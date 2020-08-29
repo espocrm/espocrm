@@ -1602,8 +1602,6 @@ class Stream
 
     public function findEntityFollowers(Entity $entity, $params) : RecordCollection
     {
-        $selectAttributeList = $this->serviceFactory->create('User')->getSelectAttributeList($params);
-
         $selectManager = $this->selectManagerFactory->create('User');
 
         $selectParams = $selectManager->getSelectParams($params, true, true);
@@ -1611,7 +1609,7 @@ class Stream
         if (empty($params['orderBy'])) {
             $selectParams['orderBy'] = [
                 ['LIST:id:' . $this->user->id, 'DESC'],
-                ['name']
+                ['name'],
             ];
         }
 
@@ -1621,16 +1619,9 @@ class Stream
             [
                 'subscription.userId=:' => 'user.id',
                 'subscription.entityId' => $entity->id,
-                'subscription.entityType' => $entity->getEntityType()
+                'subscription.entityType' => $entity->getEntityType(),
             ]
         ], $selectParams);
-
-        if ($selectAttributeList) {
-            $selectParams['select'] = $selectAttributeList;
-        }
-
-        $query = $this->entityManager->getQueryComposer();
-        $selectParams['t'] = true;
 
         $collection = $this->entityManager->getRepository('User')->find($selectParams);
         $total = $this->entityManager->getRepository('User')->count($selectParams);

@@ -161,8 +161,6 @@ class Record implements Crud,
 
     protected $maxSelectTextAttributeLengthDisabled = false;
 
-    protected $skipSelectTextAttributes = false;
-
     protected $selectAttributeList = null;
 
     protected $mandatorySelectAttributeList = [];
@@ -449,7 +447,7 @@ class Record implements Crud,
 
     protected function loadLinkMultipleFields(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && in_array($defs['type'], ['linkMultiple', 'attachmentMultiple']) && empty($defs['noLoad'])) {
                 $columns = null;
@@ -1188,16 +1186,11 @@ class Record implements Crud,
            }
         }
 
+        $this->handleListParams($params);
+
         $selectParams = $this->getSelectParams($params);
 
         $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
-
-        $selectAttributeList = $this->getSelectAttributeList($params);
-        if ($selectAttributeList) {
-            $selectParams['select'] = $selectAttributeList;
-        } else {
-            $selectParams['skipTextColumns'] = $this->isSkipSelectTextAttributes();
-        }
 
         $collection = $this->getRepository()->find($selectParams);
 
@@ -1206,8 +1199,8 @@ class Record implements Crud,
             if (!empty($params['loadAdditionalFields'])) {
                 $this->loadAdditionalFields($e);
             }
-            if (!empty($selectAttributeList)) {
-                $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+            if (!empty($params['select'])) {
+                $this->loadLinkMultipleFieldsForList($e, $params['select']);
             }
             $this->prepareEntityForOutput($e);
         }
@@ -1245,16 +1238,11 @@ class Record implements Crud,
            }
         }
 
+        $this->handleListParams($params);
+
         $selectParams = $this->getSelectParams($params);
 
         $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
-
-        $selectAttributeList = $this->getSelectAttributeList($params);
-        if ($selectAttributeList) {
-            $selectParams['select'] = $selectAttributeList;
-        } else {
-            $selectParams['skipTextColumns'] = $this->isSkipSelectTextAttributes();
-        }
 
         $collection = new EntityCollection([], $this->entityType);
 
@@ -1305,8 +1293,8 @@ class Record implements Crud,
                 if (!empty($params['loadAdditionalFields'])) {
                     $this->loadAdditionalFields($e);
                 }
-                if (!empty($selectAttributeList)) {
-                    $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+                if (!empty($params['select'])) {
+                    $this->loadLinkMultipleFieldsForList($e, $params['select']);
                 }
                 $this->prepareEntityForOutput($e);
 
@@ -1377,11 +1365,6 @@ class Record implements Crud,
         return null;
     }
 
-    public function isSkipSelectTextAttributes() : bool
-    {
-        return $this->skipSelectTextAttributes;
-    }
-
     /** @deprecated */
     public function findLinkedEntities($id, $link, $params)
     {
@@ -1438,6 +1421,7 @@ class Record implements Crud,
 
         $disableCount = false;
         $disableCountPropertyName = 'findLinked' . ucfirst($link) . 'CountQueryDisabled';
+
         if (
             !empty($this->$disableCountPropertyName)
         ) {
@@ -1449,6 +1433,20 @@ class Record implements Crud,
             if (!empty($params['maxSize'])) {
                 $maxSize = $params['maxSize'];
                 $params['maxSize'] = $params['maxSize'] + 1;
+            }
+        }
+
+        $recordService->handleListParams($params);
+
+        if (isset($params['select'])) {
+            $mandatorySelectAttributeList = $this->linkMandatorySelectAttributeList[$link] ?? [];
+
+            foreach ($mandatorySelectAttributeList as $item) {
+                if (in_array($item, $params['select'])) {
+                    continue;
+                }
+
+                $params['select'][] = $item;
             }
         }
 
@@ -1471,18 +1469,6 @@ class Record implements Crud,
 
         $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
 
-        $selectAttributeList = $recordService->getSelectAttributeList($params);
-        if ($selectAttributeList) {
-            $selectParams['select'] = $selectAttributeList;
-        } else {
-            $selectParams['skipTextColumns'] = $recordService->isSkipSelectTextAttributes();
-        }
-
-        if ($selectAttributeList) {
-            $mandatorySelectAttributeList = $this->linkMandatorySelectAttributeList[$link] ?? [];
-            $selectParams['select'] = array_merge($selectParams['select'], $mandatorySelectAttributeList);
-        }
-
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
         foreach ($collection as $e) {
@@ -1490,8 +1476,8 @@ class Record implements Crud,
             if (!empty($params['loadAdditionalFields'])) {
                 $recordService->loadAdditionalFields($e);
             }
-            if (!empty($selectAttributeList)) {
-                $this->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+            if (!empty($params['select'])) {
+                $this->loadLinkMultipleFieldsForList($e, $params['select']);
             }
             $recordService->prepareEntityForOutput($e);
         }
@@ -2619,7 +2605,48 @@ class Record implements Crud,
         return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
     }
 
-    public function getSelectAttributeList($params)
+    /**
+     * Handle list parameters (passed from frontend).
+     */
+    public function handleListParams(array &$params)
+    {
+        $this->handleListParamsSelect($params);
+    }
+
+    protected function handleListParamsSelect(array &$params)
+    {
+        if ($this->forceSelectAllAttributes) {
+            unset($params['select']);
+
+            return;
+        }
+
+        if ($this->selectAttributeList) {
+            $params['select'] = $this->selectAttributeList;
+
+            return;
+        }
+
+        if (
+            count($this->mandatorySelectAttributeList) &&
+            array_key_exists('select', $params) && is_array($params['select'])
+        ) {
+
+            $itemList = $params['select'];
+
+            foreach ($this->mandatorySelectAttributeList as $attribute) {
+                if (in_array($attribute, $itemList)) {
+                    continue;
+                }
+
+                $itemList[] = $attribute;
+            }
+
+            $params['select'] = $itemList;
+        }
+    }
+
+    /*public function getSelectAttributeList($params)
     {
         if ($this->forceSelectAllAttributes) {
             return null;
@@ -2627,11 +2654,6 @@ class Record implements Crud,
 
         if ($this->selectAttributeList) {
             return $this->selectAttributeList;
-        }
-
-        // TODO remove in 5.7.0
-        if (in_array($this->getEntityType(), ['Report', 'Workflow', 'ReportPanel'])) {
-            return null;
         }
 
         if (!array_key_exists('select', $params)) {
@@ -2650,7 +2672,7 @@ class Record implements Crud,
         }
 
         return $attributeList;
-    }
+    }*/
 
     public function massConvertCurrency($params, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
     {

@@ -596,9 +596,9 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!$isAggregation) {
-            $selectPart = $this->getSelectPart($entity, $params);
-
             $orderPart = $this->getOrderPart($entity, $params['orderBy'], $params['order'], $params);
+
+            $selectPart = $this->getSelectPart($entity, $params);
 
             $additionalSelectPart = $this->getAdditionalSelect($entity, $params);
             if ($additionalSelectPart) {

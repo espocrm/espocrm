@@ -31,6 +31,13 @@ namespace Espo\Modules\Crm\SelectManagers;
 
 class Meeting extends \Espo\Core\Select\SelectManager
 {
+    protected $selectAttributesDependancyMap = [
+        'duration' => [
+            'dateStart',
+            'dateEnd',
+        ],
+    ];
+
     protected function accessOnlyOwn(&$result)
     {
         $this->setDistinct(true, $result);

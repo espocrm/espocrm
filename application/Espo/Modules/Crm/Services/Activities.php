@@ -38,6 +38,10 @@ use Espo\ORM\{
     QueryParams\Select,
 };
 
+use Espo\Core\{
+    Record\Collection as RecordCollection,
+};
+
 use PDO;
 
 use Espo\Core\Di;
@@ -837,8 +841,9 @@ class Activities implements
         }
     }
 
-    public function findActivitiyEntityType($scope, $id, $entityType, $isHistory = false, $params = [])
-    {
+    public function findActivitiyEntityType(
+        string $scope, string $id, string $entityType, bool $isHistory = false, array $params = []
+    ) : RecordCollection {
         if (!$this->getAcl()->checkScope($entityType)) {
             throw new Forbidden();
         }
@@ -860,19 +865,15 @@ class Activities implements
         $service = $this->getServiceFactory()->create($entityType);
         $selectManager = $this->getSelectManagerFactory()->create($entityType);
 
-
         if ($entityType === 'Email') {
             if ($params['orderBy'] ?? null === 'dateStart') {
                 $params['orderBy'] = 'dateSent';
             }
         }
 
-        $selectParams = $selectManager->getSelectParams($params, false, true);
+        $service->handleListParams($params);
 
-        $selectAttributeList = $service->getSelectAttributeList($params);
-        if ($selectAttributeList) {
-            $selectParams['select'] = $selectAttributeList;
-        }
+        $selectParams = $selectManager->getSelectParams($params, false, true);
 
         $offset = $selectParams['offset'];
         $limit = $selectParams['limit'];
@@ -894,6 +895,17 @@ class Activities implements
 
         $seed = $this->getEntityManager()->getEntity($entityType);
 
+        if (is_array($query)) {
+            $unionBuilder = $this->entityManager->getQueryBuilder()
+                ->union();
+
+            foreach ($query as $subQuery) {
+                $unionBuilder->query($subQuery);
+            }
+
+            $query = $unionBuilder->build();
+        }
+
         $builder = $this->entityManager->getQueryBuilder()->clone($query);
 
         if ($orderBy) {
@@ -906,14 +918,19 @@ class Activities implements
 
         $collection = $this->getEntityManager()->getRepository($entityType)->findBySql($sql);
 
+        $collection = $this->getEntityManager()->getCollectionFactory()->createFromSthCollection($collection);
+
         foreach ($collection as $e) {
             $service->loadAdditionalFieldsForList($e);
+
             if (!empty($params['loadAdditionalFields'])) {
                 $service->loadAdditionalFields($e);
             }
-            if (!empty($selectAttributeList)) {
-                $service->loadLinkMultipleFieldsForList($e, $selectAttributeList);
+
+            if (!empty($params['select'])) {
+                $service->loadLinkMultipleFieldsForList($e, $params['select']);
             }
+
             $service->prepareEntityForOutput($e);
         }
 
@@ -929,10 +946,7 @@ class Activities implements
 
         $total = $row['count'];
 
-        return (object) [
-            'total' => $total,
-            'collection' => $collection,
-        ];
+        return new RecordCollection($collection, $total);
     }
 
     public function getActivities(string $scope, string $id, array $params = [])

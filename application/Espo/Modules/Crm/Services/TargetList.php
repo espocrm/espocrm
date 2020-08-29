@@ -55,13 +55,6 @@ class TargetList extends \Espo\Services\Record implements
 
     protected $targetsLinkList = ['contacts', 'leads', 'users', 'accounts'];
 
-    protected $entityTypeLinkMap = [
-        'Lead' => 'leads',
-        'Account' => 'accounts',
-        'Contact' => 'contacts',
-        'User' => 'users',
-    ];
-
     protected $linkMandatorySelectAttributeList = [
         'accounts' => ['targetListIsOptedOut'],
         'contacts' => ['targetListIsOptedOut'],
@@ -69,13 +62,12 @@ class TargetList extends \Espo\Services\Record implements
         'users' => ['targetListIsOptedOut'],
     ];
 
-    protected function init()
-    {
-        parent::init();
-        $this->addDependencyList([
-            'hookManager'
-        ]);
-    }
+    protected $entityTypeLinkMap = [
+        'Lead' => 'leads',
+        'Account' => 'accounts',
+        'Contact' => 'contacts',
+        'User' => 'users',
+    ];
 
     public function loadAdditionalFields(Entity $entity)
     {

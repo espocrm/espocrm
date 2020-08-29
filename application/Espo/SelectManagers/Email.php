@@ -178,11 +178,24 @@ class Email extends \Espo\Core\Select\SelectManager
 
     protected function addUsersColumns(&$result)
     {
-        if (!isset($result['select'])) {
-            $result['additionalSelectColumns']['usersMiddle.is_read'] = 'isRead';
-            $result['additionalSelectColumns']['usersMiddle.is_important'] = 'isImportant';
-            $result['additionalSelectColumns']['usersMiddle.in_trash'] = 'inTrash';
-            $result['additionalSelectColumns']['usersMiddle.folder_id'] = 'folderId';
+        $result['select'] = $result['select'] ?? [];
+
+        if (!count($result['select'])) {
+            $result['select'][] = '*';
+        }
+
+        $itemList = [
+            'isRead',
+            'isImportant',
+            'inTrash',
+            'folderId',
+        ];
+
+        foreach ($itemList as $item) {
+            $result['select'][] = [
+                'usersMiddle.' . $item,
+                $item,
+            ];
         }
     }
 

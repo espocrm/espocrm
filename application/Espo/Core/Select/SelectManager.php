@@ -855,7 +855,12 @@ class SelectManager
         array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false
     ) : array {
         $result = [];
+
         $this->prepareResult($result);
+
+        if (!empty($params['select'])) {
+            $result['select'] = $this->getSelectAttributeList($params);
+        }
 
         if (!empty($params['orderBy'])) {
             $isDesc = false;

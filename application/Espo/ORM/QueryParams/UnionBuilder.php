@@ -86,17 +86,35 @@ class UnionBuilder implements Builder
     /**
      * Apply ORDER.
      *
-     * @param int|string $orderBy A position in select (starting from 1) or select alias.
+     * @param int|string|array $orderBy A position in select (starting from 1) or select alias.
      * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
      */
     public function order($orderBy, $direction = Select::ORDER_ASC) : self
     {
         if (!$orderBy) {
-            throw InvalidArgumentException();
+            throw new InvalidArgumentException();
+        }
+
+        if (is_array($orderBy)) {
+            foreach ($orderBy as $item) {
+                if (count($item) == 2) {
+                    $this->order($item[0], $item[1]);
+                    continue;
+                }
+
+                if (count($item) == 1) {
+                    $this->order($item[0]);
+                    continue;
+                }
+
+                throw new InvalidArgumentException("Bad order.");
+            }
+
+            return $this;
         }
 
         if (!is_string($orderBy) && !is_int($orderBy)) {
-            throw InvalidArgumentException();
+            throw new InvalidArgumentException("Bad order.");
         }
 
         $this->params['orderBy'] = $this->params['orderBy'] ?? [];

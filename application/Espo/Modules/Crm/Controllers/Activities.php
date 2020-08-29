@@ -32,6 +32,8 @@ namespace Espo\Modules\Crm\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\Utils\ControllerUtil;
+
 class Activities extends \Espo\Core\Controllers\Base
 {
     protected $maxCalendarRange = 123;
@@ -249,7 +251,7 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $params = [];
 
-        \Espo\Core\Utils\ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
+        ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', 200);
         if (empty($params['maxSize'])) {
@@ -264,8 +266,8 @@ class Activities extends \Espo\Core\Controllers\Base
         $result = $service->findActivitiyEntityType($scope, $id, $entityType, $isHistory, $params);
 
         return (object) [
-            'total' => $result->total,
-            'list' => $result->collection->getValueMapList()
+            'total' => $result->getTotal(),
+            'list' => $result->getValueMapList(),
         ];
     }
 

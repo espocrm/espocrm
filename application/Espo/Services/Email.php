@@ -54,8 +54,6 @@ class Email extends Record implements
 
     protected $getEntityBeforeUpdate = true;
 
-    protected $skipSelectTextAttributes = true;
-
     protected $allowedForUpdateAttributeList = [
         'parentType',
         'parentId',
@@ -749,48 +747,62 @@ class Email extends Record implements
             $userEmailAdddressIdList[] = $ea->id;
         }
 
-        $status = $entity->get('status');
-        if (in_array($entity->get('fromEmailAddressId'), $userEmailAdddressIdList) || $entity->get('createdById') === $this->getUser()->id) {
+        if (
+            in_array($entity->get('fromEmailAddressId'), $userEmailAdddressIdList) ||
+            $entity->get('createdById') === $this->getUser()->id
+        ) {
             $entity->loadLinkMultipleField('toEmailAddresses');
             $idList = $entity->get('toEmailAddressesIds');
             $names = $entity->get('toEmailAddressesNames');
 
             if (!empty($idList)) {
                 $arr = [];
+
                 foreach ($idList as $emailAddressId) {
-                    $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($emailAddressId, null, true);
+                    $person = $this->getEntityManager()->getRepository('EmailAddress')
+                        ->getEntityByAddressId($emailAddressId, null, true);
                     if ($person) {
                         $arr[] = $person->get('name');
                     } else {
                         $arr[] = $names->$emailAddressId;
                     }
                 }
+
                 $entity->set('personStringData', 'To: ' . implode(', ', $arr));
             }
-        } else {
-            $fromEmailAddressId = $entity->get('fromEmailAddressId');
-            if (!empty($fromEmailAddressId)) {
-                if (!array_key_exists($fromEmailAddressId, $this->fromEmailAddressNameCache)) {
-                    $person = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddressId($fromEmailAddressId, null, true);
-                    if ($person) {
-                        $fromName = $person->get('name');
-                    } else {
-                        $fromName = null;
-                    }
-                    $this->fromEmailAddressNameCache[$fromEmailAddressId] = $fromName;
-                }
-                $fromName = $this->fromEmailAddressNameCache[$fromEmailAddressId];
 
-                if (!$fromName) {
-                    $fromName = $entity->get('fromName');
-                    if (!$fromName) {
-                        $fromName = $entity->get('fromEmailAddressName');
-                    }
-                }
+            return;
+        }
 
-                $entity->set('personStringData', $fromName);
+        $fromEmailAddressId = $entity->get('fromEmailAddressId');
+
+        if (empty($fromEmailAddressId)) {
+            return;
+        }
+
+        if (!array_key_exists($fromEmailAddressId, $this->fromEmailAddressNameCache)) {
+            $person = $this->getEntityManager()->getRepository('EmailAddress')
+                ->getEntityByAddressId($fromEmailAddressId, null, true);
+
+            if ($person) {
+                $fromName = $person->get('name');
+            } else {
+                $fromName = null;
+            }
+
+            $this->fromEmailAddressNameCache[$fromEmailAddressId] = $fromName;
+        }
+
+        $fromName = $this->fromEmailAddressNameCache[$fromEmailAddressId];
+
+        if (!$fromName) {
+            $fromName = $entity->get('fromName');
+            if (!$fromName) {
+                $fromName = $entity->get('fromEmailAddressName');
             }
         }
+
+        $entity->set('personStringData', $fromName);
     }
 
     public function loadUserColumnFields(Entity $entity)

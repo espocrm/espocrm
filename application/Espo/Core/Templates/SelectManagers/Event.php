@@ -31,6 +31,13 @@ namespace Espo\Core\Templates\SelectManagers;
 
 class Event extends \Espo\Core\Select\SelectManager
 {
+    protected $selectAttributesDependancyMap = [
+        'duration' => [
+            'dateStart',
+            'dateEnd',
+        ],
+    ];
+
     protected function filterPlanned(&$result)
     {
         $result['whereClause'][] = [
