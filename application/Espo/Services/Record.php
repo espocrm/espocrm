@@ -2646,34 +2646,6 @@ class Record implements Crud,
         }
     }
 
-    /*public function getSelectAttributeList($params)
-    {
-        if ($this->forceSelectAllAttributes) {
-            return null;
-        }
-
-        if ($this->selectAttributeList) {
-            return $this->selectAttributeList;
-        }
-
-        if (!array_key_exists('select', $params)) {
-            return null;
-        }
-
-        $attributeList = $this->getSelectManager()->getSelectAttributeList($params);
-
-        if (!empty($this->mandatorySelectAttributeList)) {
-            $seed = $this->getEntityManager()->getEntity($this->getEntityType());
-            foreach ($this->mandatorySelectAttributeList as $attribute) {
-                if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
-                    $attributeList[] = $attribute;
-                }
-            }
-        }
-
-        return $attributeList;
-    }*/
-
     public function massConvertCurrency($params, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
     {
         if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden("No mass-update permission.");
