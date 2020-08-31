@@ -292,7 +292,7 @@ class EntityManager
     /**
      * Store an entity (in database).
      *
-     * @return Deprecated. To be changed to void.
+     * @return Deprecated. @todo To be changed to void in 6.3.
      */
     public function saveEntity(Entity $entity, array $options = [])
     {
