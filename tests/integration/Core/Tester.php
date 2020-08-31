@@ -48,6 +48,8 @@ class Tester
 
     protected $testDataPath = 'tests/integration/testData';
 
+    protected $packageJsonPath = 'package.json';
+
     private $application;
 
     private $apiClient;
@@ -129,7 +131,15 @@ class Tester
             die('Config for integration tests ['. $this->configPath .'] is not found');
         }
 
-        return include($this->configPath);
+        $data = include($this->configPath);
+
+        $packageData = json_decode(file_get_contents($this->packageJsonPath));
+
+        $version = $packageData->version;
+
+        $data['version'] = $version;
+
+        return $data;
     }
 
     protected function saveTestConfigData($optionName, $data)
