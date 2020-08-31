@@ -278,7 +278,6 @@ class BaseMapper implements Mapper
 
                 $sth = $this->executeSql($sql);
 
-
                 if ($returnTotalCount) {
                     while ($row = $sth->fetch()) {
                         return (int) $row['value'];

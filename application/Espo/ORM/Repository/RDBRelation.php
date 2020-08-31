@@ -310,6 +310,10 @@ class RDBRelation
             return $this->isRelatedBelongsToParent($entity);
         }
 
+        if ($this->relationType === Entity::BELONGS_TO) {
+            return $this->isRelatedBelongsTo($entity);
+        }
+
         $this->processCheckForeignEntity($entity);
 
         return (bool) $this->createBuilder()
@@ -337,6 +341,23 @@ class RDBRelation
             $fromEntity->get($idAttribute) === $entity->id
             &&
             $fromEntity->get($typeAttribute) === $entity->getEntityType();
+    }
+
+    protected function isRelatedBelongsTo(Entity $entity) : bool
+    {
+        $fromEntity = $this->entity;
+
+        $idAttribute = $this->relationName . 'Id';
+
+        if (!$fromEntity->has($idAttribute)) {
+            $fromEntity = $this->entityManager->getEntity($fromEntity->getEntityType(), $fromEntity->id);
+        }
+
+        if (!$fromEntity) {
+            return false;
+        }
+
+        return $fromEntity->get($idAttribute) === $entity->id;
     }
 
     /**
