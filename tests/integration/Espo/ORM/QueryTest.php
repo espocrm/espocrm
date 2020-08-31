@@ -50,7 +50,7 @@ class QueryTest extends \tests\integration\Core\BaseTestCase
 
         $rowList = [];
 
-        $sth = $entityManager->getQueryExecutor()->run($query);
+        $sth = $entityManager->getQueryExecutor()->execute($query);
 
         while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
             $rowList[] = $row;

@@ -76,9 +76,10 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test',
             'testEnum' => 'option1'
         ]);
-        $savedId = $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $savedId);
+        $entityManager->saveEntity($account);
+
+        $account = $entityManager->getEntity('Account', $account->id);
         $this->assertEquals('option1', $account->get('testEnum'));
     }
 
@@ -111,9 +112,10 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $account->set([
             'name' => 'New Test',
         ]);
-        $savedId = $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $savedId);
+        $entityManager->saveEntity($account);
+
+        $account = $entityManager->getEntity('Account', $account->id);
         $this->assertEquals('option3', $account->get('testEnum'));
     }
 }

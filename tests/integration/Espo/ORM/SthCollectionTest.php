@@ -126,12 +126,12 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
         $query = $em->getQueryBuilder()
             ->select()
             ->from('Account')
-            ->sth()
             ->where(['name' => 'test-1'])
             ->build();
 
         $collection = $em->getRepository('Account')
             ->clone($query)
+            ->sth()
             ->find();
 
         $this->assertEquals(SthCollection::class, get_class($collection));
@@ -166,12 +166,12 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
         $query = $em->getQueryBuilder()
             ->select()
             ->from('Opportunity')
-            ->sth()
             ->order('name')
             ->build();
 
         $collection = $em->getRepository('Account')->getRelation($account, 'opportunities')
             ->clone($query)
+            ->sth()
             ->find();
 
         $this->assertEquals(SthCollection::class, get_class($collection));
@@ -211,11 +211,11 @@ class SthCollectionTest extends \tests\integration\Core\BaseTestCase
         $query = $em->getQueryBuilder()
             ->select()
             ->from('Opportunity')
-            ->sth()
             ->build();
 
         $collection = $em->getRepository('Contact')->getRelation($contact, 'opportunities')
             ->clone($query)
+            ->sth()
             ->find();
 
         $this->assertEquals(SthCollection::class, get_class($collection));

@@ -76,9 +76,10 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test',
             'testArray' => ['option1', 'option3']
         ]);
-        $savedId = $entityManager->saveEntity($account);
 
-        $account = $entityManager->getEntity('Account', $savedId);
+        $entityManager->saveEntity($account);
+
+        $account = $entityManager->getEntity('Account', $account->id);
         $this->assertEquals(['option1', 'option3'], $account->get('testArray'));
     }
 
@@ -106,6 +107,7 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
         $account->set([
             'name' => 'Test',
         ]);
-        $savedId = $entityManager->saveEntity($account);
+
+        $entityManager->saveEntity($account);
     }
 }

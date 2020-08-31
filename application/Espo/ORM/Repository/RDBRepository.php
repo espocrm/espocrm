@@ -269,6 +269,10 @@ class RDBRepository extends Repository
 
         $result = $this->getMapper()->selectRelated($entity, $relationName, $select);
 
+        if ($result instanceof SthCollection) {
+            return $this->entityManager->getCollectionFactory()->createFromSthCOllection($result);
+        }
+
         return $result;
     }
 

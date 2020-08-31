@@ -122,6 +122,9 @@ class BaseEntity implements Entity
         }
     }
 
+    /**
+     * @param $params @deprecated
+     */
     public function get(string $name, $params = [])
     {
         if ($name == 'id') {
@@ -136,6 +139,7 @@ class BaseEntity implements Entity
             return $this->valuesContainer[$name];
         }
 
+        // @todo Remove this.
         if ($this->hasRelation($name) && $this->id && $this->entityManager) {
             return $this->entityManager
                 ->getRepository($this->getEntityType())
