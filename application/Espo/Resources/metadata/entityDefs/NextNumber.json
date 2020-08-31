@@ -2,10 +2,12 @@
     "fields": {
         "entityType": {
             "type": "varchar",
-            "index": true
+            "index": true,
+            "maxLength": 100
         },
         "fieldName": {
-            "type": "varchar"
+            "type": "varchar",
+            "maxLength": 100
         },
         "value": {
             "type": "int",
