@@ -291,12 +291,16 @@ class EntityManager
 
     /**
      * Store an entity (in database).
+     *
+     * @return Deprecated. To be changed to void.
      */
     public function saveEntity(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
 
         $this->getRepository($entityType)->save($entity, $options);
+
+        return $entity->id;
     }
 
     /**
