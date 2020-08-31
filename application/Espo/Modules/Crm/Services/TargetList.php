@@ -271,7 +271,7 @@ class TargetList extends \Espo\Services\Record implements
                     'j.deleted' => false,
                     'j.optedOut' => true,
                     'j.targetListId' => $targetListId,
-                ],
+                ]
             )
             ->order('createdAt', 'DESC')
             ->build();
