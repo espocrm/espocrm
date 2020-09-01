@@ -29,16 +29,18 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
     Utils\Util,
     Api\Request,
     Api\Response,
+    Exceptions\NotFound,
+    Exceptions\BadRequest,
 };
+
+use ReflectionClass;
+use StdClass;
 
 /**
  * Creates controller instances and processes actions.
@@ -89,24 +91,10 @@ class ControllerManager
             );
         }
 
+        $this->processContentTypeCheck($controller, $primaryActionMethodName, 1);
+
         if (method_exists($controller, $beforeMethodName)) {
             $controller->$beforeMethodName($params, $data, $request, $response);
-        }
-
-        $class = new \ReflectionClass($controller);
-        $method = $class->getMethod($primaryActionMethodName);
-        $args = $method->getParameters();
-        if (count($args) >= 2) {
-            if ($args[1]->hasType()) {
-                $dataClass = $args[1]->getClass();
-                if ($dataClass && strtolower($dataClass->getName()) === 'stdclass') {
-                    if (!$data instanceof \StdClass) {
-                        throw new BadRequest(
-                            "{$controllerName} {$requestMethod} {$actionName}: Content-Type should be 'application/json'."
-                        );
-                    }
-                }
-            }
         }
 
         $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
@@ -116,6 +104,41 @@ class ControllerManager
         }
 
         return $result;
+    }
+
+    protected function processContentTypeCheck(object $controller, string $primaryActionMethodName, int $parameterIndex)
+    {
+        $class = new ReflectionClass($controller);
+
+        $method = $class->getMethod($primaryActionMethodName);
+
+        $args = $method->getParameters();
+
+        if (count($args) <= $parameterIndex) {
+            return;
+        }
+
+        $param = $args[$parameterIndex];
+
+        if (! $param->hasType()) {
+            return;
+        }
+
+        $dataClass = $param->getClass();
+
+        if (!$dataClass) {
+            return;
+        }
+
+        if (strtolower($dataClass->getName()) !== strtolower(StdClass::class)) {
+            return;
+        }
+
+        if (! $data instanceof StdClass) {
+            throw new BadRequest(
+                "{$controllerName} {$requestMethod} {$actionName}: Content-Type should be 'application/json'."
+            );
+        }
     }
 
     protected function getControllerClassName(string $name) : string

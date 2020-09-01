@@ -37,6 +37,8 @@ use Espo\Core\{
     ControllerManager,
 };
 
+use StdClass;
+
 /**
  * Processes routes. Obtains a controller name, action, body from a request. Then passes them to controller manager.
  */
@@ -92,8 +94,11 @@ class RouteProcessor
 
         if (!$actionName) {
             $httpMethod = strtolower($requestMethod);
+
             $crudList = $this->config->get('crud') ?? [];
+
             $actionName = $crudList[$httpMethod] ?? null;
+
             if (!$actionName) {
                 throw new Error("No action for method {$httpMethod}.");
             }
@@ -119,7 +124,7 @@ class RouteProcessor
             is_float($result) ||
             is_array($result) ||
             is_bool($result) ||
-            $result instanceof \StdClass
+            $result instanceof StdClass
         ) {
             $responseContents = Json::encode($result);
         }

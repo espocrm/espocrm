@@ -135,8 +135,14 @@ class Api implements ApplicationRunner
             }
 
             $routeProcessor = $this->injectableFactory->create(RouteProcessor::class);
+
+            ob_start();
+
             $routeProcessor->process($item['route'], $item['params'], $requestWrapped, $responseWrapped, $args);
-        } catch (Exception $exception) {
+
+            ob_clean();
+        }
+        catch (Exception $exception) {
             (new ApiErrorOutput($requestWrapped))->process(
                 $responseWrapped, $exception, false, $item, $args
             );
