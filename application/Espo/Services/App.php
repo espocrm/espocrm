@@ -106,6 +106,7 @@ class App
 
         if ($user->get('dashboardTemplateId')) {
             $dashboardTemplate = $this->entityManager->getEntity('DashboardTemplate', $user->get('dashboardTemplateId'));
+
             if ($dashboardTemplate) {
                 $settings->forcedDashletsOptions = $dashboardTemplate->get('dashletsOptions') ?? (object) [];
                 $settings->forcedDashboardLayout = $dashboardTemplate->get('layout') ?? [];
@@ -115,6 +116,7 @@ class App
         $language = Language::detectLanguage($this->config, $this->preferences);
 
         $auth2FARequired = false;
+
         if (
             $user->isRegular() && $this->config->get('auth2FA') && $this->config->get('auth2FAForced') &&
             !$user->get('auth2FA')
@@ -211,12 +213,25 @@ class App
         $emailAddressList = [];
         $userEmailAddressList = [];
 
-        foreach ($user->get('emailAddresses') as $emailAddress) {
-            if ($emailAddress->get('invalid')) continue;
+        $emailAddressCollection = $this->entityManager
+            ->getRepository('User')
+            ->getRelation($user, 'emailAddresses')
+            ->find();
+
+        foreach ($emailAddressCollection as $emailAddress) {
+            if ($emailAddress->get('invalid')) {
+                continue;
+            }
+
             $userEmailAddressList[] = $emailAddress->get('name');
-            if ($user->get('emailAddress') === $emailAddress->get('name')) continue;
+
+            if ($user->get('emailAddress') === $emailAddress->get('name')) {
+                continue;
+            }
+
             $emailAddressList[] = $emailAddress->get('name');
         }
+
         if ($user->get('emailAddress')) {
             array_unshift($emailAddressList, $user->get('emailAddress'));
         }
@@ -224,37 +239,41 @@ class App
         $entityManager = $this->entityManager;
 
         $teamIdList = $user->getLinkMultipleIdList('teams');
+
         $groupEmailAccountPermission = $this->acl->get('groupEmailAccountPermission');
+
         if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
             if ($groupEmailAccountPermission === 'team') {
                 if (count($teamIdList)) {
-                    $selectParams = [
-                        'whereClause' => [
+                    $inboundEmailList = $entityManager->getRepository('InboundEmail')
+                        ->where([
                             'status' => 'Active',
                             'useSmtp' => true,
                             'smtpIsShared' => true,
-                            'teamsMiddle.teamId' => $teamIdList
-                        ],
-                        'joins' => ['teams'],
-                        'distinct' => true
-                    ];
-                    $inboundEmailList = $entityManager->getRepository('InboundEmail')->find($selectParams);
+                            'teamsMiddle.teamId' => $teamIdList,
+                        ])
+                        ->join('teams')
+                        ->distinct()
+                        ->find();
+
                     foreach ($inboundEmailList as $inboundEmail) {
                         if (!$inboundEmail->get('emailAddress')) continue;
+
                         $emailAddressList[] = $inboundEmail->get('emailAddress');
                     }
                 }
             } else if ($groupEmailAccountPermission === 'all') {
-                $selectParams = [
-                    'whereClause' => [
+                $inboundEmailList = $entityManager->getRepository('InboundEmail')
+                    ->where([
                         'status' => 'Active',
                         'useSmtp' => true,
-                        'smtpIsShared' => true
-                    ]
-                ];
-                $inboundEmailList = $entityManager->getRepository('InboundEmail')->find($selectParams);
+                        'smtpIsShared' => true,
+                    ])
+                    ->find();
+
                 foreach ($inboundEmailList as $inboundEmail) {
                     if (!$inboundEmail->get('emailAddress')) continue;
+
                     $emailAddressList[] = $inboundEmail->get('emailAddress');
                 }
             }
@@ -262,7 +281,7 @@ class App
 
         return (object) [
             'emailAddressList' => $emailAddressList,
-            'userEmailAddressList' => $userEmailAddressList
+            'userEmailAddressList' => $userEmailAddressList,
         ];
     }
 
@@ -271,10 +290,13 @@ class App
         $maxSize = 0;
 
         $postMaxSize = $this->convertPHPSizeToBytes(ini_get('post_max_size'));
+
         if ($postMaxSize > 0) {
             $maxSize = $postMaxSize;
         }
+
         $attachmentUploadMaxSize = $this->config->get('attachmentUploadMaxSize');
+
         if ($attachmentUploadMaxSize && (!$maxSize || $attachmentUploadMaxSize < $maxSize)) {
             $maxSize = $attachmentUploadMaxSize;
         }
@@ -288,6 +310,7 @@ class App
 
         $suffix = substr($size, -1);
         $value = substr($size, 0, -1);
+
         switch(strtoupper($suffix)) {
             case 'P':
                 $value *= 1024;
@@ -301,6 +324,7 @@ class App
                 $value *= 1024;
                 break;
             }
+
         return $value;
     }
 
