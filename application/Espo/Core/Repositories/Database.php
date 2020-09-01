@@ -476,15 +476,14 @@ class Database extends RDBRepository
 
         $defs = [];
 
-        $columns = $this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.columns");
+        $columns = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'columns']);
 
         if (!empty($columns)) {
             $columnData = $entity->get($columnsAttribute);
-            $defs['additionalColumns'] = $columns;
         }
 
         if (!$skipRemove || !$skipUpdate) {
-            $foreignEntityList = $entity->get($name, $defs);
+            $foreignEntityList = $this->getRelation($entity, $name)->find();
 
             if ($foreignEntityList) {
                 foreach ($foreignEntityList as $foreignEntity) {

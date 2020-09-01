@@ -383,7 +383,7 @@ class Campaign extends \Espo\Services\Record implements
         $this->getEntityManager()->saveEntity($logRecord);
     }
 
-    public function generateMailMergePdf($campaignId, $link, $checkAcl = false)
+    public function generateMailMergePdf(string $campaignId, string $link, bool $checkAcl = false)
     {
         $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
 
@@ -430,41 +430,69 @@ class Campaign extends \Espo\Services\Record implements
         $metTargetHash = [];
         $targetEntityList = [];
 
-        $excludingTargetListList = $campaign->get('excludingTargetLists');
+        $excludingTargetListList = $this->getEntityManager()
+            ->getRepository('Campaign')
+            ->getRelation($campaign, 'excludingTargetLists')
+            ->find();
+
         foreach ($excludingTargetListList as $excludingTargetList) {
-            foreach ($excludingTargetList->get($link) as $excludingTarget) {
-                $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->id;
+            $recordList = $this->getEntityManager()
+                ->getRepository('TargetList')
+                ->getRelation($excludingTargetList, $link)
+                ->find();
+
+            foreach ($recordList as $excludingTarget) {
+                $hashId = $excludingTarget->getEntityType() . '-' . $excludingTarget->id;
                 $metTargetHash[$hashId] = true;
             }
         }
 
         $addressFieldList = $this->entityTypeAddressFieldListMap[$targetEntityType];
 
-        $targetListCollection = $campaign->get('targetLists');
+        $targetListCollection = $this->getEntityManager()
+            ->getRepository('Campaign')
+            ->getRelation($campaign, 'targetLists')
+            ->find();
+
         foreach ($targetListCollection as $targetList) {
-            if (!$campaign->get($link . 'TemplateId')) continue;
-            $entityList = $targetList->get($link, [
-                'additionalColumnsConditions' => [
-                    'optedOut' => false
-                ]
-            ]);
+            if (!$campaign->get($link . 'TemplateId')) {
+                continue;
+            }
+
+            $entityList = $this->getEntityManager()
+                ->getRepository('TargetList')
+                ->getRelation($targetList, $link)
+                ->where([
+                    '@relation.optedOut' => false,
+                ])
+                ->find();
+
             foreach ($entityList as $e) {
                 $hashId = $e->getEntityType() . '-'. $e->id;
+
                 if (!empty($metTargetHash[$hashId])) {
                     continue;
                 }
+
                 $metTargetHash[$hashId] = true;
 
                 if ($campaign->get('mailMergeOnlyWithAddress')) {
-                    if (empty($addressFieldList)) continue;
+                    if (empty($addressFieldList)) {
+                        continue;
+                    }
+
                     $hasAddress = false;
+
                     foreach ($addressFieldList as $addressField) {
                         if ($e->get($addressField . 'Street') || $e->get($addressField . 'PostalCode')) {
                             $hasAddress = true;
                             break;
                         }
                     }
-                    if (!$hasAddress) continue;
+
+                    if (!$hasAddress) {
+                        continue;
+                    }
                 }
 
                 $targetEntityList[] = $e;
@@ -479,7 +507,8 @@ class Campaign extends \Espo\Services\Record implements
             $this->getDefaultLanguage()->translate($targetEntityType, 'scopeNamesPlural');
 
         return $this->getServiceFactory()->create('Pdf')->generateMailMerge(
-            $targetEntityType, $targetEntityList, $template, $filename, $campaign->id);
+            $targetEntityType, $targetEntityList, $template, $filename, $campaign->id
+        );
     }
 
     protected function getDefaultLanguage()
