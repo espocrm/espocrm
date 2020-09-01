@@ -29,12 +29,16 @@
 
 namespace Espo\Core;
 
-use Espo\Core\InjectableFactory;
+use Espo\Core\{
+    Exceptions\Error,
+    InjectableFactory,
+};
 
-use Espo\Core\Exceptions\Error;
+use ReflectionClass;
 
 /**
  * DI container for services. Lazy initialization is used. Services are instantiated only once.
+ *
  * See https://docs.espocrm.com/development/di/.
  */
 class Container
@@ -45,10 +49,15 @@ class Container
 
     protected $configuration;
 
+    protected $injectableFactory;
+
     public function __construct(string $configurationClassName, array $loaderClassNames = [])
     {
         $this->loaderClassNames = $loaderClassNames;
-        $this->configuration = $this->get('injectableFactory')->create($configurationClassName);
+
+        $this->injectableFactory = $this->get('injectableFactory');
+
+        $this->configuration = $this->injectableFactory->create($configurationClassName);
     }
 
     /**
@@ -58,9 +67,13 @@ class Container
     {
         if (!isset($this->data[$name])) {
             $this->load($name);
+
+            if (!isset($this->data[$name])) {
+                throw new Error("Could not load '{$name}' service.");
+            }
         }
 
-        return $this->data[$name] ?? null;
+        return $this->data[$name];
     }
 
     /**
@@ -69,6 +82,10 @@ class Container
     public function has(string $name) : bool
     {
         if (isset($this->data[$name])) {
+            return true;
+        }
+
+        if (array_key_exists($name, $this->loaderClassNames)) {
             return true;
         }
 
@@ -97,6 +114,7 @@ class Container
         if (!$this->configuration->isSettable($name)) {
             throw new Error("Service '{$name}' is not settable.");
         }
+
         $this->setForced($name, $object);
     }
 
@@ -111,15 +129,17 @@ class Container
 
         if (method_exists($this, $loadMethodName)) {
             $this->data[$name] = $this->$loadMethodName();
+
             return;
         }
 
         $loaderClassName = $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);
 
         if ($loaderClassName) {
-            $loadClass = $this->get('injectableFactory')->create($loaderClassName);
+            $loadClass = $this->injectableFactory->create($loaderClassName);
 
             $this->data[$name] = $loadClass->load();
+
             return;
         }
 
@@ -133,17 +153,19 @@ class Container
 
         if (!is_null($dependencyList)) {
             $dependencyObjectList = [];
+
             foreach ($dependencyList as $item) {
                 $dependencyObjectList[] = $this->get($item);
             }
 
-            $reflector = new \ReflectionClass($className);
+            $reflector = new ReflectionClass($className);
 
             $this->data[$name] = $reflector->newInstanceArgs($dependencyObjectList);
+
             return;
         }
 
-        $this->data[$name] = $this->get('injectableFactory')->create($className);
+        $this->data[$name] = $this->injectableFactory->create($className);
     }
 
     protected function loadContainer()

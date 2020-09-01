@@ -34,6 +34,9 @@ use Espo\Core\{
     Utils\Metadata,
 };
 
+use ReflectionClass;
+use Exception;
+
 class ContainerConfiguration
 {
     protected $log;
@@ -41,7 +44,7 @@ class ContainerConfiguration
 
     public function __construct(Log $log, Metadata $metadata)
     {
-        // log must be loaded before anything
+        // Log must be loaded before anything.
         $this->log = $log;
         $this->metadata = $metadata;
     }
@@ -50,24 +53,27 @@ class ContainerConfiguration
     {
         try {
             $className = $this->metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
+
             if (!$className) {
                 /** @deprecated */
-                /** @todo remove in 7.0 */
+                /** @todo Remove in 6.4. */
                 $className = $this->metadata->get(['app', 'loaders', ucfirst($name)]);
             }
-        } catch (\Exception $e) {}
+        } catch (Exception $e) {}
 
         if ($className && class_exists($className)) {
             return $className;
         }
 
         $className = 'Espo\Custom\Core\Loaders\\' . ucfirst($name);
+
         if (!class_exists($className)) {
             $className = 'Espo\Core\Loaders\\' . ucfirst($name);
         }
 
         if (class_exists($className)) {
-            $class = new \ReflectionClass($className);
+            $class = new ReflectionClass($className);
+
             if ($class->isInstantiable()) {
                 return $className;
             }

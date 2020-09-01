@@ -29,12 +29,14 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\Error;
-use Throwable;
-
-use Espo\Core\Interfaces\Injectable;
+use Espo\Core\{
+    Exceptions\Error,
+    Interfaces\Injectable,
+};
 
 use ReflectionClass;
+use ReflectionParameter;
+use Throwable;
 
 /**
  * Creates an instance by a class name. Uses constructor param names to detect which
@@ -49,13 +51,17 @@ class InjectableFactory
         $this->container = $container;
     }
 
+    /**
+     * Creates an instance by a class name.
+     */
     public function create(string $className) : object
     {
         return $this->createByClassName($className);
     }
 
     /**
-     * Allows passing specific constructor parameters. Defined in an associative array. A key should match the parameter name.
+     * Creates an instance by a class name. Allows passing specific constructor parameters.
+     * Defined in an associative array. A key should match the parameter name.
      */
     public function createWith(string $className, array $with = []) : object
     {
@@ -63,7 +69,7 @@ class InjectableFactory
     }
 
     /**
-     * Use create or createWith instead. Left public for backward compatibility.
+     * @deprecated Use create or createWith methods instead. Left public for backward compatibility.
      * @todo Make protected.
      */
     public function createByClassName(string $className, ?array $with = null) : object
@@ -78,8 +84,10 @@ class InjectableFactory
 
         $obj = $class->newInstanceArgs($injectionList);
 
+        // @todo Remove in 6.4.
         if ($class->implementsInterface(Injectable::class)) {
             $this->applyInjectable($class, $obj);
+
             return $obj;
         }
 
@@ -88,7 +96,10 @@ class InjectableFactory
         return $obj;
     }
 
-    /** @deprecated */
+    /**
+     * @deprecated
+     * @todo Remove in 6.4.
+     */
     protected function applyInjectable(ReflectionClass $class, object $obj)
     {
         $setList = [];
@@ -97,11 +108,13 @@ class InjectableFactory
 
         foreach ($dependencyList as $name) {
             $injection = $this->container->get($name);
+
             if ($this->classHasDependencySetter($class, $name)) {
                 $methodName = 'set' . ucfirst($name);
                 $obj->$methodName($injection);
                 $setList[] = $name;
             }
+
             $obj->inject($name, $injection);
         }
 
@@ -110,7 +123,7 @@ class InjectableFactory
         return $obj;
     }
 
-    protected function getConstructorInjectionList(ReflectionClass $class, ?array $with = null)
+    protected function getConstructorInjectionList(ReflectionClass $class, ?array $with = null) : array
     {
         $injectionList = [];
 
@@ -123,43 +136,53 @@ class InjectableFactory
         $params = $constructor->getParameters();
 
         foreach ($params as $param) {
-            $name = $param->getName();
-
-            if ($with && array_key_exists($name, $with)) {
-                $injection = $with[$name];
-            } else {
-                $dependencyClassName = null;
-
-                if ($param->getType()) {
-                    try {
-                        $dependencyClassName = $param->getClass();
-                    } catch (Throwable $e) {
-                        $badClassName = $param->getType()->getName();
-                        // this trick allows to log syntax errors
-                        class_exists($badClassName);
-                        throw new Error("InjectableFactory: " . $e->getMessage());
-                    }
-                }
-
-                if (!$dependencyClassName) {
-                    if ($param->isDefaultValueAvailable()) {
-                        $injectionList[] = $param->getDefaultValue();
-                        continue;
-                    }
-                }
-
-                $injection = $this->container->get($name);
-
-                if (!$injection) {
-                    $className = $class->getName();
-                    throw new Error("InjectableFactory: Could not create {$className}, dependency '{$name}' not found.");
-                }
-            }
-
-            $injectionList[] = $injection;
+            $injectionList[] = $this->getConstructorParamInjection($class, $param, $with);
         }
 
         return $injectionList;
+    }
+
+    protected function getConstructorParamInjection(ReflectionClass $class, ReflectionParameter $param, ?array $with)
+    {
+        $name = $param->getName();
+
+        if ($with && array_key_exists($name, $with)) {
+            return $with[$name];
+        }
+
+        $dependencyClassName = null;
+
+        if ($param->getType()) {
+            try {
+                $dependencyClassName = $param->getClass();
+            }
+            catch (Throwable $e) {
+                $badClassName = $param->getType()->getName();
+
+                // This trick allows to log syntax errors.
+                class_exists($badClassName);
+
+                throw new Error("InjectableFactory: " . $e->getMessage());
+            }
+        }
+
+        if (!$dependencyClassName) {
+            if ($param->isDefaultValueAvailable()) {
+                return $param->getDefaultValue();
+            }
+        }
+
+        if ($this->container->has($name)) {
+            return $this->container->get($name);
+        }
+
+        if ($dependencyClassName && class_exists($dependencyClassName)) {
+            return $this->create($dependencyClassName);
+        }
+
+        $className = $class->getName();
+
+        throw new Error("InjectableFactory: Could not create {$className}, dependency '{$name}' not found.");
     }
 
     protected function applyAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
