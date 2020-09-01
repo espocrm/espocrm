@@ -38,6 +38,7 @@ class Logger extends \Monolog\Logger
         $level = static::toMonologLevel($levelName);
 
         $handlers = $this->getHandlers();
+
         foreach ($handlers as $handler) {
             if ($handler->getLevel() > $level) {
                 $className = get_class($handler);

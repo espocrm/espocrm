@@ -28,26 +28,21 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Log\Monolog\Handler;
+
 use Monolog\Logger;
 
 class RotatingFileHandler extends StreamHandler
 {
     /**
-     * Date format as a part of filename
-     * @var string
+     * Date format as a part of filename.
      */
     protected $dateFormat = 'Y-m-d';
 
-    /**
-     * Filename format
-     * @var string
-     */
     protected $filenameFormat = '{filename}-{date}';
 
     protected $filename;
 
     protected $maxFiles;
-
 
     public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true)
     {
@@ -68,7 +63,7 @@ class RotatingFileHandler extends StreamHandler
     protected function rotate()
     {
         if (0 === $this->maxFiles) {
-            return; //unlimited number of files for 0
+            return; // unlimited number of files for 0
         }
 
         $filePattern = $this->getFilePattern();
@@ -77,7 +72,7 @@ class RotatingFileHandler extends StreamHandler
 
         if (!empty($logFiles) && count($logFiles) > $this->maxFiles) {
 
-            usort($logFiles, function($a, $b) {
+            usort($logFiles, function ($a, $b) {
                 return strcmp($b, $a);
             });
 
@@ -90,6 +85,7 @@ class RotatingFileHandler extends StreamHandler
     protected function getTimedFilename()
     {
         $fileInfo = pathinfo($this->filename);
+
         $timedFilename = str_replace(
             array('{filename}', '{date}'),
             array($fileInfo['filename'], date($this->dateFormat)),
@@ -106,6 +102,7 @@ class RotatingFileHandler extends StreamHandler
     protected function getFilePattern()
     {
         $fileInfo = pathinfo($this->filename);
+
         $glob = str_replace(
             array('{filename}', '{date}'),
             array($fileInfo['filename'], '.*'),

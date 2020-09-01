@@ -201,30 +201,37 @@ class Email extends \Espo\Core\Select\SelectManager
 
     protected function filterInbox(&$result)
     {
-        $eaList = $this->getUser()->get('emailAddresses');
+        $eaList = $this->getEntityManager()
+            ->getRepository('User')
+            ->getRelation($this->getUser(), 'emailAddresses')
+            ->find();
+
         $idList = [];
+
         foreach ($eaList as $ea) {
             $idList[] = $ea->id;
         }
+
         $group = [
             'usersMiddle.inTrash=' => false,
             'usersMiddle.folderId' => null,
             [
-                'status' => ['Archived', 'Sent']
+                'status' => ['Archived', 'Sent'],
             ]
         ];
+
         if (!empty($idList)) {
             $group['fromEmailAddressId!='] = $idList;
             $group[] = [
                 'OR' => [
                     'status' => 'Archived',
-                    'createdById!=' => $this->getUser()->id
+                    'createdById!=' => $this->getUser()->id,
                 ]
             ];
         } else {
             $group[] = [
                 'status' => 'Archived',
-                'createdById!=' => $this->getUser()->id
+                'createdById!=' => $this->getUser()->id,
             ];
         }
         $result['whereClause'][] = $group;
@@ -240,7 +247,11 @@ class Email extends \Espo\Core\Select\SelectManager
 
     protected function filterSent(&$result)
     {
-        $eaList = $this->getUser()->get('emailAddresses');
+        $eaList = $this->getEntityManager()
+            ->getRepository('User')
+            ->getRelation($this->getUser(), 'emailAddresses')
+            ->find();
+
         $idList = [];
         foreach ($eaList as $ea) {
             $idList[] = $ea->id;

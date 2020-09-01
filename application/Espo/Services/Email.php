@@ -743,7 +743,12 @@ class Email extends Record implements
         parent::loadAdditionalFieldsForList($entity);
 
         $userEmailAdddressIdList = [];
-        foreach ($this->getUser()->get('emailAddresses') as $ea) {
+
+        $eaCollection = $this->entityManager->getRepository('User')
+            ->getRelation($this->getUser(), 'emailAddresses')
+            ->find();
+
+        foreach ($eaCollection as $ea) {
             $userEmailAdddressIdList[] = $ea->id;
         }
 

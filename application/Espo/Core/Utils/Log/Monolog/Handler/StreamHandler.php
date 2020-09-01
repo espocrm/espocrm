@@ -28,7 +28,13 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Log\Monolog\Handler;
+
 use Monolog\Logger;
+
+use Espo\Core\Utils\File\Manager as FileManager;
+
+use LogicException;
+use UnexpectedValueException;
 
 class StreamHandler extends \Monolog\Handler\StreamHandler
 {
@@ -40,7 +46,7 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
     {
         parent::__construct($url, $level, $bubble);
 
-        $this->fileManager = new \Espo\Core\Utils\File\Manager();
+        $this->fileManager = new FileManager();
     }
 
     protected function getFileManager()
@@ -48,11 +54,12 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
         return $this->fileManager;
     }
 
-
     protected function write(array $record)
     {
         if (!$this->url) {
-            throw new \LogicException('Missing logger path, the stream can not be opened. Please check logger options in the data/config.php.');
+            throw new LogicException(
+                'Missing logger path, the stream can not be opened. Please check logger options in the data/config.php.'
+            );
         }
 
         $this->errorMessage = null;
@@ -62,13 +69,17 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
         }
 
         if (is_writable($this->url)) {
-            set_error_handler(array($this, 'customErrorHandler'));
+            set_error_handler([$this, 'customErrorHandler']);
+
             $this->getFileManager()->appendContents($this->url, $this->pruneMessage($record));
+
             restore_error_handler();
         }
 
         if (isset($this->errorMessage)) {
-            throw new \UnexpectedValueException(sprintf('The stream or file "%s" could not be opened: '.$this->errorMessage, $this->url));
+            throw new UnexpectedValueException(
+                sprintf('The stream or file "%s" could not be opened: '.$this->errorMessage, $this->url)
+            );
         }
     }
 
@@ -77,12 +88,6 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
         $this->errorMessage = $msg;
     }
 
-    /**
-     * Cut the error message depends on maxErrorMessageLength
-     *
-     * @param  array  $record
-     * @return string
-     */
     protected function pruneMessage(array $record)
     {
         $message = (string) $record['message'];
@@ -94,5 +99,4 @@ class StreamHandler extends \Monolog\Handler\StreamHandler
 
         return (string) $record['formatted'];
     }
-
 }
