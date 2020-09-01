@@ -85,14 +85,23 @@ class ErrorOutput
             $logMessage = "API ($statusCode) ";
             $logMessageItemList = [];
 
-            if ($message) $logMessageItemList[] = $message;
+            if ($message) {
+                $logMessageItemList[] = $message;
+            }
 
             $logMessageItemList[] .= $this->request->getMethod() . ' ' . $this->request->getResourcePath();
 
-            if ($requestBodyString) $logMessageItemList[] = "Input data: " . $requestBodyString;
+            if ($requestBodyString) {
+                $logMessageItemList[] = "Input data: " . $requestBodyString;
+            }
 
-            if ($routePattern) $logMessageItemList[] = "Route pattern: ". $routePattern;
-            if (!empty($routeParams)) $logMessageItemList[] = "Route params: ". print_r($routeParams, true);
+            if ($routePattern) {
+                $logMessageItemList[] = "Route pattern: ". $routePattern;
+            }
+
+            if (!empty($routeParams)) {
+                $logMessageItemList[] = "Route params: ". print_r($routeParams, true);
+            }
 
             $logMessage .= implode("; ", $logMessageItemList);
 
@@ -125,7 +134,13 @@ class ErrorOutput
         $GLOBALS['log']->log($logLevel, $logMessage);
 
         $toPrintXStatusReason = true;
-        if ($exception && in_array(get_class($exception), $this->ignorePrintXStatusReasonExceptionClassNameList)) {
+
+        if (
+            $exception &&
+            in_array(
+                get_class($exception), $this->ignorePrintXStatusReasonExceptionClassNameList
+            )
+        ) {
             $toPrintXStatusReason = false;
         }
 
@@ -134,6 +149,7 @@ class ErrorOutput
         }
 
         $response->setStatus($statusCode);
+
         if ($toPrintXStatusReason) {
             $response->setHeader('X-Status-Reason', $message);
         }
@@ -157,6 +173,7 @@ class ErrorOutput
         if (isset($this->errorDescriptions[$statusCode])) {
             return $this->errorDescriptions[$statusCode];
         }
+
         return null;
     }
 
