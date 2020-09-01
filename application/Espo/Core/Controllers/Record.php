@@ -29,15 +29,19 @@
 
 namespace Espo\Core\Controllers;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\{
+    Error,
+    Forbidden,
+    NotFound,
+    BadRequest,
+    ForbiddenSilent,
+};
 
-use Espo\Core\Utils\Util;
-use Espo\Core\Utils\ControllerUtil;
-use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Core\{
+    Utils\Util,
+    Utils\ControllerUtil,
+    Record\Collection as RecordCollection,
+};
 
 class Record extends Base
 {

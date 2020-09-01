@@ -36,6 +36,8 @@ use Psr\Http\Message\{
 
 use Espo\Core\Api\Request as ApiRequest;
 
+use StdClass;
+
 /**
  * Adapter for PSR-7 request interface.
  */
@@ -44,6 +46,8 @@ class RequestWrapper implements ApiRequest
     protected $request;
 
     protected $basePath;
+
+    protected $parsedBody = null;
 
     public function __construct(Psr7Request $request, string $basePath = '')
     {
@@ -94,18 +98,46 @@ class RequestWrapper implements ApiRequest
 
     public function getBodyContents() : ?string
     {
-        return $this->request->getBody()->getContents();
+        $contents = $this->request->getBody()->getContents();
+
+        $this->request->getBody()->rewind();
+
+        return $contents;
+    }
+
+    public function getParsedBody() : StdClass
+    {
+        if ($this->parsedBody === null) {
+            $this->initParsedBody();
+        }
+
+        return $this->parsedBody;
+    }
+
+    protected function initParsedBody()
+    {
+        $contents = $this->getBodyContents();
+
+        if (strtolower($this->getContentType()) === 'application/json' && $contents) {
+            $this->parsedBody = json_decode($contents);
+
+            return;
+        }
+
+        $this->parsedBody = (object) [];
     }
 
     public function getCookieParam(string $name) : ?string
     {
         $params = $this->request->getCookieParams();
+
         return $params[$name] ?? null;
     }
 
     public function getServerParam(string $name) : ?string
     {
         $params = $this->request->getServerParams();
+
         return $params[$name] ?? null;
     }
 
@@ -117,6 +149,7 @@ class RequestWrapper implements ApiRequest
     public function getResourcePath() : string
     {
         $path = $this->request->getUri()->getPath();
+
         return substr($path, strlen($this->basePath));
     }
 

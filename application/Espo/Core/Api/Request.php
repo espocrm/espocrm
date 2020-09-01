@@ -31,6 +31,8 @@ namespace Espo\Core\Api;
 
 use Psr\Http\Message\UriInterface;
 
+use StdClass;
+
 /**
  * Representation of an HTTP request.
  */
@@ -75,6 +77,11 @@ interface Request
      * Get body contents.
      */
     public function getBodyContents() : ?string;
+
+    /**
+     * Get a parsed body.
+     */
+    public function getParsedBody() : StdClass;
 
     /**
      * Get a cookie param value.

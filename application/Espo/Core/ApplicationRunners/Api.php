@@ -80,7 +80,9 @@ class Api implements ApplicationRunner
     public function run()
     {
         $slim = SlimAppFactory::create();
+
         $slim->setBasePath(Route::detectBasePath());
+
         $slim->addRoutingMiddleware();
 
         $routeList = $this->getRouteList();
