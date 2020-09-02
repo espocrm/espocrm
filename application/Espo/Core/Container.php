@@ -161,6 +161,9 @@ class Container
         $this->classCache[$name] = new ReflectionClass($className);
     }
 
+    /**
+     * Get a class of a service.
+     */
     public function getClass(string $name) : ReflectionClass
     {
         if (!$this->has($name)) {
