@@ -76,7 +76,9 @@ class RequestWrapper implements ApiRequest
 
     public function getHeader(string $name) : ?string
     {
-        if (!$this->request->hasHeader($name)) return null;
+        if (!$this->request->hasHeader($name)) {
+            return null;
+        }
 
         return $this->request->getHeaderLine($name);
     }
