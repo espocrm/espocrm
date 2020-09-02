@@ -31,13 +31,19 @@ namespace Espo\Core\Acl;
 
 use Espo\Core\Exceptions\Error;
 
-use Espo\ORM\Entity;
 use Espo\Entities\User;
 
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\FieldManagerUtil;
-use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\{
+    ORM\EntityManager,
+    ORM\Entity,
+    Utils\Config,
+    Utils\Metadata,
+    Utils\FieldManagerUtil,
+    Utils\File\Manager as FileManager,
+};
+
+use StdClass;
+use Traversable;
 
 /**
  * A table is generated for each user. Multiple roles are merged into a single table.
@@ -75,19 +81,23 @@ class Table
 
     protected $isStrictMode = false;
 
-    private $user;
-    private $config;
-    private $fileManager;
-    private $metadata;
-    private $fieldManagerUtil;
+    protected $entityManager;
+    protected $user;
+    protected $config;
+    protected $fileManager;
+    protected $metadata;
+    protected $fieldManagerUtil;
 
     public function __construct(
+        EntityManager $entityManager,
         User $user,
         Config $config = null,
         FileManager $fileManager = null,
         Metadata $metadata = null,
         FieldManagerUtil $fieldManagerUtil = null
     ) {
+        $this->entityManager = $entityManager;
+
         $this->data = (object) [
             'table' => (object) [],
             'fieldTable' => (object) [],
@@ -151,7 +161,7 @@ class Table
         return $this->fieldManager;
     }
 
-    public function getMap() : \StdClass
+    public function getMap() : StdClass
     {
         return $this->data;
     }
@@ -292,20 +302,34 @@ class Table
     {
         $roleList = [];
 
-        $userRoleList = $this->getUser()->get('roles');
-        if (!(is_array($userRoleList) || $userRoleList instanceof \Traversable)) {
+        $userRoleList = $this->entityManager
+            ->getRepository('User')
+            ->getRelation($this->getUser(), 'roles')
+            ->find();
+
+        if (! $userRoleList instanceof Traversable) {
             throw new Error();
         }
+
         foreach ($userRoleList as $role) {
             $roleList[] = $role;
         }
 
-        $teamList = $this->getUser()->get('teams');
-        if (!(is_array($teamList) || $teamList instanceof \Traversable)) {
+        $teamList = $this->entityManager
+            ->getRepository('User')
+            ->getRelation($this->getUser(), 'teams')
+            ->find();
+
+        if (! $teamList instanceof Traversable) {
             throw new Error();
         }
+
         foreach ($teamList as $team) {
-            $teamRoleList = $team->get('roles');
+            $teamRoleList = $this->entityManager
+                ->getRepository('Team')
+                ->getRelation($team, 'roles')
+                ->find();
+
             foreach ($teamRoleList as $role) {
                 $roleList[] = $role;
             }

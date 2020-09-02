@@ -31,14 +31,21 @@ namespace Espo\Core\AclPortal;
 
 use Espo\Core\Exceptions\Error;
 
-use Espo\ORM\Entity;
-use Espo\Entities\User;
-use Espo\Entities\Portal;
+use Espo\Entities\{
+    User,
+    Portal,
+};
 
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Utils\FieldManagerUtil;
-use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\{
+    ORM\EntityManager,
+    ORM\Entity,
+    Utils\Config,
+    Utils\Metadata,
+    Utils\FieldManagerUtil,
+    Utils\File\Manager as FileManager,
+};
+
+use Traversable;
 
 class Table extends \Espo\Core\Acl\Table
 {
@@ -53,15 +60,21 @@ class Table extends \Espo\Core\Acl\Table
     protected $isStrictModeForced = true;
 
     public function __construct(
-        User $user, Portal $portal, Config $config = null, FileManager $fileManager = null,
-        Metadata $metadata = null, FieldManagerUtil $fieldManagerUtil = null
+        EntityManager $entityManager,
+        User $user,
+        Portal $portal,
+        Config $config = null,
+        FileManager $fileManager = null,
+        Metadata $metadata = null,
+        FieldManagerUtil $fieldManagerUtil = null
     ) {
         if (empty($portal)) {
             throw new Error("No portal was passed to AclPortal\\Table constructor.");
         }
+
         $this->portal = $portal;
 
-        parent::__construct($user, $config, $fileManager, $metadata, $fieldManagerUtil);
+        parent::__construct($entityManager, $user, $config, $fileManager, $metadata, $fieldManagerUtil);
     }
 
     protected function getPortal()
@@ -78,18 +91,28 @@ class Table extends \Espo\Core\Acl\Table
     {
         $roleList = [];
 
-        $userRoleList = $this->getUser()->get('portalRoles');
-        if (!(is_array($userRoleList) || $userRoleList instanceof \Traversable)) {
+        $userRoleList = $this->entityManager
+            ->getRepository('User')
+            ->getRelation($this->getUser(), 'portalRoles')
+            ->find();
+
+        if (! $userRoleList instanceof Traversable) {
             throw new Error();
         }
+
         foreach ($userRoleList as $role) {
             $roleList[] = $role;
         }
 
-        $portalRoleList = $this->getPortal()->get('portalRoles');
-        if (!(is_array($portalRoleList) || $portalRoleList instanceof \Traversable)) {
+        $portalRoleList = $this->entityManager
+            ->getRepository('Portal')
+            ->getRelation($this->getPortal(), 'portalRoles')
+            ->find();
+
+        if (! $portalRoleList instanceof Traversable) {
             throw new Error();
         }
+
         foreach ($portalRoleList as $role) {
             $roleList[] = $role;
         }

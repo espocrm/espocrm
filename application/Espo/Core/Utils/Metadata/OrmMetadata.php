@@ -52,19 +52,14 @@ class OrmMetadata
 
     protected $useCache;
 
-    public function __construct(Metadata $metadata, FileManager $fileManager, ?Config $config = null)
+    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
 
-        $this->useCache = false;
+        $this->config = $config;
 
-        if ($config instanceof Config) {
-            $this->config = $config;
-            $this->useCache = $this->config->get('useCache', false);
-        } elseif (is_bool($config)) {
-            $this->useCache = $config;
-        }
+        $this->useCache = $this->config->get('useCache', false);
     }
 
     protected function getConverter()
