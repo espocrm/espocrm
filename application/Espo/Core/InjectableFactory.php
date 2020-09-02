@@ -39,8 +39,11 @@ use ReflectionParameter;
 use Throwable;
 
 /**
- * Creates an instance by a class name. Uses constructor param names to detect which
- * dependencies are needed. Only container services supported as dependencies.
+ * Creates an instance by a class name. Uses constructor param names and type hinting to detect which
+ * dependencies are needed. Service dependencies are instantiated only once. Non-service dependencies
+ * are instantiated every time along with a dependent class.
+ *
+ * Aware interfaces are also used to detect service dependencies.
  */
 class InjectableFactory
 {
