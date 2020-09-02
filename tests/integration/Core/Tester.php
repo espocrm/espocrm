@@ -229,16 +229,22 @@ class Tester
 
     protected function install()
     {
-        $mainApplication = new \Espo\Core\Application();
-        $fileManager = $mainApplication->getContainer()->get('fileManager');
+        $fileManager = new \Espo\Core\Utils\File\Manager();
 
         $latestEspoDir = Utils::getLatestBuildedPath($this->buildedPath);
-
         $configData = $this->getTestConfigData();
 
+        if (!isset($configData['siteUrl'])) {
+            $mainConfigData = include('data/config.php');
 
-        $configData['siteUrl'] = $mainApplication->getContainer()->get('config')->get('siteUrl') . '/' . $this->installPath;
-        $this->params['siteUrl'] = $configData['siteUrl'];
+            if (isset($mainConfigData['siteUrl'])) {
+                $configData['siteUrl'] = $mainConfigData['siteUrl'] . '/' . $this->installPath;
+            }
+        }
+
+        if (isset($configData['siteUrl'])) {
+            $this->params['siteUrl'] = $configData['siteUrl'];
+        }
 
         if (!file_exists($this->installPath)) {
             $fileManager->mkdir($this->installPath);
