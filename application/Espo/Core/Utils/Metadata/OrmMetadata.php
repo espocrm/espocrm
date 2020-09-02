@@ -29,11 +29,18 @@
 
 namespace Espo\Core\Utils\Metadata;
 
-use Espo\Core\Utils\Util;
+use Espo\Core\{
+    Utils\Util,
+    Utils\Metadata,
+    Utils\File\Manager as FileManager,
+    Utils\Config,
+    Utils\Database\Converter,
+    Exceptions\Error,
+};
 
 class OrmMetadata
 {
-    protected $data = array();
+    protected $data = [];
 
     protected $cacheFile = 'data/cache/application/ormMetadata.php';
 
@@ -45,13 +52,14 @@ class OrmMetadata
 
     protected $useCache;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, $config)
+    public function __construct(Metadata $metadata, FileManager $fileManager, ?Config $config = null)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
 
         $this->useCache = false;
-        if ($config instanceof \Espo\Core\Utils\Config) {
+
+        if ($config instanceof Config) {
             $this->config = $config;
             $this->useCache = $this->config->get('useCache', false);
         } elseif (is_bool($config)) {
@@ -62,7 +70,7 @@ class OrmMetadata
     protected function getConverter()
     {
         if (!isset($this->converter)) {
-            $this->converter = new \Espo\Core\Utils\Database\Converter($this->metadata, $this->fileManager, $this->config);
+            $this->converter = new Converter($this->metadata, $this->fileManager, $this->config);
         }
 
         return $this->converter;
@@ -95,7 +103,7 @@ class OrmMetadata
             if ($this->useCache) {
                 $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
                 if ($result == false) {
-                    throw new \Espo\Core\Exceptions\Error('OrmMetadata::getData() - Cannot save ormMetadata to cache file');
+                    throw new Error('OrmMetadata::getData() - Cannot save ormMetadata to cache file');
                 }
             }
         }
@@ -109,7 +117,6 @@ class OrmMetadata
 
     public function get($key = null, $default = null)
     {
-        $result = Util::getValueByKey($this->getData(), $key, $default);
-        return $result;
+        return Util::getValueByKey($this->getData(), $key, $default);
     }
 }

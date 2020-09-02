@@ -166,13 +166,12 @@ class InjectableFactory
             }
         }
 
-        if (!$dependencyClassName) {
-            if ($param->isDefaultValueAvailable()) {
-                return $param->getDefaultValue();
-            }
+        if (!$dependencyClassName && $param->isDefaultValueAvailable()) {
+            return $param->getDefaultValue();
         }
 
-        if ($this->container->has($name)) {
+
+        if ($dependencyClassName && $this->container->has($name)) {
             return $this->container->get($name);
         }
 
