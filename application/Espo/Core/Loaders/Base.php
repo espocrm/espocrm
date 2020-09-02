@@ -31,6 +31,10 @@ namespace Espo\Core\Loaders;
 
 use Espo\Core\Container;
 
+/**
+ * @deprecated
+ * @todo Remove in 6.4.
+ */
 abstract class Base implements Loader
 {
     protected $container;

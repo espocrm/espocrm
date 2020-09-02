@@ -29,7 +29,10 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Container;
+use Espo\Core\{
+    Container,
+    ApplicationState as ApplicationStateService,
+};
 
 class ApplicationState implements Loader
 {
@@ -40,8 +43,8 @@ class ApplicationState implements Loader
         $this->container = $container;
     }
 
-    public function load()
+    public function load() : ApplicationStateService
     {
-        return new \Espo\Core\ApplicationState($this->container);
+        return new ApplicationStateService($this->container);
     }
 }

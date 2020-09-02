@@ -37,8 +37,10 @@ use Espo\Core\{
     Loaders\Loader as Loader,
 };
 
-use Espo\Entities\Preferences;
-use Espo\Entities\Portal;
+use Espo\Entities\{
+    Preferences,
+    Portal,
+};
 
 class Language implements Loader
 {
@@ -58,7 +60,7 @@ class Language implements Loader
         $this->portal = $portal;
     }
 
-    public function load()
+    public function load() : LanguageService
     {
         $language = new LanguageService(
             LanguageService::detectLanguage($this->config, $this->preferences),

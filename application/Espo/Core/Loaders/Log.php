@@ -50,7 +50,7 @@ class Log implements Loader
         $this->config = $config;
     }
 
-    public function load()
+    public function load() : LogService
     {
         $config = $this->config;
 
@@ -58,6 +58,7 @@ class Log implements Loader
         $rotation = $config->get('logger.rotation', true);
 
         $log = new LogService('Espo');
+
         $levelCode = $log::toMonologLevel($config->get('logger.level', 'WARNING'));
 
         if ($rotation) {
@@ -66,9 +67,11 @@ class Log implements Loader
         } else {
             $handler = new StreamHandler($path, $levelCode);
         }
+
         $log->pushHandler($handler);
 
         $errorHandler = new MonologErrorHandler($log);
+
         $errorHandler->registerExceptionHandler(null, false);
         $errorHandler->registerErrorHandler([], false);
 

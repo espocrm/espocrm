@@ -33,7 +33,10 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-use Espo\Entities\User;
+use Espo\Entities\{
+    User,
+    Preferences as PreferencesService,
+};
 
 class Preferences implements Loader
 {
@@ -46,7 +49,7 @@ class Preferences implements Loader
         $this->user = $user;
     }
 
-    public function load()
+    public function load() : PreferencesService
     {
         return $this->entityManager->getEntity('Preferences', $this->user->id);
     }

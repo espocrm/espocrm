@@ -46,7 +46,7 @@ class Metadata implements Loader
         $this->config = $config;
     }
 
-    public function load()
+    public function load() : MetadataService
     {
         return new MetadataService($this->fileManager, $this->config->get('useCache'));
     }

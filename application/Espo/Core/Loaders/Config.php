@@ -29,12 +29,14 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\Utils\Config as ConfigService;
-use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\{
+    Utils\Config as ConfigService,
+    Utils\File\Manager as FileManager,
+};
 
 class Config implements Loader
 {
-    public function load()
+    public function load() : ConfigService
     {
         return new ConfigService(new FileManager());
     }

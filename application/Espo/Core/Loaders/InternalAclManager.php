@@ -31,6 +31,7 @@ namespace Espo\Core\Loaders;
 
 use Espo\Core\{
     Container,
+    AclManager as AclManagerService,
 };
 
 class InternalAclManager implements Loader
@@ -40,7 +41,7 @@ class InternalAclManager implements Loader
         $this->container = $container;
     }
 
-    public function load()
+    public function load() : AclManagerService
     {
         return $this->container->get('aclManager');
     }

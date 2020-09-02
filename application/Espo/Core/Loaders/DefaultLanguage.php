@@ -35,7 +35,7 @@ use Espo\Core\{
 
 class DefaultLanguage extends BaseLanguage
 {
-    public function load()
+    public function load() : LanguageService
     {
         return new LanguageService(
             LanguageService::detectLanguage($this->config),

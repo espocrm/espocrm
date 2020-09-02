@@ -53,7 +53,7 @@ class Language implements Loader
         $this->preferences = $preferences;
     }
 
-    public function load()
+    public function load() : LanguageService
     {
         return new LanguageService(
             LanguageService::detectLanguage($this->config, $this->preferences),

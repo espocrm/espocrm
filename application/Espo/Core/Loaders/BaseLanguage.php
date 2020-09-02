@@ -49,7 +49,7 @@ class BaseLanguage implements Loader
         $this->metadata = $metadata;
     }
 
-    public function load()
+    public function load() : LanguageService
     {
         return new LanguageService(
             'en_US',

@@ -30,21 +30,21 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
-    Container,
+    InjectableFactory,
     DataManager as DataManagerService,
 };
 
 class DataManager implements Loader
 {
-    protected $container;
+    protected $injectableFactory;
 
-    public function __construct(Container $container)
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        $this->container = $container;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function load()
+    public function load() : DataManagerService
     {
-        return new DataManagerService($this->container);
+        return $this->injectableFactory->create(DataManagerService::class);
     }
 }

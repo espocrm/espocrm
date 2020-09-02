@@ -43,7 +43,7 @@ class FileManager implements Loader
         $this->config = $config;
     }
 
-    public function load()
+    public function load() : FileManagerService
     {
         return new FileManagerService($this->config);
     }

@@ -52,7 +52,7 @@ class EntityManager implements Loader
         $this->ormMetadata = $ormMetadata;
     }
 
-    public function load()
+    public function load() : EntityManagerService
     {
         $entityFactory = $this->injectableFactory->create(EntityFactory::class);
 

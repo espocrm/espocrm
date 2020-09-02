@@ -43,7 +43,7 @@ class DateTime implements Loader
         $this->config = $config;
     }
 
-    public function load()
+    public function load() : DateTimeService
     {
         return new DateTimeService(
             $this->config->get('dateFormat'),

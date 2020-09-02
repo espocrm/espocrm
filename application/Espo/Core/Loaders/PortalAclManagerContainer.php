@@ -42,7 +42,7 @@ class PortalAclManagerContainer implements Loader
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function load()
+    public function load() : PortalAclManagerContainerService
     {
         return new PortalAclManagerContainerService($this->injectableFactory);
     }

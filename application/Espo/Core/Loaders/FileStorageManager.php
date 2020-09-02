@@ -46,9 +46,10 @@ class FileStorageManager implements Loader
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function load()
+    public function load() : FileStorageManagerService
     {
         $implementationClassNameMap = $this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap']) ?? [];
+
         return new FileStorageManagerService($implementationClassNameMap, $this->injectableFactory);
     }
 }
