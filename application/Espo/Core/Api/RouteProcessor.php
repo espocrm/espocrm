@@ -107,14 +107,8 @@ class RouteProcessor
         unset($params['controller']);
         unset($params['action']);
 
-        $data = $request->getBodyContents();
-
-        if ($data && stristr($request->getContentType(), 'application/json')) {
-            $data = json_decode($data);
-        }
-
         $result = $this->controllerManager->process(
-            $controllerName, $requestMethod, $actionName, $params, $data, $request, $response
+            $controllerName, $requestMethod, $actionName, $params, $request, $response
         ) ?? null;
 
         $responseContents = $result;

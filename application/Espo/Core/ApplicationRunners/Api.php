@@ -104,7 +104,7 @@ class Api implements ApplicationRunner
         $slim->$method(
             $route,
             function (Psr7Request $request, Psr7Response $response, array $args) use ($item, $slim) {
-                $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
+                $requestWrapped = new RequestWrapper($request, $slim->getBasePath(), $args);
                 $responseWrapped = new ResponseWrapper($response);
 
                 $this->processRequest($item, $requestWrapped, $responseWrapped, $args);

@@ -29,11 +29,14 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\{
+    Forbidden,
+    BadRequest,
+};
 
 use Espo\Core\{
     ServiceFactory,
+    Api\Request,
 };
 
 class CurrencyRate
@@ -45,13 +48,15 @@ class CurrencyRate
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function getActionIndex()
+    public function getActionIndex(Request $request)
     {
         return $this->serviceFactory->create('CurrencyRate')->get();
     }
 
-    public function putActionUpdate($params, \StdClass $data)
+    public function putActionUpdate(Request $request)
     {
+        $data = $request->getParsedBody();
+
         return $this->serviceFactory->create('CurrencyRate')->set($data);
     }
 }

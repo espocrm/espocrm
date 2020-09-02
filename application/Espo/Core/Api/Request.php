@@ -39,14 +39,29 @@ use StdClass;
 interface Request
 {
     /**
-     * Get a query parameter.
+     * Whether a query parameter is set.
      */
-    public function getQueryParam(string $name);
+    public function hasQueryParam(string $name) : bool;
 
     /**
-     * Get query parameters.
+     * Get a query parameter.
+     */
+    public function getQueryParam(string $name) : ?string;
+
+    /**
+     * Get all query parameters.
      */
     public function getQueryParams() : array;
+
+    /**
+     * Whether a route parameter is set.
+     */
+    public function hasRouteParam(string $name) : bool;
+
+    /**
+     * Get a route parameter.
+     */
+    public function getRouteParam(string $name) : ?string;
 
     /**
      * Get a header value.

@@ -61,7 +61,6 @@ class ControllerManager
         string $requestMethod,
         string $actionName,
         array $params,
-        $data,
         Request $request,
         Response $response
     ) {
@@ -73,9 +72,7 @@ class ControllerManager
 
         $actionNameUcfirst = ucfirst($actionName);
 
-        $beforeMethodName = 'before' . $actionNameUcfirst;
         $actionMethodName = 'action' . $actionNameUcfirst;
-        $afterMethodName = 'after' . $actionNameUcfirst;
 
         $fullActionMethodName = strtolower($requestMethod) . ucfirst($actionMethodName);
 
@@ -91,17 +88,56 @@ class ControllerManager
             );
         }
 
+        if (
+            $this->useShortParamList($controller, $primaryActionMethodName)
+        ) {
+            return $controller->$primaryActionMethodName($request, $response);
+        }
+
+        // Below is a legacy way.
+
+        $data = $request->getParsedBody();
+
+        $beforeMethodName = 'before' . $actionNameUcfirst;
+
         if (method_exists($controller, $beforeMethodName)) {
             $controller->$beforeMethodName($params, $data, $request, $response);
         }
 
         $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
 
+        $afterMethodName = 'after' . $actionNameUcfirst;
+
         if (method_exists($controller, $afterMethodName)) {
             $controller->$afterMethodName($params, $data, $request, $response);
         }
 
         return $result;
+    }
+
+    protected function useShortParamList(object $controller, string $methodName) : bool
+    {
+        $class = new ReflectionClass($controller);
+
+        $method = $class->getMethod($methodName);
+
+        $params = $method->getParameters();
+
+        if (count($params) > 0) {
+            $firstParamClass = $params[0]->getClass();
+
+            if (
+                $firstParamClass
+                &&
+                (
+                    $firstParamClass->getName() === Request::class || $firstParamClass->isSubclassOf(Request::class)
+                )
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     protected function getControllerClassName(string $name) : string

@@ -49,24 +49,66 @@ class RequestWrapper implements ApiRequest
 
     protected $parsedBody = null;
 
-    public function __construct(Psr7Request $request, string $basePath = '')
+    protected $routeParams;
+
+    public function __construct(Psr7Request $request, string $basePath = '', array $routeParams = [])
     {
         $this->request = $request;
         $this->basePath = $basePath;
+
+        unset($routeParams['controller']);
+        unset($routeParams['actioon']);
+
+        $this->routeParams = $routeParams;
     }
 
+    /**
+     * Get a route or query parameter. Route params have a higher priority.
+     *
+     * @todo Don't support NULL $name.
+     *
+     * @return ?string
+     */
     public function get(?string $name = null)
     {
         if (is_null($name)) {
-            return $this->getQueryParams();
+            return array_merge(
+                $this->getQueryParams(),
+                $this->routeParams
+            );
+        }
+
+        if ($this->hasRouteParam($name)) {
+            return $this->getRouteParam($name);
         }
 
         return $this->getQueryParam($name);
     }
 
-    public function getQueryParam(string $name)
+    public function hasRouteParam(string $name) : bool
     {
-        return $this->request->getQueryParams()[$name] ?? null;
+        return array_key_exists($name, $this->routeParams);
+    }
+
+    public function getRouteParam(string $name) : ?string
+    {
+        return $this->routeParams[$name] ?? null;
+    }
+
+    public function hasQueryParam(string $name) : bool
+    {
+        return array_key_exists($name, $this->request->getQueryParams());
+    }
+
+    public function getQueryParam(string $name) : ?string
+    {
+        $value = $this->request->getQueryParams()[$name] ?? null;
+
+        if ($value === null) {
+            return null;
+        }
+
+        return (string) $value;
     }
 
     public function getQueryParams() : array
