@@ -32,6 +32,7 @@ namespace Espo\Core;
 use Espo\Core\{
     Exceptions\Error,
     InjectableFactory,
+    Loaders\Loader,
 };
 
 use ReflectionClass;
@@ -44,6 +45,8 @@ use ReflectionClass;
 class Container
 {
     private $data = [];
+
+    private $classCache = [];
 
     private $loaderClassNames;
 
@@ -65,10 +68,10 @@ class Container
      */
     public function get(string $name) : object
     {
-        if (!isset($this->data[$name])) {
+        if (!$this->isSet($name)) {
             $this->load($name);
 
-            if (!isset($this->data[$name])) {
+            if (!$this->isSet($name)) {
                 throw new Error("Could not load '{$name}' service.");
             }
         }
@@ -81,7 +84,7 @@ class Container
      */
     public function has(string $name) : bool
     {
-        if (isset($this->data[$name])) {
+        if ($this->isSet($name)) {
             return true;
         }
 
@@ -106,6 +109,71 @@ class Container
         return false;
     }
 
+    protected function isSet(string $name) : bool
+    {
+        return isset($this->data[$name]);
+    }
+
+    private function initClass(string $name)
+    {
+        if ($this->isSet($name)) {
+            $object = $this->get($name);
+
+            $this->classCache[$name] = new ReflectionClass($object);
+
+            return;
+        }
+
+        $loadMethodName = 'load' . ucfirst($name);
+
+        if (method_exists($this, $loadMethodName)) {
+            $loaderClass = new ReflectionClass($this);
+
+            $loadMethod = $loaderClass->getMethod($loadMethodName);
+
+            $className = $loadMethod->getReturnType()->getName();
+
+            $this->classCache[$name] = new ReflectionClass($className);
+
+            return;
+        }
+
+        $loaderClassName = $this->getLoaderClassName($name);
+
+        if ($loaderClassName) {
+            $loaderClass = new ReflectionClass($loaderClassName);
+
+            $loadMethod = $loaderClass->getMethod('load');
+
+            if (!$loadMethod->hasReturnType()) {
+                throw new Error("Loader method for service '{$name}' does not have a return type.");
+            }
+
+            $className = $loadMethod->getReturnType()->getName();
+
+            $this->classCache[$name] = new ReflectionClass($className);
+
+            return;
+        }
+
+        $className = $this->configuration->getServiceClassName($name);
+
+        $this->classCache[$name] = new ReflectionClass($className);
+    }
+
+    public function getClass(string $name) : ReflectionClass
+    {
+        if (!$this->has($name)) {
+            throw new Error("Service '{$name}' does not exist.");
+        }
+
+        if (!isset($this->classCache[$name])) {
+            $this->initClass($name);
+        }
+
+        return $this->classCache[$name];
+    }
+
     /**
      * Set a service object. Must be configured as settable.
      */
@@ -123,6 +191,22 @@ class Container
         $this->data[$name] = $object;
     }
 
+    private function getLoader(string $name) : ?Loader
+    {
+        $loaderClassName = $this->getLoaderClassName($name);
+
+        if (!$loaderClassName) {
+            return null;
+        }
+
+        return $this->injectableFactory->create($loaderClassName);
+    }
+
+    private function getLoaderClassName(string $name) : ?string
+    {
+        return $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);
+    }
+
     private function load(string $name)
     {
         $loadMethodName = 'load' . ucfirst($name);
@@ -133,12 +217,10 @@ class Container
             return;
         }
 
-        $loaderClassName = $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);
+        $loader = $this->getLoader($name);
 
-        if ($loaderClassName) {
-            $loadClass = $this->injectableFactory->create($loaderClassName);
-
-            $this->data[$name] = $loadClass->load();
+        if ($loader) {
+            $this->data[$name] = $loader->load();
 
             return;
         }
@@ -168,12 +250,12 @@ class Container
         $this->data[$name] = $this->injectableFactory->create($className);
     }
 
-    protected function loadContainer()
+    protected function loadContainer() : Container
     {
         return $this;
     }
 
-    protected function loadInjectableFactory()
+    protected function loadInjectableFactory() : InjectableFactory
     {
         return new InjectableFactory($this);
     }

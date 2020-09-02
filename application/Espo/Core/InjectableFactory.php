@@ -150,11 +150,11 @@ class InjectableFactory
             return $with[$name];
         }
 
-        $dependencyClassName = null;
+        $dependencyClass = null;
 
         if ($param->getType()) {
             try {
-                $dependencyClassName = $param->getClass();
+                $dependencyClass = $param->getClass();
             }
             catch (Throwable $e) {
                 $badClassName = $param->getType()->getName();
@@ -166,22 +166,37 @@ class InjectableFactory
             }
         }
 
-        if (!$dependencyClassName && $param->isDefaultValueAvailable()) {
+        if (!$dependencyClass && $param->isDefaultValueAvailable()) {
             return $param->getDefaultValue();
         }
 
-
-        if ($dependencyClassName && $this->container->has($name)) {
+        if (
+            $dependencyClass && $this->container->has($name) &&
+            $this->areDependencyClassesMatching($dependencyClass, $this->container->getClass($name))
+        ) {
             return $this->container->get($name);
         }
 
-        if ($dependencyClassName && class_exists($dependencyClassName)) {
-            return $this->create($dependencyClassName);
+        if ($dependencyClass && class_exists($dependencyClass)) {
+            return $this->create($dependencyClass->getName());
         }
 
         $className = $class->getName();
 
         throw new Error("InjectableFactory: Could not create {$className}, dependency '{$name}' not found.");
+    }
+
+    protected function areDependencyClassesMatching(ReflectionClass $paramHintClass, ReflectionClass $returnHintClass) : bool
+    {
+        if ($paramHintClass->getName() === $returnHintClass->getName()) {
+            return true;
+        }
+
+        if ($returnHintClass->isSubclassOf($paramHintClass)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function applyAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
