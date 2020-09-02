@@ -85,6 +85,18 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ['user', $this->user],
                 ['log', $this->log],
             ]));
+
+        $container
+            ->expects($this->any())
+            ->method('has')
+            ->will($this->returnValueMap([
+                ['entityManager', true],
+                ['dateTime', true],
+                ['number', true],
+                ['config', true],
+                ['user', true],
+                ['log', true],
+            ]));
     }
 
     protected function tearDown() : void

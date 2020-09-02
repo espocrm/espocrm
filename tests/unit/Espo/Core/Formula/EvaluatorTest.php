@@ -47,6 +47,13 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
                 ['log', $this->log],
             ]));
 
+        $container
+            ->expects($this->any())
+            ->method('has')
+            ->will($this->returnValueMap([
+                ['log', true],
+            ]));
+
         $injectableFactory = $injectableFactory = new \Espo\Core\InjectableFactory($container);
 
         $this->evaluator = new \Espo\Core\Formula\Evaluator($injectableFactory);
