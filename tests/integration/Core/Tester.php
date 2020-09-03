@@ -297,10 +297,13 @@ class Tester
         if ($fullReset) {
             Utils::dropTables($configData['database']);
 
-            //$fileManager->removeInDir($this->installPath);
-            //$fileManager->copy($latestEspoDir, $this->installPath, true);
-            shell_exec('rm -rf "' . $this->installPath . '"');
-            shell_exec('cp -r "' . $latestEspoDir . '" "' . $this->installPath . '"');
+            if ($this->isShellEnabled()) {
+                shell_exec('rm -rf "' . $this->installPath . '"');
+                shell_exec('cp -r "' . $latestEspoDir . '" "' . $this->installPath . '"');
+            } else {
+                $fileManager->removeInDir($this->installPath);
+                $fileManager->copy($latestEspoDir, $this->installPath, true);
+            }
 
             return true;
         }
@@ -475,5 +478,19 @@ class Tester
     public function normalizePath($path)
     {
         return $this->getParam('testDataPath') . '/' . $path;
+    }
+
+    protected function isShellEnabled()
+    {
+        if (!function_exists('exec') || !is_callable('shell_exec')) {
+            return false;
+        }
+
+        $result = shell_exec("echo test");
+        if (empty($result)) {
+            return false;
+        }
+
+        return true;
     }
 }
