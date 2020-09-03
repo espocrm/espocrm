@@ -180,7 +180,11 @@ class InjectableFactory
             return $this->container->get($name);
         }
 
-        if ($dependencyClass && class_exists($dependencyClass)) {
+        if ($dependencyClass && $param->allowsNull()) {
+            return null;
+        }
+
+        if ($dependencyClass) {
             return $this->create($dependencyClass->getName());
         }
 
