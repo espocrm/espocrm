@@ -46,7 +46,7 @@ interface Request
     /**
      * Get a query parameter.
      */
-    public function getQueryParam(string $name) : ?string;
+    public function getQueryParam(string $name);
 
     /**
      * Get all query parameters.
