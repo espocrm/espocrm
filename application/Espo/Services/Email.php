@@ -147,7 +147,12 @@ class Email extends Record implements
         $userAddressList = [];
 
         if ($user) {
-            foreach ($user->get('emailAddresses') as $ea) {
+            $emailAddressCollection = $this->entityManager
+                ->getRepository('User')
+                ->getRelation($user, 'emailAddresses')
+                ->find();
+
+            foreach ($emailAddressCollection as $ea) {
                 $userAddressList[] = $ea->get('lower');
             }
         }
@@ -339,7 +344,7 @@ class Email extends Record implements
         }
     }
 
-    public function validateEmailAddresses(\Espo\Entities\Email $entity)
+    public function validateEmailAddresses(Entities\Email $entity)
     {
         $from = $entity->get('from');
         if ($from) {
@@ -744,7 +749,8 @@ class Email extends Record implements
 
         $userEmailAdddressIdList = [];
 
-        $eaCollection = $this->entityManager->getRepository('User')
+        $eaCollection = $this->entityManager
+            ->getRepository('User')
             ->getRelation($this->getUser(), 'emailAddresses')
             ->find();
 
@@ -1008,7 +1014,13 @@ class Email extends Record implements
 
         $folderIdList = ['inbox', 'drafts'];
 
-        $emailFolderList = $this->getEntityManager()->getRepository('EmailFolder')->where(['assignedUserId' => $this->getUser()->id])->find();
+        $emailFolderList = $this->getEntityManager()
+            ->getRepository('EmailFolder')
+            ->where([
+                'assignedUserId' => $this->getUser()->id,
+            ])
+            ->find();
+
         foreach ($emailFolderList as $folder) {
             $folderIdList[] = $folder->id;
         }
@@ -1019,9 +1031,13 @@ class Email extends Record implements
             } else {
                 $folderSelectParams = $selectParams;
             }
+
             $selectManager->applyFolder($folderId, $folderSelectParams);
             $selectManager->addUsersJoin($folderSelectParams);
-            $data[$folderId] = $this->getEntityManager()->getRepository('Email')->count($folderSelectParams);
+
+            $data[$folderId] = $this->getEntityManager()
+                ->getRepository('Email')
+                ->count($folderSelectParams);
         }
 
         return $data;
