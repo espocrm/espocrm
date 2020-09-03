@@ -29,34 +29,30 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
+
+use Espo\Core\Formula\Evaluator;
+use Espo\Core\InjectableFactory;
+
+use Espo\Core\Utils\Log;
+
+use tests\unit\ContainerMocker;
 
 class EvaluatorTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
-        $container = $this->container =
-            $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+        $log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
 
-        $this->log = $this->getMockBuilder('Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
+        $containerMocker = new ContainerMocker($this);
 
-        $container
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap([
-                ['log', $this->log],
-            ]));
+        $container = $containerMocker->create([
+            'log' => $log,
+        ]);
 
-        $container
-            ->expects($this->any())
-            ->method('has')
-            ->will($this->returnValueMap([
-                ['log', true],
-            ]));
+        $injectableFactory = $injectableFactory = new InjectableFactory($container);
 
-        $injectableFactory = $injectableFactory = new \Espo\Core\InjectableFactory($container);
-
-        $this->evaluator = new \Espo\Core\Formula\Evaluator($injectableFactory);
+        $this->evaluator = new Evaluator($injectableFactory);
     }
 
     protected function tearDown() : void

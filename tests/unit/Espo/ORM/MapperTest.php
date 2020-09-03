@@ -42,7 +42,7 @@ use Espo\ORM\{
     QueryParams\Select,
 };
 
-use Espo\Entities\{
+use tests\unit\testData\DB\{
     Post,
     Comment,
     Tag,
@@ -94,7 +94,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnCallback(
                 function () use ($entityManager) {
                     $args = func_get_args();
-                    $className = "Espo\\Entities\\" . $args[0];
+                    $className = "tests\\unit\\testData\\DB\\" . $args[0];
                     return new $className($args[0], [], $entityManager);
                 }
             ));

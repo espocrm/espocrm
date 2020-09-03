@@ -35,7 +35,7 @@ use Espo\ORM\{
     EntityFactory,
 };
 
-use Espo\Entities\Job;
+use tests\unit\testData\DB\Job;
 
 use Espo\Core\ORM\EntityManager;
 

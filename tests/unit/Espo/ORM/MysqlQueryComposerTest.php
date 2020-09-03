@@ -45,7 +45,7 @@ use Espo\ORM\QueryParams\{
     LockTableBuilder,
 };
 
-use Espo\Entities\{
+use tests\unit\testData\DB\{
     Post,
     Comment,
     Tag,
@@ -79,13 +79,13 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();;
 
-        $this->entityFactory = $this->getMockBuilder('Espo\\ORM\\EntityFactory')->disableOriginalConstructor()->getMock();
+        $this->entityFactory = $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
         $this->entityFactory->expects($this->any())
                             ->method('create')
                             ->will(
                                 $this->returnCallback(function() {
                                     $args = func_get_args();
-                                    $className = "Espo\\Entities\\" . $args[0];
+                                    $className = "tests\\unit\\testData\\DB\\" . $args[0];
                                     return new $className($args[0], [], $this->entityManager);
                                 }
                             ));

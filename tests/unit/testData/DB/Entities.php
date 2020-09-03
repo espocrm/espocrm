@@ -1,6 +1,6 @@
 <?php
 
-namespace Espo\Entities;
+namespace tests\unit\testData\DB;
 
 use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;

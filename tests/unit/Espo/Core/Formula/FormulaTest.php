@@ -29,31 +29,45 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
-use Espo\ORM\Entity;
-
 use Espo\Core\Formula\AttributeFetcher;
 use Espo\Core\Formula\Processor;
 use Espo\Core\Formula\Argument;
+
+use Espo\Core\Utils\DateTime;
+use Espo\Core\Utils\NumberUtil;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
+
+use Espo\Core\Repositories\Database as DatabaseRepository;
+use Espo\Core\ORM\EntityManager;
+
+use Espo\Core\Container;
+
+use Espo\Entities\User;
+
+use Espo\ORM\Entity;
+
+use Espo\Core\ORM\Entity as EntityCore;
+
+use Espo\Core\InjectableFactory;
+
+use tests\unit\ContainerMocker;
 
 class FormulaTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
-        $container = $this->container =
-            $this->getMockBuilder('Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
-
-
         $this->entity = $this->getEntityMock();
-        $this->entityManager = $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
-        $this->repository = $this->getMockBuilder('Espo\\Core\\Repositories\\Database')->disableOriginalConstructor()->getMock();
+        $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
+        $this->repository = $this->getMockBuilder(DatabaseRepository::class)->disableOriginalConstructor()->getMock();
 
         date_default_timezone_set('UTC');
 
-        $this->dateTime = new \Espo\Core\Utils\DateTime();
+        $this->dateTime = new DateTime();
 
-        $this->number = new \Espo\Core\Utils\NumberUtil();
+        $this->number = new NumberUtil();
 
-        $this->config = $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
         $this->config
             ->expects($this->any())
             ->method('get')
@@ -61,9 +75,9 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ['timeZone', null, 'UTC']
             ]));
 
-        $this->user = $this->getMockBuilder('Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
+        $this->user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
 
-        $this->log = $this->getMockBuilder('Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
+        $this->log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
 
         $this->user->id = '1';
 
@@ -74,29 +88,17 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 ['id', [], '1']
             ]));
 
-        $container
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap([
-                ['entityManager', $this->entityManager],
-                ['dateTime', $this->dateTime],
-                ['number', $this->number],
-                ['config', $this->config],
-                ['user', $this->user],
-                ['log', $this->log],
-            ]));
 
-        $container
-            ->expects($this->any())
-            ->method('has')
-            ->will($this->returnValueMap([
-                ['entityManager', true],
-                ['dateTime', true],
-                ['number', true],
-                ['config', true],
-                ['user', true],
-                ['log', true],
-            ]));
+        $containerMocker = new ContainerMocker($this);
+
+        $this->container = $containerMocker->create([
+            'entityManager' => $this->entityManager,
+            'dateTime' => $this->dateTime,
+            'number' => $this->number,
+            'config' => $this->config,
+            'user' => $this->user,
+            'log' => $this->log,
+        ]);
     }
 
     protected function tearDown() : void
@@ -110,14 +112,15 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
     protected function createProcessor($variables = null)
     {
-        $injectableFactory = new \Espo\Core\InjectableFactory($this->container);
+        $injectableFactory = new InjectableFactory($this->container);
         $attributeFetcher = new AttributeFetcher();
+
         return new Processor($injectableFactory, $attributeFetcher, null, $this->entity, $variables);
     }
 
     protected function getEntityMock()
     {
-        return $this->getMockBuilder('\\Espo\\Core\\ORM\\Entity')->disableOriginalConstructor()->getMock();
+        return $this->getMockBuilder(EntityCore::class)->disableOriginalConstructor()->getMock();
     }
 
     protected function setEntityAttributes($entity, $attributes)

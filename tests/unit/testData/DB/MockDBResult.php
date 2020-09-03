@@ -7,9 +7,7 @@ class MockDBResult extends ArrayIterator
         $arr = array();
         foreach ($this as $value) {
             $arr[] = $value;
-        }        
+        }
         return $arr;
     }
 }
-
-?>

@@ -50,7 +50,7 @@ use RuntimeException;
 
 use tests\unit\testData\Entities\Test;
 
-use Espo\Entities;
+use tests\unit\testData\DB as Entities;
 
 class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -100,7 +100,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will(
                 $this->returnCallback(
                     function (string $entityType) {
-                        $className = 'Espo\\Entities\\' . ucfirst($entityType);
+                        $className = 'tests\\unit\\testData\\DB\\' . ucfirst($entityType);
 
                         return $this->createEntity($entityType, $className);
                     }
