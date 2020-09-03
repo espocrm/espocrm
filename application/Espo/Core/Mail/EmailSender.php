@@ -162,9 +162,9 @@ class EmailSender
                     'emailAddress' => $address,
                 ])
                 ->findOne();
-
-            $this->systemInboundEmailIsCached = true;
         }
+
+        $this->systemInboundEmailIsCached = true;
 
         return $this->systemInboundEmail;
     }

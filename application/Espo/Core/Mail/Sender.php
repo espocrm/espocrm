@@ -331,8 +331,13 @@ class Sender
      */
     public function hasSystemSmtp()
     {
-        if ($this->config->get('smtpServer')) return true;
-        if ($this->getSystemInboundEmail()) return true;
+        if ($this->config->get('smtpServer')) {
+            return true;
+        }
+
+        if ($this->getSystemInboundEmail()) {
+            return true;
+        }
 
         return false;
     }
@@ -347,8 +352,9 @@ class Sender
                 'useSmtp' => true,
                 'emailAddress' => $address,
             ])->findOne();
-            $this->systemInboundEmailIsCached = true;
         }
+
+        $this->systemInboundEmailIsCached = true;
 
         return $this->systemInboundEmail;
     }
