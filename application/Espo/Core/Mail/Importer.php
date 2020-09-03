@@ -38,9 +38,14 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\Config,
     Notificators\Notificator,
+    Mail\Parsers\MailMimeParser,
 };
 
 use Espo\Notificators\EmailNotificator;
+
+use DateTime;
+use DateTimeZone;
+use Exception;
 
 /**
  * Imports an email message into CRM. Handles duplicate checking, parent look-up.
@@ -48,42 +53,30 @@ use Espo\Notificators\EmailNotificator;
 class Importer
 {
     private $entityManager;
+
     private $config;
+
     private $notificator;
 
     private $filtersMatcher;
 
-    public function __construct(EntityManager $entityManager, Config $config, ?Notificator $notificator = null)
-    {
+    protected $defaultParserClassName = MailMimeParser::class;
+
+    protected $parserClassName;
+
+    public function __construct(
+        EntityManager $entityManager, Config $config, ?Notificator $notificator = null, ?string $parserClassName = null
+    ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->notificator = $notificator;
 
         $this->filtersMatcher = new FiltersMatcher();
-    }
 
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getFiltersMatcher()
-    {
-        return $this->filtersMatcher;
-    }
-
-    protected function getNotificator()
-    {
-        return $this->notificator;
+        $this->parserClassName = $parserClassName ?? $this->defaultParserClassName;
     }
 
     public function importMessage(
-        string $parserType,
         MessageWrapper $message,
         ?string $assignedUserId = null,
         array $teamsIdList = [],
@@ -93,23 +86,27 @@ class Importer
         ?array $folderData = null
     ) : ?Email {
         $parser = $message->getParser();
-        $parserClassName = 'Espo\\Core\\Mail\\Parsers\\' . $parserType;
+
+        $parserClassName = $this->parserClassName;
 
         if (!$parser || get_class($parser) !== $parserClassName) {
-            $parser = new $parserClassName($this->getEntityManager());
+            $parser = new $parserClassName($this->entityManager);
         }
 
-        $email = $this->getEntityManager()->getEntity('Email');
+        $email = $this->entityManager->getEntity('Email');
 
         $email->set('isBeingImported', true);
 
         $subject = '';
+
         if ($parser->checkMessageAttribute($message, 'subject')) {
             $subject = $parser->getMessageAttribute($message, 'subject');
         }
+
         if (!empty($subject) && is_string($subject)) {
             $subject = trim($subject);
         }
+
         if ($subject !== '0' && empty($subject)) {
             $subject = '(No Subject)';
         }
@@ -118,10 +115,12 @@ class Importer
         $email->set('name', $subject);
         $email->set('status', 'Archived');
         $email->set('attachmentsIds', []);
+
         if ($assignedUserId) {
             $email->set('assignedUserId', $assignedUserId);
             $email->addLinkMultipleId('assignedUsers', $assignedUserId);
         }
+
         $email->set('teamsIds', $teamsIdList);
 
         if (!empty($userIdList)) {
@@ -131,6 +130,7 @@ class Importer
         }
 
         $fromAddressData = $parser->getAddressDataFromMessage($message, 'from');
+
         if ($fromAddressData) {
             $fromString = ($fromAddressData['name'] ? ($fromAddressData['name'] . ' ') : '') . '<' .
                 $fromAddressData['address'] .'>';
@@ -138,6 +138,7 @@ class Importer
         }
 
         $replyToData = $parser->getAddressDataFromMessage($message, 'reply-To');
+
         if ($replyToData) {
             $replyToString = ($replyToData['name'] ? ($replyToData['name'] . ' ') : '') . '<' . $replyToData['address'] .'>';
             $email->set('replyToString', $replyToString);
@@ -151,6 +152,7 @@ class Importer
         if (count($fromArr)) {
             $email->set('from', $fromArr[0]);
         }
+
         $email->set('to', implode(';', $toArr));
         $email->set('cc', implode(';', $ccArr));
         $email->set('replyTo', implode(';', $replyToArr));
@@ -164,7 +166,7 @@ class Importer
             }
         }
 
-        if ($this->getFiltersMatcher()->match($email, $filterList, true)) {
+        if ($this->filtersMatcher->match($email, $filterList, true)) {
             return null;
         }
 
@@ -172,9 +174,11 @@ class Importer
             $messageId = $parser->getMessageMessageId($message);
 
             $email->set('messageId', $messageId);
+
             if ($parser->checkMessageAttribute($message, 'delivered-To')) {
                 $email->set('messageIdInternal', $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To'));
             }
+
             if (stripos($messageId, '@espo-system') !== false) {
                 return null;
             }
@@ -184,7 +188,7 @@ class Importer
 
         if ($duplicate = $this->findDuplicate($email)) {
             if ($duplicate->get('status') != 'Being Imported') {
-                $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
+                $duplicate = $this->entityManager->getEntity('Email', $duplicate->id);
                 $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
                 return $duplicate;
             }
@@ -192,23 +196,24 @@ class Importer
 
         if ($parser->checkMessageAttribute($message, 'date')) {
             try {
-                $dt = new \DateTime($parser->getMessageAttribute($message, 'date'));
+                $dt = new DateTime($parser->getMessageAttribute($message, 'date'));
                 if ($dt) {
-                    $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                    $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                     $email->set('dateSent', $dateSent);
                 }
-            } catch (\Exception $e) {}
+            } catch (Exception $e) {}
         } else {
             $email->set('dateSent', date('Y-m-d H:i:s'));
         }
+
         if ($parser->checkMessageAttribute($message, 'delivery-Date')) {
             try {
-                $dt = new \DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
+                $dt = new DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
                 if ($dt) {
-                    $deliveryDate = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                    $deliveryDate = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                     $email->set('delivery-Date', $deliveryDate);
                 }
-            } catch (\Exception $e) {}
+            } catch (Exception $e) {}
         }
 
         $inlineAttachmentList = [];
@@ -216,7 +221,7 @@ class Importer
         if (!$fetchOnlyHeader) {
             $parser->fetchContentParts($email, $message, $inlineAttachmentList);
 
-            if ($this->getFiltersMatcher()->match($email, $filterList)) {
+            if ($this->filtersMatcher->match($email, $filterList)) {
                 return false;
             }
         } else {
@@ -234,7 +239,7 @@ class Importer
 
             if ($inReplyTo) {
                 if ($inReplyTo[0] !== '<') $inReplyTo = '<' . $inReplyTo . '>';
-                $replied = $this->getEntityManager()->getRepository('Email')->where(array(
+                $replied = $this->entityManager->getRepository('Email')->where(array(
                     'messageId' => $inReplyTo
                 ))->findOne();
                 if ($replied) {
@@ -262,7 +267,9 @@ class Importer
                 $parentType = $parentId = null;
                 $emailSent = PHP_INT_MAX;
                 $number = null;
+
                 $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
+
                 if ($n != 4) {
                     $n = sscanf($reference, '%s %s %d %d espo-system', $parentType, $parentId, $emailSent, $number);
                 }
@@ -270,18 +277,18 @@ class Importer
                 if ($n == 4 && $emailSent < time()) {
                     if (!empty($parentType) && !empty($parentId)) {
                         if ($parentType == 'Lead') {
-                            $parent = $this->getEntityManager()->getEntity('Lead', $parentId);
+                            $parent = $this->entityManager->getEntity('Lead', $parentId);
                             if ($parent && $parent->get('status') == 'Converted') {
                                 if ($parent->get('createdAccountId')) {
-                                    $account = $this->getEntityManager()->getEntity('Account', $parent->get('createdAccountId'));
+                                    $account = $this->entityManager->getEntity('Account', $parent->get('createdAccountId'));
                                     if ($account) {
                                         $parentType = 'Account';
                                         $parentId = $account->id;
                                     }
                                 } else {
-                                    if ($this->getConfig()->get('b2cMode')) {
+                                    if ($this->config->get('b2cMode')) {
                                         if ($parent->get('createdContactId')) {
-                                            $contact = $this->getEntityManager()->getEntity('Contact', $parent->get('createdContactId'));
+                                            $contact = $this->entityManager->getEntity('Contact', $parent->get('createdContactId'));
                                             if ($contact) {
                                                 $parentType = 'Contact';
                                                 $parentId = $contact->id;
@@ -291,6 +298,7 @@ class Importer
                                 }
                             }
                         }
+
                         $email->set('parentType', $parentType);
                         $email->set('parentId', $parentId);
                         $parentFound = true;
@@ -301,7 +309,7 @@ class Importer
 
         if (!$parentFound) {
             if ($replied && $replied->get('parentId') && $replied->get('parentType')) {
-                $parentFound = $this->getEntityManager()->getEntity($replied->get('parentType'), $replied->get('parentId'));
+                $parentFound = $this->entityManager->getEntity($replied->get('parentType'), $replied->get('parentId'));
                 if ($parentFound) {
                     $email->set('parentType', $replied->get('parentType'));
                     $email->set('parentId', $replied->get('parentId'));
@@ -326,13 +334,13 @@ class Importer
         }
 
         if (!$duplicate) {
-            $this->getEntityManager()->getLocker()->lockExclusive('Email');
+            $this->entityManager->getLocker()->lockExclusive('Email');
 
             if ($duplicate = $this->findDuplicate($email)) {
-                $this->getEntityManager()->getLocker()->rollback();
+                $this->entityManager->getLocker()->rollback();
 
                 if ($duplicate->get('status') != 'Being Imported') {
-                    $duplicate = $this->getEntityManager()->getEntity('Email', $duplicate->id);
+                    $duplicate = $this->entityManager->getEntity('Email', $duplicate->id);
                     $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
 
                     return $duplicate;
@@ -359,7 +367,7 @@ class Importer
                 'replyToString' => $email->get('replyToString'),
             ]);
 
-            $this->getEntityManager()->getRepository('Email')->fillAccount($duplicate);
+            $this->entityManager->getRepository('Email')->fillAccount($duplicate);
 
             $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
 
@@ -372,20 +380,20 @@ class Importer
 
         $email->set('status', 'Being Imported');
 
-        $this->getEntityManager()->saveEntity($email, [
+        $this->entityManager->saveEntity($email, [
             'skipAll' => true,
             'keepNew' => true,
         ]);
 
-        $this->getEntityManager()->getLocker()->commit();
+        $this->entityManager->getLocker()->commit();
 
         if ($parentFound) {
             $parentType = $email->get('parentType');
             $parentId = $email->get('parentId');
-            $emailKeepParentTeamsEntityList = $this->getConfig()->get('emailKeepParentTeamsEntityList', []);
+            $emailKeepParentTeamsEntityList = $this->config->get('emailKeepParentTeamsEntityList', []);
             if ($parentId && in_array($parentType, $emailKeepParentTeamsEntityList)) {
-                if ($this->getEntityManager()->hasRepository($parentType)) {
-                    $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+                if ($this->entityManager->hasRepository($parentType)) {
+                    $parent = $this->entityManager->getEntity($parentType, $parentId);
                     if ($parent) {
                         $parentTeamIdList = $parent->getLinkMultipleIdList('teams');
                         foreach ($parentTeamIdList as $parentTeamId) {
@@ -398,7 +406,7 @@ class Importer
 
         $email->set('status', 'Archived');
 
-        $this->getEntityManager()->saveEntity($email, [
+        $this->entityManager->saveEntity($email, [
             'isBeingImported' => true
         ]);
 
@@ -408,7 +416,7 @@ class Importer
                 'relatedType' => 'Email',
                 'field' => 'body',
             ]);
-            $this->getEntityManager()->saveEntity($attachment);
+            $this->entityManager->saveEntity($attachment);
         }
 
         return $email;
@@ -416,23 +424,26 @@ class Importer
 
     protected function findParent(Email $email, $emailAddress)
     {
-        $contact = $this->getEntityManager()->getRepository('Contact')->where([
+        $contact = $this->entityManager->getRepository('Contact')->where([
             'emailAddress' => $emailAddress
         ])->findOne();
 
         if ($contact) {
-            if (!$this->getConfig()->get('b2cMode')) {
+            if (!$this->config->get('b2cMode')) {
                 if ($contact->get('accountId')) {
                     $email->set('parentType', 'Account');
                     $email->set('parentId', $contact->get('accountId'));
+
                     return true;
                 }
             }
             $email->set('parentType', 'Contact');
             $email->set('parentId', $contact->id);
+
             return true;
-        } else {
-            $account = $this->getEntityManager()->getRepository('Account')->where([
+        }
+        else {
+            $account = $this->entityManager->getRepository('Account')->where([
                 'emailAddress' => $emailAddress
             ])->findOne();
 
@@ -441,7 +452,7 @@ class Importer
                 $email->set('parentId', $account->id);
                 return true;
             } else {
-                $lead = $this->getEntityManager()->getRepository('Lead')->where([
+                $lead = $this->entityManager->getRepository('Lead')->where([
                     'emailAddress' => $emailAddress
                 ])->findOne();
                 if ($lead) {
@@ -459,7 +470,7 @@ class Importer
             return null;
         }
 
-        $duplicate = $this->getEntityManager()->getRepository('Email')
+        $duplicate = $this->entityManager->getRepository('Email')
             ->select(['id', 'status'])
             ->where([
                 'messageId' => $email->get('messageId'),
@@ -472,8 +483,8 @@ class Importer
     protected function processDuplicate(Email $duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList)
     {
         if ($duplicate->get('status') == 'Archived') {
-            $this->getEntityManager()->getRepository('Email')->loadFromField($duplicate);
-            $this->getEntityManager()->getRepository('Email')->loadToField($duplicate);
+            $this->entityManager->getRepository('Email')->loadFromField($duplicate);
+            $this->entityManager->getRepository('Email')->loadToField($duplicate);
         }
 
         $duplicate->loadLinkMultipleField('users');
@@ -504,7 +515,7 @@ class Importer
                 if (!in_array($uId, $fetchedUserIdList)) {
                     $duplicate->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
                 } else {
-                    $this->getEntityManager()->getRepository('Email')->updateRelation($duplicate, 'users', $uId, [
+                    $this->entityManager->getRepository('Email')->updateRelation($duplicate, 'users', $uId, [
                         'folderId' => $folderId,
                     ]);
                 }
@@ -513,19 +524,19 @@ class Importer
 
         $duplicate->set('isBeingImported', true);
 
-        $this->getEntityManager()->getRepository('Email')->applyUsersFilters($duplicate);
+        $this->entityManager->getRepository('Email')->applyUsersFilters($duplicate);
 
-        $this->getEntityManager()->getRepository('Email')->processLinkMultipleFieldSave($duplicate, 'users', [
+        $this->entityManager->getRepository('Email')->processLinkMultipleFieldSave($duplicate, 'users', [
             'skipLinkMultipleRemove' => true,
             'skipLinkMultipleUpdate' => true,
         ]);
 
-        $this->getEntityManager()->getRepository('Email')->processLinkMultipleFieldSave($duplicate, 'assignedUsers', [
+        $this->entityManager->getRepository('Email')->processLinkMultipleFieldSave($duplicate, 'assignedUsers', [
             'skipLinkMultipleRemove' => true,
             'skipLinkMultipleUpdate' => true,
         ]);
 
-        if ($notificator = $this->getNotificator()) {
+        if ($notificator = $this->notificator) {
             $notificator->process($duplicate, [
                 'isBeingImported' => true,
             ]);
@@ -537,17 +548,18 @@ class Importer
             foreach ($teamsIdList as $teamId) {
                 if (!in_array($teamId, $fetchedTeamIdList)) {
                     $processNoteAcl = true;
-                    $this->getEntityManager()->getRepository('Email')->relate($duplicate, 'teams', $teamId);
+                    $this->entityManager->getRepository('Email')->relate($duplicate, 'teams', $teamId);
                 }
             }
         }
 
         if ($duplicate->get('parentType') && $processNoteAcl) {
-            $dt = new \DateTime();
+            $dt = new DateTime();
             $dt->modify('+5 seconds');
+
             $executeAt = $dt->format('Y-m-d H:i:s');
 
-            $job = $this->getEntityManager()->getEntity('Job');
+            $job = $this->entityManager->getEntity('Job');
             $job->set([
                 'serviceName' => 'Note',
                 'methodName' => 'processNoteAclJob',
@@ -558,7 +570,7 @@ class Importer
                 'executeAt' => $executeAt,
                 'queue' => 'q1',
             ]);
-            $this->getEntityManager()->saveEntity($job);
+            $this->entityManager->saveEntity($job);
         }
     }
 }
