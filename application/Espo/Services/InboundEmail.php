@@ -29,17 +29,33 @@
 
 namespace Espo\Services;
 
-use Espo\ORM\Entity;
-use Espo\Entities\Team;
 use Laminas\Mail\Storage;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\ORM\Entity;
 
-use Espo\Core\Mail\Importer;
+use Espo\Core\{
+    Exceptions\Error,
+    Exceptions\Forbidden,
+    Exceptions\BadRequest,
+    Mail\Importer,
+    Mail\MessageWrapper,
+    Mail\Mail\Storage\Imap,
+    Mail\Parsers\MailMimeParser,
+};
+
+use Espo\Entities\{
+    Team,
+    InboundEmail as InboundEmailEntity,
+    User,
+};
 
 use Espo\Core\Di;
+
+use RecursiveIteratorIterator;
+use Exception;
+use Throwable;
+use DateTime;
+use DateTimeZone;
 
 class InboundEmail extends \Espo\Services\Record implements
 
@@ -53,7 +69,9 @@ class InboundEmail extends \Espo\Services\Record implements
 
     private $campaignService = null;
 
-    protected $storageClassName = 'Espo\\Core\\Mail\\Mail\\Storage\\Imap';
+    protected $storageClassName = Imap::class;
+
+    protected $parserClassName = MailMimeParser::class;
 
     const PORTION_LIMIT = 20;
 
@@ -103,7 +121,7 @@ class InboundEmail extends \Espo\Services\Record implements
 
         $storage = $this->createStorage($params);
 
-        $folders = new \RecursiveIteratorIterator($storage->getFolders(), \RecursiveIteratorIterator::SELF_FIRST);
+        $folders = new RecursiveIteratorIterator($storage->getFolders(), RecursiveIteratorIterator::SELF_FIRST);
         foreach ($folders as $name => $folder) {
             $foldersArr[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
         }
@@ -135,7 +153,7 @@ class InboundEmail extends \Espo\Services\Record implements
 
         $notificator = $this->notificatorFactory->create('Email');
 
-        $importer = new Importer($this->getEntityManager(), $this->getConfig(), $notificator);
+        $importer = new Importer($this->getEntityManager(), $this->getConfig(), $notificator, $this->parserClassName);
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
@@ -183,19 +201,25 @@ class InboundEmail extends \Espo\Services\Record implements
         ])->find();
 
         $fetchData = $emailAccount->get('fetchData');
+
         if (empty($fetchData)) {
             $fetchData = (object) [];
         }
+
         $fetchData = clone $fetchData;
+
         if (!property_exists($fetchData, 'lastUID')) {
             $fetchData->lastUID = (object) [];
         }
+
         if (!property_exists($fetchData, 'lastDate')) {
             $fetchData->lastDate = (object) [];
         }
+
         if (!property_exists($fetchData, 'byDate')) {
             $fetchData->byDate = (object) [];
         }
+
         $fetchData->lastUID = clone $fetchData->lastUID;
         $fetchData->lastDate = clone $fetchData->lastDate;
         $fetchData->byDate = clone $fetchData->byDate;
@@ -207,9 +231,6 @@ class InboundEmail extends \Espo\Services\Record implements
             $monitoredFolders = 'INBOX';
         }
 
-        $parserName = 'MailMimeParser';
-        $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserName;
-
         $monitoredFoldersArr = explode(',', $monitoredFolders);
 
         foreach ($monitoredFoldersArr as $folder) {
@@ -219,19 +240,24 @@ class InboundEmail extends \Espo\Services\Record implements
 
             try {
                 $storage->selectFolder($folder);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage());
+            } catch (Exception $e) {
+                $GLOBALS['log']->error(
+                    'InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
+                );
                 continue;
             }
 
             $lastUID = 0;
             $lastDate = 0;
+
             if (!empty($fetchData->lastUID->$folder)) {
                 $lastUID = $fetchData->lastUID->$folder;
             }
+
             if (!empty($fetchData->lastDate->$folder)) {
                 $lastDate = $fetchData->lastDate->$folder;
             }
+
             $forceByDate = !empty($fetchData->byDate->$folder);
 
             if ($forceByDate) {
@@ -251,8 +277,8 @@ class InboundEmail extends \Espo\Services\Record implements
 
                 $dt = null;
                 try {
-                    $dt = new \DateTime($fetchSince);
-                } catch (\Exception $e) {}
+                    $dt = new DateTime($fetchSince);
+                } catch (Exception $e) {}
 
                 if ($dt) {
                     $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
@@ -282,6 +308,7 @@ class InboundEmail extends \Espo\Services\Record implements
                 }
 
                 $fetchOnlyHeader = false;
+
                 if ($maxSize) {
                     if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
                         $fetchOnlyHeader = true;
@@ -290,10 +317,11 @@ class InboundEmail extends \Espo\Services\Record implements
 
                 $message = null;
                 $email = null;
+
                 try {
                     $toSkip = false;
-                    $parser = new $parserClassName($this->getEntityManager());
-                    $message = new \Espo\Core\Mail\MessageWrapper($storage, $id, $parser);
+                    $parser = new $this->parserClassName($this->getEntityManager());
+                    $message = new MessageWrapper($storage, $id, $parser);
 
                     if ($message && $message->checkAttribute('from')) {
                         $fromString = $message->getAttribute('from');
@@ -301,7 +329,7 @@ class InboundEmail extends \Espo\Services\Record implements
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
                             try {
                                 $toSkip = $this->processBouncedMessage($message) || $toSkip;
-                            } catch (\Throwable $e) {
+                            } catch (Throwable $e) {
                                 $GLOBALS['log']->error(
                                     'InboundEmail ' . $emailAccount->id .
                                     ' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage()
@@ -316,7 +344,7 @@ class InboundEmail extends \Espo\Services\Record implements
                         }
 
                         $email = $this->importMessage(
-                            $parserName, $importer, $emailAccount, $message, $teamIdList, $userId, $userIdList,
+                            $importer, $emailAccount, $message, $teamIdList, $userId, $userIdList,
                             $filterCollection, $fetchOnlyHeader, null
                         );
 
@@ -327,10 +355,10 @@ class InboundEmail extends \Espo\Services\Record implements
                             }
                         }
                     }
-                } catch (\Throwable $e) {
+                } catch (Throwable $e) {
                     $GLOBALS['log']->error(
                         'InboundEmail '.$emailAccount->id.
-                        ' (Get Message w/ parser '.$parserName.'): [' . $e->getCode() . '] ' .$e->getMessage()
+                        ' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage()
                     );
                 }
 
@@ -360,8 +388,10 @@ class InboundEmail extends \Espo\Services\Record implements
                             }
                         }
                     }
-                } catch (\Exception $e) {
-                    $GLOBALS['log']->error('InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .$e->getMessage());
+                } catch (Exception $e) {
+                    $GLOBALS['log']->error(
+                        'InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .$e->getMessage()
+                    );
                 }
 
                 if ($k === count($idList) - 1 || $k === $portionLimit - 1) {
@@ -370,15 +400,15 @@ class InboundEmail extends \Espo\Services\Record implements
                     if ($email && $email->get('dateSent')) {
                         $dt = null;
                         try {
-                            $dt = new \DateTime($email->get('dateSent'));
-                        } catch (\Exception $e) {}
+                            $dt = new DateTime($email->get('dateSent'));
+                        } catch (Exception $e) {}
 
                         if ($dt) {
-                            $nowDt = new \DateTime();
+                            $nowDt = new DateTime();
                             if ($dt->getTimestamp() >= $nowDt->getTimestamp()) {
                                 $dt = $nowDt;
                             }
-                            $dateSent = $dt->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+                            $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                             $lastDate = $dateSent;
                         }
                     }
@@ -390,7 +420,7 @@ class InboundEmail extends \Espo\Services\Record implements
             }
 
             if ($forceByDate) {
-                $nowDt = new \DateTime();
+                $nowDt = new DateTime();
                 $lastDate = $nowDt->format('Y-m-d H:i:s');
             }
 
@@ -424,17 +454,17 @@ class InboundEmail extends \Espo\Services\Record implements
     }
 
     protected function importMessage(
-        $parserName, $importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [],
+        $importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [],
         $filterCollection, $fetchOnlyHeader, $folderData = null
     ) {
         $email = null;
         try {
             $email = $importer->importMessage(
-                $parserName, $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
+                $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $GLOBALS['log']->error(
-                'InboundEmail '.$emailAccount->id.' (Import Message w/ '.$parserName.'): [' . $e->getCode() . '] ' .
+                'InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
             );
 
@@ -482,7 +512,7 @@ class InboundEmail extends \Espo\Services\Record implements
 
         $this->getEntityManager()->saveEntity($email, [
             'skipLinkMultipleRemove' => true,
-            'skipLinkMultipleUpdate' => true
+            'skipLinkMultipleUpdate' => true,
         ]);
     }
 
@@ -501,9 +531,11 @@ class InboundEmail extends \Espo\Services\Record implements
 
         if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
             $caseNumber = $m[1];
+
             $case = $this->getEntityManager()->getRepository('Case')->where([
                 'number' => $caseNumber
             ])->findOne();
+
             if ($case) {
                 $email->set('parentType', 'Case');
                 $email->set('parentId', $case->id);
@@ -520,9 +552,13 @@ class InboundEmail extends \Espo\Services\Record implements
                 'targetUserPosition' => $inboundEmail->get('targetUserPosition'),
                 'inboundEmailId' => $inboundEmail->id
             ];
+
             $case = $this->emailToCase($email, $params);
+
             $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
+
             $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email, true);
+
             if ($inboundEmail->get('reply')) {
                 $this->autoReply($inboundEmail, $email, $case, $user);
             }
@@ -531,9 +567,10 @@ class InboundEmail extends \Espo\Services\Record implements
 
     protected function assignRoundRobin(Entity $case, Team $team, $targetUserPosition)
     {
-        $className = '\\Espo\\Custom\\Business\\Distribution\\CaseObj\\RoundRobin';
+        $className = 'Espo\\Custom\\Business\\Distribution\\CaseObj\\RoundRobin';
+
         if (!class_exists($className)) {
-            $className = '\\Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\RoundRobin';
+            $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\RoundRobin';
         }
 
         $distribution = new $className($this->getEntityManager());
@@ -548,9 +585,9 @@ class InboundEmail extends \Espo\Services\Record implements
 
     protected function assignLeastBusy(Entity $case, Team $team, $targetUserPosition)
     {
-        $className = '\\Espo\\Custom\\Business\\Distribution\\CaseObj\\LeastBusy';
+        $className = 'Espo\\Custom\\Business\\Distribution\\CaseObj\\LeastBusy';
         if (!class_exists($className)) {
-            $className = '\\Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\LeastBusy';
+            $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\LeastBusy';
         }
 
         $distribution = new $className($this->getEntityManager(), $this->getMetadata());
@@ -657,6 +694,7 @@ class InboundEmail extends \Espo\Services\Record implements
         $contact = $this->getEntityManager()->getRepository('Contact')->join('emailAddresses', 'emailAddressesMultiple')->where([
             'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
         ])->findOne();
+
         if ($contact) {
             $case->set('contactId', $contact->id);
         } else {
@@ -692,7 +730,7 @@ class InboundEmail extends \Espo\Services\Record implements
             return false;
         }
 
-        $d = new \DateTime();
+        $d = new DateTime();
         $d->modify('-3 hours');
         $threshold = $d->format('Y-m-d H:i:s');
 
@@ -788,13 +826,14 @@ class InboundEmail extends \Espo\Services\Record implements
                 return true;
             }
 
-        } catch (\Exception $e) {}
+        } catch (Exception $e) {}
     }
 
-    protected function getSmtpParamsFromInboundEmail(\Espo\Entities\InboundEmail $emailAccount)
+    protected function getSmtpParamsFromInboundEmail(InboundEmailEntity $emailAccount)
     {
         $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
+
         if ($smtpParams['server']) {
             $smtpParams['port'] = $emailAccount->get('smtpPort');
             $smtpParams['auth'] = $emailAccount->get('smtpAuth');
@@ -806,6 +845,7 @@ class InboundEmail extends \Espo\Services\Record implements
             }
             return $smtpParams;
         }
+
         return;
     }
 
@@ -870,6 +910,7 @@ class InboundEmail extends \Espo\Services\Record implements
         if (!$this->campaignService) {
             $this->campaignService = $this->getServiceFactory()->create('Campaign');
         }
+
         return $this->campaignService;
     }
 
@@ -885,7 +926,7 @@ class InboundEmail extends \Espo\Services\Record implements
         return $inboundEmail;
     }
 
-    public function findSharedAccountForUser(\Espo\Entities\User $user, $emailAddress)
+    public function findSharedAccountForUser(User $user, $emailAddress)
     {
         $groupEmailAccountPermission = $this->getAclManager()->get($user, 'groupEmailAccountPermission');
         $teamIdList = $user->getLinkMultipleIdList('teams');
@@ -893,6 +934,7 @@ class InboundEmail extends \Espo\Services\Record implements
         $inboundEmail = null;
 
         $groupEmailAccountPermission = $this->getAcl()->get('groupEmailAccountPermission');
+
         if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
             if ($groupEmailAccountPermission === 'team') {
                 if (!count($teamIdList)) return;
@@ -917,13 +959,14 @@ class InboundEmail extends \Espo\Services\Record implements
                     ]
                 ];
             }
+
             $inboundEmail = $this->getEntityManager()->getRepository('InboundEmail')->findOne($selectParams);
 
         }
         return $inboundEmail;
     }
 
-    protected function getStorage(\Espo\Entities\InboundEmail $emailAccount)
+    protected function getStorage(InboundEmailEntity $emailAccount)
     {
         $params = [
             'host' => $emailAccount->get('host'),
@@ -953,7 +996,7 @@ class InboundEmail extends \Espo\Services\Record implements
         if ($handlerClassName && !empty($params['id'])) {
             try {
                 $handler = $this->injectableFactory->create($handlerClassName);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $GLOBALS['log']->error(
                     "InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage()
                 );
@@ -978,7 +1021,7 @@ class InboundEmail extends \Espo\Services\Record implements
         return new $this->storageClassName($imapParams);
     }
 
-    public function storeSentMessage(\Espo\Entities\InboundEmail $emailAccount, $message)
+    public function storeSentMessage(InboundEmailEntity $emailAccount, $message)
     {
         $storage = $this->getStorage($emailAccount);
 
@@ -989,7 +1032,7 @@ class InboundEmail extends \Espo\Services\Record implements
         $storage->appendMessage($message->toString(), $folder);
     }
 
-    public function getSmtpParamsFromAccount(\Espo\Entities\InboundEmail $emailAccount) : ?array
+    public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount) : ?array
     {
         $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
@@ -1018,21 +1061,24 @@ class InboundEmail extends \Espo\Services\Record implements
 
             return $smtpParams;
         }
+
         return null;
     }
 
-    public function applySmtpHandler(\Espo\Entities\InboundEmail $emailAccount, array &$params)
+    public function applySmtpHandler(InboundEmailEntity $emailAccount, array &$params)
     {
         $handlerClassName = $emailAccount->get('smtpHandler');
+
         if (!$handlerClassName) return;
 
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $GLOBALS['log']->error(
                 "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()
             );
         }
+
         if (method_exists($handler, 'applyParams')) {
             $handler->applyParams($emailAccount->id, $params);
         }
