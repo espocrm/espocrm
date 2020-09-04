@@ -932,20 +932,27 @@ class Record implements Crud,
 
     protected function processDuplicateCheck(Entity $entity, $data)
     {
-        if (empty($data->_skipDuplicateCheck) && empty($data->skipDuplicateCheck) && empty($data->forceDuplicate)) {
-            $duplicateList = $this->findDuplicates($entity, $data);
-            if (!empty($duplicateList)) {
-                $data = [];
-                foreach ($duplicateList as $e) {
-                    $data[$e->id] = $e->getValueMap();
-                }
-                $reason = [
-                    'reason' => 'Duplicate',
-                    'data' => $data
-                ];
-                throw new ConflictSilent(json_encode($reason));
-            }
+        if (
+            !empty($data->_skipDuplicateCheck) ||
+            !empty($data->skipDuplicateCheck) ||
+            !empty($data->forceDuplicate)
+        ) {
+            return;
         }
+
+        $duplicateList = $this->findDuplicates($entity, $data);
+
+        if (empty($duplicateList)) {
+            return;
+        }
+
+        $list = [];
+
+        foreach ($duplicateList as $e) {
+            $list[] = $e->getValueMap();
+        }
+
+        throw ConflictSilent::createWithBody('duplicate', json_encode($list));
     }
 
     public function populateDefaults(Entity $entity, $data)

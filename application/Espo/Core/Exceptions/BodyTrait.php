@@ -29,11 +29,21 @@
 
 namespace Espo\Core\Exceptions;
 
-use Exception;
-
-class Conflict extends Exception
+trait BodyTrait
 {
-    use BodyTrait;
+    protected $body = null;
 
-    protected $code = 409;
+    public static function createWithBody(string $reason, string $body) : self
+    {
+        $exception = new self($reason);
+
+        $exception->body = $body;
+
+        return $exception;
+    }
+
+    public function getBody() : ?string
+    {
+        return $this->body;
+    }
 }

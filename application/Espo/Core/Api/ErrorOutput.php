@@ -68,7 +68,7 @@ class ErrorOutput
     public function process(
         Response $response,
         Throwable $exception,
-        bool $toPrint = false,
+        bool $toPrintBody = false,
         ?array $route = null,
         ?array $routeParams = null
     ) {
@@ -135,7 +135,7 @@ class ErrorOutput
 
         $GLOBALS['log']->log($logLevel, $logMessage);
 
-        $toPrintXStatusReason = true;
+        $toPrintBodyXStatusReason = true;
 
         if (
             $exception &&
@@ -143,7 +143,7 @@ class ErrorOutput
                 get_class($exception), $this->ignorePrintXStatusReasonExceptionClassNameList
             )
         ) {
-            $toPrintXStatusReason = false;
+            $toPrintBodyXStatusReason = false;
         }
 
         if (!in_array($statusCode, $this->allowedStatusCodeList)) {
@@ -152,12 +152,24 @@ class ErrorOutput
 
         $response->setStatus($statusCode);
 
-        if ($toPrintXStatusReason) {
+        if ($toPrintBodyXStatusReason) {
             $response->setHeader('X-Status-Reason', $this->stripInvalidCharactersFromHeaderValue($message));
         }
 
-        if ($toPrint) {
+        $exceptionBody = null;
+        if (method_exists($exception, 'getBody')) {
+            $exceptionBody = $exception->getBody();
+        }
+
+        if ($exceptionBody) {
+            $response->writeBody($exceptionBody);
+
+            $toPrintBody = false;
+        }
+
+        if ($toPrintBody) {
             $statusText = $this->getCodeDescription($statusCode);
+
             $statusText = isset($statusText) ?
                 $statusCode . ' '. $statusText :
                 'HTTP ' . $statusCode;
