@@ -32,6 +32,8 @@ namespace Espo\Core\Api;
 use Espo\Core\{
     Api\Request,
     Api\Response,
+    Exceptions\Conflict,
+    Exceptions\Error,
 };
 
 use Throwable;
@@ -156,13 +158,8 @@ class ErrorOutput
             $response->setHeader('X-Status-Reason', $this->stripInvalidCharactersFromHeaderValue($message));
         }
 
-        $exceptionBody = null;
-        if (method_exists($exception, 'getBody')) {
-            $exceptionBody = $exception->getBody();
-        }
-
-        if ($exceptionBody) {
-            $response->writeBody($exceptionBody);
+        if ($this->doesExceptionHaveBody($exception)) {
+            $response->writeBody($exception->getBody());
 
             $toPrintBody = false;
         }
@@ -180,6 +177,25 @@ class ErrorOutput
 
             $response->writeBody(self::generateErrorBody($statusText, $message));
         }
+    }
+
+    protected function doesExceptionHaveBody(Throwable $exception) : bool
+    {
+        if (
+            ! $exception instanceof Error
+            &&
+            ! $exception instanceof Conflict
+        ) {
+            return false;
+        }
+
+        $exceptionBody = null;
+
+        if (method_exists($exception, 'getBody')) {
+            $exceptionBody = $exception->getBody();
+        }
+
+        return $exceptionBody !== null;
     }
 
     protected function getCodeDescription(int $statusCode) : ?string
