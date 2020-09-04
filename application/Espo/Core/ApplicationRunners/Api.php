@@ -53,6 +53,7 @@ use Psr\Http\{
 };
 
 use Exception;
+use Throwable;
 
 /**
  * Runs API request processing.
@@ -145,9 +146,22 @@ class Api implements ApplicationRunner
             ob_clean();
         }
         catch (Exception $exception) {
-            (new ApiErrorOutput($requestWrapped))->process(
-                $responseWrapped, $exception, false, $item, $args
-            );
+            $this->handleException($exception, $item, $requestWrapped, $responseWrapped, $args);
+        }
+    }
+
+    protected function handleException(
+        Throwable $exception, array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped, array $args
+    ) {
+        $errorOutput = new ApiErrorOutput($requestWrapped);
+
+        try {
+            $errorOutput->process($responseWrapped, $exception, false, $item, $args);
+        }
+        catch (Throwable $exception) {
+            $GLOBALS['log']->error($exception->getMessage());
+
+            $responseWrapped->setStatus(500);
         }
     }
 

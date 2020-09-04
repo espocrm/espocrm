@@ -153,7 +153,7 @@ class ErrorOutput
         $response->setStatus($statusCode);
 
         if ($toPrintXStatusReason) {
-            $response->setHeader('X-Status-Reason', $message);
+            $response->setHeader('X-Status-Reason', $this->stripInvalidCharactersFromHeaderValue($message));
         }
 
         if ($toPrint) {
@@ -190,5 +190,14 @@ class ErrorOutput
         $body .= $text;
 
         return $body;
+    }
+
+    protected function stripInvalidCharactersFromHeaderValue(string $value) : string
+    {
+        $pattern = "/[^ \t\x21-\x7E\x80-\xFF]/";
+
+        $value = preg_replace($pattern, ' ', $value);
+
+        return $value;
     }
 }

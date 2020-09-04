@@ -39,6 +39,7 @@ use Laminas\{
     Mail\Message,
     Mail\Transport\SmtpOptions,
     Mail\Transport\Envelope,
+    Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException,
 };
 
 use Espo\Entities\{
@@ -608,11 +609,34 @@ class Sender
             $this->resetParams();
             $this->useGlobal();
 
-            throw new Error($e->getMessage(), 500);
+            $this->handleException($e);
+
+            return;
         }
 
         $this->resetParams();
         $this->useGlobal();
+    }
+
+    protected function handleException(Exception $e)
+    {
+        if ($e instanceof ProtocolRuntimeException) {
+            $message = "Email sending error.";
+
+            if (
+                stripos($e->getMessage(), 'password') !== false
+                ||
+                stripos($e->getMessage(), 'credentials') !== false
+            ) {
+                $message .= ' Invalid credentials.';
+            }
+
+            $GLOBALS['log']->error("Email sending error. " . $e->getMessage());
+
+            throw new Error($message, 500);
+        }
+
+        throw new Error($e->getMessage(), 500);
     }
 
     static public function generateMessageId(Email $email) : string
