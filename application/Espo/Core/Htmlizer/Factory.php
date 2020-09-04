@@ -57,4 +57,9 @@ class Factory
 
         return $this->injectableFactory->createWith(Htmlizer::class, $with);
     }
+
+    public function createNoAcl() : Htmlizer
+    {
+        return $this->create(true);
+    }
 }

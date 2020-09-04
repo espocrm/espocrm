@@ -152,6 +152,9 @@ class BaseEntity implements Entity
 
         // @todo Remove this.
         if ($this->hasRelation($name) && $this->id && $this->entityManager) {
+            $e = new \Exception();
+            echo $e->getTraceAsString();
+            die;
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. Use \$entityManager->getRelation(...)->find()",
                 E_USER_DEPRECATED

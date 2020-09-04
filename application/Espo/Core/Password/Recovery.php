@@ -40,7 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\{
     ORM\EntityManager,
     Utils\Config,
-    Mail\Sender as MailSender,
+    Mail\EmailSender,
     Htmlizer\Factory as HtmlizerFactory,
     Utils\TemplateFileManager,
 };
@@ -53,20 +53,20 @@ class Recovery
 
     protected $entityManager;
     protected $config;
-    protected $mailSender;
+    protected $emailSender;
     protected $htmlizerFactory;
     protected $templateFileManager;
 
     public function __construct(
         EntityManager $entityManager,
         Config $config,
-        MailSender $mailSender,
+        EmailSender $emailSender,
         HtmlizerFactory $htmlizerFactory,
         TemplateFileManager $templateFileManager
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
-        $this->mailSender = $mailSender;
+        $this->emailSender = $emailSender;
         $this->htmlizerFactory = $htmlizerFactory;
         $this->templateFileManager = $templateFileManager;
     }
@@ -227,7 +227,6 @@ class Recovery
     {
         $config = $this->config;
         $em = $this->entityManager;
-        $mailSender = $this->mailSender;
         $htmlizerFactory = $this->htmlizerFactory;
 
         $templateFileManager = $this->templateFileManager;
@@ -236,9 +235,11 @@ class Recovery
 
         $email = $em->getEntity('Email');
 
-        if (!$mailSender->hasSystemSmtp() && !$config->get('internalSmtpServer')) {
+        if (!$this->emailSender->hasSystemSmtp() && !$config->get('internalSmtpServer')) {
             throw new Error("Password recovery: SMTP credentials are not defined.");
         }
+
+        $sender = $this->emailSender->create();
 
         $subjectTpl = $templateFileManager->getTemplate('passwordChangeLink', 'subject', 'User');
         $bodyTpl = $templateFileManager->getTemplate('passwordChangeLink', 'body', 'User');
@@ -273,10 +274,8 @@ class Recovery
             'isSystem' => true,
         ]);
 
-        if ($mailSender->hasSystemSmtp()) {
-            $mailSender->useGlobal();
-        } else {
-            $mailSender->useSmtp([
+        if (!$this->emailAddress->hasSystemSmtp()) {
+            $sender->withSmtpParams([
                 'server' => $config->get('internalSmtpServer'),
                 'port' => $config->get('internalSmtpPort'),
                 'auth' => $config->get('internalSmtpAuth'),
@@ -287,7 +286,7 @@ class Recovery
             ]);
         }
 
-        $mailSender->send($email);
+        $sender->send($email);
     }
 
     private function fail(?string $msg = null, int $errorCode = 403)

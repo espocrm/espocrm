@@ -29,19 +29,22 @@
 
 namespace Espo\Modules\Crm\Business\Event;
 
+use Laminas\Mail\Message;
+
 use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
 
 use Espo\Core\{
     ORM\EntityManager,
-    Mail\Sender,
+    Mail\EmailSender,
     Utils\Config,
     Utils\File\Manager as FileManager,
     Utils\DateTime,
     Utils\NumberUtil,
     Utils\Language,
     Utils\TemplateFileManager,
+    Htmlizer\Factory as HtmlizerFactory,
 };
 
 class Invitations
@@ -51,34 +54,37 @@ class Invitations
     protected $ics;
 
     protected $entityManager;
-    protected $mailSender;
+    protected $emailSender;
     protected $config;
     protected $dateTime;
     protected $language;
     protected $number;
     protected $templateFileManager;
     protected $fileManager;
+    protected $htmlizerFactory;
 
     public function __construct(
         EntityManager $entityManager,
         ?array $smtpParams,
-        Sender $mailSender,
+        EmailSender $emailSender,
         Config $config,
         FileManager $fileManager,
         DateTime $dateTime,
         NumberUtil $number,
         Language $language,
-        TemplateFileManager $templateFileManager
+        TemplateFileManager $templateFileManager,
+        HtmlizerFactory $htmlizerFactory
     ) {
         $this->entityManager = $entityManager;
         $this->smtpParams = $smtpParams;
-        $this->mailSender = $mailSender;
+        $this->emailSender = $emailSender;
         $this->config = $config;
         $this->dateTime = $dateTime;
         $this->language = $language;
         $this->number = $number;
         $this->fileManager = $fileManager;
         $this->templateFileManager = $templateFileManager;
+        $this->htmlizerFactory = $htmlizerFactory;
     }
 
     protected function getEntityManager()
@@ -161,7 +167,7 @@ class Invitations
         $data['entityType'] = $this->language->translate($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
-        $htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $dateTime, $this->number, null);
+        $htmlizer = $this->htmlizerFactory->createNoAcl();
 
         $subject = $htmlizer->render($entity, $subjectTpl, 'invitation-email-subject-' . $entity->getEntityType(), $data, true);
         $body = $htmlizer->render($entity, $bodyTpl, 'invitation-email-body-' . $entity->getEntityType(), $data, false);
@@ -178,24 +184,32 @@ class Invitations
             'contents' => $this->getIscContents($entity),
         ]);
 
-        $message = new \Laminas\Mail\Message();
+        $message = new Message();
 
-        $emailSender = $this->mailSender;
+        $sender = $this->emailSender->create();
 
         if ($this->smtpParams) {
-            $emailSender->useSmtp($this->smtpParams);
+            $sender->withSmtpParams($this->smtpParams);
         }
-        $emailSender->send($email, [], $message, [$attachment]);
+
+        $sender
+            ->withMessage($message)
+            ->withAttachments([$attachment])
+            ->send($email);
 
         $this->getEntityManager()->removeEntity($email);
     }
 
     protected function getIscContents(Entity $entity)
     {
-        $user = $entity->get('assignedUser');
+        $user = $this->entityManager
+            ->getRepository($entity->getEntityType())
+            ->getRelation($entity, 'assignedUser')
+            ->findOne();
 
         $who = '';
         $email = '';
+
         if ($user) {
             $who = $user->get('name');
             $email = $user->get('emailAddress');

@@ -36,7 +36,7 @@ use Espo\Core\Utils\Util;
 use Espo\Core\{
     ORM\EntityManager,
     Utils\TemplateFileManager,
-    Mail\Sender,
+    Mail\EmailSender,
     Utils\Config,
     Htmlizer\Factory as HtmlizerFactory,
     Utils\Language,
@@ -45,7 +45,7 @@ use Espo\Core\{
 class EmailReminder
 {
     protected $entityManager;
-    protected $mailSender;
+    protected $emailSender;
     protected $config;
     protected $dateTime;
     protected $templateFileManager;
@@ -55,14 +55,14 @@ class EmailReminder
     public function __construct(
         EntityManager $entityManager,
         TemplateFileManager $templateFileManager,
-        Sender $mailSender,
+        EmailSender $emailSender,
         Config $config,
         HtmlizerFactory $htmlizerFactory,
         Language $language
     ) {
         $this->entityManager = $entityManager;
         $this->templateFileManager = $templateFileManager;
-        $this->mailSender = $mailSender;
+        $this->emailSender = $emailSender;
         $this->config = $config;
         $this->language = $language;
         $this->htmlizerFactory = $htmlizerFactory;
@@ -140,8 +140,6 @@ class EmailReminder
         $email->set('body', $body);
         $email->set('isHtml', true);
 
-        $emailSender = $this->mailSender;
-
-        $emailSender->send($email);
+        $this->emailSender->send($email);
     }
 }

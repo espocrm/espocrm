@@ -41,15 +41,16 @@ use Espo\Core\Utils\Util;
 use Espo\Core\{
     ORM\EntityManager,
     Htmlizer\Factory as HtmlizerFactory,
-    Mail\Sender,
     Utils\Config,
     Utils\Metadata,
     Utils\Language,
     Select\SelectManagerFactory,
     InjectableFactory,
     Utils\TemplateFileManager,
-    Mail\Sender as MailSender,
+    Mail\EmailSender as EmailSender,
 };
+
+use Exception;
 
 class EmailNotification
 {
@@ -61,7 +62,7 @@ class EmailNotification
 
     protected $entityManager;
     protected $htmlizerFactory;
-    protected $mailSender;
+    protected $emailSender;
     protected $config;
     protected $selectManagerFactory;
     protected $injectableFactory;
@@ -71,7 +72,7 @@ class EmailNotification
     public function __construct(
         EntityManager $entityManager,
         HtmlizerFactory $htmlizerFactory,
-        MailSender $mailSender,
+        EmailSender $emailSender,
         Config $config,
         SelectManagerFactory $selectManagerFactory,
         InjectableFactory $injectableFactory,
@@ -81,7 +82,7 @@ class EmailNotification
     ) {
         $this->entityManager = $entityManager;
         $this->htmlizerFactory = $htmlizerFactory;
-        $this->mailSender = $mailSender;
+        $this->emailSender = $emailSender;
         $this->config = $config;
         $this->selectManagerFactory = $selectManagerFactory;
         $this->injectableFactory = $injectableFactory;
@@ -174,9 +175,11 @@ class EmailNotification
                 'parentId' => $entity->id,
                 'parentType' => $entity->getEntityType()
             ]);
+
             try {
-                $this->mailSender->send($email);
-            } catch (\Exception $e) {
+                $this->emailSender->send($email);
+            }
+            catch (Exception $e) {
                 $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }
@@ -383,8 +386,9 @@ class EmailNotification
         }
 
         try {
-            $this->mailSender->send($email);
-        } catch (\Exception $e) {
+            $this->emailSender->send($email);
+        }
+        catch (Exception $e) {
             $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
@@ -503,6 +507,7 @@ class EmailNotification
         }
 
         $smtpParams = null;
+
         if ($parentId && $parentType && !empty($parent)) {
             $handler = $this->getEmailNotificationEntityHandler($parentType);
             if ($handler) {
@@ -517,12 +522,16 @@ class EmailNotification
             }
         }
 
+        $sender = $this->emailSender->create();
+
         try {
             if ($smtpParams) {
-                $this->mailSender->setParams($smtpParams);
+                $sender->withSmtpParams($smtpParams);
             }
-            $this->mailSender->send($email);
-        } catch (\Exception $e) {
+
+            $sender->send($email);
+        }
+        catch (Exception $e) {
             $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
@@ -619,8 +628,9 @@ class EmailNotification
         ]);
 
         try {
-            $this->mailSender->send($email);
-        } catch (\Exception $e) {
+            $this->emailSender->send($email);
+        }
+        catch (Exception $e) {
             $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
@@ -704,7 +714,7 @@ class EmailNotification
             'body' => $body,
             'isHtml' => true,
             'to' => $emailAddress,
-            'isSystem' => true
+            'isSystem' => true,
         ]);
 
         $email->set([
@@ -713,8 +723,9 @@ class EmailNotification
         ]);
 
         try {
-            $this->mailSender->send($email);
-        } catch (\Exception $e) {
+            $this->emailSender->send($email);
+        }
+        catch (Exception $e) {
             $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
@@ -722,6 +733,7 @@ class EmailNotification
     protected function loadParentNameFields(Entity $entity)
     {
         $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
                 $entity->loadParentNameField($field);

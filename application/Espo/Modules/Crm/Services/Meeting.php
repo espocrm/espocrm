@@ -105,7 +105,11 @@ class Meeting extends \Espo\Services\Record implements
 
         $sentCount = 0;
 
-        $users = $entity->get('users');
+        $users = $this->getEntityManager()
+            ->getRepository($entity->getEntityType())
+            ->getRelation($entity, 'users')
+            ->find();
+
         foreach ($users as $user) {
             if ($user->id === $this->getUser()->id) {
                 if ($entity->getLinkMultipleColumn('users', 'status', $user->id) === 'Accepted') {
@@ -119,7 +123,11 @@ class Meeting extends \Espo\Services\Record implements
             }
         }
 
-        $contacts = $entity->get('contacts');
+        $contacts = $this->getEntityManager()
+            ->getRepository($entity->getEntityType())
+            ->getRelation($entity, 'contacts')
+            ->find();
+
         foreach ($contacts as $contact) {
             if ($contact->get('emailAddress') && !array_key_exists($contact->get('emailAddress'), $emailHash)) {
                 $invitationManager->sendInvitation($entity, $contact, 'contacts');
@@ -128,7 +136,11 @@ class Meeting extends \Espo\Services\Record implements
             }
         }
 
-        $leads = $entity->get('leads');
+        $leads = $this->getEntityManager()
+            ->getRepository($entity->getEntityType())
+            ->getRelation($entity, 'leads')
+            ->find();
+
         foreach ($leads as $lead) {
             if ($lead->get('emailAddress') && !array_key_exists($lead->get('emailAddress'), $emailHash)) {
                 $invitationManager->sendInvitation($entity, $lead, 'leads');

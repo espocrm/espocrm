@@ -113,12 +113,14 @@ class Htmlizer
                 $this->acl->getScopeRestrictedAttributeList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin'])
             );
 
-            $forbiddenLinkList = $this->acl->getScopeRestrictedLinkList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']);
+            $forbiddenLinkList = $this->acl->getScopeRestrictedLinkList(
+                $entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']
+            );
         }
 
         $relationList = $entity->getRelationList();
 
-        if (!$skipLinks && $level === 0) {
+        if (!$skipLinks && $level === 0 && $this->entityManager) {
             foreach ($relationList as $relation) {
                 $collection = null;
 
