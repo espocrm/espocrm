@@ -121,7 +121,9 @@ class ErrorOutput
 
         $logMessageItemList = [];
 
-        if ($message) $logMessageItemList[] = "{$message}";
+        if ($message) {
+            $logMessageItemList[] = "{$message}";
+        }
 
         $logMessageItemList[] = $this->request->getMethod() . ' ' . $this->request->getResourcePath();
 
