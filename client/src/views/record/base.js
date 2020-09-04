@@ -510,27 +510,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                     }
                 }.bind(this),
                 error: function (e, xhr) {
-                    var r = xhr.getAllResponseHeaders();
-                    var response = null;
-
-                    if (~[409, 500].indexOf(xhr.status)) {
-                        var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
-                        if (statusReasonHeader) {
-                            try {
-                                var response = JSON.parse(statusReasonHeader);
-                            } catch (e) {
-                                console.error('Could not parse X-Status-Reason header');
-                            }
-                        }
-                    }
-
-                    if (response && response.reason) {
-                        var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
-                        if (methodName in this) {
-                            xhr.errorIsHandled = true;
-                            this[methodName](response.data);
-                        }
-                    }
+                    this.handleSaveError(e, xhr);
 
                     this.afterSaveError();
 
@@ -543,9 +523,49 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                         errorCallback.call(this, xhr);
                     }
                 }.bind(this),
+
                 patch: !model.isNew()
             });
+
             return true;
+        },
+
+        handleSaveError: function (e, xhr) {
+            var response = null;
+
+            if (~[409, 500].indexOf(xhr.status)) {
+                var statusReason = xhr.getResponseHeader('X-Status-Reason');
+                if (statusReason) {
+                    try {
+                        var response = JSON.parse(statusReason);
+                    } catch (e) {}
+
+                    if (!response && xhr.responseText) {
+                        response = {
+                            reason: statusReason,
+                        };
+
+                        try {
+                            var data = JSON.parse(xhr.responseText);
+                        } catch (e) {
+                            console.error('Could not parse error response body.');
+                            return;
+                        }
+
+                        response.data = data;
+                    }
+                }
+            }
+
+            if (response && response.reason) {
+                var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
+
+                if (methodName in this) {
+                    xhr.errorIsHandled = true;
+
+                    this[methodName](response.data);
+                }
+            }
         },
 
         fetch: function () {
