@@ -128,7 +128,7 @@ class EmailSender
     /**
      * Set a message instance.
      */
-    public function message(Message $message) : Sender
+    public function withMessage(Message $message) : Sender
     {
         return $this->createSender()->message($message);
     }

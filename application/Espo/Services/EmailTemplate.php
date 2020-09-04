@@ -37,6 +37,9 @@ use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\Di;
 
+use DateTime;
+use DateTimezone;
+
 class EmailTemplate extends Record implements
 
     Di\FileStorageManagerAware,
@@ -86,13 +89,18 @@ class EmailTemplate extends Record implements
         }
 
         if (!empty($params['emailAddress'])) {
-            $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->where([
-                'lower' => $params['emailAddress']
-            ])->findOne();
+            $emailAddress = $this->getEntityManager()
+                ->getRepository('EmailAddress')
+                ->where([
+                    'lower' => $params['emailAddress'],
+                ])
+                ->findOne();
 
-            $entity = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($params['emailAddress'],
-                null, ['Contact', 'Lead', 'Account', 'User']
-            );
+            $entity = $this->getEntityManager()
+                ->getRepository('EmailAddress')
+                ->getEntityByAddress($params['emailAddress'],
+                    null, ['Contact', 'Lead', 'Account', 'User']
+                );
 
             if ($entity) {
                 if ($entity instanceof Person) {
@@ -164,14 +172,21 @@ class EmailTemplate extends Record implements
         $attachmentsNames = (object) [];
 
         if ($copyAttachments) {
-            $attachmentList = $emailTemplate->get('attachments');
+            $attachmentList = $this->getEntityManager()
+                ->getRepository('EmailTemplate')
+                ->getRelation($emailTemplate, 'attachments')
+                ->find();
+
             if (!empty($attachmentList)) {
                 foreach ($attachmentList as $attachment) {
                     $clone = $this->getEntityManager()->getEntity('Attachment');
+
                     $data = $attachment->toArray();
+
                     unset($data['parentType']);
                     unset($data['parentId']);
                     unset($data['id']);
+
                     $clone->set($data);
                     $clone->set('sourceId', $attachment->getSourceId());
                     $clone->set('storage', $attachment->get('storage'));
@@ -179,6 +194,7 @@ class EmailTemplate extends Record implements
                     if (!$this->getFileStorageManager()->isFile($attachment)) {
                         continue;
                     }
+
                     $this->getEntityManager()->saveEntity($clone);
 
                     $attachmentsIds[] = $id = $clone->id;
@@ -192,13 +208,14 @@ class EmailTemplate extends Record implements
             'body' => $body,
             'attachmentsIds' => $attachmentsIds,
             'attachmentsNames' => $attachmentsNames,
-            'isHtml' => $emailTemplate->get('isHtml')
+            'isHtml' => $emailTemplate->get('isHtml'),
         ];
     }
 
-    public function parse($id, array $params = [], bool $copyAttachments = false)
+    public function parse(string $id, array $params = [], bool $copyAttachments = false)
     {
         $emailTemplate = $this->getEntity($id);
+
         if (empty($emailTemplate)) {
             throw new NotFound();
         }
@@ -221,14 +238,19 @@ class EmailTemplate extends Record implements
                 $this->getAcl()->getScopeRestrictedAttributeList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin'])
             );
 
-            $forbiddenLinkList = $this->getAcl()->getScopeRestrictedLinkList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']);
+            $forbiddenLinkList = $this->getAcl()->getScopeRestrictedLinkList(
+                $entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']
+            );
         }
 
         foreach ($attributeList as $attribute) {
             if (in_array($attribute, $forbiddenAttributeList)) continue;
 
             $value = $entity->get($attribute);
-            if (is_object($value)) continue;
+
+            if (is_object($value)) {
+                continue;
+            }
 
             if (!$entity->getAttributeType($attribute)) continue;
 
@@ -246,17 +268,31 @@ class EmailTemplate extends Record implements
 
         if (!$skipLinks) {
             $relationDefs = $entity->getRelations();
+
             foreach ($entity->getRelationList() as $relation) {
-                if (in_array($relation, $forbiddenLinkList)) continue;
+                if (in_array($relation, $forbiddenLinkList)) {
+                    continue;
+                }
+
+                $relationType = $entity->getRelationType($relation);
+
                 if (
-                    !empty($relationDefs[$relation]['type'])
-                    &&
-                    ($entity->getRelationType($relation) === 'belongsTo' || $entity->getRelationType($relation) === 'belongsToParent')
+                    $relationType === 'belongsTo' ||
+                    $relationType === 'belongsToParent'
                 ) {
-                    $relatedEntity = $entity->get($relation);
-                    if (!$relatedEntity) continue;
+                    $relatedEntity = $this->getEntityManager()
+                        ->getRepository($entity->getEntityType())
+                        ->getRelation($entity, $relation)
+                        ->findOne();
+
+                    if (!$relatedEntity) {
+                        continue;
+                    }
+
                     if ($this->getAcl()) {
-                        if (!$this->getAcl()->check($relatedEntity, 'read')) continue;
+                        if (!$this->getAcl()->check($relatedEntity, 'read')) {
+                            continue;
+                        }
                     }
 
                     $text = $this->parseText($type, $relatedEntity, $text, true, $relation, $skipAcl);
@@ -269,7 +305,7 @@ class EmailTemplate extends Record implements
         $replaceData['now'] = $this->getDateTime()->getNowString();
 
         $timeZone = $this->getConfig()->get('timeZone');
-        $now = new \DateTime('now', new \DateTimezone($timeZone));
+        $now = new DateTime('now', new DateTimezone($timeZone));
 
         $replaceData['currentYear'] = $now->format('Y');
 

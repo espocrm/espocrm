@@ -29,24 +29,32 @@
 
 namespace Espo\Services;
 
-use Espo\ORM\Entity;
-use Espo\Entities;
+use Laminas\Mail\Message;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\ErrorSilent;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\{
+    ORM\Entity,
+    Entities,
+};
 
-use Espo\Core\Di;
+use Espo\Core\{
+    Exceptions\Error,
+    Exceptions\ErrorSilent,
+    Exceptions\Forbidden,
+    Exceptions\NotFound,
+    Exceptions\BadRequest,
+    Di,
+};
+
+use Exception;
+use StdClass;
 
 class Email extends Record implements
 
-    Di\MailSenderAware,
+    Di\EmailSenderAware,
     Di\CryptAware,
     Di\FileStorageManagerAware
 {
-    use Di\MailSenderSetter;
+    use Di\EmailSenderSetter;
     use Di\CryptSetter;
     use Di\FileStorageManagerSetter;
 
@@ -89,11 +97,6 @@ class Email extends Record implements
     protected function getFileStorageManager()
     {
         return $this->fileStorageManager;
-    }
-
-    protected function getMailSender()
-    {
-        return $this->mailSender;
     }
 
     protected function getCrypt()
@@ -142,7 +145,7 @@ class Email extends Record implements
 
     public function sendEntity(Entities\Email $entity, ?Entities\User $user = null)
     {
-        $emailSender = $this->getMailSender();
+        $emailSender = $this->emailSender->create();
 
         $userAddressList = [];
 
@@ -171,6 +174,7 @@ class Email extends Record implements
 
         if ($user && in_array($fromAddress, $userAddressList)) {
             $primaryUserAddress = strtolower($user->get('emailAddress'));
+
             if ($primaryUserAddress === $fromAddress) {
                 $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
                 if ($preferences) {
@@ -201,7 +205,8 @@ class Email extends Record implements
                 if ($fromAddress) {
                     $this->applySmtpHandler($user->id, $fromAddress, $smtpParams);
                 }
-                $emailSender->useSmtp($smtpParams);
+
+                $emailSender->withSmtpParams($smtpParams);
             }
         }
 
@@ -218,7 +223,7 @@ class Email extends Record implements
                 $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
             }
             if ($smtpParams) {
-                $emailSender->useSmtp($smtpParams);
+                $emailSender->withSmtpParams($smtpParams);
             }
         }
 
@@ -226,8 +231,9 @@ class Email extends Record implements
             if (!$this->getConfig()->get('outboundEmailIsShared')) {
                 throw new Error("Email sending: Can not use system SMTP. System SMTP is not shared.");
             }
-            $emailSender->setParams([
-                'fromName' => $this->getConfig()->get('outboundEmailFromName')
+
+            $emailSender->withParams([
+                'fromName' => $this->getConfig()->get('outboundEmailFromName'),
             ]);
         }
 
@@ -237,7 +243,7 @@ class Email extends Record implements
 
         if (!$smtpParams) {
             if ($user && in_array($fromAddress, $userAddressList)) {
-                $emailSender->setParams([
+                $emailSender->withParams([
                     'fromName' => $user->get('name')
                 ]);
             }
@@ -246,8 +252,10 @@ class Email extends Record implements
         $params = [];
 
         $parent = null;
+
         if ($entity->get('parentType') && $entity->get('parentId')) {
             $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+
             if ($parent) {
                 if ($entity->get('parentType') == 'Case') {
                     if ($parent->get('inboundEmailId')) {
@@ -260,26 +268,29 @@ class Email extends Record implements
             }
         }
 
-        $message = new \Laminas\Mail\Message();
-
         $this->validateEmailAddresses($entity);
 
+        $message = new Message();
+
         try {
-            $emailSender->send($entity, $params, $message);
-        } catch (\Exception $e) {
+            $emailSender
+                ->withParams($params)
+                ->withMessage($message)
+                ->send($entity);
+        }
+        catch (Exception $e) {
             $entity->set('status', 'Draft');
+
             $this->getEntityManager()->saveEntity($entity, ['silent' => true]);
 
             $GLOBALS['log']->error("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 
-            $reason = [
-                'reason' => 'SendingFail',
-                'data' => [
-                    'id' => $entity->id,
-                    'message' => $e->getMessage(),
-                ],
+            $errorData = [
+                'id' => $entity->id,
+                'message' => $e->getMessage(),
             ];
-            throw new ErrorSilent(json_encode($reason));
+
+            throw ErrorSilent::createWithBody('sendingFail', json_encode($errorData));
         }
 
         $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);
@@ -292,7 +303,8 @@ class Email extends Record implements
                     try {
                         $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
                         $inboundEmailService->storeSentMessage($inboundEmail, $message);
-                    } catch (\Exception $e) {
+                    }
+                    catch (Exception $e) {
                         $GLOBALS['log']->error(
                             "Email sending: Could not store sent email (Group Email Account {$inboundEmail->id}): " .
                             $e->getMessage() . "."
@@ -301,11 +313,13 @@ class Email extends Record implements
                 }
             } else if ($emailAccount) {
                 $entity->addLinkMultipleId('emailAccounts', $emailAccount->id);
+
                 if ($emailAccount->get('storeSentEmails')) {
                     try {
                         $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
                         $emailAccountService->storeSentMessage($emailAccount, $message);
-                    } catch (\Exception $e) {
+                    }
+                    catch (Exception $e) {
                         $GLOBALS['log']->error(
                             "Email sending: Could not store sent email (Email Account {$emailAccount->id}): " .
                             $e->getMessage() . "."
@@ -380,7 +394,7 @@ class Email extends Record implements
         return $this->streamService;
     }
 
-    public function create(\StdClass $data) : Entity
+    public function create(StdClass $data) : Entity
     {
         $entity = parent::create($data);
 
@@ -935,6 +949,7 @@ class Email extends Record implements
 
         if ($type === 'emailAccount' && $id) {
             $emailAccount = $this->getEntityManager()->getEntity('EmailAccount', $id);
+
             if ($emailAccount && $emailAccount->get('smtpHandler')) {
                 $this->getServiceFactory()->create('EmailAccount')->applySmtpHandler($emailAccount, $smtpParams);
             }
@@ -942,6 +957,7 @@ class Email extends Record implements
 
         if ($type === 'inboundEmail' && $id) {
             $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $id);
+
             if ($inboundEmail && $inboundEmail->get('smtpHandler')) {
                 $this->getServiceFactory()->create('InboundEmail')->applySmtpHandler($inboundEmail, $smtpParams);
             }
@@ -953,8 +969,11 @@ class Email extends Record implements
             }
         }
 
-        $emailSender = $this->getMailSender();
-        $emailSender->useSmtp($smtpParams)->send($email);
+        $emailSender = $this->emailSender;
+
+        $emailSender
+            ->withSmtpParams($smtpParams)
+            ->send($email);
 
         return true;
     }

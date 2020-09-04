@@ -60,11 +60,11 @@ use DateTimeZone;
 class InboundEmail extends \Espo\Services\Record implements
 
     Di\CryptAware,
-    Di\MailSenderAware,
+    Di\EmailSenderAware,
     Di\NotificatorFactoryAware
 {
     use Di\CryptSetter;
-    use Di\MailSenderSetter;
+    use Di\EmailSenderSetter;
     use Di\NotificatorFactorySetter;
 
     private $campaignService = null;
@@ -74,11 +74,6 @@ class InboundEmail extends \Espo\Services\Record implements
     protected $parserClassName = MailMimeParser::class;
 
     const PORTION_LIMIT = 20;
-
-    protected function getMailSender()
-    {
-        return $this->mailSender;
-    }
 
     protected function getCrypt()
     {
@@ -798,28 +793,37 @@ class InboundEmail extends \Espo\Services\Record implements
 
                 $this->getEntityManager()->saveEntity($reply);
 
-                $sender = $this->getMailSender()->useGlobal();
+                $sender = $this->emailSender->create();
 
                 if ($inboundEmail->get('useSmtp')) {
                     $smtpParams = $this->getSmtpParamsFromInboundEmail($inboundEmail);
+
                     if ($smtpParams) {
-                        $sender->useSmtp($smtpParams);
+                        $sender->withSmtpParams($smtpParams);
                     }
                 }
+
                 $senderParams = [];
+
                 if ($inboundEmail->get('fromName')) {
                     $senderParams['fromName'] = $inboundEmail->get('fromName');
                 }
+
                 if ($inboundEmail->get('replyFromAddress')) {
                     $senderParams['fromAddress'] = $inboundEmail->get('replyFromAddress');
                 }
+
                 if ($inboundEmail->get('replyFromName')) {
                     $senderParams['fromName'] = $inboundEmail->get('replyFromName');
                 }
+
                 if ($inboundEmail->get('replyToAddress')) {
                     $senderParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
                 }
-                $sender->send($reply, $senderParams);
+
+                $sender
+                    ->withParams($senderParams)
+                    ->send($reply);
 
                 $this->getEntityManager()->saveEntity($reply);
 

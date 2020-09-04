@@ -29,28 +29,34 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\BadRequest;
-
-use Espo\ORM\Entity;
-
-use Espo\Modules\Crm\Entities\EmailQueueItem;
-use Espo\Modules\Crm\Entities\Campaign;
-use Espo\Core\Mail\Sender;
 use Laminas\Mail\Message;
 
-use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Exceptions\Error,
+    Exceptions\BadRequest,
+    Mail\Sender,
+    Mail\Mail\Header\XQueueItemId,
+    Record\Collection as RecordCollection,
+    Di,
+};
 
-use Espo\Core\Di;
+use Espo\{
+    Modules\Crm\Entities\EmailQueueItem,
+    Modules\Crm\Entities\Campaign,
+    ORM\Entity,
+    Services\Record as RecordService,
+};
 
-class MassEmail extends \Espo\Services\Record implements
+use Exception;
+
+class MassEmail extends RecordService implements
 
     Di\DefaultLanguageAware,
-    Di\MailSenderAware
+    Di\EmailSenderAware
 {
     use Di\DefaultLanguageSetter;
-    use Di\MailSenderSetter;
+    use Di\EmailSenderSetter;
 
     const MAX_ATTEMPT_COUNT = 3;
 
@@ -64,11 +70,6 @@ class MassEmail extends \Espo\Services\Record implements
 
     protected $targetsLinkList = ['accounts', 'contacts', 'leads', 'users'];
 
-    protected function getMailSender()
-    {
-        return $this->mailSender;
-    }
-
     protected function getLanguage()
     {
         return $this->defaultLanguage;
@@ -77,6 +78,7 @@ class MassEmail extends \Espo\Services\Record implements
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         parent::beforeCreateEntity($entity, $data);
+
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden();
         }
@@ -265,6 +267,7 @@ class MassEmail extends \Espo\Services\Record implements
         ))->limit(0, $maxBatchSize)->find();
 
         $templateId = $massEmail->get('emailTemplateId');
+
         if (!$templateId) {
             $this->setFailed($massEmail);
             return;
@@ -272,20 +275,29 @@ class MassEmail extends \Espo\Services\Record implements
 
         $campaign = null;
         $campaignId = $massEmail->get('campaignId');
+
         if ($campaignId) {
             $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
         }
+
         $emailTemplate = $this->getEntityManager()->getEntity('EmailTemplate', $templateId);
+
         if (!$emailTemplate) {
             $this->setFailed($massEmail);
             return;
         }
-        $attachmentList = $emailTemplate->get('attachments');
+
+        $attachmentList = $this->getEntityManager()
+            ->getRepository('EmailTemplate')
+            ->getRelation($emailTemplate, 'attachments')
+            ->find();
 
         $smtpParams = null;
 
         if ($massEmail->get('inboundEmailId')) {
+
             $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $massEmail->get('inboundEmailId'));
+
             if (!$inboundEmail) {
                 throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' is not available.");
             }
@@ -301,10 +313,13 @@ class MassEmail extends \Espo\Services\Record implements
             }
 
             $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
+
             $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
+
             if (!$smtpParams) {
                 throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' has no SMTP params.");
             }
+
             if ($inboundEmail->get('replyToAddress')) {
                 $smtpParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
             }
@@ -394,7 +409,8 @@ class MassEmail extends \Espo\Services\Record implements
 
     protected function prepareQueueItemMessage(EmailQueueItem $queueItem, Sender $sender, Message $message, array &$params)
     {
-        $header = new \Espo\Core\Mail\Mail\Header\XQueueItemId();
+        $header = new XQueueItemId();
+
         $header->setId($queueItem->id);
         $message->getHeaders()->addHeader($header);
 
@@ -411,7 +427,8 @@ class MassEmail extends \Espo\Services\Record implements
             if ($fromAddress && strpos($fromAddress, '@')) {
                 $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->id .
                     '@' . explode('@', $fromAddress)[1];
-                $sender->setEnvelopeOptions([
+
+                $sender->withEnvelopeOptions([
                     'from' => $bounceAddress,
                 ]);
             }
@@ -419,10 +436,16 @@ class MassEmail extends \Espo\Services\Record implements
     }
 
     protected function sendQueueItem(
-        Entity $queueItem, Entity $massEmail, Entity $emailTemplate, $attachmentList = [], ?Campaign $campaign = null,
-        bool $isTest = false, $smtpParams = null) : bool
-    {
+        Entity $queueItem,
+        Entity $massEmail,
+        Entity $emailTemplate,
+        $attachmentList = [],
+        ?Campaign $campaign = null,
+        bool $isTest = false,
+        $smtpParams = null
+    ) : bool {
         $queueItemFetched = $this->getEntityManager()->getEntity($queueItem->getEntityType(), $queueItem->id);
+
         if ($queueItemFetched->get('status') !== 'Pending') {
             return false;
         }
@@ -431,9 +454,11 @@ class MassEmail extends \Espo\Services\Record implements
         $this->getEntityManager()->saveEntity($queueItem);
 
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
+
         if (!$target || !$target->id || !$target->get('emailAddress')) {
             $queueItem->set('status', 'Failed');
             $this->getEntityManager()->saveEntity($queueItem);
+
             return false;
         }
 
@@ -441,21 +466,28 @@ class MassEmail extends \Espo\Services\Record implements
         if (!$emailAddress) {
             $queueItem->set('status', 'Failed');
             $this->getEntityManager()->saveEntity($queueItem);
+
             return false;
         }
 
         $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+
         if ($emailAddressRecord) {
             if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
                 $queueItem->set('status', 'Failed');
                 $this->getEntityManager()->saveEntity($queueItem);
+
                 return false;
             }
         }
 
         $trackingUrlList = [];
+
         if ($campaign) {
-            $trackingUrlList = $campaign->get('trackingUrls');
+            $trackingUrlList = $this->getEntityManager()
+                ->getRepository('Campaign')
+                ->getRelation($campaign, 'trackingUrls')
+                ->find();
         }
 
         $email = $this->getPreparedEmail($queueItem, $massEmail, $emailTemplate, $target, $trackingUrlList);
@@ -465,6 +497,7 @@ class MassEmail extends \Espo\Services\Record implements
         }
 
         $params = [];
+
         if ($massEmail->get('fromName')) {
             $params['fromName'] = $massEmail->get('fromName');
         }
@@ -477,21 +510,23 @@ class MassEmail extends \Espo\Services\Record implements
             $attemptCount++;
             $queueItem->set('attemptCount', $attemptCount);
 
-            $sender = $this->getMailSender();
+            $sender = $this->emailSender->create();
 
             if ($smtpParams) {
-                $sender->useSmtp($smtpParams);
-            } else {
-                $sender->useGlobal();
+                $sender->withSmtpParams($smtpParams);
             }
 
             $message = new Message();
 
             $this->prepareQueueItemMessage($queueItem, $sender, $message, $params);
 
-            $sender->send($email, $params, $message, $attachmentList);
-
-        } catch (\Exception $e) {
+            $sender
+                ->withParams($params)
+                ->withMessage($message)
+                ->withAttachments($attachmentList)
+                ->send($email);
+        }
+        catch (Exception $e) {
             $maxAttemptCount = $this->getConfig()->get('massEmailMaxAttemptCount', self::MAX_ATTEMPT_COUNT);
             if ($queueItem->get('attemptCount') >= $maxAttemptCount) {
                 $queueItem->set('status', 'Failed');

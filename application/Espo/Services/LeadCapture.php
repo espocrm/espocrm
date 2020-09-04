@@ -41,13 +41,13 @@ use Espo\Core\Di;
 
 class LeadCapture extends Record implements
 
-    Di\MailSenderAware,
+    Di\EmailSenderAware,
     Di\DateTimeAware,
     Di\DefaultLanguageAware,
     Di\FieldManagerUtilAware,
     Di\HookManagerAware
 {
-    use Di\MailSenderSetter;
+    use Di\EmailSenderSetter;
     use Di\DateTimeSetter;
     use Di\DefaultLanguageSetter;
     use Di\FieldManagerUtilSetter;
@@ -590,10 +590,10 @@ class LeadCapture extends Record implements
             }
         }
 
-        $sender = $this->mailSender;
+        $sender = $this->emailSender->create();
 
         if ($smtpParams) {
-            $sender->useSmtp($smtpParams);
+            $sender->withSmtpParams($smtpParams);
         }
 
         $sender->send($email);
@@ -601,11 +601,14 @@ class LeadCapture extends Record implements
         return true;
     }
 
-    public function confirmOptIn($id)
+    public function confirmOptIn(string $id)
     {
-        $uniqueId = $this->getEntityManager()->getRepository('UniqueId')->where([
-            'name' => $id
-        ])->findOne();
+        $uniqueId = $this->getEntityManager()
+            ->getRepository('UniqueId')
+            ->where([
+                'name' => $id
+            ])
+            ->findOne();
 
         if (!$uniqueId) throw new NotFound("LeadCapture Confirm: UniqueId not found.");
 

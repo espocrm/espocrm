@@ -36,6 +36,8 @@ use Espo\Core\Utils\Util;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Utils\PasswordHash;
+
 use StdClass;
 
 use Espo\Core\Di;
@@ -43,13 +45,13 @@ use Espo\Core\Di;
 class User extends Record implements
 
     Di\TemplateFileManagerAware,
-    Di\MailSenderAware,
+    Di\EmailSenderAware,
     Di\HtmlizerFactoryAware,
     Di\FileManagerAware,
     Di\DataManagerAware
 {
     use Di\TemplateFileManagerSetter;
-    use Di\MailSenderSetter;
+    use Di\EmailSenderSetter;
     use Di\HtmlizerFactorySetter;
     use Di\FileManagerSetter;
     use Di\DataManagerSetter;
@@ -81,7 +83,7 @@ class User extends Record implements
     }
 
     public function changePassword(
-        string $userId, string $password, bool $checkCurrentPassword = false, bool $currentPassword = null
+        string $userId, string $password, bool $checkCurrentPassword = false, ?string $currentPassword = null
     ) {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) {
@@ -101,17 +103,24 @@ class User extends Record implements
         }
 
         if ($checkCurrentPassword) {
-            $passwordHash = new \Espo\Core\Utils\PasswordHash($this->getConfig());
-            $u = $this->getEntityManager()->getRepository('User')->where([
-                'id' => $user->id,
-                'password' => $passwordHash->hash($currentPassword)
-            ])->findOne();
+            $passwordHash = new PasswordHash($this->getConfig());
+
+            $u = $this->getEntityManager()
+                ->getRepository('User')
+                ->where([
+                    'id' => $user->id,
+                    'password' => $passwordHash->hash($currentPassword),
+                ])
+                ->findOne();
+
             if (!$u) {
-                throw new Forbidden();
+                throw new Forbidden("Wrong password.");
             }
         }
 
-        if (!$this->checkPasswordStrength($password)) throw new Forbidden("Change password: Password is weak.");
+        if (!$this->checkPasswordStrength($password)) {
+            throw new Forbidden("Change password: Password is weak.");
+        }
 
         $user->set('password', $this->hashPassword($password));
 
@@ -354,7 +363,7 @@ class User extends Record implements
             throw new Forbidden("Generate new password: Can't process because user desn't have email address.");
         }
 
-        if (!$this->mailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->emailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
             throw new Forbidden("Generate new password: Can't process because SMTP is not configured.");
         }
 
@@ -500,7 +509,7 @@ class User extends Record implements
 
         $email = $this->getEntityManager()->getEntity('Email');
 
-        if (!$this->mailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
+        if (!$this->emailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
             return;
         }
 
@@ -555,13 +564,13 @@ class User extends Record implements
         $email->set([
             'subject' => $subject,
             'body' => $body,
-            'to' => $emailAddress
+            'to' => $emailAddress,
         ]);
 
-        if ($this->mailSender->hasSystemSmtp()) {
-            $this->mailSender->useGlobal();
-        } else {
-            $this->mailSender->useSmtp(array(
+        $sender = $this->emailSender->create();
+
+        if (!$this->emailSender->hasSystemSmtp()) {
+            $sender->withStmpParams([
                 'server' => $this->getConfig()->get('internalSmtpServer'),
                 'port' => $this->getConfig()->get('internalSmtpPort'),
                 'auth' => $this->getConfig()->get('internalSmtpAuth'),
@@ -569,10 +578,12 @@ class User extends Record implements
                 'password' => $this->getConfig()->get('internalSmtpPassword'),
                 'security' => $this->getConfig()->get('internalSmtpSecurity'),
                 'fromAddress' => $this->getConfig()->get(
-                    'internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress'))
-            ));
+                    'internalOutboundEmailFromAddress', $this->getConfig()->get('outboundEmailFromAddress')
+                ),
+            ]);
         }
-        $this->mailSender->send($email);
+
+        $sender->send($email);
     }
 
     public function delete(string $id)

@@ -241,9 +241,12 @@ class Htmlizer
                     $data[$keyRaw] = $data[$attribute];
 
                 $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
+
                 if ($fieldType === 'enum') {
                     if ($this->language) {
-                        $data[$attribute] = $this->language->translateOption($data[$attribute], $attribute, $entity->getEntityType());
+                        $data[$attribute] = $this->language->translateOption(
+                            $data[$attribute], $attribute, $entity->getEntityType()
+                        );
                     }
                 }
 
@@ -252,18 +255,33 @@ class Htmlizer
         }
 
         if (!$skipLinks) {
+
             $relationDefs = $entity->getRelations();
+
             foreach ($entity->getRelationList() as $relation) {
-                if (in_array($relation, $forbiddenLinkList)) continue;
+                if (in_array($relation, $forbiddenLinkList)) {
+                    continue;
+                }
+
+                $relationType = $entity->getRelationType($relation);
+
                 if (
-                    !empty($relationDefs[$relation]['type'])
-                    &&
-                    ($entity->getRelationType($relation) === 'belongsTo' || $entity->getRelationType($relation) === 'belongsToParent')
+                    $relationType === 'belongsTo' ||
+                    $relationType === 'belongsToParent'
                 ) {
-                    $relatedEntity = $entity->get($relation);
-                    if (!$relatedEntity) continue;
+                    $relatedEntity = $this->entityManager
+                        ->getRepository($entity->getEntityType())
+                        ->getRelation($entity, $relation)
+                        ->findOne();
+
+                    if (!$relatedEntity) {
+                        continue;
+                    }
+
                     if ($this->acl) {
-                        if (!$this->acl->check($relatedEntity, 'read')) continue;
+                        if (!$this->acl->check($relatedEntity, 'read')) {
+                            continue;
+                        }
                     }
 
                     $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);

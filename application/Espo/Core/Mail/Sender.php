@@ -183,7 +183,7 @@ class Sender
     /**
      * Set a message instance.
      */
-    public function message(Message $message) : self
+    public function withMessage(Message $message) : self
     {
         $this->message = $message;
 
