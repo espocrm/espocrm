@@ -29,13 +29,18 @@
 
 namespace Espo\Core\Exceptions;
 
+use Exception;
+
 trait BodyTrait
 {
     protected $body = null;
 
-    public static function createWithBody(string $reason, string $body) : self
+    /**
+     * @todo Change return type to `static` once PHP 8.0 is a min supported version.
+     */
+    public static function createWithBody(string $reason, string $body) : Exception
     {
-        $exception = new self($reason);
+        $exception = new static($reason);
 
         $exception->body = $body;
 
