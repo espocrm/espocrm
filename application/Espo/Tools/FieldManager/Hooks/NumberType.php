@@ -27,18 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\FieldManager\Hooks;
+namespace Espo\Tools\FieldManager\Hooks;
 
-class NumberType extends Base
+use Espo\Core\Di;
+
+class NumberType implements Di\EntityManagerAware
 {
+    use Di\EntityManagerSetter;
+
     public function onRead($scope, $name, &$defs, $options)
     {
-        $number = $this->getEntityManager()->getRepository('NextNumber')->where(array(
-            'entityType' => $scope,
-            'fieldName' => $name
-        ))->findOne();
+        $number = $this->entityManager
+            ->getRepository('NextNumber')
+            ->where([
+                'entityType' => $scope,
+                'fieldName' => $name,
+            ])
+            ->findOne();
 
         $value = null;
+
         if (!$number) {
             $value = 1;
         } else {
@@ -56,33 +64,41 @@ class NumberType extends Base
 
     public function afterSave($scope, $name, $defs, $options)
     {
-        if (!isset($defs['nextNumber'])) return;
+        if (!isset($defs['nextNumber'])) {
+            return;
+        }
 
-        $number = $this->getEntityManager()->getRepository('NextNumber')->where(array(
-            'entityType' => $scope,
-            'fieldName' => $name
-        ))->findOne();
+        $number = $this
+            ->entityManager
+            ->getRepository('NextNumber')->where([
+                'entityType' => $scope,
+                'fieldName' => $name
+            ])
+            ->findOne();
 
         if (!$number) {
-            $number = $this->getEntityManager()->getEntity('NextNumber');
+            $number = $this->entityManager->getEntity('NextNumber');
 
             $number->set('entityType', $scope);
             $number->set('fieldName', $name);
         }
 
         $number->set('value', $defs['nextNumber']);
-        $this->getEntityManager()->saveEntity($number);
+        $this->entityManager->saveEntity($number);
     }
 
     public function afterRemove($scope, $name, $defs, $options)
     {
-        $number = $this->getEntityManager()->getRepository('NextNumber')->where(array(
+        $number = $this->entityManager->getRepository('NextNumber')
+        ->where([
             'entityType' => $scope,
             'fieldName' => $name
-        ))->findOne();
+        ])->findOne();
 
-        if (!$number) return;
+        if (!$number) {
+            return;
+        }
 
-        $this->getEntityManager()->removeEntity($number);
+        $this->entityManager->removeEntity($number);
     }
 }

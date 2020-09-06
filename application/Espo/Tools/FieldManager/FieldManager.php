@@ -673,15 +673,6 @@ class FieldManager
             return;
         }
 
-        if (class_exists($className)) {
-            $hook = new $className();
-            foreach ($hook->getDependencyList() as $name) {
-                $hook->inject($name, $this->container->get($name));
-            }
-            return $hook;
-        }
-        $GLOBALS['log']->error("Field Manager hook class '{$className}' does not exist.");
-
-        return;
+        return $this->container->get('injectableFactory')->create($className);
     }
 }

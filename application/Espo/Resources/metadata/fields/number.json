@@ -29,7 +29,7 @@
       "notNull": false,
       "unique": false
    },
-   "hookClassName": "\\Espo\\Core\\Utils\\FieldManager\\Hooks\\NumberType",
+   "hookClassName": "Espo\\Tools\\FieldManager\\Hooks\\NumberType",
    "textFilter": true,
    "readOnly": true
 }
