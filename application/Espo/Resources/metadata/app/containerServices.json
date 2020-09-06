@@ -65,6 +65,9 @@
     "themeManager": {
         "className": "Espo\\Core\\Utils\\ThemeManager"
     },
+    "fieldUtil": {
+        "className": "Espo\\Core\\Utils\\FieldUtil"
+    },
     "fieldManager": {
         "className": "Espo\\Core\\Utils\\FieldManager"
     },

@@ -29,27 +29,52 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\{
+    Entities\User,
+    Tools\FieldManager\FieldManager as FieldManagerTool,
+};
 
-class FieldManager extends \Espo\Core\Controllers\Base
+use Espo\Core\{
+    Exceptions\Error,
+    Exceptions\Forbidden,
+    Exceptions\NotFound,
+    Exceptions\BadRequest,
+    Api\Request,
+    DataManager,
+};
+
+class FieldManager
 {
+    protected $user;
+    protected $dataManager;
+    protected $fieldManager;
+
+    public function __construct(User $user, DataManager $dataManager, FieldManagerTool $fieldManager)
+    {
+        $this->user = $user;
+        $this->dataManager = $dataManager;
+        $this->fieldManager = $fieldManager;
+
+        $this->checkControllerAccess();
+    }
+
     protected function checkControllerAccess()
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
-    public function actionRead($params, $data)
+    public function getActionRead(Request $request)
     {
-        if (empty($params['scope']) || empty($params['name'])) {
+        $scope = $request->getRouteParam('scope');
+        $name = $request->getRouteParam('name');
+
+        if (!$scope || !$name) {
             throw new BadRequest();
         }
 
-        $data = $this->getContainer()->get('fieldManager')->read($params['scope'], $params['name']);
+        $data = $this->fieldManager->read($scope, $name);
 
         if (!isset($data)) {
             throw new BadRequest();
@@ -58,72 +83,91 @@ class FieldManager extends \Espo\Core\Controllers\Base
         return $data;
     }
 
-    public function postActionCreate($params, $data)
+    public function postActionCreate(Request $request)
     {
-        if (empty($params['scope']) || empty($data->name)) {
+        $data = $request->getParsedBody();
+
+        $scope = $request->getRouteParam('scope');
+        $name = $data->name ?? null;
+
+        if (!$scope || !$name) {
             throw new BadRequest();
         }
 
-        $fieldManager = $this->getContainer()->get('fieldManager');
-        $fieldManager->create($params['scope'], $data->name, get_object_vars($data));
+        $fieldManager = $this->fieldManager;
+
+        $fieldManager->create($scope, $name, get_object_vars($data));
 
         try {
-            $this->getContainer()->get('dataManager')->rebuild($params['scope']);
-        } catch (Error $e) {
-            $fieldManager->delete($params['scope'], $data->name);
+            $this->dataManager->rebuild($scope);
+        }
+        catch (Error $e) {
+            $fieldManager->delete($scope, $data->name);
+
             throw new Error($e->getMessage());
         }
 
-        return $fieldManager->read($params['scope'], $data->name);
+        return $fieldManager->read($scope, $data->name);
     }
 
-    public function patchActionUpdate($params, $data)
+    public function patchActionUpdate(Request $request)
     {
-        return $this->putActionUpdate($params, $data);
+        return $this->putActionUpdate($request);
     }
 
-    public function putActionUpdate($params, $data)
+    public function putActionUpdate(Request $request)
     {
-        if (empty($params['scope']) || empty($params['name'])) {
+        $data = $request->getParsedBody();
+
+        $scope = $request->getRouteParam('scope');
+        $name = $request->getRouteParam('name');
+
+        if (!$scope || !$name) {
             throw new BadRequest();
         }
 
-        $fieldManager = $this->getContainer()->get('fieldManager');
-        $fieldManager->update($params['scope'], $params['name'], get_object_vars($data));
+        $fieldManager = $this->fieldManager;
+
+        $fieldManager->update($scope, $name, get_object_vars($data));
 
         if ($fieldManager->isChanged()) {
-            $this->getContainer()->get('dataManager')->rebuild($params['scope']);
+            $this->dataManager->rebuild($scope);
         } else {
-            $this->getContainer()->get('dataManager')->clearCache();
+            $this->dataManager->clearCache();
         }
 
-        return $fieldManager->read($params['scope'], $params['name']);
+        return $fieldManager->read($scope, $name);
     }
 
-    public function deleteActionDelete($params, $data)
+    public function deleteActionDelete(Request $request)
     {
-        if (empty($params['scope']) || empty($params['name'])) {
+        $scope = $request->getRouteParam('scope');
+        $name = $request->getRouteParam('name');
+
+        if (!$scope || !$name) {
             throw new BadRequest();
         }
 
-        $result = $this->getContainer()->get('fieldManager')->delete($params['scope'], $params['name']);
+        $result = $this->fieldManager->delete($scope, $name);
 
-        $this->getContainer()->get('dataManager')->rebuildMetadata();
+        $this->dataManager->rebuildMetadata();
 
         return $result;
     }
 
-    public function postActionResetToDefault($params, $data)
+    public function postActionResetToDefault(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->scope) || empty($data->name)) {
             throw new BadRequest();
         }
 
-        $this->getContainer()->get('fieldManager')->resetToDefault($data->scope, $data->name);
+        $this->fieldManager->resetToDefault($data->scope, $data->name);
 
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->dataManager->clearCache();
 
-        $this->getContainer()->get('dataManager')->rebuildMetadata();
+        $this->dataManager->rebuildMetadata();
 
         return true;
     }

@@ -51,12 +51,25 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
         "tooltip":false
     }';
 
+    protected function createFieldManager($app = null)
+    {
+        if (!$app) {
+            $app = $this;
+        }
+
+        return $app->getContainer()->get('injectableFactory')->create(
+            'Espo\\Tools\\FieldManager\\FieldManager'
+        );
+    }
+
     public function testCreate()
     {
-        $fieldManager = $this->getContainer()->get('fieldManager');
+        $fieldManager = $this->createFieldManager();
+
         $fieldDefs = get_object_vars(json_decode($this->jsonFieldDefs));
 
         $fieldManager->create('Account', 'testArray', $fieldDefs);
+
         $this->getContainer()->get('dataManager')->rebuild('Account');
 
         $app = $this->createApplication();
@@ -88,11 +101,14 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
         $this->testCreate();
 
         $app = $this->createApplication();
-        $fieldManager = $app->getContainer()->get('fieldManager');
+
+        $fieldManager = $this->createFieldManager($app);
+
         $fieldDefs = get_object_vars(json_decode($this->jsonFieldDefs));
         $fieldDefs['required'] = true;
 
         $fieldManager->update('Account', 'testArray', $fieldDefs);
+
         $this->getContainer()->get('dataManager')->rebuild('Account');
 
         $app = $this->createApplication();

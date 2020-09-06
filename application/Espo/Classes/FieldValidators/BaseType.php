@@ -33,32 +33,27 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     Utils\Metadata,
-    Utils\FieldManagerUtil,
+    Utils\FieldUtil,
 };
 
 class BaseType
 {
     protected $metadata;
-    protected $fieldManagerUtil;
+    protected $fieldUtil;
 
-    public function __construct(Metadata $metadata, FieldManagerUtil $fieldManagerUtil)
+    public function __construct(Metadata $metadata, FieldUtil $fieldUtil)
     {
         $this->metadata = $metadata;
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
     }
 
     protected function getActualAttributeList(Entity $entity, string $field) : array
     {
-        return $this->getFieldManagerUtil()->getActualAttributeList($entity->getEntityType(), $field);
+        return $this->fieldUtil->getActualAttributeList($entity->getEntityType(), $field);
     }
 
     protected function getMetadata() : Metadata
     {
         return $this->metadata;
-    }
-
-    protected function getFieldManagerUtil() : FieldManagerUtil
-    {
-        return $this->fieldManagerUtil;
     }
 }
