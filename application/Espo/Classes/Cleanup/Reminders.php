@@ -27,9 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\Cleanup;
 
-class ChecklistType extends ArrayType
+use Espo\Core\{
+    Utils\Config,
+    ORM\EntityManager,
+};
+
+class Reminders
 {
+    protected $config;
+    protected $entityManager;
 
+    public function __construct(Config $config, EntityManager $entityManager)
+    {
+        $this->config = $config;
+        $this->entityManager = $entityManager;
+    }
+
+    protected $cleanupRemindersPeriod = '15 days';
+
+    public function process()
+    {
+        $period = '-' . $this->config->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
+
+        $dt = new \DateTime();
+        $dt->modify($period);
+
+        $delete = $this->entityManager->getQueryBuilder()
+            ->delete()
+            ->from('Reminder')
+            ->where([
+                'remindAt<' => $dt->format('Y-m-d'),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($delete);
+    }
 }

@@ -27,8 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\FieldValidators;
 
-class FileType extends LinkType
+use Espo\ORM\Entity;
+
+class PhoneType extends BaseType
 {
+    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    {
+        if ($this->isNotEmpty($entity, $field)) return true;
+
+        $dataList = $entity->get($field . 'Data');
+        if (!is_array($dataList)) return false;
+
+        foreach ($dataList as $item) {
+            if (!empty($item->phoneNumber)) return true;
+        }
+
+        return false;
+    }
+
+    protected function isNotEmpty(Entity $entity, $field)
+    {
+        return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
+    }
 }

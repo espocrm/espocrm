@@ -27,25 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\AppParams;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    Acl,
+    Select\SelectManagerFactory,
+    ORM\EntityManager,
+};
 
-class LinkParentType extends BaseType
+/**
+ * Returns a list of entity types for which a PDF template exists.
+ */
+class TemplateEntityTypeList
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    protected $acl;
+    protected $selectManagerFactory;
+    protected $entityManager;
+
+    public function __construct(Acl $acl, SelectManagerFactory $selectManagerFactory, EntityManager $entityManager)
     {
-        $idAttribute = $field . 'Id';
-        $typeAttribute = $field . 'Type';
+        $this->acl = $acl;
+        $this->selectManagerFactory = $selectManagerFactory;
+        $this->entityManager = $entityManager;
+    }
 
-        if (!$entity->has($idAttribute) || $entity->get($idAttribute) === '' || $entity->get($idAttribute) === null) {
-            return false;
+    public function get()
+    {
+        if (!$this->acl->checkScope('Template')) {
+            return [];
         }
 
-        if (!$entity->get($typeAttribute)) {
-            return false;
+        $list = [];
+
+        $selectManager = $this->selectManagerFactory->create('Template');
+
+        $selectParams = $selectManager->getEmptySelectParams();
+        $selectManager->applyAccess($selectParams);
+
+        $templateList = $this->entityManager->getRepository('Template')
+            ->select(['entityType'])
+            ->groupBy(['entityType'])
+            ->find($selectParams);
+
+        foreach ($templateList as $template) {
+            $list[] = $template->get('entityType');
         }
 
-        return true;
+        return $list;
     }
 }

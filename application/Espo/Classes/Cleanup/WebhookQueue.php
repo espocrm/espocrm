@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Cleanup;
+namespace Espo\Classes\Cleanup;
 
 use Espo\Core\{
     Utils\Config,

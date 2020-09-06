@@ -27,38 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Utils\Metadata,
-    Utils\FieldManagerUtil,
-};
-
-class BaseType
+class LinkMultipleType extends BaseType
 {
-    protected $metadata;
-    protected $fieldManagerUtil;
-
-    public function __construct(Metadata $metadata, FieldManagerUtil $fieldManagerUtil)
+    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
     {
-        $this->metadata = $metadata;
-        $this->fieldManagerUtil = $fieldManagerUtil;
-    }
-
-    protected function getActualAttributeList(Entity $entity, string $field) : array
-    {
-        return $this->getFieldManagerUtil()->getActualAttributeList($entity->getEntityType(), $field);
-    }
-
-    protected function getMetadata() : Metadata
-    {
-        return $this->metadata;
-    }
-
-    protected function getFieldManagerUtil() : FieldManagerUtil
-    {
-        return $this->fieldManagerUtil;
+        return count($entity->getLinkMultipleIdList($field)) > 0;
     }
 }

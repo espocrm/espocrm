@@ -27,33 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class IntType extends BaseType
+class CurrencyType extends FloatType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
-    {
-        return $this->isNotEmpty($entity, $field);
-    }
-
-    public function checkMax(Entity $entity, string $field, $validationValue, $data) : bool
-    {
-        if (!$this->isNotEmpty($entity, $field)) return true;
-        if ($entity->get($field) > $validationValue) return false;
-        return true;
-    }
-
-    public function checkMin(Entity $entity, string $field, $validationValue, $data) : bool
-    {
-        if (!$this->isNotEmpty($entity, $field)) return true;
-        if ($entity->get($field) < $validationValue) return false;
-        return true;
-    }
-
     protected function isNotEmpty(Entity $entity, $field)
     {
-        return $entity->has($field) && $entity->get($field) !== null;
+        return
+            $entity->has($field) && $entity->get($field) !== null &&
+            $entity->has($field . 'Currency') && $entity->get($field . 'Currency') !== null &&
+            $entity->get($field . 'Currency') !== '';
     }
 }

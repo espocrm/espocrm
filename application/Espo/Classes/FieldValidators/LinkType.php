@@ -27,17 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class CurrencyType extends FloatType
+class LinkType extends BaseType
 {
-    protected function isNotEmpty(Entity $entity, $field)
+    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
     {
-        return
-            $entity->has($field) && $entity->get($field) !== null &&
-            $entity->has($field . 'Currency') && $entity->get($field . 'Currency') !== null &&
-            $entity->get($field . 'Currency') !== '';
+        $idAttribute = $field . 'Id';
+
+        if (!$entity->has($idAttribute)) {
+            return false;
+        }
+
+        return $entity->get($idAttribute) !== null && $entity->get($idAttribute) !== '';
     }
 }

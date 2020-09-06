@@ -27,20 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\FieldValidators;
 
-use Espo\ORM\Entity;
-
-class LinkType extends BaseType
+class ChecklistType extends ArrayType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
-    {
-        $idAttribute = $field . 'Id';
 
-        if (!$entity->has($idAttribute)) {
-            return false;
-        }
-
-        return $entity->get($idAttribute) !== null && $entity->get($idAttribute) !== '';
-    }
 }

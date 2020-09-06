@@ -74,9 +74,9 @@ class FieldValidatorManager
         $className = $this->metadata->get(['fields', $fieldType, 'validatorClassName']);
 
         if (!$className) {
-            $className = '\\Espo\\Core\\FieldValidators\\' . ucfirst($fieldType) . 'Type';
+            $className = 'Espo\\Classes\\FieldValidators\\' . ucfirst($fieldType) . 'Type';
             if (!class_exists($className)) {
-                $className = '\\Espo\\Core\\FieldValidators\\BaseType';
+                $className = 'Espo\\Classes\\FieldValidators\\BaseType';
             }
         }
 

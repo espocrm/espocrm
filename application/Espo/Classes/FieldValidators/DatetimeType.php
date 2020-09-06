@@ -27,19 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\FieldValidators;
 
-use Espo\ORM\Entity;
-
-class EnumType extends BaseType
+class DatetimeType extends DateType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
-    {
-        return $this->isNotEmpty($entity, $field);
-    }
-
-    protected function isNotEmpty(Entity $entity, $field)
-    {
-        return $entity->has($field) && $entity->get($field) !== null;
-    }
 }

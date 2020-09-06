@@ -27,40 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class ArrayType extends BaseType
+class VarcharType extends BaseType
 {
     public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
     {
         return $this->isNotEmpty($entity, $field);
     }
 
-    public function checkMaxCount(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkMaxLength(Entity $entity, string $field, $validationValue, $data) : bool
     {
-        if (!$this->isNotEmpty($entity, $field)) return true;
-        $list = $entity->get($field);
-        if (count($list) > $validationValue) return false;
-        return true;
-    }
-
-    public function checkArray(Entity $entity, string $field, $validationValue, $data) : bool
-    {
-        if (isset($data->$field) && $data->$field !== null && !is_array($data->$field)) {
-            return false;
+        if ($this->isNotEmpty($entity, $field)) {
+            $value = $entity->get($field);
+            if (mb_strlen($value) > $validationValue) {
+                return false;
+            }
         }
-
         return true;
     }
 
     protected function isNotEmpty(Entity $entity, $field)
     {
-        if (!$entity->has($field) || $entity->get($field) === null) return false;
-        $list = $entity->get($field);
-        if (!is_array($list)) return false;
-        if (count($list)) return true;
-        return false;
+        return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
     }
 }

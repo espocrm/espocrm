@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\TemplateHelpers;
+namespace Espo\Classes\TemplateHelpers;
 
 class GoogleMaps
 {

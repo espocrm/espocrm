@@ -47,5 +47,5 @@
       "type":"varchar",
       "len": 255
    },
-   "validatorClassName": "Espo\\Core\\FieldValidators\\VarcharType"
+   "validatorClassName": "Espo\\Classes\\FieldValidators\\VarcharType"
 }

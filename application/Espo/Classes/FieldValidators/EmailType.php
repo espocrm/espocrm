@@ -27,41 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Cleanup;
+namespace Espo\Classes\FieldValidators;
 
-use Espo\Core\{
-    Utils\Config,
-    ORM\EntityManager,
-};
+use Espo\ORM\Entity;
 
-class Reminders
+class EmailType extends BaseType
 {
-    protected $config;
-    protected $entityManager;
-
-    public function __construct(Config $config, EntityManager $entityManager)
+    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
     {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
+        if ($this->isNotEmpty($entity, $field)) return true;
+
+        $dataList = $entity->get($field . 'Data');
+        if (!is_array($dataList)) return false;
+
+        foreach ($dataList as $item) {
+            if (!empty($item->emailAddress)) return true;
+        }
+
+        return false;
     }
 
-    protected $cleanupRemindersPeriod = '15 days';
-
-    public function process()
+    public function checkEmailAddress(Entity $entity, string $field, $validationValue, $data) : bool
     {
-        $period = '-' . $this->config->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
+        if ($this->isNotEmpty($entity, $field)) {
+            $address = $entity->get($field);
+            if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                return false;
+            }
+        }
 
-        $dt = new \DateTime();
-        $dt->modify($period);
+        $dataList = $entity->get($field . 'Data');
+        if (is_array($dataList)) {
+            foreach ($dataList as $item) {
+                if (empty($item->emailAddress)) continue;
+                $address = $item->emailAddress;
+                if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                    return false;
+                }
+            }
+        }
 
-        $delete = $this->entityManager->getQueryBuilder()
-            ->delete()
-            ->from('Reminder')
-            ->where([
-                'remindAt<' => $dt->format('Y-m-d'),
-            ])
-            ->build();
+        return true;
+    }
 
-        $this->entityManager->getQueryExecutor()->execute($delete);
+    protected function isNotEmpty(Entity $entity, $field)
+    {
+        return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
     }
 }

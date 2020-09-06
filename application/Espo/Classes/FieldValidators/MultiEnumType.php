@@ -27,8 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldValidators;
+namespace Espo\Classes\FieldValidators;
 
-class DatetimeType extends DateType
+class MultiEnumType extends ArrayType
 {
+
 }
