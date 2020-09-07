@@ -27,9 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Utils;
+namespace tests\unit\Espo\Tools;
 
 use tests\unit\ReflectionHelper;
+
+use Espo\Tools\FieldManager\FieldManager;
 
 class FieldManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -41,12 +43,12 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['container'] = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
+        $this->objects['container'] = $this->getMockBuilder('Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
-        $this->objects['metadata'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
-        $this->objects['language'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Language')->disableOriginalConstructor()->getMock();
+        $this->objects['metadata'] = $this->getMockBuilder('Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->objects['language'] = $this->getMockBuilder('Espo\\Core\\Utils\\Language')->disableOriginalConstructor()->getMock();
         $this->objects['baseLanguage'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Language')->disableOriginalConstructor()->getMock();
-        $this->objects['metadataHelper'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata\\Helper')->disableOriginalConstructor()->getMock();
+        $this->objects['metadataHelper'] = $this->getMockBuilder('Espo\\Core\\Utils\\Metadata\\Helper')->disableOriginalConstructor()->getMock();
 
         $map = array(
             array('baseLanguage', $this->objects['baseLanguage']),
@@ -59,7 +61,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
             ->method('get')
             ->will($this->returnValueMap($map));
 
-        $this->object = new \Espo\Core\Utils\FieldManager($this->objects['container']);
+        $this->object = new FieldManager($this->objects['container']);
 
         $this->reflection = new ReflectionHelper($this->object);
         $this->reflection->setProperty('metadataHelper', $this->objects['metadataHelper']);
@@ -72,9 +74,9 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateExistingField()
     {
-        $this->expectException('\Espo\Core\Exceptions\Conflict');
+        $this->expectException('Espo\Core\Exceptions\Conflict');
 
-        $data = (object) [
+        $data = [
             "type" => "varchar",
             "maxLength" => "50",
         ];
