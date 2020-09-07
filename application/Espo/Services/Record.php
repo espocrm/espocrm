@@ -633,6 +633,7 @@ class Record implements Crud,
     protected function processValidationField(Entity $entity, $field, $data)
     {
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, 'type');
+
         $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
         $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
         $fieldValidatorManager = $this->fieldValidatorManager;
