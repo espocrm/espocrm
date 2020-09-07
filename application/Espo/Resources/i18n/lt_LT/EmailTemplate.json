@@ -22,7 +22,7 @@
     "actual": "Esamas"
   },
   "messages": {
-    "infoText": "Galimi užpildai:\n\n{optOutUrl} & # 8211; \"Unsubsbribe\" nuorodos URL;\n\n{optOutLink} & # 8211; Atsisakyti prenumeratos nuorodą."
+    "infoText": "Galimi užpildai:\n\n{optOutUrl} & # 8211; \"Unsubscribe\" nuorodos URL;\n\n{optOutLink} & # 8211; Atsisakyti prenumeratos nuorodą."
   },
   "placeholderTexts": {
     "optOutUrl": "URL nepasirinkto šlamšto nuorodos",
