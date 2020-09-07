@@ -20,7 +20,7 @@
     "actual": "действителен"
   },
   "messages": {
-    "infoText": "Предлагани заместители: {optOutUrl} & # 8211; URL за unsubsbribe връзка; {OptOutLink} & # 8211; за връзка за отписване."
+    "infoText": "Предлагани заместители: {optOutUrl} & # 8211; URL за unsubscribe връзка; {OptOutLink} & # 8211; за връзка за отписване."
   },
   "placeholderTexts": {
     "optOutUrl": "URL за unsubsbribe връзка",
