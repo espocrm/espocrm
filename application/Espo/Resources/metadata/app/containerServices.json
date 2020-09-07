@@ -86,6 +86,9 @@
     "hasher": {
         "className": "Espo\\Core\\Utils\\Hasher"
     },
+    "layout": {
+        "className": "Espo\\Core\\Utils\\Layout"
+    },
     "authLoginFactory": {
         "className": "Espo\\Core\\Authentication\\LoginFactory"
     },

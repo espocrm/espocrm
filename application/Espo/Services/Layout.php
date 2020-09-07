@@ -29,10 +29,9 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
+    Exceptions\NotFound,
+    Exceptions\Error,
     Acl,
     Utils\Layout as LayoutUtil,
     ORM\EntityManager,
@@ -40,12 +39,16 @@ use Espo\Core\{
     DataManager,
 };
 
-use Espo\Entities\User;
+use Espo\{
+    Entities\User,
+    Tools\LayoutManager\LayoutManager,
+};
 
 class Layout
 {
     protected $acl;
     protected $layout;
+    protected $layoutManager;
     protected $entityManager;
     protected $metadata;
     protected $dataManager;
@@ -54,6 +57,7 @@ class Layout
     public function __construct(
         Acl $acl,
         LayoutUtil $layout,
+        LayoutManager $layoutManager,
         EntityManager $entityManager,
         Metadata $metadata,
         DataManager $dataManager,
@@ -61,6 +65,7 @@ class Layout
     ) {
         $this->acl = $acl;
         $this->layout = $layout;
+        $this->layoutManager = $layoutManager;
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
         $this->dataManager = $dataManager;
@@ -73,6 +78,7 @@ class Layout
 
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId, true);
+
             if ($layout) {
                 $result = $layout->get('data');
             }
@@ -85,6 +91,7 @@ class Layout
 
         if ($result === false) {
             $methodName = 'getOriginal' . ucfirst($name);
+
             if (method_exists($this, $methodName)) {
                 $result = $this->$methodName($scope, $setId);
             }
@@ -103,16 +110,28 @@ class Layout
 
         if ($user->isPortal()) {
             $portalId = $user->get('portalId');
+
             if ($portalId) {
-                $portal = $em->getRepository('Portal')->select(['layoutSetId'])->where(['id' => $portalId])->findOne();
+                $portal = $em
+                    ->getRepository('Portal')
+                    ->select(['layoutSetId'])
+                    ->where(['id' => $portalId])
+                    ->findOne();
+
                 if ($portal) {
                     $layoutSetId = $portal->get('layoutSetId');
                 }
             }
         } else {
             $teamId = $user->get('defaultTeamId');
+
             if ($teamId) {
-                $team = $em->getRepository('Team')->select(['layoutSetId'])->where(['id' => $teamId])->findOne();
+                $team = $em
+                    ->getRepository('Team')
+                    ->select(['layoutSetId'])
+                    ->where(['id' => $teamId])
+                    ->findOne();
+
                 if ($team) {
                     $layoutSetId = $team->get('layoutSetId');
                 }
@@ -150,8 +169,13 @@ class Layout
                 if (is_array($data)) {
                     foreach ($data as $i => $item) {
                         $link = $item;
-                        if (is_object($item)) $link = $item->name ?? null;
+
+                        if (is_object($item)) {
+                            $link = $item->name ?? null;
+                        }
+
                         $foreignEntityType = $this->metadata->get(['entityDefs', $scope, 'links', $link, 'entity']);
+
                         if ($foreignEntityType) {
                             if (!$this->acl->check($foreignEntityType)) {
                                 unset($data[$i]);
@@ -165,6 +189,7 @@ class Layout
 
         if ($data === false) {
             $methodName = 'getForFrontend' . ucfirst($name);
+
             if (method_exists($this, $methodName)) {
                 $data = $this->$methodName($scope);
             }
@@ -176,22 +201,32 @@ class Layout
     protected function getRecordFromSet(string $scope, string $name, string $setId, bool $skipCheck = false)
     {
         $em = $this->entityManager;
+
         $layoutSet = $em->getEntity('LayoutSet', $setId);
-        if (!$layoutSet) throw new NotFound("LayoutSet {$setId} not found.");
+
+        if (!$layoutSet) {
+            throw new NotFound("LayoutSet {$setId} not found.");
+        }
 
         $layoutList = $layoutSet->get('layoutList') ?? [];
 
         $fullName = $scope . '.' . $name;
 
         if (!in_array($fullName, $layoutList)) {
-            if ($skipCheck) return null;
+            if ($skipCheck) {
+                return null;
+            }
+
             throw new NotFound("Layout {$fullName} is no allowed in set.");
         }
 
-        $layout = $em->getRepository('LayoutRecord')->where([
-            'layoutSetId' => $setId,
-            'name' => $fullName,
-        ])->findOne();
+        $layout = $em
+            ->getRepository('LayoutRecord')
+            ->where([
+                'layoutSetId' => $setId,
+                'name' => $fullName,
+            ])
+            ->findOne();
 
         return $layout;
     }
@@ -218,12 +253,15 @@ class Layout
             return $layout->get('data');
         }
 
-        $layoutManager = $this->layout;
+        $layoutManager = $this->layoutManager;
 
         $layoutManager->set($data, $scope, $name);
+
         $result = $layoutManager->save();
 
-        if ($result === false) throw new Error("Error while saving layout.");
+        if ($result === false) {
+            throw new Error("Error while saving layout.");
+        }
 
         $this->dataManager->updateCacheTimestamp();
 
@@ -236,16 +274,19 @@ class Layout
 
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId);
+
             if ($layout) {
                 $em = $this->entityManager;
                 $em->removeEntity($layout);
             }
+
             return $this->getOriginal($scope, $name);
         }
 
-        $this->layout->resetToDefault($scope, $name);
+        $this->layoutManager->resetToDefault($scope, $name);
 
         $methodName = 'resetToDefault' . ucfirst($name);
+
         if (method_exists($this, $methodName)) {
             $this->$methodName($scope);
         }
@@ -265,12 +306,17 @@ class Layout
                     'name' => $item,
                 ];
             }
-            if (!is_object($item)) continue;
+
+            if (!is_object($item)) {
+                continue;
+            }
 
             $item = clone $item;
             $item->index = 5 + 0.001 * $i;
 
-            if (!isset($item->name)) continue;
+            if (!isset($item->name)) {
+                continue;
+            }
 
             $result->{$item->name} = $item;
         }
@@ -285,6 +331,6 @@ class Layout
 
     protected function resetToDefaultBottomPanelsDetail(string $scope)
     {
-        $this->layout->resetToDefault($scope, 'relationships');
+        $this->layoutManager->resetToDefault($scope, 'relationships');
     }
 }

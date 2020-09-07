@@ -29,10 +29,13 @@
 
 namespace Espo\Core\Portal\Utils;
 
-use \Espo\Core\Utils\Util;
-use \Espo\Core\Utils\Json;
+use Espo\Core\{
+    Utils\Util,
+    Utils\Json,
+    Utils\Layout as LayoutBase,
+};
 
-class Layout extends \Espo\Core\Utils\Layout
+class Layout extends LayoutBase
 {
     public function get(string $scope, string $name) : ?string
     {
@@ -46,14 +49,14 @@ class Layout extends \Espo\Core\Utils\Layout
             return Json::encode($this->changedData[$scope][$name]);
         }
 
-        $filePath = Util::concatPath($this->getLayoutPath($scope, true), 'portal/' . $name . '.json');
+        $filePath = Util::concatPath($this->getDirPath($scope, true), 'portal/' . $name . '.json');
 
         if (!file_exists($filePath)) {
-            $filePath = Util::concatPath($this->getLayoutPath($scope), 'portal/' . $name . '.json');
+            $filePath = Util::concatPath($this->getDirPath($scope), 'portal/' . $name . '.json');
         }
 
         if (file_exists($filePath)) {
-            return $this->getFileManager()->getContents($filePath);
+            return $this->fileManager->getContents($filePath);
         }
 
         return parent::get($originalScope, $originalName);

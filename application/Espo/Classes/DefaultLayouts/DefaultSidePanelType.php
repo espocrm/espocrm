@@ -27,13 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Layout\Defaults;
+namespace Espo\Classes\DefaultLayouts;
+
+use Espo\Core\Utils\Metadata;
 
 class DefaultSidePanelType
 {
     protected $metadata;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata)
+    public function __construct(Metadata $metadata)
     {
         $this->metadata = $metadata;
     }

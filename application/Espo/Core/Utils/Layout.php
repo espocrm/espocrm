@@ -29,20 +29,13 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Metadata;
-use Espo\Entities\User;
+use Espo\Core\{
+    Utils\File\Manager as FileManager,
+    Utils\Metadata,
+};
 
 class Layout
 {
-    private $fileManager;
-
-    private $metadata;
-
-    private $user;
-
-    protected $changedData = [];
-
     protected $defaultPath = 'application/Espo/Resources/defaults/layouts';
 
     protected $paths = [
@@ -51,36 +44,22 @@ class Layout
         'customPath' => 'custom/Espo/Custom/Resources/layouts',
     ];
 
-    public function __construct(FileManager $fileManager, Metadata $metadata, User $user)
+    protected $fileManager;
+
+    protected $metadata;
+
+    public function __construct(FileManager $fileManager, Metadata $metadata)
     {
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
-        $this->user = $user;
     }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getUser()
-    {
-        return $this->user;
-    }
-
-    protected function sanitizeInput($name)
+    protected function sanitizeInput(string $name) : string
     {
         return preg_replace("([\.]{2,})", '', $name);
     }
 
-    /**
-     * Get layout in string format
-     */
+
     public function get(string $scope, string $name) : ?string
     {
         $scope = $this->sanitizeInput($scope);
@@ -90,155 +69,64 @@ class Layout
             return Json::encode($this->changedData[$scope][$name]);
         }
 
-        $filePath = Util::concatPath($this->getLayoutPath($scope, true), $name . '.json');
-
-        if (!file_exists($filePath))
-            $filePath = Util::concatPath($this->getLayoutPath($scope), $name . '.json');
+        $filePath = Util::concatPath(
+            $this->getDirPath($scope, true),
+            $name . '.json'
+        );
 
         if (!file_exists($filePath)) {
-            $defaultImplClassName = 'Espo\\Custom\\Core\\Utils\\Layout\\Defaults\\' . ucfirst($name) . 'Type';
-            if (!class_exists($defaultImplClassName))
-                $defaultImplClassName = 'Espo\\Core\\Utils\\Layout\\Defaults\\' . ucfirst($name) . 'Type';
+            $filePath = Util::concatPath(
+                $this->getDirPath($scope),
+                $name . '.json'
+            );
+        }
+
+        if (!file_exists($filePath)) {
+            $defaultImplClassName = 'Espo\\Custom\\Classes\\DefaultLayouts\\' . ucfirst($name) . 'Type';
+
+            if (!class_exists($defaultImplClassName)) {
+                $defaultImplClassName = 'Espo\\Classes\\DefaultLayouts\\' . ucfirst($name) . 'Type';
+            }
 
             if (class_exists($defaultImplClassName)) {
                 $defaultImpl = new $defaultImplClassName($this->metadata);
+
                 $data = $defaultImpl->get($scope);
+
                 return Json::encode($data);
             }
 
-            $filePath = Util::concatPath($this->defaultPath, $name . '.json' );
+            $filePath = Util::concatPath(
+                $this->defaultPath,
+                $name . '.json'
+            );
 
-            if (!file_exists($filePath)) return null;
-        }
-
-        return $this->getFileManager()->getContents($filePath);
-    }
-
-    /**
-     * Set Layout data
-     * Ex. $scope = Account, $name = detail then will be created a file layoutFolder/Account/detail.json
-     *
-     * @param array $data
-     * @param string $scope - ex. Account
-     * @param string $name - detail
-     *
-     * @return void
-     */
-    public function set($data, $scope, $name)
-    {
-        $scope = $this->sanitizeInput($scope);
-        $name = $this->sanitizeInput($name);
-
-        if (empty($scope) || empty($name)) {
-            return false;
-        }
-
-        $this->changedData[$scope][$name] = $data;
-    }
-
-    public function resetToDefault($scope, $name)
-    {
-        $scope = $this->sanitizeInput($scope);
-        $name = $this->sanitizeInput($name);
-
-        $filePath = 'custom/Espo/Custom/Resources/layouts/' . $scope . '/' . $name . '.json';
-        if ($this->getFileManager()->isFile($filePath)) {
-            $this->getFileManager()->removeFile($filePath);
-        }
-        if (!empty($this->changedData[$scope]) && !empty($this->changedData[$scope][$name])) {
-            unset($this->changedData[$scope][$name]);
-        }
-        return $this->get($scope, $name);
-    }
-
-    /**
-     * Save changes
-     *
-     * @return bool
-     */
-    public function save()
-    {
-        $result = true;
-
-        if (!empty($this->changedData)) {
-            foreach ($this->changedData as $scope => $rowData) {
-                foreach ($rowData as $layoutName => $layoutData) {
-                    if (empty($scope) || empty($layoutName)) {
-                        continue;
-                    }
-                    $layoutPath = $this->getLayoutPath($scope, true);
-                    $data = Json::encode($layoutData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-                    $result &= $this->getFileManager()->putContents(array($layoutPath, $layoutName.'.json'), $data);
-                }
+            if (!file_exists($filePath)) {
+                return null;
             }
         }
 
-        if ($result == true) {
-            $this->clearChanges();
-        }
-
-        return (bool) $result;
+        return $this->fileManager->getContents($filePath);
     }
 
-    /**
-     * Clear unsaved changes
-     *
-     * @return void
-     */
-    public function clearChanges()
-    {
-        $this->changedData = [];
-    }
-
-    /**
-     * Merge layout data
-     * Ex. $scope= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
-     *
-     * @param JSON string $data
-     * @param string $scope - ex. Account
-     * @param string $name - detail
-     *
-     * @return bool
-     */
-    public function merge($data, $scope, $name)
-    {
-        $scope = $this->sanitizeInput($scope);
-        $name = $this->sanitizeInput($name);
-
-        $prevData = $this->get($scope, $name);
-
-        $prevDataArray = Json::getArrayData($prevData);
-        $dataArray = Json::getArrayData($data);
-
-        $data = Util::merge($prevDataArray, $dataArray);
-        $data = Json::encode($data);
-
-        return $this->set($data, $scope, $name);
-    }
-
-    /**
-     * Get Layout path, ex. application/Modules/Crm/Layouts/Account
-     *
-     * @param string $entityType
-     * @param bool $isCustom - if need to check custom folder
-     *
-     * @return string
-     */
-    protected function getLayoutPath($entityType, $isCustom = false)
+    public function getDirPath(string $entityType, bool $isCustom = false) : string
     {
         $path = $this->paths['customPath'];
 
         if (!$isCustom) {
-            $moduleName = $this->getMetadata()->getScopeModuleName($entityType);
+            $moduleName = $this->metadata->getScopeModuleName($entityType);
 
             $path = $this->paths['corePath'];
+
             if ($moduleName !== false) {
                 $path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
             }
         }
 
-        $path = Util::concatPath(Util::fixPath($path), $entityType);
+        $path = Util::concatPath(
+            Util::fixPath($path),
+            $entityType
+        );
 
         return $path;
     }
