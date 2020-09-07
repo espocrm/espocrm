@@ -96,7 +96,11 @@ class ControllerManager
 
         // Below is a legacy way.
 
-        $data = $request->getParsedBody();
+        $data = $request->getBodyContents();
+
+        if ($data) {
+            $data = json_decode($data);
+        }
 
         $beforeMethodName = 'before' . $actionNameUcfirst;
 
