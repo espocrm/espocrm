@@ -44,7 +44,6 @@ use Espo\ORM\{
     Entity,
     EntityCollection,
     EntityManager,
-    QueryParams\Select as SelectQuery,
 };
 
 use Espo\Entities\User;
@@ -56,6 +55,8 @@ use Espo\Core\{
     Services\Crud,
     Record\Collection as RecordCollection,
 };
+
+use Espo\Tools\ListExport\ListExport as ListExportTool;
 
 use StdClass;
 
@@ -146,8 +147,6 @@ class Record implements Crud,
     protected $exportSkipAttributeList = [];
 
     protected $exportAdditionalAttributeList = [];
-
-    protected $exportAllowedAttributeList = [];
 
     protected $checkForDuplicatesInUpdate = false;
 
@@ -2040,257 +2039,24 @@ class Record implements Crud,
         return null;
     }
 
-    public function checkAttributeIsAllowedForExport($entity, $attribute, $isExportAllFields = false)
-    {
-        $entity = $this->getEntityManager()->getEntity($this->getEntityType());
-
-        if (in_array($attribute, $this->internalAttributeList)) return false;
-        if (in_array($attribute, $this->forbiddenAttributeList)) return false;
-
-        if (!$this->getUser()->isAdmin() && in_array($attribute, $this->onlyAdminAttributeList)) return false;
-
-        if (!$isExportAllFields) return true;
-
-        if ($entity->getAttributeParam($attribute, 'notExportable')) return false;
-        if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) return false;
-        if ($entity->getAttributeParam($attribute, 'isLinkMultipleNameMap')) return false;
-        if ($entity->getAttributeParam($attribute, 'isLinkStub')) return false;
-
-        return true;
-    }
-
     public function exportCollection(array $params, $collection)
     {
         $params['collection'] = $collection;
+
         return $this->export($params);
     }
 
     public function export(array $params)
     {
-        if (array_key_exists('format', $params)) {
-            $format = $params['format'];
-        } else {
-            $format = 'csv';
-        }
+        $export = $this->injectableFactory->create(ListExportTool::class);
 
-        if (!in_array($format, $this->getMetadata()->get(['app', 'export', 'formatList']))) {
-            throw new Error('Not supported export format.');
-        }
-
-        $className = $this->getMetadata()->get(['app', 'export', 'exportFormatClassNameMap', $format]);
-        if (empty($className)) {
-            throw new Error();
-        }
-        $exportObj = $this->injectableFactory->create($className);
-
-        $collection = null;
-
-        if (array_key_exists('collection', $params)) {
-            $collection = $params['collection'];
-        } else {
-            $selectManager = $this->getSelectManager($this->getEntityType());
-            if (array_key_exists('ids', $params)) {
-                $ids = $params['ids'];
-                $where = [
-                    [
-                        'type' => 'in',
-                        'field' => 'id',
-                        'value' => $ids
-                    ]
-                ];
-                $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
-            } else if (array_key_exists('where', $params)) {
-                $where = $params['where'];
-
-                $p = [];
-                $p['where'] = $where;
-                if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                    foreach ($params['selectData'] as $k => $v) {
-                        $p[$k] = $v;
-                    }
-                }
-                $selectParams = $this->getSelectParams($p);
-            } else {
-                throw new BadRequest();
-            }
-
-            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'orderBy']);
-            $order = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'order']);
-
-            if ($orderBy) {
-                $selectManager->applyOrder($orderBy, $order, $selectParams);
-            }
-
-            $select = SelectQuery::fromRaw($selectParams);
-
-            $collection = $this->getEntityManager()->getRepository($this->getEntityType())
-                ->clone($select)
-                ->sth()
-                ->find();
-        }
-
-        $attributeListToSkip = [
-            'deleted'
-        ];
-
-        foreach ($this->exportSkipAttributeList as $attribute) {
-            $attributeListToSkip[] = $attribute;
-        }
-
-        foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->getEntityType(), 'read') as $attribute) {
-            $attributeListToSkip[] = $attribute;
-        }
-
-        $attributeList = null;
-        if (array_key_exists('attributeList', $params)) {
-            $attributeList = [];
-            $seed = $this->getEntityManager()->getEntity($this->getEntityType());
-            foreach ($params['attributeList'] as $attribute) {
-                if (in_array($attribute, $attributeListToSkip)) continue;
-                if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
-                    $attributeList[] = $attribute;
-                }
-            }
-        }
-
-        if (!array_key_exists('fieldList', $params)) {
-            $exportAllFields = true;
-            $fieldDefs = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields'], []);
-            $fieldList = array_keys($fieldDefs);
-            array_unshift($fieldList, 'id');
-        } else {
-            $exportAllFields = false;
-            $fieldList = $params['fieldList'];
-        }
-
-        foreach ($fieldList as $i => $field) {
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'exportDisabled'])) {
-                unset($fieldList[$i]);
-            }
-        }
-        $fieldList = array_values($fieldList);
-
-        if (method_exists($exportObj, 'filterFieldList')) {
-            $fieldList = $exportObj->filterFieldList($this->entityType, $fieldList, $exportAllFields);
-        }
-
-        $fp = null;
-
-        if (is_null($attributeList)) {
-            $attributeList = [];
-            $seed = $this->getEntityManager()->getEntity($this->entityType);
-            foreach ($seed->getAttributes() as $attribute => $defs) {
-                if (in_array($attribute, $attributeListToSkip)) {
-                    continue;
-                }
-                if ($this->checkAttributeIsAllowedForExport($seed, $attribute, true)) {
-                    $attributeList[] = $attribute;
-                }
-            }
-            foreach ($this->exportAdditionalAttributeList as $attribute) {
-                $attributeList[] = $attribute;
-            }
-        }
-
-        if (method_exists($exportObj, 'addAdditionalAttributes')) {
-            $exportObj->addAdditionalAttributes($this->entityType, $attributeList, $fieldList);
-        }
-
-        $fp = fopen('php://temp', 'w');
-
-        foreach ($collection as $entity) {
-            $this->loadAdditionalFieldsForExport($entity);
-            if (method_exists($exportObj, 'loadAdditionalFields')) {
-                $exportObj->loadAdditionalFields($entity, $fieldList);
-            }
-            $row = [];
-            foreach ($attributeList as $attribute) {
-                $value = $this->getAttributeFromEntityForExport($entity, $attribute);
-                $row[$attribute] = $value;
-            }
-            $line = base64_encode(serialize($row)) . \PHP_EOL;
-            fwrite($fp, $line);
-        }
-        rewind($fp);
-
-
-        if (is_null($attributeList)) {
-            $attributeList = [];
-        }
-
-        $mimeType = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
-        $fileExtension = $this->getMetadata()->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
-
-        $fileName = null;
-        if (!empty($params['fileName'])) {
-            $fileName = trim($params['fileName']);
-        }
-
-        if (!empty($fileName)) {
-            $fileName = $fileName . '.' . $fileExtension;
-        } else {
-            $fileName = "Export_{$this->entityType}." . $fileExtension;
-        }
-
-        $exportParams = [
-            'attributeList' => $attributeList,
-            'fileName ' => $fileName
-        ];
-
-        $exportParams['fieldList'] = $fieldList;
-        if (array_key_exists('exportName', $params)) {
-            $exportParams['exportName'] = $params['exportName'];
-        }
-        $contents = $exportObj->process($this->entityType, $exportParams, null, $fp);
-
-        fclose($fp);
-
-        $attachment = $this->getEntityManager()->getEntity('Attachment');
-        $attachment->set('name', $fileName);
-        $attachment->set('role', 'Export File');
-        $attachment->set('type', $mimeType);
-        $attachment->set('contents', $contents);
-
-        $this->getEntityManager()->saveEntity($attachment);
-
-        return $attachment->id;
-    }
-
-    protected function getAttributeFromEntityForExport(Entity $entity, $attribute)
-    {
-        $methodName = 'getAttribute' . ucfirst($attribute). 'FromEntityForExport';
-        if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity);
-        }
-
-        $defs = $entity->getAttributes();
-        if (!empty($defs[$attribute]) && !empty($defs[$attribute]['type'])) {
-            $type = $defs[$attribute]['type'];
-            switch ($type) {
-                case 'jsonObject':
-                    if (!empty($defs[$attribute]['isLinkMultipleNameMap'])) {
-                        break;
-                    }
-                    $value = $entity->get($attribute);
-                    return \Espo\Core\Utils\Json::encode($value, \JSON_UNESCAPED_UNICODE);
-                    break;
-                case 'jsonArray':
-                    if (!empty($defs[$attribute]['isLinkMultipleIdList'])) {
-                        break;
-                    }
-                    $value = $entity->get($attribute);
-                    if (is_array($value)) {
-                        return \Espo\Core\Utils\Json::encode($value, \JSON_UNESCAPED_UNICODE);
-                    } else {
-                        return null;
-                    }
-                    break;
-                case 'password':
-                    return null;
-                    break;
-            }
-        }
-        return $entity->get($attribute);
+        return $export
+            ->setRecordService($this)
+            ->setParams($params)
+            ->setEntityType($this->getEntityType())
+            ->setAdditionalAttributeList($this->exportAdditionalAttributeList)
+            ->setSkipAttributeList($this->exportSkipAttributeList)
+            ->run();
     }
 
     public function prepareEntityForOutput(Entity $entity)

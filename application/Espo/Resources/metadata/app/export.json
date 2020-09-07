@@ -14,7 +14,7 @@
         }
     },
     "exportFormatClassNameMap": {
-        "csv": "\\Espo\\Core\\Export\\Csv",
-        "xlsx": "\\Espo\\Core\\Export\\Xlsx"
+        "csv": "Espo\\Tools\\ListExport\\Formats\\Csv",
+        "xlsx": "Espo\\Tools\\ListExport\\Formats\\Xlsx"
     }
 }
