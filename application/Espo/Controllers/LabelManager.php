@@ -29,49 +29,69 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Utils as Utils;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Exceptions\BadRequest,
+    Api\Request,
+    DataManager,
+};
 
-class LabelManager extends \Espo\Core\Controllers\Base
+use Espo\{
+    Tools\LabelManager\LabelManager as LabelManagerTool,
+    Entities\User,
+};
+
+class LabelManager
 {
+    protected $user;
+    protected $dataManager;
+    protected $labelManagerTool;
+
+    public function __construct(User $user, DataManager $dataManager, LabelManagerTool $labelManagerTool)
+    {
+        $this->user = $user;
+        $this->dataManager = $dataManager;
+        $this->labelManagerTool = $labelManagerTool;
+
+        $this->checkControllerAccess();
+    }
+
     protected function checkControllerAccess()
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
-    public function postActionGetScopeList($params)
+    public function postActionGetScopeList()
     {
-        $labelManager = $this->getContainer()->get('injectableFactory')->create('\\Espo\\Core\\Utils\\LabelManager');
-
-        return $labelManager->getScopeList();
+        return $this->labelManagerTool->getScopeList();
     }
 
-    public function postActionGetScopeData($params, $data, $request)
+    public function postActionGetScopeData(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->scope) || empty($data->language)) {
             throw new BadRequest();
         }
-        $labelManager = $this->getContainer()->get('injectableFactory')->create('\\Espo\\Core\\Utils\\LabelManager');
-        return $labelManager->getScopeData($data->language, $data->scope);
+
+        return $this->labelManagerTool->getScopeData($data->language, $data->scope);
     }
 
-    public function postActionSaveLabels($params, $data)
+    public function postActionSaveLabels(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->scope) || empty($data->language) || !isset($data->labels)) {
             throw new BadRequest();
         }
 
         $labels = get_object_vars($data->labels);
 
-        $labelManager = $this->getContainer()->get('injectableFactory')->create('\\Espo\\Core\\Utils\\LabelManager');
-        $returnData = $labelManager->saveLabels($data->language, $data->scope, $labels);
+        $returnData = $this->labelManagerTool->saveLabels($data->language, $data->scope, $labels);
 
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->dataManager->clearCache();
 
         return $returnData;
     }
