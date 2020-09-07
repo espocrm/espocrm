@@ -104,9 +104,6 @@
     "emailFilterManager": {
         "className": "Espo\\Core\\Utils\\EmailFilterManager"
     },
-    "entityManagerUtil": {
-        "className": "Espo\\Core\\Utils\\EntityManager"
-    },
     "externalAccountClientManager": {
         "className": "Espo\\Core\\ExternalAccount\\ClientManager"
     },

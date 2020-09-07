@@ -29,26 +29,49 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\Error;
+use Espo\{
+    Entities\User,
+    Tools\EntityManager\EntityManager as EntityManagerTool,
+};
 
-class EntityManager extends \Espo\Core\Controllers\Base
+use Espo\Core\{
+    Exceptions\Error,
+    Exceptions\Forbidden,
+    Exceptions\BadRequest,
+    Api\Request,
+    DataManager,
+    Utils\Config,
+};
+
+class EntityManager
 {
+    protected $user;
+    protected $dataManager;
+    protected $config;
+    protected $entityManagerTool;
+
+    public function __construct(User $user, DataManager $dataManager, Config $config, EntityManagerTool $entityManagerTool)
+    {
+        $this->user = $user;
+        $this->dataManager = $dataManager;
+        $this->config = $config;
+        $this->entityManagerTool = $entityManagerTool;
+
+        $this->checkControllerAccess();
+    }
+
     protected function checkControllerAccess()
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
-    public function actionCreateEntity($params, $data, $request)
+    public function postActionCreateEntity(Request $request)
     {
-        $data = get_object_vars($data);
+        $data = $request->getParsedBody();
 
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $data = get_object_vars($data);
 
         if (empty($data['name']) || empty($data['type'])) {
             throw new BadRequest();
@@ -101,18 +124,18 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
         }
 
-        $result = $this->getContainer()->get('entityManagerUtil')->create($name, $type, $params);
+        $result = $this->entityManagerTool->create($name, $type, $params);
 
         if ($result) {
-            $tabList = $this->getConfig()->get('tabList', []);
+            $tabList = $this->config->get('tabList', []);
 
             if (!in_array($name, $tabList)) {
                 $tabList[] = $name;
-                $this->getConfig()->set('tabList', $tabList);
-                $this->getConfig()->save();
+                $this->config->set('tabList', $tabList);
+                $this->config->save();
             }
 
-            $this->getContainer()->get('dataManager')->rebuild();
+            $this->dataManager->rebuild();
         } else {
             throw new Error();
         }
@@ -120,23 +143,23 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-    public function actionUpdateEntity($params, $data, $request)
+    public function postActionUpdateEntity(Request $request)
     {
+        $data = $request->getParsedBody();
+
         $data = get_object_vars($data);
 
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
         if (empty($data['name'])) {
             throw new BadRequest();
         }
+
         $name = $data['name'];
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
 
-        $result = $this->getContainer()->get('entityManagerUtil')->update($name, $data);
+        $result = $this->entityManagerTool->update($name, $data);
 
         if ($result) {
-            $this->getContainer()->get('dataManager')->clearCache();
+            $this->dataManager->clearCache();
         } else {
             throw new Error();
         }
@@ -144,32 +167,31 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-    public function actionRemoveEntity($params, $data, $request)
+    public function postActionRemoveEntity(Request $request)
     {
-        $data = get_object_vars($data);
+        $data = $request->getParsedBody();
 
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $data = get_object_vars($data);
 
         if (empty($data['name'])) {
             throw new BadRequest();
         }
+
         $name = $data['name'];
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
 
-        $result = $this->getContainer()->get('entityManagerUtil')->delete($name);
+        $result = $this->entityManagerTool->delete($name);
 
         if ($result) {
-            $tabList = $this->getConfig()->get('tabList', []);
+            $tabList = $this->config->get('tabList', []);
             if (($key = array_search($name, $tabList)) !== false) {
                 unset($tabList[$key]);
                 $tabList = array_values($tabList);
             }
-            $this->getConfig()->set('tabList', $tabList);
-            $this->getConfig()->save();
+            $this->config->set('tabList', $tabList);
+            $this->config->save();
 
-            $this->getContainer()->get('dataManager')->clearCache();
+            $this->dataManager->clearCache();
         } else {
             throw new Error();
         }
@@ -177,13 +199,11 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-    public function actionCreateLink($params, $data, $request)
+    public function postActionCreateLink(Request $request)
     {
-        $data = get_object_vars($data);
+        $data = $request->getParsedBody();
 
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $data = get_object_vars($data);
 
         $paramList = [
         	'entity',
@@ -234,10 +254,10 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
-        $result = $this->getContainer()->get('entityManagerUtil')->createLink($params);
+        $result = $this->entityManagerTool->createLink($params);
 
         if ($result) {
-            $this->getContainer()->get('dataManager')->rebuild();
+            $this->dataManager->rebuild();
         } else {
             throw new Error();
         }
@@ -245,13 +265,11 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-    public function actionUpdateLink($params, $data, $request)
+    public function postActionUpdateLink(Request $request)
     {
-        $data = get_object_vars($data);
+        $data = $request->getParsedBody();
 
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $data = get_object_vars($data);
 
         $paramList = [
         	'entity',
@@ -295,10 +313,10 @@ class EntityManager extends \Espo\Core\Controllers\Base
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
-        $result = $this->getContainer()->get('entityManagerUtil')->updateLink($params);
+        $result = $this->entityManagerTool->updateLink($params);
 
         if ($result) {
-            $this->getContainer()->get('dataManager')->clearCache();
+            $this->dataManager->clearCache();
         } else {
             throw new Error();
         }
@@ -306,27 +324,27 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-    public function actionRemoveLink($params, $data, $request)
+    public function postActionRemoveLink(Request $request)
     {
-        $data = get_object_vars($data);
+        $data = $request->getParsedBody();
 
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $data = get_object_vars($data);
 
         $paramList = [
         	'entity',
         	'link',
         ];
-        $d = array();
+
+        $d = [];
+
         foreach ($paramList as $item) {
         	$d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
         }
 
-        $result = $this->getContainer()->get('entityManagerUtil')->deleteLink($d);
+        $result = $this->entityManagerTool->deleteLink($d);
 
         if ($result) {
-            $this->getContainer()->get('dataManager')->clearCache();
+            $this->dataManager->clearCache();
         } else {
             throw new Error();
         }
@@ -334,32 +352,37 @@ class EntityManager extends \Espo\Core\Controllers\Base
         return true;
     }
 
-    public function postActionFormula($params, $data, $request)
+    public function postActionFormula(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->scope)) {
             throw new BadRequest();
         }
+
         if (!property_exists($data, 'data')) {
             throw new BadRequest();
         }
 
         $formulaData = get_object_vars($data->data);
 
-        $this->getContainer()->get('entityManagerUtil')->setFormulaData($data->scope, $formulaData);
+        $this->entityManagerTool->setFormulaData($data->scope, $formulaData);
 
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->dataManager->clearCache();
 
         return true;
     }
 
-    public function postActionResetToDefault($params, $data, $request)
+    public function postActionResetToDefault(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->scope)) {
             throw new BadRequest();
         }
 
-        $this->getContainer()->get('entityManagerUtil')->resetToDefaults($data->scope);
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->entityManagerTool->resetToDefaults($data->scope);
+        $this->dataManager->clearCache();
 
         return true;
     }

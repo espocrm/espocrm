@@ -27,22 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\EntityManager\Hooks;
+namespace Espo\Tools\EntityManager\Hooks;
 
-class BasePlusType extends Base
+use Espo\Core\Di;
+
+class BasePlusType implements Di\ConfigAware, Di\MetadataAware
 {
+    use Di\ConfigSetter;
+    use Di\MetadataSetter;
+
     public function afterCreate($name, $params)
     {
-        $activitiesEntityTypeList = $this->getConfig()->get('activitiesEntityList', []);
-        $historyEntityTypeList = $this->getConfig()->get('historyEntityList', []);
+        $activitiesEntityTypeList = $this->config->get('activitiesEntityList', []);
+        $historyEntityTypeList = $this->config->get('historyEntityList', []);
         $entityTypeList = array_merge($activitiesEntityTypeList, $historyEntityTypeList);
         $entityTypeList[] = 'Task';
         $entityTypeList = array_unique($entityTypeList);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) continue;
+            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) continue;
 
-            $list = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
+            $list = $this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
             if (!in_array($name, $list)) {
                 $list[] = $name;
                 $data = array(
@@ -52,25 +57,25 @@ class BasePlusType extends Base
                         )
                     )
                 );
-                $this->getMetadata()->set('entityDefs', $entityType, $data);
+                $this->metadata->set('entityDefs', $entityType, $data);
             }
         }
 
-        $this->getMetadata()->save();
+        $this->metadata->save();
     }
 
     public function afterRemove($name)
     {
-        $activitiesEntityTypeList = $this->getConfig()->get('activitiesEntityList', []);
-        $historyEntityTypeList = $this->getConfig()->get('historyEntityList', []);
+        $activitiesEntityTypeList = $this->config->get('activitiesEntityList', []);
+        $historyEntityTypeList = $this->config->get('historyEntityList', []);
         $entityTypeList = array_merge($activitiesEntityTypeList, $historyEntityTypeList);
         $entityTypeList[] = 'Task';
         $entityTypeList = array_unique($entityTypeList);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) continue;
+            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) continue;
 
-            $list = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
+            $list = $this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
             if (in_array($name, $list)) {
                 $key = array_search($name, $list);
                 unset($list[$key]);
@@ -82,10 +87,10 @@ class BasePlusType extends Base
                         )
                     )
                 );
-                $this->getMetadata()->set('entityDefs', $entityType, $data);
+                $this->metadata->set('entityDefs', $entityType, $data);
             }
         }
 
-        $this->getMetadata()->save();
+        $this->metadata->save();
     }
 }

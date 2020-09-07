@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\EntityManager\Hooks;
+namespace Espo\Tools\EntityManager\Hooks;
 
 class PersonType extends BasePlusType
 {

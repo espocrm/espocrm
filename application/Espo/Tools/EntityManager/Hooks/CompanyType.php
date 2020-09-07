@@ -27,66 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\EntityManager\Hooks;
+namespace Espo\Tools\EntityManager\Hooks;
 
-abstract class Base
+class CompanyType extends BasePlusType
 {
-    protected $dependencyList = [
-        'entityManager',
-        'config',
-        'metadata',
-    ];
 
-    protected $injections = array();
-
-    public function __construct()
-    {
-        $this->init();
-    }
-
-    protected function init()
-    {
-    }
-
-    public function getDependencyList()
-    {
-        return $this->dependencyList;
-    }
-
-    protected function addDependencyList(array $list)
-    {
-        foreach ($list as $item) {
-            $this->addDependency($item);
-        }
-    }
-
-    protected function addDependency($name)
-    {
-        $this->dependencyList[] = $name;
-    }
-
-    protected function getInjection($name)
-    {
-        return $this->injections[$name] ?? $this->$name ?? null;
-    }
-
-    public function inject($name, $object)
-    {
-        $this->injections[$name] = $object;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->getInjection('metadata');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getInjection('config');
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getInjection('entityManager');
-    }
 }
