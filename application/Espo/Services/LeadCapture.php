@@ -44,13 +44,13 @@ class LeadCapture extends Record implements
     Di\EmailSenderAware,
     Di\DateTimeAware,
     Di\DefaultLanguageAware,
-    Di\FieldManagerUtilAware,
+    Di\FieldUtilAware,
     Di\HookManagerAware
 {
     use Di\EmailSenderSetter;
     use Di\DateTimeSetter;
     use Di\DefaultLanguageSetter;
-    use Di\FieldManagerUtilSetter;
+    use Di\FieldUtilSetter;
     use Di\HookManagerSetter;
 
     protected $readOnlyAttributeList = ['apiKey'];
@@ -64,7 +64,7 @@ class LeadCapture extends Record implements
         $requestUrl = $this->getConfig()->getSiteUrl() . '/api/v1/LeadCapture/' . $entity->get('apiKey');
         $entity->set('exampleRequestUrl', $requestUrl);
 
-        $fieldManagerUtil = $this->fieldManagerUtil;
+        $fieldUtil = $this->fieldUtil;
 
         $requestPayload = "```{\n";
 
@@ -75,7 +75,7 @@ class LeadCapture extends Record implements
         $fieldList = $entity->get('fieldList');
         if (is_array($fieldList)) {
             foreach ($fieldList as $field) {
-                foreach ($fieldManagerUtil->getActualAttributeList('Lead', $field) as $attribute) {
+                foreach ($fieldUtil->getActualAttributeList('Lead', $field) as $attribute) {
                     if (!in_array($attribute, $attributeIgnoreList)) {
                         $attributeList[] = $attribute;
                     }
@@ -238,7 +238,7 @@ class LeadCapture extends Record implements
                 }
                 continue;
             }
-            $attributeList = $this->fieldManagerUtil->getActualAttributeList('Lead', $field);
+            $attributeList = $this->fieldUtil->getActualAttributeList('Lead', $field);
             if (empty($attributeList)) continue;
             foreach ($attributeList as $attribute) {
                 if (property_exists($data, $attribute)) {

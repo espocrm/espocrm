@@ -32,7 +32,7 @@ namespace Espo\Core\Acl;
 use Espo\Core\{
     Utils\Metadata,
     Utils\File\Manager as FileManager,
-    Utils\FieldManagerUtil,
+    Utils\FieldUtil,
 };
 
 /**
@@ -62,16 +62,16 @@ class GlobalRestricton
 
     private $fileManager;
 
-    private $fieldManagerUtil;
+    private $fieldUtil;
 
     private $data;
 
     public function __construct(
-        Metadata $metadata, FileManager $fileManager, FieldManagerUtil $fieldManagerUtil, bool $useCache = true
+        Metadata $metadata, FileManager $fileManager, FieldUtil $fieldUtil, bool $useCache = true
     ) {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
 
         $isFromCache = false;
 
@@ -129,7 +129,7 @@ class GlobalRestricton
                     if ($this->getMetadata()->get(['entityAcl', $scope, 'fields', $field, $type])) {
                         $isNotEmpty = true;
                         $resultFieldList[] = $field;
-                        $fieldAttributeList = $this->getFieldManagerUtil()->getAttributeList($scope, $field);
+                        $fieldAttributeList = $this->getFieldUtil()->getAttributeList($scope, $field);
                         foreach ($fieldAttributeList as $attribute) {
                             $resultAttributeList[] = $attribute;
                         }
@@ -168,9 +168,9 @@ class GlobalRestricton
         return $this->fileManager;
     }
 
-    protected function getFieldManagerUtil()
+    protected function getFieldUtil()
     {
-        return $this->fieldManagerUtil;
+        return $this->fieldUtil;
     }
 
     public function getScopeRestrictedFieldList($scope, $type)

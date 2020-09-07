@@ -78,7 +78,7 @@ class Record implements Crud,
     Di\FileManagerAware,
     Di\SelectManagerFactoryAware,
     Di\InjectableFactoryAware,
-    Di\FieldManagerUtilAware,
+    Di\FieldUtilAware,
     Di\FieldValidatorManagerAware,
     Di\RecordServiceContainerAware,
 
@@ -95,7 +95,7 @@ class Record implements Crud,
     use Di\FileManagerSetter;
     use Di\SelectManagerFactorySetter;
     use Di\InjectableFactorySetter;
-    use Di\FieldManagerUtilSetter;
+    use Di\FieldUtilSetter;
     use Di\FieldValidatorManagerSetter;
     use Di\RecordServiceContainerSetter;
 
@@ -323,9 +323,12 @@ class Record implements Crud,
         return $this->metadata;
     }
 
+    /**
+     * @deprecated
+     */
     protected function getFieldManagerUtil()
     {
-        return $this->fieldManagerUtil;
+        return $this->fieldUtil;
     }
 
     protected function getEntityManager()
@@ -617,7 +620,7 @@ class Record implements Crud,
 
     public function processValidation(Entity $entity, $data)
     {
-        $fieldList = $this->getFieldManagerUtil()->getEntityTypeFieldList($this->entityType);
+        $fieldList = $this->fieldUtil->getEntityTypeFieldList($this->entityType);
 
         foreach ($fieldList as $field) {
             if (in_array($field, $this->validateSkipFieldList)) continue;
@@ -630,13 +633,13 @@ class Record implements Crud,
 
     protected function processValidationField(Entity $entity, $field, $data)
     {
-        $fieldType = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, 'type');
+        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, 'type');
         $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
         $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
         $fieldValidatorManager = $this->fieldValidatorManager;
 
         foreach ($validationList as $type) {
-            $value = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, $type);
+            $value = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, $type);
             if (is_null($value)) {
                 if (!in_array($type, $mandatoryValidationList)) {
                     continue;
@@ -658,7 +661,7 @@ class Record implements Crud,
 
     protected function isFieldSetInData(StdClass $data, string $field) : bool
     {
-        $attributeList = $this->getFieldManagerUtil()->getActualAttributeList($this->entityType, $field);
+        $attributeList = $this->fieldUtil->getActualAttributeList($this->entityType, $field);
         $isSet = false;
         foreach ($attributeList as $attribute) {
             if (property_exists($data, $attribute)) {
@@ -986,8 +989,8 @@ class Record implements Crud,
             }
         }
 
-        foreach ($this->getFieldManagerUtil()->getEntityTypeFieldList($this->entityType) as $field) {
-            $type = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, 'type');
+        foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
+            $type = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, 'type');
             if ($type === 'currency') {
                 if ($entity->get($field) && !$entity->get($field . 'Currency')) {
                     $entity->set($field . 'Currency', $this->getConfig()->get('defaultCurrency'));
@@ -2518,7 +2521,7 @@ class Record implements Crud,
 
         $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []);
 
-        $fieldManager = $this->fieldManagerUtil;
+        $fieldManager = $this->fieldUtil;
 
         foreach ($fields as $field => $item) {
             if (!empty($item['duplicateIgnore']) || in_array($field, $this->duplicateIgnoreFieldList)) {
@@ -2609,7 +2612,7 @@ class Record implements Crud,
 
     protected function getFieldByTypeList($type)
     {
-        return $this->getFieldManagerUtil()->getFieldByTypeList($this->entityType, $type);
+        return $this->fieldUtil->getFieldByTypeList($this->entityType, $type);
     }
 
     /**
@@ -2746,7 +2749,7 @@ class Record implements Crud,
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
 
         $list = [];
-        foreach ($this->getFieldManagerUtil()->getEntityTypeFieldList($this->entityType) as $field) {
+        foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
             if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') continue;
             if (in_array($field, $forbiddenFieldList)) continue;
             $list[] = $field;

@@ -50,7 +50,7 @@ use Espo\Core\{
     ServiceFactory,
     Portal\AclManagerContainer as PortalAclManagerContainer,
     Select\SelectManagerFactory,
-    Utils\FieldManagerUtil,
+    Utils\FieldUtil,
     Record\Collection as RecordCollection,
 };
 
@@ -73,7 +73,7 @@ class Stream
     protected $serviceFactory;
     protected $portalAclManagerContainer;
     protected $selectManagerFactory;
-    protected $fieldManagerUtil;
+    protected $fieldUtil;
 
     public function __construct(
         EntityManager $entityManager,
@@ -85,7 +85,7 @@ class Stream
         ServiceFactory $serviceFactory,
         PortalAclManagerContainer $portalAclManagerContainer,
         SelectManagerFactory $selectManagerFactory,
-        FieldManagerUtil $fieldManagerUtil
+        FieldUtil $fieldUtil
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -96,7 +96,7 @@ class Stream
         $this->serviceFactory = $serviceFactory;
         $this->portalAclManagerContainer = $portalAclManagerContainer;
         $this->selectManagerFactory = $selectManagerFactory;
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
     }
 
     protected $auditedFieldsCache = [];
@@ -1505,8 +1505,8 @@ class Stream
                         continue;
                     }
                     $auditedFields[$field] = array();
-                    $auditedFields[$field]['actualList'] = $this->fieldManagerUtil->getActualAttributeList($entityType, $field);
-                    $auditedFields[$field]['notActualList'] = $this->fieldManagerUtil->getNotActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['actualList'] = $this->fieldUtil->getActualAttributeList($entityType, $field);
+                    $auditedFields[$field]['notActualList'] = $this->fieldUtil->getNotActualAttributeList($entityType, $field);
                     $auditedFields[$field]['fieldType'] = $d['type'];
                 }
             }

@@ -29,14 +29,14 @@
 
 namespace Espo\Core\Di;
 
-use Espo\Core\Utils\FieldManagerUtil;
+use Espo\Core\Utils\FieldUtil;
 
-trait FieldManagerUtilSetter
+trait FieldUtilSetter
 {
-    protected $fieldManagerUtil;
+    protected $fieldUtil;
 
-    public function setFieldManagerUtil(FieldManagerUtil $fieldManagerUtil)
+    public function setFieldUtil(FieldUtil $fieldUtil)
     {
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
     }
 }

@@ -40,18 +40,13 @@ use Espo\Core\Di;
 
 class Lead extends \Espo\Core\Templates\Services\Person implements
 
-    Di\FieldManagerUtilAware
+    Di\FieldUtilAware
 {
-    use Di\FieldManagerUtilSetter;
+    use Di\FieldUtilSetter;
 
     protected $linkMandatorySelectAttributeList = [
         'targetLists' => ['isOptedOut'],
     ];
-
-    protected function getFieldManagerUtil()
-    {
-        return $this->fieldManagerUtil;
-    }
 
     protected function afterCreateEntity(Entity $entity, $data)
     {
@@ -160,8 +155,8 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
                     continue;
                 }
 
-                $leadAttributeList = $this->getFieldManagerUtil()->getAttributeList('Lead', $leadField);
-                $attributeList = $this->getFieldManagerUtil()->getAttributeList($entityType, $field);
+                $leadAttributeList = $this->fieldUtil->getAttributeList('Lead', $leadField);
+                $attributeList = $this->fieldUtil->getAttributeList($entityType, $field);
 
                 foreach ($attributeList as $i => $attribute) {
                     if (in_array($attribute, $ignoreAttributeList)) continue;

@@ -41,7 +41,7 @@ use Espo\Core\{
     ORM\Entity,
     Utils\Config,
     Utils\Metadata,
-    Utils\FieldManagerUtil,
+    Utils\FieldUtil,
     Utils\File\Manager as FileManager,
 };
 
@@ -66,7 +66,7 @@ class Table extends \Espo\Core\Acl\Table
         Config $config = null,
         FileManager $fileManager = null,
         Metadata $metadata = null,
-        FieldManagerUtil $fieldManagerUtil = null
+        FieldUtil $fieldUtil = null
     ) {
         if (empty($portal)) {
             throw new Error("No portal was passed to AclPortal\\Table constructor.");
@@ -74,7 +74,7 @@ class Table extends \Espo\Core\Acl\Table
 
         $this->portal = $portal;
 
-        parent::__construct($entityManager, $user, $config, $fileManager, $metadata, $fieldManagerUtil);
+        parent::__construct($entityManager, $user, $config, $fileManager, $metadata, $fieldUtil);
     }
 
     protected function getPortal()

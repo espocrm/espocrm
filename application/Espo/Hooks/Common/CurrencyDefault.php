@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Utils\{
     Config,
-    FieldManagerUtil,
+    FieldUtil,
 };
 
 class CurrencyDefault
@@ -41,17 +41,17 @@ class CurrencyDefault
     public static $order = 200;
 
     protected $config;
-    protected $fieldManagerUtil;
+    protected $fieldUtil;
 
-    public function __construct(Config $config, FieldManagerUtil $fieldManagerUtil)
+    public function __construct(Config $config, FieldUtil $fieldUtil)
     {
         $this->config = $config;
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
     }
 
     public function beforeSave(Entity $entity, array $options = [])
     {
-        $fieldList = $this->fieldManagerUtil->getFieldByTypeList($entity->getEntityType(), 'currency');
+        $fieldList = $this->fieldUtil->getFieldByTypeList($entity->getEntityType(), 'currency');
 
         $defaultCurrency = $this->config->get('defaultCurrency');
 

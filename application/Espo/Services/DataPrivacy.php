@@ -43,7 +43,7 @@ class DataPrivacy implements
     Di\MetadataAware,
     Di\ServiceFactoryAware,
     Di\EntityManagerAware,
-    Di\FieldManagerUtilAware,
+    Di\FieldUtilAware,
     Di\UserAware
 {
     use Di\AclSetter;
@@ -51,7 +51,7 @@ class DataPrivacy implements
     use Di\MetadataSetter;
     use Di\ServiceFactorySetter;
     use Di\EntityManagerSetter;
-    use Di\FieldManagerUtilSetter;
+    use Di\FieldUtilSetter;
     use Di\UserSetter;
 
     public function erase(string $entityType, string $id, array $fieldList)
@@ -87,11 +87,11 @@ class DataPrivacy implements
 
         $service->loadAdditionalFields($entity);
 
-        $filedManager = $this->fieldManagerUtil;
+        $fieldUtil = $this->fieldUtil;
 
         foreach ($fieldList as $field) {
             $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-            $attributeList = $filedManager->getActualAttributeList($entityType, $field);
+            $attributeList = $fieldUtil->getActualAttributeList($entityType, $field);
 
             if ($type === 'email') {
                 $emailAddressList = $entity->get('emailAddresses');

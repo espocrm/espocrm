@@ -29,27 +29,31 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\ORM\Entity;
+
 class FieldValidatorManager
 {
     private $metadata;
 
-    private $fieldManagerUtil;
+    private $fieldUtil;
 
     private $implHash = [];
 
-    public function __construct(Metadata $metadata, FieldManagerUtil $fieldManagerUtil)
+    public function __construct(Metadata $metadata, FieldUtil $fieldUtil)
     {
         $this->metadata = $metadata;
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
     }
 
-    public function check(\Espo\ORM\Entity $entity, string $field, string $type, $data = null) : bool
+    public function check(Entity $entity, string $field, string $type, $data = null) : bool
     {
-        if (!$data) $data = (object) [];
+        if (!$data) {
+            $data = (object) [];
+        }
 
-        $fieldType = $this->fieldManagerUtil->getEntityTypeFieldParam($entity->getEntityType(), $field, 'type');
+        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entity->getEntityType(), $field, 'type');
 
-        $validationValue = $this->fieldManagerUtil->getEntityTypeFieldParam($entity->getEntityType(), $field, $type);
+        $validationValue = $this->fieldUtil->getEntityTypeFieldParam($entity->getEntityType(), $field, $type);
 
         $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
 
@@ -60,6 +64,7 @@ class FieldValidatorManager
         if (!array_key_exists($fieldType, $this->implHash)) {
             $this->loadImpl($fieldType);
         }
+
         $impl = $this->implHash[$fieldType];
 
         $methodName = 'check' . ucfirst($type);
@@ -80,6 +85,6 @@ class FieldValidatorManager
             }
         }
 
-        $this->implHash[$fieldType] = new $className($this->metadata, $this->fieldManagerUtil);
+        $this->implHash[$fieldType] = new $className($this->metadata, $this->fieldUtil);
     }
 }

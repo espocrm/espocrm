@@ -41,7 +41,7 @@ use Espo\Core\{
     InjectableFactory,
     ORM\EntityManager,
     Utils\Metadata,
-    Utils\FieldManagerUtil,
+    Utils\FieldUtil,
     Utils\Config,
     DataManager,
     Utils\FieldValidatorManager,
@@ -52,7 +52,7 @@ class Settings
 {
     protected $applicationState;
     protected $config;
-    protected $fieldManagerUtil;
+    protected $fieldUtil;
     protected $metadata;
     protected $acl;
     protected $entityManager;
@@ -65,7 +65,7 @@ class Settings
         Config $config,
         Metadata $metadata,
         Acl $acl,
-        FieldManagerUtil $fieldManagerUtil,
+        FieldUtil $fieldUtil,
         EntityManager $entityManager,
         DataManager $dataManager,
         FieldValidatorManager $fieldValidatorManager,
@@ -75,7 +75,7 @@ class Settings
         $this->config = $config;
         $this->metadata = $metadata;
         $this->acl = $acl;
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
         $this->entityManager = $entityManager;
         $this->dataManager = $dataManager;
         $this->fieldValidatorManager = $fieldValidatorManager;
@@ -276,7 +276,7 @@ class Settings
         $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['onlyAdmin'])) {
-                foreach ($this->fieldManagerUtil->getAttributeList('Settings', $field) as $attribute) {
+                foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
                     $itemList[] = $attribute;
                 }
             }
@@ -292,7 +292,7 @@ class Settings
         $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['onlyUser'])) {
-                foreach ($this->fieldManagerUtil->getAttributeList('Settings', $field) as $attribute) {
+                foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
                     $itemList[] = $attribute;
                 }
             }
@@ -308,7 +308,7 @@ class Settings
         $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['onlySystem'])) {
-                foreach ($this->fieldManagerUtil->getAttributeList('Settings', $field) as $attribute) {
+                foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
                     $itemList[] = $attribute;
                 }
             }
@@ -324,7 +324,7 @@ class Settings
         $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['global'])) {
-                foreach ($this->fieldManagerUtil->getAttributeList('Settings', $field) as $attribute) {
+                foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
                     $itemList[] = $attribute;
                 }
             }
@@ -335,7 +335,7 @@ class Settings
 
     protected function processValidation(Entity $entity, $data)
     {
-        $fieldList = $this->fieldManagerUtil->getEntityTypeFieldList('Settings');
+        $fieldList = $this->fieldUtil->getEntityTypeFieldList('Settings');
 
         foreach ($fieldList as $field) {
             if (!$this->isFieldSetInData($data, $field)) continue;
@@ -345,13 +345,13 @@ class Settings
 
     protected function processValidationField(Entity $entity, string $field, $data)
     {
-        $fieldType = $this->fieldManagerUtil->getEntityTypeFieldParam('Settings', $field, 'type');
+        $fieldType = $this->fieldUtil->getEntityTypeFieldParam('Settings', $field, 'type');
         $validationList = $this->metadata->get(['fields', $fieldType, 'validationList'], []);
         $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
         $fieldValidatorManager = $this->fieldValidatorManager;
 
         foreach ($validationList as $type) {
-            $value = $this->fieldManagerUtil->getEntityTypeFieldParam('Settings', $field, $type);
+            $value = $this->fieldUtil->getEntityTypeFieldParam('Settings', $field, $type);
             if (is_null($value) && !in_array($type, $mandatoryValidationList)) continue;
 
             if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
@@ -362,7 +362,7 @@ class Settings
 
     protected function isFieldSetInData($data, $field)
     {
-        $attributeList = $this->fieldManagerUtil->getActualAttributeList('Settings', $field);
+        $attributeList = $this->fieldUtil->getActualAttributeList('Settings', $field);
         $isSet = false;
         foreach ($attributeList as $attribute) {
             if (property_exists($data, $attribute)) {

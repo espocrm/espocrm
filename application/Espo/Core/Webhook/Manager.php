@@ -32,7 +32,7 @@ namespace Espo\Core\Webhook;
 use Espo\Core\{
     Utils\Config,
     Utils\File\Manager as FileManager,
-    Utils\FieldManagerUtil,
+    Utils\FieldUtil,
     ORM\EntityManager,
     ORM\Entity,
 };
@@ -51,18 +51,18 @@ class Manager
     protected $config;
     protected $fileManager;
     protected $entityManager;
-    protected $fieldManagerUtil;
+    protected $fieldUtil;
 
     public function __construct(
         Config $config,
         FileManager $fileManager,
         EntityManager $entityManager,
-        FieldManagerUtil $fieldManagerUtil
+        FieldUtil $fieldUtil
     ) {
         $this->config = $config;
         $this->fileManager = $fileManager;
         $this->entityManager = $entityManager;
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
 
         $this->loadData();
     }
@@ -220,11 +220,11 @@ class Manager
             $this->logDebugEvent($event, $entity);
         }
 
-        foreach ($this->fieldManagerUtil->getEntityTypeFieldList($entity->getEntityType()) as $field) {
+        foreach ($this->fieldUtil->getEntityTypeFieldList($entity->getEntityType()) as $field) {
             $itemEvent = $entity->getEntityType() . '.fieldUpdate.' . $field;
             if (!$this->eventExists($itemEvent)) continue;
 
-            $attributeList = $this->fieldManagerUtil->getActualAttributeList($entity->getEntityType(), $field);
+            $attributeList = $this->fieldUtil->getActualAttributeList($entity->getEntityType(), $field);
             $isChanged = false;
             foreach ($attributeList as $attribute) {
                 if (in_array($attribute, $this->skipAttributeList)) continue;
@@ -237,7 +237,7 @@ class Manager
             if ($isChanged) {
                 $itemData = (object) [];
                 $itemData->id = $entity->id;
-                $attributeList = $this->fieldManagerUtil->getAttributeList($entity->getEntityType(), $field);
+                $attributeList = $this->fieldUtil->getAttributeList($entity->getEntityType(), $field);
                 foreach ($attributeList as $attribute) {
                     if (in_array($attribute, $this->skipAttributeList)) continue;
                     $itemData->$attribute = $entity->get($attribute);

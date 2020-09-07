@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Di;
 
-use Espo\Core\Utils\FieldManagerUtil;
+use Espo\Core\Utils\FieldUtil;
 
-interface FieldManagerUtilAware
+interface FieldUtilAware
 {
-    public function setFieldManagerUtil(FieldManagerUtil $fieldManagerUtil);
+    public function setFieldUtil(FieldUtil $fieldUtil);
 }

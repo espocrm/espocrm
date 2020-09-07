@@ -96,9 +96,9 @@ class FieldManager
         return $this->container->get('defaultLanguage');
     }
 
-    protected function getFieldManagerUtil()
+    protected function getFieldUtil()
     {
-        return $this->container->get('fieldManagerUtil');
+        return $this->container->get('fieldUtil');
     }
 
     public function read(string $scope, string $name) : array

@@ -47,14 +47,14 @@ class EmailTemplate extends Record implements
     Di\LanguageAware,
     Di\NumberAware,
     Di\HtmlizerFactoryAware,
-    Di\FieldManagerUtilAware
+    Di\FieldUtilAware
 {
     use Di\FileStorageManagerSetter;
     use Di\DateTimeSetter;
     use Di\LanguageSetter;
     use Di\NumberSetter;
     use Di\HtmlizerFactorySetter;
-    use Di\FieldManagerUtilSetter;
+    use Di\FieldUtilSetter;
 
     protected function getFileStorageManager()
     {
@@ -409,7 +409,7 @@ class EmailTemplate extends Record implements
             }
         }
 
-        $fm = $this->fieldManagerUtil;
+        $fm = $this->fieldUtil;
 
         foreach ($dataList as $item) {
             $type = $item['type'];

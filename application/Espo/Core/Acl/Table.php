@@ -38,7 +38,7 @@ use Espo\Core\{
     ORM\Entity,
     Utils\Config,
     Utils\Metadata,
-    Utils\FieldManagerUtil,
+    Utils\FieldUtil,
     Utils\File\Manager as FileManager,
 };
 
@@ -86,7 +86,7 @@ class Table
     protected $config;
     protected $fileManager;
     protected $metadata;
-    protected $fieldManagerUtil;
+    protected $fieldUtil;
 
     public function __construct(
         EntityManager $entityManager,
@@ -94,7 +94,7 @@ class Table
         Config $config = null,
         FileManager $fileManager = null,
         Metadata $metadata = null,
-        FieldManagerUtil $fieldManagerUtil = null
+        FieldUtil $fieldUtil = null
     ) {
         $this->entityManager = $entityManager;
 
@@ -114,8 +114,8 @@ class Table
 
         $this->metadata = $metadata;
 
-        if ($fieldManagerUtil) {
-            $this->fieldManager = $fieldManagerUtil;
+        if ($fieldUtil) {
+            $this->fieldUtil = $fieldUtil;
         }
 
         if (!$this->user->isFetched()) {
@@ -156,9 +156,9 @@ class Table
         return $this->metadata;
     }
 
-    protected function getFieldManager()
+    protected function getFieldUtil()
     {
-        return $this->fieldManager;
+        return $this->fieldUtil;
     }
 
     public function getMap() : StdClass
@@ -438,7 +438,7 @@ class Table
             }
 
             foreach (get_object_vars($scopeData) as $field => $fieldData) {
-                $attributeList = $this->getFieldManager()->getAttributeList($scope, $field);
+                $attributeList = $this->getFieldUtil()->getAttributeList($scope, $field);
 
                 foreach ($this->fieldActionList as $action) {
                     if (!isset($fieldData->$action)) continue;

@@ -40,7 +40,7 @@ use Espo\Core\{
     InjectableFactory,
     Utils\Metadata,
     Utils\Config,
-    Utils\FieldManagerUtil,
+    Utils\FieldUtil,
     ORM\EntityManager,
 };
 
@@ -99,7 +99,7 @@ class SelectManager
     protected $aclManager;
     protected $metadata;
     protected $config;
-    protected $fieldManagerUtil;
+    protected $fieldUtil;
     protected $injectableFactory;
 
     public function __construct(
@@ -109,7 +109,7 @@ class SelectManager
         AclManager $aclManager,
         Metadata $metadata,
         Config $config,
-        FieldManagerUtil $fieldManagerUtil,
+        FieldUtil $fieldUtil,
         InjectableFactory $injectableFactory
     ) {
         $this->entityManager = $entityManager;
@@ -118,7 +118,7 @@ class SelectManager
         $this->aclManager = $aclManager;
         $this->metadata = $metadata;
         $this->config = $config;
-        $this->fieldManagerUtil = $fieldManagerUtil;
+        $this->fieldUtil = $fieldUtil;
         $this->injectableFactory = $injectableFactory;
     }
 
@@ -157,9 +157,9 @@ class SelectManager
         return $this->injectableFactory;
     }
 
-    protected function getFieldManagerUtil() : FieldManagerUtil
+    protected function getFieldUtil() : FieldUtil
     {
-        return $this->fieldManagerUtil;
+        return $this->fieldUtil;
     }
 
     public function setEntityType(string $entityType)
@@ -2825,7 +2825,7 @@ class SelectManager
         $sortByField = $params['orderBy'] ?? $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
 
         if ($sortByField) {
-            $sortByAttributeList = $this->getFieldManagerUtil()->getAttributeList($this->getEntityType(), $sortByField);
+            $sortByAttributeList = $this->getFieldUtil()->getAttributeList($this->getEntityType(), $sortByField);
             foreach ($sortByAttributeList as $attribute) {
                 if (!in_array($attribute, $attributeList) && $seed->hasAttribute($attribute)) {
                     $attributeList[] = $attribute;
