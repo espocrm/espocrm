@@ -96,9 +96,9 @@ class Layout
             $filePath = Util::concatPath($this->getLayoutPath($scope), $name . '.json');
 
         if (!file_exists($filePath)) {
-            $defaultImplClassName = '\\Espo\\Custom\\Core\\Utils\\Layout\\Defaults\\' . ucfirst($name) . 'Type';
+            $defaultImplClassName = 'Espo\\Custom\\Core\\Utils\\Layout\\Defaults\\' . ucfirst($name) . 'Type';
             if (!class_exists($defaultImplClassName))
-                $defaultImplClassName = '\\Espo\\Core\\Utils\\Layout\\Defaults\\' . ucfirst($name) . 'Type';
+                $defaultImplClassName = 'Espo\\Core\\Utils\\Layout\\Defaults\\' . ucfirst($name) . 'Type';
 
             if (class_exists($defaultImplClassName)) {
                 $defaultImpl = new $defaultImplClassName($this->metadata);

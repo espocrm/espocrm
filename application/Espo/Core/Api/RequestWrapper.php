@@ -165,6 +165,12 @@ class RequestWrapper implements ApiRequest
         if (strtolower($this->getContentType()) === 'application/json' && $contents) {
             $this->parsedBody = json_decode($contents);
 
+            if (is_array($this->parsedBody)) {
+                $this->parsedBody = (object) [
+                    'list' => $this->parsedBody,
+                ];
+            }
+
             return;
         }
 

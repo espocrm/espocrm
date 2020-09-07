@@ -59,9 +59,6 @@
     "clientManager": {
         "className": "Espo\\Core\\Utils\\ClientManager"
     },
-    "layout": {
-        "className": "Espo\\Core\\Utils\\Layout"
-    },
     "themeManager": {
         "className": "Espo\\Core\\Utils\\ThemeManager"
     },

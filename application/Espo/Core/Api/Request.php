@@ -94,7 +94,7 @@ interface Request
     public function getBodyContents() : ?string;
 
     /**
-     * Get a parsed body.
+     * Get a parsed body. If JSON array is passed, then will be converted to `{"list": ARRAY}`.
      */
     public function getParsedBody() : StdClass;
 

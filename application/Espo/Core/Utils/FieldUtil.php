@@ -203,7 +203,7 @@ class FieldUtil
         return array_keys($this->metadata->get(['entityDefs', $entityType, 'fields'], []));
     }
 
-    public function getEntityTypeFieldParam(string $entityType, string $field, array $param)
+    public function getEntityTypeFieldParam(string $entityType, string $field, string $param)
     {
         return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, $param]);
     }
