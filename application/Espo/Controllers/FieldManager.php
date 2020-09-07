@@ -47,13 +47,13 @@ class FieldManager
 {
     protected $user;
     protected $dataManager;
-    protected $fieldManager;
+    protected $fieldManagerTool;
 
-    public function __construct(User $user, DataManager $dataManager, FieldManagerTool $fieldManager)
+    public function __construct(User $user, DataManager $dataManager, FieldManagerTool $fieldManagerTool)
     {
         $this->user = $user;
         $this->dataManager = $dataManager;
-        $this->fieldManager = $fieldManager;
+        $this->fieldManagerTool = $fieldManagerTool;
 
         $this->checkControllerAccess();
     }
@@ -74,7 +74,7 @@ class FieldManager
             throw new BadRequest();
         }
 
-        $data = $this->fieldManager->read($scope, $name);
+        $data = $this->fieldManagerTool->read($scope, $name);
 
         if (!isset($data)) {
             throw new BadRequest();
@@ -94,20 +94,20 @@ class FieldManager
             throw new BadRequest();
         }
 
-        $fieldManager = $this->fieldManager;
+        $fieldManagerTool = $this->fieldManagerTool;
 
-        $fieldManager->create($scope, $name, get_object_vars($data));
+        $fieldManagerTool->create($scope, $name, get_object_vars($data));
 
         try {
             $this->dataManager->rebuild($scope);
         }
         catch (Error $e) {
-            $fieldManager->delete($scope, $data->name);
+            $fieldManagerTool->delete($scope, $data->name);
 
             throw new Error($e->getMessage());
         }
 
-        return $fieldManager->read($scope, $data->name);
+        return $fieldManagerTool->read($scope, $data->name);
     }
 
     public function patchActionUpdate(Request $request)
@@ -126,17 +126,17 @@ class FieldManager
             throw new BadRequest();
         }
 
-        $fieldManager = $this->fieldManager;
+        $fieldManagerTool = $this->fieldManagerTool;
 
-        $fieldManager->update($scope, $name, get_object_vars($data));
+        $fieldManagerTool->update($scope, $name, get_object_vars($data));
 
-        if ($fieldManager->isChanged()) {
+        if ($fieldManagerTool->isChanged()) {
             $this->dataManager->rebuild($scope);
         } else {
             $this->dataManager->clearCache();
         }
 
-        return $fieldManager->read($scope, $name);
+        return $fieldManagerTool->read($scope, $name);
     }
 
     public function deleteActionDelete(Request $request)
@@ -148,7 +148,7 @@ class FieldManager
             throw new BadRequest();
         }
 
-        $result = $this->fieldManager->delete($scope, $name);
+        $result = $this->fieldManagerTool->delete($scope, $name);
 
         $this->dataManager->rebuildMetadata();
 
@@ -163,7 +163,7 @@ class FieldManager
             throw new BadRequest();
         }
 
-        $this->fieldManager->resetToDefault($data->scope, $data->name);
+        $this->fieldManagerTool->resetToDefault($data->scope, $data->name);
 
         $this->dataManager->clearCache();
 
