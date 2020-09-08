@@ -626,32 +626,46 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
         actionResetToDefault: function () {
             this.confirm(this.translate('confirmation', 'messages'), function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
                 this.ajaxPostRequest('EntityManager/action/resetToDefault', {
-                    scope: this.scope
-                }).then(function () {
-                    new Promise(
-                        function (resolve) {
-                            this.getMetadata().load(function () {
-                                this.getMetadata().storeToCache();
-                                resolve();
-                            }.bind(this), true);
-                        }.bind(this)
-                    ).then(
-                        new Promise(
+                    scope: this.scope,
+                })
+                .then(
+                    function () {
+                        (new Promise(
                             function (resolve) {
-                                this.getLanguage().load(function () {
-                                    resolve();
-                                }.bind(this), true);
+                                this.getMetadata().load(
+                                    function () {
+                                        this.getMetadata().storeToCache();
+                                        resolve();
+                                    }.bind(this),
+                                    true
+                                );
+                            }.bind(this)
+                        ))
+                        .then(
+                            function () {
+                                return new Promise(
+                                    function (resolve) {
+                                        this.getLanguage().load(
+                                            function () {
+                                                resolve();
+                                            }.bind(this),
+                                            true
+                                        );
+                                    }.bind(this)
+                                )
                             }.bind(this)
                         )
-                    ).then(
-                        function () {
-                            this.setupData();
-                            this.model.fetchedAttributes = this.model.getClonedAttributes();
-                            this.notify('Done', 'success');
-                        }.bind(this)
-                    );
-                }.bind(this));
+                        .then(
+                            function () {
+                                this.setupData();
+                                this.model.fetchedAttributes = this.model.getClonedAttributes();
+                                this.notify('Done', 'success');
+                            }.bind(this)
+                        );
+                    }.bind(this)
+                );
             }, this);
         },
 
