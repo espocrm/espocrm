@@ -50,15 +50,17 @@ class ServiceFactory
 
     protected function getClassName(string $name)
     {
-        return $this->classFinder->find('Services', $name, true);
+        return $this->classFinder->find('Services', $name);
     }
 
     public function checkExists(string $name) : bool
     {
         $className = $this->getClassName($name);
+
         if (!$className) {
             return false;
         }
+
         return true;
     }
 
