@@ -79,12 +79,14 @@ class CommandManager
     protected function getClassName(string $command) : string
     {
         $className =
-            $this->metadata->get(['app', 'consoleCommands', $command, 'className']) ??
+            $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'className']) ??
             'Espo\\Core\\Console\\Commands\\' . $command;
 
         if (!class_exists($className)) {
             $msg = "Command '{$command}' does not exist.";
+
             echo $msg . "\n";
+
             throw new Error($msg);
         }
 

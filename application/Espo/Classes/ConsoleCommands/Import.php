@@ -27,9 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Classes\ConsoleCommands;
 
-use Espo\Core\ServiceFactory;
+use Espo\Core\{
+    ServiceFactory,
+    Console\Commands\Command,
+};
 
 use Throwable;
 
