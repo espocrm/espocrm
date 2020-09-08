@@ -56,7 +56,7 @@ use Espo\Core\{
     Record\Collection as RecordCollection,
 };
 
-use Espo\Tools\ListExport\ListExport as ListExportTool;
+use Espo\Tools\Export\Export as ExportTool;
 
 use StdClass;
 
@@ -2049,7 +2049,7 @@ class Record implements Crud,
 
     public function export(array $params)
     {
-        $export = $this->injectableFactory->create(ListExportTool::class);
+        $export = $this->injectableFactory->create(ExportTool::class);
 
         return $export
             ->setRecordService($this)

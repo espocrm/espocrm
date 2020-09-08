@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\ListExport;
+namespace Espo\Tools\Export;
 
 use Espo\Core\{
     Exceptions\NotFound,
@@ -44,7 +44,7 @@ use Espo\{
     Services\Record,
 };
 
-class ListExport
+class Export
     implements Di\MetadataAware, Di\EntityManagerAware, Di\SelectManagerFactoryAware, Di\AclAware, Di\InjectableFactoryAware
 {
     use Di\MetadataSetter;
