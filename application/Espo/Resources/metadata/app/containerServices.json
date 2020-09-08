@@ -26,9 +26,6 @@
     "number": {
         "loaderClassName": "Espo\\Core\\Loaders\\NumberUtil"
     },
-    "controllerManager": {
-        "className": "Espo\\Core\\ControllerManager"
-    },
     "selectManagerFactory": {
         "className": "Espo\\Core\\Select\\SelectManagerFactory"
     },
@@ -86,9 +83,6 @@
     "hasher": {
         "className": "Espo\\Core\\Utils\\Hasher"
     },
-    "layout": {
-        "className": "Espo\\Core\\Utils\\Layout"
-    },
     "authLoginFactory": {
         "className": "Espo\\Core\\Authentication\\LoginFactory"
     },
@@ -97,9 +91,6 @@
     },
     "auth2FAUserFactory": {
         "className": "Espo\\Core\\Authentication\\TwoFactor\\UserFactory"
-    },
-    "totp": {
-        "className": "Espo\\Core\\Authentication\\TwoFactor\\Utils\\Totp"
     },
     "emailFilterManager": {
         "className": "Espo\\Core\\Utils\\EmailFilterManager"

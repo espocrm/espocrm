@@ -32,6 +32,10 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\UpgradeManager;
+use Espo\Core\Utils\AdminNotificationManager;
+use Espo\Core\Utils\SystemRequirements;
+
 class Admin extends \Espo\Core\Controllers\Base
 {
     protected function checkControllerAccess()
@@ -46,6 +50,7 @@ class Admin extends \Espo\Core\Controllers\Base
         if (!$request->isPost()) {
             throw new BadRequest();
         }
+
         $result = $this->getContainer()->get('dataManager')->rebuild();
 
         return $result;
@@ -54,6 +59,7 @@ class Admin extends \Espo\Core\Controllers\Base
     public function postActionClearCache($params)
     {
         $result = $this->getContainer()->get('dataManager')->clearCache();
+
         return $result;
     }
 
@@ -71,15 +77,16 @@ class Admin extends \Espo\Core\Controllers\Base
                 throw new Forbidden();
             }
         }
-        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+
+        $upgradeManager = new UpgradeManager($this->getContainer());
 
         $upgradeId = $upgradeManager->upload($data);
         $manifest = $upgradeManager->getManifest();
 
-        return array(
+        return [
             'id' => $upgradeId,
             'version' => $manifest['version'],
-        );
+        ];
     }
 
     public function postActionRunUpgrade($params, $data)
@@ -90,7 +97,7 @@ class Admin extends \Espo\Core\Controllers\Base
             }
         }
 
-        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+        $upgradeManager = new UpgradeManager($this->getContainer());
         $upgradeManager->install(get_object_vars($data));
 
         return true;
@@ -103,13 +110,15 @@ class Admin extends \Espo\Core\Controllers\Base
 
     public function actionAdminNotificationList($params)
     {
-        $adminNotificationManager = new \Espo\Core\Utils\AdminNotificationManager($this->getContainer());
+        $adminNotificationManager = new AdminNotificationManager($this->getContainer());
+
         return $adminNotificationManager->getNotificationList();
     }
 
     public function actionSystemRequirementList($params)
     {
-        $systemRequirementManager = new \Espo\Core\Utils\SystemRequirements($this->getContainer());
+        $systemRequirementManager = new SystemRequirements($this->getContainer());
+
         return $systemRequirementManager->getAllRequiredList();
     }
 }
