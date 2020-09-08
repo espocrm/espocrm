@@ -455,6 +455,7 @@ class MassEmail extends RecordService implements
         }
 
         $queueItem->set('status', 'Sending');
+
         $this->getEntityManager()->saveEntity($queueItem);
 
         $target = $this->getEntityManager()->getEntity($queueItem->get('targetType'), $queueItem->get('targetId'));
@@ -467,6 +468,7 @@ class MassEmail extends RecordService implements
         }
 
         $emailAddress = $target->get('emailAddress');
+
         if (!$emailAddress) {
             $queueItem->set('status', 'Failed');
             $this->getEntityManager()->saveEntity($queueItem);
@@ -496,8 +498,19 @@ class MassEmail extends RecordService implements
 
         $email = $this->getPreparedEmail($queueItem, $massEmail, $emailTemplate, $target, $trackingUrlList);
 
+        if (!$email) {
+            return false;
+        }
+
         if ($email->get('replyToAddress')) {
             unset($smtpParams['replyToAddress']);
+        }
+
+        if ($campaign) {
+            $email->setLinkMultipleIdList(
+                'teams',
+                $campaign->getLinkMultipleIdList('teams')
+            );
         }
 
         $params = [];
@@ -538,14 +551,18 @@ class MassEmail extends RecordService implements
                 $queueItem->set('status', 'Pending');
             }
             $this->getEntityManager()->saveEntity($queueItem);
+
             $GLOBALS['log']->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
 
             return false;
         }
 
         $emailObject = $emailTemplate;
+
         if ($massEmail->get('storeSentEmails') && !$isTest) {
+
             $this->getEntityManager()->saveEntity($email);
+
             $emailObject = $email;
         }
 
