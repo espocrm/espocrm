@@ -12,7 +12,7 @@
     {
         "label": "Misc",
         "rows": [
-            [{"name": "exportDelimiter"}, {"name":"autoFollowEntityTypeList"}]
+            [{"name": "exportDelimiter"}, false]
         ]
     },
     {
