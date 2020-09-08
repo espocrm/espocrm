@@ -57,8 +57,8 @@ class CommandManager
 
         if (!$command) {
             $msg = "Command name is not specifed.";
+
             echo $msg . "\n";
-            throw new Error($msg);
         }
 
         $command = ucfirst(Util::hyphenToCamelCase($command));
@@ -86,8 +86,6 @@ class CommandManager
             $msg = "Command '{$command}' does not exist.";
 
             echo $msg . "\n";
-
-            throw new Error($msg);
         }
 
         return $className;
@@ -100,6 +98,7 @@ class CommandManager
         $flagList = [];
 
         $skipIndex = 1;
+
         if (isset($argv[0]) && $argv[0] === 'command.php') {
             $skipIndex = 2;
         }
