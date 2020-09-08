@@ -46,6 +46,7 @@ use Espo\{
     Modules\Crm\Entities\Campaign,
     ORM\Entity,
     Services\Record as RecordService,
+    Entities\Email,
 };
 
 use Exception;
@@ -344,11 +345,11 @@ class MassEmail extends RecordService implements
     }
 
     protected function getPreparedEmail(
-        Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, $trackingUrlList = [])
-    {
-        $templateParams = array(
-            'parent' => $target
-        );
+        Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, iterable $trackingUrlList = []
+    ) : ?Email {
+        $templateParams = [
+            'parent' => $target,
+        ];
 
         $emailData = $this->getEmailTemplateService()->parseTemplate($emailTemplate, $templateParams);
 
@@ -365,7 +366,10 @@ class MassEmail extends RecordService implements
             $body = str_replace($trackingUrl->get('urlToUse'), $url, $body);
         }
 
-        if (!$this->getConfig()->get('massEmailDisableMandatoryOptOutLink') && stripos($body, '?entryPoint=unsubscribe&id') === false) {
+        if (
+            !$this->getConfig()->get('massEmailDisableMandatoryOptOutLink') &&
+            stripos($body, '?entryPoint=unsubscribe&id') === false
+        ) {
             if ($emailData['isHtml']) {
                 $body .= "<br><br>" . $optOutLink;
             } else {
@@ -392,7 +396,7 @@ class MassEmail extends RecordService implements
         $emailAddress = $target->get('emailAddress');
 
         if (empty($emailAddress)) {
-            return false;
+            return null;
         }
 
         $email->set('to', $emailAddress);
