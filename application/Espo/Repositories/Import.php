@@ -40,6 +40,8 @@ class Import extends \Espo\Core\Repositories\Database
     {
         $entityType = $entity->get('entityType');
 
+        $params = $params ?? [];
+
         $this->addImportEntityJoin($entity, $relationName, $params);
 
         return $this->getEntityManager()->getRepository($entityType)->find($params);
@@ -82,6 +84,8 @@ class Import extends \Espo\Core\Repositories\Database
     public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int
     {
         $entityType = $entity->get('entityType');
+
+        $params = $params ?? [];
 
         $this->addImportEntityJoin($entity, $relationName, $params);
 

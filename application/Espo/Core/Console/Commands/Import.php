@@ -31,6 +31,8 @@ namespace Espo\Core\Console\Commands;
 
 use Espo\Core\ServiceFactory;
 
+use Throwable;
+
 class Import implements Command
 {
     protected $serviceFactory;
@@ -54,11 +56,13 @@ class Import implements Command
         if (!$id && $filePath) {
             if (!$paramsId) {
                 $this->out("You need to specify --params-id option.\n");
+
                 return;
             }
 
             if (!file_exists($filePath)) {
                 $this->out("File not found.\n");
+
                 return;
             }
 
@@ -70,12 +74,15 @@ class Import implements Command
                 $resultId = $result->id;
                 $countCreated = $result->countCreated;
                 $countUpdated = $result->countUpdated;
-            } catch (\Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $this->out("Error occured: ".$e->getMessage()."\n");
+
                 return;
             }
 
             $this->out("Finished. Import ID: {$resultId}. Created: {$countCreated}. Updated: {$countUpdated}.\n");
+
             return;
         }
 
@@ -84,12 +91,15 @@ class Import implements Command
 
             try {
                 $service->revert($id);
-            } catch (\Throwable $e) {
-                $this->out("Error occured: ".$e->getMessage()."\n");
+            }
+            catch (Throwable $e) {
+                $this->out("Error occured: " . $e->getMessage() . "\n");
+
                 return;
             }
 
             $this->out("Finished.\n");
+
             return;
         }
 
@@ -98,8 +108,10 @@ class Import implements Command
 
             try {
                 $result = $service->importById($id, true, $forceResume);
-            } catch (\Throwable $e) {
-                $this->out("Error occured: ".$e->getMessage()."\n");
+            }
+            catch (Throwable $e) {
+                $this->out("Error occured: " . $e->getMessage() . "\n");
+
                 return;
             }
 
@@ -107,10 +119,12 @@ class Import implements Command
             $countUpdated = $result->countUpdated;
 
             $this->out("Finished. Created: {$countCreated}. Updated: {$countUpdated}.\n");
+
             return;
         }
 
         $this->out("Not enough params passed.\n");
+
         return;
     }
 
