@@ -65,8 +65,13 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
             ->method('getScopeModuleName')
             ->will($this->returnValue(false));
 
-        $this->assertEquals(Util::fixPath('application/Espo/Resources/layouts/User'), $this->reflection->invokeMethod('getLayoutPath', array('User')) );
-        $this->assertEquals(Util::fixPath('custom/Espo/Custom/Resources/layouts/User'), $this->reflection->invokeMethod('getLayoutPath', array('User', true)) );
+        $this->assertEquals(Util::fixPath('application/Espo/Resources/layouts/User'),
+            $this->reflection->invokeMethod('getDirPath', ['User'])
+        );
+        $this->assertEquals(
+            Util::fixPath('custom/Espo/Custom/Resources/layouts/User'),
+            $this->reflection->invokeMethod('getDirPath', ['User', true])
+        );
     }
 
 
@@ -77,8 +82,14 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
             ->method('getScopeModuleName')
             ->will($this->returnValue('Crm'));
 
-        $this->assertEquals(Util::fixPath('application/Espo/Modules/Crm/Resources/layouts/Call'), $this->reflection->invokeMethod('getLayoutPath', array('Call')) );
-        $this->assertEquals(Util::fixPath('custom/Espo/Custom/Resources/layouts/Call'), $this->reflection->invokeMethod('getLayoutPath', array('Call', true)) );
+        $this->assertEquals(
+            Util::fixPath('application/Espo/Modules/Crm/Resources/layouts/Call'),
+            $this->reflection->invokeMethod('getDirPath', array('Call'))
+        );
+        $this->assertEquals(
+            Util::fixPath('custom/Espo/Custom/Resources/layouts/Call'),
+            $this->reflection->invokeMethod('getDirPath', array('Call', true))
+        );
     }
 
     function testGet()
