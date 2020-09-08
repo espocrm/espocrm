@@ -1671,7 +1671,7 @@ class Stream
         return $data;
     }
 
-    protected function getOnlyTeamEntityTypeList(\Espo\Entities\User $user)
+    protected function getOnlyTeamEntityTypeList(User $user)
     {
         if ($user->isPortal()) return [];
 
@@ -1691,7 +1691,7 @@ class Stream
         return $list;
     }
 
-    protected function getOnlyOwnEntityTypeList(\Espo\Entities\User $user)
+    protected function getOnlyOwnEntityTypeList(User $user)
     {
         if ($user->isPortal()) return [];
 
@@ -1710,14 +1710,18 @@ class Stream
         return $list;
     }
 
-    protected function getUserAclManager(\Espo\Entities\User $user)
+    protected function getUserAclManager(User $user)
     {
         $aclManager = $this->aclManager;
 
         if ($user->isPortal() && !$this->user->isPortal()) {
-            $portals = $user->get('portals');
-            if (count($portals)) {
-                $aclManager = $this->portalAclManagerContainer->get($portals[0]);
+            $portal = $this->entityManager
+                ->getRepository('User')
+                ->getRelation($user, 'portals')
+                ->findOne();
+
+            if ($portal) {
+                $aclManager = $this->portalAclManagerContainer->get($portal);
             } else {
                 $aclManager = null;
             }
@@ -1726,7 +1730,7 @@ class Stream
         return $aclManager;
     }
 
-    protected function getNotAllEntityTypeList(\Espo\Entities\User $user)
+    protected function getNotAllEntityTypeList(User $user)
     {
         if (!$user->isPortal()) return [];
 
@@ -1747,7 +1751,7 @@ class Stream
         return $list;
     }
 
-    protected function getIgnoreScopeList(\Espo\Entities\User $user)
+    protected function getIgnoreScopeList(User $user)
     {
         $ignoreScopeList = [];
         $scopes = $this->metadata->get('scopes', []);
