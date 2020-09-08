@@ -59,6 +59,8 @@ class CommandManager
             $msg = "Command name is not specifed.";
 
             echo $msg . "\n";
+
+            exit;
         }
 
         $command = ucfirst(Util::hyphenToCamelCase($command));
@@ -86,6 +88,8 @@ class CommandManager
             $msg = "Command '{$command}' does not exist.";
 
             echo $msg . "\n";
+
+            exit;
         }
 
         return $className;
