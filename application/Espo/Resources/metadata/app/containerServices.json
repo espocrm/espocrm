@@ -47,9 +47,6 @@
     "hookManager": {
         "className": "Espo\\Core\\HookManager"
     },
-    "entryPointManager": {
-        "className": "Espo\\Core\\EntryPointManager"
-    },
     "notificatorFactory": {
         "className": "Espo\\Core\\NotificatorFactory"
     },
@@ -82,15 +79,6 @@
     },
     "hasher": {
         "className": "Espo\\Core\\Utils\\Hasher"
-    },
-    "authLoginFactory": {
-        "className": "Espo\\Core\\Authentication\\LoginFactory"
-    },
-    "auth2FAFactory": {
-        "className": "Espo\\Core\\Authentication\\TwoFactor\\Factory"
-    },
-    "auth2FAUserFactory": {
-        "className": "Espo\\Core\\Authentication\\TwoFactor\\UserFactory"
     },
     "emailFilterManager": {
         "className": "Espo\\Core\\Utils\\EmailFilterManager"
