@@ -447,6 +447,7 @@ class Import
                     }
                 }
             }
+
             if (!$entity) {
                 if ($action == 'createAndUpdate') {
                     $entity = $this->entityManager->getEntity($this->entityType);
@@ -472,24 +473,6 @@ class Import
             }
 
             $entity->set($v);
-        }
-
-        $attributeDefs = $entity->getAttributes();
-        $relDefs = $entity->getRelations();
-
-        $phoneFieldList = [];
-
-        if (
-            $entity->hasAttribute('phoneNumber')
-            &&
-            $entity->getAttributeParam('phoneNumber', 'fieldType') === 'phone'
-        ) {
-            $typeList = $this->metadata->get('entityDefs.' . $this->entityType . '.fields.phoneNumber.typeList', []);
-
-            foreach ($typeList as $type) {
-                $attr = str_replace(' ', '_', ucfirst($type));
-                $phoneFieldList[] = 'phoneNumber' . $attr;
-            }
         }
 
         $valueMap = (object) [];
@@ -525,83 +508,49 @@ class Import
             $defaultCurrency = $params['currency'];
         }
 
-        $mFieldsDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+        $fieldsDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields']) ?? [];
 
-        foreach ($mFieldsDefs as $field => $defs) {
-            if (!empty($defs['type']) && $defs['type'] === 'currency') {
+        foreach ($fieldsDefs as $field => $defs) {
+            $fieldType = $defs['type'] ?? null;
+
+            if ($fieldType === 'currency') {
                 if ($entity->has($field) && !$entity->get($field . 'Currency')) {
                     $entity->set($field . 'Currency', $defaultCurrency);
                 }
             }
         }
 
-        foreach ($attributeList as $i => $attribute) {
-            if (!array_key_exists($attribute, $attributeDefs)) {
+        foreach ($attributeList as $attribute) {
+            if (!$entity->hasAttribute($attribute)) {
                 continue;
             }
 
-            $defs = $attributeDefs[$attribute];
-            $type = $attributeDefs[$attribute]['type'];
-
-            if (in_array($type, [Entity::FOREIGN, Entity::VARCHAR]) && !empty($defs['foreign'])) {
-                $relatedEntityIsPerson =
-                    is_array($defs['foreign']) &&
-                    in_array('firstName', $defs['foreign']) && in_array('lastName', $defs['foreign']);
-
-                if ($defs['foreign'] === 'name' || $relatedEntityIsPerson) {
-                    if ($entity->has($attribute)) {
-                        $relation = $defs['relation'];
-
-                        if (
-                            $attribute == $relation . 'Name' &&
-                            !$entity->has($relation . 'Id') &&
-                            array_key_exists($relation, $relDefs)
-                        ) {
-                            if ($relDefs[$relation]['type'] == Entity::BELONGS_TO) {
-                                $value = $entity->get($attribute);
-                                $foreignEntityType = $relDefs[$relation]['entity'];
-
-                                if ($relatedEntityIsPerson) {
-                                    $where = $this->parsePersonName($value, $params['personNameFormat']);
-                                } else {
-                                    $where['name'] = $value;
-                                }
-
-                                $found = $this->entityManager
-                                    ->getRepository($foreignEntityType)
-                                    ->where($where)
-                                    ->findOne();
-
-                                if ($found) {
-                                    $entity->set($relation . 'Id', $found->id);
-                                    $entity->set($relation . 'Name', $found->get('name'));
-                                } else {
-                                    if (!in_array($foreignEntityType, ['User', 'Team'])) {
-                                        // TODO create related record with name $name and relate
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+            if (
+                $entity->getAttributeType($attribute) === Entity::FOREIGN
+                &&
+                $entity->getAttributeParam($attribute, 'foreign') === 'name'
+            ) {
+                $this->processForeignName($entity, $attribute);
             }
         }
 
         $result = [];
 
+        if ($isNew) {
+            $isDuplicate = false;
+
+            if (empty($params['skipDuplicateChecking'])) {
+                $isDuplicate = $recordService->checkIsDuplicate($entity);
+            }
+        }
+
+        if ($entity->id) {
+            $this->entityManager
+                ->getRepository($entity->getEntityType())
+                ->deleteFromDb($entity->id, true);
+        }
+
         try {
-            if ($isNew) {
-                $isDuplicate = false;
-
-                if (empty($params['skipDuplicateChecking'])) {
-                    $isDuplicate = $recordService->checkIsDuplicate($entity);
-                }
-            }
-
-            if ($entity->id) {
-                $sql = $this->entityManager->getRepository($entity->getEntityType())->deleteFromDb($entity->id, true);
-            }
-
             $this->entityManager->saveEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
@@ -613,26 +562,85 @@ class Import
 
             if ($isNew) {
                 $result['isImported'] = true;
+
                 if ($isDuplicate) {
                     $result['isDuplicate'] = true;
                 }
             } else {
                 $result['isUpdated'] = true;
             }
-
         } catch (Exception $e) {
-            $GLOBALS['log']->error('Import: [' . $e->getCode() . '] ' .$e->getMessage());
+            $GLOBALS['log']->error("Import: " . $e->getMessage());
         }
 
         return (object) $result;
     }
 
+    protected function processForeignName(Entity $entity, string $attribute)
+    {
+        $relation = $entity->getAttributeParam($attribute, 'relation');
+
+        if (!$relation) {
+            return;
+        }
+
+        $foreignEntityType = $entity->getRelationParam($relation, 'entity');
+
+        $isPerson = false;
+
+        if ($foreignEntityType) {
+            $isPerson = $this->metadata->get(['entityDefs', $foreignEntityType, 'fields', 'name', 'type']) === 'personName';
+        }
+
+        if ($attribute !== $relation . 'Name') {
+            return;
+        }
+
+        if ($entity->has($relation . 'Id')) {
+            return;
+        }
+
+        if (!$entity->hasRelation($relation)) {
+            return;
+        }
+
+        $relationType = $entity->getRelationType($relation);
+
+        if ($relationType !== Entity::BELONGS_TO) {
+            return;
+        }
+
+        $nameValue = $entity->get($attribute);
+
+        if ($isPerson) {
+            $where = $this->parsePersonName($nameValue, $this->params['personNameFormat']);
+        } else {
+            $where = [
+                'name' => $nameValue,
+            ];
+        }
+
+        $found = $this->entityManager
+            ->getRepository($foreignEntityType)
+            ->select(['id', 'name'])
+            ->where($where)
+            ->findOne();
+
+        if ($found) {
+            $entity->set($relation . 'Id', $found->id);
+            $entity->set($relation . 'Name', $found->get('name'));
+
+            return;
+        }
+
+        if (!in_array($foreignEntityType, ['User', 'Team'])) {
+            // @todo Create related record with name $name and relate.
+        }
+    }
+
     protected function processRowItem(Entity $entity, string $attribute, $value, StdClass $valueMap)
     {
         $params = $this->params;
-
-        $attributeDefs = $entity->getAttributes();
-        $relDefs = $entity->getRelations();
 
         if ($attribute == 'id') {
             if ($params['action'] == 'create') {
@@ -727,6 +735,20 @@ class Import
             return;
         }
 
+        $phoneFieldList = [];
+
+        if (
+            $entity->hasAttribute('phoneNumber')
+            &&
+            $entity->getAttributeParam('phoneNumber', 'fieldType') === 'phone'
+        ) {
+            $typeList = $this->metadata->get(['entityDefs', $this->entityType, 'fields', 'phoneNumber', 'typeList']) ?? [];
+
+            foreach ($typeList as $type) {
+                $phoneFieldList[] = 'phoneNumber' . str_replace(' ', '_', ucfirst($type));
+            }
+        }
+
         if (in_array($attribute, $phoneFieldList) && !empty($value)) {
             $phoneNumberData = $entity->get('phoneNumberData');
             $isPrimary = false;
@@ -787,6 +809,7 @@ class Import
             ];
 
             $emailAddressData[] = $o;
+
             $entity->set('emailAddressData', $emailAddressData);
 
             return;
