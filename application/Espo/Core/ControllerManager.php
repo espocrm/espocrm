@@ -98,7 +98,7 @@ class ControllerManager
 
         $data = $request->getBodyContents();
 
-        if ($data) {
+        if ($data && $request->getContentType() === 'application/json') {
             $data = json_decode($data);
         }
 
