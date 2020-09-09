@@ -351,7 +351,7 @@ class EntityManager
     /**
      * Get a repository for a specific entity type.
      */
-    public function getRepository(string $entityType) : ?Repository
+    public function getRepository(string $entityType) : Repository
     {
         if (!$this->hasRepository($entityType)) {
             throw new RuntimeException("Repository '{$entityType}' does not exist.");

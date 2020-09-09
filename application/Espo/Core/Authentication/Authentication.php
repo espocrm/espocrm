@@ -53,7 +53,7 @@ use Espo\Core\{
     ApplicationState,
     Utils\Config,
     Utils\Metadata,
-    ORM\EntityManager,
+    ORM\EntityManagerProxy,
     Api\Request,
 };
 
@@ -86,7 +86,7 @@ class Authentication
         ApplicationState $applicationState,
         Config $config,
         Metadata $metadata,
-        EntityManager $entityManager,
+        EntityManagerProxy $entityManagerProxy,
         LoginFactory $authLoginFactory,
         TwoFAFactory $auth2FAFactory
     ) {
@@ -96,7 +96,7 @@ class Authentication
         $this->applicationState = $applicationState;
         $this->config = $config;
         $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
+        $this->entityManager = $entityManagerProxy;
         $this->authLoginFactory = $authLoginFactory;
         $this->auth2FAFactory = $auth2FAFactory;
     }

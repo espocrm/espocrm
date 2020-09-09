@@ -27,55 +27,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\ORM;
 
-use Espo\Core\Exceptions\{
-    Error,
-};
-
-use Espo\Entities\{
-    User,
+use Espo\ORM\{
+    Entity,
+    Repository\Repository,
 };
 
 use Espo\Core\{
-    ORM\EntityManagerProxy,
+    Container,
 };
 
-/**
- * Setting a current user for the application.
- */
-class ApplicationUser
+class EntityManagerProxy
 {
-    protected $container;
-    protected $entityManagerProxy;
+    private $entityManager = null;
 
-    public function __construct(Container $container, EntityManagerProxy $entityManagerProxy)
+    private $container;
+
+    public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->entityManagerProxy = $entityManagerProxy;
     }
 
-    /**
-     * Setup the system user as a current user. The system user is used when no user is logged in.
-     */
-    public function setupSystemUser()
+    private function getEntityManager() : EntityManager
     {
-        $user = $this->entityManagerProxy->getEntity('User', 'system');
-        if (!$user) {
-            throw new Error("System user is not found");
+        if (!$this->entityManager) {
+            $this->entityManager = $this->container->get('entityManager');
         }
 
-        $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
-        $user->set('type', 'system');
-
-        $this->container->set('user', $user);
+        return $this->entityManager;
     }
 
-    /**
-     * Set a current user.
-     */
-    public function setUser(User $user)
+    public function getEntity(string $entityType, ?string $id = null) : ?Entity
     {
-        $this->container->set('user', $user);
+        return $this->getEntityManager()->getEntity($entityType, $id);
+    }
+
+    public function saveEntity(Entity $entity, array $options = [])
+    {
+        return $this->getEntityManager()->saveEntity($entity, $options);
+    }
+
+    public function getRepository(string $entityType) : Repository
+    {
+        return $this->getEntityManager()->getRepository($entityType);
     }
 }
