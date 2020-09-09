@@ -1,0 +1,7 @@
+{
+    "manifest": {
+        "delete": [
+            "vendor/zendframework"
+        ]
+    }
+}
