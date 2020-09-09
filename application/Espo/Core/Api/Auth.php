@@ -29,9 +29,11 @@
 
 namespace Espo\Core\Api;
 
-use Exception;
-
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\{
+    BadRequest,
+    Forbidden,
+    ServiceUnavailable,
+};
 
 use Espo\Core\Authentication\{
     Authentication,
@@ -44,6 +46,7 @@ use Espo\Core\{
 };
 
 use StdClass;
+use Exception;
 
 /**
  * Determines which auth method to use. Fetches a username and password from headers and server parameters.
@@ -156,23 +159,29 @@ class Auth
             if (!$this->isEntryPoint && $hasAuthData) {
                 try {
                     $isAuthenticated = (bool) $this->authentication->login($username, $password, $request, $authenticationMethod);
-                } catch (Exception $e) {
+                }
+                catch (Exception $e) {
                     $this->processException($response, $e);
+
                     return;
                 }
+
                 if ($isAuthenticated) {
                     $this->resolve();
+
                     return;
                 }
             }
             $this->resolveUseNoAuth();
+
             return;
         }
 
         if ($hasAuthData) {
             try {
                 $authResult = $this->authentication->login($username, $password, $request, $authenticationMethod);
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 $this->processException($response, $e);
             }
 
@@ -185,6 +194,7 @@ class Auth
             if (!$this->isXMLHttpRequest($request)) {
                 $showDialog = true;
             }
+
             $this->processUnauthorized($response, $showDialog);
         }
     }
@@ -206,6 +216,7 @@ class Auth
 
         if ($authResult->isSuccess()) {
             $this->resolve();
+
             return;
         }
 
@@ -219,19 +230,34 @@ class Auth
                 'view' => $authResult->getView(),
                 'token' => $authResult->getToken(),
             ];
+
             $response->writeBody(json_encode($bodyData));
         }
     }
 
     protected function processException(Response $response, Exception $e)
     {
-        $reason = $e->getMessage();
+        if (
+            $e instanceof BadRequest ||
+            $e instanceof ServiceUnavailable ||
+            $e instanceof BadRequest
+        ) {
+            $reason = $e->getMessage();
 
-        if ($reason) {
-            $response->setHeader('X-Status-Reason', $e->getMessage());
+            if ($reason) {
+                $response->setHeader('X-Status-Reason', $e->getMessage());
+            }
+
+            $response->setStatus($e->getCode());
+
+            $GLOBALS['log']->notice("Auth: " . $e->getMessage());
+
+            return;
         }
 
-        $response->setStatus($e->getCode(), $reason);
+        $response->setStatus(500);
+
+        $GLOBALS['log']->error("Auth: " . $e->getMessage());
     }
 
     protected function processUnauthorized(Response $response, bool $showDialog)
