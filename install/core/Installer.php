@@ -216,7 +216,7 @@ class Installer
 
     protected function getCurrencyList()
     {
-        return $this->app->getMetadata()->get('app.currency.list');
+        return $this->app->getContainer()->get('metadata')->get('app.currency.list');
     }
 
     public function getInstallerConfigData()
@@ -479,12 +479,14 @@ class Installer
     {
         if (!$this->defaultSettings) {
 
-            $settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');
+            $settingDefs = $this->app->getContainer()->get('metadata')->get('entityDefs.Settings.fields');
 
-            $defaults = array();
+            $defaults = [];
+
             foreach ($this->permittedSettingList as $fieldName) {
-
-                if (!isset($settingDefs[$fieldName])) continue;
+                if (!isset($settingDefs[$fieldName])) {
+                    continue;
+                }
 
                 switch ($fieldName) {
                     case 'defaultCurrency':
