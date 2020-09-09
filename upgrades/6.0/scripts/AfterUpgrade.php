@@ -138,4 +138,25 @@ class AfterUpgrade
             }
         }
     }
+
+    protected function isUseMyisam($container)
+    {
+        $pdo = $container->get('entityManager')->getPDO();
+        $databaseInfo = $container->get('config')->get('database');
+
+        try {
+            $sth = $pdo->prepare("SELECT TABLE_NAME as tableName FROM information_schema.TABLES WHERE TABLE_SCHEMA = '". $databaseInfo['dbname'] ."' and ENGINE = 'MyISAM'");
+            $sth->execute();
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        $tableList = $sth->fetchAll(\PDO::FETCH_NUM);
+
+        if (empty($tableList)) {
+            return false;
+        }
+
+        return true;
+    }
 }
