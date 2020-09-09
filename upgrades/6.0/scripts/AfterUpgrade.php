@@ -20,6 +20,9 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
+
 class AfterUpgrade
 {
     public function run($container)
@@ -32,6 +35,18 @@ class AfterUpgrade
         $config->save();
 
         $this->fixCollation($container);
+
+        $this->fixNoteEmailReceivedTemplate();
+    }
+
+    protected function fixNoteEmailReceivedTemplate()
+    {
+        $from = 'custom/Espo/Custom/Resources/templates/noteEmailRecieved';
+        $to = 'custom/Espo/Custom/Resources/templates/noteEmailReceived';
+
+        if (is_dir($from)) {
+            rename($from, $to);
+        }
     }
 
     protected function fixCollation($container)
@@ -41,14 +56,18 @@ class AfterUpgrade
         $pdo = $container->get('entityManager')->getPDO();
         $ormMeta = $container->get('ormMetadata')->getData(true);
 
-        $fieldListExceededIndexMaxLength = \Espo\Core\Utils\Database\Schema\Utils::getFieldListExceededIndexMaxLength($ormMeta, 767);
+        $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, 767);
 
         foreach ($ormMeta as $entityName => $entityParams) {
+            if (in_array($entityName, $ignotedEntityList)) {
+                continue;
+            }
 
-            if (in_array($entityName, $ignotedEntityList)) continue;
-            if (!isset($fieldListExceededIndexMaxLength[$entityName])) continue;
+            if (!isset($fieldListExceededIndexMaxLength[$entityName])) {
+                continue;
+            }
 
-            $tableName = \Espo\Core\Utils\Util::toUnderScore($entityName);
+            $tableName = Util::toUnderScore($entityName);
 
             //Get table columns params
             $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE `Collation` <> 'utf8mb4_unicode_ci'";
@@ -56,24 +75,32 @@ class AfterUpgrade
             try {
                 $sth = $pdo->prepare($query);
                 $sth->execute();
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e) {
                 $GLOBALS['log']->debug('Utf8mb4: Table does not exist - ' . $e->getMessage());
+
                 continue;
             }
 
-            $columnParams = array();
+            $columnParams = [];
+
             $rowList = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
             foreach ($rowList as $row) {
                 $columnParams[ $row['Field'] ] = $row;
             }
             //END: get table columns params
 
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
+                $columnName = Util::toUnderScore($fieldName);
 
-                $columnName = \Espo\Core\Utils\Util::toUnderScore($fieldName);
+                if (!in_array($fieldName, $fieldListExceededIndexMaxLength[$entityName])) {
+                    continue;
+                }
 
-                if (!in_array($fieldName, $fieldListExceededIndexMaxLength[$entityName])) continue;
-                if (!isset($columnParams[$columnName])) continue;
+                if (!isset($columnParams[$columnName])) {
+                    continue;
+                }
 
                 if (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) {
                     continue;
@@ -90,7 +117,9 @@ class AfterUpgrade
                     case 'text':
                     case 'jsonObject':
                     case 'jsonArray':
-                        $query = "ALTER TABLE `".$tableName."` CHANGE COLUMN `". $columnName ."` `". $columnName ."` ". $columnParams[$columnName]['Type'] ." CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+                        $query = "ALTER TABLE `".$tableName."` CHANGE COLUMN `". $columnName ."` `". $columnName ."` ".
+                        $columnParams[$columnName]['Type'] ." CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+
                         break;
                 }
 
@@ -101,7 +130,9 @@ class AfterUpgrade
                         $sth = $pdo->prepare($query);
                         $sth->execute();
                     } catch (\Exception $e) {
-                        $GLOBALS['log']->warning('Utf8mb4: FAILED executing the query - [' . $query . '], details: '. $e->getMessage() .'.');
+                        $GLOBALS['log']->warning(
+                            'Utf8mb4: FAILED executing the query - [' . $query . '], details: '. $e->getMessage() .'.'
+                        );
                     }
                 }
             }
