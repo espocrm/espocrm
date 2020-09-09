@@ -289,8 +289,8 @@ module.exports = function (grunt) {
                 },
                 files: [
                     {
-                        src: 'build/tmp/application/Espo/Core/defaults/config.php',
-                        dest: 'build/tmp/application/Espo/Core/defaults/config.php'
+                        src: 'build/tmp/application/Espo/Resources/defaults/config.php',
+                        dest: 'build/tmp/application/Espo/Resources/defaults/config.php'
                     }
                 ]
             }
