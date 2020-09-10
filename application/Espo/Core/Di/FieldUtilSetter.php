@@ -35,8 +35,14 @@ trait FieldUtilSetter
 {
     protected $fieldUtil;
 
+    protected $fieldManagerUtil;
+
     public function setFieldUtil(FieldUtil $fieldUtil)
     {
         $this->fieldUtil = $fieldUtil;
+
+        // for backward compatibility
+        // @todo Remove in 6.4.
+        $this->fieldManagerUtil = $fieldUtil;
     }
 }
