@@ -110,6 +110,13 @@ class BaseEntity implements Entity
                 $p2 = false;
             }
 
+            if ($p2) {
+                trigger_error(
+                    'Second parameter is deprecated in Entity::set(array, onlyAccessible).',
+                    E_USER_DEPRECATED
+                );
+            }
+
             $this->populateFromArray($p1, $p2);
 
             return;
