@@ -348,8 +348,13 @@ class Record implements Crud,
 
     protected function processActionHistoryRecord($action, Entity $entity)
     {
-        if ($this->actionHistoryDisabled) return;
-        if ($this->getConfig()->get('actionHistoryDisabled')) return;
+        if ($this->actionHistoryDisabled) {
+            return;
+        }
+
+        if ($this->getConfig()->get('actionHistoryDisabled')) {
+            return;
+        }
 
         $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
 
@@ -435,12 +440,20 @@ class Record implements Crud,
 
     protected function loadFollowers(Entity $entity)
     {
-        if ($this->getUser()->isPortal()) return;
-        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) return;
+        if ($this->getUser()->isPortal()) {
+            return;
+        }
 
-        if (!$this->getAcl()->check($entity, 'stream')) return;
+        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) {
+            return;
+        }
+
+        if (!$this->getAcl()->check($entity, 'stream')) {
+            return;
+        }
 
         $data = $this->getStreamService()->getEntityFollowers($entity, 0, self::FOLLOWERS_LIMIT);
+
         if ($data) {
             $entity->set('followersIds', $data['idList']);
             $entity->set('followersNames', $data['nameMap']);
@@ -491,8 +504,9 @@ class Record implements Crud,
 
     protected function loadLinkFields(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
-        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
+        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', []);
+
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] === 'link') {
                 if (!empty($defs['noLoad'])) continue;
@@ -507,7 +521,8 @@ class Record implements Crud,
 
     protected function loadParentNameFields(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
+
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
                 $parentId = $entity->get($field . 'Id');
@@ -519,55 +534,88 @@ class Record implements Crud,
 
     protected function loadNotJoinedLinkFields(Entity $entity)
     {
-        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', array());
+        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', []);
+
         foreach ($linkDefs as $link => $defs) {
-            if (isset($defs['type']) && $defs['type'] == 'belongsTo') {
-                if (!empty($defs['noJoin']) && !empty($defs['entity'])) {
-                    $nameAttribute = $link . 'Name';
-                    $idAttribute = $link . 'Id';
-                    if ($entity->hasAttribute($nameAttribute) && $entity->hasAttribute($idAttribute)) {
-                        $id = $entity->get($idAttribute);
-                    } else {
-                        continue;
-                    }
-                    if (!empty($defs['entity'])) {
-                        $scope = $defs['entity'];
-                        if ($this->getEntityManager()->hasRepository($scope)) {
-                            $foreignEntity = $this->getEntityManager()->getRepository($scope)
-                                ->select(['id', 'name'])
-                                ->where(['id' => $id])
-                                ->findOne();
-                            if ($foreignEntity) {
-                                $entity->set($nameAttribute, $foreignEntity->get('name'));
-                            } else {
-                                $entity->set($nameAttribute, null);
-                            }
-                        }
-                    }
-                }
+            $type = $defs['type'] ?? null;
+
+            if ($type !== 'belongsTo') {
+                continue;
             }
+
+            if (empty($defs['noJoin']) || empty($defs['entity'])) {
+                continue;
+            }
+
+            $nameAttribute = $link . 'Name';
+            $idAttribute = $link . 'Id';
+
+            if (!$entity->hasAttribute($nameAttribute) || $entity->hasAttribute($idAttribute)) {
+                continue;
+            }
+
+            $id = $entity->get($idAttribute);
+
+            if (!$id) {
+                $entity->set($nameAttribute, null);
+
+                continue;
+            }
+
+            $scope = $defs['entity'];
+
+            if (!$this->getEntityManager()->hasRepository($scope)) {
+                continue;
+            }
+
+            $foreignEntity = $this->getEntityManager()
+                ->getRepository($scope)
+                ->select(['id', 'name'])
+                ->where(['id' => $id])
+                ->findOne();
+
+            if ($foreignEntity) {
+                $entity->set($nameAttribute, $foreignEntity->get('name'));
+
+                continue;
+            }
+
+            $entity->set($nameAttribute, null);
         }
     }
 
     protected function loadEmptyNameLinkFields(Entity $entity)
     {
         $linkDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []);
+
         foreach ($linkDefs as $link => $defs) {
-            if (!isset($defs['type'])) continue;
-            if ($defs['type'] != 'belongsTo') continue;
+            if (!isset($defs['type'])) {
+                continue;
+            }
+
+            if ($defs['type'] !== 'belongsTo') {
+                continue;
+            }
 
             $nameAttribute = $link . 'Name';
             $idAttribute = $link . 'Id';
 
             if ($entity->get($idAttribute) && !$entity->get($nameAttribute)) {
                 $id = $entity->get($idAttribute);
-                if (empty($defs['entity'])) continue;
+
+                if (empty($defs['entity'])) {
+                    continue;
+                }
+
                 $scope = $defs['entity'];
+
                 if ($this->getEntityManager()->hasRepository($scope)) {
-                    $foreignEntity = $this->getEntityManager()->getRepository($scope)
+                    $foreignEntity = $this->getEntityManager()
+                        ->getRepository($scope)
                         ->select(['id', 'name'])
                         ->where(['id' => $id])
                         ->findOne();
+
                     if ($foreignEntity) {
                         $entity->set($nameAttribute, $foreignEntity->get('name'));
                     }
@@ -600,10 +648,12 @@ class Record implements Crud,
 
     protected function loadEmailAddressField(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
+
         if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
             $dataAttributeName = 'emailAddressData';
             $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
+
             $entity->set($dataAttributeName, $emailAddressData);
             $entity->setFetched($dataAttributeName, $emailAddressData);
         }
@@ -611,10 +661,12 @@ class Record implements Crud,
 
     protected function loadPhoneNumberField(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', array());
+        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
+
         if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
             $dataAttributeName = 'phoneNumberData';
             $phoneNumberData = $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity);
+
             $entity->set($dataAttributeName, $phoneNumberData);
             $entity->setFetched($dataAttributeName, $phoneNumberData);
         }
@@ -625,6 +677,7 @@ class Record implements Crud,
         if (!$entityType) {
             $entityType = $this->getEntityType();
         }
+
         return $this->getSelectManagerFactory()->create($entityType);
     }
 
@@ -638,10 +691,16 @@ class Record implements Crud,
         $fieldList = $this->fieldUtil->getEntityTypeFieldList($this->entityType);
 
         foreach ($fieldList as $field) {
-            if (in_array($field, $this->validateSkipFieldList)) continue;
-            if (!$entity->isNew()) {
-                if (!$this->isFieldSetInData($data, $field)) continue;
+            if (in_array($field, $this->validateSkipFieldList)) {
+                continue;
             }
+
+            if (!$entity->isNew()) {
+                if (!$this->isFieldSetInData($data, $field)) {
+                    continue;
+                }
+            }
+
             $this->processValidationField($entity, $field, $data);
         }
     }
@@ -656,6 +715,7 @@ class Record implements Crud,
 
         foreach ($validationList as $type) {
             $value = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, $type);
+
             if (is_null($value)) {
                 if (!in_array($type, $mandatoryValidationList)) {
                     continue;
@@ -665,10 +725,12 @@ class Record implements Crud,
             $skipPropertyName = 'validate' . ucfirst($type) . 'SkipFieldList';
             if (property_exists($this, $skipPropertyName)) {
                 $skipList = $this->$skipPropertyName;
+
                 if (in_array($type, $skipList)) {
                     continue;
                 }
             }
+
             if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
                 throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
             }
@@ -679,12 +741,14 @@ class Record implements Crud,
     {
         $attributeList = $this->fieldUtil->getActualAttributeList($this->entityType, $field);
         $isSet = false;
+
         foreach ($attributeList as $attribute) {
             if (property_exists($data, $attribute)) {
                 $isSet = true;
                 break;
             }
         }
+
         return $isSet;
     }
 
@@ -700,9 +764,11 @@ class Record implements Crud,
         if (!$this->isPermittedAssignedUser($entity)) {
             return false;
         }
+
         if (!$this->isPermittedTeams($entity)) {
             return false;
         }
+
         if ($entity->hasLinkMultipleField('assignedUsers')) {
             if (!$this->isPermittedAssignedUsers($entity)) {
                 return false;
@@ -726,7 +792,11 @@ class Record implements Crud,
 
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
-        if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
+        if (
+            $assignmentPermission === true ||
+            $assignmentPermission === 'yes' ||
+            !in_array($assignmentPermission, ['team', 'no'])
+        ) {
             return true;
         }
 
@@ -748,21 +818,30 @@ class Record implements Crud,
                 if ($assignmentPermission == 'no' && !$this->getUser()->isApi()) {
                     return false;
                 }
+
                 return true;
             }
+
             $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
 
             if ($assignmentPermission == 'no') {
                 foreach ($userIdList as $userId) {
-                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) continue;
+                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
+                        continue;
+                    }
+
                     if ($this->getUser()->id != $userId) {
                         return false;
                     }
                 }
             } else if ($assignmentPermission == 'team') {
                 $teamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+
                 foreach ($userIdList as $userId) {
-                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) continue;
+                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
+                        continue;
+                    }
+
                     if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
                         return false;
                     }
@@ -2447,28 +2526,41 @@ class Record implements Crud,
         }
     }
 
-    public function massConvertCurrency($params, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
-    {
-        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden("No mass-update permission.");
+    public function massConvertCurrency(
+        array $params, string $targetCurrency, string $baseCurrency, StdClass $rates, ?array $fieldList = null
+    ) {
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
+            throw new Forbidden("No mass-update permission.");
+        }
 
-        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden("No edit access.");
+        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) {
+            throw new Forbidden("No edit access.");
+        }
+
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
 
         $allFields = !$fieldList;
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
 
-        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
+        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency)) {
             throw new Error("targetCurrency rate is not specified.");
+        }
 
         foreach ($fieldList as $i => $field) {
-            if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency')
+            if (in_array($field, $forbiddenFieldList)) {
+                unset($fieldList[$i]);
+            }
+
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
                 throw new Error("Can't convert field not of currency type.");
+            }
         }
 
         $fieldList = array_values($fieldList);
 
-        if (empty($fieldList)) throw new Forbidden("No fields to convert.");
+        if (empty($fieldList)) {
+            throw new Forbidden("No fields to convert.");
+        }
 
         $count = 0;
 
@@ -2476,7 +2568,9 @@ class Record implements Crud,
 
         $selectParams = $this->convertMassActionSelectParams($params);
 
-        $collection = $this->getRepository()->sth()->find($selectParams);
+        $collection = $this->getRepository()
+            ->sth()
+            ->find($selectParams);
 
         foreach ($collection as $entity) {
             $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
@@ -2492,26 +2586,37 @@ class Record implements Crud,
         ];
     }
 
-    public function convertCurrency(string $id, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
-    {
-        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden();
+    public function convertCurrency(
+        string $id, string $targetCurrency, string $baseCurrency, StdClass $rates, ?array $fieldList = null
+    ) {
+        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) {
+            throw new Forbidden();
+        }
+
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
 
         $allFields = !$fieldList;
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
 
-        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
+        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency)) {
             throw new Error("targetCurrency rate is not specified.");
+        }
 
         foreach ($fieldList as $i => $field) {
-            if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency')
+            if (in_array($field, $forbiddenFieldList)) {
+                unset($fieldList[$i]);
+            }
+
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
                 throw new Error("Can't convert not currency field.");
+            }
         }
 
         $fieldList = array_values($fieldList);
 
-        if (empty($fieldList)) throw new Forbidden("No fields to convert.");
+        if (empty($fieldList)) {
+            throw new Forbidden("No fields to convert.");
+        }
 
         $entity = $this->getEntity($id);
 
@@ -2521,12 +2626,17 @@ class Record implements Crud,
 
         if ($result) {
             $valueMap = (object) [];
+
             foreach ($entity->getAttributeList() as $a) {
-                if (in_array($a, ['modifiedAt', 'modifiedById', 'modifiedByName'])) continue;
+                if (in_array($a, ['modifiedAt', 'modifiedById', 'modifiedByName'])) {
+                    continue;
+                }
+
                 if ($entity->get($a) !== ($initialValueMap->$a ?? null)) {
                     $valueMap->$a = $entity->get($a);
                 }
             }
+
             return $valueMap;
         }
 
@@ -2535,14 +2645,23 @@ class Record implements Crud,
 
     protected function getConvertCurrencyFieldList()
     {
-        if (isset($this->convertCurrencyFieldList)) return $this->convertCurrencyFieldList;
+        if (isset($this->convertCurrencyFieldList)) {
+            return $this->convertCurrencyFieldList;
+        }
 
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
 
         $list = [];
+
         foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') continue;
-            if (in_array($field, $forbiddenFieldList)) continue;
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
+                continue;
+            }
+
+            if (in_array($field, $forbiddenFieldList)) {
+                continue;
+            }
+
             $list[] = $field;
         }
 
@@ -2550,20 +2669,25 @@ class Record implements Crud,
     }
 
     protected function convertEntityCurrency(
-        Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null
+        Entity $entity, string $targetCurrency, string $baseCurrency,
+        StdClass $rates, bool $allFields = false, ?array $fieldList = null
     ) {
-        if (!$this->getAcl()->check($entity, 'edit')) return;
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            return;
+        }
 
         $data = $this->getConvertCurrencyValues($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
 
         $entity->set($data);
         $this->getRepository()->save($entity);
         $this->processActionHistoryRecord('update', $entity);
+
         return true;
     }
 
     public function getConvertCurrencyValues(
-        Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null
+        Entity $entity, string $targetCurrency, string $baseCurrency,
+        StdClass $rates, bool $allFields = false, ?array $fieldList = null
     ) {
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
 
@@ -2575,9 +2699,13 @@ class Record implements Crud,
             $currentCurrency = $entity->get($currencyAttribute);
             $value = $entity->get($field);
 
-            if ($value === null) continue;
+            if ($value === null) {
+                continue;
+            }
 
-            if ($currentCurrency === $targetCurrency) continue;
+            if ($currentCurrency === $targetCurrency) {
+                continue;
+            }
 
             if ($currentCurrency !== $baseCurrency && !property_exists($rates, $currentCurrency)) {
                 continue;
@@ -2589,7 +2717,9 @@ class Record implements Crud,
             $rate2 = property_exists($rates, $targetCurrency) ? $rates->$targetCurrency : 1.0;
             $value = $value / $rate2;
 
-            if (!$rate2) continue;
+            if (!$rate2) {
+                continue;
+            }
 
             $value = round($value, 2);
 
