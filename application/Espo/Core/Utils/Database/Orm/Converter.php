@@ -607,10 +607,6 @@ class Converter
 
         $additionalDefs = $defs['additionalTables'];
 
-        foreach ($additionalDefs as $aEntityType => &$item) {
-            $item['skipRebuild'] = true;
-        }
-
         return $additionalDefs;
     }
 
