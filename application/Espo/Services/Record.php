@@ -841,9 +841,17 @@ class Record implements Crud,
 
         if (!$entity->isNew()) {
             $existingIdList = [];
-            foreach ($entity->get('teams') as $team) {
+
+            $teamCollection = $this->getEntityManager()
+                ->getRepository($entity->getEntityType())
+                ->getRelation($entity, 'teams')
+                ->select('id')
+                ->find();
+
+            foreach ($teamCollection as $team) {
                 $existingIdList[] = $team->id;
             }
+
             foreach ($teamIdList as $id) {
                 if (!in_array($id, $existingIdList)) {
                     $newIdList[] = $id;
