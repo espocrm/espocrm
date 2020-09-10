@@ -29,9 +29,18 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Utils\Util,
-    Espo\Core\Exceptions\NotFound,
-    Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\Util,
+    Utils\File\Manager as FileManager,
+    Utils\Metadata,
+    Utils\File\Unifier as FileUnifier,
+    Utils\Config,
+};
+
+use Espo\{
+    Entities\Preferences,
+};
 
 class Language
 {
@@ -63,8 +72,9 @@ class Language
         'customPath' => 'custom/Espo/Custom/Resources/i18n/{language}',
     ];
 
-    public function __construct($language = null, File\Manager $fileManager, Metadata $metadata, $useCache = false, $noCustom = false)
-    {
+    public function __construct(
+        ?string $language = null, FileManager $fileManager, Metadata $metadata, bool $useCache = false, bool $noCustom = false
+    ) {
         if ($language) {
             $this->currentLanguage = $language;
         } else {
@@ -77,7 +87,7 @@ class Language
         $this->useCache = $useCache;
         $this->noCustom = $noCustom;
 
-        $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this->metadata);
+        $this->unifier = new FileUnifier($this->fileManager, $this->metadata);
     }
 
     protected function getFileManager()
@@ -100,15 +110,18 @@ class Language
         return $this->defaultLanguage;
     }
 
-    public static function detectLanguage(\Espo\Core\Utils\Config $config, $preferences = null)
+    public static function detectLanguage(Config $config, ?Preferences $preferences = null)
     {
         $language = null;
+
         if ($preferences) {
             $language = $preferences->get('language');
         }
+
         if (!$language) {
             $language = $config->get('language');
         }
+
         return $language;
     }
 
@@ -132,7 +145,7 @@ class Language
     }
 
     /**
-     * Translate label/labels
+     * Translate label/labels.
      *
      * @param  string $label name of label
      * @param  string $category
@@ -181,14 +194,19 @@ class Language
     public function translateOption($value, $field, $scope = 'Global')
     {
         $options = $this->get($scope. '.options.' . $field);
+
         if (is_array($options) && array_key_exists($value, $options)) {
             return $options[$value];
-        } else if ($scope !== 'Global') {
+        }
+
+        if ($scope !== 'Global') {
             $options = $this->get('Global.options.' . $field);
+
             if (is_array($options) && array_key_exists($value, $options)) {
                 return $options[$value];
             }
         }
+
         return $value;
     }
 
@@ -209,7 +227,7 @@ class Language
     }
 
     /**
-     * Save changes
+     * Save changes.
      */
     public function save() : bool
     {
@@ -219,6 +237,7 @@ class Language
         $path = str_replace('{language}', $language, $path);
 
         $result = true;
+
         if (!empty($this->changedData)) {
             foreach ($this->changedData as $scope => $data) {
                 if (!empty($data)) {
@@ -241,14 +260,13 @@ class Language
     }
 
     /**
-     * Clear unsaved changes
-     *
-     * @return void
+     * Clear unsaved changes.
      */
     public function clearChanges()
     {
         $this->changedData = [];
         $this->deletedData = [];
+
         $this->init(true);
     }
 
@@ -264,14 +282,12 @@ class Language
     }
 
     /**
-     * Set/change a label
+     * Set/change a label.
      *
      * @param string $scope
      * @param string $category
      * @param string | array $name
      * @param mixed $value
-     *
-     * @return void
      */
     public function set($scope, $category, $name, $value)
     {
@@ -279,6 +295,7 @@ class Language
             foreach ($name as $rowLabel => $rowValue) {
                 $this->set($scope, $category, $rowLabel, $rowValue);
             }
+
             return;
         }
 
@@ -294,13 +311,11 @@ class Language
     }
 
     /**
-     * Remove a label
+     * Remove a label.
      *
      * @param  string $name
      * @param  string $category
      * @param  string $scope
-     *
-     * @return void
      */
     public function delete($scope, $category, $name)
     {
