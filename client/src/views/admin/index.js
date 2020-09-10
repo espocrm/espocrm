@@ -62,12 +62,15 @@ define('views/admin/index', 'view', function (Dep) {
             var panels = this.getMetadata().get('app.adminPanel') || {};
             for (var name in panels) {
                 var panelItem = Espo.Utils.cloneDeep(panels[name]);
+
                 panelItem.name = name;
                 panelItem.itemList = panelItem.itemList || [];
                 panelItem.label = this.translate(panelItem.label, 'labels', 'Admin');
 
                 if (panelItem.itemList) {
                     panelItem.itemList.forEach(function (item) {
+                        item.label = this.translate(item.label, 'labels', 'Admin');
+
                         if (item.description) {
                             item.keywords = (this.getLanguage().get('Admin', 'keywords', item.description) || '').split(',');
                         } else {
@@ -76,12 +79,14 @@ define('views/admin/index', 'view', function (Dep) {
                     }, this);
                 }
 
+                // Legacy support.
                 if (panelItem.items) {
                     panelItem.items.forEach(function (item) {
                         item.label = this.translate(item.label, 'labels', 'Admin');
                         panelItem.itemList.push(item);
                     }, this);
                 }
+
                 this.panelDataList.push(panelItem);
             }
 
