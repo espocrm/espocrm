@@ -449,13 +449,22 @@ class Record implements Crud,
 
     protected function loadLinkMultipleFields(Entity $entity)
     {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
+        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) ?? [];
+
         foreach ($fieldDefs as $field => $defs) {
-            if (isset($defs['type']) && in_array($defs['type'], ['linkMultiple', 'attachmentMultiple']) && empty($defs['noLoad'])) {
+            if (
+                isset($defs['type']) &&
+                in_array($defs['type'], ['linkMultiple', 'attachmentMultiple']) &&
+                empty($defs['noLoad']) &&
+                empty($defs['notStorable']) &&
+                $entity->hasRelation($field)
+            ) {
                 $columns = null;
+
                 if (!empty($defs['columns'])) {
                     $columns = $defs['columns'];
                 }
+
                 $entity->loadLinkMultipleField($field, $columns);
             }
         }
@@ -466,8 +475,15 @@ class Record implements Crud,
         foreach ($selectAttributeList as $attribute) {
             if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
                 $field = $entity->getAttributeParam($attribute, 'relation');
-                if (!$field) continue;
-                if ($entity->has($attribute)) continue;
+
+                if (!$field) {
+                    continue;
+                }
+
+                if ($entity->has($attribute)) {
+                    continue;
+                }
+
                 $entity->loadLinkMultipleField($field);
             }
         }
