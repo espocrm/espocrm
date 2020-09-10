@@ -75,7 +75,7 @@ class Import extends \Espo\Core\Repositories\Database
             [
                 'importEntity.importId' => $entity->id,
                 'importEntity.entityType' => $entityType,
-                'importEntity.entityId:' => $entityType . '.id',
+                'importEntity.entityId:' => 'id',
                 'importEntity.' . $param => true,
             ],
         ];
