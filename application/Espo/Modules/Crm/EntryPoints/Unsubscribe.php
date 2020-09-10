@@ -137,28 +137,36 @@ class Unsubscribe implements EntryPoint
                     }
 
                     $link = null;
+
                     $m = [
                         'Account' => 'accounts',
                         'Contact' => 'contacts',
                         'Lead' => 'leads',
                         'User' => 'users',
                     ];
+
                     if (!empty($m[$target->getEntityType()])) {
                         $link = $m[$target->getEntityType()];
                     }
+
                     if ($link) {
-                        $targetListList = $massEmail->get('targetLists');
+                        $targetListList = $this->entityManager
+                            ->getRepository('MassEmail')
+                            ->getRelation($massEmail, 'targetLists')
+                            ->find();
 
                         foreach ($targetListList as $targetList) {
-                            $optedOutResult = $this->entityManager->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
-                                'optedOut' => true
-                            ));
+                            $optedOutResult = $this->entityManager
+                                ->getRepository('TargetList')
+                                ->updateRelation($targetList, $link, $target->id, ['optedOut' => true]);
+
                             if ($optedOutResult) {
                                 $hookData = [
                                    'link' => $link,
                                    'targetId' => $targetId,
-                                   'targetType' => $targetType
+                                   'targetType' => $targetType,
                                 ];
+
                                 $this->hookManager->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
                             }
                         }
@@ -194,6 +202,7 @@ class Unsubscribe implements EntryPoint
                 controller.doAction('unsubscribe', ".json_encode($data).");
             });
         ";
+
         $this->clientManager->display($runScript);
     }
 
@@ -210,6 +219,7 @@ class Unsubscribe implements EntryPoint
         $repository = $this->entityManager->getRepository('EmailAddress');
 
         $ea = $repository->getByAddress($emailAddress);
+
         if ($ea) {
             $entityList = $repository->getEntityListByAddressId($ea->id);
 
@@ -226,6 +236,7 @@ class Unsubscribe implements EntryPoint
                 'emailAddress' => $emailAddress,
                 'hash' => $hash,
             ]);
+
         } else {
             throw new NotFound();
         }

@@ -154,7 +154,10 @@ class MassEmail extends RecordService implements
                 }
             }
 
-            $targetListCollection = $massEmail->get('targetLists');
+            $targetListCollection = $em
+                ->getRepository('MassEmail')
+                ->getRelation($massEmail, 'targetLists')
+                ->find();
 
             foreach ($targetListCollection as $targetList) {
                 foreach ($this->targetsLinkList as $link) {
@@ -171,9 +174,17 @@ class MassEmail extends RecordService implements
                         $hashId = $record->getEntityType() . '-'. $record->id;
                         $emailAddress = $record->get('emailAddress');
 
-                        if (!$emailAddress) continue;
-                        if (!empty($metEmailAddressHash[$emailAddress])) continue;
-                        if (!empty($metTargetHash[$hashId])) continue;
+                        if (!$emailAddress) {
+                            continue;
+                        }
+
+                        if (!empty($metEmailAddressHash[$emailAddress])) {
+                            continue;
+                        }
+
+                        if (!empty($metTargetHash[$hashId])) {
+                            continue;
+                        }
 
                         $item = $record->getValueMap();
                         $item->entityType = $record->getEntityType();
@@ -195,8 +206,14 @@ class MassEmail extends RecordService implements
 
         foreach ($itemList as $item) {
             $emailAddress = $item->emailAddress ?? null;
-            if (!$emailAddress) continue;
-            if (strpos($emailAddress, 'ERASED:') === 0) continue;
+
+            if (!$emailAddress) {
+                continue;
+            }
+
+            if (strpos($emailAddress, 'ERASED:') === 0) {
+                continue;
+            }
 
             $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
             if ($emailAddressRecord) {

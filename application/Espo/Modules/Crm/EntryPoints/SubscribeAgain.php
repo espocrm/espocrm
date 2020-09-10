@@ -85,6 +85,7 @@ class SubscribeAgain implements EntryPoint
 
         if ($emailAddress && $hash) {
             $this->processWithHash($emailAddress, $hash);
+
             return;
         }
 
@@ -125,6 +126,7 @@ class SubscribeAgain implements EntryPoint
                         $emailAddress = $target->get('emailAddress');
                         if ($emailAddress) {
                             $ea = $this->entityManager->getRepository('EmailAddress')->getByAddress($emailAddress);
+
                             if ($ea) {
                                 $ea->set('optOut', false);
                                 $this->entityManager->saveEntity($ea);
@@ -133,28 +135,36 @@ class SubscribeAgain implements EntryPoint
                     }
 
                     $link = null;
+
                     $m = [
                         'Account' => 'accounts',
                         'Contact' => 'contacts',
                         'Lead' => 'leads',
                         'User' => 'users',
                     ];
+
                     if (!empty($m[$target->getEntityType()])) {
                         $link = $m[$target->getEntityType()];
                     }
+
                     if ($link) {
-                        $targetListList = $massEmail->get('targetLists');
+                        $targetListList = $this->entityManager
+                            ->getRepository('MassEmail')
+                            ->getRelation($massEmail, 'targetLists')
+                            ->find();
 
                         foreach ($targetListList as $targetList) {
-                            $optedInResult = $this->entityManager->getRepository('TargetList')->updateRelation($targetList, $link, $target->id, array(
-                                'optedOut' => false
-                            ));
+                            $optedInResult = $this->entityManager
+                                ->getRepository('TargetList')
+                                ->updateRelation($targetList, $link, $target->id, ['optedOut' => false]);
+
                             if ($optedInResult) {
                                 $hookData = [
                                    'link' => $link,
                                    'targetId' => $targetId,
-                                   'targetType' => $targetType
+                                   'targetType' => $targetType,
                                 ];
+
                                 $this->hookManager->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
                             }
                         }
@@ -168,10 +178,13 @@ class SubscribeAgain implements EntryPoint
         }
 
         if ($campaign && $target) {
-            $logRecord = $this->entityManager->getRepository('CampaignLogRecord')->where(array(
-                'queueItemId' => $queueItemId,
-                'action' => 'Opted Out'
-            ))->order('createdAt', true)->findOne();
+            $logRecord = $this->entityManager
+                ->getRepository('CampaignLogRecord')->where([
+                    'queueItemId' => $queueItemId,
+                    'action' => 'Opted Out',
+                ])
+                ->order('createdAt', true)
+                ->findOne();
 
             if ($logRecord) {
                 $this->entityManager->removeEntity($logRecord);
@@ -195,6 +208,7 @@ class SubscribeAgain implements EntryPoint
                 controller.doAction('subscribeAgain', ".json_encode($data).");
             });
         ";
+
         $this->clientManager->display($runScript);
     }
 
@@ -216,6 +230,7 @@ class SubscribeAgain implements EntryPoint
 
             if ($ea->get('optOut')) {
                 $ea->set('optOut', false);
+
                 $this->entityManager->saveEntity($ea);
 
                 foreach ($entityList as $entity) {
