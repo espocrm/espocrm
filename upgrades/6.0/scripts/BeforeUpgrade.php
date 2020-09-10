@@ -27,40 +27,70 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+use Espo\Core\Exceptions\Error;
+
 class BeforeUpgrade
 {
     public function run($container)
     {
         $this->container = $container;
 
-        $myisamTableList = $this->getMyisamTableList($container);
-        if (!empty($myisamTableList)) {
-            $isCli = (substr(php_sapi_name(), 0, 3) == 'cli') ? true : false;
-            throw new \Espo\Core\Exceptions\Error("In v6.0 we have dropped a support of MyISAM engine for DB tables. You have the following tables that use MyISAM: " . implode(", ", $myisamTableList) . ". " . ($isCli ? "\n" : "<br>") . "Please change the engine to InnoDB for these tables then run upgrade again. See ". ($isCli ? "" : "<a href=\"https://www.espocrm.com/blog/converting-myisam-engine-to-innodb\" target=\"_blank\">") . "https://www.espocrm.com/blog/converting-myisam-engine-to-innodb." . ($isCli ? "" : "</a>"));
-        }
+        $this->processMyIsamCheck();
     }
 
-    protected function getMyisamTableList($container)
+    protected function processMyIsamCheck()
     {
+        $myisamTableList = $this->getMyIsamTableList();
+
+        if (empty($myisamTableList)) {
+            return;
+        }
+
+        $isCli = (substr(php_sapi_name(), 0, 3) == 'cli') ? true : false;
+
+        $tableListString = implode(", ", $myisamTableList);
+
+        $lineBreak = $isCli ? "\n" : "<br>";
+
+        $link = "https://www.espocrm.com/blog/converting-myisam-engine-to-innodb";
+
+        $linkString = $isCli ? $link : "<a href=\"{$link}\" target=\"_blank\">link</a>";
+
+        $message =
+            "In v6.0 we have dropped a support of MyISAM engine for DB tables. " .
+            "You have the following tables that use MyISAM: {$tableListString}.{$lineBreak}" .
+            "Please change the engine to InnoDB for these tables then run upgrade again.{$lineBreak}" .
+            "See: {$linkString}.";
+
+        throw new Error($message);
+    }
+
+    protected function getMyIsamTableList()
+    {
+        $container = $this->container;
+
         $pdo = $container->get('entityManager')->getPDO();
         $databaseInfo = $container->get('config')->get('database');
 
         try {
+
             $sth = $pdo->prepare("
                 SELECT TABLE_NAME as tableName
                 FROM information_schema.TABLES
                 WHERE TABLE_SCHEMA = '". $databaseInfo['dbname'] ."'
                 AND ENGINE = 'MyISAM'
             ");
+
             $sth->execute();
-        } catch (\Exception $e) {
-            return;
+
+        }catch (Exception $e) {
+            return [];
         }
 
-        $tableList = $sth->fetchAll(\PDO::FETCH_COLUMN);
+        $tableList = $sth->fetchAll(PDO::FETCH_COLUMN);
 
         if (empty($tableList)) {
-            return;
+            return [];
         }
 
         return $tableList;
