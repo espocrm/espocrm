@@ -1280,6 +1280,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.createView('duplicate', 'views/modals/duplicate', {
                 scope: this.entityType,
                 duplicates: duplicates,
+                model: this.model,
             }, function (view) {
                 view.render();
 

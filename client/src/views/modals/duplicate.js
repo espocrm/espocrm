@@ -42,10 +42,16 @@ define('views/modals/duplicate', 'views/modal', function (Dep) {
         },
 
         setup: function () {
+            var saveLabel = 'Save';
+
+            if (this.model && this.model.isNew()) {
+                saveLabel = 'Create';
+            }
+
             this.buttonList = [
                 {
                     name: 'save',
-                    label: 'Save',
+                    label: saveLabel,
                     style: 'danger',
                     onClick: function (dialog) {
                         this.trigger('save');
