@@ -145,6 +145,11 @@ class Tester
     protected function saveTestConfigData($optionName, $data)
     {
         $configData = $this->getTestConfigData();
+
+        if ($configData[$optionName] === $data) {
+            return true;
+        }
+
         $configData[$optionName] = $data;
 
         $fileManager = new \Espo\Core\Utils\File\Manager();
@@ -230,9 +235,13 @@ class Tester
     protected function install()
     {
         $fileManager = new \Espo\Core\Utils\File\Manager();
+        $configData = $this->getTestConfigData();
 
         $latestEspoDir = Utils::getLatestBuildedPath($this->buildedPath);
-        $configData = $this->getTestConfigData();
+
+        if (empty($latestEspoDir)) {
+            die("EspoCRM build is not found. Please run \"grunt\" in your terminal.\n");
+        }
 
         if (!isset($configData['siteUrl'])) {
             $mainConfigData = include('data/config.php');
@@ -286,11 +295,19 @@ class Tester
     {
         $configData = $this->getTestConfigData();
 
-        $fullReset = false;
+        $fullReset = true;
 
-        $modifiedTime = filemtime($latestEspoDir . '/application');
-        if ($this->getParam('fullReset') || !isset($configData['lastModifiedTime']) || $configData['lastModifiedTime'] != $modifiedTime) {
-            $fullReset = true;
+        if (file_exists($latestEspoDir . '/application')) {
+            $modifiedTime = filemtime($latestEspoDir . '/application');
+
+            if (
+                !$this->getParam('fullReset') &&
+                isset($configData['lastModifiedTime']) &&
+                $configData['lastModifiedTime'] == $modifiedTime
+            ) {
+                $fullReset = false;
+            }
+
             $this->saveTestConfigData('lastModifiedTime', $modifiedTime);
         }
 
