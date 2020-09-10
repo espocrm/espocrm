@@ -33,6 +33,8 @@ use StdClass;
 
 use const E_USER_DEPRECATED;
 
+use InvalidArgumentException;
+
 class BaseEntity implements Entity
 {
     public $id = null;
@@ -44,7 +46,7 @@ class BaseEntity implements Entity
     protected $entityType;
 
     /**
-     * @todo Make private.
+     * @todo Make private. Rename to `attributes`.
      */
     public $fields = [];
 
@@ -103,25 +105,38 @@ class BaseEntity implements Entity
             if (is_object($p1)) {
                 $p1 = get_object_vars($p1);
             }
+
             if ($p2 === null) {
                 $p2 = false;
             }
+
             $this->populateFromArray($p1, $p2);
-        } else if (is_string($p1)) {
+
+            return;
+        }
+
+        if (is_string($p1)) {
             $name = $p1;
             $value = $p2;
+
             if ($name == 'id') {
                 $this->id = $value;
             }
+
             if ($this->hasAttribute($name)) {
                 $method = '_set' . ucfirst($name);
+
                 if (method_exists($this, $method)) {
                     $this->$method($value);
                 } else {
                     $this->valuesContainer[$name] = $value;
                 }
             }
+
+            return;
         }
+
+        throw new InvalidArgumentException();
     }
 
     /**
@@ -172,6 +187,7 @@ class BaseEntity implements Entity
         }
 
         $method = '_has' . ucfirst($name);
+
         if (method_exists($this, $method)) {
             return (bool) $this->$method();
         }
@@ -196,6 +212,7 @@ class BaseEntity implements Entity
 
             if ($attribute == 'id') {
                 $this->id = $data[$attribute];
+
                 continue;
             }
 
@@ -213,8 +230,10 @@ class BaseEntity implements Entity
                 if ($valueType === self::FOREIGN) {
                     $relation = $this->getAttributeParam($attribute, 'relation');
                     $foreign = $this->getAttributeParam($attribute, 'foreign');
+
                     if (is_string($foreign)) {
                         $foreignEntityType = $this->getRelationParam($relation, 'entity');
+
                         if ($foreignEntityType && $this->entityManager) {
                             $valueType = $this->entityManager->getMetadata()->get(
                                 $foreignEntityType, ['fields', $foreign, 'type']
@@ -226,33 +245,40 @@ class BaseEntity implements Entity
                 switch ($valueType) {
                     case self::VARCHAR:
                         break;
+
                     case self::BOOL:
                         $value = ($value === 'true' || $value === '1' || $value === true);
                         break;
+
                     case self::INT:
                         $value = intval($value);
                         break;
+
                     case self::FLOAT:
                         $value = floatval($value);
                         break;
+
                     case self::JSON_ARRAY:
                         $value = is_string($value) ? json_decode($value) : $value;
                         if (!is_array($value)) {
                             $value = null;
                         }
                         break;
+
                     case self::JSON_OBJECT:
                         $value = is_string($value) ? json_decode($value) : $value;
                         if (!($value instanceof StdClass) && !is_array($value)) {
                             $value = null;
                         }
                         break;
+
                     default:
                         break;
                 }
             }
 
             $method = '_set' . ucfirst($attribute);
+
             if (method_exists($this, $method)) {
                 $this->$method($value);
             } else {
@@ -363,18 +389,22 @@ class BaseEntity implements Entity
     public function toArray()
     {
         $arr = [];
+
         if (isset($this->id)) {
             $arr['id'] = $this->id;
         }
+
         foreach ($this->fields as $field => $defs) {
             if ($field == 'id') {
                 continue;
             }
+
             if ($this->has($field)) {
                 $arr[$field] = $this->get($field);
             }
 
         }
+
         return $arr;
     }
 
@@ -384,6 +414,7 @@ class BaseEntity implements Entity
     public function getValueMap() : StdClass
     {
         $array = $this->toArray();
+
         return (object) $array;
     }
 
@@ -419,6 +450,7 @@ class BaseEntity implements Entity
         if (isset($this->fields[$attribute]) && isset($this->fields[$attribute]['type'])) {
             return $this->fields[$attribute]['type'];
         }
+
         return null;
     }
 
@@ -430,6 +462,7 @@ class BaseEntity implements Entity
         if (isset($this->relations[$relation]) && isset($this->relations[$relation]['type'])) {
             return $this->relations[$relation]['type'];
         }
+
         return null;
     }
 
@@ -441,6 +474,7 @@ class BaseEntity implements Entity
         if (isset($this->fields[$attribute]) && isset($this->fields[$attribute][$name])) {
             return $this->fields[$attribute][$name];
         }
+
         return null;
     }
 
@@ -452,6 +486,7 @@ class BaseEntity implements Entity
         if (isset($this->relations[$relation]) && isset($this->relations[$relation][$name])) {
             return $this->relations[$relation][$name];
         }
+
         return null;
     }
 
@@ -476,11 +511,14 @@ class BaseEntity implements Entity
      */
     public function isAttributeChanged(string $name) : bool
     {
-        if (!$this->has($name)) return false;
+        if (!$this->has($name)) {
+            return false;
+        }
 
         if (!$this->hasFetched($name)) {
             return true;
         }
+
         return !self::areValuesEqual(
             $this->getAttributeType($name),
             $this->get($name),
@@ -497,9 +535,11 @@ class BaseEntity implements Entity
                     sort($v1);
                     sort($v2);
                 }
+
                 if ($v1 != $v2) {
                     return false;
                 }
+
                 foreach ($v1 as $i => $itemValue) {
                     if (is_object($v1[$i]) && is_object($v2[$i])) {
                         if (!self::areValuesEqual(self::JSON_OBJECT, $v1[$i], $v2[$i])) {
@@ -507,10 +547,12 @@ class BaseEntity implements Entity
                         }
                         continue;
                     }
+
                     if ($v1[$i] !== $v2[$i]) {
                         return false;
                     }
                 }
+
                 return true;
             }
         } else if ($type === self::JSON_OBJECT) {
@@ -520,23 +562,29 @@ class BaseEntity implements Entity
                 }
                 $a1 = get_object_vars($v1);
                 $a2 = get_object_vars($v2);
+
                 foreach ($v1 as $key => $itemValue) {
                     if (is_object($a1[$key]) && is_object($a2[$key])) {
                         if (!self::areValuesEqual(self::JSON_OBJECT, $a1[$key], $a2[$key])) {
                             return false;
                         }
+
                         continue;
                     }
+
                     if (is_array($a1[$key]) && is_array($a2[$key])) {
                         if (!self::areValuesEqual(self::JSON_ARRAY, $a1[$key], $a2[$key])) {
                             return false;
                         }
+
                         continue;
                     }
+
                     if ($a1[$key] !== $a2[$key]) {
                         return false;
                     }
                 }
+
                 return true;
             }
         }
@@ -551,6 +599,7 @@ class BaseEntity implements Entity
     {
         if ($value) {
             $type = $this->getAttributeType($name);
+
             if ($type === self::JSON_OBJECT) {
                 $value = self::cloneObject($value);
             } else if ($type === self::JSON_ARRAY) {
@@ -569,9 +618,11 @@ class BaseEntity implements Entity
         if ($name === 'id') {
             return $this->id;
         }
+
         if (isset($this->fetchedValuesContainer[$name])) {
             return $this->fetchedValuesContainer[$name];
         }
+
         return null;
     }
 
@@ -583,6 +634,7 @@ class BaseEntity implements Entity
         if ($name === 'id') {
             return !!$this->id;
         }
+
         return array_key_exists($name, $this->fetchedValuesContainer);
     }
 
@@ -612,6 +664,7 @@ class BaseEntity implements Entity
     public function setAsFetched()
     {
         $this->isFetched = true;
+
         $this->updateFetchedValues();
     }
 
@@ -621,6 +674,7 @@ class BaseEntity implements Entity
     public function setAsNotFetched()
     {
         $this->isFetched = false;
+
         $this->resetFetchedValues();
     }
 
@@ -663,12 +717,14 @@ class BaseEntity implements Entity
     {
         if (is_array($value)) {
             $copy = [];
+
             foreach ($value as $v) {
                 if (is_object($v)) {
                     $v = clone $v;
                 }
                 $copy[] = $v;
             }
+
             return $copy;
         }
 
@@ -679,14 +735,17 @@ class BaseEntity implements Entity
     {
         if (is_array($value)) {
             $copy = [];
+
             foreach ($value as $v) {
                 $copy[] = self::cloneObject($v);
             }
+
             return $copy;
         }
 
         if (is_object($value)) {
             $copy = (object) [];
+
             foreach (get_object_vars($value) as $k => $v) {
                 $key = $k;
                 if (!is_string($key)) {
@@ -694,6 +753,7 @@ class BaseEntity implements Entity
                 }
                 $copy->$key = self::cloneObject($v);
             }
+
             return $copy;
         }
 
