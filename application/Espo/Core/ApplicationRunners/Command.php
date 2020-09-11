@@ -42,13 +42,11 @@ class Command implements ApplicationRunner
     use Cli;
     use SetupSystemUser;
 
-    protected $injectableFactory;
+    protected $commandManager;
 
-    public function __construct(InjectableFactory $injectableFactory)
+    public function __construct(ConsoleCommandManager $commandManager)
     {
-        $this->injectableFactory = $injectableFactory;
-
-        $this->commandManager = $this->injectableFactory->create(ConsoleCommandManager::class);
+        $this->commandManager = $commandManager;
     }
 
     public function run()

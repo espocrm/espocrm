@@ -92,45 +92,47 @@ class Route
      */
     protected function unify() : array
     {
-        $data = $this->getAddData([], $this->paths['customPath']);
+        $data = $this->addDataFromFile([], $this->paths['customPath']);
 
         $moduleData = [];
 
         foreach ($this->metadata->getModuleList() as $moduleName) {
             $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
 
-            foreach ($this->getAddData([], $modulePath) as $row) {
-                $moduleData[$row['method'].$row['route']] = $row;
+            foreach ($this->addDataFromFile([], $modulePath) as $row) {
+                $key = $row['method'] . $row['route'];
+
+                $moduleData[$key] = $row;
             }
         }
 
         $data = array_merge($data, array_values($moduleData));
 
-        $data = $this->getAddData($data, $this->paths['corePath']);
+        $data = $this->addDataFromFile($data, $this->paths['corePath']);
 
         return $data;
     }
 
-    protected function getAddData(array $currentData, string $routeFile) : array
+    protected function addDataFromFile(array $currentData, string $routeFile) : array
     {
-        if (file_exists($routeFile)) {
-            $content = $this->fileManager->getContents($routeFile);
-
-            $arrayContent = Json::getArrayData($content);
-
-            if (empty($arrayContent)) {
-                $GLOBALS['log']->error('Route::unify() - Empty file or syntax error - ['.$routeFile.'].');
-
-                return $currentData;
-            }
-
-            $currentData = $this->addToData($currentData, $arrayContent);
+        if (!file_exists($routeFile)) {
+            return $currentData;
         }
 
-        return $currentData;
+        $content = $this->fileManager->getContents($routeFile);
+
+        $data = Json::getArrayData($content);
+
+        if (empty($data)) {
+            $GLOBALS['log']->warning("Route: No data or syntax error in '{$routeFile}'.");
+
+            return $currentData;
+        }
+
+        return $this->appendRoutesToData($currentData, $data);
     }
 
-    protected function addToData(array $data, array $newData) : array
+    protected function appendRoutesToData(array $data, array $newData) : array
     {
         foreach ($newData as $route) {
             $route['route'] = $this->adjustPath($route['route']);
@@ -139,6 +141,10 @@ class Route
                 $route['noAuth'] = !($route['conditions']['auth'] ?? true);
 
                 unset($route['conditions']);
+            }
+
+            if (self::isRouteInList($route, $data)) {
+                continue;
             }
 
             $data[] = $route;
@@ -157,8 +163,8 @@ class Route
         // to fast route format
         $routePath = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', $routePath);
 
-        if (substr($routePath, 0, 1) != '/') {
-            return '/'.$routePath;
+        if (substr($routePath, 0, 1) !== '/') {
+            return '/' . $routePath;
         }
 
         return $routePath;
@@ -180,5 +186,16 @@ class Route
         }
 
         return '';
+    }
+
+    static protected function isRouteInList(array $newRoute, array $routeList) : bool
+    {
+        foreach ($routeList as $route) {
+            if (Util::isEquals($route, $newRoute)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

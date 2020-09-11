@@ -60,22 +60,15 @@ use Throwable;
  */
 class Api implements ApplicationRunner
 {
-    protected $allowedMethodList = [
-        'get',
-        'post',
-        'put',
-        'patch',
-        'delete',
-        'options',
-    ];
-
     protected $injectableFactory;
     protected $applicationUser;
+    protected $routeUtil;
 
-    public function __construct(InjectableFactory $injectableFactory, ApplicationUser $applicationUser)
+    public function __construct(InjectableFactory $injectableFactory, ApplicationUser $applicationUser, Route $routeUtil)
     {
         $this->injectableFactory = $injectableFactory;
         $this->applicationUser = $applicationUser;
+        $this->routeUtil = $routeUtil;
     }
 
     public function run()
@@ -86,14 +79,14 @@ class Api implements ApplicationRunner
 
         $slim->addRoutingMiddleware();
 
-        $routeList = $this->getRouteList();
-        $routeList = $this->filterRouteList($routeList);
+        $routeList = $this->routeUtil->getFullList();
 
         foreach ($routeList as $item) {
             $this->addRoute($slim, $item);
         }
 
         $slim->addErrorMiddleware(false, true, true);
+
         $slim->run();
     }
 
@@ -104,7 +97,8 @@ class Api implements ApplicationRunner
 
         $slim->$method(
             $route,
-            function (Psr7Request $request, Psr7Response $response, array $args) use ($item, $slim) {
+            function (Psr7Request $request, Psr7Response $response, array $args) use ($item, $slim)
+            {
                 $routeParams = $this->getRouteParams($item, $args);
 
                 $requestWrapped = new RequestWrapper($request, $slim->getBasePath(), $routeParams);
@@ -205,31 +199,5 @@ class Api implements ApplicationRunner
 
             $responseWrapped->setStatus(500);
         }
-    }
-
-    protected function filterRouteList(array $routeList) : array
-    {
-        $routeList = array_filter($routeList, function ($item) {
-            $method = strtolower($item['method'] ?? '');
-            $route = $item['route'] ?? null;
-
-            if (!$route) {
-                return false;
-            }
-
-            if (!in_array($method, $this->allowedMethodList)) {
-                $GLOBALS['log']->warning("Route: Method '{$method}' is not supported. Fix the route '{$route}'.");
-
-                return false;
-            }
-            return true;
-        });
-
-        return $routeList;
-    }
-
-    protected function getRouteList() : array
-    {
-        return $this->injectableFactory->create(Route::class)->getFullList();
     }
 }
