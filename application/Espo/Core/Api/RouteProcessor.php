@@ -30,8 +30,6 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\{
-    Api\Request,
-    Api\Response,
     Utils\Config,
     Utils\Json,
     ControllerManager,
@@ -54,7 +52,7 @@ class RouteProcessor
         $this->controllerManager = $controllerManager;
     }
 
-    public function process(string $route, RequestWrapper $request, ResponseWrapper $response)
+    public function process(string $route, Request $request, Response $response)
     {
         $response->setHeader('Content-Type', 'application/json');
 
