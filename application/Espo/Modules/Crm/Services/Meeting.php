@@ -54,19 +54,32 @@ class Meeting extends \Espo\Services\Record implements
     public function checkAssignment(Entity $entity) : bool
     {
         $result = parent::checkAssignment($entity);
-        if (!$result) return false;
 
-        $userIdList = $entity->get('usersIds');
+        if (!$result) {
+            return false;
+        }
+
+        $userIdList = $entity->get('usersIds')
+        ;
         if (!is_array($userIdList)) {
             $userIdList = [];
         }
 
         $newIdList = [];
+
         if (!$entity->isNew()) {
             $existingIdList = [];
-            foreach ($entity->get('users') as $user) {
+
+            $usersCollection = $this->getEntityManager()
+                ->getRepository($entity->getEntityType())
+                ->getRelation($entity, 'users')
+                ->select('id')
+                ->find();
+
+            foreach ($usersCollection as $user) {
                 $existingIdList[] = $user->id;
             }
+
             foreach ($userIdList as $id) {
                 if (!in_array($id, $existingIdList)) {
                     $newIdList[] = $id;
