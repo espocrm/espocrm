@@ -62,21 +62,27 @@ class Route
         if (!isset($this->data)) {
             $this->init();
         }
+
         return $this->data;
     }
 
     protected function init()
     {
-        if (file_exists($this->cacheFile) && $this->config->get('useCache')) {
-            $this->data = $this->fileManager->getPhpContents($this->cacheFile);
-        } else {
-            $this->data = $this->unify();
+        $useCache = $this->config->get('useCache');
 
-            if ($this->config->get('useCache')) {
-                $result = $this->fileManager->putPhpContents($this->cacheFile, $this->data);
-                if ($result == false) {
-                    throw new Error('Route - Cannot save unified routes');
-                }
+        if (file_exists($this->cacheFile) && $useCache) {
+            $this->data = $this->fileManager->getPhpContents($this->cacheFile);
+
+            return;
+        }
+
+        $this->data = $this->unify();
+
+        if ($useCache) {
+            $result = $this->fileManager->putPhpContents($this->cacheFile, $this->data);
+
+            if ($result == false) {
+                throw new Error('Route - Cannot save unified routes');
             }
         }
     }
@@ -86,54 +92,56 @@ class Route
      */
     protected function unify() : array
     {
-        // for custom
         $data = $this->getAddData([], $this->paths['customPath']);
 
-        // for module
         $moduleData = [];
+
         foreach ($this->metadata->getModuleList() as $moduleName) {
             $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+
             foreach ($this->getAddData([], $modulePath) as $row) {
                 $moduleData[$row['method'].$row['route']] = $row;
             }
         }
+
         $data = array_merge($data, array_values($moduleData));
 
-        // for core
         $data = $this->getAddData($data, $this->paths['corePath']);
 
         return $data;
     }
 
-    protected function getAddData($currData, $routeFile)
+    protected function getAddData(array $currentData, string $routeFile) : array
     {
         if (file_exists($routeFile)) {
             $content = $this->fileManager->getContents($routeFile);
+
             $arrayContent = Json::getArrayData($content);
+
             if (empty($arrayContent)) {
-                $GLOBALS['log']->error('Route::unify() - Empty file or syntax error - ['.$routeFile.']');
-                return $currData;
+                $GLOBALS['log']->error('Route::unify() - Empty file or syntax error - ['.$routeFile.'].');
+
+                return $currentData;
             }
 
-            $currData = $this->addToData($currData, $arrayContent);
+            $currentData = $this->addToData($currentData, $arrayContent);
         }
 
-        return $currData;
+        return $currentData;
     }
 
-    protected function addToData($data, $newData)
+    protected function addToData(array $data, array $newData) : array
     {
         foreach ($newData as $route) {
             $route['route'] = $this->adjustPath($route['route']);
 
             if (isset($route['conditions'])) {
                 $route['noAuth'] = !($route['conditions']['auth'] ?? true);
+
                 unset($route['conditions']);
             }
 
-            if (!$this->isRouteExists($route, $data)) {
-                $data[] = $route;
-            }
+            $data[] = $route;
         }
 
         return $data;
@@ -141,10 +149,6 @@ class Route
 
     /**
      * Check and adjust the route path.
-     *
-     * @param string $routePath - it can be "/App/user",  "App/user"
-     *
-     * @return string - "/App/user"
      */
     protected function adjustPath(string $routePath) : string
     {
@@ -167,25 +171,14 @@ class Route
 
         $uri = parse_url('http://any.com' . $_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        $basePath = '';
-
         if (stripos($uri, $scriptName) === 0) {
-            $basePath = $scriptName;
-        } elseif ($scriptDir !== '/' && stripos($uri, $scriptDir) === 0) {
-            $basePath = $scriptDir;
+            return $scriptName;
         }
 
-        return $basePath;
-    }
-
-    protected function isRouteExists(array $newRoute, array $routeList) : bool
-    {
-        foreach ($routeList as $route) {
-            if (Util::isEquals($route, $newRoute)) {
-                return true;
-            }
+        if ($scriptDir !== '/' && stripos($uri, $scriptDir) === 0) {
+            return $scriptDir;
         }
 
-        return false;
+        return '';
     }
 }
