@@ -55,10 +55,6 @@ class RequestWrapper implements ApiRequest
     {
         $this->request = $request;
         $this->basePath = $basePath;
-
-        unset($routeParams['controller']);
-        unset($routeParams['actioon']);
-
         $this->routeParams = $routeParams;
     }
 
@@ -93,6 +89,11 @@ class RequestWrapper implements ApiRequest
     public function getRouteParam(string $name) : ?string
     {
         return $this->routeParams[$name] ?? null;
+    }
+
+    public function getRouteParams() : array
+    {
+        return $this->routeParams;
     }
 
     public function hasQueryParam(string $name) : bool

@@ -56,15 +56,11 @@ class ControllerManager
         $this->classFinder = $classFinder;
     }
 
-    public function process(
-        string $controllerName,
-        string $requestMethod,
-        string $actionName,
-        array $params,
-        Request $request,
-        Response $response
-    ) {
+    public function process(string $controllerName, string $actionName, Request $request, Response $response)
+    {
         $controller = $this->createController($controllerName);
+
+        $requestMethod = $request->getMethod();
 
         if ($actionName == 'index') {
             $actionName = $controller::$defaultAction ?? 'index';
@@ -101,6 +97,8 @@ class ControllerManager
         if ($data && $request->getContentType() === 'application/json') {
             $data = json_decode($data);
         }
+
+        $params = $request->getRouteParams();
 
         $beforeMethodName = 'before' . $actionNameUcfirst;
 

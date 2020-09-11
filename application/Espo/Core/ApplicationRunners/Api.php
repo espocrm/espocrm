@@ -105,7 +105,10 @@ class Api implements ApplicationRunner
         $slim->$method(
             $route,
             function (Psr7Request $request, Psr7Response $response, array $args) use ($item, $slim) {
-                $requestWrapped = new RequestWrapper($request, $slim->getBasePath(), $args);
+                $routeParams = $this->getRouteParams($item, $args);
+
+                $requestWrapped = new RequestWrapper($request, $slim->getBasePath(), $routeParams);
+
                 $responseWrapped = new ResponseWrapper($response);
 
                 $this->processRequest($item, $requestWrapped, $responseWrapped, $args);
@@ -113,6 +116,45 @@ class Api implements ApplicationRunner
                 return $responseWrapped->getResponse();
             }
         );
+    }
+
+    protected function getRouteParams(array $item, array $args) : array
+    {
+        $params = [];
+
+        $routeParams = $item['params'] ?? [];
+
+        $paramKeys = array_keys($routeParams);
+
+        $setKeyList = [];
+
+        foreach ($paramKeys as $key) {
+            $value = $routeParams[$key];
+
+            $paramName = $key;
+
+            if ($value[0] === ':') {
+                $realKey = substr($value, 1);
+
+                $params[$paramName] = $args[$realKey];
+
+                $setKeyList[] = $realKey;
+
+                continue;
+            }
+
+            $params[$paramName] = $value;
+        }
+
+        foreach ($args as $key => $value) {
+            if (in_array($key, $setKeyList)) {
+                continue;
+            }
+
+            $params[$key] = $value;
+        }
+
+        return $params;
     }
 
     protected function processRequest(array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped, array $args)
@@ -141,7 +183,7 @@ class Api implements ApplicationRunner
 
             ob_start();
 
-            $routeProcessor->process($item['route'], $item['params'], $requestWrapped, $responseWrapped, $args);
+            $routeProcessor->process($item['route'], $requestWrapped, $responseWrapped);
 
             ob_clean();
         }
@@ -177,6 +219,7 @@ class Api implements ApplicationRunner
 
             if (!in_array($method, $this->allowedMethodList)) {
                 $GLOBALS['log']->warning("Route: Method '{$method}' is not supported. Fix the route '{$route}'.");
+
                 return false;
             }
             return true;

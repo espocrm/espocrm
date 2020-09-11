@@ -64,6 +64,11 @@ interface Request
     public function getRouteParam(string $name) : ?string;
 
     /**
+     * Get all route parameters.
+     */
+    public function getRouteParams() : array;
+
+    /**
      * Get a header value.
      */
     public function getHeader(string $name) : ?string;

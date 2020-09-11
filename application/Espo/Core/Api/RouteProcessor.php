@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Json,
     ControllerManager,
+    Exceptions\Error,
 };
 
 use StdClass;
@@ -53,33 +54,11 @@ class RouteProcessor
         $this->controllerManager = $controllerManager;
     }
 
-    public function process(string $route, array $routeParams, RequestWrapper $request, ResponseWrapper $response, array $args)
+    public function process(string $route, RequestWrapper $request, ResponseWrapper $response)
     {
         $response->setHeader('Content-Type', 'application/json');
 
-        $params = [];
-
-        $paramKeys = array_keys($routeParams);
-
-        $setKeyList = [];
-
-        foreach ($paramKeys as $key) {
-            $value = $routeParams[$key];
-
-            $paramName = $key;
-            if ($value[0] === ':') {
-                $realKey = substr($value, 1);
-                $params[$paramName] = $args[$realKey];
-                $setKeyList[] = $realKey;
-            } else {
-                $params[$paramName] = $value;
-            }
-        }
-
-        foreach ($args as $key => $value) {
-            if (in_array($key, $setKeyList)) continue;
-            $params[$key] = $value;
-        }
+        $params = $request->getRouteParams();
 
         $controllerName = $params['controller'] ?? null;
         $actionName = $params['action'] ?? null;
@@ -107,9 +86,7 @@ class RouteProcessor
         unset($params['controller']);
         unset($params['action']);
 
-        $result = $this->controllerManager->process(
-            $controllerName, $requestMethod, $actionName, $params, $request, $response
-        ) ?? null;
+        $result = $this->controllerManager->process($controllerName, $actionName, $request, $response) ?? null;
 
         $responseContents = $result;
 

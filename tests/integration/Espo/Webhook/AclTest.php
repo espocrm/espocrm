@@ -29,6 +29,8 @@
 
 namespace tests\integration\Espo\Webhook;
 
+use Espo\Core\ControllerManager;
+
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
 
@@ -51,15 +53,13 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('controllerManager');
+        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
 
         $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
 
-        $request = $this->createRequest('POST', [], ['Content-Type' => 'application/json']);
+        $request = $this->createRequest('POST', [], ['Content-Type' => 'application/json'], '{"event":"Account.create"}');
 
-        $data = json_decode('{"event":"Account.create"}');
-
-        $result = $controllerManager->process('Webhook', 'POST', 'create', [], $data, $request, $this->createResponse());
+        $result = $controllerManager->process('Webhook', 'create', $request, $this->createResponse());
     }
 
     public function testApiUserNoAccess1()
@@ -78,22 +78,27 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        $request = $this->createRequest('POST', [], [
-            'Content-Type' => 'application/json',
-            'X-Api-Key' => 'test-key',
-        ]);
+        $request = $this->createRequest(
+            'POST',
+            [],
+            [
+                'Content-Type' => 'application/json',
+                'X-Api-Key' => 'test-key',
+            ],
+            '{"event":"Account.create", "url": "https://test"}'
+        );
 
         $this->auth(null, null, null, 'ApiKey', $request);
 
-        $data = json_decode('{"event":"Account.create", "url": "https://test"}');
+        $data = json_decode();
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('controllerManager');
+        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
 
         $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
 
-        $result = $controllerManager->process('Webhook', 'POST', 'create', [], $data, $request, $this->createResponse());
+        $result = $controllerManager->process('Webhook', 'create', $request, $this->createResponse());
     }
 
     public function testApiUserNoAccess2()
@@ -113,22 +118,25 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        $request = $this->createRequest('POST', [], [
-            'Content-Type' => 'application/json',
-            'X-Api-Key' => 'test-key',
-        ]);
+        $request = $this->createRequest(
+            'POST',
+            [],
+            [
+                'Content-Type' => 'application/json',
+                'X-Api-Key' => 'test-key',
+            ],
+            '{"event":"Account.create", "url": "https://test"}'
+        );
 
         $this->auth(null, null, null, 'ApiKey', $request);
 
-        $data = json_decode('{"event":"Account.create", "url": "https://test"}');
-
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('controllerManager');
+        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
 
         $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
 
-        $result = $controllerManager->process('Webhook', 'POST', 'create', [], $data, $request, $this->createResponse());
+        $result = $controllerManager->process('Webhook', 'create', $request, $this->createResponse());
     }
 
     public function testApiUserHasAccess1()
@@ -148,20 +156,23 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ]
         );
 
-        $request = $this->createRequest('POST', [], [
-            'Content-Type' => 'application/json',
-            'X-Api-Key' => 'test-key',
-        ]);
+        $request = $this->createRequest(
+            'POST',
+            [],
+            [
+                'Content-Type' => 'application/json',
+                'X-Api-Key' => 'test-key',
+            ],
+            '{"event":"Account.create", "url": "https://test"}'
+        );
 
         $this->auth(null, null, null, 'ApiKey', $request);
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('controllerManager');
+        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
 
-        $data = json_decode('{"event":"Account.create", "url": "https://test"}');
-
-        $result = $controllerManager->process('Webhook', 'POST', 'create', [], $data, $request, $this->createResponse());
+        $result = $controllerManager->process('Webhook', 'create', $request, $this->createResponse());
 
         $this->assertTrue(!empty($result));
     }

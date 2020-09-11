@@ -173,7 +173,7 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     }
 
     protected function createRequest(
-        string $method, array $queryParams = [], array $headers = [], ?string $body = null
+        string $method, array $queryParams = [], array $headers = [], ?string $body = null, array $routeParams = []
     ) : RequestWrapper {
         $request = (new RequestFactory())->createRequest($method, 'http://localhost/?' . http_build_query($queryParams));
 
@@ -187,7 +187,7 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
             );
         }
 
-        return new RequestWrapper($request);
+        return new RequestWrapper($request, '', $routeParams);
     }
 
     protected function createResponse()
