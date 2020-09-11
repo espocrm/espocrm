@@ -83,9 +83,6 @@ class RouteProcessor
             }
         }
 
-        unset($params['controller']);
-        unset($params['action']);
-
         $result = $this->controllerManager->process($controllerName, $actionName, $request, $response) ?? null;
 
         $responseContents = $result;
