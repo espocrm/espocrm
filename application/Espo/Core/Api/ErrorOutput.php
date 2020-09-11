@@ -62,62 +62,30 @@ class ErrorOutput
 
     protected $request;
 
-    public function __construct(Request $request)
+    protected $route;
+
+    public function __construct(Request $request, ?string $route = null)
     {
         $this->request = $request;
+        $this->route = $route;
     }
 
-    public function process(
-        Response $response,
-        Throwable $exception,
-        bool $toPrintBody = false,
-        ?array $route = null,
-        ?array $routeParams = null
-    ) {
+    public function process(Response $response, Throwable $exception, bool $toPrintBody = false)
+    {
         $message = $exception->getMessage() ?? '';
         $statusCode = $exception->getCode();
 
-        if ($route) {
-            $requestBodyString = $this->request->getBodyContents();
-            $requestBodyString = $this->clearPasswords($requestBodyString);
-
-            $routePattern = $route['route'];
-            $routeParams = $routeParams ?? [];
-
-            $logMessage = "API ($statusCode) ";
-            $logMessageItemList = [];
-
-            if ($message) {
-                $logMessageItemList[] = $message;
-            }
-
-            $logMessageItemList[] .= $this->request->getMethod() . ' ' . $this->request->getResourcePath();
-
-            if ($requestBodyString) {
-                $logMessageItemList[] = "Input data: " . $requestBodyString;
-            }
-
-            if ($routePattern) {
-                $logMessageItemList[] = "Route pattern: ". $routePattern;
-            }
-
-            if (!empty($routeParams)) {
-                $logMessageItemList[] = "Route params: ". print_r($routeParams, true);
-            }
-
-            $logMessage .= implode("; ", $logMessageItemList);
-
-            $GLOBALS['log']->log('debug', $logMessage);
+        if ($this->route) {
+            $this->processRoute($response, $exception);
         }
 
         $logLevel = 'error';
+
         $messageLineFile = null;
 
-        if ($exception) {
-            $messageLineFile = 'line: ' . $exception->getLine() . ', file: ' . $exception->getFile();
-        }
+        $messageLineFile = 'line: ' . $exception->getLine() . ', file: ' . $exception->getFile();
 
-        if ($exception && !empty($exception->logLevel)) {
+        if (!empty($exception->logLevel)) {
             $logLevel = $exception->logLevel;
         }
 
@@ -140,7 +108,6 @@ class ErrorOutput
         $toPrintBodyXStatusReason = true;
 
         if (
-            $exception &&
             in_array(
                 get_class($exception), $this->ignorePrintXStatusReasonExceptionClassNameList
             )
@@ -227,5 +194,40 @@ class ErrorOutput
         $value = preg_replace($pattern, ' ', $value);
 
         return $value;
+    }
+
+    protected function processRoute(Response $response, Throwable $exception)
+    {
+        $requestBodyString = $this->request->getBodyContents();
+        $requestBodyString = $this->clearPasswords($requestBodyString);
+
+        $message = $exception->getMessage() ?? '';
+        $statusCode = $exception->getCode();
+
+        $routeParams = $this->request->getRouteParams();
+
+        $logMessage = "API ($statusCode) ";
+
+        $logMessageItemList = [];
+
+        if ($message) {
+            $logMessageItemList[] = $message;
+        }
+
+        $logMessageItemList[] .= $this->request->getMethod() . ' ' . $this->request->getResourcePath();
+
+        if ($requestBodyString) {
+            $logMessageItemList[] = "Input data: " . $requestBodyString;
+        }
+
+        $logMessageItemList[] = "Route pattern: " . $this->route;
+
+        if (!empty($routeParams)) {
+            $logMessageItemList[] = "Route params: " . print_r($routeParams, true);
+        }
+
+        $logMessage .= implode("; ", $logMessageItemList);
+
+        $GLOBALS['log']->log('debug', $logMessage);
     }
 }

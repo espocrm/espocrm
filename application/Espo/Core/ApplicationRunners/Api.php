@@ -188,17 +188,17 @@ class Api implements ApplicationRunner
             ob_clean();
         }
         catch (Exception $exception) {
-            $this->handleException($exception, $item, $requestWrapped, $responseWrapped, $args);
+            $this->handleException($exception, $requestWrapped, $responseWrapped, $item['route']);
         }
     }
 
     protected function handleException(
-        Throwable $exception, array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped, array $args
+        Throwable $exception, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped, string $route
     ) {
-        $errorOutput = new ApiErrorOutput($requestWrapped);
+        $errorOutput = new ApiErrorOutput($requestWrapped, $route);
 
         try {
-            $errorOutput->process($responseWrapped, $exception, false, $item, $args);
+            $errorOutput->process($responseWrapped, $exception);
         }
         catch (Throwable $exception) {
             $GLOBALS['log']->error($exception->getMessage());
