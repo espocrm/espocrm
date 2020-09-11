@@ -616,7 +616,7 @@
             "layoutRelationshipsDisabled": true,
             "audited": true,
             "columnAttributeMap": {
-                "status": "acceptanceStatusMeetings"
+                "status": "acceptanceStatus"
             }
         },
         "calls": {
@@ -626,7 +626,7 @@
             "layoutRelationshipsDisabled": true,
             "audited": true,
             "columnAttributeMap": {
-                "status": "acceptanceStatusCalls"
+                "status": "acceptanceStatus"
             }
         },
         "tasks": {

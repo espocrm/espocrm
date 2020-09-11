@@ -245,14 +245,20 @@
             "entity": "Meeting",
             "foreign": "leads",
             "layoutRelationshipsDisabled": true,
-            "audited": true
+            "audited": true,
+            "columnAttributeMap": {
+                "status": "acceptanceStatus"
+            }
         },
         "calls": {
             "type": "hasMany",
             "entity": "Call",
             "foreign": "leads",
             "layoutRelationshipsDisabled": true,
-            "audited": true
+            "audited": true,
+            "columnAttributeMap": {
+                "status": "acceptanceStatus"
+            }
         },
         "tasks": {
             "type": "hasChildren",

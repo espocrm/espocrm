@@ -393,7 +393,7 @@
             "entity": "Meeting",
             "foreign": "users",
             "columnAttributeMap": {
-                "status": "acceptanceStatusMeetings"
+                "status": "acceptanceStatus"
             }
         },
         "calls": {
@@ -401,7 +401,7 @@
             "entity": "Call",
             "foreign": "users",
             "columnAttributeMap": {
-                "status": "acceptanceStatusCalls"
+                "status": "acceptanceStatus"
             }
         },
         "emails": {
