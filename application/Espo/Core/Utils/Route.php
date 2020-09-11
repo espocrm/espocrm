@@ -130,7 +130,10 @@ class Route
                 $route['noAuth'] = !($route['conditions']['auth'] ?? true);
                 unset($route['conditions']);
             }
-            $data[] = $route;
+
+            if (!$this->isRouteExists($route, $data)) {
+                $data[] = $route;
+            }
         }
 
         return $data;
@@ -173,5 +176,16 @@ class Route
         }
 
         return $basePath;
+    }
+
+    protected function isRouteExists(array $newRoute, array $routeList) : bool
+    {
+        foreach ($routeList as $route) {
+            if (Util::isEquals($route, $newRoute)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
