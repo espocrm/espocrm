@@ -60,7 +60,9 @@ class Totp implements CodeVerify
 
     public function verify(UserData $userData, string $code) : bool
     {
-        if (!$code) return false;
+        if (!$code) {
+            return false;
+        }
 
         $code = str_replace(' ', '', trim($code));
 

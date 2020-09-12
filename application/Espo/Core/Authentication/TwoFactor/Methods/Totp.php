@@ -49,15 +49,27 @@ class Totp implements CodeVerify
 
     public function verifyCode(User $user, string $code) : bool
     {
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
+        $userData = $this->entityManager
+            ->getRepository('UserData')
+            ->getByUserId($user->id);
 
-        if (!$userData) return false;
-        if (!$userData->get('auth2FA')) return false;
-        if ($userData->get('auth2FAMethod') != 'Totp') return false;
+        if (!$userData) {
+            return false;
+        }
+
+        if (!$userData->get('auth2FA')) {
+            return false;
+        }
+
+        if ($userData->get('auth2FAMethod') != 'Totp') {
+            return false;
+        }
 
         $secret = $userData->get('auth2FATotpSecret');
 
-        if (!$secret) return false;
+        if (!$secret) {
+            return false;
+        }
 
         return $this->totp->verifyCode($secret, $code);
     }
