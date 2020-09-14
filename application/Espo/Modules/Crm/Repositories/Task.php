@@ -64,12 +64,15 @@ class Task extends \Espo\Core\Repositories\Event
             if ($parentId && $parentType) {
                 if ($this->getEntityManager()->hasRepository($parentType)) {
                     $columnList = ['id', 'name'];
+
                     if ($this->getEntityManager()->getMetadata()->get($parentType, ['fields', 'accountId'])) {
                         $columnList[] = 'accountId';
                     }
+
                     if ($this->getEntityManager()->getMetadata()->get($parentType, ['fields', 'contactId'])) {
                         $columnList[] = 'contactId';
                     }
+
                     if ($parentType === 'Lead') {
                         $columnList[] = 'status';
                         $columnList[] = 'createdAccountId';
@@ -77,7 +80,12 @@ class Task extends \Espo\Core\Repositories\Event
                         $columnList[] = 'createdContactId';
                         $columnList[] = 'createdContactName';
                     }
-                    $parent = $this->getEntityManager()->getRepository($parentType)->select($columnList)->get($parentId);
+
+                    $parent = $this->getEntityManager()
+                        ->getRepository($parentType)
+                        ->select($columnList)
+                        ->where(['id' => $parentId])
+                        ->findOne();
                 }
             }
 
