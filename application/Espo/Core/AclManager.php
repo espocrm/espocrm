@@ -267,7 +267,7 @@ class AclManager
     }
 
     /**
-     * @deprecated
+     * @deprecated Use checkUserPermission instead.
      */
     public function checkUser(User $user, string $permission, User $target) : bool
     {
