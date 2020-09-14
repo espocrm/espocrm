@@ -46,6 +46,8 @@ use Espo\Core\{
     Utils\Util,
 };
 
+use StdClass;
+
 /**
  * Used to check access for a specific user.
  */
@@ -107,6 +109,7 @@ class AclManager
     protected function getTable(User $user)
     {
         $key = $user->id;
+
         if (empty($key)) {
             $key = spl_object_hash($user);
         }
@@ -120,7 +123,7 @@ class AclManager
         return $this->tableHashMap[$key];
     }
 
-    public function getMap(User $user) : \StdClass
+    public function getMap(User $user) : StdClass
     {
         return $this->getTable($user)->getMap();
     }
@@ -133,6 +136,7 @@ class AclManager
         if ($user->isAdmin()) {
             return $this->getTable($user)->getHighestLevel($scope, $action);
         }
+
         return $this->getTable($user)->getLevel($scope, $action);
     }
 
@@ -144,6 +148,7 @@ class AclManager
         if (substr($permission, -10) !== 'Permission') {
             $permission .= 'Permission';
         }
+
         return $this->getTable($user)->get($permission);
     }
 
@@ -155,7 +160,9 @@ class AclManager
         if ($user->isAdmin()) {
             return false;
         }
+
         $data = $this->getTable($user)->getScopeData($scope);
+
         return (bool) $this->getImplementation($scope)->checkReadNo($user, $data);
     }
 
@@ -167,7 +174,9 @@ class AclManager
         if ($user->isAdmin()) {
             return false;
         }
+
         $data = $this->getTable($user)->getScopeData($scope);
+
         return (bool) $this->getImplementation($scope)->checkReadOnlyTeam($user, $data);
     }
 
@@ -179,7 +188,9 @@ class AclManager
         if ($user->isAdmin()) {
             return false;
         }
+
         $data = $this->getTable($user)->getScopeData($scope);
+
         return (bool) $this->getImplementation($scope)->checkReadOnlyOwn($user, $data);
     }
 
@@ -190,11 +201,14 @@ class AclManager
     {
         if (is_string($subject)) {
             return $this->checkScope($user, $subject, $action);
-        } else {
-            $entity = $subject;
-            if ($entity instanceof Entity) {
-                return $this->checkEntity($user, $entity, $action);
-            }
+        }
+
+        $entity = $subject;
+
+        if ($entity instanceof Entity) {
+            $action = $action ?? 'read';
+
+            return $this->checkEntity($user, $entity, $action);
         }
 
         return false;
@@ -217,6 +231,7 @@ class AclManager
 
         if ($action) {
             $methodName = 'checkEntity' . ucfirst($action);
+
             if (method_exists($impl, $methodName)) {
                 return (bool) $impl->$methodName($user, $entity, $data);
             }
@@ -247,6 +262,7 @@ class AclManager
     public function checkScope(User $user, string $scope, ?string $action = null) : bool
     {
         $data = $this->getTable($user)->getScopeData($scope);
+
         return (bool) $this->getImplementation($scope)->checkScope($user, $data, $action);
     }
 
@@ -258,6 +274,7 @@ class AclManager
         if ($user->isAdmin()) {
             return true;
         }
+
         if ($this->get($user, $permission) === 'no') {
             if ($target->id !== $user->id) {
                 return false;
@@ -268,17 +285,21 @@ class AclManager
                 $teamIdList2 = $target->getTeamIdList();
 
                 $inTeam = false;
+
                 foreach ($teamIdList1 as $id) {
                     if (in_array($id, $teamIdList2)) {
                         $inTeam = true;
+
                         break;
                     }
                 }
+
                 if (!$inTeam) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
@@ -296,6 +317,7 @@ class AclManager
 
         if ($action === 'edit') {
             $typeList[] = 'readOnly';
+
             if (!$user->isAdmin()) {
                 $typeList[] = 'nonAdminReadOnly';
             }
@@ -321,6 +343,7 @@ class AclManager
                 $list,
                 $this->getScopeRestrictedAttributeList($scope, $this->getGlobalRestrictionTypeList($user, $action))
             );
+
             $list = array_values($list);
         }
 
@@ -344,6 +367,7 @@ class AclManager
                 $list,
                 $this->getScopeRestrictedFieldList($scope, $this->getGlobalRestrictionTypeList($user, $action))
             );
+
             $list = array_values($list);
         }
 
@@ -363,6 +387,7 @@ class AclManager
                 $list,
                 $this->getScopeRestrictedLinkList($scope, $this->getGlobalRestrictionTypeList($user, $action))
             );
+
             $list = array_values($list);
         }
 
@@ -396,6 +421,7 @@ class AclManager
 
         if ($permission === 'team') {
             $teamIdList = $user->getLinkMultipleIdList('teams');
+
             if (!$this->entityManager->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
                 return false;
             }
@@ -421,6 +447,7 @@ class AclManager
     {
         $className = $this->userAclClassName;
         $acl = new $className($this, $user);
+
         return $acl;
     }
 
@@ -429,10 +456,13 @@ class AclManager
         if (is_array($type)) {
             $typeList = $type;
             $list = [];
+
             foreach ($typeList as $type) {
                 $list = array_merge($list, $this->globalRestricton->getScopeRestrictedFieldList($scope, $type));
             }
+
             $list = array_values($list);
+
             return $list;
         }
         return $this->globalRestricton->getScopeRestrictedFieldList($scope, $type);
@@ -443,12 +473,16 @@ class AclManager
         if (is_array($type)) {
             $typeList = $type;
             $list = [];
+
             foreach ($typeList as $type) {
                 $list = array_merge($list, $this->globalRestricton->getScopeRestrictedAttributeList($scope, $type));
             }
+
             $list = array_values($list);
+
             return $list;
         }
+
         return $this->globalRestricton->getScopeRestrictedAttributeList($scope, $type);
     }
 
@@ -457,12 +491,16 @@ class AclManager
         if (is_array($type)) {
             $typeList = $type;
             $list = [];
+
             foreach ($typeList as $type) {
                 $list = array_merge($list, $this->globalRestricton->getScopeRestrictedLinkList($scope, $type));
             }
+
             $list = array_values($list);
+
             return $list;
         }
+
         return $this->globalRestricton->getScopeRestrictedLinkList($scope, $type);
     }
 }
