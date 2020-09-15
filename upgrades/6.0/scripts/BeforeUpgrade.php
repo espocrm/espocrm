@@ -36,6 +36,8 @@ class BeforeUpgrade
         $this->container = $container;
 
         $this->processMyIsamCheck();
+
+        $this->processNextNumberAlterTable();
     }
 
     protected function processMyIsamCheck()
@@ -73,7 +75,6 @@ class BeforeUpgrade
         $databaseInfo = $container->get('config')->get('database');
 
         try {
-
             $sth = $pdo->prepare("
                 SELECT TABLE_NAME as tableName
                 FROM information_schema.TABLES
@@ -82,8 +83,8 @@ class BeforeUpgrade
             ");
 
             $sth->execute();
-
-        }catch (Exception $e) {
+        }
+        catch (Exception $e) {
             return [];
         }
 
@@ -94,5 +95,16 @@ class BeforeUpgrade
         }
 
         return $tableList;
+    }
+
+    protected function processNextNumberAlterTable()
+    {
+        $pdo = $this->container->get('entityManager')->getPDO();
+
+        $q1 = "ALTER TABLE `next_number` CHANGE `entity_type` `entity_type` VARCHAR(100)";
+        $q2 = "ALTER TABLE `next_number` CHANGE `field_name` `field_name` VARCHAR(100)";
+
+        $pdo->exec($q1);
+        $pdo->exec($q2);
     }
 }

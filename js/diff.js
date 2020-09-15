@@ -215,6 +215,10 @@ class Diff
                 fs.mkdirSync(upgradePath + '/files');
             }
 
+            if (fs.existsSync(upgradeDataFolderPath + '/beforeUpgradeFiles')) {
+                cp.execSync('cp -r ' + upgradeDataFolderPath + '/beforeUpgradeFiles ' + upgradePath + '/beforeUpgradeFiles');
+            }
+
             if (beforeUpgradeFileList.length) {
                 if (!fs.existsSync(upgradePath + '/beforeUpgradeFiles')) {
                     fs.mkdirSync(upgradePath + '/beforeUpgradeFiles');
