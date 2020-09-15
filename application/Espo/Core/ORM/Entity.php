@@ -142,7 +142,9 @@ class Entity extends BaseEntity
     public function loadLinkMultipleField(string $field, $columns = null)
     {
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) {
-            throw new LogicException("There's no link-multiple field '{$field}'.");
+            return;
+            // @todo Throw exception in 6.4.
+            // throw new LogicException("There's no link-multiple field '{$field}'.");
         }
 
         $select = ['id', 'name'];
