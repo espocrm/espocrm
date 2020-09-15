@@ -444,16 +444,17 @@ class Diff
     getDeletedFileList (versionFrom) {
         process.chdir(this.espoPath);
 
-        var deletedFileList = [];
+        var deletedFileList = this.getRepositoryDeletedFileList(versionFrom);
+        var previousAllFileList = this.getPreviousAllFileList(versionFrom);
+        var actualAllFileList = this.getActualAllFileList();
 
-        var stdout = cp.execSync('git diff --name-only --diff-filter=D ' + versionFrom).toString();
-
-        (stdout || '').trim().split('\n').forEach(function (file) {
-            if (file == '') {
-                return;
+        previousAllFileList.forEach(function (file) {
+            if (
+                ! ~actualAllFileList.indexOf(file) &&
+                ! ~deletedFileList.indexOf(file)
+            ) {
+                deletedFileList.push(file);
             }
-
-            deletedFileList.push(file);
         });
 
         deletedFileList = deletedFileList.filter(function (item) {
@@ -468,6 +469,54 @@ class Diff
         });
 
         return deletedFileList;
+    }
+
+    getRepositoryDeletedFileList (versionFrom) {
+        var deletedFileList = [];
+
+        var stdout = cp.execSync('git diff --name-only --diff-filter=D ' + versionFrom).toString();
+
+        (stdout || '').trim().split('\n').forEach(function (file) {
+            if (file == '') {
+                return;
+            }
+
+            deletedFileList.push(file);
+        });
+
+        return deletedFileList;
+    }
+
+    getActualAllFileList () {
+        var actualAllFileList = [];
+
+        var stdout = cp.execSync('git ls-tree -r --name-only HEAD').toString();
+
+        (stdout || '').trim().split('\n').forEach(function (file) {
+            if (file == '') {
+                return;
+            }
+
+            actualAllFileList.push(file);
+        });
+
+        return actualAllFileList;
+    }
+
+    getPreviousAllFileList (versionFrom) {
+        var previousAllFileList = [];
+
+        var stdout = cp.execSync('git ls-tree -r --name-only ' + versionFrom).toString();
+
+        (stdout || '').trim().split('\n').forEach(function (file) {
+            if (file == '') {
+                return;
+            }
+
+            previousAllFileList.push(file);
+        });
+
+        return previousAllFileList;
     }
 }
 
