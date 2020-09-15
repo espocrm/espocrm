@@ -133,7 +133,12 @@ class Task extends \Espo\Core\Repositories\Event
                 &&
                 !$entity->get('accountName')
             ) {
-                $account = $this->getEntityManager()->getRepository('Account')->select(['id', 'name'])->get($entity->get('accountId'));
+                $account = $this->getEntityManager()
+                    ->getRepository('Account')
+                    ->select(['id', 'name'])
+                    ->where(['id' => $entity->get('accountId')])
+                    ->findOne();
+
                 if ($account) {
                     $entity->set('accountName', $account->get('name'));
                 }
@@ -144,13 +149,17 @@ class Task extends \Espo\Core\Repositories\Event
                 &&
                 !$entity->get('contactName')
             ) {
-                $contact = $this->getEntityManager()->getRepository('Contact')->select(['id', 'name'])->get($entity->get('contactId'));
+                $contact = $this->getEntityManager()
+                    ->getRepository('Contact')
+                    ->select(['id', 'name'])
+                    ->where(['id' => $entity->get('contactId')])
+                    ->findOne();
+
                 if ($contact) {
                     $entity->set('contactName', $contact->get('name'));
                 }
             }
         }
-
 
         parent::beforeSave($entity, $options);
     }
