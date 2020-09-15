@@ -458,7 +458,7 @@ class Diff
 
         deletedFileList = deletedFileList.filter(function (item) {
             if (
-                item.indexOf('test/') === 0 ||
+                item.indexOf('tests/') === 0 ||
                 item.indexOf('frontend/less') === 0
             ) {
                 return false;
