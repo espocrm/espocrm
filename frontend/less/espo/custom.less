@@ -1536,6 +1536,21 @@ label.attach-file-label {
     margin-bottom: 0;
 }
 
+.list-row > .cell > .attachment-preview {
+    margin-bottom: -@table-cell-padding;
+    margin-top: -@table-cell-padding;
+    max-height: @line-height-computed + @table-cell-padding + @table-cell-padding;
+
+    a {
+        display: inline-block;
+    }
+
+    img {
+        max-height: @line-height-computed + @table-cell-padding + @table-cell-padding;
+        vertical-align: top;
+    }
+}
+
 .stick-sub {
     position: fixed;
     top: 0;
