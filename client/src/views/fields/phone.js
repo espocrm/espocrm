@@ -113,13 +113,18 @@ define('views/fields/phone', 'views/fields/varchar', function (Dep) {
             }
 
             if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
+                var number = this.model.get(this.name);
+
                 var o = {
-                    phoneNumber: this.model.get(this.name),
-                    primary: true
+                    phoneNumber: number,
+                    primary: true,
+                    valueForLink: number.replace(/ /g, ''),
                 };
+
                 if (this.mode === 'edit' && this.model.isNew()) {
                     o.type = this.defaultType;
                 }
+
                 phoneNumberData = [o];
             }
 
