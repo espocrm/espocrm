@@ -62,7 +62,6 @@ define('views/stream', 'view', function (Dep) {
         setup: function () {
             this.filter = this.options.filter || this.filter;
 
-            this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 this.createView('createPost', 'views/stream/record/edit', {
                     el: this.options.el + ' .create-post-container',
@@ -72,8 +71,7 @@ define('views/stream', 'view', function (Dep) {
                     this.listenTo(view, 'after:save', function () {
                         this.getView('list').showNewRecords();
                     }, this);
-                }, this);
-                this.wait(false);
+                }, true);
             }, this);
         },
 
