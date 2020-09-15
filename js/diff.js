@@ -67,9 +67,13 @@ class Diff
 
         for (var i = 0; i < tagList.length; i++) {
             var tag = tagList[i];
-            if (tag === '') continue;
+            if (tag === '') {
+                continue;
+            }
+
             if (!~tag.indexOf('beta') && !~tag.indexOf('alpha')) {
                 var minorVersionNumberI = tag.split('.')[1];
+
                 if (minorVersionNumberI !== minorVersionNumber) {
                     versionFromList.push(tag);
                     break;
@@ -80,6 +84,7 @@ class Diff
         if (hotfixVersionNumber !== '0') {
             for (var i = 0; i < tagList.length; i++) {
                 var tag = tagList[i];
+
                 if (!~tag.indexOf('beta') && !~tag.indexOf('alpha')) {
                     versionFromList.push(tag);
                     break;
@@ -143,14 +148,17 @@ class Diff
 
             var upgradeDataFolder = versionFrom + '-' + version;
             var isMinorVersion = false;
+
             if (versionFrom.split('.')[1] !== version.split('.')[1] || versionFrom.split('.')[0] !== version.split('.')[0]) {
                 isMinorVersion = true;
                 upgradeDataFolder = version.split('.')[0] + '.' + version.split('.')[1];
             }
+
             var upgradeDataFolderPath = currentPath + '/upgrades/' + upgradeDataFolder;
             var upgradeFolderExists = fs.existsSync(upgradeDataFolderPath);
 
             var upgradeData = {};
+
             if (upgradeFolderExists) {
                 upgradeData = require(upgradeDataFolderPath + '/data.json') || {};
             }
@@ -161,14 +169,17 @@ class Diff
                 if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
                     fs.readdirSync(path).forEach(function (file, index) {
                         var curPath = path + "/" + file;
+
                         if (fs.lstatSync(curPath).isDirectory()) {
                             deleteDirRecursively(curPath);
                         } else {
                             fs.unlinkSync(curPath);
                         }
                     });
+
                     fs.rmdirSync(path);
-                } else if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
+                }
+                else if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
                     fs.unlinkSync(path);
                 }
             };
@@ -178,12 +189,15 @@ class Diff
             deleteDirRecursively(upgradePath);
             deleteDirRecursively(tempFolderPath);
 
-            if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+            if (fs.existsSync(zipPath)) {
+                fs.unlinkSync(zipPath);
+            }
 
             process.chdir(espoPath);
 
             execute('git rev-parse --abbrev-ref HEAD', function (branch) {
                 branch = branch.trim();
+
                 if (branch !== 'master' && branch !== 'stable' && branch.indexOf('hotfix/') !== 0) {
                     console.log('\x1b[33m%s\x1b[0m', "Warning! You are on " + branch + " branch.");
                 }
@@ -196,6 +210,7 @@ class Diff
             if (!fs.existsSync(upgradePath)) {
                 fs.mkdirSync(upgradePath);
             }
+
             if (!fs.existsSync(upgradePath + '/files')) {
                 fs.mkdirSync(upgradePath + '/files');
             }
@@ -265,6 +280,7 @@ class Diff
                     if (tag == versionFrom) {
                         versionList.push(tag);
                     }
+
                     if (!tag || tag == version) {
                         return;
                     }
@@ -292,8 +308,10 @@ class Diff
                 for (var item in additionalManifestData) {
                     if (Array.isArray(manifestData[item])) {
                         manifestData[item] = manifestData[item].concat(additionalManifestData[item]);
+
                         continue;
                     }
+
                     manifestData[item] = additionalManifestData[item];
                 }
 
@@ -309,12 +327,16 @@ class Diff
                 new Promise(function (resolve) {
                     if (!withVendor) {
                         resolve();
+
                         return;
                     }
 
                     var output = cp.execSync("git show "+versionFrom+" --format=%H").toString();
                     var commitHash = output.trim().split("\n")[3];
-                    if (!commitHash) throw new Error("Couldn't find commit hash.");
+
+                    if (!commitHash) {
+                        throw new Error("Couldn't find commit hash.");
+                    }
 
                     var composerLockOldContents = cp.execSync("git show "+commitHash+":composer.lock").toString();
                     var composerLockNewContents = cp.execSync("cat "+currentPath+"/composer.lock").toString();
@@ -322,14 +344,15 @@ class Diff
 
                     if (composerLockNewContents === composerLockOldContents) {
                         resolve();
+
                         return;
                     }
 
                     var newPackages = JSON.parse(composerLockNewContents).packages;
                     var oldPackages = JSON.parse(composerLockOldContents).packages;
 
-                    cp.execSync("mkdir "+tempFolderPath);
-                    cp.execSync("mkdir "+tempFolderPath + "/new");
+                    fs.mkdirSync(tempFolderPath);
+                    fs.mkdirSync(tempFolderPath + "/new");
 
                     var vendorPath = tempFolderPath + "/new/vendor/";
 
@@ -340,24 +363,32 @@ class Diff
 
                     fs.mkdirSync(upgradePath + '/vendorFiles');
 
-                    cp.execSync("mv "+vendorPath+"/autoload.php "+ upgradePath + "/vendorFiles/autoload.php");
-                    cp.execSync("mv "+vendorPath+"/composer "+ upgradePath + "/vendorFiles/composer");
-                    cp.execSync("mv "+vendorPath+"/bin "+ upgradePath + "/vendorFiles/bin");
+                    cp.execSync("mv " + vendorPath + "/autoload.php "+ upgradePath + "/vendorFiles/autoload.php");
+                    cp.execSync("mv " + vendorPath + "/composer "+ upgradePath + "/vendorFiles/composer");
+                    cp.execSync("mv " + vendorPath + "/bin "+ upgradePath + "/vendorFiles/bin");
 
                     var folderList = [];
 
                     for (var item of newPackages) {
                         var name = item.name;
-                        if (name.indexOf('composer/') === 0) continue;
+
+                        if (name.indexOf('composer/') === 0) {
+                            continue;
+                        }
 
                         var isFound = false;
                         var toAdd = false;
 
                         for (var oItem of oldPackages) {
-                            if (oItem.name !== name) continue;
+                            if (oItem.name !== name) {
+                                continue;
+                            }
+
                             isFound = true;
-                            if (item.version !== oItem.version)
+
+                            if (item.version !== oItem.version) {
                                  toAdd = true;
+                            }
                         }
 
                         if (!isFound) {
@@ -366,14 +397,16 @@ class Diff
 
                         if (toAdd) {
                             var folder = name.split('/')[0];
-                            if (!~folderList.indexOf(folder))
+
+                            if (!~folderList.indexOf(folder)) {
                                 folderList.push(folder);
+                            }
                         }
                     }
 
                     for (var folder of folderList) {
                         if (fs.existsSync(vendorPath + '/'+ folder)) {
-                            cp.execSync("mv "+vendorPath + '/'+ folder+" "+ upgradePath + '/vendorFiles/' + folder);
+                            cp.execSync("mv " + vendorPath + '/'+ folder+" "+ upgradePath + '/vendorFiles/' + folder);
                         }
                     }
 
@@ -383,16 +416,21 @@ class Diff
 
                 }).then(function () {
                     var zipOutput = fs.createWriteStream(zipPath);
+
                     var archive = archiver('zip');
+
                     archive.on('error', function (err) {
                         throw err;
                     });
+
                     zipOutput.on('close', function () {
                         console.log("Upgrade package has been built: "+name+"");
                         deleteDirRecursively(upgradePath);
                         resolve();
                     });
+
                     archive.directory(upgradePath, false).pipe(zipOutput);
+
                     archive.finalize();
                 });
             });
@@ -410,6 +448,7 @@ class Diff
             if (file == '') {
                 return;
             }
+
             deletedFileList.push(file);
         });
 
@@ -420,6 +459,7 @@ class Diff
             ) {
                 return false;
             }
+
             return true;
         });
 
