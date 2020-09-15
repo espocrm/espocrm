@@ -37,6 +37,8 @@ class BeforeUpgrade
 
         $this->processCheckCLI();
 
+        $this->processCheckExtensions();
+
         $this->processMyIsamCheck();
 
         $this->processNextNumberAlterTable();
@@ -48,6 +50,30 @@ class BeforeUpgrade
 
         if (!$isCli) {
             throw new Error("This upgrade can be run only from CLI.");
+        }
+    }
+
+    protected function processCheckExtensions()
+    {
+        $em = $this->container->get('entityManager');
+
+        $extension = $em->getRepository('Extension')
+            ->where([
+                'name' => 'Google Integration',
+                'isInstalled' => true,
+            ])
+            ->findOne();
+
+        if ($extension) {
+            $version = $extension->get('version');
+
+            if (version_compare($version, '1.4.2', '<')) {
+                $message =
+                    "EspoCRM 6.0.0 is not compatible with Google Integration extension of a version lower than 1.4.2. " .
+                    "Please upgrade the extension or uninstall it. Then run the upgrade command again.";
+
+                throw new Error($message);
+            }
         }
     }
 
