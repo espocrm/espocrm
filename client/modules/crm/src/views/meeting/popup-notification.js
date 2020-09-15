@@ -39,9 +39,10 @@ Espo.define('crm:views/meeting/popup-notification', 'views/popup-notification', 
         closeButton: true,
 
         setup: function () {
-            this.wait(true);
-
             if (this.notificationData.entityType) {
+                
+                this.wait(true);
+                
                 this.getModelFactory().create(this.notificationData.entityType, function (model) {
 
                     var dateAttribute = 'dateStart';
