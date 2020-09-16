@@ -55,7 +55,7 @@ use PDOStatement;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 
-class DBMapperTest extends \PHPUnit\Framework\TestCase
+class MapperTest extends \PHPUnit\Framework\TestCase
 {
     protected $db;
     protected $pdo;
@@ -1150,7 +1150,8 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     {
         $query =
             "INSERT INTO `post_tag` (`post_id`, `tag_id`) ".
-            "(SELECT '1' AS `v0`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = 0) ON DUPLICATE KEY UPDATE `deleted` = 0";
+            "SELECT '1' AS `v0`, tag.id AS `id` FROM `tag` WHERE tag.name = 'test' AND tag.deleted = 0 ".
+            "ON DUPLICATE KEY UPDATE `deleted` = 0";
 
         $return = true;
         $this->mockQuery($query, $return);

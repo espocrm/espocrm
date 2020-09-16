@@ -385,7 +385,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $valuesQuery = $params['valuesQuery'] ?? null;
 
         if ($isBySelect) {
-            return '('. $this->composeSelecting($valuesQuery) . ')';
+            return $this->composeSelecting($valuesQuery);
         }
 
         if ($isMass) {

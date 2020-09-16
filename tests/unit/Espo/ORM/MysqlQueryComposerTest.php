@@ -323,6 +323,30 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testInsertValuesQuery1()
+    {
+        $selectQuery = $this->queryBuilder
+            ->select()
+            ->from('Account')
+            ->select('id')
+            ->withDeleted()
+            ->build();
+
+        $query = $this->queryBuilder
+            ->insert()
+            ->into('Account')
+            ->columns(['id'])
+            ->valuesQuery($selectQuery)
+            ->build();
+
+        $sql = $this->query->compose($query);
+
+        $expectedSql =
+            "INSERT INTO `account` (`id`) SELECT account.id AS `id` FROM `account`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testInsertUpdate()
     {
         $sql = $this->query->compose(Insert::fromRaw([
