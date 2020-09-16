@@ -133,7 +133,7 @@ class Mentions
         }
     }
 
-    protected function notifyAboutMention(Entity $entity, \Espo\Entities\User $user, Entity $parent = null)
+    protected function notifyAboutMention(Entity $entity, User $user, Entity $parent = null)
     {
         if ($user->isPortal()) return;
         if ($parent) {
@@ -145,7 +145,7 @@ class Mentions
     protected function getNotificationService()
     {
         if (empty($this->notificationService)) {
-            $this->notificationService = $this->getServiceFactory()->create('Notification');
+            $this->notificationService = $this->serviceFactory->create('Notification');
         }
         return $this->notificationService;
     }
