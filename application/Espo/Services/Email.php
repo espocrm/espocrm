@@ -46,6 +46,7 @@ use Espo\Core\{
 };
 
 use Exception;
+use Throwable;
 use StdClass;
 
 class Email extends Record implements
@@ -344,7 +345,8 @@ class Email extends Record implements
                     $handlerClassName = $smtpHandlers->$emailAddress;
                     try {
                         $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
-                    } catch (\Throwable $e) {
+                    }
+                    catch (Throwable $e) {
                         $GLOBALS['log']->error(
                             "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " . $e->getMessage() . "."
                         );
@@ -971,9 +973,20 @@ class Email extends Record implements
 
         $emailSender = $this->emailSender;
 
-        $emailSender
-            ->withSmtpParams($smtpParams)
-            ->send($email);
+        try {
+            $emailSender
+                ->withSmtpParams($smtpParams)
+                ->send($email);
+        }
+        catch (Exception $e) {
+            $GLOBALS['log']->warning("Email sending:" . $e->getMessage() . "; " . $e->getCode());
+
+            $errorData = [
+                'message' => $e->getMessage(),
+            ];
+
+            throw ErrorSilent::createWithBody('sendingFail', json_encode($errorData));
+        }
 
         return true;
     }

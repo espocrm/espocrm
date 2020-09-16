@@ -26,11 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/outbound-email/fields/test-send', 'views/fields/base', function (Dep) {
+define('views/outbound-email/fields/test-send', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
-        templateContent: '<button class="btn btn-default hidden" data-action="sendTestEmail">{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
+        templateContent:
+            '<button class="btn btn-default hidden" data-action="sendTestEmail">'+
+            '{{translate \'Send Test Email\' scope=\'Email\'}}</button>',
 
         events: {
             'click [data-action="sendTestEmail"]': function () {
@@ -92,35 +94,62 @@ Espo.define('views/outbound-email/fields/test-send', 'views/fields/base', functi
 
                     view.close();
 
-                    $.ajax({
-                        url: 'Email/action/sendTestEmail',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        error: function (xhr, status) {
-                            var statusReason = xhr.getResponseHeader('X-Status-Reason') || '';
-                            statusReason = statusReason.replace(/ $/, '');
-                            statusReason = statusReason.replace(/,$/, '');
+                    Espo.Ajax.postRequest('Email/action/sendTestEmail', data)
+                        .then(
+                            function () {
+                                this.$el.find('button').removeClass('disabled');
 
-                            var msg = this.translate('Error') + ' ' + xhr.status;
-                            if (statusReason) {
-                                msg += ': ' + statusReason;
+                                Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
                             }
-                            Espo.Ui.error(msg);
-                            console.error(msg);
-                            xhr.errorIsHandled = true;
+                            .bind(this)
+                        )
+                        .fail(
+                            function (xhr) {
+                                var reason = xhr.getResponseHeader('X-Status-Reason') || '';
 
-                            this.$el.find('button').removeClass('disabled');
-                        }.bind(this)
-                    }).done(function () {
-                        this.$el.find('button').removeClass('disabled');
-                        Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
-                    }.bind(this));
+                                reason = reason
+                                    .replace(/ $/, '')
+                                    .replace(/,$/, '');
+
+                                var msg = this.translate('Error');
+
+                                if (xhr.status !== 200) {
+                                    msg += ' ' + xhr.status;
+                                }
+
+                                if (xhr.responseText) {
+                                    try {
+                                        var data = JSON.parse(xhr.responseText);
+
+                                        reason = data.message || reason;
+                                    }
+                                    catch (e) {
+                                        console.error('Could not parse error response body.');
+
+                                        return;
+                                    }
+                                }
+
+                                if (reason) {
+                                    msg += ': ' + reason;
+                                }
+
+                                Espo.Ui.error(msg);
+
+                                console.error(msg);
+
+                                xhr.errorIsHandled = true;
+
+                                this.$el.find('button').removeClass('disabled');
+                            }
+                            .bind(this)
+                        );
+
                 }, this);
             }.bind(this));
 
         },
 
     });
-
 });
 

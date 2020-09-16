@@ -26,13 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-account/fields/test-connection', 'views/fields/base', function (Dep) {
+define('views/email-account/fields/test-connection', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
         readOnly: true,
 
-        templateContent: '<button class="btn btn-default disabled" data-action="testConnection">{{translate \'Test Connection\' scope=\'EmailAccount\'}}</button>',
+        templateContent:
+            '<button class="btn btn-default disabled" data-action="testConnection">'+
+            '{{translate \'Test Connection\' scope=\'EmailAccount\'}}</button>',
 
         url: 'EmailAccount/action/testConnection',
 

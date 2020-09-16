@@ -627,6 +627,8 @@ class Sender
                 stripos($e->getMessage(), 'password') !== false
                 ||
                 stripos($e->getMessage(), 'credentials') !== false
+                ||
+                stripos($e->getMessage(), '5.7.8') !== false
             ) {
                 $message .= ' Invalid credentials.';
             }
