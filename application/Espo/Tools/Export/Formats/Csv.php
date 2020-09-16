@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Export;
+namespace Espo\Tools\Export\Formats;
 
 use Espo\Core\Exceptions\Error;
 
