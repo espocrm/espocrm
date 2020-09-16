@@ -503,7 +503,8 @@ define('views/admin/link-manager/modals/edit',
             if (view) {
                 view.disabled = true;
             }
-            this.$el.find('.cell[data-name=' + name+']').addClass('hidden');
+
+            this.$el.find('.cell[data-name=' + name+']').addClass('hidden-cell');
         },
 
         showField: function (name) {
@@ -511,7 +512,8 @@ define('views/admin/link-manager/modals/edit',
             if (view) {
                 view.disabled = false;
             }
-            this.$el.find('.cell[data-name=' + name+']').removeClass('hidden');
+
+            this.$el.find('.cell[data-name=' + name+']').removeClass('hidden-cell');
         },
 
         handleLinkTypeChange: function () {
