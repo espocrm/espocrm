@@ -400,9 +400,13 @@ class Parser
             }
 
             if (is_numeric($expression)) {
+                $value = filter_var($expression, FILTER_VALIDATE_INT) !== false ?
+                    (int) $expression :
+                    (float) $expression;
+
                 return (object) [
                     'type' => 'value',
-                    'value' => ($expression == (int) $expression) ? (int) $expression : (float) $expression
+                    'value' => $value,
                 ];
             }
 

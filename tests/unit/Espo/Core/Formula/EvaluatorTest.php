@@ -284,4 +284,22 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->evaluator->process($expression, null, $vars);
         $this->assertEquals('// 1 */', $vars->test);
     }
+
+    public function testIntValue()
+    {
+        $expression = "0";
+
+        $value = $this->evaluator->process($expression);
+
+        $this->assertTrue(is_int($value));
+    }
+
+    public function testFloatZeroDecimals()
+    {
+        $expression = "1.0";
+
+        $value = $this->evaluator->process($expression);
+
+        $this->assertTrue(is_float($value));
+    }
 }
