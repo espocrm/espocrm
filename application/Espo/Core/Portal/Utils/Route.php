@@ -27,19 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\ApplicationRunners;
+namespace Espo\Core\Portal\Utils;
 
-use Espo\Core\{
-    ApplicationRunners\Api as ApiBase,
-    InjectableFactory,
-    ApplicationUser,
-    Portal\Utils\Route,
-};
+use Espo\Core\Utils\Route as BaseRoute;
 
-class Api extends ApiBase
+class Route extends BaseRoute
 {
-    public function __construct(InjectableFactory $injectableFactory, ApplicationUser $applicationUser, Route $routeUtil)
+    public function getFullList() : array
     {
-        parent::__construct($injectableFactory, $applicationUser, $routeUtil);
+        $routeList = parent::getFullList();
+
+        foreach ($routeList as $i => $route) {
+            if (isset($route['route'])) {
+                if ($route['route'][0] !== '/') {
+                    $route['route'] = '/' . $route['route'];
+                }
+
+                $route['route'] = '/{portalId}' . $route['route'];
+            }
+
+            $routeList[$i] = $route;
+        }
+
+        return $routeList;
     }
 }
