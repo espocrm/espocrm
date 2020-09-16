@@ -596,7 +596,15 @@ class Import
             return;
         }
 
-        if ($entity->has($relation . 'Id')) {
+        if ($entity->has($relation . 'Id') && $entity->isNew()) {
+            return;
+        }
+
+        if (
+            $entity->has($relation . 'Id') &&
+            !$entity->isNew() &&
+            !$entity->isAttributeChanged($relation . 'Name')
+        ) {
             return;
         }
 
