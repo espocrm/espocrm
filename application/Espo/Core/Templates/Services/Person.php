@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Templates\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class Person extends \Espo\Services\Record
 {
@@ -38,7 +38,9 @@ class Person extends \Espo\Services\Record
         $whereClause = [
             'OR' => []
         ];
+
         $toCheck = false;
+
         if ($entity->get('firstName') || $entity->get('lastName')) {
             $part = [];
             $part['firstName'] = $entity->get('firstName');
@@ -46,14 +48,20 @@ class Person extends \Espo\Services\Record
             $whereClause['OR'][] = $part;
             $toCheck = true;
         }
+
         if (
             ($entity->get('emailAddress') || $entity->get('emailAddressData'))
             &&
             ($entity->isNew() || $entity->isAttributeChanged('emailAddress') || $entity->isAttributeChanged('emailAddressData'))
         ) {
+            $list = [];
+
             if ($entity->get('emailAddress')) {
-                $list = [$entity->get('emailAddress')];
+                $list = [
+                    $entity->get('emailAddress')
+                ];
             }
+
             if ($entity->get('emailAddressData')) {
                 foreach ($entity->get('emailAddressData') as $row) {
                     if (!in_array($row->emailAddress, $list)) {
@@ -61,13 +69,16 @@ class Person extends \Espo\Services\Record
                     }
                 }
             }
+
             foreach ($list as $emailAddress) {
                 $whereClause['OR'][] = [
                     'emailAddress' => $emailAddress
                 ];
+
                 $toCheck = true;
             }
         }
+
         if (!$toCheck) {
             return false;
         }
@@ -75,4 +86,3 @@ class Person extends \Espo\Services\Record
         return $whereClause;
     }
 }
-
