@@ -170,7 +170,10 @@ class Converter
 
         foreach ($entityDefs as $entityType => $entityMetadata) {
             if (empty($entityMetadata)) {
-                $GLOBALS['log']->critical('Orm\Converter:process(), Entity:'.$entityType.' - metadata cannot be converted into ORM format');
+                $GLOBALS['log']->critical(
+                    'Orm\Converter:process(), Entity:'.$entityType.' - metadata cannot be converted into ORM format'
+                );
+
                 continue;
             }
 
@@ -375,19 +378,30 @@ class Converter
 
         //load custom field definitions and customCodes
         foreach ($entityMetadata['fields'] as $fieldName => $fieldParams) {
-            if (empty($fieldParams['type'])) continue;
+            if (empty($fieldParams['type'])) {
+                continue;
+            }
 
-            $fieldType = ucfirst($fieldParams['type']);
-            $className = 'Espo\Custom\Core\Utils\Database\Orm\Fields\\' . $fieldType;
-            if (!class_exists($className)) {
-                $className = 'Espo\Core\Utils\Database\Orm\Fields\\' . $fieldType;
+            $fieldType = $fieldParams['type'];
+
+            $className = $this->metadata->get(['fields', $fieldType, 'converterClassName']);
+
+            if (!$className) {
+                $className = 'Espo\Custom\Core\Utils\Database\Orm\Fields\\' . ucfirst($fieldType);
+
+                if (!class_exists($className)) {
+                    $className = 'Espo\Core\Utils\Database\Orm\Fields\\' . ucfirst($fieldType);
+                }
             }
 
             if (class_exists($className) && method_exists($className, 'load')) {
                 $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
+
                 $fieldResult = $helperClass->process($fieldName, $entityType);
+
                 if (isset($fieldResult['unset'])) {
                     $ormMetadata = Util::unsetInArray($ormMetadata, $fieldResult['unset']);
+
                     unset($fieldResult['unset']);
                 }
 
@@ -395,6 +409,7 @@ class Converter
             }
 
             $defaultAttributes = $this->metadata->get(['entityDefs', $entityType, 'fields', $fieldName, 'defaultAttributes']);
+
             if ($defaultAttributes && array_key_exists($fieldName, $defaultAttributes)) {
                 $defaultMetadataPart = [
                     $entityType => [
@@ -405,6 +420,7 @@ class Converter
                         ]
                     ]
                 ];
+
                 $ormMetadata = Util::merge($ormMetadata, $defaultMetadataPart);
             }
         }
