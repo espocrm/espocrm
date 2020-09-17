@@ -37,18 +37,28 @@ class LeadCapture extends \Espo\Core\Controllers\Record
 {
     public function postActionLeadCapture($params, $data, $request, $response)
     {
-        if (empty($params['apiKey'])) throw new BadRequest('No API key provided.');
-        if (empty($data)) throw new BadRequest('No payload provided.');
+        if (empty($params['apiKey'])) {
+            throw new BadRequest('No API key provided.');
+        }
+
+        if (empty($data)) {
+            throw new BadRequest('No payload provided.');
+        }
 
         $allowOrigin = $this->getConfig()->get('leadCaptureAllowOrigin', '*');
+
         $response->setHeader('Access-Control-Allow-Origin', $allowOrigin);
 
-        return $this->getRecordService()->leadCapture($params['apiKey'], $data);
+        $this->getRecordService()->leadCapture($params['apiKey'], $data);
+
+        return true;
     }
 
     public function optionsActionLeadCapture($params, $data, $request, $response)
     {
-        if (empty($params['apiKey'])) throw new BadRequest('No API key provided.');
+        if (empty($params['apiKey'])) {
+            throw new BadRequest('No API key provided.');
+        }
 
         if (!$this->getRecordService()->isApiKeyValid($params['apiKey'])) {
             throw new NotFound();
@@ -65,14 +75,18 @@ class LeadCapture extends \Espo\Core\Controllers\Record
 
     public function postActionGenerateNewApiKey($params, $data, $request)
     {
-        if (empty($data->id)) throw new BadRequest();
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
 
         return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
     }
 
     public function getActionSmtpAccountDataList()
     {
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
         return $this->getServiceFactory()->create('LeadCapture')->getSmtpAccountDataList();
     }
