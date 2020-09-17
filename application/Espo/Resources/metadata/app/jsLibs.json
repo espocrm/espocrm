@@ -36,8 +36,8 @@
     },
     "gridstack": {
         "path": "client/lib/gridstack.all.js",
-        "exportsTo": "$",
-        "exportsAs": "gridstack"
+        "exportsTo": "window",
+        "exportsAs": "GridStack"
     },
     "Colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",

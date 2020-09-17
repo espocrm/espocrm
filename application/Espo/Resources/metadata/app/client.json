@@ -21,6 +21,7 @@
         "client/lib/bull.js",
         "client/lib/marked.min.js",
         "client/lib/autobahn.js",
+        "client/lib/gridstack.all.js",
         "client/src/loader.js",
         "client/src/utils.js",
         "client/src/exceptions.js"

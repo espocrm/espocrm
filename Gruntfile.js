@@ -49,6 +49,7 @@ module.exports = function (grunt) {
         'client/lib/bull.js',
         'client/lib/marked.min.js',
         'client/lib/autobahn.js',
+        'client/lib/gridstack.all.js',
 
         'client/src/namespace.js',
         'client/src/exceptions.js',
