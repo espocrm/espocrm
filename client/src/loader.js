@@ -63,6 +63,7 @@ var Espo = Espo || {classMap:{}};
             if (name in this.classMap) {
                 return this.classMap[name];
             }
+
             return false;
         },
 
@@ -77,6 +78,7 @@ var Espo = Espo || {classMap:{}};
                 var arr = name.split(':');
                 var namePart = arr[1];
                 var modulePart = arr[0];
+
                 if (modulePart == 'custom') {
                     path = 'client/custom/src/' + namePart;
                 } else {
@@ -85,6 +87,7 @@ var Espo = Espo || {classMap:{}};
             } else {
                 path = 'client/src/' + name;
             }
+
             path += '.js';
 
             return path;
@@ -99,6 +102,7 @@ var Espo = Espo || {classMap:{}};
                 this._loadCallbacks[subject].forEach(function (callback) {
                     callback(o);
                 });
+
                 delete this._loadCallbacks[subject];
             }
         },
@@ -120,8 +124,10 @@ var Espo = Espo || {classMap:{}};
                     if (self.cache) {
                         self.cache.clear('a', subject);
                     }
+
                     throw new Error("Could not load '" + subject + "'");
                 }
+
                 self._setClass(subject, o);
                 self._executeLoadCallback(subject, o);
             };
@@ -137,17 +143,21 @@ var Espo = Espo || {classMap:{}};
 
         require: function (subject, callback, errorCallback) {
             var list;
+
             if (Object.prototype.toString.call(subject) === '[object Array]') {
                 list = subject;
                 list.forEach(function (item, i) {
                     list[i] = this.normalizeClassName(list[i]);
                 }, this);
-            } else if (subject) {
+            }
+            else if (subject) {
                 subject = this.normalizeClassName(subject);
                 list = [subject];
-            } else {
+            }
+            else {
                 list = [];
             }
+
             var totalCount = list.length;
 
             if (totalCount === 1) {
@@ -180,14 +190,17 @@ var Espo = Espo || {classMap:{}};
             if (string == null) {
                 return string;
             }
+
             return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
         },
 
         normalizeClassName: function (name) {
             var normalizedName = name;
+
             if (~name.indexOf('.') && !~name.indexOf('!')) {
                 console.warn(name + ': class name should use slashes for a directory separator and hyphen format.');
             }
+
             if (!!/[A-Z]/.exec(name[0])) {
                 if (name.indexOf(':') != -1) {
                     var arr = name.split(':');
@@ -206,6 +219,7 @@ var Espo = Espo || {classMap:{}};
             if (!(name in this._loadCallbacks)) {
                 this._loadCallbacks[name] = [];
             }
+
             this._loadCallbacks[name].push(callback);
         },
 
@@ -235,8 +249,9 @@ var Espo = Espo || {classMap:{}};
                     noAppCache = libData.noAppCache || noAppCache;
                 }
 
-                fetchObject = function (name, d) {
+                fetchObject = function () {
                     var from = root;
+
                     if (exportsTo == 'window') {
                         from = root;
                     } else {
@@ -244,18 +259,28 @@ var Espo = Espo || {classMap:{}};
                             from = from[item];
                         });
                     }
+
                     if (exportsAs in from) {
                         return from[exportsAs];
                     }
                 }
 
-            } else if (name.indexOf('res!') === 0) {
+                var obj = fetchObject();
+
+                if (obj) {
+                    callback(obj);
+
+                    return;
+                }
+            }
+            else if (name.indexOf('res!') === 0) {
                 dataType = 'text';
                 type = 'res';
 
                 realName = name.substr(4);
                 path = realName;
-            } else {
+            }
+            else {
                 dataType = 'script';
                 type = 'class';
 
@@ -264,8 +289,10 @@ var Espo = Espo || {classMap:{}};
                 }
 
                 var c = this._getClass(name);
+
                 if (c) {
                     callback(c);
+
                     return;
                 }
 
@@ -274,31 +301,42 @@ var Espo = Espo || {classMap:{}};
 
             if (name in this.dataLoaded) {
                 callback(this.dataLoaded[name]);
+
                 return;
             }
 
             if (this.cache) {
                 var cached = this.cache.get('a', name);
+
                 if (cached) {
                     if (type == 'class') {
                         this.loadingSubject = name;
                     }
+
                     if (dataType == 'script') {
                         this._execute(cached);
                     }
+
                     if (type == 'class') {
                         var c = this._getClass(name);
+
                         if (c) {
                             callback(c);
+
                             return;
                         }
+
                         this._addLoadCallback(name, callback);
-                    } else {
+                    }
+                    else {
                         var d = cached;
+
                         if (typeof fetchObject == 'function') {
                             d = fetchObject(realName, cached);
                         }
+
                         this.dataLoaded[name] = d;
+
                         callback(d);
                     }
 
@@ -308,13 +346,17 @@ var Espo = Espo || {classMap:{}};
 
             if (path in this.pathsBeingLoaded) {
                 this._addLoadCallback(name, callback);
+
                 return;
             }
+
             this.pathsBeingLoaded[path] = true;
 
             var useCache = false;
+
             if (this.cacheTimestamp) {
                 useCache = true;
+
                 var sep = (path.indexOf('?') > -1) ? '&' : '?';
                 path += sep + 'r=' + this.cacheTimestamp;
             }
@@ -326,6 +368,7 @@ var Espo = Espo || {classMap:{}};
                 mimeType: 'text/plain',
                 local: true,
                 url: this.basePath + path,
+
                 success: function (response) {
                     if (this.cache && !noAppCache) {
                         this.cache.set('a', name, response);
@@ -342,28 +385,38 @@ var Espo = Espo || {classMap:{}};
                     }
 
                     var data;
+
                     if (type == 'class') {
                         data = this._getClass(name);
+
                         if (data && typeof data === 'function') {
                             this._executeLoadCallback(name, data);
                         }
-                    } else {
+                    }
+                    else {
                         data = response;
+
                         if (typeof fetchObject == 'function') {
                             data = fetchObject(realName, response);
                         }
+
                         this.dataLoaded[name] = data;
                         this._executeLoadCallback(name, data);
                     }
+
                     return;
-                }.bind(this),
+                }
+                .bind(this),
+
                 error: function (event, xhr, options) {
                     if (typeof errorCallback == 'function') {
                         errorCallback();
+
                         return;
                     }
+
                     throw new Error("Could not load file '" + path + "'");
-                }
+                },
             });
         },
 
@@ -371,6 +424,7 @@ var Espo = Espo || {classMap:{}};
         loadLib: function (url, callback) {
             if (this.cache) {
                 var script = this.cache.get('a', url);
+
                 if (script) {
                     this._execute(script);
                     if (typeof callback == 'function') {
@@ -394,7 +448,6 @@ var Espo = Espo || {classMap:{}};
                     throw new Error("Could not load file '" + url + "'");
                 },
             });
-
         },
 
         loadLibsConfig: function (callback) {
@@ -420,6 +473,7 @@ var Espo = Espo || {classMap:{}};
         if (context) {
             callback = callback.bind(context);
         }
+
         Espo.loader.require(subject, callback, errorCallback);
     }
 
