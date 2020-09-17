@@ -249,8 +249,12 @@ class Converter
             foreach ($entityParams['fields'] as $fieldName => &$fieldParams) {
 
                 /* remove fields without type */
-                if (!isset($fieldParams['type']) && (!isset($fieldParams['notStorable']) || $fieldParams['notStorable'] === false)) {
+                if (
+                    !isset($fieldParams['type']) &&
+                    (!isset($fieldParams['notStorable']) || $fieldParams['notStorable'] === false)
+                ) {
                     unset($entityParams['fields'][$fieldName]);
+
                     continue;
                 }
 
@@ -259,11 +263,13 @@ class Converter
                         if ($fieldParams['dbType'] != 'int') {
                             $fieldParams = array_merge($this->idParams, $fieldParams);
                         }
+
                         break;
 
                     case 'foreignId':
                         $fieldParams = array_merge($this->idParams, $fieldParams);
                         $fieldParams['notNull'] = false;
+
                         break;
 
                     case 'foreignType':
@@ -271,22 +277,23 @@ class Converter
                         if (empty($fieldParams['len'])) {
                             $fieldParams['len'] = $this->defaultLength['varchar'];
                         }
+
                         break;
 
                     case 'bool':
-                        $fieldParams['default'] = isset($fieldParams['default']) ? (bool) $fieldParams['default'] : $this->defaultValue['bool'];
-                        break;
+                        $fieldParams['default'] = isset($fieldParams['default']) ?
+                            (bool) $fieldParams['default'] :
+                            $this->defaultValue['bool'];
 
-                    //todo: remove the types from ORM Metadata. Types are deprecated.
-                    case 'email':
-                    case 'phone':
                         break;
 
                     default:
                         $constName = strtoupper(Util::toUnderScore($fieldParams['type']));
-                        if (!defined('\\Espo\\ORM\\Entity::' . $constName)) {
+
+                        if (!defined('Espo\\ORM\\Entity::' . $constName)) {
                             $fieldParams['type'] = $this->defaultFieldType;
                         }
+
                         break;
                 }
             }

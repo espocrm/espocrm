@@ -37,6 +37,7 @@ class Phone extends Base
         $foreignJoinMiddleAlias = "{$fieldName}{$entityType}{alias}ForeignMiddle";
 
         $mainFieldDefs = [
+            'type' => 'varchar',
             'select' => [
                 "select" => "phoneNumbers.name",
                 'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => 1]]],

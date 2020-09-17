@@ -37,6 +37,7 @@ class Email extends Base
         $foreignJoinMiddleAlias = "{$fieldName}{$entityType}{alias}ForeignMiddle";
 
         $mainFieldDefs = [
+            'type' => 'varchar',
             'select' => [
                 "select" => "emailAddresses.name",
                 'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => 1]]],
