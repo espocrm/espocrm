@@ -51,16 +51,16 @@ class Admin extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        $result = $this->getContainer()->get('dataManager')->rebuild();
+        $this->getContainer()->get('dataManager')->rebuild();
 
-        return $result;
+        return true;
     }
 
     public function postActionClearCache($params)
     {
-        $result = $this->getContainer()->get('dataManager')->clearCache();
+        $this->getContainer()->get('dataManager')->clearCache();
 
-        return $result;
+        return true;
     }
 
     public function actionJobs()
