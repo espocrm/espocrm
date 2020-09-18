@@ -33,7 +33,10 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
+
 use Composer\Semver\Semver;
+
+use Throwable;
 
 abstract class Base
 {
@@ -263,9 +266,11 @@ abstract class Base
 
         foreach ($versionList as $version) {
             $isInRange = false;
+
             try {
                 $isInRange = Semver::satisfies($currentVersion, $version);
-            } catch (\Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $GLOBALS['log']->error('SemVer: Version identification error: '.$e->getMessage().'.');
             }
 
@@ -329,11 +334,13 @@ abstract class Base
             $scriptName = $scriptNames[$type];
 
             require_once($beforeInstallScript);
+
             $script = new $scriptName();
 
             try {
                 $script->run($this->getContainer(), $this->scriptParams);
-            } catch (\Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $this->throwErrorAndRemovePackage($e->getMessage());
             }
         }
@@ -514,7 +521,8 @@ abstract class Base
     {
         try {
             $res = $this->getFileManager()->copy($sourcePath, $destPath, $recursively, $fileList, $copyOnlyFiles);
-        } catch (\Throwable $e) {
+        }
+        catch (Throwable $e) {
             $this->throwErrorAndRemovePackage($e->getMessage());
         }
 
@@ -725,8 +733,11 @@ abstract class Base
     protected function systemRebuild()
     {
         try {
-            return $this->getContainer()->get('dataManager')->rebuild();
-        } catch (\Throwable $e) {
+            $this->getContainer()->get('dataManager')->rebuild();
+
+            return true;
+        }
+        catch (Throwable $e) {
             $GLOBALS['log']->error('Database rebuild failure, details: '. $e->getMessage() .'.');
         }
 

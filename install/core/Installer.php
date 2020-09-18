@@ -318,13 +318,17 @@ class Installer
         $result = false;
 
         try {
-            $result = $this->app->getContainer()->get('dataManager')->rebuild();
-        } catch (Exception $e) {
+            $this->app->getContainer()->get('dataManager')->rebuild();
+
+            return true;
+        }
+        catch (Exception $e) {
             $this->auth();
-            $result = $this->app->getContainer()->get('dataManager')->rebuild();
+
+            $this->app->getContainer()->get('dataManager')->rebuild();
         }
 
-        return $result;
+        return true;
     }
 
     public function savePreferences($preferences)
