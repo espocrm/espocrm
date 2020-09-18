@@ -235,19 +235,61 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             return this.$dashboard.hasClass('fallback');
         },
 
+        preserveDashletViews: function () {
+            this.preservedDashletViews = {};
+            this.preservedDashletElements = {};
+
+            this.currentTabLayout.forEach(function (o) {
+                var key = 'dashlet-' + o.id;
+                var view = this.getView(key);
+
+                this.unchainView(key);
+
+                this.preservedDashletViews[o.id] = view;
+
+                var $el = view.$el.children(0);
+
+                this.preservedDashletElements[o.id] = $el;
+
+                $el.detach();
+            }, this);
+        },
+
+        addPreservedDashlet: function (id) {
+            var view = this.preservedDashletViews[id];
+            var $el = this.preservedDashletElements[id];
+
+            this.$el.find('.dashlet-container[data-id="'+id+'"]').append($el);
+
+            this.setView('dashlet-' + id, view);
+        },
+
+        clearPreservedDashlets: function () {
+            this.preservedDashletViews = null;
+            this.preservedDashletElements = null;
+        },
+
+        hasPreservedDashlets: function () {
+            return !!this.preservedDashletViews;
+        },
+
         initFallbackMode: function () {
             if (this.grid) {
                 this.grid.destroy(false);
                 this.grid = null;
+
+                this.preserveDashletViews();
             }
 
             this.$dashboard.empty();
 
             var $dashboard = this.$dashboard;
+
             $dashboard.addClass('fallback');
 
             this.currentTabLayout.forEach(function (o) {
                 var $item = this.prepareFallbackItem(o);
+
                 $dashboard.append($item);
             }, this);
 
@@ -258,11 +300,20 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
                 if (!this.getMetadata().get(['dashlets', o.name])) {
                     console.error("Dashlet " + o.name + " doesn't exist or not available.");
+
+                    return;
+                }
+
+                if (this.hasPreservedDashlets()) {
+                    this.addPreservedDashlet(o.id);
+
                     return;
                 }
 
                 this.createDashletView(o.id, o.name);
             }, this);
+
+            this.clearPreservedDashlets();
 
             if (this.fallbackModeTimeout) {
                 clearTimeout(this.fallbackModeTimeout);
@@ -276,7 +327,9 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         fallbackControlHeights: function () {
             this.currentTabLayout.forEach(function (o) {
                 var $container = this.$dashboard.find('.dashlet-container[data-id="'+o.id+'"]');
+
                 var headerHeight = $container.find('.panel-heading').outerHeight();
+
                 var $body = $container.find('.dashlet-body');
 
                 var bodyEl = $body.get(0);
@@ -287,9 +340,9 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
                 if (bodyEl.scrollHeight > bodyEl.offsetHeight) {
                     var height = bodyEl.scrollHeight + headerHeight;
+
                     $container.css('height', height + 'px');
                 }
-
             }, this);
 
             this.fallbackModeTimeout = setTimeout(function () {
@@ -298,6 +351,10 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         initGridstack: function () {
+            if (this.isFallbackMode()) {
+                this.preserveDashletViews();
+            }
+
             this.$dashboard.empty();
 
             var $gridstack = this.$gridstack = this.$dashboard;
@@ -373,8 +430,16 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                     return;
                 }
 
+                if (this.hasPreservedDashlets()) {
+                    this.addPreservedDashlet(o.id);
+
+                    return;
+                }
+
                 this.createDashletView(o.id, o.name);
             }, this);
+
+            this.clearPreservedDashlets();
 
             this.grid.on('change', function (e, itemList) {
                 this.fetchLayout();
