@@ -471,7 +471,7 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         getStaticItemsHeight: function () {
-            return this.getThemeManager().getParam('navbarStaticItemsHeight') || 85;
+            return this.getThemeManager().getParam('navbarStaticItemsHeight') || 91;
         },
 
         adjustBodyMinHeight: function () {

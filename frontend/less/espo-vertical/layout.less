@@ -68,7 +68,7 @@
                 text-decoration: none;
                 margin-top: 5px;
                 display: inline-block;
-                margin-left: 12px;
+                margin-left: @navbar-tab-left-padding + 3px;
             }
 
             a.minimizer > span.left {
@@ -80,7 +80,7 @@
             }
 
             a.side-menu-button {
-                width: 38px;
+                width: @navbar-minimized-width;
                 padding-top: 9px;
                 padding-bottom: 9px;
                 text-align: center;
@@ -116,20 +116,22 @@
             }
 
             .navbar-brand img {
-                max-width: @navbar-width - 38px;
-                height: 37px;
+                max-width: @navbar-width - @navbar-minimized-width;
+                height: @navbar-logo-height;
             }
 
             a.navbar-brand {
-                max-width: @navbar-width - 38px;
-                height: 37px;
+                max-width: @navbar-width - @navbar-minimized-width;
+                height: @navbar-logo-height;
+                margin-left: 0;
             }
 
             .navbar-header {
                 width: @navbar-width;
+                height: @navbar-header-height;
                 display: block;
-                margin-bottom: 6px;
-                margin-top: 9px;
+                padding-bottom: @navbar-header-vertical-padding;
+                padding-top: @navbar-header-vertical-padding;
             }
 
             .navbar-header > a.minimizer {
@@ -188,7 +190,7 @@
             }
 
             ul.tabs {
-                margin-top: 3px;
+                margin-top: @navbar-tabs-margin-top;
 
                 li {
                     float: none;
@@ -197,11 +199,13 @@
                 li > a {
                     padding-top: 9px;
                     padding-bottom: 9px;
-                    padding-left: 10px;
+                    padding-left: @navbar-tab-left-padding;
+                    padding-right: @navbar-tab-right-padding;
                 }
 
                 li.tab > a {
-                    padding-left: 10px - @navbar-color-border-width;
+                    padding-left: @navbar-tab-left-padding - @navbar-color-border-width;
+                    padding-right: @navbar-tab-right-padding;
                 }
             }
 
@@ -217,7 +221,7 @@
         #navbar > .navbar {
 
             .navbar-logo-container {
-                width: ~"calc(100% - 38px)";
+                width: ~"calc(100% - "@navbar-minimized-width~")";
                 float: right;
                 display: flex;
             }
@@ -283,17 +287,17 @@ body {
     #navbar {
         ul.tabs {
             > li > a {
-                height: 37px
+                height: @navbar-logo-height;
             }
 
             > li.more > ul > li > a > span.full-label {
-                padding-left: 30px;
+                padding-left: @navbar-tab-text-left-padding;
                 position: static;
             }
 
             > li a > span.full-label {
                 position: static;
-                padding-left: 30px;
+                padding-left: @navbar-tab-text-left-padding;
                 position: static;
             }
 
@@ -385,7 +389,7 @@ body {
 
             .navbar-header {
                 width: @navbar-minimized-width;
-                height: 37px;
+                height: @navbar-header-height;
             }
 
             a.minimizer > span.left {
@@ -404,11 +408,11 @@ body {
                 width: @navbar-minimized-width;
 
                 > li > a {
-                    padding-left: 10px;
+                    padding-left: @navbar-tab-left-padding;
                 }
 
                 > li.tab > a {
-                    padding-left: 10px - @navbar-color-border-width;
+                    padding-left: @navbar-tab-left-padding - @navbar-color-border-width;
                 }
 
                 > li > a > span.short-label {
