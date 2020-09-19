@@ -54,6 +54,9 @@ use Cron\CronExpression;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
+use Exception;
+use Throwable;
+
 class CronManager
 {
     private $cronJobUtil;
@@ -343,8 +346,9 @@ class CronManager
             } else {
                 $this->runService($job);
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $isSuccess = false;
+
             if ($e->getCode() === -1) {
                 $job->set('attempts', 0);
                 $skipLog = true;
@@ -380,15 +384,26 @@ class CronManager
     {
         $jobName = $job->get('scheduledJobJob');
 
+        if (!$jobName) {
+            throw new Error(
+                "Can't run job with ID '" . $job->id . "'. No schedule job."
+            );
+        }
+
         $className = $this->getScheduledJobUtil()->getJobClassName($jobName);
 
-        if ($className === false) throw new Error("No class name for job {$jobName}.");
+        if (!$className) {
+            throw new Error("No class name for job {$jobName}.");
+        }
 
         $obj = $this->injectableFactory->create($className);
 
-        if (!method_exists($obj, 'run')) throw new Error("No 'run' method in job {$jobName}.");
+        if (!method_exists($obj, 'run')) {
+            throw new Error("No 'run' method in job {$jobName}.");
+        }
 
         $data = null;
+
         if ($job->get('data')) {
             $data = $job->get('data');
         }
@@ -404,16 +419,22 @@ class CronManager
             throw new Error("Job with empty serviceName.");
         }
 
-        if (!$this->serviceFactory->checkExists($serviceName)) throw new Error();
+        if (!$this->serviceFactory->checkExists($serviceName)) {
+            throw new Error();
+        }
 
         $service = $this->serviceFactory->create($serviceName);
 
         $methodNameDeprecated = $job->get('method');
         $methodName = $job->get('methodName');
 
-        if (!$methodName) throw new Error('Job with empty methodName.');
+        if (!$methodName) {
+            throw new Error('Job with empty methodName.');
+        }
 
-        if (!method_exists($service, $methodName)) throw new Error();
+        if (!method_exists($service, $methodName)) {
+            throw new Error();
+        }
 
         $data = $job->get('data');
 
@@ -426,10 +447,15 @@ class CronManager
 
         $className = $this->getScheduledJobUtil()->getJobClassName($jobName);
 
-        if ($className === false) throw new Error("No class name for job {$jobName}.");
+        if (!$className) {
+            throw new Error("No class name for job {$jobName}.");
+        }
 
         $obj = $this->injectableFactory->create($className);
-        if (!method_exists($obj, 'run')) throw new Error("No 'run' method in job {$jobName}.");
+
+        if (!method_exists($obj, 'run')) {
+            throw new Error("No 'run' method in job {$jobName}.");
+        }
 
         $data = $job->get('data') ?: null;
 
@@ -448,36 +474,44 @@ class CronManager
 
             if ($asSoonAsPossible) {
                 $nextDate = date('Y-m-d H:i:s');
-            } else {
+            }
+            else {
                 try {
                     $cronExpression = CronExpression::factory($scheduling);
-                } catch (\Exception $e) {
+                }
+                catch (Exception $e) {
                     $GLOBALS['log']->error(
                         'CronManager (ScheduledJob ['.$scheduledJob->id.']): Scheduling string error - '. $e->getMessage() . '.'
                     );
+
                     continue;
                 }
 
                 try {
                     $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
-                } catch (\Exception $e) {
+                }
+                catch (Exception $e) {
                     $GLOBALS['log']->error(
                         'CronManager (ScheduledJob ['.$scheduledJob->id.']): Unsupported CRON expression ['.$scheduling.']'
                     );
+
                     continue;
                 }
 
                 $jobAlreadyExists = $this->getCronJobUtil()->hasScheduledJobOnMinute($scheduledJob->id, $nextDate);
+
                 if ($jobAlreadyExists) {
                     continue;
                 }
             }
 
             $className = $this->getScheduledJobUtil()->getJobClassName($scheduledJob->get('job'));
+
             if ($className) {
                 if (method_exists($className, 'prepare')) {
                     $obj = $this->injectableFactory->create($className);
                     $obj->prepare($scheduledJob, $nextDate);
+
                     continue;
                 }
             }
@@ -499,12 +533,14 @@ class CronManager
             }
 
             $jobEntity = $this->entityManager->getEntity('Job');
+
             $jobEntity->set([
                 'name' => $scheduledJob->get('name'),
                 'status' => self::PENDING,
                 'scheduledJobId' => $scheduledJob->id,
-                'executeTime' => $nextDate
+                'executeTime' => $nextDate,
             ]);
+
             $this->entityManager->saveEntity($jobEntity);
         }
     }

@@ -93,6 +93,7 @@ class ScheduledJob
     {
         $name = ucfirst($name);
         $className = $this->classFinder->find('Jobs', $name);
+
         return $className;
     }
 
