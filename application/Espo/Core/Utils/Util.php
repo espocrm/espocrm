@@ -459,7 +459,7 @@ class Util
     {
         $className = preg_replace('/\.php$/i', '', $filePath);
         $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
-        $className = '\\'.static::toFormat($className, '\\');
+        $className = static::toFormat($className, '\\');
 
         return $className;
     }

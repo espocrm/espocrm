@@ -36,6 +36,8 @@ use Espo\Core\Utils\Metadata;
 
 use Espo\Core\Exceptions\Error;
 
+use ReflectionClass;
+
 class ClassParser
 {
     private $fileManager;
@@ -49,21 +51,6 @@ class ClassParser
         $this->fileManager = $fileManager;
         $this->config = $config;
         $this->metadata = $metadata;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
     }
 
     /**
@@ -87,8 +74,8 @@ class ClassParser
             ];
         }
 
-        if ($cacheFile && file_exists($cacheFile) && $this->getConfig()->get('useCache')) {
-            $data = $this->getFileManager()->getPhpContents($cacheFile);
+        if ($cacheFile && file_exists($cacheFile) && $this->config->get('useCache')) {
+            $data = $this->fileManager->getPhpContents($cacheFile);
 
             if (!is_array($data)) {
                 $GLOBALS['log']->error("ClassParser: Non-array value stored in {$cacheFile}.");
@@ -99,7 +86,7 @@ class ClassParser
             $data = $this->getClassNameHash($paths['corePath'], $allowedMethods, $subDirs);
 
             if (isset($paths['modulePath'])) {
-                foreach ($this->getMetadata()->getModuleList() as $moduleName) {
+                foreach ($this->metadata->getModuleList() as $moduleName) {
                     $path = str_replace('{*}', $moduleName, $paths['modulePath']);
 
                     $data = array_merge($data, $this->getClassNameHash($path, $allowedMethods, $subDirs));
@@ -110,8 +97,9 @@ class ClassParser
                 $data = array_merge($data, $this->getClassNameHash($paths['customPath'], $allowedMethods, $subDirs));
             }
 
-            if ($cacheFile && $this->getConfig()->get('useCache')) {
-                $result = $this->getFileManager()->putPhpContents($cacheFile, $data);
+            if ($cacheFile && $this->config->get('useCache')) {
+                $result = $this->fileManager->putPhpContents($cacheFile, $data);
+
                 if ($result == false) {
                     throw new Error("ClassParser: Could not save file {$cacheFile}.");
                 }
@@ -128,9 +116,10 @@ class ClassParser
         }
 
         $data = [];
+
         foreach ($dirs as $dir) {
             if (file_exists($dir)) {
-                $fileList = $this->getFileManager()->getFileList($dir, $subDirs, '\.php$', true);
+                $fileList = $this->fileManager->getFileList($dir, $subDirs, '\.php$', true);
 
                 $this->fillHashFromFileList($fileList, $dir, $allowedMethods, $data);
             }
@@ -147,15 +136,20 @@ class ClassParser
                 if (is_array($file)) {
                     $this->fillHashFromFileList($file, $dir . '/'. $key, $allowedMethods, $data, $category . $key . '\\');
                 }
+
                 continue;
             }
 
             $filePath = Util::concatPath($dir, $file);
             $className = Util::getClassName($filePath);
-            $fileName = $this->getFileManager()->getFileName($filePath);
 
-            $class = new \ReflectionClass($className);
-            if (!$class->isInstantiable()) continue;
+            $fileName = $this->fileManager->getFileName($filePath);
+
+            $class = new ReflectionClass($className);
+
+            if (!$class->isInstantiable()) {
+                continue;
+            }
 
             $name = Util::normilizeScopeName(ucfirst($fileName));
 
@@ -163,6 +157,7 @@ class ClassParser
 
             if (empty($allowedMethods)) {
                 $data[$name] = $className;
+
                 continue;
             }
 

@@ -42,8 +42,8 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
     protected function setUp() : void
     {
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-        $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
+        $this->objects['config'] = $this->getMockBuilder('Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+        $this->objects['metadata'] = $this->getMockBuilder('Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
 
         $this->object = new \Espo\Core\Utils\File\ClassParser(
             $this->objects['fileManager'], $this->objects['config'], $this->objects['metadata']);
@@ -64,9 +64,9 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
         ];
 
         $result = [
-            'Download' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
-            'InModule' => '\tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
+            'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
+            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
         ];
         $this->assertEquals($result, $this->reflection->invokeMethod('getClassNameHash', [$paths, ['run']]));
     }
@@ -80,9 +80,9 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
 
         $cacheFile = 'tests/unit/testData/EntryPoints/cache/entryPoints.php';
         $paths = [
-            'corePath' => 'tests/unit/testData/EntryPoints/Espo/EntryPoints',
-            'modulePath' => 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
-            'customPath' => 'tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
+            'corePath' => '/tests/unit/testData/EntryPoints/Espo/EntryPoints',
+            'modulePath' => '/tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
+            'customPath' => '/tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
         ];
 
         $result = [
@@ -116,9 +116,9 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
         ];
 
         $result = [
-            'Download' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
-            'InModule' => '\tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
+            'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
+            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
         ];
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheFile, ['run']]));
@@ -144,8 +144,8 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
         $path = 'tests/unit/testData/EntryPoints/Espo/EntryPoints';
 
         $result = [
-            'Download' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
+            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
         ];
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$path, $cacheFile, ['run']]));
@@ -173,8 +173,8 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
         ];
 
         $result = [
-            'Download' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => '\tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
+            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
         ];
 
         $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, null, ['run']]));

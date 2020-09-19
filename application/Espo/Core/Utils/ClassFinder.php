@@ -58,6 +58,7 @@ class ClassFinder
     {
         $map = $this->getMap($category, $subDirs);
         $className = $map[$name] ?? null;
+
         return $className;
     }
 
@@ -69,6 +70,7 @@ class ClassFinder
         if (!array_key_exists($category, $this->dataHash)) {
             $this->load($category, $subDirs);
         }
+
         return $this->dataHash[$category] ?? [];
     }
 
@@ -76,21 +78,25 @@ class ClassFinder
     {
         $path = $this->buildPaths($category);
         $cacheFile = $this->buildCacheFilePath($category);
+
         $this->dataHash[$category] = $this->classParser->getData($path, $cacheFile, null, $subDirs);
     }
 
     protected function buildPaths(string $category) : array
     {
         $paths = [];
+
         foreach ($this->pathsTemplate as $key => $value) {
             $path[$key] = str_replace('{category}', $category, $value);
         }
+
         return $path;
     }
 
     protected function buildCacheFilePath(string $category) : string
     {
         $path = 'data/cache/application/classmap_' . str_replace('/', '_', strtolower($category)) . '.php';
+
         return $path;
     }
 }

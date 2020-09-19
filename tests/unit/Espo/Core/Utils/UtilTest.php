@@ -1047,7 +1047,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
        $this->assertEquals('\Espo\Core\Utils', Util::toFormat('/Espo/Core/Utils', '\\'));
 
        $this->assertEquals('/Espo/Core/Utils', Util::toFormat('\Espo\Core\Utils', '/'));
-       $this->assertEquals('\Espo\Core\Utils', Util::toFormat('\Espo\Core\Utils', '\\'));
+       $this->assertEquals('Espo\Core\Utils', Util::toFormat('Espo\Core\Utils', '\\'));
     }
 
     public function testConcatPath()
@@ -1157,7 +1157,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider dp_classNames
      */
-    public function testGetClassName($path, $expectedClassName = '\Espo\EntryPoints\Donwload')
+    public function testGetClassName($path, $expectedClassName = 'Espo\EntryPoints\Donwload')
     {
         $this->assertEquals($expectedClassName, Util::getClassName($path));
     }
