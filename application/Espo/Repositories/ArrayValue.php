@@ -31,9 +31,12 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Exceptions\Error,
+    Repositories\Database,
+};
 
-class ArrayValue extends \Espo\Core\Repositories\Database
+class ArrayValue extends Database
 {
     protected $hooksDisabled = true;
 
@@ -46,9 +49,18 @@ class ArrayValue extends \Espo\Core\Repositories\Database
         if (!$entity->getAttributeType($attribute) === Entity::JSON_ARRAY) {
             throw new Error("ArrayValue: Can't store non array attribute.");
         }
-        if ($entity->getAttributeType('notStorable')) return;
-        if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) return;
-        if (!$entity->has($attribute)) return;
+
+        if ($entity->getAttributeType('notStorable')) {
+            return;
+        }
+
+        if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) {
+            return;
+        }
+
+        if (!$entity->has($attribute)) {
+            return;
+        }
 
         $valueList = $entity->get($attribute);
 
@@ -56,40 +68,65 @@ class ArrayValue extends \Espo\Core\Repositories\Database
             $valueList = [];
         }
 
-        if (!is_array($valueList)) throw new Error("ArrayValue: Bad value passed to JSON_ARRAY attribute {$attribute}.");
+        if (!is_array($valueList)) {
+            throw new Error("ArrayValue: Bad value passed to JSON_ARRAY attribute {$attribute}.");
+        }
 
         $valueList = array_unique($valueList);
 
         $toSkipValueList = [];
 
+        $isTransaction = false;
+
         if (!$entity->isNew() && !$populateMode) {
-            $existingList = $this->where([
-                'entityType' => $entity->getEntityType(),
-                'entityId' => $entity->id,
-                'attribute' => $attribute
-            ])->find();
+            $this->entityManager->getTransactionManager()->start();
+
+            $isTransaction = true;
+
+            $existingList = $this
+                ->select(['id', 'value'])
+                ->where([
+                    'entityType' => $entity->getEntityType(),
+                    'entityId' => $entity->id,
+                    'attribute' => $attribute,
+                ])
+                ->forUpdate()
+                ->find();
 
             foreach ($existingList as $existing) {
                 if (!in_array($existing->get('value'), $valueList)) {
                     $this->deleteFromDb($existing->id);
-                } else {
-                    $toSkipValueList[] = $existing->get('value');
+
+                    continue;
                 }
+
+                $toSkipValueList[] = $existing->get('value');
             }
         }
 
         foreach ($valueList as $value) {
-            if (in_array($value, $toSkipValueList)) continue;
-            if (!is_string($value)) continue;
+            if (in_array($value, $toSkipValueList)) {
+                continue;
+            }
+
+            if (!is_string($value)) {
+                continue;
+            }
 
             $arrayValue = $this->get();
+
             $arrayValue->set([
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->id,
                 'attribute' => $attribute,
                 'value' => $value,
             ]);
+
             $this->save($arrayValue);
+        }
+
+        if ($isTransaction) {
+            $this->entityManager->getTransactionManager()->commit();
         }
     }
 
@@ -98,14 +135,23 @@ class ArrayValue extends \Espo\Core\Repositories\Database
         if (!$entity->id) {
             throw new Error("ArrayValue: Can't delete {$attribute} w/o id given.");
         }
-        $list = $this->select(['id'])->where([
-            'entityType' => $entity->getEntityType(),
-            'entityId' => $entity->id,
-            'attribute' => $attribute
-        ])->find();
+
+        $this->entityManager->getTransactionManager()->start();
+
+        $list = $this
+            ->select(['id'])
+            ->where([
+                'entityType' => $entity->getEntityType(),
+                'entityId' => $entity->id,
+                'attribute' => $attribute,
+            ])
+            ->forUpdate()
+            ->find();
 
         foreach ($list as $arrayValue) {
             $this->deleteFromDb($arrayValue->id);
         }
+
+        $this->entityManager->getTransactionManager()->commit();
     }
 }
