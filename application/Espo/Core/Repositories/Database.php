@@ -108,8 +108,14 @@ class Database extends RDBRepository
 
         foreach ($defs['fields'] as $field => $d) {
             if (isset($d['type']) && $d['type'] == 'currency') {
-                if (!empty($d['notStorable'])) continue;
-                if (empty($params['leftJoins'])) $params['leftJoins'] = [];
+                if (!empty($d['notStorable'])) {
+                    continue;
+                }
+
+                if (empty($params['leftJoins'])) {
+                    $params['leftJoins'] = [];
+                }
+
                 $alias = $field . 'CurrencyRate';
 
                 $params['leftJoins'][] = ['Currency', $alias, [
@@ -117,14 +123,17 @@ class Database extends RDBRepository
                 ]];
             }
         }
-
     }
 
     protected function handleEmailAddressParams(&$params)
     {
         $defs = $this->getEntityManager()->getMetadata()->get($this->entityType);
+
         if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
-            if (empty($params['leftJoins'])) $params['leftJoins'] = [];
+            if (empty($params['leftJoins'])) {
+                $params['leftJoins'] = [];
+            }
+
             $params['leftJoins'][] = ['emailAddresses', null, [
                 'primary' => 1
             ]];
@@ -134,8 +143,12 @@ class Database extends RDBRepository
     protected function handlePhoneNumberParams(&$params)
     {
         $defs = $this->getEntityManager()->getMetadata()->get($this->entityType);
+
         if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {
-            if (empty($params['leftJoins'])) $params['leftJoins'] = [];
+            if (empty($params['leftJoins'])) {
+                $params['leftJoins'] = [];
+            }
+
             $params['leftJoins'][] = ['phoneNumbers', null, [
                 'primary' => 1
             ]];
@@ -145,14 +158,17 @@ class Database extends RDBRepository
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
+
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->hookManager->process($this->entityType, 'beforeRemove', $entity, $options);
         }
 
         $nowString = date('Y-m-d H:i:s', time());
+
         if ($entity->hasAttribute('modifiedAt')) {
             $entity->set('modifiedAt', $nowString);
         }
+
         if ($entity->hasAttribute('modifiedById')) {
             if ($this->applicationState->hasUser()) {
                 $entity->set('modifiedById', $this->applicationState->getUser()->id);
@@ -165,7 +181,7 @@ class Database extends RDBRepository
         parent::afterRemove($entity, $options);
 
         if (!$this->processFieldsAfterRemoveDisabled) {
-            $this->processArrayFieldsRemove($entity);
+
         }
 
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
@@ -180,6 +196,7 @@ class Database extends RDBRepository
                 'relationName' => $relationName,
                 'relationParams' => $params,
             ];
+
             $this->hookManager->process(
                 $this->entityType, 'afterMassRelate', $entity, $options, $hookData
             );
@@ -199,6 +216,7 @@ class Database extends RDBRepository
             if (is_string($foreign)) {
                 $foreignId = $foreign;
                 $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
                 if ($foreignEntityType) {
                     $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
                     $foreign->id = $foreignId;
@@ -210,6 +228,7 @@ class Database extends RDBRepository
                 if (is_object($data)) {
                     $data = (array) $data;
                 }
+
                 $this->hookMediator->afterRelate($entity, $relationName, $foreign, $data, $options);
             }
         }
@@ -222,7 +241,9 @@ class Database extends RDBRepository
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             if (is_string($foreign)) {
                 $foreignId = $foreign;
+
                 $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
                 if ($foreignEntityType) {
                     $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
                     $foreign->id = $foreignId;
@@ -287,13 +308,16 @@ class Database extends RDBRepository
                         $entity->set('createdAt', $nowString);
                     }
                 }
+
                 if ($entity->hasAttribute('modifiedAt')) {
                     $entity->set('modifiedAt', $nowString);
                 }
+
                 if ($entity->hasAttribute('createdById')) {
                     if (!empty($options['createdById'])) {
                         $entity->set('createdById', $options['createdById']);
-                    } else if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
+                    }
+                    else if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
                         if ($this->applicationState->hasUser()) {
                             $entity->set('createdById', $this->applicationState->getUser()->id);
                         }
@@ -304,10 +328,12 @@ class Database extends RDBRepository
                     if ($entity->hasAttribute('modifiedAt')) {
                         $entity->set('modifiedAt', $nowString);
                     }
+
                     if ($entity->hasAttribute('modifiedById')) {
                         if (!empty($options['modifiedById'])) {
                             $entity->set('modifiedById', $options['modifiedById']);
-                        } else if ($this->applicationState->hasUser()) {
+                        }
+                        else if ($this->applicationState->hasUser()) {
                             $entity->set('modifiedById', $this->applicationState->getUser()->id);
                             $entity->set('modifiedByName', $this->applicationState->getUser()->get('name'));
                         }
@@ -330,28 +356,37 @@ class Database extends RDBRepository
             if (!($defs['type'] === $entity::BELONGS_TO && $defs['entity'] === 'Attachment')) continue;
 
             $attribute = $name . 'Id';
+
             if (!$entity->hasAttribute($attribute)) continue;
             if (!$entity->get($attribute)) continue;
             if (!$entity->isAttributeChanged($attribute)) continue;
 
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get($attribute));
-            if (!$attachment) continue;
+
+            if (!$attachment) {
+                continue;
+            }
+
             $attachment->set([
                 'relatedId' => $entity->id,
                 'relatedType' => $entity->getEntityType(),
             ]);
+
             $this->getEntityManager()->saveEntity($attachment);
         }
 
         if (!$entity->isNew()) {
-
             foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $defs) {
                 if (!empty($defs['type']) && in_array($defs['type'], ['file', 'image'])) {
                     $attribute = $name . 'Id';
+
                     if ($entity->isAttributeChanged($attribute)) {
                         $previousAttachmentId = $entity->getFetched($attribute);
+
                         if ($previousAttachmentId) {
-                            $attachment = $this->getEntityManager()->getEntity('Attachment', $previousAttachmentId);
+                            $attachment = $this->getEntityManager()
+                                ->getEntity('Attachment', $previousAttachmentId);
+
                             if ($attachment) {
                                 $this->getEntityManager()->removeEntity($attachment);
                             }
@@ -370,29 +405,39 @@ class Database extends RDBRepository
             if (!$entity->isAttributeChanged($attribute)) continue;
             if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
             if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
+
             $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute);
         }
     }
 
     protected function processWysiwygFieldsSave(Entity $entity)
     {
-        if (!$entity->isNew()) return;
+        if (!$entity->isNew()) {
+            return;
+        }
 
         $fieldsDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
+
         foreach ($fieldsDefs as $field => $defs) {
             if (!empty($defs['type']) && $defs['type'] === 'wysiwyg') {
                 $content = $entity->get($field);
-                if (!$content) continue;
+
+                if (!$content) {
+                    continue;
+                }
+
                 if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $content, $matches)) {
                     if (!empty($matches[1]) && is_array($matches[1])) {
                         foreach ($matches[1] as $id) {
                             $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
+
                             if ($attachment) {
                                 if (!$attachment->get('relatedId') && !$attachment->get('sourceId')) {
                                     $attachment->set([
                                         'relatedId' => $entity->id,
                                         'relatedType' => $entity->getEntityType()
                                     ]);
+
                                     $this->getEntityManager()->saveEntity($attachment);
                                 }
                             }
@@ -400,16 +445,6 @@ class Database extends RDBRepository
                     }
                 }
             }
-        }
-    }
-
-    protected function processArrayFieldsRemove(Entity $entity)
-    {
-        foreach ($entity->getAttributes() as $attribute => $defs) {
-            if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
-            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
-            if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
-            $this->getEntityManager()->getRepository('ArrayValue')->deleteEntityAttribute($entity, $attribute);
         }
     }
 
@@ -575,15 +610,19 @@ class Database extends RDBRepository
     protected function processSpecifiedRelationsSave(Entity $entity, array $options = [])
     {
         $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
+
         foreach ($entity->getRelations() as $name => $defs) {
             if (in_array($defs['type'], $relationTypeList)) {
                 $idListAttribute = $name . 'Ids';
                 $columnsAttribute = $name . 'Columns';
+
                 if ($entity->has($idListAttribute) || $entity->has($columnsAttribute)) {
                     $this->processLinkMultipleFieldSave($entity, $name, $options);
                 }
             } else if ($defs['type'] === $entity::HAS_ONE) {
-                if (empty($defs['entity']) || empty($defs['foreignKey'])) continue;
+                if (empty($defs['entity']) || empty($defs['foreignKey'])) {
+                    continue;
+                }
 
                 if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
                     continue;
@@ -593,18 +632,24 @@ class Database extends RDBRepository
                 $foreignKey = $defs['foreignKey'];
                 $idAttribute = $name . 'Id';
 
-                if (!$entity->has($idAttribute)) continue;
+                if (!$entity->has($idAttribute)) {
+                    continue;
+                }
 
                 $where = [];
                 $where[$foreignKey] = $entity->id;
 
-                $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)
-                    ->select(['id'])->where($where)->findOne();
+                $previousForeignEntity = $this->getEntityManager()
+                    ->getRepository($foreignEntityType)
+                    ->select(['id'])
+                    ->where($where)
+                    ->findOne();
 
                 if ($previousForeignEntity) {
                     if (!$entity->isNew()) {
                         $entity->setFetched($idAttribute, $previousForeignEntity->id);
                     }
+
                     if (!$entity->get($idAttribute)) {
                         $previousForeignEntity->set($foreignKey, null);
                         $this->getEntityManager()->saveEntity($previousForeignEntity, ['skipAll' => true]);
@@ -630,15 +675,20 @@ class Database extends RDBRepository
 
                 if (
                     $this->getMetadata()->get(
-                        ['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']) === $entity::HAS_ONE
+                        ['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']
+                    ) === $entity::HAS_ONE
                 ) {
-                    $anotherEntity = $this->select(['id'])->where([
-                        $name . 'Id' => $entity->get($name . 'Id'),
-                        'id!=' => $entity->id,
-                    ])->findOne();
+                    $anotherEntity = $this
+                        ->select(['id'])
+                        ->where([
+                            $name . 'Id' => $entity->get($name . 'Id'),
+                            'id!=' => $entity->id,
+                        ])
+                        ->findOne();
 
                     if ($anotherEntity) {
                         $anotherEntity->set($name . 'Id', null);
+
                         $this->getEntityManager()->saveEntity($anotherEntity, ['skipAll' => true]);
                     }
                 }

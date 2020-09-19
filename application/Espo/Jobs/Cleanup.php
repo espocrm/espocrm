@@ -44,6 +44,11 @@ use Espo\Core\{
 
 use Espo\ORM\Entity;
 
+use DateTime;
+use SplFileInfo;
+use Exception;
+use Throwable;
+
 class Cleanup implements Job
 {
     protected $cleanupJobPeriod = '10 days';
@@ -101,6 +106,7 @@ class Cleanup implements Job
         usort($items, function ($a, $b) {
             $o1 = $a['order'] ?? 0;
             $o2 = $b['order'] ?? 0;
+
             return $o1 > $o2;
         });
 
@@ -110,7 +116,8 @@ class Cleanup implements Job
             try {
                 $className = $item['className'];
                 $injectableFactory->create($className)->process();
-            } catch (\Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $GLOBALS['log']->error("Cleanup: {$name}: " . $e->getMessage());
             }
         }
@@ -196,7 +203,9 @@ class Cleanup implements Job
     protected function cleanupActionHistory()
     {
         $period = '-' . $this->config->get('cleanupActionHistoryPeriod', $this->cleanupActionHistoryPeriod);
-        $datetime = new \DateTime();
+
+        $datetime = new DateTime();
+
         $datetime->modify($period);
 
         $delete = $this->entityManager->getQueryBuilder()->delete()
@@ -212,7 +221,8 @@ class Cleanup implements Job
     protected function cleanupAuthToken()
     {
         $period = '-' . $this->config->get('cleanupAuthTokenPeriod', $this->cleanupAuthTokenPeriod);
-        $datetime = new \DateTime();
+
+        $datetime = new DateTime();
         $datetime->modify($period);
 
         $delete = $this->entityManager->getQueryBuilder()->delete()
@@ -229,7 +239,9 @@ class Cleanup implements Job
     protected function cleanupAuthLog()
     {
         $period = '-' . $this->config->get('cleanupAuthLogPeriod', $this->cleanupAuthLogPeriod);
-        $datetime = new \DateTime();
+
+        $datetime = new DateTime();
+
         $datetime->modify($period);
 
         $delete = $this->entityManager->getQueryBuilder()->delete()
@@ -245,8 +257,11 @@ class Cleanup implements Job
     protected function getCleanupJobFromDate()
     {
         $period = '-' . $this->config->get('cleanupJobPeriod', $this->cleanupJobPeriod);
-        $datetime = new \DateTime();
+
+        $datetime = new DateTime();
+
         $datetime->modify($period);
+
         return $datetime->format('Y-m-d');
     }
 
@@ -255,10 +270,13 @@ class Cleanup implements Job
         $pdo = $this->entityManager->getPDO();
 
         $period = '-' . $this->config->get('cleanupAttachmentsPeriod', $this->cleanupAttachmentsPeriod);
-        $datetime = new \DateTime();
+
+        $datetime = new DateTime();
+
         $datetime->modify($period);
 
-        $collection = $this->entityManager->getRepository('Attachment')
+        $collection = $this->entityManager
+            ->getRepository('Attachment')
             ->where([
                 'OR' => [
                     [
@@ -293,54 +311,95 @@ class Cleanup implements Job
         }
 
         $fromPeriod = '-' . $this->config->get('cleanupAttachmentsFromPeriod', $this->cleanupAttachmentsFromPeriod);
-        $datetimeFrom = new \DateTime();
+
+        $datetimeFrom = new DateTime();
+
         $datetimeFrom->modify($fromPeriod);
 
         $scopeList = array_keys($this->metadata->get(['scopes']));
+
         foreach ($scopeList as $scope) {
-            if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
-            if (!$this->metadata->get(['scopes', $scope, 'object']) && $scope !== 'Note') continue;
-            if (!$this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) continue;
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
+                continue;
+            }
+
+            if (!$this->metadata->get(['scopes', $scope, 'object']) && $scope !== 'Note') {
+                continue;
+            }
+
+            if (!$this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
+                continue;
+            }
 
             $hasAttachmentField = false;
+
             if ($scope === 'Note') {
                 $hasAttachmentField = true;
             }
+
             if (!$hasAttachmentField) {
                 foreach ($this->metadata->get(['entityDefs', $scope, 'fields']) as $field => $defs) {
-                    if (empty($defs['type'])) continue;
+                    if (empty($defs['type'])) {
+                        continue;
+                    }
+
                     if (in_array($defs['type'], ['file', 'image', 'attachmentMultiple'])) {
                         $hasAttachmentField = true;
+
                         break;
                     }
                 }
             }
-            if (!$hasAttachmentField) continue;
 
-            if (!$this->entityManager->hasRepository($scope)) continue;
+            if (!$hasAttachmentField) {
+                continue;
+            }
+
+            if (!$this->entityManager->hasRepository($scope)) {
+                continue;
+            }
+
             $repository = $this->entityManager->getRepository($scope);
-            if (!method_exists($repository, 'find')) continue;
-            if (!method_exists($repository, 'where')) continue;
 
-            $deletedEntityList = $repository->where([
-                'deleted' => 1,
-                'modifiedAt<' => $datetime->format('Y-m-d H:i:s'),
-                'modifiedAt>' => $datetimeFrom->format('Y-m-d H:i:s'),
+            if (!method_exists($repository, 'find')) {
+                continue;
+            }
 
-            ])->find(['withDeleted' => true]);
+            if (!method_exists($repository, 'clone')) {
+                continue;
+            }
+
+            $query = $this->entityManager->getQueryBuilder()
+                ->select()
+                ->from($scope)
+                ->withDeleted()
+                ->where([
+                    'deleted' => 1,
+                    'modifiedAt<' => $datetime->format('Y-m-d H:i:s'),
+                    'modifiedAt>' => $datetimeFrom->format('Y-m-d H:i:s'),
+                ])
+                ->build();
+
+            $deletedEntityList = $repository
+                ->clone($query)
+                ->find();
+
             foreach ($deletedEntityList as $deletedEntity) {
-                $attachmentToRemoveList = $this->entityManager->getRepository('Attachment')->where([
-                    'OR' => [
-                        [
-                            'relatedType' => $scope,
-                            'relatedId' => $deletedEntity->id
-                        ],
-                        [
-                            'parentType' => $scope,
-                            'parentId' => $deletedEntity->id
+                $attachmentToRemoveList = $this->entityManager
+                    ->getRepository('Attachment')
+                    ->where([
+                        'OR' => [
+                            [
+                                'relatedType' => $scope,
+                                'relatedId' => $deletedEntity->id,
+                            ],
+                            [
+                                'parentType' => $scope,
+                                'parentId' => $deletedEntity->id,
+                            ]
                         ]
-                    ]
-                ])->find();
+                    ])
+                    ->find();
 
                 foreach ($attachmentToRemoveList as $attachmentToRemove) {
                     $this->entityManager->removeEntity($attachmentToRemove);
@@ -363,21 +422,32 @@ class Cleanup implements Job
     {
         $dateBefore = date('Y-m-d H:i:s', time() - 3600 * 24 * 20);
 
-        $emailList = $this->entityManager->getRepository('Email')
+        $query = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->from('Email')
+            ->withDeleted()
+            ->build();
+
+        $emailList = $this->entityManager
+            ->getRepository('Email')
+            ->clone($query)
             ->select(['id'])
             ->where([
                 'createdAt<' => $dateBefore,
                 'deleted' => true,
             ])
-            ->find(['withDeleted' => true]);
+            ->find();
 
         foreach ($emailList as $email) {
             $id = $email->get('id');
 
-            $attachments = $this->entityManager->getRepository('Attachment')->where([
-                'parentId' => $id,
-                'parentType' => 'Email'
-            ])->find();
+            $attachments = $this->entityManager
+                ->getRepository('Attachment')
+                ->where([
+                    'parentId' => $id,
+                    'parentType' => 'Email'
+                ])
+                ->find();
 
             foreach ($attachments as $attachment) {
                 $this->entityManager->removeEntity($attachment);
@@ -407,7 +477,8 @@ class Cleanup implements Job
     protected function cleanupNotifications()
     {
         $period = '-' . $this->config->get('cleanupNotificationsPeriod', $this->cleanupNotificationsPeriod);
-        $datetime = new \DateTime();
+
+        $datetime = new DateTime();
         $datetime->modify($period);
 
         $notificationList = $this->entityManager->getRepository('Notification')
@@ -424,7 +495,8 @@ class Cleanup implements Job
     protected function cleanupUpgradeBackups()
     {
         $path = 'data/.backup/upgrades';
-        $datetime = new \DateTime('-' . $this->cleanupBackupPeriod);
+
+        $datetime = new DateTime('-' . $this->cleanupBackupPeriod);
 
         if (file_exists($path)) {
             $fileManager = $this->fileManager;
@@ -433,7 +505,8 @@ class Cleanup implements Job
             foreach ($fileList as $dirName) {
                 $dirPath = $path .  '/' . $dirName;
 
-                $info = new \SplFileInfo($dirPath);
+                $info = new SplFileInfo($dirPath);
+
                 if ($datetime->getTimestamp() > $info->getMTime()) {
                     $fileManager->removeInDir($dirPath, true);
                 }
@@ -450,6 +523,7 @@ class Cleanup implements Job
         }
 
         $repository = $this->entityManager->getRepository($scope);
+
         $repository->deleteFromDb($entity->id);
 
         $query = $this->entityManager->getQueryComposer();
@@ -498,69 +572,116 @@ class Cleanup implements Job
                     ->build();
 
                 $this->entityManager->getQueryExecutor()->execute($delete);
-
-            } catch (\Exception $e) {
+            }
+            catch (Exception $e) {
                 $GLOBALS['log']->error("Cleanup: " . $e->getMessage());
             }
         }
 
-        $noteList = $this->entityManager->getRepository('Note')->where([
-            'OR' => [
-                [
-                    'relatedType' => $scope,
-                    'relatedId' => $entity->id
-                ],
-                [
-                    'parentType' => $scope,
-                    'parentId' => $entity->id
+        $query = $this->entityManager->getQueryBuilder()
+            ->select()
+            ->from('Note')
+            ->withDeleted()
+            ->build();
+
+        $noteList = $this->entityManager
+            ->getRepository('Note')
+            ->clone($query)
+            ->where([
+                'OR' => [
+                    [
+                        'relatedType' => $scope,
+                        'relatedId' => $entity->id,
+                    ],
+                    [
+                        'parentType' => $scope,
+                        'parentId' => $entity->id,
+                    ]
                 ]
-            ]
-        ])->find(['withDeleted' => true]);
+            ])
+            ->find();
 
         foreach ($noteList as $note) {
             $this->entityManager->removeEntity($note);
+
             $note->set('deleted', true);
+
             $this->cleanupDeletedEntity($note);
         }
 
         if ($scope === 'Note') {
-            $attachmentList = $this->entityManager->getRepository('Attachment')->where([
-                'parentId' => $entity->id,
-                'parentType' => 'Note'
-            ])->find();
+            $attachmentList = $this->entityManager
+                ->getRepository('Attachment')
+                ->where([
+                    'parentId' => $entity->id,
+                    'parentType' => 'Note',
+                ])
+                ->find();
 
             foreach ($attachmentList as $attachment) {
                 $this->entityManager->removeEntity($attachment);
                 $this->entityManager->getRepository('Attachment')->deleteFromDb($attachment->id);
             }
         }
+
+        $arrayValueList = $this->entityManager
+            ->getRepository('ArrayValue')
+            ->where([
+                'entityType' => $entity->getEntityType(),
+                'entityId' => $entity->id,
+            ])
+            ->find();
+
+        foreach ($arrayValueList as $arrayValue) {
+            $this->entityManager->getRepository('ArrayValue')->deleteFromDb($arrayValue->id);
+        }
     }
 
     protected function cleanupDeletedRecords()
     {
-        if (!$this->config->get('cleanupDeletedRecords')) return;
+        if (!$this->config->get('cleanupDeletedRecords')) {
+            return;
+        }
+
         $period = '-' . $this->config->get('cleanupDeletedRecordsPeriod', $this->cleanupDeletedRecordsPeriod);
-        $datetime = new \DateTime($period);
+
+        $datetime = new DateTime($period);
 
         $serviceFactory = $this->serviceFactory;
 
         $scopeList = array_keys($this->metadata->get(['scopes']));
-        foreach ($scopeList as $scope) {
-            if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
-            if ($scope === 'Attachment') continue;
 
-            if (!$this->entityManager->hasRepository($scope)) continue;
+        foreach ($scopeList as $scope) {
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
+                continue;
+            }
+
+            if ($scope === 'Attachment') {
+                continue;
+            }
+
+            if (!$this->entityManager->hasRepository($scope)) {
+                continue;
+            }
+
             $repository = $this->entityManager->getRepository($scope);
-            if (!$repository) continue;
+
+            if (!$repository) {
+                continue;
+            }
+
             if (!method_exists($repository, 'find')) continue;
+            if (!method_exists($repository, 'clone')) continue;
             if (!method_exists($repository, 'where')) continue;
             if (!method_exists($repository, 'select')) continue;
             if (!method_exists($repository, 'deleteFromDb')) continue;
 
             $hasCleanupMethod = false;
             $service = null;
+
             if ($serviceFactory->checkExists($scope)) {
                 $service = $serviceFactory->create($scope);
+
                 if (method_exists($service, 'cleanup')) {
                     $hasCleanupMethod = true;
                 }
@@ -572,20 +693,33 @@ class Cleanup implements Job
 
             if ($this->metadata->get(['entityDefs', $scope, 'fields', 'modifiedAt'])) {
                 $whereClause['modifiedAt<'] = $datetime->format('Y-m-d H:i:s');
-            } else if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
+            } else
+            if ($this->metadata->get(['entityDefs', $scope, 'fields', 'createdAt'])) {
                 $whereClause['createdAt<'] = $datetime->format('Y-m-d H:i:s');
             }
 
-            $deletedEntityList = $repository->select(['id', 'deleted'])->where($whereClause)->find(['withDeleted' => true]);
+            $query = $this->entityManager->getQueryBuilder()
+                ->select()
+                ->from($scope)
+                ->withDeleted()
+                ->build();
+
+            $deletedEntityList = $repository
+                ->clone($query)
+                ->select(['id', 'deleted'])
+                ->where($whereClause)
+                ->find();
 
             foreach ($deletedEntityList as $entity) {
                 if ($hasCleanupMethod) {
                     try {
                         $service->cleanup($entity->id);
-                    } catch (\Throwable $e) {
+                    }
+                    catch (Throwable $e) {
                         $GLOBALS['log']->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());
                     }
                 }
+
                 $this->cleanupDeletedEntity($entity);
             }
         }
