@@ -34,6 +34,8 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+use DateTime;
+
 class WebhookQueue
 {
     protected $cleanupWebhookQueuePeriod = '10 days';
@@ -50,7 +52,9 @@ class WebhookQueue
     public function process()
     {
         $period = '-' . $this->config->get('cleanupWebhookQueuePeriod', $this->cleanupWebhookQueuePeriod);
-        $datetime = new \DateTime();
+
+        $datetime = new DateTime();
+
         $datetime->modify($period);
         $from = $datetime->format('Y-m-d H:i:s');
 

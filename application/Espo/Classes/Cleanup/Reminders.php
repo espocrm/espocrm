@@ -34,6 +34,8 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+use DateTime;
+
 class Reminders
 {
     protected $config;
@@ -51,7 +53,8 @@ class Reminders
     {
         $period = '-' . $this->config->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
 
-        $dt = new \DateTime();
+        $dt = new DateTime();
+
         $dt->modify($period);
 
         $delete = $this->entityManager->getQueryBuilder()
