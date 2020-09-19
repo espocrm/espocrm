@@ -36,10 +36,10 @@ use Espo\Entities\PhoneNumber as PhoneNumberEntity;
 use Espo\Core\Di;
 
 class PhoneNumber extends \Espo\Core\Repositories\Database implements
-    Di\UserAware,
+    Di\ApplicationStateAware,
     Di\AclManagerAware
 {
-    use Di\UserSetter;
+    use Di\ApplicationStateSetter;
     use Di\AclManagerSetter;
 
     protected $processFieldsAfterSaveDisabled = true;
@@ -333,6 +333,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
         foreach ($toRemoveList as $number) {
             $phoneNumber = $this->getByNumber($number);
+
             if (!$phoneNumber) {
                 continue;
             }
@@ -352,8 +353,10 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
         foreach ($toUpdateList as $number) {
             $phoneNumber = $this->getByNumber($number);
+
             if ($phoneNumber) {
                 $skipSave = $this->checkChangeIsForbidden($phoneNumber, $entity);
+
                 if (!$skipSave) {
                     $phoneNumber->set([
                         'type' => $hash->{$number}['type'],
@@ -361,7 +364,8 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                         'invalid' => $hash->{$number}['invalid'],
                     ]);
                     $this->save($phoneNumber);
-                } else {
+                }
+                else {
                     $revertData[$number] = [
                         'type' => $phoneNumber->get('type'),
                         'optOut' => $phoneNumber->get('optOut'),
@@ -373,6 +377,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
 
         foreach ($toCreateList as $number) {
             $phoneNumber = $this->getByNumber($number);
+
             if (!$phoneNumber) {
                 $phoneNumber = $this->get();
 
@@ -383,8 +388,10 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                     'invalid' => $hash->{$number}['invalid'],
                 ]);
                 $this->save($phoneNumber);
-            } else {
+            }
+            else {
                 $skipSave = $this->checkChangeIsForbidden($phoneNumber, $entity);
+
                 if (!$skipSave) {
                     if (
                         $phoneNumber->get('type') != $hash->{$number}['type'] ||
@@ -396,6 +403,7 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
                             'optOut' => $hash->{$number}['optOut'],
                             'invalid' => $hash->{$number}['invalid'],
                         ]);
+
                         $this->save($phoneNumber);
                     }
                 } else {
@@ -561,11 +569,19 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    // @todo move it to another place
+    /**
+     * @todo Move it to another place. ACL should not be in a repository.
+     */
     protected function checkChangeIsForbidden($entity, $excludeEntity)
     {
+        if (!$this->applicationState->hasUser()) {
+            return true;
+        }
+
+        $user = $this->applicationState->getUser();
+
         return !$this->aclManager->getImplementation('PhoneNumber')
-            ->checkEditInEntity($this->user, $entity, $excludeEntity);
+            ->checkEditInEntity($user, $entity, $excludeEntity);
     }
 
     protected function beforeSave(Entity $entity, array $options = [])
@@ -583,11 +599,13 @@ class PhoneNumber extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function markNumberOptedOut($number, $isOptedOut = true)
+    public function markNumberOptedOut(string $number, bool $isOptedOut = true)
     {
         $number = $this->getByNumber($number);
+
         if ($number) {
             $number->set('optOut', !!$isOptedOut);
+
             $this->save($number);
         }
     }

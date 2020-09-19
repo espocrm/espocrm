@@ -36,10 +36,10 @@ use Espo\Entities\EmailAddress as EmailAddressEntity;
 use Espo\Core\Di;
 
 class EmailAddress extends \Espo\Core\Repositories\Database implements
-    Di\UserAware,
+    Di\ApplicationStateAware,
     Di\AclManagerAware
 {
-    use Di\UserSetter;
+    use Di\ApplicationStateSetter;
     use Di\AclManagerSetter;
 
     protected $processFieldsAfterSaveDisabled = true;
@@ -239,6 +239,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 if ($entity->getEntityType() === 'User') {
                     if (!$entity->get('isActive')) continue;
                 }
+
                 return $entity;
             }
         }
@@ -279,6 +280,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 if ($entity->getEntityType() === 'User') {
                     if (!$entity->get('isActive')) continue;
                 }
+
                 return $entity;
             }
         }
@@ -289,17 +291,24 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
     public function storeEntityEmailAddressData(Entity $entity)
     {
         $emailAddressValue = $entity->get('emailAddress');
+
         if (is_string($emailAddressValue)) {
             $emailAddressValue = trim($emailAddressValue);
         }
 
         $emailAddressData = null;
+
         if ($entity->has('emailAddressData')) {
             $emailAddressData = $entity->get('emailAddressData');
         }
 
-        if (is_null($emailAddressData)) return;
-        if (!is_array($emailAddressData)) return;
+        if (is_null($emailAddressData)) {
+            return;
+        }
+
+        if (!is_array($emailAddressData)) {
+            return;
+        }
 
         $keyList = [];
         $keyPreviousList = [];
@@ -425,8 +434,10 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
         foreach ($toUpdateList as $address) {
             $emailAddress = $this->getByAddress($address);
+
             if ($emailAddress) {
                 $skipSave = $this->checkChangeIsForbidden($emailAddress, $entity);
+
                 if (!$skipSave) {
                     $emailAddress->set([
                         'optOut' => $hash->{$address}['optOut'],
@@ -434,7 +445,8 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                         'name' => $hash->{$address}['emailAddress']
                     ]);
                     $this->save($emailAddress);
-                } else {
+                }
+                else {
                     $revertData[$address] = [
                         'optOut' => $emailAddress->get('optOut'),
                         'invalid' => $emailAddress->get('invalid'),
@@ -445,6 +457,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
 
         foreach ($toCreateList as $address) {
             $emailAddress = $this->getByAddress($address);
+
             if (!$emailAddress) {
                 $emailAddress = $this->get();
 
@@ -454,8 +467,10 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     'invalid' => $hash->{$address}['invalid'],
                 ]);
                 $this->save($emailAddress);
-            } else {
+            }
+            else {
                 $skipSave = $this->checkChangeIsForbidden($emailAddress, $entity);
+
                 if (!$skipSave) {
                     if (
                         $emailAddress->get('optOut') != $hash->{$address}['optOut'] ||
@@ -478,6 +493,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             }
 
             $entityEmailAddress = $this->getEntityManager()->getEntity('EntityEmailAddress');
+
             $entityEmailAddress->set([
                 'entityId' => $entity->id,
                 'entityType' => $entity->getEntityType(),
@@ -533,15 +549,19 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     $row->invalid = $revertData[$row->emailAddress]['invalid'];
                 }
             }
+
             $entity->set('emailAddressData', $emailAddressData);
         }
     }
 
     protected function storeEntityEmailAddressPrimary(Entity $entity)
     {
-        if (!$entity->has('emailAddress')) return;
+        if (!$entity->has('emailAddress')) {
+            return;
+        }
 
         $emailAddressValue = $entity->get('emailAddress');
+
         if (is_string($emailAddressValue)) {
             $emailAddressValue = trim($emailAddressValue);
         }
@@ -552,7 +572,9 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             if ($emailAddressValue != $entity->getFetched('emailAddress')) {
 
                 $emailAddressNew = $this->where(['lower' => strtolower($emailAddressValue)])->findOne();
+
                 $isNewEmailAddress = false;
+
                 if (!$emailAddressNew) {
                     $emailAddressNew = $this->get();
                     $emailAddressNew->set('name', $emailAddressValue);
@@ -564,12 +586,14 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 }
 
                 $emailAddressValueOld = $entity->getFetched('emailAddress');
+
                 if (!empty($emailAddressValueOld)) {
                     $emailAddressOld = $this->getByAddress($emailAddressValueOld);
                     if ($emailAddressOld) {
                         $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
                     }
                 }
+
                 $entityRepository->relate($entity, 'emailAddresses', $emailAddressNew);
 
                 if ($entity->has('emailAddressIsOptedOut')) {
@@ -608,8 +632,10 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             }
         } else {
             $emailAddressValueOld = $entity->getFetched('emailAddress');
+
             if (!empty($emailAddressValueOld)) {
                 $emailAddressOld = $this->getByAddress($emailAddressValueOld);
+
                 if ($emailAddressOld) {
                     $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld);
                 }
@@ -631,18 +657,28 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    // @todo move it to another place
+    /**
+     * @todo Move it to another place. ACL should not be in a repository.
+     */
     protected function checkChangeIsForbidden($entity, $excludeEntity)
     {
+        if (!$this->applicationState->hasUser()) {
+            return true;
+        }
+
+        $user = $this->applicationState->getUser();
+
         return !$this->aclManager->getImplementation('EmailAddress')
-            ->checkEditInEntity($this->user, $entity, $excludeEntity);
+            ->checkEditInEntity($user, $entity, $excludeEntity);
     }
 
-    public function markAddressOptedOut($address, $isOptedOut = true)
+    public function markAddressOptedOut(string $address, bool $isOptedOut = true)
     {
         $emailAddress = $this->getByAddress($address);
+
         if ($emailAddress) {
             $emailAddress->set('optOut', !!$isOptedOut);
+
             $this->save($emailAddress);
         }
     }

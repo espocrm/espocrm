@@ -27,28 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\Schema\rebuildActions;
+namespace Espo\Core\Di;
 
-use Espo\Core\Utils\Database\Schema\BaseRebuildActions as Base;
+use Espo\Core\ApplicationState;
 
-class AddSystemUser extends Base
+interface ApplicationStateAware
 {
-    public function afterRebuild()
-    {
-        $userId = $this->getConfig()->get('systemUserAttributes.id');
-
-        $user = $this->getEntityManager()->getEntity('User', $userId);
-
-        if ($user) {
-            return;
-        }
-
-        $systemUserAttributes = $this->getConfig()->get('systemUserAttributes');
-
-        $user = $this->getEntityManager()->getEntity('User');
-
-        $user->set($systemUserAttributes);
-
-        $this->getEntityManager()->saveEntity($user);
-    }
+    public function setApplicationState(ApplicationState $applicationState);
 }
