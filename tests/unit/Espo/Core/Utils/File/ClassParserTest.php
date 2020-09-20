@@ -31,6 +31,10 @@ namespace tests\unit\Espo\Core\Utils\File;
 
 use tests\unit\ReflectionHelper;
 
+use Espo\Core\Utils\File\ClassParser;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+
 class ClassParserTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -41,12 +45,16 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+        $this->objects['fileManager'] = new FileManager();
+
         $this->objects['config'] = $this->getMockBuilder('Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
         $this->objects['metadata'] = $this->getMockBuilder('Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\File\ClassParser(
-            $this->objects['fileManager'], $this->objects['config'], $this->objects['metadata']);
+        $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
+
+        $this->object = new ClassParser(
+            $this->objects['fileManager'], $this->objects['config'], $this->objects['metadata'], $this->dataCache
+        );
 
         $this->reflection = new ReflectionHelper($this->object);
     }
@@ -73,29 +81,42 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
 
     function testGetDataWithCache()
     {
+        $result = [
+            'Download' => '\\tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
+        ];
+
         $this->objects['config']
             ->expects($this->once())
             ->method('get')
             ->will($this->returnValue(true));
 
-        $cacheFile = 'tests/unit/testData/EntryPoints/cache/entryPoints.php';
+        $cacheKey = 'entryPoints';
+
+        $this->dataCache
+            ->expects($this->once())
+            ->method('has')
+            ->with('entryPoints')
+            ->willReturn(true);
+
+        $this->dataCache
+            ->expects($this->once())
+            ->method('get')
+            ->with('entryPoints')
+            ->willReturn($result);
+
         $paths = [
             'corePath' => '/tests/unit/testData/EntryPoints/Espo/EntryPoints',
             'modulePath' => '/tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
             'customPath' => '/tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
         ];
 
-        $result = [
-            'Download' => '\\tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
-        ];
-
-        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheFile, ['run']]) );
+        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheKey, ['run']]) );
     }
 
     function testGetDataWithNoCache()
     {
         $this->objects['config']
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('get')
             ->will($this->returnValue(false));
 
@@ -108,7 +129,8 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
                 ]
             ));
 
-        $cacheFile = 'tests/unit/testData/EntryPoints/cache/entryPoints.php';
+        $cacheKey = 'entryPoints';
+
         $paths = [
             'corePath' => 'tests/unit/testData/EntryPoints/Espo/EntryPoints',
             'modulePath' => 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
@@ -121,13 +143,13 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
         ];
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheFile, ['run']]));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheKey, ['run']]));
     }
 
     function testGetDataWithNoCacheString()
     {
         $this->objects['config']
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(1))
             ->method('get')
             ->will($this->returnValue(false));
 
@@ -140,7 +162,7 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
                 ]
             ));
 
-        $cacheFile = 'tests/unit/testData/EntryPoints/cache/entryPoints.php';
+        $cacheKey = 'entryPoints';
         $path = 'tests/unit/testData/EntryPoints/Espo/EntryPoints';
 
         $result = [
@@ -148,7 +170,7 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
             'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
         ];
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$path, $cacheFile, ['run']]));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$path, $cacheKey, ['run']]));
     }
 
     function testGetDataWithCacheFalse()

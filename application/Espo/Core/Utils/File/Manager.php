@@ -276,12 +276,9 @@ class Manager
     /**
      * Save PHP content to file.
      *
-     * @param string | array $path
-     * @param string $data
-     *
      * @return bool
      */
-    public function putPhpContents($path, $data, $withObjects = false, bool $useRenaming = false)
+    public function putPhpContents(string $path, $data, bool $withObjects = false, bool $useRenaming = false)
     {
         return $this->putContents($path, $this->wrapForDataExport($data, $withObjects), LOCK_EX, $useRenaming);
     }

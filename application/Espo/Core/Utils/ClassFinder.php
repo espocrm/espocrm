@@ -77,7 +77,7 @@ class ClassFinder
     protected function load(string $category, bool $subDirs = false)
     {
         $path = $this->buildPaths($category);
-        $cacheFile = $this->buildCacheFilePath($category);
+        $cacheFile = $this->buildCacheKey($category);
 
         $this->dataHash[$category] = $this->classParser->getData($path, $cacheFile, null, $subDirs);
     }
@@ -93,10 +93,8 @@ class ClassFinder
         return $path;
     }
 
-    protected function buildCacheFilePath(string $category) : string
+    protected function buildCacheKey(string $category) : string
     {
-        $path = 'data/cache/application/classmap_' . str_replace('/', '_', strtolower($category)) . '.php';
-
-        return $path;
+        return 'classmap' . str_replace('/', '', $category);
     }
 }

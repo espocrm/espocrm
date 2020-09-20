@@ -29,28 +29,31 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\Utils\Util;
-use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Metadata;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\Util,
+    Utils\File\Manager as FileManager,
+    Utils\Config,
+    Utils\Metadata,
+    Utils\DataCache,
 
-use Espo\Core\Exceptions\Error;
+};
 
 use ReflectionClass;
 
 class ClassParser
 {
     private $fileManager;
-
     private $config;
-
     private $metadata;
+    private $dataCache;
 
-    public function __construct(FileManager $fileManager, Config $config, Metadata $metadata)
+    public function __construct(FileManager $fileManager, Config $config, Metadata $metadata, DataCache $dataCache)
     {
         $this->fileManager = $fileManager;
         $this->config = $config;
         $this->metadata = $metadata;
+        $this->dataCache = $dataCache;
     }
 
     /**
@@ -61,10 +64,9 @@ class ClassParser
      *    'modulePath' => '',
      *    'customPath' => '',
      * ]
-     * @param $cacheFile Full path for a cache file, ex. data/cache/application/entryPoints.php.
      * @param $allowedMethods If specified, classes w/o specified method will be ignored.
      */
-    public function getData($paths, ?string $cacheFile = null, ?array $allowedMethods = null, bool $subDirs = false) : array
+    public function getData($paths, ?string $cacheKey = null, ?array $allowedMethods = null, bool $subDirs = false) : array
     {
         $data = null;
 
@@ -74,11 +76,12 @@ class ClassParser
             ];
         }
 
-        if ($cacheFile && file_exists($cacheFile) && $this->config->get('useCache')) {
-            $data = $this->fileManager->getPhpContents($cacheFile);
+
+        if ($cacheKey && $this->dataCache->has($cacheKey) && $this->config->get('useCache')) {
+            $data = $this->dataCache->get($cacheKey);
 
             if (!is_array($data)) {
-                $GLOBALS['log']->error("ClassParser: Non-array value stored in {$cacheFile}.");
+                $GLOBALS['log']->error("ClassParser: Non-array value stored in {$cacheKey}.");
             }
         }
 
@@ -97,12 +100,8 @@ class ClassParser
                 $data = array_merge($data, $this->getClassNameHash($paths['customPath'], $allowedMethods, $subDirs));
             }
 
-            if ($cacheFile && $this->config->get('useCache')) {
-                $result = $this->fileManager->putPhpContents($cacheFile, $data);
-
-                if ($result == false) {
-                    throw new Error("ClassParser: Could not save file {$cacheFile}.");
-                }
+            if ($cacheKey && $this->config->get('useCache')) {
+                $this->dataCache->store($cacheKey, $data);
             }
         }
 

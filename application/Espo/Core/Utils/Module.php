@@ -100,7 +100,7 @@ class Module
         $this->data = $this->unifier->unify($this->paths, true);
 
         if ($this->useCache) {
-            $result = $this->fileManager->putPhpContents($this->cacheFile, $this->data);
+            $result = $this->fileManager->putPhpContents($this->cacheFile, $this->data, false, true);
 
             if ($result === false) {
                 throw new Error('Module: Could not save unified module data.');

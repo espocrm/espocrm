@@ -27,56 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Autoload;
+namespace Espo\Core\Loaders;
 
-class Loader
+use Espo\Core\{
+    InjectableFactory,
+    Utils\DataCache as DataCacheService,
+};
+
+class DataCache implements Loader
 {
-    protected $namespaceLoader;
+    protected $injectableFactory;
 
-    public function __construct(NamespaceLoader $namespaceLoader)
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        $this->namespaceLoader = $namespaceLoader;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function register(array $autoloadList)
+    public function load() : DataCacheService
     {
-        /* load "psr-4", "psr-0", "classmap" */
-        $this->namespaceLoader->register($autoloadList);
-
-        /* load "autoloadFileList" */
-        $this->registerAutoloadFileList($autoloadList);
-
-        /* load "files" */
-        $this->registerFiles($autoloadList);
-    }
-
-    protected function registerAutoloadFileList(array $autoloadList)
-    {
-        $keyName = 'autoloadFileList';
-
-        if (!isset($autoloadList[$keyName])) {
-            return;
-        }
-
-        foreach ($autoloadList[$keyName] as $filePath) {
-            if (file_exists($filePath)) {
-                require_once($filePath);
-            }
-        }
-    }
-
-    protected function registerFiles(array $autoloadList)
-    {
-        $keyName = 'files';
-
-        if (!isset($autoloadList[$keyName])) {
-            return;
-        }
-
-        foreach ($autoloadList[$keyName] as $id => $filePath) {
-            if (file_exists($filePath)) {
-                require_once($filePath);
-            }
-        }
+        return $this->injectableFactory->create(DataCacheService::class);
     }
 }

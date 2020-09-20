@@ -84,7 +84,7 @@ class CronManager
 
     const FAILED = 'Failed';
 
-    protected $lastRunTime = 'data/cache/application/cronLastRunTime.php';
+    protected $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
 
     protected $config;
     protected $fileManager;
@@ -137,7 +137,7 @@ class CronManager
 
     protected function getLastRunTime()
     {
-        $lastRunData = $this->fileManager->getPhpContents($this->lastRunTime);
+        $lastRunData = $this->fileManager->getPhpContents($this->lastRunTimeFile);
 
         if (is_array($lastRunData) && !empty($lastRunData['time'])) {
             $lastRunTime = $lastRunData['time'];
@@ -150,10 +150,11 @@ class CronManager
 
     protected function setLastRunTime($time)
     {
-        $data = array(
+        $data = [
             'time' => $time,
-        );
-        return $this->fileManager->putPhpContents($this->lastRunTime, $data);
+        ];
+
+        return $this->fileManager->putPhpContents($this->lastRunTimeFile, $data, false, true);
     }
 
     protected function checkLastRunTime()

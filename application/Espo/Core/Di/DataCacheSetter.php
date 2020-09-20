@@ -27,56 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Autoload;
+namespace Espo\Core\Di;
 
-class Loader
+use Espo\Core\Utils\DataCache;
+
+trait DataCacheSetter
 {
-    protected $namespaceLoader;
+    protected $dataCache;
 
-    public function __construct(NamespaceLoader $namespaceLoader)
+    public function setDataCache(DataCache $dataCache)
     {
-        $this->namespaceLoader = $namespaceLoader;
-    }
-
-    public function register(array $autoloadList)
-    {
-        /* load "psr-4", "psr-0", "classmap" */
-        $this->namespaceLoader->register($autoloadList);
-
-        /* load "autoloadFileList" */
-        $this->registerAutoloadFileList($autoloadList);
-
-        /* load "files" */
-        $this->registerFiles($autoloadList);
-    }
-
-    protected function registerAutoloadFileList(array $autoloadList)
-    {
-        $keyName = 'autoloadFileList';
-
-        if (!isset($autoloadList[$keyName])) {
-            return;
-        }
-
-        foreach ($autoloadList[$keyName] as $filePath) {
-            if (file_exists($filePath)) {
-                require_once($filePath);
-            }
-        }
-    }
-
-    protected function registerFiles(array $autoloadList)
-    {
-        $keyName = 'files';
-
-        if (!isset($autoloadList[$keyName])) {
-            return;
-        }
-
-        foreach ($autoloadList[$keyName] as $id => $filePath) {
-            if (file_exists($filePath)) {
-                require_once($filePath);
-            }
-        }
+        $this->dataCache = $dataCache;
     }
 }
