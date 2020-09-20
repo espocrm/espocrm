@@ -31,23 +31,28 @@ namespace Espo\Core\Loaders;
 
 use Espo\Core\{
     Utils\Metadata as MetadataService,
+    InjectableFactory,
     Utils\Config,
-    Utils\File\Manager as FileManager,
 };
 
 class Metadata implements Loader
 {
-    protected $fileManager;
+    protected $injectableFactory;
     protected $config;
 
-    public function __construct(FileManager $fileManager, Config $config)
+    public function __construct(InjectableFactory $injectableFactory, Config $config)
     {
-        $this->fileManager = $fileManager;
+        $this->injectableFactory = $injectableFactory;
         $this->config = $config;
     }
 
     public function load() : MetadataService
     {
-        return new MetadataService($this->fileManager, $this->config->get('useCache'));
+        return $this->injectableFactory->createWith(
+            MetadataService::class,
+            [
+                'useCache' => $this->config->get('useCache'),
+            ]
+        );
     }
 }
