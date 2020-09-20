@@ -31,6 +31,11 @@ namespace tests\unit\Espo\Core\Utils;
 
 use tests\unit\ReflectionHelper;
 
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\DataCache;
+
 class MetadataTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -39,33 +44,19 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected $defaultCacheFile = 'tests/unit/testData/Utils/Metadata/metadata.php';
-    protected $defaultObjCacheFile = 'tests/unit/testData/Utils/Metadata/metadata.php';
-
-    protected $cacheFile = 'tests/unit/testData/cache/metadata.php';
-    protected $objCacheFile = 'tests/unit/testData/cache/objMetadata.php';
-
     protected function setUp() : void
     {
-        /*copy defaultCacheFile file to cache*/
-        if (!file_exists($this->cacheFile)) {
-            copy($this->defaultCacheFile, $this->cacheFile);
-        }
+        $this->fileManager = new FileManager();
 
-        if (!file_exists($this->objCacheFile)) {
-            copy($this->defaultObjCacheFile, $this->objCacheFile);
-        }
+        $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+        $this->log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['log'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
-        $GLOBALS['log'] = $this->objects['log'];
+        $GLOBALS['log'] = $this->log;
 
-        $this->object = new \Espo\Core\Utils\Metadata($this->objects['fileManager'], true);
+        $this->object = new Metadata($this->fileManager, $this->dataCache, true);
 
         $this->reflection = new ReflectionHelper($this->object);
-        $this->reflection->setProperty('cacheFile', $this->cacheFile);
-        $this->reflection->setProperty('objCacheFile', $this->objCacheFile);
     }
 
     protected function tearDown() : void
@@ -96,7 +87,9 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
             ),
           ),
         );
+
         $this->object->set('entityDefs', 'Attachment', $data);
+
         $this->assertEquals('Views.Test.Custom', $this->object->get('entityDefs.Attachment.fields.name.view'));
         $this->assertEquals(150, $this->object->get('entityDefs.Attachment.fields.name.maxLength'));
 
@@ -116,6 +109,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
             ),
           ),
         );
+
         $this->object->set('entityDefs', 'Attachment', $data);
         $this->assertEquals(200, $this->object->get('entityDefs.Attachment.fields.name.maxLength'));
         $this->assertEquals('Views.Test.Custom', $this->object->get('entityDefs.Attachment.fields.name.view'));
@@ -158,6 +152,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
                 ),
             ),
         );
+
         $this->assertEquals($result, $this->reflection->getProperty('deletedData'));
 
         $data = array (
@@ -182,15 +177,16 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($this->object->get('entityDefs.Attachment.fields.name.required'));
 
         $this->object->clearChanges();
-        $this->assertEquals(array(), $this->reflection->getProperty('deletedData'));
+        $this->assertEquals([], $this->reflection->getProperty('deletedData'));
     }
 
     public function testUndelete()
     {
-        $data = array (
+        $data = [
             'fields.name.type',
             'fields.name.required',
-        );
+        ];
+
         $this->object->delete('entityDefs', 'Attachment', $data);
         $this->assertNull($this->object->get('entityDefs.Attachment.fields.name.type'));
 
@@ -242,11 +238,13 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $paths = $this->reflection->getProperty('paths');
         $paths['customPath'] = $customPath;
+
         $this->reflection->setProperty('paths', $paths);
 
         $this->assertNull($this->object->getCustom('entityDefs', 'Lead'));
 
         $customData = $this->object->getCustom('entityDefs', 'Lead', (object) []);
+
         $this->assertTrue(is_object($customData));
 
         $data = (object) [
@@ -257,6 +255,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
             ],
           ],
         ];
+
         $this->object->saveCustom('entityDefs', 'Lead', $data);
 
         $this->assertEquals($data, $this->object->getCustom('entityDefs', 'Lead'));
@@ -286,7 +285,8 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->object->saveCustom('entityDefs', 'Lead', $data);
 
         $savedFile = $customPath . '/entityDefs/Lead.json';
-        $fileContent = $this->objects['fileManager']->getContents($savedFile);
+        $fileContent = $this->fileManager->getContents($savedFile);
+
         $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
         $this->assertEquals($data, $savedData);
@@ -324,7 +324,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $this->object->saveCustom('entityDefs', 'Lead', $customData);
 
         $savedFile = $customPath . '/entityDefs/Lead.json';
-        $fileContent = $this->objects['fileManager']->getContents($savedFile);
+        $fileContent = $this->fileManager->getContents($savedFile);
         $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
         $expectedData = (object) [

@@ -33,6 +33,7 @@ use Espo\Core\{
     Exceptions\Error,
     Utils\File\Manager as FileManager,
     Utils\File\FileUnifier,
+    Utils\DataCache,
 };
 
 /**
@@ -40,15 +41,13 @@ use Espo\Core\{
  */
 class Module
 {
-    private $fileManager;
-
     private $useCache;
 
     private $unifier;
 
     protected $data = null;
 
-    protected $cacheFile = 'data/cache/application/modules.php';
+    protected $cacheKey = 'modules';
 
     protected $paths = [
         'corePath' => 'application/Espo/Resources/module.json',
@@ -56,9 +55,13 @@ class Module
         'customPath' => 'custom/Espo/Custom/Resources/module.json',
     ];
 
-    public function __construct(FileManager $fileManager, bool $useCache = false)
+    private $fileManager;
+    private $dataCache;
+
+    public function __construct(FileManager $fileManager, DataCache $dataCache, bool $useCache = false)
     {
         $this->fileManager = $fileManager;
+        $this->dataCache = $dataCache;
 
         $this->unifier = new FileUnifier($this->fileManager);
 
@@ -91,8 +94,8 @@ class Module
 
     protected function init()
     {
-        if (file_exists($this->cacheFile) && $this->useCache) {
-            $this->data = $this->fileManager->getPhpContents($this->cacheFile);
+        if ($this->dataCache->has($this->cacheKey) && $this->useCache) {
+            $this->data = $this->dataCache->get($this->cacheKey);
 
             return;
         }
@@ -100,11 +103,7 @@ class Module
         $this->data = $this->unifier->unify($this->paths, true);
 
         if ($this->useCache) {
-            $result = $this->fileManager->putPhpContents($this->cacheFile, $this->data, false, true);
-
-            if ($result === false) {
-                throw new Error('Module: Could not save unified module data.');
-            }
+            $this->dataCache->store($this->cacheKey, $this->data);
         }
     }
 }

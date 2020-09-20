@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\File\Unifier,
     Utils\Module,
     Utils\Metadata\Helper,
+    Utils\DataCache,
 };
 
 class Metadata
@@ -49,17 +50,15 @@ class Metadata
 
     private $objUnifier;
 
-    private $fileManager;
-
     private $module;
 
     private $metadataHelper;
 
     protected $pathToModules = 'application/Espo/Modules';
 
-    protected $cacheFile = 'data/cache/application/metadata.php';
+    protected $cacheKey = 'metadata';
 
-    protected $objCacheFile = 'data/cache/application/objMetadata.php';
+    protected $objCacheKey = 'objMetadata';
 
     protected $paths = [
         'corePath' => 'application/Espo/Resources/metadata',
@@ -75,10 +74,15 @@ class Metadata
 
     private $changedData = [];
 
-    public function __construct(FileManager $fileManager, bool $useCache = false)
+    private $fileManager;
+    private $dataCache;
+
+    public function __construct(FileManager $fileManager, DataCache $dataCache, bool $useCache = false)
     {
-        $this->useCache = $useCache;
         $this->fileManager = $fileManager;
+        $this->dataCache = $dataCache;
+
+        $this->useCache = $useCache;
     }
 
     protected function getObjUnifier()
@@ -93,7 +97,7 @@ class Metadata
     protected function getModule()
     {
         if (!isset($this->module)) {
-            $this->module = new Module($this->fileManager, $this->useCache);
+            $this->module = new Module($this->fileManager, $this->dataCache, $this->useCache);
         }
 
         return $this->module;
@@ -108,19 +112,6 @@ class Metadata
         return $this->metadataHelper;
     }
 
-    public function isCached()
-    {
-        if (!$this->useCache) {
-            return false;
-        }
-
-        if (file_exists($this->cacheFile)) {
-            return true;
-        }
-
-        return false;
-    }
-
     /**
      * Init metadata.
      */
@@ -130,8 +121,8 @@ class Metadata
             $reload = true;
         }
 
-        if (file_exists($this->cacheFile) && !$reload) {
-            $this->data = $this->fileManager->getPhpContents($this->cacheFile);
+        if ($this->dataCache->has($this->cacheKey) && !$reload) {
+            $this->data = $this->dataCache->get($this->cacheKey);
 
             return;
         }
@@ -143,11 +134,7 @@ class Metadata
         $this->data = Util::objectToArray($objData);
 
         if ($this->useCache) {
-            $isSaved = $this->fileManager->putPhpContents($this->cacheFile, $this->data);
-
-            if ($isSaved === false) {
-                $GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
-            }
+            $this->dataCache->store($this->cacheKey, $this->data);
         }
     }
 
@@ -207,8 +194,8 @@ class Metadata
             $reload = true;
         }
 
-        if (file_exists($this->objCacheFile) && !$reload) {
-            $this->objData = $this->fileManager->getPhpContents($this->objCacheFile);
+        if ($this->dataCache->has($this->objCacheKey) && !$reload) {
+            $this->objData = $this->dataCache->get($this->objCacheKey);
 
             return;
         }
@@ -217,11 +204,7 @@ class Metadata
         $this->objData = $this->addAdditionalFieldsObj($this->objData);
 
         if ($this->useCache) {
-            $isSaved = $this->fileManager->putPhpContents($this->objCacheFile, $this->objData, true);
-
-            if ($isSaved === false) {
-                $GLOBALS['log']->emergency('Metadata:objInit() - metadata has not been saved to a cache file');
-            }
+            $this->dataCache->store($this->objCacheKey, $this->objData);
         }
     }
 

@@ -44,6 +44,7 @@ use Espo\Core\{
     Loaders\FileManager as FileManagerLoader,
     Loaders\DataManager as DataManagerLoader,
     Loaders\Metadata as MetadataLoader,
+    Loaders\DataCache as DataCacheLoader,
 };
 
 use ReflectionClass;
@@ -60,6 +61,7 @@ class Application
         'log' => LogLoader::class,
         'fileManager' => FileManagerLoader::class,
         'dataManager' => DataManagerLoader::class,
+        'dataCache' => DataCacheLoader::class,
         'metadata' => MetadataLoader::class,
     ];
 
