@@ -76,7 +76,6 @@ class ClassParser
             ];
         }
 
-
         if ($cacheKey && $this->dataCache->has($cacheKey) && $this->config->get('useCache')) {
             $data = $this->dataCache->get($cacheKey);
 

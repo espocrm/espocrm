@@ -115,8 +115,14 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
 
     function testGetDataWithNoCache()
     {
+        $this->dataCache
+            ->expects($this->once())
+            ->method('has')
+            ->with('entryPoints')
+            ->willReturn(true);
+
         $this->objects['config']
-            ->expects($this->exactly(1))
+            ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
 
@@ -148,8 +154,14 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
 
     function testGetDataWithNoCacheString()
     {
+        $this->dataCache
+            ->expects($this->once())
+            ->method('has')
+            ->with('entryPoints')
+            ->willReturn(true);
+
         $this->objects['config']
-            ->expects($this->exactly(1))
+            ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
 
