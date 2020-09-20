@@ -29,7 +29,13 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\File\Manager as FileManager,
+    Utils\File\Unifier,
+    Utils\Module,
+    Utils\Metadata\Helper,
+};
 
 class Metadata
 {
@@ -45,7 +51,7 @@ class Metadata
 
     private $fileManager;
 
-    private $moduleConfig;
+    private $module;
 
     private $metadataHelper;
 
@@ -55,66 +61,48 @@ class Metadata
 
     protected $objCacheFile = 'data/cache/application/objMetadata.php';
 
-    protected $paths = array(
+    protected $paths = [
         'corePath' => 'application/Espo/Resources/metadata',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/metadata',
         'customPath' => 'custom/Espo/Custom/Resources/metadata',
-    );
+    ];
 
     private $moduleList = null;
 
-    /**
-     * Default module order
-     * @var integer
-     */
     protected $defaultModuleOrder = 10;
 
-    private $deletedData = array();
+    private $deletedData = [];
 
-    private $changedData = array();
+    private $changedData = [];
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, $useCache = false)
+    public function __construct(FileManager $fileManager, bool $useCache = false)
     {
         $this->useCache = $useCache;
         $this->fileManager = $fileManager;
     }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getUnifier()
-    {
-        if (!isset($this->unifier)) {
-            $this->unifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this, false);
-        }
-
-        return $this->unifier;
-    }
-
     protected function getObjUnifier()
     {
         if (!isset($this->objUnifier)) {
-            $this->objUnifier = new \Espo\Core\Utils\File\Unifier($this->fileManager, $this, true);
+            $this->objUnifier = new Unifier($this->fileManager, $this, true);
         }
 
         return $this->objUnifier;
     }
 
-    protected function getModuleConfig()
+    protected function getModule()
     {
-        if (!isset($this->moduleConfig)) {
-            $this->moduleConfig = new \Espo\Core\Utils\Module($this->fileManager, $this->useCache);
+        if (!isset($this->module)) {
+            $this->module = new Module($this->fileManager, $this->useCache);
         }
 
-        return $this->moduleConfig;
+        return $this->module;
     }
 
     protected function getMetadataHelper()
     {
         if (!isset($this->metadataHelper)) {
-            $this->metadataHelper = new Metadata\Helper($this);
+            $this->metadataHelper = new Helper($this);
         }
 
         return $this->metadataHelper;
@@ -134,35 +122,37 @@ class Metadata
     }
 
     /**
-     * Init metadata
-     *
-     * @param  boolean $reload
-     * @return void
+     * Init metadata.
      */
-    public function init($reload = false)
+    public function init(bool $reload = false)
     {
         if (!$this->useCache) {
             $reload = true;
         }
 
         if (file_exists($this->cacheFile) && !$reload) {
-            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
-        } else {
-            $this->clearVars();
-            $objData = $this->getAllObjects(false, $reload);
-            $this->data = Util::objectToArray($objData);
+            $this->data = $this->fileManager->getPhpContents($this->cacheFile);
 
-            if ($this->useCache) {
-                $isSaved = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
-                if ($isSaved === false) {
-                    $GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
-                }
+            return;
+        }
+
+        $this->clearVars();
+
+        $objData = $this->getAllObjects(false, $reload);
+
+        $this->data = Util::objectToArray($objData);
+
+        if ($this->useCache) {
+            $isSaved = $this->fileManager->putPhpContents($this->cacheFile, $this->data);
+
+            if ($isSaved === false) {
+                $GLOBALS['log']->emergency('Metadata:init() - metadata has not been saved to a cache file');
             }
         }
     }
 
     /**
-     * Get metadata array
+     * Get metadata array.
      *
      * @return array
      */
@@ -176,7 +166,7 @@ class Metadata
     }
 
     /**
-    * Get Metadata
+    * Get Metadata.
     *
     * @param mixed string|array $key
     * @param mixed $default
@@ -186,11 +176,12 @@ class Metadata
     public function get($key = null, $default = null)
     {
         $result = Util::getValueByKey($this->getData(), $key, $default);
+
         return $result;
     }
 
     /**
-    * Get All Metadata context
+    * Get All Metadata context.
     *
     * @param $isJSON
     * @param bool $reload
@@ -206,6 +197,7 @@ class Metadata
         if ($isJSON) {
             return Json::encode($this->data);
         }
+
         return $this->data;
     }
 
@@ -216,16 +208,19 @@ class Metadata
         }
 
         if (file_exists($this->objCacheFile) && !$reload) {
-            $this->objData = $this->getFileManager()->getPhpContents($this->objCacheFile);
-        } else {
-            $this->objData = $this->getObjUnifier()->unify('metadata', $this->paths, true);
-            $this->objData = $this->addAdditionalFieldsObj($this->objData);
+            $this->objData = $this->fileManager->getPhpContents($this->objCacheFile);
 
-            if ($this->useCache) {
-                $isSaved = $this->getFileManager()->putPhpContents($this->objCacheFile, $this->objData, true);
-                if ($isSaved === false) {
-                    $GLOBALS['log']->emergency('Metadata:objInit() - metadata has not been saved to a cache file');
-                }
+            return;
+        }
+
+        $this->objData = $this->getObjUnifier()->unify('metadata', $this->paths, true);
+        $this->objData = $this->addAdditionalFieldsObj($this->objData);
+
+        if ($this->useCache) {
+            $isSaved = $this->fileManager->putPhpContents($this->objCacheFile, $this->objData, true);
+
+            if ($isSaved === false) {
+                $GLOBALS['log']->emergency('Metadata:objInit() - metadata has not been saved to a cache file');
             }
         }
     }
@@ -240,7 +235,7 @@ class Metadata
     }
 
     /**
-    * Get Object Metadata
+    * Get Metadata with StdClass items.
     *
     * @param mixed string|array $key
     * @param mixed $default
@@ -274,6 +269,7 @@ class Metadata
         foreach ($frontendHiddenPathList as $row) {
             $this->removeDataByPath($row, $data);
         }
+
         return $data;
     }
 
@@ -283,23 +279,36 @@ class Metadata
         $path = [&$p];
 
         foreach ($row as $i => $item) {
-            if (is_array($item)) break;
+            if (is_array($item)) {
+                break;
+            }
+
             if ($item === '__ANY__') {
                 foreach (get_object_vars($p) as &$v) {
-                    $this->removeDataByPath(array_slice($row, $i + 1), $v);
+                    $this->removeDataByPath(
+                        array_slice($row, $i + 1), $v
+                    );
                 }
+
                 return;
             }
-            if (!property_exists($p, $item)) break;
+            if (!property_exists($p, $item)) {
+                break;
+            }
+
             if ($i == count($row) - 1) {
                 unset($p->$item);
+
                 $o = &$p;
+
                 for ($j = $i - 1; $j > 0; $j--) {
                     if (is_object($o) && !count(get_object_vars($o))) {
                         $o = &$path[$j];
                         $k = $row[$j];
+
                         unset($o->$k);
-                    } else {
+                    }
+                    else {
                         break;
                     }
                 }
@@ -312,12 +321,13 @@ class Metadata
 
     protected function addAdditionalFieldsObj($data)
     {
-        if (!isset($data->entityDefs)) return $data;
+        if (!isset($data->entityDefs)) {
+            return $data;
+        }
 
         $fieldDefinitionList = Util::objectToArray($data->fields);
 
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
-
             if (isset($data->entityDefs->$entityType->collection)) {
 
                 $collectionItem = $data->entityDefs->$entityType->collection;
@@ -335,14 +345,24 @@ class Metadata
                 }
             }
 
-            if (!isset($entityDefsItem->fields)) continue;
-            foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
-                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
+            if (!isset($entityDefsItem->fields)) {
+                continue;
+            }
 
-                if (!$additionalFields) continue;
+            foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
+                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList(
+                    $field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList
+                );
+
+                if (!$additionalFields) {
+                    continue;
+                }
+
                 foreach ($additionalFields as $subFieldName => $subFieldParams) {
                     if (isset($entityDefsItem->fields->$subFieldName)) {
-                        $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(Util::arrayToObject($subFieldParams), $entityDefsItem->fields->$subFieldName);
+                        $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(
+                            Util::arrayToObject($subFieldParams), $entityDefsItem->fields->$subFieldName
+                        );
                     } else {
                         $data->entityDefs->$entityType->fields->$subFieldName = Util::arrayToObject($subFieldParams);
                     }
@@ -354,7 +374,7 @@ class Metadata
     }
 
     /**
-     * Get metadata definition in custom directory
+     * Get metadata definition in custom directory.
      *
      * @param  string|array $key
      * @param  mixed $default
@@ -364,7 +384,7 @@ class Metadata
     public function getCustom($key1, $key2, $default = null)
     {
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
-        $fileContent = $this->getFileManager()->getContents($filePath);
+        $fileContent = $this->fileManager->getContents($filePath);
 
         if ($fileContent) {
             return Json::decode($fileContent);
@@ -374,7 +394,8 @@ class Metadata
     }
 
     /**
-     * Set and save metadata in custom directory. The data is not merging with existing data. Use getCustom() to get existing data.
+     * Set and save metadata in custom directory.
+     * The data is not merging with existing data. Use getCustom() to get existing data.
      *
      * @param  string $key1
      * @param  string $key2
@@ -395,7 +416,7 @@ class Metadata
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $result = $this->getFileManager()->putContents($filePath, $changedData);
+        $result = $this->fileManager->putContents($filePath, $changedData);
 
         $this->init(true);
 
@@ -403,7 +424,7 @@ class Metadata
     }
 
     /**
-    * Set Metadata data
+    * Set Metadata data.
     * Ex. $key1 = menu, $key2 = Account then will be created a file metadataFolder/menu/Account.json
     *
     * @param  string $key1
@@ -435,7 +456,7 @@ class Metadata
     }
 
     /**
-     * Unset some fields and other stuff in metadat
+     * Unset some fields and other stuff in metadata.
      *
      * @param  string $key1
      * @param  string $key2
@@ -455,12 +476,16 @@ class Metadata
                 $fieldDefinitionList = $this->get('fields');
 
                 $unsetList = $unsets;
+
                 foreach ($unsetList as $unsetItem) {
                     if (preg_match('/fields\.([^\.]+)/', $unsetItem, $matches) && isset($matches[1])) {
                         $fieldName = $matches[1];
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 
-                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath, []), $fieldDefinitionList);
+                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList(
+                            $fieldName, $this->get($fieldPath, []), $fieldDefinitionList
+                        );
+
                         if (is_array($additionalFields)) {
                             foreach ($additionalFields as $additionalFieldName => $additionalFieldParams) {
                                 $unsets[] = 'fields.' . $additionalFieldName;
@@ -471,20 +496,22 @@ class Metadata
                 break;
         }
 
-        $normalizedData = array(
+        $normalizedData = [
             '__APPEND__',
-        );
-        $metadataUnsetData = array();
+        ];
+
+        $metadataUnsetData = [];
+
         foreach ($unsets as $unsetItem) {
             $normalizedData[] = $unsetItem;
-            $metadataUnsetData[] = implode('.', array($key1, $key2, $unsetItem));
+            $metadataUnsetData[] = implode('.', [$key1, $key2, $unsetItem]);
         }
 
-        $unsetData = array(
-            $key1 => array(
+        $unsetData = [
+            $key1 => [
                 $key2 => $normalizedData
-            )
-        );
+            ]
+        ];
 
         $this->deletedData = Util::merge($this->deletedData, $unsetData);
         $this->deletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
@@ -492,19 +519,12 @@ class Metadata
         $this->data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
     }
 
-    /**
-     * Undelete the deleted items
-     *
-     * @param  string $key1
-     * @param  string $key2
-     * @param  array $data
-     * @return void
-     */
     protected function undelete($key1, $key2, $data)
     {
         if (isset($this->deletedData[$key1][$key2])) {
             foreach ($this->deletedData[$key1][$key2] as $unsetIndex => $unsetItem) {
                 $value = Util::getValueByKey($data, $unsetItem);
+
                 if (isset($value)) {
                     unset($this->deletedData[$key1][$key2][$unsetIndex]);
                 }
@@ -513,19 +533,18 @@ class Metadata
     }
 
     /**
-     * Clear unsaved changes
-     *
-     * @return void
+     * Clear unsaved changes.
      */
     public function clearChanges()
     {
-        $this->changedData = array();
-        $this->deletedData = array();
+        $this->changedData = [];
+        $this->deletedData = [];
+
         $this->init(true);
     }
 
     /**
-     * Save changes
+     * Save changes.
      *
      * @return bool
      */
@@ -534,11 +553,12 @@ class Metadata
         $path = $this->paths['customPath'];
 
         $result = true;
+
         if (!empty($this->changedData)) {
             foreach ($this->changedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $data) {
                     if (!empty($data)) {
-                        $result &= $this->getFileManager()->mergeContents(array($path, $key1, $key2.'.json'), $data, true);
+                        $result &= $this->fileManager->mergeContents([$path, $key1, $key2.'.json'], $data, true);
                     }
                 }
             }
@@ -548,10 +568,16 @@ class Metadata
             foreach ($this->deletedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $unsetData) {
                     if (!empty($unsetData)) {
-                        $rowResult = $this->getFileManager()->unsetContents(array($path, $key1, $key2.'.json'), $unsetData, true);
+                        $rowResult = $this->fileManager->unsetContents(
+                            [$path, $key1, $key2.'.json'], $unsetData, true
+                        );
+
                         if ($rowResult == false) {
-                            $GLOBALS['log']->warning('Metadata items ['.$key1.'.'.$key2.'] can be deleted for custom code only.');
+                            $GLOBALS['log']->warning(
+                                'Metadata items ['.$key1.'.'.$key2.'] can be deleted for custom code only.'
+                            );
                         }
+
                         $result &= $rowResult;
                     }
                 }
@@ -568,30 +594,33 @@ class Metadata
     }
 
     /**
-     * Load modules
-     *
-     * @return void
+     * Load modules.
      */
     protected function loadModuleList()
     {
-        $modules = $this->getFileManager()->getFileList($this->pathToModules, false, '', false);
+        $modules = $this->fileManager->getFileList($this->pathToModules, false, '', false);
 
-        $modulesToSort = array();
+        $modulesToSort = [];
+
         if (is_array($modules)) {
             foreach ($modules as $moduleName) {
                 if (!empty($moduleName) && !isset($modulesToSort[$moduleName])) {
-                    $modulesToSort[$moduleName] = $this->getModuleConfig()->get($moduleName . '.order', $this->defaultModuleOrder);
+                    $modulesToSort[$moduleName] = $this->getModule()->get(
+                        $moduleName . '.order', $this->defaultModuleOrder
+                    );
                 }
             }
         }
 
-        array_multisort(array_values($modulesToSort), SORT_ASC, array_keys($modulesToSort), SORT_ASC, $modulesToSort);
+        array_multisort(
+            array_values($modulesToSort), SORT_ASC, array_keys($modulesToSort), SORT_ASC, $modulesToSort
+        );
 
         $this->moduleList = array_keys($modulesToSort);
     }
 
     /**
-     * Get Module List
+     * Get Module List.
      *
      * @return array
      */
@@ -605,19 +634,19 @@ class Metadata
     }
 
     /**
-     * Get module name if it's a custom module or empty string for core entity
+     * Get module name if it's a custom module or empty string for core entity.
      *
      * @param string $scopeName
      *
      * @return string
      */
-    public function getScopeModuleName($scopeName)
+    public function getScopeModuleName(string $scopeName)
     {
         return $this->get('scopes.' . $scopeName . '.module', false);
     }
 
     /**
-     * Clear metadata variables when reload meta
+     * Clear metadata variables when reload metadata.
      *
      * @return void
      */
