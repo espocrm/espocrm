@@ -31,16 +31,13 @@ namespace Espo\Core\Utils;
 
 class Util
 {
-    /**
-     * @var string - default directory separator
-     */
     protected static $separator = DIRECTORY_SEPARATOR;
 
     protected static $reservedWordList = ['Case'];
 
 
     /**
-     * Get a folder separator
+     * Get a folder separator.
      *
      * @return string
      */
@@ -61,7 +58,7 @@ class Util
 
 
     /**
-     * Convert to format with defined delimeter
+     * Convert to format with defined delimeter.
      * ex. Espo/Utils to Espo\Utils
      *
      * @param string $name
@@ -76,7 +73,7 @@ class Util
 
 
     /**
-     * Convert name to Camel Case format, ex. camel_case to camelCase
+     * Convert name to Camel Case format, ex. camel_case to camelCase.
      *
      * @param  string  $name
      * @param  string | array  $symbol
@@ -126,9 +123,13 @@ class Util
         }
 
         $name[0] = strtolower($name[0]);
-        return preg_replace_callback('/([A-Z])/', function ($matches) use ($symbol) {
-                     return $symbol . strtolower($matches[1]);
-                }, $name);
+        return preg_replace_callback(
+            '/([A-Z])/',
+            function ($matches) use ($symbol) {
+                return $symbol . strtolower($matches[1]);
+            },
+            $name
+        );
     }
 
     /**
@@ -145,7 +146,7 @@ class Util
     }
 
     /**
-     * Merge arrays recursively (default PHP function is not suitable)
+     * Merge arrays recursively (default PHP function is not suitable).
      *
      * @param array $currentArray
      * @param array $newArray - chief array (priority is same as for array_merge())
@@ -191,7 +192,7 @@ class Util
     }
 
     /**
-     * Unset a value in array recursively
+     * Unset a value in array recursively.
      *
      * @param  string $needle
      * @param  array  $haystack
@@ -223,7 +224,7 @@ class Util
     }
 
     /**
-     * Get a full path of the file
+     * Get a full path of the file.
      *
      * @param string | array $folderPath - Folder path, Ex. myfolder
      * @param string $filePath - File path, Ex. file.json
@@ -255,7 +256,7 @@ class Util
     }
 
     /**
-     * Fix path separator
+     * Fix path separator.
      *
      * @param  string $path
      * @return string
@@ -266,7 +267,7 @@ class Util
     }
 
     /**
-     * Convert array to object format recursively
+     * Convert array to object format recursively.
      *
      * @param array $array
      * @return object
@@ -281,7 +282,7 @@ class Util
     }
 
     /**
-     * Convert object to array format recursively
+     * Convert object to array format recursively.
      *
      * @param object $object
      * @return array
@@ -327,7 +328,7 @@ class Util
     }
 
     /**
-    * Get Naming according to prefix or postfix type
+    * Get Naming according to prefix or postfix type.
     *
     * @param string $name
     * @param string $prePostFix
@@ -347,7 +348,7 @@ class Util
     }
 
     /**
-     * Replace $search in array recursively
+     * Replace $search in array recursively.
      *
      * @param string $search
      * @param string $replace
@@ -377,7 +378,7 @@ class Util
     }
 
     /**
-     * Unset content items defined in the unset.json
+     * Unset content items defined in the unset.json.
      *
      * @param array $content
      * @param string | array $unsets in format
@@ -449,7 +450,7 @@ class Util
 
 
     /**
-     * Get class name from the file path
+     * Get class name from the file path.
      *
      * @param  string $filePath
      *
@@ -506,7 +507,7 @@ class Util
     }
 
     /**
-     * Check if two variables are equals
+     * Check if two variables are equals.
      *
      * @param  mixed  $var1
      * @param  mixed  $var2
@@ -525,7 +526,7 @@ class Util
     }
 
     /**
-     * Sort array recursively
+     * Sort array recursively.
      * @param  array $array
      * @return bool
      */
@@ -593,7 +594,7 @@ class Util
     }
 
     /**
-     * Improved computing the difference of arrays
+     * Improved computing the difference of arrays.
      *
      * @param  array  $array1
      * @param  array  $array2
@@ -621,7 +622,7 @@ class Util
     }
 
     /**
-     * Fill array with specified keys
+     * Fill array with specified keys.
      *
      * @param  array|string $keys
      * @param  mixed $value
@@ -643,7 +644,7 @@ class Util
     }
 
     /**
-     * Array keys exists
+     * Array keys exists.
      *
      * @param  array  $keys
      * @param  array  $array
@@ -749,7 +750,7 @@ class Util
     }
 
     /**
-     * Sanitize Html code
+     * Sanitize Html code.
      * @param  string $text
      * @param  array  $permittedHtmlTags - Allows only html tags without parameters like <p></p>, <br>, etc.
      * @return string
