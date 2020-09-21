@@ -43,6 +43,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\FieldUtil,
     Utils\File\Manager as FileManager,
+    Utils\DataCache,
 };
 
 use Traversable;
@@ -64,9 +65,9 @@ class Table extends \Espo\Core\Acl\Table
         User $user,
         Portal $portal,
         Config $config = null,
-        FileManager $fileManager = null,
         Metadata $metadata = null,
-        FieldUtil $fieldUtil = null
+        FieldUtil $fieldUtil = null,
+        DataCache $dataCache
     ) {
         if (empty($portal)) {
             throw new Error("No portal was passed to AclPortal\\Table constructor.");
@@ -74,7 +75,7 @@ class Table extends \Espo\Core\Acl\Table
 
         $this->portal = $portal;
 
-        parent::__construct($entityManager, $user, $config, $fileManager, $metadata, $fieldUtil);
+        parent::__construct($entityManager, $user, $config, $metadata, $fieldUtil, $dataCache);
     }
 
     protected function getPortal()
@@ -82,9 +83,9 @@ class Table extends \Espo\Core\Acl\Table
         return $this->portal;
     }
 
-    protected function initCacheFilePath()
+    protected function initCacheKey()
     {
-        $this->cacheFilePath = 'data/cache/application/acl-portal/'.$this->getPortal()->id.'/' . $this->getUser()->id . '.php';
+        $this->cacheKey = 'aclPortal/' . $this->getPortal()->id.'/' . $this->getUser()->id;
     }
 
     protected function getRoleList()
