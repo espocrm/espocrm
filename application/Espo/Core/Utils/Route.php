@@ -29,13 +29,19 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\Config,
+    Utils\Metadata,
+    Utils\File\Manager as FileManager,
+    Utils\DataCache,
+};
 
 class Route
 {
     protected $data = null;
 
-    protected $cacheFile = 'data/cache/application/routes.php';
+    protected $cacheKey = 'routes';
 
     protected $paths = [
         'corePath' => 'application/Espo/Resources/routes.json',
@@ -43,15 +49,17 @@ class Route
         'customPath' => 'custom/Espo/Custom/Resources/routes.json',
     ];
 
-    private $fileManager;
     private $config;
     private $metadata;
+    private $fileManager;
+    private $dataCache;
 
-    public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
+    public function __construct(Config $config, Metadata $metadata, FileManager $fileManager, DataCache $dataCache)
     {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
+        $this->dataCache = $dataCache;
     }
 
     /**
@@ -70,8 +78,8 @@ class Route
     {
         $useCache = $this->config->get('useCache');
 
-        if (file_exists($this->cacheFile) && $useCache) {
-            $this->data = $this->fileManager->getPhpContents($this->cacheFile);
+        if ($this->dataCache->has($this->cacheKey) && $useCache) {
+            $this->data = $this->dataCache->get($this->cacheKey);
 
             return;
         }
@@ -79,17 +87,10 @@ class Route
         $this->data = $this->unify();
 
         if ($useCache) {
-            $result = $this->fileManager->putPhpContents($this->cacheFile, $this->data);
-
-            if ($result == false) {
-                throw new Error('Route - Cannot save unified routes');
-            }
+            $this->dataCache->store($this->cacheKey, $this->data);
         }
     }
 
-    /**
-     * Unify routes.
-     */
     protected function unify() : array
     {
         $data = $this->addDataFromFile([], $this->paths['customPath']);
