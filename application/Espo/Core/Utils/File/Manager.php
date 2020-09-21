@@ -927,7 +927,7 @@ class Manager
             "return " . $this->varExport($content) . ";\n";
     }
 
-    protected function varExport($variable, $level = 0)
+    protected function varExport($variable, int $level = 0)
     {
         $tab = '';
         $tabElement = '  ';
@@ -939,22 +939,24 @@ class Manager
         $prevTab = substr($tab, 0, strlen($tab) - strlen($tabElement));
 
         if ($variable instanceof StdClass) {
-            $result = "(object) " . $this->varExport(get_object_vars($variable), $level);
+            return "(object) " . $this->varExport(get_object_vars($variable), $level);
         }
-        else if (is_array($variable)) {
+
+        if (is_array($variable)) {
             $array = [];
 
             foreach ($variable as $key => $value) {
                 $array[] = var_export($key, true) . " => " . $this->varExport($value, $level + 1);
             }
 
-            $result = "[\n" . $tab . implode(",\n" . $tab, $array) . "\n" . $prevTab . "]";
-        }
-        else {
-            $result = var_export($variable, true);
+            if (count($array) === 0) {
+                return "[]";
+            }
+
+            return "[\n" . $tab . implode(",\n" . $tab, $array) . "\n" . $prevTab . "]";
         }
 
-        return $result;
+        return var_export($variable, true);
     }
 
     /**
