@@ -31,7 +31,7 @@ namespace Espo\Core\Webhook;
 
 use Espo\Core\{
     Utils\Config,
-    Utils\File\Manager as FileManager,
+    Utils\DataCache,
     Utils\FieldUtil,
     ORM\EntityManager,
     ORM\Entity,
@@ -42,25 +42,25 @@ use Espo\Core\{
  */
 class Manager
 {
-    private $cacheFile = 'data/cache/application/webhooks.php';
+    private $cacheKey = 'webhooks';
 
     protected $skipAttributeList = ['isFollowed', 'modifiedAt', 'modifiedBy'];
 
     private $data = null;
 
     protected $config;
-    protected $fileManager;
+    protected $dataCache;
     protected $entityManager;
     protected $fieldUtil;
 
     public function __construct(
         Config $config,
-        FileManager $fileManager,
+        DataCache $dataCache,
         EntityManager $entityManager,
         FieldUtil $fieldUtil
     ) {
         $this->config = $config;
-        $this->fileManager = $fileManager;
+        $this->dataCache = $dataCache;
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
 
@@ -70,10 +70,8 @@ class Manager
     private function loadData()
     {
         if ($this->config->get('useCache')) {
-            if ($this->fileManager->isFile($this->cacheFile)) {
-                if (file_exists($this->cacheFile)) {
-                    $this->data = $this->fileManager->getPhpContents($this->cacheFile);
-                }
+            if ($this->dataCache->has($this->cacheKey)) {
+                $this->data = $this->dataCache->get($this->cacheKey);
             }
         }
 
@@ -88,7 +86,7 @@ class Manager
 
     private function storeDataToCache()
     {
-        $this->fileManager->putPhpContents($this->cacheFile, $this->data);
+        $this->dataCache->store($this->cacheKey, $this->data);
     }
 
     private function buildData()
@@ -128,13 +126,18 @@ class Manager
      */
     public function removeEvent(string $event)
     {
-        $notExists = !$this->entityManager->getRepository('Webhook')->select(['id'])->where([
-            'event' => $event,
-            'isActive' => true,
-        ])->findOne();
+        $notExists = !$this->entityManager
+            ->getRepository('Webhook')
+            ->select(['id'])
+            ->where([
+                'event' => $event,
+                'isActive' => true,
+            ])
+            ->findOne();
 
         if ($notExists) {
             unset($this->data[$event]);
+
             if ($this->config->get('useCache')) {
                 $this->storeDataToCache();
             }
@@ -158,7 +161,9 @@ class Manager
     {
         $event = $entity->getEntityType() . '.create';
 
-        if (!$this->eventExists($event)) return;
+        if (!$this->eventExists($event)) {
+            return;
+        }
 
         $this->entityManager->createEntity('WebhookEventQueueItem', [
             'event' => $event,
@@ -177,7 +182,9 @@ class Manager
     {
         $event = $entity->getEntityType() . '.delete';
 
-        if (!$this->eventExists($event)) return;
+        if (!$this->eventExists($event)) {
+            return;
+        }
 
         $this->entityManager->createEntity('WebhookEventQueueItem', [
             'event' => $event,
@@ -199,14 +206,20 @@ class Manager
         $event = $entity->getEntityType() . '.update';
 
         $data = (object) [];
+
         foreach ($entity->getAttributeList() as $attribute) {
-            if (in_array($attribute, $this->skipAttributeList)) continue;
+            if (in_array($attribute, $this->skipAttributeList)) {
+                continue;
+            }
+
             if ($entity->isAttributeChanged($attribute)) {
                 $data->$attribute = $entity->get($attribute);
             }
         }
 
-        if (!count(get_object_vars($data))) return;
+        if (!count(get_object_vars($data))) {
+            return;
+        }
 
         $data->id = $entity->id;
 
@@ -222,14 +235,22 @@ class Manager
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($entity->getEntityType()) as $field) {
             $itemEvent = $entity->getEntityType() . '.fieldUpdate.' . $field;
-            if (!$this->eventExists($itemEvent)) continue;
+
+            if (!$this->eventExists($itemEvent)) {
+                continue;
+            }
 
             $attributeList = $this->fieldUtil->getActualAttributeList($entity->getEntityType(), $field);
             $isChanged = false;
+
             foreach ($attributeList as $attribute) {
-                if (in_array($attribute, $this->skipAttributeList)) continue;
+                if (in_array($attribute, $this->skipAttributeList)) {
+                    continue;
+                }
+
                 if (property_exists($data, $attribute)) {
                     $isChanged = true;
+
                     break;
                 }
             }
@@ -238,8 +259,12 @@ class Manager
                 $itemData = (object) [];
                 $itemData->id = $entity->id;
                 $attributeList = $this->fieldUtil->getAttributeList($entity->getEntityType(), $field);
+
                 foreach ($attributeList as $attribute) {
-                    if (in_array($attribute, $this->skipAttributeList)) continue;
+                    if (in_array($attribute, $this->skipAttributeList)) {
+                        continue;
+                    }
+
                     $itemData->$attribute = $entity->get($attribute);
                 }
 
