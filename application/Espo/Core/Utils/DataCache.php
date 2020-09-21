@@ -108,7 +108,7 @@ class DataCache
     {
         if (
             $key === '' ||
-            preg_match('/[^a-zA-Z0-9\/]/i', $key) ||
+            preg_match('/[^a-zA-Z0-9_\/]/i', $key) ||
             $key[0] === '/' ||
             substr($key, -1) === '/'
         ) {

@@ -36,6 +36,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\File\Unifier as FileUnifier,
     Utils\Config,
+    Utils\DataCache,
 };
 
 use Espo\{
@@ -58,8 +59,6 @@ class Language
 
     private $currentLanguage = null;
 
-    protected $cacheFile = 'data/cache/application/languages/{language}.php';
-
     protected $defaultLanguage = 'en_US';
 
     protected $useCache = false;
@@ -73,7 +72,12 @@ class Language
     ];
 
     public function __construct(
-        ?string $language = null, FileManager $fileManager, Metadata $metadata, bool $useCache = false, bool $noCustom = false
+        ?string $language = null,
+        FileManager $fileManager,
+        Metadata $metadata,
+        DataCache $dataCache,
+        bool $useCache = false,
+        bool $noCustom = false
     ) {
         if ($language) {
             $this->currentLanguage = $language;
@@ -83,6 +87,7 @@ class Language
 
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
+        $this->dataCache = $dataCache;
 
         $this->useCache = $useCache;
         $this->noCustom = $noCustom;
@@ -135,13 +140,11 @@ class Language
         $this->currentLanguage = $language;
     }
 
-    protected function getCacheFile(string $language = null) : string
+    protected function getCacheKey(string $language = null) : string
     {
         $language = $language ?? $this->getLanguage();
 
-        $langCacheFile = str_replace('{language}', $language, $this->cacheFile);
-
-        return $langCacheFile;
+        return 'languages/' . $language;
     }
 
     /**
@@ -323,12 +326,14 @@ class Language
             foreach ($name as $rowLabel) {
                 $this->delete($scope, $category, $rowLabel);
             }
+
             return;
         }
 
         $this->deletedData[$scope][$category][] = $name;
 
         $currentLanguage = $this->getLanguage();
+
         if (!isset($this->data[$currentLanguage])) {
             $this->init();
         }
@@ -367,9 +372,9 @@ class Language
     {
         if ($reload || !isset($this->data[$language])) {
 
-            $cacheFile = $this->getCacheFile($language);
+            $cacheKey = $this->getCacheKey($language);
 
-            if (!$this->useCache || !file_exists($cacheFile) || $reload) {
+            if (!$this->useCache || !$this->dataCache->has($cacheKey) || $reload) {
 
                 $paths = $this->paths;
 
@@ -394,15 +399,12 @@ class Language
                 $this->data[$language] = $data;
 
                 if ($this->useCache) {
-                    $putResult = $this->getFileManager()->putPhpContents($cacheFile, $data);
-                    if (!$putResult) {
-                        $GLOBALS['log']->error("Language: Could not store cache file for {$language}");
-                    }
+                    $this->dataCache->store($cacheKey, $data);
                 }
             }
 
             if ($this->useCache) {
-                $this->data[$language] = $this->getFileManager()->getPhpContents($cacheFile);
+                $this->data[$language] = $this->dataCache->get($cacheKey);
             }
         }
 

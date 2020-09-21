@@ -31,6 +31,11 @@ namespace tests\unit\Espo\Core\Utils;
 
 use tests\unit\ReflectionHelper;
 
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+
 class LanguageTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -38,8 +43,6 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     protected $objects;
 
     protected $reflection;
-
-    protected $cacheFile = 'tests/unit/testData/cache/application/languages/{language}.php';
 
     protected $paths = [
         'corePath' => 'tests/unit/testData/Utils/I18n/Espo/Resources/i18n/{language}',
@@ -49,22 +52,24 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+        $this->fileManager = new FileManager();
 
+        $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
-        $this->objects['metadata']->expects($this->any())
-             ->method('getModuleList')
-             ->will($this->returnValue(
-                [
-                  'Crm',
-                ]
-             ));
+        $this->metadata = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\Language(null, $this->objects['fileManager'], $this->objects['metadata'], false);
+        $this->metadata->expects($this->any())
+        ->method('getModuleList')
+        ->will($this->returnValue(
+            [
+                'Crm',
+            ]
+        ));
+
+        $this->object = new Language(null, $this->fileManager, $this->metadata, $this->dataCache, false);
 
         $this->reflection = new ReflectionHelper($this->object);
-        $this->reflection->setProperty('cacheFile', $this->cacheFile);
+
         $this->reflection->setProperty('paths', $this->paths);
         $this->reflection->setProperty('currentLanguage', 'en_US');
     }
@@ -74,7 +79,6 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->object = NULL;
     }
 
-
     public function testLanguage()
     {
         $this->assertEquals('en_US', $this->object->getLanguage());
@@ -82,21 +86,6 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $originalLang = $this->object->getLanguage();
         $this->object->setLanguage('lang_TEST');
         $this->assertEquals('lang_TEST', $this->object->getLanguage());
-
-        $this->object->setLanguage($originalLang);
-    }
-
-    public function testGetLangCacheFile()
-    {
-        $cacheFile = $this->cacheFile;
-
-        $result = str_replace('{language}', 'en_US', $cacheFile);
-        $this->assertEquals($result, $this->reflection->invokeMethod('getCacheFile'));
-
-        $originalLang = $this->object->getLanguage();
-        $this->object->setLanguage('lang_TEST');
-        $result = str_replace('{language}', 'lang_TEST', $cacheFile);
-        $this->assertEquals($result, $this->reflection->invokeMethod('getCacheFile'));
 
         $this->object->setLanguage($originalLang);
     }
