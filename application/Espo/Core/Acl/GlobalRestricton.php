@@ -31,9 +31,11 @@ namespace Espo\Core\Acl;
 
 use Espo\Core\{
     Utils\Metadata,
-    Utils\File\Manager as FileManager,
+    Utils\DataCache,
     Utils\FieldUtil,
 };
+
+use StdClass;
 
 /**
  * Lists of restricted fields can be obtained from here. Restricted fields are specified in metadata > entityAcl.
@@ -56,32 +58,32 @@ class GlobalRestricton
         'nonAdminReadOnly' // read-only for non-admin users
     ];
 
-    protected $cacheFilePath = 'data/cache/application/entityAcl.php';
-
-    private $metadata;
-
-    private $fileManager;
-
-    private $fieldUtil;
-
     private $data;
 
+    protected $cacheKey = 'entityAcl';
+
+    private $metadata;
+    private $dataCache;
+    private $fieldUtil;
+
     public function __construct(
-        Metadata $metadata, FileManager $fileManager, FieldUtil $fieldUtil, bool $useCache = true
+        Metadata $metadata, DataCache $dataCache, FieldUtil $fieldUtil, bool $useCache = true
     ) {
         $this->metadata = $metadata;
-        $this->fileManager = $fileManager;
+        $this->dataCache = $dataCache;
         $this->fieldUtil = $fieldUtil;
 
         $isFromCache = false;
 
         if ($useCache) {
-            if (file_exists($this->cacheFilePath)) {
-                $this->data = include($this->cacheFilePath);
+            if ($this->dataCache->has($this->cacheKey)) {
+                $this->data = $this->dataCache->get($this->cacheKey);
+
                 $isFromCache = true;
 
-                if (!($this->data instanceof \StdClass)) {
+                if (! $this->data instanceof StdClass) {
                     $GLOBALS['log']->error("ACL GlobalRestricton: Bad data fetched from cache.");
+
                     $this->data = null;
                 }
             }
@@ -100,25 +102,25 @@ class GlobalRestricton
 
     protected function storeCacheFile()
     {
-        $this->getFileManager()->putPhpContents($this->cacheFilePath, $this->data, true);
+        $this->dataCache->store($this->cacheKey, $this->data, true);
     }
 
     protected function buildData()
     {
-        $scopeList = array_keys($this->getMetadata()->get(['entityDefs'], []));
+        $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
 
         $data = (object) [];
 
         foreach ($scopeList as $scope) {
-            $fieldList = array_keys($this->getMetadata()->get(['entityDefs', $scope, 'fields'], []));
-            $linkList = array_keys($this->getMetadata()->get(['entityDefs', $scope, 'links'], []));
+            $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields'], []));
+            $linkList = array_keys($this->metadata->get(['entityDefs', $scope, 'links'], []));
 
             $isNotEmpty = false;
 
             $scopeData = (object) [
                 'fields' => (object) [],
                 'attributes' => (object) [],
-                'links' => (object) []
+                'links' => (object) [],
             ];
 
             foreach ($this->fieldTypeList as $type) {
@@ -126,10 +128,13 @@ class GlobalRestricton
                 $resultAttributeList = [];
 
                 foreach ($fieldList as $field) {
-                    if ($this->getMetadata()->get(['entityAcl', $scope, 'fields', $field, $type])) {
+                    if ($this->metadata->get(['entityAcl', $scope, 'fields', $field, $type])) {
                         $isNotEmpty = true;
+
                         $resultFieldList[] = $field;
-                        $fieldAttributeList = $this->getFieldUtil()->getAttributeList($scope, $field);
+
+                        $fieldAttributeList = $this->fieldUtil->getAttributeList($scope, $field);
+
                         foreach ($fieldAttributeList as $attribute) {
                             $resultAttributeList[] = $attribute;
                         }
@@ -141,9 +146,11 @@ class GlobalRestricton
             }
             foreach ($this->linkTypeList as $type) {
                 $resultLinkList = [];
+
                 foreach ($linkList as $link) {
-                    if ($this->getMetadata()->get(['entityAcl', $scope, 'links', $link, $type])) {
+                    if ($this->metadata->get(['entityAcl', $scope, 'links', $link, $type])) {
                         $isNotEmpty = true;
+
                         $resultLinkList[] = $link;
                     }
                 }
@@ -158,44 +165,52 @@ class GlobalRestricton
         $this->data = $data;
     }
 
-    protected function getMetadata()
+    public function getScopeRestrictedFieldList(string $scope, string $type) : array
     {
-        return $this->metadata;
-    }
+        if (!property_exists($this->data, $scope)) {
+            return [];
+        }
+        if (!property_exists($this->data->$scope, 'fields')) {
+            return [];
+        }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getFieldUtil()
-    {
-        return $this->fieldUtil;
-    }
-
-    public function getScopeRestrictedFieldList($scope, $type)
-    {
-        if (!property_exists($this->data, $scope)) return [];
-        if (!property_exists($this->data->$scope, 'fields')) return [];
-        if (!property_exists($this->data->$scope->fields, $type)) return [];
+        if (!property_exists($this->data->$scope->fields, $type)) {
+            return [];
+        }
 
         return $this->data->$scope->fields->$type;
     }
 
-    public function getScopeRestrictedAttributeList($scope, $type)
+    public function getScopeRestrictedAttributeList(string $scope, string $type) : array
     {
-        if (!property_exists($this->data, $scope)) return [];
-        if (!property_exists($this->data->$scope, 'attributes')) return [];
-        if (!property_exists($this->data->$scope->attributes, $type)) return [];
+        if (!property_exists($this->data, $scope)) {
+            return [];
+        }
+
+        if (!property_exists($this->data->$scope, 'attributes')) {
+            return [];
+        }
+
+        if (!property_exists($this->data->$scope->attributes, $type)) {
+            return [];
+        }
 
         return $this->data->$scope->attributes->$type;
     }
 
-    public function getScopeRestrictedLinkList($scope, $type)
+    public function getScopeRestrictedLinkList(string $scope, string $type) : array
     {
-        if (!property_exists($this->data, $scope)) return [];
-        if (!property_exists($this->data->$scope, 'links')) return [];
-        if (!property_exists($this->data->$scope->links, $type)) return [];
+        if (!property_exists($this->data, $scope)) {
+            return [];
+        }
+
+        if (!property_exists($this->data->$scope, 'links')) {
+            return [];
+        }
+
+        if (!property_exists($this->data->$scope->links, $type)) {
+            return [];
+        }
 
         return $this->data->$scope->links->$type;
     }
