@@ -920,19 +920,17 @@ class Manager
 
         if (!$withObjects) {
             return "<?php\n" .
-                "return " . var_export($content, true) . ";\n".
-                "?>";
+                "return " . var_export($content, true) . ";\n";
         }
 
         return "<?php\n" .
-            "return " . $this->varExport($content) . ";\n".
-            "?>";
+            "return " . $this->varExport($content) . ";\n";
     }
 
     public function varExport($variable, $level = 0)
     {
         $tab = '';
-        $tabElement = '    ';
+        $tabElement = '  ';
 
         for ($i = 0; $i <= $level; $i++) {
             $tab .= $tabElement;
