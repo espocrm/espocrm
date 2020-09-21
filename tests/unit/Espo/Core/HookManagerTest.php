@@ -31,6 +31,15 @@ namespace tests\unit\Espo\Core;
 
 use tests\unit\ReflectionHelper;
 
+use Espo\Core\{
+    HookManager,
+    InjectableFactory,
+    Utils\Metadata,
+    Utils\Config,
+    Utils\File\Manager as FileManager,
+    Utils\DataCache,
+};
+
 class HookManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -42,23 +51,26 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
     protected function setUp() : void
     {
 
-        $this->objects['metadata'] =
-            $this->getMockBuilder('Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->metadata =
+            $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['config'] =
-            $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $this->config =
+            $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['injectableFactory'] =
-            $this->getMockBuilder('Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
+        $this->injectableFactory =
+            $this->getMockBuilder(InjectableFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+        $this->dataCache =
+            $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
 
+        $this->fileManager = new FileManager();
 
-        $this->object = new \Espo\Core\HookManager(
-            $this->objects['injectableFactory'],
-            $this->objects['fileManager'],
-            $this->objects['metadata'],
-            $this->objects['config']
+        $this->object = new HookManager(
+            $this->injectableFactory,
+            $this->fileManager,
+            $this->metadata,
+            $this->config,
+            $this->dataCache
         );
 
         $this->reflection = new ReflectionHelper($this->object);
@@ -73,9 +85,9 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
     public function testIsHookExists()
     {
         $data = array (
-            '\\Espo\\Hooks\\Note\\Stream' => 8,
-            '\\Espo\\Hooks\\Note\\Mentions' => 9,
-            '\\Espo\\Hooks\\Note\\Notifications' => 14,
+            'Espo\\Hooks\\Note\\Stream' => 8,
+            'Espo\\Hooks\\Note\\Mentions' => 9,
+            'Espo\\Hooks\\Note\\Notifications' => 14,
         );
 
         $data = array (
@@ -93,11 +105,21 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
           ),
         );
 
-        $this->assertTrue( $this->reflection->invokeMethod('hookExists', array('Espo\\Hooks\\Note\\Mentions', $data)) );
-        $this->assertTrue( $this->reflection->invokeMethod('hookExists', array('Espo\\Modules\\Crm\\Hooks\\Note\\Mentions', $data)) );
-        $this->assertTrue( $this->reflection->invokeMethod('hookExists', array('Espo\\Modules\\Test\\Hooks\\Note\\Mentions', $data)) );
-        $this->assertTrue( $this->reflection->invokeMethod('hookExists', array('Espo\\Modules\\Test\\Hooks\\Common\\Stream', $data)) );
-        $this->assertFalse( $this->reflection->invokeMethod('hookExists', array('Espo\\Hooks\\Note\\TestHook', $data)) );
+        $this->assertTrue(
+            $this->reflection->invokeMethod('hookExists', array('Espo\\Hooks\\Note\\Mentions', $data))
+        );
+        $this->assertTrue(
+            $this->reflection->invokeMethod('hookExists', array('Espo\\Modules\\Crm\\Hooks\\Note\\Mentions', $data))
+        );
+        $this->assertTrue(
+            $this->reflection->invokeMethod('hookExists', array('Espo\\Modules\\Test\\Hooks\\Note\\Mentions', $data))
+        );
+        $this->assertTrue(
+            $this->reflection->invokeMethod('hookExists', array('Espo\\Modules\\Test\\Hooks\\Common\\Stream', $data))
+        );
+        $this->assertFalse(
+            $this->reflection->invokeMethod('hookExists', array('Espo\\Hooks\\Note\\TestHook', $data))
+        );
     }
 
     public function testSortHooks()
@@ -219,12 +241,12 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
             'customPath' => $this->filesPath . '/testCase1/custom/Espo/Custom/Hooks',
         ));
 
-        $this->objects['config']
+        $this->config
             ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
             ->will($this->returnValue(array(
@@ -258,12 +280,12 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
             'customPath' => $this->filesPath . '/testCase2/custom/Espo/Custom/Hooks',
         ));
 
-        $this->objects['config']
+        $this->config
             ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
             ->will($this->returnValue(array(
@@ -298,12 +320,12 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
             'customPath' => $this->filesPath . '/testCase2/custom/Espo/Custom/Hooks',
         ));
 
-        $this->objects['config']
+        $this->config
             ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
             ->will($this->returnValue(array(
@@ -338,12 +360,12 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
             'customPath' => $this->filesPath . '/testCase3/custom/Espo/Custom/Hooks',
         ));
 
-        $this->objects['config']
+        $this->config
             ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->at(0))
             ->method('getModuleList')
             ->will($this->returnValue(array(
