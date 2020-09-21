@@ -69,7 +69,7 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $fieldDefs = get_object_vars(json_decode($this->jsonFieldDefs));
 
         $fieldManager->create('Account', 'testEnum', $fieldDefs);
-        $this->getContainer()->get('dataManager')->rebuild('Account');
+        $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 
@@ -110,7 +110,7 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $fieldDefs['readOnly'] = true;
 
         $fieldManager->update('Account', 'testEnum', $fieldDefs);
-        $this->getContainer()->get('dataManager')->rebuild('Account');
+        $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 

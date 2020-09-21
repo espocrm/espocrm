@@ -70,7 +70,7 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
 
         $fieldManager->create('Account', 'testArray', $fieldDefs);
 
-        $this->getContainer()->get('dataManager')->rebuild('Account');
+        $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 
@@ -109,7 +109,7 @@ class ArrayTypeTest extends \tests\integration\Core\BaseTestCase
 
         $fieldManager->update('Account', 'testArray', $fieldDefs);
 
-        $this->getContainer()->get('dataManager')->rebuild('Account');
+        $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 
