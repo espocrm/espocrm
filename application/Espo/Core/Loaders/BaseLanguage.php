@@ -34,6 +34,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\File\Manager as FileManager,
     Utils\Language as LanguageService,
+    Utils\DataCache,
 };
 
 class BaseLanguage implements Loader
@@ -41,12 +42,14 @@ class BaseLanguage implements Loader
     protected $fileManager;
     protected $config;
     protected $metadata;
+    protected $dataCache;
 
-    public function __construct(FileManager $fileManager, Config $config, Metadata $metadata)
+    public function __construct(FileManager $fileManager, Config $config, Metadata $metadata, DataCache $dataCache)
     {
         $this->fileManager = $fileManager;
         $this->config = $config;
         $this->metadata = $metadata;
+        $this->dataCache = $dataCache;
     }
 
     public function load() : LanguageService
@@ -55,6 +58,7 @@ class BaseLanguage implements Loader
             'en_US',
             $this->fileManager,
             $this->metadata,
+            $this->dataCache,
             $this->config->get('useCache')
         );
     }

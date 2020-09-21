@@ -67,7 +67,7 @@ class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
         $fieldDefs = get_object_vars(json_decode($this->jsonFieldDefs));
 
         $fieldManager->create('Account', 'testVarchar', $fieldDefs);
-        $this->getContainer()->get('dataManager')->rebuild('Account');
+        $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 
@@ -106,7 +106,7 @@ class VarcharTypeTest extends \tests\integration\Core\BaseTestCase
         $fieldDefs['default'] = 'default-value';
 
         $fieldManager->update('Account', 'testVarchar', $fieldDefs);
-        $this->getContainer()->get('dataManager')->rebuild('Account');
+        $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 

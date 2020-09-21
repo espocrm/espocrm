@@ -41,6 +41,7 @@ class DefaultLanguage extends BaseLanguage
             LanguageService::detectLanguage($this->config),
             $this->fileManager,
             $this->metadata,
+            $this->dataCache,
             $this->config->get('useCache')
         );
     }

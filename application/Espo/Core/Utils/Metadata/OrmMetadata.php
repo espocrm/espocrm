@@ -35,34 +35,35 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\Config,
     Utils\Database\Converter,
+    Utils\DataCache,
     Exceptions\Error,
 };
 
 class OrmMetadata
 {
-    protected $data = [];
+    protected $data = null;
 
-    protected $cacheFile = 'data/cache/application/ormMetadata.php';
-
-    protected $metadata;
-
-    protected $fileManager;
-
-    protected $config;
+    protected $cacheKey = 'ormMetadata';
 
     protected $useCache;
 
-    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config)
+    protected $metadata;
+    protected $fileManager;
+    protected $dataCache;
+    protected $config;
+
+    public function __construct(Metadata $metadata, FileManager $fileManager, DataCache $dataCache, Config $config)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
+        $this->dataCache = $dataCache;
 
         $this->config = $config;
 
         $this->useCache = $this->config->get('useCache', false);
     }
 
-    protected function getConverter()
+    protected function getConverter() : Converter
     {
         if (!isset($this->converter)) {
             $this->converter = new Converter($this->metadata, $this->fileManager, $this->config);
@@ -71,40 +72,22 @@ class OrmMetadata
         return $this->converter;
     }
 
-    protected function getFileManager()
+    public function getData(bool $reload = false) : array
     {
-        return $this->fileManager;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    public function clearData()
-    {
-        $this->ormData = null;
-    }
-
-    public function getData($reload = false)
-    {
-        if (!empty($this->ormData) && !$reload) {
-            return $data;
+        if (isset($this->data) && !$reload) {
+            return $this->data;
         }
 
-        if (!file_exists($this->cacheFile) || !$this->useCache || $reload) {
-            $this->data = $this->getConverter()->process();
+        if ($this->useCache && $this->dataCache->has($this->cacheKey) && !$reload) {
+            $this->data = $this->dataCache->get($this->cacheKey);
 
-            if ($this->useCache) {
-                $result = $this->getFileManager()->putPhpContents($this->cacheFile, $this->data);
-                if ($result == false) {
-                    throw new Error('OrmMetadata::getData() - Cannot save ormMetadata to cache file');
-                }
-            }
+            return $this->data;
         }
 
-        if (empty($this->data)) {
-            $this->data = $this->getFileManager()->getPhpContents($this->cacheFile);
+        $this->data = $this->getConverter()->process();
+
+        if ($this->useCache) {
+            $this->dataCache->store($this->cacheKey, $this->data);
         }
 
         return $this->data;

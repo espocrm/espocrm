@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     Portal\Utils\Language as LanguageService,
     Loaders\Loader as Loader,
+    Utils\DataCache,
 };
 
 use Espo\Entities\{
@@ -47,15 +48,17 @@ class Language implements Loader
     protected $fileManager;
     protected $config;
     protected $metadata;
+    protected $dataCache;
     protected $preferences;
     protected $portal;
 
     public function __construct(
-        FileManager $fileManager, Config $config, Metadata $metadata, Preferences $preferences, Portal $portal
+        FileManager $fileManager, Config $config, Metadata $metadata, DataCache $dataCache, Preferences $preferences, Portal $portal
     ) {
         $this->fileManager = $fileManager;
         $this->config = $config;
         $this->metadata = $metadata;
+        $this->dataCache = $dataCache;
         $this->preferences = $preferences;
         $this->portal = $portal;
     }
@@ -66,6 +69,7 @@ class Language implements Loader
             LanguageService::detectLanguage($this->config, $this->preferences),
             $this->fileManager,
             $this->metadata,
+            $this->dataCache,
             $this->config->get('useCache')
         );
 

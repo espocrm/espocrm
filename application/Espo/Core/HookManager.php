@@ -37,6 +37,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\Config,
     Utils\Util,
+    Utils\DataCache,
 };
 
 /**
@@ -55,7 +56,7 @@ class HookManager
 
     private $hooks;
 
-    protected $cacheFile = 'data/cache/application/hooks.php';
+    protected $cacheKey = 'hooks';
 
     protected $ignoredMethodList = [
         '__construct',
@@ -73,12 +74,14 @@ class HookManager
         InjectableFactory $injectableFactory,
         FileManager $fileManager,
         Metadata $metadata,
-        Config $config
+        Config $config,
+        DataCache $dataCache
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
         $this->config = $config;
+        $this->dataCache = $dataCache;
     }
 
     public function process(string $scope, string $hookName, $injection = null, array $options = [], array $hookData = [])
@@ -97,9 +100,14 @@ class HookManager
             foreach ($hookList as $className) {
                 if (empty($this->hooks[$className])) {
                     $this->hooks[$className] = $this->createHookByClassName($className);
-                    if (empty($this->hooks[$className])) continue;
+
+                    if (empty($this->hooks[$className])) {
+                        continue;
+                    }
                 }
+
                 $hook = $this->hooks[$className];
+
                 $hook->$hookName($injection, $options, $hookData);
             }
         }
@@ -123,8 +131,9 @@ class HookManager
 
     protected function loadHooks()
     {
-        if ($this->config->get('useCache') && file_exists($this->cacheFile)) {
-            $this->data = $this->fileManager->getPhpContents($this->cacheFile);
+        if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
+            $this->data = $this->dataCache->get($this->cacheKey);
+
             return;
         }
 
@@ -134,6 +143,7 @@ class HookManager
 
         foreach ($metadata->getModuleList() as $moduleName) {
             $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+
             $data = $this->getHookData($modulePath, $data);
         }
 
@@ -142,13 +152,13 @@ class HookManager
         $this->data = $this->sortHooks($data);
 
         if ($this->config->get('useCache')) {
-            $this->fileManager->putPhpContents($this->cacheFile, $this->data);
+            $this->dataCache->store($this->cacheKey, $this->data);
         }
     }
 
     protected function createHookByClassName(string $className) : object
     {
-        if (!@class_exists($className)) {
+        if (!class_exists($className)) {
             $GLOBALS['log']->error("Hook class '{$className}' does not exist.");
         }
 
@@ -158,7 +168,7 @@ class HookManager
     }
 
     /**
-     * Get and merge hook data by checking the files exist in $hookDirs
+     * Get and merge hook data by checking the files exist in $hookDirs.
      *
      * @param $hookDirs - can be ['Espo/Hooks', 'Espo/Custom/Hooks', 'Espo/Modules/Crm/Hooks']
      */
@@ -172,6 +182,7 @@ class HookManager
             if (!file_exists($hookDir)) {
                 continue;
             }
+
             $fileList = $this->fileManager->getFileList($hookDir, 1, '\.php$', true);
 
             foreach ($fileList as $scopeName => $hookFiles) {
@@ -179,6 +190,7 @@ class HookManager
                 $normalizedScopeName = Util::normilizeScopeName($scopeName);
 
                 $scopeHooks = [];
+
                 foreach ($hookFiles as $hookFile) {
                     $hookFilePath = Util::concatPath($hookScopeDirPath, $hookFile);
                     $className = Util::getClassName($hookFilePath);
@@ -187,12 +199,16 @@ class HookManager
                     $hookMethods = array_diff($classMethods, $this->ignoredMethodList);
 
                     $hookMethods = array_filter($hookMethods, function ($item) {
-                        if (strpos($item, 'set') === 0) return false;
+                        if (strpos($item, 'set') === 0) {
+                            return false;
+                        }
+
                         return true;
                     });
 
                     foreach ($hookMethods as $hookType) {
                         $entityHookData = $hookData[$normalizedScopeName][$hookType] ?? [];
+
                         if (!$this->hookExists($className, $entityHookData)) {
                             $hookData[$normalizedScopeName][$hookType][] = [
                                 'className' => $className,
@@ -241,6 +257,7 @@ class HookManager
             }
 
             $normalizedList = [];
+
             foreach ($hookList as $hookData) {
                 $normalizedList[] = $hookData['className'];
             }
