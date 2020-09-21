@@ -61,8 +61,9 @@ class ApplicationUser
     public function setupSystemUser()
     {
         $user = $this->entityManagerProxy->getEntity('User', 'system');
+
         if (!$user) {
-            throw new Error("System user is not found");
+            throw new Error("System user is not found.");
         }
 
         $user->set('ipAddress', $_SERVER['REMOTE_ADDR'] ?? null);
