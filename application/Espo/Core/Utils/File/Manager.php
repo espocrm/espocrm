@@ -927,7 +927,7 @@ class Manager
             "return " . $this->varExport($content) . ";\n";
     }
 
-    public function varExport($variable, $level = 0)
+    protected function varExport($variable, $level = 0)
     {
         $tab = '';
         $tabElement = '  ';
