@@ -980,7 +980,7 @@ class InboundEmail extends \Espo\Services\Record implements
         ];
 
         if ($emailAccount->get('security')) {
-            $params['ssl'] = $emailAccount->get('security');
+            $params['security'] = $emailAccount->get('security');
         }
 
         $params['imapHandler'] = $emailAccount->get('imapHandler');
