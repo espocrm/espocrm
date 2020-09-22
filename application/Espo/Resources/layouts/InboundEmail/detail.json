@@ -25,7 +25,7 @@
         "rows": [
             [{"name": "useImap"}, {"name":"fetchSince"}],
             [
-                {"name":"host"},{"name":"ssl"}
+                {"name":"host"}, {"name":"security"}
             ],
             [
                 {"name":"port"},{"name":"username"}

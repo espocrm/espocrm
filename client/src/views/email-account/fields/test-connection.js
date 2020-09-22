@@ -69,7 +69,7 @@ define('views/email-account/fields/test-connection', 'views/fields/base', functi
             var data = {
                 'host': this.model.get('host'),
                 'port': this.model.get('port'),
-                'ssl': this.model.get('ssl'),
+                'security': this.model.get('security'),
                 'username': this.model.get('username'),
                 'password': this.model.get('password') || null,
                 'id': this.model.id,

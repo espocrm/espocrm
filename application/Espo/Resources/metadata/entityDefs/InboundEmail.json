@@ -25,10 +25,12 @@
             "type": "int",
             "min": 0,
             "max": 65535,
-            "default": 143
+            "default": 993
         },
-        "ssl": {
-            "type": "bool"
+        "security": {
+            "type": "enum",
+            "default": "SSL",
+            "options": ["", "SSL", "TLS"]
         },
         "username": {
             "type": "varchar",

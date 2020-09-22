@@ -220,25 +220,27 @@ define('views/inbound-email/record/detail', 'views/record/detail', function (Dep
         },
 
         initSslFieldListening: function () {
-            this.listenTo(this.model, 'change:ssl', function (model, value, o) {
-                if (o.ui) {
-                    if (value) {
-                        this.model.set('port', 993);
-                    } else {
-                        this.model.set('port', 143);
-                    }
+            this.listenTo(this.model, 'change:security', function (model, value, o) {
+                if (!o.ui) {
+                    return;
+                }
+                if (value) {
+                    this.model.set('port', 993);
+                } else {
+                    this.model.set('port', 143);
                 }
             }, this);
 
             this.listenTo(this.model, 'change:smtpSecurity', function (model, value, o) {
-                if (o.ui) {
-                    if (value === 'SSL') {
-                        this.model.set('smtpPort', 465);
-                    } else if (value === 'TLS') {
-                        this.model.set('smtpPort', 587);
-                    } else {
-                        this.model.set('smtpPort', 25);
-                    }
+                if (!o.ui) {
+                    return;
+                }
+                if (value === 'SSL') {
+                    this.model.set('smtpPort', 465);
+                } else if (value === 'TLS') {
+                    this.model.set('smtpPort', 587);
+                } else {
+                    this.model.set('smtpPort', 25);
                 }
             }, this);
         }

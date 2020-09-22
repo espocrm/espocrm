@@ -85,13 +85,14 @@ define('views/email-account/record/detail', 'views/record/detail', function (Dep
         },
 
         initSslFieldListening: function () {
-            this.listenTo(this.model, 'change:ssl', function (model, value, o) {
-                if (o.ui) {
-                    if (value) {
-                        this.model.set('port', 993);
-                    } else {
-                        this.model.set('port', 143);
-                    }
+            this.listenTo(this.model, 'change:security', function (model, value, o) {
+                if (!o.ui) {
+                    return;
+                }
+                if (value) {
+                    this.model.set('port', 993);
+                } else {
+                    this.model.set('port', 143);
                 }
             }, this);
 

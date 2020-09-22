@@ -45,7 +45,7 @@ class InboundEmail extends \Espo\Core\Controllers\Record
         return $this->getRecordService()->getFolders([
             'host' => $data->host ?? null,
             'port' => $data->port ?? null,
-            'ssl' =>  $data->ssl ?? false,
+            'security' =>  $data->security ?? null,
             'username' => $data->username ?? null,
             'password' => $data->password ?? null,
             'id' => $data->id ?? null,

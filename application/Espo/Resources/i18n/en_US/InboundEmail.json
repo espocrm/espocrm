@@ -11,7 +11,7 @@
         "port": "Port",
         "monitoredFolders": "Monitored Folders",
         "trashFolder": "Trash Folder",
-        "ssl": "SSL",
+        "security": "Security",
         "createCase": "Create Case",
         "reply": "Auto-Reply",
         "caseDistribution": "Case Distribution",

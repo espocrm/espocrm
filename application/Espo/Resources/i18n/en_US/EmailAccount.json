@@ -7,7 +7,7 @@
         "password": "Password",
         "port": "Port",
         "monitoredFolders": "Monitored Folders",
-        "ssl": "SSL",
+        "security": "Security",
         "fetchSince": "Fetch Since",
         "emailAddress": "Email Address",
         "sentFolder": "Sent Folder",

@@ -212,8 +212,8 @@ class EmailAccount extends Record implements
                 'password' => $params['password'],
             ];
 
-            if (!empty($params['ssl'])) {
-                $imapParams['ssl'] = 'SSL';
+            if (!empty($params['security'])) {
+                $imapParams['ssl'] = $params['security'];
             }
         }
 
@@ -268,8 +268,8 @@ class EmailAccount extends Record implements
             'userId' => $emailAccount->get('assignedUserId'),
         ];
 
-        if ($emailAccount->get('ssl')) {
-            $params['ssl'] = true;
+        if ($emailAccount->get('security')) {
+            $params['ssl'] = $emailAccount->get('security');
         }
 
         $params['imapHandler'] = $emailAccount->get('imapHandler');

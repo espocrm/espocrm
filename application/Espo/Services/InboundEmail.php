@@ -979,8 +979,8 @@ class InboundEmail extends \Espo\Services\Record implements
             'password' => $this->getCrypt()->decrypt($emailAccount->get('password')),
         ];
 
-        if ($emailAccount->get('ssl')) {
-            $params['ssl'] = 'SSL';
+        if ($emailAccount->get('security')) {
+            $params['ssl'] = $emailAccount->get('security');
         }
 
         $params['imapHandler'] = $emailAccount->get('imapHandler');
@@ -1017,8 +1017,9 @@ class InboundEmail extends \Espo\Services\Record implements
                 'user' => $params['username'],
                 'password' => $params['password'],
             ];
-            if (!empty($params['ssl'])) {
-                $imapParams['ssl'] = 'SSL';
+
+            if (!empty($params['security'])) {
+                $imapParams['ssl'] = $params['security'];
             }
         }
 
