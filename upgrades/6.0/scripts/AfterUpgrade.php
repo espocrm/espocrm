@@ -41,7 +41,7 @@ class AfterUpgrade
         $pdo = $this->container->get('entityManager')->getPDO();
 
         $q1 = "UPDATE `email_account` SET email_account.security = '' WHERE email_account.ssl = 0";
-        $q1 = "UPDATE `inbound_email` SET inbound_email.security = '' WHERE inbound_email.ssl = 0";
+        $q2 = "UPDATE `inbound_email` SET inbound_email.security = '' WHERE inbound_email.ssl = 0";
 
         $pdo->exec($q1);
         $pdo->exec($q2);
