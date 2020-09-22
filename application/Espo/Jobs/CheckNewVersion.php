@@ -35,6 +35,9 @@ use Espo\Core\{
     Jobs\Job,
 };
 
+use DateTime;
+use DateTimeZone;
+
 class CheckNewVersion implements Job
 {
     protected $config;
@@ -70,7 +73,7 @@ class CheckNewVersion implements Job
         $hour = rand(0, 4);
         $minute = rand(0, 59);
 
-        $nextDay = new \DateTime('+ 1 day');
+        $nextDay = new DateTime('+ 1 day');
         $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';
 
         $timeZone = $this->config->get('timeZone');
@@ -78,8 +81,16 @@ class CheckNewVersion implements Job
             $timeZone = 'UTC';
         }
 
-        $datetime = new \DateTime($time, new \DateTimeZone($timeZone));
+        $datetime = new DateTime($time, new DateTimeZone($timeZone));
 
-        return $datetime->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+        return $datetime->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * For backward compatibility.
+     */
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
     }
 }
