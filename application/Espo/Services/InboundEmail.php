@@ -1006,6 +1006,9 @@ class InboundEmail extends \Espo\Services\Record implements
                 );
             }
             if (method_exists($handler, 'prepareProtocol')) {
+                // for backward compatibility
+                $params['ssl'] = $params['security'];
+
                 $imapParams = $handler->prepareProtocol($params['id'], $params);
             }
         }
