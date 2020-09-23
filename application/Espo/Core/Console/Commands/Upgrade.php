@@ -29,9 +29,18 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Exceptions\Error,
+    Application,
+    UpgradeManager,
+    Utils\Util,
+    Utils\File\Manager as FileManager,
+    Utils\Config,
+};
 
-use Espo\Core\Container;
+use Symfony\Component\Process\PhpExecutableFinder;
+
+use Exception;
 
 class Upgrade implements Command
 {
@@ -50,16 +59,13 @@ class Upgrade implements Command
         'rebuild',
     ];
 
-    private $container;
+    private $fileManager;
+    private $config;
 
-    public function __construct(Container $container)
+    public function __construct(FileManager $fileManager, Config $config)
     {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
+        $this->fileManager = $fileManager;
+        $this->config = $config;
     }
 
     public function run(array $options, array $flagList, array $argumentList)
@@ -69,11 +75,13 @@ class Upgrade implements Command
         switch ($params['mode']) {
             case 'local':
                 $this->runLocalUpgrade($params);
+
                 break;
 
             default:
             case 'remote':
                 $this->runRemoteUpgrade($params);
+
                 break;
         }
     }
@@ -121,16 +129,19 @@ class Upgrade implements Command
     {
         if (empty($params['file']) || !file_exists($params['file'])) {
             echo "Upgrade package is not found.\n";
+
             return;
         }
 
         $packageFile = $params['file'];
-        $fromVersion = $this->getConfig()->get('version');
+        $fromVersion = $this->config->get('version');
 
         fwrite(\STDOUT, "Current version is {$fromVersion}.\n");
 
         $upgradeId = $this->upload($packageFile);
+
         $manifest = $this->getUpgradeManager()->getManifestById($upgradeId);
+
         $nextVersion = $manifest['version'];
 
         if (!$params['skipConfirmation']) {
@@ -138,6 +149,7 @@ class Upgrade implements Command
 
             if (!$this->confirm()) {
                 echo "Upgrade canceled.\n";
+
                 return;
             }
         }
@@ -146,9 +158,11 @@ class Upgrade implements Command
 
         try {
             $this->runUpgradeProcess($upgradeId, $params);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             fwrite(\STDOUT, "\n");
             fwrite(\STDOUT, $e->getMessage() . "\n");
+
             return;
         }
 
@@ -159,15 +173,18 @@ class Upgrade implements Command
         fwrite(\STDOUT, "Upgrade is complete. Current version is {$currentVerison}.\n");
 
         $infoData = $this->getVersionInfo();
+
         $lastVersion = $infoData->lastVersion ?? null;
 
         if ($lastVersion && $lastVersion !== $currentVerison && $fromVersion !== $currentVerison) {
             fwrite(\STDOUT, "Newer version is available.\n");
+
             return;
         }
 
         if ($lastVersion && $lastVersion === $currentVerison) {
             fwrite(\STDOUT, "You have the latest version.\n");
+
             return;
         }
     }
@@ -175,17 +192,21 @@ class Upgrade implements Command
     protected function runRemoteUpgrade(array $params)
     {
         $infoData = $this->getVersionInfo();
-        if (!$infoData) return;
+
+        if (!$infoData) {
+            return;
+        }
 
         $nextVersion = $infoData->nextVersion ?? null;
         $lastVersion = $infoData->lastVersion ?? null;
 
-        $fromVersion = $this->getConfig()->get('version');
+        $fromVersion = $this->config->get('version');
 
         fwrite(\STDOUT, "Current version is {$fromVersion}.\n");
 
         if (!$nextVersion) {
             echo "There are no available upgrades.\n";
+
             return;
         }
 
@@ -194,6 +215,7 @@ class Upgrade implements Command
 
             if (!$this->confirm()) {
                 echo "Upgrade canceled.\n";
+
                 return;
             }
         }
@@ -201,7 +223,10 @@ class Upgrade implements Command
         fwrite(\STDOUT, "Downloading...");
 
         $upgradePackageFilePath = $this->downloadFile($infoData->nextPackage);
-        if (!$upgradePackageFilePath) return;
+
+        if (!$upgradePackageFilePath) {
+            return;
+        }
 
         fwrite(\STDOUT, "\n");
 
@@ -211,16 +236,18 @@ class Upgrade implements Command
 
         try {
             $this->runUpgradeProcess($upgradeId, $params);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $error = $e->getMessage();
         }
 
-        $this->getFileManager()->unlink($upgradePackageFilePath);
+        $this->fileManager->unlink($upgradePackageFilePath);
 
         fwrite(\STDOUT, "\n");
 
         if (!empty($error)) {
             echo $error;
+
             return;
         }
 
@@ -230,11 +257,13 @@ class Upgrade implements Command
 
         if ($lastVersion && $lastVersion !== $currentVerison && $fromVersion !== $currentVerison) {
             fwrite(\STDOUT, "Newer version is available. Run command again to upgrade.\n");
+
             return;
         }
 
         if ($lastVersion && $lastVersion === $currentVerison) {
             fwrite(\STDOUT, "You have the latest version.\n");
+
             return;
         }
     }
@@ -244,8 +273,10 @@ class Upgrade implements Command
         try {
             $fileData = file_get_contents($filePath);
             $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
+
             $upgradeId = $this->getUpgradeManager()->upload($fileData);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             die("Error: " . $e->getMessage() . "\n");
         }
 
@@ -257,6 +288,7 @@ class Upgrade implements Command
         $useSingleProcess = array_key_exists('singleProcess', $params) ? $params['singleProcess'] : false;
 
         $stepList = !empty($params['step']) ? [$params['step']] : $this->upgradeStepList;
+
         array_unshift($stepList, 'init');
         array_push($stepList, 'finalize');
 
@@ -278,8 +310,9 @@ class Upgrade implements Command
                 $upgradeManager = $this->getUpgradeManager(true);
                 $upgradeManager->runInstallStep($stepName, ['id' => $upgradeId]);
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $GLOBALS['log']->error('Upgrade Error: ' . $e->getMessage());
+
             throw new Error($e->getMessage());
         }
 
@@ -294,9 +327,12 @@ class Upgrade implements Command
             fwrite(\STDOUT, ".");
 
             $command = $phpExecutablePath . " command.php upgrade-step --step=". ucfirst($stepName) ." --id=". $upgradeId;
+
             $shellResult = shell_exec($command);
+
             if ($shellResult !== 'true') {
                 $GLOBALS['log']->error('Upgrade Error: ' . $shellResult);
+
                 throw new Error($shellResult);
             }
         }
@@ -307,31 +343,26 @@ class Upgrade implements Command
     protected function confirm()
     {
         $fh = fopen('php://stdin', 'r');
+
         $inputLine = trim(fgets($fh));
+
         fclose($fh);
+
         if (strtolower($inputLine) !== 'y'){
             return false;
         }
+
         return true;
-    }
-
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    protected function getFileManager()
-    {
-        return $this->getContainer()->get('fileManager');
     }
 
     protected function getUpgradeManager($reload = false)
     {
         if (!$this->upgradeManager || $reload) {
-            $app = new \Espo\Core\Application();
+            $app = new Application();
+
             $app->setupSystemUser();
 
-            $this->upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
+            $this->upgradeManager = new UpgradeManager($app->getContainer());
         }
 
         return $this->upgradeManager;
@@ -339,10 +370,10 @@ class Upgrade implements Command
 
     protected function getPhpExecutablePath()
     {
-        $phpExecutablePath = $this->getConfig()->get('phpExecutablePath');
+        $phpExecutablePath = $this->config->get('phpExecutablePath');
 
         if (!$phpExecutablePath) {
-            $phpExecutablePath = (new \Symfony\Component\Process\PhpExecutableFinder)->find();
+            $phpExecutablePath = (new PhpExecutableFinder)->find();
         }
 
         return $phpExecutablePath;
@@ -351,25 +382,31 @@ class Upgrade implements Command
     protected function getVersionInfo()
     {
         $url = 'https://s.espocrm.com/upgrade/next/';
-        $url = $this->getConfig()->get('upgradeNextVersionUrl', $url);
-        $url .= '?fromVersion=' . $this->getConfig()->get('version');
+        $url = $this->config->get('upgradeNextVersionUrl', $url);
+        $url .= '?fromVersion=' . $this->config->get('version');
 
         $ch = curl_init();
+
         curl_setopt($ch, \CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, \CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, \CURLOPT_URL, $url);
+
         $result = curl_exec($ch);
+
         curl_close($ch);
 
         try {
             $data = json_decode($result);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             echo "Could not parse info about next version.\n";
+
             return;
         }
 
         if (!$data) {
             echo "Could not get info about next version.\n";
+
             return;
         }
 
@@ -378,27 +415,33 @@ class Upgrade implements Command
 
     protected function downloadFile($url)
     {
-        $localFilePath = 'data/upload/upgrades/' . \Espo\Core\Utils\Util::generateId() . '.zip';
-        $this->getFileManager()->putContents($localFilePath, '');
+        $localFilePath = 'data/upload/upgrades/' . Util::generateId() . '.zip';
+
+        $this->fileManager->putContents($localFilePath, '');
 
         if (is_file($url)) {
             copy($url, $localFilePath);
         } else {
             $options = [
-                CURLOPT_FILE  => fopen($localFilePath, 'w'),
+                CURLOPT_FILE => fopen($localFilePath, 'w'),
                 CURLOPT_TIMEOUT => 3600,
-                CURLOPT_URL => $url
+                CURLOPT_URL => $url,
             ];
 
             $ch = curl_init();
+
             curl_setopt_array($ch, $options);
+
             curl_exec($ch);
+
             curl_close($ch);
         }
 
-        if (!$this->getFileManager()->isFile($localFilePath)) {
+        if (!$this->fileManager->isFile($localFilePath)) {
             echo "\nCould not download upgrade file.\n";
-            $this->getFileManager()->unlink($localFilePath);
+
+            $this->fileManager->unlink($localFilePath);
+
             return;
         }
 
@@ -412,6 +455,7 @@ class Upgrade implements Command
         }
 
         $result = shell_exec("echo test");
+
         if (empty($result)) {
             return false;
         }
