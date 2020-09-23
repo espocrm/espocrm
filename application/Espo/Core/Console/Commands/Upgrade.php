@@ -140,8 +140,7 @@ class Upgrade extends Base
 
         fwrite(\STDOUT, "\n");
 
-        $app = new \Espo\Core\Application();
-        $currentVerison = $app->getContainer()->get('config')->get('version');
+        $currentVerison = $this->getCurrentVersion();
 
         fwrite(\STDOUT, "Upgrade is complete. Current version is {$currentVerison}.\n");
 
@@ -211,8 +210,7 @@ class Upgrade extends Base
             return;
         }
 
-        $app = new \Espo\Core\Application();
-        $currentVerison = $app->getContainer()->get('config')->get('version');
+        $currentVerison = $this->getCurrentVersion();
 
         fwrite(\STDOUT, "Upgrade is complete. Current version is {$currentVerison}.\n");
 
@@ -405,5 +403,16 @@ class Upgrade extends Base
         }
 
         return true;
+    }
+
+    protected function getCurrentVersion()
+    {
+        $configData = include "data/config.php";
+
+        if (!$configData) {
+            return null;
+        }
+
+        return $configData['version'] ?? null;
     }
 }
