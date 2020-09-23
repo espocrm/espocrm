@@ -75,7 +75,7 @@ class Language
         ?string $language = null,
         FileManager $fileManager,
         Metadata $metadata,
-        DataCache $dataCache,
+        DataCache $dataCache = null,
         bool $useCache = false,
         bool $noCustom = false
     ) {
@@ -91,6 +91,10 @@ class Language
 
         $this->useCache = $useCache;
         $this->noCustom = $noCustom;
+
+        if (!$this->dataCache) {
+            $this->useCache = false;
+        }
 
         $this->unifier = new FileUnifier($this->fileManager, $this->metadata);
     }
