@@ -43,6 +43,11 @@ class Portal extends Record implements
 
     protected $getEntityBeforeUpdate = true;
 
+    protected $mandatorySelectAttributeList = [
+        'customUrl',
+        'customId',
+    ];
+
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
