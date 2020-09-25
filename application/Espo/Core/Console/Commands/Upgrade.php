@@ -165,12 +165,8 @@ class Upgrade implements Command
      * -s - single process
      * --file="EspoCRM-upgrade.zip"
      * --step="beforeUpgradeScript"
-     * @param  array $options
-     * @param  array $flagList
-     * @param  array $argumentList
-     * @return object
      */
-    protected function normalizeParams(array $options, array $flagList, array $argumentList)
+    protected function normalizeParams(array $options, array $flagList, array $argumentList) : object
     {
         $params = (object) [
             'localMode' => false,
@@ -391,9 +387,9 @@ class Upgrade implements Command
             copy($url, $localFilePath);
         } else {
             $options = [
-                CURLOPT_FILE => fopen($localFilePath, 'w'),
-                CURLOPT_TIMEOUT => 3600,
-                CURLOPT_URL => $url,
+                \CURLOPT_FILE => fopen($localFilePath, 'w'),
+                \CURLOPT_TIMEOUT => 3600,
+                \CURLOPT_URL => $url,
             ];
 
             $ch = curl_init();
