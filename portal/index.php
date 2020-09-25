@@ -50,20 +50,26 @@ if (strpos($requestUri, '=') !== false) {
 
 if (!isset($portalId)) {
     $url = $_SERVER['REDIRECT_URL'];
+
     $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
 }
 
 $a = explode('?', $url);
+
 if (substr($a[0], -1) !== '/') {
     $url = $a[0] . '/';
+
     if (count($a) > 1) {
         $url .= '?' . $a[1];
     }
+
     header("Location: " . $url);
-    exit();
+
+    exit;
 }
 
 $a = explode('?', $requestUri);
+
 $requestUri = rtrim($a[0], '/');
 
 if (strpos($requestUri, '/') !== false) {
@@ -76,6 +82,7 @@ if (strpos($requestUri, '/') !== false) {
 
 if (!empty($_GET['entryPoint'])) {
     $app->run(EntryPoint::class);
+
     exit;
 }
 

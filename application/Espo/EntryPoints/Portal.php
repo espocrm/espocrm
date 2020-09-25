@@ -68,23 +68,28 @@ class Portal implements EntryPoint
 
         if (!$id) {
             $url = $_SERVER['REQUEST_URI'];
+
             $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
 
             if (!isset($id)) {
                 $url = $_SERVER['REDIRECT_URL'];
+
                 $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
             }
 
             if (!$id) {
                 $id = $this->config->get('defaultPortalId');
             }
+
             if (!$id) {
                 throw new NotFound();
             }
         }
 
         $application = new PortalApplication($id);
+
         $application->setClientBasePath($this->clientManager->getBasePath());
+
         $application->run(Client::class);
     }
 }

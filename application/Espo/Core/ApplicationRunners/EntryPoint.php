@@ -105,13 +105,16 @@ class EntryPoint implements ApplicationRunner
 
         if ($authRequired && !$authNotStrict && !$final) {
             $portalId = $this->detectPortalId();
+
             if ($portalId) {
                 $this->runThroughPortal($portalId, $entryPoint, $data);
+
                 return;
             }
         }
 
         $slim = SlimAppFactory::create();
+
         $slim->setBasePath(Route::detectBasePath());
 
         $slim->add(
@@ -164,7 +167,9 @@ class EntryPoint implements ApplicationRunner
             }
 
             ob_start();
+
             $this->entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped, $data);
+
             $contents = ob_get_clean();
 
             if ($contents) {
@@ -180,20 +185,27 @@ class EntryPoint implements ApplicationRunner
         if (!empty($_GET['portalId'])) {
             return $_GET['portalId'];
         }
+
         if (!empty($_COOKIE['auth-token'])) {
-            $token = $this->entityManager->getRepository('AuthToken')->where(['token' => $_COOKIE['auth-token']])->findOne();
+            $token = $this->entityManager
+                ->getRepository('AuthToken')
+                ->where(['token' => $_COOKIE['auth-token']])
+                ->findOne();
 
             if ($token && $token->get('portalId')) {
                 return $token->get('portalId');
             }
         }
+
         return null;
     }
 
     protected function runThroughPortal(string $portalId, string $entryPoint, ?StdClass $data)
     {
         $app = new PortalApplication($portalId);
+
         $app->setClientBasePath($this->clientManager->getBasePath());
+
         $app->run(EntryPoint::class, (object) [
             'entryPoint' => $entryPoint,
             'data' => $data,
