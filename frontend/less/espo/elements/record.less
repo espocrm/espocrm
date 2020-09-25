@@ -2,7 +2,7 @@
     display: grid;
     grid-column-gap: @container-padding;
 
-    grid-template-columns: 8fr 4fr;
+    grid-template-columns: minmax(auto, 67%) minmax(auto, 33%);
 
     &.record-grid-wide {
         grid-template-columns: 100%;
@@ -13,7 +13,7 @@
     }
 
     &.record-grid-small {
-        grid-template-columns: 7fr 5fr;
+        grid-template-columns: minmax(auto, 60%) minmax(auto, 40%);
     }
 }
 
