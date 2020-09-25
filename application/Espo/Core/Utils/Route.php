@@ -189,6 +189,23 @@ class Route
         return '';
     }
 
+    public static function detectEntryPointRoute() : string
+    {
+        $basePath = self::detectBasePath();
+
+        $uri = parse_url('http://any.com' . $_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
+        if ($uri === $basePath) {
+            return '/';
+        }
+
+        if (stripos($uri, $basePath) === 0) {
+            return substr($uri, strlen($basePath));
+        }
+
+        return '/';
+    }
+
     static protected function isRouteInList(array $newRoute, array $routeList) : bool
     {
         foreach ($routeList as $route) {

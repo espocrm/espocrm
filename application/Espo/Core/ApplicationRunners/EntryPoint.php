@@ -130,7 +130,9 @@ class EntryPoint implements ApplicationRunner
             }
         );
 
-        $slim->get('/', function (Psr7Request $request, Psr7Response $response) : Psr7Response {
+        $route = Route::detectEntryPointRoute();
+
+        $slim->get($route, function (Psr7Request $request, Psr7Response $response) : Psr7Response {
             return $response;
         });
 

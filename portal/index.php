@@ -35,11 +35,13 @@ use Espo\Core\{
 };
 
 $app = new Application();
+
 if (!$app->isInstalled()) {
     exit;
 }
 
 $url = $_SERVER['REQUEST_URI'];
+
 $requestUri = $url;
 
 $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
