@@ -73,16 +73,23 @@ class Upgrade implements Command
         $params = $this->normalizeParams($options, $flagList, $argumentList);
 
         $versionInfo = $this->getVersionInfo();
+
         $fromVersion = $this->config->get('version');
+
         $nextVersion = $versionInfo->nextVersion ?? null;
         $lastVersion = $infoData->lastVersion ?? null;
 
         $packageFile = $this->getPackageFile($params, $versionInfo);
-        if (!$packageFile) return;
+
+        if (!$packageFile) {
+            return;
+        }
 
         if ($params->localMode) {
             $upgradeId = $this->upload($packageFile);
+
             $manifest = $this->getUpgradeManager()->getManifestById($upgradeId);
+
             $nextVersion = $manifest['version'];
         }
 
@@ -93,6 +100,7 @@ class Upgrade implements Command
 
             if (!$this->confirm()) {
                 echo "Upgrade canceled.\n";
+
                 return;
             }
         }
@@ -106,6 +114,7 @@ class Upgrade implements Command
 
             if (!$packageFile) {
                 fwrite(\STDOUT, "Error: Unable to download upgrade package.\n");
+
                 return;
             }
         }
@@ -116,7 +125,8 @@ class Upgrade implements Command
 
         try {
             $this->runUpgradeProcess($upgradeId, $params);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $errorMessage = $e->getMessage();
         }
 
@@ -128,6 +138,7 @@ class Upgrade implements Command
 
         if (!empty($errorMessage)) {
             fwrite(\STDOUT, $errorMessage . "\n");
+
             return;
         }
 
@@ -137,11 +148,13 @@ class Upgrade implements Command
 
         if ($lastVersion && $lastVersion !== $currentVerison && $fromVersion !== $currentVerison) {
             fwrite(\STDOUT, "Newer version is available. Run command again to upgrade.\n");
+
             return;
         }
 
         if ($lastVersion && $lastVersion === $currentVerison) {
             fwrite(\STDOUT, "You have the latest version.\n");
+
             return;
         }
     }
@@ -194,16 +207,19 @@ class Upgrade implements Command
         if (!$params->localMode) {
             if (empty($versionInfo)) {
                 fwrite(\STDOUT, "Error: Upgrade server is currently unavailable. Please try again later.\n");
+
                 return;
             }
 
             if (!isset($versionInfo->nextVersion)) {
                 fwrite(\STDOUT, "There are no available upgrades.\n");
+
                 return;
             }
 
             if (!isset($versionInfo->nextPackage)) {
                 fwrite(\STDOUT, "Error: Upgrade package is not found.\n");
+
                 return;
             }
 
@@ -212,6 +228,7 @@ class Upgrade implements Command
 
         if (!$packageFile || !file_exists($packageFile)) {
             fwrite(\STDOUT, "Error: Upgrade package is not found.\n");
+
             return;
         }
 
