@@ -32,6 +32,7 @@ include "../bootstrap.php";
 use Espo\Core\{
     Application,
     ApplicationRunners\EntryPoint,
+    Portal\Utils\Url,
 };
 
 $app = new Application();
@@ -40,46 +41,23 @@ if (!$app->isInstalled()) {
     exit;
 }
 
-$url = $_SERVER['REQUEST_URI'];
+$url = Url::detectUrl();
+$normalizedUrl = Url::normalizeUrl($url);
 
-$requestUri = $url;
-
-$portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-
-if (strpos($requestUri, '=') !== false) {
-    $portalId = null;
-}
-
-if (!isset($portalId)) {
-    $url = $_SERVER['REDIRECT_URL'];
-
-    $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-}
-
-$a = explode('?', $url);
-
-if (substr($a[0], -1) !== '/') {
-    $url = $a[0] . '/';
-
-    if (count($a) > 1) {
-        $url .= '?' . $a[1];
-    }
-
-    header("Location: " . $url);
+if ($url !== $normalizedUrl) {
+    header("Location: " . $normalizedUrl);
 
     exit;
 }
 
-$a = explode('?', $requestUri);
+if (Url::detectIsInDir()) {
+    $basePath = '../';
 
-$requestUri = rtrim($a[0], '/');
-
-if (strpos($requestUri, '/') !== false) {
-    if ($portalId) {
-        $app->setClientBasePath('../../');
-    } else {
-        $app->setClientBasePath('../');
+    if (Url::detectPortalId()) {
+        $basePath = '../../';
     }
+
+    $app->setClientBasePath($basePath);
 }
 
 if (!empty($_GET['entryPoint'])) {
@@ -88,6 +66,9 @@ if (!empty($_GET['entryPoint'])) {
     exit;
 }
 
-$app->run(EntryPoint::class, (object) [
-    'entryPoint' => 'portal',
-]);
+$app->run(
+    EntryPoint::class,
+    (object) [
+        'entryPoint' => 'portal',
+    ]
+);
