@@ -29,9 +29,12 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\File\Manager as FileManager,
+};
 
-use Espo\Core\Utils\File\Manager as FileManager;
+use StdClass;
 
 /**
  * Reads and writes the main config file.
@@ -88,6 +91,7 @@ class Config
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();
+
         foreach ($keys as $keyName) {
             if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
                 if (is_array($lastBranch)) {
@@ -111,6 +115,7 @@ class Config
         $keys = explode('.', $name);
 
         $lastBranch = $this->loadConfig();
+
         foreach ($keys as $keyName) {
             if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
                 if (is_array($lastBranch)) {
@@ -136,14 +141,16 @@ class Config
         }
 
         if (!is_array($name)) {
-            $name = array($name => $value);
+            $name = [$name => $value];
         }
 
         foreach ($name as $key => $value) {
             if (in_array($key, $this->associativeArrayAttributeList) && is_object($value)) {
                 $value = (array) $value;
             }
+
             $this->data[$key] = $value;
+
             if (!$dontMarkDirty) {
                 $this->changedData[$key] = $value;
             }
@@ -157,7 +164,9 @@ class Config
     {
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
+
             $this->removeData[] = $name;
+
             return true;
         }
 
@@ -180,10 +189,11 @@ class Config
         $configPath = $this->getConfigPath();
 
         if (!file_exists($configPath)) {
-            throw new Error('Config file ['. $configPath .'] is not found.');
+            throw new Error("Config file '{$configPath}' is not found.");
         }
 
         $data = include($configPath);
+
         if (!is_array($data)) {
             $data = include($configPath);
         }
@@ -201,7 +211,8 @@ class Config
         }
 
         if (!is_array($data)) {
-            $GLOBALS['log']->error('Invalid config data ['. var_export($data, true) .'] while saving to ['. $configPath .'].');
+            $GLOBALS['log']->error("Invalid config data while saving to '{$configPath}'.");
+
             throw new Error('Invalid config data while saving.');
         }
 
@@ -211,14 +222,16 @@ class Config
 
         if ($result) {
             $reloadedData = include($configPath);
+
             if (!is_array($reloadedData) || $microtime !== ($reloadedData['microtime'] ?? null)) {
                 $result = $this->getFileManager()->putPhpContents($configPath, $data, true, false);
             }
         }
 
         if ($result) {
-            $this->changedData = array();
-            $this->removeData = array();
+            $this->changedData = [];
+            $this->removeData = [];
+
             $this->loadConfig(true);
         }
 
@@ -244,6 +257,7 @@ class Config
         $this->data = $this->getFileManager()->getPhpContents($configPath);
 
         $systemConfig = $this->getFileManager()->getPhpContents($this->systemConfigPath);
+
         $this->data = Util::merge($systemConfig, $this->data);
 
         return $this->data;
@@ -252,7 +266,7 @@ class Config
     /**
      * Get all parameters.
      */
-    public function getAllData() : \StdClass
+    public function getAllData() : StdClass
     {
         return (object) $this->loadConfig();
     }
