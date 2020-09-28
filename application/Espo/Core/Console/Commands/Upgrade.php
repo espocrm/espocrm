@@ -72,9 +72,10 @@ class Upgrade implements Command
     {
         $params = $this->normalizeParams($options, $flagList, $argumentList);
 
-        $versionInfo = $this->getVersionInfo();
-
         $fromVersion = $this->config->get('version');
+        $toVersion = $params->toVersion ?? null;
+
+        $versionInfo = $this->getVersionInfo($toVersion);
 
         $nextVersion = $versionInfo->nextVersion ?? null;
         $lastVersion = $infoData->lastVersion ?? null;
@@ -189,8 +190,20 @@ class Upgrade implements Command
             $params->singleProcess = true;
         }
 
+        if (in_array('patch', $flagList)) {
+            $currentVersion = $this->config->get('version');
+
+            if (preg_match('/^(.*)\.(.*)\..*$/', $currentVersion, $match)) {
+                $options['toVersion'] = $match[1] . '.' . $match[2];
+            }
+        }
+
         if (!empty($options['step'])) {
             $params->step = $options['step'];
+        }
+
+        if (!empty($options['toVersion'])) {
+            $params->toVersion = $options['toVersion'];
         }
 
         return $params;
@@ -343,11 +356,15 @@ class Upgrade implements Command
         return $phpExecutablePath;
     }
 
-    protected function getVersionInfo()
+    protected function getVersionInfo($toVersion = null)
     {
         $url = 'https://s.espocrm.com/upgrade/next/';
         $url = $this->config->get('upgradeNextVersionUrl', $url);
         $url .= '?fromVersion=' . $this->config->get('version');
+
+        if ($toVersion) {
+            $url .= '&toVersion=' . $toVersion;
+        }
 
         $ch = curl_init();
 
