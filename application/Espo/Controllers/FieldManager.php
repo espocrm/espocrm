@@ -99,7 +99,7 @@ class FieldManager
         $fieldManagerTool->create($scope, $name, get_object_vars($data));
 
         try {
-            $this->dataManager->rebuild($scope);
+            $this->dataManager->rebuild([$scope]);
         }
         catch (Error $e) {
             $fieldManagerTool->delete($scope, $data->name);
@@ -131,7 +131,7 @@ class FieldManager
         $fieldManagerTool->update($scope, $name, get_object_vars($data));
 
         if ($fieldManagerTool->isChanged()) {
-            $this->dataManager->rebuild($scope);
+            $this->dataManager->rebuild([$scope]);
         } else {
             $this->dataManager->clearCache();
         }
