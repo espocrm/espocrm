@@ -165,9 +165,9 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
         },
 
         removeDashlet: function (id) {
-            var grid = this.$gridstack.data('gridstack');
             var $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
-            grid.removeWidget($item, true);
+
+            this.grid.removeWidget($item, true);
 
             var layout = this.dashboardLayout[this.currentTab].layout;
 
