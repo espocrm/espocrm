@@ -40,13 +40,13 @@ class Utils
      */
     public static function getLatestBuildedPath($path)
     {
-        $archives = array();
+        $archives = [];
 
         $buildDir = dir($path);
         while ($folderName = $buildDir->read()) {
             if ($folderName === '.'|| $folderName === '..' || empty($folderName)) continue;
 
-            $pattern = '/^EspoCRM-([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-((a|alpha|b|beta|pre|rc)(\.[0-9]+)?)?)?$/';
+            $pattern = '/^EspoCRM-([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-((a|alpha|b|beta|pre|rc)([0-9]+)?)?)?$/';
 
             if (preg_match($pattern, $folderName)) {
                 $archives[] = $folderName;
@@ -61,14 +61,14 @@ class Utils
 
     protected static function sortVersions(& $existVersions)
     {
-        usort($existVersions, array("\\tests\\integration\\Core\\Utils", "versionCmp"));
+        usort($existVersions, ["\\tests\\integration\\Core\\Utils", "versionCmp"]);
     }
 
     public static function versionCmp($a, $b)
     {
-        $order = array('a' => 0, 'alpha' => 1, 'b' => 2, 'beta' => 3, 'pre' => 4, 'rc' => 5);
+        $order = ['a' => 0, 'alpha' => 1, 'b' => 2, 'beta' => 3, 'pre' => 4, 'rc' => 5];
 
-        $ma = $mb = array();
+        $ma = $mb = [];
 
         $pattern = '/^EspoCRM-([0-9]+)\.([0-9]+)(?:\.([0-9]+))?(?:-((a|alpha|b|beta|pre|rc)[0-9]+)?)?$/';
 
