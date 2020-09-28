@@ -42,7 +42,7 @@ class Url
         }
 
         if (!isset($portalId)) {
-            $url = $_SERVER['REDIRECT_URL'];
+            $url = $_SERVER['REDIRECT_URL'] ?? $url;
 
             $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
         }
@@ -61,7 +61,7 @@ class Url
         }
 
         if (!isset($portalId)) {
-            return $_SERVER['REDIRECT_URL'];
+            return $_SERVER['REDIRECT_URL'] ?? $url;
         }
 
         return $url;
