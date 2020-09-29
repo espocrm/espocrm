@@ -69,6 +69,7 @@ abstract class BaseFunction
         if (!$this->entity) {
             throw new NotPassedEntity('function: ' . $this->name);
         }
+
         return $this->entity;
     }
 
@@ -119,12 +120,15 @@ abstract class BaseFunction
     protected function throwBadArgumentType(?int $index = null, ?string $type = null)
     {
         $msg = 'function: ' . $this->name;
+
         if ($index !== null) {
             $msg .= ', index: ' . $index;
+
             if ($type) {
                 $msg .= ', should be: ' . $type;
             }
         }
+
         throw new BadArgumentType($msg);
     }
 
@@ -134,12 +138,15 @@ abstract class BaseFunction
     protected function throwBadArgumentValue(?int $index = null, ?string $msg = null)
     {
         $string = 'function: ' . $this->name;
+
         if ($index !== null) {
             $string .= ', index: ' . $index;
+
             if ($msg) {
                 $string .= ', ' . $msg;
             }
         }
+
         throw new BadArgumentValue($string);
     }
 
@@ -147,11 +154,13 @@ abstract class BaseFunction
      * Throw Error exception.
      */
     protected function throwError(?string $msg = null)
+
     {
         $string = 'function: ' . $this->name;
         if ($msg) {
             $string .= ', ' . $msg;
         }
+
         throw new Error($string);
     }
 
@@ -160,7 +169,10 @@ abstract class BaseFunction
      */
     protected function logBadArgumentType(int $index, string $type)
     {
-        if (!$this->log) return;
+        if (!$this->log) {
+            return;
+        }
+
         $this->log->warning("Formula function: {$this->name}, argument {$index} should be '{$type}'.");
     }
 
@@ -169,7 +181,10 @@ abstract class BaseFunction
      */
     protected function log(string $msg, string $level = 'notice')
     {
-        if (!$this->log) return;
+        if (!$this->log) {
+            return;
+        }
+
         $this->log->log($level, 'Formula function: ' . $this->name . ', ' . $msg);
     }
 }
