@@ -319,4 +319,102 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue(is_float($value));
     }
+
+    public function testJsonRetrieve1()
+    {
+        $value = (object) [
+            'a' => 'test',
+        ];
+
+        $expression = "json\\retrieve(\$value, 'a')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertEquals('test', $result);
+    }
+
+    public function testJsonRetrieve2()
+    {
+        $value =  [
+            0 => 'test',
+        ];
+
+        $expression = "json\\retrieve(\$value, '0')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertEquals('test', $result);
+    }
+
+    public function testJsonRetrieve3()
+    {
+        $value = (object) [
+            'a' => [
+                'ab' => 'test'
+            ],
+        ];
+
+        $expression = "json\\retrieve(\$value, 'a.ab')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertEquals('test', $result);
+    }
+
+    public function testJsonRetrieve4()
+    {
+        $value = (object) [
+            'a' => [
+                'ab' => 'test'
+            ],
+        ];
+
+        $expression = "json\\retrieve(\$value, 'b.c')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertEquals(null, $result);
+    }
+
+    public function testJsonRetrieve5()
+    {
+        $value = (object) [
+            'a' => [
+                'ab' => 'test'
+            ],
+        ];
+
+        $expression = "json\\retrieve(\$value, '0')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertEquals(null, $result);
+    }
+
+    public function testJsonRetrieve6()
+    {
+        $value =  [
+            0 => (object) [
+                'a' => 'test'
+            ],
+        ];
+
+        $expression = "json\\retrieve(\$value, '0.a')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertEquals('test', $result);
+    }
 }
