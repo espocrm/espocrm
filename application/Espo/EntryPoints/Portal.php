@@ -41,6 +41,7 @@ use Espo\Core\{
     Utils\Config,
     Portal\Application as PortalApplication,
     Portal\ApplicationRunners\Client,
+    Portal\Utils\Url,
     Api\Request,
     Api\Response,
 };
@@ -64,26 +65,14 @@ class Portal implements EntryPoint
     {
         $data = $data ?? (object) [];
 
-        $id = $request->get('id') ?? $data->id ?? null;
+        $id = $data->id ?? Url::detectPortalId();
 
         if (!$id) {
-            $url = $_SERVER['REQUEST_URI'];
+            $id = $this->config->get('defaultPortalId');
+        }
 
-            $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-
-            if (!isset($id)) {
-                $url = $_SERVER['REDIRECT_URL'];
-
-                $id = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-            }
-
-            if (!$id) {
-                $id = $this->config->get('defaultPortalId');
-            }
-
-            if (!$id) {
-                throw new NotFound();
-            }
+        if (!$id) {
+            throw new NotFound("Portal ID not detected.");
         }
 
         $application = new PortalApplication($id);

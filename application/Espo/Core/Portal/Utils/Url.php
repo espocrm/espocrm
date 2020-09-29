@@ -33,6 +33,12 @@ class Url
 {
     public static function detectPortalId() : ?string
     {
+        $portalId = $_SERVER['ESPO_PORTAL_ID'] ?? null;
+
+        if ($portalId) {
+            return $portalId;
+        }
+
         $url = $_SERVER['REQUEST_URI'];
 
         $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
@@ -41,57 +47,61 @@ class Url
             $portalId = null;
         }
 
-        if (!isset($portalId)) {
-            $url = $_SERVER['REDIRECT_URL'] ?? $url;
-
-            $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
+        if ($portalId) {
+            return $portalId;
         }
+
+        $url = $_SERVER['REDIRECT_URL'] ?? null;
+
+        if (!$url) {
+            return null;
+        }
+
+        $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
 
         return $portalId;
     }
 
-    public static function detectUrl() : string
+    protected static function detectIsCustomUrl() : bool
     {
-        $url = $_SERVER['REQUEST_URI'];
-
-        $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
-
-        if (strpos($url, '=') !== false) {
-            $portalId = null;
-        }
-
-        if (!isset($portalId)) {
-            return $_SERVER['REDIRECT_URL'] ?? $url;
-        }
-
-        return $url;
+        return (bool) ($_SERVER['ESPO_PORTAL_IS_CUSTOM_URL'] ?? false);
     }
 
-    public static function normalizeUrl(string $url) : string
+    public static function detectIsInPortalDir() : bool
     {
-        $urlParts = explode('?', $url);
+        $isCustomUrl = self::detectIsCustomUrl();
 
-        if (substr($urlParts[0], -1) === '/') {
-            return $url;
+        if ($isCustomUrl) {
+            return false;
         }
 
-        $url = $urlParts[0] . '/';
-
-        if (count($urlParts) > 1) {
-            $url .= '?' . $urlParts[1];
-        }
-
-        return $url;
-    }
-
-    public static function detectIsInDir() : bool
-    {
         $url = $_SERVER['REQUEST_URI'];
 
         $a = explode('?', $url);
 
         $url = rtrim($a[0], '/');
 
-        return strpos($url, '/') !== false;
+        return strpos($url, '/portal') !== false ;
+    }
+
+    public static function detectIsInPortalWithId() : bool
+    {
+        if (!self::detectIsInPortalDir()) {
+            return false;
+        }
+
+        $url = $_SERVER['REQUEST_URI'];
+
+        $a = explode('?', $url);
+
+        $url = rtrim($a[0], '/');
+
+        $folders = explode('/', $url);
+
+        if (count($folders) > 1 && $folders[count($folders) - 2] === 'portal') {
+            return true;
+        }
+
+        return false;
     }
 }

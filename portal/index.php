@@ -41,19 +41,10 @@ if (!$app->isInstalled()) {
     exit;
 }
 
-$url = Url::detectUrl();
-$normalizedUrl = Url::normalizeUrl($url);
-
-if ($url !== $normalizedUrl) {
-    header("Location: " . $normalizedUrl);
-
-    exit;
-}
-
-if (Url::detectIsInDir()) {
+if (Url::detectIsInPortalDir()) {
     $basePath = '../';
 
-    if (Url::detectPortalId()) {
+    if (Url::detectIsInPortalWithId()) {
         $basePath = '../../';
     }
 
