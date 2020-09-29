@@ -84,7 +84,7 @@ class Url
         return $url;
     }
 
-    public function detectIsInDir() : bool
+    public static function detectIsInDir() : bool
     {
         $url = $_SERVER['REQUEST_URI'];
 
