@@ -86,6 +86,7 @@ class Application
     {
         if (!$className || !class_exists($className)) {
             $this->getLog()->error("Application runner '{$className}' does not exist.");
+
             return;
         }
 
@@ -161,6 +162,7 @@ class Application
     protected function initAutoloads()
     {
         $autoload = $this->getInjectableFactory()->create(Autoload::class);
+
         $autoload->register();
     }
 
