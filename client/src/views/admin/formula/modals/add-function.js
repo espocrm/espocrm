@@ -56,7 +56,7 @@ define('views/admin/formula/modals/add-function', ['views/modal', 'model'], func
         setup: function () {
             this.header = this.translate('Function');
 
-            this.documentationUrl = 'https://www.espocrm.com/documentation/administration/formula/';
+            this.documentationUrl = 'https://docs.espocrm.com/administration/formula/';
 
             this.functionDataList = this.getMetadata().get('app.formula.functionList') || [];
         },
