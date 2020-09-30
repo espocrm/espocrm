@@ -59,9 +59,20 @@ class RetrieveType extends BaseFunction
 
         $item = json_decode($jsonString);
 
-        $pathArray = explode('.', $path);
+        $pathArray = $this->splitPath($path);
 
         return $this->retrieveAttribute($item, $pathArray);
+    }
+
+    private function splitPath(string $path) : array
+    {
+        $pathArray = preg_split('/(?<!\\\)\./', $path);
+
+        foreach ($pathArray as $i => $item) {
+            $pathArray[$i] = str_replace('\.', '.', $item);
+        }
+
+        return $pathArray;
     }
 
     private function retrieveAttribute($item, array $path)

@@ -417,4 +417,21 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('test', $result);
     }
+
+    public function testJsonRetrieve7()
+    {
+        $value = (object) [
+            'a.b' => (object) [
+                'c' => 'test'
+            ],
+        ];
+
+        $expression = "json\\retrieve(\$value, 'a\\.b.c')";
+
+        $result = $this->evaluator->process($expression, null, (object) [
+            'value' => json_encode($value),
+        ]);
+
+        $this->assertEquals('test', $result);
+    }
 }
