@@ -716,7 +716,10 @@ class Email extends Record implements
 
         $update = $this->entityManager->getQueryBuilder()->update()
             ->in('EmailUser')
-            ->set(['folderId' => $folderId])
+            ->set([
+                'folderId' => $folderId,
+                'inTrash' => false,
+            ])
             ->where([
                 'deleted' => false,
                 'userId' => $userId,

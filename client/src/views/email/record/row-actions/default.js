@@ -93,9 +93,8 @@ define('views/email/record/row-actions/default', 'views/record/row-actions/defau
                         }
                     });
                 }
-
-
             }
+
             if (this.model.get('isUsers')) {
                 if (!this.model.get('isImportant')) {
                     if (!this.model.get('inTrash')) {
@@ -117,17 +116,17 @@ define('views/email/record/row-actions/default', 'views/record/row-actions/defau
                     });
                 }
             }
+
             if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
-                if (!this.model.get('inTrash')) {
-                    list.push({
-                        action: 'moveToFolder',
-                        label: 'Move to Folder',
-                        data: {
-                            id: this.model.id
-                        }
-                    });
-                }
+                list.push({
+                    action: 'moveToFolder',
+                    label: 'Move to Folder',
+                    data: {
+                        id: this.model.id
+                    }
+                });
             }
+
             if (this.options.acl.delete) {
                 list.push({
                     action: 'quickRemove',
@@ -137,6 +136,7 @@ define('views/email/record/row-actions/default', 'views/record/row-actions/defau
                     }
                 });
             }
+
             return list;
         },
 
