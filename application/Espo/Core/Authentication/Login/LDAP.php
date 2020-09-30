@@ -44,7 +44,11 @@ use Espo\Core\{
     Utils\Language,
     ApplicationUser,
     Authentication\Result,
+    Authentication\LDAP\Utils as LDAPUtils,
+    Authentication\LDAP\Client as LDAPClient,
 };
+
+use Exception;
 
 class LDAP extends Espo
 {
@@ -76,12 +80,9 @@ class LDAP extends Espo
 
         $this->isPortal = $isPortal;
 
-        $this->utils = new LDAP\Utils($config);
+        $this->utils = new LDAPUtils($config);
     }
 
-    /**
-     * User field name  => option name (LDAP attribute).
-     */
     protected $ldapFieldMap = [
         'userName' => 'userNameAttribute',
         'firstName' => 'userFirstNameAttribute',
@@ -91,17 +92,11 @@ class LDAP extends Espo
         'phoneNumber' => 'userPhoneNumberAttribute',
     ];
 
-    /**
-     * User field name => option name.
-     */
     protected $userFieldMap = [
         'teamsIds' => 'userTeamsIds',
         'defaultTeamId' => 'userDefaultTeamId',
     ];
 
-    /**
-     * User field name => option name.
-     */
     protected $portalUserFieldMap = [
         'portalsIds' => 'portalUserPortalsIds',
         'portalRolesIds' => 'portalUserRolesIds',
@@ -137,7 +132,8 @@ class LDAP extends Espo
         /* Login LDAP system user (ldapUsername, ldapPassword) */
         try {
             $ldapClient->bind();
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $options = $this->utils->getLdapClientOptions();
             $GLOBALS['log']->error('LDAP: Could not connect to LDAP server ['.$options['host'].'], details: ' . $e->getMessage());
 
@@ -152,7 +148,8 @@ class LDAP extends Espo
         if (!isset($adminUser)) {
             try {
                 $userDn = $this->findLdapUserDnByUsername($username);
-            } catch (\Exception $e) {
+            }
+            catch (Exception $e) {
                 $GLOBALS['log']->error('Error while finding DN for ['.$username.'], details: ' . $e->getMessage() . '.');
             }
 
@@ -171,8 +168,11 @@ class LDAP extends Espo
 
             try {
                 $ldapClient->bind($userDn, $password);
-            } catch (\Exception $e) {
+            }
+            catch (
+                Exception $e) {
                 $GLOBALS['log']->error('LDAP: Authentication failed for user ['.$username.'], details: ' . $e->getMessage());
+
                 return Result::fail();
             }
         }
@@ -187,6 +187,7 @@ class LDAP extends Espo
         if (!isset($user)) {
             if (!$this->utils->getOption('createEspoUser')) {
                 $this->useSystemUser();
+
                 throw new Error($this->language->translate('ldapUserInEspoNotFound', 'messages', 'User'));
             }
 
@@ -212,8 +213,9 @@ class LDAP extends Espo
             $options = $this->utils->getLdapClientOptions();
 
             try {
-                $this->ldapClient = new LDAP\Client($options);
-            } catch (\Exception $e) {
+                $this->ldapClient = new LDAPClient($options);
+            }
+            catch (Exception $e) {
                 $GLOBALS['log']->error('LDAP error: ' . $e->getMessage());
             }
         }
@@ -239,11 +241,14 @@ class LDAP extends Espo
         $user = $this->entityManager->getEntity('User', $userId);
 
         $tokenUsername = $user->get('userName');
+
         if (strtolower($username) != strtolower($tokenUsername)) {
             $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+
             $GLOBALS['log']->alert(
                 'Unauthorized access attempt for user ['.$username.'] from IP ['.$ip.']'
             );
+
             return null;
         }
 
@@ -257,11 +262,7 @@ class LDAP extends Espo
     }
 
     /**
-     * Login user with administrator rights
-     *
-     * @param  string $username
-     * @param  string $password
-     * @return \Espo\Entities\User | null
+     * Login user with administrator rights.
      */
     protected function adminLogin($username, $password)
     {
@@ -279,12 +280,7 @@ class LDAP extends Espo
     }
 
     /**
-     * Create Espo user with data gets from LDAP server
-     *
-     * @param  array $userData LDAP entity data
-     * @param  boolean $isPortal Is portal user
-     *
-     * @return \Espo\Entities\User
+     * Create Espo user with data gets from LDAP server.
      */
     protected function createUser(array $userData, $isPortal = false)
     {
@@ -320,17 +316,14 @@ class LDAP extends Espo
 
         $user = $this->entityManager->getEntity('User');
         $user->set($data);
+
         $this->entityManager->saveEntity($user);
 
         return $this->entityManager->getEntity('User', $user->id);
     }
 
     /**
-     * Find LDAP user DN by his username
-     *
-     * @param  string $username
-     *
-     * @return string | null
+     * Find LDAP user DN by his username.
      */
     protected function findLdapUserDnByUsername($username)
     {
@@ -338,11 +331,14 @@ class LDAP extends Espo
         $options = $this->utils->getOptions();
 
         $loginFilterString = '';
+
         if (!empty($options['userLoginFilter'])) {
             $loginFilterString = $this->convertToFilterFormat($options['userLoginFilter']);
         }
 
-        $searchString = '(&(objectClass='.$options['userObjectClass'].')('.$options['userNameAttribute'].'='.$username.')'.$loginFilterString.')';
+        $searchString = '(&(objectClass='.$options['userObjectClass'].')('.$options['userNameAttribute'].'='.$username.')'.
+            $loginFilterString.')';
+
         $result = $ldapClient->search($searchString, null, LDAP\Client::SEARCH_SCOPE_SUB);
         $GLOBALS['log']->debug('LDAP: user search string: "' . $searchString . '"');
 
@@ -361,21 +357,20 @@ class LDAP extends Espo
     protected function convertToFilterFormat($filter)
     {
         $filter = trim($filter);
+
         if (substr($filter, 0, 1) != '(') {
             $filter = '(' . $filter;
         }
+
         if (substr($filter, -1) != ')') {
             $filter = $filter . ')';
         }
+
         return $filter;
     }
 
     /**
-     * Load fields for a user
-     *
-     * @param  string $type
-     *
-     * @return array
+     * Load fields for a user.
      */
     protected function loadFields($type)
     {
@@ -384,6 +379,7 @@ class LDAP extends Espo
         $typeMap = $type . 'FieldMap';
 
         $fields = [];
+
         foreach ($this->$typeMap as $fieldName => $fieldValue) {
             if (isset($options[$fieldValue])) {
                 $fields[$fieldName] = $options[$fieldValue];
