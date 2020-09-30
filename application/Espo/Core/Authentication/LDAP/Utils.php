@@ -37,10 +37,6 @@ class Utils
 
     protected $options = null;
 
-    /**
-     * Association between LDAP and Espo fields
-     * @var array
-     */
     protected $fieldMap = [
         'host' => 'ldapHost',
         'port' => 'ldapPort',
@@ -73,11 +69,6 @@ class Utils
         'portalUserRolesIds' => 'ldapPortalUserRolesIds',
     ];
 
-    /**
-     * Permitted Espo Options
-     *
-     * @var array
-     */
     protected $permittedEspoOptions = [
         'createEspoUser',
         'userNameAttribute',
@@ -96,9 +87,7 @@ class Utils
     ];
 
     /**
-     * accountCanonicalForm Map between Espo and Laminas value
-     *
-     * @var array
+     * accountCanonicalForm Map between Espo and Laminas value.
      */
     protected $accountCanonicalFormMap = [
         'Dn' => 1,
@@ -106,7 +95,6 @@ class Utils
         'Backslash' => 3,
         'Principal' => 4,
     ];
-
 
     public function __construct(Config $config = null)
     {
@@ -121,7 +109,7 @@ class Utils
     }
 
     /**
-     * Get Options from espo config according to $this->fieldMap
+     * Get Options from espo config according to $this->fieldMap.
      *
      * @return array
      */
@@ -131,10 +119,10 @@ class Utils
             return $this->options;
         }
 
-        $options = array();
+        $options = [];
         foreach ($this->fieldMap as $ldapName => $espoName) {
-
             $option = $this->getConfig()->get($espoName);
+
             if (isset($option)) {
                 $options[$ldapName] = $option;
             }
@@ -162,7 +150,7 @@ class Utils
     }
 
     /**
-     * Get an ldap option
+     * Get an ldap option.
      *
      * @param  string $name
      * @param  mixed $returns Return value
@@ -182,7 +170,7 @@ class Utils
     }
 
     /**
-     * Get Laminas options for using Laminas\Ldap
+     * Get Laminas options for using Laminas\Ldap.
      *
      * @return array
      */
@@ -193,5 +181,4 @@ class Utils
 
         return $zendOptions;
     }
-
 }
