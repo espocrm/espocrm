@@ -1,4 +1,4 @@
-<ul class="list-group">
+<ul class="list-group no-side-margin">
     <li data-id="inbox" class="list-group-item">
         <a href="javascript:" data-action="selectFolder" data-id="inbox" class="side-link">{{translate 'inbox' category='presetFilters' scope='Email'}}</a>
     </li>
