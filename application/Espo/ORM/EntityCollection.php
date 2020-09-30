@@ -34,6 +34,8 @@ use Countable;
 use ArrayAccess;
 use SeekableIterator;
 use RuntimeException;
+use OutOfBoundsException;
+use InvalidArgumentException;
 
 /**
  * A standard collection of entities. It allocates a memory for all entities.
@@ -80,7 +82,9 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     {
         do {
             $this->position ++;
+
             $next = false;
+
             if (!$this->valid() && $this->position <= $this->getLastValidKey()) {
                 $next = true;
             }
@@ -90,13 +94,17 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     private function getLastValidKey()
     {
         $keys = array_keys($this->dataList);
+
         $i = end($keys);
+
         while ($i > 0) {
             if (isset($this->dataList[$i])) {
                 break;
             }
+
             $i--;
         }
+
         return $i;
     }
 
@@ -115,20 +123,23 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         if (!isset($this->dataList[$offset])) {
             return null;
         }
+
         return $this->getEntityByOffset($offset);
     }
 
     public function offsetSet($offset, $value)
     {
         if (!($value instanceof Entity)) {
-            throw new \InvalidArgumentException('Only Entity is allowed to be added to EntityCollection.');
+            throw new InvalidArgumentException('Only Entity is allowed to be added to EntityCollection.');
         }
 
         if (is_null($offset)) {
             $this->dataList[] = $value;
-        } else {
-            $this->dataList[$offset] = $value;
+
+            return;
         }
+
+        $this->dataList[$offset] = $value;
     }
 
     public function offsetUnset($offset)
@@ -144,8 +155,9 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     public function seek($offset)
     {
         $this->position = $offset;
+
         if (!$this->valid()) {
-            throw new \OutOfBoundsException("Invalid seek offset ($offset).");
+            throw new OutOfBoundsException("Invalid seek offset ($offset).");
         }
     }
 
@@ -160,13 +172,15 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
         if ($value instanceof Entity) {
             return $value;
-        } else if (is_array($value)) {
-            $this->dataList[$offset] = $this->buildEntityFromArray($value);
-        } else {
-            return null;
         }
 
-        return $this->dataList[$offset];
+        if (is_array($value)) {
+            $this->dataList[$offset] = $this->buildEntityFromArray($value);
+
+            return $this->dataList[$offset];
+        }
+
+        return null;
     }
 
     protected function buildEntityFromArray(array $dataArray)
@@ -179,9 +193,11 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
         if ($entity) {
             $entity->set($dataArray);
+
             if ($this->isFetched) {
                 $entity->setAsFetched();
             }
+
             return $entity;
         }
     }
@@ -213,6 +229,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     public function merge(EntityCollection $collection)
     {
         $newData = $this->dataList;
+
         $incomingDataList = $collection->getDataList();
 
         foreach ($incomingDataList as $v) {
@@ -230,12 +247,14 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         if ($this->indexOf($value) !== false) {
             return true;
         }
+
         return false;
     }
 
     public function indexOf($value)
     {
         $index = 0;
+
         if (is_array($value)) {
             foreach ($this->dataList as $v) {
                 if (is_array($v)) {
@@ -247,6 +266,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
                         return $index;
                     }
                 }
+
                 $index ++;
             }
         } else if ($value instanceof Entity) {
@@ -260,9 +280,11 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
                         return $index;
                     }
                 }
+
                 $index ++;
             }
         }
+
         return false;
     }
 
@@ -272,14 +294,17 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     public function toArray(bool $itemsAsObjects = false) : array
     {
         $arr = [];
+
         foreach ($this as $entity) {
             if ($itemsAsObjects) {
                 $item = $entity->getValueMap();
             } else {
                 $item = $entity->toArray();
             }
+
             $arr[] = $item;
         }
+
         return $arr;
     }
 
