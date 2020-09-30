@@ -189,7 +189,9 @@ class Importer
         if ($duplicate = $this->findDuplicate($email)) {
             if ($duplicate->get('status') != 'Being Imported') {
                 $duplicate = $this->entityManager->getEntity('Email', $duplicate->id);
+
                 $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+
                 return $duplicate;
             }
         }
@@ -197,6 +199,7 @@ class Importer
         if ($parser->checkMessageAttribute($message, 'date')) {
             try {
                 $dt = new DateTime($parser->getMessageAttribute($message, 'date'));
+
                 if ($dt) {
                     $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                     $email->set('dateSent', $dateSent);
@@ -209,6 +212,7 @@ class Importer
         if ($parser->checkMessageAttribute($message, 'delivery-Date')) {
             try {
                 $dt = new DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
+
                 if ($dt) {
                     $deliveryDate = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                     $email->set('delivery-Date', $deliveryDate);
@@ -222,7 +226,7 @@ class Importer
             $parser->fetchContentParts($email, $message, $inlineAttachmentList);
 
             if ($this->filtersMatcher->match($email, $filterList)) {
-                return false;
+                return null;
             }
         } else {
             $email->set('body', 'Not fetched. The email size exceeds the limit.');
@@ -233,15 +237,24 @@ class Importer
 
         $replied = null;
 
-        if ($parser->checkMessageAttribute($message, 'in-Reply-To') && $parser->getMessageAttribute($message, 'in-Reply-To')) {
+        if (
+            $parser->checkMessageAttribute($message, 'in-Reply-To') && $parser->getMessageAttribute($message, 'in-Reply-To')
+        ) {
             $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
             $inReplyTo = $arr[0];
 
             if ($inReplyTo) {
-                if ($inReplyTo[0] !== '<') $inReplyTo = '<' . $inReplyTo . '>';
-                $replied = $this->entityManager->getRepository('Email')->where(array(
-                    'messageId' => $inReplyTo
-                ))->findOne();
+                if ($inReplyTo[0] !== '<') {
+                    $inReplyTo = '<' . $inReplyTo . '>';
+                }
+
+                $replied = $this->entityManager
+                    ->getRepository('Email')
+                    ->where([
+                        'messageId' => $inReplyTo
+                    ])
+                    ->findOne();
+
                 if ($replied) {
                     $email->set('repliedId', $replied->id);
                     $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
@@ -255,6 +268,7 @@ class Importer
         if ($parser->checkMessageAttribute($message, 'references') && $parser->getMessageAttribute($message, 'references')) {
             $references = $parser->getMessageAttribute($message, 'references');
             $delimiter = ' ';
+
             if (strpos($references, '>,')) {
                 $delimiter = ',';
             }
@@ -278,6 +292,7 @@ class Importer
                     if (!empty($parentType) && !empty($parentId)) {
                         if ($parentType == 'Lead') {
                             $parent = $this->entityManager->getEntity('Lead', $parentId);
+
                             if ($parent && $parent->get('status') == 'Converted') {
                                 if ($parent->get('createdAccountId')) {
                                     $account = $this->entityManager->getEntity('Account', $parent->get('createdAccountId'));
@@ -301,6 +316,7 @@ class Importer
 
                         $email->set('parentType', $parentType);
                         $email->set('parentId', $parentId);
+
                         $parentFound = true;
                     }
                 }
@@ -310,6 +326,7 @@ class Importer
         if (!$parentFound) {
             if ($replied && $replied->get('parentId') && $replied->get('parentType')) {
                 $parentFound = $this->entityManager->getEntity($replied->get('parentType'), $replied->get('parentId'));
+
                 if ($parentFound) {
                     $email->set('parentType', $replied->get('parentType'));
                     $email->set('parentId', $replied->get('parentId'));
@@ -318,6 +335,7 @@ class Importer
         }
         if (!$parentFound) {
             $from = $email->get('from');
+
             if ($from) {
                 $parentFound = $this->findParent($email, $from);
             }
