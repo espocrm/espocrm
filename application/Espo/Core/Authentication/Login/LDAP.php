@@ -334,7 +334,7 @@ class LDAP extends Espo
         $searchString = '(&(objectClass='.$options['userObjectClass'].')('.$options['userNameAttribute'].'='.$username.')'.
             $loginFilterString.')';
 
-        $result = $ldapClient->search($searchString, null, LDAP\Client::SEARCH_SCOPE_SUB);
+        $result = $ldapClient->search($searchString, null, LDAPClient::SEARCH_SCOPE_SUB);
         $GLOBALS['log']->debug('LDAP: user search string: "' . $searchString . '"');
 
         foreach ($result as $item) {
