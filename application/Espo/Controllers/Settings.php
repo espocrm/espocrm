@@ -32,6 +32,11 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\{
+    Authentication\LDAP\Utils as LDAPUtils,
+    Authentication\LDAP\Client as LDAPClient,
+};
+
 class Settings extends \Espo\Core\Controllers\Base
 {
     protected function getConfigData()
@@ -86,11 +91,14 @@ class Settings extends \Espo\Core\Controllers\Base
 
         $data = get_object_vars($data);
 
-        $ldapUtils = new \Espo\Core\Utils\Authentication\LDAP\Utils();
+        $ldapUtils = new LDAPUtils();
+
         $options = $ldapUtils->normalizeOptions($data);
 
-        $ldapClient = new \Espo\Core\Utils\Authentication\LDAP\Client($options);
-        $ldapClient->bind(); //an exception if no connection
+        $ldapClient = new LDAPClient($options);
+
+        //an exception if no connection
+        $ldapClient->bind();
 
         return true;
     }
