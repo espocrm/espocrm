@@ -224,12 +224,7 @@ class LDAP extends Espo
     }
 
     /**
-     * Login by authorization token
-     *
-     * @param  string $username
-     * @param  \Espo\Entities\AuthToken $authToken
-     *
-     * @return \Espo\Entities\User | null
+     * Login by authorization token.
      */
     protected function loginByToken($username, AuthToken $authToken = null)
     {
@@ -348,11 +343,7 @@ class LDAP extends Espo
     }
 
     /**
-     * Check and convert filter item into LDAP format
-     *
-     * @param  string $filter E.g. "memberof=CN=externalTesters,OU=groups,DC=espo,DC=local"
-     *
-     * @return string
+     * Check and convert filter item into LDAP format.
      */
     protected function convertToFilterFormat($filter)
     {
