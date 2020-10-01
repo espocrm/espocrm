@@ -47,6 +47,10 @@ class Manager
 
     protected $tmpDir = 'data/tmp';
 
+    const RENAME_RETRY_NUMBER = 10;
+
+    const RENAME_RETRY_INTERVAL = 0.2;
+
     public function __construct(?Config $config = null)
     {
         $params = null;
@@ -266,11 +270,39 @@ class Manager
 
         $result = rename($tmpPath, $path);
 
+        if (!$result && stripos(\PHP_OS, 'WIN') === 0) {
+            $result = $this->renameInLoop($tmpPath, $path);
+        }
+
         if ($this->isFile($tmpPath)) {
             $this->removeFile($tmpPath);
         }
 
         return $result;
+    }
+
+    protected function renameInLoop(string $source, string $destination) : bool
+    {
+        $counter = 0;
+
+        while ($counter < self::RENAME_RETRY_NUMBER) {
+            if (!$this->isWritable($destination)) {
+                break;
+            }
+
+            $result = rename($source, $destination);
+
+            if ($result !== false) {
+                return true;
+            }
+
+            usleep(self::RENAME_RETRY_INTERVAL * 1000000);
+
+            $counter ++;
+        }
+
+
+        return false;
     }
 
     /**
