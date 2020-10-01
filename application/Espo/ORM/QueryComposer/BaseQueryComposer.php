@@ -1296,7 +1296,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $modifiedOrder[] = $newItem;
             }
 
-            $part = $this->getOrderExpressionPart($entity, $modifiedOrder, null, false, $params, true);
+            $part = $this->getOrderExpressionPart($entity, $modifiedOrder, null, $params, true);
 
             return $part;
         }
@@ -1839,7 +1839,6 @@ abstract class BaseQueryComposer implements QueryComposer
         Entity $entity,
         $orderBy = null,
         $order = null,
-        bool $useColumnAlias = false,
         ?array &$params = null,
         bool $noCustom = false
     ) : ?string {
@@ -1860,7 +1859,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
 
                     $arr[] = $this->getOrderExpressionPart(
-                        $entity, $orderByInternal, $orderInternal, $useColumnAlias, $params, $noCustom
+                        $entity, $orderByInternal, $orderInternal, $params, $noCustom
                     );
                 }
             }
@@ -1871,13 +1870,8 @@ abstract class BaseQueryComposer implements QueryComposer
         if (strpos($orderBy, 'LIST:') === 0) {
             list($l, $field, $list) = explode(':', $orderBy);
 
-            if ($useColumnAlias) {
-                $fieldPath = $this->quoteIdentifier(
-                    $this->sanitizeSelectAlias($field)
-                );
-            } else {
-                $fieldPath = $this->getAttributePathForOrderBy($entity, $field, $params);
-            }
+            $fieldPath = $this->getAttributePathForOrderBy($entity, $field, $params);
+
 
             $listQuoted = [];
             $list = array_reverse(explode(',', $list));
@@ -1916,13 +1910,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->getAttributeOrderSql($entity, $orderBy, $params, $order);
         }
 
-        if ($useColumnAlias) {
-            $fieldPath = $this->quoteIdentifier(
-                $this->sanitizeSelectAlias($orderBy)
-            );
-        } else {
-            $fieldPath = $this->getAttributePathForOrderBy($entity, $orderBy, $params);
-        }
+        $fieldPath = $this->getAttributePathForOrderBy($entity, $orderBy, $params);
 
         if (!$fieldPath) {
             throw new LogicException("Could not handle 'order' for '".$entity->getEntityType()."'.");
@@ -1933,7 +1921,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function getOrderPart(Entity $entity, $orderBy = null, $order = null, &$params = null) : ?string
     {
-        return $this->getOrderExpressionPart($entity, $orderBy, $order, false, $params);
+        return $this->getOrderExpressionPart($entity, $orderBy, $order, $params);
     }
 
     protected function getAttributePathForOrderBy(Entity $entity, string $orderBy, array $params) : ?string
