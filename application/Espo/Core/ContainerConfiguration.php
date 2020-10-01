@@ -51,6 +51,8 @@ class ContainerConfiguration
 
     public function getLoaderClassName(string $name) : ?string
     {
+        $className = null;
+
         try {
             $className = $this->metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
 
