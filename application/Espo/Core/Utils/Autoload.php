@@ -33,6 +33,7 @@ use Espo\Core\{
     Exceptions\Error,
     Utils\Autoload\Loader,
     Utils\DataCache,
+    Utils\File\Manager as FileManager,
 };
 
 use Exception;
@@ -52,14 +53,16 @@ class Autoload
     protected $config;
     protected $metadata;
     protected $dataCache;
+    protected $fileManager;
     protected $loader;
 
-    public function __construct(Config $config, Metadata $metadata, DataCache $dataCache, Loader $loader)
-    {
+    public function __construct(
+        Config $config, Metadata $metadata, DataCache $dataCache, FileManager $fileManager, Loader $loader
+    ) {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->dataCache = $dataCache;
-
+        $this->fileManager = $fileManager;
         $this->loader = $loader;
     }
 
