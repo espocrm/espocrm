@@ -72,8 +72,10 @@ class DataCacheTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($result);
     }
 
-    public function testGetData()
+    public function testGetDataInt()
     {
+        $this->expectException(Error::class);
+
         $this->fileManager
             ->expects($this->once())
             ->method('getPhpContents')
@@ -81,8 +83,6 @@ class DataCacheTest extends \PHPUnit\Framework\TestCase
             ->willReturn(1);
 
         $result = $this->dataCache->get('autoload');
-
-        $this->assertEquals(1, $result);
     }
 
     public function testGetError()

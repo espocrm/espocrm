@@ -63,35 +63,33 @@ class DataCache
      *
      * @throws Error if is not cached.
      *
-     * @return ?array|StdClass|int|float|string
+     * @return ?array|StdClass
      */
     public function get(string $key)
     {
         $cacheFile = $this->getCacheFile($key);
 
-        $result = $this->fileManager->getPhpContents($cacheFile);
+        $data = $this->fileManager->getPhpContents($cacheFile);
 
-        if ($result === false) {
+        if ($data === false) {
             throw new Error("Could not get '{$key}'.");
         }
 
-        return $result;
+        if (! $this->checkDataIsValid($data)) {
+            throw new Error("Bad data fetched from cache by key '{$key}'.");
+        }
+
+        return $data;
     }
 
     /**
      * Store in cache.
      *
-     * @param ?array|StdClass|int|float|string $data
+     * @param ?array|StdClass $data
      */
     public function store(string $key, $data)
     {
-        if (
-            ! is_array($data) &&
-            ! $data instanceof StdClass &&
-            ! is_int($data) &&
-            ! is_float($data) &&
-            ! is_int($data)
-        ) {
+        if (! $this->checkDataIsValid($data)) {
             throw new InvalidArgumentException("Bad cache data type.");
         }
 
@@ -102,6 +100,15 @@ class DataCache
         if ($result === false) {
             throw new Error("Could not store '{$key}'.");
         }
+    }
+
+    protected function checkDataIsValid($data)
+    {
+        $isInvalid =
+            ! is_array($data) &&
+            ! $data instanceof StdClass;
+
+        return ! $isInvalid;
     }
 
     protected function getCacheFile(string $key) : string
