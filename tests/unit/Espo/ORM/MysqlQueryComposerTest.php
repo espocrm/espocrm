@@ -937,9 +937,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
-            'select' => array('COUNT:id', 'post.name'),
-            'leftJoins' => array('post'),
-            'groupBy' => array('post.name'),
+            'select' => ['COUNT:id', 'post.name'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['post.name'],
             'orderBy' => 'LIST:post.name:Test,Hello',
         ]));
 
@@ -969,6 +969,26 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "WHERE comment.deleted = 0 " .
             "GROUP BY YEAR(post.created_at), post.name ".
             "ORDER BY 2 DESC, FIELD(post.name, 'Hello', 'Test') DESC";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testOrderByList()
+    {
+        $sql = $this->query->compose(Select::fromRaw([
+            'from' => 'Comment',
+            'select' => ['id'],
+            'leftJoins' => ['post'],
+            'groupBy' => ['post.name'],
+            'orderBy' => 'LIST:post.name:Test,Hello',
+            'distinct' => true,
+        ]));
+
+        $expectedSql =
+            "SELECT comment.id AS `id`, post.name AS `post.name` FROM `comment` " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "WHERE comment.deleted = 0 " .
+            "GROUP BY post.name ".
+            "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
         $this->assertEquals($expectedSql, $sql);
     }
 

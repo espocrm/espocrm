@@ -1446,21 +1446,32 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (is_string($value)) {
-            return self::getAllAttributesFromComplexExpression($value);
+            $value = [[$value]];
+        }
+
+        if (!is_array($value)) {
+            return [];
         }
 
         $list = [];
 
-        if (is_array($value)) {
-            foreach ($value as $item) {
-                if (!is_array($item) || !isset($item[0])) continue;
-
-                $list = array_merge(
-                    $list,
-                    self::getAllAttributesFromComplexExpression($item[0])
-                );
-
+        foreach ($value as $item) {
+            if (!is_array($item) || !isset($item[0])) {
+                continue;
             }
+
+            $expression = $item[0];
+
+            if (strpos($expression, 'LIST:') === 0 && substr_count($expression, ':') === 2) {
+                $expression = explode(':', $expression)[1];
+            }
+
+            $attributeList = self::getAllAttributesFromComplexExpression($expression);
+
+            $list = array_merge(
+                $list,
+                $attributeList
+            );
         }
 
         return $list;
