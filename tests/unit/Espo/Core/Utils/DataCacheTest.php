@@ -78,7 +78,7 @@ class DataCacheTest extends \PHPUnit\Framework\TestCase
 
         $this->fileManager
             ->expects($this->once())
-            ->method('getPhpContents')
+            ->method('getPhpSafeContents')
             ->with('data/cache/application/autoload.php')
             ->willReturn(1);
 
@@ -91,7 +91,7 @@ class DataCacheTest extends \PHPUnit\Framework\TestCase
 
         $this->fileManager
             ->expects($this->once())
-            ->method('getPhpContents')
+            ->method('getPhpSafeContents')
             ->with('data/cache/application/autoload.php')
             ->willReturn(false);
 

@@ -69,7 +69,7 @@ class DataCache
     {
         $cacheFile = $this->getCacheFile($key);
 
-        $data = $this->fileManager->getPhpContents($cacheFile);
+        $data = $this->fileManager->getPhpSafeContents($cacheFile);
 
         if ($data === false) {
             throw new Error("Could not get '{$key}'.");

@@ -49,7 +49,11 @@ class Manager
 
     const RENAME_RETRY_NUMBER = 10;
 
-    const RENAME_RETRY_INTERVAL = 0.2;
+    const RENAME_RETRY_INTERVAL = 0.1;
+
+    const GET_SAFE_CONTENTS_RETRY_NUMBER = 10;
+
+    const GET_SAFE_CONTENTS_RETRY_INTERVAL = 0.1;
 
     public function __construct(?Config $config = null)
     {
@@ -179,10 +183,10 @@ class Manager
     }
 
     /**
-     * Get PHP array from PHP file.
+     * Get data from PHP file.
      *
      * @param string|array $path
-     * @return array|object|bool
+     * @return mixed|bool
      */
     public function getPhpContents($path)
     {
@@ -195,6 +199,43 @@ class Manager
         }
 
         return false;
+    }
+
+    /**
+     * Get array or StdClass data from PHP file.
+     * For Windows: If a file is not yet written, it will wait until it's ready.
+     *
+     * @return array|StdClass
+     */
+    public function getPhpSafeContents(string $path)
+    {
+        if (!file_exists($path)) {
+            throw new Error("Can't get contents from non-existing file '{$path}'.");
+        }
+
+        if (!strtolower(substr($path, -4)) == '.php') {
+            throw new Error("Only PHP file are allowed for getting contents.");
+        }
+
+        $counter = 0;
+
+        while ($counter < self::GET_SAFE_CONTENTS_RETRY_NUMBER) {
+            $data = include($path);
+
+            if (is_array($data) || $data instanceof StdClass) {
+                return $data;
+            }
+
+            if (stripos(\PHP_OS, 'WIN') !== 0) {
+                break;
+            }
+
+            usleep(self::GET_SAFE_CONTENTS_RETRY_INTERVAL * 1000000);
+
+            $counter ++;
+        }
+
+        throw new Error("Bad data stored in file '{$path}'.");
     }
 
     /**
