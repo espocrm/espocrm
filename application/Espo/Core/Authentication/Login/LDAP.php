@@ -68,14 +68,14 @@ class LDAP extends Espo
         Config $config,
         EntityManager $entityManager,
         PasswordHash $passwordHash,
-        Language $language,
+        Language $defaultLanguage,
         ApplicationUser $applicationUser,
         bool $isPortal = false
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->passwordHash = $passwordHash;
-        $this->language = $language;
+        $this->language = $defaultLanguage;
         $this->applicationUser = $applicationUser;
 
         $this->isPortal = $isPortal;
