@@ -301,7 +301,6 @@ class Manager
             $counter ++;
         }
 
-
         return false;
     }
 
@@ -320,8 +319,8 @@ class Manager
      *
      * @param string | array $path
      * @param string $data
-     * @param  integer $flags
-     * @param  resource  $context
+     * @param integer $flags
+     * @param resource  $context
      *
      * @return bool
      */
@@ -409,8 +408,8 @@ class Manager
     /**
      * Unset some element of content data.
      *
-     * @param  string | array $path
-     * @param  array | string $unsets
+     * @param string | array $path
+     * @param array | string $unsets
      * @return bool
      */
     public function unsetContents($path, $unsets, $isJSON = true)
@@ -444,8 +443,8 @@ class Manager
 
 
     /**
-     * Concat paths
-     * @param  string | array  $paths Ex. array('pathPart1', 'pathPart2', 'pathPart3')
+     * Concat paths.
+     * @param string | array  $paths Ex. array('pathPart1', 'pathPart2', 'pathPart3')
      * @return string
      */
     protected function concatPaths($paths)
@@ -464,11 +463,11 @@ class Manager
     }
 
     /**
-     * Create a new dir
+     * Create a new dir.
      *
-     * @param  string | array $path
-     * @param  int $permission - ex. 0755
-     * @param  bool $recursive
+     * @param string | array $path
+     * @param int $permission - ex. 0755
+     * @param bool $recursive
      *
      * @return bool
      */
@@ -519,11 +518,11 @@ class Manager
      * Ex. $sourcePath = 'data/uploads/extensions/file.json',
      * $destPath = 'data/uploads/backup', result will be data/uploads/backup/data/uploads/backup/file.json.
      *
-     * @param  string  $sourcePath
-     * @param  string  $destPath
-     * @param  boolean $recursively
-     * @param  array $fileList - list of files that should be copied
-     * @param  boolean $copyOnlyFiles - copy only files, instead of full path with directories,
+     * @param string  $sourcePath
+     * @param string  $destPath
+     * @param boolean $recursively
+     * @param array $fileList - list of files that should be copied
+     * @param boolean $copyOnlyFiles - copy only files, instead of full path with directories,
      * Ex. $sourcePath = 'data/uploads/extensions/file.json',
      * $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json'
      * @return boolen
@@ -542,7 +541,6 @@ class Manager
         $permissionDeniedList = [];
 
         foreach ($fileList as $file) {
-
             if ($copyOnlyFiles) {
                 $file = pathinfo($file, PATHINFO_BASENAME);
             }
@@ -699,7 +697,6 @@ class Manager
      *
      * @param string $dirPath - directory path.
      * @param bool $removeWithDir - if remove with directory.
-     *
      * @return bool
      */
     public function removeInDir($dirPath, $removeWithDir = false)
@@ -731,8 +728,8 @@ class Manager
     /**
      * Remove items (files or directories).
      *
-     * @param  string | array $items
-     * @param  string $dirPath
+     * @param string | array $items
+     * @param string $dirPath
      * @return boolean
      */
     public function remove($items, $dirPath = null, $removeEmptyDirs = false)
@@ -806,8 +803,8 @@ class Manager
     /**
      * Check if $dirname is directory.
      *
-     * @param  string  $dirname
-     * @param  string  $basePath
+     * @param string $dirname
+     * @param string $basePath
      *
      * @return boolean
      */
@@ -925,10 +922,10 @@ class Manager
     }
 
     /**
-     * Get parent dir name/path
+     * Get parent dir name/path.
      *
-     * @param  string  $path
-     * @param  boolean $isFullPath
+     * @param string $path
+     * @param boolean $isFullPath
      * @return string
      */
     public function getParentDirName($path, $isFullPath = true)
@@ -939,7 +936,6 @@ class Manager
     /**
      * Return content of PHP file.
      *
-     * @param string $varName - name of variable which contains the content.
      * @param array $content
      *
      * @return string | false
@@ -993,12 +989,8 @@ class Manager
 
     /**
      * Check if $paths are writable. Permission denied list are defined in getLastPermissionDeniedList().
-     *
-     * @param array $paths
-     *
-     * @return boolean
      */
-    public function isWritableList(array $paths)
+    public function isWritableList(array $paths) : bool
     {
         $permissionDeniedList = [];
 
@@ -1034,12 +1026,8 @@ class Manager
 
     /**
      * Check if $path is writable.
-     *
-     * @param string |array $path
-     *
-     * @return boolean
      */
-    public function isWritable($path)
+    public function isWritable(string $path) : bool
     {
         $existFile = $this->getExistsPath($path);
 
@@ -1048,12 +1036,8 @@ class Manager
 
     /**
      * Check if $path is writable.
-     *
-     * @param  string | array  $path
-     *
-     * @return boolean
      */
-    public function isReadable($path)
+    public function isReadable(string $path) : bool
     {
         $existFile = $this->getExistsPath($path);
 
