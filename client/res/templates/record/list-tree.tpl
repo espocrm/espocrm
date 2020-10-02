@@ -14,7 +14,7 @@
         {{/unless}}
     {{/if}}
 {{/unless}}
-<div class="list list-expanded">
+<div class="list list-expanded list-tree">
     {{#if showRootMenu}}
     <div class="btn-group pull-right">
         <a href="javascript:" class="small dropdown-toggle btn-link" data-toggle="dropdown">
