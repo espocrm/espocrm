@@ -2,7 +2,8 @@
     "fields": {
         "useCache": {
             "type": "bool",
-            "default": true
+            "default": true,
+            "tooltip": true
         },
         "recordsPerPage": {
             "type": "int",
@@ -61,7 +62,8 @@
             "type": "multiEnum",
             "default": ["USD", "EUR"],
             "required": true,
-            "view": "views/settings/fields/currency-list"
+            "view": "views/settings/fields/currency-list",
+            "tooltip": true
         },
         "defaultCurrency": {
             "type": "enum",
@@ -143,7 +145,8 @@
         "globalSearchEntityList": {
             "type": "multiEnum",
             "translation": "Global.scopeNames",
-            "view": "views/settings/fields/global-search-entity-list"
+            "view": "views/settings/fields/global-search-entity-list",
+            "tooltip": true
         },
         "exportDelimiter": {
             "type": "varchar",
@@ -326,7 +329,8 @@
         },
         "exportDisabled": {
             "type": "bool",
-            "default": false
+            "default": false,
+            "tooltip": true
         },
         "emailNotificationsDelay": {
             "type": "int",
@@ -399,7 +403,8 @@
             "type": "varchar"
         },
         "displayListViewRecordCount": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         },
         "userThemesDisabled": {
             "type": "bool",
@@ -461,7 +466,8 @@
             "disabled": true
         },
         "siteUrl": {
-            "type": "varchar"
+            "type": "varchar",
+            "tooltip": true
         },
         "applicationName": {
             "type": "varchar"
@@ -503,15 +509,18 @@
         },
         "calendarEntityList": {
             "type": "multiEnum",
-            "view": "views/settings/fields/calendar-entity-list"
+            "view": "views/settings/fields/calendar-entity-list",
+            "tooltip": true
         },
         "activitiesEntityList": {
             "type": "multiEnum",
-            "view": "views/settings/fields/activities-entity-list"
+            "view": "views/settings/fields/activities-entity-list",
+            "tooltip": true
         },
         "historyEntityList": {
             "type": "multiEnum",
-            "view": "views/settings/fields/history-entity-list"
+            "view": "views/settings/fields/history-entity-list",
+            "tooltip": true
         },
         "busyRangesEntityList": {
             "type": "multiEnum",
@@ -578,13 +587,16 @@
             "tooltip": true
         },
         "addressCountryList": {
-            "type": "multiEnum"
+            "type": "multiEnum",
+            "tooltip": true
         },
         "addressCityList": {
-            "type": "multiEnum"
+            "type": "multiEnum",
+            "tooltip": true
         },
         "addressStateList": {
-            "type": "multiEnum"
+            "type": "multiEnum",
+            "tooltip": true
         },
         "jobRunInParallel": {
             "type": "bool",
@@ -621,7 +633,8 @@
             "tooltip": true
         },
         "useWebSocket": {
-            "type": "bool"
+            "type": "bool",
+            "tooltip": true
         }
     }
 }
