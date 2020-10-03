@@ -1547,6 +1547,9 @@ label.attach-file-label {
 .list-row > .cell > .attachment-preview {
     margin-bottom: -@table-cell-padding;
     margin-top: -@table-cell-padding;
+}
+
+.list-row > .cell > .attachment-preview:not(.no-shrink) {
     max-height: @line-height-computed + @table-cell-padding + @table-cell-padding;
 
     a {

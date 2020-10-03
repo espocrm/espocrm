@@ -12,6 +12,14 @@
          "options": ["x-small", "small", "medium", "large"]
       },
       {
+         "name": "listPreviewSize",
+         "type": "enum",
+         "default": "small",
+         "options": ["", "small", "medium"],
+         "translation": "Admin.options.previewSize",
+         "default": ""
+      },
+      {
          "name": "maxFileSize",
          "type": "float",
          "tooltip": true,

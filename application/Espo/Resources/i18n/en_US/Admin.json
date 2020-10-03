@@ -162,6 +162,7 @@
         "max": "Max",
         "translation": "Translation",
         "previewSize": "Preview Size",
+        "listPreviewSize": "Preview Size in List View",
         "noEmptyString": "Empty string value is not allowed",
         "defaultType": "Default Type",
         "seeMoreDisabled": "Disable Text Cut",
@@ -289,6 +290,7 @@
     },
     "options": {
         "previewSize": {
+            "": "Default",
             "x-small": "X-Small",
             "small": "Small",
             "medium": "Medium",
