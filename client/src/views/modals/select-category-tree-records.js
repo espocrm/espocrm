@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/select-category-tree-records', 'views/modals/select-records', function (Dep) {
+define('views/modals/select-category-tree-records', 'views/modals/select-records', function (Dep) {
 
     return Dep.extend({
 
@@ -113,13 +113,13 @@ Espo.define('views/modals/select-category-tree-records', 'views/modals/select-re
                         this.createView('list', viewName, {
                             collection: collection,
                             el: this.containerSelector + ' .list-container',
-                            createDisabled: true,
+                            readOnly: true,
                             selectable: true,
                             checkboxes: this.multiple,
                             massActionsDisabled: true,
                             searchManager: searchManager,
                             checkAllResultDisabled: true,
-                            buttonsDisabled: true
+                            buttonsDisabled: true,
                         }, function (list) {
                             list.once('select', function (model) {
                                 this.trigger('select', model);
@@ -136,4 +136,3 @@ Espo.define('views/modals/select-category-tree-records', 'views/modals/select-re
 
     });
 });
-

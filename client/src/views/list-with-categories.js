@@ -366,14 +366,14 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                     collection: collection,
                     el: this.options.el + ' .categories-container',
                     selectable: true,
-                    createDisabled: true,
                     showRoot: true,
                     rootName: this.translate(this.scope, 'scopeNamesPlural'),
                     buttonsDisabled: true,
                     checkboxes: false,
                     showEditLink: this.getAcl().check(this.categoryScope, 'edit'),
                     isExpanded: this.isExpanded,
-                    hasExpandedToggler: this.hasExpandedToggler
+                    hasExpandedToggler: this.hasExpandedToggler,
+                    readOnly: true,
                 }, function (view) {
                     if (this.currentCategoryId) {
                         view.setSelected(this.currentCategoryId);

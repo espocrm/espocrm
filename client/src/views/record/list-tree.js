@@ -64,8 +64,11 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.createDisabled = this.createDisabled;
+
             data.showRoot = this.showRoot;
+
             if (data.showRoot) {
                 data.rootName = this.rootName || this.translate('Root');
             }
@@ -96,12 +99,15 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                 this.selectable = this.options.selectable;
             }
 
-            this.createDisabled = this.options.createDisabled || this.createDisabled;
+            this.readOnly = this.options.readOnly;
+
+            this.createDisabled = this.readOnly || this.options.createDisabled || this.createDisabled;
 
             this.isExpanded = this.options.isExpanded;
 
             if ('showRoot' in this.options) {
                 this.showRoot = this.options.showRoot;
+
                 if ('rootName' in this.options) {
                     this.rootName = this.options.rootName;
                 }
@@ -114,16 +120,21 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
             if ('level' in this.options) {
                 this.level = this.options.level;
             }
+
+            this.rootView = this.options.rootView || this;
+
             if (this.level == 0) {
                 this.selectedData = {
                     id: null,
                     path: [],
-                    names: {}
+                    names: {},
                 };
             }
+
             if ('selectedData' in this.options) {
                 this.selectedData = this.options.selectedData;
             }
+
             Dep.prototype.setup.call(this);
 
             if (this.selectable) {
@@ -139,6 +150,7 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                             o.selectedData = this.selectedData;
                         }
                     }
+
                     if (this.level > 0) {
                         this.getParentView().trigger('select', o);
                     }
@@ -152,6 +164,7 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
             } else {
                 this.selectedData.id = id;
             }
+
             this.rowList.forEach(function (key) {
                 var view = this.getView(key);
 
@@ -160,6 +173,7 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                 } else {
                     view.isSelected = false;
                 }
+
                 if (view.hasView('children')) {
                     view.getView('children').setSelected(id);
                 }
@@ -176,25 +190,32 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                 var modelList = this.collection.models;
                 var count = modelList.length;
                 var built = 0;
+
                 modelList.forEach(function (model, i) {
                     var key = model.id;
+
                     this.rowList.push(key);
+
                     this.createView(key, this.itemViewName, {
                         model: model,
                         collection: this.collection,
                         el: this.options.el + ' ' + this.getRowSelector(model.id),
                         createDisabled: this.createDisabled,
+                        readOnly: this.readOnly,
                         level: this.level,
                         isSelected: model.id == this.selectedData.id,
                         selectedData: this.selectedData,
                         selectable: this.selectable,
-                        setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
+                        setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
+                        rootView: this.rootView,
                     }, function () {
                         built++;
+
                         if (built == count) {
                             if (typeof callback == 'function') {
                                 callback();
                             }
+
                             this.wait(false);
                         };
                     }.bind(this));
@@ -224,7 +245,16 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
             var attributes = this.getCreateAttributes();
 
-            attributes.order = this.collection.length + 1;
+            var maxOrder = 0;
+
+            this.collection.models.forEach(function (m) {
+                if (m.get('order') > maxOrder) {
+                    maxOrder = m.get('order');
+                }
+            }, this);
+
+            attributes.order = maxOrder + 1;
+
             attributes.parentId = null;
             attributes.parentName = null;
 
@@ -235,17 +265,22 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
             var scope = this.collection.name;
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'Modals.Edit';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+
             this.createView('quickCreate', viewName, {
                 scope: scope,
-                attributes: attributes
+                attributes: attributes,
             }, function (view) {
                 view.render();
+
                 this.listenToOnce(view, 'after:save', function (model) {
                     view.close();
+
                     model.set('childCollection', this.collection.createSeed());
+
                     if (model.get('parentId') !== attributes.parentId) {
                         var v = this;
+
                         while (1) {
                             if (v.level) {
                                 v = v.getParentView().getParentView();
@@ -253,10 +288,14 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                                 break;
                             }
                         }
+
                         v.collection.fetch();
+
                         return;
                     }
+
                     this.collection.push(model);
+
                     this.buildRows(function () {
                         this.render();
                     }.bind(this));
@@ -266,12 +305,14 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
         actionSelectRoot: function () {
             this.trigger('select', {id: null});
+
             if (this.selectable) {
                 this.$el.find('a.link').removeClass('text-bold');
                 this.$el.find('a.link[data-action="selectRoot"]').addClass('text-bold');
+
                 this.setSelected(null);
             }
-        }
+        },
 
     });
 });

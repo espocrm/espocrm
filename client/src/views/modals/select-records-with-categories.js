@@ -55,8 +55,6 @@ define('views/modals/select-records-with-categories', ['views/modals/select-reco
                                    !this.getAcl().checkScope(this.categoryScope);
 
             Dep.prototype.setup.call(this);
-
-
         },
 
         loadList: function () {
@@ -77,12 +75,12 @@ define('views/modals/select-records-with-categories', ['views/modals/select-reco
                         collection: collection,
                         el: this.options.el + ' .categories-container',
                         selectable: true,
-                        createDisabled: true,
+                        readOnly: true,
                         showRoot: true,
                         rootName: this.translate(this.scope, 'scopeNamesPlural'),
                         buttonsDisabled: true,
                         checkboxes: false,
-                        isExpanded: this.isExpanded
+                        isExpanded: this.isExpanded,
                     }, function (view) {
                         if (this.isRendered()) {
                             view.render();
