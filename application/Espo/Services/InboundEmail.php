@@ -43,10 +43,13 @@ use Espo\Core\{
     Mail\Parsers\MailMimeParser,
 };
 
+use Espo\Services\Email as EmailService;
+
 use Espo\Entities\{
     Team,
     InboundEmail as InboundEmailEntity,
     User,
+    Email as EmailEntity,
 };
 
 use Espo\Core\Di;
@@ -83,9 +86,11 @@ class InboundEmail extends \Espo\Services\Record implements
     protected function handleInput($data)
     {
         parent::handleInput($data);
+
         if (property_exists($data, 'password')) {
             $data->password = $this->getCrypt()->encrypt($data->password);
         }
+
         if (property_exists($data, 'smtpPassword')) {
             $data->smtpPassword = $this->getCrypt()->encrypt($data->smtpPassword);
         }
@@ -106,6 +111,7 @@ class InboundEmail extends \Espo\Services\Record implements
     {
         if (!empty($params['id'])) {
             $account = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+
             if ($account) {
                 $params['password'] = $this->getCrypt()->decrypt($account->get('password'));
                 $params['imapHandler'] = $account->get('imapHandler');
@@ -117,9 +123,11 @@ class InboundEmail extends \Espo\Services\Record implements
         $storage = $this->createStorage($params);
 
         $folders = new RecursiveIteratorIterator($storage->getFolders(), RecursiveIteratorIterator::SELF_FIRST);
+
         foreach ($folders as $name => $folder) {
             $foldersArr[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
         }
+
         return $foldersArr;
     }
 
@@ -127,6 +135,7 @@ class InboundEmail extends \Espo\Services\Record implements
     {
         if (!empty($params['id'])) {
             $account = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+
             if ($account) {
                 $params['imapHandler'] = $account->get('imapHandler');
             }
@@ -137,6 +146,7 @@ class InboundEmail extends \Espo\Services\Record implements
         if ($storage->getFolders()) {
             return true;
         }
+
         throw new Error();
     }
 
@@ -153,25 +163,30 @@ class InboundEmail extends \Espo\Services\Record implements
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
         $teamId = $emailAccount->get('teamId');
+
         $userId = null;
+
         if ($emailAccount->get('assignToUserId')) {
             $userId = $emailAccount->get('assignToUserId');
         }
+
         $userIdList = [];
 
         $teamIdList = $emailAccount->getLinkMultipleIdList('teams');
 
         if (!empty($teamIdList)) {
             if ($emailAccount->get('addAllTeamUsers')) {
-                $userList = $this->getEntityManager()->getRepository('User')->find([
-                    'select' => ['id'],
-                    'whereClause' => [
+                $userList = $this->getEntityManager()
+                    ->getRepository('User')
+                    ->select(['id'])
+                    ->distinct()
+                    ->join('teams')
+                    ->where([
                         'isActive' => true,
-                        'teamsMiddle.teamId' => $teamIdList
-                    ],
-                    'distinct' => true,
-                    'joins' => ['teams'],
-                ]);
+                        'teamsMiddle.teamId' => $teamIdList,
+                    ])
+                    ->find();
+
                 foreach ($userList as $user) {
                     $userIdList[] = $user->id;
                 }
@@ -182,18 +197,21 @@ class InboundEmail extends \Espo\Services\Record implements
             $teamIdList[] = $teamId;
         }
 
-        $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
-            'action' => 'Skip',
-            'OR' => [
-                [
-                    'parentType' => $emailAccount->getEntityType(),
-                    'parentId' => $emailAccount->id
+        $filterCollection = $this->getEntityManager()
+            ->getRepository('EmailFilter')
+            ->where([
+                'action' => 'Skip',
+                'OR' => [
+                    [
+                        'parentType' => $emailAccount->getEntityType(),
+                        'parentId' => $emailAccount->id,
+                    ],
+                    [
+                        'parentId' => null
+                    ],
                 ],
-                [
-                    'parentId' => null
-                ]
-            ]
-        ])->find();
+            ])
+            ->find();
 
         $fetchData = $emailAccount->get('fetchData');
 
@@ -239,6 +257,7 @@ class InboundEmail extends \Espo\Services\Record implements
                 $GLOBALS['log']->error(
                     'InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
                 );
+
                 continue;
             }
 
@@ -266,6 +285,7 @@ class InboundEmail extends \Espo\Services\Record implements
                 $idList = $storage->getIdsFromUID($lastUID);
             } else {
                 $fetchSince = $emailAccount->get('fetchSince');
+
                 if ($lastDate) {
                     $fetchSince = $lastDate;
                 }
@@ -296,8 +316,10 @@ class InboundEmail extends \Espo\Services\Record implements
 
                 if ($forceByDate && $previousLastUID) {
                     $uid = $storage->getUniqueId($id);
+
                     if ($uid <= $previousLastUID) {
                         $k++;
+
                         continue;
                     }
                 }
@@ -394,15 +416,18 @@ class InboundEmail extends \Espo\Services\Record implements
 
                     if ($email && $email->get('dateSent')) {
                         $dt = null;
+
                         try {
                             $dt = new DateTime($email->get('dateSent'));
                         } catch (Exception $e) {}
 
                         if ($dt) {
                             $nowDt = new DateTime();
+
                             if ($dt->getTimestamp() >= $nowDt->getTimestamp()) {
                                 $dt = $nowDt;
                             }
+
                             $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
                             $lastDate = $dateSent;
                         }
@@ -416,6 +441,7 @@ class InboundEmail extends \Espo\Services\Record implements
 
             if ($forceByDate) {
                 $nowDt = new DateTime();
+
                 $lastDate = $nowDt->format('Y-m-d H:i:s');
             }
 
@@ -425,8 +451,10 @@ class InboundEmail extends \Espo\Services\Record implements
             if ($forceByDate) {
                 if ($previousLastUID) {
                     $idList = $storage->getIdsFromUID($previousLastUID);
+
                     if (count($idList)) {
                         $uid1 = $storage->getUniqueId($idList[0]);
+
                         if ($uid1 && $uid1 > $previousLastUID) {
                             unset($fetchData->byDate->$folder);
                         }
@@ -475,8 +503,10 @@ class InboundEmail extends \Espo\Services\Record implements
     {
         if ($email->get('parentType') && $email->get('parentId')) {
             $parent = $this->getEntityManager()->getEntity($email->get('parentType'), $email->get('parentId'));
+
             if ($parent) {
                 $this->getServiceFactory()->create('Stream')->noteEmailReceived($parent, $email);
+
                 return;
             }
         }
@@ -515,12 +545,15 @@ class InboundEmail extends \Espo\Services\Record implements
     {
         if ($email->get('parentType') == 'Case' && $email->get('parentId')) {
             $case = $this->getEntityManager()->getEntity('Case', $email->get('parentId'));
+
             if ($case) {
                 $this->processCaseToEmailFields($case, $email);
+
                 if (!$email->isFetched()) {
                     $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
                 }
             }
+
             return;
         }
 
@@ -535,6 +568,7 @@ class InboundEmail extends \Espo\Services\Record implements
                 $email->set('parentType', 'Case');
                 $email->set('parentId', $case->id);
                 $this->processCaseToEmailFields($case, $email);
+
                 if (!$email->isFetched()) {
                     $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
                 }
@@ -545,7 +579,7 @@ class InboundEmail extends \Espo\Services\Record implements
                 'teamId' => $inboundEmail->get('teamId'),
                 'userId' => $inboundEmail->get('assignToUserId'),
                 'targetUserPosition' => $inboundEmail->get('targetUserPosition'),
-                'inboundEmailId' => $inboundEmail->id
+                'inboundEmailId' => $inboundEmail->id,
             ];
 
             $case = $this->emailToCase($email, $params);
@@ -581,6 +615,7 @@ class InboundEmail extends \Espo\Services\Record implements
     protected function assignLeastBusy(Entity $case, Team $team, $targetUserPosition)
     {
         $className = 'Espo\\Custom\\Business\\Distribution\\CaseObj\\LeastBusy';
+
         if (!class_exists($className)) {
             $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\LeastBusy';
         }
@@ -595,10 +630,12 @@ class InboundEmail extends \Espo\Services\Record implements
         }
     }
 
-    protected function emailToCase(\Espo\Entities\Email $email, array $params = [])
+    protected function emailToCase(EmailEntity $email, array $params = [])
     {
         $case = $this->getEntityManager()->getEntity('Case');
+
         $case->populateDefaults();
+
         $case->set('name', $email->get('name'));
 
         $bodyPlain = $email->getBodyPlain();
@@ -616,8 +653,13 @@ class InboundEmail extends \Espo\Services\Record implements
 
         foreach ($attachmentIdList as $attachmentId) {
             $attachment = $this->getEntityManager()->getRepository('Attachment')->get($attachmentId);
-            if (!$attachment) continue;
+
+            if (!$attachment) {
+                continue;
+            }
+
             $copiedAttachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+
             $copiedAttachmentIdList[] = $copiedAttachment->id;
         }
 
@@ -626,6 +668,7 @@ class InboundEmail extends \Espo\Services\Record implements
         }
 
         $userId = null;
+
         if (!empty($params['userId'])) {
             $userId = $params['userId'];
         }
@@ -635,19 +678,23 @@ class InboundEmail extends \Espo\Services\Record implements
         }
 
         $teamId = false;
+
         if (!empty($params['teamId'])) {
             $teamId = $params['teamId'];
         }
+
         if ($teamId) {
             $case->set('teamsIds', [$teamId]);
         }
 
         $caseDistribution = '';
+
         if (!empty($params['caseDistribution'])) {
             $caseDistribution = $params['caseDistribution'];
         }
 
         $targetUserPosition = null;
+
         if (!empty($params['targetUserPosition'])) {
             $targetUserPosition = $params['targetUserPosition'];
         }
@@ -660,21 +707,26 @@ class InboundEmail extends \Espo\Services\Record implements
                     $case->set('status', 'Assigned');
                 }
                 break;
+
             case 'Round-Robin':
                 if ($teamId) {
                     $team = $this->getEntityManager()->getEntity('Team', $teamId);
+
                     if ($team) {
                         $this->assignRoundRobin($case, $team, $targetUserPosition);
                     }
                 }
                 break;
+
             case 'Least-Busy':
                 if ($teamId) {
                     $team = $this->getEntityManager()->getEntity('Team', $teamId);
+
                     if ($team) {
                         $this->assignLeastBusy($case, $team, $targetUserPosition);
                     }
                 }
+
                 break;
         }
 
@@ -686,18 +738,26 @@ class InboundEmail extends \Espo\Services\Record implements
             $case->set('accountId', $email->get('accountId'));
         }
 
-        $contact = $this->getEntityManager()->getRepository('Contact')->join('emailAddresses', 'emailAddressesMultiple')->where([
-            'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
-        ])->findOne();
+        $contact = $this->getEntityManager()
+            ->getRepository('Contact')
+            ->join('emailAddresses', 'emailAddressesMultiple')
+            ->where([
+                'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
+            ])
+            ->findOne();
 
         if ($contact) {
             $case->set('contactId', $contact->id);
         } else {
             if (!$case->get('accountId')) {
-                $lead = $this->getEntityManager()->getRepository('Lead')
-                ->join('emailAddresses', 'emailAddressesMultiple')->where([
-                    'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
-                ])->findOne();
+                $lead = $this->getEntityManager()
+                    ->getRepository('Lead')
+                    ->join('emailAddresses', 'emailAddressesMultiple')
+                    ->where([
+                        'emailAddressesMultiple.id' => $email->get('fromEmailAddressId')
+                    ])
+                    ->findOne();
+
                 if ($lead) {
                     $case->set('leadId', $lead->id);
                 }
@@ -731,11 +791,15 @@ class InboundEmail extends \Espo\Services\Record implements
 
         $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($email->get('from'));
 
-        $sent = $this->getEntityManager()->getRepository('Email')->where([
-            'toEmailAddresses.id' => $emailAddress->id,
-            'dateSent>' => $threshold,
-            'status' => 'Sent'
-        ])->join('toEmailAddresses')->findOne();
+        $sent = $this->getEntityManager()
+            ->getRepository('Email')
+            ->where([
+                'toEmailAddresses.id' => $emailAddress->id,
+                'dateSent>' => $threshold,
+                'status' => 'Sent',
+            ])
+            ->join('toEmailAddresses')
+            ->findOne();
 
         if ($sent) {
             return false;
@@ -745,15 +809,20 @@ class InboundEmail extends \Espo\Services\Record implements
             $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
             if ($replyEmailTemplateId) {
                 $entityHash = [];
+
                 if ($case) {
                     $entityHash['Case'] = $case;
+
                     if ($case->get('contactId')) {
                         $contact = $this->getEntityManager()->getEntity('Contact', $case->get('contactId'));
                     }
                 }
+
                 if (empty($contact)) {
                     $contact = $this->getEntityManager()->getEntity('Contact');
-                    $fromName = \Espo\Services\Email::parseFromName($email->get('fromString'));
+
+                    $fromName = EmailService::parseFromName($email->get('fromString'));
+
                     if (!empty($fromName)) {
                         $contact->set('name', $fromName);
                     }
@@ -771,11 +840,13 @@ class InboundEmail extends \Espo\Services\Record implements
                 $replyData = $emailTemplateService->parse($replyEmailTemplateId, ['entityHash' => $entityHash], true);
 
                 $subject = $replyData['subject'];
+
                 if ($case) {
                     $subject = '[#' . $case->get('number'). '] ' . $subject;
                 }
 
                 $reply = $this->getEntityManager()->getEntity('Email');
+
                 $reply->set('to', $email->get('from'));
                 $reply->set('subject', $subject);
                 $reply->set('body', $replyData['body']);
@@ -829,7 +900,6 @@ class InboundEmail extends \Espo\Services\Record implements
 
                 return true;
             }
-
         } catch (Exception $e) {}
     }
 
@@ -844,9 +914,11 @@ class InboundEmail extends \Espo\Services\Record implements
             $smtpParams['security'] = $emailAccount->get('smtpSecurity');
             $smtpParams['username'] = $emailAccount->get('smtpUsername');
             $smtpParams['password'] = $emailAccount->get('smtpPassword');
+
             if (array_key_exists('password', $smtpParams)) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
             }
+
             return $smtpParams;
         }
 
@@ -858,6 +930,7 @@ class InboundEmail extends \Espo\Services\Record implements
         $content = $message->getRawContent();
 
         $isHard = false;
+
         if (preg_match('/permanent[ ]*[error|failure]/', $content)) {
             $isHard = true;
         }
@@ -876,15 +949,21 @@ class InboundEmail extends \Espo\Services\Record implements
             }
         }
 
-        if (!$queueItemId) return false;
+        if (!$queueItemId) {
+            return false;
+        }
 
         $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
-        if (!$queueItem) return false;
+
+        if (!$queueItem) {
+            return false;
+        }
 
         $massEmailId = $queueItem->get('massEmailId');
         $massEmail = $this->getEntityManager()->getEntity('MassEmail', $massEmailId);
 
         $campaignId = null;
+
         if ($massEmail) {
             $campaignId = $massEmail->get('campaignId');
         }
@@ -898,12 +977,15 @@ class InboundEmail extends \Espo\Services\Record implements
         if ($isHard && $emailAddress) {
             $emailAddressEntity = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
             $emailAddressEntity->set('invalid', true);
+
             $this->getEntityManager()->saveEntity($emailAddressEntity);
         }
 
         if ($campaignId && $target && $target->id) {
             $this->getCampaignService()
-                ->logBounced($campaignId, $queueItemId, $target, $emailAddress, $isHard, null, $queueItem->get('isTest'));
+                ->logBounced(
+                    $campaignId, $queueItemId, $target, $emailAddress, $isHard, null, $queueItem->get('isTest')
+                );
         }
 
         return true;
@@ -918,14 +1000,17 @@ class InboundEmail extends \Espo\Services\Record implements
         return $this->campaignService;
     }
 
-    public function findAccountForSending(string $emailAddress) : ?\Espo\Entities\InboundEmail
+    public function findAccountForSending(string $emailAddress) : ?InboundEmailEntity
     {
-        $inboundEmail = $this->getEntityManager()->getRepository('InboundEmail')->where([
-            'status' => 'Active',
-            'useSmtp' => true,
-            'smtpHost!=' => null,
-            'emailAddress' => $emailAddress,
-        ])->findOne();
+        $inboundEmail = $this->getEntityManager()
+            ->getRepository('InboundEmail')
+            ->where([
+                'status' => 'Active',
+                'useSmtp' => true,
+                'smtpHost!=' => null,
+                'emailAddress' => $emailAddress,
+            ])
+            ->findOne();
 
         return $inboundEmail;
     }
@@ -933,6 +1018,7 @@ class InboundEmail extends \Espo\Services\Record implements
     public function findSharedAccountForUser(User $user, $emailAddress)
     {
         $groupEmailAccountPermission = $this->getAclManager()->get($user, 'groupEmailAccountPermission');
+
         $teamIdList = $user->getLinkMultipleIdList('teams');
 
         $inboundEmail = null;
@@ -941,17 +1027,20 @@ class InboundEmail extends \Espo\Services\Record implements
 
         if ($groupEmailAccountPermission && $groupEmailAccountPermission !== 'no') {
             if ($groupEmailAccountPermission === 'team') {
-                if (!count($teamIdList)) return;
+                if (!count($teamIdList)) {
+                    return;
+                }
+
                 $selectParams = [
                     'whereClause' => [
                         'status' => 'Active',
                         'useSmtp' => true,
                         'smtpIsShared' => true,
                         'teamsMiddle.teamId' => $teamIdList,
-                        'emailAddress' => $emailAddress
+                        'emailAddress' => $emailAddress,
                     ],
                     'joins' => ['teams'],
-                    'distinct' => true
+                    'distinct' => true,
                 ];
             } else if ($groupEmailAccountPermission === 'all') {
                 $selectParams = [
@@ -959,7 +1048,7 @@ class InboundEmail extends \Espo\Services\Record implements
                         'status' => 'Active',
                         'useSmtp' => true,
                         'smtpIsShared' => true,
-                        'emailAddress' => $emailAddress
+                        'emailAddress' => $emailAddress,
                     ]
                 ];
             }
@@ -967,6 +1056,7 @@ class InboundEmail extends \Espo\Services\Record implements
             $inboundEmail = $this->getEntityManager()->getRepository('InboundEmail')->findOne($selectParams);
 
         }
+
         return $inboundEmail;
     }
 
@@ -1034,9 +1124,11 @@ class InboundEmail extends \Espo\Services\Record implements
         $storage = $this->getStorage($emailAccount);
 
         $folder = $emailAccount->get('sentFolder');
+
         if (empty($folder)) {
             throw new Error("No sent folder for Email Account: " . $emailAccount->id . ".");
         }
+
         $storage->appendMessage($message->toString(), $folder);
     }
 
@@ -1044,6 +1136,7 @@ class InboundEmail extends \Espo\Services\Record implements
     {
         $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
+
         if ($smtpParams['server']) {
             $smtpParams['port'] = $emailAccount->get('smtpPort');
             $smtpParams['auth'] = $emailAccount->get('smtpAuth');
@@ -1058,9 +1151,11 @@ class InboundEmail extends \Espo\Services\Record implements
             if ($emailAccount->get('fromName')) {
                 $smtpParams['fromName'] = $emailAccount->get('fromName');
             }
+
             if ($emailAccount->get('emailAddress')) {
                 $smtpParams['fromAddress'] = $emailAccount->get('emailAddress');
             }
+
             if (array_key_exists('password', $smtpParams) && is_string($smtpParams['password'])) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
             }
@@ -1077,7 +1172,9 @@ class InboundEmail extends \Espo\Services\Record implements
     {
         $handlerClassName = $emailAccount->get('smtpHandler');
 
-        if (!$handlerClassName) return;
+        if (!$handlerClassName) {
+            return;
+        }
 
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
