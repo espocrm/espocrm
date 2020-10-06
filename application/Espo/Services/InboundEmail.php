@@ -43,7 +43,10 @@ use Espo\Core\{
     Mail\Parsers\MailMimeParser,
 };
 
-use Espo\Services\Email as EmailService;
+use Espo\Services\{
+    Email as EmailService,
+    Record as RecordService,
+};
 
 use Espo\Entities\{
     Team,
@@ -60,7 +63,7 @@ use Throwable;
 use DateTime;
 use DateTimeZone;
 
-class InboundEmail extends \Espo\Services\Record implements
+class InboundEmail extends RecordService implements
 
     Di\CryptAware,
     Di\EmailSenderAware,
@@ -401,6 +404,7 @@ class InboundEmail extends \Espo\Services\Record implements
                         } else {
                             if ($emailAccount->get('reply')) {
                                 $user = $this->getEntityManager()->getEntity('User', $userId);
+
                                 $this->autoReply($emailAccount, $email, $user);
                             }
                         }
@@ -481,6 +485,7 @@ class InboundEmail extends \Espo\Services\Record implements
         $filterCollection, $fetchOnlyHeader, $folderData = null
     ) {
         $email = null;
+
         try {
             $email = $importer->importMessage(
                 $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
@@ -520,6 +525,7 @@ class InboundEmail extends \Espo\Services\Record implements
             $userIdList = $case->getLinkMultipleIdList('assignedUsers');
         } else {
             $assignedUserId = $case->get('assignedUserId');
+
             if ($assignedUserId) {
                 $userIdList[] = $assignedUserId;
             }
@@ -560,37 +566,43 @@ class InboundEmail extends \Espo\Services\Record implements
         if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
             $caseNumber = $m[1];
 
-            $case = $this->getEntityManager()->getRepository('Case')->where([
-                'number' => $caseNumber
-            ])->findOne();
+            $case = $this->getEntityManager()
+                ->getRepository('Case')
+                ->where([
+                    'number' => $caseNumber,
+                ])
+                ->findOne();
 
             if ($case) {
                 $email->set('parentType', 'Case');
                 $email->set('parentId', $case->id);
+
                 $this->processCaseToEmailFields($case, $email);
 
                 if (!$email->isFetched()) {
                     $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email);
                 }
             }
-        } else {
-            $params = [
-                'caseDistribution' => $inboundEmail->get('caseDistribution'),
-                'teamId' => $inboundEmail->get('teamId'),
-                'userId' => $inboundEmail->get('assignToUserId'),
-                'targetUserPosition' => $inboundEmail->get('targetUserPosition'),
-                'inboundEmailId' => $inboundEmail->id,
-            ];
 
-            $case = $this->emailToCase($email, $params);
+            return;
+        }
 
-            $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
+        $params = [
+            'caseDistribution' => $inboundEmail->get('caseDistribution'),
+            'teamId' => $inboundEmail->get('teamId'),
+            'userId' => $inboundEmail->get('assignToUserId'),
+            'targetUserPosition' => $inboundEmail->get('targetUserPosition'),
+            'inboundEmailId' => $inboundEmail->id,
+        ];
 
-            $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email, true);
+        $case = $this->emailToCase($email, $params);
 
-            if ($inboundEmail->get('reply')) {
-                $this->autoReply($inboundEmail, $email, $case, $user);
-            }
+        $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
+
+        $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email, true);
+
+        if ($inboundEmail->get('reply')) {
+            $this->autoReply($inboundEmail, $email, $case, $user);
         }
     }
 
