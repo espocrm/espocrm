@@ -84,6 +84,7 @@ define('views/admin/index', 'view', function (Dep) {
                     panelItem.items.forEach(function (item) {
                         item.label = this.translate(item.label, 'labels', 'Admin');
                         panelItem.itemList.push(item);
+                        item.keywords = [];
                     }, this);
                 }
 
