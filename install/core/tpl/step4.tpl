@@ -100,7 +100,7 @@
                             {$langs['fields']['Thousand Separator']}
                         </label>
                         <div class="field field-thousandSeparator">
-                            <input type="text" class="main-element form-control" name="thousandSeparator" value="{$fields['thousandSeparator'].value}">
+                            <input type="text" class="main-element form-control" name="thousandSeparator" value="{$fields['thousandSeparator'].value}" maxlength="1">
                         </div>
                     </div>
 
@@ -108,8 +108,8 @@
                         <label class="field-label-decimalMark control-label">
                             {$langs['fields']['Decimal Mark']} *</label>
                         <div class="field field-decimalMark">
-                            <input type="text" class="main-element form-control" name="decimalMark" value="{$fields['decimalMark'].value}">
-                            </div>
+                            <input type="text" class="main-element form-control" name="decimalMark" value="{$fields['decimalMark'].value}" maxlength="1">
+                        </div>
                     </div>
                 </div>
 
