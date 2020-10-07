@@ -106,6 +106,10 @@ define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep)
                 var imgEl = $img.get(0);
 
                 EXIF.getData(imgEl, function () {
+                    if ($img.css('image-orientation') === 'from-image') {
+                        return;
+                    }
+
                     var orientation = EXIF.getTag(this, 'Orientation');
 
                     switch (orientation) {
