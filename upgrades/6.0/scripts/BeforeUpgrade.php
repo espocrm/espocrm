@@ -94,6 +94,25 @@ class BeforeUpgrade
                 throw new Error($message);
             }
         }
+
+        $extension = $em->getRepository('Extension')
+            ->where([
+                'name' => 'VoIP Integration',
+                'isInstalled' => true,
+            ])
+            ->findOne();
+
+        if ($extension) {
+            $version = $extension->get('version');
+
+            if (version_compare($version, '1.5.0', '<')) {
+                $message =
+                    "EspoCRM 6.0.0 is not compatible with VoIP Integration extension of a version lower than 1.5.0. " .
+                    "Please upgrade the extension or uninstall it. Then run the upgrade command again.";
+
+                throw new Error($message);
+            }
+        }
     }
 
     protected function processMyIsamCheck()
