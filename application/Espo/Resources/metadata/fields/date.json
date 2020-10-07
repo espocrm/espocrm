@@ -42,11 +42,11 @@
       },
       {
          "name":"after",
-         "type":"varchar"
+         "type":"date"
       },
       {
          "name":"before",
-         "type":"varchar"
+         "type":"date"
       },
       {
          "type": "bool",

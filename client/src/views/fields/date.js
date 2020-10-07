@@ -323,14 +323,15 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
         },
 
         validateAfter: function () {
-            var field = this.model.getFieldParam(this.name, 'after');
-            if (field) {
+            var validator = 'after';
+            var validatorValue = this.model.getFieldParam(this.name, validator);
+            if (validatorValue) {
                 var value = this.model.get(this.name);
-                var otherValue = this.model.get(field);
-                if (value && otherValue) {
-                    if (moment(value).unix() <= moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.getLabelText())
-                                                                                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                if (value) {
+                    if (moment(value).unix() <= moment(validatorValue).unix()) {
+                        var msg = this.translate('fieldShouldAfter', 'messages')
+                            .replace('{field}', this.getLabelText())
+                            .replace('{otherField}', this.convertDateValueForDetail(validatorValue));
 
                         this.showValidationMessage(msg);
                         return true;
@@ -340,14 +341,16 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
         },
 
         validateBefore: function () {
-            var field = this.model.getFieldParam(this.name, 'before');
-            if (field) {
+            var validator = 'before';
+            var validatorValue = this.model.getFieldParam(this.name, validator);
+            if (validatorValue) {
                 var value = this.model.get(this.name);
-                var otherValue = this.model.get(field);
-                if (value && otherValue) {
-                    if (moment(value).unix() >= moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.getLabelText())
-                                                                                 .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                if (value) {
+                    if (moment(value).unix() >= moment(validatorValue).unix()) {
+                        var msg = this.translate('fieldShouldBefore', 'messages')
+                            .replace('{field}', this.getLabelText())
+                            .replace('{otherField}', this.convertDateValueForDetail(validatorValue));
+
                         this.showValidationMessage(msg);
                         return true;
                     }
