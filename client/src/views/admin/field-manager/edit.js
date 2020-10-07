@@ -88,6 +88,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     this.model.set('tooltipText', this.getLanguage().translate(this.field, 'tooltips', this.scope));
                 }
             } else {
+                this.model.scope = this.scope;
                 this.model.set('type', this.type);
             }
 
