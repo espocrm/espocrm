@@ -5,6 +5,7 @@
     "acl": "recordAllTeamNo",
     "aclPortal": true,
     "aclPortalLevelList": ["all", "no"],
+    "aclPortalActionList": ["read"],
     "customizable": true,
     "importable": true,
     "disabled": false
