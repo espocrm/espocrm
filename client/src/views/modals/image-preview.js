@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep) {
+define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep) {
 
     return Dep.extend({
 
@@ -72,25 +72,29 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
 
         getImageUrl: function () {
             var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
+
             if (this.size) {
                 url += '&size=' + this.size;
             }
+
             if (this.getUser().get('portalId')) {
                 url += '&portalId=' + this.getUser().get('portalId');
             }
+
             return url;
         },
 
         getOriginalImageUrl: function () {
             var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
+
             if (this.getUser().get('portalId')) {
                 url += '&portalId=' + this.getUser().get('portalId');
             }
+
             return url;
         },
 
         onImageLoad: function () {
-            console.log(1);
         },
 
         afterRender: function () {
@@ -103,6 +107,7 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
 
                 EXIF.getData(imgEl, function () {
                     var orientation = EXIF.getTag(this, 'Orientation');
+
                     switch (orientation) {
                         case 2:
                             $img.addClass('transform-flip');
@@ -138,6 +143,7 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
 
             if (this.navigationEnabled) {
                 $img.css('cursor', 'pointer');
+
                 $img.click(function () {
                     this.switchToNext();
                 }.bind(this));
@@ -145,10 +151,12 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
 
             var manageSize = function () {
                 var width = $container.width();
+
                 $img.css('maxWidth', width);
             }.bind(this);
 
             $(window).off('resize.image-review');
+
             $(window).on('resize.image-review', function () {
                 manageSize();
             });
@@ -159,12 +167,12 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
         },
 
         switchToNext: function () {
-
             this.transformClassList.forEach(function (item) {
                 this.$img.removeClass(item);
             }, this);
 
             var index = -1;
+
             this.imageList.forEach(function (d, i) {
                 if (d.id === this.options.id) {
                     index = i;
@@ -172,12 +180,14 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
             }, this);
 
             index++;
+
             if (index > this.imageList.length - 1) {
                 index = 0;
             }
 
             this.options.id = this.imageList[index].id
             this.options.name = this.imageList[index].name;
+
             this.reRender();
         },
 
