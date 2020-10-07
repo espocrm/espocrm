@@ -102,6 +102,10 @@ Espo.define('views/modals/image-preview', ['views/modal', 'lib!exif'], function 
                 var imgEl = $img.get(0);
 
                 EXIF.getData(imgEl, function () {
+                    if ($img.css('image-orientation') === 'from-image') {
+                        return;
+                    }
+
                     var orientation = EXIF.getTag(this, 'Orientation');
                     switch (orientation) {
                         case 2:
