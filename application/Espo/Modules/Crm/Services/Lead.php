@@ -31,14 +31,17 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ConflictSilent;
 
 use Espo\ORM\Entity;
 
 use Espo\Modules\Crm\Entities\Lead as LeadEntity;
 
+use Espo\Core\Templates\Services\Person as PersonService;
+
 use Espo\Core\Di;
 
-class Lead extends \Espo\Core\Templates\Services\Person implements
+class Lead extends PersonService implements
 
     Di\FieldUtilAware
 {
@@ -52,31 +55,36 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
     {
         if (!empty($data->emailId)) {
             $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
+
             if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
-                $email->set(array(
+                $email->set([
                     'parentType' => 'Lead',
                     'parentId' => $entity->id
-                ));
+                ]);
+
                 $this->getEntityManager()->saveEntity($email);
             }
         }
         if ($entity->get('campaignId')) {
-        	$campaign = $this->getEntityManager()->getEntity('Campaign', $entity->get('campaignId'));
-        	if ($campaign) {
-        		$log = $this->getEntityManager()->getEntity('CampaignLogRecord');
-        		$log->set(array(
-        			'action' => 'Lead Created',
-        			'actionDate' => date('Y-m-d H:i:s'),
-        			'parentType' => 'Lead',
-        			'parentId' => $entity->id,
-        			'campaignId' => $campaign->id
-        		));
-        		$this->getEntityManager()->saveEntity($log);
-        	}
+            $campaign = $this->getEntityManager()->getEntity('Campaign', $entity->get('campaignId'));
+
+            if ($campaign) {
+                $log = $this->getEntityManager()->getEntity('CampaignLogRecord');
+
+                $log->set([
+                    'action' => 'Lead Created',
+                    'actionDate' => date('Y-m-d H:i:s'),
+                    'parentType' => 'Lead',
+                    'parentId' => $entity->id,
+                    'campaignId' => $campaign->id,
+                ]);
+
+                $this->getEntityManager()->saveEntity($log);
+            }
         }
     }
 
-    public function getConvertAttributes($id)
+    public function getConvertAttributes(string $id)
     {
         $lead = $this->getEntity($id);
 
@@ -84,7 +92,7 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
             throw new Forbidden();
         }
 
-        $data = array();
+        $data = [];
 
         $entityList = $this->getMetadata()->get('entityDefs.Lead.convertEntityList', []);
 
@@ -93,22 +101,30 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
         $convertFieldsDefs = $this->getMetadata()->get('entityDefs.Lead.convertFields', array());
 
         foreach ($entityList as $entityType) {
-            if (!$this->getAcl()->checkScope($entityType, 'edit')) continue;
+            if (!$this->getAcl()->checkScope($entityType, 'edit')) {
+                continue;
+            }
 
-            $attributes = array();
+            $attributes = [];
 
             $target = $this->getEntityManager()->getEntity($entityType);
 
-            $fieldMap = array();
+            $fieldMap = [];
 
-            $fieldList = array_keys($this->getMetadata()->get('entityDefs.Lead.fields', array()));
+            $fieldList = array_keys($this->getMetadata()->get('entityDefs.Lead.fields', []));
+
             foreach ($fieldList as $field) {
-                if (!$this->getMetadata()->get('entityDefs.'.$entityType.'.fields.' . $field)) continue;
+                if (!$this->getMetadata()->get('entityDefs.'.$entityType.'.fields.' . $field)) {
+                    continue;
+                }
+
                 if (
                     $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type'])
                     !==
                     $this->getMetadata()->get(['entityDefs', 'Lead', 'fields', $field, 'type'])
-                ) continue;
+                ) {
+                    continue;
+                }
 
                 $fieldMap[$field] = $field;
             }
@@ -121,55 +137,69 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
             foreach ($fieldMap as $field => $leadField) {
                 $type = $this->getMetadata()->get(['entityDefs', 'Lead', 'fields', $field, 'type']);
 
-
                 if (in_array($type, ['file', 'image'])) {
                     $attachment = $lead->get($field);
+
                     if ($attachment) {
                         $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
                         $idAttribute = $field . 'Id';
                         $nameAttribute = $field . 'Name';
+
                         if ($attachment) {
                             $attributes[$idAttribute] = $attachment->id;
                             $attributes[$nameAttribute] = $attachment->get('name');
                         }
                     }
+
                     continue;
-                } else if (in_array($type, ['attachmentMultiple'])) {
+                }
+                else if (in_array($type, ['attachmentMultiple'])) {
                     $attachmentList = $lead->get($field);
+
                     if (count($attachmentList)) {
                         $idList = [];
                         $nameHash = (object) [];
                         $typeHash = (object) [];
+
                         foreach ($attachmentList as $attachment) {
                             $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+
                             if ($attachment) {
                                 $idList[] = $attachment->id;
+
                                 $nameHash->{$attachment->id} = $attachment->get('name');
                                 $typeHash->{$attachment->id} = $attachment->get('type');
                             }
                         }
+
                         $attributes[$field . 'Ids'] = $idList;
                         $attributes[$field . 'Names'] = $nameHash;
                         $attributes[$field . 'Types'] = $typeHash;
                     }
+
                     continue;
                 }
 
                 $leadAttributeList = $this->fieldUtil->getAttributeList('Lead', $leadField);
+
                 $attributeList = $this->fieldUtil->getAttributeList($entityType, $field);
 
                 foreach ($attributeList as $i => $attribute) {
-                    if (in_array($attribute, $ignoreAttributeList)) continue;
+                    if (in_array($attribute, $ignoreAttributeList)) {
+                        continue;
+                    }
 
                     $leadAttribute = $leadAttributeList[$i];
-                    if (!$lead->has($leadAttribute)) continue;
+
+                    if (!$lead->has($leadAttribute)) {
+                        continue;
+                    }
 
                     $attributes[$attribute] = $lead->get($leadAttribute);
                 }
             }
 
             $data[$entityType] = $attributes;
-
         }
 
         return $data;
@@ -197,7 +227,10 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
             $account->set(get_object_vars($recordsData->Account));
 
             if ($duplicateCheck) {
-                $rDuplicateList = $this->getServiceFactory()->create('Account')->findDuplicates($account, $recordsData->Account);
+                $rDuplicateList = $this->getServiceFactory()
+                    ->create('Account')
+                    ->findDuplicates($account, $recordsData->Account);
+
                 if ($rDuplicateList) {
                     foreach ($rDuplicateList as $e) {
                         $item = $e->getValueMap();
@@ -210,6 +243,7 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
 
             if (!$skipSave) {
                 $entityManager->saveEntity($account);
+
                 $lead->set('createdAccountId', $account->id);
             }
         }
@@ -217,12 +251,16 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
         if (!empty($recordsData->Contact)) {
             $contact = $entityManager->getEntity('Contact');
             $contact->set(get_object_vars($recordsData->Contact));
+
             if (isset($account)) {
                 $contact->set('accountId', $account->id);
             }
 
             if ($duplicateCheck) {
-                $rDuplicateList = $this->getServiceFactory()->create('Contact')->findDuplicates($contact, $recordsData->Contact);
+                $rDuplicateList = $this->getServiceFactory()
+                    ->create('Contact')
+                    ->findDuplicates($contact, $recordsData->Contact);
+
                 if ($rDuplicateList) {
                     foreach ($rDuplicateList as $e) {
                         $item = $e->getValueMap();
@@ -235,6 +273,7 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
 
             if (!$skipSave) {
                 $entityManager->saveEntity($contact);
+
                 $lead->set('createdContactId', $contact->id);
             }
         }
@@ -242,15 +281,18 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
         if (!empty($recordsData->Opportunity)) {
             $opportunity = $entityManager->getEntity('Opportunity');
             $opportunity->set(get_object_vars($recordsData->Opportunity));
+
             if (isset($account)) {
                 $opportunity->set('accountId', $account->id);
             }
+
             if (isset($contact)) {
                 $opportunity->set('contactId', $contact->id);
             }
 
             if ($duplicateCheck) {
-                $rDuplicateList = $this->getServiceFactory()->create('Opportunity')
+                $rDuplicateList = $this->getServiceFactory()
+                    ->create('Opportunity')
                     ->findDuplicates($opportunity, $recordsData->Opportunity);
 
                 if ($rDuplicateList) {
@@ -265,9 +307,11 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
 
             if (!$skipSave) {
                 $entityManager->saveEntity($opportunity);
+
                 if (isset($contact)) {
                     $entityManager->getRepository('Contact')->relate($contact, 'opportunities', $opportunity);
                 }
+
                 $lead->set('createdOpportunityId', $opportunity->id);
             }
         }
@@ -277,78 +321,110 @@ class Lead extends \Espo\Core\Templates\Services\Person implements
                 'reason' => 'duplicate',
                 'duplicates' => $duplicateList,
             ];
-            throw new \Espo\Core\Exceptions\ConflictSilent(json_encode($reason));
+
+            throw new ConflictSilent(json_encode($reason));
         }
 
         $lead->set('status', 'Converted');
+
         $entityManager->saveEntity($lead);
 
-        if ($meetings = $lead->get('meetings')) {
-            foreach ($meetings as $meeting) {
-                if (!empty($contact)) {
-                    $entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
-                }
+        $leadRepisotory = $entityManager->getRepository('Lead');
 
-                if (!empty($opportunity)) {
-                    $meeting->set('parentId', $opportunity->id);
-                    $meeting->set('parentType', 'Opportunity');
-                    $entityManager->saveEntity($meeting);
-                } else if (!empty($account)) {
-                    $meeting->set('parentId', $account->id);
-                    $meeting->set('parentType', 'Account');
-                    $entityManager->saveEntity($meeting);
-                }
+        $meetings = $leadRepisotory
+            ->getRelation($lead, 'meetings')
+            ->select(['id', 'parentId', 'parentType'])
+            ->find();
+
+        foreach ($meetings as $meeting) {
+            if (!empty($contact)) {
+                $entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
             }
-        }
-        if ($calls = $lead->get('calls')) {
-            foreach ($calls as $call) {
-                if (!empty($contact)) {
-                    $entityManager->getRepository('Call')->relate($call, 'contacts', $contact);
-                }
-                if (!empty($opportunity)) {
-                    $call->set('parentId', $opportunity->id);
-                    $call->set('parentType', 'Opportunity');
-                    $entityManager->saveEntity($call);
-                } else if (!empty($account)) {
-                    $call->set('parentId', $account->id);
-                    $call->set('parentType', 'Account');
-                    $entityManager->saveEntity($call);
-                }
+
+            if (!empty($opportunity)) {
+                $meeting->set('parentId', $opportunity->id);
+                $meeting->set('parentType', 'Opportunity');
+
+                $entityManager->saveEntity($meeting);
             }
-        }
-        if ($emails = $lead->get('emails')) {
-            foreach ($emails as $email) {
-                if (!empty($opportunity)) {
-                    $email->set('parentId', $opportunity->id);
-                    $email->set('parentType', 'Opportunity');
-                    $entityManager->saveEntity($email);
-                } else if (!empty($account)) {
-                    $email->set('parentId', $account->id);
-                    $email->set('parentType', 'Account');
-                    $entityManager->saveEntity($email);
-                }
+            else if (!empty($account)) {
+                $meeting->set('parentId', $account->id);
+                $meeting->set('parentType', 'Account');
+
+                $entityManager->saveEntity($meeting);
             }
         }
 
-        if ($documents = $lead->get('documents')) {
-            foreach ($documents as $document) {
-                if (!empty($account)) {
-                    $entityManager->getRepository('Document')->relate($document, 'accounts', $account);
-                }
-                if (!empty($opportunity)) {
-                    $entityManager->getRepository('Document')->relate($document, 'opportunities', $opportunity);
-                }
+        $calls = $leadRepisotory
+            ->getRelation($lead, 'calls')
+            ->select(['id', 'parentId', 'parentType'])
+            ->find();
+
+        foreach ($calls as $call) {
+            if (!empty($contact)) {
+                $entityManager->getRepository('Call')->relate($call, 'contacts', $contact);
+            }
+
+            if (!empty($opportunity)) {
+                $call->set('parentId', $opportunity->id);
+                $call->set('parentType', 'Opportunity');
+
+                $entityManager->saveEntity($call);
+            }
+            else if (!empty($account)) {
+                $call->set('parentId', $account->id);
+                $call->set('parentType', 'Account');
+
+                $entityManager->saveEntity($call);
+            }
+        }
+
+        $emails = $leadRepisotory
+            ->getRelation($lead, 'emails')
+            ->select(['id', 'parentId', 'parentType'])
+            ->find();
+
+        foreach ($emails as $email) {
+            if (!empty($opportunity)) {
+                $email->set('parentId', $opportunity->id);
+                $email->set('parentType', 'Opportunity');
+
+                $entityManager->saveEntity($email);
+            }
+            else if (!empty($account)) {
+                $email->set('parentId', $account->id);
+                $email->set('parentType', 'Account');
+
+                $entityManager->saveEntity($email);
+            }
+        }
+
+        $documents = $leadRepisotory
+            ->getRelation($lead, 'documents')
+            ->select(['id'])
+            ->find();
+
+        foreach ($documents as $document) {
+            if (!empty($account)) {
+                $entityManager->getRepository('Document')->relate($document, 'accounts', $account);
+            }
+
+            if (!empty($opportunity)) {
+                $entityManager->getRepository('Document')->relate($document, 'opportunities', $opportunity);
             }
         }
 
         $streamService = $this->getStreamService();
+
         if ($streamService->checkIsFollowed($lead, $this->getUser()->id)) {
             if (!empty($opportunity)) {
                 $streamService->followEntity($opportunity, $this->getUser()->id);
             }
+
             if (!empty($account)) {
                 $streamService->followEntity($account, $this->getUser()->id);
             }
+
             if (!empty($contact)) {
                 $streamService->followEntity($contact, $this->getUser()->id);
             }
