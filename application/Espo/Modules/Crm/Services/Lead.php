@@ -329,67 +329,88 @@ class Lead extends PersonService implements
 
         $entityManager->saveEntity($lead);
 
-        if ($meetings = $lead->get('meetings')) {
-            foreach ($meetings as $meeting) {
-                if (!empty($contact)) {
-                    $entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
-                }
+        $leadRepisotory = $entityManager->getRepository('Lead');
 
-                if (!empty($opportunity)) {
-                    $meeting->set('parentId', $opportunity->id);
-                    $meeting->set('parentType', 'Opportunity');
-                    $entityManager->saveEntity($meeting);
-                }
-                else if (!empty($account)) {
-                    $meeting->set('parentId', $account->id);
-                    $meeting->set('parentType', 'Account');
-                    $entityManager->saveEntity($meeting);
-                }
+        $meetings = $leadRepisotory
+            ->getRelation($lead, 'meetings')
+            ->select(['id', 'parentId', 'parentType'])
+            ->find();
+
+        foreach ($meetings as $meeting) {
+            if (!empty($contact)) {
+                $entityManager->getRepository('Meeting')->relate($meeting, 'contacts', $contact);
+            }
+
+            if (!empty($opportunity)) {
+                $meeting->set('parentId', $opportunity->id);
+                $meeting->set('parentType', 'Opportunity');
+
+                $entityManager->saveEntity($meeting);
+            }
+            else if (!empty($account)) {
+                $meeting->set('parentId', $account->id);
+                $meeting->set('parentType', 'Account');
+
+                $entityManager->saveEntity($meeting);
             }
         }
 
-        if ($calls = $lead->get('calls')) {
-            foreach ($calls as $call) {
-                if (!empty($contact)) {
-                    $entityManager->getRepository('Call')->relate($call, 'contacts', $contact);
-                }
+        $calls = $leadRepisotory
+            ->getRelation($lead, 'calls')
+            ->select(['id', 'parentId', 'parentType'])
+            ->find();
 
-                if (!empty($opportunity)) {
-                    $call->set('parentId', $opportunity->id);
-                    $call->set('parentType', 'Opportunity');
-                    $entityManager->saveEntity($call);
-                }
-                else if (!empty($account)) {
-                    $call->set('parentId', $account->id);
-                    $call->set('parentType', 'Account');
-                    $entityManager->saveEntity($call);
-                }
+        foreach ($calls as $call) {
+            if (!empty($contact)) {
+                $entityManager->getRepository('Call')->relate($call, 'contacts', $contact);
             }
-        }
-        if ($emails = $lead->get('emails')) {
-            foreach ($emails as $email) {
-                if (!empty($opportunity)) {
-                    $email->set('parentId', $opportunity->id);
-                    $email->set('parentType', 'Opportunity');
-                    $entityManager->saveEntity($email);
-                }
-                else if (!empty($account)) {
-                    $email->set('parentId', $account->id);
-                    $email->set('parentType', 'Account');
-                    $entityManager->saveEntity($email);
-                }
+
+            if (!empty($opportunity)) {
+                $call->set('parentId', $opportunity->id);
+                $call->set('parentType', 'Opportunity');
+
+                $entityManager->saveEntity($call);
+            }
+            else if (!empty($account)) {
+                $call->set('parentId', $account->id);
+                $call->set('parentType', 'Account');
+
+                $entityManager->saveEntity($call);
             }
         }
 
-        if ($documents = $lead->get('documents')) {
-            foreach ($documents as $document) {
-                if (!empty($account)) {
-                    $entityManager->getRepository('Document')->relate($document, 'accounts', $account);
-                }
+        $emails = $leadRepisotory
+            ->getRelation($lead, 'emails')
+            ->select(['id', 'parentId', 'parentType'])
+            ->find();
 
-                if (!empty($opportunity)) {
-                    $entityManager->getRepository('Document')->relate($document, 'opportunities', $opportunity);
-                }
+        foreach ($emails as $email) {
+            if (!empty($opportunity)) {
+                $email->set('parentId', $opportunity->id);
+                $email->set('parentType', 'Opportunity');
+
+                $entityManager->saveEntity($email);
+            }
+            else if (!empty($account)) {
+                $email->set('parentId', $account->id);
+                $email->set('parentType', 'Account');
+
+                $entityManager->saveEntity($email);
+            }
+        }
+
+        $documents = $leadRepisotory
+            ->getRelation($lead, 'documents')
+            ->select(['id'])
+            ->find();
+
+        foreach ($documents as $document) {
+            if (!empty($account)) {
+                $entityManager->getRepository('Document')->relate($document, 'accounts', $account);
+            }
+
+            if (!empty($opportunity)) {
+                $entityManager->getRepository('Document')->relate($document, 'opportunities', $opportunity);
             }
         }
 
