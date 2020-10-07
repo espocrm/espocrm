@@ -203,7 +203,7 @@ class Manager
 
     /**
      * Get array or StdClass data from PHP file.
-     * For Windows: If a file is not yet written, it will wait until it's ready.
+     * If a file is not yet written, it will wait until it's ready.
      *
      * @return array|StdClass
      */
@@ -224,10 +224,6 @@ class Manager
 
             if (is_array($data) || $data instanceof StdClass) {
                 return $data;
-            }
-
-            if (stripos(\PHP_OS, 'WIN') !== 0) {
-                break;
             }
 
             usleep(self::GET_SAFE_CONTENTS_RETRY_INTERVAL * 1000000);
