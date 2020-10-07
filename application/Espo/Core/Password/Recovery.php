@@ -274,7 +274,7 @@ class Recovery
             'isSystem' => true,
         ]);
 
-        if (!$this->emailAddress->hasSystemSmtp()) {
+        if (!$this->emailSender->hasSystemSmtp()) {
             $sender->withSmtpParams([
                 'server' => $config->get('internalSmtpServer'),
                 'port' => $config->get('internalSmtpPort'),

@@ -39,11 +39,13 @@
       },
       {
          "name":"after",
-         "type":"varchar"
+         "type":"varchar",
+         "view": "views/admin/field-manager/fields/date/after-before"
       },
       {
          "name":"before",
-         "type":"varchar"
+         "type":"varchar",
+         "view": "views/admin/field-manager/fields/date/after-before"
       },
       {
          "type": "bool",

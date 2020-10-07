@@ -410,32 +410,42 @@ class Installer
     {
         $this->auth();
 
-        $user = array(
+        $result = $this->createRecord('User', [
             'id' => '1',
             'userName' => $userName,
             'password' => $this->getPasswordHash()->hash($password),
             'lastName' => 'Admin',
             'type' => 'admin',
-        );
+        ]);
 
-        $result = $this->createRecord('User', $user);
-
-        return $result;
-    }
-
-    protected function saveAdminPreferences($preferences)
-    {
-        $data = [
+        $this->saveAdminPreferences([
             'dateFormat' => '',
             'timeFormat' => '',
             'timeZone' => '',
             'weekStart' => -1,
             'defaultCurrency' => '',
             'language' => '',
-            'thousandSeparator' => $preferences['thousandSeparator'] ?? ',',
-            'decimalMark' => $preferences['decimalMark'] ?? '.',
-        ];
+            'thousandSeparator' => $this->getConfig()->get('thousandSeparator', ','),
+            'decimalMark' => $this->getConfig()->get('decimalMark', '.'),
+        ]);
 
+        return $result;
+    }
+
+    protected function saveAdminPreferences($preferences)
+    {
+        $permittedSettingList = array(
+            'dateFormat',
+            'timeFormat',
+            'timeZone',
+            'weekStart',
+            'defaultCurrency',
+            'thousandSeparator',
+            'decimalMark',
+            'language',
+        );
+
+        $data = array_intersect_key($preferences, array_flip($permittedSettingList));
         if (empty($data)) {
             return true;
         }
