@@ -142,7 +142,10 @@ define('ui', [], function () {
         if (this.removeOnClose) {
             this.$el.on('hidden.bs.modal', function (e) {
                 if (this.$el.get(0) == e.target) {
-                    if (this.skipRemove) return;
+                    if (this.skipRemove) {
+                        return;
+                    }
+
                     this.remove();
                 }
             }.bind(this));
@@ -324,11 +327,22 @@ define('ui', [], function () {
 
         $('body > .popover').addClass('hidden');
     };
+
     Dialog.prototype.hide = function () {
+        this.$el.find('.modal-content').addClass('hidden');
+    };
+
+    Dialog.prototype.hideWithBackdrop = function () {
         var $modalBackdrop = $('.modal-backdrop');
         $modalBackdrop.last().addClass('hidden');
 
+        $($modalBackdrop.get($modalBackdrop.length - 2)).removeClass('hidden');
+
+        var $modalConainer = $('.modal-container');
+        $($modalConainer.get($modalConainer.length - 2)).removeClass('overlaid');
+
         this.skipRemove = true;
+
         setTimeout(function () {
             this.skipRemove = false;
         }.bind(this), 50);
@@ -337,6 +351,7 @@ define('ui', [], function () {
 
         this.$el.find('.modal-content').addClass('hidden');
     };
+
     Dialog.prototype.close = function () {
         var $modalBackdrop = $('.modal-backdrop');
         $modalBackdrop.last().removeClass('hidden');
@@ -347,6 +362,7 @@ define('ui', [], function () {
         this.$el.modal('hide');
         $(this).trigger('dialog:close');
     };
+
     Dialog.prototype.remove = function () {
         this.onRemove();
         this.$el.remove();

@@ -70,8 +70,13 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 this.once('after:render', function () {
                     this.actionClose();
                 }, this);
+
                 return;
             }
+
+            this.once('remove', function () {
+                this.dialogIsHidden = false;
+            }, this);
         },
 
         createRecordView: function (model, callback) {
@@ -99,18 +104,34 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             var model = editView.model;
 
             var afterSend = function () {
+                this.dialogIsHidden = false;
+
                 this.trigger('after:save', model);
                 this.trigger('after:send', model);
+
                 dialog.close();
 
                 this.stopListening(editView, 'before:save', beforeSave);
                 this.stopListening(editView, 'error:save', errorSave);
+
+                this.remove();
             }.bind(this);
+
             var beforeSave = function () {
-                dialog.hide();
+                this.dialogIsHidden = true;
+
+                dialog.hideWithBackdrop();
+
                 editView.setConfirmLeaveOut(false);
-            };
+
+                if (!this.forceRemoveIsInitiated) {
+                    this.initiateForceRemove();
+                }
+            }.bind(this);
+
             var errorSave = function () {
+                this.dialogIsHidden = false;
+
                 if (this.isRendered()) {
                     dialog.show();
                 }
@@ -167,6 +188,24 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
             }, this);
 
             editView.saveDraft();
+        },
+
+        initiateForceRemove: function () {
+            this.forceRemoveIsInitiated = true;
+
+            var parentView = this.getParentView();
+
+            if (!parentView) {
+                return true;
+            }
+
+            parentView.once('remove', function () {
+                if (!this.dialogIsHidden) {
+                    return;
+                }
+
+                this.remove();
+            }, this);
         },
 
     });

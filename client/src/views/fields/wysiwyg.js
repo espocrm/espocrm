@@ -624,6 +624,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     var self = options.espoView;
                     var lang = options.langInfo;
 
+                    if (!self) {
+                        return;
+                    }
+
                     context.memo('button.espoImage', function () {
                         var button = ui.button({
                             contents: options.espoImage.icon,
@@ -673,6 +677,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     var self = options.espoView;
                     var lang = options.langInfo;
 
+                    if (!self) {
+                        return;
+                    }
+
                     this.show = function () {
                         var linkInfo = context.invoke('editor.getLinkInfo');
 
@@ -705,6 +713,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     var self = options.espoView;
                     var lang = options.langInfo;
 
+                    if (!self) {
+                        return;
+                    }
+
                     var isMacLike = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform);
 
                     context.memo('button.espoLink', function () {
@@ -721,7 +733,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     this.initialize = function () {};
 
                     this.destroy = function () {
-                        if (!self) return;
+                        if (!self) {
+                            return;
+                        }
+
                         self.clearView('dialogInsertLink');
                     }
 
@@ -756,6 +771,10 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                     var options = context.options;
                     var self = options.espoView;
                     var lang = options.langInfo;
+
+                    if (!self) {
+                        return;
+                    }
 
                     this.$window = $(window);
                     this.$scrollbar = $('html, body');
