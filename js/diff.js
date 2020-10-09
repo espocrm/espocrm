@@ -45,15 +45,21 @@ class Diff
     }
 
     getTagList () {
+        var dirInitial = process.cwd();
+
         process.chdir(this.espoPath);
 
         var tagsString = cp.execSync('git tag -l --sort=-v:refname').toString();
         var tagList = tagsString.trim().split("\n");
 
+        process.chdir(dirInitial);
+
         return tagList;
     }
 
     getPreviousVersionList () {
+        var dirInitial = process.cwd();
+
         var version = (require(this.espoPath + '/package.json') || {}).version;
 
         process.chdir(this.espoPath);
@@ -91,6 +97,8 @@ class Diff
                 }
             }
         }
+
+        process.chdir(dirInitial);
 
         return versionFromList;
     }
@@ -225,6 +233,9 @@ class Diff
                 }
             }
 
+            var deletedFileList = this.getDeletedFileList(versionFrom);
+            var tagList = this.getTagList();
+
             process.chdir(buildPath);
 
             var fileList = [];
@@ -251,8 +262,6 @@ class Diff
                 fs.writeFileSync(diffBeforeUpgradeFolderPath, beforeUpgradeFileList.join('\n'));
             }
 
-            var deletedFileList = this.getDeletedFileList(versionFrom);
-
             if (beforeUpgradeFileList.length) {
                 cp.execSync(
                     'xargs -a ' + diffBeforeUpgradeFolderPath + ' cp -p --parents -t ' + upgradePath + '/beforeUpgradeFiles'
@@ -264,8 +273,6 @@ class Diff
                     cp.execSync('cp -r ' + upgradeDataFolderPath + '/scripts ' + upgradePath + '/scripts');
                 }
             }
-
-            var tagList = this.getTagList();
 
             execute('xargs -a ' + diffFilePath + ' cp -p --parents -t ' + upgradePath + '/files' , function (stdout) {
                 var d = new Date();
@@ -442,6 +449,8 @@ class Diff
     }
 
     getDeletedFileList (versionFrom) {
+        var dirInitial = process.cwd();
+
         process.chdir(this.espoPath);
 
         var deletedFileList = this.getRepositoryDeletedFileList(versionFrom);
@@ -467,6 +476,8 @@ class Diff
 
             return true;
         });
+
+        process.chdir(dirInitial);
 
         return deletedFileList;
     }
