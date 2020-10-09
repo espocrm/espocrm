@@ -34,6 +34,8 @@ class AfterUpgrade
         $this->container = $container;
 
         $this->processEmailAccountsUpdate();
+
+        $this->cleanupFiles();
     }
 
     protected function processEmailAccountsUpdate()
@@ -45,5 +47,20 @@ class AfterUpgrade
 
         $pdo->exec($q1);
         $pdo->exec($q2);
+    }
+
+    protected function cleanupFiles()
+    {
+        $fileList = [
+            'application/Espo/Core/Loaders/ClientManager.php',
+        ];
+
+        foreach ($fileList as $file) {
+            if (!file_exists($file)) {
+                continue;
+            }
+
+            unlink($file);
+        }
     }
 }

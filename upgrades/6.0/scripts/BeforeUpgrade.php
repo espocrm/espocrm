@@ -135,8 +135,8 @@ class BeforeUpgrade
 
         $message =
             "In v6.0 we have dropped a support of MyISAM engine for DB tables. " .
-            "You have the following tables that use MyISAM: {$tableListString}.{$lineBreak}" .
-            "Please change the engine to InnoDB for these tables then run upgrade again.{$lineBreak}" .
+            "You have the following tables that use MyISAM: {$tableListString}.{$lineBreak}{$lineBreak}" .
+            "Please change the engine to InnoDB for these tables then run upgrade again.{$lineBreak}{$lineBreak}" .
             "See: {$linkString}.";
 
         throw new Error($message);
