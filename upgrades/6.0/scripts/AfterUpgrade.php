@@ -51,11 +51,21 @@ class AfterUpgrade
 
     protected function cleanupFiles()
     {
+        $fileManager = $this->container->get('fileManager');
+
         $fileList = [
             'application/Espo/Core/Loaders/ClientManager.php',
+            'client/res/templates/record/panels/default-side.tpl',
+            'application/Espo/Resources/templates/noteEmailRecieved',
         ];
 
         foreach ($fileList as $file) {
+            if (is_dir($file)) {
+                $fileManager->removeInDir($file, true);
+
+                continue;
+            }
+
             if (!file_exists($file)) {
                 continue;
             }
