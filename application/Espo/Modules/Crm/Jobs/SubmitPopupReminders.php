@@ -36,6 +36,9 @@ use Espo\Core\{
     Jobs\Job,
 };
 
+use Throwable;
+use DateTime;
+
 class SubmitPopupReminders implements Job
 {
     const REMINDER_PAST_HOURS = 24;
@@ -53,21 +56,27 @@ class SubmitPopupReminders implements Job
 
     public function run()
     {
-        if (!$this->config->get('useWebSocket')) return;
+        if (!$this->config->get('useWebSocket')) {
+            return;
+        }
 
-        $dt = new \DateTime();
+        $dt = new DateTime();
 
         $now = $dt->format('Y-m-d H:i:s');
 
         $pastHours = $this->config->get('reminderPastHours', self::REMINDER_PAST_HOURS);
+
         $nowShifted = $dt->modify('-' . $pastHours . ' hours')->format('Y-m-d H:i:s');
 
-        $reminderList = $this->entityManager->getRepository('Reminder')->where([
-            'type' => 'Popup',
-            'remindAt<=' => $now,
-            'startAt>' => $nowShifted,
-            'isSubmitted' => false,
-        ])->find();
+        $reminderList = $this->entityManager
+            ->getRepository('Reminder')
+            ->where([
+                'type' => 'Popup',
+                'remindAt<=' => $now,
+                'startAt>' => $nowShifted,
+                'isSubmitted' => false,
+            ])
+            ->find();
 
         $submitData = [];
 
@@ -78,6 +87,7 @@ class SubmitPopupReminders implements Job
 
             if (!$userId || !$entityType || !$entityId) {
                 $this->deleteReminder($reminder);
+
                 continue;
             }
 
@@ -85,19 +95,24 @@ class SubmitPopupReminders implements Job
 
             if (!$entity) {
                 $this->deleteReminder($reminder);
+
                 continue;
             }
 
             if ($entity->hasLinkMultipleField('users')) {
                 $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
+
                 $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
+
                 if ($status === 'Declined') {
                     $this->deleteReminder($reminder);
+
                     continue;
                 }
             }
 
             $dateAttribute = 'dateStart';
+
             if ($entityType === 'Task') {
                 $dateAttribute = 'dateEnd';
             }
@@ -125,10 +140,10 @@ class SubmitPopupReminders implements Job
 
         foreach ($submitData as $userId => $list) {
             try {
-                $this->getContainer()->get('webSocketSubmission')->submit('popupNotifications.event', $userId, (object) [
+                $this->webSocketSubmission->submit('popupNotifications.event', $userId, (object) [
                     'list' => $list
                 ]);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $GLOBALS['log']->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }
