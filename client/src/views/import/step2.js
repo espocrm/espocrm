@@ -350,13 +350,21 @@ define('views/import/step2', 'view', function (Dep) {
         },
 
         disableButtons: function () {
-            this.$el.find('button[data-action="next"]').addClass('disabled');
-            this.$el.find('button[data-action="back"]').addClass('disabled');
+            var btnNext = this.$el.find('button[data-action="next"]');
+            var btnBack = this.$el.find('button[data-action="back"]');
+            btnNext.prop('disabled', true);
+            btnNext.addClass('disabled');
+            btnBack.prop('disabled', true);
+            btnBack.addClass('disabled');
         },
 
         enableButtons: function () {
-            this.$el.find('button[data-action="next"]').removeClass('disabled');
-            this.$el.find('button[data-action="back"]').removeClass('disabled');
+            var btnNext = this.$el.find('button[data-action="next"]');
+            var btnBack = this.$el.find('button[data-action="back"]');
+            btnNext.prop('disabled', false);
+            btnNext.removeClass('disabled');
+            btnBack.prop('disabled', false);
+            btnBack.removeClass('disabled');
         },
 
         fetch: function () {
