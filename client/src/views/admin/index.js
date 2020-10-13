@@ -172,11 +172,11 @@ define('views/admin/index', 'view', function (Dep) {
                         }, this);
 
                         if (!matched) {
-                            matched = ~row.keywords.indexOf(text);
+                            matched = ~(row.keywords || []).indexOf(text);
                         }
                         if (!matched) {
                             if (text.length > 3) {
-                                row.keywords.forEach(function (word) {
+                                (row.keywords || []).forEach(function (word) {
                                     if (word.indexOf(text) === 0) {
                                         matched = true;
                                     }
@@ -189,8 +189,8 @@ define('views/admin/index', 'view', function (Dep) {
                     if (matched) {
                         panelMatched = true;
                         this.$el.find(
-                            '.admin-content-section[data-index="'+panelIndex.toString()+'"] '+
-                            '.admin-content-row[data-index="'+rowIndex.toString()+'"]'
+                            '.admin-content-section[data-index="' + panelIndex.toString() + '"] ' +
+                            '.admin-content-row[data-index="' + rowIndex.toString() + '"]'
                         ).removeClass('hidden');
                         anythingMatched = true;
                     }
