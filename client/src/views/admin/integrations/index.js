@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/integrations/index', 'view', function (Dep) {
+define('views/admin/integrations/index', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -51,12 +51,13 @@ Espo.define('views/admin/integrations/index', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.integrationList = Object.keys(this.getMetadata().get('integrations') || {});;
+            this.integrationList = Object.keys(this.getMetadata().get('integrations') || {});
 
             this.integration = this.options.integration || null;
 
             this.on('after:render', function () {
                 this.renderHeader();
+
                 if (!this.integration) {
                     this.renderDefaultPage();
                 } else {
@@ -70,34 +71,45 @@ Espo.define('views/admin/integrations/index', 'view', function (Dep) {
 
             this.getRouter().navigate('#Admin/integrations/name=' + integration, {trigger: false});
 
-            var viewName = this.getMetadata().get('integrations.' + integration + '.view') || 'views/admin/integrations/' + Espo.Utils.camelCaseToHyphen(this.getMetadata().get('integrations.' + integration + '.authMethod'));
+            var viewName = this.getMetadata().get('integrations.' + integration + '.view') ||
+                'views/admin/integrations/' +
+                Espo.Utils.camelCaseToHyphen(this.getMetadata().get('integrations.' + integration + '.authMethod'));
+
             this.notify('Loading...');
+
             this.createView('content', viewName, {
                 el: '#integration-content',
                 integration: integration,
             }, function (view) {
                 this.renderHeader();
+
                 view.render();
+
                 this.notify(false);
+
                 $(window).scrollTop(0);
             }.bind(this));
         },
 
         renderDefaultPage: function () {
             $('#integration-header').html('').hide();
+
             if (this.integrationList.length) {
             	var msg = this.translate('selectIntegration', 'messages', 'Integration');
             } else {
             	var msg = '<p class="lead">' + this.translate('noIntegrations', 'messages', 'Integration') + '</p>';
             }
+
             $('#integration-content').html(msg);
         },
 
         renderHeader: function () {
             if (!this.integration) {
                 $('#integration-header').html('');
+
                 return;
             }
+
             $('#integration-header').show().html(this.translate(this.integration, 'titles', 'Integration'));
         },
 
@@ -106,5 +118,3 @@ Espo.define('views/admin/integrations/index', 'view', function (Dep) {
         },
     });
 });
-
-
