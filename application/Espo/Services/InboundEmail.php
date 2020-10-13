@@ -798,7 +798,9 @@ class InboundEmail extends RecordService implements
         }
 
         $d = new DateTime();
+
         $d->modify('-3 hours');
+
         $threshold = $d->format('Y-m-d H:i:s');
 
         $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($email->get('from'));
@@ -819,6 +821,7 @@ class InboundEmail extends RecordService implements
 
         try {
             $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
+
             if ($replyEmailTemplateId) {
                 $entityHash = [];
 
@@ -912,7 +915,9 @@ class InboundEmail extends RecordService implements
 
                 return true;
             }
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+            $GLOBALS['log']->error("Inbound Email: Auto-reply error: " . $e->getMessage());
+        }
     }
 
     protected function getSmtpParamsFromInboundEmail(InboundEmailEntity $emailAccount)
