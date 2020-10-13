@@ -55,11 +55,13 @@ class ApplicationState
     }
 
     /**
-     * Get portal ID (if an applicaition is portal).
+     * Get a portal ID (if an applicaition is portal).
      */
     public function getPortalId() : string
     {
-        if (!$this->isPortal()) throw new Error("Can't get portal ID for non-portal application.");
+        if (!$this->isPortal()) {
+            throw new Error("Can't get portal ID for non-portal application.");
+        }
 
         return $this->getPortal()->id;
     }
@@ -69,7 +71,9 @@ class ApplicationState
      */
     public function getPortal() : PortalEntity
     {
-        if (!$this->isPortal()) throw new Error("Can't get portal for non-portal application.");
+        if (!$this->isPortal()) {
+            throw new Error("Can't get portal for non-portal application.");
+        }
 
         return $this->container->get('portal');
     }
@@ -83,12 +87,23 @@ class ApplicationState
     }
 
     /**
-     * Get current logged user. If no auth is applied, then system user will be returned.
+     * Get a current logged user. If no auth is applied, then the system user will be returned.
      */
     public function getUser() : UserEntity
     {
-        if (!$this->hasUser()) throw new Error("User is not yet available.");
+        if (!$this->hasUser()) {
+            throw new Error("User is not yet available.");
+        }
+
         return $this->container->get('user');
+    }
+
+    /**
+     * Get an ID of a current logged user. If no auth is applied, then the system user will be returned.
+     */
+    public function getUserId() : string
+    {
+        return $this->getUser()->id;
     }
 
     /**
@@ -96,8 +111,14 @@ class ApplicationState
      */
     public function isLogged() : bool
     {
-        if (!$this->container->has('user')) return false;
-        if ($this->getUser()->isSystem()) return false;
+        if (!$this->container->has('user')) {
+            return false;
+        }
+
+        if ($this->getUser()->isSystem()) {
+            return false;
+        }
+
         return true;
     }
 
@@ -106,7 +127,10 @@ class ApplicationState
      */
     public function isAdmin() : bool
     {
-        if (!$this->isLogged()) return false;
+        if (!$this->isLogged()) {
+            return false;
+        }
+
         return $this->getUser()->isAdmin();
     }
 
@@ -116,7 +140,10 @@ class ApplicationState
      */
     public function isApi() : bool
     {
-        if (!$this->isLogged()) return false;
+        if (!$this->isLogged()) {
+            return false;
+        }
+
         return $this->getUser()->isApi();
     }
 }
