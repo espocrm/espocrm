@@ -29,5 +29,16 @@
 
 include "bootstrap.php";
 
-$app = new \Espo\Core\Application();
-$app->runEntryPoint('OauthCallback');
+use Espo\Core\{
+    Application,
+    ApplicationRunners\EntryPoint,
+};
+
+$app = new Application();
+
+$app->run(
+    EntryPoint::class,
+    (object) [
+        'entryPoint' => 'oauthCallback',
+    ]
+);

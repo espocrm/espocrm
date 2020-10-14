@@ -34,13 +34,15 @@ use Espo\Core\EntryPoints\{
     NoAuth,
 };
 
+use Espo\Core\Api\Request;
+
 class OauthCallback implements EntryPoint
 {
     use NoAuth;
 
-    public function run()
+    public function run(Request $request)
     {
-        echo "EspoCRM rocks! If this window is not closed automatically, it's probable that URL you use to access ".
+        echo "If this window is not closed automatically, it's probable that URL you use to access ".
         "EspoCRM doesn't match URL specified at Administration > Settings > Site URL.";
     }
 }
