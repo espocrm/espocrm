@@ -29,9 +29,8 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
+    Exceptions\Error,
     InjectableFactory,
     EntryPointManager,
     ApplicationUser,
@@ -39,7 +38,6 @@ use Espo\Core\{
     Portal\Application as PortalApplication,
     Utils\Route,
     Utils\ClientManager,
-
     Authentication\Authentication,
     Api\Auth as ApiAuth,
     Api\ErrorOutput as ApiErrorOutput,
@@ -48,18 +46,12 @@ use Espo\Core\{
 };
 
 use Slim\{
-    App as SlimApp,
-    Factory\AppFactory as SlimAppFactory,
-};
-
-use Psr\Http\{
-    Message\ResponseInterface as Psr7Response,
-    Message\ServerRequestInterface as Psr7Request,
-    Server\RequestHandlerInterface as Psr7RequestHandler,
+    ResponseEmitter,
+    Factory\ServerRequestCreatorFactory,
+    Psr7\Response,
 };
 
 use StdClass;
-
 use Exception;
 
 /**
@@ -113,30 +105,19 @@ class EntryPoint implements ApplicationRunner
             }
         }
 
-        $slim = SlimAppFactory::create();
+        $request = (ServerRequestCreatorFactory::create())->createServerRequestFromGlobals();
 
-        $slim->setBasePath(Route::detectBasePath());
+        if ($request->getMethod() !== 'GET') {
+            throw new Error("Only GET request allowed for entry points.");
+        }
 
-        $slim->add(
-            function (Psr7Request $request, Psr7RequestHandler $handler) use (
-                $entryPoint, $data, $authRequired, $authNotStrict, $slim
-            ) : Psr7Response {
-                $requestWrapped = new RequestWrapper($request, $slim->getBasePath());
-                $responseWrapped = new ResponseWrapper($handler->handle($request));
+        $requestWrapped = new RequestWrapper($request, Route::detectBasePath());
 
-                $this->processRequest($entryPoint, $requestWrapped, $responseWrapped, $data, $authRequired, $authNotStrict);
+        $responseWrapped = new ResponseWrapper(new Response());
 
-                return $responseWrapped->getResponse();
-            }
-        );
+        $this->processRequest($entryPoint, $requestWrapped, $responseWrapped, $data, $authRequired, $authNotStrict);
 
-        $route = Route::detectEntryPointRoute();
-
-        $slim->get($route, function (Psr7Request $request, Psr7Response $response) : Psr7Response {
-            return $response;
-        });
-
-        $slim->run();
+        (new ResponseEmitter())->emit($responseWrapped->getResponse());
     }
 
     protected function processRequest(
