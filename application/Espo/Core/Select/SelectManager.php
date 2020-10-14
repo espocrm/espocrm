@@ -2368,7 +2368,9 @@ class SelectManager
     protected function textFilter($textFilter, array &$result, $noFullText = false)
     {
         $fieldDefs = $this->getSeed()->getAttributes();
+
         $fieldList = $this->getTextFilterFieldList();
+
         $group = [];
 
         $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
@@ -2401,6 +2403,7 @@ class SelectManager
         $textFilterForFullTextSearch = str_replace('%', '*', $textFilterForFullTextSearch);
 
         $skipFullTextSearch = false;
+
         if (!$forceFullTextSearch) {
             if (mb_strpos($textFilterForFullTextSearch, '*') === 0) {
                 $skipFullTextSearch = true;
@@ -2409,9 +2412,12 @@ class SelectManager
             }
         }
 
-        if ($noFullText) $skipFullTextSearch = true;
+        if ($noFullText) {
+            $skipFullTextSearch = true;
+        }
 
         $fullTextSearchData = null;
+
         if (!$skipFullTextSearch) {
             $fullTextSearchData = $this->getFullTextSearchDataForTextFilter($textFilterForFullTextSearch, !$useFullTextSearch);
         }
@@ -2419,6 +2425,7 @@ class SelectManager
         $fullTextGroup = [];
 
         $fullTextSearchFieldList = [];
+
         if ($fullTextSearchData) {
             if ($this->fullTextRelevanceThreshold) {
                 $fullTextGroup[] = [$fullTextSearchData['where'] . '>=' => $this->fullTextRelevanceThreshold];
@@ -2434,12 +2441,15 @@ class SelectManager
 
             $orderTypeMap = [
                 'combined' => self::FT_ORDER_COMBINTED,
-                'relavance' => self::FT_ORDER_RELEVANCE,
+                'relevance' => self::FT_ORDER_RELEVANCE,
                 'original' => self::FT_ORDER_ORIGINAL,
             ];
 
             $mOrderType = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'fullTextSearchOrderType']);
-            if ($mOrderType) $fullTextOrderType = $orderTypeMap[$mOrderType];
+
+            if ($mOrderType) {
+                $fullTextOrderType = $orderTypeMap[$mOrderType];
+            }
 
             if (!isset($result['orderBy']) || $fullTextOrderType === self::FT_ORDER_RELEVANCE) {
                 $result['orderBy'] = [[$relevanceExpression, 'desc']];
@@ -2468,9 +2478,14 @@ class SelectManager
 
         foreach ($fieldList as $field) {
             if ($useFullTextSearch) {
-                if (in_array($field, $fullTextSearchFieldList)) continue;
+                if (in_array($field, $fullTextSearchFieldList)) {
+                    continue;
+                }
             }
-            if ($forceFullTextSearch) continue;
+
+            if ($forceFullTextSearch) {
+                continue;
+            }
 
             $seed = $this->getSeed();
 
@@ -2478,12 +2493,16 @@ class SelectManager
 
             if (strpos($field, '.') !== false) {
                 list($link, $foreignField) = explode('.', $field);
+
                 $foreignEntityType = $seed->getRelationParam($link, 'entity');
                 $seed = $this->getEntityManager()->getEntity($foreignEntityType);
+
                 $this->addLeftJoin($link, $result);
+
                 if ($seed->getRelationParam($link, 'type') === $seed::HAS_MANY) {
                     $this->setDistinct(true, $result);
                 }
+
                 $attributeType = $seed->getAttributeType($foreignField);
             } else {
                 $attributeType = $seed->getAttributeType($field);
@@ -2493,6 +2512,7 @@ class SelectManager
                 if (is_numeric($textFilter)) {
                     $group[$field] = intval($textFilter);
                 }
+
                 continue;
             }
 
