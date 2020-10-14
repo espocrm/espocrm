@@ -133,6 +133,7 @@ class EmailTemplate extends Record implements
 
         if (!empty($params['relatedId']) && !empty($params['relatedType'])) {
             $related = $this->getEntityManager()->getEntity($params['relatedType'], $params['relatedId']);
+
             if ($related) {
                 $entityHash[$related->getEntityType()] = $related;
             }
@@ -155,6 +156,7 @@ class EmailTemplate extends Record implements
                 if ($handlebarsInSubject) {
                     $subject = $htmlizer->render($parent, $subject);
                 }
+
                 if ($handlebarsInBody) {
                     $body = $htmlizer->render($parent, $body);
                 }
@@ -244,7 +246,9 @@ class EmailTemplate extends Record implements
         }
 
         foreach ($attributeList as $attribute) {
-            if (in_array($attribute, $forbiddenAttributeList)) continue;
+            if (in_array($attribute, $forbiddenAttributeList)) {
+                continue;
+            }
 
             $value = $entity->get($attribute);
 
@@ -252,13 +256,18 @@ class EmailTemplate extends Record implements
                 continue;
             }
 
-            if (!$entity->getAttributeType($attribute)) continue;
+            if (!$entity->getAttributeType($attribute)) {
+                continue;
+            }
 
             $value = $this->formatAttributeValue($entity, $attribute);
 
-            if (is_null($value)) continue;
+            if (is_null($value)) {
+                continue;
+            }
 
             $variableName = $attribute;
+
             if (!is_null($prefixLink)) {
                 $variableName = $prefixLink . '.' . $attribute;
             }
@@ -266,7 +275,7 @@ class EmailTemplate extends Record implements
             $text = str_replace('{' . $type . '.' . $variableName . '}', $value, $text);
         }
 
-        if (!$skipLinks) {
+        if (!$skipLinks && $entity->id) {
             $relationDefs = $entity->getRelations();
 
             foreach ($entity->getRelationList() as $relation) {
@@ -301,10 +310,12 @@ class EmailTemplate extends Record implements
         }
 
         $replaceData = [];
+
         $replaceData['today'] = $this->getDateTime()->getTodayString();
         $replaceData['now'] = $this->getDateTime()->getNowString();
 
         $timeZone = $this->getConfig()->get('timeZone');
+
         $now = new DateTime('now', new DateTimezone($timeZone));
 
         $replaceData['currentYear'] = $now->format('Y');
@@ -328,11 +339,13 @@ class EmailTemplate extends Record implements
             $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
         } else if ($fieldType === 'array' || $fieldType === 'multiEnum' || $fieldType === 'checklist') {
             $valueList = [];
+
             if (is_array($value)) {
                 foreach ($value as $v) {
                     $valueList[] = $this->getLanguage()->translateOption($v, $attribute, $entity->getEntityType());
                 }
             }
+
             $value = implode(', ', $valueList);
             $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
         } else {
@@ -348,13 +361,16 @@ class EmailTemplate extends Record implements
                 if (!is_string($value)) {
                     $value = '';
                 }
+
                 $value = nl2br($value);
             } else if ($attributeType == 'float') {
                 if (is_float($value)) {
                     $decimalPlaces = 2;
+
                     if ($fieldType === 'currency') {
                         $decimalPlaces = $this->getConfig()->get('currencyDecimalPlaces');
                     }
+
                     $value = $this->getNumber()->format($value, $decimalPlaces);
                 }
             } else if ($attributeType == 'int') {
@@ -370,7 +386,9 @@ class EmailTemplate extends Record implements
             $value = '';
         }
 
-        if (!is_string($value)) return null;
+        if (!is_string($value)) {
+            return null;
+        }
 
         return $value;
     }
@@ -389,6 +407,7 @@ class EmailTemplate extends Record implements
 
         if ($parentId && $parentType) {
             $e = $this->getEntityManager()->getEntity($parentType, $parentId);
+
             if ($e && $this->getAcl()->check($e)) {
                 $dataList[] = [
                     'type' => 'parent',
@@ -426,6 +445,7 @@ class EmailTemplate extends Record implements
             foreach ($fm->getEntityTypeFieldList($entityType) as $field) {
                 $fieldType = $fm->getEntityTypeFieldParam($entityType, $field, 'type');
                 $fieldAttributeList = $fm->getAttributeList($entityType, $field);
+
                 if (
                     $fm->getEntityTypeFieldParam($entityType, $field, 'disabled') ||
                     $fm->getEntityTypeFieldParam($entityType, $field, 'directAccessDisabled') ||
@@ -441,9 +461,14 @@ class EmailTemplate extends Record implements
             $attributeList = $fm->getEntityTypeAttributeList($entityType);
 
             $values = (object) [];
+
             foreach ($attributeList as $a) {
-                if (!$e->has($a)) continue;
+                if (!$e->has($a)) {
+                    continue;
+                }
+
                 $value = $emailTemplateService->formatAttributeValue($e, $a);
+
                 if ($value != '') {
                     $values->$a = $value;
                 }

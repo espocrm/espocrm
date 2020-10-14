@@ -32,7 +32,8 @@ Espo.define('crm:views/task/fields/is-overdue', 'views/fields/base', function (D
 
         readOnly: true,
 
-        _template: '{{#if isOverdue}}<span class="label label-danger">{{translate "overdue"}}</span>{{/if}}',
+        _template: '{{#if isOverdue}}<span class="label label-danger">' +
+            '{{translate "overdue" scope="Task"}}</span>{{/if}}',
 
         data: function () {
             var isOverdue = false;

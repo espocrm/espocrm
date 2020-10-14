@@ -34,17 +34,20 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
+    ApplicationState,
 };
 
 class AssignmentEmailNotification
 {
     protected $config;
     protected $entityManager;
+    protected $applicationState;
 
-    public function __construct(Config $config, EntityManager $entityManager)
+    public function __construct(Config $config, EntityManager $entityManager, ApplicationState $applicationState)
     {
         $this->config = $config;
         $this->entityManager = $entityManager;
+        $this->applicationState = $applicationState;
     }
 
     public function afterSave(Entity $entity, array $options = [])
@@ -67,17 +70,25 @@ class AssignmentEmailNotification
             if ($entity->has('assignedUsersIds')) {
                 $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
                 $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
+
                 if (!is_array($fetchedAssignedUserIdList)) {
                     $fetchedAssignedUserIdList = [];
                 }
 
                 foreach ($userIdList as $userId) {
-                    if (in_array($userId, $fetchedAssignedUserIdList)) continue;
-                    if (!$this->isNotSelfAssignment($entity, $userId)) continue;
+                    if (in_array($userId, $fetchedAssignedUserIdList)) {
+                        continue;
+                    }
+
+                    if (!$this->isNotSelfAssignment($entity, $userId)) {
+                        continue;
+                    }
+
                     $this->createJob($entity, $userId);
                 }
             } else {
                 $userId = $entity->get('assignedUserId');
+
                 if (!empty($userId) &&
                     $entity->isAttributeChanged('assignedUserId') && $this->isNotSelfAssignment($entity, $userId)
                 ) {
@@ -96,26 +107,29 @@ class AssignmentEmailNotification
                 $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
             }
         } else {
-            $isNotSelfAssignment = $assignedUserId !== $this->getUser()->id;
+            $isNotSelfAssignment = $assignedUserId !== $this->applicationState->getUserId();
         }
+
         return $isNotSelfAssignment;
     }
 
     protected function createJob(Entity $entity, $userId)
     {
         $job = $this->entityManager->getEntity('Job');
+
         $job->set([
             'serviceName' => 'EmailNotification',
             'methodName' => 'notifyAboutAssignmentJob',
             'data' => [
                 'userId' => $userId,
-                'assignerUserId' => $this->getUser()->id,
+                'assignerUserId' => $this->applicationState->getUserId(),
                 'entityId' => $entity->id,
                 'entityType' => $entity->getEntityType(),
             ],
             'executeTime' => date('Y-m-d H:i:s'),
             'queue' => 'e0',
         ]);
+
         $this->entityManager->saveEntity($job);
     }
 }
