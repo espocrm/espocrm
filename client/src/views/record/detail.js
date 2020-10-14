@@ -246,6 +246,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     this.getAcl().check(this.entityType, 'edit')
                     &&
                     !~this.getAcl().getScopeForbiddenFieldList(this.entityType).indexOf('assignedUser')
+                    &&
+                    !this.getUser().isPortal()
                 ) {
                     if (this.model.has('assignedUserId')) {
                         this.dropdownItemList.push({
