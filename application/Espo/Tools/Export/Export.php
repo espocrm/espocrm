@@ -138,26 +138,35 @@ class Export
 
             if (array_key_exists('ids', $params)) {
                 $ids = $params['ids'];
+
                 $where = [
                     [
                         'type' => 'in',
                         'field' => 'id',
-                        'value' => $ids
+                        'value' => $ids,
                     ]
                 ];
+
                 $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
             }
             else if (array_key_exists('where', $params)) {
                 $where = $params['where'];
 
-                $p = [];
-                $p['where'] = $where;
+                $searchParams = [];
+
+                $searchParams['where'] = $where;
+
                 if (!empty($params['selectData']) && is_array($params['selectData'])) {
                     foreach ($params['selectData'] as $k => $v) {
-                        $p[$k] = $v;
+                        $searchParams[$k] = $v;
                     }
                 }
-                $selectParams = $this->getSelectParams($p);
+
+                if (isset($searchParams['select']) && is_string($searchParams['select'])) {
+                    $searchParams['select'] = explode(',', $searchParams['select']);
+                }
+
+                $selectParams = $selectManager->getSelectParams($searchParams, true, true);
             }
             else {
                 throw new BadRequest();
@@ -172,14 +181,15 @@ class Export
 
             $select = Select::fromRaw($selectParams);
 
-            $collection = $this->entityManager->getRepository($this->entityType)
+            $collection = $this->entityManager
+                ->getRepository($this->entityType)
                 ->clone($select)
                 ->sth()
                 ->find();
         }
 
         $attributeListToSkip = [
-            'deleted'
+            'deleted',
         ];
 
         foreach ($this->skipAttributeList as $attribute) {
@@ -225,6 +235,7 @@ class Export
                 unset($fieldList[$i]);
             }
         }
+
         $fieldList = array_values($fieldList);
 
         if (method_exists($exportObj, 'filterFieldList')) {
