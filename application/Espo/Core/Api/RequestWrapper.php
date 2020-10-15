@@ -138,7 +138,13 @@ class RequestWrapper implements ApiRequest
 
     public function getContentType() : ?string
     {
-        return $this->getHeader('Content-Type');
+        if (!$this->hasHeader('Content-Type')) {
+            return null;
+        }
+
+        $contentType = $this->request->getHeader('Content-Type')[0];
+
+        return strtolower($contentType);
     }
 
     public function getBodyContents() : ?string
@@ -163,7 +169,7 @@ class RequestWrapper implements ApiRequest
     {
         $contents = $this->getBodyContents();
 
-        if (strtolower($this->getContentType()) === 'application/json' && $contents) {
+        if ($this->getContentType() === 'application/json' && $contents) {
             $this->parsedBody = json_decode($contents);
 
             if (is_array($this->parsedBody)) {
