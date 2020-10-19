@@ -45,6 +45,7 @@
         }
     },
     "collection": {
+        "textFilterFields": ["id", "emailAddress"],
         "orderBy": "createdAt",
         "order": "desc"
     }
