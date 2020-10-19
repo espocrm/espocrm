@@ -2,5 +2,6 @@
     "massEmail",
     "status",
     "target",
-    "sentAt"
+    "sentAt",
+    "emailAddress"
 ]
