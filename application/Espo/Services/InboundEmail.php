@@ -993,9 +993,12 @@ class InboundEmail extends RecordService implements
 
         if ($isHard && $emailAddress) {
             $emailAddressEntity = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
-            $emailAddressEntity->set('invalid', true);
 
-            $this->getEntityManager()->saveEntity($emailAddressEntity);
+            if ($emailAddressEntity) {
+                $emailAddressEntity->set('invalid', true);
+
+                $this->getEntityManager()->saveEntity($emailAddressEntity);
+            }
         }
 
         if ($campaignId && $target && $target->id) {
