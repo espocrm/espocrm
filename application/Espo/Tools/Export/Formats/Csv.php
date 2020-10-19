@@ -56,7 +56,11 @@ class Csv
     public function loadAdditionalFields(Entity $entity, $fieldList)
     {
         foreach ($fieldList as $field) {
-            if ($this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']) === 'linkMultiple') {
+            $fieldType = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+
+            if (
+                $fieldType === 'linkMultiple' || $fieldType === 'attachmentMultiple'
+            ) {
                 if (!$entity->has($field . 'Ids')) {
                     $entity->loadLinkMultipleField($field);
                 }

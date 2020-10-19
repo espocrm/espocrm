@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Model) {
+define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -44,11 +44,11 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
                 {
                     name: 'export',
                     label: 'Export',
-                    style: 'danger'
+                    style: 'danger',
                 },
                 {
                     name: 'cancel',
-                    label: 'Cancel'
+                    label: 'Cancel',
                 }
             ];
 
@@ -73,44 +73,53 @@ Espo.define('views/export/modals/export', ['views/modal', 'model'], function (De
             this.createView('record', 'views/export/record/record', {
                 scope: this.scope,
                 model: this.model,
-                el: this.getSelector() + ' .record'
+                el: this.getSelector() + ' .record',
             });
         },
 
         actionExport: function () {
             var data = this.getView('record').fetch();
             this.model.set(data);
-            if (this.getView('record').validate()) return;
+
+            if (this.getView('record').validate()) {
+                return;
+            }
 
             var returnData = {
                 exportAllFields: data.exportAllFields,
-                format: data.format
+                format: data.format,
             };
 
             if (!data.exportAllFields) {
                 var attributeList = [];
+
                 data.fieldList.forEach(function (item) {
                     if (item === 'id') {
                         attributeList.push('id');
+
                         return;
                     }
+
                     var type = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'type']);
-                    if (type) {;
+
+                    if (type) {
                         this.getFieldManager().getAttributeList(type, item).forEach(function (attribute) {
                             attributeList.push(attribute);
                         }, this);
                     }
+
                     if (~item.indexOf('_')) {
                         attributeList.push(item);
                     }
                 }, this);
+
                 returnData.attributeList = attributeList;
                 returnData.fieldList = data.fieldList;
             }
 
             this.trigger('proceed', returnData);
             this.close();
-        }
+        },
 
     });
 });

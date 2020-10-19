@@ -113,7 +113,9 @@ class Xlsx
             }
         }
         foreach ($fieldList as $field) {
-            if ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']) === 'linkMultiple') {
+            $fieldType = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+
+            if ($fieldType === 'linkMultiple' || $fieldType === 'attachmentMultiple') {
                 if (!$entity->has($field . 'Ids')) {
                     $entity->loadLinkMultipleField($field);
                 }
@@ -442,7 +444,7 @@ class Xlsx
                         }
                         $sheet->setCellValue("$col$rowNumber", $value);
                     }
-                } else if ($type == 'linkMultiple') {
+                } else if ($type == 'linkMultiple' || $type == 'attachmentMultiple') {
                     if (array_key_exists($name . 'Ids', $row) && array_key_exists($name . 'Names', $row)) {
                         $nameList = [];
                         foreach ($row[$name . 'Ids'] as $relatedId) {
