@@ -78,6 +78,7 @@
         }
     },
     "collection": {
+        "textFilterFields": ["queueItem.id"],
         "orderBy": "createdAt",
         "order": "desc"
     },
