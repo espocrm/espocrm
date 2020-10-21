@@ -2066,24 +2066,36 @@ class Record implements Crud,
     protected function convertMassActionSelectParams($params)
     {
         if (array_key_exists('ids', $params)) {
-            if (!is_array($params['ids'])) throw new BadRequest();
-            $selectParams = $this->getSelectParams([]);
-            $selectParams['whereClause'][] = [
-                'id' => $params['ids']
-            ];
-        } else if (array_key_exists('where', $params)) {
-            $p = ['where' => $params['where']];
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
+            if (!is_array($params['ids'])) {
+                throw new BadRequest();
             }
-            $selectParams = $this->getSelectParams($p);
-        } else {
-            throw new BadRequest();
+
+            $selectParams = $this->getSelectParams([]);
+
+            $selectParams['whereClause'][] = [
+                'id' => $params['ids'],
+            ];
+
+            return $selectParams;
         }
 
-        return $selectParams;
+        if (array_key_exists('where', $params)) {
+            $searchParams = [
+                'where' => $params['where'],
+            ];
+
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $searchParams[$k] = $v;
+                }
+            }
+
+            unset($searchParams['select']);
+
+            return $this->getSelectParams($searchParams);
+        }
+
+        throw new BadRequest();
     }
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
