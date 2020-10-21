@@ -31,6 +31,11 @@ if (substr(php_sapi_name(), 0, 3) != 'cli') exit;
 
 include "bootstrap.php";
 
+use Espo\Core\{
+    Application,
+    ApplicationRunners\Rebuild,
+};
+
 $arg = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : '';
 
 if ($arg == 'version' || $arg == '-v') {
@@ -51,7 +56,7 @@ if (!isset($pathInfo['extension']) || $pathInfo['extension'] !== 'zip' || !is_fi
     die("Unsupported package.\n");
 }
 
-$app = new \Espo\Core\Application();
+$app = new Application();
 $app->setupSystemUser();
 
 $config = $app->getContainer()->get('config');
@@ -73,8 +78,7 @@ try {
 }
 
 try {
-    $app = new \Espo\Core\Application();
-    $app->runRebuild();
+    (new Application())->run(Rebuild::class);
 } catch (\Exception $e) {}
 
 echo "Upgrade is complete. Current version is " . $config->get('version') . ". \n";
