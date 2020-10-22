@@ -169,6 +169,7 @@ class AdminNotificationManager
         $extension = $this->getEntityManager()->getRepository('Extension')
             ->select(['version'])
             ->where([
+                'name' => $extensionName,
                 'isInstalled' => true,
             ])
             ->order('createdAt', true)
