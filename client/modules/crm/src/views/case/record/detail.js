@@ -34,19 +34,30 @@ define('crm:views/case/record/detail', 'views/record/detail', function (Dep) {
 
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
+
             if (
                 this.getAcl().checkModel(this.model, 'edit') &&
                 !~['Closed', 'Rejected', 'Duplicate'].indexOf(this.model.get('status')) &&
                 this.getAcl().checkField(this.entityType, 'status', 'edit')
             ) {
-                this.dropdownItemList.push({
-                    'label': 'Close',
-                    'name': 'close',
-                });
-                this.dropdownItemList.push({
-                    'label': 'Reject',
-                    'name': 'reject',
-                });
+
+                var statusList = this.getMetadata().get(
+                    ['entityDefs', 'Case', 'fields', 'status', 'options']
+                ) || [];
+
+                if (~statusList.indexOf('Closed')) {
+                    this.dropdownItemList.push({
+                        'label': 'Close',
+                        'name': 'close',
+                    });
+                }
+
+                if (~statusList.indexOf('Rejected')) {
+                    this.dropdownItemList.push({
+                        'label': 'Reject',
+                        'name': 'reject',
+                    });
+                }
             }
         },
 
