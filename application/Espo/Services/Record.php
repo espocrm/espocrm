@@ -56,7 +56,11 @@ use Espo\Core\{
     Record\Collection as RecordCollection,
 };
 
-use Espo\Tools\Export\Export as ExportTool;
+use Espo\Tools\{
+    Export\Export as ExportTool,
+    Kanban\Kanban as KanbanTool,
+    Kanban\Result as KanbanResult,
+};
 
 use StdClass;
 use Exception;
@@ -1340,9 +1344,10 @@ class Record implements Crud,
         return new RecordCollection($collection, $total);
     }
 
-    public function getListKanban(array $params) : StdClass
+    public function getListKanban(array $params) : KanbanResult
     {
         $disableCount = false;
+
         if (
             $this->listCountQueryDisabled
             ||
@@ -1351,105 +1356,17 @@ class Record implements Crud,
             $disableCount = true;
         }
 
-        $maxSize = 0;
-        if ($disableCount) {
-           if (!empty($params['maxSize'])) {
-               $maxSize = $params['maxSize'];
-               $params['maxSize'] = $params['maxSize'] + 1;
-           }
-        }
-
         $this->handleListParams($params);
 
-        $selectParams = $this->getSelectParams($params);
+        $kanban = $this->injectableFactory->create(KanbanTool::class);
 
-        $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
-
-        $collection = new EntityCollection([], $this->entityType);
-
-        $statusField = $this->getMetadata()->get(['scopes', $this->entityType, 'statusField']);
-        if (!$statusField) {
-            throw new Error("No status field for entity type '{$this->entityType}'.");
-        }
-
-        $statusList = $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
-        if (empty($statusList)) {
-            throw new Error("No options for status field for entity type '{$this->entityType}'.");
-        }
-
-        $statusIgnoreList = $this->getMetadata()->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
-
-        $additionalData = (object) [
-            'groupList' => []
-        ];
-
-        foreach ($statusList as $status) {
-            if (in_array($status, $statusIgnoreList)) {
-                continue;
-            }
-
-            if (!$status) {
-                continue;
-            }
-
-            $selectParamsSub = $selectParams;
-
-            $selectParamsSub['whereClause'][] = [
-                $statusField => $status
-            ];
-
-            $o = (object) [
-                'name' => $status
-            ];
-
-            $collectionSub = $this->getRepository()->find($selectParamsSub);
-
-            if (!$disableCount) {
-                $totalSub = $this->getRepository()->count($selectParamsSub);
-            } else {
-                if ($maxSize && count($collectionSub) > $maxSize) {
-                    $totalSub = -1;
-                    unset($collectionSub[count($collectionSub) - 1]);
-                } else {
-                    $totalSub = -2;
-                }
-            }
-
-            foreach ($collectionSub as $e) {
-                $this->loadAdditionalFieldsForList($e);
-                if (!empty($params['loadAdditionalFields'])) {
-                    $this->loadAdditionalFields($e);
-                }
-                if (!empty($params['select'])) {
-                    $this->loadLinkMultipleFieldsForList($e, $params['select']);
-                }
-                $this->prepareEntityForOutput($e);
-
-                $collection[] = $e;
-            }
-
-            $o->total = $totalSub;
-            $o->list = $collectionSub->getValueMapList();
-
-            $additionalData->groupList[] = $o;
-        }
-
-        if (!$disableCount) {
-            $total = $this->getRepository()->count($selectParams);
-        } else {
-            if ($maxSize && count($collection) > $maxSize) {
-                $total = -1;
-                unset($collection[count($collection) - 1]);
-            } else {
-                $total = -2;
-            }
-        }
-
-        return (object) [
-            'total' => $total,
-            'collection' => $collection,
-            'additionalData' => $additionalData
-        ];
+        return $kanban
+            ->setEntityType($this->entityType)
+            ->setRecordService($this)
+            ->setSearchParams($params)
+            ->setCountDisabled($disableCount)
+            ->setMaxSelectTextAttributeLength($this->getMaxSelectTextAttributeLength())
+            ->getResult();
     }
 
     protected function getEntityEvenDeleted(string $id) : ?Entity
