@@ -147,7 +147,7 @@ class Export
                     ]
                 ];
 
-                $selectParams = $selectManager->getSelectParams(['where' => $where], true, true);
+                $selectParams = $selectManager->getSelectParams(['where' => $where], true, true, true);
             }
             else if (array_key_exists('where', $params)) {
                 $where = $params['where'];
@@ -166,7 +166,7 @@ class Export
                     $searchParams['select'] = explode(',', $searchParams['select']);
                 }
 
-                $selectParams = $selectManager->getSelectParams($searchParams, true, true);
+                $selectParams = $selectManager->getSelectParams($searchParams, true, true, true);
             }
             else {
                 throw new BadRequest();
