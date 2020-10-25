@@ -37,11 +37,12 @@ use Espo\Core\{
     Utils\Language,
 };
 
-class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\FileManagerAware
+class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\FileManagerAware, Di\DataCacheAware
 {
     use Di\DefaultLanguageSetter;
     use Di\MetadataSetter;
     use Di\FileManagerSetter;
+    use Di\DataCacheSetter;
 
     protected $ignoreList = [
         'Global.sets',
@@ -71,7 +72,7 @@ class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\File
 
     public function getScopeData($language, $scope)
     {
-        $languageObj = new Language($language, $this->fileManager, $this->metadata);
+        $languageObj = new Language($language, $this->fileManager, $this->metadata, $this->dataCache);
 
         $data = $languageObj->get($scope);
 
@@ -179,8 +180,8 @@ class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\File
 
     public function saveLabels($language, $scope, $labels)
     {
-        $languageObj = new Language($language, $this->fileManager, $this->metadata);
-        $languageOriginalObj = new Language($language, $this->fileManager, $this->metadata, false, true);
+        $languageObj = new Language($language, $this->fileManager, $this->metadata, $this->dataCache);
+        $languageOriginalObj = new Language($language, $this->fileManager, $this->metadata, $this->dataCache, false, true);
 
         $returnDataHash = [];
 
