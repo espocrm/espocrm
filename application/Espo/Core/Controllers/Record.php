@@ -164,12 +164,15 @@ class Record extends Base
         }
 
         $params = [];
+
         $this->fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+
         if (empty($params['maxSize'])) {
             $params['maxSize'] = $maxSizeLimit;
         }
+
         if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
@@ -177,9 +180,9 @@ class Record extends Base
         $result = $this->getRecordService()->getListKanban($params);
 
         return (object) [
-            'total' => $result->total,
-            'list' => $result->collection->getValueMapList(),
-            'additionalData' => $result->additionalData
+            'total' => $result->getTotal(),
+            'list' => $result->getCollection()->getValueMapList(),
+            'additionalData' => $result->getData(),
         ];
     }
 
