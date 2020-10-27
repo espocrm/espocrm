@@ -873,7 +873,7 @@ class Activities implements
 
         $service->handleListParams($params);
 
-        $selectParams = $selectManager->getSelectParams($params, false, true);
+        $selectParams = $selectManager->getSelectParams($params, false, true, true);
 
         $offset = $selectParams['offset'];
         $limit = $selectParams['limit'];
