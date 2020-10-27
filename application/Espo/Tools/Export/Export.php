@@ -131,6 +131,8 @@ class Export
 
         $collection = null;
 
+        $exportAllFields = !array_key_exists('fieldList', $params);
+
         if (array_key_exists('collection', $params)) {
             $collection = $params['collection'];
         } else {
@@ -164,6 +166,10 @@ class Export
 
                 if (isset($searchParams['select']) && is_string($searchParams['select'])) {
                     $searchParams['select'] = explode(',', $searchParams['select']);
+                }
+
+                if ($exportAllFields) {
+                    unset($searchParams['select']);
                 }
 
                 $selectParams = $selectManager->getSelectParams($searchParams, true, true, true);
@@ -218,15 +224,12 @@ class Export
             }
         }
 
-        if (!array_key_exists('fieldList', $params)) {
-            $exportAllFields = true;
-
+        if ($exportAllFields) {
             $fieldDefs = $this->metadata->get(['entityDefs', $this->entityType, 'fields'], []);
             $fieldList = array_keys($fieldDefs);
 
             array_unshift($fieldList, 'id');
         } else {
-            $exportAllFields = false;
             $fieldList = $params['fieldList'];
         }
 
