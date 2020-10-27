@@ -93,7 +93,12 @@ class Diff
 
                 if (!~tag.indexOf('beta') && !~tag.indexOf('alpha')) {
                     versionFromList.push(tag);
-                    break;
+
+                    var patchVersionNumberI = tag.split('.')[2];
+
+                    if (patchVersionNumberI === '0') {
+                        break;
+                    }
                 }
             }
         }
