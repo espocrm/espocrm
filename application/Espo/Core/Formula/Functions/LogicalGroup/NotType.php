@@ -38,6 +38,6 @@ class NotType extends BaseFunction
 {
     public function process(ArgumentList $args)
     {
-        return !$this->evaluate($args);
+        return !$this->evaluate($args[0]);
     }
 }

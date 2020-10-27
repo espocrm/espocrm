@@ -434,4 +434,13 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('test', $result);
     }
+
+    public function testNegate1()
+    {
+        $expression = "!string\contains('hello', 'test')";
+
+        $result = $this->evaluator->process($expression);
+
+        $this->assertTrue($result);
+    }
 }
