@@ -443,4 +443,13 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($result);
     }
+
+    public function testLogicalProority()
+    {
+        $expression = "0 && 0 || 1";
+
+        $result = $this->evaluator->process($expression);
+
+        $this->assertTrue($result);
+    }
 }
