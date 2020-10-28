@@ -65,7 +65,10 @@
                 "parent": false
             },
             "EmailFolder": {
-                "assignedUser": false
+                "assignedUser": {
+                    "read": "yes",
+                    "edit": "no"
+                }
             },
             "Email": {
                 "inboundEmails": false,
