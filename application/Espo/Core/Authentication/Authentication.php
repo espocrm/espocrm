@@ -368,7 +368,7 @@ class Authentication
 
         if ($code) {
             if (!$impl->verifyCode($loggedUser, $code)) {
-                Result::fail('Code not verified');
+                return Result::fail('Code not verified');
             }
 
             return $result;

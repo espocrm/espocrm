@@ -162,8 +162,6 @@ class Email extends \Espo\Core\Select\SelectManager
         $result['whereClause'][] = [
             'usersMiddle.userId' => $this->getUser()->id
         ];
-
-        $this->addUsersColumns($result);
     }
 
     protected function boolFilterOnlyMy(&$result)
