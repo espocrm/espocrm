@@ -356,11 +356,6 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
                     this.$country.attr('autocomplete', 'espo-country');
                 }
 
-                this.controlStreetTextareaHeight();
-                this.$street.on('input', function (e) {
-                    this.controlStreetTextareaHeight();
-                }.bind(this));
-
                 var cityList = this.getConfig().get('addressCityList') || [];
                 if (cityList.length) {
                     this.$city.autocomplete({
@@ -393,11 +388,6 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
                     }, this);
                     this.$city.attr('autocomplete', 'espo-city');
                 }
-
-                this.controlStreetTextareaHeight();
-                this.$street.on('input', function (e) {
-                    this.controlStreetTextareaHeight();
-                }.bind(this));
 
                 var stateList = this.getConfig().get('addressStateList') || [];
                 if (stateList.length) {
