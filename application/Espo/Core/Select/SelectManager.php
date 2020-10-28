@@ -2686,15 +2686,20 @@ class SelectManager
             $selectParams1['havingClause'][] = $selectParams2['havingClause'];
         }
 
-        if (!empty($selectParams2['leftJoins'])) {
-            foreach ($selectParams2['leftJoins'] as $item) {
-                $this->addLeftJoin($item, $selectParams1);
-            }
-        }
 
         if (!empty($selectParams2['joins'])) {
             foreach ($selectParams2['joins'] as $item) {
                 $this->addJoin($item, $selectParams1);
+            }
+        }
+
+        if (!empty($selectParams2['leftJoins'])) {
+            foreach ($selectParams2['leftJoins'] as $item) {
+                if ($this->hasJoin($item, $selectParams1)) {
+                    continue;
+                }
+
+                $this->addLeftJoin($item, $selectParams1);
             }
         }
 

@@ -164,13 +164,7 @@ class Export
                     }
                 }
 
-                if (isset($searchParams['select']) && is_string($searchParams['select'])) {
-                    $searchParams['select'] = explode(',', $searchParams['select']);
-                }
-
-                if ($exportAllFields) {
-                    unset($searchParams['select']);
-                }
+                unset($searchParams['select']);
 
                 $selectParams = $selectManager->getSelectParams($searchParams, true, true, true);
             }

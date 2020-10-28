@@ -53,11 +53,21 @@
                 {
                     "label":"Folders",
                     "link":"#EmailFolder",
-                    "configCheck": "!emailFoldersDisabled"
+                    "configCheck": "!emailFoldersDisabled",
+                    "accessDataList": [
+                        {
+                            "inPortalDisabled": true
+                        }
+                    ]
                 },
                 {
                     "label":"Filters",
-                    "link":"#EmailFilter"
+                    "link":"#EmailFilter",
+                    "accessDataList": [
+                        {
+                            "inPortalDisabled": true
+                        }
+                    ]
                 }
             ]
         },

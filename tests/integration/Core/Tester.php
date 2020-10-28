@@ -146,7 +146,7 @@ class Tester
     {
         $configData = $this->getTestConfigData();
 
-        if ($configData[$optionName] === $data) {
+        if (array_key_exists($optionName, $configData) && $configData[$optionName] === $data) {
             return true;
         }
 
