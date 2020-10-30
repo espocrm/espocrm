@@ -44,6 +44,10 @@ class Attachment extends Record
 
     protected $inlineAttachmentFieldTypeList = ['wysiwyg'];
 
+    protected $adminOnlyHavingInlineAttachmentsEntityTypeList = [
+        'TemplateManager',
+    ];
+
     protected $imageTypeList = [
         'image/png',
         'image/jpeg',
@@ -160,12 +164,24 @@ class Attachment extends Record
 
     protected function checkAttachmentField($relatedEntityType, $field, $role = 'Attachment')
     {
+        if (
+            $this->getUser()->isAdmin()
+            &&
+            $role === 'Inline Attachment'
+            &&
+            in_array($relatedEntityType, $this->adminOnlyHavingInlineAttachmentsEntityTypeList)
+        ) {
+            return;
+        }
+
         $fieldType = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
+
         if (!$fieldType) {
             throw new Error("Field '{$field}' does not exist.");
         }
 
         $attachmentFieldTypeListParam = lcfirst(str_replace(' ', '', $role)) . 'FieldTypeList';
+
         if (!in_array($fieldType, $this->$attachmentFieldTypeListParam)) {
             throw new Error("Field type '{$fieldType}' is not allowed for {$role}.");
         }
