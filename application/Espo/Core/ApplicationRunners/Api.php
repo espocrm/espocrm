@@ -39,6 +39,7 @@ use Espo\Core\{
     Api\ResponseWrapper,
     Api\RouteProcessor,
     Utils\Route,
+    Utils\Log,
 };
 
 use Slim\{
@@ -63,12 +64,15 @@ class Api implements ApplicationRunner
     protected $injectableFactory;
     protected $applicationUser;
     protected $routeUtil;
+    protected $log;
 
-    public function __construct(InjectableFactory $injectableFactory, ApplicationUser $applicationUser, Route $routeUtil)
-    {
+    public function __construct(
+        InjectableFactory $injectableFactory, ApplicationUser $applicationUser, Route $routeUtil, Log $log
+    ) {
         $this->injectableFactory = $injectableFactory;
         $this->applicationUser = $applicationUser;
         $this->routeUtil = $routeUtil;
+        $this->log = $log;
     }
 
     public function run()
@@ -85,7 +89,7 @@ class Api implements ApplicationRunner
             $this->addRoute($slim, $item);
         }
 
-        $slim->addErrorMiddleware(false, true, true);
+        $slim->addErrorMiddleware(false, true, true, $this->log);
 
         $slim->run();
     }
