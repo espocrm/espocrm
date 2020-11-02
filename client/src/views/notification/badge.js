@@ -57,6 +57,7 @@ define('views/notification/badge', 'view', function (Dep) {
                 if (this.timeout) {
                     clearTimeout(this.timeout);
                 }
+
                 for (var name in this.popoupTimeouts) {
                     clearTimeout(this.popoupTimeouts[name]);
                 }
@@ -76,8 +77,10 @@ define('views/notification/badge', 'view', function (Dep) {
             window.addEventListener('storage', function (e) {
                 if (e.key == 'messageClosePopupNotificationId') {
                     var id = localStorage.getItem('messageClosePopupNotificationId');
+
                     if (id) {
                         var key = 'popup-' + id;
+
                         if (this.hasView(key)) {
                             this.markPopupRemoved(id);
                             this.clearView(key);
@@ -102,18 +105,22 @@ define('views/notification/badge', 'view', function (Dep) {
             this.runCheckUpdates(true);
 
             this.$popupContainer = $('#popup-notifications-container');
+
             if (!$(this.$popupContainer).length) {
                 this.$popupContainer = $('<div>').attr('id', 'popup-notifications-container').addClass('hidden').appendTo('body');
             }
 
             var popupNotificationsData = this.popupNotificationsData = this.getMetadata().get('app.popupNotifications') || {};
+
             for (var name in popupNotificationsData) {
                 this.checkPopupNotifications(name);
             }
         },
 
         playSound: function () {
-            if (this.notificationSoundsDisabled) return;
+            if (this.notificationSoundsDisabled) {
+                return;
+            }
 
             var html = '' +
                 '<audio autoplay="autoplay">'+
@@ -142,26 +149,33 @@ define('views/notification/badge', 'view', function (Dep) {
 
         checkBypass: function () {
             var last = this.getRouter().getLast() || {};
+
             if (last.controller == 'Admin' && last.action == 'upgrade') {
                 return true;
             }
         },
 
         checkUpdates: function (isFirstCheck) {
-            if (this.checkBypass()) return;
+            if (this.checkBypass()) {
+                return;
+            }
 
             Espo.Ajax.getRequest('Notification/action/notReadCount').then(function (count) {
                 if (!isFirstCheck && count > this.unreadCount) {
                     var messageBlockPlayNotificationSound = localStorage.getItem('messageBlockPlayNotificationSound');
+
                     if (!messageBlockPlayNotificationSound) {
                         this.playSound();
+
                         localStorage.setItem('messageBlockPlayNotificationSound', true);
+
                         setTimeout(function () {
                             delete localStorage['messageBlockPlayNotificationSound'];
                         }, this.notificationsCheckInterval * 1000);
                     }
                 }
                 this.unreadCount = count;
+
                 if (count) {
                     this.showNotRead(count);
                 } else {
@@ -176,9 +190,11 @@ define('views/notification/badge', 'view', function (Dep) {
             if (this.useWebSocket) {
                 this.getHelper().webSocketManager.subscribe('newNotification', function () {
                     this.checkUpdates();
-                }.bind(this))
+                }.bind(this));
+
                 return;
             }
+
             this.timeout = setTimeout(function () {
                 this.runCheckUpdates();
             }.bind(this), this.notificationsCheckInterval * 1000);
@@ -190,26 +206,39 @@ define('views/notification/badge', 'view', function (Dep) {
             var interval = data.interval;
             var disabled = data.disabled || false;
 
-            if (disabled) return;
-            if (data.portalDisabled && this.getUser().isPortal()) return;
+            if (disabled) {
+                return;
+            }
+
+            if (data.portalDisabled && this.getUser().isPortal()) {
+                return;
+            }
 
             var useWebSocket = this.useWebSocket && data.useWebSocket;
+
             if (useWebSocket) {
                 var category = 'popupNotifications.' + (data.webSocketCategory || name);
+
                 this.getHelper().webSocketManager.subscribe(category, function (c, response) {
-                    if (!response.list) return;
+                    if (!response.list) {
+                        return;
+                    }
+
                     response.list.forEach(function (item) {
                         this.showPopupNotification(name, item);
                     }, this);
                 }.bind(this))
             }
 
-            if (!url || !interval) return;
+            if (!url || !interval) {
+                return;
+            }
 
             (new Promise(
                 function (resolve) {
                     if (this.checkBypass()) {
                         resolve();
+
                         return;
                     }
 
@@ -230,7 +259,9 @@ define('views/notification/badge', 'view', function (Dep) {
                 }.bind(this)
             )).then(
                 function () {
-                    if (useWebSocket) return;
+                    if (useWebSocket) {
+                        return;
+                    }
 
                     this.popoupTimeouts[name] = setTimeout(function () {
                         this.checkPopupNotifications(name, isNotFirstCheck);
@@ -241,20 +272,29 @@ define('views/notification/badge', 'view', function (Dep) {
 
         showPopupNotification: function (name, data, isNotFirstCheck) {
             var view = this.popupNotificationsData[name].view;
-            if (!view) return;
+
+            if (!view) {
+                return;
+            }
 
             var id = data.id || null;
 
             if (id) {
                 id = name + '_' + id;
+
                 if (~this.shownNotificationIds.indexOf(id)) {
                     var notificationView = this.getView('popup-' + id);
+
                     if (notificationView) {
                         notificationView.trigger('update-data', data.data);
                     }
+
                     return;
                 }
-                if (~this.closedNotificationIds.indexOf(id)) return;
+
+                if (~this.closedNotificationIds.indexOf(id)) {
+                    return;
+                }
             } else {
                 id = this.lastId++;
             }
@@ -268,7 +308,9 @@ define('views/notification/badge', 'view', function (Dep) {
                 isFirstCheck: !isNotFirstCheck,
             }, function (view) {
                 view.render();
+
                 this.$popupContainer.removeClass('hidden');
+
                 this.listenTo(view, 'remove', function () {
                     this.markPopupRemoved(id);
                     localStorage.setItem('messageClosePopupNotificationId', id);
@@ -278,22 +320,30 @@ define('views/notification/badge', 'view', function (Dep) {
 
         markPopupRemoved: function (id) {
             var index = this.shownNotificationIds.indexOf(id);
+
             if (index > -1) {
                 this.shownNotificationIds.splice(index, 1);
             }
+
             if (this.shownNotificationIds.length == 0) {
                 this.$popupContainer.addClass('hidden');
             }
+
             this.closedNotificationIds.push(id);
         },
 
         broadcastNotificationsRead: function () {
-            if (!this.useWebSocket) return;
+            if (!this.useWebSocket) {
+                return;
+            }
 
             this.isBroadcustingNotificationRead = true;
+
             localStorage.setItem('messageNotificationRead', true);
+
             setTimeout(function () {
                 this.isBroadcustingNotificationRead = false;
+
                 delete localStorage['messageNotificationRead'];
             }.bind(this), 500);
         },
@@ -309,6 +359,7 @@ define('views/notification/badge', 'view', function (Dep) {
                 el: '#notifications-panel',
             }, function (view) {
                 view.render();
+
                 this.listenTo(view, 'all-read', function () {
                     this.hideNotRead();
                     this.$el.find('.badge-circle-warning').remove();
@@ -326,6 +377,7 @@ define('views/notification/badge', 'view', function (Dep) {
             });
 
             $document = $(document);
+
             $document.on('mouseup.notification', function (e) {
                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {
                     if (!$(e.target).closest('div.modal-dialog').length) {
@@ -345,12 +397,17 @@ define('views/notification/badge', 'view', function (Dep) {
             $container = $('#notifications-panel');
 
             $('#notifications-panel').remove();
+
             $document = $(document);
+
             if (this.hasView('panel')) {
                 this.getView('panel').remove();
-            };
+            }
+
             $document.off('mouseup.notification');
+
             $container.remove();
         },
+
     });
 });
