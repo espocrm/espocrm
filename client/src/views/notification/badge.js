@@ -212,6 +212,10 @@ define('views/notification/badge', 'view', function (Dep) {
                     continue;
                 }
 
+                if (data.portalDisabled && this.getUser().isPortal()) {
+                    return;
+                }
+
                 toCheck = true;
             }
 
