@@ -115,6 +115,8 @@ define('views/notification/badge', 'view', function (Dep) {
             for (var name in popupNotificationsData) {
                 this.checkPopupNotifications(name);
             }
+
+            this.checkGroupedPopupNotifications();
         },
 
         playSound: function () {
@@ -200,11 +202,45 @@ define('views/notification/badge', 'view', function (Dep) {
             }.bind(this), this.notificationsCheckInterval * 1000);
         },
 
+        checkGroupedPopupNotifications: function () {
+            var toCheck = false;
+
+            for (var name in this.popupNotificationsData) {
+                var data = this.popupNotificationsData[name] || {};
+
+                if (!data.grouped) {
+                    continue;
+                }
+
+                toCheck = true;
+            }
+
+            if (!toCheck) {
+                return;
+            }
+
+            Espo.Ajax.getRequest('PopupNotification/action/grouped')
+                .then(
+                    function (result) {
+                        for (const type in result) {
+                            const list = result[name];
+
+                            list.forEach(function (item) {
+                                this.showPopupNotification(type, item);
+                            }, this);
+                        }
+                    }.bind(this)
+                );
+        },
+
         checkPopupNotifications: function (name, isNotFirstCheck) {
             var data = this.popupNotificationsData[name] || {};
+
             var url = data.url;
             var interval = data.interval;
             var disabled = data.disabled || false;
+
+            var isFirstCheck = !isNotFirstCheck;
 
             if (disabled) {
                 return;
@@ -230,7 +266,26 @@ define('views/notification/badge', 'view', function (Dep) {
                 }.bind(this))
             }
 
-            if (!url || !interval) {
+            if (data.grouped && interval && !useWebSocket && isFirstCheck) {
+                this.popoupTimeouts[name] = setTimeout(
+                    function () {
+                        this.checkPopupNotifications(name, true);
+                    }.bind(this),
+                    interval * 1000
+                );
+
+                return;
+            }
+
+            if (data.grouped && isFirstCheck) {
+                return;
+            }
+
+            if (!url) {
+                return;
+            }
+
+            if (!interval) {
                 return;
             }
 
@@ -264,7 +319,7 @@ define('views/notification/badge', 'view', function (Dep) {
                     }
 
                     this.popoupTimeouts[name] = setTimeout(function () {
-                        this.checkPopupNotifications(name, isNotFirstCheck);
+                        this.checkPopupNotifications(name, true);
                     }.bind(this), interval * 1000);
                 }.bind(this)
             );
