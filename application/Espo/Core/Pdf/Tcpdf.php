@@ -120,11 +120,11 @@ class Tcpdf extends \TCPDF
         $html = $this->headerHtml;
 
         if ($this->useGroupNumbers) {
-            $html = str_replace('{pageNumber}', '{:png:}', $html);
-            $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
+            $html = str_replace('{pageNumber}', '{{:png:}}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
         } else {
-            $html = str_replace('{pageNumber}', '{:pnp:}', $html);
-            $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
+            $html = str_replace('{pageNumber}', '{{:pnp:}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
         }
 
         if ($this->isUnicodeFont()) {
@@ -148,11 +148,11 @@ class Tcpdf extends \TCPDF
         $html = $this->footerHtml;
 
         if ($this->useGroupNumbers) {
-            $html = str_replace('{pageNumber}', '{:png:}', $html);
-            $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
+            $html = str_replace('{pageNumber}', '{{:png:}}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
         } else {
-            $html = str_replace('{pageNumber}', '{:pnp:}', $html);
-            $html = str_replace('{pageAbsoluteNumber}', '{:pnp:}', $html);
+            $html = str_replace('{pageNumber}', '{{:pnp:}}', $html);
+            $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
         }
 
         if ($this->isUnicodeFont()) {

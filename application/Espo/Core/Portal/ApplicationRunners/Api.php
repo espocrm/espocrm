@@ -34,12 +34,13 @@ use Espo\Core\{
     InjectableFactory,
     ApplicationUser,
     Portal\Utils\Route,
+    Utils\Log,
 };
 
 class Api extends ApiBase
 {
-    public function __construct(InjectableFactory $injectableFactory, ApplicationUser $applicationUser, Route $routeUtil)
+    public function __construct(InjectableFactory $injectableFactory, ApplicationUser $applicationUser, Route $routeUtil, Log $log)
     {
-        parent::__construct($injectableFactory, $applicationUser, $routeUtil);
+        parent::__construct($injectableFactory, $applicationUser, $routeUtil, $log);
     }
 }

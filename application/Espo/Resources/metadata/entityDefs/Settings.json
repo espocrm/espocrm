@@ -496,7 +496,7 @@
         },
         "currencyFormat": {
             "type": "enumInt",
-            "options": [1, 2]
+            "options": [1, 2, 3]
         },
         "currencyDecimalPlaces": {
             "type": "int",

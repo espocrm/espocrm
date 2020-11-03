@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
+define('views/fields/currency', 'views/fields/float', function (Dep) {
 
     return Dep.extend({
 
@@ -40,11 +40,15 @@ Espo.define('views/fields/currency', 'views/fields/float', function (Dep) {
 
         detailTemplate2: 'fields/currency/detail-2',
 
+        detailTemplate3: 'fields/currency/detail-3',
+
         listTemplate: 'fields/currency/list',
 
         listTemplate1: 'fields/currency/list-1',
 
         listTemplate2: 'fields/currency/list-2',
+
+        listTemplate3: 'fields/currency/list-3',
 
         detailTemplateNoCurrency: 'fields/currency/detail-no-currency',
 
