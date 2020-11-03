@@ -253,10 +253,6 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
                             e.currentTarget.value = this.model.get(this.nameName);
                         }
                     }.bind(this));
-                } else if (this.mode == 'search') {
-                    this.$elementName.on('blur', function (e) {
-                        e.currentTarget.value = '';
-                    }.bind(this));
                 }
 
                 if (!this.autocompleteDisabled) {
