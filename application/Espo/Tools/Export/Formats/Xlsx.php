@@ -350,21 +350,24 @@ class Xlsx
                 } else if ($type == 'currency') {
                     if (array_key_exists($name.'Currency', $row) && array_key_exists($name, $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
+
                         $currency = $row[$name . 'Currency'];
-                        $currencySymbol = $this->getMetadata()->get(['app', 'currency', 'symbolMap', $currency], '');
 
                         $sheet->getStyle("$col$rowNumber")
                             ->getNumberFormat()
-                            ->setFormatCode('[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00');
+                            ->setFormatCode(
+                                $this->getCurrencyFormatCode($currency)
+                            );
                     }
                 } else if ($type == 'currencyConverted') {
                     if (array_key_exists($name, $row)) {
                         $currency = $this->getConfig()->get('defaultCurrency');
-                        $currencySymbol = $this->getMetadata()->get(['app', 'currency', 'symbolMap', $currency], '');
 
                         $sheet->getStyle("$col$rowNumber")
                             ->getNumberFormat()
-                            ->setFormatCode('[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00');
+                            ->setFormatCode(
+                                $this->getCurrencyFormatCode($currency)
+                            );
 
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
                     }
@@ -662,5 +665,18 @@ class Xlsx
         $this->fileManager->unlink($tempFileName);
 
         return $xlsx;
+    }
+
+    protected function getCurrencyFormatCode(string $currency) : string
+    {
+        $currencySymbol = $this->getMetadata()->get(['app', 'currency', 'symbolMap', $currency], '');
+
+        $currencyFormat = $this->getConfig()->get('currencyFormat') ?? 2;
+
+        if ($currencyFormat == 3) {
+            return '#,##0.00_-"' . $currencySymbol . '"';
+        }
+
+        return '[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00';
     }
 }
