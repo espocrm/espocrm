@@ -68,20 +68,33 @@ define('views/modals/kanban-move-over', 'views/modal', function (Dep) {
 
             this.optionDataList = [];
 
-            (this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'options']) || []).forEach(function (item) {
+            (this.getMetadata().get(
+                ['entityDefs', this.scope, 'fields', this.statusField, 'options']) || []
+            ).forEach(function (item) {
                 this.optionDataList.push({
                     value: item,
-                    label: this.getLanguage().translateOption(item, this.statusField, this.scope)
+                    label: this.getLanguage().translateOption(item, this.statusField, this.scope),
                 });
             }, this);
         },
 
         moveTo: function (status) {
             var attributes = {};
+
             attributes[this.statusField] = status;
-            this.model.save(attributes, {patch: true}).then(function () {
-                Espo.Ui.success(this.translate('Done'));
-            }.bind(this));
+
+            this.model
+                .save(
+                    attributes,
+                    {
+                        patch: true,
+                        isMoveTo: true,
+                    }
+                )
+                .then(function () {
+                    Espo.Ui.success(this.translate('Done'));
+                }.bind(this));
+
             this.close();
         },
 

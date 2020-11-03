@@ -57,10 +57,13 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
+
                 if (!this.scope || this.selectable) {
                     return;
                 }
+
                 e.preventDefault();
+
                 var id = $(e.currentTarget).data('id');
                 var model = this.collection.get(id);
 
@@ -68,8 +71,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 var options = {
                     id: id,
-                    model: model
+                    model: model,
                 };
+
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
@@ -79,7 +83,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             },
             'click [data-action="groupShowMore"]': function (e) {
                 var $target = $(e.currentTarget);
+
                 var group = $target.data('name');
+
                 this.groupShowMore(group);
             },
             'click .action': function (e) {
@@ -122,7 +128,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.layoutName = this.options.layoutName || this.layoutName || this.type;
 
-            this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
+            this.rowActionsView = _.isUndefined(this.options.rowActionsView) ?
+                this.rowActionsView :
+                this.options.rowActionsView;
 
             if (this.massActionsDisabled && !this.selectable) {
                 this.checkboxes = false;
@@ -156,6 +164,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             if ('showCount' in this.options) {
                 this.showCount = this.options.showCount;
             }
+
             this.displayTotalCount = this.showCount && this.getConfig().get('displayListViewRecordCount');
 
             if ('displayTotalCount' in this.options) {
@@ -168,17 +177,25 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 }
             }
 
+            this.orderDisabled = this.getMetadata().get(['scopes', this.scope, 'kanbanOrderDisabled']);
+
             this.statusField = this.getMetadata().get(['scopes', this.scope, 'statusField']);
 
             if (!this.statusField) {
                 throw new Error("No status field for entity type '" + this.scope + "'.");
             }
-            this.statusList = Espo.Utils.clone(this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'options']));
+
+            this.statusList = Espo.Utils.clone(this.getMetadata().get(
+                ['entityDefs', this.scope, 'fields', this.statusField, 'options'])
+            );
 
             var statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
 
             this.statusList = this.statusList.filter(function (item) {
-                if (~statusIgnoreList.indexOf(item)) return;
+                if (~statusIgnoreList.indexOf(item)) {
+                    return;
+                }
+
                 return true;
             }, this);
 
@@ -191,7 +208,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.seedCollection.order = this.collection.defaultOrder;
 
             this.listenTo(this.collection, 'sync', function (c, r, options) {
-                if (this.hasView('modal') && this.getView('modal').isRendered()) return;
+                if (this.hasView('modal') && this.getView('modal').isRendered()) {
+                    return;
+                }
 
                 this.buildRows(function () {
                     this.render();
@@ -272,6 +291,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     $container.css('width', '');
                     $block.hide();
                     $container.show();
+
                     return;
                 }
 
@@ -290,6 +310,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         }
                     } else {
                         $container.css('width', '');
+
                         if ($container.hasClass('sticked')) {
                             $container.removeClass('sticked');
                             $block.hide();
@@ -312,6 +333,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 e.originalEvent.stopPropagation();
             }.bind(this));
 
+            var orderDisabled = this.orderDisabled;
+
             $list.sortable({
                 connectWith: '.group-column-list',
                 cancel: '.dropdown-menu *',
@@ -319,48 +342,122 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     if (this.isItemBeingMoved) {
 
                     }
+
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
                 }.bind(this),
                 stop: function (e, ui) {
                     var $item = $(ui.item);
+
                     var group = $item.closest('.group-column-list').data('name');
                     var id = $item.data('id');
 
                     var draggedGroupFrom = this.draggedGroupFrom;
+
                     this.draggedGroupFrom = null;
 
                     if (group !== draggedGroupFrom) {
                         var model = this.collection.get(id);
+
                         if (!model) {
                             $list.sortable('cancel');
+
                             return;
                         }
+
                         var attributes = {};
+
                         attributes[this.statusField] = group;
+
                         this.handleAttributesOnGroupChange(model, attributes, group);
 
                         $list.sortable('disable');
 
-                        model.save(attributes, {patch: true, isDrop: true}).then(function () {
-                            Espo.Ui.success(this.translate('Saved'));
-                            $list.sortable('destroy');
-                            this.initSortable();
-                        }.bind(this)).fail(function () {
+                        model
+                            .save(attributes, {patch: true, isDrop: true})
+                            .then(function () {
+                                Espo.Ui.success(this.translate('Saved'));
+
+                                $list.sortable('destroy');
+
+                                this.initSortable();
+
+                                if (!orderDisabled) {
+                                    this.reOrderGroup(group);
+                                    this.storeGroupOrder(group);
+                                }
+                            }.bind(this))
+                            .fail(function () {
+                                $list.sortable('cancel');
+                                $list.sortable('enable');
+                            }.bind(this));
+                    } else {
+                        if (orderDisabled) {
                             $list.sortable('cancel');
                             $list.sortable('enable');
-                        }.bind(this));
-                    } else {
-                        $list.sortable('cancel');
-                        $list.sortable('enable');
+
+                            return;
+                        }
+
+                        this.reOrderGroup(group);
+                        this.storeGroupOrder(group);
                     }
                 }.bind(this)
+            });
+        },
+
+
+        storeGroupOrder: function (group) {
+            Espo.Ajax.postRequest('KanbanOrder/action/store', {
+                entityType: this.entityType,
+                group: group,
+                ids: this.getGroupOrderFromDom(group),
+            });
+        },
+
+        getGroupOrderFromDom: function (group) {
+            var ids = [];
+
+            var $group = this.$el.find('.group-column-list[data-name="'+group+'"]');
+
+            $group.children().each(function (i, el) {
+                ids.push($(el).data('id'));
+            });
+
+            return ids;
+        },
+
+        reOrderGroup: function (group) {
+            var groupCollection = this.getGroupCollection(group);
+
+            var ids = this.getGroupOrderFromDom(group);
+
+            var modelMap = {};
+
+            groupCollection.models.forEach(function (m) {
+                modelMap[m.id] = m;
+            });
+
+            while (groupCollection.models.length) {
+                groupCollection.pop({silent: true})
+            }
+
+            ids.forEach(function (id) {
+                var model = modelMap[id];
+
+                if (!model) {
+                    return;
+                }
+
+                groupCollection.add(model, {silent: true});
             });
         },
 
         handleAttributesOnGroupChange: function (model, attributes, group) {},
 
         adjustMinHeight: function () {
-            if (this.collection.models.length === 0) return;
+            if (this.collection.models.length === 0) {
+                return;
+            }
 
             var top = this.$listKanban.find('table > tbody').position().top;
             var bottom = this.$content.position().top + this.$content.outerHeight(true);
@@ -374,13 +471,14 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             }
 
             this.$listKanban.find('td.group-column > div').css({
-                minHeight: height + 'px'
+                minHeight: height + 'px',
             });
         },
 
         getListLayout: function (callback) {
             if (this.listLayout) {
                 callback.call(this, this.listLayout);
+
                 return;
             }
 
@@ -397,6 +495,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         attrubuteList.push(this.statusField);
                     }
                 }
+
                 callback(attrubuteList);
             }.bind(this));
         },
@@ -420,20 +519,25 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 groupList.forEach(function (item, i) {
                     var collection = this.seedCollection.clone();
+
                     collection.total = item.total;
-                    collection.url = this.scope;
+                    //collection.url = this.scope;
+                    collection.url = this.collection.url;
+
                     collection.where = this.collection.where;
                     collection.name = this.seedCollection.name;
                     collection.maxSize = this.seedCollection.maxSize;
                     collection.orderBy = this.seedCollection.orderBy;
                     collection.order = this.seedCollection.order;
+
                     collection.whereAdditional = [
                         {
                             field: this.statusField,
                             type: 'equals',
-                            value: item.name
+                            value: item.name,
                         }
                     ];
+
                     collection.groupName = item.name;
                     collection.set(item.list);
 
@@ -445,15 +549,19 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                     collection.models.forEach(function (model) {
                         count ++;
+
                         itemDataList.push({
                             key: model.id,
-                            id: model.id
+                            id: model.id,
                         });
                     }, this);
 
                     var nextStyle = null;
+
                     if (i < groupList.length - 1) {
-                        nextStyle = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'style', groupList[i + 1].name]);
+                        nextStyle = this.getMetadata().get(
+                            ['entityDefs', this.scope, 'fields', this.statusField, 'style', groupList[i + 1].name]
+                        );
                     }
 
                     var o = {
@@ -463,8 +571,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         collection: collection,
                         isLast: i === groupList.length - 1,
                         hasShowMore: collection.total > collection.length || collection.total == -1,
-                        style: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.statusField, 'style', item.name]),
-                        nextStyle: nextStyle
+                        style: this.getMetadata().get(
+                            ['entityDefs', this.scope, 'fields', this.statusField, 'style', item.name]
+                        ),
+                        nextStyle: nextStyle,
                     };
 
                     this.groupDataList.push(o);
@@ -472,6 +582,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 if (count === 0) {
                     this.wait(false);
+
                     if (callback) {
                         callback();
                     }
@@ -479,10 +590,13 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     this.groupDataList.forEach(function (groupItem) {
                         groupItem.dataList.forEach(function (item, j) {
                             var model = groupItem.collection.get(item.id);
+
                             this.buildRow(j, model, function (view) {
                                 loadedCount++;
+
                                 if (loadedCount === count) {
                                     this.wait(false);
+
                                     if (callback) {
                                         callback();
                                     }
@@ -504,15 +618,17 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 rowActionsDisabled: this.rowActionsDisabled,
                 rowActionsView: this.rowActionsView,
                 setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
-                statusFieldIsEditable: this.statusFieldIsEditable
+                statusFieldIsEditable: this.statusFieldIsEditable,
             }, callback);
         },
 
         removeRecordFromList: function (id) {
             this.collection.remove(id);
+
             if (this.collection.total > 0) {
                 this.collection.total--;
             }
+
             this.totalCount = this.collection.total;
 
             this.$el.find('.total-count-span').text(this.totalCount.toString());
@@ -529,14 +645,20 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             for (var i in this.groupDataList) {
                 var groupItem = this.groupDataList[i];
+
                 for (var j in groupItem.dataList) {
                     var item = groupItem.dataList[j];
+
                     if (item.id === id) {
                         groupItem.dataList.splice(j, 1);
+
                         if (groupItem.collection.total > 0) {
                             groupItem.collection.total--;
                         }
-                        groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length || groupItem.collection.total == -1;
+
+                        groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length ||
+                            groupItem.collection.total == -1;
+
                         break;
                     }
                 }
@@ -550,6 +672,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.collection.subCollectionList.forEach(function (collection) {
                 if (collection.get(id)) {
                     collection.remove(id);
+
                     if (collection.total > 0) {
                         collection.total--;
                     }
@@ -560,27 +683,42 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             for (var i in this.groupDataList) {
                 var groupItem = this.groupDataList[i];
+
                 for (var j in groupItem.dataList) {
                     var item = groupItem.dataList[j];
+
                     if (item.id === id) {
                         dataItem = item;
                         groupItem.dataList.splice(j, 1);
+
                         break;
                     }
                 }
             }
 
-            if (!group) return;
-            if (o.isDrop) return;
+            if (!group) {
+                return;
+            }
+
+            if (o.isDrop) {
+                return;
+            }
 
             for (var i in this.groupDataList) {
                 var groupItem = this.groupDataList[i];
-                if (groupItem.name !== group) continue;
+
+                if (groupItem.name !== group) {
+                    continue;
+                }
+
                 groupItem.collection.unshift(model);
                 groupItem.collection.total++;
+
                 if (dataItem) {
                     groupItem.dataList.unshift(dataItem);
-                    groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length || groupItem.collection.total == -1;
+
+                    groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length ||
+                        groupItem.collection.total == -1;
                 }
             }
 
@@ -592,21 +730,29 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             } else {
                 $item.remove();
             }
+
+            if (!this.orderDisabled) {
+                this.storeGroupOrder(group);
+            }
         },
 
         groupShowMore: function (group) {
             for (var i in this.groupDataList) {
                 var groupItem = this.groupDataList[i];
+
                 if (groupItem.name === group) {
                     break;
-                } else {
-                    groupItem = null;
                 }
+
+                groupItem = null;
             }
 
-            if (!groupItem) return;
+            if (!groupItem) {
+                return;
+            }
 
             var collection = groupItem.collection;
+
             var $list = this.$el.find('.group-column-list[data-name="'+group+'"]');
             var $showMore = this.$el.find('.group-column[data-name="'+group+'"] .show-more');
 
@@ -614,15 +760,24 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.showMoreRecords(collection, $list, $showMore, function () {
                 this.noRebuild = false;
+
                 collection.models.forEach(function (model) {
-                    if (this.collection.get(model.id)) return;
+                    if (this.collection.get(model.id)) {
+                        return;
+                    }
+
                     this.collection.add(model);
+
                     groupItem.dataList.push({
                         key: model.id,
-                        id: model.id
+                        id: model.id,
                     });
                 }, this);
             });
+        },
+
+        getDomRowItem: function (id) {
+            return this.$el.find('.item[data-id="'+id+'"]');
         },
 
         getRowContainerHtml: function (id) {
@@ -634,11 +789,24 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.createView('moveOverDialog', 'views/modals/kanban-move-over', {
                 model: model,
-                statusField: this.statusField
+                statusField: this.statusField,
             }, function (view) {
                 view.render();
             });
-        }
+        },
+
+        getGroupCollection: function (group) {
+            var collection = null;
+
+            this.collection.subCollectionList.forEach(function (itemCollection) {
+                if (itemCollection.groupName === group) {
+                    collection = itemCollection;
+                }
+
+            }, this);
+
+            return collection;
+        },
 
     });
 });

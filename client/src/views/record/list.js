@@ -1574,32 +1574,50 @@ define('views/record/list', 'view', function (Dep) {
 
             var success = function () {
                 Espo.Ui.notify(false);
+
                 $showMore.addClass('hidden');
 
                 var rowCount = collection.length - initialCount;
                 var rowsReady = 0;
+
                 if (collection.length <= initialCount) {
                     final();
                 }
+
                 for (var i = initialCount; i < collection.length; i++) {
                     var model = collection.at(i);
+
                     this.buildRow(i, model, function (view) {
                         var model = view.model;
+
                         view.getHtml(function (html) {
                             var $row = $(this.getRowContainerHtml(model.id));
+
                             $row.append(html);
+
+                            var $existingRowItem = this.getDomRowItem(model.id);
+
+                            if ($existingRowItem && $existingRowItem.length) {
+                                $existingRowItem.remove();
+                            }
+
                             $list.append($row);
+
                             rowsReady++;
+
                             if (rowsReady == rowCount) {
                                 final();
                             }
+
                             view._afterRender();
+
                             if (view.options.el) {
                                 view.setElement(view.options.el);
                             }
                         }.bind(this));
                     });
                 }
+
                 this.noRebuild = true;
             }.bind(this);
 
@@ -1614,6 +1632,10 @@ define('views/record/list', 'view', function (Dep) {
                 remove: false,
                 more: true
             });
+        },
+
+        getDomRowItem: function (id) {
+            return null;
         },
 
         getRowContainerHtml: function (id) {

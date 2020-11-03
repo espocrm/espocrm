@@ -34,11 +34,11 @@ use Espo\Core\{
     Utils\Metadata,
     Select\SelectManagerFactory,
     ORM\EntityManager,
-    //Record\Collection as RecordCollection,
 };
 
 use Espo\{
     Services\Record as RecordService,
+    ORM\QueryParams\Select as SelectQuery,
 };
 
 class Kanban
@@ -47,9 +47,17 @@ class Kanban
 
     protected $countDisabled = false;
 
+    protected $orderDisabled = false;
+
     protected $searchParams = [];
 
     protected $maxSelectTextAttributeLength = null;
+
+    protected $userId = null;
+
+    protected $maxOrderNumber = 50;
+
+    const MAX_GROUP_LENGTH = 100;
 
     protected $metadata;
     protected $selectManagerFactory;
@@ -89,6 +97,27 @@ class Kanban
     public function setCountDisabled(bool $countDisabled) : self
     {
         $this->countDisabled = $countDisabled;
+
+        return $this;
+    }
+
+    public function setOrderDisabled(bool $orderDisabled) : self
+    {
+        $this->orderDisabled = $orderDisabled;
+
+        return $this;
+    }
+
+    public function setUserId(string $userId) : self
+    {
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function setMaxOrderNumber(int $maxOrderNumber) : self
+    {
+        $this->maxOrderNumber = $maxOrderNumber;
 
         return $this;
     }
@@ -159,14 +188,47 @@ class Kanban
             $selectParamsSub = $selectParams;
 
             $selectParamsSub['whereClause'][] = [
-                $statusField => $status
+                $statusField => $status,
             ];
 
             $o = (object) [
                 'name' => $status,
             ];
 
-            $collectionSub = $repository->find($selectParamsSub);
+            $query = SelectQuery::fromRaw($selectParamsSub);
+
+            $newOrder = $selectParamsSub['orderBy'] ?? [];
+
+            array_unshift($newOrder, [
+                'COALESCE:(kanbanOrder.order, ' . strval($this->maxOrderNumber + 1) . ')',
+                'ASC',
+            ]);
+
+            if ($this->userId && !$this->orderDisabled) {
+                $group = mb_substr($status, 0, self::MAX_GROUP_LENGTH);
+
+                $builder = $this->entityManager
+                    ->getQueryBuilder()
+                    ->select()
+                    ->clone($query)
+                    ->order($newOrder)
+                    ->leftJoin(
+                        'KanbanOrder',
+                        'kanbanOrder',
+                        [
+                            'kanbanOrder.entityType' => $this->entityType,
+                            'kanbanOrder.entityId:' => 'id',
+                            'kanbanOrder.group' => $group,
+                            'kanbanOrder.userId' => $this->userId,
+                        ]
+                    );
+
+                $query = $builder->build();
+            }
+
+            $collectionSub = $repository
+                ->clone($query)
+                ->find();
 
             if (!$this->countDisabled) {
                 $totalSub = $repository->count($selectParamsSub);

@@ -1,6 +1,9 @@
 {
     "event": {
         "url": "Activities/action/popupNotifications",
+        "grouped": true,
+        "serviceName": "Activities",
+        "methodName": "getPopupNotifications",
         "interval": 15,
         "useWebSocket": true,
         "portalDisabled": true,
