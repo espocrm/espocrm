@@ -144,7 +144,8 @@
         },
         "currencyFormat": {
             "1": "10 USD",
-            "2": "$10"
+            "2": "$10",
+            "3": "10 $"
         },
         "personNameFormat": {
             "firstLast": "First Last",
