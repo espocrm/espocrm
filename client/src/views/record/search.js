@@ -96,20 +96,32 @@ define('views/record/search', 'view', function (Dep) {
                 return this.fieldList != null && this.moreFieldList != null;
             }.bind(this));
 
-            this.boolFilterList = Espo.Utils.clone(this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []).filter(function (item) {
-                if (typeof item === 'string') return true;
+            this.boolFilterList = Espo.Utils.clone(
+                this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []
+            ).filter(function (item) {
+                if (typeof item === 'string') {
+                    return true;
+                }
+
                 item = item || {};
+
                 if (item.inPortalDisabled && this.getUser().isPortal()) return false;
                 if (item.isPortalOnly && !this.getUser().isPortal()) return false;
+
                 if (item.accessDataList) {
                     if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
                         return false;
                     }
                 }
+
                 return true;
             }, this).map(function (item) {
-                if (typeof item === 'string') return item;
+                if (typeof item === 'string') {
+                    return item;
+                }
+
                 item = item || {};
+
                 return item.name;
             }, this);
 
@@ -117,20 +129,29 @@ define('views/record/search', 'view', function (Dep) {
 
             this._helper.layoutManager.get(this.entityType, 'filters', function (list) {
                 this.moreFieldList = [];
+
                 (list || []).forEach(function (field) {
-                    if (~forbiddenFieldList.indexOf(field)) return;
+                    if (~forbiddenFieldList.indexOf(field)) {
+                        return;
+                    }
                     this.moreFieldList.push(field);
                 }, this);
+
                 this.tryReady();
             }.bind(this));
 
             var filterList = this.options.filterList || this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
 
             this.presetFilterList = Espo.Utils.clone(filterList).filter(function (item) {
-                if (typeof item === 'string') return true;
+                if (typeof item === 'string') {
+                    return true;
+                }
+
                 item = item || {};
+
                 if (item.inPortalDisabled && this.getUser().isPortal()) return false;
                 if (item.isPortalOnly && !this.getUser().isPortal()) return false;
+
                 if (item.accessDataList) {
                     if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
                         return false;
@@ -138,6 +159,7 @@ define('views/record/search', 'view', function (Dep) {
                 }
                 return true;
             }, this);
+
             ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {
                 this.presetFilterList.push(item);
             }, this);
@@ -150,14 +172,18 @@ define('views/record/search', 'view', function (Dep) {
 
             if (this.presetName) {
                 var hasPresetListed = false;
+
                 for (var i in this.presetFilterList) {
                     var item = this.presetFilterList[i] || {};
+
                     var name = (typeof item === 'string') ? item : item.name;
+
                     if (name === this.presetName) {
                         hasPresetListed = true;
                         break;
                     }
                 }
+
                 if (!hasPresetListed) {
                     this.presetFilterList.push(this.presetName);
                 }
@@ -179,7 +205,9 @@ define('views/record/search', 'view', function (Dep) {
             if (!this.viewModeList) {
                 return [];
             }
+
             var list = [];
+
             this.viewModeList.forEach(function (item) {
                 var o = {
                     name: item,
@@ -282,9 +310,11 @@ define('views/record/search', 'view', function (Dep) {
                 var name = $target.data('name');
 
                 this.$el.find('ul.filter-list li[data-name="' + name + '"]').removeClass('hidden');
+
                 var container = this.getView('filter-' + name).$el.closest('div.filter');
                 this.clearView('filter-' + name);
                 container.remove();
+
                 delete this.advanced[name];
 
 
@@ -308,9 +338,6 @@ define('views/record/search', 'view', function (Dep) {
             'click a[data-action="selectPreset"]': function (e) {
                 var presetName = $(e.currentTarget).data('name') || null;
                 this.selectPreset(presetName);
-            },
-            'click .advanced-filters-bar a[data-action="showFiltersPanel"]': function (e) {
-                this.$advancedFiltersPanel.removeClass('hidden');
             },
             'click .dropdown-menu a[data-action="savePreset"]': function (e) {
                 this.createView('savePreset', 'views/modals/save-filters', {}, function (view) {
@@ -341,7 +368,9 @@ define('views/record/search', 'view', function (Dep) {
             'click [data-action="switchViewMode"]': function (e) {
                 var mode = $(e.currentTarget).data('name');
 
-                if (mode === this.viewMode) return;
+                if (mode === this.viewMode) {
+                    return;
+                }
 
                 this.setViewMode(mode, false, true);
             }
@@ -486,7 +515,6 @@ define('views/record/search', 'view', function (Dep) {
 
             this.updateAddFilterButton();
 
-            this.$advancedFiltersBar = this.$el.find('.advanced-filters-bar');
             this.$advancedFiltersPanel = this.$el.find('.advanced-filters');
 
             this.manageLabels();
@@ -495,8 +523,6 @@ define('views/record/search', 'view', function (Dep) {
         },
 
         manageLabels: function () {
-            this.$advancedFiltersBar.empty().addClass('hidden');
-
             this.$el.find('ul.dropdown-menu > li.preset-control').addClass('hidden');
 
             this.currentFilterLabelList = [];
@@ -541,27 +567,6 @@ define('views/record/search', 'view', function (Dep) {
             } else {
                 $resetButton.css('visibility', 'hidden');
             }
-        },
-
-        addLabelHtml: function (label, style, id, noAction) {
-            var action = "showFiltersPanel";
-            var cursor = 'pointer';
-            var tag = 'a';
-            if (noAction) {
-                action = "NO_ACTION";
-                tag = 'span';
-                cursor = 'default';
-            }
-
-            var barContentHtml = '<'+tag+' href="javascript:" style="cursor: '+cursor+';" class="label label-'+style+'" data-action="'+action+'">' + label + '</'+tag+'>';
-            if (id) {
-                barContentHtml += ' <a href="javascript:" title="'+this.translate('Remove')+'" class="small" data-action="removePreset" data-id="'+id+'"><span class="fas fa-times"></span></a>';
-            }
-            barContentHtml = '<span style="margin-right: 10px;">' + barContentHtml + '</span>'
-
-            this.$advancedFiltersBar.append($(barContentHtml));
-            this.$advancedFiltersBar.removeClass('hidden');
-
         },
 
         managePresetFilters: function () {
@@ -611,7 +616,6 @@ define('views/record/search', 'view', function (Dep) {
                         this.$el.find('ul.dropdown-menu > li.divider.preset-control').removeClass('hidden');
                         this.$el.find('ul.dropdown-menu > li.preset-control.save-preset').removeClass('hidden');
                         this.$el.find('ul.dropdown-menu > li.preset-control.remove-preset').addClass('hidden');
-
                     }
                 }
 
@@ -630,6 +634,7 @@ define('views/record/search', 'view', function (Dep) {
                                .removeClass('btn-danger')
                                .removeClass('btn-success')
                                .removeClass('btn-info');
+
             this.$filtersButton.addClass('btn-' + filterStyle);
 
             presetName = presetName || '';
@@ -655,12 +660,14 @@ define('views/record/search', 'view', function (Dep) {
 
         getFilterDataList: function () {
             var arr = [];
+
             for (var field in this.advanced) {
                 arr.push({
                     key: 'filter-' + field,
                     name: field
                 });
             }
+
             return arr;
         },
 
@@ -784,7 +791,8 @@ define('views/record/search', 'view', function (Dep) {
             this.bool = {};
 
             this.boolFilterList.forEach(function (name) {
-                this.bool[name] = this.$el.find('input[data-name="' + name + '"][data-role="boolFilterCheckbox"]').prop('checked');
+                this.bool[name] = this.$el.find('input[data-name="' + name + '"][data-role="boolFilterCheckbox"]')
+                    .prop('checked');
             }, this);
 
             for (var field in this.advanced) {
@@ -808,6 +816,7 @@ define('views/record/search', 'view', function (Dep) {
 
         getAdvancedDefs: function () {
             var defs = [];
+
             for (var i in this.moreFieldList) {
                 var field = this.moreFieldList[i];
                 var o = {
@@ -816,8 +825,9 @@ define('views/record/search', 'view', function (Dep) {
                 };
                 defs.push(o);
             }
+
             return defs;
-        }
+        },
 
     });
 });

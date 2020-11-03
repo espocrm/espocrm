@@ -58,7 +58,6 @@
     </div>
 </div>
 
-<div class="advanced-filters-bar" style="margin-bottom: 12px;"></div>
 <div class="advanced-filters hidden grid-auto-fill-sm">
 {{#each filterDataList}}
     <div class="filter filter-{{name}}" data-name="{{name}}">
