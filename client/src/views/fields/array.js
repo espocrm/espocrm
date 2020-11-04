@@ -357,6 +357,14 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             var type = this.$el.find('select.search-type').val();
             this.handleSearchType(type);
+
+            this.$el.find('select.search-type').on('change', function () {
+                this.trigger('change');
+            }.bind(this));
+
+            this.$element.on('change', function () {
+                this.trigger('change');
+            }.bind(this));
         },
 
         fetchFromDom: function () {

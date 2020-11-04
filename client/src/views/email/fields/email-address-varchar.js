@@ -204,6 +204,12 @@ define(
             if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
                 EmailAddress.prototype.initSearchAutocomplete.call(this);
             }
+
+            if (this.mode == 'search') {
+                this.$input.on('input', function () {
+                    this.trigger('change');
+                }.bind(this));
+            }
         },
 
         checkEmailAddressInString: function (string) {

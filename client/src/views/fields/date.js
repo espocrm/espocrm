@@ -44,17 +44,25 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
 
         validations: ['required', 'date', 'after', 'before'],
 
-        searchTypeList: ['lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter', 'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between'],
+        searchTypeList: [
+            'lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter',
+            'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays',
+            'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between',
+        ],
+
+        initialSearchIsNotIdle: true,
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
             if (this.getConfig().get('fiscalYearShift')) {
                 this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
+
                 if (this.getConfig().get('fiscalYearShift') % 3 != 0) {
                     this.searchTypeList.push('currentFiscalQuarter');
                     this.searchTypeList.push('lastFiscalQuarter');
                 }
+
                 this.searchTypeList.push('currentFiscalYear');
                 this.searchTypeList.push('lastFiscalYear');
             }
@@ -199,10 +207,19 @@ define('views/fields/date', 'views/fields/base', function (Dep) {
 
                 if (this.mode == 'search') {
                     var $elAdd = this.$el.find('input.additional');
+
                     $elAdd.datepicker(options);
                     $elAdd.parent().find('button.date-picker-btn').on('click', function (e) {
                         $elAdd.datepicker('show');
                     });
+
+                    this.$el.find('select.search-type').on('change', function () {
+                        this.trigger('change');
+                    }.bind(this));
+
+                    $elAdd.on('change', function () {
+                        this.trigger('change');
+                    }.bind(this));
                 }
 
                 this.$element.parent().find('button.date-picker-btn').on('click', function (e) {

@@ -42,10 +42,22 @@ define('views/fields/bool', 'views/fields/base', function (Dep) {
 
         validations: [],
 
+        initialSearchIsNotIdle: true,
+
         data: function () {
             var data = Dep.prototype.data.call(this);
             data.valueIsSet = this.model.has(this.name);
             return data;
+        },
+
+        afterRender: function () {
+            Dep.prototype.afterRender.call(this);
+
+            if (this.mode == 'search') {
+                this.$element.on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
+            }
         },
 
         fetch: function () {

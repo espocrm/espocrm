@@ -38,7 +38,10 @@ define('views/fields/varchar', 'views/fields/base', function (Dep) {
 
         searchTemplate: 'fields/varchar/search',
 
-        searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains', 'notEquals', 'notLike', 'isEmpty', 'isNotEmpty'],
+        searchTypeList: [
+            'startsWith', 'contains', 'equals', 'endsWith', 'like', 'notContains',
+            'notEquals', 'notLike', 'isEmpty', 'isNotEmpty',
+        ],
 
         setup: function () {
             this.setupOptions();
@@ -156,6 +159,16 @@ define('views/fields/varchar', 'views/fields/base', function (Dep) {
                 this.once('remove', function () {
                     this.$element.autocomplete('dispose');
                 }, this);
+            }
+
+            if (this.mode === 'search') {
+                this.$el.find('select.search-type').on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
+
+                this.$element.on('input', function () {
+                    this.trigger('change');
+                }.bind(this));
             }
         },
 

@@ -45,6 +45,12 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
             if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
                 this.initSearchAutocomplete();
             }
+
+            if (this.mode == 'search') {
+                this.$input.on('input', function () {
+                    this.trigger('change');
+                }.bind(this));
+            }
         },
 
         initSearchAutocomplete: function () {

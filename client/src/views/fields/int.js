@@ -69,6 +69,18 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
             if (this.mode == 'search') {
                 var $searchType = this.$el.find('select.search-type');
                 this.handleSearchType($searchType.val());
+
+                this.$el.find('select.search-type').on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
+
+                this.$element.on('input', function () {
+                    this.trigger('change');
+                }.bind(this));
+
+                this.$el.find('input.additional').on('input', function () {
+                    this.trigger('change');
+                }.bind(this));
             }
         },
 

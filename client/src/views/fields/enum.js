@@ -258,6 +258,14 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                 });
 
                 this.$el.find('.selectize-dropdown-content').addClass('small');
+
+                this.$el.find('select.search-type').on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
+
+                this.$element.on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
             }
         },
 

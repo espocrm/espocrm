@@ -318,6 +318,10 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
                 this.handleSearchType(type);
+
+                this.$el.find('select.search-type').on('change', function () {
+                    this.trigger('change');
+                }.bind(this));
             }
         },
 

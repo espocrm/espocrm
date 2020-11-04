@@ -358,6 +358,10 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         this.once('remove', function () {
                             $elementOneOf.autocomplete('dispose');
                         }, this);
+
+                        this.$el.find('select.search-type').on('change', function () {
+                            this.trigger('change');
+                        }.bind(this));
                     }
                 }
 
