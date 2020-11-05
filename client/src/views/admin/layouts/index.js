@@ -258,8 +258,10 @@ define('views/admin/layouts/index', 'view', function (Dep) {
                 html += "<a href=\"#Admin/entityManager\">" + this.translate('Entity Manager', 'labels', 'Admin') + "</a>";
 
                 if (this.scope) {
-                    html += ' ' + separatorHtml + ' ' + this.translate(this.scope, 'scopeNames') +
-                    ' ' + separatorHtml + ' ' + this.translate('Layouts', 'labels', 'EntityManager');
+                    html += ' ' + separatorHtml + ' ' +
+                        "<a href=\"#Admin/entityManager/scope=" + this.scope + "\">" +
+                        this.translate(this.scope, 'scopeNames') + '</a>' +
+                        ' ' + separatorHtml + ' ' + this.translate('Layouts', 'labels', 'EntityManager');
                 }
             } else {
                 html += this.translate('Layout Manager', 'labels', 'Admin');

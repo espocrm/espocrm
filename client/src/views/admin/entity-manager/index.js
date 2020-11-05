@@ -39,28 +39,27 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
         data: function () {
             return {
                 scopeDataList: this.scopeDataList,
-                scope: this.scope,
             };
         },
 
         events: {
-            'click a[data-action="editEntity"]': function (e) {
+            /*'click a[data-action="editEntity"]': function (e) {
                 var scope = $(e.currentTarget).data('scope');
                 this.editEntity(scope);
             },
             'click [data-action="editFormula"]': function (e) {
                 var scope = $(e.currentTarget).data('scope');
                 this.editFormula(scope);
-            },
+            },*/
             'click button[data-action="createEntity"]': function (e) {
                 this.createEntity();
             },
-            'click [data-action="removeEntity"]': function (e) {
+            /*'click [data-action="removeEntity"]': function (e) {
                 var scope = $(e.currentTarget).data('scope');
                 this.confirm(this.translate('confirmation', 'messages'), function () {
                     this.removeEntity(scope);
                 }, this);
-            }
+            }*/
         },
 
         setupScopeData: function () {
@@ -78,6 +77,7 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                     scopeListSorted.push(scope);
                 }
             }, this);
+
             scopeList.forEach(function (scope) {
                 var d = this.getMetadata().get('scopes.' + scope);
                 if (d.entity && !d.customizable) {
@@ -109,8 +109,6 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.scope = this.options.scope || null;
-
             this.setupScopeData();
         },
 
@@ -118,10 +116,9 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
             this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {}, function (view) {
                 view.render();
 
-                this.listenTo(view, 'after:save', function () {
+                this.listenTo(view, 'after:save', function (o) {
                     this.clearView('edit');
-                    this.setupScopeData();
-                    this.render();
+                    this.getRouter().navigate('#Admin/entityManager/scope=' + o.scope, {trigger: true});
                 }, this);
 
                 this.listenTo(view, 'close', function () {
@@ -130,7 +127,7 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
             }, this);
         },
 
-        editEntity: function (scope) {
+        /*editEntity: function (scope) {
             this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {
                 scope: scope,
             }, function (view) {
@@ -154,7 +151,7 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                                 {
                                     name: 'close',
                                     label: this.translate('Close'),
-                                }
+                                },
                             ],
                         }, function (view) {
                             view.render();
@@ -166,14 +163,14 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                     this.clearView('edit');
                 }, this);
             }, this);
-        },
+        },*/
 
-        removeEntity: function (scope) {
+        /*removeEntity: function (scope) {
             $.ajax({
                 url: 'EntityManager/action/removeEntity',
                 type: 'POST',
                 data: JSON.stringify({
-                    name: scope
+                    name: scope,
                 })
             }).done(function () {
                 this.$el.find('table tr[data-scope="'+scope+'"]').remove();
@@ -184,11 +181,11 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                     }.bind(this), true);
                 }.bind(this), true);
             }.bind(this));
-        },
+        },*/
 
-        editFormula: function (scope) {
+        /*editFormula: function (scope) {
             this.createView('edit', 'views/admin/entity-manager/modals/edit-formula', {
-                scope: scope
+                scope: scope,
             }, function (view) {
                 view.render();
 
@@ -200,12 +197,10 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                     this.clearView('edit');
                 }, this);
             }, this);
-        },
+        },*/
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Entity Manager', 'labels', 'Admin'));
         },
     });
 });
-
-

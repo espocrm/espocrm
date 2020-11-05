@@ -4,14 +4,17 @@
         <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
         <a href="#Admin/entityManager">{{translate 'Entity Manager' scope='Admin'}}</a>
         <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
-        {{translate scope category='scopeNames'}}
+        <a href="#Admin/entityManager/scope={{scope}}">{{translate scope category='scopeNames'}}</a>
         <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
         {{translate 'Relationships' scope='EntityManager'}}
     </h3>
 </div>
 
 <div class="button-container">
-    <button class="btn btn-primary" data-action="createLink">{{translate 'Create Link' scope='Admin'}}</button>
+    <button class="btn btn-default" data-action="createLink">
+        <span class="fas fa-plus"></span>
+        {{translate 'Create Link' scope='Admin'}}
+    </button>
 </div>
 
 

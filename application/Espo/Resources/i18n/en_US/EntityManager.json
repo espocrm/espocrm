@@ -64,6 +64,7 @@
         }
     },
     "messages": {
+        "confirmRemove": "Are you sure you want to remove the entity type from the system?",
         "entityCreated": "Entity has been created",
         "linkAlreadyExists": "Link name conflict.",
         "linkConflict": "Name conflict: link or field with the same name already exists."

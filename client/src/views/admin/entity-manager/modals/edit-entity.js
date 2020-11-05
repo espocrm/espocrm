@@ -485,7 +485,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 'stream',
                 'disabled',
                 'statusField',
-                'iconClass'
+                'iconClass',
             ];
 
             if (this.scope) {
@@ -608,7 +608,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                         function () {
                             var rebuildRequired = data.fullTextSearch && !fetchedAttributes.fullTextSearch;
                             var o = {
-                                rebuildRequired: rebuildRequired
+                                rebuildRequired: rebuildRequired,
+                                scope: name,
                             };
                             this.trigger('after:save', o);
                         }.bind(this)
