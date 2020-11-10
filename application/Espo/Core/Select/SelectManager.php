@@ -2506,6 +2506,14 @@ class SelectManager
                 $attributeType = $seed->getAttributeType($foreignField);
             } else {
                 $attributeType = $seed->getAttributeType($field);
+
+                if ($attributeType === 'foreign') {
+                    $link = $seed->getAttributeParam($field, 'relation');
+
+                    if ($link) {
+                        $this->addLeftJoin($link, $result);
+                    }
+                }
             }
 
             if ($attributeType === 'int') {
