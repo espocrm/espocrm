@@ -31,11 +31,6 @@ namespace Espo\Core\Authentication\Login;
 
 use Espo\Core\Exceptions\Error;
 
-use Espo\Entities\{
-    User,
-    AuthToken,
-};
-
 use Espo\Core\{
     ORM\EntityManager,
     Api\Request,
@@ -46,6 +41,7 @@ use Espo\Core\{
     Authentication\Result,
     Authentication\LDAP\Utils as LDAPUtils,
     Authentication\LDAP\Client as LDAPClient,
+    Authentication\AuthToken\AuthToken,
 };
 
 use Exception;
@@ -122,6 +118,7 @@ class LDAP extends Espo
 
         if ($isPortal) {
             $useLdapAuthForPortalUser = $this->utils->getOption('portalUserLdapAuth');
+
             if (!$useLdapAuthForPortalUser) {
                 return parent::login($username, $password, $authToken, $request);
             }
@@ -232,7 +229,8 @@ class LDAP extends Espo
             return null;
         }
 
-        $userId = $authToken->get('userId');
+        $userId = $authToken->getUserId();
+
         $user = $this->entityManager->getEntity('User', $userId);
 
         $tokenUsername = $user->get('userName');

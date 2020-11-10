@@ -29,17 +29,13 @@
 
 namespace Espo\Core\Authentication\Login;
 
-use Espo\Entities\{
-    User,
-    AuthToken,
-};
-
 use Espo\Core\{
     ORM\EntityManager,
     Api\Request,
     Utils\Config,
     Utils\ApiKey,
     Authentication\Result,
+    Authentication\AuthToken\AuthToken,
 };
 
 class Hmac implements Login
@@ -59,18 +55,23 @@ class Hmac implements Login
 
         list($apiKey, $hash) = explode(':', $authString, 2);
 
-        $user = $this->entityManager->getRepository('User')->where([
-            'type' => 'api',
-            'apiKey' => $apiKey,
-            'authMethod' => 'Hmac',
-        ])->findOne();
+        $user = $this->entityManager->getRepository('User')
+            ->where([
+                'type' => 'api',
+                'apiKey' => $apiKey,
+                'authMethod' => 'Hmac',
+            ])
+            ->findOne();
 
         if (!$user) {
             return Result::fail();
         }
 
         $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
-        if (!$secretKey) return null;
+
+        if (!$secretKey) {
+            return null;
+        }
 
         $string = $request->getMethod() . ' ' . $request->getResourcePath();
 
