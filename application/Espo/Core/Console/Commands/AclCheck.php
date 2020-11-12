@@ -48,37 +48,57 @@ class AclCheck implements Command
         $id = $options['id'] ?? null;
         $action = $options['action'] ?? null;
 
-        if (empty($userId)) return null;
-        if (empty($scope)) return null;
-        if (empty($id)) return null;
+        if (empty($userId)) {
+            return null;
+        }
+
+        if (empty($scope)) {
+            return null;
+        }
+
+        if (empty($id)) {
+            return null;
+        }
 
         $container = $this->container;
+
         $entityManager = $container->get('entityManager');
 
         $user = $entityManager->getEntity('User', $userId);
-        if (!$user) return null;
+
+        if (!$user) {
+            return null;
+        }
 
         if ($user->isPortal()) {
             $portalIdList = $user->getLinkMultipleIdList('portals');
+
             foreach ($portalIdList as $portalId) {
                 $application = new PortalApplication($portalId);
                 $containerPortal = $application->getContainer();
                 $entityManager = $containerPortal->get('entityManager');
 
                 $user = $entityManager->getEntity('User', $userId);
-                if (!$user) return null;
+
+                if (!$user) {
+                    return null;
+                }
 
                 $result = $this->check($user, $scope, $id, $action, $containerPortal);
+
                 if ($result) {
                     return 'true';
                 }
             }
+
             return null;
         }
 
         if ($this->check($user, $scope, $id, $action, $container)) {
             return 'true';
         }
+
+        return null;
     }
 
     protected function check($user, $scope, $id, $action, $container)
@@ -86,7 +106,10 @@ class AclCheck implements Command
         $entityManager = $container->get('entityManager');
 
         $entity = $entityManager->getEntity($scope, $id);
-        if (!$entity) return false;
+
+        if (!$entity) {
+            return false;
+        }
 
         $aclManager = $container->get('aclManager');
 
