@@ -2,7 +2,7 @@
     "fields": {
         "timeZone": {
             "type": "enum",
-            "detault": "",
+            "default": "",
             "view": "views/preferences/fields/time-zone"
         },
         "dateFormat": {
@@ -124,7 +124,8 @@
         "assignmentNotificationsIgnoreEntityTypeList": {
             "type": "checklist",
             "translation": "Global.scopeNamesPlural",
-            "view": "views/preferences/fields/assignment-notifications-ignore-entity-type-list"
+            "view": "views/preferences/fields/assignment-notifications-ignore-entity-type-list",
+            "default": []
         },
         "assignmentEmailNotificationsIgnoreEntityTypeList": {
             "type": "checklist",
@@ -140,14 +141,17 @@
         },
         "signature": {
             "type": "wysiwyg",
-            "view": "views/preferences/fields/signature"
+            "view": "views/preferences/fields/signature",
+            "default": ""
         },
         "defaultReminders": {
             "type": "jsonArray",
-            "view": "crm:views/meeting/fields/reminders"
+            "view": "crm:views/meeting/fields/reminders",
+            "default": []
         },
         "theme": {
             "type": "enum",
+            "default": "",
             "view": "views/preferences/fields/theme",
             "translation": "Global.themes"
         },
@@ -173,7 +177,8 @@
         },
         "doNotFillAssignedUserIfNotRequired": {
             "type": "bool",
-            "tooltip": true
+            "tooltip": true,
+            "default": false
         },
         "followEntityOnStreamPost": {
             "type": "bool",
@@ -187,16 +192,20 @@
             "type": "multiEnum",
             "view": "views/preferences/fields/auto-follow-entity-type-list",
             "translation": "Global.scopeNamesPlural",
+            "default": [],
             "tooltip": true
         },
         "emailUseExternalClient": {
-            "type": "bool"
+            "type": "bool",
+            "default": false
         },
         "scopeColorsDisabled": {
-            "type": "bool"
+            "type": "bool",
+            "default": false
         },
         "tabColorsDisabled": {
-            "type": "bool"
+            "type": "bool",
+            "default": false
         }
     },
     "noDeletedAttribute": true

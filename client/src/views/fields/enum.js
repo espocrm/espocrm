@@ -44,6 +44,8 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
 
         translatedOptions: null,
 
+        fetchEmptyValueAsNull: false,
+
         searchTypeList: ['anyOf', 'noneOf', 'isEmpty', 'isNotEmpty'],
 
         data: function () {
