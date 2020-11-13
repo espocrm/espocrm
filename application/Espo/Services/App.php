@@ -46,6 +46,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Util,
     Utils\Language,
+    Utils\FieldUtil,
 };
 
 use Espo\Entities\User;
@@ -57,8 +58,24 @@ use Espo\ORM\{
     Entity,
 };
 
+use StdClass;
+use Throwable;
+
 class App
 {
+    protected $config;
+    protected $entityManager;
+    protected $metadata;
+    protected $acl;
+    protected $aclManager;
+    protected $dataManager;
+    protected $selectManagerFactory;
+    protected $injectableFactory;
+    protected $serviceFactory;
+    protected $user;
+    protected $preferences;
+    protected $fieldUtil;
+
     public function __construct(
         Config $config,
         EntityManager $entityManager,
@@ -70,7 +87,8 @@ class App
         InjectableFactory $injectableFactory,
         ServiceFactory $serviceFactory,
         User $user,
-        Preferences $preferences
+        Preferences $preferences,
+        FieldUtil $fieldUtil
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
@@ -83,12 +101,14 @@ class App
         $this->serviceFactory = $serviceFactory;
         $this->user = $user;
         $this->preferences = $preferences;
+        $this->fieldUtil = $fieldUtil;
     }
 
     public function getUserData()
     {
         $preferencesData = $this->preferences->getValueMap();
-        unset($preferencesData->smtpPassword);
+
+        $this->filterPreferencesData($preferencesData);
 
         $settingsService = $this->serviceFactory->create('Settings');
 
@@ -134,11 +154,16 @@ class App
 
         foreach (($this->metadata->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
             $className = $item['className'] ?? null;
-            if (!$className) continue;
+
+            if (!$className) {
+                continue;
+            }
+
             try {
                 $itemParams = $this->injectableFactory->create($className)->get();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $GLOBALS['log']->error("appParam {$paramKey}: " . $e->getMessage());
+
                 continue;
             }
             $appParams[$paramKey] = $itemParams;
@@ -452,19 +477,41 @@ class App
         $entityTypeList = ['Contact', 'Lead'];
 
         foreach ($entityTypeList as $entityType) {
-            $entityList = $this->entityManager->getRepository($entityType)->where([
-                'doNotCall' => true,
-                'phoneNumber!=' => null,
-            ])->select(['id', 'phoneNumber'])->find();
+            $entityList = $this->entityManager
+                ->getRepository($entityType)
+                ->where([
+                    'doNotCall' => true,
+                    'phoneNumber!=' => null,
+                ])
+                ->select(['id', 'phoneNumber'])
+                ->find();
+
             foreach ($entityList as $entity) {
                 $phoneNumber = $entity->get('phoneNumber');
-                if (!$phoneNumber) continue;
-                $phoneNumberEntity = $this->entityManager->getRepository('PhoneNumber')->getByNumber($phoneNumber);
-                if (!$phoneNumberEntity) continue;
-                $phoneNumberEntity->set('optOut', true);
-                $this->entityManager->saveEntity($phoneNumberEntity);
 
+                if (!$phoneNumber) {
+                    continue;
+                }
+
+                $phoneNumberEntity = $this->entityManager->getRepository('PhoneNumber')->getByNumber($phoneNumber);
+
+                if (!$phoneNumberEntity) {
+                    continue;
+                }
+
+                $phoneNumberEntity->set('optOut', true);
+
+                $this->entityManager->saveEntity($phoneNumberEntity);
             }
+        }
+    }
+
+    protected function filterPreferencesData(StdClass $data)
+    {
+        $passwordFieldList = $this->fieldUtil->getFieldByTypeList('Preferences', 'password');
+
+        foreach ($passwordFieldList as $field) {
+            unset($data->$field);
         }
     }
 }
