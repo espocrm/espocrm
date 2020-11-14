@@ -998,7 +998,7 @@ define('views/record/list', 'view', function (Dep) {
             }, this);
 
             if (
-                this.getConfig().get('exportDisabled') && !this.getUser().get('isAdmin')
+                this.getConfig().get('exportDisabled') && !this.getUser().isAdmin()
                 ||
                 this.getAcl().get('exportPermission') === 'no'
                 ||
