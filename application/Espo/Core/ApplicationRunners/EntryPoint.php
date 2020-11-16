@@ -43,6 +43,7 @@ use Espo\Core\{
     Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
+    Authentication\AuthToken\AuthTokenManager,
 };
 
 use Slim\{
@@ -64,19 +65,22 @@ class EntryPoint implements ApplicationRunner
     protected $entityManager;
     protected $clientManager;
     protected $applicationUser;
+    protected $authTokenManager;
 
     public function __construct(
         InjectableFactory $injectableFactory,
         EntryPointManager $entryPointManager,
         EntityManager $entityManager,
         ClientManager $clientManager,
-        ApplicationUser $applicationUser
+        ApplicationUser $applicationUser,
+        AuthTokenManager $authTokenManager
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->entryPointManager = $entryPointManager;
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
         $this->applicationUser = $applicationUser;
+        $this->authTokenManager = $authTokenManager;
     }
 
     public function run(?StdClass $params = null)
@@ -169,15 +173,14 @@ class EntryPoint implements ApplicationRunner
             return $_GET['portalId'];
         }
 
-        if (!empty($_COOKIE['auth-token'])) {
-            $token = $this->entityManager
-                ->getRepository('AuthToken')
-                ->where(['token' => $_COOKIE['auth-token']])
-                ->findOne();
+        if (empty($_COOKIE['auth-token'])) {
+            return null;
+        }
 
-            if ($token && $token->get('portalId')) {
-                return $token->get('portalId');
-            }
+        $authToken = $this->authTokenManager->get($_COOKIE['auth-token']);
+
+        if ($authToken) {
+            return $authToken->getPortalId();
         }
 
         return null;

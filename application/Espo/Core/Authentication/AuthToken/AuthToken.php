@@ -27,42 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Core\Authentication\AuthToken;
 
-use Espo\Core\{
-    ORM\Entity as BaseEntity,
-    Authentication\AuthToken\AuthToken as AuthTokenInterface,
-};
-
-class AuthToken extends BaseEntity implements AuthTokenInterface
+/**
+ * An auth token record.
+ */
+interface AuthToken
 {
-    public function getToken() : string
-    {
-        return $this->get('token');
-    }
+    /**
+     * Get a token.
+     */
+    public function getToken() : string;
 
-    public function getUserId() : string
-    {
-        return $this->get('userId');
-    }
+    /**
+     * Get a user ID.
+     */
+    public function getUserId() : string;
 
-    public function getPortalId() : ?string
-    {
-        return $this->get('portalId');
-    }
+    /**
+     * Get a portal ID. If a token belongs to a specific portal.
+     */
+    public function getPortalId() : ?string;
 
-    public function getSecret() : ?string
-    {
-        return $this->get('secret');
-    }
+    /**
+     * Get a token secret. Secret is used as an additional security check.
+     */
+    public function getSecret() : ?string;
 
-    public function isActive() : bool
-    {
-        return $this->get('isActive');
-    }
+    /**
+     * Whether a token is active.
+     */
+    public function isActive() : bool;
 
-    public function getHash() : ?string
-    {
-        return $this->get('hash');
-    }
+    /**
+     * Get a password hash. If a password hash is not stored in token, then return NULL.
+     * If you store auth tokens remotely it's reasonable to avoid hashes being sent.
+     */
+    public function getHash() : ?string;
 }

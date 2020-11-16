@@ -143,11 +143,10 @@ class RDBRepository extends Repository
         if ($entity->isNew()) {
             if (empty($options['keepNew'])) {
                 $entity->setIsNew(false);
-            }
-        } else {
-            if ($entity->isFetched()) {
                 $entity->updateFetchedValues();
             }
+        } else {
+            $entity->updateFetchedValues();
         }
 
         $entity->setAsNotBeingSaved();

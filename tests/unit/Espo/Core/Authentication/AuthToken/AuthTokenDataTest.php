@@ -27,57 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Login;
+namespace tests\unit\Espo\Core\Authentication\AuthToken;
 
-use Espo\Core\{
-    ORM\EntityManager,
-    Api\Request,
-    Utils\PasswordHash,
-    Authentication\Result,
-    Authentication\AuthToken\AuthToken,
-};
+use Espo\Core\Authentication\AuthToken\AuthTokenData;
 
-class Espo implements Login
+class AuthTokenDataTest extends \PHPUnit\Framework\TestCase
 {
-    protected $entityManager;
-    protected $passwordHash;
-
-    public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
+    public function testCreate()
     {
-        $this->entityManager = $entityManager;
-        $this->passwordHash = $passwordHash;
-    }
+        $authTokenData = AuthTokenData::create([
+            'hash' => 'hash',
+            'ipAddress' => 'ip-address',
+            'userId' => 'user-id',
+            'portalId' => 'portal-id',
+            'createSecret' => true,
+        ]);
 
-    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result
-    {
-        if (!$password) {
-            return Result::fail('Empty password');
-        }
-
-        if ($authToken) {
-            $hash = $authToken->getHash();
-        } else {
-            $hash = $this->passwordHash->hash($password);
-        }
-
-        $user = $this->entityManager->getRepository('User')
-            ->where([
-                'userName' => $username,
-                'password' => $hash,
-                'type!=' => ['api', 'system'],
-            ])
-            ->findOne();
-
-        if (!$user) {
-            return Result::fail();
-        }
-
-        if ($authToken) {
-            if ($user->id !== $authToken->getUserId()) {
-                return Result::fail('User and token mismatch');
-            }
-        }
-
-        return Result::success($user);
+        $this->assertEquals('hash', $authTokenData->getHash());
+        $this->assertEquals('ip-address', $authTokenData->getIpAddress());
+        $this->assertEquals('user-id', $authTokenData->getUserId());
+        $this->assertEquals('portal-id', $authTokenData->getPortalId());
+        $this->assertTrue($authTokenData->toCreateSecret());
     }
 }

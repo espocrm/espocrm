@@ -27,42 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Core\Authentication\AuthToken;
 
-use Espo\Core\{
-    ORM\Entity as BaseEntity,
-    Authentication\AuthToken\AuthToken as AuthTokenInterface,
-};
-
-class AuthToken extends BaseEntity implements AuthTokenInterface
+/**
+ * Fetches and stores auth tokens.
+ */
+interface AuthTokenManager
 {
-    public function getToken() : string
-    {
-        return $this->get('token');
-    }
+    /**
+     * Get an auth token. If does not exist then returns NULL.
+     */
+    public function get(string $token) : ?AuthToken;
 
-    public function getUserId() : string
-    {
-        return $this->get('userId');
-    }
+    /**
+     * Create an auth token and store it.
+     */
+    public function create(AuthTokenData $authTokenData) : AuthToken;
 
-    public function getPortalId() : ?string
-    {
-        return $this->get('portalId');
-    }
+    /**
+     * Make an auth token inactive (invalid).
+     */
+    public function inactivate(AuthToken $authToken);
 
-    public function getSecret() : ?string
-    {
-        return $this->get('secret');
-    }
-
-    public function isActive() : bool
-    {
-        return $this->get('isActive');
-    }
-
-    public function getHash() : ?string
-    {
-        return $this->get('hash');
-    }
+    /**
+     * Update a last access date. An implementation can be omitted to avoid a writing operation.
+     */
+    public function renew(AuthToken $authToken);
 }

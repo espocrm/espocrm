@@ -29,15 +29,11 @@
 
 namespace Espo\Core\Authentication\Login;
 
-use Espo\Entities\{
-    User,
-    AuthToken,
-};
-
 use Espo\Core\{
     Api\Request,
     ORM\EntityManager,
     Authentication\Result,
+    Authentication\AuthToken\AuthToken,
 };
 
 class ApiKey implements Login
@@ -53,11 +49,13 @@ class ApiKey implements Login
     {
         $apiKey = $request->getHeader('X-Api-Key');
 
-        $user = $this->entityManager->getRepository('User')->where([
-            'type' => 'api',
-            'apiKey' => $apiKey,
-            'authMethod' => 'ApiKey',
-        ])->findOne();
+        $user = $this->entityManager->getRepository('User')
+            ->where([
+                'type' => 'api',
+                'apiKey' => $apiKey,
+                'authMethod' => 'ApiKey',
+            ])
+            ->findOne();
 
         if (!$user) {
             return Result::fail();

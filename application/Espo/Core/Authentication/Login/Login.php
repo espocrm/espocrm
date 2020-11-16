@@ -29,14 +29,10 @@
 
 namespace Espo\Core\Authentication\Login;
 
-use Espo\Entities\{
-    User,
-    AuthToken,
-};
-
 use Espo\Core\{
     Api\Request,
     Authentication\Result,
+    Authentication\AuthToken\AuthToken,
 };
 
 /**
