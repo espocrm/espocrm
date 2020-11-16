@@ -86,12 +86,12 @@ class SystemTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($rootDir, $this->object->getRootDir());
     }
 
-    public function testGetPhpBin()
+    public function testGetPhpBinary()
     {
-        $phpBin = @exec('which php');
+        $phpBinary = (new \Symfony\Component\Process\PhpExecutableFinder)->find();
 
-        if (isset($phpBin)) {
-            $this->assertEquals($phpBin, $this->object->getPhpBin());
+        if (isset($phpBinary)) {
+            $this->assertEquals($phpBinary, $this->object->getPhpBinary());
         }
     }
 
