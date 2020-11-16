@@ -2550,6 +2550,10 @@ class Record implements Crud,
                             ->getRepository('Attachment')
                             ->getCopiedAttachment($attachment);
 
+                        $attachment->set('field', $field);
+
+                        $this->getEntityManager()->saveEntity($attachment);
+
                         if ($attachment) {
                             $idList[] = $attachment->id;
                             $nameHash->{$attachment->id} = $attachment->get('name');
