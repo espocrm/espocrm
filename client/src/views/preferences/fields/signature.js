@@ -30,6 +30,8 @@ define('views/preferences/fields/signature', 'views/fields/wysiwyg', function (D
 
     return Dep.extend({
 
+        fetchEmptyValueAsNull: true,
+
         toolbar: [
             ["style", ["bold", "italic", "underline", "clear"]],
             ["color", ["color"]],

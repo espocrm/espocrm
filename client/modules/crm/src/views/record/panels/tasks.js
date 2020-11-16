@@ -68,14 +68,14 @@ define('crm:views/record/panels/tasks', 'views/record/panels/relationship', func
                         name: 'name',
                         link: true,
                     },
-                    {
-                        name: 'isOverdue'
-                    }
                 ],
                 [
+                    {
+                        name: 'isOverdue'
+                    },
                     {name: 'assignedUser'},
-                    {name: 'status'},
                     {name: 'dateEnd'},
+                    {name: 'status'},
                 ]
             ]
         },

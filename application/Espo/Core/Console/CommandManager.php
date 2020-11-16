@@ -103,7 +103,7 @@ class CommandManager
 
         $skipIndex = 1;
 
-        if (isset($argv[0]) && $argv[0] === 'command.php') {
+        if (isset($argv[0]) && preg_match('/command\.php$/', $argv[0])) {
             $skipIndex = 2;
         }
 

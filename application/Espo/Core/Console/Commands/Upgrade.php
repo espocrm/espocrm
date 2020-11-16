@@ -78,7 +78,7 @@ class Upgrade implements Command
         $versionInfo = $this->getVersionInfo($toVersion);
 
         $nextVersion = $versionInfo->nextVersion ?? null;
-        $lastVersion = $infoData->lastVersion ?? null;
+        $lastVersion = $versionInfo->lastVersion ?? null;
 
         $packageFile = $this->getPackageFile($params, $versionInfo);
 

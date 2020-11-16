@@ -44,6 +44,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         seeMoreDisabled: true,
 
+        fetchEmptyValueAsNull: false,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -532,6 +534,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 data[this.name] = code;
             } else {
                 data[this.name] = this.$element.val();
+
+                if (this.fetchEmptyValueAsNull) {
+                    if (!data[this.name]) {
+                        data[this.name] = null;
+                    }
+                }
             }
 
             if (this.model.has('isHtml') && this.hasBodyPlainField) {
