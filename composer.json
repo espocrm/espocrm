@@ -21,7 +21,6 @@
         "dragonmantank/cron-expression": "^3",
         "laminas/laminas-mail": "2.10.0",
         "laminas/laminas-ldap": "2.*",
-        "laminas/laminas-servicemanager": "3.3.2",
         "laminas/laminas-mime": "^2.7.1",
         "laminas/laminas-stdlib": "^3.1",
         "monolog/monolog": "1.*",
@@ -38,7 +37,6 @@
         "react/zmq": "^0.4.0",
         "guzzlehttp/psr7": "^1.6",
         "michelf/php-markdown": "^1.8",
-        "container-interop/container-interop": "1.2.0",
         "robthree/twofactorauth": "^1.6",
         "nesbot/carbon": "^2.26"
     },
