@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Symfony\Component\Process\PhpExecutableFinder;
+
 class System
 {
     /**
@@ -114,7 +116,7 @@ class System
      */
     public function getPhpBinary()
     {
-        return (new \Symfony\Component\Process\PhpExecutableFinder)->find();
+        return (new PhpExecutableFinder)->find();
     }
 
     /**
