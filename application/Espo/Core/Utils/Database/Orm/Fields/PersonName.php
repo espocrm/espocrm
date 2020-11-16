@@ -96,7 +96,7 @@ class PersonName extends Base
             $whereItems[] = "CONCAT:({$firstName}, ' ', {$middleName}, ' ', {$lastName})";
         } else
         if ($format === 'lastFirstMiddle') {
-            $whereItems[] = "CONCAT:({$lastName}, ' ', {$firstColumn}, ' ', {$middleName})";
+            $whereItems[] = "CONCAT:({$lastName}, ' ', {$firstName}, ' ', {$middleName})";
         }
 
         $selectExpression = $this->getSelect($fullList);
