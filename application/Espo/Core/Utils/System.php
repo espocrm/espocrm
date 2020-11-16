@@ -100,22 +100,11 @@ class System
     }
 
     /**
-     * Get path to PHP
-     *
-     * @return string
+     * Deprecated. Use getPhpBinary()
      */
     public function getPhpBin()
     {
-        if (isset($_SERVER['PHP_PATH']) && !empty($_SERVER['PHP_PATH'])) {
-            return $_SERVER['PHP_PATH'];
-        }
-
-        $phpBin = @exec('which php');
-        if (!empty($phpBin)) {
-            return $phpBin;
-        }
-
-        return defined("PHP_BINDIR") ? PHP_BINDIR . DIRECTORY_SEPARATOR . 'php' : 'php';
+        return $this->getPhpBinary();
     }
 
     /**
@@ -125,7 +114,7 @@ class System
      */
     public function getPhpBinary()
     {
-        return defined("PHP_BINARY") ? PHP_BINARY : 'php';
+        return (new \Symfony\Component\Process\PhpExecutableFinder)->find();
     }
 
     /**

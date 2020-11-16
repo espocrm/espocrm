@@ -53,10 +53,10 @@ class ScheduledJob
     protected $checkingCronPeriod = '25 hours';
 
     protected $cronSetup = [
-        'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
+        'linux' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
         'windows' => '{PHP-BINARY} -f {FULL-CRON-PATH}',
-        'mac' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
-        'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BIN-DIR} -f {CRON-FILE} > /dev/null 2>&1',
+        'mac' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
+        'default' => '* * * * * cd {DOCUMENT_ROOT}; {PHP-BINARY} -f {CRON-FILE} > /dev/null 2>&1',
     ];
 
     protected $classFinder;
@@ -105,7 +105,6 @@ class ScheduledJob
         $desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
 
         $data = array(
-            'PHP-BIN-DIR' => $this->getSystemUtil()->getPhpBin(),
             'PHP-BINARY' => $this->getSystemUtil()->getPhpBinary(),
             'CRON-FILE' => $this->cronFile,
             'DOCUMENT_ROOT' => $this->getSystemUtil()->getRootDir(),
