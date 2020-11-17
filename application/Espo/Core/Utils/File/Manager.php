@@ -132,13 +132,13 @@ class Manager
         }
 
         if ($isReturnSingleArray) {
-            return $this->getSingeFileList($result, $onlyFileType, $path);
+            return $this->getSingleFileList($result, $onlyFileType, $path);
         }
 
         return $result;
     }
 
-    protected function getSingeFileList(array $fileList, $onlyFileType = null, $basePath = null, $parentDirName = '')
+    protected function getSingleFileList(array $fileList, $onlyFileType = null, $basePath = null, $parentDirName = '')
     {
         $singleFileList = [];
 
@@ -151,7 +151,7 @@ class Manager
                 }
 
                 $singleFileList = array_merge(
-                    $singleFileList, $this->getSingeFileList($fileName, $onlyFileType, $basePath, $currentDir)
+                    $singleFileList, $this->getSingleFileList($fileName, $onlyFileType, $basePath, $currentDir)
                 );
             } else {
                 $currentFileName = Util::concatPath($parentDirName, $fileName);
