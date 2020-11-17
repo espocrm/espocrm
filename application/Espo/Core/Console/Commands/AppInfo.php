@@ -29,72 +29,57 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\Container;
-use Espo\Core\Utils\Metadata;
+use Espo\Core\{
+    InjectableFactory,
+    Utils\File\Manager as FileManager,
+};
 
 class AppInfo implements Command
 {
-    protected $container;
-    protected $metadata;
+    protected $injectableFactory;
+    protected $fileManager;
 
-    public function __construct(Container $container, Metadata $metadata)
+    public function __construct(InjectableFactory $injectableFactory, FileManager $fileManager)
     {
-        $this->container = $container;
-        $this->metadata = $metadata;
+        $this->injectableFactory = $injectableFactory;
+        $this->fileManager = $fileManager;
     }
 
     public function run(array $options, array $flagList)
     {
-        if (in_array('container', $flagList)) {
-            $this->printContainerInfo(in_array('nameOnly', $flagList));
-        }
-    }
+        $fileList = $this->fileManager->getFileList('application/Espo/Classes/AppInfo');
 
-    protected function printContainerInfo(bool $nameOnly = false)
-    {
-        $serviceList = [
-            'injectableFactory', 'config', 'log', 'fileManager', 'dataManager', 'metadata', 'user',
-        ];
+        $typeList = array_map(function ($item) {
+            return lcfirst(substr($item, 0, -4));
+        }, $fileList);
 
-        $fileList = scandir('application/Espo/Core/Loaders');
+        foreach ($typeList as $type) {
+            if (in_array($type, $flagList)) {
+                $this->processType($type, $options, $flagList);
 
-        if (file_exists('custom/Espo/Custom/Core/Loaders')) {
-            $fileList = array_merge($fileList, scandir('custom/Espo/Custom/Core/Loaders'));
-        }
-
-        foreach ($fileList as $file) {
-            if (substr($file, -4) === '.php') {
-                $name = lcfirst(substr($file, 0, -4));
-
-                if (!in_array($name, $serviceList) && $this->container->has($name)) {
-                    $serviceList[] = $name;
-                }
+                return;
             }
         }
 
-        foreach ($this->metadata->get(['app', 'containerServices']) ?? [] as $name => $data) {
-            if (!in_array($name, $serviceList)) {
-                $serviceList[] = $name;
-            }
-        }
+        if (empty($flagList)) {
+            echo "No parameters specified.\n";
 
-
-        sort($serviceList);
-
-        if ($nameOnly) {
-            foreach ($serviceList as $name) {
-                echo $name . "\n";
-            }
             return;
         }
 
-        foreach ($serviceList as $name) {
-            echo $name . "\n";
+        echo "Bad parameters specified.\n";
+    }
 
-            $obj = $this->container->get($name);
-            echo get_class($obj) . "\n";
+    protected function processType(string $type, array $options, array $flagList)
+    {
+        $className = 'Espo\\Classes\\AppInfo\\' . ucfirst($type);
 
-            echo "\n";
+        $obj = $this->injectableFactory->create($className);
+
+        $result = $obj->process($options, $flagList);
+
+        if ($result) {
+            echo $result;
         }
     }
 }

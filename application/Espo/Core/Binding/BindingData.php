@@ -96,4 +96,25 @@ class BindingData
 
         return $this->global->$key;
     }
+
+    public function getGlobalKeyList() : array
+    {
+        return array_keys(
+            get_object_vars($this->global)
+        );
+    }
+
+    public function getContextList() : array
+    {
+        return array_keys(
+            get_object_vars($this->context)
+        );
+    }
+
+    public function getContextKeyList(string $context) : array
+    {
+        return array_keys(
+            get_object_vars($this->context->$context ?? (object) [])
+        );
+    }
 }
