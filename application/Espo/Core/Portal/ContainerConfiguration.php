@@ -30,26 +30,11 @@
 namespace Espo\Core\Portal;
 
 use Espo\Core\{
-    Utils\Log,
-    Utils\Metadata,
-};
-
-use Espo\Core\{
-    ContainerConfiguration as BaseContainerConfiguration
+    ContainerConfiguration as BaseContainerConfiguration,
 };
 
 class ContainerConfiguration extends BaseContainerConfiguration
 {
-    protected $log;
-    protected $metadata;
-
-    public function __construct(Log $log, Metadata $metadata)
-    {
-        // log must be loaded before anything
-        $this->log = $log;
-        $this->metadata = $metadata;
-    }
-
     public function getLoaderClassName(string $name) : ?string
     {
         try {

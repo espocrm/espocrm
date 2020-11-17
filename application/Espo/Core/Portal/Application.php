@@ -36,9 +36,10 @@ use Espo\Core\Exceptions\{
 };
 
 use Espo\Core\{
+    ContainerBuilder,
     Portal\Container as PortalContainer,
     Portal\ContainerConfiguration as PortalContainerConfiguration,
-    Portal\Loaders\Config as ConfigLoader,
+    Portal\Utils\Config,
     Application as BaseApplication,
 };
 
@@ -58,9 +59,11 @@ class Application extends BaseApplication
 
     protected function initContainer()
     {
-        $this->loaderClassNames['config'] = ConfigLoader::class;
-
-        $this->container = new PortalContainer(PortalContainerConfiguration::class, $this->loaderClassNames);
+        $this->container = (new ContainerBuilder())
+            ->withConfigClassName(Config::class)
+            ->withContainerClassName(PortalContainer::class)
+            ->withContainerConfigurationClassName(PortalContainerConfiguration::class)
+            ->build();
     }
 
     protected function initPortal(?string $portalId)

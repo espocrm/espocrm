@@ -83,6 +83,8 @@ class Metadata
         $this->dataCache = $dataCache;
 
         $this->useCache = $useCache;
+
+        $this->module = new Module($this->fileManager, $dataCache, $useCache);
     }
 
     protected function getObjUnifier()
@@ -92,15 +94,6 @@ class Metadata
         }
 
         return $this->objUnifier;
-    }
-
-    protected function getModule()
-    {
-        if (!isset($this->module)) {
-            $this->module = new Module($this->fileManager, $this->dataCache, $this->useCache);
-        }
-
-        return $this->module;
     }
 
     protected function getMetadataHelper()
@@ -588,7 +581,7 @@ class Metadata
         if (is_array($modules)) {
             foreach ($modules as $moduleName) {
                 if (!empty($moduleName) && !isset($modulesToSort[$moduleName])) {
-                    $modulesToSort[$moduleName] = $this->getModule()->get(
+                    $modulesToSort[$moduleName] = $this->module->get(
                         $moduleName . '.order', $this->defaultModuleOrder
                     );
                 }

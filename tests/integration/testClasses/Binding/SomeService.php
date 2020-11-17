@@ -27,16 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Loaders;
+namespace tests\integration\testClasses\Binding;
 
-use Espo\Core\Portal\Utils\Config as ConfigService;
-use Espo\Core\Loaders\Loader;
-use Espo\Core\Utils\File\Manager as FileManager;
-
-class Config implements Loader
+class SomeService
 {
-    public function load() : ConfigService
-    {
-        return new ConfigService(new FileManager());
-    }
+
 }

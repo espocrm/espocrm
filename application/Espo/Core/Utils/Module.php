@@ -34,6 +34,7 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\File\FileUnifier,
     Utils\DataCache,
+    Utils\Config,
 };
 
 /**
@@ -41,6 +42,8 @@ use Espo\Core\{
  */
 class Module
 {
+    const DEFAULT_ORDER = 10;
+
     private $useCache;
 
     private $unifier;
@@ -48,6 +51,8 @@ class Module
     protected $data = null;
 
     protected $cacheKey = 'modules';
+
+    protected $pathToModules = 'application/Espo/Modules';
 
     protected $paths = [
         'corePath' => 'application/Espo/Resources/module.json',
@@ -58,7 +63,7 @@ class Module
     private $fileManager;
     private $dataCache;
 
-    public function __construct(FileManager $fileManager, DataCache $dataCache, bool $useCache = false)
+    public function __construct(FileManager $fileManager, ?DataCache $dataCache = null, bool $useCache = false)
     {
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
@@ -94,7 +99,7 @@ class Module
 
     protected function init()
     {
-        if ($this->dataCache->has($this->cacheKey) && $this->useCache) {
+        if ($this->useCache && $this->dataCache->has($this->cacheKey)) {
             $this->data = $this->dataCache->get($this->cacheKey);
 
             return;
@@ -105,5 +110,41 @@ class Module
         if ($this->useCache) {
             $this->dataCache->store($this->cacheKey, $this->data);
         }
+    }
+
+    /**
+     * Get an ordered list of modules.
+     */
+    public function getOrderedList() : array
+    {
+        $modules = $this->fileManager->getFileList($this->pathToModules, false, '', false);
+
+        $modulesToSort = [];
+
+        if (!is_array($modules)) {
+            return [];
+        }
+
+        foreach ($modules as $moduleName) {
+            if (empty($moduleName)) {
+                continue;
+            }
+
+            if (isset($modulesToSort[$moduleName])) {
+                continue;
+            }
+
+            $modulesToSort[$moduleName] = $this->get($moduleName . '.order', self::DEFAULT_ORDER);
+        }
+
+        array_multisort(
+            array_values($modulesToSort),
+            SORT_ASC,
+            array_keys($modulesToSort),
+            SORT_ASC,
+            $modulesToSort
+        );
+
+        return array_keys($modulesToSort);
     }
 }

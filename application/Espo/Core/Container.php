@@ -33,6 +33,7 @@ use Espo\Core\{
     Exceptions\Error,
     InjectableFactory,
     Loaders\Loader,
+    Binding\BindingContainer,
 };
 
 use ReflectionClass;
@@ -50,13 +51,27 @@ class Container
 
     private $loaderClassNames;
 
-    protected $configuration;
+    protected $configuration = null;
 
     protected $injectableFactory;
 
-    public function __construct(string $configurationClassName, array $loaderClassNames = [])
-    {
+    public function __construct(
+        string $configurationClassName,
+        array $loaderClassNames = [],
+        array $services = [],
+        ?BindingContainer $bindingContainer = null
+    ) {
         $this->loaderClassNames = $loaderClassNames;
+
+        foreach ($services as $name => $service) {
+            if (!is_string($name) || !is_object($service)) {
+                throw new Error("Container: Bad service passed.");
+            }
+
+            $this->setForced($name, $service);
+        }
+
+        $this->bindingContainer = $bindingContainer;
 
         $this->injectableFactory = $this->get('injectableFactory');
 
@@ -96,6 +111,10 @@ class Container
 
         if (method_exists($this, $loadMethodName)) {
             return true;
+        }
+
+        if (!$this->configuration) {
+            return false;
         }
 
         if ($this->configuration->getLoaderClassName($name)) {
@@ -260,6 +279,6 @@ class Container
 
     protected function loadInjectableFactory() : InjectableFactory
     {
-        return new InjectableFactory($this);
+        return new InjectableFactory($this, $this->bindingContainer);
     }
 }

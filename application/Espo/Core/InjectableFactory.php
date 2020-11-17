@@ -32,10 +32,14 @@ namespace Espo\Core;
 use Espo\Core\{
     Exceptions\Error,
     Interfaces\Injectable,
+    Binding\BindingContainer,
+    Binding\BindingLoader,
+    Binding\Binding,
 };
 
 use ReflectionClass;
 use ReflectionParameter;
+use ReflectionFunction;
 use Throwable;
 
 /**
@@ -49,9 +53,12 @@ class InjectableFactory
 {
     protected $container;
 
-    public function __construct(Container $container)
+    protected $bindingContainer;
+
+    public function __construct(Container $container, ?BindingContainer $bindingContainer = null)
     {
         $this->container = $container;
+        $this->bindingContainer = $bindingContainer;
     }
 
     /**
@@ -139,13 +146,13 @@ class InjectableFactory
         $params = $constructor->getParameters();
 
         foreach ($params as $param) {
-            $injectionList[] = $this->getConstructorParamInjection($class, $param, $with);
+            $injectionList[] = $this->getMethodParamInjection($class, $param, $with);
         }
 
         return $injectionList;
     }
 
-    protected function getConstructorParamInjection(ReflectionClass $class, ReflectionParameter $param, ?array $with)
+    protected function getMethodParamInjection(?ReflectionClass $class, ReflectionParameter $param, ?array $with)
     {
         $name = $param->getName();
 
@@ -169,6 +176,12 @@ class InjectableFactory
             }
         }
 
+        if ($this->bindingContainer && $this->bindingContainer->has($class, $param)) {
+            $binding = $this->bindingContainer->get($class, $param);
+
+            return $this->resolveBinding($binding);
+        }
+
         if (!$dependencyClass && $param->isDefaultValueAvailable()) {
             return $param->getDefaultValue();
         }
@@ -188,9 +201,54 @@ class InjectableFactory
             return $this->create($dependencyClass->getName());
         }
 
+        if (!$class) {
+            throw new Error("InjectableFactory: Could not resolve the dependency '{$name}' for a callback.");
+        }
+
         $className = $class->getName();
 
-        throw new Error("InjectableFactory: Could not create {$className}, dependency '{$name}' not found.");
+        throw new Error("InjectableFactory: Could not create '{$className}', the dependency '{$name}' is not resolved.");
+    }
+
+    protected function getCallbackInjectionList(callable $callback, ?array $with = null) : array
+    {
+        $injectionList = [];
+
+        $function = new ReflectionFunction($callback);
+
+        foreach ($function->getParameters() as $param) {
+            $injectionList[] = $this->getMethodParamInjection(null, $param, $with);
+        }
+
+        return $injectionList;
+    }
+
+    protected function resolveBinding(Binding $binding)
+    {
+        $type = $binding->getType();
+        $value = $binding->getValue();
+
+        if ($type === Binding::CONTAINER_SERVICE) {
+            return $this->container->get($value);
+        }
+
+        if ($type === Binding::IMPLEMENTATION_CLASS_NAME) {
+            return $this->create($value);
+        }
+
+        if ($type === Binding::VALUE) {
+            return $value;
+        }
+
+        if ($type === Binding::CALLBACK) {
+            $callback = $value;
+
+            $dependencyList = $this->getCallbackInjectionList($callback);
+
+            return $callback(...$dependencyList);
+        }
+
+        throw new Error("InjectableFactory: Bad binding.");
     }
 
     protected function areDependencyClassesMatching(ReflectionClass $paramHintClass, ReflectionClass $returnHintClass) : bool

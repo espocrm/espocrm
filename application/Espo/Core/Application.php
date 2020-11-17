@@ -30,6 +30,7 @@
 namespace Espo\Core;
 
 use Espo\Core\{
+    ContainerBuilder,
     ContainerConfiguration,
     InjectableFactory,
     Container,
@@ -39,12 +40,6 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\ClientManager,
     Utils\Log,
-    Loaders\Config as ConfigLoader,
-    Loaders\Log as LogLoader,
-    Loaders\FileManager as FileManagerLoader,
-    Loaders\DataManager as DataManagerLoader,
-    Loaders\Metadata as MetadataLoader,
-    Loaders\DataCache as DataCacheLoader,
 };
 
 use ReflectionClass;
@@ -55,15 +50,6 @@ use ReflectionClass;
 class Application
 {
     protected $container;
-
-    protected $loaderClassNames = [
-        'config' => ConfigLoader::class,
-        'log' => LogLoader::class,
-        'fileManager' => FileManagerLoader::class,
-        'dataManager' => DataManagerLoader::class,
-        'dataCache' => DataCacheLoader::class,
-        'metadata' => MetadataLoader::class,
-    ];
 
     public function __construct()
     {
@@ -76,7 +62,7 @@ class Application
 
     protected function initContainer()
     {
-        $this->container = new Container(ContainerConfiguration::class, $this->loaderClassNames);
+        $this->container = (new ContainerBuilder())->build();
     }
 
     /**

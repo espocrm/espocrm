@@ -27,24 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace tests\integration\testClasses\Binding;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\DataCache as DataCacheService,
-};
-
-class DataCache implements Loader
+class SomeImplementation implements SomeInterface
 {
-    protected $injectableFactory;
 
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    public function load() : DataCacheService
-    {
-        return $this->injectableFactory->create(DataCacheService::class);
-    }
 }

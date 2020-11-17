@@ -27,24 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Binding;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\File\Manager as FileManagerService,
-};
-
-class FileManager implements Loader
+interface BindingLoader
 {
-    protected $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
-
-    public function load() : FileManagerService
-    {
-        return new FileManagerService($this->config);
-    }
+    public function load() : BindingData;
 }
