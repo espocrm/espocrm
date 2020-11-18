@@ -162,9 +162,11 @@ class InjectableFactory
 
         $dependencyClass = null;
 
-        if ($param->getType()) {
+        $type = $param->getType();
+
+        if ($type && !$type->isBuiltin()) {
             try {
-                $dependencyClass = $param->getClass();
+                $dependencyClass = new ReflectionClass($type->getName());
             }
             catch (Throwable $e) {
                 $badClassName = $param->getType()->getName();
@@ -299,15 +301,26 @@ class InjectableFactory
         }
 
         $params = $class->getMethod($methodName)->getParameters();
+
         if (!$params || !count($params)) {
             return false;
         }
 
+        if ($skipInstanceCheck) {
+            return true;
+        }
+
         $injection = $this->container->get($name);
 
-        $paramClass = $params[0]->getClass();
+        $paramClass = null;
 
-        if ($skipInstanceCheck || $paramClass && $paramClass->isInstance($injection)) {
+        $type = $params[0]->getType();
+
+        if ($type && !$type->isBuiltin()) {
+            $paramClass = new ReflectionClass($type->getName());
+        }
+
+        if ($paramClass && $paramClass->isInstance($injection)) {
             return true;
         }
 
