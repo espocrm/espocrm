@@ -351,7 +351,7 @@ class Xlsx
                     if (array_key_exists($name.'Currency', $row) && array_key_exists($name, $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
 
-                        $currency = $row[$name . 'Currency'];
+                        $currency = $row[$name . 'Currency'] ?? $this->getConfig()->get('defaultCurrency');
 
                         $sheet->getStyle("$col$rowNumber")
                             ->getNumberFormat()
