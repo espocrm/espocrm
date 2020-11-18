@@ -155,9 +155,11 @@ class InjectableFactory
 
         $dependencyClass = null;
 
-        if ($param->getType()) {
+        $type = $param->getType();
+
+        if ($type && !$type->isBuiltin()) {
             try {
-                $dependencyClass = $param->getClass();
+                $dependencyClass = new ReflectionClass($type->getName());
             }
             catch (Throwable $e) {
                 $badClassName = $param->getType()->getName();
