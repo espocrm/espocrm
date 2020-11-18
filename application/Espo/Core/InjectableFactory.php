@@ -243,15 +243,26 @@ class InjectableFactory
         }
 
         $params = $class->getMethod($methodName)->getParameters();
+
         if (!$params || !count($params)) {
             return false;
         }
 
+        if ($skipInstanceCheck) {
+            return true;
+        }
+
         $injection = $this->container->get($name);
 
-        $paramClass = $params[0]->getClass();
+        $paramClass = null;
 
-        if ($skipInstanceCheck || $paramClass && $paramClass->isInstance($injection)) {
+        $type = $params[0]->getType();
+
+        if ($type && !$type->isBuiltin()) {
+            $paramClass = new ReflectionClass($type->getName());
+        }
+
+        if ($paramClass && $paramClass->isInstance($injection)) {
             return true;
         }
 
