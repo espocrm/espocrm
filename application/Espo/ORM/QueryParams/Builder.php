@@ -37,13 +37,7 @@ interface Builder
 {
     /**
      * Build a query instance.
-     * @todo Uncomment when 7.4 is a min supported PHP version. Need the support of contravariant method parameters.
+     * @todo Uncomment when 7.4 is a min supported PHP version.
      */
     //public function build() : Query;
-
-    /**
-     * Clone an existing query for a further modification and building.
-     * @todo Uncomment when 7.4 is a min supported PHP version. Need the support of contravariant method parameters.
-     */
-    //public function clone(Query $query) : self;
 }
