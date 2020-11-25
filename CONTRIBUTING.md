@@ -12,4 +12,6 @@ Branches:
 
 ## Issues
 
-We don't provide developer help or any kind of support on github. Please use our [forum](https://forum.espocrm.com) for this.
+When reporting a possible bug please provide detail steps so that we will be able to reproduce the issue. Please try not to use phrases like "very big bug", "huge issue", etc. No need to use exclamation marks as well.
+
+Note that we don't provide developer help or any kind of support on Github. Please use our [forum](https://forum.espocrm.com) for this.
