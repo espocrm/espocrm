@@ -235,6 +235,7 @@
         "maintenanceMode": "Only administrators will have access to the system."
     },
     "labels": {
+        "Group Tab": "Group Tab",
         "System": "System",
         "Locale": "Locale",
         "Search": "Search",

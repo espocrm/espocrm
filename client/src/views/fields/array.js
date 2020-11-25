@@ -46,6 +46,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         validations: ['required', 'maxCount'],
 
+        addItemModalView: 'views/modals/array-field-add',
+
         data: function () {
             var itemHtmlList = [];
             (this.selected || []).forEach(function (value) {
@@ -70,24 +72,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 this.removeValue(value);
             },
             'click [data-action="showAddModal"]': function () {
-                var options = [];
-
-                this.params.options.forEach(function (item) {
-                    if (!~this.selected.indexOf(item)) {
-                        options.push(item);
-                    }
-                }, this);
-                this.createView('addModal', 'views/modals/array-field-add', {
-                    options: options,
-                    translatedOptions: this.translatedOptions
-                }, function (view) {
-                    view.render();
-                    this.listenToOnce(view, 'add', function (item) {
-                        this.addValue(item);
-                        view.close();
-                    }.bind(this));
-                }.bind(this));
-            }
+                this.actionAddItem();
+            },
         },
 
         setup: function () {
@@ -589,6 +575,27 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         getSearchType: function () {
             return this.getSearchParamsData().type || 'anyOf';
+        },
+
+        actionAddItem: function () {
+            var options = [];
+
+            this.params.options.forEach(function (item) {
+                if (!~this.selected.indexOf(item)) {
+                    options.push(item);
+                }
+            }, this);
+
+            this.createView('addModal', this.addItemModalView, {
+                options: options,
+                translatedOptions: this.translatedOptions,
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'add', function (item) {
+                    this.addValue(item);
+                    view.close();
+                }.bind(this));
+            }.bind(this));
         },
     });
 });
