@@ -126,7 +126,9 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
         },
 
         setupNonAdminFieldsAccess: function () {
-            if (this.getUser().isAdmin()) return;
+            if (this.getUser().isAdmin()) {
+                return;
+            }
 
             var nonAdminReadOnlyFieldList = [
                 'userName',
@@ -138,8 +140,29 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 'portalRoles',
                 'contact',
                 'accounts',
-                'type'
+                'type',
+                'emailAddress',
             ];
+
+            nonAdminReadOnlyFieldList = nonAdminReadOnlyFieldList.filter(
+                function (item) {
+                    if (!this.model.hasField(item)) {
+                        return true;
+                    }
+
+                    var aclDefs = this.getMetadata().get(['entityAcl', 'User', 'fields', item]);
+
+                    if (!aclDefs) {
+                        return true;
+                    }
+
+                    if (aclDefs.nonAdminReadOnly) {
+                        return true;
+                    }
+
+                    return false;
+                }.bind(this),
+            );
 
             nonAdminReadOnlyFieldList.forEach(function (field) {
                 this.setFieldReadOnly(field, true);

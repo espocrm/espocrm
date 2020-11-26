@@ -219,7 +219,13 @@ define('views/admin/layouts/index', 'view', function (Dep) {
         },
 
         navigate: function (scope, type) {
-            this.getRouter().navigate('#Admin/layouts/scope=' + scope + '&type=' + type, {trigger: false});
+            var url = '#Admin/layouts/scope=' + scope + '&type=' + type;
+
+            if (this.em) {
+                url += '&em=true';
+            }
+
+            this.getRouter().navigate(url, {trigger: false});
         },
 
         renderDefaultPage: function () {
