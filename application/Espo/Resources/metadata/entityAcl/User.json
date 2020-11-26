@@ -29,6 +29,9 @@
         "isActive": {
             "nonAdminReadOnly": true
         },
+        "emailAddress": {
+            "nonAdminReadOnly": true
+        },
         "teams": {
             "nonAdminReadOnly": true
         },
