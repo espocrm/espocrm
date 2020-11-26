@@ -29,25 +29,34 @@
 
 namespace Espo\Core\Htmlizer;
 
-use Espo\ORM\Entity;
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\File\Manager as FileManager,
+    Utils\DateTime,
+    Utils\NumberUtil,
+    Utils\Config,
+    Utils\Language,
+    Utils\Metadata,
+    ServiceFactory,
+    Acl,
+    InjectableFactory,
+};
 
-use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\DateTime;
-use Espo\Core\Utils\NumberUtil;
-use Espo\Core\Utils\Config;
-use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Metadata;
-use Espo\ORM\EntityManager;
-use Espo\ORM\Collection;
-use Espo\Core\ServiceFactory;
-use Espo\Core\Acl;
+use Espo\ORM\{
+    Entity,
+    EntityManager,
+    Collection,
+};
 
 use LightnCandy\LightnCandy as LightnCandy;
 
+use StdClass;
+
+use const JSON_PRESERVE_ZERO_FRACTION;
+
 /**
  * Generates an HTML for an entity.
- * Used by a Print-to-PDF, system email notifications.
+ * Used by Print-to-PDF, system email notifications.
  */
 class Htmlizer
 {
@@ -59,6 +68,7 @@ class Htmlizer
     protected $metadata;
     protected $language;
     protected $serviceFactory;
+    protected $injectableFactory;
 
     public function __construct(
         FileManager $fileManager,
@@ -69,7 +79,8 @@ class Htmlizer
         ?Metadata $metadata = null,
         ?Language $language = null,
         ?Config $config = null,
-        ?ServiceFactory $serviceFactory = null
+        ?ServiceFactory $serviceFactory = null,
+        ?InjectableFactory $injectableFactory = null
     ) {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
@@ -80,6 +91,7 @@ class Htmlizer
         $this->language = $language;
         $this->config = $config;
         $this->serviceFactory = $serviceFactory;
+        $this->injectableFactory = $injectableFactory;
     }
 
     protected function format($value)
@@ -91,6 +103,7 @@ class Htmlizer
         } else if (is_string($value)) {
             $value = nl2br($value);
         }
+
         return $value;
     }
 
@@ -170,6 +183,7 @@ class Htmlizer
         foreach ($attributeList as $attribute) {
             if (in_array($attribute, $forbiddenAttributeList)) {
                 unset($data[$attribute]);
+
                 continue;
             }
             if (in_array($attribute, $skipAttributeList)) {
@@ -194,11 +208,14 @@ class Htmlizer
                     $list = $data[$attribute];
 
                     $newList = [];
+
                     foreach ($list as $item) {
                         $v = $item;
-                        if ($item instanceof \StdClass) {
-                            $v = json_decode(json_encode($v, \JSON_PRESERVE_ZERO_FRACTION), true);
+
+                        if ($item instanceof StdClass) {
+                            $v = json_decode(json_encode($v, JSON_PRESERVE_ZERO_FRACTION), true);
                         }
+
                         if (is_array($v)) {
                             foreach ($v as $k => $w) {
                                 $keyRaw = $k . '_RAW';
@@ -214,9 +231,11 @@ class Htmlizer
             } else if ($type == Entity::JSON_OBJECT) {
                 if (!empty($data[$attribute])) {
                     $value = $data[$attribute];
-                    if ($value instanceof \StdClass) {
-                        $data[$attribute] = json_decode(json_encode($value, \JSON_PRESERVE_ZERO_FRACTION), true);
+
+                    if ($value instanceof StdClass) {
+                        $data[$attribute] = json_decode(json_encode($value, JSON_PRESERVE_ZERO_FRACTION), true);
                     }
+
                     foreach ($data[$attribute] as $k => $w) {
                         $keyRaw = $k . '_RAW';
                         $data[$attribute][$keyRaw] = $data[$attribute][$k];
@@ -230,6 +249,7 @@ class Htmlizer
             if ($fieldType === 'currency' && $this->metadata) {
                 if ($entity->getAttributeParam($attribute, 'attributeRole') === 'currency') {
                     $currencyValue = $data[$attribute] ?? null;
+
                     if ($currencyValue) {
                         $data[$attribute . 'Symbol'] = $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);
                     }
@@ -239,8 +259,9 @@ class Htmlizer
             if (array_key_exists($attribute, $data)) {
                 $keyRaw = $attribute . '_RAW';
 
-                if (!isset($data[$keyRaw]))
+                if (!isset($data[$keyRaw])) {
                     $data[$keyRaw] = $data[$attribute];
+                }
 
                 $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
 
@@ -300,7 +321,11 @@ class Htmlizer
             'file' => function () {
                 $args = func_get_args();
                 $id = $args[0] ?? null;
-                if (!$id) return '';
+
+                if (!$id) {
+                    return '';
+                }
+
                 return new LightnCandy\SafeString("?entryPoint=attachment&id=" . $id);
             },
             'pagebreak' => function () {
@@ -311,6 +336,7 @@ class Htmlizer
                 $context = $args[count($args) - 1];
 
                 $field = $context['hash']['field'] ?? null;
+
                 if ($field) {
                     $id = $context['_this'][$field . 'Id'] ?? null;
                 } else {
@@ -318,17 +344,23 @@ class Htmlizer
                         $id = $args[0];
                     }
                 }
-                if (!$id || !is_string($id)) return null;
+
+                if (!$id || !is_string($id)) {
+                    return null;
+                }
 
                 $width = $context['hash']['width'] ?? null;
                 $height = $context['hash']['height'] ?? null;
 
                 $attributesPart = "";
-                if ($width)
-                    $attributesPart .= " width=\"" .strval($width) . "\"";
 
-                if ($height)
+                if ($width) {
+                    $attributesPart .= " width=\"" .strval($width) . "\"";
+                }
+
+                if ($height) {
                     $attributesPart .= " height=\"" .strval($height) . "\"";
+                }
 
                 $html = "<img src=\"?entryPoint=attachment&id={$id}\"{$attributesPart}>";
 
@@ -338,16 +370,26 @@ class Htmlizer
                 $args = func_get_args();
                 $c = $args[1] ?? [];
                 $key = $args[0] ?? null;
-                if (is_null($key)) return null;
+
+                if (is_null($key)) {
+                    return null;
+                }
+
                 return $c[$key] ?? null;
             },
             'numberFormat' => function () {
                 $args = func_get_args();
-                if (count($args) !== 2) return null;
+
+                if (count($args) !== 2) {
+                    return null;
+                }
+
                 $context = $args[count($args) - 1];
                 $number = $args[0] ?? null;
 
-                if (is_null($number)) return '';
+                if (is_null($number)) {
+                    return '';
+                }
 
                 $decimals = $context['hash']['decimals'] ?? 0;
                 $decimalPoint = $context['hash']['decimalPoint'] ?? '.';
@@ -357,7 +399,11 @@ class Htmlizer
             },
             'dateFormat' => function () {
                 $args = func_get_args();
-                if (count($args) !== 2) return null;
+
+                if (count($args) !== 2) {
+                    return null;
+                }
+
                 $context = $args[count($args) - 1];
                 $dateValue = $args[0];
 
@@ -365,13 +411,20 @@ class Htmlizer
                 $timezone = $context['hash']['timezone'] ?? null;
                 $language = $context['hash']['language'] ?? null;
                 $dateTime = $context['data']['root']['__dateTime'];
-                if (strlen($dateValue) > 11) return $dateTime->convertSystemDateTime($dateValue, $timezone, $format, $language);
+
+                if (strlen($dateValue) > 11) {
+                    return $dateTime->convertSystemDateTime($dateValue, $timezone, $format, $language);
+                }
 
                 return $dateTime->convertSystemDate($dateValue, $format, $language);
             },
             'barcodeImage' => function () {
                 $args = func_get_args();
-                if (count($args) !== 2) return null;
+
+                if (count($args) !== 2) {
+                    return null;
+                }
+
                 $context = $args[count($args) - 1];
                 $value = $args[0];
 
@@ -395,6 +448,7 @@ class Htmlizer
 
                 if ($codeType === 'QRcode') {
                     $function = 'write2DBarcode';
+
                     $params = [
                         $value,
                         $typeMap[$codeType] ?? null,
@@ -414,6 +468,7 @@ class Htmlizer
                     ];
                 } else {
                     $function = 'write1DBarcode';
+
                     $params = [
                         $value,
                         $typeMap[$codeType] ?? null,
@@ -443,6 +498,7 @@ class Htmlizer
             'ifEqual' => function () {
                 $args = func_get_args();
                 $context = $args[count($args) - 1];
+
                 if ($args[0] === $args[1]) {
                     return $context['fn']();
                 } else {
@@ -452,6 +508,7 @@ class Htmlizer
             'ifNotEqual' => function () {
                 $args = func_get_args();
                 $context = $args[count($args) - 1];
+
                 if ($args[0] !== $args[1]) {
                     return $context['fn']();
                 } else {
@@ -487,10 +544,10 @@ class Htmlizer
                 $border = $context['hash']['border'] ?? '0.5pt';
                 $cellpadding = $context['hash']['cellpadding'] ?? '2';
 
-
                 $width = $context['hash']['width'] ?? null;
 
                 $attributesPart = "";
+
                 if ($width) {
                     $attributesPart .= " width=\"{$width}\"";
                 }
@@ -505,11 +562,15 @@ class Htmlizer
                 $context = $args[count($args) - 1];
 
                 $align = strtolower($context['hash']['align'] ?? 'left');
-                if (!in_array($align, ['left', 'right', 'center'])) $align = 'left';
+
+                if (!in_array($align, ['left', 'right', 'center'])) {
+                    $align = 'left';
+                }
 
                 $width = $context['hash']['width'] ?? null;
 
                 $attributesPart = "align=\"{$align}\"";
+
                 if ($width) {
                     $attributesPart .= " width=\"{$width}\"";
                 }
@@ -532,18 +593,25 @@ class Htmlizer
                 $args = func_get_args();
                 $context = $args[count($args) - 1];
 
-                if (count($args) < 2) return null;
+                if (count($args) < 2) {
+                    return null;
+                }
 
                 $color = $context['hash']['color'] ?? '#000';
 
                 $option = $context['hash']['option'] ?? null;
 
-                if (is_null($option)) return null;
+                if (is_null($option)) {
+                    return null;
+                }
+
                 $option = strval($option);
 
                 $list = $args[0] ?? [];
 
-                if (!is_array($list)) return null;
+                if (!is_array($list)) {
+                    return null;
+                }
 
                 $css = "font-family: zapfdingbats; color: {$color}";
 
@@ -604,6 +672,7 @@ class Htmlizer
             $data[$k] = $value;
         }
 
+        $data['__injectableFactory'] = $this->injectableFactory;
         $data['__config'] = $this->config;
         $data['__dateTime'] = $this->dateTime;
         $data['__metadata'] = $this->metadata;
@@ -623,6 +692,7 @@ class Htmlizer
 
                 if ($attachment) {
                     $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
+
                     return $filePath;
                 }
             }, $html);
@@ -633,7 +703,10 @@ class Htmlizer
 
     protected function getFieldType(string $entityType, string $field)
     {
-        if (!$this->metadata) return null;
+        if (!$this->metadata) {
+            return null;
+        }
+
         return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
     }
 }
