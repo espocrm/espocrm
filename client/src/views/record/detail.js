@@ -124,6 +124,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         panelSoftLockedTypeList: ['default', 'acl', 'delimiter', 'dynamicLogic'],
 
+        confirmLeaveDisabled: false,
+
         events: {
             'click .button-container .action': function (e) {
                 Espo.Utils.handleAction(this, e);
@@ -1085,11 +1087,21 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         setIsChanged: function () {
             this.isChanged = true;
+
+            if (this.confirmLeaveDisabled) {
+                return;
+            }
+
             this.setConfirmLeaveOut(true);
         },
 
         setIsNotChanged: function () {
             this.isChanged = false;
+
+            if (this.confirmLeaveDisabled) {
+                return;
+            }
+
             this.setConfirmLeaveOut(false);
         },
 

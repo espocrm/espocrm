@@ -26,21 +26,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/edit-for-modal', 'views/record/edit', function (Dep) {
+define('views/settings/modals/tab-list-field-add', 'views/modals/array-field-add', function (Dep) {
 
     return Dep.extend({
 
-        bottomView: null,
+        setup: function () {
+            Dep.prototype.setup.call(this);
 
-        sideView: null,
+            if (!this.options.noGroups) {
+                this.buttonList.push({
+                    name: 'addGroup',
+                    html: this.translate('Group Tab', 'labels', 'Settings'),
+                });
+            }
+        },
 
-        buttonsDisabled: true,
-
-        isWide: true,
-
-        accessControlDisabled: true,
-
-        confirmLeaveDisabled: true,
+        actionAddGroup: function () {
+            this.trigger('add', {
+                type: 'group',
+                text: this.translate('Group Tab', 'labels', 'Settings'),
+                iconClass: null,
+                color: null,
+            });
+        },
 
     });
 });

@@ -36,6 +36,16 @@
         top: -2px;
     }
 
+    ul.tabs {
+        li > a > .group-caret {
+            position: absolute;
+            top: 13px;
+            right: 13px;
+            font-size: 12px;
+            opacity: 0.6;
+        }
+    }
+
     @media screen and (min-width: @screen-sm-min) {
         .tabs > .more {
             li.show-more a {
@@ -131,6 +141,39 @@
                         }
                     }
                 }
+
+                > li > a > span.full-label,
+                li > a > span.full-label {
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                    max-width: calc(100%);
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+            }
+
+            li > a > .group-caret {
+                -webkit-transform: rotate(90deg);
+                -moz-transform: rotate(90deg);
+                -ms-transform: rotate(90deg);
+                -o-transform: rotate(90deg);
+                transform: rotate(90deg);
+            }
+
+            li > a {
+                height: @navbar-height-xsmall;
+            }
+
+            li.tab-group {
+                background-color: @navbar-inverse-bg;
+
+                > a > .full-label {
+                    padding-right: 8px;
+                }
+            }
+
+            li.tab-group.open > a {
+                background-color: @navbar-inverse-link-active-bg;
             }
         }
 

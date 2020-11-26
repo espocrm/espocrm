@@ -41,7 +41,7 @@ define('views/modals/array-field-add', 'views/modal', function (Dep) {
         data: function () {
             return {
                 optionList: this.options.options,
-                translatedOptions: this.options.translatedOptions
+                translatedOptions: this.options.translatedOptions,
             };
         },
 
@@ -53,16 +53,9 @@ define('views/modals/array-field-add', 'views/modal', function (Dep) {
         },
 
         setup: function () {
-
             this.header = this.translate('Add Item');
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                }
-            ];
-
+            this.buttonList = [];
         },
 
     });

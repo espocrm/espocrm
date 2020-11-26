@@ -30,17 +30,59 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
 
     return Dep.extend({
 
+        addItemModalView: 'views/settings/modals/tab-list-field-add',
+
+        noGroups: false,
+
+        noDelimiters: false,
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.selected.forEach(function (item) {
+                if (item && typeof item === 'object') {
+                    if (!item.id) {
+                        item.id = this.generateItemId();
+                    }
+                }
+            }, this);
+
+            this.events['click [data-action="editGroup"]'] = function (e) {
+                var id = $(e.currentTarget).parent().data('value').toString();
+
+                this.editGroup(id);
+            }.bind(this);
+        },
+
+        generateItemId: function () {
+            return Math.floor(Math.random() * 1000000 + 1).toString();
+        },
+
         setupOptions: function () {
+            this.params.options = Object.keys(this.getMetadata().get('scopes'))
+                .filter(
+                    function (scope) {
+                        if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
+                            return false;
+                        }
 
-            this.params.options = Object.keys(this.getMetadata().get('scopes')).filter(function (scope) {
-                if (this.getMetadata().get('scopes.' + scope + '.disabled')) return;
-                return this.getMetadata().get('scopes.' + scope + '.tab');
-            }, this).sort(function (v1, v2) {
-                return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-            }.bind(this));
+                        if (!this.getAcl().checkScope(scope)) {
+                            return false;
+                        }
 
-            this.params.options.push('_delimiter_');
-            this.params.options.push('_delimiter-ext_');
+                        return this.getMetadata().get('scopes.' + scope + '.tab');
+                    },
+                    this
+                ).sort(
+                    function (v1, v2) {
+                        return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
+                    }.bind(this)
+                );
+
+            if (!this.noDelimiters) {
+                this.params.options.push('_delimiter_');
+                this.params.options.push('_delimiter-ext_');
+            }
 
             this.translatedOptions = {};
 
@@ -50,6 +92,161 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
 
             this.translatedOptions['_delimiter_'] = '. . .';
             this.translatedOptions['_delimiter-ext_'] = '. . .';
+        },
+
+        addValue: function (value) {
+            if (value && typeof value === 'object') {
+                if (!value.id) {
+                    value.id = this.generateItemId();
+                }
+
+                var html = this.getItemHtml(value);
+
+                this.$list.append(html);
+
+                this.selected.push(value);
+
+                this.trigger('change');
+
+                return;
+            }
+
+            Dep.prototype.addValue.call(this, value);
+        },
+
+        removeValue: function (value) {
+            var index = this.getGroupIndexById(value);
+
+            if (~index) {
+                this.$list.children('[data-value="' + value + '"]').remove();
+
+                this.selected.splice(index, 1);
+                this.trigger('change');
+
+                return;
+            }
+
+            Dep.prototype.removeValue.call(this, value);
+        },
+
+        getItemHtml: function (value) {
+            if (value && typeof value === 'object') {
+                return this.getGroupItemHtml(value);
+            }
+
+            return Dep.prototype.getItemHtml.call(this, value);
+        },
+
+        getGroupItemHtml: function (item) {
+            var label = this.escapeValue(item.text || '');
+
+            var html = '<div class="list-group-item" data-value="' + item.id + '" style="cursor: default;">' +
+                '<a href="javascript:" class="" data-value="' + item.id + '" ' +
+                    'data-action="editGroup" style="margin-right: 7px;">' +
+                '<span class="fas fa-pencil-alt fa-sm"></span>' +
+                '</a>' +
+                label +
+                '&nbsp;' +
+                '<a href="javascript:" class="pull-right" data-value="' + item.id + '" data-action="removeValue">' +
+                '<span class="fas fa-times"></span>' +
+                '</a>' +
+                '</div>';
+
+            return html;
+        },
+
+        fetchFromDom: function () {
+            var selected = [];
+
+            this.$el.find('.list-group .list-group-item').each(function (i, el) {
+                var value = $(el).data('value').toString();
+
+                var groupItem = this.getGroupValueById(value);
+
+                if (groupItem) {
+                    selected.push(groupItem);
+
+                    return;
+                }
+
+                selected.push(value);
+            }.bind(this));
+
+            this.selected = selected;
+        },
+
+        getGroupIndexById: function (id) {
+            for (var i = 0; i < this.selected.length; i++) {
+                var item = this.selected[i];
+
+                if (item && typeof item === 'object') {
+                    if (item.id === id) {
+                        return i;
+                    }
+                }
+            }
+
+            return -1;
+        },
+
+        getGroupValueById: function (id) {
+            for (var item of this.selected) {
+                if (item && typeof item === 'object') {
+                    if (item.id === id) {
+                        return item;
+                    }
+                }
+            }
+
+            return null;
+        },
+
+        editGroup: function (id) {
+            var item = Espo.Utils.cloneDeep(
+                this.getGroupValueById(id) || {}
+            );
+
+            var index = this.getGroupIndexById(id);
+
+            var tabList = Espo.Utils.cloneDeep(this.selected);
+
+            this.createView('dialog', 'views/settings/modals/edit-tab-group', {
+                itemData: item,
+            }, function (view) {
+                view.render();
+
+                this.listenToOnce(view, 'apply', function (itemData) {
+                    for (var a in itemData) {
+                        tabList[index][a] = itemData[a];
+                    }
+
+                    this.model.set(this.name, tabList);
+
+                    view.close();
+                }, this);
+            });
+        },
+
+        actionAddItem: function () {
+            var options = [];
+
+            this.params.options.forEach(function (item) {
+                if (!~this.selected.indexOf(item)) {
+                    options.push(item);
+                }
+            }, this);
+
+            this.createView('addModal', this.addItemModalView, {
+                options: options,
+                translatedOptions: this.translatedOptions,
+                noGroups: this.noGroups,
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'add', function (item) {
+                    this.addValue(item);
+                    view.close();
+                }.bind(this));
+            }.bind(this));
         },
 
     });

@@ -91,6 +91,157 @@ define('views/site/navbar', 'view', function (Dep) {
                 e.stopPropagation();
                 this.showMoreTabs();
             },
+            'click .not-in-more > .nav-link-group': function (e) {
+                this.handleGroupDropdownClick(e);
+            },
+            'click .in-more .nav-link-group': function (e) {
+                this.handleGroupDropdownClick(e);
+            },
+        },
+
+        handleGroupDropdownClick: function (e) {
+            var $target = $(e.currentTarget).parent();
+
+            if ($target.parent().hasClass('more-dropdown-menu')) {
+                e.stopPropagation();
+
+                if ($target.hasClass('open')) {
+                    $target.removeClass('open');
+
+                    return;
+                }
+
+                this.handleGroupDropdownInMoreOpen($target);
+
+                return;
+            }
+
+            if ($target.hasClass('open')) {
+                return;
+            }
+
+            this.handleGroupDropdownOpen($target);
+        },
+
+        handleGroupMenuPosition: function ($menu, $target) {
+            if (this.navbarAdjustmentHandler && this.navbarAdjustmentHandler.handleGroupMenuPosition()) {
+                this.handleGroupMenuPosition($menu, $target);
+
+                return;
+            }
+
+            var rectItem = $target.get(0).getBoundingClientRect();
+
+            var windowHeight = window.innerHeight;
+
+            var isVertical = this.getThemeManager().getParam('navbarIsVertical');
+
+            if (
+                !isVertical &&
+                !$target.parent().hasClass('more-dropdown-menu')
+            ) {
+                var maxHeight = windowHeight - rectItem.bottom;
+
+                this.handleGroupMenuScrolling($menu, $target, maxHeight);
+
+                return;
+            }
+
+            var itemCount = $menu.children().length;
+
+            if (isVertical) {
+                var tabHeight = this.$tabs.find('> .tab').height();
+            } else {
+                var tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
+            }
+
+            var menuHeight = tabHeight * itemCount;
+
+            var top = rectItem.top - 1;
+
+            if (top + menuHeight > windowHeight) {
+                top = windowHeight - menuHeight - 2;
+
+                if (top < 0) {
+                    top = 0;
+                }
+            }
+
+            $menu.css({
+                top: top + 'px',
+            });
+
+            var maxHeight = windowHeight - top;
+
+            this.handleGroupMenuScrolling($menu, $target, maxHeight);
+        },
+
+        handleGroupMenuScrolling: function ($menu, $target, maxHeight) {
+            $menu.css({
+                maxHeight: maxHeight + 'px',
+            });
+
+            var $window = $(window);
+
+            $window.off('scroll.navbar-tab-group');
+
+            $window.on('scroll.navbar-tab-group', function () {
+                if (!$menu.get(0) || !$target.get(0)) {
+                    return;
+                }
+
+                if (!$target.hasClass('open')) {
+                    return;
+                }
+
+                $menu.scrollTop($window.scrollTop());
+            });
+        },
+
+        handleGroupDropdownOpen: function ($target) {
+            var $menu = $target.find('.dropdown-menu');
+
+            this.handleGroupMenuPosition($menu, $target);
+
+            setTimeout(function () {
+                this.adjustBodyMinHeight();
+            }.bind(this), 50);
+
+            $target.off('hidden.bs.dropdown');
+
+            $target.on('hidden.bs.dropdown', function () {
+                this.adjustBodyMinHeight();
+            }.bind(this));
+        },
+
+        handleGroupDropdownInMoreOpen: function ($target) {
+            this.$el.find('.tab-group.tab.dropdown').removeClass('open');
+
+            var $parentDropdown = this.$el.find('.more-dropdown-menu');
+
+            $target.addClass('open');
+
+            var $menu = $target.find('.dropdown-menu');
+
+            var rectDropdown = $parentDropdown.get(0).getBoundingClientRect();
+
+            var left = rectDropdown.right;
+
+            $menu.css({
+                left: left + 'px',
+            });
+
+            this.handleGroupMenuPosition($menu, $target);
+
+            this.adjustBodyMinHeight();
+
+            if (!this.getThemeManager().getParam('isVertical')) {
+                if (left + $menu.width() > window.innerWidth) {
+                    $menu.css({
+                        left: rectDropdown.left - $menu.width() - 2,
+                    });
+                }
+            }
         },
 
         isCollapsableVisible: function () {
@@ -183,12 +334,16 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         getTabList: function () {
-            var tabList = this.getPreferences().get('useCustomTabList') ? this.getPreferences().get('tabList') : this.getConfig().get('tabList');
-            tabList = Espo.Utils.clone(tabList || []);
+            var tabList = this.getPreferences().get('useCustomTabList') ?
+                this.getPreferences().get('tabList') :
+                this.getConfig().get('tabList');
+
+            tabList = Espo.Utils.cloneDeep(tabList || []);
 
             if (this.getThemeManager().getParam('navbarIsVertical')) {
                 tabList.unshift('Home');
             }
+
             return tabList;
         },
 
@@ -209,23 +364,33 @@ define('views/site/navbar', 'view', function (Dep) {
 
             var scopes = this.getMetadata().get('scopes') || {};
 
-            this.tabList = tabList.filter(function (scope) {
-                if (~['Home', '_delimiter_', '_delimiter-ext_'].indexOf(scope)) return true;
-                if (!scopes[scope]) return false;
+            this.tabList = tabList.filter(
+                function (item) {
+                    if (!item) {
+                        return false;
+                    }
 
-                var defs = scopes[scope] || {};
+                    if (typeof item === 'object') {
+                        item.itemList = item.itemList || [];
 
-                if (defs.disabled) return;
+                        item.itemList = item.itemList.filter(
+                            function (item) {
+                                return this.filterTabItem(item);
+                            },
+                            this
+                        );
 
-                if (defs.acl) {
-                    return this.getAcl().check(scope);
-                }
-                if (defs.tabAclPermission) {
-                    var level = this.getAcl().get(defs.tabAclPermission);
-                    return level && level !== 'no';
-                }
-                return true;
-            }, this);
+                        if (!item.itemList.length) {
+                            return false;
+                        }
+
+                        return true;
+                    }
+
+                    return this.filterTabItem(item);
+                },
+                this
+            );
 
             this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
                 if (!scopes[scope]) return false;
@@ -247,7 +412,37 @@ define('views/site/navbar', 'view', function (Dep) {
             this.once('remove', function () {
                 $(window).off('resize.navbar');
                 $(window).off('scroll.navbar');
+                $(window).off('scroll.navbar-tab-group');
             });
+        },
+
+        filterTabItem: function (scope) {
+            if (~['Home', '_delimiter_', '_delimiter-ext_'].indexOf(scope)) {
+                return true;
+            }
+
+            var scopes = this.getMetadata().get('scopes') || {};
+
+            if (!scopes[scope]) {
+                return false;
+            }
+
+            var defs = scopes[scope] || {};
+
+            if (defs.disabled) {
+                return;
+            }
+
+            if (defs.acl) {
+                return this.getAcl().check(scope);
+            }
+            if (defs.tabAclPermission) {
+                var level = this.getAcl().get(defs.tabAclPermission);
+
+                return level && level !== 'no';
+            }
+
+            return true;
         },
 
         setupGlobalSearch: function () {
@@ -491,23 +686,73 @@ define('views/site/navbar', 'view', function (Dep) {
 
             minHeight = Math.max(minHeight, moreHeight);
 
+            var tabHeight = this.$tabs.find('> .tab').height();
+
+            this.tabList.forEach(function (item, i) {
+                if (typeof item !== 'object') {
+                    return;
+                }
+
+                var $li = this.$el.find('li.tab[data-name="group-'+i+'"]');
+
+                if (!$li.hasClass('open')) {
+                    return;
+                }
+
+                var tabCount = (item.itemList || []).length;
+
+                var menuHeight = tabHeight * tabCount;
+
+                if (menuHeight > minHeight) {
+                    minHeight = menuHeight;
+                }
+            }, this);
+
             this.$body.css('minHeight', minHeight + 'px');
         },
 
         adjustBodyMinHeightHorizontal: function () {
-            var height = this.getNavbarHeight();
+            var minHeight = this.getNavbarHeight();
 
             this.$more.find('> li').each(function (i, el) {
                 var $el = $(el);
+
                 if (!this.isMoreTabsShown) {
-                    if ($el.hasClass('after-show-more')) return;
+                    if ($el.hasClass('after-show-more')) {
+                        return;
+                    }
                 } else {
-                    if ($el.hasClass('show-more')) return;
+                    if ($el.hasClass('show-more')) {
+                        return;
+                    }
                 }
-                height += $el.height();
+
+                minHeight += $el.height();
             }.bind(this));
 
-            this.$body.css('minHeight', height + 'px');
+            var tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
+
+            this.tabList.forEach(function (item, i) {
+                if (typeof item !== 'object') {
+                    return;
+                }
+
+                var $li = this.$el.find('li.tab[data-name="group-'+i+'"]');
+
+                if (!$li.hasClass('open')) {
+                    return;
+                }
+
+                var tabCount = (item.itemList || []).length;
+
+                var menuHeight = tabHeight * tabCount;
+
+                if (menuHeight > minHeight) {
+                    minHeight = menuHeight;
+                }
+            }, this);
+
+            this.$body.css('minHeight', minHeight + 'px');
         },
 
         afterRender: function () {
@@ -551,6 +796,9 @@ define('views/site/navbar', 'view', function (Dep) {
             if (handlerClassName) {
                 require(handlerClassName, function (Handler) {
                     var handler = new Handler(this);
+
+                    this.navbarAdjustmentHandler = handler;
+
                     handler.process();
                 }.bind(this));
             }
@@ -606,6 +854,7 @@ define('views/site/navbar', 'view', function (Dep) {
 
         setupTabDefsList: function () {
             var tabDefsList = [];
+
             var moreIsMet = false;
             var isHidden = false;
 
@@ -614,16 +863,32 @@ define('views/site/navbar', 'view', function (Dep) {
                 this.getPreferences().get('tabColorsDisabled') ||
                 this.getConfig().get('scopeColorsDisabled') ||
                 this.getConfig().get('tabColorsDisabled');
+
             var tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
+
+            var params = {
+                colorsDisabled: colorsDisabled,
+                tabIconsDisabled: tabIconsDisabled,
+            };
+
+            var vars = {
+                moreIsMet: false,
+                isHidden: false,
+            };
 
             this.tabList.forEach(function (tab, i) {
                 if (tab === '_delimiter_' || tab === '_delimiter-ext_') {
-                    if (!moreIsMet) {
-                        moreIsMet = true;
+                    if (!vars.moreIsMet) {
+                        vars.moreIsMet = true;
+
                         return;
                     } else {
-                        if (i == this.tabList.length - 1) return;
-                        isHidden = true;
+                        if (i == this.tabList.length - 1) {
+                            return;
+                        }
+
+                        vars.isHidden = true;
+
                         tabDefsList.push({
                             name: 'show-more',
                             link: 'javascript:',
@@ -631,51 +896,102 @@ define('views/site/navbar', 'view', function (Dep) {
                             className: 'show-more',
                             html: '<span class="fas fa-ellipsis-h more-icon"></span>',
                         });
+
                         return;
                     }
                 }
 
-                var label;
-                var link;
-
-                if (tab == 'Home') {
-                    label = this.getLanguage().translate(tab);
-                    link = '#';
-                } else {
-                    label = this.getLanguage().translate(tab, 'scopeNamesPlural');
-                    link = '#' + tab;
-                }
-
-                var color = null;
-                if (!colorsDisabled) {
-                    var color = this.getMetadata().get(['clientDefs', tab, 'color']);
-                }
-
-                var shortLabel = label.substr(0, 2);
-
-                var iconClass = null;
-                if (!tabIconsDisabled) {
-                    iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
-                }
-
-                var o = {
-                    link: link,
-                    label: label,
-                    shortLabel: shortLabel,
-                    name: tab,
-                    isInMore: moreIsMet,
-                    color: color,
-                    iconClass: iconClass,
-                    isAfterShowMore: isHidden,
-                    aClassName: 'nav-link',
-                };
-                if (isHidden) o.className = 'after-show-more';
-                if (color && !iconClass) {
-                    o.colorIconClass = 'color-icon fas fa-square-full';
-                }
-                tabDefsList.push(o);
+                tabDefsList.push(
+                    this.prepareTabItemDefs(params, tab, i, vars)
+                );
             }, this);
+
             this.tabDefsList = tabDefsList;
+        },
+
+        prepareTabItemDefs: function (params, tab, i, vars) {
+            var label;
+            var link;
+
+            var iconClass = null;
+
+            var color = null;
+
+            var isGroup = false;
+
+            var name = tab;
+
+            var aClassName = 'nav-link';
+
+            if (tab == 'Home') {
+                label = this.getLanguage().translate(tab);
+                link = '#';
+            }
+            else if (typeof tab === 'object') {
+                isGroup = true;
+
+                label = tab.text;
+                color = tab.color;
+                iconClass = tab.iconClass;
+
+                name = 'group-' + i;
+
+                link = 'javascript:';
+
+                aClassName = 'nav-link-group';
+
+                if (label.indexOf('label@') === 0) {
+                    label = this.translate(label.substr(6), 'tabs');
+                }
+            }
+            else {
+                label = this.getLanguage().translate(tab, 'scopeNamesPlural');
+                link = '#' + tab;
+            }
+
+            label = label || '';
+
+            var shortLabel = label.substr(0, 2);
+
+            if (!params.colorsDisabled && !isGroup) {
+                color = this.getMetadata().get(['clientDefs', tab, 'color']);
+            }
+
+            if (!params.tabIconsDisabled && !isGroup) {
+                iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
+            }
+
+            var o = {
+                link: link,
+                label: label,
+                shortLabel: shortLabel,
+                name: name,
+                isInMore: vars.moreIsMet,
+                color: color,
+                iconClass: iconClass,
+                isAfterShowMore: vars.isHidden,
+                aClassName: aClassName,
+                isGroup: isGroup,
+            };
+
+            if (isGroup) {
+                o.itemList = tab.itemList.map(
+                    function (tab, i) {
+                        return this.prepareTabItemDefs(params, tab, i, vars);
+                    },
+                    this
+                );
+            }
+
+            if (vars.isHidden) {
+                o.className = 'after-show-more';
+            }
+
+            if (color && !iconClass) {
+                o.colorIconClass = 'color-icon fas fa-square-full';
+            }
+
+            return o;
         },
 
         getMenuDataList: function () {
@@ -765,15 +1081,24 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         showMoreTabs: function () {
+            this.$el.find('.tab-group.tab.dropdown').removeClass('open');
+
             this.isMoreTabsShown = true;
+
             this.$more.addClass('more-expanded');
+
             this.adjustBodyMinHeight();
+
             this.trigger('show-more-tabs');
         },
 
         hideMoreTabs: function () {
-            if (!this.isMoreTabsShown) return;
+            if (!this.isMoreTabsShown) {
+                return;
+            }
+
             this.$more.removeClass('more-expanded');
+
             this.adjustBodyMinHeight();
 
             this.isMoreTabsShown = false;

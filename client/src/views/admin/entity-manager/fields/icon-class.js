@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/entity-manager/fields/icon-class', 'views/fields/base', function (Dep) {
+define('views/admin/entity-manager/fields/icon-class', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -44,15 +44,24 @@ Espo.define('views/admin/entity-manager/fields/icon-class', 'views/fields/base',
             this.createView('dialog', 'views/admin/entity-manager/modals/select-icon', {}, function (view) {
                 view.render();
                 this.listenToOnce(view, 'select', function (value) {
+                    if (value === '') {
+                        value = null;
+                    }
+
                     this.model.set(this.name, value);
+
                     view.close();
                 }, this);
             });
         },
 
         fetch: function () {
-            return {};
-        }
+            var data = {};
+
+            data[this.name] = this.model.get(this.name);
+
+            return data;
+        },
 
     });
 });
