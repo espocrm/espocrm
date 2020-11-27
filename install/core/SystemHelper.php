@@ -82,12 +82,24 @@ class SystemHelper extends \Espo\Core\Utils\System
 
     public function getBaseUrl()
     {
-        $pageUrl = ($_SERVER["HTTPS"] == 'on') ? 'https://' : 'http://';
+        $pageUrl = 'http://';
 
-        if ($_SERVER["SERVER_PORT"] != "80") {
-            $pageUrl .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
-        } else {
+        if (isset($_SERVER['REQUEST_SCHEME']) && $_SERVER['REQUEST_SCHEME'] == 'https') {
+            $pageUrl = 'https://';
+        }
+
+        if (isset($_SERVER['HTTPS']) && $_SERVER["HTTPS"] == 'on') {
+            $pageUrl = 'https://';
+        }
+
+        if ($_SERVER["SERVER_PORT"] == '443') {
+            $pageUrl = 'https://';
+        }
+
+        if (in_array($_SERVER["SERVER_PORT"], ['80', '443'])) {
             $pageUrl .= $_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"];
+        } else {
+            $pageUrl .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
         }
 
         $baseUrl = str_ireplace('/install/index.php', '', $pageUrl);

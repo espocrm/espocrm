@@ -13,10 +13,10 @@
                     {foreach from=$phpRequirementList key=name item=value}
                         <tr class="list-row">
                             <td class="cell col-md-5">
-                                {if $langs['systemRequirements'][$name] eq ''}
-                                    {$name}
+                                {if isset($langs['systemRequirements'][$name])}
+                                    {$langs['systemRequirements'][{$name}]}
                                 {else}
-                                   {$langs['systemRequirements'][{$name}]}
+                                   {$name}
                                 {/if}
                             </td>
                             <td class="cell col-md-3">{$value['actual']}</td>
@@ -41,10 +41,10 @@
                     {foreach from=$mysqlRequirementList key=name item=value}
                         <tr class="list-row">
                             <td class="cell col-md-5">
-                                {if $langs['systemRequirements'][$name] eq ''}
-                                    {$name}
+                                {if isset($langs['systemRequirements'][$name])}
+                                    {$langs['systemRequirements'][{$name}]}
                                 {else}
-                                   {$langs['systemRequirements'][{$name}]}
+                                   {$name}
                                 {/if}
                             </td>
                             <td class="cell col-md-3">{$value['actual']}</td>
@@ -68,10 +68,10 @@
                     {foreach from=$permissionRequirementList key=name item=value}
                         <tr class="list-row">
                             <td class="cell col-md-5">
-                                {if $langs['systemRequirements'][$name] eq ''}
-                                    {$name}
+                                {if isset($langs['systemRequirements'][$name])}
+                                    {$langs['systemRequirements'][{$name}]}
                                 {else}
-                                   {$langs['systemRequirements'][{$name}]}
+                                   {$name}
                                 {/if}
                             </td>
                             <td class="cell col-md-3">{$langs['systemRequirements'][{$value['type']}]}</td>
