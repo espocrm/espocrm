@@ -52,7 +52,7 @@ class Metadata implements Loader
 
     public function load() : MetadataService
     {
-        $useCache = $this->config->get('useCache');
+        $useCache = $this->config->get('useCache') ?? false;
 
         return new MetadataService($this->fileManager, $this->dataCache, $useCache);
     }
