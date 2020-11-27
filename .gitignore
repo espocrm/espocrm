@@ -16,6 +16,6 @@ npm-debug.log
 /tests/integration/config.php
 .phpunit.result.cache
 composer.phar
-vendor/
+/vendor/
 /custom/Espo/Custom/*
 /install/config.php
