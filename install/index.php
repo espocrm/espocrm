@@ -89,7 +89,7 @@ if (!$systemHelper->initWritable()) {
 	die($message . "\n");
 }
 
-require_once ('install/vendor/smarty/libs/Smarty.class.php');
+require_once ('install/vendor/smarty/smarty/libs/Smarty.class.php');
 
 require_once 'core/Installer.php';
 require_once 'core/Utils.php';
