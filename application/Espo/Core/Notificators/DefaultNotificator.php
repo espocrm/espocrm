@@ -132,4 +132,13 @@ class DefaultNotificator implements Notificator
     {
         return $this->entityManager;
     }
+
+    /**
+     * For backward compatibility.
+     * @todo Remove.
+     */
+    protected function getUser()
+    {
+        return $this->user;
+    }
 }
