@@ -47,14 +47,24 @@ use Espo\Core\{
     ORM\EntityManager,
     ORM\Entity,
     Pdf\Tcpdf,
+    Select\SelectManagerFactory,
 };
+
+use Espo\{
+    Tools\Pdf\Builder,
+    Tools\Pdf\Contents,
+    Tools\Pdf\TemplateWrapper,
+    Tools\Pdf\Data,
+};
+
+use Espo\ORM\{
+    QueryParams\Select,
+};
+
+use DateTime;
 
 class Pdf
 {
-    protected $fontFace = 'freesans';
-
-    protected $fontSize = 12;
-
     protected $removeMassFilePeriod = '1 hour';
 
     protected $config;
@@ -64,6 +74,8 @@ class Pdf
     protected $acl;
     protected $defaultLanguage;
     protected $htmlizerFactory;
+    protected $selectManagerFactory;
+    protected $builder;
 
     public function __construct(
         Config $config,
@@ -72,7 +84,9 @@ class Pdf
         EntityManager $entityManager,
         Acl $acl,
         Language $defaultLanguage,
-        HtmlizerFactory $htmlizerFactory
+        HtmlizerFactory $htmlizerFactory,
+        SelectManagerFactory $selectManagerFactory,
+        Builder $builder
     ) {
         $this->config = $config;
         $this->serviceFactory = $serviceFactory;
@@ -81,71 +95,18 @@ class Pdf
         $this->acl = $acl;
         $this->defaultLanguage = $defaultLanguage;
         $this->htmlizerFactory = $htmlizerFactory;
+        $this->selectManagerFactory = $selectManagerFactory;
+        $this->builder = $builder;
     }
 
-    protected function printEntity(
-        Entity $entity, Entity $template, Htmlizer $htmlizer, Tcpdf $pdf,
-        ?array $additionalData = null
-    ) {
-        $fontFace = $this->config->get('pdfFontFace', $this->fontFace);
-        if ($template->get('fontFace')) {
-            $fontFace = $template->get('fontFace');
+    public function generateMailMerge(
+        string $entityType, iterable $entityList, Entity $template, string $name, ?string $campaignId = null
+    ) : string {
+        $collection = $this->entityManager->getCollectionFactory()->create($entityType);
+
+        foreach ($entityList as $entity) {
+            $collection[] = $entity;
         }
-
-        $pdf->setFont($fontFace, '', $this->fontSize, '', true);
-
-        $pdf->setAutoPageBreak(true, $template->get('bottomMargin'));
-        $pdf->setMargins($template->get('leftMargin'), $template->get('topMargin'), $template->get('rightMargin'));
-
-        if ($template->get('printFooter')) {
-            $htmlFooter = $htmlizer->render($entity, $template->get('footer') ?? '', null, $additionalData);
-            $pdf->setFooterFont([$fontFace, '', $this->fontSize]);
-            $pdf->setFooterPosition($template->get('footerPosition'));
-            $pdf->setFooterHtml($htmlFooter);
-        } else {
-            $pdf->setPrintFooter(false);
-        }
-
-        $pageOrientation = 'Portrait';
-        if ($template->get('pageOrientation')) {
-            $pageOrientation = $template->get('pageOrientation');
-        }
-        $pageFormat = 'A4';
-        if ($template->get('pageFormat')) {
-            $pageFormat = $template->get('pageFormat');
-        }
-        if ($pageFormat === 'Custom') {
-            $pageFormat = [$template->get('pageWidth'), $template->get('pageHeight')];
-        }
-        $pageOrientationCode = 'P';
-        if ($pageOrientation === 'Landscape') {
-            $pageOrientationCode = 'L';
-        }
-
-        $htmlHeader = $htmlizer->render($entity, $template->get('header') ?? '', null, $additionalData);
-
-        if ($template->get('printHeader')) {
-            $pdf->setHeaderFont([$fontFace, '', $this->fontSize]);
-            $pdf->setHeaderPosition($template->get('headerPosition'));
-            $pdf->setHeaderHtml($htmlHeader);
-
-            $pdf->addPage($pageOrientationCode, $pageFormat);
-        } else {
-            $pdf->addPage($pageOrientationCode, $pageFormat);
-            $pdf->setPrintHeader(false);
-            $pdf->writeHTML($htmlHeader, true, false, true, false, '');
-        }
-
-
-        $htmlBody = $htmlizer->render($entity, $template->get('body') ?? '', null, $additionalData);
-        $pdf->writeHTML($htmlBody, true, false, true, false, '');
-    }
-
-    public function generateMailMerge($entityType, $entityList, Entity $template, $name, $campaignId = null)
-    {
-        $htmlizer = $this->createHtmlizer();
-        $pdf = new Tcpdf();
-        $pdf->setUseGroupNumbers(true);
 
         if ($this->serviceFactory->checkExists($entityType)) {
             $service = $this->serviceFactory->create($entityType);
@@ -155,18 +116,24 @@ class Pdf
 
         foreach ($entityList as $entity) {
             $service->loadAdditionalFields($entity);
+
             if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
                 $service->loadAdditionalFieldsForPdf($entity);
             }
-            $pdf->startPageGroup();
-            $this->printEntity($entity, $template, $htmlizer, $pdf);
         }
+
+        $templateWrapper = new TemplateWrapper($template);
+
+        $printer = $this->builder
+            ->setTemplate($templateWrapper)
+            ->setEngine('Tcpdf')
+            ->build();
+
+        $contents = $printer->printCollection($collection);
 
         $filename = Util::sanitizeFileName($name) . '.pdf';
 
         $attachment = $this->entityManager->getEntity('Attachment');
-
-        $content = $pdf->output('', 'S');
 
         $attachment->set([
             'name' => $filename,
@@ -174,7 +141,7 @@ class Pdf
             'type' => 'application/pdf',
             'relatedId' => $campaignId,
             'role' => 'Mail Merge',
-            'contents' => $content
+            'contents' => $contents->getString(),
         ]);
 
         $this->entityManager->saveEntity($attachment);
@@ -182,7 +149,7 @@ class Pdf
         return $attachment->id;
     }
 
-    public function massGenerate($entityType, $idList, $templateId, $checkAcl = false)
+    public function massGenerate(string $entityType, array $idList, string $templateId, bool $checkAcl = false) : string
     {
         if ($this->serviceFactory->checkExists($entityType)) {
             $service = $this->serviceFactory->create($entityType);
@@ -191,6 +158,7 @@ class Pdf
         }
 
         $maxCount = $this->config->get('massPrintPdfMaxCount');
+
         if ($maxCount) {
             if (count($idList) > $maxCount) {
                 throw new Error("Mass print to PDF max count exceeded.");
@@ -207,55 +175,76 @@ class Pdf
             if (!$this->acl->check($template)) {
                 throw new Forbidden();
             }
+
             if (!$this->acl->checkScope($entityType)) {
                 throw new Forbidden();
             }
         }
 
-        $htmlizer = $this->createHtmlizer();
-        $pdf = new Tcpdf();
-        $pdf->setUseGroupNumbers(true);
+        $selectManager = $this->selectManagerFactory->create($entityType);
 
-        $entityList = $this->entityManager->getRepository($entityType)->where([
-            'id' => $idList
-        ])->find();
+        $selectParams = $selectManager->getEmptySelectParams();
 
-        foreach ($entityList as $entity) {
-            if ($checkAcl) {
-                if (!$this->acl->check($entity)) continue;
-            }
+        if ($checkAcl) {
+            $selectManager->applyAccess($selectParams);
+        }
+
+        $query = Select::fromRaw($selectParams);
+
+        $collection = $this->entityManager
+            ->getRepository($entityType)
+            ->clone($query)
+            ->where([
+                'id' => $idList,
+            ])
+            ->find();
+
+        foreach ($collection as $entity) {
             $service->loadAdditionalFields($entity);
+
             if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
                 $service->loadAdditionalFieldsForPdf($entity);
             }
-            $pdf->startPageGroup();
-            $this->printEntity($entity, $template, $htmlizer, $pdf);
         }
 
-        $content = $pdf->output('', 'S');
+        $templateWrapper = new TemplateWrapper($template);
+
+        $engine = $this->config->get('pdfEngine') ?? 'Tcpdf';
+
+        $printer = $this->builder
+            ->setTemplate($templateWrapper)
+            ->setEngine($engine)
+            ->build();
+
+        $contents = $printer->printCollection($collection);
 
         $entityTypeTranslated = $this->defaultLanguage->translate($entityType, 'scopeNamesPlural');
+
         $filename = Util::sanitizeFileName($entityTypeTranslated) . '.pdf';
 
         $attachment = $this->entityManager->getEntity('Attachment');
+
         $attachment->set([
             'name' => $filename,
             'type' => 'application/pdf',
             'role' => 'Mass Pdf',
-            'contents' => $content
+            'contents' => $contents->getString(),
         ]);
+
         $this->entityManager->saveEntity($attachment);
 
         $job = $this->entityManager->getEntity('Job');
+
         $job->set([
             'serviceName' => 'Pdf',
             'methodName' => 'removeMassFileJob',
             'data' => [
                 'id' => $attachment->id
             ],
-            'executeTime' => (new \DateTime())->modify('+' . $this->removeMassFilePeriod)->format('Y-m-d H:i:s'),
-            'queue' => 'q1'
+            'executeTime' => (new DateTime())->modify('+' . $this->removeMassFilePeriod)->format('Y-m-d H:i:s'),
+            'queue' => 'q1',
         ]);
+
         $this->entityManager->saveEntity($job);
 
         return $attachment->id;
@@ -266,9 +255,17 @@ class Pdf
         if (empty($data->id)) {
             return;
         }
+
         $attachment = $this->entityManager->getEntity('Attachment', $data->id);
-        if (!$attachment) return;
-        if ($attachment->get('role') !== 'Mass Pdf') return;
+
+        if (!$attachment) {
+            return;
+        }
+
+        if ($attachment->get('role') !== 'Mass Pdf') {
+            return;
+        }
+
         $this->entityManager->removeEntity($attachment);
     }
 
@@ -289,28 +286,57 @@ class Pdf
         }
 
         if ($template->get('entityType') !== $entityType) {
-            throw new Forbidden();
+            throw new Error("Not matching entity types.");
         }
 
         if (!$this->acl->check($entity, 'read') || !$this->acl->check($template, 'read')) {
             throw new Forbidden();
         }
 
-        $htmlizer = $this->createHtmlizer();
-        $pdf = new Tcpdf();
+        $templateWrapper = new TemplateWrapper($template);
 
-        $this->printEntity($entity, $template, $htmlizer, $pdf, $additionalData);
+        $data = Data::createFromArray([
+            'additionalTemplateData' => $additionalData,
+        ]);
+
+        $engine = $this->config->get('pdfEngine') ?? 'Tcpdf';
+
+        $printer = $this->builder
+            ->setTemplate($templateWrapper)
+            ->setEngine($engine)
+            ->build();
+
+        $contents = $printer->printEntity($entity, $data);
 
         if ($displayInline) {
-            $name = $entity->get('name');
-            $name = Util::sanitizeFileName($name);
-            $fileName = $name . '.pdf';
+            $this->displayInline($entity, $contents);
 
-            $pdf->output($fileName, 'I');
             return;
         }
 
-        return $pdf->output('', 'S');
+        return $contents->getString();
+    }
+
+    protected function displayInline(Entity $entity, Contents $contents)
+    {
+        $fileName = Util::sanitizeFileName(
+            $entity->get('name') ?? 'unnamed'
+        );
+
+        $fileName = $fileName . '.pdf';
+
+        header('Content-Type: application/pdf');
+        header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
+        header('Pragma: public');
+        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+        header('Content-Disposition: inline; filename="'.basename($fileName).'"');
+
+        if (!isset($_SERVER['HTTP_ACCEPT_ENCODING']) OR empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+            header('Content-Length: '. $contents->getLength());
+        }
+
+        echo $contents->getString();
     }
 
     protected function createHtmlizer()

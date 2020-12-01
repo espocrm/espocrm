@@ -148,13 +148,11 @@ class GoogleMaps
 
         $GLOBALS['log']->debug("Template helper _googleMapsImage: URL: {$url}.");
 
-        $image = \Espo\Core\TemplateHelpers\GoogleMaps::getImage($url);
+        $image = \Espo\Classes\TemplateHelpers\GoogleMaps::getImage($url);
 
         if (!$image) {
             return null;
         }
-
-
 
         $filePath = tempnam(sys_get_temp_dir(), 'google_maps_image');
         file_put_contents($filePath, $image);
