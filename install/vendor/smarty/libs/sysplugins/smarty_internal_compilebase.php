@@ -72,30 +72,31 @@ abstract class Smarty_Internal_CompileBase
                 }
                 // named attribute
             } else {
-                $kv = each($mixed);
-                // option flag?
-                if (in_array($kv['key'], $this->option_flags)) {
-                    if (is_bool($kv['value'])) {
-                        $_indexed_attr[$kv['key']] = $kv['value'];
-                    } elseif (is_string($kv['value']) && in_array(trim($kv['value'], '\'"'), array('true', 'false'))) {
-                        if (trim($kv['value']) == 'true') {
-                            $_indexed_attr[$kv['key']] = true;
+                foreach ($mixed as $k => $v) {
+                    // option flag?
+                    if (in_array($k, $this->option_flags)) {
+                        if (is_bool($v)) {
+                            $_indexed_attr[$k] = $v;
+                        } elseif (is_string($v) && in_array(trim($v, '\'"'), array('true', 'false'))) {
+                            if (trim($v) == 'true') {
+                                $_indexed_attr[$k] = true;
+                            } else {
+                                $_indexed_attr[$k] = false;
+                            }
+                        } elseif (is_numeric($v) && in_array($v, array(0, 1))) {
+                            if ($v == 1) {
+                                $_indexed_attr[$k] = true;
+                            } else {
+                                $_indexed_attr[$k] = false;
+                            }
                         } else {
-                            $_indexed_attr[$kv['key']] = false;
+                            $compiler->trigger_template_error("illegal value of option flag \"{$k}\"", $compiler->lex->taglineno);
                         }
-                    } elseif (is_numeric($kv['value']) && in_array($kv['value'], array(0, 1))) {
-                        if ($kv['value'] == 1) {
-                            $_indexed_attr[$kv['key']] = true;
-                        } else {
-                            $_indexed_attr[$kv['key']] = false;
-                        }
+                        // must be named attribute
                     } else {
-                        $compiler->trigger_template_error("illegal value of option flag \"{$kv['key']}\"", $compiler->lex->taglineno);
+                        reset($mixed);
+                        $_indexed_attr[key($mixed)] = $mixed[key($mixed)];
                     }
-                    // must be named attribute
-                } else {
-                    reset($mixed);
-                    $_indexed_attr[key($mixed)] = $mixed[key($mixed)];
                 }
             }
         }

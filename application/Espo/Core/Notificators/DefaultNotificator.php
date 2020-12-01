@@ -123,4 +123,22 @@ class DefaultNotificator implements Notificator
 
         return $this->userIdEnabledMap[$userId];
     }
+
+    /**
+     * For backward compatibility.
+     * @todo Remove.
+     */
+    protected function getEntityManager()
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * For backward compatibility.
+     * @todo Remove.
+     */
+    protected function getUser()
+    {
+        return $this->user;
+    }
 }

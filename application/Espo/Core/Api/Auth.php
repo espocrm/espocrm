@@ -178,6 +178,8 @@ class Auth
         }
 
         if ($hasAuthData) {
+            $authResult = null;
+
             try {
                 $authResult = $this->authentication->login($username, $password, $request, $authenticationMethod);
             }

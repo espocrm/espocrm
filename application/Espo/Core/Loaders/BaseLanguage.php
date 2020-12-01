@@ -59,7 +59,7 @@ class BaseLanguage implements Loader
             $this->fileManager,
             $this->metadata,
             $this->dataCache,
-            $this->config->get('useCache')
+            $this->config->get('useCache') ?? false
         );
     }
 }
