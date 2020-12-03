@@ -90,7 +90,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             },
             'click .action': function (e) {
                 Espo.Utils.handleAction(this, e);
-            }
+            },
         },
 
         showMore: true,
@@ -521,7 +521,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     var collection = this.seedCollection.clone();
 
                     collection.total = item.total;
-                    //collection.url = this.scope;
+
                     collection.url = this.collection.url;
 
                     collection.where = this.collection.where;
