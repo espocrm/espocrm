@@ -381,10 +381,14 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                                 this.initSortable();
 
+                                this.moveModelBetweenGroupCollections(model, draggedGroupFrom, group);
+
                                 if (!orderDisabled) {
                                     this.reOrderGroup(group);
                                     this.storeGroupOrder(group);
                                 }
+
+                                this.rebuildGroupDataList();
                             }.bind(this))
                             .fail(function () {
                                 $list.sortable('cancel');
@@ -400,11 +404,12 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                         this.reOrderGroup(group);
                         this.storeGroupOrder(group);
+
+                        this.rebuildGroupDataList();
                     }
                 }.bind(this)
             });
         },
-
 
         storeGroupOrder: function (group) {
             Espo.Ajax.postRequest('KanbanOrder/action/store', {
@@ -450,6 +455,37 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                 groupCollection.add(model, {silent: true});
             });
+        },
+
+        rebuildGroupDataList: function () {
+            this.groupDataList.forEach(function (item) {
+                item.dataList = [];
+
+                for (var model of item.collection.models) {
+                    item.dataList.push({
+                        key: model.id,
+                        id: model.id,
+                    });
+                }
+            }, this);
+        },
+
+        moveModelBetweenGroupCollections: function (model, groupFrom, groupTo) {
+            var collection = this.getGroupCollection(groupFrom);
+
+            if (!collection) {
+                return;
+            }
+
+            collection.remove(model.id, {silent: true});
+
+            var collection = this.getGroupCollection(groupTo);
+
+            if (!collection) {
+                return;
+            }
+
+            collection.add(model, {silent: true});
         },
 
         handleAttributesOnGroupChange: function (model, attributes, group) {},
