@@ -428,72 +428,12 @@ class Htmlizer
                 $context = $args[count($args) - 1];
                 $value = $args[0];
 
-                $codeType = $context['hash']['type'] ?? 'CODE128';
-
-                $typeMap = [
-                    "CODE128" => 'C128',
-                    "CODE128A" => 'C128A',
-                    "CODE128B" => 'C128B',
-                    "CODE128C" => 'C128C',
-                    "EAN13" => 'EAN13',
-                    "EAN8" => 'EAN8',
-                    "EAN5" => 'EAN5',
-                    "EAN2" => 'EAN2',
-                    "UPC" => 'UPCA',
-                    "UPCE" => 'UPCE',
-                    "ITF14" => 'I25',
-                    "pharmacode" => 'PHARMA',
-                    "QRcode" => 'QRCODE,H',
-                ];
-
-                if ($codeType === 'QRcode') {
-                    $function = 'write2DBarcode';
-
-                    $params = [
-                        $value,
-                        $typeMap[$codeType] ?? null,
-                        '', '',
-                        $context['hash']['width'] ?? 40,
-                        $context['hash']['height'] ?? 40,
-                        [
-                            'border' => false,
-                            'vpadding' => $context['hash']['padding'] ?? 2,
-                            'hpadding' => $context['hash']['padding'] ?? 2,
-                            'fgcolor' => $context['hash']['color'] ?? [0,0,0],
-                            'bgcolor' => $context['hash']['bgcolor'] ?? false,
-                            'module_width' => 1,
-                            'module_height' => 1,
-                        ],
-                        'N',
-                    ];
-                } else {
-                    $function = 'write1DBarcode';
-
-                    $params = [
-                        $value,
-                        $typeMap[$codeType] ?? null,
-                        '', '',
-                        $context['hash']['width'] ?? 60,
-                        $context['hash']['height'] ?? 30,
-                        0.4,
-                        [
-                            'position' => 'S',
-                            'border' => false,
-                            'padding' => $context['hash']['padding'] ?? 0,
-                            'fgcolor' => $context['hash']['color'] ?? [0,0,0],
-                            'bgcolor' => $context['hash']['bgcolor'] ?? [255,255,255],
-                            'text' => $context['hash']['text'] ?? true,
-                            'font' => 'helvetica',
-                            'fontsize' => $context['hash']['fontsize'] ?? 14,
-                            'stretchtext' => 4,
-                        ],
-                        'N',
-                    ];
-                }
+                $params = $context['hash'];
+                $params['value'] = $value;
 
                 $paramsString = urlencode(json_encode($params));
 
-                return new LightnCandy\SafeString("<tcpdf method=\"{$function}\" params=\"{$paramsString}\" />");
+                return new LightnCandy\SafeString("<barcodeimage data=\"{$paramsString}\"/>");
             },
             'ifEqual' => function () {
                 $args = func_get_args();
