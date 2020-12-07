@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Utils\Log\Monolog;
 
-class Logger extends \Monolog\Logger
+use Monolog\Logger as MonologLogger;
+
+class Logger extends MonologLogger
 {
     protected $defaultLevelName = 'DEBUG';
 
@@ -41,7 +43,6 @@ class Logger extends \Monolog\Logger
 
         foreach ($handlers as $handler) {
             if ($handler->getLevel() > $level) {
-                $className = get_class($handler);
                 $handler->setLevel($level);
             }
         }
