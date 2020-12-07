@@ -31,11 +31,8 @@ namespace Espo\Core\Utils\Log\Monolog\Handler;
 
 use Monolog\Logger;
 
-class RotatingFileHandler extends StreamHandler
+class EspoRotatingFileHandler extends EspoFileHandler
 {
-    /**
-     * Date format as a part of filename.
-     */
     protected $dateFormat = 'Y-m-d';
 
     protected $filenameFormat = '{filename}-{date}';

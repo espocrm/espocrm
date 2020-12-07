@@ -35,8 +35,8 @@ use Espo\Core\{
 };
 
 use Espo\Core\Utils\Log\Monolog\Handler\{
-    RotatingFileHandler,
-    StreamHandler,
+    EspoRotatingFileHandler,
+    EspoFileHandler,
 };
 
 use Monolog\ErrorHandler as MonologErrorHandler;
@@ -63,9 +63,10 @@ class Log implements Loader
 
         if ($rotation) {
             $maxFileNumber = $config->get('logger.maxFileNumber', 30);
-            $handler = new RotatingFileHandler($path, $maxFileNumber, $levelCode);
+
+            $handler = new EspoRotatingFileHandler($path, $maxFileNumber, $levelCode);
         } else {
-            $handler = new StreamHandler($path, $levelCode);
+            $handler = new EspoFileHandler($path, $levelCode);
         }
 
         $log->pushHandler($handler);

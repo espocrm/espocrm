@@ -30,13 +30,14 @@
 namespace Espo\Core\Utils\Log\Monolog\Handler;
 
 use Monolog\Logger;
+use Monolog\Handler\StreamHandler as MonologStreamHandler;
 
 use Espo\Core\Utils\File\Manager as FileManager;
 
 use LogicException;
 use UnexpectedValueException;
 
-class StreamHandler extends \Monolog\Handler\StreamHandler
+class EspoFileHandler extends MonologStreamHandler
 {
     protected $fileManager;
 
