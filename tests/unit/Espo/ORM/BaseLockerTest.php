@@ -34,14 +34,14 @@ use Espo\ORM\{
     QueryComposer\MysqlQueryComposer,
     EntityFactory,
     Metadata,
-    Locker\MysqlLocker,
+    Locker\BaseLocker,
 };
 
 use PDO;
 use PDOException;
 use RuntimeException;
 
-class MysqlLockerTest extends \PHPUnit\Framework\TestCase
+class BaseLockerTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
@@ -55,7 +55,7 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
 
         $composer = new MysqlQueryComposer($this->pdo, $entityFactory, $metadata);
 
-        $this->locker = new MysqlLocker($this->pdo, $composer, $this->transactionManager);
+        $this->locker = new BaseLocker($this->pdo, $composer, $this->transactionManager);
     }
 
     public function testLockCommit()
@@ -65,15 +65,18 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
             ->method('exec')
             ->with('LOCK TABLES `account` WRITE');
 
+        $this->transactionManager
+            ->expects($this->at(0))
+            ->method('start');
+
         $this->pdo
             ->expects($this->at(1))
             ->method('exec')
             ->with('LOCK TABLES `contact` READ');
 
-        $this->pdo
-            ->expects($this->at(2))
-            ->method('exec')
-            ->with('UNLOCK TABLES');
+        $this->transactionManager
+            ->expects($this->at(1))
+            ->method('commit');
 
         $this->locker->lockExclusive('Account');
         $this->locker->lockShare('Contact');
@@ -92,15 +95,18 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
             ->method('exec')
             ->with('LOCK TABLES `account` WRITE');
 
+        $this->transactionManager
+            ->expects($this->at(0))
+            ->method('start');
+
         $this->pdo
             ->expects($this->at(1))
             ->method('exec')
             ->with('LOCK TABLES `contact` READ');
 
-        $this->pdo
-            ->expects($this->at(2))
-            ->method('exec')
-            ->with('UNLOCK TABLES');
+        $this->transactionManager
+            ->expects($this->at(1))
+            ->method('rollback');
 
         $this->locker->lockExclusive('Account');
         $this->locker->lockShare('Contact');
