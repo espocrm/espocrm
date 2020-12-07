@@ -156,5 +156,6 @@ return [
     'auth2FAMethodList' => ['Totp'],
     'personNameFormat' => 'firstLast',
     'newNotificationCountInTitle' => false,
+    'pdfEngine' => 'Tcpdf',
     'isInstalled' => false,
 ];
