@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Utils\Log\Monolog\Logger;
+use Monolog\Logger as MonologLogger;
 
-class Log extends Logger
+class Log extends MonologLogger
 {
 
 }
