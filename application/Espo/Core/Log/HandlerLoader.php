@@ -27,28 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Log;
 
-use Espo\Core\{
-    Log\LogLoader,
-    Utils\Log as LogService,
+use Monolog\{
+    Handler\HandlerInterface,
 };
 
-class Log implements Loader
+interface HandlerLoader
 {
-    protected $logLoader;
-
-    public function __construct(LogLoader $logLoader)
-    {
-        $this->logLoader = $logLoader;
-    }
-
-    public function load() : LogService
-    {
-        $log = $this->logLoader->load();
-
-        $GLOBALS['log'] = $log;
-
-        return $log;
-    }
+    public function load(array $params) : HandlerInterface;
 }

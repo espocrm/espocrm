@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Log\Monolog\Handler;
+namespace Espo\Core\Log\Handler;
 
 use Monolog\Logger;
 
@@ -41,7 +41,7 @@ class EspoRotatingFileHandler extends EspoFileHandler
 
     protected $maxFiles;
 
-    public function __construct($filename, $maxFiles = 0, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(string $filename, int $maxFiles = 0, $level = Logger::DEBUG, bool $bubble = true)
     {
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
@@ -51,12 +51,6 @@ class EspoRotatingFileHandler extends EspoFileHandler
         $this->rotate();
     }
 
-    public function setFilenameFormat($filenameFormat, $dateFormat)
-    {
-        $this->filenameFormat = $filenameFormat;
-        $this->dateFormat = $dateFormat;
-    }
-
     protected function rotate()
     {
         if (0 === $this->maxFiles) {
@@ -64,18 +58,17 @@ class EspoRotatingFileHandler extends EspoFileHandler
         }
 
         $filePattern = $this->getFilePattern();
-        $dirPath = $this->getFileManager()->getDirName($this->filename);
-        $logFiles = $this->getFileManager()->getFileList($dirPath, false, $filePattern, true);
+        $dirPath = $this->fileManager->getDirName($this->filename);
+        $logFiles = $this->fileManager->getFileList($dirPath, false, $filePattern, true);
 
         if (!empty($logFiles) && count($logFiles) > $this->maxFiles) {
-
             usort($logFiles, function ($a, $b) {
                 return strcmp($b, $a);
             });
 
             $logFilesToBeRemoved = array_slice($logFiles, $this->maxFiles);
 
-            $this->getFileManager()->removeFile($logFilesToBeRemoved, $dirPath);
+            $this->fileManager->removeFile($logFilesToBeRemoved, $dirPath);
         }
     }
 

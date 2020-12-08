@@ -27,28 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Log;
 
 use Espo\Core\{
-    Log\LogLoader,
-    Utils\Log as LogService,
+    Log\Handler\EspoRotatingFileHandler,
 };
 
-class Log implements Loader
+use Monolog\{
+    Logger,
+    Handler\HandlerInterface,
+};
+
+class EspoRotatingFileHandlerLoader implements HandlerLoader
 {
-    protected $logLoader;
-
-    public function __construct(LogLoader $logLoader)
+    public function load(array $params) : HandlerInterface
     {
-        $this->logLoader = $logLoader;
-    }
+        $filename = $params['filename'] ?? 'data/logs/espo.log';
+        $level = $params['level'] ?? Logger::NOTICE;
 
-    public function load() : LogService
-    {
-        $log = $this->logLoader->load();
-
-        $GLOBALS['log'] = $log;
-
-        return $log;
+        return new EspoRotatingFileHandler($filename, 0, $level);
     }
 }

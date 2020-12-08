@@ -27,10 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Log\Monolog\Handler;
+namespace Espo\Core\Log\Handler;
 
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler as MonologStreamHandler;
+use Monolog\{
+    Logger,
+    Handler\StreamHandler as MonologStreamHandler,
+};
 
 use Espo\Core\Utils\File\Manager as FileManager;
 
@@ -43,43 +45,38 @@ class EspoFileHandler extends MonologStreamHandler
 
     protected $maxErrorMessageLength = 5000;
 
-    public function __construct($url, $level = Logger::DEBUG, $bubble = true)
+    public function __construct(string $filename, $level = Logger::DEBUG, bool $bubble = true)
     {
-        parent::__construct($url, $level, $bubble);
+        parent::__construct($filename, $level, $bubble);
 
         $this->fileManager = new FileManager();
     }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function write(array $record)
+    protected function write(array $record): void
     {
         if (!$this->url) {
             throw new LogicException(
-                'Missing logger path, the stream can not be opened. Please check logger options in the data/config.php.'
+                'Missing logger path. Check logger params in the data/config.php.'
             );
         }
 
         $this->errorMessage = null;
 
         if (!is_writable($this->url)) {
-            $this->getFileManager()->checkCreateFile($this->url);
+            $this->fileManager->checkCreateFile($this->url);
         }
 
         if (is_writable($this->url)) {
             set_error_handler([$this, 'customErrorHandler']);
 
-            $this->getFileManager()->appendContents($this->url, $this->pruneMessage($record));
+            $this->fileManager->appendContents($this->url, $this->pruneMessage($record));
 
             restore_error_handler();
         }
 
         if (isset($this->errorMessage)) {
             throw new UnexpectedValueException(
-                sprintf('The stream or file "%s" could not be opened: '.$this->errorMessage, $this->url)
+                sprintf('File "%s" could not be opened: ' . $this->errorMessage, $this->url)
             );
         }
     }
