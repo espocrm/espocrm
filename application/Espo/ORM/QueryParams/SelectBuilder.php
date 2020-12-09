@@ -251,6 +251,4 @@ class SelectBuilder implements Builder
 
         return $this;
     }
-
-
 }

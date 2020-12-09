@@ -52,5 +52,4 @@ trait BaseBuilderTrait
 
         $this->params = $query->getRawParams();
     }
-
 }
