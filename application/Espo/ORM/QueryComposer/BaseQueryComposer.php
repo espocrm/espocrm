@@ -1085,7 +1085,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function convertComplexExpression(
-        ?Entity $entity = null, string $attribute, bool $distinct = false, array &$params
+        ?Entity $entity = null, string $attribute, bool $distinct, array &$params
     ) : string {
         $function = null;
 
