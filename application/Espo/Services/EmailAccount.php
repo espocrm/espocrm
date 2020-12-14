@@ -540,7 +540,7 @@ class EmailAccount extends Record implements
         $message,
         $teamIdList,
         $userId,
-        $userIdList = [],
+        $userIdList,
         $filterCollection,
         $fetchOnlyHeader,
         $folderData = null
