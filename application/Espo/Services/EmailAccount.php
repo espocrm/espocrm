@@ -442,7 +442,17 @@ class EmailAccount extends Record implements
                         $flags = $message->getFlags();
                     }
 
-                    $email = $this->importMessage($importer, $emailAccount, $message, $teamIdList, null, [$userId], $filterCollection, $fetchOnlyHeader, $folderData);
+                    $email = $this->importMessage(
+                        $importer,
+                        $emailAccount,
+                        $message,
+                        $teamIdList,
+                        null,
+                        [$userId],
+                        $filterCollection,
+                        $fetchOnlyHeader,
+                        $folderData
+                    );
 
                     if ($emailAccount->get('keepFetchedEmailsUnread')) {
                         if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
@@ -529,7 +539,7 @@ class EmailAccount extends Record implements
         $emailAccount,
         $message,
         $teamIdList,
-        $userId = null,
+        $userId,
         $userIdList = [],
         $filterCollection,
         $fetchOnlyHeader,
