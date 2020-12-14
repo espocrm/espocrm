@@ -125,18 +125,23 @@ class ControllerManager
 
         $params = $method->getParameters();
 
-        if (count($params) > 0) {
-            $firstParamClass = $params[0]->getClass();
+        if (count($params) === 0) {
+            return false;
+        }
 
-            if (
-                $firstParamClass
-                &&
-                (
-                    $firstParamClass->getName() === Request::class || $firstParamClass->isSubclassOf(Request::class)
-                )
-            ) {
-                return true;
-            }
+        $type = $params[0]->getType();
+
+        if (!$type || $type->isBuiltin()) {
+            return false;
+        }
+
+        $firstParamClass = new ReflectionClass($type->getName());
+
+        if (
+            $firstParamClass->getName() === Request::class ||
+            $firstParamClass->isSubclassOf(Request::class)
+        ) {
+            return true;
         }
 
         return false;
