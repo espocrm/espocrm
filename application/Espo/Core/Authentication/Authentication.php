@@ -84,7 +84,6 @@ class Authentication
     protected $auth2FAFactory;
 
     public function __construct(
-        bool $allowAnyAccess = false,
         ApplicationUser $applicationUser,
         ApplicationState $applicationState,
         Config $config,
@@ -92,7 +91,8 @@ class Authentication
         EntityManagerProxy $entityManagerProxy,
         LoginFactory $authLoginFactory,
         TwoFAFactory $auth2FAFactory,
-        AuthTokenManager $authTokenManager
+        AuthTokenManager $authTokenManager,
+        bool $allowAnyAccess = false
     ) {
         $this->allowAnyAccess = $allowAnyAccess;
 
