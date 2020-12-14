@@ -1349,7 +1349,7 @@ class Activities implements
         return Select::fromRaw($selectParams);
     }
 
-    protected function getActivitiesSelectParams(Entity $entity, $scope, array $statusList = [], $isHistory)
+    protected function getActivitiesSelectParams(Entity $entity, $scope, array $statusList, $isHistory)
     {
         $selectManager = $this->getSelectManagerFactory()->create($scope);
 
