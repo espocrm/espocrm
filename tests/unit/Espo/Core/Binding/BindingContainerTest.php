@@ -39,7 +39,7 @@ use Espo\Core\{
 
 use ReflectionClass;
 use ReflectionParameter;
-use ReflectionType;
+use ReflectionNamedType;
 
 class BindingContainerTest extends \PHPUnit\Framework\TestCase
 {
@@ -75,16 +75,31 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $class = null;
 
+        $type = $this->getMockBuilder(ReflectionNamedType::class)->disableOriginalConstructor()->getMock();
+
         if ($className) {
             $class = $this->createClassMock($className);
 
-            $type = $this->getMockBuilder(ReflectionType::class)->disableOriginalConstructor()->getMock();
-
-            $param
+            $type
                 ->expects($this->any())
-                ->method('getType')
-                ->willReturn($type);
+                ->method('isBuiltin')
+                ->willReturn(false);
+
+            $type
+                ->expects($this->any())
+                ->method('getName')
+                ->willReturn($className);
         }
+
+        $type
+            ->expects($this->any())
+            ->method('isBuiltin')
+            ->willReturn(true);
+
+        $param
+            ->expects($this->any())
+            ->method('getType')
+            ->willReturn($type);
 
         $param
             ->expects($this->any())

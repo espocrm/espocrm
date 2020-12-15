@@ -364,8 +364,15 @@ class InboundEmail extends RecordService implements
                         }
 
                         $email = $this->importMessage(
-                            $importer, $emailAccount, $message, $teamIdList, $userId, $userIdList,
-                            $filterCollection, $fetchOnlyHeader, null
+                            $importer,
+                            $emailAccount,
+                            $message,
+                            $teamIdList,
+                            $userId,
+                            $userIdList,
+                            $filterCollection,
+                            $fetchOnlyHeader,
+                            null
                         );
 
                         if ($emailAccount->get('keepFetchedEmailsUnread')) {
@@ -481,8 +488,15 @@ class InboundEmail extends RecordService implements
     }
 
     protected function importMessage(
-        $importer, $emailAccount, $message, $teamIdList, $userId = null, $userIdList = [],
-        $filterCollection, $fetchOnlyHeader, $folderData = null
+        $importer,
+        $emailAccount,
+        $message,
+        $teamIdList,
+        $userId,
+        $userIdList,
+        $filterCollection,
+        $fetchOnlyHeader,
+        $folderData = null
     ) {
         $email = null;
 

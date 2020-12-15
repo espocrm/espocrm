@@ -74,17 +74,19 @@ class BindingContainer
             return $this->data->getContext($className, $key);
         }
 
-        $dependencyClass = null;
+        $dependencyClassName = null;
 
-        if ($param->getType()) {
-            $dependencyClass = $param->getClass();
+        $type = $param->getType();
+
+        if ($type && !$type->isBuiltin()) {
+            $dependencyClassName = $type->getName();
         }
 
         $key = null;
         $keyWithParamName = null;
 
-        if ($dependencyClass) {
-            $key = $dependencyClass->getName();
+        if ($dependencyClassName) {
+            $key = $dependencyClassName;
 
             if ($key) {
                 $keyWithParamName = $key . ' $' . $param->getName();

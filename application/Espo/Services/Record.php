@@ -2205,7 +2205,7 @@ class Record implements Crud,
         }
     }
 
-    public function merge($id, array $sourceIdList = [], $attributes)
+    public function merge(string $id, array $sourceIdList, StdClass $attributes)
     {
         if (empty($id)) {
             throw new Error("No ID passed.");
