@@ -12,7 +12,7 @@
         },
         "userId": {
             "type": "varchar",
-            "maxLength": 11,
+            "maxLength": 24,
             "index": true
         }
     }

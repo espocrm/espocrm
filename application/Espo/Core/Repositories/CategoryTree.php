@@ -49,6 +49,9 @@ class CategoryTree extends Database
                     ->select()
                     ->from($pathEntityType)
                     ->select(['ascendorId', "'" . $entity->id . "'"])
+                    ->where([
+                        'descendorId' => $parentId,
+                    ])
                     ->build();
 
                 $subSelect2 = $em->getQueryBuilder()
