@@ -43,15 +43,19 @@ class Job implements ApplicationRunner
     use Cli;
     use SetupSystemUser;
 
+    protected $params;
+
     protected $cronManager;
 
-    public function __construct(CronManager $cronManager)
+    public function __construct(CronManager $cronManager, StdClass $params)
     {
         $this->cronManager = $cronManager;
+
+        $this->params = $params;
     }
 
-    public function run(StdClass $params)
+    public function run()
     {
-        $this->cronManager->runJobById($params->id);
+        $this->cronManager->runJobById($this->params->id);
     }
 }
