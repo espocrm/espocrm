@@ -90,8 +90,6 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->auth(null, null, null, 'ApiKey', $request);
 
-        $data = json_decode();
-
         $app = $this->createApplication();
 
         $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
