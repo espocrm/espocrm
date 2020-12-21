@@ -107,7 +107,7 @@ class Cleanup implements Job
             $o1 = $a['order'] ?? 0;
             $o2 = $b['order'] ?? 0;
 
-            return $o1 > $o2;
+            return $o1 <=> $o2;
         });
 
         $injectableFactory = $this->injectableFactory;
