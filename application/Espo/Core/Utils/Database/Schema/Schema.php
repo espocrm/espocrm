@@ -41,7 +41,7 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     ORM\EntityManager,
     Utils\File\ClassParser,
-    Utils\Metadata\OrmMetadata,
+    Utils\Metadata\OrmMetadataData,
     Utils\Util,
     Utils\Database\Helper,
     Utils\Database\DBAL\Schema\Comparator,
@@ -63,6 +63,8 @@ class Schema
     private $converter;
 
     private $databaseHelper;
+
+    protected $ormMetadataData;
 
     protected $fieldTypePaths = [
         'application/Espo/Core/Utils/Database/DBAL/FieldTypes',
@@ -92,7 +94,7 @@ class Schema
         FileManager $fileManager,
         EntityManager $entityManager,
         ClassParser $classParser,
-        OrmMetadata $ormMetadata
+        OrmMetadataData $ormMetadataData
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
@@ -110,7 +112,7 @@ class Schema
 
         $this->schemaConverter = new Converter($this->metadata, $this->fileManager, $this, $this->config);
 
-        $this->ormMetadata = $ormMetadata;
+        $this->ormMetadataData = $ormMetadataData;
     }
 
     protected function getConfig()
@@ -203,7 +205,7 @@ class Schema
 
         $currentSchema = $this->getCurrentSchema();
 
-        $metadataSchema = $this->schemaConverter->process($this->ormMetadata->getData(), $entityList);
+        $metadataSchema = $this->schemaConverter->process($this->ormMetadataData->getData(), $entityList);
 
         $this->initRebuildActions($currentSchema, $metadataSchema);
 

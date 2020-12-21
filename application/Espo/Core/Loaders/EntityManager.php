@@ -31,25 +31,32 @@ namespace Espo\Core\Loaders;
 
 use Espo\Core\{
     Utils\Config,
-    Utils\Metadata\OrmMetadata,
     InjectableFactory,
     ORM\EntityManager as EntityManagerService,
     ORM\RepositoryFactory,
     ORM\EntityFactory,
     ORM\Helper,
+    ORM\MetadataDataProvider,
+};
+
+use Espo\{
+    ORM\Metadata as OrmMetadata,
 };
 
 class EntityManager implements Loader
 {
     protected $config;
     protected $injectableFactory;
-    protected $ormMetadata;
+    protected $metadataDataProvider;
 
-    public function __construct(Config $config, InjectableFactory $injectableFactory, OrmMetadata $ormMetadata)
-    {
+    public function __construct(
+        Config $config,
+        InjectableFactory $injectableFactory,
+        MetadataDataProvider $metadataDataProvider
+    ) {
         $this->config = $config;
         $this->injectableFactory = $injectableFactory;
-        $this->ormMetadata = $ormMetadata;
+        $this->metadataDataProvider = $metadataDataProvider;
     }
 
     public function load() : EntityManagerService
@@ -65,7 +72,6 @@ class EntityManager implements Loader
         $config = $this->config;
 
         $params = [
-            'metadata' => $this->ormMetadata->getData(),
             'host' => $config->get('database.host'),
             'port' => $config->get('database.port'),
             'dbname' => $config->get('database.dbname'),
@@ -81,8 +87,11 @@ class EntityManager implements Loader
             'sslCipher' => $config->get('database.sslCipher'),
         ];
 
+        $metadata = new OrmMetadata($this->metadataDataProvider);
+
         $entityManager = $this->injectableFactory->createWith(EntityManagerService::class, [
             'params' => $params,
+            'metadata' => $metadata,
             'repositoryFactory' => $repositoryFactory,
             'entityFactory' => $entityFactory,
             'helper' => $helper,

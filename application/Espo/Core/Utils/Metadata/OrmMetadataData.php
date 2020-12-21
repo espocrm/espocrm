@@ -39,7 +39,7 @@ use Espo\Core\{
     Exceptions\Error,
 };
 
-class OrmMetadata
+class OrmMetadataData
 {
     protected $data = null;
 

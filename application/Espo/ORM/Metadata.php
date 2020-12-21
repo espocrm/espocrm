@@ -32,20 +32,27 @@ namespace Espo\ORM;
 use InvalidArgumentException;
 
 /**
- * Metadata of all entities.
+ * Metadata.
  */
 class Metadata
 {
     protected $data;
 
-    public function __construct(array $data = [])
+    protected $dataProvider;
+
+    public function __construct(MetadataDataProvider $dataProvider)
     {
-        $this->data = $data;
+        $this->data = $dataProvider->get();
+
+        $this->dataProvider = $dataProvider;
     }
 
-    public function setData(array $data)
+    /**
+     * Update data from the data provider.
+     */
+    public function updateData()
     {
-        $this->data = $data;
+        $this->data = $this->dataProvider->get();
     }
 
     /**

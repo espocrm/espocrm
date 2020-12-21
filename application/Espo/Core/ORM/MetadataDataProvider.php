@@ -29,35 +29,20 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\Entities\User;
-
-use Espo\Core\{
-    Utils\Util,
+use Espo\{
+    Core\Utils\Metadata\OrmMetadataData,
+    ORM\MetadataDataProvider as MetadataDataProviderInterface,
 };
 
-use Espo\ORM\{
-    EntityManager as BaseEntityManager,
-    Metadata,
-};
-
-class EntityManager extends BaseEntityManager
+class MetadataDataProvider implements MetadataDataProviderInterface
 {
-    private $helper;
-
-    public function __construct(
-        array $params,
-        Metadata $metadata,
-        RepositoryFactory $repositoryFactory,
-        EntityFactory $entityFactory,
-        Helper $helper
-    ) {
-        parent::__construct($params, $metadata, $repositoryFactory, $entityFactory);
-
-        $this->helper = $helper;
+    public function __construct(OrmMetadataData $ormMetadataData)
+    {
+        $this->ormMetadataData = $ormMetadataData;
     }
 
-    public function getHelper() : Helper
+    public function get() : array
     {
-        return $this->helper;
+        return $this->ormMetadataData->getData();
     }
 }

@@ -49,6 +49,11 @@ class DefaultBinding
         );
 
         $binder->bindService(
+            'Espo\\ORM\\Metadata',
+            'ormMetadata'
+        );
+
+        $binder->bindService(
             'Espo\\Core\\ORM\\EntityManager',
             'entityManager'
         );

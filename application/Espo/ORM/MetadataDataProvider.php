@@ -27,37 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ORM;
+namespace Espo\ORM;
 
-use Espo\Entities\User;
-
-use Espo\Core\{
-    Utils\Util,
-};
-
-use Espo\ORM\{
-    EntityManager as BaseEntityManager,
-    Metadata,
-};
-
-class EntityManager extends BaseEntityManager
+/**
+ * Provides data for metadata.
+ */
+interface MetadataDataProvider
 {
-    private $helper;
-
-    public function __construct(
-        array $params,
-        Metadata $metadata,
-        RepositoryFactory $repositoryFactory,
-        EntityFactory $entityFactory,
-        Helper $helper
-    ) {
-        parent::__construct($params, $metadata, $repositoryFactory, $entityFactory);
-
-        $this->helper = $helper;
-    }
-
-    public function getHelper() : Helper
-    {
-        return $this->helper;
-    }
+    public function get() : array;
 }

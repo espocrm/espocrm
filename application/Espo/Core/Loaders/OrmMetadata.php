@@ -27,37 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ORM;
+namespace Espo\Core\Loaders;
 
-use Espo\Entities\User;
-
-use Espo\Core\{
-    Utils\Util,
+use Espo\{
+    ORM\Metadata,
+    ORM\EntityManager,
 };
 
-use Espo\ORM\{
-    EntityManager as BaseEntityManager,
-    Metadata,
-};
-
-class EntityManager extends BaseEntityManager
+class OrmMetadata implements Loader
 {
-    private $helper;
+    protected $entityManager;
 
-    public function __construct(
-        array $params,
-        Metadata $metadata,
-        RepositoryFactory $repositoryFactory,
-        EntityFactory $entityFactory,
-        Helper $helper
-    ) {
-        parent::__construct($params, $metadata, $repositoryFactory, $entityFactory);
-
-        $this->helper = $helper;
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
     }
 
-    public function getHelper() : Helper
+    public function load() : Metadata
     {
-        return $this->helper;
+        return $this->entityManager->getMetadata();
     }
 }
