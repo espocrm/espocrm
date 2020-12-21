@@ -5237,16 +5237,19 @@ Flotr.addPlugin('hit', {
 
       // EspoCRM fix start
       if (n.mouse.autoPositionHorizontal) {
+
         if (n.xaxis.d2p(n.x) > this.plotWidth * 2 / 3) {
           p = 'w';
         } else {
           p = 'e';
         }
 
-        if (n.x < 0 && n.xaxis.d2p(n.x) < this.plotWidth * 1 / 4) {
-          p = 'e';
-        } else {
-          p = 'w';
+        if (n.x < 0) {
+          if (n.xaxis.d2p(n.x) < this.plotWidth * 1 / 4) {
+            p = 'e';
+          } else {
+            p = 'w';
+          }
         }
       }
       if (n.mouse.autoPositionVertical) {

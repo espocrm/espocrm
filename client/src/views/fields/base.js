@@ -257,6 +257,8 @@ define('views/fields/base', 'view', function (Dep) {
                 this.events = {};
             }
 
+            this.validations = Espo.Utils.clone(this.validations);
+
             this.defs = this.options.defs || {};
             this.name = this.options.name || this.defs.name;
             this.params = this.options.params || this.defs.params || {};
