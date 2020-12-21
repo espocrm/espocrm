@@ -238,4 +238,30 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($expected, $raw['whereClause']);
     }
+
+    public function testLeftJoin()
+    {
+        $params = $this->builder
+            ->from('Test')
+            ->leftJoin('link1')
+            ->leftJoin('link1')
+            ->leftJoin('link2')
+            ->build()
+            ->getRawParams();
+
+        $this->assertEquals(['link1', 'link2'], $params['leftJoins']);
+    }
+
+    public function testJoin()
+    {
+        $params = $this->builder
+            ->from('Test')
+            ->join('link1')
+            ->join('link1')
+            ->join('link2')
+            ->build()
+            ->getRawParams();
+
+        $this->assertEquals(['link1', 'link2'], $params['joins']);
+    }
 }

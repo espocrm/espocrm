@@ -23,6 +23,7 @@
         "laminas/laminas-ldap": "2.*",
         "laminas/laminas-mime": "^2.7.1",
         "laminas/laminas-stdlib": "^3.1",
+        "laminas/laminas-servicemanager": "^3.3.1",
         "monolog/monolog": "2.*",
         "yzalis/identicon": "*",
         "zordius/lightncandy": "1.*",

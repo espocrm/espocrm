@@ -60,6 +60,8 @@ use Exception;
  */
 class EntryPoint implements ApplicationRunner
 {
+    protected $params;
+
     protected $injectableFactory;
     protected $entryPointManager;
     protected $entityManager;
@@ -73,7 +75,8 @@ class EntryPoint implements ApplicationRunner
         EntityManager $entityManager,
         ClientManager $clientManager,
         ApplicationUser $applicationUser,
-        AuthTokenManager $authTokenManager
+        AuthTokenManager $authTokenManager,
+        ?StdClass $params = null
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->entryPointManager = $entryPointManager;
@@ -81,16 +84,16 @@ class EntryPoint implements ApplicationRunner
         $this->clientManager = $clientManager;
         $this->applicationUser = $applicationUser;
         $this->authTokenManager = $authTokenManager;
+
+        $this->params = $params ?? (object) [];
     }
 
-    public function run(?StdClass $params = null)
+    public function run()
     {
-        $params = $params ?? (object) [];
+        $entryPoint = $this->params->entryPoint ?? $_GET['entryPoint'];
 
-        $entryPoint = $params->entryPoint ?? $_GET['entryPoint'];
-
-        $final = $params->final ?? false;
-        $data = $params->data ?? null;
+        $final = $this->params->final ?? false;
+        $data = $this->params->data ?? null;
 
         if (!$entryPoint) {
             throw new Error();
