@@ -35,6 +35,7 @@ use Espo\ORM\{
     QueryComposer\MysqlQueryComposer as QueryComposer,
     QueryBuilder,
     EntityManager,
+    MetadataDataProvider,
 };
 
 use Espo\ORM\QueryParams\{
@@ -92,7 +93,14 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
 
-        $this->metadata = new Metadata($ormMetadata);
+        $metadataDataProvider = $this->createMock(MetadataDataProvider::class);
+
+        $metadataDataProvider
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($ormMetadata);
+
+        $this->metadata = new Metadata($metadataDataProvider);
 
         $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
 

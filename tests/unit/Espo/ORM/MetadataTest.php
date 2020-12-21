@@ -31,6 +31,7 @@ namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\{
     Metadata,
+    MetadataDataProvider,
 };
 
 class MetadataTest extends \PHPUnit\Framework\TestCase
@@ -42,7 +43,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testHas1()
     {
-        $metadata = new Metadata([
+        $metadata = $this->createMetadata([
             'Test' => [],
         ]);
 
@@ -51,7 +52,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testHas2()
     {
-        $metadata = new Metadata([
+        $metadata = $this->createMetadata([
             'Test' => [],
         ]);
 
@@ -60,7 +61,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testGet1()
     {
-        $metadata = new Metadata([
+        $metadata = $this->createMetadata([
             'Test' => [
                 'indexes' => [],
             ],
@@ -71,7 +72,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testGet2()
     {
-        $metadata = new Metadata([
+        $metadata = $this->createMetadata([
             'Test' => [
                 'relations' => [
                     'test' => [
@@ -86,7 +87,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testGet3()
     {
-        $metadata = new Metadata([
+        $metadata = $this->createMetadata([
             'Test' => [
                 'relations' => [
                     'test' => [
@@ -97,5 +98,17 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $this->assertEquals('hasMany', $metadata->get('Test', ['relations', 'test', 'type']));
+    }
+
+    protected function createMetadata(array $data) : Metadata
+    {
+        $metadataDataProvider = $this->createMock(MetadataDataProvider::class);
+
+        $metadataDataProvider
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($data);
+
+        return new Metadata($metadataDataProvider);
     }
 }
