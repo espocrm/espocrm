@@ -49,8 +49,6 @@ class Config
 
     private $cacheTimestamp = 'cacheTimestamp';
 
-    protected $adminItems = [];
-
     protected $associativeArrayAttributeList = [
         'currencyRates',
         'database',
