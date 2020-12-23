@@ -30,73 +30,21 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
-    Utils\Config,
-    InjectableFactory,
+    ORM\EntityManagerFactory,
     ORM\EntityManager as EntityManagerService,
-    ORM\RepositoryFactory,
-    ORM\EntityFactory,
-    ORM\Helper,
-    ORM\MetadataDataProvider,
-};
-
-use Espo\{
-    ORM\Metadata as OrmMetadata,
 };
 
 class EntityManager implements Loader
 {
-    protected $config;
-    protected $injectableFactory;
-    protected $metadataDataProvider;
+    protected $entityManagerFactory;
 
-    public function __construct(
-        Config $config,
-        InjectableFactory $injectableFactory,
-        MetadataDataProvider $metadataDataProvider
-    ) {
-        $this->config = $config;
-        $this->injectableFactory = $injectableFactory;
-        $this->metadataDataProvider = $metadataDataProvider;
+    public function __construct(EntityManagerFactory $entityManagerFactory)
+    {
+        $this->entityManagerFactory = $entityManagerFactory;
     }
 
     public function load() : EntityManagerService
     {
-        $entityFactory = $this->injectableFactory->create(EntityFactory::class);
-
-        $repositoryFactory = $this->injectableFactory->createWith(RepositoryFactory::class, [
-            'entityFactory' => $entityFactory,
-        ]);
-
-        $helper = $this->injectableFactory->create(Helper::class);
-
-        $config = $this->config;
-
-        $params = [
-            'host' => $config->get('database.host'),
-            'port' => $config->get('database.port'),
-            'dbname' => $config->get('database.dbname'),
-            'user' => $config->get('database.user'),
-            'charset' => $config->get('database.charset', 'utf8'),
-            'password' => $config->get('database.password'),
-            'driver' => $config->get('database.driver'),
-            'platform' => $config->get('database.platform'),
-            'sslCA' => $config->get('database.sslCA'),
-            'sslCert' => $config->get('database.sslCert'),
-            'sslKey' => $config->get('database.sslKey'),
-            'sslCAPath' => $config->get('database.sslCAPath'),
-            'sslCipher' => $config->get('database.sslCipher'),
-        ];
-
-        $metadata = new OrmMetadata($this->metadataDataProvider);
-
-        $entityManager = $this->injectableFactory->createWith(EntityManagerService::class, [
-            'params' => $params,
-            'metadata' => $metadata,
-            'repositoryFactory' => $repositoryFactory,
-            'entityFactory' => $entityFactory,
-            'helper' => $helper,
-        ]);
-
-        return $entityManager;
+        return $this->entityManagerFactory->create();
     }
 }
