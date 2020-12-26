@@ -22,6 +22,11 @@
             "default": false,
             "tooltip": true
         },
+        "insertField": {
+            "type": "base",
+            "notStorable": true,
+            "view": "views/email-template/fields/insert-field"
+        },
         "attachments": {
             "type": "attachmentMultiple"
         },
