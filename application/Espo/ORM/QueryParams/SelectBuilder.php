@@ -30,6 +30,7 @@
 namespace Espo\ORM\QueryParams;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 class SelectBuilder implements Builder
 {
