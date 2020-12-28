@@ -30,7 +30,6 @@
 namespace Espo\Tools\Pdf\Tcpdf;
 
 use Espo\Core\{
-    //Exceptions\Error,
     Utils\Config,
     Htmlizer\Factory as HtmlizerFactory,
     Pdf\Tcpdf,

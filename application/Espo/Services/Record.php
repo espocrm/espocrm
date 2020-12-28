@@ -710,7 +710,7 @@ class Record implements Crud,
         }
     }
 
-    protected function processValidationField(Entity $entity, $field, $data)
+    protected function processValidationField(Entity $entity, string $field, $data)
     {
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, 'type');
 
@@ -728,10 +728,11 @@ class Record implements Crud,
             }
 
             $skipPropertyName = 'validate' . ucfirst($type) . 'SkipFieldList';
+
             if (property_exists($this, $skipPropertyName)) {
                 $skipList = $this->$skipPropertyName;
 
-                if (in_array($type, $skipList)) {
+                if (in_array($field, $skipList)) {
                     continue;
                 }
             }
@@ -2205,7 +2206,7 @@ class Record implements Crud,
         }
     }
 
-    public function merge($id, array $sourceIdList = [], $attributes)
+    public function merge(string $id, array $sourceIdList, StdClass $attributes)
     {
         if (empty($id)) {
             throw new Error("No ID passed.");

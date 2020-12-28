@@ -14,7 +14,6 @@
         "ext-xml": "*",
         "ext-curl": "*",
         "ext-exif": "*",
-        "doctrine/dbal": "2.*",
         "psr/log": "1.1.*",
         "slim/slim": "^4.5",
         "slim/psr7": "^1",
@@ -23,12 +22,12 @@
         "laminas/laminas-ldap": "2.*",
         "laminas/laminas-mime": "^2.7.1",
         "laminas/laminas-stdlib": "^3.1",
-        "monolog/monolog": "1.*",
+        "laminas/laminas-servicemanager": "^3.3.1",
+        "monolog/monolog": "2.*",
         "yzalis/identicon": "*",
         "zordius/lightncandy": "1.*",
         "composer/semver": "^3",
         "tecnickcom/tcpdf": "^6.3",
-        "zbateson/mail-mime-parser": "1.2.*",
         "phpoffice/phpspreadsheet": "^1.10",
         "spatie/async": "dev-for-espocrm",
         "symfony/process": "4.1.7",
@@ -38,7 +37,9 @@
         "guzzlehttp/psr7": "^1.6",
         "michelf/php-markdown": "^1.8",
         "robthree/twofactorauth": "^1.6",
-        "nesbot/carbon": "^2.26"
+        "nesbot/carbon": "^2.26",
+        "zbateson/mail-mime-parser": "1.3.*",
+        "doctrine/dbal": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8"

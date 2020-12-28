@@ -155,7 +155,7 @@ class Client
         return $this->execute($url, $params, $httpMethod, $httpHeaders);
     }
 
-    private function execute($url, $params = null, $httpMethod, array $httpHeaders = [])
+    private function execute($url, $params, $httpMethod, array $httpHeaders = [])
     {
         $curlOptions = array(
             CURLOPT_RETURNTRANSFER => true,

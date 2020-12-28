@@ -82,11 +82,15 @@ class EntityManager
         'mysqli' => 'Mysql',
     ];
 
-    public function __construct(array $params, RepositoryFactory $repositoryFactory, EntityFactory $entityFactory)
-    {
+    public function __construct(
+        array $params,
+        Metadata $metadata,
+        RepositoryFactory $repositoryFactory,
+        EntityFactory $entityFactory
+    ) {
         $this->params = $params;
 
-        $this->metadata = new Metadata();
+        $this->metadata = $metadata;
 
         if (empty($this->params['platform'])) {
             if (empty($this->params['driver'])) {
@@ -100,10 +104,6 @@ class EntityManager
             }
 
             $this->params['platform'] = $this->driverPlatformMap[$this->params['driver']];
-        }
-
-        if (!empty($params['metadata'])) {
-            $this->setMetadata($params['metadata']);
         }
 
         $this->entityFactory = $entityFactory;
@@ -372,16 +372,7 @@ class EntityManager
         return $this->queryBuilder;
     }
 
-    /**
-     * @deprecated
-     * @todo Remove.
-     */
-    public function setMetadata(array $data)
-    {
-        $this->metadata->setData($data);
-    }
-
-    public function getMetadata()
+    public function getMetadata() : Metadata
     {
         return $this->metadata;
     }

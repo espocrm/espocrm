@@ -81,7 +81,7 @@ class Notification extends \Espo\Services\Record implements
         $collection = $this->entityManager->createCollection();
 
         $userList = $this->getEntityManager()->getRepository('User')
-            ->select(['id'])
+            ->select(['id', 'type'])
             ->where([
                 'isActive' => true,
                 'id' => $userIdList,
@@ -90,7 +90,10 @@ class Notification extends \Espo\Services\Record implements
         foreach ($userList as $user) {
             $userId = $user->id;
 
-            if (!$this->checkUserNoteAccess($user, $note)) continue;
+            if (!$this->checkUserNoteAccess($user, $note)) {
+                continue;
+            }
+
             if ($note->get('createdById') === $user->id) continue;
             if ($related && $related->getEntityType() == 'Email' && $related->get('sentById') == $user->id) continue;
             if ($related && $related->get('createdById') == $user->id) continue;

@@ -46,19 +46,27 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                 this.getMetadata().get(['scopes', this.scope, 'stream'])
             ) {
                 panelListAll.push('stream');
+
                 labels['stream'] = this.translate('Stream');
+
                 params['stream'] = {
                     name: 'stream',
                     sticked: true,
                     index: 2,
                 };
             }
+
             (this.getMetadata().get(['clientDefs', this.scope, 'bottomPanels', this.viewType]) || []).forEach(function (item) {
-                if (!item.name) return;
+                if (!item.name) {
+                    return;
+                }
+
                 panelListAll.push(item.name);
+
                 if (item.label) {
                     labels[item.name] = item.label;
                 }
+
                 params[item.name] = Espo.Utils.clone(item);
 
                 if ('order' in item) {
@@ -71,8 +79,14 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
             if (this.hasRelationships) {
                 var linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
                 Object.keys(linkDefs).forEach(function (link) {
-                    if (linkDefs[link].disabled || linkDefs[link].layoutRelationshipsDisabled) return;
-                    if (!~['hasMany', 'hasChildren'].indexOf(linkDefs[link].type)) return;
+                    if (linkDefs[link].disabled || linkDefs[link].layoutRelationshipsDisabled) {
+                        return;
+                    }
+
+                    if (!~['hasMany', 'hasChildren'].indexOf(linkDefs[link].type)) {
+                        return;
+                    }
+
                     panelListAll.push(link);
 
                     labels[link] = this.translate(link, 'links', this.scope);
@@ -82,11 +96,18 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                         index: 5,
                     };
                     this.dataAttributeList.forEach(function (attribute) {
-                        if (attribute in item) return;
+                        if (attribute in item) {
+                            return;
+                        }
+
                         var value = this.getMetadata().get(
                             ['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]
                         );
-                        if (value === null) return;
+
+                        if (value === null) {
+                            return;
+                        }
+
                         item[attribute] = value;
                     }, this);
 
@@ -146,8 +167,10 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                         name: item,
                         label: labelText,
                     };
+
                     if (o.name[0] === '_') {
                         o.notEditable = true;
+
                         if (o.name == '_delimiter_') {
                             o.label = '. . .';
                         }
@@ -158,25 +181,34 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
                         name: item,
                         label: labelText,
                     };
+
                     if (o.name[0] === '_') {
                         o.notEditable = true;
                         if (o.name == '_delimiter_') {
                             o.label = '. . .';
                         }
                     }
+
                     if (o.name in params) {
                         this.dataAttributeList.forEach(function (attribute) {
-                            if (attribute === 'name') return;
+                            if (attribute === 'name') {
+                                return;
+                            }
+
                             var itemParams = params[o.name] || {};
+
                             if (attribute in itemParams) {
                                 o[attribute] = itemParams[attribute];
                             }
                         }, this);
                     }
+
                     for (var i in itemData) {
                         o[i] = itemData[i];
                     }
+
                     o.index = ('index' in itemData) ? itemData.index : index;
+
                     this.rowLayout.push(o);
 
                     this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
@@ -194,12 +226,14 @@ define('views/admin/layouts/bottom-panels-detail', 'views/admin/layouts/side-pan
             var newLayout = {};
 
             for (var i in layout) {
-                if (layout[i].disabled && this.links[i]) continue;
+                if (layout[i].disabled && this.links[i]) {
+                    continue;
+                }
+
                 newLayout[i] = layout[i];
             }
 
             return newLayout;
         },
-
     });
 });

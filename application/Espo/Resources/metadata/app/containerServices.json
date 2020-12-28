@@ -5,8 +5,8 @@
     "schema": {
         "className": "Espo\\Core\\Utils\\Database\\Schema\\Schema"
     },
-    "ormMetadata": {
-        "className": "Espo\\Core\\Utils\\Metadata\\OrmMetadata"
+    "ormMetadataData": {
+        "className": "Espo\\Core\\Utils\\Metadata\\OrmMetadataData"
     },
     "classParser": {
         "className": "Espo\\Core\\Utils\\File\\ClassParser"

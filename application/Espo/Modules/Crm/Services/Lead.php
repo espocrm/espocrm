@@ -98,7 +98,7 @@ class Lead extends PersonService implements
 
         $ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
 
-        $convertFieldsDefs = $this->getMetadata()->get('entityDefs.Lead.convertFields', array());
+        $convertFieldsDefs = $this->getMetadata()->get('entityDefs.Lead.convertFields', []);
 
         foreach ($entityList as $entityType) {
             if (!$this->getAcl()->checkScope($entityType, 'edit')) {
@@ -141,7 +141,10 @@ class Lead extends PersonService implements
                     $attachment = $lead->get($field);
 
                     if ($attachment) {
-                        $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+                        $attachment = $this->getEntityManager()
+                            ->getRepository('Attachment')
+                            ->getCopiedAttachment($attachment);
+
                         $idAttribute = $field . 'Id';
                         $nameAttribute = $field . 'Name';
 
@@ -189,7 +192,11 @@ class Lead extends PersonService implements
                         continue;
                     }
 
-                    $leadAttribute = $leadAttributeList[$i];
+                    $leadAttribute = $leadAttributeList[$i] ?? null;
+
+                    if (!$leadAttribute) {
+                        throw new Error("Not compatible fields in 'convertFields' map.");
+                    }
 
                     if (!$lead->has($leadAttribute)) {
                         continue;

@@ -29,29 +29,101 @@
 
 namespace Espo\ORM\Locker;
 
+use Espo\ORM\{
+    TransactionManager,
+    QueryComposer\QueryComposer,
+    QueryParams\LockTableBuilder,
+};
+
+use PDO;
 use RuntimeException;
 
-class MysqlLocker extends BaseLocker
+/**
+ * Transactions within locking is not supported for MySQL.
+ */
+class MysqlLocker implements Locker
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function commit()
+    protected $pdo;
+    protected $queryComposer;
+    protected $transactionManager;
+
+    protected $isLocked = false;
+
+    public function __construct(PDO $pdo, QueryComposer $queryComposer, TransactionManager $transactionManager)
     {
-        parent::commit();
-
-        $sql = $this->queryComposer->composeUnlockTables();
-
-        $this->pdo->exec($sql);
-
+        $this->pdo = $pdo;
+        $this->queryComposer = $queryComposer;
+        $this->transactionManager = $transactionManager;
     }
 
     /**
      * {@inheritdoc}
      */
+    public function isLocked() : bool
+    {
+        return $this->isLocked;
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function lockExclusive(string $entityType)
+    {
+        $this->isLocked = true;
+
+        $query = (new LockTableBuilder())
+            ->table($entityType)
+            ->inExclusiveMode()
+            ->build();
+
+        $sql = $this->queryComposer->compose($query);
+
+        $this->pdo->exec($sql);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function lockShare(string $entityType)
+    {
+        $this->isLocked = true;
+
+        $query = (new LockTableBuilder())
+            ->table($entityType)
+            ->inShareMode()
+            ->build();
+
+        $sql = $this->queryComposer->compose($query);
+
+        $this->pdo->exec($sql);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function commit()
+    {
+        if (!$this->isLocked) {
+            throw new RuntimeException("Can't commit, it was not locked.");
+        }
+
+        $this->isLocked = false;
+
+        $sql = $this->queryComposer->composeUnlockTables();
+
+        $this->pdo->exec($sql);
+    }
+
+    /**
+     * Lift locking.
+     * Rolling back within locking is not supported for MySQL.
+     */
     public function rollback()
     {
-        parent::rollback();
+        if (!$this->isLocked) {
+            throw new RuntimeException("Can't rollback, it was not locked.");
+        }
+
+        $this->isLocked = false;
 
         $sql = $this->queryComposer->composeUnlockTables();
 

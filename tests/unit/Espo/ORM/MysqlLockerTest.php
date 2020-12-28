@@ -65,18 +65,10 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
             ->method('exec')
             ->with('LOCK TABLES `account` WRITE');
 
-        $this->transactionManager
-            ->expects($this->at(0))
-            ->method('start');
-
         $this->pdo
             ->expects($this->at(1))
             ->method('exec')
             ->with('LOCK TABLES `contact` READ');
-
-        $this->transactionManager
-            ->expects($this->at(1))
-            ->method('commit');
 
         $this->pdo
             ->expects($this->at(2))
@@ -100,18 +92,10 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
             ->method('exec')
             ->with('LOCK TABLES `account` WRITE');
 
-        $this->transactionManager
-            ->expects($this->at(0))
-            ->method('start');
-
         $this->pdo
             ->expects($this->at(1))
             ->method('exec')
             ->with('LOCK TABLES `contact` READ');
-
-        $this->transactionManager
-            ->expects($this->at(1))
-            ->method('rollback');
 
         $this->pdo
             ->expects($this->at(2))

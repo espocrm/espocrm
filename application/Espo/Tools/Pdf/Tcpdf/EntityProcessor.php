@@ -32,6 +32,7 @@ namespace Espo\Tools\Pdf\Tcpdf;
 use Espo\Core\{
     Exceptions\Error,
     Utils\Config,
+    Htmlizer\Htmlizer as Htmlizer,
     Htmlizer\Factory as HtmlizerFactory,
     Pdf\Tcpdf,
 };
@@ -80,15 +81,11 @@ class EntityProcessor
         );
 
         if ($template->hasFooter()) {
-            $htmlFooter = $htmlizer->render(
-                $entity,
-                $template->getFooter(),
-                null,
-                $additionalData
-            );
+            $htmlFooter = $this->render($htmlizer, $entity, $template->getFooter(), $additionalData);
 
             $pdf->setFooterFont([$fontFace, '', $this->fontSize]);
             $pdf->setFooterPosition($template->getFooterPosition());
+
             $pdf->setFooterHtml($htmlFooter);
         }
         else {
@@ -112,16 +109,16 @@ class EntityProcessor
             $pageOrientationCode = 'L';
         }
 
-        $htmlHeader = $htmlizer->render(
-            $entity,
-            $template->getHeader(),
-            null,
-            $additionalData
-        );
+        $htmlHeader = '';
+
+        if ($template->getHeader() !== '') {
+            $htmlHeader = $this->render($htmlizer, $entity, $template->getHeader(), $additionalData);
+        }
 
         if ($template->hasHeader()) {
             $pdf->setHeaderFont([$fontFace, '', $this->fontSize]);
             $pdf->setHeaderPosition($template->getHeaderPosition());
+
             $pdf->setHeaderHtml($htmlHeader);
 
             $pdf->addPage($pageOrientationCode, $pageFormat);
@@ -134,13 +131,104 @@ class EntityProcessor
             $pdf->writeHTML($htmlHeader, true, false, true, false, '');
         }
 
-        $htmlBody = $htmlizer->render(
+        $htmlBody = $this->render($htmlizer, $entity, $template->getBody(), $additionalData);
+
+        $pdf->writeHTML($htmlBody, true, false, true, false, '');
+    }
+
+    protected function render(Htmlizer $htmlizer, Entity $entity, string $template, array $additionalData) : string
+    {
+        $html = $htmlizer->render(
             $entity,
-            $template->getBody(),
+            $template,
             null,
             $additionalData
         );
 
-        $pdf->writeHTML($htmlBody, true, false, true, false, '');
+        $html = preg_replace_callback(
+            '/<barcodeimage data="([^"]+)"\/>/',
+            function ($matches) {
+                $dataString = $matches[1];
+
+                $data = json_decode(urldecode($dataString), true);
+
+                return $this->composeBarcodeTag($data);
+            },
+            $html
+        );
+
+        return $html;
+    }
+
+    protected function composeBarcodeTag(array $data) : string
+    {
+        $value = $data['value'] ?? null;
+
+        $codeType = $data['type'] ?? 'CODE128';
+
+        $typeMap = [
+            "CODE128" => 'C128',
+            "CODE128A" => 'C128A',
+            "CODE128B" => 'C128B',
+            "CODE128C" => 'C128C',
+            "EAN13" => 'EAN13',
+            "EAN8" => 'EAN8',
+            "EAN5" => 'EAN5',
+            "EAN2" => 'EAN2',
+            "UPC" => 'UPCA',
+            "UPCE" => 'UPCE',
+            "ITF14" => 'I25',
+            "pharmacode" => 'PHARMA',
+            "QRcode" => 'QRCODE,H',
+        ];
+
+        if ($codeType === 'QRcode') {
+            $function = 'write2DBarcode';
+
+            $params = [
+                $value,
+                $typeMap[$codeType] ?? null,
+                '', '',
+                $data['width'] ?? 40,
+                $data['height'] ?? 40,
+                [
+                    'border' => false,
+                    'vpadding' => $data['padding'] ?? 2,
+                    'hpadding' => $data['padding'] ?? 2,
+                    'fgcolor' => $data['color'] ?? [0,0,0],
+                    'bgcolor' => $data['bgcolor'] ?? false,
+                    'module_width' => 1,
+                    'module_height' => 1,
+                ],
+                'N',
+            ];
+        } else {
+            $function = 'write1DBarcode';
+
+            $params = [
+                $value,
+                $typeMap[$codeType] ?? null,
+                '', '',
+                $data['width'] ?? 60,
+                $data['height'] ?? 30,
+                0.4,
+                [
+                    'position' => 'S',
+                    'border' => false,
+                    'padding' => $data['padding'] ?? 0,
+                    'fgcolor' => $data['color'] ?? [0,0,0],
+                    'bgcolor' => $data['bgcolor'] ?? [255,255,255],
+                    'text' => $data['text'] ?? true,
+                    'font' => 'helvetica',
+                    'fontsize' => $data['fontsize'] ?? 14,
+                    'stretchtext' => 4,
+                ],
+                'N',
+            ];
+        }
+
+        $paramsString = urlencode(json_encode($params));
+
+        return "<tcpdf method=\"{$function}\" params=\"{$paramsString}\" />";
     }
 }

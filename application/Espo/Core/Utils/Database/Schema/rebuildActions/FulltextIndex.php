@@ -59,7 +59,7 @@ class FulltextIndex extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
                     $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE Field = '" . $columnName . "'";
 
                     try {
-                        $row = $connection->fetchAssoc($query);
+                        $row = $connection->fetchAssociative($query);
                     } catch (\Exception $e) {
                         continue;
                     }

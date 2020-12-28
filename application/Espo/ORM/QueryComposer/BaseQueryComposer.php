@@ -1085,7 +1085,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function convertComplexExpression(
-        ?Entity $entity = null, string $attribute, bool $distinct = false, array &$params
+        ?Entity $entity = null, string $attribute, bool $distinct, array &$params
     ) : string {
         $function = null;
 
@@ -1145,7 +1145,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getFunctionArgumentPart(
-        Entity $entity, string $attribute, bool $distinct = false, array &$params
+        Entity $entity, string $attribute, bool $distinct, array &$params
     ) : string {
         $argument = $attribute;
 
@@ -1767,7 +1767,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return null;
     }
 
-    protected function getBelongsToJoinsPart(Entity $entity, ?array $select = null, array $skipList = [], array $params) : string
+    protected function getBelongsToJoinsPart(Entity $entity, ?array $select, array $skipList, array $params) : string
     {
         $joinsArr = [];
 
@@ -1939,7 +1939,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getAggregationSelectPart(
-        Entity $entity, string $aggregation, string $aggregationBy, bool $distinct = false, array $params
+        Entity $entity, string $aggregation, string $aggregationBy, bool $distinct, array $params
     ) : ?string {
         if (!isset($entity->getAttributes()[$aggregationBy])) {
             return null;
@@ -2510,7 +2510,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getJoinsTypePart(
-        Entity $entity, array $joins, bool $isLeft = false, $joinConditions = [], array $params
+        Entity $entity, array $joins, bool $isLeft, $joinConditions, array $params
     ) : string {
         $joinSqlList = [];
 
@@ -2556,7 +2556,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return implode(' ', $joinSqlList);
     }
 
-    protected function buildJoinConditionStatement(Entity $entity, $alias = null, $left, $right, array $params)
+    protected function buildJoinConditionStatement(Entity $entity, $alias, $left, $right, array $params)
     {
         $sql = '';
 

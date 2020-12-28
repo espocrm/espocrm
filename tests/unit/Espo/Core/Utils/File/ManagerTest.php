@@ -233,7 +233,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($result, $this->object->getParentDirName($input, true));
     }
 
-    public function testGetSingeFileListAll()
+    public function testGetSingleFileListAll()
     {
         $input = array (
           'custom' =>
@@ -266,7 +266,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         );
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input)));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', array($input)));
     }
 
     public function testGetSingeFileListOnlyFiles()
@@ -297,7 +297,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         );
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input, true)));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', array($input, true)));
     }
 
     public function testGetSingeFileListOnlyDirs()
@@ -331,7 +331,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         );
         $result = array_map('\Espo\Core\Utils\Util::fixPath', $result);
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getSingeFileList', array($input, false)));
+        $this->assertEquals($result, $this->reflection->invokeMethod('getSingleFileList', array($input, false)));
     }
 
     public function fileListSets()

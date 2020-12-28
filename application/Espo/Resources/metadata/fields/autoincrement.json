@@ -8,6 +8,7 @@
       "autoincrement":true,
       "unique":true
    },
+   "hookClassName": "Espo\\Tools\\FieldManager\\Hooks\\AutoincrementType",
    "textFilter": true,
    "readOnly": true
 }

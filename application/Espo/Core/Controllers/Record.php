@@ -43,6 +43,8 @@ use Espo\Core\{
     Record\Collection as RecordCollection,
 };
 
+use StdClass;
+
 class Record extends Base
 {
     const MAX_SIZE_LIMIT = 200;
@@ -441,9 +443,15 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        if (empty($data->targetId) || empty($data->sourceIds) || !is_array($data->sourceIds) || !($data->attributes instanceof \StdClass)) {
+        if (
+            empty($data->targetId) ||
+            empty($data->sourceIds) ||
+            !is_array($data->sourceIds) ||
+            !($data->attributes instanceof StdClass)
+        ) {
             throw new BadRequest();
         }
+
         $targetId = $data->targetId;
         $sourceIds = $data->sourceIds;
         $attributes = $data->attributes;

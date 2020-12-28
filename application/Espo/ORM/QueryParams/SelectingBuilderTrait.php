@@ -136,6 +136,10 @@ trait SelectingBuilderTrait
             return $this;
         }
 
+        if (is_null($alias) && is_null($conditions) && $this->hasJoin($relationName)) {
+            return $this;
+        }
+
         if (is_null($alias) && is_null($conditions)) {
             $this->params['joins'][] = $relationName;
 
@@ -174,6 +178,10 @@ trait SelectingBuilderTrait
             return $this;
         }
 
+        if (is_null($alias) && is_null($conditions) && $this->hasLeftJoin($relationName)) {
+            return $this;
+        }
+
         if (is_null($alias) && is_null($conditions)) {
             $this->params['leftJoins'][] = $relationName;
 
@@ -189,5 +197,39 @@ trait SelectingBuilderTrait
         $this->params['leftJoins'][] = [$relationName, $alias, $conditions];
 
         return $this;
+    }
+
+    protected function hasLeftJoin(string $alias) : bool
+    {
+        if (in_array($alias, $this->params['leftJoins'])) {
+            return true;
+        }
+
+        foreach ($this->params['leftJoins'] as $item) {
+            if (is_array($item) && count($item) > 1) {
+                if ($item[1] === $alias) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected function hasJoin(string $alias) : bool
+    {
+        if (in_array($alias, $this->params['joins'])) {
+            return true;
+        }
+
+        foreach ($this->params['joins'] as $item) {
+            if (is_array($item) && count($item) > 1) {
+                if ($item[1] === $alias) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

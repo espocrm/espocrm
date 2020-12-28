@@ -34,4 +34,5 @@ namespace Espo\Core\ApplicationRunners;
  */
 interface ApplicationRunner
 {
+    public function run();
 }

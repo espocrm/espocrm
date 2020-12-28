@@ -58,9 +58,11 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
         data: function () {
             var data = {};
+
             data.categoriesDisabled = this.categoriesDisabled;
             data.isExpanded = this.isExpanded;
             data.hasExpandedToggler = this.hasExpandedToggler;
+
             return data;
         },
 
@@ -101,7 +103,10 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.applyCategoryToCollection();
 
             this.listenTo(this.collection, 'sync', function (c, d, o) {
-                if (o && o.openCategory) return;
+                if (o && o.openCategory) {
+                    return;
+                }
+
                 this.controlListVisibility();
             }, this);
         },
@@ -120,6 +125,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                         this.openCategory(params.categoryId, params.categoryName);
                     }
                 }
+
                 this.selectCurrentCategory();
             }
         },
@@ -129,13 +135,14 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 for (var i = 0; i < this.collection.where.length; i++) {
                     if (this.collection.where[i].type === 'textFilter') {
                         return true;
-                        break;
                     }
                 }
             }
+
             if (this.collection.data && this.collection.data.textFilter) {
                 return true;
             }
+
             return false;
         },
 
@@ -161,9 +168,11 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             } else {
                 this.controlListVisibility();
             }
+
             if (!this.categoriesDisabled && !this.hasView('categories')) {
                 this.loadCategories();
             }
+
             if (!this.isExpanded  && !this.hasView('nestedCategories')) {
                 this.loadNestedCategories();
             }
@@ -171,6 +180,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
         actionExpand: function () {
             this.isExpanded = true;
+
             this.setIsExpandedStoredValue(true);
 
             this.applyCategoryToCollection();
@@ -307,12 +317,15 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 this.listenToOnce(collection, 'sync', function () {
                     callback.call(this, collection);
                 }, this);
+
                 collection.fetch();
             }, this);
         },
 
         applyCategoryToNestedCategoriesCollection: function () {
-            if (!this.nestedCategoriesCollection) return;
+            if (!this.nestedCategoriesCollection) {
+                return;
+            }
 
             this.nestedCategoriesCollection.where = null;
 
@@ -335,6 +348,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 collection.maxDepth = 1;
 
                 collection.data.checkIfEmpty = true;
+
                 if (!this.getAcl().checkScope(this.scope, 'create')) {
                     collection.data.onlyNotEmpty = true;
                 }
@@ -344,6 +358,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 collection.fetch().then(function () {
                     this.controlListVisibility();
                     this.controlNestedCategoriesVisibility();
+
                     callback.call(this, collection);
                 }.bind(this));
             }, this);
@@ -353,7 +368,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.getNestedCategoriesCollection(function (collection) {
                 this.createView('nestedCategories', 'views/record/list-nested-categories', {
                     collection: collection,
-                    el: this.options.el + ' .nested-categories-container'
+                    el: this.options.el + ' .nested-categories-container',
                 }, function (view) {
                     view.render();
                 });
@@ -378,18 +393,22 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                     if (this.currentCategoryId) {
                         view.setSelected(this.currentCategoryId);
                     }
+
                     view.render();
 
                     this.listenTo(view, 'select', function (model) {
                         if (!this.isExpanded) {
                             var id = null;
                             var name = null;
+
                             if (model && model.id) {
                                 id = model.id;
                                 name = model.get('name');
                             }
+
                             this.openCategory(id, name);
                             this.navigateToCurrentCategory();
+
                             return;
                         }
                         this.currentCategoryId = null;
@@ -409,6 +428,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                         this.listenToOnce(this.collection, 'sync', function () {
                             this.notify(false);
                         }, this);
+
                         this.collection.fetch();
 
                     }, this);
@@ -417,9 +437,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             }, this);
         },
 
-
         applyCategoryToCollection: function () {
-
             this.collection.whereFunction = function () {
                 var filter;
                 var isExpanded = this.isExpanded;
@@ -457,14 +475,14 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                         filter = {
                             field: this.categoryField,
                             type: this.categoryFilterType,
-                            value: this.currentCategoryId
+                            value: this.currentCategoryId,
                         };
                     }
                 }
+
                 if (filter) {
                     return [filter];
                 }
-
             }.bind(this);
         },
 
@@ -479,19 +497,26 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 if (this.currentCategoryId) {
                     var names = {};
                     names[this.currentCategoryId] = this.currentCategoryName;
+
                     var data = {};
+
                     var idsAttribute = this.categoryField + 'Ids';
                     var namesAttribute = this.categoryField + 'Names';
+
                     data[idsAttribute] = [this.currentCategoryId],
                     data[namesAttribute] = names;
+
                     return data;
                 }
             } else {
                 var idAttribute = this.categoryField + 'Id';
                 var nameAttribute = this.categoryField + 'Name';
+
                 var data = {};
+
                 data[idAttribute] = this.currentCategoryId;
                 data[nameAttribute] = this.currentCategoryName;
+
                 return data;
             }
         },
@@ -500,6 +525,5 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.clearView('categories');
             this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
         },
-
     });
 });

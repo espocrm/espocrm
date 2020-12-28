@@ -36,7 +36,7 @@ use Espo\Core\{
     Utils\Util,
     Utils\Config,
     Utils\File\Manager as FileManager,
-    Utils\Metadata\OrmMetadata,
+    Utils\Metadata\OrmMetadataData,
     HookManager,
     Utils\Database\Schema\SchemaProxy,
 };
@@ -53,7 +53,7 @@ class DataManager
     protected $entityManager;
     protected $fileManager;
     protected $metadata;
-    protected $ormMetadata;
+    protected $ormMetadataData;
     protected $hookManager;
     protected $schemaProxy;
 
@@ -64,7 +64,7 @@ class DataManager
         Config $config,
         FileManager $fileManager,
         Metadata $metadata,
-        OrmMetadata $ormMetadata,
+        OrmMetadataData $ormMetadataData,
         HookManager $hookManager,
         SchemaProxy $schemaProxy
     ) {
@@ -72,7 +72,7 @@ class DataManager
         $this->config = $config;
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
-        $this->ormMetadata = $ormMetadata;
+        $this->ormMetadataData = $ormMetadataData;
         $this->hookManager = $hookManager;
         $this->schemaProxy = $schemaProxy;
     }
@@ -124,7 +124,10 @@ class DataManager
         catch (Throwable $e) {
             $result = false;
 
-            $GLOBALS['log']->error('Fault to rebuild database schema. Details: '. $e->getMessage());
+            $GLOBALS['log']->error(
+                'Fault to rebuild database schema. Details: '. $e->getMessage() .
+                ' at ' . $e->getFile() . ':' . $e->getLine()
+            );
         }
 
         if ($result != true) {
@@ -157,9 +160,9 @@ class DataManager
 
         $metadata->init(true);
 
-        $ormData = $this->ormMetadata->getData(true);
+        $ormData = $this->ormMetadataData->getData(true);
 
-        $this->entityManager->setMetadata($ormData);
+        $this->entityManager->getMetadata()->updateData();
 
         $this->updateCacheTimestamp();
 

@@ -32,12 +32,13 @@ namespace Espo\Core\ORM;
 use Espo\Entities\User;
 
 use Espo\Core\{
-    Utils\Metadata as EspoMetadata,
-    HookManager,
     Utils\Util,
 };
 
-use Espo\ORM\EntityManager as BaseEntityManager;
+use Espo\ORM\{
+    EntityManager as BaseEntityManager,
+    Metadata,
+};
 
 class EntityManager extends BaseEntityManager
 {
@@ -45,11 +46,12 @@ class EntityManager extends BaseEntityManager
 
     public function __construct(
         array $params,
+        Metadata $metadata,
         RepositoryFactory $repositoryFactory,
         EntityFactory $entityFactory,
         Helper $helper
     ) {
-        parent::__construct($params, $repositoryFactory, $entityFactory);
+        parent::__construct($params, $metadata, $repositoryFactory, $entityFactory);
 
         $this->helper = $helper;
     }

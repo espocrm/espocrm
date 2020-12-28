@@ -43,6 +43,7 @@ use Espo\Core\{
 };
 
 use ReflectionClass;
+use StdClass;
 
 /**
  * A central access point of the application.
@@ -68,7 +69,7 @@ class Application
     /**
      * Run a specific application runner.
      */
-    public function run(string $className, ?object $params = null)
+    public function run(string $className, ?StdClass $params = null)
     {
         if (!$className || !class_exists($className)) {
             $this->getLog()->error("Application runner '{$className}' does not exist.");
@@ -88,9 +89,11 @@ class Application
             $this->setupSystemUser();
         }
 
-        $runner = $this->getInjectableFactory()->create($className);
+        $runner = $this->getInjectableFactory()->createWith($className, [
+            'params' => $params,
+        ]);
 
-        $runner->run($params);
+        $runner->run();
     }
 
     /**

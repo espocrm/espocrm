@@ -201,6 +201,8 @@ class LeadCapture
             $lead = $this->getLeadWithPopulatedData($leadCapture, $data);
         }
 
+        $campaign = null;
+
         $campaingService = $this->serviceFactory->create('Campaign');
 
         if ($leadCapture->get('campaignId')) {

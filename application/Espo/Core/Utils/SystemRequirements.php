@@ -130,9 +130,9 @@ class SystemRequirements
 
         $databaseHelper =  $this->getDatabaseHelper();
         $databaseParams = isset($additionalData['database']) ? $additionalData['database'] : null;
-        $dbalConnection = $databaseHelper->createDbalConnection($databaseParams);
-        if ($dbalConnection) {
-            $databaseHelper->setDbalConnection($dbalConnection);
+        $pdoConnection = $databaseHelper->createPdoConnection($databaseParams);
+        if ($pdoConnection) {
+            $databaseHelper->setPdoConnection($pdoConnection);
             $databaseType = $databaseHelper->getDatabaseType();
             $databaseTypeName = ucfirst(strtolower($databaseType));
         }

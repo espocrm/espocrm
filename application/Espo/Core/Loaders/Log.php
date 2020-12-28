@@ -30,50 +30,22 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
-    Utils\Config,
+    Log\LogLoader,
     Utils\Log as LogService,
 };
 
-use Espo\Core\Utils\Log\Monolog\Handler\{
-    RotatingFileHandler,
-    StreamHandler,
-};
-
-use Monolog\ErrorHandler as MonologErrorHandler;
-
 class Log implements Loader
 {
-    protected $config;
+    protected $logLoader;
 
-    public function __construct(Config $config)
+    public function __construct(LogLoader $logLoader)
     {
-        $this->config = $config;
+        $this->logLoader = $logLoader;
     }
 
     public function load() : LogService
     {
-        $config = $this->config;
-
-        $path = $config->get('logger.path', 'data/logs/espo.log');
-        $rotation = $config->get('logger.rotation', true);
-
-        $log = new LogService('Espo');
-
-        $levelCode = $log::toMonologLevel($config->get('logger.level', 'WARNING'));
-
-        if ($rotation) {
-            $maxFileNumber = $config->get('logger.maxFileNumber', 30);
-            $handler = new RotatingFileHandler($path, $maxFileNumber, $levelCode);
-        } else {
-            $handler = new StreamHandler($path, $levelCode);
-        }
-
-        $log->pushHandler($handler);
-
-        $errorHandler = new MonologErrorHandler($log);
-
-        $errorHandler->registerExceptionHandler(null, false);
-        $errorHandler->registerErrorHandler([], false);
+        $log = $this->logLoader->load();
 
         $GLOBALS['log'] = $log;
 
