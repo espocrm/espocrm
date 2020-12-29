@@ -227,11 +227,11 @@ define('views/settings/fields/tab-list', 'views/fields/array', function (Dep) {
             });
         },
 
-        getAddModalOptions: function () {
+        getAddItemModalOptions: function () {
             return _.extend(
-                Dep.prototype.getAddModalOptions.call(this),
+                Dep.prototype.getAddItemModalOptions.call(this),
                 {
-                noGroups: this.noGroups,
+                    noGroups: this.noGroups,
                 }
             );
         },

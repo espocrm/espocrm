@@ -577,7 +577,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             return this.getSearchParamsData().type || 'anyOf';
         },
 
-        getAddModalOptions: function () {
+        getAddItemModalOptions: function () {
             var options = [];
 
             this.params.options.forEach(function (item) {
@@ -593,7 +593,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         },
 
         actionAddItem: function () {
-            this.createView('addModal', this.addItemModalView, this.getAddModalOptions(), function (view) {
+            this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), function (view) {
                 view.render();
                 view.once('add', function (item) {
                     this.addValue(item);
