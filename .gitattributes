@@ -1,0 +1,11 @@
+* text=auto
+*.php text eol=crlf
+*.js text eol=crlf
+*.json text eol=crlf
+*.md text eol=crlf
+*.less text eol=crlf
+*.css text eol=crlf
+*.tpl text eol=crlf
+*.html text eol=crlf
+
+*.png binary
