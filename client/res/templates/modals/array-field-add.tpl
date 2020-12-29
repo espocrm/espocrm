@@ -4,6 +4,7 @@
 <ul class="list-group array-add-list-group no-side-margin">
 {{#each optionList}}
     <li class="list-group-item clearfix">
+        <input class="cell" type="checkbox" data-value="{{./this}}">
         <a href="javascript:" class="add text-bold" data-value="{{./this}}">
             {{#if ../translatedOptions}}{{prop ../../translatedOptions this}}{{else}}{{./this}}{{/if}}
         </a>

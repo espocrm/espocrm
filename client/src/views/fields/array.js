@@ -577,7 +577,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             return this.getSearchParamsData().type || 'anyOf';
         },
 
-        actionAddItem: function () {
+        getAddModalOptions: function () {
             var options = [];
 
             this.params.options.forEach(function (item) {
@@ -586,13 +586,24 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 }
             }, this);
 
-            this.createView('addModal', this.addItemModalView, {
+            return {
                 options: options,
                 translatedOptions: this.translatedOptions,
-            }, function (view) {
+            };
+        },
+
+        actionAddItem: function () {
+            this.createView('addModal', this.addItemModalView, this.getAddModalOptions(), function (view) {
                 view.render();
-                this.listenToOnce(view, 'add', function (item) {
+                view.once('add', function (item) {
                     this.addValue(item);
+                    view.close();
+                }.bind(this));
+
+                view.once('add-mass', function (items) {
+                    items.forEach(function (item) {
+                        this.addValue(item);
+                    }.bind(this));
                     view.close();
                 }.bind(this));
             }.bind(this));
