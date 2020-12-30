@@ -136,7 +136,7 @@ trait SelectingBuilderTrait
             return $this;
         }
 
-        if (is_null($alias) && is_null($conditions) && $this->hasJoin($relationName)) {
+        if (is_null($alias) && is_null($conditions) && $this->hasJoinAlias($relationName)) {
             return $this;
         }
 
@@ -178,7 +178,7 @@ trait SelectingBuilderTrait
             return $this;
         }
 
-        if (is_null($alias) && is_null($conditions) && $this->hasLeftJoin($relationName)) {
+        if (is_null($alias) && is_null($conditions) && $this->hasLeftJoinAlias($relationName)) {
             return $this;
         }
 
@@ -199,7 +199,10 @@ trait SelectingBuilderTrait
         return $this;
     }
 
-    protected function hasLeftJoin(string $alias) : bool
+    /**
+     * Whether an alias is in left joins.
+     */
+    public function hasLeftJoinAlias(string $alias) : bool
     {
         if (in_array($alias, $this->params['leftJoins'])) {
             return true;
@@ -216,7 +219,10 @@ trait SelectingBuilderTrait
         return false;
     }
 
-    protected function hasJoin(string $alias) : bool
+    /**
+     * Whether an alias is in joins.
+     */
+    public function hasJoinAlias(string $alias) : bool
     {
         if (in_array($alias, $this->params['joins'])) {
             return true;
