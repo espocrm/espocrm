@@ -27,27 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\Driver\Mysqli;
+namespace Espo\Core\Utils\Database\DBAL\Platforms;
 
-use Espo\Core\Utils\Database\DBAL\{
-    Platforms\MySqlPlatform,
-    Schema\MySqlSchemaManager,
-};
+use Doctrine\DBAL\Platforms\MySQL57Platform as OriginalMySQL57Platform;
+use Espo\Core\Utils\Database\DBAL\Traits\Platforms\MySQLPlatform as MySQLPlatformTrait;
 
-use Doctrine\DBAL\{
-    Connection,
-    Driver\Mysqli\Driver as OriginalDriver,
-};
-
-class Driver extends OriginalDriver
+class MySQL57Platform extends OriginalMySQL57Platform
 {
-    public function getDatabasePlatform()
-    {
-        return new MySqlPlatform();
-    }
-
-    public function getSchemaManager(Connection $conn)
-    {
-        return new MySqlSchemaManager($conn);
-    }
+    use MySQLPlatformTrait;
 }

@@ -29,10 +29,22 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\Database\Schema\Utils as SchemaUtils;
+
+use Espo\Core\Utils\{
+    Util,
+    Config,
+    Metadata,
+    File\Manager as FileManager,
+    Database\Schema\Schema,
+    Database\Schema\Utils as SchemaUtils
+};
+
+use Doctrine\DBAL\{
+    Schema\Schema as DbalSchema,
+    Types\Type as DbalType,
+};
 
 class Converter
 {
@@ -60,7 +72,6 @@ class Converter
         'default' => 'default',
         'notNull' => 'notnull',
         'autoincrement' => 'autoincrement',
-        'unique' => 'unique',
     );
 
     //todo: same array in Converters\Orm
@@ -81,14 +92,18 @@ class Converter
 
     protected $maxIndexLength;
 
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Database\Schema\Schema $databaseSchema, \Espo\Core\Utils\Config $config = null)
-    {
+    public function __construct(
+        Metadata $metadata,
+        FileManager $fileManager,
+        Schema $databaseSchema,
+        Config $config = null
+    ) {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->databaseSchema = $databaseSchema;
         $this->config = $config;
 
-        $this->typeList = array_keys(\Doctrine\DBAL\Types\Type::getTypesMap());
+        $this->typeList = array_keys(DbalType::getTypesMap());
     }
 
     protected function getMetadata()
@@ -116,7 +131,7 @@ class Converter
     protected function getSchema($reload = false)
     {
         if (!isset($this->dbalSchema) || $reload) {
-            $this->dbalSchema = new \Espo\Core\Utils\Database\DBAL\Schema\Schema();
+            $this->dbalSchema = new DbalSchema();
         }
 
         return $this->dbalSchema;
@@ -387,7 +402,9 @@ class Converter
 
     protected function getDbFieldParams($fieldParams)
     {
-        $dbFieldParams = array();
+        $dbFieldParams = [
+            'notnull' => false,
+        ];
 
         foreach($this->allowedDbFieldParams as $espoName => $dbalName) {
             if (isset($fieldParams[$espoName])) {
@@ -428,7 +445,6 @@ class Converter
         }
 
         if ($fieldParams['type'] != 'id' && isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
-            $dbFieldParams['unique'] = true;
             $dbFieldParams['notnull'] = true;
             $dbFieldParams['unsigned'] = true;
         }

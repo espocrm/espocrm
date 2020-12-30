@@ -44,18 +44,14 @@ class HelperTest extends \PHPUnit\Framework\TestCase
     {
         $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
 
-        $this->objects['config']->expects($this->any())
-            ->method('get')
-            ->with($this->equalTo('database'))
-            ->will($this->returnValue([
-                'driver' => 'pdo_mysql',
-                'dbname' => 'test',
-                'user' => 'test_database',
-                'password' => 'test_user',
-                'host' => 'localhost',
-                'port' => '',
-                'charset' => 'utf8mb4'
-        ]));
+        if (file_exists('data/config.php')) {
+            $configData = include('data/config.php');
+
+            $this->objects['config']->expects($this->any())
+                ->method('get')
+                ->with($this->equalTo('database'))
+                ->will($this->returnValue($configData['database']));
+        }
     }
 
     protected function tearDown() : void
@@ -83,6 +79,20 @@ class HelperTest extends \PHPUnit\Framework\TestCase
         $this->initDatabaseHelper($this->objects['config']);
 
         $this->assertInstanceOf('\\Doctrine\\DBAL\\Connection', $this->object->getDbalConnection());
+    }
+
+    public function testGetPdoConnection()
+    {
+        $this->initDatabaseHelper(null);
+
+        $this->assertNull($this->object->getPdoConnection());
+    }
+
+    public function testGetPdoConnectionWithConfig()
+    {
+        $this->initDatabaseHelper($this->objects['config']);
+
+        $this->assertInstanceOf('\\PDO', $this->object->getPdoConnection());
     }
 
     public function testGetMaxIndexLength()

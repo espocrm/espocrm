@@ -29,21 +29,42 @@
 
 namespace Espo\Core\Utils\Database;
 
-use Espo\Core\Utils\Util;
+use PDO;
+use ReflectionClass;
 use Espo\ORM\Entity;
+
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\Util,
+    Utils\Config,
+};
+
+use Doctrine\DBAL\{
+    Connection as DbalConnection,
+    Platforms\AbstractPlatform as DbalPlatform,
+};
 
 class Helper
 {
     private $config;
 
-    private $connection;
+    private $dbalConnection;
 
-    protected $drivers = array(
-        'mysqli' => '\Espo\Core\Utils\Database\DBAL\Driver\Mysqli\Driver',
-        'pdo_mysql' => '\Espo\Core\Utils\Database\DBAL\Driver\PDOMySql\Driver',
-    );
+    private $pdoConnection;
 
-    public function __construct(\Espo\Core\Utils\Config $config = null)
+    protected $dbalDrivers = [
+        'mysqli' => '\\Doctrine\\DBAL\\Driver\\Mysqli\\Driver',
+        'pdo_mysql' => '\\Doctrine\\DBAL\\Driver\\PDO\\MySQL\\Driver',
+    ];
+
+    protected $dbalPlatforms = [
+        'MariaDb1027Platform' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MariaDb1027Platform',
+        'MySQL57Platform' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL57Platform',
+        'MySQL80Platform' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL80Platform',
+        'MySQLPlatform' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQLPlatform',
+    ];
+
+    public function __construct(Config $config = null)
     {
         $this->config = $config;
     }
@@ -55,16 +76,30 @@ class Helper
 
     public function getDbalConnection()
     {
-        if (!isset($this->connection)) {
-            $this->connection = $this->createDbalConnection();
+        if (!isset($this->dbalConnection)) {
+            $this->dbalConnection = $this->createDbalConnection();
         }
 
-        return $this->connection;
+        return $this->dbalConnection;
     }
 
-    public function setDbalConnection($dbalConnection)
+    public function getPdoConnection()
     {
-        $this->connection = $dbalConnection;
+        if (!isset($this->pdoConnection)) {
+            $this->pdoConnection = $this->createPdoConnection();
+        }
+
+        return $this->pdoConnection;
+    }
+
+    public function setDbalConnection(DbalConnection $dbalConnection)
+    {
+        $this->dbalConnection = $dbalConnection;
+    }
+
+    public function setPdoConnection(PDO $pdoConnection)
+    {
+        $this->pdoConnection = $pdoConnection;
     }
 
     public function createDbalConnection(array $params = null)
@@ -76,18 +111,47 @@ class Helper
             }
         }
 
-        $params['driver'] = isset($params['driver']) ? $params['driver'] : 'pdo_mysql';
-
         if (empty($params['dbname']) || empty($params['user'])) {
             return null;
         }
 
-        $params['driverClass'] = $this->drivers[ $params['driver'] ];
+        $driverName = isset($params['driver']) ? $params['driver'] : 'pdo_mysql';
         unset($params['driver']);
 
-        $dbalConfig = new \Doctrine\DBAL\Configuration();
+        if (!isset($this->dbalDrivers[$driverName])) {
+            throw new Error('Unknown database driver.');
+        }
 
-        return \Doctrine\DBAL\DriverManager::getConnection($params, $dbalConfig);
+        $driverClass = $this->dbalDrivers[$driverName];
+
+        if (!class_exists($driverClass)) {
+            throw new Error('Unknown database class.');
+        }
+
+        $driver = new $driverClass();
+
+        $version = $this->getFullDatabaseVersion();
+        $platform = $driver->createDatabasePlatformForVersion($version);
+
+        $params['platform'] = $this->createDbalPlatform($platform);
+
+        return new DbalConnection(
+            $params,
+            $driver
+        );
+    }
+
+    protected function createDbalPlatform(DbalPlatform $platform)
+    {
+        $reflect = new ReflectionClass($platform);
+        $platformClass = $reflect->getShortName();
+
+        if (isset($this->dbalPlatforms[$platformClass])) {
+            $class = $this->dbalPlatforms[$platformClass];
+            return new $class();
+        }
+
+        return $platform;
     }
 
     /**
@@ -98,7 +162,14 @@ class Helper
     public function createPdoConnection(array $params = null)
     {
         if (!isset($params)) {
-            $params = $this->getConfig()->get('database');
+            $config = $this->getConfig();
+            if ($config) {
+                $params = $config->get('database');
+            }
+        }
+
+        if (empty($params)) {
+            return null;
         }
 
         $platform = !empty($params['platform']) ? strtolower($params['platform']) : 'mysql';
@@ -180,12 +251,8 @@ class Helper
      */
     public function getDatabaseType($default = 'MySQL')
     {
-        $connection = $this->getDbalConnection();
-        if (!$connection) {
-            return $default;
-        }
-
         $version = $this->getFullDatabaseVersion();
+
         if (preg_match('/mariadb/i', $version)) {
             return 'MariaDB';
         }
@@ -195,12 +262,15 @@ class Helper
 
     protected function getFullDatabaseVersion()
     {
-        $connection = $this->getDbalConnection();
+        $connection = $this->getPdoConnection();
         if (!$connection) {
             return null;
         }
 
-        return $connection->fetchColumn("select version()");
+        $sth = $connection->prepare("select version()");
+        $sth->execute();
+
+        return $sth->fetchColumn();
     }
 
     /**
@@ -225,7 +295,7 @@ class Helper
      */
     protected function getTableEngine($tableName = null, $default = null)
     {
-        $connection = $this->getDbalConnection();
+        $connection = $this->getPdoConnection();
         if (!$connection) {
             return $default;
         }
@@ -235,7 +305,10 @@ class Helper
             $query = "SHOW TABLE STATUS WHERE Engine = 'MyISAM' AND Name = '" . $tableName . "'";
         }
 
-        $result = $connection->fetchColumn($query);
+        $sth = $connection->prepare($query);
+        $sth->execute();
+
+        $result = $sth->fetchColumn();
 
         if (!empty($result)) {
             return 'MyISAM';

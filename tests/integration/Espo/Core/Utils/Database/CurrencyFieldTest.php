@@ -27,62 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\Schema;
+namespace tests\integration\Espo\Core\Utils\Database;
 
-class Column extends \Doctrine\DBAL\Schema\Column
+class CurrencyFieldTest extends Base
 {
-    /**
-     * @var boolean
-     */
-    protected $_notnull = false;
-
-    /**
-     * @var boolean
-     */
-    protected $_unique = false;
-
-    protected $_quoted = true;
-
-    /**
-     * @param boolean $unique
-     *
-     * @return \Doctrine\DBAL\Schema\Column
-     */
-    public function setUnique($unique)
+    public function fieldlist()
     {
-        $this->_unique = (bool)$unique;
-
-        return $this;
+        return [
+            ['testCurrency', 'double', null, null],
+            ['testCurrencyCurrency', 'varchar', 6, 'utf8mb4_unicode_ci'],
+        ];
     }
 
     /**
-     * @return boolean
+     * @dataProvider fieldlist
      */
-    public function getUnique()
+    public function testColumns($fieldName, $type, $length, $collation)
     {
-        return $this->_unique;
-    }
+        $column = $this->getColumnInfo('Test', $fieldName);
 
-    /**
-     * @return array
-     */
-    public function toArray()
-    {
-        return array_merge(array(
-            'name'          => $this->_name,
-            'type'          => $this->_type,
-            'default'       => $this->_default,
-            'notnull'       => $this->_notnull,
-            'length'        => $this->_length,
-            'precision'     => $this->_precision,
-            'scale'         => $this->_scale,
-            'fixed'         => $this->_fixed,
-            'unsigned'      => $this->_unsigned,
-            'autoincrement' => $this->_autoincrement,
-            'unique' => $this->_unique,
-            'columnDefinition' => $this->_columnDefinition,
-            'comment' => $this->_comment,
-        ), $this->_platformOptions, $this->_customSchemaOptions);
+        $this->assertNotEmpty($column);
+        $this->assertEquals($type, $column['DATA_TYPE']);
+        $this->assertEquals($length, $column['CHARACTER_MAXIMUM_LENGTH']);
+        $this->assertEquals('YES', $column['IS_NULLABLE']);
+        $this->assertEquals($collation, $column['COLLATION_NAME']);
     }
-
 }

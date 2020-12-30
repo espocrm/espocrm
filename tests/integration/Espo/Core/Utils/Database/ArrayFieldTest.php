@@ -27,27 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\Driver\PDOMySql;
+namespace tests\integration\Espo\Core\Utils\Database;
 
-use Espo\Core\Utils\Database\DBAL\{
-    Platforms\MySqlPlatform,
-    Schema\MySqlSchemaManager,
-};
-
-use Doctrine\DBAL\{
-    Connection,
-    Driver\PDOMySql\Driver as OriginalDriver,
-};
-
-class Driver extends OriginalDriver
+class ArrayFieldTest extends Base
 {
-    public function getDatabasePlatform()
+    public function testColumn()
     {
-        return new MySqlPlatform();
-    }
+        $column = $this->getColumnInfo('Test', 'testArray');    
 
-    public function getSchemaManager(Connection $conn)
-    {
-        return new MySqlSchemaManager($conn);
+        $this->assertNotEmpty($column);
+        $this->assertEquals('mediumtext', $column['COLUMN_TYPE']);
+        $this->assertEquals('YES', $column['IS_NULLABLE']);
+        $this->assertEquals('utf8mb4_unicode_ci', $column['COLLATION_NAME']);
     }
 }
