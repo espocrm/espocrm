@@ -38,42 +38,42 @@ class Loader
         $this->namespaceLoader = $namespaceLoader;
     }
 
-    public function register(array $autoloadList)
+    public function register(array $data)
     {
         /* load "psr-4", "psr-0", "classmap" */
-        $this->namespaceLoader->register($autoloadList);
+        $this->namespaceLoader->register($data);
 
         /* load "autoloadFileList" */
-        $this->registerAutoloadFileList($autoloadList);
+        $this->registerAutoloadFileList($data);
 
         /* load "files" */
-        $this->registerFiles($autoloadList);
+        $this->registerFiles($data);
     }
 
-    protected function registerAutoloadFileList(array $autoloadList)
+    protected function registerAutoloadFileList(array $data)
     {
         $keyName = 'autoloadFileList';
 
-        if (!isset($autoloadList[$keyName])) {
+        if (!isset($data[$keyName])) {
             return;
         }
 
-        foreach ($autoloadList[$keyName] as $filePath) {
+        foreach ($data[$keyName] as $filePath) {
             if (file_exists($filePath)) {
                 require_once($filePath);
             }
         }
     }
 
-    protected function registerFiles(array $autoloadList)
+    protected function registerFiles(array $data)
     {
         $keyName = 'files';
 
-        if (!isset($autoloadList[$keyName])) {
+        if (!isset($data[$keyName])) {
             return;
         }
 
-        foreach ($autoloadList[$keyName] as $id => $filePath) {
+        foreach ($data[$keyName] as $id => $filePath) {
             if (file_exists($filePath)) {
                 require_once($filePath);
             }
