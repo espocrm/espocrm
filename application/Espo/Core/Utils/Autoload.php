@@ -66,22 +66,13 @@ class Autoload
         $this->loader = $loader;
     }
 
-    public function get($key = null, $returns = null)
+    protected function getData() : array
     {
         if (!isset($this->data)) {
             $this->init();
         }
 
-        if (!isset($key)) {
-            return $this->data;
-        }
-
-        return Util::getValueByKey($this->data, $key, $returns);
-    }
-
-    public function getAll()
-    {
-        return $this->get();
+        return $this->data;
     }
 
     protected function init()
@@ -94,46 +85,48 @@ class Autoload
             return;
         }
 
-        $this->data = $this->unify();
+        $this->data = $this->loadData();
 
         if ($useCache) {
             $result = $this->dataCache->store($this->cacheKey, $this->data);
         }
     }
 
-    protected function unify()
+    protected function loadData() : array
     {
-        $data = $this->loadData($this->paths['corePath']);
+        $data = $this->loadDataFromFile($this->paths['corePath']);
 
         foreach ($this->metadata->getModuleList() as $moduleName) {
             $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
 
-            $data = array_merge_recursive($data, $this->loadData($modulePath));
+            $data = array_merge_recursive($data, $this->loadDataFromFile($modulePath));
         }
 
-        $data = array_merge_recursive($data, $this->loadData($this->paths['customPath']));
+        $data = array_merge_recursive($data, $this->loadDataFromFile($this->paths['customPath']));
 
         return $data;
     }
 
-    protected function loadData($autoloadFile, $returns = [])
+    protected function loadDataFromFile(string $filePath) : array
     {
-        if (file_exists($autoloadFile)) {
-            $content = $this->fileManager->getContents($autoloadFile);
-
-            $arrayContent = Json::getArrayData($content);
-
-            if (!empty($arrayContent)) {
-                return $this->normalizeData($arrayContent);
-            }
-
-            $GLOBALS['log']->error('Autoload: Empty file or syntax error ['.$autoloadFile.'].');
+        if (!$this->fileManager->isFile($filePath)) {
+            return [];
         }
 
-        return $returns;
+        $content = $this->fileManager->getContents($filePath);
+
+        $arrayContent = Json::getArrayData($content);
+
+        if (empty($arrayContent)) {
+            $GLOBALS['log']->error("Autoload: Empty file or syntax error in '{$filePath}'.");
+
+            return [];
+        }
+
+        return $this->normalizeData($arrayContent);
     }
 
-    protected function normalizeData(array $data)
+    protected function normalizeData(array $data) : array
     {
         $normalizedData = [];
 
@@ -161,12 +154,14 @@ class Autoload
     public function register()
     {
         try {
-            $autoloadList = $this->getAll();
+            $data = $this->getData();
         }
-        catch (Exception $e) {} //bad permissions
+        catch (Exception $e) {} // bad permissions
 
-        if (!empty($autoloadList)) {
-            $this->loader->register($autoloadList);
+        if (empty($data)) {
+            return;
         }
+
+        $this->loader->register($data);
     }
 }

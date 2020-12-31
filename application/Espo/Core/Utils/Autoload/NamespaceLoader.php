@@ -74,9 +74,9 @@ class NamespaceLoader
         $this->classLoader = new ClassLoader();
     }
 
-    public function register(array $autoloadList)
+    public function register(array $data)
     {
-        $this->addListToClassLoader($this->classLoader, $autoloadList);
+        $this->addListToClassLoader($this->classLoader, $data);
 
         $this->classLoader->register(true);
     }
@@ -147,7 +147,7 @@ class NamespaceLoader
         return false;
     }
 
-    protected function addListToClassLoader($classLoader, array $list, $skipVendorNamespaces = false)
+    protected function addListToClassLoader(ClassLoader $classLoader, array $list, bool $skipVendorNamespaces = false)
     {
         foreach ($this->methodNameMap as $type => $methodName) {
             if (!isset($list[$type])) {
