@@ -821,7 +821,7 @@ class Manager
 
     /**
      * Remove empty parent directories if they are empty.
-     * @param  string $path
+     * @param string $path
      * @return bool
      */
     protected function removeEmptyDirs($path)
@@ -838,29 +838,19 @@ class Manager
     }
 
     /**
-     * Check if $dirname is directory.
-     *
-     * @param string $dirname
-     * @param string $basePath
-     *
-     * @return boolean
+     * Check whether a path is a directory.
      */
-    public function isDir($dirname, $basePath = null)
+    public function isDir(string $dirPath) : bool
     {
-        if (!empty($basePath)) {
-            $dirname = $this->concatPaths([$basePath, $dirname]);
-        }
-
-        return is_dir($dirname);
+        return is_dir($dirPath);
     }
 
-    public function isFile($filename, $basePath = null)
+    /**
+     * Check whether a path is a file.
+     */
+    public function isFile(string $filePath) : bool
     {
-        if (!empty($basePath)) {
-            $filename = $this->concatPaths([$basePath, $filename]);
-        }
-
-        return is_file($filename);
+        return is_file($filePath);
     }
 
     /**
@@ -891,12 +881,9 @@ class Manager
     }
 
     /**
-     * Check if directory is empty.
-     *
-     * @param string $path
-     * @return boolean
+     * Check whether a directory is empty.
      */
-    public function isDirEmpty($path)
+    public function isDirEmpty(string $path) : bool
     {
         if (is_dir($path)) {
             $fileList = $this->getFileList($path, true);
