@@ -108,10 +108,10 @@ class Autoload
         foreach ($this->metadata->getModuleList() as $moduleName) {
             $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
 
-            $data = array_merge($data, $this->loadData($modulePath));
+            $data = array_merge_recursive($data, $this->loadData($modulePath));
         }
 
-        $data = array_merge($data, $this->loadData($this->paths['customPath']));
+        $data = array_merge_recursive($data, $this->loadData($this->paths['customPath']));
 
         return $data;
     }
