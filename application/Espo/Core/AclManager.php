@@ -43,7 +43,6 @@ use Espo\Core\{
     Acl\GlobalRestricton,
     Acl as UserAclWrapper,
     Acl\Table as AclTable,
-    Utils\Util,
 };
 
 use StdClass;
@@ -409,7 +408,9 @@ class AclManager
             $userId = $target;
         }
 
-        if ($user->id === $userId) return true;
+        if ($user->id === $userId) {
+            return true;
+        }
 
         if ($permission === 'no') {
             return false;

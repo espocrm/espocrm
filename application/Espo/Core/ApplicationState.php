@@ -55,7 +55,7 @@ class ApplicationState
     }
 
     /**
-     * Get a portal ID (if an applicaition is portal).
+     * Get a portal ID (if an application is portal).
      */
     public function getPortalId() : string
     {
@@ -67,7 +67,7 @@ class ApplicationState
     }
 
     /**
-     * Get a portal entity (if an applicaition is portal).
+     * Get a portal entity (if an application is portal).
      */
     public function getPortal() : PortalEntity
     {
@@ -136,7 +136,7 @@ class ApplicationState
 
 
     /**
-     * Whether logged as an api user.
+     * Whether logged as an API user.
      */
     public function isApi() : bool
     {

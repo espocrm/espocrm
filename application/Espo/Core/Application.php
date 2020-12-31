@@ -31,7 +31,6 @@ namespace Espo\Core;
 
 use Espo\Core\{
     ContainerBuilder,
-    ContainerConfiguration,
     InjectableFactory,
     Container,
     ApplicationUser,
