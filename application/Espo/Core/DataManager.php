@@ -124,7 +124,10 @@ class DataManager
         catch (Throwable $e) {
             $result = false;
 
-            $GLOBALS['log']->error('Fault to rebuild database schema. Details: '. $e->getMessage());
+            $GLOBALS['log']->error(
+                'Fault to rebuild database schema. Details: '. $e->getMessage() .
+                ' at ' . $e->getFile() . ':' . $e->getLine()
+            );
         }
 
         if ($result != true) {

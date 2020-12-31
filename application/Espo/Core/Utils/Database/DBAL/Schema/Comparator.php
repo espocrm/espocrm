@@ -29,241 +29,321 @@
 
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
-use Doctrine\DBAL\Schema\Column;
-use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Schema\TableDiff;
-use Doctrine\DBAL\Schema\ColumnDiff;
+use Espo\Core\Utils\Database\DBAL\Traits\Schema\Comparator as ComparatorTrait;
+use Doctrine\DBAL\{
+    Types,
+    Schema\Table,
+    Schema\Column,
+    Schema\TableDiff,
+    Schema\ColumnDiff,
+    Schema\Index,
+    Schema\Comparator as OriginalComparator,
+};
 
-class Comparator extends \Doctrine\DBAL\Schema\Comparator
+class Comparator extends OriginalComparator
 {
+    // Espo
+    use ComparatorTrait;
+    // Espo: end
+
     public function diffColumn(Column $column1, Column $column2)
     {
-        $changedProperties = array();
+        $properties1 = $column1->toArray();
+        $properties2 = $column2->toArray();
 
-        if ( $column1->getType() != $column2->getType() ) {
+        $changedProperties = [];
 
-            //espo: fix problem with executing query for custom types
-            $column1DbTypeName = method_exists($column1->getType(), 'getDbTypeName') ? $column1->getType()->getDbTypeName() : $column1->getType()->getName();
-            $column2DbTypeName = method_exists($column2->getType(), 'getDbTypeName') ? $column2->getType()->getDbTypeName() : $column2->getType()->getName();
+        if (get_class($properties1['type']) !== get_class($properties2['type'])) {
+            // Espo
+            $this->espoFixTypeDiff($changedProperties, $column1, $column2);
+            //$changedProperties[] = 'type';
+            // Espo: end
+        }
 
-            if (strtolower($column1DbTypeName) != strtolower($column2DbTypeName)) {
-                $changedProperties[] = 'type';
+        foreach (['notnull', 'unsigned', 'autoincrement'] as $property) {
+            if ($properties1[$property] === $properties2[$property]) {
+                continue;
             }
-            //END: espo
+
+            $changedProperties[] = $property;
         }
 
-        if ($column1->getNotnull() != $column2->getNotnull()) {
-            $changedProperties[] = 'notnull';
-        }
-
-        if ($column1->getDefault() != $column2->getDefault()) {
+        // Null values need to be checked additionally as they tell whether to create or drop a default value.
+        // null != 0, null != false, null != '' etc. This affects platform's table alteration SQL generation.
+        if (
+            ($properties1['default'] === null) !== ($properties2['default'] === null)
+            || $properties1['default'] != $properties2['default']
+        ) {
             $changedProperties[] = 'default';
         }
 
-        if ($column1->getUnsigned() != $column2->getUnsigned()) {
-            $changedProperties[] = 'unsigned';
-        }
-
-        if ($column1->getType() instanceof \Doctrine\DBAL\Types\StringType) {
+        if (
+            ($properties1['type'] instanceof Types\StringType && ! $properties1['type'] instanceof Types\GuidType) ||
+            $properties1['type'] instanceof Types\BinaryType
+        ) {
             // check if value of length is set at all, default value assumed otherwise.
-            $length1 = $column1->getLength() ?: 255;
-            $length2 = $column2->getLength() ?: 255;
+            $length1 = $properties1['length'] ?? 255;
+            $length2 = $properties2['length'] ?? 255;
 
-            /** Espo: column length can be increased only */
-            /*if ($length1 != $length2) {
+            // Espo: column length can only be increased
+            /*if ($length1 !== $length2) {
                 $changedProperties[] = 'length';
             }*/
             if ($length2 > $length1) {
                 $changedProperties[] = 'length';
             }
-            /** Espo: end */
+            // Espo: end
 
-            if ($column1->getFixed() != $column2->getFixed()) {
+            if ($properties1['fixed'] !== $properties2['fixed']) {
                 $changedProperties[] = 'fixed';
             }
-        }
-
-        if ($column1->getType() instanceof \Doctrine\DBAL\Types\DecimalType) {
-            if (($column1->getPrecision()?:10) != ($column2->getPrecision()?:10)) {
+        } elseif ($properties1['type'] instanceof Types\DecimalType) {
+            if (($properties1['precision'] ?? 10) !== ($properties2['precision'] ?? 10)) {
                 $changedProperties[] = 'precision';
             }
-            if ($column1->getScale() != $column2->getScale()) {
+
+            if ($properties1['scale'] !== $properties2['scale']) {
                 $changedProperties[] = 'scale';
             }
         }
 
-        if ($column1->getAutoincrement() != $column2->getAutoincrement()) {
-            $changedProperties[] = 'autoincrement';
-        }
-
-        // only allow to delete comment if its set to '' not to null.
-        if ($column1->getComment() !== null && $column1->getComment() != $column2->getComment()) {
+        // A null value and an empty string are actually equal for a comment so they should not trigger a change.
+        if (
+            $properties1['comment'] !== $properties2['comment'] &&
+            ! ($properties1['comment'] === null && $properties2['comment'] === '') &&
+            ! ($properties2['comment'] === null && $properties1['comment'] === '')
+        ) {
             $changedProperties[] = 'comment';
         }
 
-        $options1 = $column1->getCustomSchemaOptions();
-        $options2 = $column2->getCustomSchemaOptions();
+        $customOptions1 = $column1->getCustomSchemaOptions();
+        $customOptions2 = $column2->getCustomSchemaOptions();
 
-        $commonKeys = array_keys(array_intersect_key($options1, $options2));
-
-        foreach ($commonKeys as $key) {
-            if ($options1[$key] !== $options2[$key]) {
+        foreach (array_merge(array_keys($customOptions1), array_keys($customOptions2)) as $key) {
+            if (! array_key_exists($key, $properties1) || ! array_key_exists($key, $properties2)) {
+                $changedProperties[] = $key;
+            } elseif ($properties1[$key] !== $properties2[$key]) {
                 $changedProperties[] = $key;
             }
         }
 
-        $diffKeys = array_keys(array_diff_key($options1, $options2) + array_diff_key($options2, $options1));
+        $platformOptions1 = $column1->getPlatformOptions();
+        $platformOptions2 = $column2->getPlatformOptions();
 
-        $changedProperties = array_merge($changedProperties, $diffKeys);
-
-        /** Espo: do not change a field length downwards */
-        if (!empty($changedProperties) && !in_array('length', $changedProperties) && $column1->getType() instanceof \Doctrine\DBAL\Types\StringType) {
-            $length1 = $column1->getLength() ?: 255;
-            $length2 = $column2->getLength() ?: 255;
-
-            if ($length1 > $length2) {
-                $changedProperties[] = 'length';
-                $column2->setLength($length1);
+        foreach (array_keys(array_intersect_key($platformOptions1, $platformOptions2)) as $key) {
+            if ($properties1[$key] === $properties2[$key]) {
+                continue;
             }
+
+            // Espo: skip collation changes
+            if ($key == 'collation') continue;
+            // Espo: end
+
+            $changedProperties[] = $key;
         }
 
-        if (in_array('type', $changedProperties) && $column1->getType() instanceof \Doctrine\DBAL\Types\TextType && isset($column1DbTypeName) && isset($column2DbTypeName)) {
-            $constName1 = '\Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform::LENGTH_LIMIT_' . strtoupper($column1DbTypeName);
-            $constName2 = '\Espo\Core\Utils\Database\DBAL\Platforms\MySqlPlatform::LENGTH_LIMIT_' . strtoupper($column2DbTypeName);
-
-            if (defined($constName1) && defined($constName2) && constant($constName1) >= constant($constName2)) {
-                $changedProperties = array_diff($changedProperties, ['type']);
-            }
-        }
-        /** Espo: end */
-
-        return $changedProperties;
+        return array_unique($changedProperties);
     }
 
-    public function diffTable(Table $table1, Table $table2)
+    public function diffTable(Table $fromTable, Table $toTable)
     {
-        $changes = 0;
-        $tableDifferences = new TableDiff($table1->getName());
-        $tableDifferences->fromTable = $table1;
+        $changes                     = 0;
+        $tableDifferences            = new TableDiff($fromTable->getName());
+        $tableDifferences->fromTable = $fromTable;
 
-        $table1Columns = $table1->getColumns();
-        $table2Columns = $table2->getColumns();
+        $fromTableColumns = $fromTable->getColumns();
+        $toTableColumns   = $toTable->getColumns();
 
-        /* See if all the fields in table 1 exist in table 2 */
-        foreach ( $table2Columns as $columnName => $column ) {
-            if ( !$table1->hasColumn($columnName) ) {
-                $tableDifferences->addedColumns[$columnName] = $column;
-                $changes++;
+        /* See if all the columns in "from" table exist in "to" table */
+        foreach ($toTableColumns as $columnName => $column) {
+            if ($fromTable->hasColumn($columnName)) {
+                continue;
             }
+
+            $tableDifferences->addedColumns[$columnName] = $column;
+            $changes++;
         }
-        /* See if there are any removed fields in table 2 */
-        foreach ( $table1Columns as $columnName => $column ) {
-            if ( !$table2->hasColumn($columnName) ) {
+
+        /* See if there are any removed columns in "to" table */
+        foreach ($fromTableColumns as $columnName => $column) {
+            // See if column is removed in "to" table.
+            if (! $toTable->hasColumn($columnName)) {
                 $tableDifferences->removedColumns[$columnName] = $column;
                 $changes++;
+                continue;
             }
-        }
 
-        foreach ( $table1Columns as $columnName => $column ) {
-            if ( $table2->hasColumn($columnName) ) {
-                $changedProperties = $this->diffColumn( $column, $table2->getColumn($columnName) );
-                if (count($changedProperties) ) {
-                    $columnDiff = new ColumnDiff($column->getName(), $table2->getColumn($columnName), $changedProperties);
-                    $columnDiff->fromColumn = $column;
-                    $tableDifferences->changedColumns[$column->getName()] = $columnDiff;
-                    $changes++;
-                }
+            // See if column has changed properties in "to" table.
+            $changedProperties = $this->diffColumn($column, $toTable->getColumn($columnName));
+
+            if (count($changedProperties) === 0) {
+                continue;
             }
+
+            $columnDiff = new ColumnDiff($column->getName(), $toTable->getColumn($columnName), $changedProperties);
+
+            $columnDiff->fromColumn                               = $column;
+            $tableDifferences->changedColumns[$column->getName()] = $columnDiff;
+            $changes++;
         }
 
         $this->detectColumnRenamings($tableDifferences);
 
-        $table1Indexes = $table1->getIndexes();
-        $table2Indexes = $table2->getIndexes();
+        $fromTableIndexes = $fromTable->getIndexes();
+        $toTableIndexes   = $toTable->getIndexes();
 
-        foreach ($table2Indexes as $index2Name => $index2Definition) {
-            foreach ($table1Indexes as $index1Name => $index1Definition) {
-                if ($this->diffIndex($index1Definition, $index2Definition) === false) {
-                    unset($table1Indexes[$index1Name]);
-                    unset($table2Indexes[$index2Name]);
-                } else {
-                    if ($index1Name == $index2Name) {
-                        /*espo*/ if (isset($table2Indexes[$index2Name])) { /*espo*/
-                            $tableDifferences->changedIndexes[$index2Name] = $table2Indexes[$index2Name];
-                            unset($table1Indexes[$index1Name]);
-                            unset($table2Indexes[$index2Name]);
-                            $changes++;
-                        /*espo*/ } /*espo*/
-                    }
-                }
+        /* See if all the indexes in "from" table exist in "to" table */
+        foreach ($toTableIndexes as $indexName => $index) {
+            if (($index->isPrimary() && $fromTable->hasPrimaryKey()) || $fromTable->hasIndex($indexName)) {
+                continue;
             }
-        }
 
-        foreach ($table1Indexes as $index1Name => $index1Definition) {
-            $tableDifferences->removedIndexes[$index1Name] = $index1Definition;
+            $tableDifferences->addedIndexes[$indexName] = $index;
             $changes++;
         }
 
-        foreach ($table2Indexes as $index2Name => $index2Definition) {
-            $tableDifferences->addedIndexes[$index2Name] = $index2Definition;
+        /* See if there are any removed indexes in "to" table */
+        foreach ($fromTableIndexes as $indexName => $index) {
+            // See if index is removed in "to" table.
+            if (
+                ($index->isPrimary() && ! $toTable->hasPrimaryKey()) ||
+                ! $index->isPrimary() && ! $toTable->hasIndex($indexName)
+            ) {
+                $tableDifferences->removedIndexes[$indexName] = $index;
+                $changes++;
+                continue;
+            }
+
+            // See if index has changed in "to" table.
+            $toTableIndex = $index->isPrimary() ? $toTable->getPrimaryKey() : $toTable->getIndex($indexName);
+            assert($toTableIndex instanceof Index);
+
+            if (! $this->diffIndex($index, $toTableIndex)) {
+                continue;
+            }
+
+            $tableDifferences->changedIndexes[$indexName] = $toTableIndex;
             $changes++;
         }
 
-        $fromFkeys = $table1->getForeignKeys();
-        $toFkeys = $table2->getForeignKeys();
+        $this->detectIndexRenamings($tableDifferences);
 
-        foreach ($fromFkeys as $key1 => $constraint1) {
-            foreach ($toFkeys as $key2 => $constraint2) {
-                if($this->diffForeignKey($constraint1, $constraint2) === false) {
-                    unset($fromFkeys[$key1]);
-                    unset($toFkeys[$key2]);
+        $fromForeignKeys = $fromTable->getForeignKeys();
+        $toForeignKeys   = $toTable->getForeignKeys();
+
+        foreach ($fromForeignKeys as $fromKey => $fromConstraint) {
+            foreach ($toForeignKeys as $toKey => $toConstraint) {
+                if ($this->diffForeignKey($fromConstraint, $toConstraint) === false) {
+                    unset($fromForeignKeys[$fromKey], $toForeignKeys[$toKey]);
                 } else {
-                    if (strtolower($constraint1->getName()) == strtolower($constraint2->getName())) {
-                        $tableDifferences->changedForeignKeys[] = $constraint2;
+                    if (strtolower($fromConstraint->getName()) === strtolower($toConstraint->getName())) {
+                        $tableDifferences->changedForeignKeys[] = $toConstraint;
                         $changes++;
-                        unset($fromFkeys[$key1]);
-                        unset($toFkeys[$key2]);
+                        unset($fromForeignKeys[$fromKey], $toForeignKeys[$toKey]);
                     }
                 }
             }
         }
 
-        foreach ($fromFkeys as $constraint1) {
-            $tableDifferences->removedForeignKeys[] = $constraint1;
+        foreach ($fromForeignKeys as $fromConstraint) {
+            $tableDifferences->removedForeignKeys[] = $fromConstraint;
             $changes++;
         }
 
-        foreach ($toFkeys as $constraint2) {
-            $tableDifferences->addedForeignKeys[] = $constraint2;
+        foreach ($toForeignKeys as $toConstraint) {
+            $tableDifferences->addedForeignKeys[] = $toConstraint;
             $changes++;
         }
 
-        return $changes ? $tableDifferences : false;
+        return $changes > 0 ? $tableDifferences : false;
     }
 
+    /**
+     * Try to find columns that only changed their name, rename operations maybe cheaper than add/drop
+     * however ambiguities between different possibilities should not lead to renaming at all.
+     *
+     * @return void
+     */
     private function detectColumnRenamings(TableDiff $tableDifferences)
     {
-        $renameCandidates = array();
+        $renameCandidates = [];
         foreach ($tableDifferences->addedColumns as $addedColumnName => $addedColumn) {
             foreach ($tableDifferences->removedColumns as $removedColumn) {
-                if (count($this->diffColumn($addedColumn, $removedColumn)) == 0) {
-                    $renameCandidates[$addedColumn->getName()][] = array($removedColumn, $addedColumn, $addedColumnName);
+                if (count($this->diffColumn($addedColumn, $removedColumn)) !== 0) {
+                    continue;
                 }
+
+                $renameCandidates[$addedColumn->getName()][] = [$removedColumn, $addedColumn, $addedColumnName];
             }
         }
 
         foreach ($renameCandidates as $candidateColumns) {
-            if (count($candidateColumns) == 1) {
-                list($removedColumn, $addedColumn) = $candidateColumns[0];
-                $removedColumnName = strtolower($removedColumn->getName());
-                $addedColumnName = strtolower($addedColumn->getName());
-
-                if ( ! isset($tableDifferences->renamedColumns[$removedColumnName])) {
-                    $tableDifferences->renamedColumns[$removedColumnName] = $addedColumn;
-                    unset($tableDifferences->addedColumns[$addedColumnName]);
-                    unset($tableDifferences->removedColumns[$removedColumnName]);
-                }
+            if (count($candidateColumns) !== 1) {
+                continue;
             }
+
+            [$removedColumn, $addedColumn] = $candidateColumns[0];
+            $removedColumnName             = strtolower($removedColumn->getName());
+            $addedColumnName               = strtolower($addedColumn->getName());
+
+            if (isset($tableDifferences->renamedColumns[$removedColumnName])) {
+                continue;
+            }
+
+            $tableDifferences->renamedColumns[$removedColumnName] = $addedColumn;
+            unset(
+                $tableDifferences->addedColumns[$addedColumnName],
+                $tableDifferences->removedColumns[$removedColumnName]
+            );
+        }
+    }
+
+    /**
+     * Try to find indexes that only changed their name, rename operations maybe cheaper than add/drop
+     * however ambiguities between different possibilities should not lead to renaming at all.
+     *
+     * @return void
+     */
+    private function detectIndexRenamings(TableDiff $tableDifferences)
+    {
+        $renameCandidates = [];
+
+        // Gather possible rename candidates by comparing each added and removed index based on semantics.
+        foreach ($tableDifferences->addedIndexes as $addedIndexName => $addedIndex) {
+            foreach ($tableDifferences->removedIndexes as $removedIndex) {
+                if ($this->diffIndex($addedIndex, $removedIndex)) {
+                    continue;
+                }
+
+                $renameCandidates[$addedIndex->getName()][] = [$removedIndex, $addedIndex, $addedIndexName];
+            }
+        }
+
+        foreach ($renameCandidates as $candidateIndexes) {
+            // If the current rename candidate contains exactly one semantically equal index,
+            // we can safely rename it.
+            // Otherwise it is unclear if a rename action is really intended,
+            // therefore we let those ambiguous indexes be added/dropped.
+            if (count($candidateIndexes) !== 1) {
+                continue;
+            }
+
+            [$removedIndex, $addedIndex] = $candidateIndexes[0];
+
+            $removedIndexName = strtolower($removedIndex->getName());
+            $addedIndexName   = strtolower($addedIndex->getName());
+
+            if (isset($tableDifferences->renamedIndexes[$removedIndexName])) {
+                continue;
+            }
+
+            // Espo: skip index renaming
+            //$tableDifferences->renamedIndexes[$removedIndexName] = $addedIndex;
+            // Espo: end
+            unset(
+                $tableDifferences->addedIndexes[$addedIndexName],
+                $tableDifferences->removedIndexes[$removedIndexName]
+            );
         }
     }
 }

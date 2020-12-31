@@ -27,27 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Database\DBAL\Schema;
+namespace tests\integration\Espo\Core\Utils\Database;
 
-class Schema extends \Doctrine\DBAL\Schema\Schema
+class DateFieldTest extends Base
 {
-    /**
-     * Creates a new table.
-     *
-     * @param string $tableName
-     *
-     * @return \Doctrine\DBAL\Schema\Table
-     */
-    public function createTable($tableName)
+    public function testColumn()
     {
-        $table = new Table($tableName);
-        $this->_addTable($table);
+        $column = $this->getColumnInfo('Test', 'testDate');
 
-        foreach ($this->_schemaConfig->getDefaultTableOptions() as $name => $value) {
-            $table->addOption($name, $value);
-        }
-
-        return $table;
+        $this->assertNotEmpty($column);
+        $this->assertEquals('date', $column['DATA_TYPE']);
+        $this->assertEquals('YES', $column['IS_NULLABLE']);
     }
-
 }
