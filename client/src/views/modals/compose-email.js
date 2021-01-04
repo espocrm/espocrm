@@ -62,8 +62,12 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 var attributes = this.options.attributes || {};
 
                 require('email-helper', function (EmailHelper) {
+                    this.getRouter().confirmLeaveOut = false;
+
                     var emailHelper = new EmailHelper();
+
                     var link = emailHelper.composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+
                     document.location.href = link;
                 }.bind(this));
 
@@ -80,7 +84,9 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
         },
 
         createRecordView: function (model, callback) {
-            var viewName = this.getMetadata().get('clientDefs.' + model.name + '.recordViews.compose') || 'views/email/record/compose';
+            var viewName = this.getMetadata().get('clientDefs.' + model.name + '.recordViews.compose') ||
+                'views/email/record/compose';
+
             var options = {
                 model: model,
                 el: this.containerSelector + ' .edit-container',
@@ -93,6 +99,7 @@ define('views/modals/compose-email', 'views/modals/edit', function (Dep) {
                 appendSignature: this.options.appendSignature,
                 exit: function () {}
             };
+
             this.createView('edit', viewName, options, callback);
         },
 
