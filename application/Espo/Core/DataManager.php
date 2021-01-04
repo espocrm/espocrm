@@ -211,7 +211,7 @@ class DataManager
             $job = $entityManager
                 ->getRepository('ScheduledJob')
                 ->where([
-                    'job' => $jobName
+                    'job' => $jobName,
                 ])
                 ->findOne();
 
@@ -289,14 +289,15 @@ class DataManager
         $sql = "SHOW VARIABLES LIKE 'ft_min_word_len'";
 
         $sth = $pdo->prepare($sql);
+
         $sth->execute();
 
         $fullTextSearchMinLength = null;
 
-        if ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            if (isset($row['Value'])) {
-                $fullTextSearchMinLength = intval($row['Value']);
-            }
+        $row = $sth->fetch(PDO::FETCH_ASSOC);
+
+        if ($row && isset($row['Value'])) {
+            $fullTextSearchMinLength = intval($row['Value']);
         }
 
         $config->set('fullTextSearchMinLength', $fullTextSearchMinLength);
@@ -304,17 +305,13 @@ class DataManager
 
     protected function setCryptKeyConfigParameter()
     {
-        $config = $this->config;
-
-        $cryptKey = $config->get('cryptKey');
-
-        if ($cryptKey) {
+        if ($this->config->get('cryptKey')) {
             return;
         }
 
         $cryptKey = Util::generateSecretKey();
 
-        $config->set('cryptKey', $cryptKey);
+        $this->config->set('cryptKey', $cryptKey);
     }
 
     protected function disableHooks()

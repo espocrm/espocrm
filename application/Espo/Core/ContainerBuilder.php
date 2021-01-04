@@ -122,7 +122,7 @@ class ContainerBuilder
         return $this;
     }
 
-    public function withDataCacheClassName(string $fileManagerClassName) : self
+    public function withDataCacheClassName(string $dataCacheClassName) : self
     {
         $this->dataCacheClassName = $dataCacheClassName;
 

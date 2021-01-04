@@ -29,14 +29,12 @@
 
 namespace Espo\Core;
 
-use PDO;
-
 use Espo\Core\{
+    Exceptions\Error,
     ServiceFactory,
     InjectableFactory,
     Utils\Config,
     Utils\File\Manager as FileManager,
-    Utils\Json,
     Utils\System,
     Utils\ScheduledJob,
     Utils\Cron\ScheduledJob as CronScheduledJob,
@@ -50,9 +48,6 @@ use Espo\Entities\Job as JobEntity;
 use Spatie\Async\Pool as AsyncPool;
 
 use Cron\CronExpression;
-
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
 
 use Exception;
 use Throwable;
@@ -187,6 +182,7 @@ class CronManager
     {
         if (!$this->checkLastRunTime()) {
             $GLOBALS['log']->info('CronManager: Stop cron running, too frequent execution.');
+
             return;
         }
 
@@ -297,6 +293,7 @@ class CronManager
 
         if ($useProcessPool) {
             $task = new JobTask($job->id);
+
             $pool->add($task);
 
             return;
@@ -310,11 +307,15 @@ class CronManager
      */
     public function runJobById(string $id)
     {
-        if (empty($id)) throw new Error();
+        if (empty($id)) {
+            throw new Error();
+        }
 
         $job = $this->entityManager->getEntity('Job', $id);
 
-        if (!$job) throw new Error("Job {$id} not found.");
+        if (!$job) {
+            throw new Error("Job {$id} not found.");
+        }
 
         if ($job->get('status') !== self::READY) {
             throw new Error("Can't run job {$id} with no status Ready.");
@@ -377,7 +378,10 @@ class CronManager
             );
         }
 
-        if ($isSuccess) return true;
+        if ($isSuccess) {
+            return true;
+        }
+
         return false;
     }
 
@@ -426,7 +430,6 @@ class CronManager
 
         $service = $this->serviceFactory->create($serviceName);
 
-        $methodNameDeprecated = $job->get('method');
         $methodName = $job->get('methodName');
 
         if (!$methodName) {
@@ -468,7 +471,6 @@ class CronManager
         $activeScheduledJobList = $this->getCronScheduledJobUtil()->getActiveScheduledJobList();
         $runningScheduledJobIdList = $this->getCronJobUtil()->getRunningScheduledJobIdList();
 
-        $createdJobIdList = [];
         foreach ($activeScheduledJobList as $scheduledJob) {
             $scheduling = $scheduledJob->get('scheduling');
             $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
@@ -482,7 +484,8 @@ class CronManager
                 }
                 catch (Exception $e) {
                     $GLOBALS['log']->error(
-                        'CronManager (ScheduledJob ['.$scheduledJob->id.']): Scheduling string error - '. $e->getMessage() . '.'
+                        'CronManager (ScheduledJob ' . $scheduledJob->id . '): Scheduling string error - ' .
+                        $e->getMessage() . '.'
                     );
 
                     continue;
@@ -493,7 +496,8 @@ class CronManager
                 }
                 catch (Exception $e) {
                     $GLOBALS['log']->error(
-                        'CronManager (ScheduledJob ['.$scheduledJob->id.']): Unsupported CRON expression ['.$scheduling.']'
+                        'CronManager (ScheduledJob '. $scheduledJob->id . '): ' .
+                        'Unsupported CRON expression ' . $scheduling . '.'
                     );
 
                     continue;

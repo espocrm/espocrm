@@ -43,7 +43,7 @@ class MariaDb1027Platform extends MySQLPlatform
 
     protected function getReservedKeywordsClass(): string
     {
-        return Keywords\MariaDb102Keywords::class;
+        return MariaDb102Keywords::class;
     }
 
     protected function initializeDoctrineTypeMappings(): void

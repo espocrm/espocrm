@@ -32,15 +32,12 @@ namespace Espo\Core;
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
-    Utils\Util,
     Api\Request,
     Api\Response,
     Exceptions\NotFound,
-    Exceptions\BadRequest,
 };
 
 use ReflectionClass;
-use StdClass;
 
 /**
  * Creates controller instances and processes actions.
