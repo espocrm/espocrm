@@ -262,7 +262,7 @@ class Manager
         }
 
         if ($result && function_exists('opcache_invalidate')) {
-            @opcache_invalidate($fullPath);
+            opcache_invalidate($fullPath);
         }
 
         return $result;
@@ -516,6 +516,12 @@ class Manager
             return true;
         }
 
+        $parentDirPath = dirname($fullPath);
+
+        if (!file_exists($parentDirPath)) {
+            $this->mkdir($parentDirPath, $permission);
+        }
+
         $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($fullPath);
 
         if (!isset($permission)) {
@@ -524,11 +530,11 @@ class Manager
         }
 
         try {
-            $umask = @umask(0);
-            $result = mkdir($fullPath, $permission, true);
+            $umask = umask(0);
+            $result = mkdir($fullPath, $permission);
 
             if ($umask) {
-                @umask($umask);
+                umask($umask);
             }
 
             if (!empty($defaultPermissions['user'])) {
@@ -615,7 +621,7 @@ class Manager
                 $this->getPermissionUtils()->setDefaultPermissions($destFile);
 
                 if (function_exists('opcache_invalidate')) {
-                    @opcache_invalidate($destFile);
+                    opcache_invalidate($destFile);
                 }
             }
         }
@@ -719,7 +725,7 @@ class Manager
 
             if (file_exists($filePath) && is_file($filePath)) {
                 if (function_exists('opcache_invalidate')) {
-                    @opcache_invalidate($filePath, true);
+                    opcache_invalidate($filePath, true);
                 }
 
                 $result &= unlink($filePath);
