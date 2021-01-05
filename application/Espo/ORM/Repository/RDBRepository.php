@@ -297,17 +297,17 @@ class RDBRepository extends Repository
         $additionalColumnsConditions = $params['additionalColumnsConditions'] ?? [];
         unset($params['additionalColumnsConditions']);
 
-        if ($type === Entity::MANY_MANY && count($additionalColumnsConditions)) {
-            $select = $this->applyRelationAdditionalColumnsConditions(
-                $entity, $relationName, $additionalColumnsConditions, $select
-            );
-        }
-
         $select = null;
 
         if ($entityType) {
             $params['from'] = $entityType;
             $select = Select::fromRaw($params);
+        }
+
+        if ($type === Entity::MANY_MANY && count($additionalColumnsConditions)) {
+            $select = $this->applyRelationAdditionalColumnsConditions(
+                $entity, $relationName, $additionalColumnsConditions, $select
+            );
         }
 
         return (int) $this->getMapper()->countRelated($entity, $relationName, $select);
