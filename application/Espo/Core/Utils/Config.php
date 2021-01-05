@@ -31,7 +31,7 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\{
     Exceptions\Error,
-    Utils\File\Manager as FileManager,
+    Utils\Config\ConfigFileManager,
 };
 
 use StdClass;
@@ -64,17 +64,12 @@ class Config
 
     private $fileManager;
 
-    public function __construct(FileManager $fileManager)
+    public function __construct(ConfigFileManager $fileManager)
     {
         $this->fileManager = $fileManager;
     }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    public function getConfigPath()
+    public function getConfigPath() : string
     {
         return $this->configPath;
     }
@@ -186,7 +181,7 @@ class Config
 
         $configPath = $this->getConfigPath();
 
-        if (!file_exists($configPath)) {
+        if (!$this->fileManager->isFile($configPath)) {
             throw new Error("Config file '{$configPath}' is not found.");
         }
 
@@ -216,13 +211,13 @@ class Config
 
         $data['microtime'] = $microtime = microtime(true);
 
-        $result = $this->getFileManager()->putPhpContents($configPath, $data, true, true);
+        $result = $this->fileManager->putPhpContents($configPath, $data, true);
 
         if ($result) {
             $reloadedData = include($configPath);
 
             if (!is_array($reloadedData) || $microtime !== ($reloadedData['microtime'] ?? null)) {
-                $result = $this->getFileManager()->putPhpContents($configPath, $data, true, false);
+                $result = $this->fileManager->putPhpContents($configPath, $data, false);
             }
         }
 
@@ -241,7 +236,7 @@ class Config
      */
     public function getDefaults() : array
     {
-        return $this->getFileManager()->getPhpContents($this->defaultConfigPath);
+        return $this->fileManager->getPhpContents($this->defaultConfigPath);
     }
 
     protected function loadConfig(bool $reload = false)
@@ -250,13 +245,17 @@ class Config
             return $this->data;
         }
 
-        $configPath = file_exists($this->configPath) ? $this->configPath : $this->defaultConfigPath;
+        $configPath = $this->fileManager->isFile($this->configPath) ?
+                $this->configPath :
+                $this->defaultConfigPath;
 
-        $this->data = $this->getFileManager()->getPhpContents($configPath);
+        $this->data = $this->fileManager->getPhpContents($configPath);
 
-        $systemConfig = $this->getFileManager()->getPhpContents($this->systemConfigPath);
+        $systemConfig = $this->fileManager->getPhpContents($this->systemConfigPath);
 
         $this->data = Util::merge($systemConfig, $this->data);
+
+        $this->fileManager->setConfig($this);
 
         return $this->data;
     }

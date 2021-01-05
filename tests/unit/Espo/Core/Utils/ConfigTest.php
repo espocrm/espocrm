@@ -31,6 +31,9 @@ namespace tests\unit\Espo\Core\Utils;
 
 use tests\unit\ReflectionHelper;
 
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigFileManager;
+
 class ConfigTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -45,16 +48,16 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
+        $this->fileManager = new ConfigFileManager;
 
         /*copy defaultTestConfig file to cache*/
         if (!file_exists($this->configPath)) {
             copy($this->defaultTestConfig, $this->configPath);
         }
 
-        $this->object = new \Espo\Core\Utils\Config($this->objects['fileManager']);
+        $this->config = new Config($this->fileManager);
 
-        $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection = new ReflectionHelper($this->config);
 
         $this->reflection->setProperty('configPath', $this->configPath);
         $this->reflection->setProperty('systemConfigPath', $this->systemConfigPath);
@@ -62,9 +65,8 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     protected function tearDown() : void
     {
-        $this->object = NULL;
+        $this->config = NULL;
     }
-
 
     public function testLoadConfig()
     {
@@ -82,16 +84,16 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
             'user' => 'root',
             'password' => '',
         );
-        $this->assertEquals($result, $this->object->get('database'));
+        $this->assertEquals($result, $this->config->get('database'));
 
         $result = 'pdo_mysql';
-        $this->assertEquals($result, $this->object->get('database.driver'));
+        $this->assertEquals($result, $this->config->get('database.driver'));
 
 
         $result = 'YYYY-MM-DD';
-        $this->assertEquals($result, $this->object->get('dateFormat'));
+        $this->assertEquals($result, $this->config->get('dateFormat'));
 
-        $this->assertTrue($this->object->get('isInstalled'));
+        $this->assertTrue($this->config->get('isInstalled'));
     }
 
 
@@ -100,12 +102,12 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $setKey= 'testOption';
         $setValue= 'Test';
 
-        $this->object->set($setKey, $setValue);
-        $this->assertTrue($this->object->save());
-        $this->assertEquals($setValue, $this->object->get($setKey));
+        $this->config->set($setKey, $setValue);
+        $this->assertTrue($this->config->save());
+        $this->assertEquals($setValue, $this->config->get($setKey));
 
-        $this->object->set($setKey, 'Another Wrong Value');
-        $this->assertTrue($this->object->save());
+        $this->config->set($setKey, 'Another Wrong Value');
+        $this->assertTrue($this->config->save());
     }
 
     public function testSetNull()
@@ -113,13 +115,13 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $setKey= 'testOption';
         $setValue= 'Test';
 
-        $this->object->set($setKey, $setValue);
-        $this->assertTrue($this->object->save());
-        $this->assertEquals($setValue, $this->object->get($setKey));
+        $this->config->set($setKey, $setValue);
+        $this->assertTrue($this->config->save());
+        $this->assertEquals($setValue, $this->config->get($setKey));
 
-        $this->object->set($setKey, null);
-        $this->assertTrue($this->object->save());
-        $this->assertNull($this->object->get($setKey));
+        $this->config->set($setKey, null);
+        $this->assertTrue($this->config->save());
+        $this->assertNull($this->config->get($setKey));
     }
 
     public function testSetArray()
@@ -129,16 +131,16 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
             'testOption2' => 'Test2',
         );
 
-        $this->object->set($values);
-        $this->assertTrue($this->object->save());
-        $this->assertEquals('Test', $this->object->get('testOption'));
-        $this->assertEquals('Test2', $this->object->get('testOption2'));
+        $this->config->set($values);
+        $this->assertTrue($this->config->save());
+        $this->assertEquals('Test', $this->config->get('testOption'));
+        $this->assertEquals('Test2', $this->config->get('testOption2'));
 
         $wrongArray = array(
             'testOption' => 'Another Wrong Value',
         );
-        $this->object->set($wrongArray);
-        $this->assertTrue($this->object->save());
+        $this->config->set($wrongArray);
+        $this->assertTrue($this->config->save());
     }
 
     public function testRemove()
@@ -146,17 +148,17 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $optKey = 'removeOption';
         $optValue = 'Test';
 
-        $this->object->set($optKey, $optValue);
-        $this->assertTrue($this->object->save());
+        $this->config->set($optKey, $optValue);
+        $this->assertTrue($this->config->save());
 
-        $this->assertTrue($this->object->remove($optKey));
+        $this->assertTrue($this->config->remove($optKey));
 
-        $this->assertNull($this->object->get($optKey));
+        $this->assertNull($this->config->get($optKey));
     }
 
     public function testSystemConfigMerge()
     {
-        $configDataWithoutSystem = $this->objects['fileManager']->getPhpContents($this->configPath);
+        $configDataWithoutSystem = $this->fileManager->getPhpContents($this->configPath);
         $this->assertArrayNotHasKey('systemItems', $configDataWithoutSystem);
         $this->assertArrayNotHasKey('adminItems', $configDataWithoutSystem);
 
