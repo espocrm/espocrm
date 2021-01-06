@@ -30,7 +30,7 @@
 use Espo\Core\{
     Application,
     Utils\Util,
-    Utils\File\Manager as FileManager,
+    Utils\Config\ConfigFileManager,
     Utils\Config,
     Utils\Database\Helper as DatabaseHelper,
     Utils\PasswordHash,
@@ -96,7 +96,7 @@ class Installer
 
     protected function initialize()
     {
-        $fileManager = new FileManager();
+        $fileManager = new ConfigFileManager();
         $config = new Config($fileManager);
         $configPath = $config->getConfigPath();
 

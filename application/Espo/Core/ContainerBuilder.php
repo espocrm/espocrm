@@ -36,6 +36,7 @@ use Espo\Core\{
     Binding\BindingLoader,
     Binding\EspoBindingLoader,
     Utils\File\Manager as FileManager,
+    Utils\Config\ConfigFileManager,
     Utils\Config,
     Utils\DataCache,
     Utils\Module,
@@ -133,7 +134,7 @@ class ContainerBuilder
     {
         $config = $this->services['config'] ?? (
             new $this->configClassName(
-                new $this->fileManagerClassName()
+                new ConfigFileManager()
             )
         );
 
