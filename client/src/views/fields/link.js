@@ -366,7 +366,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 }
 
                 $elementName.on('change', function () {
-                    if (!this.model.get(this.idName)) {
+                    if (this.mode !== 'search' && !this.model.get(this.idName)) {
                         $elementName.val(this.model.get(this.nameName));
                     }
                 }.bind(this));
