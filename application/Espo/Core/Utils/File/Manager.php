@@ -55,13 +55,13 @@ class Manager
 
     const GET_SAFE_CONTENTS_RETRY_INTERVAL = 0.1;
 
-    public function __construct(?Config $config = null)
+    public function __construct(?array $defaultPermissions = null)
     {
         $params = null;
 
-        if (isset($config)) {
+        if ($defaultPermissions) {
             $params = [
-                'defaultPermissions' => $config->get('defaultPermissions'),
+                'defaultPermissions' => $defaultPermissions,
             ];
         }
 

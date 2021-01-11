@@ -45,11 +45,21 @@ class EspoFileHandler extends MonologStreamHandler
 
     protected $maxErrorMessageLength = 5000;
 
+    protected $configPath = 'data/config.php';
+
     public function __construct(string $filename, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($filename, $level, $bubble);
 
-        $this->fileManager = new FileManager();
+        $defaultPermissions = null;
+
+        if (file_exists($this->configPath)) {
+            $configData = include $this->configPath;
+
+            $defaultPermissions = $configData['defaultPermissions'] ?? null;
+        }
+
+        $this->fileManager = new FileManager($defaultPermissions);
     }
 
     protected function write(array $record): void

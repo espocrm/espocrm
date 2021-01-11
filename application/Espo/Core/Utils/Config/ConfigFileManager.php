@@ -45,7 +45,9 @@ class ConfigFileManager
 
     public function setConfig(Config $config)
     {
-        $this->fileManager = new FileManager($config);
+        $this->fileManager = new FileManager(
+            $config->get('defaultPermissions')
+        );
     }
 
     public function isFile(string $filePath) : bool

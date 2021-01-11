@@ -28,8 +28,11 @@
  ************************************************************************/
 
 namespace tests\unit\Espo\Core\Utils\File;
+
 use tests\unit\ReflectionHelper;
+
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 class ManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -44,9 +47,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-
-        $this->object = new \Espo\Core\Utils\File\Manager();
+        $this->object = new FileManager();
 
         $this->reflection = new ReflectionHelper($this->object);
     }
