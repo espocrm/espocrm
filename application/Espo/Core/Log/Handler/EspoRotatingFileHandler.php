@@ -31,6 +31,10 @@ namespace Espo\Core\Log\Handler;
 
 use Monolog\Logger;
 
+use Espo\Core\{
+    Utils\Config,
+};
+
 class EspoRotatingFileHandler extends EspoFileHandler
 {
     protected $dateFormat = 'Y-m-d';
@@ -41,12 +45,13 @@ class EspoRotatingFileHandler extends EspoFileHandler
 
     protected $maxFiles;
 
-    public function __construct(string $filename, int $maxFiles = 0, $level = Logger::DEBUG, bool $bubble = true)
-    {
+    public function __construct(
+        string $filename, int $maxFiles = 0, $level = Logger::DEBUG, bool $bubble = true, Config $config
+    ) {
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;
 
-        parent::__construct($this->getTimedFilename(), $level, $bubble);
+        parent::__construct($this->getTimedFilename(), $level, $bubble, $config);
 
         $this->rotate();
     }
