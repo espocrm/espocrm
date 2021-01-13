@@ -90,6 +90,7 @@ class Functions
         'QUARTER_10',
         'QUARTER_11',
         'CONCAT',
+        'LEFT',
         'TZ',
         'NOW',
         'ADD',
@@ -132,6 +133,7 @@ class Functions
 
     public static $multipleArgumentsFunctionList = [
         'CONCAT',
+        'LEFT',
         'TZ',
         'ROUND',
         'COALESCE',
