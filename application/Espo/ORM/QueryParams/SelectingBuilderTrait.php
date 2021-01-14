@@ -204,11 +204,13 @@ trait SelectingBuilderTrait
      */
     public function hasLeftJoinAlias(string $alias) : bool
     {
-        if (in_array($alias, $this->params['leftJoins'])) {
+        $leftJoins = $this->params['leftJoins'] ?? [];
+
+        if (in_array($alias, $leftJoins)) {
             return true;
         }
 
-        foreach ($this->params['leftJoins'] as $item) {
+        foreach ($leftJoins as $item) {
             if (is_array($item) && count($item) > 1) {
                 if ($item[1] === $alias) {
                     return true;
@@ -224,11 +226,13 @@ trait SelectingBuilderTrait
      */
     public function hasJoinAlias(string $alias) : bool
     {
-        if (in_array($alias, $this->params['joins'])) {
+        $joins = $this->params['joins'] ?? [];
+
+        if (in_array($alias, $joins)) {
             return true;
         }
 
-        foreach ($this->params['joins'] as $item) {
+        foreach ($joins as $item) {
             if (is_array($item) && count($item) > 1) {
                 if ($item[1] === $alias) {
                     return true;
