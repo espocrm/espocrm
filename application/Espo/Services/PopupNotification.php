@@ -32,6 +32,7 @@ namespace Espo\Services;
 use Espo\Core\{
     ServiceFactory,
     Utils\Metadata,
+    Utils\Log,
 };
 
 use Espo\{
@@ -46,12 +47,14 @@ class PopupNotification
     protected $metadata;
     protected $serviceFactory;
     protected $user;
+    protected $log;
 
-    public function __construct(Metadata $metadata, ServiceFactory $serviceFactory, User $user)
+    public function __construct(Metadata $metadata, ServiceFactory $serviceFactory, User $user, Log $log)
     {
         $this->metadata = $metadata;
         $this->serviceFactory = $serviceFactory;
         $this->user = $user;
+        $this->log = $log;
     }
 
     public function getGroupedList() : StdClass
