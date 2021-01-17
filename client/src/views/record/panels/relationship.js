@@ -64,7 +64,7 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
             var url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
 
             if (!('create' in this.defs)) {
-                this.defs.create = true;
+                this.defs.create = !this.getMetadata().get(['clientDefs', this.scope, 'createDisabled']);
             }
             if (!('select' in this.defs)) {
                 this.defs.select = true;
