@@ -23,42 +23,42 @@
     "links": {
     },
     "options": {
-        "Draft": "Draft",
-        "Sending": "Posílání",
-        "Sent": "Posláno",
+        "Draft": "Koncept",
+        "Sending": "Odesílání",
+        "Sent": "Odesláno",
         "Archived": "Archivováno",
-        "Received": "Obdrženo"
+        "Received": "Přijato"
     },
     "labels": {
         "Create Email": "Vytvořit email",
         "Archive Email": "Archivovat email",
-        "Compose": "Složit",
+        "Compose": "Vytvořit",
         "Reply": "Odpovědět",
         "Reply to All": "Odpovědět všem",
         "Forward": "Přeposlat",
         "Original message": "Původní zpráva",
         "Forwarded message": "Přeposlaná zpráva",
         "Email Accounts": "Emailové účty",
-        "Send Test Email": "Poslat testovací email",
-        "Send": "Poslat",
+        "Send Test Email": "Poslat zkušební email",
+        "Send": "Odeslat",
         "Email Address": "Emailová adresa",
         "Mark Read": "Označit jako přečtěné",
-        "Sending...": "Posílání...",
-        "Save Draft": "Uložit draft",
+        "Sending...": "Odesílání...",
+        "Save Draft": "Uložit koncept",
         "Mark all as read": "Označit vše jako přečtené",
         "Show Plain Text": "Zobrazit Plain Text"
     },
     "messages": {
-        "noSmtpSetup": "Chybí SMTP nastavení. {link}.",
-        "testEmailSent": "Testovací email byl poslán",
+        "noSmtpSetup": "Chybí nastavení SMTP. {link}.",
+        "testEmailSent": "Zkušební email byl odeslán",
         "emailSent": "Email byl odeslán",
-        "savedAsDraft": "Uloženo jako draft"
+        "savedAsDraft": "Uloženo jako koncept"
     },
     "presetFilters": {
-        "sent": "Odesláné",
+        "sent": "Odeslané",
         "archived": "Archivované",
         "inbox": "Doručené",
-        "drafts": "Drafty"
+        "drafts": "Koncepty"
     },
     "massActions": {
         "markAsRead": "Označit jako přečtené"
