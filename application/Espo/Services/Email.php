@@ -43,6 +43,7 @@ use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\BadRequest,
     Di,
+    Select\Where\Item as WhereItem,
 };
 
 use Exception;
@@ -1039,13 +1040,19 @@ class Email extends Record implements
     {
         $data = [];
 
-        $selectManager = $this->getSelectManager($this->getEntityType());
-        $selectParams = $selectManager->getEmptySelectParams();
-        $selectManager->applyAccess($selectParams);
+        $selectBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from('Email')
+            ->withAccessControlFilter();
 
-        $draftsSelectParams = $selectParams;
+        $draftsSelectParams = clone $selectBuilder;
 
-        $selectParams['whereClause'][] = $selectManager->getWherePartIsNotReadIsTrue();
+        $selectBuilder->withWhere(
+            WhereItem::fromRaw([
+                'type' => 'isTrue',
+                'attribute' => 'isNotRead',
+            ])
+        );
 
         $folderIdList = ['inbox', 'drafts'];
 
@@ -1061,18 +1068,24 @@ class Email extends Record implements
         }
 
         foreach ($folderIdList as $folderId) {
+            $itemSelectBuilder = $selectBuilder;
+
             if ($folderId === 'drafts') {
-                $folderSelectParams = $draftsSelectParams;
-            } else {
-                $folderSelectParams = $selectParams;
+                $itemSelectBuilder = $draftsSelectParams;
             }
 
-            $selectManager->applyFolder($folderId, $folderSelectParams);
-            $selectManager->addUsersJoin($folderSelectParams);
+            $itemSelectBuilder->withWhere(
+                WhereItem::fromRaw([
+                   'type' => 'inFolder',
+                   'attribute' => 'folderId',
+                   'value' => $folderId,
+                ])
+            );
 
-            $data[$folderId] = $this->getEntityManager()
+            $data[$folderId] = $this->entityManager
                 ->getRepository('Email')
-                ->count($folderSelectParams);
+                ->clone($itemSelectBuilder->build())
+                ->count();
         }
 
         return $data;

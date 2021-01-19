@@ -37,30 +37,44 @@ class ControllerUtil
         $params['maxSize'] = $request->get('maxSize');
         $params['offset'] = $request->get('offset');
 
+        if ($params['maxSize']) {
+            $params['maxSize'] = intval($params['maxSize']);
+        }
+
+        if ($params['offset']) {
+            $params['offset'] = intval($params['offset']);
+        }
+
         if ($request->get('orderBy')) {
             $params['orderBy'] = $request->get('orderBy');
-        } else if ($request->get('sortBy')) {
+        }
+        else if ($request->get('sortBy')) {
             $params['orderBy'] = $request->get('sortBy');
         }
 
         if ($request->get('order')) {
             $params['order'] = $request->get('order');
-        } else if ($request->get('asc')) {
+        }
+        else if ($request->get('asc')) {
             $params['order'] = $request->get('asc') === 'true' ? 'asc' : 'desc';
         }
 
         if ($request->get('q')) {
             $params['q'] = trim($request->get('q'));
         }
+
         if ($request->get('textFilter')) {
             $params['textFilter'] = $request->get('textFilter');
         }
+
         if ($request->get('primaryFilter')) {
             $params['primaryFilter'] = $request->get('primaryFilter');
         }
+
         if ($request->get('boolFilterList')) {
             $params['boolFilterList'] = $request->get('boolFilterList');
         }
+
         if ($request->get('filterList')) {
             $params['filterList'] = $request->get('filterList');
         }

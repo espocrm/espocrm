@@ -54,7 +54,11 @@ use DateTime;
 use DateTimeZone;
 use DateInterval;
 
+use ReflectionMethod;
+
 /**
+ * @deprecated Use SelectBuilder instead.
+ *
  * Used for generating and managing select parameters which subsequently will be feed to ORM.
  */
 class SelectManager
@@ -1974,6 +1978,130 @@ class SelectManager
     {
         $this->prepareResult($result);
         $this->limit($offset, $maxSize, $result);
+    }
+
+    /**
+     * Fallback for backward compatibiltiy.
+     */
+    public function hasInheritedAccessMethod() : bool
+    {
+        $method = new ReflectionMethod($this, 'access');
+
+        return $method->getDeclaringClass()->getName() !== SelectManager::class;
+    }
+
+    /**
+     * Fallback for backward compatibiltiy.
+     */
+    public function applyAccessToQueryBuilder(OrmSelectBuilder $queryBuilder)
+    {
+        $result = $queryBuilder->build()->getRaw();
+
+        $this->access($result);
+
+        $queryBuilder->setRawParams($result);
+    }
+
+    /**
+     * Fallback for backward compatibiltiy.
+     */
+    public function hasInheritedAccessFilterMethod(string $filterName) : bool
+    {
+        if (
+            $this->metadata->get(
+                ['selectDefs', $this->entityType, 'accessControlFilterClassNameMap', $filterName]
+            )
+        ) {
+            return false;
+        }
+
+        $methodName = 'access' . ucfirst($filterName);
+
+        if (!method_exists($this, $methodName)) {
+            return false;
+        }
+
+        $method = new ReflectionMethod($this, $methodName);
+
+        return $method->getDeclaringClass()->getName() !== SelectManager::class;
+    }
+
+    /**
+     * Fallback for backward compatibiltiy.
+     */
+    public function applyAccessFilterToQueryBuilder(OrmSelectBuilder $queryBuilder, string $filterName)
+    {
+        $methodName = 'access' . ucfirst($filterName);
+
+        $result = $queryBuilder->build()->getRaw();
+
+        $this->$methodName($result);
+
+        $queryBuilder->setRawParams($result);
+    }
+
+    /**
+     * Fallback for backward compatibiltiy.
+     */
+    public function hasBoolFilter(string $filter) : bool
+    {
+        $method = 'boolFilter' . ucfirst($filter);
+
+        return method_exists($this, $method);
+    }
+
+    /**
+     * Fallback for backward compatibiltiy.
+     */
+    public function applyBoolFilterToQueryBuilder(OrmSelectBuilder $queryBuilder, string $filter) : array
+    {
+        $result = $queryBuilder->build()->getRaw();
+
+        $method = 'boolFilter' . ucfirst($filter);
+
+        if (!method_exists($this, $method)) {
+            throw new Error("Bool filter '{$filter}' does not exist.");
+        }
+
+        $rawWhereClause = $this->$method($result) ?? [];
+
+        $queryBuilder->setRawParams($result);
+
+        return $rawWhereClause;
+    }
+
+    /**
+     * Fallback for backward compatibiltiy.
+     */
+    public function hasPrimaryFilter(string $filter) : bool
+    {
+        if (
+            method_exists($this, 'filter' . ucfirst($filter))
+        ) {
+            return true;
+        }
+
+        if (
+            $this->getMetadata()->get(
+                ['entityDefs', $this->entityType, 'collection', 'filters', $filter, 'className']
+            )
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Fallback for backward compatibiltiy.
+     */
+    public function applyPrimaryFilterToQueryBuilder(OrmSelectBuilder $queryBuilder, string $filter)
+    {
+        $result = $queryBuilder->build()->getRaw();
+
+        $this->applyPrimaryFilter($filter, $result);
+
+        $queryBuilder->setRawParams($result);
     }
 
     /**

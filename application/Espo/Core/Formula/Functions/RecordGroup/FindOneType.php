@@ -38,10 +38,10 @@ use Espo\Core\Di;
 
 class FindOneType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectManagerFactoryAware
+    Di\SelectBuilderFactoryAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectManagerFactorySetter;
+    use Di\SelectBuilderFactorySetter;
 
     public function process(ArgumentList $args)
     {
@@ -51,42 +51,61 @@ class FindOneType extends BaseFunction implements
 
         $entityType = $this->evaluate($args[0]);
         $orderBy = $this->evaluate($args[1]);
-        $order = $this->evaluate($args[2]) ?? 'asc';
+        $order = $this->evaluate($args[2]) ?? 'ASC';
 
-        $selectManager = $this->selectManagerFactory->create($entityType);
-        $selectParams = $selectManager->getEmptySelectParams();
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($entityType);
+
+        $whereClause = [];
 
         if (count($args) <= 4) {
             $filter = null;
+
             if (count($args) == 4) {
                 $filter = $this->evaluate($args[3]);
             }
-            if ($filter) {
-                if (!is_string($filter)) {
-                    $this->throwBadArgumentType(4, 'string');
-                }
-                $selectManager->applyFilter($filter, $selectParams);
+
+            if ($filter && !is_string($filter)) {
+                $this->throwBadArgumentType(4, 'string');
             }
-        } else {
-            $whereClause = [];
+
+            if ($filter) {
+                $builder->withPrimaryFilter($filter);
+            }
+        }
+        else {
             $i = 3;
+
             while ($i < count($args) - 1) {
                 $key = $this->evaluate($args[$i]);
                 $value = $this->evaluate($args[$i + 1]);
+
                 $whereClause[] = [$key => $value];
+
                 $i = $i + 2;
             }
-            $selectParams['whereClause'] = $whereClause;
+        }
+
+        $queryBuilder = $builder->buildQueryBuilder();
+
+        if (!empty($whereClause)) {
+            $queryBuilder->where($whereClause);
         }
 
         if ($orderBy) {
-            $selectManager->applyOrder($orderBy, $order, $selectParams);
+            $queryBuilder->order($orderBy, $order);
         }
 
-        $e = $this->entityManager->getRepository($entityType)->select(['id'])->findOne($selectParams);
+        $queryBuilder->select(['id']);
 
-        if ($e) {
-            return $e->id;
+        $entity = $this->entityManager
+            ->getRepository($entityType)
+            ->clone($queryBuilder->build())
+            ->findOne();
+
+        if ($entity) {
+            return $entity->id;
         }
 
         return null;

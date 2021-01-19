@@ -38,11 +38,11 @@ use Espo\Core\Di;
 
 class FindRelatedOneType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectManagerFactoryAware,
+    Di\SelectBuilderFactoryAware,
     Di\MetadataAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectManagerFactorySetter;
+    use Di\SelectBuilderFactorySetter;
     use Di\MetadataSetter;
 
     public function process(ArgumentList $args)
@@ -63,6 +63,7 @@ class FindRelatedOneType extends BaseFunction implements
         if (count($args) > 3) {
             $orderBy = $this->evaluate($args[3]);
         }
+
         if (count($args) > 4) {
             $order = $this->evaluate($args[4]) ?? null;
         }
@@ -81,80 +82,117 @@ class FindRelatedOneType extends BaseFunction implements
 
         $entity = $entityManager->getEntity($entityType, $id);
 
-        if (!$entity) return null;
+        if (!$entity) {
+            return null;
+        }
 
         $metadata = $this->metadata;
 
         $relationType = $entity->getRelationParam($link, 'type');
 
         if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
-            $relatedEntity = $entityManager->getRepository($entityType)->findRelated($entity, $link, [
-                'select' => ['id'],
-            ]);
+            $relatedEntity = $entityManager
+                ->getRepository($entityType)
+                ->getRelation($entity, $link)
+                ->select(['id'])
+                ->findOne();
+
             if (!$relatedEntity) {
                 return null;
             }
+
             return $relatedEntity->id;
         }
 
         if (!$orderBy) {
             $orderBy = $metadata->get(['entityDefs', $entityType, 'collection', 'orderBy']);
+
             if (is_null($order)) {
-                $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'asc';
+                $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'ASC';
             }
-        } else {
-            $order = $order ?? 'asc';
+        }
+        else {
+            $order = $order ?? 'ASC';
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
+
         if (!$foreignEntityType) {
             $this->throwError("Bad or not supported link '{$link}'.");
         }
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
+
         if (!$foreignLink) {
             $this->throwError("Not supported link '{$link}'.");
         }
 
-        $selectManager = $this->selectManagerFactory->create($foreignEntityType);
-        $selectParams = $selectManager->getEmptySelectParams();
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($foreignEntityType);
 
-        if ($relationType === 'hasChildren') {
-            $selectParams['whereClause'][] = [$foreignLink . 'Id' => $entity->id];
-            $selectParams['whereClause'][] = [$foreignLink . 'Type' => $entity->getEntityType()];
-        } else {
-            $selectManager->addJoin($foreignLink, $selectParams);
-            $selectParams['whereClause'][] = [$foreignLink . '.id' => $entity->id];
-        }
+        $whereClause = [];
 
         if (count($args) <= 6) {
             $filter = null;
+
             if (count($args) == 6) {
                 $filter = $this->evaluate($args[5]);
             }
+
+            if ($filter && !is_string($filter)) {
+                $this->throwError("Bad filter.");
+            }
+
             if ($filter) {
-                if (!is_string($filter)) {
-                    $this->throwError("Bad filter.");
-                }
-                $selectManager->applyFilter($filter, $selectParams);
+                $builder->withPrimaryFilter($filter);
             }
         } else {
             $i = 5;
+
             while ($i < count($args) - 1) {
                 $key = $this->evaluate($args[$i]);
                 $value = $this->evaluate($args[$i + 1]);
-                $selectParams['whereClause'][] = [$key => $value];
+
+                $whereClause[] = [$key => $value];
+
                 $i = $i + 2;
             }
         }
 
-        if ($orderBy) {
-            $selectManager->applyOrder($orderBy, $order, $selectParams);
+        $queryBuilder = $builder->buildQueryBuilder();
+
+        if (!empty($whereClause)) {
+            $queryBuilder->where($whereClause);
         }
 
-        $e = $entityManager->getRepository($foreignEntityType)->select(['id'])->findOne($selectParams);
+        if ($relationType === 'hasChildren') {
+            $queryBuilder->where([
+                $foreignLink . 'Id' => $entity->id,
+                $foreignLink . 'Type' => $entity->getEntityType(),
+            ]);
+        }
+        else {
+            $queryBuilder
+                ->join($foreignLink)
+                ->where([
+                    $foreignLink . '.id' => $entity->id,
+                ]);
+        }
 
-        if ($e) return $e->id;
+        if ($orderBy) {
+            $queryBuilder->order($orderBy, $order);
+        }
+
+        $relatedEntity = $entityManager
+            ->getRepository($foreignEntityType)
+            ->clone($queryBuilder->build())
+            ->select(['id'])
+            ->findOne();
+
+        if ($relatedEntity) {
+            return $relatedEntity->id;
+        }
 
         return null;
     }

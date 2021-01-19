@@ -30,22 +30,38 @@
 namespace Espo\Modules\Crm\Services;
 
 use Espo\ORM\{
-    Entity,
-    QueryParams\Select,
+    QueryParams\SelectBuilder,
 };
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
+use Espo\{
+    Services\Record,
+    Modules\Crm\Entities\Opportunity as OpportunityEntity,
+};
 
-class Opportunity extends \Espo\Services\Record
+use Espo\Core\{
+    Exceptions\Forbidden,
+};
+
+use DateTime;
+use DateInterval;
+use PDO;
+use StdClass;
+
+class Opportunity extends Record
 {
     protected $mandatorySelectAttributeList = [
         'accountId',
-        'accountName'
+        'accountName',
     ];
 
-    public function reportSalesPipeline($dateFilter, $dateFrom = null, $dateTo = null, $useLastStage = false, $teamId = null)
-    {
+    public function reportSalesPipeline(
+        string $dateFilter,
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
+        bool $useLastStage = false,
+        ?string $teamId = null
+    ) : StdClass {
+
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
             throw new Forbidden();
         }
@@ -56,26 +72,29 @@ class Opportunity extends \Espo\Services\Record
 
         $lostStageList = $this->getLostStageList();
 
-        $pdo = $this->getEntityManager()->getPDO();
-
         $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
 
-        $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
+        $queryBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from('Opportunity')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder();
 
         $stageField = 'stage';
+
         if ($useLastStage) {
             $stageField = 'lastStage';
         }
 
         $whereClause = [
             [$stageField . '!=' => $lostStageList],
-            [$stageField . '!=' => null]
+            [$stageField . '!=' => null],
         ];
 
         if ($dateFilter !== 'ever') {
             $whereClause[] = [
                 'closeDate>=' => $dateFrom,
-                'closeDate<' => $dateTo
+                'closeDate<' => $dateTo,
             ];
         }
 
@@ -85,61 +104,67 @@ class Opportunity extends \Espo\Services\Record
             ];
         }
 
-        $selectParams = [
-            'from' => 'Opportunity',
-            'select' => [$stageField, ['SUM:amountConverted', 'amount']],
-            'whereClause' => $whereClause,
-            'orderBy' => 'LIST:'.$stageField.':' . implode(',', $options),
-            'groupBy' => [$stageField],
-        ];
+        $queryBuilder
+            ->select([
+                $stageField,
+                ['SUM:amountConverted', 'amount'],
+            ])
+            ->order('LIST:'.$stageField.':' . implode(',', $options))
+            ->groupBy($stageField)
+            ->where($whereClause);
 
         if ($teamId) {
-            $selectManager->addJoin(['teams', 'teamsFilter'], $selectParams);
+            $queryBuilder->join('teams', 'teamsFilter');
         }
 
-        $selectManager->applyAccess($selectParams);
+        $this->handleDistinctReportQueryBuilder($queryBuilder, $whereClause);
 
-        $this->handleDistinctReportSelectParams($selectParams, $whereClause);
+        $sth = $this->entityManager
+            ->getQueryExecutor()
+            ->execute($queryBuilder->build());
 
-        $query = Select::fromRaw($selectParams);
-
-        $sql = $this->getEntityManager()->getQueryComposer()->compose($query);
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-
-        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         $data = [];
-        foreach ($rows as $row) {
-            $data[$row[$stageField]] = floatval($row['amount']);
+
+        foreach ($rowList as $row) {
+            $stage = $row[$stageField];
+
+            $data[$stage] = floatval($row['amount']);
         }
 
         $dataList = [];
 
         $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+
         foreach ($stageList as $stage) {
-            if (in_array($stage, $lostStageList)) continue;
+            if (in_array($stage, $lostStageList)) {
+                continue;
+            }
+
             if (!in_array($stage, $lostStageList) && !isset($data[$stage])) {
                 $data[$stage] = 0.0;
             }
 
             $dataList[] = [
                 'stage' => $stage,
-                'value' => $data[$stage]
+                'value' => $data[$stage],
             ];
         }
 
-        return [
-            'dataList' => $dataList
+        return (object) [
+            'dataList' => $dataList,
         ];
     }
 
-    public function reportByLeadSource($dateFilter, $dateFrom = null, $dateTo = null)
-    {
+    public function reportByLeadSource(
+        string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
+    ) : StdClass {
+
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
             throw new Forbidden();
         }
+
         if (in_array('leadSource', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
             throw new Forbidden();
         }
@@ -148,11 +173,13 @@ class Opportunity extends \Espo\Services\Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-
         $options = $this->getMetadata()->get('entityDefs.Lead.fields.source.options', []);
 
-        $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
+        $queryBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from('Opportunity')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder();
 
         $whereClause = [
             ['stage!=' => $this->getLostStageList()],
@@ -163,42 +190,42 @@ class Opportunity extends \Espo\Services\Record
         if ($dateFilter !== 'ever') {
             $whereClause[] = [
                 'closeDate>=' => $dateFrom,
-                'closeDate<' => $dateTo
+                'closeDate<' => $dateTo,
             ];
         }
 
-        $selectParams = [
-            'from' => 'Opportunity',
-            'select' => ['leadSource', ['SUM:amountWeightedConverted', 'amount']],
-            'whereClause' => $whereClause,
-            'orderBy' => 'LIST:leadSource:' . implode(',', $options),
-            'groupBy' => ['leadSource'],
-        ];
+        $queryBuilder
+            ->select([
+                'leadSource',
+                ['SUM:amountWeightedConverted', 'amount'],
+            ])
+            ->order('LIST:leadSource:' . implode(',', $options))
+            ->groupBy('leadSource')
+            ->where($whereClause);
 
-        $selectManager->applyAccess($selectParams);
+        $this->handleDistinctReportQueryBuilder($queryBuilder, $whereClause);
 
-        $this->handleDistinctReportSelectParams($selectParams, $whereClause);
+        $sth = $this->entityManager
+            ->getQueryExecutor()
+            ->execute($queryBuilder->build());
 
-        $query = Select::fromRaw($selectParams);
-
-        $sql = $this->getEntityManager()->getQueryComposer()->compose($query);
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-
-        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         $result = [];
 
-        foreach ($rows as $row) {
-            $result[$row['leadSource']] = floatval($row['amount']);
+        foreach ($rowList as $row) {
+            $leadSource = $row['leadSource'];
+
+            $result[$leadSource] = floatval($row['amount']);
         }
 
-        return $result;
+        return (object) $result;
     }
 
-    public function reportByStage($dateFilter, $dateFrom = null, $dateTo = null)
-    {
+    public function reportByStage(
+        string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
+    ) : StdClass {
+
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
             throw new Forbidden();
         }
@@ -207,11 +234,13 @@ class Opportunity extends \Espo\Services\Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-
         $options = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
 
-        $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
+        $queryBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from('Opportunity')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder();
 
         $whereClause = [
             ['stage!=' => $this->getLostStageList()],
@@ -225,46 +254,56 @@ class Opportunity extends \Espo\Services\Record
             ];
         }
 
-        $selectParams = [
-            'from' => 'Opportunity',
-            'select' => ['stage', ['SUM:amountConverted', 'amount']],
-            'whereClause' => $whereClause,
-            'orderBy' => 'LIST:stage:' . implode(',', $options),
-            'groupBy' => ['stage'],
-        ];
+        $queryBuilder
+            ->select([
+                'stage',
+                ['SUM:amountConverted', 'amount'],
+            ])
+            ->order('LIST:stage:' . implode(',', $options))
+            ->groupBy('stage')
+            ->where($whereClause);
 
         $stageIgnoreList = array_merge($this->getLostStageList(), $this->getWonStageList());
 
-        $selectManager->applyAccess($selectParams);
+        $this->handleDistinctReportQueryBuilder($queryBuilder, $whereClause);
 
-        $this->handleDistinctReportSelectParams($selectParams, $whereClause);
+        $sth = $this->entityManager
+            ->getQueryExecutor()
+            ->execute($queryBuilder->build());
 
-        $query = Select::fromRaw($selectParams);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
-        $sql = $this->getEntityManager()->getQueryComposer()->compose($query);
+        $result = [];
 
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
+        foreach ($rowList as $row) {
+            $stage = $row['stage'];
 
-        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+            if (in_array($stage, $stageIgnoreList)) {
+                continue;
+            }
 
-        $result = array();
-        foreach ($rows as $row) {
-            if (in_array($row['stage'], $stageIgnoreList)) continue;
-            $result[$row['stage']] = floatval($row['amount']);
+            $result[$stage] = floatval($row['amount']);
         }
 
         foreach ($options as $stage) {
-            if (in_array($stage, $stageIgnoreList)) continue;
-            if (array_key_exists($stage, $result)) continue;
+            if (in_array($stage, $stageIgnoreList)) {
+                continue;
+            }
+
+            if (array_key_exists($stage, $result)) {
+                continue;
+            }
+
             $result[$stage] = 0.0;
         }
 
-        return $result;
+        return (object) $result;
     }
 
-    public function reportSalesByMonth($dateFilter, $dateFrom = null, $dateTo = null)
-    {
+    public function reportSalesByMonth(
+        string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
+    ) : StdClass {
+
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
             throw new Forbidden();
         }
@@ -273,259 +312,365 @@ class Opportunity extends \Espo\Services\Record
             list($dateFrom, $dateTo) = $this->getDateRangeByFilter($dateFilter);
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-
-        $selectManager = $this->getSelectManagerFactory()->create('Opportunity');
+        $queryBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from('Opportunity')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder();
 
         $whereClause = [
-            ['stage' => $this->getWonStageList()]
+            'stage' => $this->getWonStageList(),
         ];
 
         if ($dateFilter !== 'ever') {
             $whereClause[] = [
                 'closeDate>=' => $dateFrom,
-                'closeDate<' => $dateTo
+                'closeDate<' => $dateTo,
             ];
         }
 
-        $selectParams = [
-            'from' => 'Opportunity',
-            'select' => [['MONTH:closeDate', 'month'], ['SUM:amountConverted', 'amount']],
-            'whereClause' => $whereClause,
-            'orderBy' => 1,
-            'groupBy' => ['MONTH:closeDate']
-        ];
+        $queryBuilder
+            ->select([
+                ['MONTH:closeDate', 'month'],
+                ['SUM:amountConverted', 'amount'],
+            ])
+            ->order(1)
+            ->groupBy('MONTH:closeDate')
+            ->where($whereClause);
 
-        $selectManager->applyAccess($selectParams);
+        $this->handleDistinctReportQueryBuilder($queryBuilder, $whereClause);
 
-        $this->handleDistinctReportSelectParams($selectParams, $whereClause);
-
-        $query = Select::fromRaw($selectParams);
-
-        $sql = $this->getEntityManager()->getQueryComposer()->compose($query);
-
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-
-        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $sth = $this->entityManager
+            ->getQueryExecutor()
+            ->execute($queryBuilder->build());
 
         $result = [];
 
-        foreach ($rows as $row) {
-            $result[$row['month']] = floatval($row['amount']);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($rowList as $row) {
+            $month = $row['month'];
+
+            $result[$month] = floatval($row['amount']);
         }
 
-        $dt = new \DateTime($dateFrom);
-        $dtTo = new \DateTime($dateTo);
+        $dt = new DateTime($dateFrom);
+        $dtTo = new DateTime($dateTo);
 
         if (intval($dtTo->format('d')) !== 1) {
             $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
             $dtTo->modify('+ 1 month');
-        } else {
+        }
+        else {
             $dtTo->setDate($dtTo->format('Y'), $dtTo->format('m'), 1);
         }
 
         if ($dt && $dtTo) {
-            $interval = new \DateInterval('P1M');
+            $interval = new DateInterval('P1M');
+
             while ($dt->getTimestamp() < $dtTo->getTimestamp()) {
                 $month = $dt->format('Y-m');
+
                 if (!array_key_exists($month, $result)) {
                     $result[$month] = 0;
                 }
+
                 $dt->add($interval);
             }
         }
 
         $keyList = array_keys($result);
+
         sort($keyList);
 
-        $today = new \DateTime();
+        $today = new DateTime();
 
         $endPosition = count($keyList);
+
         for ($i = count($keyList) - 1; $i >= 0; $i--) {
             $key = $keyList[$i];
-            $dt = new \DateTime($key . '-01');
+
+            $dt = new DateTime($key . '-01');
 
             if ($dt->getTimestamp() < $today->getTimestamp()) {
                 break;
             }
+
             if (empty($result[$key])) {
                 $endPosition = $i;
-            } else {
+            }
+            else {
                 break;
             }
         }
 
-        $keyList = array_slice($keyList, 0, $endPosition);
+        $keyListSliced = array_slice($keyList, 0, $endPosition);
 
         return (object) [
-            'keyList' => $keyList,
-            'dataMap' => $result
+            'keyList' => $keyListSliced,
+            'dataMap' => $result,
         ];
     }
 
-    protected function handleDistinctReportSelectParams(&$selectParams, $whereClause)
+    /**
+     * A grouping-by with distinct will give wrong results. Need to use sub-query.
+     */
+    protected function handleDistinctReportQueryBuilder(SelectBuilder $queryBuilder, array $whereClause)
     {
-        if (!empty($selectParams['distinct'])) {
-            $selectParamsSubQuery = $selectParams;
-
-            unset($selectParams['distinct']);
-            $selectParams['leftJoins'] = [];
-            $selectParams['joins'] = [];
-            $selectParams['whereClause'] = $whereClause;
-
-            $selectParamsSubQuery['select'] = ['id'];
-            unset($selectParamsSubQuery['groupBy']);
-            unset($selectParamsSubQuery['orderBy']);
-            unset($selectParamsSubQuery['order']);
-
-            $selectParams['whereClause'][] = [
-                'id=s' => [
-                    'entityType' => 'Opportunity',
-                    'selectParams' => $selectParamsSubQuery
-                ]
-            ];
+        if (!$queryBuilder->build()->isDistinct()) {
+            return;
         }
+
+        $subQuery = $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->from('Opportunity')
+            ->select('id')
+            ->where($whereClause)
+            ->build();
+
+        $queryBuilder->where([
+            'id=s' => $subQuery->build()->getRaw(),
+        ]);
     }
 
-    protected function getDateRangeByFilter($dateFilter)
+    protected function getDateRangeByFilter(string $dateFilter) : array
     {
         switch ($dateFilter) {
             case 'currentYear':
-                $dt = new \DateTime();
+                $dt = new DateTime();
+
                 return [
                     $dt->modify('first day of January this year')->format('Y-m-d'),
-                    $dt->add(new \DateInterval('P1Y'))->format('Y-m-d')
+                    $dt->add(new DateInterval('P1Y'))->format('Y-m-d')
                 ];
+
             case 'currentQuarter':
-                $dt = new \DateTime();
+                $dt = new DateTime();
+
                 $quarter = ceil($dt->format('m') / 3);
+
                 $dt->modify('first day of January this year');
+
                 return [
-                    $dt->add(new \DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
-                    $dt->add(new \DateInterval('P3M'))->format('Y-m-d')
+                    $dt->add(new DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
+                    $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
                 ];
+
             case 'currentMonth':
-                $dt = new \DateTime();
+                $dt = new DateTime();
+
                 return [
                     $dt->modify('first day of this month')->format('Y-m-d'),
-                    $dt->add(new \DateInterval('P1M'))->format('Y-m-d')
+                    $dt->add(new DateInterval('P1M'))->format('Y-m-d'),
                 ];
+
             case 'currentFiscalYear':
-                $dtToday = new \DateTime();
-                $dt = new \DateTime();
+                $dtToday = new DateTime();
+
+                $dt = new DateTime();
+
                 $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+
                 $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+
                 if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
                     $dt->modify('-1 year');
                 }
+
                 return [
                     $dt->format('Y-m-d'),
-                    $dt->add(new \DateInterval('P1Y'))->format('Y-m-d')
+                    $dt->add(new DateInterval('P1Y'))->format('Y-m-d')
                 ];
+
             case 'currentFiscalQuarter':
-                $dtToday = new \DateTime();
-                $dt = new \DateTime();
+                $dtToday = new DateTime();
+                $dt = new DateTime();
+
                 $fiscalYearShift = $this->getConfig()->get('fiscalYearShift', 0);
+
                 $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+
                 $month = intval($dtToday->format('m'));
+
                 $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
+
                 if ($quarterShift) {
                     if ($quarterShift >= 0) {
-                        $dt->add(new \DateInterval('P'.($quarterShift * 3).'M'));
-                    } else {
+                        $dt->add(new DateInterval('P'.($quarterShift * 3).'M'));
+                    }
+                    else {
                         $quarterShift *= -1;
-                        $dt->sub(new \DateInterval('P'.($quarterShift * 3).'M'));
+
+                        $dt->sub(new DateInterval('P'.($quarterShift * 3).'M'));
                     }
                 }
+
                 return [
                     $dt->format('Y-m-d'),
-                    $dt->add(new \DateInterval('P3M'))->format('Y-m-d')
+                    $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
                 ];
         }
+
         return [0, 0];
     }
 
-    protected function getLostStageList()
+    protected function getLostStageList() : array
     {
         $lostStageList = [];
-        $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+
+        $probabilityMap =  $this->getMetadata()->get(
+            ['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []
+        );
+
         $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+
         foreach ($stageList as $stage) {
             if (empty($probabilityMap[$stage])) {
                 $lostStageList[] = $stage;
             }
         }
+
         return $lostStageList;
     }
 
-    protected function getWonStageList()
+    protected function getWonStageList() : array
     {
         $wonStageList = [];
-        $probabilityMap =  $this->getMetadata()->get(['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []);
+
+        $probabilityMap =  $this->getMetadata()->get(
+            ['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []
+        );
+
         $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
+
         foreach ($stageList as $stage) {
             if (!empty($probabilityMap[$stage]) && $probabilityMap[$stage] == 100) {
                 $wonStageList[] = $stage;
             }
         }
+
         return $wonStageList;
     }
 
-    public function getEmailAddressList($id)
+    public function getEmailAddressList(string $id) : array
     {
         $entity = $this->getEntity($id);
-        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->getEntityType());
+
+        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->getEntityType());
 
         $list = [];
-        $emailAddressList = [];
 
-        if (!in_array('contacts', $forbiddenFieldList) && $this->getAcl()->checkScope('Contact')) {
-            $contactIdList = $entity->getLinkMultipleIdList('contacts');
-            if (count($contactIdList)) {
-                $contactForbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList('Contact');
-                if (!in_array('emailAddress', $contactForbiddenFieldList)) {
-                    $selectManager = $this->getSelectManagerFactory()->create('Contact');
-                    $selectParams = $selectManager->getEmptySelectParams();
-                    $selectManager->applyAccess($selectParams);
-                    $contactList = $this->getEntityManager()->getRepository('Contact')->select(['id', 'emailAddress', 'name'])->where([
-                        'id' => $contactIdList
-                    ])->find($selectParams);
-
-                    foreach ($contactList as $contact) {
-                        $emailAddress = $contact->get('emailAddress');
-                        if ($emailAddress && !in_array($emailAddress, $emailAddressList)) {
-                            $list[] = (object) [
-                                'emailAddress' => $emailAddress,
-                                'name' => $contact->get('name'),
-                                'entityType' => 'Contact'
-                            ];
-                            $emailAddressList[] = $emailAddress;
-                        }
-                    }
-                }
+        if (
+            !in_array('contacts', $forbiddenFieldList) &&
+            $this->acl->checkScope('Contact')
+        ) {
+            foreach ($this->getContactEmailAddressList($entity) as $item) {
+                $list[] = $item;
             }
         }
 
-        if (empty($list)) {
-            if (!in_array('account', $forbiddenFieldList) && $this->getAcl()->checkScope('Account')) {
-                if ($entity->get('accountId')) {
-                    $account = $this->getEntityManager()->getEntity('Account', $entity->get('accountId'));
-                    if ($account && $account->get('emailAddress')) {
-                        $emailAddress = $account->get('emailAddress');
-                        if ($this->getAcl()->checkEntity($account)) {
-                            $list[] = (object) [
-                                'emailAddress' => $emailAddress,
-                                'name' => $account->get('name'),
-                                'entityType' => 'Account'
-                            ];
-                            $emailAddressList[] = $emailAddress;
-                        }
-                    }
-                }
+        if (
+            empty($list) &&
+            !in_array('account', $forbiddenFieldList) &&
+            $this->acl->checkScope('Account') &&
+            $entity->get('accountId')
+        ) {
+            $item = $this->getAccountEmailAddress($entity, $list);
+
+            if ($item) {
+                $list[] = $item;
             }
         }
 
         return $list;
+    }
+
+    protected function getAccountEmailAddress(OpportunityEntity $entity, array $dataList) : ?StdClass
+    {
+        $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
+
+        if (!$account || !$account->get('emailAddress')) {
+            return null;
+        }
+
+        $emailAddress = $account->get('emailAddress');
+
+        if (!$this->acl->checkEntity($account)) {
+            return null;
+        }
+
+        foreach ($dataList as $item) {
+            if ($item->emailAddrses === $emailAddress) {
+                return null;
+            }
+        }
+
+        return (object) [
+            'emailAddress' => $emailAddress,
+            'name' => $account->get('name'),
+            'entityType' => 'Account',
+        ];
+    }
+
+    protected function getContactEmailAddressList(OpportunityEntity $entity) : array
+    {
+        $contactIdList = $entity->getLinkMultipleIdList('contacts');
+
+        if (!count($contactIdList)) {
+            return [];
+        }
+
+        $contactForbiddenFieldList = $this->acl->getScopeForbiddenFieldList('Contact');
+
+        if (in_array('emailAddress', $contactForbiddenFieldList)) {
+            return [];
+        }
+
+        $dataList = [];
+
+        $emailAddressList = [];
+
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from('Contact')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder()
+            ->select([
+                'id',
+                'emailAddress',
+                'name',
+            ])
+            ->where([
+                'id' => $contactIdList,
+            ])
+            ->build();
+
+        $contactCollection = $this->entityManager
+            ->getRepository('Contact')
+            ->clone($query)
+            ->find();
+
+        foreach ($contactCollection as $contact) {
+            $emailAddress = $contact->get('emailAddress');
+
+            if (!$emailAddress) {
+                continue;
+            }
+
+            if (in_array($emailAddress, $emailAddressList)) {
+                continue;
+            }
+
+            $emailAddressList[] = $emailAddress;
+
+            $dataList[] = (object) [
+                'emailAddress' => $emailAddress,
+                'name' => $contact->get('name'),
+                'entityType' => 'Contact',
+            ];
+        }
+
+        return $dataList;
     }
 }

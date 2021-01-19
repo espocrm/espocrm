@@ -38,11 +38,11 @@ use Espo\Core\Di;
 
 class FindRelatedManyType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectManagerFactoryAware,
+    Di\SelectBuilderFactoryAware,
     Di\MetadataAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectManagerFactorySetter;
+    use Di\SelectBuilderFactorySetter;
     use Di\MetadataSetter;
 
     public function process(ArgumentList $args)
@@ -66,6 +66,7 @@ class FindRelatedManyType extends BaseFunction implements
         if (count($args) > 4) {
             $orderBy = $args[4];
         }
+
         if (count($args) > 5) {
             $order = $args[5];
         }
@@ -95,6 +96,7 @@ class FindRelatedManyType extends BaseFunction implements
 
         if (!$entity) {
             $this->log("record\\findRelatedMany: Entity {$entity} {$id} not found.", 'notice');
+
             return [];
         }
 
@@ -102,10 +104,12 @@ class FindRelatedManyType extends BaseFunction implements
 
         if (!$orderBy) {
             $orderBy = $metadata->get(['entityDefs', $entityType, 'collection', 'orderBy']);
+
             if (is_null($order)) {
                 $order = $metadata->get(['entityDefs', $entityType, 'collection', 'order']) ?? 'asc';
             }
-        } else {
+        }
+        else {
             $order = $order ?? 'asc';
         }
 
@@ -116,54 +120,81 @@ class FindRelatedManyType extends BaseFunction implements
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
+
         if (!$foreignEntityType) {
             $this->throwError("Bad or not supported link '{$link}'.");
         }
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
+
         if (!$foreignLink) {
             $this->throwError("Not supported link '{$link}'.");
         }
 
-        $selectManager = $this->selectManagerFactory->create($foreignEntityType);
-        $selectParams = $selectManager->getEmptySelectParams();
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($foreignEntityType);
 
-        if ($relationType === 'hasChildren') {
-            $selectParams['whereClause'][] = [$foreignLink . 'Id' => $entity->id];
-            $selectParams['whereClause'][] = [$foreignLink . 'Type' => $entity->getEntityType()];
-        } else {
-            $selectManager->addJoin($foreignLink, $selectParams);
-            $selectParams['whereClause'][] = [$foreignLink . '.id' => $entity->id];
-        }
+        $whereClause = [];
 
         if (count($args) <= 7) {
             $filter = null;
             if (count($args) == 7) {
                 $filter = $args[6];
             }
-            if ($filter) {
-                if (!is_string($filter)) {
-                    $this->throwError("Bad filter.");
-                }
-                $selectManager->applyFilter($filter, $selectParams);
+
+            if ($filter && !is_string($filter)) {
+                $this->throwError("Bad filter.");
             }
-        } else {
+
+            if ($filter) {
+                $builder->withPrimaryFilter($filter);
+            }
+        }
+        else {
             $i = 6;
+
             while ($i < count($args) - 1) {
                 $key = $args[$i];
                 $value = $args[$i + 1];
-                $selectParams['whereClause'][] = [$key => $value];
+
+                $whereClause[] = [$key => $value];
+
                 $i = $i + 2;
             }
         }
 
-        $selectParams['limit'] = $limit;
+        $queryBuilder = $builder->buildQueryBuilder();
 
-        if ($orderBy) {
-            $selectManager->applyOrder($orderBy, $order, $selectParams);
+        if (!empty($whereClause)) {
+            $queryBuilder->where($whereClause);
         }
 
-        $collection = $entityManager->getRepository($foreignEntityType)->select(['id'])->find($selectParams);
+        if ($relationType === 'hasChildren') {
+            $queryBuilder->where([
+                $foreignLink . 'Id' => $entity->id,
+                $foreignLink . 'Type' => $entity->getEntityType(),
+            ]);
+        }
+        else {
+            $queryBuilder
+                ->join($foreignLink)
+                ->where([
+                    $foreignLink . '.id' => $entity->id,
+                ]);
+        }
+
+        $queryBuilder->limit(0, $limit);
+
+        if ($orderBy) {
+            $queryBuilder->order($orderBy, $order);
+        }
+
+        $collection = $entityManager
+            ->getRepository($foreignEntityType)
+            ->clone($queryBuilder->build())
+            ->select(['id'])
+            ->find();
 
         $idList = [];
 

@@ -37,7 +37,7 @@ class MysqlQueryComposer extends BaseQueryComposer
 {
     public function composeLockTable(LockTableQuery $queryParams) : string
     {
-        $params = $queryParams->getRawParams();
+        $params = $queryParams->getRaw();
 
         $table = $this->toDb($this->sanitize($params['table']));
 

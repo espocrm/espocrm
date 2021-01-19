@@ -91,7 +91,7 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
                 ])
             );
 
-        $inboundEmailService = $this->getMockBuilder(InboundEmailService::class)->getMock();
+        $inboundEmailService = $this->createMock(InboundEmailService::class);
 
         $serviceFactory
             ->expects($this->any())

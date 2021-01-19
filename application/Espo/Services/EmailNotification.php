@@ -29,28 +29,28 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 
-use Espo\ORM\Entity;
-
-use Espo\ORM\QueryParams\Select;
+use Espo\{
+    ORM\Entity,
+    ORM\EntityManager,
+    ORM\QueryParams\SelectBuilder as SelectBuilder,
+};
 
 use Espo\Core\Utils\Util;
 
 use Espo\Core\{
-    ORM\EntityManager,
     Htmlizer\Factory as HtmlizerFactory,
     Utils\Config,
     Utils\Metadata,
     Utils\Language,
-    Select\SelectManagerFactory,
+    Select\SelectBuilderFactory,
     InjectableFactory,
     Utils\TemplateFileManager,
     Mail\EmailSender as EmailSender,
 };
 
 use Exception;
+use DateTime;
 
 class EmailNotification
 {
@@ -64,7 +64,7 @@ class EmailNotification
     protected $htmlizerFactory;
     protected $emailSender;
     protected $config;
-    protected $selectManagerFactory;
+    protected $selectBuilderFactory;
     protected $injectableFactory;
     protected $templateFileManager;
     protected $metadata;
@@ -74,7 +74,7 @@ class EmailNotification
         HtmlizerFactory $htmlizerFactory,
         EmailSender $emailSender,
         Config $config,
-        SelectManagerFactory $selectManagerFactory,
+        SelectBuilderFactory $selectBuilderFactory,
         InjectableFactory $injectableFactory,
         TemplateFileManager $templateFileManager,
         Metadata $metadata,
@@ -84,7 +84,7 @@ class EmailNotification
         $this->htmlizerFactory = $htmlizerFactory;
         $this->emailSender = $emailSender;
         $this->config = $config;
-        $this->selectManagerFactory = $selectManagerFactory;
+        $this->selectBuilderFactory = $selectBuilderFactory;
         $this->injectableFactory = $injectableFactory;
         $this->templateFileManager = $templateFileManager;
         $this->metadata = $metadata;
@@ -195,6 +195,7 @@ class EmailNotification
         $portalStreamEmailNotifications = $this->config->get('portalStreamEmailNotifications');
 
         $typeList = [];
+
         if ($mentionEmailNotifications) {
             $typeList[] = 'MentionInPost';
         }
@@ -203,9 +204,12 @@ class EmailNotification
             $typeList[] = 'Note';
         }
 
-        if (empty($typeList)) return;
+        if (empty($typeList)) {
+            return;
+        }
 
-        $fromDt = new \DateTime();
+        $fromDt = new DateTime();
+
         $fromDt->modify('-' . self::HOURS_THERSHOLD . ' hours');
 
         $where = [
@@ -217,21 +221,23 @@ class EmailNotification
         $delay = $this->config->get('emailNotificationsDelay');
 
         if ($delay) {
-            $delayDt = new \DateTime();
+            $delayDt = new DateTime();
+
             $delayDt->modify('-' . $delay . ' seconds');
+
             $where[] = ['createdAt<' => $delayDt->format('Y-m-d H:i:s')];
         }
 
         $queryList = [];
 
         foreach ($typeList as $type) {
-            $methodName = 'getNotificationSelectParams' . $type;
-            $selectParams = $this->$methodName();
-            $selectParams['whereClause'][] = $where;
+            $methodName = 'getNotificationQueryBuilder' . $type;
 
-            $selectParams['from'] = 'Notification';
+            $itemBuilder = $this->$methodName();
 
-            $queryList[] = Select::fromRaw($selectParams);
+            $itemBuilder->where($where);
+
+            $queryList[] = $itemBuilder->build();
         }
 
         $builder = $this->entityManager->getQueryBuilder()
@@ -255,6 +261,7 @@ class EmailNotification
             $type = $notification->get('type');
 
             $methodName = 'processNotification' . ucfirst($type);
+
             if (method_exists($this, $methodName)) {
                 $this->$methodName($notification);
             }
@@ -263,59 +270,71 @@ class EmailNotification
         }
     }
 
-    protected function getNotificationSelectParamsMentionInPost()
+    protected function getNotificationQueryBuilderMentionInPost() : SelectBuilder
     {
-        $selectManager = $this->selectManagerFactory->create('Notification');
-
-        $selectParams = $selectManager->getEmptySelectParams();
-
-        $selectParams['whereClause']['type'] = 'MentionInPost';
-
-        return $selectParams;
+        return $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->from('Notification')
+            ->where([
+                'type' => 'MentionInPost',
+            ]);
     }
 
-    protected function getNotificationSelectParamsNote()
+    protected function getNotificationQueryBuilderNote() : SelectBuilder
     {
         $noteNotificationTypeList = $this->config->get('streamEmailNotificationsTypeList', []);
 
-        $selectManager = $this->selectManagerFactory->create('Notification');
-
-        $selectParams = $selectManager->getEmptySelectParams();
-
-        $selectParams['whereClause']['type'] = 'Note';
-        $selectParams['whereClause']['relatedType'] = 'Note';
-
-        $selectManager->addJoin(['Note', 'note', ['note.id:' => 'relatedId']], $selectParams);
-
-        $selectParams['whereClause']['note.type'] = $noteNotificationTypeList;
+        $builder = $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->from('Notification')
+            ->join('Note', 'note', ['note.id:' => 'relatedId'])
+            ->where([
+                'type' => 'Note',
+                'relatedType' => 'Note',
+                'note.type' => $noteNotificationTypeList,
+            ]);
 
         $entityList = $this->config->get('streamEmailNotificationsEntityList');
 
         if (empty($entityList)) {
-            $selectParams['whereClause']['relatedParentType'] = null;
-        } else {
-            $selectParams['whereClause'][] = [
+            $builder->where([
+                'relatedParentType' => null,
+            ]);
+        }
+        else {
+            $builder->where([
                 'OR' => [
                     [
-                        'relatedParentType' => $entityList
+                        'relatedParentType' => $entityList,
                     ],
                     [
                         'relatedParentType' => null,
-                    ]
-                ]
-            ];
+                    ],
+                ],
+            ]);
         }
 
         $forInternal = $this->config->get('streamEmailNotifications');
         $forPortal = $this->config->get('portalStreamEmailNotifications');
 
         if ($forInternal && !$forPortal) {
-            $selectParams['whereClause']['user.type!='] = 'portal';
-        } else if (!$forInternal && $forPortal) {
-            $selectParams['whereClause']['user.type'] = 'portal';
+            //$selectParams['whereClause']['user.type!='] = 'portal';
+
+            $builder->where([
+                'user.type!=' => 'portal',
+            ]);
+        }
+        else if (!$forInternal && $forPortal) {
+            //$selectParams['whereClause']['user.type'] = 'portal';
+
+            $builder->where([
+                'user.type' => 'portal',
+            ]);
         }
 
-        return $selectParams;
+        return $builder;
     }
 
     protected function processNotificationMentionInPost(Entity $notification)

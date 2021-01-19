@@ -33,14 +33,13 @@ use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\NotFound,
     Exceptions\Error,
-    Exceptions\BadRequest,
     Record\Collection as RecordCollection,
     Di,
+    Select\SearchParams,
 };
 
 use Espo\{
     ORM\Entity,
-    Entities\User,
     Services\Record,
     Tools\Import\Import as ImportTool,
 };
@@ -86,9 +85,9 @@ class Import extends Record implements
     {
         parent::loadAdditionalFields($entity);
 
-        $importedCount = $this->getRepository()->countRelated($entity, 'imported');
-        $duplicateCount = $this->getRepository()->countRelated($entity, 'duplicates');
-        $updatedCount = $this->getRepository()->countRelated($entity, 'updated');
+        $importedCount = $this->getRepository()->countResultRecords($entity, 'imported');
+        $duplicateCount = $this->getRepository()->countResultRecords($entity, 'duplicates');
+        $updatedCount = $this->getRepository()->countResultRecords($entity, 'updated');
 
         $entity->set([
             'importedCount' => $importedCount,
@@ -99,23 +98,30 @@ class Import extends Record implements
 
     public function findLinked(string $id, string $link, array $params) : RecordCollection
     {
+        if (!in_array($link, ['imported', 'duplicates', 'updated'])) {
+            return parent::findLinked($id, $link, $params);
+        }
+
         $entity = $this->getRepository()->get($id);
+
         $foreignEntityType = $entity->get('entityType');
 
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
         }
+
         if (!$this->getAcl()->check($foreignEntityType, 'read')) {
             throw new Forbidden();
         }
 
-        $selectParams = $this->getSelectManager($foreignEntityType)->getSelectParams($params, true);
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from($foreignEntityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(SearchParams::fromRaw($params))
+            ->build();
 
-        if (array_key_exists($link, $this->linkSelectParams)) {
-            $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
-        }
-
-        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+        $collection = $this->getRepository()->findResultRecords($entity, $link, $query);
 
         $recordService = $this->recordServiceContainer->get($foreignEntityType);
 
@@ -124,7 +130,7 @@ class Import extends Record implements
             $recordService->prepareEntityForOutput($e);
         }
 
-        $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
+        $total = $this->getRepository()->countResultRecords($entity, $link, $query);
 
         return new RecordCollection($collection, $total);
     }

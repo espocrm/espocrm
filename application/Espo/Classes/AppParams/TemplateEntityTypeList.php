@@ -31,7 +31,7 @@ namespace Espo\Classes\AppParams;
 
 use Espo\Core\{
     Acl,
-    Select\SelectManagerFactory,
+    Select\SelectBuilderFactory,
     ORM\EntityManager,
 };
 
@@ -41,17 +41,17 @@ use Espo\Core\{
 class TemplateEntityTypeList
 {
     protected $acl;
-    protected $selectManagerFactory;
+    protected $selectBuilderFactory;
     protected $entityManager;
 
-    public function __construct(Acl $acl, SelectManagerFactory $selectManagerFactory, EntityManager $entityManager)
+    public function __construct(Acl $acl, SelectBuilderFactory $selectBuilderFactory, EntityManager $entityManager)
     {
         $this->acl = $acl;
-        $this->selectManagerFactory = $selectManagerFactory;
+        $this->selectBuilderFactory = $selectBuilderFactory;
         $this->entityManager = $entityManager;
     }
 
-    public function get()
+    public function get() : array
     {
         if (!$this->acl->checkScope('Template')) {
             return [];
@@ -59,17 +59,21 @@ class TemplateEntityTypeList
 
         $list = [];
 
-        $selectManager = $this->selectManagerFactory->create('Template');
-
-        $selectParams = $selectManager->getEmptySelectParams();
-        $selectManager->applyAccess($selectParams);
-
-        $templateList = $this->entityManager->getRepository('Template')
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from('Template')
+            ->withAccessControlFilter()
+            ->buildQueryBuilder()
             ->select(['entityType'])
             ->groupBy(['entityType'])
-            ->find($selectParams);
+            ->build();
 
-        foreach ($templateList as $template) {
+        $templateCollection = $this->entityManager
+            ->getRepository('Template')
+            ->clone($query)
+            ->find();
+
+        foreach ($templateCollection as $template) {
             $list[] = $template->get('entityType');
         }
 

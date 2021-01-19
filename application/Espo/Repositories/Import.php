@@ -31,23 +31,30 @@ namespace Espo\Repositories;
 
 use Espo\ORM\{
     Entity,
+    QueryParams\Select as Query,
     Collection,
 };
 
-class Import extends \Espo\Core\Repositories\Database
+use Espo\Core\Repositories\Database;
+
+class Import extends Database
 {
-    public function findRelated(Entity $entity, string $relationName, ?array $params = [])
+    public function findResultRecords(Entity $entity, string $relationName, Query $query) : Collection
     {
         $entityType = $entity->get('entityType');
 
         $params = $params ?? [];
 
-        $this->addImportEntityJoin($entity, $relationName, $params);
 
-        return $this->getEntityManager()->getRepository($entityType)->find($params);
+        $modifiedQuery = $this->addImportEntityJoin($entity, $relationName, $query);
+
+        return $this->getEntityManager()
+            ->getRepository($entityType)
+            ->clone($modifiedQuery)
+            ->find();
     }
 
-    protected function addImportEntityJoin(Entity $entity, string $link, array &$params)
+    protected function addImportEntityJoin(Entity $entity, string $link, Query $query) : Query
     {
         $entityType = $entity->get('entityType');
 
@@ -56,20 +63,26 @@ class Import extends \Espo\Core\Repositories\Database
         switch ($link) {
             case 'imported':
                 $param = 'isImported';
+
                 break;
+
             case 'duplicates':
                 $param = 'isDuplicate';
+
                 break;
+
             case 'updated':
                 $param = 'isUpdated';
+
                 break;
+
             default:
-                return;
+                return $query;
         }
 
-        $params['joins'] = $params['joins'] ?? [];
+        $builder = $this->entityManager->getQueryBuilder()->clone($query);
 
-        $params['joins'][] = [
+        $builder->join(
             'ImportEntity',
             'importEntity',
             [
@@ -77,19 +90,29 @@ class Import extends \Espo\Core\Repositories\Database
                 'importEntity.entityType' => $entityType,
                 'importEntity.entityId:' => 'id',
                 'importEntity.' . $param => true,
-            ],
-        ];
+            ]
+        );
+
+        return $builder->build();
     }
 
-    public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int
+    public function countResultRecords(Entity $entity, string $relationName, ?Query $query = null) : int
     {
         $entityType = $entity->get('entityType');
 
-        $params = $params ?? [];
+        $query = $query ??
+            $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->from($entityType)
+            ->build();
 
-        $this->addImportEntityJoin($entity, $relationName, $params);
+        $modifiedQuery = $this->addImportEntityJoin($entity, $relationName, $query);
 
-        return $this->getEntityManager()->getRepository($entityType)->count($params);
+        return $this->getEntityManager()
+            ->getRepository($entityType)
+            ->clone($modifiedQuery)
+            ->count();
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
@@ -101,7 +124,8 @@ class Import extends \Espo\Core\Repositories\Database
             }
         }
 
-        $delete = $this->getEntityManager()->getQueryBuilder()
+        $delete = $this->getEntityManager()
+            ->getQueryBuilder()
             ->delete()
             ->from('ImportEntity')
             ->where([

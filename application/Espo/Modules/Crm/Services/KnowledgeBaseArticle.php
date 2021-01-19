@@ -29,13 +29,14 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\ORM\Entity;
-
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
-use Espo\Core\Di;
+use Espo\Core\{
+    Di,
+    Select\SearchParams,
+};
 
 class KnowledgeBaseArticle extends \Espo\Services\Record implements
 
@@ -109,148 +110,218 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
         ];
     }
 
-    public function moveUp(string $id, $where = null)
+    public function moveUp(string $id, ?array $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
 
         $currentIndex = $entity->get('order');
 
-        if (!is_int($currentIndex)) throw new Error();
-
-        if (!$where) {
-            $where = array();
+        if (!is_int($currentIndex)) {
+            throw new Error();
         }
 
-        $params = array(
-            'where' => $where
-        );
+        if (!$where) {
+            $where = [];
+        }
 
-        $selectManager = $this->getSelectManager();
-        $selectParams = $selectManager->buildSelectParams($params, true, true);
+        $params = [
+            'where' => $where,
+        ];
 
-        $selectParams['whereClause'][] = array(
-            'order<' => $currentIndex
-        );
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(SearchParams::fromRaw($params))
+            ->buildQueryBuilder()
+            ->where([
+                'order<' => $currentIndex,
+            ])
+            ->order([
+                ['order', 'DESC'],
+            ])
+            ->build();
 
-        $selectManager->applyOrder('order', true, $selectParams);
+        $previousEntity = $this->getRepository()
+            ->clone($query)
+            ->findOne();
 
-        $previousEntity = $this->getRepository()->findOne($selectParams);
-
-        if (!$previousEntity) return;
+        if (!$previousEntity) {
+            return;
+        }
 
         $entity->set('order', $previousEntity->get('order'));
+
         $previousEntity->set('order', $currentIndex);
 
         $this->getEntityManager()->saveEntity($entity);
         $this->getEntityManager()->saveEntity($previousEntity);
     }
 
-    public function moveDown(string $id, $where = null)
+    public function moveDown(string $id, ?array $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
 
         $currentIndex = $entity->get('order');
 
-        if (!is_int($currentIndex)) throw new Error();
-
-        if (!$where) {
-            $where = array();
+        if (!is_int($currentIndex)) {
+            throw new Error();
         }
 
-        $params = array(
-            'where' => $where
-        );
+        if (!$where) {
+            $where = [];
+        }
 
-        $selectManager = $this->getSelectManager();
-        $selectParams = $selectManager->buildSelectParams($params, true, true);
+        $params = [
+            'where' => $where,
+        ];
 
-        $selectParams['whereClause'][] = array(
-            'order>' => $currentIndex
-        );
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(SearchParams::fromRaw($params))
+            ->buildQueryBuilder()
+            ->where([
+                'order>' => $currentIndex,
+            ])
+            ->order([
+                ['order', 'ASC'],
+            ])
+            ->build();
 
-        $selectManager->applyOrder('order', false, $selectParams);
+        $nextEntity = $this->getRepository()
+            ->clone($query)
+            ->findOne();
 
-        $nextEntity = $this->getRepository()->findOne($selectParams);
-
-        if (!$nextEntity) return;
+        if (!$nextEntity) {
+            return;
+        }
 
         $entity->set('order', $nextEntity->get('order'));
+
         $nextEntity->set('order', $currentIndex);
 
         $this->getEntityManager()->saveEntity($entity);
         $this->getEntityManager()->saveEntity($nextEntity);
     }
 
-    public function moveToTop(string $id, $where = null)
+    public function moveToTop(string $id, ?array $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
 
         $currentIndex = $entity->get('order');
 
-        if (!is_int($currentIndex)) throw new Error();
-
-        if (!$where) {
-            $where = array();
+        if (!is_int($currentIndex)) {
+            throw new Error();
         }
 
-        $params = array(
-            'where' => $where
-        );
+        if (!$where) {
+            $where = [];
+        }
 
-        $selectManager = $this->getSelectManager();
-        $selectParams = $selectManager->buildSelectParams($params, true, true);
+        $params = [
+            'where' => $where,
+        ];
 
-        $selectParams['whereClause'][] = array(
-            'order<' => $currentIndex
-        );
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(SearchParams::fromRaw($params))
+            ->buildQueryBuilder()
+            ->where([
+                'order<' => $currentIndex,
+            ])
+            ->order([
+                ['order', 'ASC'],
+            ])
+            ->build();
 
-        $selectManager->applyOrder('order', false, $selectParams);
+        $previousEntity = $this->getRepository()
+            ->clone($query)
+            ->findOne();
 
-        $previousEntity = $this->getRepository()->findOne($selectParams);
-
-        if (!$previousEntity) return;
+        if (!$previousEntity) {
+            return;
+        }
 
         $entity->set('order', $previousEntity->get('order') - 1);
 
         $this->getEntityManager()->saveEntity($entity);
     }
 
-    public function moveToBottom(string $id, $where = null)
+    public function moveToBottom(string $id, ?array $where = null)
     {
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
 
         $currentIndex = $entity->get('order');
 
-        if (!is_int($currentIndex)) throw new Error();
-
-        if (!$where) {
-            $where = array();
+        if (!is_int($currentIndex)) {
+            throw new Error();
         }
 
-        $params = array(
-            'where' => $where
-        );
+        if (!$where) {
+            $where = [];
+        }
 
-        $selectManager = $this->getSelectManager();
-        $selectParams = $selectManager->buildSelectParams($params, true, true);
+        $params = [
+            'where' => $where,
+        ];
 
-        $selectParams['whereClause'][] = array(
-            'order>' => $currentIndex
-        );
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(SearchParams::fromRaw($params))
+            ->buildQueryBuilder()
+            ->where([
+                'order>' => $currentIndex,
+            ])
+            ->order([
+                ['order', 'DESC'],
+            ])
+            ->build();
 
-        $selectManager->applyOrder('order', true, $selectParams);
+        $nextEntity = $this->getRepository()
+            ->clone($query)
+            ->findOne();
 
-        $nextEntity = $this->getRepository()->findOne($selectParams);
-
-        if (!$nextEntity) return;
+        if (!$nextEntity) {
+            return;
+        }
 
         $entity->set('order', $nextEntity->get('order') + 1);
 

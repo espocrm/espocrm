@@ -40,30 +40,38 @@ use Espo\ORM\{
 
 use Espo\Core\{
     Record\Collection as RecordCollection,
+    Select\SearchParams,
+    Select\Where\Item as WhereItem,
+    Select\Where\ConverterFactory as WhereConverterFactory,
+    Di,
+};
+
+use Espo\{
+    Entities\User as UserEntity,
 };
 
 use PDO;
-
-use Espo\Core\Di;
+use Exception;
+use DateTime;
 
 class Activities implements
 
     Di\ConfigAware,
     Di\MetadataAware,
     Di\AclAware,
-    Di\SelectManagerFactoryAware,
     Di\ServiceFactoryAware,
     Di\EntityManagerAware,
-    Di\UserAware
+    Di\UserAware,
+    Di\SelectBuilderFactoryAware
 {
 
     use Di\ConfigSetter;
     use Di\MetadataSetter;
     use Di\AclSetter;
-    use Di\SelectManagerFactorySetter;
     use Di\ServiceFactorySetter;
     use Di\EntityManagerSetter;
     use Di\UserSetter;
+    use Di\SelectBuilderFactorySetter;
 
     const UPCOMING_ACTIVITIES_FUTURE_DAYS = 1;
 
@@ -72,6 +80,13 @@ class Activities implements
     const REMINDER_PAST_HOURS = 24;
 
     const BUSY_RANGES_MAX_RANGE_DAYS = 10;
+
+    protected $whereConverterFactory;
+
+    public function __construct(WhereConverterFactory $whereConverterFactory)
+    {
+        $this->whereConverterFactory = $whereConverterFactory;
+    }
 
     protected function getPDO()
     {
@@ -103,11 +118,6 @@ class Activities implements
         return $this->metadata;
     }
 
-    protected function getSelectManagerFactory()
-    {
-        return $this->selectManagerFactory;
-    }
-
     protected function getServiceFactory()
     {
         return $this->serviceFactory;
@@ -125,13 +135,14 @@ class Activities implements
     }
 
     protected function getActivitiesUserMeetingQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+        Entity $entity, array $statusList = []/*, $isHistory = false*//*, $additinalSelectParams = null*/
     ) {
-        $selectManager = $this->getSelectManagerFactory()->create('Meeting');
-
-        $selectParams = [
-            'from' => 'Meeting',
-            'select' => [
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from('Meeting')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder()
+            ->select([
                 'id',
                 'name',
                 ['dateStart', 'dateStart'],
@@ -146,55 +157,64 @@ class Activities implements
                 'status',
                 'createdAt',
                 ['VALUE:', 'hasAttachment'],
-            ],
-            'leftJoins' => [['MeetingUser', 'usersLeftMiddle', ['usersLeftMiddle.meetingId:' => 'meeting.id']]],
-            'whereClause' => [],
-        ];
+            ])
+            ->leftJoin(
+                'MeetingUser',
+                'usersLeftMiddle',
+                [
+                    'usersLeftMiddle.meetingId:' => 'meeting.id',
+                ]
+            );
 
         $where = [
             'usersLeftMiddle.userId' => $entity->id,
         ];
 
         if ($entity->isPortal() && $entity->get('contactId')) {
-            $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
-            $selectParams['distinct'] = true;
             $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
-            $selectParams['whereClause'][] = [
-                'OR' => $where
-            ];
-        } else {
-            $selectParams['whereClause'][] = $where;
+
+            $builder
+                ->leftJoin('contacts', 'contactsLeft')
+                ->distinct()
+                ->where([
+                    'OR' => $where,
+                ]);
+        }
+        else {
+            $builder->where($where);
         }
 
         if (!empty($statusList)) {
-            $selectParams['whereClause'][] = [
-                'status' => $statusList
-            ];
+            $builder->where([
+                'status' => $statusList,
+            ]);
         }
 
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $query = Select::fromRaw($selectParams);
-
-        return $query;
+        return $builder->build();
     }
 
-    protected function getActivitiesUserCallQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
-    ) {
-        $selectManager = $this->getSelectManagerFactory()->create('Call');
+    protected function getActivitiesUserCallQuery(Entity $entity, array $statusList = [])
+    {
+        $seed = $this->entityManager->getEntity('Call');
 
-        $selectParams = [
-            'from' => 'Call',
-            'select' => [
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from('Call')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder()
+            ->select([
                 'id',
                 'name',
                 ['dateStart', 'dateStart'],
                 ['dateEnd', 'dateEnd'],
-                ['VALUE:', 'dateStartDate'],
-                ['VALUE:', 'dateEndDate'],
+                (
+                    $seed->hasAttribute('dateStartDate') ?
+                        ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']
+                ),
+                (
+                    $seed->hasAttribute('dateEndDate') ?
+                        ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']
+                ),
                 ['VALUE:Call', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
@@ -203,56 +223,58 @@ class Activities implements
                 'status',
                 'createdAt',
                 ['VALUE:', 'hasAttachment'],
-            ],
-            'leftJoins' => [['CallUser', 'usersLeftMiddle', ['usersLeftMiddle.callId:' => 'call.id']]],
-            'whereClause' => [],
-        ];
+            ])
+            ->leftJoin(
+                'CallUser',
+                'usersLeftMiddle',
+                [
+                    'usersLeftMiddle.callId:' => 'call.id',
+                ]
+            );
 
         $where = [
-            'usersLeftMiddle.userId' => $entity->id
+            'usersLeftMiddle.userId' => $entity->id,
         ];
 
         if ($entity->isPortal() && $entity->get('contactId')) {
-            $selectParams['leftJoins'][] = ['contacts', 'contactsLeft'];
-            $selectParams['distinct'] = true;
             $where['contactsLeftMiddle.contactId'] = $entity->get('contactId');
-            $selectParams['whereClause'][] = [
-                'OR' => $where
-            ];
-        } else {
-            $selectParams['whereClause'][] = $where;
+
+            $builder
+                ->leftJoin('contacts', 'contactsLeft')
+                ->distinct()
+                ->where([
+                    'OR' => $where,
+                ]);
+        }
+        else {
+            $builder->where($where);
         }
 
         if (!empty($statusList)) {
-            $selectParams['whereClause'][] = [
-                'status' => $statusList
-            ];
+            $builder->where([
+                'status' => $statusList,
+            ]);
         }
 
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $query = Select::fromRaw($selectParams);
-
-        return $query;
+        return $builder->build();
     }
 
-    protected function getActivitiesUserEmailQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
-    ) {
+    protected function getActivitiesUserEmailQuery(Entity $entity, array $statusList = [])
+    {
         if ($entity->isPortal() && $entity->get('contactId')) {
             $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
+
             if ($contact) {
-                return $this->getActivitiesEmailQuery($contact, $statusList, $isHistory, $additinalSelectParams);
+                return $this->getActivitiesEmailQuery($contact, $statusList);
             }
         }
 
-        $selectManager = $this->getSelectManagerFactory()->create('Email');
-
-        $selectParams = [
-            'from' => 'Email',
-            'select' => [
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from('Email')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder()
+            ->select([
                 'id',
                 'name',
                 ['dateSent', 'dateStart'],
@@ -267,51 +289,59 @@ class Activities implements
                 'status',
                 'createdAt',
                 'hasAttachment',
-            ],
-            'leftJoins' => [['EmailUser', 'usersLeftMiddle', ['usersLeftMiddle.emailId:' => 'email.id']]],
-            'whereClause' => [
+            ])
+            ->leftJoin(
+                'EmailUser',
+                'usersLeftMiddle',
+                [
+                    'usersLeftMiddle.emailId:' => 'email.id',
+                ]
+            )
+            ->where([
                 'usersLeftMiddle.userId' => $entity->id,
-            ],
-        ];
+            ]);
 
         if (!empty($statusList)) {
-            $selectParams['whereClause'][] = [
-                'status' => $statusList
-            ];
+            $builder->where([
+                'status' => $statusList,
+            ]);
         }
 
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $query = Select::fromRaw($selectParams);
-
-        return $query;
+        return $builder->build();
     }
 
-    protected function getActivitiesMeetingQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+    protected function getActivitiesMeetingOrCallQuery(
+        Entity $entity, array $statusList, string $targetEntityType
     ) {
-        $scope = $entity->getEntityType();
+        $entityType = $entity->getEntityType();
         $id = $entity->id;
 
-        $methodName = 'getActivities' . $scope . 'MeetingQuery';
+        $methodName = 'getActivities' . $entityType . $targetEntityType . 'Query';
 
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+            return $this->$methodName($entity, $statusList);
         }
 
-        $selectManager = $this->getSelectManagerFactory()->create('Meeting');
+        $seed = $this->entityManager->getEntity($targetEntityType);
 
-        $baseSelectParams = [
-            'from' => 'Meeting',
-            'select' => [
+        $baseBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from($targetEntityType)
+            ->withStrictAccessControl()
+            ->buildQueryBuilder()
+            ->select([
                 'id',
                 'name',
                 ['dateStart', 'dateStart'],
                 ['dateEnd', 'dateEnd'],
-                ['dateStartDate', 'dateStartDate'],
-                ['dateEndDate', 'dateEndDate'],
+                (
+                    $seed->hasAttribute('dateStartDate') ?
+                        ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']
+                ),
+                (
+                    $seed->hasAttribute('dateEndDate') ?
+                        ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']
+                ),
                 ['VALUE:Meeting', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
@@ -320,70 +350,71 @@ class Activities implements
                 'status',
                 'createdAt',
                 ['VALUE:', 'hasAttachment'],
-            ],
-            'whereClause' => [],
-        ];
+            ]);
 
         if (!empty($statusList)) {
-            $baseSelectParams['whereClause'][] = [
-                'status' => $statusList
-            ];
+            $baseBuilder->where([
+                'status' => $statusList,
+            ]);
         }
 
-        $selectParams = $baseSelectParams;
+        $builder = clone $baseBuilder;
 
-        if ($scope == 'Account') {
-            $selectParams['whereClause'][] = [
+        if ($entityType == 'Account') {
+            $builder->where([
                 'OR' => [
                     [
                         'parentId' => $id,
-                        'parentType' => 'Account'
+                        'parentType' => 'Account',
                     ],
                     [
-                        'accountId' => $id
-                    ]
-                ]
-            ];
-        } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
-            $selectParams['whereClause'][] = [
+                        'accountId' => $id,
+                    ],
+                ],
+            ]);
+        }
+        else if ($entityType == 'Lead' && $entity->get('createdAccountId')) {
+            $builder->where([
                 'OR' => [
                     [
                         'parentId' => $id,
-                        'parentType' => 'Lead'
+                        'parentType' => 'Lead',
                     ],
                     [
-                        'accountId' => $entity->get('createdAccountId')
-                    ]
-                ]
-            ];
-        } else {
-            $selectParams['whereClause']['parentId'] = $id;
-            $selectParams['whereClause']['parentType'] = $scope;
+                        'accountId' => $entity->get('createdAccountId'),
+                    ],
+                ],
+            ]);
+        }
+        else {
+            $builder->where([
+                'parentId' => $id,
+                'parentType' => $entityType,
+            ]);
         }
 
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $query = Select::fromRaw($selectParams);
-
-        if (!$this->isPerson($scope)) {
-            return $query;
+        if (!$this->isPerson($entityType)) {
+            return $builder->build();
         }
 
-        $queryList = [$query];
+        $queryList = [$builder->build()];
 
         $link = null;
 
-        switch ($scope) {
+        switch ($entityType) {
             case 'Contact':
                 $link = 'contacts';
+
                 break;
+
             case 'Lead':
                 $link = 'leads';
+
                 break;
+
             case 'User':
                 $link = 'users';
+
                 break;
         }
 
@@ -391,172 +422,52 @@ class Activities implements
             return $queryList;
         }
 
-        $selectParams = $baseSelectParams;
+        $personBuilder = clone $baseBuilder;
 
-        $selectManager->addJoin($link, $selectParams);
+        $personBuilder
+            ->join($link)
+            ->where([
+                $link . '.id' => $id,
+                'OR' => [
+                    'parentType!=' => $entityType,
+                    'parentId!=' => $id,
+                    'parentType' => null,
+                    'parentId' => null,
+                ],
+            ]);
 
-        $selectParams['whereClause'][$link .'.id'] = $id;
-        $selectParams['whereClause'][] = [
-            'OR' => [
-                'parentType!=' => $scope,
-                'parentId!=' => $id,
-                'parentType' => null,
-                'parentId' => null,
-            ]
-        ];
-
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $query = Select::fromRaw($selectParams);
-
-        $queryList[] = $query;
+        $queryList[] = $personBuilder->build();
 
         return $queryList;
     }
 
-    protected function getActivitiesCallQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
-    ) {
-        $scope = $entity->getEntityType();
-        $id = $entity->id;
-
-        $methodName = 'getActivities' .$scope . 'CallQuery';
-
-        if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
-        }
-
-        $selectManager = $this->getSelectManagerFactory()->create('Call');
-
-        $baseSelectParams = [
-            'from' => 'Call',
-            'select' => [
-                'id',
-                'name',
-                ['dateStart', 'dateStart'],
-                ['dateEnd', 'dateEnd'],
-                ['VALUE:', 'dateStartDate'],
-                ['VALUE:', 'dateEndDate'],
-                ['VALUE:Call', '_scope'],
-                'assignedUserId',
-                'assignedUserName',
-                'parentType',
-                'parentId',
-                'status',
-                'createdAt',
-                ['VALUE:', 'hasAttachment'],
-            ],
-            'whereClause' => [],
-        ];
-
-        if (!empty($statusList)) {
-            $baseSelectParams['whereClause'][] = [
-                'status' => $statusList
-            ];
-        }
-
-        $selectParams = $baseSelectParams;
-
-        if ($scope == 'Account') {
-            $selectParams['whereClause'][] = [
-                'OR' => [
-                    [
-                        'parentId' => $id,
-                        'parentType' => 'Account'
-                    ],
-                    [
-                        'accountId' => $id
-                    ]
-                ]
-            ];
-        } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
-            $selectParams['whereClause'][] = [
-                'OR' => [
-                    [
-                        'parentId' => $id,
-                        'parentType' => 'Lead'
-                    ],
-                    [
-                        'accountId' => $entity->get('createdAccountId')
-                    ]
-                ]
-            ];
-        } else {
-            $selectParams['whereClause']['parentId'] = $id;
-            $selectParams['whereClause']['parentType'] = $scope;
-        }
-
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $query = Select::fromRaw($selectParams);
-
-        if (!$this->isPerson($scope)) {
-            return $query;
-        }
-
-        $queryList = [$query];
-
-        $link = null;
-
-        switch ($scope) {
-            case 'Contact':
-                $link = 'contacts';
-                break;
-            case 'Lead':
-                $link = 'leads';
-                break;
-            case 'User':
-                $link = 'users';
-                break;
-        }
-
-        if (!$link) {
-            return $queryList;
-        }
-
-        $selectParams = $baseSelectParams;
-        $selectManager->addJoin($link, $selectParams);
-        $selectParams['whereClause'][$link .'.id'] = $id;
-        $selectParams['whereClause'][] = [
-            'OR' => [
-                'parentType!=' => $scope,
-                'parentId!=' => $id,
-                'parentType' => null,
-                'parentId' => null,
-            ]
-        ];
-
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $query = Select::fromRaw($selectParams);
-
-        $queryList[] = $query;
-
-        return $queryList;
+    protected function getActivitiesMeetingQuery(Entity $entity, array $statusList = [])
+    {
+        return $this->getActivitiesMeetingOrCallQuery($entity, $statusList, 'Meeting');
     }
 
-    protected function getActivitiesEmailQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
-    ) {
-        $scope = $entity->getEntityType();
+    protected function getActivitiesCallQuery(Entity $entity, array $statusList = [])
+    {
+        return $this->getActivitiesMeetingOrCallQuery($entity, $statusList, 'Call');
+    }
+
+    protected function getActivitiesEmailQuery(Entity $entity, array $statusList = [])
+    {
+        $entityType = $entity->getEntityType();
         $id = $entity->id;
 
-        $methodName = 'getActivities' .$scope . 'EmailQuery';
+        $methodName = 'getActivities' . $entityType . 'EmailQuery';
+
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+            return $this->$methodName($entity, $statusList);
         }
 
-        $selectManager = $this->getSelectManagerFactory()->create('Email');
-
-        $baseSelectParams = [
-            'from' => 'Email',
-            'select' => [
+        $baseBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from('Email')
+            ->withStrictAccessControl()
+            ->buildQueryBuilder()
+            ->select([
                 'id',
                 'name',
                 ['dateSent', 'dateStart'],
@@ -570,127 +481,112 @@ class Activities implements
                 'parentId',
                 'status',
                 'createdAt',
-                'hasAttachment'
-            ],
-            'joins' => [],
-            'leftJoins' => [],
-            'whereClause' => [],
-        ];
+                'hasAttachment',
+            ]);
 
         if (!empty($statusList)) {
-            $baseSelectParams['whereClause'][] = [
-                'status' => $statusList
-            ];
+            $baseBuilder->where([
+                'status' => $statusList,
+            ]);
         }
 
-        $selectParams = $baseSelectParams;
+        $builder = clone $baseBuilder;
 
-        if ($scope == 'Account') {
-            $selectParams['whereClause'][] = [
+        if ($entityType == 'Account') {
+            $builder->where([
                 'OR' => [
                     [
                         'parentId' => $id,
-                        'parentType' => 'Account'
+                        'parentType' => 'Account',
                     ],
                     [
-                        'accountId' => $id
-                    ]
-                ]
-            ];
-        } else if ($scope == 'Lead' && $entity->get('createdAccountId')) {
-            $selectParams['whereClause'][] = [
+                        'accountId' => $id,
+                    ],
+                ],
+            ]);
+        }
+        else if ($entityType == 'Lead' && $entity->get('createdAccountId')) {
+            $builder->where([
                 'OR' => [
                     [
                         'parentId' => $id,
-                        'parentType' => 'Lead'
+                        'parentType' => 'Lead',
                     ],
                     [
-                        'accountId' => $entity->get('createdAccountId')
-                    ]
+                        'accountId' => $entity->get('createdAccountId'),
+                    ],
+                ],
+            ]);
+        }
+        else {
+            $builder->where([
+               'parentId' => $id,
+               'parentType' => $entityType,
+            ]);
+        }
+
+
+        if (!$this->isPerson($entityType) && !$this->isCompany($entityType)) {
+            return $builder->build();
+        }
+
+        $queryList = [$builder->build()];
+
+        $personBuilder = clone $baseBuilder;
+
+        $personBuilder
+            ->leftJoin(
+                'EntityEmailAddress',
+                'eea',
+                [
+                    'eea.emailAddressId:' => 'fromEmailAddressId',
+                    'eea.entityType' => $entityType,
+                    'eea.deleted' => false,
                 ]
-            ];
-        } else {
-            $selectParams['whereClause']['parentId'] = $id;
-            $selectParams['whereClause']['parentType'] = $scope;
-        }
+            )
+            ->where([
+                'OR' => [
+                    'parentType!=' => $entityType,
+                    'parentId!=' => $id,
+                    'parentType' => null,
+                    'parentId' => null,
+                ],
+                'eea.entityId' => $id,
+            ]);
 
-        $selectManager->applyAccess($selectParams);
+        $queryList[] = $personBuilder->build();
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $addressBuilder = clone $baseBuilder;
 
-        $query = Select::fromRaw($selectParams);
+        $addressBuilder
+            ->leftJoin(
+                'EmailEmailAddress',
+                'em',
+                [
+                    'em.emailId:' => 'id',
+                    'em.deleted' => false,
+                ]
+            )
+            ->leftJoin(
+                'EntityEmailAddress',
+                'eea',
+                [
+                    'eea.emailAddressId:' => 'em.emailAddressId',
+                    'eea.entityType' => $entityType,
+                    'eea.deleted' => 0,
+                ]
+            )
+            ->where([
+                'OR' => [
+                    'parentType!=' => $entityType,
+                    'parentId!=' => $id,
+                    'parentType' => null,
+                    'parentId' => null,
+                ],
+                'eea.entityId' => $id,
+            ]);
 
-        if (!$this->isPerson($scope) && !$this->isCompany($scope)) {
-            return $query;
-        }
-
-        $queryList = [$query];
-
-        $selectParams = $baseSelectParams;
-
-        $selectParams['leftJoins'][] = [
-            'EntityEmailAddress',
-            'eea',
-            [
-                'eea.emailAddressId:' => 'fromEmailAddressId',
-                'eea.entityType' => $scope,
-                'eea.deleted' => false,
-            ],
-        ];
-
-        $selectParams['whereClause'][] = [
-            'OR' => [
-                'parentType!=' => $scope,
-                'parentId!=' => $id,
-                'parentType' => null,
-                'parentId' => null,
-            ],
-        ];
-
-        $selectParams['whereClause']['eea.entityId'] = $id;
-
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $queryList[] = Select::fromRaw($selectParams);
-
-        $selectParams = $baseSelectParams;
-
-        $selectParams['leftJoins'][] = [
-            'EmailEmailAddress',
-            'em',
-            [
-                'em.emailId:' => 'id',
-                'em.deleted' => false,
-            ],
-        ];
-
-        $selectParams['leftJoins'][] = [
-            'EntityEmailAddress',
-            'eea',
-            [
-                'eea.emailAddressId:' => 'em.emailAddressId',
-                'eea.entityType' => $scope,
-                'eea.deleted' => 0,
-            ],
-        ];
-
-        $selectParams['whereClause'][] = [
-            'OR' => [
-                'parentType!=' => $scope,
-                'parentId!=' => $id,
-                'parentType' => null,
-                'parentId' => null,
-            ],
-        ];
-
-        $selectParams['whereClause']['eea.entityId'] = $id;
-        $selectManager->applyAccess($selectParams);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        $queryList[] = Select::fromRaw($selectParams);
+        $queryList[] = $addressBuilder->build();
 
         return $queryList;
     }
@@ -704,15 +600,13 @@ class Activities implements
             ];
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-
         $onlyScope = false;
+
         if (!empty($params['scope'])) {
             $onlyScope = $params['scope'];
         }
 
         $maxSize = $params['maxSize'] ?? null;
-
 
         $queryList = [];
 
@@ -805,7 +699,10 @@ class Activities implements
 
         foreach ($rowList as $row) {
             foreach ($boolAttributeList as $attribute) {
-                if (!array_key_exists($attribute, $row)) continue;
+                if (!array_key_exists($attribute, $row)) {
+                    continue;
+                }
+
                 $row[$attribute] = $row[$attribute] == '1' ? true : false;
             }
 
@@ -815,8 +712,10 @@ class Activities implements
         if ($scope === 'User') {
             if ($maxSize && count($list) > $maxSize) {
                 $totalCount = -1;
+
                 unset($list[count($list) - 1]);
-            } else {
+            }
+            else {
                 $totalCount = -2;
             }
         }
@@ -833,8 +732,8 @@ class Activities implements
             if (!$this->getAcl()->checkUserPermission($entity, 'user')) {
                 throw new Forbidden();
             }
-
-        } else {
+        }
+        else {
             if (!$this->getAcl()->check($entity, 'read')) {
                 throw new Forbidden();
             }
@@ -844,26 +743,31 @@ class Activities implements
     public function findActivitiyEntityType(
         string $scope, string $id, string $entityType, bool $isHistory = false, array $params = []
     ) : RecordCollection {
+
         if (!$this->getAcl()->checkScope($entityType)) {
             throw new Forbidden();
         }
 
         $entity = $this->getEntityManager()->getEntity($scope, $id);
-        if (!$entity) throw new NotFound();
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
         $this->accessCheck($entity);
 
         if (!$this->getMetadata()->get(['scopes', $entityType, 'activity'])) {
-            throw new Error('Entity \'' . $entityType . '\' is not an activity');
+            throw new Error("Entity '{$entityType}' is not an activity.");
         }
 
         if (!$isHistory) {
             $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
-        } else {
+        }
+        else {
             $statusList = $this->getMetadata()->get(['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']);
         }
 
         $service = $this->getServiceFactory()->create($entityType);
-        $selectManager = $this->getSelectManagerFactory()->create($entityType);
 
         if ($entityType === 'Email') {
             if ($params['orderBy'] ?? null === 'dateStart') {
@@ -873,52 +777,71 @@ class Activities implements
 
         $service->handleListParams($params);
 
-        $selectParams = $selectManager->getSelectParams($params, false, true, true);
+        $offset = $params['offset'] ?? null;
+        $limit = $params['maxSize'] ?? null;
 
-        $offset = $selectParams['offset'];
-        $limit = $selectParams['limit'];
+        $baseQueryList = $this->getActivitiesQuery($entity, $entityType, $statusList);
 
-        $orderBy = null;
-        $order = null;
-
-        if (!empty($selectParams['orderBy'])) {
-            $order = $selectParams['order'] ?? null;
-            $orderBy = $selectParams['orderBy'];
+        if (!is_array($baseQueryList)) {
+            $baseQueryList = [$baseQueryList];
         }
 
-        unset($selectParams['offset']);
-        unset($selectParams['limit']);
-        unset($selectParams['order']);
-        unset($selectParams['orderBy']);
+        $queryList = [];
 
-        $query = $this->getActivitiesQuery($entity, $entityType, $statusList, $isHistory, $selectParams);
+        $order = null;
 
-        $seed = $this->getEntityManager()->getEntity($entityType);
+        foreach ($baseQueryList as $i => $itemQuery) {
+            $itemBuilder = $this->selectBuilderFactory
+                ->create()
+                ->clone($itemQuery)
+                ->withSearchParams(SearchParams::fromRaw($params))
+                ->withComplexExpressionsForbidden()
+                ->withWherePermissionCheck()
+                ->buildQueryBuilder();
 
-        if (is_array($query)) {
-            $unionBuilder = $this->entityManager->getQueryBuilder()
+            if ($i === 0) {
+                $order = $itemBuilder->build()->getOrder();
+            }
+
+            $itemBuilder
+                ->limit(null, null)
+                ->order([]);
+
+            $queryList[] = $itemBuilder->build();
+        }
+
+        if (count($queryList) > 1) {
+            $unionBuilder = $this->entityManager
+                ->getQueryBuilder()
                 ->union();
 
-            foreach ($query as $subQuery) {
+            foreach ($queryList as $subQuery) {
                 $unionBuilder->query($subQuery);
             }
 
             $query = $unionBuilder->build();
         }
+        else {
+            $query = $queryList[0];
+        }
 
         $builder = $this->entityManager->getQueryBuilder()->clone($query);
 
-        if ($orderBy) {
-            $builder->order($orderBy, $order);
+        if ($order) {
+            $builder->order($order);
         }
 
         $builder->limit($offset, $limit);
 
         $sql = $this->entityManager->getQueryComposer()->compose($builder->build());
 
-        $collection = $this->getEntityManager()->getRepository($entityType)->findBySql($sql);
-
-        $collection = $this->getEntityManager()->getCollectionFactory()->createFromSthCollection($collection);
+        $collection = $this->entityManager
+            ->getCollectionFactory()
+            ->createFromSthCollection(
+                $this->entityManager
+                    ->getRepository($entityType)
+                    ->findBySql($sql)
+            );
 
         foreach ($collection as $e) {
             $service->loadAdditionalFieldsForList($e);
@@ -952,6 +875,7 @@ class Activities implements
     public function getActivities(string $scope, string $id, array $params = [])
     {
         $entity = $this->getEntityManager()->getEntity($scope, $id);
+
         if (!$entity) {
             throw new NotFound();
         }
@@ -971,18 +895,27 @@ class Activities implements
         $entityTypeList = $this->getConfig()->get('activitiesEntityList', ['Meeting', 'Call']);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$fetchAll && $params['scope'] !== $entityType) continue;
-            if (!$this->getAcl()->checkScope($entityType)) continue;
-            if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) continue;
+            if (!$fetchAll && $params['scope'] !== $entityType) {
+                continue;
+            }
+
+            if (!$this->getAcl()->checkScope($entityType)) {
+                continue;
+            }
+
+            if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) {
+                continue;
+            }
 
             $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList, false);
         }
 
         return $this->getResultFromQueryParts($parts, $scope, $id, $params);
     }
 
-    public function getHistory($scope, $id, $params = [])
+    public function getHistory(string $scope, string $id, array $params = [])
     {
         $entity = $this->getEntityManager()->getEntity($scope, $id);
         if (!$entity) {
@@ -1003,11 +936,22 @@ class Activities implements
         $entityTypeList = $this->getConfig()->get('historyEntityList', ['Meeting', 'Call', 'Email']);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$fetchAll && $params['scope'] !== $entityType) continue;
-            if (!$this->getAcl()->checkScope($entityType)) continue;
-            if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) continue;
+            if (!$fetchAll && $params['scope'] !== $entityType) {
+                continue;
+            }
 
-            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']);
+            if (!$this->getAcl()->checkScope($entityType)) {
+                continue;
+            }
+
+            if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) {
+                continue;
+            }
+
+            $statusList = $this->getMetadata()->get(
+                ['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']
+            );
+
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList, true);
         }
 
@@ -1022,9 +966,15 @@ class Activities implements
         return $result;
     }
 
-    protected function getCalendarMeetingQuery($userId, $from, $to, $skipAcl)
+    protected function getCalendarMeetingQuery(string $userId, string $from, string $to, bool $skipAcl) : Select
     {
-        $selectManager = $this->getSelectManagerFactory()->create('Meeting');
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from('Meeting');
+
+        if (!$skipAcl) {
+            $builder->withStrictAccessControl();
+        }
 
         $select = [
             ['VALUE:Meeting', 'scope'],
@@ -1042,46 +992,50 @@ class Activities implements
 
         $seed = $this->getEntityManager()->getEntity('Meeting');
 
-        foreach ($this->getMetadata()->get(['app', 'calendar', 'additionalAttributeList']) ?? [] as $attribute) {
-            $select[] = $seed->hasAttribute($attribute) ? [$attribute, $attribute] : ['VALUE:', $attribute];
+        $additionalAttributeList = $this->getMetadata()->get(
+            ['app', 'calendar', 'additionalAttributeList']
+        ) ?? [];
+
+        foreach ($additionalAttributeList as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ?
+                [$attribute, $attribute] :
+                ['VALUE:', $attribute];
         }
 
-        $selectParams = [
-            'from' => 'Meeting',
-            'select' => $select,
-            'leftJoins' => ['users'],
-            'whereClause' => [
+        return $builder
+            ->buildQueryBuilder()
+            ->select($select)
+            ->leftJoin('users')
+            ->where([
                 'usersMiddle.userId' => $userId,
-                [
-                    'OR' => [
-                        [
-                            'dateStart>=' => $from,
-                            'dateStart<' => $to,
-                        ],
-                        [
-                            'dateEnd>=' => $from,
-                            'dateEnd<' => $to,
-                        ],
-                        [
-                            'dateStart<=' => $from,
-                            'dateEnd>=' => $to,
-                        ],
+                'usersMiddle.status!=' => 'Declined',
+                'OR' => [
+                    [
+                        'dateStart>=' => $from,
+                        'dateStart<' => $to,
+                    ],
+                    [
+                        'dateEnd>=' => $from,
+                        'dateEnd<' => $to,
+                    ],
+                    [
+                        'dateStart<=' => $from,
+                        'dateEnd>=' => $to,
                     ],
                 ],
-                'usersMiddle.status!=' => 'Declined',
-            ],
-        ];
-
-        if (!$skipAcl) {
-            $selectManager->applyAccess($selectParams);
-        }
-
-        return Select::fromRaw($selectParams);
+            ])
+            ->build();
     }
 
-    protected function getCalendarCallQuery($userId, $from, $to, $skipAcl)
+    protected function getCalendarCallQuery(string $userId, string $from, string $to, bool $skipAcl) : Select
     {
-        $selectManager = $this->getSelectManagerFactory()->create('Call');
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from('Call');
+
+        if (!$skipAcl) {
+            $builder->withStrictAccessControl();
+        }
 
         $select = [
             ['VALUE:Call', 'scope'],
@@ -1099,110 +1053,130 @@ class Activities implements
 
         $seed = $this->getEntityManager()->getEntity('Call');
 
-        foreach ($this->getMetadata()->get(['app', 'calendar', 'additionalAttributeList']) ?? [] as $attribute) {
-            $select[] = $seed->hasAttribute($attribute) ? [$attribute, $attribute] : ['VALUE:', $attribute];
+        $additionalAttributeList = $this->getMetadata()->get(
+            ['app', 'calendar', 'additionalAttributeList']
+        ) ?? [];
+
+        foreach ($additionalAttributeList as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ?
+                [$attribute, $attribute] :
+                ['VALUE:', $attribute];
         }
 
-        $selectParams = [
-            'from' => 'Call',
-            'select' => $select,
-            'leftJoins' => ['users'],
-            'whereClause' => [
+        return $builder
+            ->buildQueryBuilder()
+            ->select($select)
+            ->leftJoin('users')
+            ->where([
                 'usersMiddle.userId' => $userId,
-                [
-                    'OR' => [
-                        [
-                            'dateStart>=' => $from,
-                            'dateStart<' => $to,
-                        ],
-                        [
-                            'dateEnd>=' => $from,
-                            'dateEnd<' => $to,
-                        ],
-                        [
-                            'dateStart<=' => $from,
-                            'dateEnd>=' => $to,
-                        ],
-                    ]
-                ],
                 'usersMiddle.status!=' => 'Declined',
-            ],
-        ];
-
-        if (!$skipAcl) {
-            $selectManager->applyAccess($selectParams);
-        }
-
-        return Select::fromRaw($selectParams);
+                'OR' => [
+                    [
+                        'dateStart>=' => $from,
+                        'dateStart<' => $to,
+                    ],
+                    [
+                        'dateEnd>=' => $from,
+                        'dateEnd<' => $to,
+                    ],
+                    [
+                        'dateStart<=' => $from,
+                        'dateEnd>=' => $to,
+                    ],
+                ],
+            ])
+            ->build();
     }
 
-    protected function getCalendarTaskQuery($userId, $from, $to, $skipAcl = false)
+    protected function getCalendarTaskQuery(string $userId, string $from, string $to, bool $skipAcl) : Select
     {
-        $selectManager = $this->getSelectManagerFactory()->create('Task');
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from('Task');
+
+        if (!$skipAcl) {
+            $builder->withStrictAccessControl();
+        }
 
         $select = [
-                ['VALUE:Task', 'scope'],
-                'id',
-                'name',
-                ['dateStart', 'dateStart'],
-                ['dateEnd', 'dateEnd'],
-                'status',
-                ['dateStartDate', 'dateStartDate'],
-                ['dateEndDate', 'dateEndDate'],
-                'parentType',
-                'parentId',
-                'createdAt',
+            ['VALUE:Task', 'scope'],
+            'id',
+            'name',
+            ['dateStart', 'dateStart'],
+            ['dateEnd', 'dateEnd'],
+            'status',
+            ['dateStartDate', 'dateStartDate'],
+            ['dateEndDate', 'dateEndDate'],
+            'parentType',
+            'parentId',
+            'createdAt',
         ];
 
         $seed = $this->getEntityManager()->getEntity('Task');
 
-        foreach ($this->getMetadata()->get(['app', 'calendar', 'additionalAttributeList']) ?? [] as $attribute) {
-            $select[] = $seed->hasAttribute($attribute) ? [$attribute, $attribute] : ['VALUE:', $attribute];
+        $additionalAttributeList = $this->getMetadata()->get(
+            ['app', 'calendar', 'additionalAttributeList']
+        ) ?? [];
+
+        foreach ($additionalAttributeList as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ?
+                [$attribute, $attribute] :
+                ['VALUE:', $attribute];
         }
 
-        $selectParams = [
-            'from' => 'Task',
-            'select' => $select,
-            'whereClause' => [
-                [
-                    'OR' => [
-                        [
-                            'dateEnd' => null,
-                            'dateStart>=' => $from,
-                            'dateStart<' => $to,
-                        ],
-                        [
-                            'dateEnd>=' => $from,
-                            'dateEnd<' => $to,
-                        ],
-                        [
-                            'dateEndDate!=' => null,
-                            'dateEndDate>=' => $from,
-                            'dateEndDate<' => $to,
-                        ]
-                    ]
-                ]
-            ]
-        ];
+        $queryBuilder = $builder
+            ->buildQueryBuilder()
+            ->select($select)
+            ->where([
+                'OR' => [
+                    [
+                        'dateEnd' => null,
+                        'dateStart>=' => $from,
+                        'dateStart<' => $to,
+                    ],
+                    [
+                        'dateEnd>=' => $from,
+                        'dateEnd<' => $to,
+                    ],
+                    [
+                        'dateEndDate!=' => null,
+                        'dateEndDate>=' => $from,
+                        'dateEndDate<' => $to,
+                    ],
+                ],
+            ]);
 
-        if ($this->getMetadata()->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple') {
-            $selectManager->setDistinct(true, $selectParams);
-            $selectManager->addLeftJoin(['assignedUsers', 'assignedUsers'], $selectParams);
-            $selectParams['whereClause'][] = ['assignedUsers.id' => $userId];
-        } else {
-            $selectParams['whereClause'][] = ['assignedUserId' => $userId];
+        if (
+            $this->getMetadata()->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple'
+            &&
+            !$this->getMetadata()->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'disabled'])
+        ) {
+            $queryBuilder
+                ->distinct()
+                ->leftJoin('assignedUsers', 'assignedUsers')
+                ->where([
+                    'assignedUsers.id' => $userId,
+                ]);
+        }
+        else {
+            $queryBuilder->where([
+                'assignedUserId' => $userId,
+            ]);
         }
 
-        if (!$skipAcl) {
-            $selectManager->applyAccess($selectParams);
-        }
-
-        return Select::fromRaw($selectParams);
+        return $queryBuilder->build();
     }
 
-    protected function getCalendarSelectParams($scope, $userId, $from, $to, $skipAcl = false)
-    {
-        $selectManager = $this->getSelectManagerFactory()->create($scope);
+    protected function getCalenderBaseQuery(
+        string $scope, string $userId, string $from, string $to, bool $skipAcl = false
+    ) : Select {
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($scope);
+
+        if (!$skipAcl) {
+            $builder->withStrictAccessControl();
+        }
 
         $seed = $this->getEntityManager()->getEntity($scope);
 
@@ -1220,83 +1194,83 @@ class Activities implements
             'createdAt',
         ];
 
-        foreach ($this->getMetadata()->get(['app', 'calendar', 'additionalAttributeList']) ?? [] as $attribute) {
-            $select[] = $seed->hasAttribute($attribute) ? [$attribute, $attribute] : ['VALUE:', $attribute];
+        $additionalAttributeList = $this->getMetadata()->get(
+            ['app', 'calendar', 'additionalAttributeList']
+        ) ?? [];
+
+        foreach ($additionalAttributeList as $attribute) {
+            $select[] = $seed->hasAttribute($attribute) ?
+                [$attribute, $attribute] :
+                ['VALUE:', $attribute];
         }
 
-        $wherePart = [
+        $orGroup = [
             'assignedUserId' => $userId,
         ];
 
         if ($seed->hasRelation('users')) {
-            $wherePart['usersMiddle.userId'] = $userId;
+            $orGroup['usersMiddle.userId'] = $userId;
         }
 
         if ($seed->hasRelation('assignedUsers')) {
-            $wherePart['assignedUsersMiddle.userId'] = $userId;
+            $orGroup['assignedUsersMiddle.userId'] = $userId;
         }
 
-        $selectParams = [
-            'from' => $scope,
-            'select' => $select,
-            'leftJoins' => [],
-            'whereClause' => [
-                'OR' => $wherePart,
+        $queryBuilder = $builder
+            ->buildQueryBuilder()
+            ->select($select)
+            ->where([
+                'OR' => $orGroup,
                 [
                     'OR' => [
                         [
                             'dateEnd' => null,
                             'dateStart>=' => $from,
-                            'dateStart<' => $to
+                            'dateStart<' => $to,
                         ],
                         [
                             'dateStart>=' => $from,
-                            'dateStart<' => $to
+                            'dateStart<' => $to,
                         ],
                         [
                             'dateEnd>=' => $from,
-                            'dateEnd<' => $to
+                            'dateEnd<' => $to,
                         ],
                         [
                             'dateStart<=' => $from,
-                            'dateEnd>=' => $to
+                            'dateEnd>=' => $to,
                         ],
                         [
                             'dateEndDate!=' => null,
                             'dateEndDate>=' => $from,
-                            'dateEndDate<' => $to
-                        ]
-                    ]
-                ]
-            ]
-        ];
+                            'dateEndDate<' => $to,
+                        ],
+                    ],
+                ],
+            ]);
 
         if ($seed->hasRelation('users')) {
-            $selectParams['leftJoins'][] = 'users';
+            $queryBuilder->leftJoin('users');
         }
 
         if ($seed->hasRelation('assignedUsers')) {
-            $selectManager->setDistinct(true, $selectParams);
-            $selectParams['leftJoins'][] = 'assignedUsers';
+            $queryBuilder
+                ->distinct()
+                ->leftJoin('assignedUsers');
         }
 
-        if (!$skipAcl) {
-            $selectManager->applyAccess($selectParams);
-        }
-
-        return $selectParams;
+        return $queryBuilder->build();
     }
 
-    protected function getCalendarQuery($scope, $userId, $from, $to, $skipAcl = false)
-    {
-        $selectManager = $this->getSelectManagerFactory()->create($scope);
+    protected function getCalendarQuery(
+        string $scope, string $userId, string $from, string $to, bool $skipAcl = false
+    ) : Select {
+        if ($this->serviceFactory->checkExists($scope)) {
+            $service = $this->serviceFactory->create($scope);
 
-        if (method_exists($selectManager, 'getCalendarSelectParams')) {
-            $selectParams = $selectManager->getCalendarSelectParams($userId, $from, $to, $skipAcl);
-
-            $selectParams['from'] = $scope;
-
-            return Select::fromRaw($selectParams);
+            if (method_exists($service, 'getCalenderQuery')) {
+                return $service->getCalenderQuery($userId, $from, $to, $skipAcl);
+            }
         }
 
         $methodName = 'getCalendar' . $scope . 'Query';
@@ -1305,101 +1279,82 @@ class Activities implements
             return $this->$methodName($userId, $from, $to, $skipAcl);
         }
 
-        $selectParams = $this->getCalendarSelectParams($scope, $userId, $from, $to, $skipAcl);
-
-        return Select::fromRaw($selectParams);
+        return $this->getCalenderBaseQuery($scope, $userId, $from, $to, $skipAcl);
     }
 
-    protected function getActivitiesQuery(
-        Entity $entity, $scope, array $statusList = [], $isHistory = false, $additinalSelectParams = null
-    ) {
+    protected function getActivitiesQuery(Entity $entity, $scope, array $statusList = [])
+    {
         $serviceName = 'Activities' . $entity->getEntityType();
+
         if ($this->getServiceFactory()->checkExists($serviceName)) {
             $service = $this->getServiceFactory()->create($serviceName);
 
             $methodName = 'getActivities' . $scope . 'Query';
 
             if (method_exists($service, $methodName)) {
-                return $service->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+                return $service->$methodName($entity, $statusList);
             }
-        }
-
-        $selectManager = $this->getSelectManagerFactory()->create($scope);
-
-        if (method_exists($selectManager, 'getActivitiesSelectParams')) {
-            $selectParams = $selectManager->getActivitiesSelectParams($entity, $statusList, $isHistory);
-
-            $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-            $selectParams['from'] = $scope;
-
-            return Select::fromRaw($selectParams);
         }
 
         $methodName = 'getActivities' . $scope . 'Query';
 
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+            return $this->$methodName($entity, $statusList);
         }
 
-        $selectParams = $this->getActivitiesSelectParams($entity, $scope, $statusList, $isHistory);
-
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
-
-        return Select::fromRaw($selectParams);
+        return $this->getActivitiesBaseQuery($entity, $scope, $statusList);
     }
 
-    protected function getActivitiesSelectParams(Entity $entity, $scope, array $statusList, $isHistory)
+    protected function getActivitiesBaseQuery(Entity $entity, string $scope, array $statusList)
     {
-        $selectManager = $this->getSelectManagerFactory()->create($scope);
-
         $seed = $this->getEntityManager()->getEntity($scope);
 
-        $select = [
-            'id',
-            'name',
-            ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['VALUE:', 'dateStart']),
-            ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['VALUE:', 'dateEnd']),
-            ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
-            ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
-            ['VALUE:' . $scope, '_scope'],
-            ($seed->hasAttribute('assignedUserId') ? ['assignedUserId', 'assignedUserId'] : ['VALUE:', 'assignedUserId']),
-            ($seed->hasAttribute('assignedUserName') ? ['assignedUserName', 'assignedUserName'] :
-                ['VALUE:', 'assignedUserName']),
-            ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
-            ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
-            'status',
-            'createdAt',
-            ['VALUE:', 'hasAttachment']
-        ];
-
-        $selectParams = $selectManager->getEmptySelectParams();
-
-        $selectParams['select'] = $select;
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($scope)
+            ->withStrictAccessControl()
+            ->buildQueryBuilder()
+            ->select([
+                'id',
+                'name',
+                ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['VALUE:', 'dateStart']),
+                ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['VALUE:', 'dateEnd']),
+                ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
+                ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
+                ['VALUE:' . $scope, '_scope'],
+                ($seed->hasAttribute('assignedUserId') ? ['assignedUserId', 'assignedUserId'] : ['VALUE:', 'assignedUserId']),
+                ($seed->hasAttribute('assignedUserName') ? ['assignedUserName', 'assignedUserName'] :
+                    ['VALUE:', 'assignedUserName']),
+                ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
+                ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
+                'status',
+                'createdAt',
+                ['VALUE:', 'hasAttachment'],
+            ]);
 
         if ($entity->getEntityType() === 'User') {
-            $selectParams['whereClause'][] = [
-                'assignedUserId' => $entity->id
-            ];
-        } else {
-            $selectParams['whereClause'][] = [
+            $builder->where([
+                'assignedUserId' => $entity->id,
+            ]);
+        }
+        else {
+            $builder->where([
                 'parentId' => $entity->id,
-                'parentType' => $entity->getEntityType()
-            ];
+                'parentType' => $entity->getEntityType(),
+            ]);
         }
 
-        $selectParams['whereClause'][] = [
-            'status' => $statusList
-        ];
+        $builder->where([
+            'status' => $statusList,
+        ]);
 
-        $selectManager->applyAccess($selectParams);
-
-        return $selectParams;
+        return $builder->build();
     }
 
     public function getUsersTimeline($userIdList, $from, $to, $scopeList = null)
     {
         $brScopeList = $this->getConfig()->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
+
         if ($scopeList) {
             foreach ($scopeList as $s) {
                 if (!in_array($s, $brScopeList)) {
@@ -1414,14 +1369,18 @@ class Activities implements
                 'eventList' => [],
                 'busyRangeList' => []
             ];
+
             try {
                 $userData->eventList = $this->getEventList($userId, $from, $to, $scopeList);
-                $userData->busyRangeList = $this->getBusyRangeList($userId, $from, $to, $brScopeList, $userData->eventList);
-            } catch (\Exception $e) {
+
+                $userData->busyRangeList = $this->getBusyRangeList(
+                    $userId, $from, $to, $brScopeList, $userData->eventList
+                );
+            } catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
                 }
-                throw new \Exception($e->getMessage(), $e->getCode(), $e);
+                throw new Exception($e->getMessage(), $e->getCode(), $e);
             }
 
             $resultData->$userId = $userData;
@@ -1437,7 +1396,10 @@ class Activities implements
         $scopeList = $this->getConfig()->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
 
         if ($entityType) {
-            if (!$this->getAcl()->check($entityType)) throw new Forbidden();
+            if (!$this->getAcl()->check($entityType)) {
+                throw new Forbidden();
+            }
+
             if (!in_array($entityType, $scopeList)) {
                 $scopeList[] = $entityType;
             }
@@ -1447,11 +1409,12 @@ class Activities implements
             $dtFrom = new \DateTime($from);
             $dtTo = new \DateTime($to);
             $diff = $dtTo->diff($dtFrom, true);
+
             if ($diff->days > $this->getConfig()->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
                 return [];
             }
-
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             throw new Error("BusyRanges: Bad date range.");
         }
 
@@ -1471,11 +1434,13 @@ class Activities implements
         foreach ($userIdList as $userId) {
             try {
                 $busyRangeList = $this->getBusyRangeList($userId, $from, $to, $scopeList, $ignoreList);
-            } catch (\Exception $e) {
+            }
+            catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
                 }
-                throw new \Exception($e->getMessage(), $e->getCode(), $e);
+
+                throw new Exception($e->getMessage(), $e->getCode(), $e);
             }
 
             $resultData->$userId = $busyRangeList;
@@ -1491,20 +1456,25 @@ class Activities implements
     public function getUsersEventList($userIdList, $from, $to, $scopeList = null)
     {
         $resultList = [];
+
         foreach ($userIdList as $userId) {
             try {
                 $userResultList = $this->getEvents($userId, $from, $to, $scopeList);
-            } catch (\Exception $e) {
+            }
+            catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
                 }
-                throw new \Exception($e->getMessage(), $e->getCode(), $e);
+
+                throw new Exception($e->getMessage(), $e->getCode(), $e);
             }
+
             foreach ($userResultList as $item) {
                 $item['userId'] = $userId;
                 $resultList[] = $item;
             }
         }
+
         return $resultList;
     }
 
@@ -1518,8 +1488,10 @@ class Activities implements
         if ($this->getAcl()->get('userPermission') === 'no') {
             throw new Forbidden("User Permission not allowing to view calendars of other users.");
         }
+
         if ($this->getAcl()->get('userPermission') === 'team') {
             $userTeamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+
             foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $userTeamIdList)) {
                     throw new Forbidden("User Permission not allowing to view calendars of other teams.");
@@ -1547,8 +1519,10 @@ class Activities implements
         }
 
         $eventList = [];
+
         foreach ($userIdList as $userId) {
             $userEventList = $this->getEventList($userId, $from, $to, $scopeList);
+
             foreach ($userEventList as $event) {
                 foreach ($eventList as &$e) {
                     if ($e['scope'] == $event['scope'] && $e['id'] == $event['id']) {
@@ -1581,6 +1555,7 @@ class Activities implements
         $eventList = $this->getEventList($userId, $from, $to, $scopeList, true);
 
         $ignoreHash = (object) [];
+
         if ($ignoreEventList) {
             foreach ($ignoreEventList as $item) {
                 $ignoreHash->{$item['id']} = true;
@@ -1592,11 +1567,19 @@ class Activities implements
         foreach ($eventList as $i => $item) {
             $eventList[$i] = (object) $item;
         }
-        foreach ($eventList as $event) {
-            if (empty($event->dateStart) || empty($event->dateEnd)) continue;
-            if (in_array($event->status ?? null, $canceledStatusList)) continue;
 
-            if (isset($ignoreHash->{$event->id})) continue;
+        foreach ($eventList as $event) {
+            if (empty($event->dateStart) || empty($event->dateEnd)) {
+                continue;
+            }
+
+            if (in_array($event->status ?? null, $canceledStatusList)) {
+                continue;
+            }
+
+            if (isset($ignoreHash->{$event->id})) {
+                continue;
+            }
 
             try {
                 $start = new \DateTime($event->dateStart);
@@ -1648,11 +1631,12 @@ class Activities implements
                     'dateStart' => $event->dateStart,
                     'dateEnd' => $event->dateEnd,
                     'start' => $start,
-                    'end' => $end
+                    'end' => $end,
                 ];
 
                 $rangeList[] = $busyItem;
-            } catch (\Exception $e) {}
+            }
+            catch (Exception $e) {}
         }
 
         foreach ($rangeList as &$item) {
@@ -1673,8 +1657,6 @@ class Activities implements
 
         $this->accessCheck($user);
 
-        $pdo = $this->getPDO();
-
         $calendarEntityList = $this->getConfig()->get('calendarEntityList', []);
 
         if (is_null($scopeList)) {
@@ -1687,9 +1669,11 @@ class Activities implements
             if (!in_array($scope, $calendarEntityList)) {
                 continue;
             }
+
             if (!$this->getAcl()->checkScope($scope)) {
                 continue;
             }
+
             if (!$this->getMetadata()->get(['scopes', $scope, 'calendar'])) {
                 continue;
             }
@@ -1752,14 +1736,15 @@ class Activities implements
 
     public function getPopupNotifications(string $userId) : array
     {
-        $dt = new \DateTime();
+        $dt = new DateTime();
 
         $pastHours = $this->getConfig()->get('reminderPastHours', self::REMINDER_PAST_HOURS);
 
         $now = $dt->format('Y-m-d H:i:s');
         $nowShifted = $dt->sub(new \DateInterval('PT'.strval($pastHours).'H'))->format('Y-m-d H:i:s');
 
-        $reminderCollection = $this->getEntityManager()->getRepository('Reminder')
+        $reminderCollection = $this->getEntityManager()
+            ->getRepository('Reminder')
             ->select(['id', 'entityType', 'entityId'])
             ->where([
                 'type' => 'Popup',
@@ -1813,8 +1798,9 @@ class Activities implements
         return $resultList;
     }
 
-    public function getUpcomingActivities($userId, $params = [], $entityTypeList = null, $futureDays = null)
-    {
+    public function getUpcomingActivities(
+        string $userId, array $params = [], ?array $entityTypeList = null, ?int $futureDays = null
+    ) {
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         $this->accessCheck($user);
@@ -1824,112 +1810,39 @@ class Activities implements
         }
 
         if (is_null($futureDays)) {
-            $futureDays = $this->getConfig()->get('activitiesUpcomingFutureDays', self::UPCOMING_ACTIVITIES_FUTURE_DAYS);
+            $futureDays = $this->getConfig()->get(
+                'activitiesUpcomingFutureDays',
+                self::UPCOMING_ACTIVITIES_FUTURE_DAYS
+            );
         }
-        $beforeString = (new \DateTime())->modify('+' . $futureDays . ' days')->format('Y-m-d H:i:s');
-
-        $upcomingTaskFutureDays = $this->getConfig()->get(
-            'activitiesUpcomingTaskFutureDays', self::UPCOMING_ACTIVITIES_TASK_FUTURE_DAYS
-        );
-
-        $taskBeforeString = (new \DateTime())->modify('+' . $upcomingTaskFutureDays . ' days')->format('Y-m-d H:i:s');
-
-        $unionPartList = [];
 
         $queryList = [];
 
         foreach ($entityTypeList as $entityType) {
-            if (!$this->getMetadata()->get(['scopes', $entityType, 'activity']) && $entityType !== 'Task') continue;
-            if (!$this->getAcl()->checkScope($entityType, 'read')) continue;
-
-            $selectParams = [
-                'from' => $entityType,
-                'select' => [
-                    'id',
-                    'name',
-                    'dateStart',
-                    'dateEnd',
-                    ['VALUE:' . $entityType, 'entityType']
-                ]
-            ];
-
-            $selectManager = $this->getSelectManagerFactory()->create($entityType);
-
-            $selectManager->applyAccess($selectParams);
-
-            if (!empty($params['textFilter'])) {
-                $selectManager->applyTextFilter($params['textFilter'], $selectParams);
+            if (
+                !$this->getMetadata()->get(['scopes', $entityType, 'activity']) &&
+                $entityType !== 'Task'
+            ) {
+                continue;
             }
 
-            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateStart'])) continue;
-            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) continue;
-
-            $selectManager->applyBoolFilter('onlyMy', $selectParams);
-
-            if ($entityType === 'Task') {
-                $selectManager->applyPrimaryFilter('actual', $selectParams);
-
-                $selectManager->addOrWhere([
-                    [
-                        'dateStart' => null,
-                        'OR' => [
-                            'dateEnd' => null,
-                            $selectManager->convertDateTimeWhere([
-                                'type' => 'before',
-                                'attribute' => 'dateEnd',
-                                'value' => $taskBeforeString,
-                                'timeZone' => $selectManager->getUserTimeZone()
-                            ])
-                        ]
-                    ],
-                    [
-                        'dateStart!=' => null,
-                        'OR' => [
-                            $selectManager->convertDateTimeWhere([
-                                'type' => 'past',
-                                'attribute' => 'dateStart',
-                                'timeZone' => $selectManager->getUserTimeZone()
-                            ]),
-                            $selectManager->convertDateTimeWhere([
-                                'type' => 'today',
-                                'attribute' => 'dateStart',
-                                'timeZone' => $selectManager->getUserTimeZone()
-                            ]),
-                            $selectManager->convertDateTimeWhere([
-                                'type' => 'before',
-                                'attribute' => 'dateStart',
-                                'value' => $beforeString,
-                                'timeZone' => $selectManager->getUserTimeZone()
-                            ])
-                        ]
-                    ]
-                ], $selectParams);
-            } else {
-                $selectManager->applyPrimaryFilter('planned', $selectParams);
-
-                $selectManager->addOrWhere([
-                    $selectManager->convertDateTimeWhere([
-                        'type' => 'today',
-                        'field' => 'dateStart',
-                        'timeZone' => $selectManager->getUserTimeZone()
-                    ]),
-                    [
-                        $selectManager->convertDateTimeWhere([
-                            'type' => 'future',
-                            'field' => 'dateEnd',
-                            'timeZone' => $selectManager->getUserTimeZone()
-                        ]),
-                        $selectManager->convertDateTimeWhere([
-                            'type' => 'before',
-                            'field' => 'dateStart',
-                            'value' => $beforeString,
-                            'timeZone' => $selectManager->getUserTimeZone()
-                        ])
-                    ]
-                ], $selectParams);
+            if (!$this->getAcl()->checkScope($entityType, 'read')) {
+                continue;
             }
 
-            $queryList[] = Select::fromRaw($selectParams);
+            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateStart'])) {
+                continue;
+            }
+
+            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) {
+                continue;
+            }
+
+            $queryList[] = $this->getUpcomingActivitiesEntityTypeQuery($entityType, $params, $user, $futureDays);
+
+
+
+            //$queryList[] = Select::fromRaw($selectParams);
         }
 
         if (empty($queryList)) {
@@ -1946,17 +1859,17 @@ class Activities implements
             $builder->query($query);
         }
 
-        $unionQuery = $builder->build();
+        $unionCountQuery = $builder->build();
 
         $countQuery = $this->entityManager->getQueryBuilder()
             ->select()
-            ->fromQuery($unionQuery, 'c')
+            ->fromQuery($unionCountQuery, 'c')
             ->select('COUNT:(c.id)', 'count')
             ->build();
 
-        $sth = $this->entityManager->getQueryExecutor()->execute($countQuery);
+        $countSth = $this->entityManager->getQueryExecutor()->execute($countQuery);
 
-        $row = $sth->fetch(PDO::FETCH_ASSOC);
+        $row = $countSth->fetch(PDO::FETCH_ASSOC);
 
         $totalCount = $row['count'];
 
@@ -1978,6 +1891,7 @@ class Activities implements
 
         foreach ($rows as $row) {
             $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['id']);
+
             $entityData = $entity->toArray();
             $entityData['_scope'] = $entity->getEntityType();
 
@@ -1988,5 +1902,158 @@ class Activities implements
             'total' => $totalCount,
             'list' => $entityDataList,
         ];
+    }
+
+    protected function getUpcomingActivitiesEntityTypeQuery(
+        string $entityType, array $params, UserEntity $user, int $futureDays
+    ) : Select {
+
+        $beforeString = (new DateTime())
+            ->modify('+' . $futureDays . ' days')
+            ->format('Y-m-d H:i:s');
+
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($entityType)
+            ->forUser($user)
+            ->withBoolFilter('onlyMy')
+            ->withStrictAccessControl();
+
+        $primaryFilter = 'planned';
+
+        if ($entityType === 'Task') {
+            $primaryFilter = 'actual';
+        }
+
+        $builder->withPrimaryFilter($primaryFilter);
+
+        if (!empty($params['textFilter'])) {
+            $builder->withTextFilter($params['textFilter']);
+        }
+
+        $queryBuilder = $builder->buildQueryBuilder();
+
+        $converter = $this->whereConverterFactory->create($entityType, $user);
+
+        $timeZone = $this->getUserTimeZone($user);
+
+        if ($entityType === 'Task') {
+            $upcomingTaskFutureDays = $this->config->get(
+                'activitiesUpcomingTaskFutureDays',
+                self::UPCOMING_ACTIVITIES_TASK_FUTURE_DAYS
+            );
+
+            $taskBeforeString = (new DateTime())
+                ->modify('+' . $upcomingTaskFutureDays . ' days')
+                ->format('Y-m-d H:i:s');
+
+            $queryBuilder->where([
+                'OR' => [
+                    [
+                        'dateStart' => null,
+                        'OR' => [
+                            'dateEnd' => null,
+                            $converter->convert(
+                                $queryBuilder,
+                                WhereItem::fromRaw([
+                                    'type' => 'before',
+                                    'attribute' => 'dateEnd',
+                                    'value' => $taskBeforeString,
+                                    'timeZone' => $timeZone,
+                                ])
+                            )->getRaw()
+                        ]
+                    ],
+                    [
+                        'dateStart!=' => null,
+                        'OR' => [
+                            $converter->convert(
+                                $queryBuilder,
+                                WhereItem::fromRaw([
+                                    'type' => 'past',
+                                    'attribute' => 'dateStart',
+                                    'timeZone' => $timeZone,
+                                ])
+                            )->getRaw(),
+                            $converter->convert(
+                                $queryBuilder,
+                                WhereItem::fromRaw([
+                                    'type' => 'today',
+                                    'attribute' => 'dateStart',
+                                    'timeZone' => $timeZone,
+                                ])
+                            )->getRaw(),
+                            $converter->convert(
+                                $queryBuilder,
+                                WhereItem::fromRaw([
+                                    'type' => 'before',
+                                    'attribute' => 'dateStart',
+                                    'value' => $beforeString,
+                                    'timeZone' => $timeZone,
+                                ])
+                            )->getRaw(),
+                        ]
+                    ],
+                ],
+            ]);
+        }
+        else {
+            $queryBuilder->where([
+                'OR' => [
+                    $converter->convert(
+                        $queryBuilder,
+                        WhereItem::fromRaw([
+                            'type' => 'today',
+                            'attribute' => 'dateStart',
+                            'timeZone' => $timeZone,
+                        ])
+                    )->getRaw(),
+                    [
+                        $converter->convert(
+                            $queryBuilder,
+                            WhereItem::fromRaw([
+                                'type' => 'future',
+                                'attribute' => 'dateEnd',
+                                'timeZone' => $timeZone,
+                            ])
+                        )->getRaw(),
+                        $converter->convert(
+                            $queryBuilder,
+                            WhereItem::fromRaw([
+                                'type' => 'before',
+                                'attribute' => 'dateStart',
+                                'value' => $beforeString,
+                                'timeZone' => $timeZone,
+                            ])
+                        )->getRaw(),
+                    ],
+                ],
+            ]);
+        }
+
+        $queryBuilder->select([
+            'id',
+            'name',
+            'dateStart',
+            'dateEnd',
+            ['VALUE:' . $entityType, 'entityType'],
+        ]);
+
+        return $queryBuilder->build();
+    }
+
+    protected function getUserTimeZone(UserEntity $user) : string
+    {
+        $preferences = $this->entityManager->getEntity('Preferences', $user->id);
+
+        if ($preferences) {
+            $timeZone = $preferences->get('timeZone');
+
+            if ($timeZone) {
+                return $timeZone;
+            }
+        }
+
+        return $this->config->get('timeZone') ?? 'UTC';
     }
 }

@@ -42,6 +42,8 @@ use Espo\Core\{
 use Espo\Entities\User;
 
 /**
+ * @deprecated Use SelectBuilder instead.
+ *
  * Creates select managers for specific entity types. You can specify a user whose ACL will be applied to queries.
  * If user is not specified, then the current one will be used.
  */

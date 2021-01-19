@@ -1,0 +1,34 @@
+{
+    "whereItemConverterClassNameMap": {
+        "folderId_inFolder": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\InFolder",
+        "emailAddress_equals": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\EmailAddressEquals",
+        "from_equals": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\FromEquals",
+        "to_equals": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\ToEquals",
+        "isNotReplied_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotRepliedIsTrue",
+        "isNotReplied_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotRepliedIsFalse",
+        "isNotRead_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotReadIsTrue",
+        "isNotRead_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotReadIsFalse",
+        "isRead_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotReadIsFalse",
+        "isRead_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotReadIsTrue",
+        "isImportant_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsImportantIsTrue",
+        "isImportant_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsImportantIsFalse"
+    },
+    "accessControlFilterClassNameMap": {
+        "onlyOwn": "Espo\\Classes\\Select\\Email\\AccessControlFilters\\OnlyOwn",
+        "portalOnlyOwn": "Espo\\Classes\\Select\\Email\\AccessControlFilters\\OnlyOwn",
+        "onlyTeam": "Espo\\Classes\\Select\\Email\\AccessControlFilters\\OnlyTeam",
+        "portalOnlyContact": "Espo\\Classes\\Select\\Email\\AccessControlFilters\\PortalOnlyContact",
+        "portalOnlyAccount": "Espo\\Classes\\Select\\Email\\AccessControlFilters\\PortalOnlyAccount"
+    },
+    "boolFilterClassNameMap": {
+        "onlyMy": "Espo\\Classes\\Select\\Email\\BoolFilters\\OnlyMy"
+    },
+    "applierClassNameMap": {
+        "additional": "Espo\\Classes\\Select\\Email\\Appliers\\AdditionalApplier",
+        "textFilter": "Espo\\Classes\\Select\\Email\\Appliers\\TextFilterApplier"
+    },
+    "selectAttributesDependancyMap": {
+        "subject": ["name"],
+        "personStringData": ["fromString", "fromEmailAddressId"]
+    }
+}

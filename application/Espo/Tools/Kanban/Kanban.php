@@ -32,13 +32,14 @@ namespace Espo\Tools\Kanban;
 use Espo\Core\{
     Exceptions\Error,
     Utils\Metadata,
-    Select\SelectManagerFactory,
-    ORM\EntityManager,
+    Select\SelectBuilderFactory,
+    Select\SearchParams,
 };
 
 use Espo\{
     Services\Record as RecordService,
     ORM\QueryParams\Select as SelectQuery,
+    ORM\EntityManager,
 };
 
 class Kanban
@@ -51,8 +52,6 @@ class Kanban
 
     protected $searchParams = [];
 
-    protected $maxSelectTextAttributeLength = null;
-
     protected $userId = null;
 
     protected $maxOrderNumber = 50;
@@ -60,16 +59,16 @@ class Kanban
     const MAX_GROUP_LENGTH = 100;
 
     protected $metadata;
-    protected $selectManagerFactory;
+    protected $selectBuilderFactory;
     protected $entityManager;
 
     public function __construct(
         Metadata $metadata,
-        SelectManagerFactory $selectManagerFactory,
+        SelectBuilderFactory $selectBuilderFactory,
         EntityManager $entityManager
     ) {
         $this->metadata = $metadata;
-        $this->selectManagerFactory = $selectManagerFactory;
+        $this->selectBuilderFactory = $selectBuilderFactory;
         $this->entityManager = $entityManager;
     }
 
@@ -122,13 +121,6 @@ class Kanban
         return $this;
     }
 
-    public function setMaxSelectTextAttributeLength(?int $maxSelectTextAttributeLength) : self
-    {
-        $this->maxSelectTextAttributeLength = $maxSelectTextAttributeLength;
-
-        return $this;
-    }
-
     /**
      * Get kanban record data.
      */
@@ -154,13 +146,15 @@ class Kanban
            }
         }
 
-        $selectManager = $this->selectManagerFactory->create($this->entityType);
+        $selectBuilder = $this->selectBuilderFactory->create();
 
-        $selectParams = $selectManager->getSelectParams($params, true, true, true);
-
-        if ($this->maxSelectTextAttributeLength) {
-            $selectParams['maxTextColumnsLength'] = $this->maxSelectTextAttributeLength;
-        }
+        $query = $selectBuilder
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(
+                SearchParams::fromRaw($params)
+            )
+            ->build();
 
         $collection = $this->entityManager
             ->getCollectionFactory()
@@ -185,19 +179,22 @@ class Kanban
                 continue;
             }
 
-            $selectParamsSub = $selectParams;
+            $itemSelectBuilder = $this->entityManager
+                ->getQueryBuilder()
+                ->select()
+                ->clone($query);
 
-            $selectParamsSub['whereClause'][] = [
+            $itemSelectBuilder->where([
                 $statusField => $status,
-            ];
+            ]);
 
-            $o = (object) [
+            $groupData = (object) [
                 'name' => $status,
             ];
 
-            $query = SelectQuery::fromRaw($selectParamsSub);
+            $itemQuery = $itemSelectBuilder->build();
 
-            $newOrder = $selectParamsSub['orderBy'] ?? [];
+            $newOrder = $itemQuery->getOrder() ?? [];
 
             array_unshift($newOrder, [
                 'COALESCE:(kanbanOrder.order, ' . strval($this->maxOrderNumber + 1) . ')',
@@ -207,10 +204,10 @@ class Kanban
             if ($this->userId && !$this->orderDisabled) {
                 $group = mb_substr($status, 0, self::MAX_GROUP_LENGTH);
 
-                $builder = $this->entityManager
+                $itemQuery = $this->entityManager
                     ->getQueryBuilder()
                     ->select()
-                    ->clone($query)
+                    ->clone($itemQuery)
                     ->order($newOrder)
                     ->leftJoin(
                         'KanbanOrder',
@@ -221,18 +218,18 @@ class Kanban
                             'kanbanOrder.group' => $group,
                             'kanbanOrder.userId' => $this->userId,
                         ]
-                    );
-
-                $query = $builder->build();
+                    )
+                    ->build();
             }
 
             $collectionSub = $repository
-                ->clone($query)
+                ->clone($itemQuery)
                 ->find();
 
             if (!$this->countDisabled) {
-                $totalSub = $repository->count($selectParamsSub);
-            } else {
+                $totalSub = $repository->clone($itemQuery)->count();
+            }
+            else {
                 if ($maxSize && count($collectionSub) > $maxSize) {
                     $totalSub = -1;
 
@@ -258,16 +255,17 @@ class Kanban
                 $collection[] = $e;
             }
 
-            $o->total = $totalSub;
+            $groupData->total = $totalSub;
 
-            $o->list = $collectionSub->getValueMapList();
+            $groupData->list = $collectionSub->getValueMapList();
 
-            $additionalData->groupList[] = $o;
+            $additionalData->groupList[] = $groupData;
         }
 
         if (!$this->countDisabled) {
-            $total = $repository->count($selectParams);
-        } else {
+            $total = $repository->clone($query)->count();
+        }
+        else {
             if ($maxSize && count($collection) > $maxSize) {
                 $total = -1;
 

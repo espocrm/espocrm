@@ -29,60 +29,60 @@
 
 namespace Espo\Entities;
 
-class User extends \Espo\Core\Entities\Person
+use Espo\Core\Entities\Person;
+
+class User extends Person
 {
-    public function isActive()
+    public function isActive() : bool
     {
-        return $this->get('isActive');
+        return (bool) $this->get('isActive');
     }
 
-    public function isAdmin()
+    public function isAdmin() : bool
     {
         return $this->get('type') === 'admin' || $this->isSystem() || $this->isSuperAdmin();
     }
 
-    public function isPortal()
+    public function isPortal() : bool
     {
         return $this->get('type') === 'portal';
     }
 
-    public function isPortalUser()
+    public function isPortalUser() : bool
     {
         return $this->isPortal();
     }
 
-    public function isRegular()
+    public function isRegular() : bool
     {
         return $this->get('type') === 'regular' || ($this->has('type') && !$this->get('type'));
     }
 
-    public function isApi()
+    public function isApi() : bool
     {
         return $this->get('type') === 'api';
     }
 
-    public function isSystem()
+    public function isSystem() : bool
     {
         return $this->get('type') === 'system';
     }
 
-    public function isSuperAdmin()
+    public function isSuperAdmin() : bool
     {
         return $this->get('type') === 'super-admin';
     }
 
-    public function getTeamIdList()
+    public function getTeamIdList() : array
     {
-        if (!$this->has('teamsIds')) {
-            $this->loadLinkMultipleField('teams');
-        }
-        return $this->get('teamsIds');
+        return $this->getLinkMultipleIdList('teams');
     }
 
     public function loadAccountField()
     {
         if ($this->get('contactId')) {
             $contact = $this->getEntityManager()->getEntity('Contact', $this->get('contactId'));
+
             if ($contact && $contact->get('accountId')) {
                 $this->set('accountId', $contact->get('accountId'));
                 $this->set('accountName', $contact->get('accountName'));
@@ -105,9 +105,11 @@ class User extends \Espo\Core\Entities\Person
         if (array_key_exists('name', $this->valuesContainer)) {
             return true;
         }
+
         if ($this->has('userName')) {
             return true;
         }
+
         return false;
     }
 }

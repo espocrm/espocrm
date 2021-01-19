@@ -47,7 +47,7 @@ use Espo\Core\{
     ORM\EntityManager,
     ORM\Entity,
     Pdf\Tcpdf,
-    Select\SelectManagerFactory,
+    Select\SelectBuilderFactory,
 };
 
 use Espo\{
@@ -74,7 +74,7 @@ class Pdf
     protected $acl;
     protected $defaultLanguage;
     protected $htmlizerFactory;
-    protected $selectManagerFactory;
+    protected $selectBuilderFactory;
     protected $builder;
 
     public function __construct(
@@ -85,7 +85,7 @@ class Pdf
         Acl $acl,
         Language $defaultLanguage,
         HtmlizerFactory $htmlizerFactory,
-        SelectManagerFactory $selectManagerFactory,
+        SelectBuilderFactory $selectBuilderFactory,
         Builder $builder
     ) {
         $this->config = $config;
@@ -95,7 +95,7 @@ class Pdf
         $this->acl = $acl;
         $this->defaultLanguage = $defaultLanguage;
         $this->htmlizerFactory = $htmlizerFactory;
-        $this->selectManagerFactory = $selectManagerFactory;
+        $this->selectBuilderFactory = $selectBuilderFactory;
         $this->builder = $builder;
     }
 
@@ -181,15 +181,11 @@ class Pdf
             }
         }
 
-        $selectManager = $this->selectManagerFactory->create($entityType);
-
-        $selectParams = $selectManager->getEmptySelectParams();
-
-        if ($checkAcl) {
-            $selectManager->applyAccess($selectParams);
-        }
-
-        $query = Select::fromRaw($selectParams);
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from($entityType)
+            ->withAccessControlFilter()
+            ->build();
 
         $collection = $this->entityManager
             ->getRepository($entityType)

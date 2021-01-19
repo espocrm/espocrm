@@ -30,26 +30,29 @@
 namespace Espo\Tools\Export;
 
 use Espo\Core\{
-    Exceptions\NotFound,
     Exceptions\BadRequest,
     Exceptions\Error,
-    Utils\Util,
     Utils\Json,
     Di,
+    Select\SearchParams,
 };
 
 use Espo\{
     ORM\Entity,
-    ORM\QueryParams\Select,
     Services\Record,
 };
 
 class Export
-    implements Di\MetadataAware, Di\EntityManagerAware, Di\SelectManagerFactoryAware, Di\AclAware, Di\InjectableFactoryAware
+    implements
+    Di\MetadataAware,
+    Di\EntityManagerAware,
+    Di\SelectBuilderFactoryAware,
+    Di\AclAware,
+    Di\InjectableFactoryAware
 {
     use Di\MetadataSetter;
     use Di\EntityManagerSetter;
-    use Di\SelectManagerFactorySetter;
+    use Di\SelectBuilderFactorySetter;
     use Di\AclSetter;
     use Di\InjectableFactorySetter;
 
@@ -135,21 +138,22 @@ class Export
 
         if (array_key_exists('collection', $params)) {
             $collection = $params['collection'];
-        } else {
-            $selectManager = $this->selectManagerFactory->create($this->entityType);
+        }
+        else {
+            $selectBuilder = $this->selectBuilderFactory
+                ->create()
+                ->from($this->entityType)
+                ->withStrictAccessControl();
 
             if (array_key_exists('ids', $params)) {
                 $ids = $params['ids'];
 
-                $where = [
-                    [
-                        'type' => 'in',
-                        'field' => 'id',
-                        'value' => $ids,
-                    ]
-                ];
-
-                $selectParams = $selectManager->getSelectParams(['where' => $where], true, true, true);
+                $queryBuilder = $selectBuilder
+                    ->withDefaultOrder()
+                    ->buildQueryBuilder()
+                    ->where([
+                        'id' => $ids,
+                    ]);
             }
             else if (array_key_exists('where', $params)) {
                 $where = $params['where'];
@@ -166,24 +170,17 @@ class Export
 
                 unset($searchParams['select']);
 
-                $selectParams = $selectManager->getSelectParams($searchParams, true, true, true);
+                $queryBuilder = $selectBuilder
+                    ->withSearchParams(SearchParams::fromRaw($searchParams))
+                    ->buildQueryBuilder();
             }
             else {
-                throw new BadRequest();
+                throw new BadRequest("Bad export parameters.");
             }
-
-            $orderBy = $this->metadata->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
-            $order = $this->metadata->get(['entityDefs', $this->entityType, 'collection', 'order']);
-
-            if ($orderBy) {
-                $selectManager->applyOrder($orderBy, $order, $selectParams);
-            }
-
-            $select = Select::fromRaw($selectParams);
 
             $collection = $this->entityManager
                 ->getRepository($this->entityType)
-                ->clone($select)
+                ->clone($queryBuilder->build())
                 ->sth()
                 ->find();
         }

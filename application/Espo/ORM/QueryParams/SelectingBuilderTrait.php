@@ -97,14 +97,14 @@ trait SelectingBuilderTrait
      */
     public function order($orderBy, $direction = Select::ORDER_ASC) : self
     {
-        if (!$orderBy) {
-            throw InvalidArgumentException();
-        }
-
         if (is_array($orderBy)) {
             $this->params['orderBy'] = $orderBy;
 
             return $this;
+        }
+
+        if (!$orderBy) {
+            throw InvalidArgumentException();
         }
 
         $this->params['orderBy'] = $this->params['orderBy'] ?? [];

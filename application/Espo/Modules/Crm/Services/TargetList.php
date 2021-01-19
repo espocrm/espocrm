@@ -121,8 +121,9 @@ class TargetList extends \Espo\Services\Record implements
         }
     }
 
-    protected function populateFromCampaignLog(Entity $entity, $sourceCampaignId, $includingActionList, $excludingActionList)
-    {
+    protected function populateFromCampaignLog(
+        Entity $entity, string $sourceCampaignId, array $includingActionList, array $excludingActionList
+    ) {
         if (empty($sourceCampaignId)) {
             throw new BadRequest();
         }
@@ -137,48 +138,69 @@ class TargetList extends \Espo\Services\Record implements
             throw new Forbidden();
         }
 
-        $selectManager = $this->getSelectManagerFactory()->create('CampaignLogRecord');
-        $selectParams = $selectManager->getEmptySelectParams();
+        $queryBuilder = $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->from('CampaignLogRecord')
+            ->where([
+                'isTest' => false,
+                'campaignId' => $sourceCampaignId,
+            ])
+            ->select(['id', 'parentId', 'parentType']);
 
+        $notQueryBuilder = clone $queryBuilder;
 
-        $selectParams['whereClause'][] = [
-            'isTest' => false
-        ];
+        $queryBuilder->where([
+            'action=' => $includingActionList,
+        ]);
 
-        $selectParams['whereClause'][] = [
-            'campaignId' => $sourceCampaignId
-        ];
+        $queryBuilder->groupBy([
+            'parentId',
+            'parentType',
+            'id',
+        ]);
 
-        $selectParams['select'] = ['id', 'parentId', 'parentType'];
+        $notQueryBuilder->where([
+            'action=' => $excludingActionList,
+        ]);
 
-        $notSelectParams = $selectParams;
+        $notQueryBuilder->select(['id']);
 
-        $selectParams['whereClause'][] = array(
-            'action=' => $includingActionList
-        );
-        $selectParams['groupBy'] = ['parentId', 'parentType', 'id'];
-
-        $notSelectParams['whereClause'][] = array(
-            'action=' => $excludingActionList
-        );
-        $notSelectParams['select'] = ['id'];
-
-        $list = $this->getEntityManager()->getRepository('CampaignLogRecord')->find($selectParams);
+        $list = $this->getEntityManager()
+            ->getRepository('CampaignLogRecord')
+            ->clone($queryBuilder->build())
+            ->find();
 
         foreach ($list as $logRecord) {
-            if (!$logRecord->get('parentType')) continue;
-            if (empty($this->entityTypeLinkMap[$logRecord->get('parentType')])) continue;
+            if (!$logRecord->get('parentType')) {
+                continue;
+            }
+
+            if (empty($this->entityTypeLinkMap[$logRecord->get('parentType')])) {
+                continue;
+            }
 
             if (!empty($excludingActionList)) {
-                $clonedSelectParams = $notSelectParams;
-                $clonedSelectParams['whereClause'][] = [
+                $cloneQueryBuilder = clone $notQueryBuilder;
+
+
+                $cloneQueryBuilder->where([
                     'parentType' => $logRecord->get('parentType'),
                     'parentId' => $logRecord->get('parentId'),
-                ];
-                if ($this->getEntityManager()->getRepository('CampaignLogRecord')->findOne($clonedSelectParams)) continue;
+                ]);
+
+                if (
+                    $this->getEntityManager()
+                        ->getRepository('CampaignLogRecord')
+                        ->clone($cloneQueryBuilder->build())
+                        ->findOne()
+                ) {
+                    continue;
+                }
             }
 
             $relation = $this->entityTypeLinkMap[$logRecord->get('parentType')];
+
             $this->getRepository()->relate($entity, $relation, $logRecord->get('parentId'));
         }
     }

@@ -29,22 +29,15 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\{
-    Forbidden,
-    Error,
-    NotFound,
-};
-
 use Espo\Core\{
     Acl,
     AclManager,
-    Select\SelectManagerFactory,
+    Select\SelectBuilderFactory,
     DataManager,
     InjectableFactory,
     ServiceFactory,
     Utils\Metadata,
     Utils\Config,
-    Utils\Util,
     Utils\Language,
     Utils\FieldUtil,
 };
@@ -69,7 +62,7 @@ class App
     protected $acl;
     protected $aclManager;
     protected $dataManager;
-    protected $selectManagerFactory;
+    protected $selectBuilderFactory;
     protected $injectableFactory;
     protected $serviceFactory;
     protected $user;
@@ -83,7 +76,7 @@ class App
         Acl $acl,
         AclManager $aclManager,
         DataManager $dataManager,
-        SelectManagerFactory $selectManagerFactory,
+        SelectBuilderFactory $selectBuilderFactory,
         InjectableFactory $injectableFactory,
         ServiceFactory $serviceFactory,
         User $user,
@@ -96,7 +89,7 @@ class App
         $this->acl = $acl;
         $this->aclManager = $aclManager;
         $this->dataManager = $dataManager;
-        $this->selectManagerFactory = $selectManagerFactory;
+        $this->selectBuilderFactory = $selectBuilderFactory;
         $this->injectableFactory = $injectableFactory;
         $this->serviceFactory = $serviceFactory;
         $this->user = $user;
@@ -110,13 +103,12 @@ class App
 
         $this->filterPreferencesData($preferencesData);
 
-        $settingsService = $this->serviceFactory->create('Settings');
-
         $user = $this->user;
 
         if (!$user->has('teamsIds')) {
             $user->loadLinkMultipleField('teams');
         }
+
         if ($user->isPortal()) {
             $user->loadAccountField();
             $user->loadLinkMultipleField('accounts');
@@ -161,11 +153,13 @@ class App
 
             try {
                 $itemParams = $this->injectableFactory->create($className)->get();
-            } catch (Throwable $e) {
+            }
+            catch (Throwable $e) {
                 $GLOBALS['log']->error("appParam {$paramKey}: " . $e->getMessage());
 
                 continue;
             }
+
             $appParams[$paramKey] = $itemParams;
         }
 
@@ -199,12 +193,19 @@ class App
         $isPortal = $user->isPortal();
 
         foreach ($forbiddenAttributeList as $attribute) {
-            if ($attribute === 'type') continue;
-            if ($isPortal) {
-                if (in_array($attribute, ['contactId', 'contactName', 'accountId', 'accountsIds'])) continue;
-            } else {
-                if (in_array($attribute, ['teamsIds', 'defaultTeamId', 'defaultTeamName'])) continue;
+            if ($attribute === 'type') {
+                continue;
             }
+            if ($isPortal) {
+                if (in_array($attribute, ['contactId', 'contactName', 'accountId', 'accountsIds'])) {
+                    continue;
+                }
+            } else {
+                if (in_array($attribute, ['teamsIds', 'defaultTeamId', 'defaultTeamName'])) {
+                    continue;
+                }
+            }
+
             unset($data->$attribute);
         }
 
@@ -219,6 +220,7 @@ class App
             $data = unserialize(serialize($data));
 
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
+
             foreach ($scopeList as $scope) {
                 if (!$this->acl->check($scope)) {
                     unset($data->table->$scope);
@@ -351,31 +353,6 @@ class App
             }
 
         return $value;
-    }
-
-    protected function getTemplateEntityTypeList()
-    {
-        if (!$this->acl->checkScope('Template')) {
-            return [];
-        }
-
-        $list = [];
-
-        $selectManager = $this->selectManagerFactory->create('Template');
-
-        $selectParams = $selectManager->getEmptySelectParams();
-        $selectManager->applyAccess($selectParams);
-
-        $templateList = $this->entityManager->getRepository('Template')
-            ->select(['entityType'])
-            ->groupBy(['entityType'])
-            ->find($selectParams);
-
-        foreach ($templateList as $template) {
-            $list[] = $template->get('entityType');
-        }
-
-        return $list;
     }
 
     public function jobClearCache()

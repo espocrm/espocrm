@@ -38,10 +38,10 @@ use Espo\Core\Di;
 
 class CountType extends BaseFunction implements
     Di\EntityManagerAware,
-    Di\SelectManagerFactoryAware
+    Di\SelectBuilderFactoryAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectManagerFactorySetter;
+    use Di\SelectBuilderFactorySetter;
 
     public function process(ArgumentList $args)
     {
@@ -53,34 +53,45 @@ class CountType extends BaseFunction implements
 
         if (count($args) < 3) {
             $filter = null;
+
             if (count($args) == 2) {
                 $filter = $this->evaluate($args[1]);
             }
 
-            $selectManager = $this->selectManagerFactory->create($entityType);
-            $selectParams = $selectManager->getEmptySelectParams();
+            $builder = $this->selectBuilderFactory
+                ->create()
+                ->from($entityType);
 
-            if ($filter) {
-                if (is_string($filter)) {
-                    $selectManager->applyFilter($filter, $selectParams);
-                } else {
-                    $this->throwError("Bad filter.");
-                }
+            if ($filter && !is_string($filter)) {
+                $this->throwBadArgumentType(2, 'string');
             }
 
-            return $this->entityManager->getRepository($entityType)->count($selectParams);
+            if ($filter) {
+                $builder->withPrimaryFilter($filter);
+            }
+
+            return $this->entityManager
+                ->getRepository($entityType)
+                ->clone($builder->build())
+                ->count();
         }
 
         $whereClause = [];
 
         $i = 1;
+
         while ($i < count($args) - 1) {
             $key = $this->evaluate($args[$i]);
             $value = $this->evaluate($args[$i + 1]);
+
             $whereClause[] = [$key => $value];
+
             $i = $i + 2;
         }
 
-        return $this->entityManager->getRepository($entityType)->where($whereClause)->count();
+        return $this->entityManager
+            ->getRepository($entityType)
+            ->where($whereClause)
+            ->count();
     }
 }

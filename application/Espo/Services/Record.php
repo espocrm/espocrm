@@ -32,7 +32,6 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\{
     Error,
     BadRequest,
-    Conflict,
     NotFound,
     Forbidden,
     NotFoundSilent,
@@ -43,7 +42,8 @@ use Espo\Core\Exceptions\{
 use Espo\ORM\{
     Entity,
     EntityCollection,
-    EntityManager,
+    Repository\Repository,
+    QueryParams\Select as SelectQuery,
 };
 
 use Espo\Entities\User;
@@ -54,6 +54,7 @@ use Espo\Core\{
     Utils\Util,
     Services\Crud,
     Record\Collection as RecordCollection,
+    Select\SearchParams,
 };
 
 use Espo\Tools\{
@@ -87,6 +88,7 @@ class Record implements Crud,
     Di\FieldUtilAware,
     Di\FieldValidatorManagerAware,
     Di\RecordServiceContainerAware,
+    Di\SelectBuilderFactoryAware,
 
     /** for backward compatibility, to be removed */
     \Espo\Core\Interfaces\Injectable
@@ -104,6 +106,7 @@ class Record implements Crud,
     use Di\FieldUtilSetter;
     use Di\FieldValidatorManagerSetter;
     use Di\RecordServiceContainerSetter;
+    use Di\SelectBuilderFactorySetter;
 
     /** for backward compatibility, to be removed */
     use \Espo\Core\Traits\Injectable;
@@ -140,8 +143,6 @@ class Record implements Crud,
     protected $onlyAdminLinkList = [];
 
     protected $linkParams = [];
-
-    protected $linkSelectParams = [];
 
     protected $linkMandatorySelectAttributeList = [];
 
@@ -190,6 +191,8 @@ class Record implements Crud,
     const FOLLOWERS_LIMIT = 4;
 
     const FIND_DUPLICATES_LIMIT = 10;
+
+    protected $selectBuilderFactory;
 
     public function __construct()
     {
@@ -340,7 +343,7 @@ class Record implements Crud,
         return $this->entityManager;
     }
 
-    protected function getRepository()
+    protected function getRepository() : Repository
     {
         return $this->getEntityManager()->getRepository($this->entityType);
     }
@@ -1274,6 +1277,9 @@ class Record implements Crud,
         $this->processActionHistoryRecord('delete', $entity);
     }
 
+    /**
+     * @deprecated
+     */
     protected function getSelectParams($params)
     {
         $selectManager = $this->getSelectManager($this->entityType);
@@ -1314,28 +1320,43 @@ class Record implements Crud,
 
         $this->handleListParams($params);
 
-        $selectParams = $this->getSelectParams($params);
+        $selectBuilder = $this->selectBuilderFactory->create();
 
-        $selectParams['maxTextColumnsLength'] = $this->getMaxSelectTextAttributeLength();
+        $query = $selectBuilder
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(
+                SearchParams::fromRaw($params)
+            )
+            ->build();
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()
+            ->clone($query)
+            ->find();
 
         foreach ($collection as $e) {
             $this->loadAdditionalFieldsForList($e);
+
             if (!empty($params['loadAdditionalFields'])) {
                 $this->loadAdditionalFields($e);
             }
+
             if (!empty($params['select'])) {
                 $this->loadLinkMultipleFieldsForList($e, $params['select']);
             }
+
             $this->prepareEntityForOutput($e);
         }
 
         if (!$disableCount) {
-            $total = $this->getRepository()->count($selectParams);
-        } else {
+            $total = $this->getRepository()
+                ->clone($query)
+                ->count();
+        }
+        else {
             if ($maxSize && count($collection) > $maxSize) {
                 $total = -1;
+
                 unset($collection[count($collection) - 1]);
             } else {
                 $total = -2;
@@ -1369,12 +1390,9 @@ class Record implements Crud,
             ->setSearchParams($params)
             ->setCountDisabled($disableCount)
             ->setOrderDisabled($orderDisabled)
-            ->setMaxSelectTextAttributeLength($this->getMaxSelectTextAttributeLength())
             ->setUserId($this->getUser()->id);
 
         $maxOrderNumber = $this->getConfig()->get('kanbanMaxOrderNumber') ?? null;
-
-
 
         if ($maxOrderNumber) {
             $kanban->setMaxOrderNumber($maxOrderNumber);
@@ -1520,45 +1538,58 @@ class Record implements Crud,
             }
         }
 
-        $selectManager = $this->getSelectManager($foreignEntityType);
+        $selectBuilder = $this->selectBuilderFactory->create();
 
-        $selectParams = $selectManager->getSelectParams($params, !$skipAcl, true);
+        $selectBuilder
+            ->from($foreignEntityType)
+            ->withSearchParams(
+                SearchParams::fromRaw($params)
+            );
 
-        if (empty($selectParams['orderBy'])) {
-            $selectManager->applyDefaultOrder($selectParams);
+        if (!$skipAcl) {
+            $selectBuilder->withStrictAccessControl();
+        }
+        else {
+            $selectBuilder->withComplexExpressionsForbidden();
+            $selectBuilder->withWherePermissionCheck();
         }
 
-        if (array_key_exists($link, $this->linkSelectParams)) {
-            $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
-        }
+        $query = $selectBuilder->build();
 
-        $additionalSelectParams = $this->getMetadata()->get(['entityDefs', $this->entityType, 'links', $link, 'selectParams']);
-        if ($additionalSelectParams) {
-            $selectParams = array_merge($selectParams, $additionalSelectParams);
-        }
-
-        $selectParams['maxTextColumnsLength'] = $recordService->getMaxSelectTextAttributeLength();
-
-        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+        $collection = $this->entityManager
+            ->getRepository($this->entityType)
+            ->getRelation($entity, $link)
+            ->clone($query)
+            ->find();
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
+
             if (!empty($params['loadAdditionalFields'])) {
                 $recordService->loadAdditionalFields($e);
             }
+
             if (!empty($params['select'])) {
                 $this->loadLinkMultipleFieldsForList($e, $params['select']);
             }
+
             $recordService->prepareEntityForOutput($e);
         }
 
         if (!$disableCount) {
-            $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
-        } else {
+            $total = $this->entityManager
+                ->getRepository($this->entityType)
+                ->getRelation($entity, $link)
+                ->clone($query)
+                ->count();
+        }
+        else {
             if ($maxSize && count($collection) > $maxSize) {
                 $total = -1;
+
                 unset($collection[count($collection) - 1]);
-            } else {
+            }
+            else {
                 $total = -2;
             }
         }
@@ -1830,24 +1861,41 @@ class Record implements Crud,
             }
         }
 
-        $selectParams = $this->recordServiceContainer->get($foreignEntityType)->getSelectParams($params);
+        $query = $this->selectBuilderFactory->create()
+            ->from($foreignEntityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(SearchParams::fromRaw($params))
+            ->build();
 
         if ($this->getAcl()->getLevel($foreignEntityType, $accessActionRequired) === 'all') {
-            $this->getRepository()->massRelate($entity, $link, $selectParams);
+            $this->getRepository()
+                ->getRelation($entity, $link)
+                ->massRelate($query);
+
             return true;
-        } else {
-            $foreignEntityList = $this->getEntityManager()->getRepository($foreignEntityType)->find($selectParams);
-            $countRelated = 0;
-            foreach ($foreignEntityList as $foreignEntity) {
-                if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
-                    continue;
-                }
-                $this->getRepository()->relate($entity, $link, $foreignEntity);
-                $countRelated++;
+        }
+
+        $countRelated = 0;
+
+        $foreignCollection = $this->entityManager
+            ->getRepository($foreignEntityType)
+            ->clone($query)
+            ->find();
+
+        foreach ($foreignCollection as $foreignEntity) {
+            if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
+                continue;
             }
-            if ($countRelated) {
-                return true;
-            }
+
+            $this->getRepository()
+                ->getRelation($entity, $link)
+                ->relate($foreignEntity);
+
+            $countRelated++;
+        }
+
+        if ($countRelated) {
+            return true;
         }
 
         return false;
@@ -1864,37 +1912,52 @@ class Record implements Crud,
 
         $count = 0;
 
-        $data = $data;
         $this->filterInput($data);
 
-        $selectParams = $this->convertMassActionSelectParams($params);
+        $query = $this->buildQueryFromMassActionParams($params);
 
-        $collection = $this->getRepository()->sth()->find($selectParams);
+        $collection = $repository
+            ->clone($query)
+            ->sth()
+            ->find();
 
         foreach ($collection as $entity) {
-            if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                $entity->set($data);
-
-                try {
-                    $this->processValidation($entity, $data);
-                } catch (Exception $e) {
-                    continue;
-                }
-
-                if ($this->checkAssignment($entity)) {
-                    $repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true]);
-                    $resultIdList[] = $entity->id;
-                    $count++;
-
-                    $this->processActionHistoryRecord('update', $entity);
-                }
+            if (!$this->getAcl()->check($entity, 'edit') || !$this->checkEntityForMassUpdate($entity, $data)) {
+                continue;
             }
+
+            $entity->set($data);
+
+            try {
+                $this->processValidation($entity, $data);
+            }
+            catch (Exception $e) {
+                continue;
+            }
+
+            if (!$this->checkAssignment($entity)) {
+                continue;
+            }
+
+            $repository->save($entity, [
+                'massUpdate' => true,
+                'skipStreamNotesAcl' => true,
+            ]);
+
+            $resultIdList[] = $entity->id;
+
+            $count++;
+
+            $this->processActionHistoryRecord('update', $entity);
         }
 
         $this->afterMassUpdate($resultIdList, $data);
 
         $result = ['count' => $count];
-        if (isset($params['ids'])) $result['ids'] = $resultIdList;
+
+        if (isset($params['ids'])) {
+            $result['ids'] = $resultIdList;
+        }
 
         return (object) $result;
     }
@@ -1917,31 +1980,39 @@ class Record implements Crud,
     public function massDelete(array $params)
     {
         $resultIdList = [];
+
         $repository = $this->getRepository();
 
         $count = 0;
 
-        $selectParams = $this->convertMassActionSelectParams($params);
-        $selectParams['skipTextColumns'] = true;
+        $query = $this->buildQueryFromMassActionParams($params);
 
-        $collection = $this->getRepository()->sth()->find($selectParams);
+        $collection = $repository
+            ->clone($query)
+            ->sth()
+            ->find();
 
         foreach ($collection as $entity) {
-            if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
-                $repository->remove($entity);
-
-                $resultIdList[] = $entity->id;
-
-                $count++;
-
-                $this->processActionHistoryRecord('delete', $entity);
+            if (!$this->getAcl()->check($entity, 'delete') || !$this->checkEntityForMassRemove($entity)) {
+                continue;
             }
+
+            $repository->remove($entity);
+
+            $resultIdList[] = $entity->id;
+
+            $count++;
+
+            $this->processActionHistoryRecord('delete', $entity);
         }
 
         $this->afterMassDelete($resultIdList);
 
         $result = ['count' => $count];
-        if (isset($params['ids'])) $result['ids'] = $resultIdList;
+
+        if (isset($params['ids'])) {
+            $result['ids'] = $resultIdList;
+        }
 
         return $result;
     }
@@ -1954,12 +2025,16 @@ class Record implements Crud,
 
         $count = 0;
 
-        $selectParams = $this->convertMassActionSelectParams($params);
+        $query = $this->buildQueryFromMassActionParams($params);
 
-        $collection = $this->getRepository()->sth()->find($selectParams);
+        $collection = $this->getRepository()
+            ->clone($query)
+            ->sth()
+            ->find();
 
         foreach ($collection as $entity) {
             $this->getEntityManager()->saveEntity($entity);
+
             $count++;
         }
 
@@ -2006,22 +2081,31 @@ class Record implements Crud,
     {
         $resultIdList = [];
 
-        if (empty($userId)) $userId = $this->getUser()->id;
+        if (empty($userId)) {
+            $userId = $this->getUser()->id;
+        }
 
         $streamService = $this->getStreamService();
 
-        if (empty($userId)) $userId = $this->getUser()->id;
+        if (empty($userId)) {
+            $userId = $this->getUser()->id;
+        }
 
-        $selectParams = $this->convertMassActionSelectParams($params);
+        $query = $this->buildQueryFromMassActionParams($params);
 
-        $collection = $this->getRepository()->sth()->find($selectParams);
+        $collection = $this->getRepository()
+            ->clone($query)
+            ->sth()
+            ->find();
 
         foreach ($collection as $entity) {
             if (!$this->getAcl()->check($entity, 'stream') || !$this->getAcl()->check($entity, 'read')) {
                 continue;
             }
 
-            if ($streamService->followEntity($entity, $userId)) {
+            $itemResult = $streamService->followEntity($entity, $userId);
+
+            if ($itemResult) {
                 $resultIdList[] = $entity->id;
             }
         }
@@ -2047,12 +2131,17 @@ class Record implements Crud,
             $userId = $this->getUser()->id;
         }
 
-        $selectParams = $this->convertMassActionSelectParams($params);
+        $query = $this->buildQueryFromMassActionParams($params);
 
-        $collection = $this->getRepository()->sth()->find($selectParams);
+        $collection = $this->getRepository()
+            ->clone($query)
+            ->sth()
+            ->find();
 
         foreach ($collection as $entity) {
-            if ($streamService->unfollowEntity($entity, $userId)) {
+            $itemResult = $streamService->unfollowEntity($entity, $userId);
+
+            if ($itemResult) {
                 $resultIdList[] = $entity->id;
             }
         }
@@ -2061,25 +2150,35 @@ class Record implements Crud,
             'count' => count($resultIdList),
         ];
 
-        if (isset($params['ids'])) $result['ids'] = $resultIdList;
+        if (isset($params['ids'])) {
+            $result['ids'] = $resultIdList;
+        }
 
         return $result;
     }
 
-    protected function convertMassActionSelectParams($params)
+    protected function buildQueryFromMassActionParams(array $params) : SelectQuery
     {
+        $builder = $this->selectBuilderFactory->create();
+
+        $builder
+            ->from($this->entityType)
+            ->withStrictAccessControl();
+
         if (array_key_exists('ids', $params)) {
             if (!is_array($params['ids'])) {
-                throw new BadRequest();
+                throw new BadRequest("Bad mass action parameters.");
             }
 
-            $selectParams = $this->getSelectParams([]);
+            $query = $this->entityManager
+                ->getQueryBuilder()
+                ->clone($builder->build())
+                ->where([
+                    'id' => $params['ids'],
+                ])
+                ->build();
 
-            $selectParams['whereClause'][] = [
-                'id' => $params['ids'],
-            ];
-
-            return $selectParams;
+            return $query;
         }
 
         if (array_key_exists('where', $params)) {
@@ -2087,18 +2186,22 @@ class Record implements Crud,
                 'where' => $params['where'],
             ];
 
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $searchParams[$k] = $v;
-                }
+            $selectData = $params['selectData'] ?? [];
+
+            foreach ($selectData as $k => $v) {
+                $searchParams[$k] = $v;
             }
 
             unset($searchParams['select']);
 
-            return $this->getSelectParams($searchParams);
+            $query = $builder
+                ->withSearchParams(SearchParams::fromRaw($searchParams))
+                ->build();
+
+            return $query;
         }
 
-        throw new BadRequest();
+        throw new BadRequest("Bad mass action parameters.");
     }
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
@@ -2136,30 +2239,32 @@ class Record implements Crud,
 
         $where = $this->getDuplicateWhereClause($entity, $data);
 
-        if ($where) {
-            if ($entity->id) {
-                $where['id!='] = $entity->id;
-            }
-            $select = $this->findDuplicatesSelectAttributeList;
+        if (!$where) {
+            return null;
+        }
 
-            $selectManager = $this->getSelectManager();
+        if ($entity->id) {
+            $where['id!='] = $entity->id;
+        }
 
-            $selectParams = $selectManager->getEmptySelectParams();
+        $select = $this->findDuplicatesSelectAttributeList;
 
-            $selectParams['select'] = $select;
-            $selectParams['whereClause'][] = $where;
+        $builder = $this->selectBuilderFactory->create();
 
-            $selectManager->applyAccess($selectParams);
+        $query = $builder
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->build();
 
-            $limit = self::FIND_DUPLICATES_LIMIT;
+        $duplicateCollection = $this->getRepository()
+            ->clone($query)
+            ->select($select)
+            ->where($where)
+            ->limit(0, self::FIND_DUPLICATES_LIMIT)
+            ->find();
 
-            $duplicateList = $this->getRepository()
-                ->limit(0, $limit)
-                ->find($selectParams);
-
-            if (count($duplicateList)) {
-                return $duplicateList;
-            }
+        if (count($duplicateCollection)) {
+            return $duplicateCollection;
         }
 
         return null;
@@ -2271,8 +2376,6 @@ class Record implements Crud,
                 $emailAddressToRelateList[] = $emailAddress;
             }
         }
-
-        $pdo = $this->getEntityManager()->getPDO();
 
         foreach ($sourceList as $source) {
             $updateQuery = $this->getEntityManager()->getQueryBuilder()
@@ -2561,6 +2664,8 @@ class Record implements Crud,
     public function handleListParams(array &$params)
     {
         $this->handleListParamsSelect($params);
+
+        $params['maxTextAttributeLength'] = $this->getMaxSelectTextAttributeLength();
     }
 
     protected function handleListParamsSelect(array &$params)
@@ -2636,14 +2741,17 @@ class Record implements Crud,
 
         $idUpdatedList = [];
 
-        $selectParams = $this->convertMassActionSelectParams($params);
+        $query = $this->buildQueryFromMassActionParams($params);
 
         $collection = $this->getRepository()
+            ->clone($query)
             ->sth()
-            ->find($selectParams);
+            ->find();
 
         foreach ($collection as $entity) {
-            $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
+            $result = $this->convertEntityCurrency(
+                $entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList
+            );
 
             if ($result) {
                 $idUpdatedList[] = $entity->id;
@@ -2677,7 +2785,9 @@ class Record implements Crud,
                 unset($fieldList[$i]);
             }
 
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
+            if (
+                $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency'
+            ) {
                 throw new Error("Can't convert not currency field.");
             }
         }

@@ -31,6 +31,15 @@ namespace tests\unit\Espo\Core;
 
 use tests\unit\ReflectionHelper;
 
+use Espo\Core\ServiceFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Acl;
+use Espo\Core\Select\SelectBuilderFactory;
+
+use Espo\Services\Import;
+
 
 class ImportTest extends \PHPUnit\Framework\TestCase
 {
@@ -38,27 +47,27 @@ class ImportTest extends \PHPUnit\Framework\TestCase
 
     protected $importService;
 
-
     protected function setUp() : void
     {
-        $this->objects['serviceFactory'] = $this->getMockBuilder('\Espo\Core\ServiceFactory')->disableOriginalConstructor()->getMock();
+        $this->objects['serviceFactory'] = $this->getMockBuilder(ServiceFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+        $this->objects['config'] = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();
+        $this->objects['fileManager'] = $this->getMockBuilder(FileManager::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['metadata'] = $this->getMockBuilder('\Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
+        $this->objects['metadata'] = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['acl'] = $this->getMockBuilder('\Espo\Core\Acl')->disableOriginalConstructor()->getMock();
+        $this->objects['acl'] = $this->getMockBuilder(Acl::class)->disableOriginalConstructor()->getMock();
 
+        $this->selectBuilderFactory = $this->getMockBuilder(SelectBuilderFactory::class)->disableOriginalConstructor()->getMock();
 
-        $this->importService = new \Espo\Services\Import();
+        $this->importService = new Import($this->selectBuilderFactory);
+
         $this->importService->inject('serviceFactory', $this->objects['serviceFactory']);
         $this->importService->inject('config', $this->objects['config']);
         $this->importService->inject('fileManager', $this->objects['fileManager']);
         $this->importService->inject('metadata', $this->objects['metadata']);
         $this->importService->inject('acl', $this->objects['acl']);
-
     }
 
     protected function tearDown() : void
@@ -66,8 +75,7 @@ class ImportTest extends \PHPUnit\Framework\TestCase
         $this->importService = NULL;
     }
 
-
-    function testImportRow()
+    public function testImportRow()
     {
         $this->assertTrue(true);
     }

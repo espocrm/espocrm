@@ -34,11 +34,11 @@ use Laminas\Mail\Message;
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\Error,
-    Exceptions\BadRequest,
     Mail\Sender,
     Mail\Mail\Header\XQueueItemId,
     Record\Collection as RecordCollection,
     Di,
+    Select\SearchParams,
 };
 
 use Espo\{
@@ -619,19 +619,26 @@ class MassEmail extends RecordService implements
     {
         $link = 'queueItems';
 
-        $entity = $this->getEntityManager()->getEntity('MassEmail', $id);
+        $entity = $this->entityManager->getEntity('MassEmail', $id);
 
-        $selectParams = $this->getSelectManager('EmailQueueItem')->getSelectParams($params, false);
+        $queryBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from('EmailQueueItem')
+            ->withSearchParams(SearchParams::fromRaw($params))
+            ->withComplexExpressionsForbidden()
+            ->withWherePermissionCheck()
+            ->buildQueryBuilder();
 
-        if (array_key_exists($link, $this->linkSelectParams)) {
-            $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
-        }
+        $queryBuilder->where([
+            'isTest' => false,
+        ]);
 
-        $selectParams['whereClause'][] = [
-            'isTest' => false
-        ];
+        $query = $queryBuilder->build();
 
-        $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
+        $collection = $this->getRepository()
+            ->getRelation($entity, $link)
+            ->clone($query)
+            ->find();
 
         $recordService = $this->recordServiceContainer->get('EmailQueueItem');
 
@@ -640,7 +647,10 @@ class MassEmail extends RecordService implements
             $recordService->prepareEntityForOutput($e);
         }
 
-        $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
+        $total = $this->getRepository()
+            ->getRelation($entity, $link)
+            ->clone($query)
+            ->count();
 
         return new RecordCollection($collection, $total);
     }

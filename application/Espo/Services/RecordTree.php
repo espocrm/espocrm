@@ -31,10 +31,12 @@ namespace Espo\Services;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\NotFound;
+use Espo\Core\{
+    Exceptions\Error,
+    Exceptions\Forbidden,
+    Select\SearchParams,
+    Select\Where\Item as WhereItem,
+};
 
 class RecordTree extends Record
 {
@@ -55,38 +57,42 @@ class RecordTree extends Record
         }
     }
 
-    public function getTree($parentId = null, $params = array(), $level = 0, $maxDepth = null)
+    public function getTree(string $parentId = null, array $params = [], int $level = 0, ?int $maxDepth = null)
     {
         if (!$maxDepth) {
             $maxDepth = self::MAX_DEPTH;
         }
 
-        if ($level == self::MAX_DEPTH) {
+        if ($level === self::MAX_DEPTH) {
             return null;
         }
 
-        $selectParams = $this->getSelectParams($params);
-        $selectParams['whereClause'][] = array(
-            'parentId' => $parentId
-        );
+        $selectBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->withSearchParams(SearchParams::fromRaw($params))
+            ->buildQueryBuilder()
+            ->where([
+                'parentId' => $parentId,
+            ]);
 
         if ($this->hasOrder()) {
-            $selectParams['orderBy'] = [
-                ['order', 'asc'],
-                ['name', 'asc']
-            ];
-        } else {
-            $selectParams['orderBy'] = [
-                ['name', 'asc']
-            ];
+            $selectBuilder->order('order', 'ASC');
         }
 
+        $selectBuilder->order('name', 'ASC');
+
         $filterItems = false;
+
         if ($this->checkFilterOnlyNotEmpty()) {
             $filterItems = true;
         }
 
-        $collection = $this->getRepository()->find($selectParams);
+        $collection = $this->getRepository()
+            ->clone($selectBuilder->build())
+            ->find();
+
         if (!empty($params['onlyNotEmpty']) || $filterItems) {
             foreach ($collection as $i => $entity) {
                 if ($this->checkItemIsEmpty($entity)) {
@@ -94,8 +100,10 @@ class RecordTree extends Record
                 }
             }
         }
+
         foreach ($collection as $entity) {
             $childList = $this->getTree($entity->id, $params, $level + 1, $maxDepth);
+
             $entity->set('childList', $childList);
         }
 
@@ -109,19 +117,34 @@ class RecordTree extends Record
         }
     }
 
-    protected function checkItemIsEmpty(Entity $entity)
+    protected function checkItemIsEmpty(Entity $entity) : bool
     {
-        if (!$this->categoryField) return false;
-
-        $selectManager = $this->getSelectManager($this->subjectEntityType);
-
-        $selectParams = $selectManager->getEmptySelectParams();
-        $selectManager->applyInCategory($this->categoryField, $entity->id, $selectParams);
-        $selectManager->applyAccess($selectParams);
-
-        if ($this->getEntityManager()->getRepository($this->subjectEntityType)->findOne($selectParams)) {
+        if (!$this->categoryField) {
             return false;
         }
+
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from($this->subjectEntityType)
+            ->withStrictAccessControl()
+            ->withWhere(
+                WhereItem::fromRaw([
+                    'type' => 'inCategory',
+                    'attribute' => $this->categoryField,
+                    'value' => $entity->id,
+                ])
+            )
+            ->build();
+
+        $one = $this->entityManager
+            ->getRepository($this->subjectEntityType)
+            ->clone($query)
+            ->findOne();
+
+        if ($one) {
+            return false;
+        }
+
         return true;
     }
 
@@ -192,41 +215,73 @@ class RecordTree extends Record
         return parent::link($id, $link, $foreignId);
     }
 
-    public function getLastChildrenIdList($parentId = null)
+    public function getLastChildrenIdList(?string $parentId = null) : array
     {
-        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams([], true, true);
-        $selectParams['whereClause'][] = ['parentId' => $parentId];
+        $query = $this->selectBuilderFactory
+            ->create()
+            ->from($this->entityType)
+            ->withStrictAccessControl()
+            ->buildQueryBuilder()
+            ->where([
+                'parentId' => $parentId,
+            ])
+            ->build();
 
         $idList = [];
 
         $includingRecords = false;
+
         if ($this->checkFilterOnlyNotEmpty()) {
             $includingRecords = true;
         }
 
-        $collection = $this->getRepository()->select(['id'])->find($selectParams);
+        $collection = $this->getRepository()
+            ->clone($query)
+            ->select(['id'])
+            ->find();
 
         foreach ($collection as $entity) {
-            $selectParams2 = $this->getSelectManager($this->entityType)->getSelectParams([], true, true);
-            $selectParams2['whereClause'][] = ['parentId' => $entity->id];
+            $subQuery = $this->selectBuilderFactory
+                ->create()
+                ->from($this->entityType)
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->where([
+                    'parentId' => $entity->id,
+                ])
+                ->build();
 
-            if (!$this->getRepository()->count($selectParams2)) {
+            $count = $this->getRepository()
+                ->clone($subQuery)
+                ->count();
+
+            if (!$count) {
                 $idList[] = $entity->id;
-            } else {
-                if ($includingRecords) {
-                    $isNotEmpty = false;
-                    foreach ($this->getRepository()->find($selectParams2) as $subEntity) {
-                        if (!$this->checkItemIsEmpty($subEntity)) {
-                            $isNotEmpty = true;
-                            break;
-                        }
+
+                continue;
+            }
+
+            if ($includingRecords) {
+                $isNotEmpty = false;
+
+                $subCollection = $this->getRepository()
+                    ->clone($subQuery)
+                    ->find();
+
+                foreach ($subCollection as $subEntity) {
+                    if (!$this->checkItemIsEmpty($subEntity)) {
+                        $isNotEmpty = true;
+
+                        break;
                     }
-                    if (!$isNotEmpty) {
-                        $idList[] = $entity->id;
-                    }
+                }
+
+                if (!$isNotEmpty) {
+                    $idList[] = $entity->id;
                 }
             }
         }
+
         return $idList;
     }
 }

@@ -38,7 +38,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\File\Manager as FileManager,
     InjectableFactory,
-    Select\SelectManagerFactory,
+    Select\SelectBuilderFactory,
     ServiceFactory,
 };
 
@@ -66,7 +66,7 @@ class Cleanup implements Job
     protected $metedata;
     protected $fileManager;
     protected $injectableFactory;
-    protected $selectManagerFactory;
+    protected $selectBuilderFactory;
     protected $serviceFactory;
 
     public function __construct(
@@ -75,7 +75,7 @@ class Cleanup implements Job
         Metadata $metadata,
         FileManager $fileManager,
         InjectableFactory $injectableFactory,
-        SelectManagerFactory $selectManagerFactory,
+        SelectBuilderFactory $selectBuilderFactory,
         ServiceFactory $serviceFactory
     ) {
         $this->config = $config;
@@ -83,7 +83,7 @@ class Cleanup implements Job
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->injectableFactory = $injectableFactory;
-        $this->selectManagerFactory = $selectManagerFactory;
+        $this->selectBuilderFactory = $selectBuilderFactory;
         $this->serviceFactory = $serviceFactory;
     }
 
@@ -267,8 +267,6 @@ class Cleanup implements Job
 
     protected function cleanupAttachments()
     {
-        $pdo = $this->entityManager->getPDO();
-
         $period = '-' . $this->config->get('cleanupAttachmentsPeriod', $this->cleanupAttachmentsPeriod);
 
         $datetime = new DateTime();
@@ -293,17 +291,22 @@ class Cleanup implements Job
         }
 
         if ($this->config->get('cleanupOrphanAttachments')) {
-            $selectManager = $this->selectManagerFactory->create('Attachment');
+            $orphanQueryBuilder = $this->selectBuilderFactory
+                ->create()
+                ->from('Attachment')
+                ->withPrimaryFilter('orphan')
+                ->buildQueryBuilder();
 
-            $selectParams = $selectManager->getEmptySelectParams();
-            $selectManager->applyFilter('orphan', $selectParams);
-
-            $selectParams['whereClause'][] = [
+            $orphanQueryBuilder->where([
                 'createdAt<' => $datetime->format('Y-m-d H:i:s'),
                 'createdAt>' => '2018-01-01 00:00:00',
-            ];
+            ]);
 
-            $collection = $this->entityManager->getRepository('Attachment')->limit(0, 5000)->find($selectParams);
+            $collection = $this->entityManager
+                ->getRepository('Attachment')
+                ->clone($orphanQueryBuilder->build())
+                ->limit(0, 5000)
+                ->find();
 
             foreach ($collection as $entity) {
                 $this->entityManager->removeEntity($entity);

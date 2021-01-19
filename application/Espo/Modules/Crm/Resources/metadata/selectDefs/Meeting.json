@@ -1,0 +1,9 @@
+{
+    "whereDateTimeItemTransformerClassName": "Espo\\Modules\\Crm\\Classes\\Select\\Meeting\\Where\\DateTimeItemTransformer",
+    "selectAttributesDependancyMap": {
+        "duration": [
+            "dateStart",
+            "dateEnd"
+        ]
+    }
+}

@@ -473,7 +473,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 } else {
                     if (this.currentCategoryId) {
                         filter = {
-                            field: this.categoryField,
+                            attribute: this.categoryField,
                             type: this.categoryFilterType,
                             value: this.currentCategoryId,
                         };

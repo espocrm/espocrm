@@ -33,7 +33,12 @@ use Espo\ORM\{
     QueryParams\Select,
 };
 
-use Espo\Core\Di;
+use Espo\Core\{
+    Di,
+    Select\Text\FullTextSearchDataComposerFactory,
+    Select\Text\FullTextSearchDataComposerParams,
+    Select\SelectBuilderFactory,
+};
 
 use PDO;
 
@@ -41,16 +46,25 @@ class GlobalSearch implements
     Di\EntityManagerAware,
     Di\MetadataAware,
     Di\AclAware,
-    Di\ConfigAware,
-    Di\SelectManagerFactoryAware
+    Di\ConfigAware
 {
     use Di\EntityManagerSetter;
     use Di\MetadataSetter;
     use Di\AclSetter;
     use Di\ConfigSetter;
-    use Di\SelectManagerFactorySetter;
 
-    public function find(string $query, int $offset, int $maxSize)
+    protected $fullTextSearchDataComposerFactory;
+    protected $selectBuilderFactory;
+
+    public function __construct(
+        FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
+        SelectBuilderFactory $selectBuilderFactory
+    ) {
+        $this->fullTextSearchDataComposerFactory = $fullTextSearchDataComposerFactory;
+        $this->selectBuilderFactory = $selectBuilderFactory;
+    }
+
+    public function find(string $filter, int $offset, int $maxSize)
     {
         $entityTypeList = $this->config->get('globalSearchEntityList') ?? [];
 
@@ -59,63 +73,16 @@ class GlobalSearch implements
         $queryList = [];
 
         foreach ($entityTypeList as $i => $entityType) {
-            if (!$this->acl->checkScope($entityType, 'read')) {
+            $query = $this->getEntityTypeQuery($entityType, $i, $filter, $offset, $maxSize, $hasFullTextSearch);
+
+            if (!$query) {
                 continue;
             }
 
-            if (!$this->metadata->get(['scopes', $entityType])) {
-                continue;
-            }
-
-            $selectManager = $this->selectManagerFactory->create($entityType);
-
-            $selectParams = [
-                'select' => [
-                    'id',
-                    'name',
-                    ['VALUE:' . $entityType, 'entityType'],
-                    [(string) $i, 'order'],
-                ],
-            ];
-
-            $fullTextSearchData = $selectManager->getFullTextSearchDataForTextFilter($query);
-
-            if ($this->metadata->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName') {
-                $selectParams['select'][] = 'firstName';
-                $selectParams['select'][] = 'lastName';
-            }
-            else {
-                $selectParams['select'][] = ['VALUE:', 'firstName'];
-                $selectParams['select'][] = ['VALUE:', 'lastName'];
-            }
-
-            $selectParams['offset'] = 0;
-            $selectParams['limit'] = $offset + $maxSize + 1;
-
-            $selectManager->manageAccess($selectParams);
-
-            $selectParams['useFullTextSearch'] = true;
-            
-            $selectManager->applyTextFilter($query, $selectParams);
-
-            if ($fullTextSearchData) {
-                $hasFullTextSearch = true;
-                $selectParams['select'][] = [$fullTextSearchData['where'], 'relevance'];
-                $selectParams['orderBy'] = [[$fullTextSearchData['where'], 'desc'], ['name']];
-            }
-            else {
-                $selectParams['select'][] = ['VALUE:1.1', 'relevance'];
-                $selectParams['orderBy'] = [['name']];
-            }
-
-            $selectParams['from'] = $entityType;
-
-            $queryList[] = Select::fromRaw($selectParams);
+            $queryList[] = $query;
         }
 
-        $entityTypeList = array_values($entityTypeList);
-
-        if (!count($entityTypeList)) {
+        if (count($queryList) === 0) {
             return [
                 'total' => 0,
                 'list' => [],
@@ -175,5 +142,75 @@ class GlobalSearch implements
             'total' => $total,
             'list' => $resultList,
         ];
+    }
+
+    protected function getEntityTypeQuery(
+        string $entityType, int $i, string $filter, int $offset, int $maxSize, bool &$hasFullTextSearch
+    ) : ?Select {
+
+        if (!$this->acl->checkScope($entityType, 'read')) {
+            return null;
+        }
+
+        if (!$this->metadata->get(['scopes', $entityType])) {
+            return null;
+        }
+
+        $selectBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from($entityType)
+            ->withStrictAccessControl()
+            ->withTextFilter($filter);
+
+        $selectList = [
+            'id',
+            'name',
+            ['VALUE:' . $entityType, 'entityType'],
+            [(string) $i, 'order'],
+        ];
+
+        $fullTextSearchDataComposer = $this->fullTextSearchDataComposerFactory->create($entityType);
+
+        $fullTextSearchData = $fullTextSearchDataComposer->compose(
+            $filter,
+            FullTextSearchDataComposerParams::fromArray([])
+        );
+
+        $isPerson = $this->metadata->get([
+            'entityDefs', $entityType, 'fields', 'name', 'type'
+        ]) === 'personName';
+
+        if ($isPerson) {
+            $selectList[] = 'firstName';
+            $selectList[] = 'lastName';
+        }
+        else {
+            $selectList[] = ['VALUE:', 'firstName'];
+            $selectList[] = ['VALUE:', 'lastName'];
+        }
+
+        $query = $selectBuilder->build();
+
+        $queryBuilder = $this->entityManager
+            ->getQueryBuilder()
+            ->clone($query)
+            ->limit(0, $offset + $maxSize + 1)
+            ->select($selectList)
+            ->order([]);
+
+        if ($fullTextSearchData) {
+            $hasFullTextSearch = true;
+
+            $queryBuilder->select($fullTextSearchData->getExpression(), 'relevance');
+
+            $queryBuilder->order($fullTextSearchData->getExpression(), Select::ORDER_DESC);
+        }
+        else {
+            $queryBuilder->select('VALUE:1.1', 'relevance');
+        }
+
+        $queryBuilder->order('name');
+
+        return $queryBuilder->build();
     }
 }

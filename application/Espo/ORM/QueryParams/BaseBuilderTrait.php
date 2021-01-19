@@ -50,6 +50,6 @@ trait BaseBuilderTrait
             throw new RuntimeException("Clone can be called only on a new empty builder instance.");
         }
 
-        $this->params = $query->getRawParams();
+        $this->params = $query->getRaw();
     }
 }

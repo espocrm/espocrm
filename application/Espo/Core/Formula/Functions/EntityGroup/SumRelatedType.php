@@ -31,18 +31,19 @@ namespace Espo\Core\Formula\Functions\EntityGroup;
 
 use Espo\Core\Exceptions\Error;
 
-use Espo\ORM\QueryParams\Select;
-
 use Espo\Core\Di;
+
+use StdClass;
+use PDO;
 
 class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
     Di\EntityManagerAware,
-    Di\SelectManagerFactoryAware
+    Di\SelectBuilderFactoryAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectManagerFactorySetter;
+    use Di\SelectBuilderFactorySetter;
 
-    public function process(\StdClass $item)
+    public function process(StdClass $item)
     {
         if (count($item->value) < 2) {
             throw new Error("sumRelated: Too few arguments.");
@@ -61,6 +62,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
         }
 
         $filter = null;
+
         if (count($item->value) > 2) {
             $filter = $this->evaluate($item->value[2]);
         }
@@ -75,8 +77,6 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
             throw new Error();
         }
 
-        $foreignSelectManager = $this->selectManagerFactory->create($foreignEntityType);
-
         $foreignLink = $entity->getRelationParam($link, 'foreign');
         $foreignLinkAlias = $foreignLink . 'SumRelated';
 
@@ -84,67 +84,70 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
             throw new Error("No foreign link for link {$link}.");
         }
 
-        $selectParams = $foreignSelectManager->getEmptySelectParams();
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($foreignEntityType);
 
         if ($filter) {
-            $foreignSelectManager->applyFilter($filter, $selectParams);
+            $builder->withPrimaryFilter($filter);
         }
 
-        $selectParams['select'] = [[$foreignLinkAlias . '.id', 'foreignId'], 'SUM:' . $field];
+        $queryBuilder = $builder->buildQueryBuilder();
+
+        $queryBuilder->select([
+            [$foreignLinkAlias . '.id', 'foreignId'],
+            'SUM:' . $field,
+        ]);
 
         if ($entity->getRelationType($link) === 'hasChildren') {
-            $foreignSelectManager->addJoin([
-                $entity->getEntityType(),
-                $foreignLinkAlias,
-                [
-                     $foreignLinkAlias . '.id:' => $foreignLink . 'Id',
-                    'deleted' => false,
-                    $foreignLinkAlias . '.id!=' => null,
-                ]
-            ], $selectParams);
-            $selectParams['whereClause'][] = [$foreignLink . 'Type'  => $entity->getEntityType()];
-
-        } else {
-            $foreignSelectManager->addJoin([$foreignLink, $foreignLinkAlias], $selectParams);
+            $queryBuilder
+                ->join(
+                    $entity->getEntityType(),
+                    $foreignLinkAlias,
+                    [
+                         $foreignLinkAlias . '.id:' => $foreignLink . 'Id',
+                        'deleted' => false,
+                        $foreignLinkAlias . '.id!=' => null,
+                    ]
+                )
+                ->where([
+                    $foreignLink . 'Type'  => $entity->getEntityType(),
+                ]);
+        }
+        else {
+            $queryBuilder->join($foreignLink, $foreignLinkAlias);
         }
 
-        if (!empty($selectParams['distinct'])) {
-            $sqSelectParams = $selectParams;
+        $queryBuilder->where([
+            $foreignLinkAlias . '.id' => $entity->id,
+        ]);
 
-            $sqSelectParams['whereClause'][] = [
-                $foreignLinkAlias . '.id' => $entity->id
-            ];
+        if ($queryBuilder->build()->isDistinct()) {
+            // Use a sub-query to weed out duplicate rows.
 
-            $sqSelectParams['select'] = ['id'];
-            unset($sqSelectParams['distinct']);
-            unset($sqSelectParams['orderBy']);
-            unset($sqSelectParams['order']);
+            $sqQueryBuilder = clone $queryBuilder;
 
-            $selectParams['whereClause'][] = [
-                'id=s' => [
-                    'entityType' => $foreignEntityType,
-                    'selectParams' => $sqSelectParams,
-                ]
-            ];
-        } else {
-            $selectParams['whereClause'][] = [
-                $foreignLinkAlias . '.id' => $entity->id
-            ];
+            $sqQueryBuilder
+                ->order([])
+                ->select(['id']);
+
+            $queryBuilder->where([
+                'id=s' => $sqQueryBuilder->build()->getRaw(),
+            ]);
         }
 
-        $selectParams['groupBy'] = [$foreignLinkAlias . '.id'];
+        $queryBuilder->groupBy($foreignLinkAlias . '.id');
 
-        $sql = $entityManager->getQueryComposer()->compose(Select::fromRaw($selectParams));
+        $sth = $entityManager->getQueryExecutor()->execute($queryBuilder->build());
 
-        $pdo = $entityManager->getPDO();
-        $sth = $pdo->prepare($sql);
-        $sth->execute();
-        $rowList = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        $rowList = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         if (empty($rowList)) {
             return 0;
         }
 
-        return floatval($rowList[0]['SUM:' . $field]);
+        $stringValue = $rowList[0]['SUM:' . $field];
+
+        return floatval($stringValue);
     }
 }

@@ -31,6 +31,12 @@ namespace Espo\SelectManagers;
 
 class Email extends \Espo\Core\Select\SelectManager
 {
+    protected $additionalFilterTypeList = [
+        'inCategory',
+        'isUserFromTeams',
+        'inFolder',
+    ];
+
     protected $textFilterUseContainsAttributeList = ['name'];
 
     protected $fullTextOrderType = self::FT_ORDER_ORIGINAL;
@@ -39,6 +45,11 @@ class Email extends \Espo\Core\Select\SelectManager
         'subject' => ['name'],
         'personStringData' => ['fromString', 'fromEmailAddressId'],
     ];
+
+    public function applyInFolder(string $attribute, $value, array &$result)
+    {
+        // stub
+    }
 
     public function applyAdditional(array $params, array &$result)
     {

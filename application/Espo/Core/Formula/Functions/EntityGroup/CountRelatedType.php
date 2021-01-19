@@ -33,14 +33,16 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Di;
 
+use StdClass;
+
 class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
     Di\EntityManagerAware,
-    Di\SelectManagerFactoryAware
+    Di\SelectBuilderFactoryAware
 {
     use Di\EntityManagerSetter;
-    use Di\SelectManagerFactorySetter;
+    use Di\SelectBuilderFactorySetter;
 
-    public function process(\StdClass $item)
+    public function process(StdClass $item)
     {
         if (count($item->value) < 1) {
             throw new Error("countRelated: roo few arguments.");
@@ -53,6 +55,7 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
         }
 
         $filter = null;
+
         if (count($item->value) > 1) {
             $filter = $this->evaluate($item->value[1]);
         }
@@ -67,14 +70,17 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
             throw new Error();
         }
 
-        $foreignSelectManager = $this->selectManagerFactory->create($foreignEntityType);
-
-        $selectParams = $foreignSelectManager->getEmptySelectParams();
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($foreignEntityType);
 
         if ($filter) {
-            $foreignSelectManager->applyFilter($filter, $selectParams);
+              $builder->withPrimaryFilter($filter);
         }
 
-        return $entityManager->getRepository($entity->getEntityType())->countRelated($entity, $link, $selectParams);
+        return $entityManager->getRepository($entity->getEntityType())
+            ->getRelation($entity, $link)
+            ->clone($builder->build())
+            ->count();
     }
 }

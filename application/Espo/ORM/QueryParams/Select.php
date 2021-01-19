@@ -60,6 +60,30 @@ class Select implements Query, Selecting
         return $this->params['select'] ?? [];
     }
 
+    /**
+     * Get order.
+     */
+    public function getOrder() : array
+    {
+        return $this->params['orderBy'] ?? [];
+    }
+
+    /**
+     * Whether is distinct.
+     */
+    public function isDistinct() : bool
+    {
+        return $this->params['distinct'] ?? false;
+    }
+
+    /**
+     * Get group by.
+     */
+    public function getGroupBy() : array
+    {
+        return $this->params['orderBy'] ?? [];
+    }
+
     protected function validateRawParams(array $params)
     {
         $this->validateRawParamsSelecting($params);

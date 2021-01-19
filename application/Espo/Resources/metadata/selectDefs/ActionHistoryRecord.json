@@ -1,0 +1,5 @@
+{
+    "accessControlFilterClassNameMap": {
+        "onlyOwn": "Espo\\Classes\\Select\\ActionHistoryRecord\\AccessControlFilters\\OnlyOwn"
+    }
+}

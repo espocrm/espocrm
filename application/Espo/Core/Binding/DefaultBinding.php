@@ -89,6 +89,11 @@ class DefaultBinding
         );
 
         $binder->bindService(
+            'Espo\\Core\\SelectBuilderFactory',
+            'selectBuilderFactory'
+        );
+
+        $binder->bindService(
             'Espo\\Core\\ServiceFactory',
             'serviceFactory'
         );

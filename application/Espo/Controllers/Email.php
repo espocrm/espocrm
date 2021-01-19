@@ -207,7 +207,17 @@ class Email extends \Espo\Core\Controllers\Record
         parent::fetchListParamsFromRequest($params, $request, $data);
 
         $folderId = $request->get('folderId');
+
         if ($folderId) {
+            $params['where'] = $params['where'] ?? [];
+
+            $params['where'][] = [
+                'type' => 'inFolder',
+                'attribute' => 'folderId',
+                'value' => $folderId,
+            ];
+
+            // @todo Remove the line.
             $params['folderId'] = $request->get('folderId');
         }
     }

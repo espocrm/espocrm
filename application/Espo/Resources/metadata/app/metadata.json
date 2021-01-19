@@ -16,6 +16,8 @@
         ["app", "pdfEngines", "__ANY__", "implementationClassNameMap"],
         ["app", "auth2FAMethods", "__ANY__", "implementationClassName"],
         ["app", "auth2FAMethods", "__ANY__", "implementationUserClassName"],
+        ["app", "select"],
+        ["selectDefs"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]
     ]
 }
