@@ -34,7 +34,10 @@ use Monolog\{
     Handler\StreamHandler as MonologStreamHandler,
 };
 
-use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\{
+    Utils\File\Manager as FileManager,
+    Utils\Config,
+};
 
 use LogicException;
 use UnexpectedValueException;
@@ -45,11 +48,13 @@ class EspoFileHandler extends MonologStreamHandler
 
     protected $maxErrorMessageLength = 5000;
 
-    public function __construct(string $filename, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(string $filename, $level = Logger::DEBUG, bool $bubble = true, Config $config)
     {
         parent::__construct($filename, $level, $bubble);
 
-        $this->fileManager = new FileManager();
+        $defaultPermissions = $config->get('defaultPermissions');
+
+        $this->fileManager = new FileManager($defaultPermissions);
     }
 
     protected function write(array $record): void

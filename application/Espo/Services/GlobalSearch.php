@@ -29,13 +29,7 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\{
-    Forbidden,
-    NotFound,
-};
-
 use Espo\ORM\{
-    Entity,
     QueryParams\Select,
 };
 
@@ -65,8 +59,13 @@ class GlobalSearch implements
         $queryList = [];
 
         foreach ($entityTypeList as $i => $entityType) {
-            if (!$this->acl->checkScope($entityType, 'read')) continue;
-            if (!$this->metadata->get(['scopes', $entityType])) continue;
+            if (!$this->acl->checkScope($entityType, 'read')) {
+                continue;
+            }
+
+            if (!$this->metadata->get(['scopes', $entityType])) {
+                continue;
+            }
 
             $selectManager = $this->selectManagerFactory->create($entityType);
 
@@ -84,7 +83,8 @@ class GlobalSearch implements
             if ($this->metadata->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName') {
                 $selectParams['select'][] = 'firstName';
                 $selectParams['select'][] = 'lastName';
-            } else {
+            }
+            else {
                 $selectParams['select'][] = ['VALUE:', 'firstName'];
                 $selectParams['select'][] = ['VALUE:', 'lastName'];
             }
@@ -93,14 +93,17 @@ class GlobalSearch implements
             $selectParams['limit'] = $offset + $maxSize + 1;
 
             $selectManager->manageAccess($selectParams);
+
             $selectParams['useFullTextSearch'] = true;
+            
             $selectManager->applyTextFilter($query, $selectParams);
 
             if ($fullTextSearchData) {
                 $hasFullTextSearch = true;
                 $selectParams['select'][] = [$fullTextSearchData['where'], 'relevance'];
                 $selectParams['orderBy'] = [[$fullTextSearchData['where'], 'desc'], ['name']];
-            } else {
+            }
+            else {
                 $selectParams['select'][] = ['VALUE:1.1', 'relevance'];
                 $selectParams['orderBy'] = [['name']];
             }
@@ -137,8 +140,6 @@ class GlobalSearch implements
 
         $unionQuery = $builder->build();
 
-        $sql = $this->entityManager->getQueryComposer()->compose($unionQuery);
-
         $sth = $this->entityManager->getQueryExecutor()->execute($unionQuery);
 
         $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -146,7 +147,8 @@ class GlobalSearch implements
         $resultList = [];
 
         foreach ($rows as $row) {
-            $entity = $this->entityManager->getRepository($row['entityType'])
+            $entity = $this->entityManager
+                ->getRepository($row['entityType'])
                 ->select(['id', 'name'])
                 ->where(['id' => $row['id']])
                 ->findOne();
@@ -165,6 +167,7 @@ class GlobalSearch implements
 
         if (count($resultList) > $maxSize) {
             $total = -1;
+
             unset($resultList[count($resultList) - 1]);
         }
 
