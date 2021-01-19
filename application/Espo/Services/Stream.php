@@ -1838,7 +1838,7 @@ class Stream
         $userList = $this->entityManager->getRepository('User')
             ->where([
                 'isActive' => true,
-                'id=s' => $subQuery->getRawParams(),
+                'id=s' => $subQuery->getRaw(),
             ])
             ->select(['id', 'type'])
             ->find();

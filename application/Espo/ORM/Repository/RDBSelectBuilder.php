@@ -322,7 +322,7 @@ class RDBSelectBuilder
 
         $params = $params ?? [];
 
-        $builtParams = $this->builder->build()->getRawParams();
+        $builtParams = $this->builder->build()->getRaw();
 
         $whereClause = $builtParams['whereClause'] ?? [];
         $havingClause = $builtParams['havingClause'] ?? [];
