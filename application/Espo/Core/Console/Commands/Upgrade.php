@@ -41,6 +41,7 @@ use Espo\Core\{
 use Symfony\Component\Process\PhpExecutableFinder;
 
 use Exception;
+use Throwable;
 
 class Upgrade implements Command
 {
@@ -127,7 +128,7 @@ class Upgrade implements Command
         try {
             $this->runUpgradeProcess($upgradeId, $params);
         }
-        catch (Exception $e) {
+        catch (Throwable $e) {
             $errorMessage = $e->getMessage();
         }
 
@@ -137,7 +138,8 @@ class Upgrade implements Command
             $this->fileManager->unlink($packageFile);
         }
 
-        if (!empty($errorMessage)) {
+        if (isset($errorMessage)) {
+            $errorMessage = !empty($errorMessage) ? $errorMessage : "Error: An unexpected error occurred.";
             fwrite(\STDOUT, $errorMessage . "\n");
 
             return;
@@ -287,7 +289,7 @@ class Upgrade implements Command
                 $upgradeManager = $this->getUpgradeManager(true);
                 $upgradeManager->runInstallStep($stepName, ['id' => $upgradeId]);
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $GLOBALS['log']->error('Upgrade Error: ' . $e->getMessage());
 
             throw new Error($e->getMessage());
