@@ -73,7 +73,7 @@ class UpgradeStep implements Command
         try {
             $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
         } catch (\Exception $e) {
-            die("Error: " . $e->getMessage() . "\n");
+            die("Error: " . $e->getMessage());
         }
 
         if (is_bool($result)) {
