@@ -525,7 +525,7 @@ class Htmlizer
                 $context = $args[count($args) - 1];
 
                 return
-                    new LightnCandy\SafeString("<tr>") .
+                    new LightnCandy\SafeString("<tr nobr=\"true\">") .
                     $context['fn']() .
                     new LightnCandy\SafeString("</tr>");
             },
