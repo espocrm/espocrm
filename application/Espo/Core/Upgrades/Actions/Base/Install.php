@@ -77,8 +77,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
     protected function initPackage(array $data)
     {
-        $GLOBALS['log']->setLevel('info');
-
         $processId = $data['id'];
 
         if (empty($processId)) {

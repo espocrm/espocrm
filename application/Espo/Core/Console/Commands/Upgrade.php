@@ -290,7 +290,10 @@ class Upgrade implements Command
                 $upgradeManager->runInstallStep($stepName, ['id' => $upgradeId]);
             }
         } catch (Throwable $e) {
-            $GLOBALS['log']->error('Upgrade Error: ' . $e->getMessage());
+            try {
+                $GLOBALS['log']->error('Upgrade Error: ' . $e->getMessage());
+            }
+            catch (Throwable $t) {}
 
             throw new Error($e->getMessage());
         }
@@ -310,7 +313,10 @@ class Upgrade implements Command
             $shellResult = shell_exec($command);
 
             if ($shellResult !== 'true') {
-                $GLOBALS['log']->error('Upgrade Error: ' . $shellResult);
+                try {
+                    $GLOBALS['log']->error('Upgrade Error: ' . $shellResult);
+                }
+                catch (Throwable $t) {}
 
                 throw new Error($shellResult);
             }
