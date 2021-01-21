@@ -78,22 +78,30 @@ class MetadataProvider
 
     public function hasAttribute(string $entityType, string $attribute) : bool
     {
-        return (bool) $this->entityManager
+        return $this->entityManager
             ->getMetadata()
-            ->get($entityType, ['fields', $attribute]);
+            ->getDefs()
+            ->getEntity($entityType)
+            ->hasAttribute($attribute);
     }
 
     public function isAttributeNotStorable(string $entityType, string $attribute) : bool
     {
-        return (bool) $this->entityManager
+        return $this->entityManager
             ->getMetadata()
-            ->get($entityType, ['fields', $attribute, 'notStorable']);
+            ->getDefs()
+            ->getEntity($entityType)
+            ->getAttribute($attribute)
+            ->isNotStorable();
     }
 
     public function getAttributeType(string $entityType, string $attribute) : string
     {
         return $this->entityManager
             ->getMetadata()
-            ->get($entityType, ['fields', $attribute, 'type']);
+            ->getDefs()
+            ->getEntity($entityType)
+            ->getAttribute($attribute)
+            ->getType();
     }
 }

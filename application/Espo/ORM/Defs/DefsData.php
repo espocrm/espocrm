@@ -27,64 +27,70 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Order;
+namespace Espo\ORM\Defs;
 
-use Espo\Core\{
-    Utils\Metadata,
+use Espo\ORM\{
+    Metadata,
 };
 
-use Espo\{
-    ORM\EntityManager,
-};
+use RuntimeException;
 
-class MetadataProvider
+class DefsData
 {
-    protected $metadata;
-    protected $entityManager;
+    private $cache = [];
 
-    public function __construct(Metadata $metadata, EntityManager $entityManager)
+    private $metadata;
+
+    public function __construct(Metadata $metadata)
     {
         $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
     }
 
-    public function getFieldType(string $entityType, string $field) : ?string
+    public function clearCache()
     {
-        return $this->metadata->get([
-            'entityDefs', $entityType, 'fields', $field, 'type'
-        ]) ?? null;
+        $this->cache = [];
     }
 
-    public function getDefaultOrderBy(string $entityType) : ?string
+    public function getEntityTypeList() : array
     {
-        return $this->metadata->get([
-            'entityDefs', $entityType, 'collection', 'orderBy'
-        ]) ?? null;
+        return $this->metadata->getEntityTypeList();
     }
 
-    public function getDefaultOrder(string $entityType) : ?string
+    public function hasEntity(string $name) : bool
     {
-        return $this->metadata->get([
-            'entityDefs', $entityType, 'collection', 'order'
-        ]) ?? null;
+        $this->cacheEntity($name);
+
+        return !is_null($this->cache[$name]);
     }
 
-    public function hasAttribute(string $entityType, string $attribute) : bool
+    public function getEntity(string $name) : EntityDefs
     {
-        return $this->entityManager
-            ->getMetadata()
-            ->getDefs()
-            ->getEntity($entityType)
-            ->hasAttribute($attribute);
+        $this->cacheEntity($name);
+
+        if (!$this->hasEntity($name)) {
+            throw new RuntimeException("Entity type '{$name}' does not exist.");
+        }
+
+        return $this->cache[$name];
     }
 
-    public function isAttributeParamUniqueTrue(string $entityType, string $attribute) : bool
+    private function cacheEntity(string $name)
     {
-        return (bool) $this->entityManager
-            ->getMetadata()
-            ->getDefs()
-            ->getEntity($entityType)
-            ->getAttribute($attribute)
-            ->getParam('unique');
+        if (array_key_exists($name, $this->cache)) {
+            return;
+        }
+
+        $this->cache[$name] = $this->loadEntity($name);
+    }
+
+    private function loadEntity(string $name) : ?EntityDefs
+    {
+        $raw = $this->metadata->get($name) ?? null;
+
+        if (!$raw) {
+            return null;
+        }
+
+        return EntityDefs::fromRaw($raw, $name);
     }
 }

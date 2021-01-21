@@ -29,6 +29,11 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\{
+    Defs\DefsData,
+    Defs\Defs,
+};
+
 use InvalidArgumentException;
 
 /**
@@ -40,11 +45,19 @@ class Metadata
 
     protected $dataProvider;
 
+    protected $defs;
+
+    protected $defsData;
+
     public function __construct(MetadataDataProvider $dataProvider)
     {
         $this->data = $dataProvider->get();
 
         $this->dataProvider = $dataProvider;
+
+        $this->defsData = new DefsData($this);
+
+        $this->defs = new Defs($this->defsData);
     }
 
     /**
@@ -53,6 +66,16 @@ class Metadata
     public function updateData()
     {
         $this->data = $this->dataProvider->get();
+
+        $this->defsData->clearCache();
+    }
+
+    /**
+     * Get definitions.
+     */
+    public function getDefs() : Defs
+    {
+        return $this->defs;
     }
 
     /**
@@ -79,6 +102,16 @@ class Metadata
     public function has(string $entityType) : bool
     {
         return array_key_exists($entityType, $this->data);
+    }
+
+    /**
+     * Get a list of entity types.
+     *
+     * @return array<string>
+     */
+    public function getEntityTypeList() : array
+    {
+        return array_keys($this->data);
     }
 
     private static function getValueByKey(array $data, $key = null, $default = null)

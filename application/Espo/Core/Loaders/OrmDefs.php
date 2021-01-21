@@ -27,64 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Order;
-
-use Espo\Core\{
-    Utils\Metadata,
-};
+namespace Espo\Core\Loaders;
 
 use Espo\{
+    ORM\Defs\Defs,
     ORM\EntityManager,
 };
 
-class MetadataProvider
+class OrmDefs implements Loader
 {
-    protected $metadata;
     protected $entityManager;
 
-    public function __construct(Metadata $metadata, EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->metadata = $metadata;
         $this->entityManager = $entityManager;
     }
 
-    public function getFieldType(string $entityType, string $field) : ?string
+    public function load() : Defs
     {
-        return $this->metadata->get([
-            'entityDefs', $entityType, 'fields', $field, 'type'
-        ]) ?? null;
-    }
-
-    public function getDefaultOrderBy(string $entityType) : ?string
-    {
-        return $this->metadata->get([
-            'entityDefs', $entityType, 'collection', 'orderBy'
-        ]) ?? null;
-    }
-
-    public function getDefaultOrder(string $entityType) : ?string
-    {
-        return $this->metadata->get([
-            'entityDefs', $entityType, 'collection', 'order'
-        ]) ?? null;
-    }
-
-    public function hasAttribute(string $entityType, string $attribute) : bool
-    {
-        return $this->entityManager
-            ->getMetadata()
-            ->getDefs()
-            ->getEntity($entityType)
-            ->hasAttribute($attribute);
-    }
-
-    public function isAttributeParamUniqueTrue(string $entityType, string $attribute) : bool
-    {
-        return (bool) $this->entityManager
-            ->getMetadata()
-            ->getDefs()
-            ->getEntity($entityType)
-            ->getAttribute($attribute)
-            ->getParam('unique');
+        return $this->entityManager->getMetadata()->getDefs();
     }
 }

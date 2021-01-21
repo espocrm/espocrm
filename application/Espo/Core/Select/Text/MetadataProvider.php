@@ -33,17 +33,17 @@ use Espo\Core\{
     Utils\Metadata,
 };
 
-use Espo\ORM\EntityManager;
+use Espo\ORM\Defs\Defs;
 
 class MetadataProvider
 {
     protected $metadata;
-    protected $entityManager;
+    protected $ormDefs;
 
-    public function __construct(Metadata $metadata, EntityManager $entityManager)
+    public function __construct(Metadata $metadata, Defs $ormDefs)
     {
         $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
+        $this->ormDefs = $ormDefs;
     }
 
     public function getFullTextSearchOrderType(string $entityType) : ?string
@@ -87,36 +87,45 @@ class MetadataProvider
 
     public function getFullTextSearchColumnList(string $entityType) : ?array
     {
-        return $this->entityManager
-            ->getMetadata()
-            ->get($entityType, ['fullTextSearchColumnList']);
+        return $this->ormDefs
+            ->getEntity($entityType)
+            ->getParam('fullTextSearchColumnList');
     }
 
-    public function getRelationType(string $entityType, string $link) : ?string
+    public function getRelationType(string $entityType, string $link) : string
     {
-        return (bool) $this->entityManager
-            ->getMetadata()
-            ->get($entityType, ['relations', $link, 'type']);
+        return $this->ormDefs
+            ->getEntity($entityType)
+            ->getRelation($link)
+            ->getType();
+    }
+
+    public function getAttributeType(string $entityType, string $attribute) : string
+    {
+        return $this->ormDefs
+            ->getEntity($entityType)
+            ->getAttribute($attribute)
+            ->getType();
     }
 
     public function getRelationEntityType(string $entityType, string $link) : ?string
     {
-        return (bool) $this->entityManager
-            ->getMetadata()
-            ->get($entityType, ['relations', $link, 'entity']);
-    }
+        $relationDefs = $this->ormDefs
+            ->getEntity($entityType)
+            ->getRelation($link);
 
-    public function getAttributeType(string $entityType, string $attribute) : ?string
-    {
-        return (bool) $this->entityManager
-            ->getMetadata()
-            ->get($entityType, ['fields', $attribute, 'type']);
+        if (!$relationDefs->hasForeignEntityType()) {
+            return null;
+        }
+
+        return $relationDefs->getForeignEntityType();
     }
 
     public function getAttributeRelationParam(string $entityType, string $attribute) : ?string
     {
-        return (bool) $this->entityManager
-            ->getMetadata()
-            ->get($entityType, ['fields', $attribute, 'relation']);
+        return $this->ormDefs
+            ->getEntity($entityType)
+            ->getAttribute($attribute)
+            ->getParam('relation');
     }
 }

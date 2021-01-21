@@ -93,15 +93,15 @@ class Entity extends BaseEntity
     {
         $field = $link;
 
-        $defs = [];
-
         $idsAttribute = $field . 'Ids';
 
         $foreignEntityType = $this->getRelationParam($field, 'entity');
 
         if ($this->getAttributeParam($idsAttribute, 'orderBy')) {
-            $defs['orderBy'] = $this->getAttributeParam($idsAttribute, 'orderBy');
-            $defs['order'] = 'ASC';
+            $defs = [
+                'orderBy' => $this->getAttributeParam($idsAttribute, 'orderBy'),
+                'order' => 'ASC',
+            ];
 
             if ($this->getAttributeParam($idsAttribute, 'orderDirection')) {
                 $defs['order'] = $this->getAttributeParam($idsAttribute, 'orderDirection');
@@ -110,33 +110,35 @@ class Entity extends BaseEntity
             return $defs;
         }
 
-        if ($foreignEntityType && $this->entityManager) {
-            $foreignEntityDefs = $this->entityManager->getMetadata()->get($foreignEntityType);
-
-            if ($foreignEntityDefs && !empty($foreignEntityDefs['collection'])) {
-                $collectionDefs = $foreignEntityDefs['collection'];
-
-                if (!empty($foreignEntityDefs['collection']['orderBy'])) {
-                    $orderBy = $foreignEntityDefs['collection']['orderBy'];
-                    $order = 'ASC';
-
-                    if (array_key_exists('order', $foreignEntityDefs['collection'])) {
-                        $order = $foreignEntityDefs['collection']['order'];
-                    }
-
-                    if (array_key_exists($orderBy, $foreignEntityDefs['fields'])) {
-                        $defs['orderBy'] = $orderBy;
-                        $defs['order'] = $order;
-                    }
-                }
-            }
-        }
-
-        if (empty($defs)) {
+        if (!$foreignEntityType || !$this->entityManager) {
             return null;
         }
 
-        return $defs;
+        $ormDefs = $this->entityManager->getMetadata()->getDefs();
+
+        if (!$ormDefs->hasEntity($foreignEntityType)) {
+            return null;
+        }
+
+        $entityDefs = $ormDefs->getEntity($foreignEntityType);
+
+        $collectionDefs = $entityDefs->getParam('collection') ?? [];
+
+        $orderBy = $collectionDefs['orderBy'] ?? null;
+        $order = $collectionDefs['order'] ?? 'ASC';
+
+        if (!$orderBy) {
+            return null;
+        }
+
+        if (!$entityDefs->hasAttribute($orderBy)) {
+            return null;
+        }
+
+        return [
+            'orderBy' => $orderBy,
+            'order' => $order,
+        ];
     }
 
     public function loadLinkMultipleField(string $field, $columns = null)

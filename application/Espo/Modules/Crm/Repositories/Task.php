@@ -39,7 +39,7 @@ class Task extends \Espo\Core\Repositories\Event
 
     protected $preserveDuration = false;
 
-    protected function beforeSave(Entity $entity, array $options = array())
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isAttributeChanged('status')) {
             if ($entity->get('status') == 'Completed') {
@@ -56,111 +56,120 @@ class Task extends \Espo\Core\Repositories\Event
             $entity->set('contactName', null);
         }
 
-        $parentId = $entity->get('parentId');
-        $parentType = $entity->get('parentType');
-
         if ($entity->isAttributeChanged('parentId') || $entity->isAttributeChanged('parentType')) {
-            $parent = null;
-            if ($parentId && $parentType) {
-                if ($this->getEntityManager()->hasRepository($parentType)) {
-                    $columnList = ['id', 'name'];
-
-                    if ($this->getEntityManager()->getMetadata()->get($parentType, ['fields', 'accountId'])) {
-                        $columnList[] = 'accountId';
-                    }
-
-                    if ($this->getEntityManager()->getMetadata()->get($parentType, ['fields', 'contactId'])) {
-                        $columnList[] = 'contactId';
-                    }
-
-                    if ($parentType === 'Lead') {
-                        $columnList[] = 'status';
-                        $columnList[] = 'createdAccountId';
-                        $columnList[] = 'createdAccountName';
-                        $columnList[] = 'createdContactId';
-                        $columnList[] = 'createdContactName';
-                    }
-
-                    $parent = $this->getEntityManager()
-                        ->getRepository($parentType)
-                        ->select($columnList)
-                        ->where(['id' => $parentId])
-                        ->findOne();
-                }
-            }
-
-            $accountId = null;
-            $contactId = null;
-            $accountName = null;
-            $contactName = null;
-
-            if ($parent) {
-                if ($parent->getEntityType() == 'Account') {
-                    $accountId = $parent->id;
-                    $accountName = $parent->get('name');
-                } else if ($parent->getEntityType() == 'Lead') {
-                    if ($parent->get('status') == 'Converted') {
-                        if ($parent->get('createdAccountId')) {
-                            $accountId = $parent->get('createdAccountId');
-                            $accountName = $parent->get('createdAccountName');
-                        }
-                        if ($parent->get('createdContactId')) {
-                            $contactId = $parent->get('createdContactId');
-                            $contactName = $parent->get('createdContactName');
-                        }
-                    }
-                } else if ($parent->getEntityType() == 'Contact') {
-                    $contactId = $parent->id;
-                    $contactName = $parent->get('name');
-                }
-
-                if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
-                    $accountId = $parent->get('accountId');
-                }
-                if (!$contactId && $parent->get('contactId') && $parent->getRelationParam('contact', 'entity') == 'Contact') {
-                    $contactId = $parent->get('contactId');
-                }
-            }
-
-            $entity->set('accountId', $accountId);
-            $entity->set('accountName', $accountName);
-
-            $entity->set('contactId', $contactId);
-            $entity->set('contactName', $contactName);
-
-            if (
-                $entity->get('accountId')
-                &&
-                !$entity->get('accountName')
-            ) {
-                $account = $this->getEntityManager()
-                    ->getRepository('Account')
-                    ->select(['id', 'name'])
-                    ->where(['id' => $entity->get('accountId')])
-                    ->findOne();
-
-                if ($account) {
-                    $entity->set('accountName', $account->get('name'));
-                }
-            }
-
-            if (
-                $entity->get('contactId')
-                &&
-                !$entity->get('contactName')
-            ) {
-                $contact = $this->getEntityManager()
-                    ->getRepository('Contact')
-                    ->select(['id', 'name'])
-                    ->where(['id' => $entity->get('contactId')])
-                    ->findOne();
-
-                if ($contact) {
-                    $entity->set('contactName', $contact->get('name'));
-                }
-            }
+            $this->processParentChanged($entity);
         }
 
         parent::beforeSave($entity, $options);
+    }
+
+    protected function processParentChanged(Entity $entity)
+    {
+        $parent = null;
+
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
+
+        if ($parentId && $parentType && $this->getEntityManager()->hasRepository($parentType)) {
+            $columnList = ['id', 'name'];
+
+            $defs = $this->entityManager->getMetadata()->getDefs();
+
+            if ($defs->getEntity($parentType)->hasAttribute('accountId')) {
+                $columnList[] = 'accountId';
+            }
+
+            if ($defs->getEntity($parentType)->hasAttribute('contactId')) {
+                $columnList[] = 'contactId';
+            }
+
+            if ($parentType === 'Lead') {
+                $columnList[] = 'status';
+                $columnList[] = 'createdAccountId';
+                $columnList[] = 'createdAccountName';
+                $columnList[] = 'createdContactId';
+                $columnList[] = 'createdContactName';
+            }
+
+            $parent = $this->entityManager
+                ->getRepository($parentType)
+                ->select($columnList)
+                ->where(['id' => $parentId])
+                ->findOne();
+        }
+
+        $accountId = null;
+        $contactId = null;
+        $accountName = null;
+        $contactName = null;
+
+        if ($parent) {
+            if ($parent->getEntityType() == 'Account') {
+                $accountId = $parent->id;
+                $accountName = $parent->get('name');
+            }
+            else if ($parent->getEntityType() == 'Lead') {
+                if ($parent->get('status') == 'Converted') {
+                    if ($parent->get('createdAccountId')) {
+                        $accountId = $parent->get('createdAccountId');
+                        $accountName = $parent->get('createdAccountName');
+                    }
+                    if ($parent->get('createdContactId')) {
+                        $contactId = $parent->get('createdContactId');
+                        $contactName = $parent->get('createdContactName');
+                    }
+                }
+            }
+            else if ($parent->getEntityType() == 'Contact') {
+                $contactId = $parent->id;
+                $contactName = $parent->get('name');
+            }
+
+            if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
+                $accountId = $parent->get('accountId');
+            }
+
+            if (!$contactId && $parent->get('contactId') && $parent->getRelationParam('contact', 'entity') == 'Contact') {
+                $contactId = $parent->get('contactId');
+            }
+        }
+
+        $entity->set('accountId', $accountId);
+        $entity->set('accountName', $accountName);
+
+        $entity->set('contactId', $contactId);
+        $entity->set('contactName', $contactName);
+
+        if (
+            $entity->get('accountId')
+            &&
+            !$entity->get('accountName')
+        ) {
+            $account = $this->entityManager
+                ->getRepository('Account')
+                ->select(['id', 'name'])
+                ->where(['id' => $entity->get('accountId')])
+                ->findOne();
+
+            if ($account) {
+                $entity->set('accountName', $account->get('name'));
+            }
+        }
+
+        if (
+            $entity->get('contactId')
+            &&
+            !$entity->get('contactName')
+        ) {
+            $contact = $this->entityManager
+                ->getRepository('Contact')
+                ->select(['id', 'name'])
+                ->where(['id' => $entity->get('contactId')])
+                ->findOne();
+
+            if ($contact) {
+                $entity->set('contactName', $contact->get('name'));
+            }
+        }
     }
 }

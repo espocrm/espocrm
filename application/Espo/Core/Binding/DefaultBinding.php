@@ -59,6 +59,11 @@ class DefaultBinding
         );
 
         $binder->bindService(
+            'Espo\\ORM\\Defs\\Defs',
+            'ormDefs'
+        );
+
+        $binder->bindService(
             'Espo\\Core\\DataManager',
             'dataManager'
         );

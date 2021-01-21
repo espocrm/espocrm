@@ -45,75 +45,8 @@ class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, D
             $entity->set('accountId', null);
         }
 
-        $parentId = $entity->get('parentId');
-        $parentType = $entity->get('parentType');
-
         if ($entity->isAttributeChanged('parentId') || $entity->isAttributeChanged('parentType')) {
-            $parent = null;
-
-            if ($parentId && $parentType) {
-                if ($this->getEntityManager()->hasRepository($parentType)) {
-                    $columnList = ['id', 'name'];
-
-                    if ($this->getEntityManager()->getMetadata()->get($parentType, ['fields', 'accountId'])) {
-                        $columnList[] = 'accountId';
-                    }
-
-                    if ($parentType === 'Lead') {
-                        $columnList[] = 'status';
-                        $columnList[] = 'createdAccountId';
-                        $columnList[] = 'createdAccountName';
-                    }
-
-                    $parent = $this->getEntityManager()->getRepository($parentType)
-                        ->select($columnList)
-                        ->where(['id' => $parentId])
-                        ->findOne();
-                }
-            }
-            $accountId = null;
-            $accountName = null;
-
-            if ($parent) {
-                if ($parent->getEntityType() == 'Account') {
-                    $accountId = $parent->id;
-                    $accountName = $parent->get('name');
-                } else if ($parent->getEntityType() == 'Lead') {
-                    if ($parent->get('status') == 'Converted') {
-                        if ($parent->get('createdAccountId')) {
-                            $accountId = $parent->get('createdAccountId');
-                            $accountName = $parent->get('createdAccountName');
-                        }
-                    }
-                }
-                if (
-                    !$accountId && $parent->get('accountId') &&
-                    $parent->getRelationParam('account', 'entity') == 'Account'
-                ) {
-                    $accountId = $parent->get('accountId');
-                }
-
-                if ($accountId) {
-                    $entity->set('accountId', $accountId);
-                    $entity->set('accountName', $accountName);
-                }
-            }
-
-            if (
-                $entity->get('accountId')
-                &&
-                !$entity->get('accountName')
-            ) {
-                $account = $this->getEntityManager()
-                    ->getRepository('Account')
-                    ->select(['id', 'name'])
-                    ->where(['id' => $entity->get('accountId')])
-                    ->findOne();
-
-                if ($account) {
-                    $entity->set('accountName', $account->get('name'));
-                }
-            }
+            $this->processParentChanged($entity);
         }
 
         parent::beforeSave($entity, $options);
@@ -149,6 +82,82 @@ class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, D
                 )
             ) {
                 $entity->setLinkMultipleColumn('users', 'status', $currentUserId, 'Accepted');
+            }
+        }
+    }
+
+    protected function processParentChanged(Entity $entity)
+    {
+        $parent = null;
+
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
+
+        if ($parentId && $parentType && $this->entityManager->hasRepository($parentType)) {
+            $columnList = ['id', 'name'];
+
+            $defs = $this->entityManager->getMetadata()->getDefs();
+
+            if ($defs->getEntity($parentType)->hasAttribute('accountId')) {
+                $columnList[] = 'accountId';
+
+            }
+
+            if ($parentType === 'Lead') {
+                $columnList[] = 'status';
+                $columnList[] = 'createdAccountId';
+                $columnList[] = 'createdAccountName';
+            }
+
+            $parent = $this->entityManager->getRepository($parentType)
+                ->select($columnList)
+                ->where(['id' => $parentId])
+                ->findOne();
+        }
+
+        $accountId = null;
+        $accountName = null;
+
+        if ($parent) {
+            if ($parent->getEntityType() == 'Account') {
+                $accountId = $parent->id;
+                $accountName = $parent->get('name');
+            }
+            else if ($parent->getEntityType() == 'Lead') {
+                if ($parent->get('status') == 'Converted') {
+                    if ($parent->get('createdAccountId')) {
+                        $accountId = $parent->get('createdAccountId');
+                        $accountName = $parent->get('createdAccountName');
+                    }
+                }
+            }
+
+            if (
+                !$accountId && $parent->get('accountId') &&
+                $parent->getRelationParam('account', 'entity') == 'Account'
+            ) {
+                $accountId = $parent->get('accountId');
+            }
+
+            if ($accountId) {
+                $entity->set('accountId', $accountId);
+                $entity->set('accountName', $accountName);
+            }
+        }
+
+        if (
+            $entity->get('accountId')
+            &&
+            !$entity->get('accountName')
+        ) {
+            $account = $this->entityManager
+                ->getRepository('Account')
+                ->select(['id', 'name'])
+                ->where(['id' => $entity->get('accountId')])
+                ->findOne();
+
+            if ($account) {
+                $entity->set('accountName', $account->get('name'));
             }
         }
     }
