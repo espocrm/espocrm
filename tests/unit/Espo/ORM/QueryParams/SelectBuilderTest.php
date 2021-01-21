@@ -47,7 +47,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $params = $this->builder
             ->from('Test')
             ->build()
-            ->getRawParams();
+            ->getRaw();
 
         $this->assertEquals('Test', $params['from']);
     }
@@ -108,7 +108,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->where(['test' => null])
             ->build();
 
-        $raw = $select->getRawParams();
+        $raw = $select->getRaw();
 
         $this->assertEquals(['test' => null], $raw['whereClause']);
     }
@@ -120,7 +120,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->where('test', null)
             ->build();
 
-        $raw = $select->getRawParams();
+        $raw = $select->getRaw();
 
         $this->assertEquals(['test' => null], $raw['whereClause']);
     }
@@ -133,7 +133,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->groupBy(['test'])
             ->build();
 
-        $raw = $select->getRawParams();
+        $raw = $select->getRaw();
 
         $this->assertEquals(['test' => null], $raw['havingClause']);
 
@@ -157,8 +157,8 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->where('test2', '2')
             ->build();
 
-        $params = $select->getRawParams();
-        $paramsCloned = $selectCloned->getRawParams();
+        $params = $select->getRaw();
+        $paramsCloned = $selectCloned->getRaw();
 
         $this->assertTrue($paramsCloned['distinct']);
         $this->assertFalse($params['distinct'] ?? false);
@@ -195,7 +195,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->where(['test' => '2'])
             ->build();
 
-        $raw = $select->getRawParams();
+        $raw = $select->getRaw();
 
         $expected = [
             'test' => '1',
@@ -223,7 +223,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ])
             ->build();
 
-        $raw = $select->getRawParams();
+        $raw = $select->getRaw();
 
         $expected = [
             'OR' => [
@@ -247,7 +247,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->leftJoin('link1')
             ->leftJoin('link2')
             ->build()
-            ->getRawParams();
+            ->getRaw();
 
         $this->assertEquals(['link1', 'link2'], $params['leftJoins']);
     }
@@ -260,7 +260,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->join('link1')
             ->join('link2')
             ->build()
-            ->getRawParams();
+            ->getRaw();
 
         $this->assertEquals(['link1', 'link2'], $params['joins']);
     }

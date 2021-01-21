@@ -36,7 +36,7 @@ trait BaseTrait
     /**
      * Get parameters in RAW format.
      */
-    public function getRawParams() : array
+    public function getRaw() : array
     {
         return $this->params;
     }

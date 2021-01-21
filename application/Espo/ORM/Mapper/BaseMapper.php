@@ -193,7 +193,7 @@ class BaseMapper implements Mapper
             throw new RuntimeException();
         }
 
-        $params = $select->getRawParams();
+        $params = $select->getRaw();
 
         $params['aggregation'] = $aggregation;
         $params['aggregationBy'] = $aggregationBy;
@@ -227,7 +227,7 @@ class BaseMapper implements Mapper
         $params = [];
 
         if ($select) {
-            $params = $select->getRawParams();
+            $params = $select->getRaw();
         }
 
         $entityType = $entity->getEntityType();
@@ -600,7 +600,7 @@ class BaseMapper implements Mapper
      */
     public function massRelate(Entity $entity, string $relationName, Select $select)
     {
-        $params = $select->getRawParams();
+        $params = $select->getRaw();
 
         $id = $entity->id;
 

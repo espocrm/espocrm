@@ -37,5 +37,5 @@ interface Query
     /**
      * Get parameters in RAW format.
      */
-    public function getRawParams() : array;
+    public function getRaw() : array;
 }

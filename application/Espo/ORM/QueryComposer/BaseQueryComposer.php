@@ -245,35 +245,35 @@ abstract class BaseQueryComposer implements QueryComposer
 
     public function composeSelect(SelectQuery $queryParams) : string
     {
-        $params = $queryParams->getRawParams();
+        $params = $queryParams->getRaw();
 
         return $this->createSelectQueryInternal($params);
     }
 
     public function composeUpdate(UpdateQuery $queryParams) : string
     {
-        $params = $queryParams->getRawParams();
+        $params = $queryParams->getRaw();
 
         return $this->createUpdateQuery($params);
     }
 
     public function composeDelete(DeleteQuery $queryParams) : string
     {
-        $params = $queryParams->getRawParams();
+        $params = $queryParams->getRaw();
 
         return $this->createDeleteQuery($params);
     }
 
     public function composeInsert(InsertQuery $queryParams) : string
     {
-        $params = $queryParams->getRawParams();
+        $params = $queryParams->getRaw();
 
         return $this->createInsertQuery($params);
     }
 
     public function composeUnion(UnionQuery $queryParams) : string
     {
-        $params = $queryParams->getRawParams();
+        $params = $queryParams->getRaw();
 
         return $this->createUnionQuery($params);
     }
@@ -413,7 +413,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $subSqlList = [];
 
         foreach ($selectQueryList as $select) {
-            $rawSelectParams = $select->getRawParams();
+            $rawSelectParams = $select->getRaw();
             $rawSelectParams['strictSelect'] = true;
             $select = SelectQuery::fromRaw($rawSelectParams);
 
