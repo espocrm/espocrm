@@ -40,6 +40,8 @@ use Espo\Core\{
     FileStorage\Manager as FileStorageManager,
     Utils\File\Manager as FileManager,
     ORM\EntityManager,
+    FieldUtils\Address\Address,
+    FieldUtils\Address\AddressFormatterFactory,
 };
 
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -62,6 +64,7 @@ class Xlsx
     protected $entityManager;
     protected $fileStorageManager;
     protected $fileManager;
+    protected $addressFormatterFactory;
 
     public function __construct(
         Config $config,
@@ -70,7 +73,8 @@ class Xlsx
         DateTimeUtil $dateTime,
         EntityManager $entityManager,
         FileStorageManager $fileStorageManager,
-        FileManager $fileManager
+        FileManager $fileManager,
+        AddressFormatterFactory $addressFormatterFactory
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
@@ -79,21 +83,7 @@ class Xlsx
         $this->entityManager = $entityManager;
         $this->fileStorageManager = $fileStorageManager;
         $this->fileManager = $fileManager;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
+        $this->addressFormatterFactory = $addressFormatterFactory;
     }
 
     public function loadAdditionalFields(Entity $entity, $fieldList)
@@ -124,7 +114,7 @@ class Xlsx
             }
         }
         foreach ($fieldList as $field) {
-            $fieldType = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+            $fieldType = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
             if ($fieldType === 'linkMultiple' || $fieldType === 'attachmentMultiple') {
                 if (!$entity->has($field . 'Ids')) {
@@ -138,7 +128,7 @@ class Xlsx
     {
         if ($exportAllFields) {
             foreach ($fieldList as $i => $field) {
-                $type = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+                $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
                 if (in_array($type, ['linkMultiple', 'attachmentMultiple'])) {
                     unset($fieldList[$i]);
                 }
@@ -156,7 +146,7 @@ class Xlsx
             $attributeList[] = 'id';
         }
 
-        $linkDefs = $this->getMetadata()->get(['entityDefs', $entityType, 'links']);
+        $linkDefs = $this->metadata->get(['entityDefs', $entityType, 'links']);
 
         if (is_array($linkDefs)) {
             foreach ($linkDefs as $link => $defs) {
@@ -168,7 +158,7 @@ class Xlsx
                     $linkList[] = $link;
                 }
                 else if ($defs['type'] === 'belongsTo' && !empty($defs['noJoin'])) {
-                    if ($this->getMetadata()->get(['entityDefs', $entityType, 'fields', $link])) {
+                    if ($this->metadata->get(['entityDefs', $entityType, 'fields', $link])) {
                         $linkList[] = $link;
                     }
                 }
@@ -182,7 +172,7 @@ class Xlsx
         }
 
         foreach ($fieldList as $field) {
-            $type = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+            $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
 
             if ($type === 'currencyConverted') {
                 if (!in_array($field, $attributeList)) {
@@ -402,7 +392,7 @@ class Xlsx
                     if (array_key_exists($name.'Currency', $row) && array_key_exists($name, $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
 
-                        $currency = $row[$name . 'Currency'] ?? $this->getConfig()->get('defaultCurrency');
+                        $currency = $row[$name . 'Currency'] ?? $this->config->get('defaultCurrency');
 
                         $sheet->getStyle("$col$rowNumber")
                             ->getNumberFormat()
@@ -413,7 +403,7 @@ class Xlsx
                 }
                 else if ($type == 'currencyConverted') {
                     if (array_key_exists($name, $row)) {
-                        $currency = $this->getConfig()->get('defaultCurrency');
+                        $currency = $this->config->get('defaultCurrency');
 
                         $sheet->getStyle("$col$rowNumber")
                             ->getNumberFormat()
@@ -481,7 +471,7 @@ class Xlsx
                 }
                 else if ($type == 'image') {
                     if (isset($row[$name . 'Id']) && $row[$name . 'Id']) {
-                        $attachment = $this->getEntityManager()->getEntity('Attachment', $row[$name . 'Id']);
+                        $attachment = $this->entityManager->getEntity('Attachment', $row[$name . 'Id']);
 
                         if ($attachment) {
                             $objDrawing = new Drawing();
@@ -533,47 +523,17 @@ class Xlsx
                     }
                 }
                 else if ($type == 'address') {
-                    $value = '';
+                    $address = Address::createBuilder()
+                        ->setStreet($row[$name . 'Street'] ?? null)
+                        ->setCity($row[$name . 'City'] ?? null)
+                        ->setState($row[$name . 'State'] ?? null)
+                        ->setCountry($row[$name . 'Country'] ?? null)
+                        ->setPostalCode($row[$name . 'PostalCode'] ?? null)
+                        ->build();
 
-                    if (!empty($row[$name . 'Street'])) {
-                        $value = $value .= $row[$name.'Street'];
-                    }
+                    $formatter = $this->addressFormatterFactory->createDefault();
 
-                    if (!empty($row[$name.'City']) || !empty($row[$name.'State']) || !empty($row[$name.'PostalCode'])) {
-                        if ($value) {
-                            $value .= "\n";
-                        }
-
-                        if (!empty($row[$name.'City'])) {
-                            $value .= $row[$name.'City'];
-
-                            if (
-                                !empty($row[$name.'State']) || !empty($row[$name.'PostalCode'])
-                            ) {
-                                $value .= ', ';
-                            }
-                        }
-
-                        if (!empty($row[$name.'State'])) {
-                            $value .= $row[$name.'State'];
-
-                            if (!empty($row[$name.'PostalCode'])) {
-                                $value .= ' ';
-                            }
-                        }
-
-                        if (!empty($row[$name.'PostalCode'])) {
-                            $value .= $row[$name.'PostalCode'];
-                        }
-                    }
-
-                    if (!empty($row[$name.'Country'])) {
-                        if ($value) {
-                            $value .= "\n";
-                        }
-
-                        $value .= $row[$name.'Country'];
-                    }
+                    $value = $formatter->format($address);
 
                     $sheet->setCellValue("$col$rowNumber", $value);
                 }
@@ -656,7 +616,7 @@ class Xlsx
 
                 if ($name == 'name') {
                     if (array_key_exists('id', $row)) {
-                        $link = $this->getConfig()->getSiteUrl() . "/#".$entityType . "/view/" . $row['id'];
+                        $link = $this->config->getSiteUrl() . "/#".$entityType . "/view/" . $row['id'];
                     }
                 }
                 else if ($type == 'url') {
@@ -669,33 +629,33 @@ class Xlsx
                         $foreignEntity = null;
 
                         if (!$isForeign) {
-                            $foreignEntity = $this->getMetadata()->get(
+                            $foreignEntity = $this->metadata->get(
                                 ['entityDefs', $entityType, 'links', $name, 'entity']
                             );
                         }
                         else {
-                            $foreignEntity1 = $this->getMetadata()->get(
+                            $foreignEntity1 = $this->metadata->get(
                                 ['entityDefs', $entityType, 'links', $foreignLink, 'entity']
                             );
 
-                            $foreignEntity = $this->getMetadata()->get(
+                            $foreignEntity = $this->metadata->get(
                                 ['entityDefs', $foreignEntity1, 'links', $foreignField, 'entity']
                             );
                         }
 
                         if ($foreignEntity) {
-                            $link = $this->getConfig()->getSiteUrl() . "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
+                            $link = $this->config->getSiteUrl() . "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
                         }
                     }
                 }
                 else if ($type == 'file') {
                     if (array_key_exists($name.'Id', $row)) {
-                        $link = $this->getConfig()->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name.'Id'];
+                        $link = $this->config->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name.'Id'];
                     }
                 }
                 else if ($type == 'linkParent') {
                     if (array_key_exists($name.'Id', $row) && array_key_exists($name.'Type', $row)) {
-                        $link = $this->getConfig()->getSiteUrl() . "/#".$row[$name.'Type']."/view/". $row[$name.'Id'];
+                        $link = $this->config->getSiteUrl() . "/#".$row[$name.'Type']."/view/". $row[$name.'Id'];
                     }
                 }
                 else if ($type == 'phone') {
@@ -809,9 +769,9 @@ class Xlsx
 
     protected function getCurrencyFormatCode(string $currency) : string
     {
-        $currencySymbol = $this->getMetadata()->get(['app', 'currency', 'symbolMap', $currency], '');
+        $currencySymbol = $this->metadata->get(['app', 'currency', 'symbolMap', $currency], '');
 
-        $currencyFormat = $this->getConfig()->get('currencyFormat') ?? 2;
+        $currencyFormat = $this->config->get('currencyFormat') ?? 2;
 
         if ($currencyFormat == 3) {
             return '#,##0.00_-"' . $currencySymbol . '"';
