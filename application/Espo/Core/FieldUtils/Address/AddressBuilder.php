@@ -100,5 +100,4 @@ class AddressBuilder
             'postalCode' => $this->postalCode,
         ]);
     }
-
 }
