@@ -38,15 +38,15 @@ use Espo\{
  */
 class Address
 {
-    protected $street;
+    protected $street = null;
 
-    protected $city;
+    protected $city = null;
 
-    protected $country;
+    protected $country = null;
 
-    protected $state;
+    protected $state = null;
 
-    protected $portalCode;
+    protected $portalCode = null;
 
     public function getStreet() : ?string
     {
