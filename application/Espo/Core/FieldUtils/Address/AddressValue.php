@@ -34,9 +34,9 @@ use Espo\{
 };
 
 /**
- * An address.
+ * An address value.
  */
-class Address
+class AddressValue
 {
     protected $street = null;
 

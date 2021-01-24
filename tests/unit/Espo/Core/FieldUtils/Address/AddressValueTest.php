@@ -30,12 +30,12 @@
 namespace tests\unit\Espo\Core\FieldUtils\Address;
 
 use Espo\Core\{
-    FieldUtils\Address\Address,
+    FieldUtils\Address\AddressValue,
 };
 
 use Espo\ORM\Entity;
 
-class AddressTest extends \PHPUnit\Framework\TestCase
+class AddressValueTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
@@ -44,7 +44,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
 
     public function testAddress1()
     {
-        $address = Address::createBuilder()
+        $address = AddressValue::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -61,7 +61,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
 
     public function testBuilderClone()
     {
-        $addressOriginal = Address::createBuilder()
+        $addressOriginal = AddressValue::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -69,7 +69,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
             ->setPostalCode('postalCode')
             ->build();
 
-        $address = Address::createBuilder()
+        $address = AddressValue::createBuilder()
             ->clone($addressOriginal)
             ->build();
 
@@ -82,7 +82,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
 
     public function testAddressWith()
     {
-        $addressOriginal = Address::createBuilder()
+        $addressOriginal = AddressValue::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -111,7 +111,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
                 ['addressPostalCode', null],
             ]);
 
-        $address = Address::fromEntity($entity, 'address');
+        $address = AddressValue::fromEntity($entity, 'address');
 
         $this->assertEquals('street', $address->getStreet());
         $this->assertEquals('city', $address->getCity());

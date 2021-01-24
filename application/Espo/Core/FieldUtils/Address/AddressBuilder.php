@@ -44,7 +44,7 @@ class AddressBuilder
 
     protected $portalCode;
 
-    public function clone(Address $address) : self
+    public function clone(AddressValue $address) : self
     {
         $this->setStreet($address->getStreet());
         $this->setCity($address->getCity());
@@ -90,9 +90,9 @@ class AddressBuilder
         return $this;
     }
 
-    public function build() : Address
+    public function build() : AddressValue
     {
-        return Address::fromRaw([
+        return AddressValue::fromRaw([
             'street' => $this->street,
             'city' => $this->city,
             'country' => $this->country,
