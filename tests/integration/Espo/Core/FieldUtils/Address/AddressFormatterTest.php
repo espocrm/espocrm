@@ -27,59 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace tests\integration\Espo\Core\FieldUtils\Address;
 
-use Espo\Core\Container;
+use Espo\Core\FieldUtils\Address\{
+    AddressFormatterFactory,
+    AddressValue,
+};
 
-class UpgradeStep implements Command
+class AddressFormatterTest extends \tests\integration\Core\BaseTestCase
 {
-    private $container;
-
-    public function __construct(Container $container)
+    public function testFormatter1()
     {
-        $this->container = $container;
-    }
+        $formatterFactory = $this->getContainer()->get('injectableFactory')->create(AddressFormatterFactory::class);
 
-    protected function getContainer()
-    {
-        return $this->container;
-    }
+        $formatter = $formatterFactory->create(1);
 
-    public function run(array $options)
-    {
-        if (empty($options['step'])) {
-            echo "Step is not specified.\n";
-            return;
-        }
+        $address = AddressValue::createBuilder()
+            ->setStreet('street')
+            ->setCity('city')
+            ->setCountry('country')
+            ->setState('state')
+            ->setPostalCode('postalCode')
+            ->build();
 
-        if (empty($options['id'])) {
-            echo "Upgrade ID is not specified.\n";
-            return;
-        }
+        $expected =
+            "street\n" .
+            "city, state postalCode\n" .
+            "country";
 
-        $stepName = $options['step'];
-        $upgradeId = $options['id'];
+        $result = $formatter->format($address);
 
-        return $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
-    }
-
-    protected function runUpgradeStep($stepName, array $params)
-    {
-        $app = new \Espo\Core\Application();
-        $app->setupSystemUser();
-
-        $upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
-
-        try {
-            $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
-        } catch (\Exception $e) {
-            die("Error: " . $e->getMessage());
-        }
-
-        if (is_bool($result)) {
-            $result = $result ? "true" : "false";
-        }
-
-        return $result;
+        $this->assertEquals($expected, $result);
     }
 }

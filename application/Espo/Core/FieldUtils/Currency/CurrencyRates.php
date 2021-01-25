@@ -27,59 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Core\FieldUtils\Currency;
 
-use Espo\Core\Container;
+use RuntimeException;
 
-class UpgradeStep implements Command
+/**
+ * Currency rates.
+ */
+class CurrencyRates
 {
-    private $container;
+    private $data = [];
 
-    public function __construct(Container $container)
+    private function __construct()
     {
-        $this->container = $container;
     }
 
-    protected function getContainer()
+    public function hasRate(string $currencyCode) : bool
     {
-        return $this->container;
+        return array_key_exists($currencyCode, $this->data);
     }
 
-    public function run(array $options)
+    public function getRate(string $currencyCode) : float
     {
-        if (empty($options['step'])) {
-            echo "Step is not specified.\n";
-            return;
+        if (!$this->hasRate($currencyCode)) {
+            throw new RuntimeException("No currency rate for '{$currencyCode}'.");
         }
 
-        if (empty($options['id'])) {
-            echo "Upgrade ID is not specified.\n";
-            return;
-        }
-
-        $stepName = $options['step'];
-        $upgradeId = $options['id'];
-
-        return $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
+        return $this->data[$currencyCode];
     }
 
-    protected function runUpgradeStep($stepName, array $params)
+    public static function fromArray(array $data) : self
     {
-        $app = new \Espo\Core\Application();
-        $app->setupSystemUser();
+        $obj = new self();
 
-        $upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
+        $obj->data = $data;
 
-        try {
-            $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
-        } catch (\Exception $e) {
-            die("Error: " . $e->getMessage());
-        }
-
-        if (is_bool($result)) {
-            $result = $result ? "true" : "false";
-        }
-
-        return $result;
+        return $obj;
     }
 }

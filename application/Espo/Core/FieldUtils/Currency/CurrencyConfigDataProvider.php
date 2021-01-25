@@ -27,59 +27,68 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Core\FieldUtils\Currency;
 
-use Espo\Core\Container;
+use Espo\Core\Utils\Config;
 
-class UpgradeStep implements Command
+use RuntimeException;
+
+class CurrencyConfigDataProvider
 {
-    private $container;
+    protected $config;
 
-    public function __construct(Container $container)
+    public function __construct(Config $config)
     {
-        $this->container = $container;
+        $this->config = $config;
     }
 
-    protected function getContainer()
+    /**
+     * Get a system default currency.
+     */
+    public function getDefaultCurrency() : string
     {
-        return $this->container;
+        return $this->config->get('defaultCurrency');
     }
 
-    public function run(array $options)
+    /**
+     * Get a base currency, used for conversion.
+     */
+    public function getBaseCurrency() : string
     {
-        if (empty($options['step'])) {
-            echo "Step is not specified.\n";
-            return;
-        }
-
-        if (empty($options['id'])) {
-            echo "Upgrade ID is not specified.\n";
-            return;
-        }
-
-        $stepName = $options['step'];
-        $upgradeId = $options['id'];
-
-        return $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
+        return $this->config->get('baseCurrency');
     }
 
-    protected function runUpgradeStep($stepName, array $params)
+    /**
+     * Get a list of available currencies.
+     *
+     * @return array<string>
+     */
+    public function getCurrencyList() : array
     {
-        $app = new \Espo\Core\Application();
-        $app->setupSystemUser();
+        return $this->config->get('currencyList') ?? [];
+    }
 
-        $upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
+    /**
+     * Whether a currency is available in the system.
+     */
+    public function hasCurrency(string $currencyCode) : bool
+    {
+        return in_array($currencyCode, $this->getCurrencyList());
+    }
 
-        try {
-            $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
-        } catch (\Exception $e) {
-            die("Error: " . $e->getMessage());
+    /**
+     * Get a rate of a specific currency related to the base currency.
+     */
+    public function getCurrencyRate(string $currencyCode) : float
+    {
+        $rates = $this->config->get('currencyRates') ?? [];
+
+        if (!$this->hasCurrency($currencyCode)) {
+            throw new RuntimeException("Can't get currency rate of '{$currencyCode}' currency.");
         }
 
-        if (is_bool($result)) {
-            $result = $result ? "true" : "false";
-        }
+        $rate = $rates[$currencyCode] ?? 1.0;
 
-        return $result;
+        return $rate;
     }
 }

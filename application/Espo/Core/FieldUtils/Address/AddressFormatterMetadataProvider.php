@@ -27,59 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Core\FieldUtils\Address;
 
-use Espo\Core\Container;
+use Espo\Core\Utils\Metadata;
 
-class UpgradeStep implements Command
+class AddressFormatterMetadataProvider
 {
-    private $container;
+    private $metadata;
 
-    public function __construct(Container $container)
+    public function __construct(Metadata $metadata)
     {
-        $this->container = $container;
+        $this->metadata = $metadata;
     }
 
-    protected function getContainer()
+    public function getFormatterClassName(int $format) : ?string
     {
-        return $this->container;
-    }
-
-    public function run(array $options)
-    {
-        if (empty($options['step'])) {
-            echo "Step is not specified.\n";
-            return;
-        }
-
-        if (empty($options['id'])) {
-            echo "Upgrade ID is not specified.\n";
-            return;
-        }
-
-        $stepName = $options['step'];
-        $upgradeId = $options['id'];
-
-        return $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
-    }
-
-    protected function runUpgradeStep($stepName, array $params)
-    {
-        $app = new \Espo\Core\Application();
-        $app->setupSystemUser();
-
-        $upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
-
-        try {
-            $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
-        } catch (\Exception $e) {
-            die("Error: " . $e->getMessage());
-        }
-
-        if (is_bool($result)) {
-            $result = $result ? "true" : "false";
-        }
-
-        return $result;
+        return $this->metadata->get([
+           'app', 'addressFormats', strval($format), 'formatterClassName',
+        ]);
     }
 }

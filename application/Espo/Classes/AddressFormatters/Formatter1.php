@@ -27,57 +27,61 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Classes\AddressFormatters;
 
-use Espo\Core\Container;
+use Espo\Core\FieldUtils\Address\{
+    AddressFormatter,
+    AddressValue,
+};
 
-class UpgradeStep implements Command
+class Formatter1 implements AddressFormatter
 {
-    private $container;
-
-    public function __construct(Container $container)
+    public function format(AddressValue $address) : string
     {
-        $this->container = $container;
-    }
+        $result = '';
 
-    protected function getContainer()
-    {
-        return $this->container;
-    }
+        $street = $address->getStreet();
+        $city = $address->getCity();
+        $country = $address->getCountry();
+        $state = $address->getState();
+        $postalCode = $address->getPostalCode();
 
-    public function run(array $options)
-    {
-        if (empty($options['step'])) {
-            echo "Step is not specified.\n";
-            return;
+        if ($street) {
+            $result .= $street;
         }
 
-        if (empty($options['id'])) {
-            echo "Upgrade ID is not specified.\n";
-            return;
+        if ($city || $state || $postalCode) {
+            if ($result) {
+                $result .= "\n";
+            }
+
+            if ($city) {
+                $result .= $city;
+            }
+
+            if ($state && $city) {
+                $result .= ', ';
+            }
+
+            if ($state) {
+                $result .= $state;
+            }
+
+            if ($postalCode && ($state || $city)) {
+                $result .= ' ';
+            }
+
+            if ($postalCode) {
+                $result .= $postalCode;
+            }
         }
 
-        $stepName = $options['step'];
-        $upgradeId = $options['id'];
+        if ($country) {
+            if ($result) {
+                $result .= "\n";
+            }
 
-        return $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
-    }
-
-    protected function runUpgradeStep($stepName, array $params)
-    {
-        $app = new \Espo\Core\Application();
-        $app->setupSystemUser();
-
-        $upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
-
-        try {
-            $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
-        } catch (\Exception $e) {
-            die("Error: " . $e->getMessage());
-        }
-
-        if (is_bool($result)) {
-            $result = $result ? "true" : "false";
+            $result .= $country;
         }
 
         return $result;

@@ -1,0 +1,14 @@
+{
+    "1": {
+        "formatterClassName": "Espo\\Classes\\AddressFormatters\\Formatter1"
+    },
+    "2": {
+        "formatterClassName": "Espo\\Classes\\AddressFormatters\\Formatter2"
+    },
+    "3": {
+        "formatterClassName": "Espo\\Classes\\AddressFormatters\\Formatter3"
+    },
+    "4": {
+        "formatterClassName": "Espo\\Classes\\AddressFormatters\\Formatter4"
+    }
+}
