@@ -108,10 +108,10 @@ class LogLoader
         if ($rotation) {
             $maxFileNumber = $this->config->get('logger.maxFileNumber') ?? self::MAX_FILE_NUMBER;
 
-            $handler = new EspoRotatingFileHandler($path, $maxFileNumber, $levelCode, true, $this->config);
+            $handler = new EspoRotatingFileHandler($this->config, $path, $maxFileNumber, $levelCode, true);
         }
         else {
-            $handler = new EspoFileHandler($path, $levelCode, true, $this->config);
+            $handler = new EspoFileHandler($this->config, $path, $levelCode, true);
         }
 
         $formatter = new LineFormatter(
