@@ -14,6 +14,7 @@
         ["app", "appParams"],
         ["app", "cleanup"],
         ["app", "pdfEngines", "__ANY__", "implementationClassNameMap"],
+        ["app", "addressFormats", "__ANY__", "formatterClassName"],
         ["app", "auth2FAMethods", "__ANY__", "implementationClassName"],
         ["app", "auth2FAMethods", "__ANY__", "implementationUserClassName"],
         ["app", "select"],

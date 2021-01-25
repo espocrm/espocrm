@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2021 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -48,7 +48,7 @@ class EspoFileHandler extends MonologStreamHandler
 
     protected $maxErrorMessageLength = 5000;
 
-    public function __construct(string $filename, $level = Logger::DEBUG, bool $bubble = true, Config $config)
+    public function __construct(Config $config, string $filename, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($filename, $level, $bubble);
 

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2021 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -462,7 +462,7 @@ abstract class Base
     {
         if (!isset($this->data['restoreFileList'])) {
             $backupPath = $this->getPath('backupPath');
-            $this->data['restoreFileList'] = $this->getFileList($backupPath);
+            $this->data['restoreFileList'] = $this->getFileList($backupPath, true);
         }
 
         return $this->data['restoreFileList'];
@@ -496,7 +496,7 @@ abstract class Base
      *
      * @return array
      */
-    protected function getFileList($dirPath)
+    protected function getFileList($dirPath, $skipVendorFileList = false)
     {
         $fileList = array();
 
@@ -508,10 +508,11 @@ abstract class Base
             }
         }
 
-        //vendor file list
-        $vendorFileList = $this->getVendorFileList('copy');
-        if (!empty($vendorFileList)) {
-            $fileList = array_merge($fileList, $vendorFileList);
+        if (!$skipVendorFileList) {
+            $vendorFileList = $this->getVendorFileList('copy');
+            if (!empty($vendorFileList)) {
+                $fileList = array_merge($fileList, $vendorFileList);
+            }
         }
 
         return $fileList;
@@ -738,7 +739,11 @@ abstract class Base
             return true;
         }
         catch (Throwable $e) {
-            $GLOBALS['log']->error('Database rebuild failure, details: '. $e->getMessage() .'.');
+
+            try {
+                $GLOBALS['log']->error('Database rebuild failure, details: '. $e->getMessage() .'.');
+            }
+            catch (Throwable $e) {}
         }
 
         return false;

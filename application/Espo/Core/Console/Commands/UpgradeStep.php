@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2021 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -73,7 +73,7 @@ class UpgradeStep implements Command
         try {
             $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
         } catch (\Exception $e) {
-            die("Error: " . $e->getMessage() . "\n");
+            die("Error: " . $e->getMessage());
         }
 
         if (is_bool($result)) {

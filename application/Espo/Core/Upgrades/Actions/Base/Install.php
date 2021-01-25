@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2021 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -148,19 +148,23 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
 
         $GLOBALS['log']->info('Installation process ['. $this->getProcessId() .']: Start "copy" step.');
 
-        /* remove files defined in a manifest "deleteBeforeCopy" */
-        $this->deleteFiles('deleteBeforeCopy', true);
+        /* remove files defined in a manifest */
+        if (!$this->deleteFiles('delete', true)) {
+            $this->throwErrorAndRemovePackage('Cannot delete files.');
+        }
 
         /* copy files from directory "Files" to EspoCRM files */
         if (!$this->copyFiles()) {
             $this->throwErrorAndRemovePackage('Cannot copy files.');
         }
 
-        /* remove files defined in a manifest */
-        $this->deleteFiles('delete', true);
+        if (!$this->deleteFiles('vendor')) {
+            $this->throwErrorAndRemovePackage('Cannot delete vendor files.');
+        }
 
-        $this->deleteFiles('vendor');
-        $this->copyFiles('vendor');
+        if (!$this->copyFiles('vendor')) {
+            $this->throwErrorAndRemovePackage('Cannot copy vendor files.');
+        }
 
         $GLOBALS['log']->info('Installation process ['. $this->getProcessId() .']: End "copy" step.');
     }

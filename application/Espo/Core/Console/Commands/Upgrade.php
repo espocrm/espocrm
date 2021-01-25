@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2021 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -41,6 +41,7 @@ use Espo\Core\{
 use Symfony\Component\Process\PhpExecutableFinder;
 
 use Exception;
+use Throwable;
 
 class Upgrade implements Command
 {
@@ -127,7 +128,7 @@ class Upgrade implements Command
         try {
             $this->runUpgradeProcess($upgradeId, $params);
         }
-        catch (Exception $e) {
+        catch (Throwable $e) {
             $errorMessage = $e->getMessage();
         }
 
@@ -137,7 +138,8 @@ class Upgrade implements Command
             $this->fileManager->unlink($packageFile);
         }
 
-        if (!empty($errorMessage)) {
+        if (isset($errorMessage)) {
+            $errorMessage = !empty($errorMessage) ? $errorMessage : "Error: An unexpected error occurred.";
             fwrite(\STDOUT, $errorMessage . "\n");
 
             return;
@@ -287,8 +289,11 @@ class Upgrade implements Command
                 $upgradeManager = $this->getUpgradeManager(true);
                 $upgradeManager->runInstallStep($stepName, ['id' => $upgradeId]);
             }
-        } catch (Exception $e) {
-            $GLOBALS['log']->error('Upgrade Error: ' . $e->getMessage());
+        } catch (Throwable $e) {
+            try {
+                $GLOBALS['log']->error('Upgrade Error: ' . $e->getMessage());
+            }
+            catch (Throwable $t) {}
 
             throw new Error($e->getMessage());
         }
@@ -308,7 +313,10 @@ class Upgrade implements Command
             $shellResult = shell_exec($command);
 
             if ($shellResult !== 'true') {
-                $GLOBALS['log']->error('Upgrade Error: ' . $shellResult);
+                try {
+                    $GLOBALS['log']->error('Upgrade Error: ' . $shellResult);
+                }
+                catch (Throwable $t) {}
 
                 throw new Error($shellResult);
             }
