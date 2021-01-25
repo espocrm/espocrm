@@ -48,7 +48,7 @@ class EspoFileHandler extends MonologStreamHandler
 
     protected $maxErrorMessageLength = 5000;
 
-    public function __construct(string $filename, $level = Logger::DEBUG, bool $bubble = true, Config $config)
+    public function __construct(Config $config, string $filename, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($filename, $level, $bubble);
 
