@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Extensions;
+namespace tests\integration\Espo\Extension;
 
 class GeneralTest extends \tests\integration\Core\BaseTestCase
 {
