@@ -627,7 +627,7 @@ class Stream
                         [
                             'noteTeam.noteId=:' => 'id',
                             'noteTeam.deleted' => false,
-                        ],
+                        ]
                     )
                     ->leftJoin(
                         'noteUser',
@@ -635,7 +635,7 @@ class Stream
                         [
                             'noteUser.noteId=:' => 'id',
                             'noteUser.deleted' => false,
-                        ],
+                        ]
                     )
                     ->where([
                         'OR' => [
@@ -653,7 +653,7 @@ class Stream
                                 'noteTeam.teamId' => $teamIdList,
                                 'noteUser.userId' => $user->id,
                             ],
-                        ],
+                        ]
                     ]);
 
                 $queryList[] = $subscriptionSuperTeamBuilder->build();
