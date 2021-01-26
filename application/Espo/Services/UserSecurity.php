@@ -29,8 +29,6 @@
 
 namespace Espo\Services;
 
-use Espo\ORM\Entity;
-
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
@@ -76,12 +74,19 @@ class UserSecurity
 
     public function read(string $id) : StdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->id) throw new Forbidden();
+        if (!$this->user->isAdmin() && $id !== $this->user->id) {
+            throw new Forbidden();
+        }
 
         $user = $this->entityManager->getEntity('User', $id);
-        if (!$user) throw new NotFound();
 
-        if (!$user->isAdmin() && !$user->isRegular()) throw new Forbidden();
+        if (!$user) {
+            throw new NotFound();
+        }
+
+        if (!$user->isAdmin() && !$user->isRegular()) {
+            throw new Forbidden();
+        }
 
         $userData = $this->entityManager->getRepository('UserData')->getByUserId($id);
 
@@ -93,15 +98,25 @@ class UserSecurity
 
     public function generate2FAData(string $id, StdClass $data) : StdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->id) throw new Forbidden();
+        if (!$this->user->isAdmin() && $id !== $this->user->id) {
+            throw new Forbidden();
+        }
 
         $user = $this->entityManager->getEntity('User', $id);
-        if (!$user) throw new NotFound();
 
-        if (!$user->isAdmin() && !$user->isRegular()) throw new Forbidden();
+        if (!$user) {
+            throw new NotFound();
+        }
+
+        if (!$user->isAdmin() && !$user->isRegular()) {
+            throw new Forbidden();
+        }
 
         $password = $data->password ?? null;
-        if (!$password) throw new Forbidden('Passport required.');
+
+        if (!$password) {
+            throw new Forbidden('Passport required.');
+        }
 
         if (!$this->user->isAdmin() || $this->user->id === $id) {
             $this->checkPassword($id, $password);
@@ -110,10 +125,16 @@ class UserSecurity
         $userData = $this->entityManager->getRepository('UserData')->getByUserId($id);
 
         $auth2FAMethod = $data->auth2FAMethod ?? null;
-        if (!$auth2FAMethod) throw new BadRequest();
+
+        if (!$auth2FAMethod) {
+            throw new BadRequest();
+        }
 
         $user = $this->entityManager->getEntity('User', $userData->get('userId'));
-        if (!$user) throw new Error("User not found.");
+
+        if (!$user) {
+            throw new Error("User not found.");
+        }
 
         $impl = $this->auth2FAUserFactory->create($auth2FAMethod);
         $generatedData = $impl->generateData($userData, $data, $user->get('userName'));
@@ -132,19 +153,29 @@ class UserSecurity
 
     public function update(string $id, StdClass $data) : StdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->id) throw new Forbidden();
+        if (!$this->user->isAdmin() && $id !== $this->user->id) {
+            throw new Forbidden();
+        }
 
         $user = $this->entityManager->getEntity('User', $id);
-        if (!$user) throw new NotFound();
 
-        if (!$user->isAdmin() && !$user->isRegular()) throw new Forbidden();
+        if (!$user) {
+            throw new NotFound();
+        }
+
+        if (!$user->isAdmin() && !$user->isRegular()) {
+            throw new Forbidden();
+        }
 
         $userData = $this->entityManager->getRepository('UserData')->getByUserId($id);
 
         $originalData = clone $data;
 
         $password = $originalData->password ?? null;
-        if (!$password) throw new Forbidden('Passport required.');
+
+        if (!$password) {
+            throw new Forbidden('Passport required.');
+        }
 
         if (!$this->user->isAdmin() || $this->user->id === $id) {
             $this->checkPassword($id, $password);
@@ -208,17 +239,23 @@ class UserSecurity
 
         $auth = $this->authLoginFactory->create($method);
 
-        $user = $this->entityManager->getRepository('User')->where([
-            'id' => $id,
-        ])->findOne();
+        $user = $this->entityManager
+            ->getRepository('User')
+            ->where([
+                'id' => $id,
+            ])
+            ->findOne();
 
-        if (!$user) throw new Forbidden('User is not found.');
+        if (!$user) {
+            throw new Forbidden('User is not found.');
+        }
 
         $result = $auth->login($user->get('userName'), $password);
 
         if ($result->isFail()) {
             throw new Forbidden('Password is incorrect.');
         }
+
         return true;
     }
 }
