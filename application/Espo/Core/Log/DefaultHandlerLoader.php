@@ -36,7 +36,6 @@ use Monolog\{
 };
 
 use ReflectionClass;
-use ReflectionMethod;
 use RuntimeException;
 
 class DefaultHandlerLoader
