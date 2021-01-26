@@ -31,6 +31,7 @@ namespace Espo\Core\Log;
 
 use Espo\Core\{
     Log\Handler\EspoRotatingFileHandler,
+    Utils\Config,
 };
 
 use Monolog\{
@@ -40,11 +41,18 @@ use Monolog\{
 
 class EspoRotatingFileHandlerLoader implements HandlerLoader
 {
+    private $config;
+
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
     public function load(array $params) : HandlerInterface
     {
         $filename = $params['filename'] ?? 'data/logs/espo.log';
         $level = $params['level'] ?? Logger::NOTICE;
 
-        return new EspoRotatingFileHandler($filename, 0, $level);
+        return new EspoRotatingFileHandler($this->config, $filename, 0, $level);
     }
 }
