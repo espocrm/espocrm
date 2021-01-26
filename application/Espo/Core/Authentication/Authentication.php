@@ -30,7 +30,6 @@
 namespace Espo\Core\Authentication;
 
 use Espo\Core\Exceptions\{
-    Error,
     Forbidden,
     ServiceUnavailable,
 };
@@ -59,7 +58,6 @@ use Espo\Core\{
     Api\Request,
 };
 
-use StdClass;
 use DateTime;
 
 /**
@@ -136,7 +134,7 @@ class Authentication
      * @return Result if success or second step required. NULL if failed.
      */
     public function login(
-        ?string $username, ?string $password = null, Request $request, ?string $authenticationMethod = null
+        ?string $username, ?string $password, Request $request, ?string $authenticationMethod = null
     ) : ?Result {
         $isByTokenOnly = false;
 
