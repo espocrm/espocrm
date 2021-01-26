@@ -56,6 +56,7 @@ use Espo\Core\{
     Utils\Metadata,
     ORM\EntityManagerProxy,
     Api\Request,
+    Utils\Log,
 };
 
 use DateTime;
@@ -80,6 +81,7 @@ class Authentication
     protected $entityManager;
     protected $authLoginFactory;
     protected $auth2FAFactory;
+    protected $log;
 
     public function __construct(
         ApplicationUser $applicationUser,
@@ -90,6 +92,7 @@ class Authentication
         LoginFactory $authLoginFactory,
         TwoFAFactory $auth2FAFactory,
         AuthTokenManager $authTokenManager,
+        Log $log,
         bool $allowAnyAccess = false
     ) {
         $this->allowAnyAccess = $allowAnyAccess;
@@ -102,6 +105,7 @@ class Authentication
         $this->authLoginFactory = $authLoginFactory;
         $this->auth2FAFactory = $auth2FAFactory;
         $this->authTokenManager = $authTokenManager;
+        $this->log = $log;
     }
 
     protected function getDefaultAuthenticationMethod()
@@ -139,7 +143,7 @@ class Authentication
 
         if ($authenticationMethod) {
             if (!$this->metadata->get(['authenticationMethods', $authenticationMethod, 'api'])) {
-                $GLOBALS['log']->warning(
+                $this->log->warning(
                     "AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'."
                 );
 
@@ -179,13 +183,17 @@ class Authentication
         if ($authToken && $authToken->isActive()) {
             if (!$this->allowAnyAccess) {
                 if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->id) {
-                    $GLOBALS['log']->info("AUTH: Trying to login to portal with a token not related to portal.");
+                    $this->log->info(
+                        "AUTH: Trying to login to portal with a token not related to portal."
+                    );
 
                     return Result::fail('Denied');
                 }
 
                 if (!$this->isPortal() && $authToken->getPortalId()) {
-                    $GLOBALS['log']->info("AUTH: Trying to login to crm with a token related to portal.");
+                    $this->log->info(
+                        "AUTH: Trying to login to crm with a token related to portal."
+                    );
 
                     return Result::fail('Denied');
                 }
@@ -206,7 +214,9 @@ class Authentication
 
         if ($isByTokenOnly && !$authToken) {
             if ($username) {
-                $GLOBALS['log']->info("AUTH: Trying to login as user '{$username}' by token but token is not found.");
+                $this->log->info(
+                    "AUTH: Trying to login as user '{$username}' by token but token is not found."
+                );
             }
 
             return Result::fail('Token not found');
@@ -304,7 +314,7 @@ class Authentication
     protected function processUserCheck(User $user, ?AuthLogRecord $authLogRecord) : bool
     {
         if (!$user->isActive()) {
-            $GLOBALS['log']->info(
+            $this->log->info(
                 "AUTH: Trying to login as user '".$user->get('userName')."' which is not active."
             );
 
@@ -314,7 +324,7 @@ class Authentication
         }
 
         if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
-            $GLOBALS['log']->info(
+            $this->log->info(
                 "AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'."
             );
 
@@ -324,7 +334,7 @@ class Authentication
         }
 
         if ($this->isPortal() && !$user->isPortal()) {
-            $GLOBALS['log']->info(
+            $this->log->info(
                 "AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user."
             );
 
@@ -339,7 +349,7 @@ class Authentication
                 ->isRelated($this->getPortal(), 'users', $user);
 
             if (!$isPortalRelatedToUser) {
-                $GLOBALS['log']->info(
+                $this->log->info(
                     "AUTH: Trying to login to portal as user '".$user->get('userName')."' ".
                     "which is portal user but does not belongs to portal."
                 );
@@ -441,7 +451,7 @@ class Authentication
         }
 
         if ($failAttemptCount > $maxFailedAttempts) {
-            $GLOBALS['log']->warning(
+            $this->log->warning(
                 "AUTH: Max failed login attempts exceeded for IP '{$ip}'."
             );
 

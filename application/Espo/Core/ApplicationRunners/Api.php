@@ -33,7 +33,7 @@ use Espo\Core\{
     InjectableFactory,
     ApplicationUser,
     Authentication\Authentication,
-    Api\Auth as ApiAuth,
+    Api\AuthBuilderFactory,
     Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
@@ -63,14 +63,20 @@ class Api implements ApplicationRunner
     protected $injectableFactory;
     protected $applicationUser;
     protected $routeUtil;
+    protected $authBuilderFactory;
     protected $log;
 
     public function __construct(
-        InjectableFactory $injectableFactory, ApplicationUser $applicationUser, Route $routeUtil, Log $log
+        InjectableFactory $injectableFactory,
+        ApplicationUser $applicationUser,
+        Route $routeUtil,
+        AuthBuilderFactory $authBuilderFactory,
+        Log $log
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->applicationUser = $applicationUser;
         $this->routeUtil = $routeUtil;
+        $this->authBuilderFactory = $authBuilderFactory;
         $this->log = $log;
     }
 
@@ -161,7 +167,8 @@ class Api implements ApplicationRunner
 
             $authentication = $this->injectableFactory->create(Authentication::class);
 
-            $apiAuth = ApiAuth::createBuilder()
+            $apiAuth = $this->authBuilderFactory
+                ->create()
                 ->setAuthentication($authentication)
                 ->setAuthRequired($authRequired)
                 ->build();

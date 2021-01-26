@@ -34,14 +34,13 @@ use Espo\Core\Exceptions\{
     ServiceUnavailable,
 };
 
-use Espo\Core\Authentication\{
-    Authentication,
-    Result,
-};
 
 use Espo\Core\{
     Api\Request,
     Api\Response,
+    Authentication\Authentication,
+    Authentication\Result,
+    Utils\Log,
 };
 
 use Exception;
@@ -52,30 +51,24 @@ use Exception;
  */
 class Auth
 {
+    protected $log;
+
     protected $authentication;
 
     protected $authRequired;
+    
+    protected $isEntryPoint;
 
-    protected $isEntryPoint = false;
-
-    public function __construct(Authentication $authentication, bool $authRequired = true)
-    {
+    public function __construct(
+        Log $log,
+        Authentication $authentication,
+        bool $authRequired = true,
+        bool $isEntryPoint = false
+    ) {
+        $this->log = $log;
         $this->authentication = $authentication;
         $this->authRequired = $authRequired;
-    }
-
-    public static function createForEntryPoint(Authentication $authentication, bool $authRequired = true) : self
-    {
-        $instance = new Auth($authentication, $authRequired);
-
-        $instance->isEntryPoint = true;
-
-        return $instance;
-    }
-
-    public static function createBuilder() : AuthBuilder
-    {
-        return new AuthBuilder();
+        $this->isEntryPoint = $isEntryPoint;
     }
 
     public function process(Request $request, Response $response) : AuthResult
@@ -213,14 +206,14 @@ class Auth
 
             $response->setStatus($e->getCode());
 
-            $GLOBALS['log']->notice("Auth: " . $e->getMessage());
+            $this->log->notice("Auth: " . $e->getMessage());
 
             return;
         }
 
         $response->setStatus(500);
 
-        $GLOBALS['log']->error("Auth: " . $e->getMessage());
+        $this->log->error("Auth: " . $e->getMessage());
     }
 
     protected function handleUnauthorized(Response $response, bool $showDialog)

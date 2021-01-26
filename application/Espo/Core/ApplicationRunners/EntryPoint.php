@@ -39,7 +39,7 @@ use Espo\Core\{
     Utils\Route,
     Utils\ClientManager,
     Authentication\Authentication,
-    Api\Auth as ApiAuth,
+    Api\AuthBuilderFactory,
     Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
@@ -68,6 +68,7 @@ class EntryPoint implements ApplicationRunner
     protected $clientManager;
     protected $applicationUser;
     protected $authTokenManager;
+    protected $authBuilderFactory;
 
     public function __construct(
         InjectableFactory $injectableFactory,
@@ -76,6 +77,7 @@ class EntryPoint implements ApplicationRunner
         ClientManager $clientManager,
         ApplicationUser $applicationUser,
         AuthTokenManager $authTokenManager,
+        AuthBuilderFactory $authBuilderFactory,
         ?StdClass $params = null
     ) {
         $this->injectableFactory = $injectableFactory;
@@ -84,6 +86,7 @@ class EntryPoint implements ApplicationRunner
         $this->clientManager = $clientManager;
         $this->applicationUser = $applicationUser;
         $this->authTokenManager = $authTokenManager;
+        $this->authBuilderFactory = $authBuilderFactory;
 
         $this->params = $params ?? (object) [];
     }
@@ -140,7 +143,8 @@ class EntryPoint implements ApplicationRunner
                 'allowAnyAccess' => $authNotStrict,
             ]);
 
-            $apiAuth = ApiAuth::createBuilder()
+            $apiAuth = $this->authBuilderFactory
+                ->create()
                 ->setAuthentication($authentication)
                 ->setAuthRequired($authRequired)
                 ->forEntryPoint()

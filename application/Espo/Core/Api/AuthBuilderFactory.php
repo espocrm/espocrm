@@ -30,22 +30,11 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\{
-    Exceptions\Error,
-    Authentication\Authentication,
     Utils\Log,
 };
 
-/**
- * Builds Auth instance.
- */
-class AuthBuilder
+class AuthBuilderFactory
 {
-    private $authRequired = false;
-
-    private $isEntryPoint = false;
-
-    private $authentication = null;
-
     private $log;
 
     public function __construct(Log $log)
@@ -53,33 +42,8 @@ class AuthBuilder
         $this->log = $log;
     }
 
-    public function setAuthentication(Authentication $authentication) : self
+    public function create() : AuthBuilder
     {
-        $this->authentication = $authentication;
-
-        return $this;
-    }
-
-    public function setAuthRequired(bool $authRequired) : self
-    {
-        $this->authRequired = $authRequired;
-
-        return $this;
-    }
-
-    public function forEntryPoint() : self
-    {
-        $this->isEntryPoint = true;
-
-        return $this;
-    }
-
-    public function build() : Auth
-    {
-        if (!$this->authentication) {
-            throw new Error("Authentication is not set.");
-        }
-
-        return new Auth($this->log, $this->authentication, $this->authRequired, $this->isEntryPoint);
+        return new AuthBuilder($this->log);
     }
 }
