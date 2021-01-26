@@ -45,6 +45,8 @@ use Espo\{
 
 class TcpdfEntityPrinter implements EntityPrinter
 {
+    protected $entityProcessor;
+
     protected $config;
     protected $htmlizerFactory;
 

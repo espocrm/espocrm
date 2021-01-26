@@ -46,6 +46,8 @@ use Espo\{
 
 class TcpdfCollectionPrinter implements CollectionPrinter
 {
+    protected $entityProcessor;
+
     protected $config;
     protected $htmlizerFactory;
 
