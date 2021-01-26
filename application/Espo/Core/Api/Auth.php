@@ -70,14 +70,16 @@ class Auth
         $this->authRequired = $authRequired;
     }
 
-    public static function createForEntryPoint(Authentication $authentication, bool $authRequired = true)
+    public static function createForEntryPoint(Authentication $authentication, bool $authRequired = true) : self
     {
         $instance = new Auth($authentication, $authRequired);
+
         $instance->isEntryPoint = true;
+
         return $instance;
     }
 
-    public static function getBuilder() : AuthBuilder
+    public static function createBuilder() : AuthBuilder
     {
         return new AuthBuilder();
     }
@@ -122,11 +124,14 @@ class Auth
 
         if ($request->hasHeader('Espo-Authorization')) {
             list($username, $password) = $this->decodeAuthorizationString($request->getHeader('Espo-Authorization'));
-        } else if ($request->hasHeader('X-Hmac-Authorization')) {
+        }
+        else if ($request->hasHeader('X-Hmac-Authorization')) {
             $authenticationMethod = 'Hmac';
-        } else if ($request->hasHeader('X-Api-Key')) {
+        }
+        else if ($request->hasHeader('X-Api-Key')) {
             $authenticationMethod = 'ApiKey';
-        } else if ($request->hasHeader('X-Auth-Method')) {
+        }
+        else if ($request->hasHeader('X-Auth-Method')) {
             $authenticationMethod = $request->getHeader('X-Auth-Method');
         }
 
@@ -146,7 +151,9 @@ class Auth
             }
 
             if (!$username) {
-                $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ?? $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
+                $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ??
+                    $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
+
                 if ($cgiAuthString) {
                     list($username, $password) = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
                 }
@@ -158,7 +165,9 @@ class Auth
         if (!$this->authRequired) {
             if (!$this->isEntryPoint && $hasAuthData) {
                 try {
-                    $isAuthenticated = (bool) $this->authentication->login($username, $password, $request, $authenticationMethod);
+                    $isAuthenticated = (bool) $this->authentication->login(
+                        $username, $password, $request, $authenticationMethod
+                    );
                 }
                 catch (Exception $e) {
                     $this->processException($response, $e);
@@ -172,6 +181,7 @@ class Auth
                     return;
                 }
             }
+
             $this->resolveUseNoAuth();
 
             return;
@@ -189,10 +199,12 @@ class Auth
 
             if ($authResult && ($authResult->isSuccess() || $authResult->isSecondStepRequired())) {
                 $this->handleAuthResult($response, $authResult);
-            } else {
+            }
+            else {
                 $this->processUnauthorized($response, $showDialog);
             }
-        } else {
+        }
+        else {
             if (!$this->isXMLHttpRequest($request)) {
                 $showDialog = true;
             }

@@ -162,7 +162,7 @@ class Api implements ApplicationRunner
 
             $authentication = $this->injectableFactory->create(Authentication::class);
 
-            $apiAuth = ApiAuth::getBuilder()
+            $apiAuth = ApiAuth::createBuilder()
                 ->setAuthentication($authentication)
                 ->setAuthRequired($authRequired)
                 ->build();
