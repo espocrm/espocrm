@@ -211,7 +211,7 @@ class Upgrade implements Command
         return $params;
     }
 
-    protected function getPackageFile(object $params, object $versionInfo)
+    protected function getPackageFile(object $params, ?object $versionInfo)
     {
         $packageFile = $params->file ?? null;
 
@@ -219,19 +219,19 @@ class Upgrade implements Command
             if (empty($versionInfo)) {
                 fwrite(\STDOUT, "Error: Upgrade server is currently unavailable. Please try again later.\n");
 
-                return;
+                return null;
             }
 
             if (!isset($versionInfo->nextVersion)) {
                 fwrite(\STDOUT, "There are no available upgrades.\n");
 
-                return;
+                return null;
             }
 
             if (!isset($versionInfo->nextPackage)) {
                 fwrite(\STDOUT, "Error: Upgrade package is not found.\n");
 
-                return;
+                return null;
             }
 
             return $versionInfo->nextPackage;
@@ -240,7 +240,7 @@ class Upgrade implements Command
         if (!$packageFile || !file_exists($packageFile)) {
             fwrite(\STDOUT, "Error: Upgrade package is not found.\n");
 
-            return;
+            return null;
         }
 
         return $packageFile;
@@ -390,13 +390,13 @@ class Upgrade implements Command
         catch (Exception $e) {
             echo "Could not parse info about next version.\n";
 
-            return;
+            return null;
         }
 
         if (!$data) {
             echo "Could not get info about next version.\n";
 
-            return;
+            return null;
         }
 
         return $data;
