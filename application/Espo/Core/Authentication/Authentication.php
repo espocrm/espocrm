@@ -130,12 +130,11 @@ class Authentication
 
     /**
      * Process logging in.
-     *
-     * @return Result if success or second step required. NULL if failed.
      */
     public function login(
         ?string $username, ?string $password, Request $request, ?string $authenticationMethod = null
-    ) : ?Result {
+    ) : Result {
+
         $isByTokenOnly = false;
 
         if ($authenticationMethod) {
@@ -144,7 +143,7 @@ class Authentication
                     "AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'."
                 );
 
-                return null;
+                return Result::fail('Not allowed authentication method');
             }
         }
 
@@ -182,13 +181,13 @@ class Authentication
                 if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->id) {
                     $GLOBALS['log']->info("AUTH: Trying to login to portal with a token not related to portal.");
 
-                    return null;
+                    return Result::fail('Denied');
                 }
 
                 if (!$this->isPortal() && $authToken->getPortalId()) {
                     $GLOBALS['log']->info("AUTH: Trying to login to crm with a token related to portal.");
 
-                    return null;
+                    return Result::fail('Denied');
                 }
             }
 
@@ -210,7 +209,7 @@ class Authentication
                 $GLOBALS['log']->info("AUTH: Trying to login as user '{$username}' by token but token is not found.");
             }
 
-            return null;
+            return Result::fail('Token not found');
         }
 
         if (!$authenticationMethod) {
@@ -229,8 +228,12 @@ class Authentication
             $authLogRecord = $this->createAuthLogRecord($username, $user, $request, $authenticationMethod);
         }
 
-        if ($result->isFail() || !$user) {
-            return null;
+        if ($result->isFail()) {
+            return $result;
+        }
+
+        if (!$user) {
+            return Result::fail();
         }
 
         if (!$user->isAdmin() && $this->config->get('maintenanceMode')) {
@@ -238,7 +241,7 @@ class Authentication
         }
 
         if (!$this->processUserCheck($user, $authLogRecord)) {
-            return null;
+            return Result::fail('Denied');
         }
 
         if ($this->isPortal()) {
@@ -257,7 +260,7 @@ class Authentication
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
-                return null;
+                return $result;
             }
         }
 

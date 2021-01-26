@@ -135,9 +135,7 @@ class Auth
             return AuthResult::createNotResolved();
         }
 
-        $isAuthenticated = !is_null($result) && !$result->isFail();
-
-        if ($isAuthenticated) {
+        if (!$result->isFail()) {
             return AuthResult::createResolved();
         }
 
@@ -159,14 +157,12 @@ class Auth
             $result = null;
         }
 
-        if (!$result || $result->isFail()) {
-            $this->handleUnauthorized($response, $showDialog);
-
-            return AuthResult::createNotResolved();
-        }
-
         if ($result->isSuccess()) {
             return AuthResult::createResolved();
+        }
+
+        if ($result->isFail()) {
+            $this->handleUnauthorized($response, $showDialog);
         }
 
         if ($result->isSecondStepRequired()) {

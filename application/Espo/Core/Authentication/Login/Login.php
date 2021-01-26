@@ -44,5 +44,7 @@ interface Login
     /**
      * Check credentials.
      */
-    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result;
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null
+    ) : Result;
 }

@@ -48,8 +48,10 @@ class Espo implements Login
         $this->passwordHash = $passwordHash;
     }
 
-    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result
-    {
+    public function login(
+        ?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null
+    ) : Result {
+
         if (!$password) {
             return Result::fail('Empty password');
         }
@@ -69,7 +71,7 @@ class Espo implements Login
             ->findOne();
 
         if (!$user) {
-            return Result::fail();
+            return Result::fail('Wrong credentials');
         }
 
         if ($authToken) {
