@@ -50,7 +50,6 @@ use Slim\{
 use Psr\Http\{
     Message\ResponseInterface as Psr7Response,
     Message\ServerRequestInterface as Psr7Request,
-    Server\RequestHandlerInterface as Psr7RequestHandler,
 };
 
 use Exception;
@@ -109,7 +108,7 @@ class Api implements ApplicationRunner
 
                 $responseWrapped = new ResponseWrapper($response);
 
-                $this->processRequest($item, $requestWrapped, $responseWrapped, $args);
+                $this->processRequest($item, $requestWrapped, $responseWrapped);
 
                 return $responseWrapped->getResponse();
             }
@@ -155,7 +154,7 @@ class Api implements ApplicationRunner
         return $params;
     }
 
-    protected function processRequest(array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped, array $args)
+    protected function processRequest(array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped)
     {
         try {
             $authRequired = !($item['noAuth'] ?? false);
@@ -167,13 +166,13 @@ class Api implements ApplicationRunner
                 ->setAuthRequired($authRequired)
                 ->build();
 
-            $apiAuth->process($requestWrapped, $responseWrapped);
+            $authResult = $apiAuth->process($requestWrapped, $responseWrapped);
 
-            if (!$apiAuth->isResolved()) {
+            if (!$authResult->isResolved()) {
                 return;
             }
 
-            if ($apiAuth->isResolvedUseNoAuth()) {
+            if ($authResult->isResolvedUseNoAuth()) {
                 $this->applicationUser->setupSystemUser();
             }
 

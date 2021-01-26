@@ -162,7 +162,7 @@ class Result
     }
 
     /**
-     * A token can be retured to a client to be used instead of password in a request for a second step.
+     * A token can be returned to a client to be used instead of password in a request for a second step.
      */
     public function getToken() : ?string
     {

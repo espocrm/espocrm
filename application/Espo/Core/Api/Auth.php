@@ -31,7 +31,6 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\{
     BadRequest,
-    Forbidden,
     ServiceUnavailable,
 };
 
@@ -45,7 +44,6 @@ use Espo\Core\{
     Api\Response,
 };
 
-use StdClass;
 use Exception;
 
 /**
@@ -59,10 +57,6 @@ class Auth
     protected $authRequired;
 
     protected $isEntryPoint = false;
-
-    private $isResolved = false;
-
-    private $isResolvedUseNoAuth = false;
 
     public function __construct(Authentication $authentication, bool $authRequired = true)
     {
@@ -84,172 +78,131 @@ class Auth
         return new AuthBuilder();
     }
 
-    protected function resolve()
+    public function process(Request $request, Response $response) : AuthResult
     {
-        $this->isResolved = true;
-    }
-
-    protected function resolveUseNoAuth()
-    {
-        $this->resolve();
-        $this->isResolvedUseNoAuth = true;
-    }
-
-    /**
-     * Logged in succesfully.
-     */
-    public function isResolved() : bool
-    {
-        return $this->isResolved;
-    }
-
-    /**
-     * No need to log in.
-     */
-    public function isResolvedUseNoAuth() : bool
-    {
-        return $this->isResolvedUseNoAuth;
-    }
-
-    public function process(Request $request, Response $response)
-    {
-        $httpMethod = $request->getMethod();
-
         $username = null;
         $password = null;
 
-        $showDialog = $this->isEntryPoint;
-
-        $authenticationMethod = null;
-
-        if ($request->hasHeader('Espo-Authorization')) {
-            list($username, $password) = $this->decodeAuthorizationString($request->getHeader('Espo-Authorization'));
-        }
-        else if ($request->hasHeader('X-Hmac-Authorization')) {
-            $authenticationMethod = 'Hmac';
-        }
-        else if ($request->hasHeader('X-Api-Key')) {
-            $authenticationMethod = 'ApiKey';
-        }
-        else if ($request->hasHeader('X-Auth-Method')) {
-            $authenticationMethod = $request->getHeader('X-Auth-Method');
-        }
+        $authenticationMethod = $this->obtainAuthenticationMethodFromRequest($request);
 
         if (!$authenticationMethod) {
-            if (!$username) {
-                if ($request->getServerParam('PHP_AUTH_USER') && $request->getServerParam('PHP_AUTH_PW')) {
-                    $username = $request->getServerParam('PHP_AUTH_USER');
-                    $password = $request->getServerParam('PHP_AUTH_PW');
-                }
-            }
-
-            if (!$username) {
-                if ($request->getCookieParam('auth-username') && $request->getCookieParam('auth-token')) {
-                    $username = $request->getCookieParam('auth-username');
-                    $password = $request->getCookieParam('auth-token');
-                }
-            }
-
-            if (!$username) {
-                $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ??
-                    $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
-
-                if ($cgiAuthString) {
-                    list($username, $password) = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
-                }
-            }
+            list($username, $password) = $this->obtainUsernamePasswordFromRequest($request);
         }
 
         $hasAuthData = $username || $authenticationMethod;
 
-        if (!$this->authRequired) {
-            if (!$this->isEntryPoint && $hasAuthData) {
-                try {
-                    $isAuthenticated = (bool) $this->authentication->login(
-                        $username, $password, $request, $authenticationMethod
-                    );
-                }
-                catch (Exception $e) {
-                    $this->processException($response, $e);
+        if (!$this->authRequired && !$this->isEntryPoint && $hasAuthData) {
+            $authResult = $this->processAuthNotRequired(
+                $username, $password, $request, $response, $authenticationMethod
+            );
 
-                    return;
-                }
-
-                if ($isAuthenticated) {
-                    $this->resolve();
-
-                    return;
-                }
+            if ($authResult) {
+                return $authResult;
             }
+        }
 
-            $this->resolveUseNoAuth();
-
-            return;
+        if (!$this->authRequired) {
+            return AuthResult::createResolvedUseNoAuth();
         }
 
         if ($hasAuthData) {
-            $authResult = null;
-
-            try {
-                $authResult = $this->authentication->login($username, $password, $request, $authenticationMethod);
-            }
-            catch (Exception $e) {
-                $this->processException($response, $e);
-            }
-
-            if ($authResult && ($authResult->isSuccess() || $authResult->isSecondStepRequired())) {
-                $this->handleAuthResult($response, $authResult);
-            }
-            else {
-                $this->processUnauthorized($response, $showDialog);
-            }
+            return $this->processWithAuthData(
+                $username, $password, $request, $response, $authenticationMethod
+            );
         }
-        else {
-            if (!$this->isXMLHttpRequest($request)) {
-                $showDialog = true;
-            }
 
-            $this->processUnauthorized($response, $showDialog);
+        $showDialog = $this->isEntryPoint;
+
+        if (!$this->isXMLHttpRequest($request)) {
+            $showDialog = true;
         }
+
+        $this->handleUnauthorized($response, $showDialog);
+
+        return AuthResult::createNotResolved();
+    }
+
+    protected function processAuthNotRequired(
+        string $username, ?string $password, Request $request, Response $response, ?string $authenticationMethod
+    ) : ?AuthResult {
+
+        try {
+            $result = $this->authentication->login($username, $password, $request, $authenticationMethod);
+        }
+        catch (Exception $e) {
+            $this->handleException($response, $e);
+
+            return AuthResult::createNotResolved();
+        }
+
+        $isAuthenticated = !is_null($result) && !$result->isFail();
+
+        if ($isAuthenticated) {
+            return AuthResult::createResolved();
+        }
+
+        return null;
+    }
+
+    protected function processWithAuthData(
+        string $username, ?string $password, Request $request, Response $response, ?string $authenticationMethod
+    ) : AuthResult {
+
+        $showDialog = $this->isEntryPoint;
+
+        try {
+            $result = $this->authentication->login($username, $password, $request, $authenticationMethod);
+        }
+        catch (Exception $e) {
+            $this->handleException($response, $e);
+
+            $result = null;
+        }
+
+        if (!$result || $result->isFail()) {
+            $this->handleUnauthorized($response, $showDialog);
+
+            return AuthResult::createNotResolved();
+        }
+
+        if ($result->isSuccess()) {
+            return AuthResult::createResolved();
+        }
+
+        if ($result->isSecondStepRequired()) {
+            $this->handleSecondStepRequired($response, $result);
+        }
+
+        return AuthResult::createNotResolved();
     }
 
     protected function decodeAuthorizationString(string $string) : array
     {
-        $string = base64_decode($string);
+        $stringDecoded = base64_decode($string);
 
-        if (strpos($string, ':') === false) {
+        if (strpos($stringDecoded, ':') === false) {
             throw new BadRequest("Auth: Bad authorization string provided.");
         }
 
-        return explode(':', $string, 2);
+        return explode(':', $stringDecoded, 2);
     }
 
-    protected function handleAuthResult(Response $response, Result $authResult)
+    protected function handleSecondStepRequired(Response $response, Result $result)
     {
-        $status = $authResult->getStatus();
+        $response->setStatus(401);
+        $response->setHeader('X-Status-Reason', 'second-step-required');
 
-        if ($authResult->isSuccess()) {
-            $this->resolve();
+        $bodyData = [
+            'status' => $result->getStatus(),
+            'message' => $result->getMessage(),
+            'view' => $result->getView(),
+            'token' => $result->getToken(),
+        ];
 
-            return;
-        }
-
-        if ($authResult->isSecondStepRequired()) {
-            $response->setStatus(401);
-            $response->setHeader('X-Status-Reason', 'second-step-required');
-
-            $bodyData = [
-                'status' => $authResult->getStatus(),
-                'message' => $authResult->getMessage(),
-                'view' => $authResult->getView(),
-                'token' => $authResult->getToken(),
-            ];
-
-            $response->writeBody(json_encode($bodyData));
-        }
+        $response->writeBody(json_encode($bodyData));
     }
 
-    protected function processException(Response $response, Exception $e)
+    protected function handleException(Response $response, Exception $e)
     {
         if (
             $e instanceof BadRequest ||
@@ -274,7 +227,7 @@ class Auth
         $GLOBALS['log']->error("Auth: " . $e->getMessage());
     }
 
-    protected function processUnauthorized(Response $response, bool $showDialog)
+    protected function handleUnauthorized(Response $response, bool $showDialog)
     {
         if ($showDialog) {
             $response->setHeader('WWW-Authenticate', 'Basic realm=""');
@@ -290,5 +243,66 @@ class Auth
         }
 
         return false;
+    }
+
+    protected function obtainAuthenticationMethodFromRequest(Request $request) : ?string
+    {
+        if ($request->hasHeader('Espo-Authorization')) {
+            return null;
+        }
+
+        if ($request->hasHeader('X-Hmac-Authorization')) {
+            return 'Hmac';
+        }
+        if ($request->hasHeader('X-Api-Key')) {
+            return 'ApiKey';
+        }
+
+        if ($request->hasHeader('X-Auth-Method')) {
+            return $request->getHeader('X-Auth-Method');
+        }
+
+        return null;
+    }
+
+    protected function obtainUsernamePasswordFromRequest(Request $request) : array
+    {
+        if ($request->hasHeader('Espo-Authorization')) {
+            list($username, $password) = $this->decodeAuthorizationString(
+                $request->getHeader('Espo-Authorization')
+            );
+
+            return [$username, $password];
+        }
+
+        if (
+            $request->getServerParam('PHP_AUTH_USER') && $request->getServerParam('PHP_AUTH_PW')
+        ) {
+            $username = $request->getServerParam('PHP_AUTH_USER');
+            $password = $request->getServerParam('PHP_AUTH_PW');
+
+            return [$username, $password];
+        }
+
+        if (
+            $request->getCookieParam('auth-username') && $request->getCookieParam('auth-token')
+        ) {
+
+            $username = $request->getCookieParam('auth-username');
+            $password = $request->getCookieParam('auth-token');
+
+            return [$username, $password];
+        }
+
+        $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ??
+            $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
+
+        if ($cgiAuthString) {
+            list($username, $password) = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
+
+            return [$username, $password];
+        }
+
+        return [null, null];
     }
 }

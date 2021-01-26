@@ -146,13 +146,13 @@ class EntryPoint implements ApplicationRunner
                 ->forEntryPoint()
                 ->build();
 
-            $apiAuth->process($requestWrapped, $responseWrapped);
+            $authResult = $apiAuth->process($requestWrapped, $responseWrapped);
 
-            if (!$apiAuth->isResolved()) {
+            if (!$authResult->isResolved()) {
                 return;
             }
 
-            if ($apiAuth->isResolvedUseNoAuth()) {
+            if ($authResult->isResolvedUseNoAuth()) {
                 $this->applicationUser->setupSystemUser();
             }
 
@@ -165,7 +165,8 @@ class EntryPoint implements ApplicationRunner
             if ($contents) {
                 $responseWrapped->writeBody($contents);
             }
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             (new ApiErrorOutput($requestWrapped))->process($responseWrapped, $e, true);
         }
     }
