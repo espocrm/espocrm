@@ -34,16 +34,10 @@ use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Conflict;
 
-use Espo\Core\Utils\ApiKey;
+use Espo\Core\Repositories\Database;
 
-use Espo\Core\Di;
-
-class User extends \Espo\Core\Repositories\Database implements
-
-    Di\ConfigAware
+class User extends Database
 {
-    use Di\ConfigSetter;
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->has('type') && !$entity->get('type')) {
@@ -54,6 +48,7 @@ class User extends \Espo\Core\Repositories\Database implements
             if ($entity->isAttributeChanged('userName')) {
                 $entity->set('lastName', $entity->get('userName'));
             }
+
             if ($entity->has('authMethod') && $entity->get('authMethod') !== 'Hmac') {
                 $entity->clear('secretKey');
             }
@@ -83,6 +78,7 @@ class User extends \Espo\Core\Repositories\Database implements
 
         if ($entity->isNew()) {
             $userName = $entity->get('userName');
+
             if (empty($userName)) {
                 throw new Error("Username can't be empty.");
             }
@@ -104,6 +100,7 @@ class User extends \Espo\Core\Repositories\Database implements
         } else {
             if ($entity->isAttributeChanged('userName')) {
                 $userName = $entity->get('userName');
+
                 if (empty($userName)) {
                     throw new Error("Username can't be empty.");
                 }
@@ -134,35 +131,14 @@ class User extends \Espo\Core\Repositories\Database implements
         }
 
         parent::afterSave($entity, $options);
-
-        if ($entity->isApi()) {
-            if (
-                $entity->get('apiKey') && $entity->get('secretKey') &&
-                (
-                    $entity->isAttributeChanged('apiKey') || $entity->isAttributeChanged('authMethod')
-                )
-            ) {
-                $apiKeyUtil = new ApiKey($this->config);
-                $apiKeyUtil->storeSecretKeyForUserId($entity->id, $entity->get('secretKey'));
-            }
-
-            if ($entity->isAttributeChanged('authMethod') && $entity->get('authMethod') !== 'Hmac') {
-                $apiKeyUtil = new ApiKey($this->config);
-                $apiKeyUtil->removeSecretKeyForUserId($entity->id);
-            }
-        }
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
 
-        if ($entity->isApi() && $entity->get('authMethod') === 'Hmac') {
-            $apiKeyUtil = new ApiKey($this->config);
-            $apiKeyUtil->removeSecretKeyForUserId($entity->id);
-        }
-
         $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($entity->id);
+
         if ($userData) {
             $this->getEntityManager()->removeEntity($userData);
         }
@@ -174,7 +150,8 @@ class User extends \Espo\Core\Repositories\Database implements
             return false;
         }
 
-        return (bool) $this->getEntityManager()->getRepository('TeamUser')
+        return (bool) $this->getEntityManager()
+            ->getRepository('TeamUser')
             ->where([
                 'deleted' => false,
                 'userId' => $userId,

@@ -27,41 +27,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\PasswordGroup;
+namespace Espo\Hooks\User;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-    Processor,
+use Espo\ORM\Entity;
+
+use Espo\Core\{
+    Utils\ApiKey as ApiKeyUtil,
 };
 
-use Espo\Core\Utils\PasswordHash;
-
-class HashType extends BaseFunction
+class ApiKey
 {
-    protected $processor;
-    protected $passwordHash;
+    protected $apiKey;
 
-    public function __construct(Processor $processor, PasswordHash $passwordHash)
+    public function __construct(ApiKeyUtil $apiKey)
     {
-        $this->processor = $processor;
-        $this->passwordHash = $passwordHash;
+        $this->apiKey = $apiKey;
     }
 
-    public function process(ArgumentList $args)
+    public function afterSave(Entity $entity)
     {
-        if (count($args) < 1) {
-            $this->throwTooFewArguments();
+        if (!$entity->isApi()) {
+            return;
         }
 
-        $password = $this->evaluate($args[0]);
-
-        if (!is_string($password)) {
-            $this->throwBadArgumentType(1, 'string');
+        if (
+            $entity->get('apiKey') && $entity->get('secretKey') &&
+            (
+                $entity->isAttributeChanged('apiKey') ||
+                $entity->isAttributeChanged('authMethod')
+            )
+        ) {
+            $this->apiKey->storeSecretKeyForUserId($entity->id, $entity->get('secretKey'));
         }
 
-        $hash = $this->passwordHash->hash($password);
+        if (
+            $entity->isAttributeChanged('authMethod') &&
+            $entity->get('authMethod') !== 'Hmac'
+        ) {
+            $this->apiKey->removeSecretKeyForUserId($entity->id);
+        }
+    }
 
-        return $hash;
+    public function afterRemove(Entity $entity)
+    {
+        if (!$entity->isApi()) {
+            return;
+        }
+
+        if ($entity->isApi() && $entity->get('authMethod') === 'Hmac') {
+            $this->apiKey->removeSecretKeyForUserId($entity->id);
+        }
     }
 }
