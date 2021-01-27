@@ -40,7 +40,7 @@ class ApiKey
         $this->config = $config;
     }
 
-    public static function hash(string $secretKey, string $string = '')
+    public static function hash(string $secretKey, string $string = '') : string
     {
         return hash_hmac('sha256', $string, $secretKey, true);
     }
