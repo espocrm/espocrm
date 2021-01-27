@@ -32,7 +32,7 @@ namespace Espo\Core\Authentication\Login;
 use Espo\Core\{
     Api\Request,
     Authentication\Result,
-    Authentication\AuthToken\AuthToken,
+    Authentication\LoginData,
 };
 
 /**
@@ -44,7 +44,5 @@ interface Login
     /**
      * Check credentials.
      */
-    public function login(
-        ?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null
-    ) : Result;
+    public function login(LoginData $loginData, Request $request) : Result;
 }

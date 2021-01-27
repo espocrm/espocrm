@@ -228,7 +228,13 @@ class Authentication
 
         $login = $this->authLoginFactory->create($authenticationMethod, $this->isPortal());
 
-        $result = $login->login($username, $password, $authToken, $request);
+        $loginData = LoginData::createBuilder()
+            ->setUsername($username)
+            ->setPassword($password)
+            ->setAuthToken($authToken)
+            ->build();
+
+        $result = $login->login($loginData, $request);
 
         $user = $result->getUser();
 

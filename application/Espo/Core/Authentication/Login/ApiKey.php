@@ -32,8 +32,9 @@ namespace Espo\Core\Authentication\Login;
 use Espo\Core\{
     Api\Request,
     ORM\EntityManager,
+    Authentication\LoginData,
     Authentication\Result,
-    Authentication\AuthToken\AuthToken,
+    Api\Request,
 };
 
 class ApiKey implements Login
@@ -45,11 +46,12 @@ class ApiKey implements Login
         $this->entityManager = $entityManager;
     }
 
-    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result
+    public function login(LoginData $loginData, Request $request) : Result
     {
         $apiKey = $request->getHeader('X-Api-Key');
 
-        $user = $this->entityManager->getRepository('User')
+        $user = $this->entityManager
+            ->getRepository('User')
             ->where([
                 'type' => 'api',
                 'apiKey' => $apiKey,

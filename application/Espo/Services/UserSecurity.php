@@ -40,10 +40,12 @@ use Espo\Entities\User;
 use Espo\Core\{
     Utils\Metadata,
     Utils\Config,
+    Authentication\LoginFactory,
+    Authentication\TwoFactor\UserFactory as TwoFactorUserFactory,
+    Authentication\LoginData,
+    Api\RequestNull,
 };
 
-use Espo\Core\Authentication\LoginFactory;
-use Espo\Core\Authentication\TwoFactor\UserFactory as TwoFactorUserFactory;
 
 use StdClass;
 
@@ -250,7 +252,12 @@ class UserSecurity
             throw new Forbidden('User is not found.');
         }
 
-        $result = $auth->login($user->get('userName'), $password);
+        $loginData = LoginData::createBuilder()
+            ->setUsername($user->get('userName'))
+            ->setPassword($password)
+            ->build();
+
+        $result = $auth->login($loginData, new RequestNull());
 
         if ($result->isFail()) {
             throw new Forbidden('Password is incorrect.');

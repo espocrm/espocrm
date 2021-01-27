@@ -27,59 +27,62 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Login;
+namespace Espo\Core\Authentication;
 
 use Espo\Core\{
-    ORM\EntityManager,
-    Api\Request,
-    Utils\Config,
-    Utils\ApiKey,
-    Authentication\LoginData,
-    Authentication\Result,
+    Authentication\AuthToken\AuthToken,
 };
 
-class Hmac implements Login
+/**
+ * Login data to be passed to the 'login' method.
+ */
+class LoginData
 {
-    protected $entityManager;
-    protected $config;
+    private $username;
 
-    public function __construct(EntityManager $entityManager, Config $config)
+    private $password;
+
+    private $authToken;
+
+    public function __construct(?string $username, ?string $password, ?AuthToken $authToken = null)
     {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
+        $this->username = $username;
+        $this->password = $password;
+        $this->authToken = $authToken;
     }
 
-    public function login(LoginData $loginData, Request $request) : Result
+    public function getUsername() : ?string
     {
-        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
+        return $this->username;
+    }
 
-        list($apiKey, $hash) = explode(':', $authString, 2);
+    public function getPassword() : ?string
+    {
+        return $this->password;
+    }
 
-        $user = $this->entityManager
-            ->getRepository('User')
-            ->where([
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'Hmac',
-            ])
-            ->findOne();
+    public function getAuthToken() : ?AuthToken
+    {
+        return $this->authToken;
+    }
 
-        if (!$user) {
-            return Result::fail();
-        }
+    public function hasUsername() : bool
+    {
+        return !is_null($this->username);
+    }
 
-        $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
+    public function hasPassword() : bool
+    {
+        return !is_null($this->password);
+    }
 
-        if (!$secretKey) {
-            return null;
-        }
+    public function hasAuthToken() : bool
+    {
+        return !is_null($this->authToken);
+    }
 
-        $string = $request->getMethod() . ' ' . $request->getResourcePath();
-
-        if ($hash === ApiKey::hash($secretKey, $string)) {
-            return Result::success($user);
-        }
-
-        return Result::fail('Hash not matched');
+    public static function createBuilder() : LoginDataBuilder
+    {
+        return new LoginDataBuilder();
     }
 }

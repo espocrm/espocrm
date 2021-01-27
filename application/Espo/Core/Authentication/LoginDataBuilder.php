@@ -27,59 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Login;
+namespace Espo\Core\Authentication;
 
 use Espo\Core\{
-    ORM\EntityManager,
-    Api\Request,
-    Utils\Config,
-    Utils\ApiKey,
-    Authentication\LoginData,
-    Authentication\Result,
+    Authentication\AuthToken\AuthToken,
 };
 
-class Hmac implements Login
+class LoginDataBuilder
 {
-    protected $entityManager;
-    protected $config;
+    private $username = null;
 
-    public function __construct(EntityManager $entityManager, Config $config)
+    private $password = null;
+
+    private $authToken = null;
+
+    public function setUsername(?string $username) : self
     {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
+        $this->username = $username;
+
+        return $this;
     }
 
-    public function login(LoginData $loginData, Request $request) : Result
+    public function setPassword(?string $password) : self
     {
-        $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));
+        $this->password = $password;
 
-        list($apiKey, $hash) = explode(':', $authString, 2);
+        return $this;
+    }
 
-        $user = $this->entityManager
-            ->getRepository('User')
-            ->where([
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'Hmac',
-            ])
-            ->findOne();
+    public function setAuthToken(?AuthToken $authToken) : self
+    {
+        $this->authToken = $authToken;
 
-        if (!$user) {
-            return Result::fail();
-        }
+        return $this;
+    }
 
-        $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
-
-        if (!$secretKey) {
-            return null;
-        }
-
-        $string = $request->getMethod() . ' ' . $request->getResourcePath();
-
-        if ($hash === ApiKey::hash($secretKey, $string)) {
-            return Result::success($user);
-        }
-
-        return Result::fail('Hash not matched');
+    public function build() : LoginData
+    {
+        return new LoginData($this->username, $this->password, $this->authToken);
     }
 }

@@ -30,54 +30,46 @@
 namespace Espo\Core\Authentication\Login;
 
 use Espo\Core\{
-    ORM\EntityManager,
     Api\Request,
     Utils\PasswordHash,
+    Authentication\LoginData,
     Authentication\Result,
-    Authentication\AuthToken\AuthToken,
+    Authentication\Helpers\UserFinder,
 };
 
 class Espo implements Login
 {
-    protected $entityManager;
+    protected $userFinder;
     protected $passwordHash;
 
-    public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
+    public function __construct(UserFinder $userFinder, PasswordHash $passwordHash)
     {
-        $this->entityManager = $entityManager;
+        $this->userFinder = $userFinder;
         $this->passwordHash = $passwordHash;
     }
 
-    public function login(
-        ?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null
-    ) : Result {
+    public function login(LoginData $loginData, Request $request) : Result
+    {
+        $username = $loginData->getUsername();
+        $password = $loginData->getPassword();
+        $authToken = $loginData->getAuthToken();
 
         if (!$password) {
             return Result::fail('Empty password');
         }
 
-        if ($authToken) {
-            $hash = $authToken->getHash();
-        } else {
-            $hash = $this->passwordHash->hash($password);
-        }
+        $hash = $authToken ?
+            $authToken->getHash() :
+            $this->passwordHash->hash($password);
 
-        $user = $this->entityManager->getRepository('User')
-            ->where([
-                'userName' => $username,
-                'password' => $hash,
-                'type!=' => ['api', 'system'],
-            ])
-            ->findOne();
+        $user = $this->userFinder->find($username, $hash);
 
         if (!$user) {
             return Result::fail('Wrong credentials');
         }
 
-        if ($authToken) {
-            if ($user->id !== $authToken->getUserId()) {
-                return Result::fail('User and token mismatch');
-            }
+        if ($authToken && $user->id !== $authToken->getUserId()) {
+            return Result::fail('User and token mismatch');
         }
 
         return Result::success($user);

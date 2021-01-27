@@ -38,6 +38,7 @@ use Espo\Core\{
     Utils\PasswordHash,
     Utils\Language,
     ApplicationUser,
+    Authentication\LoginData,
     Authentication\Result,
     Authentication\LDAP\Utils as LDAPUtils,
     Authentication\LDAP\Client as LDAPClient,
@@ -98,8 +99,12 @@ class LDAP extends Espo
         'portalRolesIds' => 'portalUserRolesIds',
     ];
 
-    public function login(?string $username, ?string $password, ?AuthToken $authToken = null, ?Request $request = null) : Result
+    public function login(LoginData $loginData, Request $request) : Result
     {
+        $username = $loginData->getUsername();
+        $password = $loginData->getPassword();
+        $authToken = $loginData->getAuthToken();
+
         $isPortal = $this->isPortal;
 
         if ($authToken) {
