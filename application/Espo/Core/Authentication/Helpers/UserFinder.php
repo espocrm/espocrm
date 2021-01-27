@@ -57,4 +57,32 @@ class UserFinder
 
         return $user;
     }
+
+    public function findApiHmac(string $apiKey) : ?User
+    {
+        $user = $this->entityManager
+            ->getRepository('User')
+            ->where([
+                'type' => 'api',
+                'apiKey' => $apiKey,
+                'authMethod' => 'Hmac',
+            ])
+            ->findOne();
+
+        return $user;
+    }
+
+    public function findApiApiKey(string $apiKey) : ?User
+    {
+        $user = $this->entityManager
+            ->getRepository('User')
+            ->where([
+                'type' => 'api',
+                'apiKey' => $apiKey,
+                'authMethod' => 'ApiKey',
+            ])
+            ->findOne();
+
+        return $user;
+    }
 }

@@ -31,36 +31,29 @@ namespace Espo\Core\Authentication\Login;
 
 use Espo\Core\{
     Api\Request,
-    ORM\EntityManager,
     Authentication\LoginData,
     Authentication\Result,
     Api\Request,
+    Authentication\Helpers\UserFinder,
 };
 
 class ApiKey implements Login
 {
-    protected $entityManager;
+    protected $userFinder;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(UserFinder $userFinder)
     {
-        $this->entityManager = $entityManager;
+        $this->userFinder = $userFinder;
     }
 
     public function login(LoginData $loginData, Request $request) : Result
     {
         $apiKey = $request->getHeader('X-Api-Key');
 
-        $user = $this->entityManager
-            ->getRepository('User')
-            ->where([
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'ApiKey',
-            ])
-            ->findOne();
+        $user = $this->userFinder->findApiApiKey($apiKey);
 
         if (!$user) {
-            return Result::fail();
+            return Result::fail('User not found');
         }
 
         return Result::success($user);

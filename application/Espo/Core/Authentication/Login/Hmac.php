@@ -30,23 +30,23 @@
 namespace Espo\Core\Authentication\Login;
 
 use Espo\Core\{
-    ORM\EntityManager,
     Api\Request,
-    Utils\Config,
     Utils\ApiKey,
     Authentication\LoginData,
     Authentication\Result,
+    Authentication\Helpers\UserFinder,
+    Exceptions\Error,
 };
 
 class Hmac implements Login
 {
-    protected $entityManager;
-    protected $config;
+    protected $userFinder;
+    protected $apiKeyUtil;
 
-    public function __construct(EntityManager $entityManager, Config $config)
+    public function __construct(UserFinder $userFinder, ApiKey $apiKeyUtil)
     {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
+        $this->userFinder = $userFinder;
+        $this->apiKeyUtil = $apiKeyUtil;
     }
 
     public function login(LoginData $loginData, Request $request) : Result
@@ -55,23 +55,16 @@ class Hmac implements Login
 
         list($apiKey, $hash) = explode(':', $authString, 2);
 
-        $user = $this->entityManager
-            ->getRepository('User')
-            ->where([
-                'type' => 'api',
-                'apiKey' => $apiKey,
-                'authMethod' => 'Hmac',
-            ])
-            ->findOne();
+        $user = $this->userFinder->findApiHmac($apiKey);
 
         if (!$user) {
-            return Result::fail();
+            return Result::fail('User not found');
         }
 
-        $secretKey = (new ApiKey($this->config))->getSecretKeyForUserId($user->id);
+        $secretKey = $this->apiKeyUtil->getSecretKeyForUserId($user->id);
 
         if (!$secretKey) {
-            return null;
+            throw new Error("No secret key for API user '" . $user->id . "'.");
         }
 
         $string = $request->getMethod() . ' ' . $request->getResourcePath();

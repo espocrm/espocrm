@@ -29,55 +29,67 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Utils\Config;
+
 class ApiKey
 {
     private $config;
 
-    public function __construct(\Espo\Core\Utils\Config $config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
     }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    public static function hash($secretKey, $string = '')
+    public static function hash(string $secretKey, string $string = '')
     {
         return hash_hmac('sha256', $string, $secretKey, true);
     }
 
-    public function getSecretKeyForUserId($id)
+    public function getSecretKeyForUserId(string $id) : ?string
     {
-        $apiSecretKeys = $this->getConfig()->get('apiSecretKeys');
-        if (!$apiSecretKeys) return;
-        if (!is_object($apiSecretKeys)) return;
-        if (!isset($apiSecretKeys->$id)) return;
+        $apiSecretKeys = $this->config->get('apiSecretKeys');
+
+        if (!$apiSecretKeys) {
+            return null;
+        }
+
+        if (!is_object($apiSecretKeys)) {
+            return null;
+        }
+
+        if (!isset($apiSecretKeys->$id)) {
+            return null;
+        }
+
         return $apiSecretKeys->$id;
     }
 
-    public function storeSecretKeyForUserId($id, $secretKey)
+    public function storeSecretKeyForUserId(string $id, string $secretKey)
     {
-        $apiSecretKeys = $this->getConfig()->get('apiSecretKeys');
+        $apiSecretKeys = $this->config->get('apiSecretKeys');
+
         if (!is_object($apiSecretKeys)) {
-            $apiSecretKeys = (object)[];
+            $apiSecretKeys = (object) [];
         }
+
         $apiSecretKeys->$id = $secretKey;
 
-        $this->getConfig()->set('apiSecretKeys', $apiSecretKeys);
-        $this->getConfig()->save();
+        $this->config->set('apiSecretKeys', $apiSecretKeys);
+
+        $this->config->save();
     }
 
-    public function removeSecretKeyForUserId($id)
+    public function removeSecretKeyForUserId(string $id)
     {
-        $apiSecretKeys = $this->getConfig()->get('apiSecretKeys');
+        $apiSecretKeys = $this->config->get('apiSecretKeys');
+
         if (!is_object($apiSecretKeys)) {
-            $apiSecretKeys = (object)[];
+            $apiSecretKeys = (object) [];
         }
+
         unset($apiSecretKeys->$id);
 
-        $this->getConfig()->set('apiSecretKeys', $apiSecretKeys);
-        $this->getConfig()->save();
+        $this->config->set('apiSecretKeys', $apiSecretKeys);
+        $this->config->save();
     }
 }
