@@ -26,16 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/fields/user-name', 'views/fields/varchar', function (Dep) {
+define('views/user/fields/user-name', 'views/fields/varchar', function (Dep) {
 
     return Dep.extend({
+
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.validations.push('userName');
+        },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            var userNameRegularExpression = this.getConfig().get('userNameRegularExpression') || '[^a-z0-9\-@_\.\s]';
+            var userNameRegularExpression = this.getUserNameRegularExpression();
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 this.$element.on('change', function () {
                     var value = this.$element.val();
                     var re = new RegExp(userNameRegularExpression, 'gi');
@@ -44,8 +50,33 @@ Espo.define('views/user/fields/user-name', 'views/fields/varchar', function (Dep
                     this.trigger('change');
                 }.bind(this));
             }
-        }
+        },
+
+        getUserNameRegularExpression: function () {
+            return this.getConfig().get('userNameRegularExpression') || '[^a-z0-9\-@_\.\s]';
+        },
+
+        validateUserName: function () {
+            var value = this.model.get(this.name);
+
+            if (!value) {
+                return;
+            }
+
+            var userNameRegularExpression = this.getUserNameRegularExpression();
+
+            var re = new RegExp(userNameRegularExpression, 'gi');
+
+            if (!re.test(value)) {
+                return;
+            }
+
+            var msg = this.translate('fieldInvalid', 'messages').replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg);
+
+            return true;
+        },
 
     });
-
 });
