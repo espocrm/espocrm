@@ -58,16 +58,17 @@ class Result
 
     protected $failReason = null;
 
-    protected function __construct(string $status, ?User $user = null, ?StdClass $params = null)
+    protected function __construct(string $status, ?User $user = null, ?ResultData $data = null)
     {
         $this->user = $user;
         $this->status = $status;
-        if ($params) {
-            $this->message = $params->message ?? null;
-            $this->token = $params->token ?? null;
-            $this->view = $params->view ?? null;
-            $this->loggedUser = $params->loggedUser ?? null;
-            $this->failReason = $params->failReason ?? null;
+
+        if ($data) {
+            $this->message = $data->getMessage();
+            $this->token = $data->getToken();
+            $this->view = $data->getView();
+            $this->loggedUser = $data->getLoggedUser();
+            $this->failReason = $data->getFailReason();
         }
     }
 
@@ -84,17 +85,19 @@ class Result
      */
     public static function fail(?string $reason = null)
     {
-        return new Result(self::STATUS_FAIL, null, (object) [
-            'failReason' => $reason,
-        ]);
+        $data = $reason ?
+            ResultData::fromFailReason($reason) :
+            ResultData::fromNothing();
+
+        return new Result(self::STATUS_FAIL, null, $data);
     }
 
     /**
      * Create an instance for a login requiring a second step. E.g. for 2FA.
      */
-    public static function secondStepRequired(User $user, StdClass $params)
+    public static function secondStepRequired(User $user, ResultData $data)
     {
-        return new Result(self::STATUS_SECOND_STEP_REQUIRED, $user, $params);
+        return new Result(self::STATUS_SECOND_STEP_REQUIRED, $user, $data);
     }
 
     /**
@@ -130,7 +133,8 @@ class Result
     }
 
     /**
-     * Get a logged user. Considered that an admin user can log in as another user. The logged user will be an admin user.
+     * Get a logged user. Considered that an admin user can log in as another user.
+     * The logged user will be an admin user.
      */
     public function getLoggedUser() : ?User
     {

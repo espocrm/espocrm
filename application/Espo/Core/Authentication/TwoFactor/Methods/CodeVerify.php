@@ -31,7 +31,9 @@ namespace Espo\Core\Authentication\TwoFactor\Methods;
 
 use Espo\Entities\User;
 
-use StdClass;
+use Espo\Core\Authentication\{
+    ResultData,
+};
 
 interface CodeVerify
 {
@@ -41,7 +43,7 @@ interface CodeVerify
     public function verifyCode(User $user, string $code) : bool;
 
     /**
-     * Data to be sent to frontend for showing a form for a second step.
+     * Data to be sent to the front-end for showing a form for a second step.
      */
-    public function getLoginData(User $user) : StdClass;
+    public function getLoginData(User $user) : ResultData;
 }

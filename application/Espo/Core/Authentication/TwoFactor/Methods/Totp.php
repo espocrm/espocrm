@@ -29,16 +29,20 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Methods;
 
-use Espo\Entities\User;
+use Espo\{
+    ORM\EntityManager,
+    Entities\User,
+};
 
-use Espo\ORM\EntityManager;
-use Espo\Core\Authentication\TwoFactor\Utils\Totp as TotpUtils;
-
-use StdClass;
+use Espo\Core\Authentication\{
+    TwoFactor\Utils\Totp as TotpUtils,
+    ResultData,
+};
 
 class Totp implements CodeVerify
 {
     protected $entityManager;
+    
     protected $totp;
 
     public function __construct(EntityManager $entityManager, TotpUtils $totp)
@@ -61,7 +65,7 @@ class Totp implements CodeVerify
             return false;
         }
 
-        if ($userData->get('auth2FAMethod') != 'Totp') {
+        if ($userData->get('auth2FAMethod') !== 'Totp') {
             return false;
         }
 
@@ -74,10 +78,8 @@ class Totp implements CodeVerify
         return $this->totp->verifyCode($secret, $code);
     }
 
-    public function getLoginData(User $user) : StdClass
+    public function getLoginData(User $user) : ResultData
     {
-        return (object) [
-            'message' => 'enterTotpCode',
-        ];
+        return ResultData::fromMessage('enterTotpCode');
     }
 }

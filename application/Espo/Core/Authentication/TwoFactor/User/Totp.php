@@ -30,8 +30,11 @@
 namespace Espo\Core\Authentication\TwoFactor\User;
 
 use Espo\Entities\UserData;
-use Espo\Core\Authentication\TwoFactor\Utils\Totp as TotpUtils;
-use Espo\Core\Utils\Config;
+
+use Espo\Core\{
+    Authentication\TwoFactor\Utils\Totp as TotpUtils,
+    Utils\Config,
+};
 
 use StdClass;
 
@@ -64,10 +67,10 @@ class Totp implements CodeVerify
             return false;
         }
 
-        $code = str_replace(' ', '', trim($code));
+        $codeModified = str_replace(' ', '', trim($code));
 
         $secret = $userData->get('auth2FATotpSecret');
 
-        return $this->totp->verifyCode($secret, $code);
+        return $this->totp->verifyCode($secret, $codeModified);
     }
 }
