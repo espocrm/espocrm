@@ -227,6 +227,7 @@ return [
         'cacheTimestamp',
         'language',
         'isDeveloperMode',
+        'theme',
         'dateFormat',
         'timeFormat',
         'timeZone',
