@@ -90,7 +90,7 @@ define(
         this.id = options.id || 'espocrm-application-id';
 
         this.useCache = options.useCache || this.useCache;
-        this.url = options.url || this.url;
+        this.apiUrl = options.apiUrl || this.apiUrl;
         this.basePath = options.basePath || '';
 
         this.ajaxTimeout = options.ajaxTimeout || 0;
@@ -98,6 +98,7 @@ define(
         this.appParams = {};
 
         this.loader = Espo.loader;
+
         this.loader.basePath = this.basePath;
 
         this.controllers = {};
@@ -188,7 +189,7 @@ define(
 
         loader: null,
 
-        url: 'api/v1',
+        apiUrl: 'api/v1',
 
         auth: null,
 
@@ -357,31 +358,47 @@ define(
         getController: function (name, callback) {
             if (!(name || false)) {
                 callback(this.baseController);
+
                 return;
             }
-            if (!(name in this.controllers)) {
-                try {
-                    var className = this.metadata.get('clientDefs.' + name + '.controller');
-                    if (!className) {
-                        var module = this.metadata.get('scopes.' + name + '.module');
-                        className = Espo.Utils.composeClassName(module, name, 'controllers');
-                    }
-                    Espo.require(className, function (controllerClass) {
+
+            if (name in this.controllers) {
+                callback(this.controllers[name]);
+            }
+
+            try {
+                var className = this.metadata.get('clientDefs.' + name + '.controller');
+
+                if (!className) {
+                    var module = this.metadata.get('scopes.' + name + '.module');
+
+                    className = Espo.Utils.composeClassName(module, name, 'controllers');
+                }
+
+                Espo.require(
+                    className,
+                    function (controllerClass) {
                         var injections = this.getControllerInjection();
+
                         injections.baseController = this.baseController;
+
                         this.controllers[name] = new controllerClass(this.baseController.params, injections);
                         this.controllers[name].name = name;
                         this.controllers[name].masterView = this.masterView;
+
                         callback(this.controllers[name]);
-                    }, this, function () {
+                    },
+                    this,
+                    function () {
                         this.baseController.error404();
-                    }.bind(this));
-                    return;
-                } catch (e) {
-                    this.baseController.error404();
-                }
+                    }.bind(this)
+                );
+
+                return;
             }
-            callback(this.controllers[name]);
+            catch (e) {
+                this.baseController.error404();
+            }
         },
 
         preLoad: function (callback) {
@@ -439,13 +456,19 @@ define(
                         if (~name.indexOf('.')) {
                             console.warn(name + ': template name should use slashes for a directory separator.');
                         }
+
                         path = 'res/templates/' + name.split('.').join('/') + '.tpl';
+
                         break;
+
                     case 'layoutTemplate':
                         path = 'res/layout-types/' + name + '.tpl';
+
                         break;
+
                     case 'layout':
                         path = 'res/layouts/' + name + '.json';
+
                         break;
                 }
                 return path;
@@ -453,10 +476,14 @@ define(
 
             var getResourcePath = function (type, name) {
                 var path;
+
                 if (name.indexOf(':') != -1) {
                     var arr = name.split(':');
+
                     name = arr[1];
+
                     var mod = arr[0];
+
                     if (mod == 'custom') {
                         path = 'client/custom/' + getResourceInnerPath(type, name);
                     } else {
@@ -465,6 +492,7 @@ define(
                 } else {
                     path = 'client/' + getResourceInnerPath(type, name);
                 }
+
                 return path;
             }.bind(this);
 
@@ -493,6 +521,7 @@ define(
 
             this.baseController.on('login', function (data) {
                 this.auth = Base64.encode(data.auth.userName  + ':' + data.auth.token);
+
                 this.storage.set('user', 'auth', this.auth);
 
                 this.setCookieAuth(data.auth.userName, data.auth.token);
@@ -511,6 +540,7 @@ define(
         logout: function () {
             if (this.auth) {
                 var arr = Base64.decode(this.auth).split(':');
+
                 if (arr.length > 1) {
                     Espo.Ajax.postRequest('App/action/destroyAuthToken', {
                         token: arr[1]
@@ -523,19 +553,26 @@ define(
             }
 
             this.auth = null;
+
             this.user.clear();
             this.preferences.clear();
+
             this.acl.clear();
+
             this.storage.clear('user', 'auth');
+
             this.doAction({action: 'login'});
 
             this.unsetCookieAuth();
 
             xhr = new XMLHttpRequest;
 
-            xhr.open('GET', this.basePath + this.url + '/');
+            xhr.open('GET', this.basePath + this.apiUrl + '/');
+
             xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
+
             xhr.send('');
+
             xhr.abort();
 
             this.loadStylesheet();
@@ -550,7 +587,9 @@ define(
 
         setCookieAuth: function (username, token) {
             var date = new Date();
+
             date.setTime(date.getTime() + (1000 * 24*60*60*1000));
+
             document.cookie = 'auth-username='+username+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
             document.cookie = 'auth-token='+token+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
         },
@@ -571,6 +610,7 @@ define(
                         resolve();
                         return;
                     };
+
                     this.requestUserData(function (data) {
                         options = data;
                         resolve();
@@ -579,6 +619,7 @@ define(
             ]).then(function () {
                 (new Promise(function (resolve) {
                     this.language.name = options.language;
+
                     this.language.load(function () {
                         resolve();
                     }.bind(this));
@@ -607,7 +648,7 @@ define(
 
                     var xhr = new XMLHttpRequest();
 
-                    xhr.open('GET', this.basePath + this.url + '/');
+                    xhr.open('GET', this.basePath + this.apiUrl + '/');
                     xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
 
                     xhr.onreadystatechange = function () {
@@ -615,6 +656,7 @@ define(
 
                             var arr = Base64.decode(this.auth).split(':');
                             this.setCookieAuth(arr[0], arr[1]);
+
                             callback();
                         }
                     }.bind(this);
@@ -630,30 +672,32 @@ define(
 
         setupAjax: function () {
             var self = this;
+
             $.ajaxSetup({
                 beforeSend: function (xhr, options) {
-                    if (!options.local && self.url) {
-                        options.url = Espo.Utils.trimSlash(self.url) + '/' + options.url;
+                    if (!options.local && this.apiUrl) {
+                        options.url = Espo.Utils.trimSlash(this.apiUrl) + '/' + options.url;
                     }
 
-                    if (!options.local && self.basePath !== '') {
-                        options.url = self.basePath + options.url;
+                    if (!options.local && this.basePath !== '') {
+                        options.url = this.basePath + options.url;
                     }
-                    if (self.auth !== null) {
-                        xhr.setRequestHeader('Authorization', 'Basic ' + self.auth);
-                        xhr.setRequestHeader('Espo-Authorization', self.auth);
+                    if (this.auth !== null) {
+                        xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
+                        xhr.setRequestHeader('Espo-Authorization', this.auth);
                         xhr.setRequestHeader('Espo-Authorization-By-Token', true);
                     }
-                },
+                }.bind(this),
                 dataType: 'json',
                 timeout: this.ajaxTimeout,
-                contentType: 'application/json'
+                contentType: 'application/json',
             });
 
             $(document).ajaxError(function (event, xhr, options) {
                 if (xhr.errorIsHandled) {
                     return;
                 }
+
                 var statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                 switch (xhr.status) {
@@ -661,11 +705,15 @@ define(
                         if (xhr.statusText == 'timeout') {
                             Espo.Ui.error(self.language.translate('Timeout'));
                         }
+
                         break;
+
                     case 200:
                         Espo.Ui.error(self.language.translate('Bad server response'));
                         console.error('Bad server response: ' + xhr.responseText);
+
                         break;
+
                     case 401:
                         if (!options.login) {
                             if (self.auth) {
@@ -674,41 +722,59 @@ define(
                                 console.error('Error 401: Unauthorized.');
                             }
                         }
+
                         break;
+
                     case 403:
                         if (options.main) {
                             self.baseController.error403();
                         } else {
                             var msg = self.language.translate('Error') + ' ' + xhr.status;
+
                             msg += ': ' + self.language.translate('Access denied');
+
                             if (statusReason) {
                                 msg += ': ' + statusReason;
                             }
+
                             Espo.Ui.error(msg);
                         }
+
                         break;
+
                     case 400:
                         var msg = self.language.translate('Error') + ' ' + xhr.status;
+
                         msg += ': ' + self.language.translate('Bad request');
+
                         if (statusReason) {
                             msg += ': ' + statusReason;
                         }
+
                         Espo.Ui.error(msg);
+
                         break;
+
                     case 404:
                         if (options.main) {
                             self.baseController.error404();
                         } else {
                             var msg = self.language.translate('Error') + ' ' + xhr.status;
+
                             msg += ': ' + self.language.translate('Not found');
+
                             Espo.Ui.error(msg);
                         }
+
                         break;
+
                     default:
                         var msg = self.language.translate('Error') + ' ' + xhr.status;
+
                         if (statusReason) {
                             msg += ': ' + statusReason;
                         }
+
                         Espo.Ui.error(msg);
                 }
 
