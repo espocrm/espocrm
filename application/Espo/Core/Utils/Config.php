@@ -35,6 +35,7 @@ use Espo\Core\{
 };
 
 use StdClass;
+use E_USER_DEPRECATED;
 
 /**
  * Access to the application config parameters.
@@ -71,7 +72,7 @@ class Config
 
     /**
      * A path to the config file.
-     * 
+     *
      * @todo Move to ConfigData.
      */
     public function getConfigPath() : string
@@ -141,7 +142,7 @@ class Config
     }
 
     /**
-     * @deprecated since version 6.2.0
+     * @deprecated Since v6.2.0.
      */
     public function set($name, $value = null, bool $dontMarkDirty = false)
     {
@@ -167,7 +168,7 @@ class Config
     }
 
     /**
-     * @deprecated since version 6.2.0
+     * @deprecated Since v6.2.0.
      */
     public function remove(string $name) : bool
     {
@@ -183,10 +184,15 @@ class Config
     }
 
     /**
-     * @deprecated since version 6.2.0
+     * @deprecated Since v6.2.0.
      */
     public function save()
     {
+        trigger_error(
+            "Config::save is deprecated. Use `Espo\Core\Utils\Config\ConfigWriter` to save the config.",
+            E_USER_DEPRECATED
+        );
+
         $values = $this->changedData;
 
         if (!isset($values[$this->cacheTimestamp])) {
