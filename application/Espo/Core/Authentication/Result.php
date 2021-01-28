@@ -31,8 +31,6 @@ namespace Espo\Core\Authentication;
 
 use Espo\Entities\User;
 
-use StdClass;
-
 /**
  * An authentication result.
  */
