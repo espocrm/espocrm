@@ -45,8 +45,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $manifest = $this->getManifest();
 
-        $this->getConfig()->set('version', $manifest['version']);
-        $this->getConfig()->save();
+        $configWriter = $this->createConfigWriter();
+
+        $configWriter->set('version', $manifest['version']);
+
+        $configWriter->save();
     }
 
     /**

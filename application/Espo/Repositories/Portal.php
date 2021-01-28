@@ -31,11 +31,12 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Repositories\Database;
 
 use Espo\Core\Di;
 
-class Portal extends \Espo\Core\Repositories\Database implements
+class Portal extends Database implements
+
     Di\ConfigAware
 {
     use Di\ConfigSetter;
@@ -65,28 +66,6 @@ class Portal extends \Espo\Core\Repositories\Database implements
 
         if (!$entity->get('customUrl')) {
             $entity->set('url', $url);
-        }
-    }
-
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
-
-        if ($entity->has('isDefault')) {
-            if ($entity->get('isDefault')) {
-                $defaultPortalId = $this->config->get('defaultPortalId');
-                if ($defaultPortalId !== $entity->id) {
-                    $this->config->set('defaultPortalId', $entity->id);
-                    $this->config->save();
-                }
-            } else {
-                if ($entity->isAttributeChanged('isDefault')) {
-                    if ($entity->getFetched('isDefault')) {
-                        $this->config->set('defaultPortalId', null);
-                        $this->config->save();
-                    }
-                }
-            }
         }
     }
 }

@@ -29,37 +29,103 @@
 
 namespace Espo\Core\Portal\Utils;
 
-use Espo\Core\Utils\Config as BaseConfig;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\Config as BaseConfig,
+};
 
 class Config extends BaseConfig
 {
-    /**
-     * Override parameters for a portal.
-     */
-    public function setPortalParameters(array $data = [])
+    protected $portalParamsSet = false;
+
+    protected $portalData = [];
+
+    protected $portalParamList = [
+        'companyLogoId',
+        'tabList',
+        'quickCreateList',
+        'dashboardLayout',
+        'dashletsOptions',
+        'theme',
+        'language',
+        'timeZone',
+        'dateFormat',
+        'timeFormat',
+        'weekStart',
+        'defaultCurrency',
+    ];
+
+    public function get(string $name, $default = null)
     {
-        if (empty($data['language'])) unset($data['language']);
-        if (empty($data['theme'])) unset($data['theme']);
-        if (empty($data['timeZone'])) unset($data['timeZone']);
-        if (empty($data['dateFormat'])) unset($data['dateFormat']);
-        if (empty($data['timeFormat'])) unset($data['timeFormat']);
-        if (empty($data['defaultCurrency'])) unset($data['defaultCurrency']);
-        if (isset($data['weekStart']) && $data['weekStart'] === -1) unset($data['weekStart']);
-        if (array_key_exists('weekStart', $data) && is_null($data['weekStart'])) unset($data['weekStart']);
-
-        if ($this->get('webSocketInPortalDisabled')) {
-            $this->set('useWebSocket', false, true);
+        if (array_key_exists($name, $this->portalData)) {
+            return $this->portalData[$name];
         }
 
-        foreach ($data as $attribute => $value) {
-            $this->set($attribute, $value, true);
+        return parent::get($name, $default);
+    }
+
+    public function has(string $name) : bool
+    {
+        if (array_key_exists($name, $this->portalData)) {
+            return true;
         }
+
+        return parent::has($name);
     }
 
     /**
-     * Save is disabled.
+     * Override parameters for a portal. Can be called only once.
      */
-    public function save()
+    public function setPortalParameters(array $data = [])
     {
+        if ($this->portalParamsSet) {
+            throw new Error("Can't set portal params second time.");
+        }
+
+        $this->portalParamsSet = true;
+
+        if (empty($data['language'])) {
+            unset($data['language']);
+        }
+
+        if (empty($data['theme'])) {
+            unset($data['theme']);
+        }
+
+        if (empty($data['timeZone'])) {
+            unset($data['timeZone']);
+        }
+
+        if (empty($data['dateFormat'])) {
+            unset($data['dateFormat']);
+        }
+
+        if (empty($data['timeFormat'])) {
+            unset($data['timeFormat']);
+        }
+
+        if (empty($data['defaultCurrency'])) {
+            unset($data['defaultCurrency']);
+        }
+
+        if (isset($data['weekStart']) && $data['weekStart'] === -1) {
+            unset($data['weekStart']);
+        }
+
+        if (array_key_exists('weekStart', $data) && is_null($data['weekStart'])) {
+            unset($data['weekStart']);
+        }
+
+        if ($this->get('webSocketInPortalDisabled')) {
+            $this->portalData['useWebSocket'] = false;
+        }
+
+        foreach ($data as $attribute => $value) {
+            if (!in_array($attribute, $this->portalParamList)) {
+                continue;
+            }
+
+            $this->portalData[$attribute] = $value;
+        }
     }
 }

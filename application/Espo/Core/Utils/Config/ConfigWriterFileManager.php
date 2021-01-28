@@ -36,13 +36,22 @@ use Espo\Core\{
 
 use RuntimeException;
 
-class ConfigFileManager
+class ConfigWriterFileManager
 {
-    protected $fileManager;
+    private $fileManager;
 
-    public function __construct()
+    public function __construct(?Config $config = null, ?array $defaultPermissions = null)
     {
-        $this->fileManager = new FileManager();
+        $defaultPermissionsToSet = null;
+
+        if ($defaultPermissions) {
+            $defaultPermissionsToSet = $defaultPermissions;
+        }
+        else if ($config) {
+            $defaultPermissionsToSet = $config->get('defaultPermissions');
+        }
+
+        $this->fileManager = new FileManager($defaultPermissionsToSet);
     }
 
     public function setConfig(Config $config)

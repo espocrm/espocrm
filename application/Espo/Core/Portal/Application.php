@@ -77,7 +77,10 @@ class Application extends BaseApplication
         $portal = $entityManager->getEntity('Portal', $portalId);
 
         if (!$portal) {
-            $portal = $entityManager->getRepository('Portal')->where(['customId' => $portalId])->findOne();
+            $portal = $entityManager
+                ->getRepository('Portal')
+                ->where(['customId' => $portalId])
+                ->findOne();
         }
 
         if (!$portal) {

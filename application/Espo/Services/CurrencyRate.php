@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\{
 use Espo\Core\{
     DataManager,
     Utils\Config,
+    Utils\Config\ConfigWriter,
     Acl,
 };
 
@@ -45,55 +46,81 @@ use StdClass;
 class CurrencyRate
 {
     protected $config;
+    protected $configWriter;
     protected $dataManager;
     protected $acl;
 
-    public function __construct(Config $config, DataManager $dataManager, Acl $acl) {
+    public function __construct(Config $config, ConfigWriter $configWriter, DataManager $dataManager, Acl $acl)
+    {
         $this->config = $config;
+        $this->configWriter = $configWriter;
         $this->dataManager = $dataManager;
         $this->acl = $acl;
     }
 
     public function get() : StdClass
     {
-        if (!$this->acl->check('Currency')) throw new Forbidden();
-        if ($this->acl->getLevel('Currency', 'read') !== 'yes') throw new Forbidden();
+        if (!$this->acl->check('Currency')) {
+            throw new Forbidden();
+        }
 
-        return (object) ($this->config->get('currencyRates') ?? []);
+        if ($this->acl->getLevel('Currency', 'read') !== 'yes') {
+            throw new Forbidden();
+        }
+
+        return (object) (
+            $this->config->get('currencyRates') ?? []
+        );
     }
 
     public function set(StdClass $rates) : StdClass
     {
-        if (!$this->acl->check('Currency')) throw new Forbidden();
-        if ($this->acl->getLevel('Currency', 'edit') !== 'yes') throw new Forbidden();
+        if (!$this->acl->check('Currency')) {
+            throw new Forbidden();
+        }
+
+        if ($this->acl->getLevel('Currency', 'edit') !== 'yes') {
+            throw new Forbidden();
+        }
 
         $config = $this->config;
+
         $currencyList = $config->get('currencyList') ?? [];
 
         foreach (get_object_vars($rates) as $key => $value) {
             if (!is_string($key) || !in_array($key, $currencyList)) {
                 unset($rates->$key);
+
                 continue;
             }
-            if (!is_numeric($value) || is_string($value)) throw new BadRequest();
-            if ($value < 0) throw new BadRequest();
+
+            if (!is_numeric($value) || is_string($value)) {
+                throw new BadRequest();
+            }
+
+            if ($value < 0) {
+                throw new BadRequest();
+            }
         }
 
         foreach ($currencyList as $currency) {
-            if ($currency == $config->get('baseCurrency')) continue;
+            if ($currency == $config->get('baseCurrency')) {
+                continue;
+            }
 
             if (!isset($rates->$currency)) {
                 $rates->$currency = $config->get('currencyRates.' . $currency) ?? 1.0;
             }
         }
 
-        $data = (object) ['currencyRates' => $rates];
+        $this->configWriter->set('currencyRates', $rates);
 
-        $config->setData($data);
-        $config->save();
+        $this->configWriter->save();
 
         $this->dataManager->rebuildDatabase([]);
 
-        return (object) ($config->get('currencyRates') ?? []);
+        return (object) (
+            $config->get('currencyRates') ?? []
+        );
     }
 }

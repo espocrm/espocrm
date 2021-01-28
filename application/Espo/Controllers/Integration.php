@@ -29,55 +29,57 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    ServiceFactory,
+    Api\Request,
+};
 
-class Integration extends \Espo\Core\Controllers\Record
+use Espo\{
+    Entities\User,
+};
+
+class Integration
 {
+    protected $serviceFactory;
+
+    protected $user;
+
+    public function __construct(ServiceFactory $serviceFactory, User $user)
+    {
+        $this->serviceFactory = $serviceFactory;
+        $this->user = $user;
+
+        $this->checkControllerAccess();
+    }
+
     protected function checkControllerAccess()
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
-    public function actionIndex($params, $data, $request)
+    public function getActionRead(Request $request)
     {
-        return false;
+        $entity = $this->serviceFactory
+            ->create('Integration')
+            ->read($request->getRouteParam('id'));
+
+        return $entity->getValueMap();
     }
 
-    public function actionRead($params, $data, $request)
+    public function putActionUpdate(Request $request)
     {
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-        return $entity->toArray();
+        return $this->patchActionPatch($request);
     }
 
-    public function actionUpdate($params, $data, $request)
+    public function patchActionPatch(Request $request)
     {
-        return $this->actionPatch($params, $data, $request);
-    }
+        $entity = $this->serviceFactory
+            ->create('Integration')
+            ->update($request->getRouteParam('id'), $request->getParsedBody());
 
-    public function actionPatch($params, $data, $request)
-    {
-        if (!$request->isPut() && !$request->isPatch()) {
-            throw new BadRequest();
-        }
-        $entity = $this->getEntityManager()->getEntity('Integration', $params['id']);
-        $entity->set($data);
-        $this->getEntityManager()->saveEntity($entity);
-
-        $integrationsConfigData = $this->getConfig()->get('integrations');
-
-        if (!$integrationsConfigData || !($integrationsConfigData instanceof \StdClass)) {
-            $integrationsConfigData = (object)[];
-        }
-        $integrationName = $params['id'];
-
-        $integrationsConfigData->$integrationName = $entity->get('enabled');
-        $this->getConfig()->set('integrations', $integrationsConfigData);
-
-        $this->getConfig()->save();
-
-        return $entity->toArray();
+        return $entity->getValueMap();
     }
 }

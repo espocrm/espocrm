@@ -29,15 +29,21 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\{
+    Utils\Config,
+    Utils\Config\ConfigWriter,
+};
 
 class ApiKey
 {
     private $config;
 
-    public function __construct(Config $config)
+    private $configWriter;
+
+    public function __construct(Config $config, ConfigWriter $configWriter)
     {
         $this->config = $config;
+        $this->configWriter = $configWriter;
     }
 
     public static function hash(string $secretKey, string $string = '') : string
@@ -74,9 +80,9 @@ class ApiKey
 
         $apiSecretKeys->$id = $secretKey;
 
-        $this->config->set('apiSecretKeys', $apiSecretKeys);
+        $this->configWriter->set('apiSecretKeys', $apiSecretKeys);
 
-        $this->config->save();
+        $this->configWriter->save();
     }
 
     public function removeSecretKeyForUserId(string $id)
@@ -89,7 +95,8 @@ class ApiKey
 
         unset($apiSecretKeys->$id);
 
-        $this->config->set('apiSecretKeys', $apiSecretKeys);
-        $this->config->save();
+        $this->configWriter->set('apiSecretKeys', $apiSecretKeys);
+
+        $this->configWriter->save();
     }
 }

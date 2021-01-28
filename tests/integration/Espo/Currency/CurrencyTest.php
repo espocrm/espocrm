@@ -27,27 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace tests\integration\Espo\Currency;
 
-class Portal extends \Espo\Core\ORM\Entity
+use Espo\Core\{
+    Utils\Config\ConfigWriter,
+};
+
+class CurrencyTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
-
-    public function getSettingsAttributeList()
+    public function testSetCurrencyRates()
     {
-        return $this->settingsAttributeList;
+        $app = $this->createApplication();
+
+        $configWriter = $app->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
+
+        $configWriter->set('currencyList', ['USD', 'EUR']);
+        $configWriter->set('defaultCurrency', 'USD');
+        $configWriter->set('baseCurrency', 'USD');
+
+        $configWriter->set('currencyRates', [
+            'EUR' => 1.2,
+        ]);
+
+        $configWriter->save();
+
+        $service = $app->getContainer()->get('serviceFactory')->create('CurrencyRate');
+
+        $newRates = $service->set(
+            (object) [
+                'EUR' => 1.3,
+            ]
+        );
+
+        $this->assertEquals(1.3, $newRates->EUR);
     }
 }

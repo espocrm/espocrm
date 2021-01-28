@@ -30,7 +30,6 @@
 namespace Espo\Services;
 
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\ORM\Entity;
@@ -43,6 +42,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\FieldUtil,
     Utils\Config,
+    Utils\Config\ConfigWriter,
     DataManager,
     Utils\FieldValidatorManager,
     Currency\DatabasePopulator as CurrencyDatabasePopulator,
@@ -52,6 +52,7 @@ class Settings
 {
     protected $applicationState;
     protected $config;
+    protected $configWriter;
     protected $fieldUtil;
     protected $metadata;
     protected $acl;
@@ -63,6 +64,7 @@ class Settings
     public function __construct(
         ApplicationState $applicationState,
         Config $config,
+        ConfigWriter $configWriter,
         Metadata $metadata,
         Acl $acl,
         FieldUtil $fieldUtil,
@@ -73,6 +75,7 @@ class Settings
     ) {
         $this->applicationState = $applicationState;
         $this->config = $config;
+        $this->configWriter = $configWriter;
         $this->metadata = $metadata;
         $this->acl = $acl;
         $this->fieldUtil = $fieldUtil;
@@ -114,7 +117,9 @@ class Settings
 
         if ($this->applicationState->isPortal()) {
             $portal = $this->applicationState->getPortal();
+
             $this->entityManager->getRepository('Portal')->loadUrlField($portal);
+
             $data->siteUrl = $portal->get('url');
         }
 
@@ -124,6 +129,7 @@ class Settings
 
         if ($user->isSystem()) {
             $globalItemList = $this->getGlobalItemList();
+
             foreach (get_object_vars($data) as $item => $value) {
                 if (!in_array($item, $globalItemList)) {
                     unset($data->$item);
@@ -145,21 +151,30 @@ class Settings
                 'streamEmailNotificationsTypeList',
                 'emailKeepParentTeamsEntityList',
             ];
-            $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
-            foreach ($scopeList as $scope) {
-                if (!$this->metadata->get(['scopes', $scope, 'acl'])) continue;
-                if (!$this->acl->check($scope)) {
-                    foreach ($entityTypeListParamList as $param) {
-                        $list = $data->$param ?? [];
-                        foreach ($list as $i => $item) {
-                            if ($item === $scope) {
-                                unset($list[$i]);
-                            }
-                        }
-                        $list = array_values($list);
 
-                        $data->$param = $list;
+            $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
+
+            foreach ($scopeList as $scope) {
+                if (!$this->metadata->get(['scopes', $scope, 'acl'])) {
+                    continue;
+                }
+
+                if ($this->acl->check($scope)) {
+                    continue;
+                }
+
+                foreach ($entityTypeListParamList as $param) {
+                    $list = $data->$param ?? [];
+
+                    foreach ($list as $i => $item) {
+                        if ($item === $scope) {
+                            unset($list[$i]);
+                        }
                     }
+
+                    $list = array_values($list);
+
+                    $data->$param = $list;
                 }
             }
         }
@@ -203,6 +218,7 @@ class Settings
             foreach ($this->config->getSuperAdminOnlyItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
+
             foreach ($this->config->getSuperAdminOnlySystemItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
@@ -213,7 +229,9 @@ class Settings
         }
 
         $entity = $this->entityManager->getEntity('Settings');
+
         $entity->set($data);
+
         $this->processValidation($entity, $data);
 
         if (
@@ -222,13 +240,11 @@ class Settings
             $this->dataManager->clearCache();
         }
 
-        $this->config->setData($data);
+        $this->configWriter->setMultiple(
+            get_object_vars($data)
+        );
 
-        $result = $this->config->save();
-
-        if ($result === false) {
-            throw new Error('Cannot save settings');
-        }
+        $this->configWriter->save();
 
         if (isset($data->personNameFormat)) {
             $this->dataManager->clearCache();
@@ -237,8 +253,6 @@ class Settings
         if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
             $this->populateDatabaseWithCurrencyRates();
         }
-
-        return $result;
     }
 
     protected function populateDatabaseWithCurrencyRates()
@@ -254,9 +268,13 @@ class Settings
             unset($data->webSocketUrl);
         }
 
-        if ($user->isSystem()) return;
+        if ($user->isSystem()) {
+            return;
+        }
 
-        if ($user->isAdmin()) return;
+        if ($user->isAdmin()) {
+            return;
+        }
 
         if (
             !$this->acl->checkScope('Email', 'create')
@@ -290,6 +308,7 @@ class Settings
         $itemList = $this->config->getUserOnlyItemList();
 
         $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
+
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['onlyUser'])) {
                 foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
@@ -306,6 +325,7 @@ class Settings
         $itemList = $this->config->getSystemOnlyItemList();
 
         $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
+
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['onlySystem'])) {
                 foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
@@ -322,6 +342,7 @@ class Settings
         $itemList = $this->config->get('globalItems', []);
 
         $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
+
         foreach ($fieldDefs as $field => $fieldParams) {
             if (!empty($fieldParams['global'])) {
                 foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
@@ -338,7 +359,10 @@ class Settings
         $fieldList = $this->fieldUtil->getEntityTypeFieldList('Settings');
 
         foreach ($fieldList as $field) {
-            if (!$this->isFieldSetInData($data, $field)) continue;
+            if (!$this->isFieldSetInData($data, $field)) {
+                continue;
+            }
+
             $this->processValidationField($entity, $field, $data);
         }
     }
@@ -352,7 +376,10 @@ class Settings
 
         foreach ($validationList as $type) {
             $value = $this->fieldUtil->getEntityTypeFieldParam('Settings', $field, $type);
-            if (is_null($value) && !in_array($type, $mandatoryValidationList)) continue;
+
+            if (is_null($value) && !in_array($type, $mandatoryValidationList)) {
+                continue;
+            }
 
             if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
                 throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
@@ -363,13 +390,17 @@ class Settings
     protected function isFieldSetInData($data, $field)
     {
         $attributeList = $this->fieldUtil->getActualAttributeList('Settings', $field);
+
         $isSet = false;
+
         foreach ($attributeList as $attribute) {
             if (property_exists($data, $attribute)) {
                 $isSet = true;
+
                 break;
             }
         }
+
         return $isSet;
     }
 }

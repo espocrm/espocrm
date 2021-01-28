@@ -29,15 +29,27 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Di;
+use Espo\Core\{
+    Utils\Config,
+    Utils\Config\ConfigWriter,
+    Di,
+};
 
 class AdminNotifications implements
 
-    Di\ConfigAware,
     Di\EntityManagerAware
 {
-    use Di\ConfigSetter;
     use Di\EntityManagerSetter;
+
+    protected $config;
+
+    protected $configWriter;
+
+    public function __construct(Config $config, ConfigWriter $configWriter)
+    {
+        $this->config = $config;
+        $this->configWriter = $configWriter;
+    }
 
     /**
      * Job for checking a new version of EspoCRM.
@@ -51,32 +63,36 @@ class AdminNotifications implements
         }
 
         $latestRelease = $this->getLatestRelease();
+
         if (empty($latestRelease['version'])) {
-            $config->set('latestVersion', $latestRelease['version']);
-            $config->save();
+            $this->configWriter->set('latestVersion', $latestRelease['version']);
+
+            $this->configWriter->save();
+
             return true;
         }
 
         if ($config->get('latestVersion') != $latestRelease['version']) {
-            $config->set('latestVersion', $latestRelease['version']);
+            $this->configWriter->set('latestVersion', $latestRelease['version']);
 
             if (!empty($latestRelease['notes'])) {
-                //todo: create notification
+                // @todo Create a notification.
             }
 
-            $config->save();
+            $this->configWriter->save();
+
             return true;
         }
 
         if (!empty($latestRelease['notes'])) {
-            //todo: find and modify notification
+            // @todo Find and modify notification.
         }
 
         return true;
     }
 
     /**
-     * Job for cheking a new version of installed extensions.
+     * Job for checking a new version of installed extensions.
      */
     public function jobCheckNewExtensionVersion()
     {
@@ -103,6 +119,7 @@ class AdminNotifications implements
 
         while ($row = $sth->fetch()) {
             $url = !empty($row['checkVersionUrl']) ? $row['checkVersionUrl'] : null;
+
             $extensionName = $row['name'];
 
             $latestRelease = $this->getLatestRelease($url, [
@@ -117,11 +134,13 @@ class AdminNotifications implements
         $latestExtensionVersions = $config->get('latestExtensionVersions', []);
 
         $save = false;
+
         foreach ($latestReleases as $extensionName => $extensionData) {
 
             if (empty($latestExtensionVersions[$extensionName])) {
                 $latestExtensionVersions[$extensionName] = $extensionData['version'];
                 $save = true;
+
                 continue;
             }
 
@@ -133,6 +152,7 @@ class AdminNotifications implements
                 }
 
                 $save = true;
+
                 continue;
             }
 
@@ -142,37 +162,51 @@ class AdminNotifications implements
         }
 
         if ($save) {
-            $config->set('latestExtensionVersions', $latestExtensionVersions);
-            $config->save();
+            $this->configWriter->set('latestExtensionVersions', $latestExtensionVersions);
+
+            $this->configWriter->save();
         }
 
         return true;
     }
 
-    protected function getLatestRelease(?string $url = null, array $requestData = [], string $urlPath = 'release/latest')
-    {
-        if (function_exists('curl_version')) {
-            $ch = curl_init();
+    protected function getLatestRelease(
+        ?string $url = null, array $requestData = [], string $urlPath = 'release/latest'
+    ) : ?array {
 
-            $requestUrl = $url ? trim($url) : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw==');
-            $requestUrl = (substr($requestUrl, -1) == '/') ? $requestUrl : $requestUrl . '/';
-            $requestUrl .= empty($requestData) ? $urlPath . '/' : $urlPath . '/?' . http_build_query($requestData);
-
-            curl_setopt($ch, CURLOPT_URL, $requestUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
-
-            $result = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-            if ($httpCode === 200) {
-                $data = json_decode($result, true);
-                if (is_array($data)) {
-                    return $data;
-                }
-            }
+        if (!function_exists('curl_version')) {
+            return null;
         }
-        return null;
+
+        $ch = curl_init();
+
+        $requestUrl = $url ? trim($url) : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw==');
+        $requestUrl = (substr($requestUrl, -1) == '/') ? $requestUrl : $requestUrl . '/';
+
+        $requestUrl .= empty($requestData) ?
+            $urlPath . '/' :
+            $urlPath . '/?' . http_build_query($requestData);
+
+        curl_setopt($ch, CURLOPT_URL, $requestUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+
+        $result = curl_exec($ch);
+
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        if ($httpCode !== 200) {
+            return null;
+        }
+
+        $data = json_decode($result, true);
+
+        if (!is_array($data)) {
+            return null;
+        }
+
+        return $data;
     }
 }

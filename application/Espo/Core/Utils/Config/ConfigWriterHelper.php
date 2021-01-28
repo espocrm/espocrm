@@ -27,27 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Core\Utils\Config;
 
-class Portal extends \Espo\Core\ORM\Entity
+class ConfigWriterHelper
 {
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
-
-    public function getSettingsAttributeList()
+    public function generateCacheTimestamp() : int
     {
-        return $this->settingsAttributeList;
+        return time();
+    }
+
+    public function generateMicrotime() : float
+    {
+        return microtime(true);
     }
 }

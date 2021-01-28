@@ -31,18 +31,31 @@ namespace Espo\Core\Portal;
 
 use Espo\Entities\Portal as PortalEntity;
 
-use Espo\Core\Container as BaseContainer;
+use Espo\Core\{
+    Container as BaseContainer,
+    Exceptions\Error,
+};
 
 class Container extends BaseContainer
 {
+    protected $portalIsSet = false;
+
     public function setPortal(PortalEntity $portal)
     {
+        if ($this->portalIsSet) {
+            throw new Error("Can't set portal second time.");
+        }
+
+        $this->portalIsSet = true;
+
         $this->setForced('portal', $portal);
 
         $data = [];
+
         foreach ($this->get('portal')->getSettingsAttributeList() as $attribute) {
             $data[$attribute] = $this->get('portal')->get($attribute);
         }
+
         $this->get('config')->setPortalParameters($data);
 
         $this->get('aclManager')->setPortal($portal);

@@ -41,6 +41,7 @@ use Espo\Core\{
     Api\Request,
     DataManager,
     Utils\Config,
+    Utils\Config\ConfigWriter,
 };
 
 class EntityManager
@@ -49,13 +50,20 @@ class EntityManager
     protected $dataManager;
     protected $config;
     protected $entityManagerTool;
+    protected $configWriter;
 
-    public function __construct(User $user, DataManager $dataManager, Config $config, EntityManagerTool $entityManagerTool)
-    {
+    public function __construct(
+        User $user,
+        DataManager $dataManager,
+        Config $config,
+        EntityManagerTool $entityManagerTool,
+        ConfigWriter $configWriter
+    ) {
         $this->user = $user;
         $this->dataManager = $dataManager;
         $this->config = $config;
         $this->entityManagerTool = $entityManagerTool;
+        $this->configWriter = $configWriter;
 
         $this->checkControllerAccess();
     }
@@ -131,8 +139,10 @@ class EntityManager
 
             if (!in_array($name, $tabList)) {
                 $tabList[] = $name;
-                $this->config->set('tabList', $tabList);
-                $this->config->save();
+
+                $this->configWriter->set('tabList', $tabList);
+
+                $this->configWriter->save();
             }
 
             $this->dataManager->rebuild();
@@ -184,15 +194,19 @@ class EntityManager
 
         if ($result) {
             $tabList = $this->config->get('tabList', []);
+
             if (($key = array_search($name, $tabList)) !== false) {
                 unset($tabList[$key]);
                 $tabList = array_values($tabList);
             }
-            $this->config->set('tabList', $tabList);
-            $this->config->save();
+
+            $this->configWriter->set('tabList', $tabList);
+
+            $this->configWriter->save();
 
             $this->dataManager->clearCache();
-        } else {
+        }
+        else {
             throw new Error();
         }
 
@@ -206,11 +220,11 @@ class EntityManager
         $data = get_object_vars($data);
 
         $paramList = [
-        	'entity',
-        	'link',
-        	'linkForeign',
-        	'label',
-        	'linkType',
+            'entity',
+            'link',
+            'linkForeign',
+            'label',
+            'linkType',
         ];
 
         $additionalParamList = [
@@ -222,10 +236,11 @@ class EntityManager
         $params = [];
 
         foreach ($paramList as $item) {
-        	if (empty($data[$item])) {
-        		throw new BadRequest();
-        	}
-        	$params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            if (empty($data[$item])) {
+                throw new BadRequest();
+            }
+
+            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
         }
 
         foreach ($additionalParamList as $item) {
@@ -272,12 +287,12 @@ class EntityManager
         $data = get_object_vars($data);
 
         $paramList = [
-        	'entity',
-        	'entityForeign',
-        	'link',
-        	'linkForeign',
-        	'label',
-        	'labelForeign',
+            'entity',
+            'entityForeign',
+            'link',
+            'linkForeign',
+            'label',
+            'labelForeign',
         ];
 
         $additionalParamList = [];
@@ -331,8 +346,8 @@ class EntityManager
         $data = get_object_vars($data);
 
         $paramList = [
-        	'entity',
-        	'link',
+            'entity',
+            'link',
         ];
 
         $d = [];
@@ -382,6 +397,7 @@ class EntityManager
         }
 
         $this->entityManagerTool->resetToDefaults($data->scope);
+        
         $this->dataManager->clearCache();
 
         return true;

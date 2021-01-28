@@ -37,7 +37,7 @@ use Espo\Core\{
 use StdClass;
 
 /**
- * Reads and writes the main config file.
+ * Access to the application config parameters.
  */
 class Config
 {
@@ -69,6 +69,11 @@ class Config
         $this->fileManager = $fileManager;
     }
 
+    /**
+     * A path to the config file.
+     * 
+     * @todo Move to ConfigData.
+     */
     public function getConfigPath() : string
     {
         return $this->configPath;
@@ -125,7 +130,18 @@ class Config
     }
 
     /**
-     * Set a parameter or multiple parameters.
+     * Re-load data.
+     *
+     * @todo Get rid of this method. Use ConfigData as a dependency.
+     * `$configData->update();`
+     */
+    public function update()
+    {
+        $this->loadConfig(true);
+    }
+
+    /**
+     * @deprecated since version 6.2.0
      */
     public function set($name, $value = null, bool $dontMarkDirty = false)
     {
@@ -151,7 +167,7 @@ class Config
     }
 
     /**
-     * Remove a parameter..
+     * @deprecated since version 6.2.0
      */
     public function remove(string $name) : bool
     {
@@ -167,7 +183,7 @@ class Config
     }
 
     /**
-     * Save config changes to the file.
+     * @deprecated since version 6.2.0
      */
     public function save()
     {
@@ -233,6 +249,9 @@ class Config
 
     /**
      * Get system default config parameters.
+     *
+     * @deprecated
+     * @todo Move to `Espo\Core\Utils\Config\ConfigDefaults`.
      */
     public function getDefaults() : array
     {
@@ -289,8 +308,7 @@ class Config
     /**
      * Update cache timestamp.
      *
-     * @param $returnOnlyValue - To return an array with timestamp.
-     * @return bool | array
+     * @deprecated
      */
     public function updateCacheTimestamp(bool $returnOnlyValue = false)
     {
@@ -305,31 +323,55 @@ class Config
         return $this->set($timestamp);
     }
 
+    /**
+     * @todo Remove.
+     * @deprecated
+     */
     public function getAdminOnlyItemList() : array
     {
         return $this->get('adminItems', []);
     }
 
+    /**
+     * @todo Remove.
+     * @deprecated
+     */
     public function getSuperAdminOnlyItemList() : array
     {
         return $this->get('superAdminItems', []);
     }
 
+    /**
+     * @todo Remove.
+     * @deprecated
+     */
     public function getSystemOnlyItemList() : array
     {
         return $this->get('systemItems', []);
     }
 
+    /**
+     * @todo Remove.
+     * @deprecated
+     */
     public function getSuperAdminOnlySystemItemList() : array
     {
         return $this->get('superAdminSystemItems', []);
     }
 
+    /**
+     * @todo Remove.
+     * @deprecated
+     */
     public function getUserOnlyItemList() : array
     {
         return $this->get('userItems', []);
     }
 
+    /**
+     * @todo Move to another class `Espo\Core\Utils\Config\ApplicationConfigProvider`.
+     * @deprecated
+     */
     public function getSiteUrl() : string
     {
         return rtrim($this->get('siteUrl'), '/');

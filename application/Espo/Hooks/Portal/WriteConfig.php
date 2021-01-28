@@ -27,27 +27,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Hooks\Portal;
 
-class Portal extends \Espo\Core\ORM\Entity
+use Espo\ORM\Entity;
+
+use Espo\Core\{
+    Utils\Config,
+    Utils\Config\ConfigWriter,
+};
+
+class WriteConfig
 {
-    protected $settingsAttributeList = [
-        'companyLogoId',
-        'tabList',
-        'quickCreateList',
-        'dashboardLayout',
-        'dashletsOptions',
-        'theme',
-        'language',
-        'timeZone',
-        'dateFormat',
-        'timeFormat',
-        'weekStart',
-        'defaultCurrency',
-    ];
+    protected $config;
 
-    public function getSettingsAttributeList()
+    protected $configWriter;
+
+    public function __construct(Config $config, ConfigWriter $configWriter)
     {
-        return $this->settingsAttributeList;
+        $this->config = $config;
+        $this->configWriter = $configWriter;
+    }
+
+    public function afterSave(Entity $entity)
+    {
+        if (!$entity->has('isDefault')) {
+            return;
+        }
+
+        if ($entity->get('isDefault')) {
+            $defaultPortalId = $this->config->get('defaultPortalId');
+
+            if ($defaultPortalId === $entity->id) {
+                return;
+            }
+
+            $this->configWriter->set('defaultPortalId', $entity->id);
+
+            $this->configWriter->save();
+        }
+
+        if ($entity->isAttributeChanged('isDefault') && $entity->getFetched('isDefault')) {
+
+            $this->configWriter->set('defaultPortalId', null);
+
+            $this->configWriter->save();
+        }
     }
 }

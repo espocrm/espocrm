@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\Util,
     Utils\Config,
+    Utils\Config\ConfigWriter,
     Utils\File\Manager as FileManager,
     Utils\Metadata\OrmMetadataData,
     HookManager,
@@ -50,6 +51,7 @@ use Throwable;
 class DataManager
 {
     protected $config;
+    protected $configWriter;
     protected $entityManager;
     protected $fileManager;
     protected $metadata;
@@ -62,6 +64,7 @@ class DataManager
     public function __construct(
         EntityManager $entityManager,
         Config $config,
+        ConfigWriter $configWriter,
         FileManager $fileManager,
         Metadata $metadata,
         OrmMetadataData $ormMetadataData,
@@ -70,6 +73,7 @@ class DataManager
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
+        $this->configWriter = $configWriter;
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
         $this->ormMetadataData = $ormMetadataData;
@@ -125,8 +129,8 @@ class DataManager
             $result = false;
 
             $GLOBALS['log']->error(
-                'Fault to rebuild database schema. Details: '. $e->getMessage() .
-                ' at ' . $e->getFile() . ':' . $e->getLine()
+                "Fault to rebuild database schema. Details: ". $e->getMessage() .
+                " at " . $e->getFile() . ":" . $e->getLine()
             );
         }
 
@@ -134,21 +138,27 @@ class DataManager
             throw new Error("Error while rebuilding database. See log file for details.");
         }
 
-        $config = $this->config;
-
         $databaseType = strtolower($schema->getDatabaseHelper()->getDatabaseType());
 
-        if (!$config->get('actualDatabaseType') || $config->get('actualDatabaseType') != $databaseType) {
-            $config->set('actualDatabaseType', $databaseType);
+        if (
+            !$this->config->get('actualDatabaseType') ||
+            $this->config->get('actualDatabaseType') !== $databaseType
+        ) {
+            $this->configWriter->set('actualDatabaseType', $databaseType);
         }
 
         $databaseVersion = $schema->getDatabaseHelper()->getDatabaseVersion();
 
-        if (!$config->get('actualDatabaseVersion') || $config->get('actualDatabaseVersion') != $databaseVersion) {
-            $config->set('actualDatabaseVersion', $databaseVersion);
+        if (
+            !$this->config->get('actualDatabaseVersion') ||
+            $this->config->get('actualDatabaseVersion') !== $databaseVersion
+        ) {
+            $this->configWriter->set('actualDatabaseVersion', $databaseVersion);
         }
 
-        $this->updateCacheTimestamp();
+        $this->configWriter->updateCacheTimestamp();
+
+        $this->configWriter->save();
     }
 
     /**
@@ -259,10 +269,9 @@ class DataManager
      */
     public function updateCacheTimestamp()
     {
-        $this->config->updateCacheTimestamp();
+        $this->configWriter->updateCacheTimestamp();
 
-        /* Fix rebuildDatabase() method when remove this line. */
-        $this->config->save();
+        $this->configWriter->save();
     }
 
     protected function populateConfigParameters()
@@ -270,15 +279,13 @@ class DataManager
         $this->setFullTextConfigParameters();
         $this->setCryptKeyConfigParameter();
 
-        $this->config->save();
+        $this->configWriter->save();
     }
 
     protected function setFullTextConfigParameters()
     {
-        $config = $this->config;
-
-        $platform = $config->get('database.platform') ?? null;
-        $driver = $config->get('database.driver') ?? '';
+        $platform = $this->config->get('database.platform') ?? null;
+        $driver = $this->config->get('database.driver') ?? '';
 
         if ($platform !== 'Mysql' && strpos($driver, 'mysql') === false) {
             return;
@@ -300,7 +307,7 @@ class DataManager
             $fullTextSearchMinLength = intval($row['Value']);
         }
 
-        $config->set('fullTextSearchMinLength', $fullTextSearchMinLength);
+        $this->configWriter->set('fullTextSearchMinLength', $fullTextSearchMinLength);
     }
 
     protected function setCryptKeyConfigParameter()
@@ -311,7 +318,7 @@ class DataManager
 
         $cryptKey = Util::generateSecretKey();
 
-        $this->config->set('cryptKey', $cryptKey);
+        $this->configWriter->set('cryptKey', $cryptKey);
     }
 
     protected function disableHooks()

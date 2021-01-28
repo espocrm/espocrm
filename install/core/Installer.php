@@ -32,6 +32,9 @@ use Espo\Core\{
     Utils\Util,
     Utils\Config\ConfigFileManager,
     Utils\Config,
+    Utils\Config\ConfigWriter,
+    Utils\Config\ConfigWriterFileManager,
+    Utils\Config\ConfigWriterHelper,
     Utils\Database\Helper as DatabaseHelper,
     Utils\PasswordHash,
     Utils\SystemRequirements,
@@ -97,7 +100,9 @@ class Installer
     protected function initialize()
     {
         $fileManager = new ConfigFileManager();
+
         $config = new Config($fileManager);
+
         $configPath = $config->getConfigPath();
 
         if (!file_exists($configPath)) {
@@ -105,13 +110,22 @@ class Installer
         }
 
         $data = include('data/config.php');
+
+        $configWriter = new ConfigWriter(
+            $config,
+            new ConfigWriterFileManager(null, $data['defaultPermissions'] ?? null),
+            new ConfigWriterHelper()
+        );
+
         $defaultData = $config->getDefaults();
 
         //save default data if not exists, check by keys
         if (!Util::arrayKeysExists(array_keys($defaultData), $data)) {
             $defaultData = array_replace_recursive($defaultData, $data);
-            $config->set($defaultData);
-            $config->save();
+
+            $configWriter->setMultiple($defaultData);
+
+            $configWriter->save();
         }
     }
 
@@ -128,6 +142,11 @@ class Installer
     public function getConfig()
     {
         return $this->app->getContainer()->get('config');
+    }
+
+    public function createConfigWriter() : ConfigWriter
+    {
+        return $this->app->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
     }
 
     protected function getSystemHelper()
@@ -154,7 +173,9 @@ class Installer
     {
         if (!isset($this->passwordHash)) {
             $config = $this->getConfig();
-            $this->passwordHash = new PasswordHash($config);
+            $configWriter = $this->createConfigWriter();
+
+            $this->passwordHash = new PasswordHash($config, $configWriter);
         }
 
         return $this->passwordHash;
@@ -192,8 +213,10 @@ class Installer
         if (!isset($this->language)) {
             try {
                 $this->language = $this->app->getContainer()->get('defaultLanguage');
-            } catch (Throwable $e) {
+            }
+            catch (Throwable $e) {
                 echo "Error: " . $e->getMessage();
+
                 $GLOBALS['log']->error($e->getMessage());
 
                 die;
@@ -227,6 +250,7 @@ class Installer
     public function getSystemRequirementList($type, $requiredOnly = false, array $additionalData = null)
     {
          $systemRequirementManager = new SystemRequirements($this->app->getContainer());
+
          return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
     }
 
@@ -240,9 +264,11 @@ class Installer
         catch (Exception $e) {
             if ($isCreateDatabase && $e->getCode() == '1049') {
                 $modParams = $params;
+
                 unset($modParams['dbname']);
 
                 $pdo = $this->getDatabaseHelper()->createPdoConnection($modParams);
+
                 $pdo->query("CREATE DATABASE IF NOT EXISTS `". $params['dbname'] ."`");
 
                 return $this->checkDatabaseConnection($params, false);
@@ -279,25 +305,31 @@ class Installer
             'siteUrl' => !empty($saveData['siteUrl']) ? $saveData['siteUrl'] : $this->getSystemHelper()->getBaseUrl(),
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
-            'hashSecretKey' => \Espo\Core\Utils\Util::generateSecretKey(),
+            'hashSecretKey' => Util::generateSecretKey(),
         ];
 
         if (empty($saveData['defaultPermissions']['user'])) {
-            $saveData['defaultPermissions']['user'] = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
+            $saveData['defaultPermissions']['user'] = $this->getFileManager()
+                ->getPermissionUtils()
+                ->getDefaultOwner(true);
         }
 
         if (empty($saveData['defaultPermissions']['group'])) {
-            $saveData['defaultPermissions']['group'] = $this->getFileManager()->getPermissionUtils()->getDefaultGroup(true);
+            $saveData['defaultPermissions']['group'] = $this->getFileManager()
+                ->getPermissionUtils()
+                ->getDefaultGroup(true);
         }
 
         if (!empty($saveData['defaultPermissions']['user'])) {
             $data['defaultPermissions']['user'] = $saveData['defaultPermissions']['user'];
         }
+
         if (!empty($saveData['defaultPermissions']['group'])) {
             $data['defaultPermissions']['group'] = $saveData['defaultPermissions']['group'];
         }
 
         $data = array_merge($data, $initData);
+
         $result = $this->saveConfig($data);
 
         return $result;
@@ -305,12 +337,13 @@ class Installer
 
     public function saveConfig($data)
     {
-        $config = $this->app->getContainer()->get('config');
+        $configWriter = $this->createConfigWriter();
 
-        $config->set($data);
-        $result = $config->save();
+        $configWriter->setMultiple($data);
 
-        return $result;
+        $configWriter->save();
+
+        return true;
     }
 
     public function buildDatabase()
@@ -446,13 +479,16 @@ class Installer
         );
 
         $data = array_intersect_key($preferences, array_flip($permittedSettingList));
+
         if (empty($data)) {
             return true;
         }
 
         $entity = $this->getEntityManager()->getEntity('Preferences', '1');
+
         if ($entity) {
             $entity->set($data);
+
             return $this->getEntityManager()->saveEntity($entity);
         }
 
@@ -479,12 +515,16 @@ class Installer
         /** END: afterInstall scripts */
 
         $installerConfig = $this->getInstallerConfig();
+
         $installerConfig->set('isInstalled', true);
+
         $installerConfig->save();
 
-        $config = $this->app->getContainer()->get('config');
-        $config->set('isInstalled', true);
-        $result &= $config->save();
+        $configWriter = $this->createConfigWriter();
+
+        $configWriter->set('isInstalled', true);
+
+        $configWriter->save();
 
         return $result;
     }
@@ -505,10 +545,12 @@ class Installer
                 switch ($fieldName) {
                     case 'defaultCurrency':
                         $settingDefs['defaultCurrency']['options'] = $this->getCurrencyList();
+
                         break;
 
                     case 'language':
                         $settingDefs['language']['options'] = $this->getLanguageList(false);
+
                         break;
                 }
 
@@ -526,8 +568,11 @@ class Installer
         $defaultSettings = $this->getDefaultSettings();
 
         $normalizedParams = [];
+
         foreach ($params as $name => $value) {
-            if (!isset($defaultSettings[$name])) continue;
+            if (!isset($defaultSettings[$name])) {
+                continue;
+            }
 
             $paramDefs = $defaultSettings[$name];
             $paramType = isset($paramDefs['type']) ? $paramDefs['type'] : 'varchar';
@@ -539,23 +584,32 @@ class Installer
                 case 'enum':
                     if (isset($paramDefs['options']) && array_key_exists($value, $paramDefs['options'])) {
                         $normalizedParams[$name] = $value;
-                    } else if (array_key_exists('default', $paramDefs)) {
-                        $normalizedParams[$name] = $paramDefs['default'];
-                        $GLOBALS['log']->warning('Incorrect value ['. $value .'] for Settings parameter ['. $name .']. Use default value ['. $paramDefs['default'] .'].');
                     }
+                    else if (array_key_exists('default', $paramDefs)) {
+                        $normalizedParams[$name] = $paramDefs['default'];
+
+                        $GLOBALS['log']->warning(
+                            'Incorrect value ['. $value .'] for Settings parameter ['. $name .']. ' .
+                            'Use default value ['. $paramDefs['default'] .'].'
+                        );
+                    }
+
                     break;
 
                 case 'bool':
                     $normalizedParams[$name] = (bool) $value;
+
                     break;
 
                 case 'int':
                     $normalizedParams[$name] = (int) $value;
+
                     break;
 
                 case 'varchar':
                 default:
                     $normalizedParams[$name] = $value;
+
                     break;
             }
         }
@@ -573,7 +627,8 @@ class Installer
             }
 
             if ($optionLabel == $name) {
-                $optionLabel = array();
+                $optionLabel = [];
+
                 foreach ($settingDefs['options'] as $key => $value) {
                     $optionLabel[$value] = $value;
                 }
@@ -603,7 +658,8 @@ class Installer
 
             try {
                 $result &= $sth->execute();
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 $GLOBALS['log']->warning('Error executing the query: ' . $query);
             }
 
