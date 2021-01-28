@@ -34,6 +34,8 @@ use Espo\Core\{
     Utils\Config as BaseConfig,
 };
 
+use StdClass;
+
 class Config extends BaseConfig
 {
     protected $portalParamsSet = false;
@@ -71,6 +73,17 @@ class Config extends BaseConfig
         }
 
         return parent::has($name);
+    }
+
+    public function getAllData() : StdClass
+    {
+        $data = parent::getAllData();
+
+        foreach ($this->portalData as $k => $v) {
+            $data->$k = $v;
+        }
+
+        return $data;
     }
 
     /**
