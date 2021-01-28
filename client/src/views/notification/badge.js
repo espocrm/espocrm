@@ -227,7 +227,7 @@ define('views/notification/badge', 'view', function (Dep) {
                 .then(
                     function (result) {
                         for (const type in result) {
-                            const list = result[name];
+                            const list = result[type];
 
                             list.forEach(function (item) {
                                 this.showPopupNotification(type, item);
