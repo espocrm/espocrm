@@ -96,66 +96,6 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->config->get('isInstalled'));
     }
 
-
-    public function testSet()
-    {
-        $setKey= 'testOption';
-        $setValue= 'Test';
-
-        $this->config->set($setKey, $setValue);
-        $this->assertTrue($this->config->save());
-        $this->assertEquals($setValue, $this->config->get($setKey));
-
-        $this->config->set($setKey, 'Another Wrong Value');
-        $this->assertTrue($this->config->save());
-    }
-
-    public function testSetNull()
-    {
-        $setKey= 'testOption';
-        $setValue= 'Test';
-
-        $this->config->set($setKey, $setValue);
-        $this->assertTrue($this->config->save());
-        $this->assertEquals($setValue, $this->config->get($setKey));
-
-        $this->config->set($setKey, null);
-        $this->assertTrue($this->config->save());
-        $this->assertNull($this->config->get($setKey));
-    }
-
-    public function testSetArray()
-    {
-        $values = array(
-            'testOption' => 'Test',
-            'testOption2' => 'Test2',
-        );
-
-        $this->config->set($values);
-        $this->assertTrue($this->config->save());
-        $this->assertEquals('Test', $this->config->get('testOption'));
-        $this->assertEquals('Test2', $this->config->get('testOption2'));
-
-        $wrongArray = array(
-            'testOption' => 'Another Wrong Value',
-        );
-        $this->config->set($wrongArray);
-        $this->assertTrue($this->config->save());
-    }
-
-    public function testRemove()
-    {
-        $optKey = 'removeOption';
-        $optValue = 'Test';
-
-        $this->config->set($optKey, $optValue);
-        $this->assertTrue($this->config->save());
-
-        $this->assertTrue($this->config->remove($optKey));
-
-        $this->assertNull($this->config->get($optKey));
-    }
-
     public function testSystemConfigMerge()
     {
         $configDataWithoutSystem = $this->fileManager->getPhpContents($this->configPath);

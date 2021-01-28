@@ -60,7 +60,7 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
     {
         $this->configWriter->set('k1', 'v1');
 
-        $this->configWriter->setMass([
+        $this->configWriter->setMultiple([
             'k2' => 'v2',
             'k3' => 'v3',
         ]);

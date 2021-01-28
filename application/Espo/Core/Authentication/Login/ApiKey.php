@@ -33,7 +33,6 @@ use Espo\Core\{
     Api\Request,
     Authentication\LoginData,
     Authentication\Result,
-    Api\Request,
     Authentication\Helpers\UserFinder,
 };
 
