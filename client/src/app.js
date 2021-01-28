@@ -143,14 +143,19 @@ define(
             this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
 
             this.user = new User();
+
             this.preferences = new Preferences();
+
             this.preferences.settings = this.settings;
+
             this.acl = this.createAclManager();
+
             this.fieldManager.acl = this.acl;
 
             this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
 
             this.modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
+
             this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory);
 
             if (this.settings.get('useWebSocket')) {
@@ -247,16 +252,23 @@ define(
                 var aclImplementationClassMap = {};
 
                 var clientDefs = this.metadata.get('clientDefs') || {};
+
                 Object.keys(clientDefs).forEach(function (scope) {
                     var o = clientDefs[scope];
+
                     var implClassName = (o || {})[this.aclName || 'acl'];
+
                     if (implClassName) {
-                        promiseList.push(new Promise(function (resolve) {
-                            this.loader.load(implClassName, function (implClass) {
-                                aclImplementationClassMap[scope] = implClass;
-                                resolve();
-                            });
-                        }.bind(this)))
+                        promiseList.push(
+                            new Promise(function (resolve) {
+                                this.loader.load(implClassName, function (implClass) {
+                                        aclImplementationClassMap[scope] = implClass;
+
+                                        resolve();
+                                    });
+                                }.bind(this)
+                            )
+                        );
                     }
                 }, this);
 
@@ -265,14 +277,19 @@ define(
                         new Promise(function (resolve) {
                             (function check (i) {
                                 i = i || 0;
+
                                 if (!this.themeManager.isApplied()) {
                                     if (i === 50) {
                                         resolve();
+
                                         return;
                                     }
+
                                     setTimeout(check.bind(this, i + 1), 10);
+
                                     return;
                                 }
+
                                 resolve();
                             }).call(this);
                         }.bind(this))
@@ -281,6 +298,7 @@ define(
 
                 Promise.all(promiseList).then(function () {
                     this.acl.implementationClassMap = aclImplementationClassMap;
+
                     this.initRouter();
                 }.bind(this));
             }.bind(this));
@@ -290,8 +308,11 @@ define(
         initRouter: function () {
             var routes = this.metadata.get(['app', 'clientRoutes']) || {};
             this.router = new Router({routes: routes});
+
             this.viewHelper.router = this.router;
+
             this.baseController.setRouter(this.router);
+
             this.router.confirmLeaveOutMessage = this.language.translate('confirmLeaveOutMessage', 'messages');
             this.router.confirmLeaveOutConfirmText = this.language.translate('Yes');
             this.router.confirmLeaveOutCancelText = this.language.translate('Cancel');
@@ -311,21 +332,29 @@ define(
 
         doAction: function (params) {
             this.trigger('action', params);
+
             this.baseController.trigger('action');
 
             this.getController(params.controller, function (controller) {
                 try {
                     controller.doAction(params.action, params.options);
+
                     this.trigger('action:done');
-                } catch (e) {
+                }
+                catch (e) {
                     console.error(e);
+
                     switch (e.name) {
                         case 'AccessDenied':
                             this.baseController.error403();
+
                             break;
+
                         case 'NotFound':
                             this.baseController.error404();
+
                             break;
+
                         default:
                             throw e;
                     }
@@ -407,7 +436,9 @@ define(
 
         initUtils: function () {
             this.dateTime = new DateTime();
+
             this.modelFactory.dateTime = this.dateTime;
+
             this.dateTime.setSettingsAndPreferences(this.settings, this.preferences);
 
             this.numberUtil = new NumberUtil(this.settings, this.preferences);
@@ -505,14 +536,16 @@ define(
                     loaders: {
                         'template': function (name, callback) {
                             var path = getResourcePath('template', name);
+
                             self.loader.load('res!'    + path, callback);
                         },
                         'layoutTemplate': function (name, callback) {
                             var path = getResourcePath('layoutTemplate', name);
+
                             self.loader.load('res!'    + path, callback);
                         }
-                    }
-                }
+                    },
+                },
             });
         },
 
@@ -579,9 +612,12 @@ define(
         },
 
         loadStylesheet: function () {
-            if (!this.metadata.get(['themes'])) return;
+            if (!this.metadata.get(['themes'])) {
+                return;
+            }
 
             var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
+
             $('#main-stylesheet').attr('href', stylesheetPath);
         },
 
@@ -602,7 +638,9 @@ define(
         initUserData: function (options, callback) {
             options = options || {};
 
-            if (this.auth === null) return;
+            if (this.auth === null) {
+                return;
+            }
 
             Promise.all([
                 new Promise(function (resolve) {
@@ -655,6 +693,7 @@ define(
                         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
 
                             var arr = Base64.decode(this.auth).split(':');
+
                             this.setCookieAuth(arr[0], arr[1]);
 
                             callback();
