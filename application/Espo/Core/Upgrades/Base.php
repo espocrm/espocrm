@@ -29,10 +29,7 @@
 
 namespace Espo\Core\Upgrades;
 
-use Espo\Core\Utils\Util;
-use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\NotFound;
 
 abstract class Base
 {

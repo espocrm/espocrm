@@ -28,8 +28,17 @@
  ************************************************************************/
 
 namespace tests\unit\Espo\Core\Upgrades\Actions;
+
 use tests\unit\ReflectionHelper;
+
 use Espo\Core\Utils\Util;
+use Espo\Core\Container;
+use Espo\Core\Upgrades\ActionManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config\ConfigWriter;
 
 class BaseTest extends \PHPUnit\Framework\TestCase
 {
@@ -58,31 +67,43 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
-        $this->objects['actionManager'] = $this->getMockBuilder('\Espo\Core\Upgrades\ActionManager')->disableOriginalConstructor()->getMock();
+        $this->container = $this->getMockBuilder(Container::class)->disableOriginalConstructor()->getMock();
+        $this->actionManager = $this->getMockBuilder(ActionManager::class)->disableOriginalConstructor()->getMock();
 
-        $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-        $this->objects['fileManager'] = $this->getMockBuilder('\Espo\Core\Utils\File\Manager')->disableOriginalConstructor()->getMock();
+        $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
 
-        $GLOBALS['log'] = $this->getMockBuilder('\Espo\Core\Utils\Log')->disableOriginalConstructor()->getMock();
+        $this->fileManager = $this->getMockBuilder(FileManager::class)->disableOriginalConstructor()->getMock();
 
-        $map = array(
-          array('config', $this->objects['config']),
-          array('fileManager', $this->objects['fileManager']),
-        );
+        $this->injectableFactory = $this->createMock(InjectableFactory::class);
 
-        $this->objects['container']
+        $this->configWriter = $this->createMock(ConfigWriter::class);
+
+        $GLOBALS['log'] = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
+
+        $map = [
+            ['config', $this->config],
+            ['fileManager', $this->fileManager],
+            ['injectableFactory', $this->injectableFactory],
+        ];
+
+        $this->injectableFactory
+            ->expects($this->any())
+            ->method('create')
+            ->with(ConfigWriter::class)
+            ->willReturn($this->configWriter);
+
+        $this->container
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap($map));
 
         $actionManagerParams = $this->actionManagerParams;
-        $this->objects['actionManager']
+        $this->actionManager
             ->expects($this->once())
             ->method('getParams')
             ->will($this->returnValue($actionManagerParams));
 
-        $this->object = new Base( $this->objects['container'], $this->objects['actionManager'] );
+        $this->object = new Base($this->container, $this->actionManager );
 
         $this->reflection = new ReflectionHelper($this->object);
 
@@ -91,10 +112,12 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         /* create a package durectory with manifest.json file */
         $packagePath = $this->reflection->invokeMethod('getPath');
         $manifestName = $this->reflection->getProperty('manifestName');
+
         $filename = $packagePath . '/' .$manifestName;
 
-        $this->fileManager = new \Espo\Core\Utils\File\Manager();
-        $this->fileManager->putContents($filename, '');
+        $this->fileManagerOriginal = new FileManager();
+
+        $this->fileManagerOriginal->putContents($filename, '');
         /* END */
     }
 
@@ -105,7 +128,8 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $processId = $this->reflection->getProperty('processId');
         if (isset($processId)) {
             $packagePath = $this->reflection->invokeMethod('getPath');
-            $this->fileManager->removeInDir($packagePath, true);
+
+            $this->fileManagerOriginal->removeInDir($packagePath, true);
         }
     }
 
@@ -140,12 +164,12 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             "name": "Upgrade 1.0-b3 to 1.0-b4"
         }';
 
-        $this->objects['fileManager']
+        $this->fileManager
             ->expects($this->once())
             ->method('getContents')
             ->will($this->returnValue($manifest));
 
-        $this->objects['config']
+        $this->config
             ->expects($this->once())
             ->method('has')
             ->will($this->returnValue(false));
@@ -165,7 +189,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             "description": "My Description"
         }';
 
-        $this->objects['fileManager']
+        $this->fileManager
             ->expects($this->once())
             ->method('getContents')
             ->will($this->returnValue($manifest));
@@ -227,7 +251,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $this->expectException('\Espo\Core\Exceptions\Error');
 
-        $this->objects['config']
+        $this->config
             ->expects($this->once())
             ->method('has')
             ->will($this->returnValue(false));
@@ -272,7 +296,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('\Espo\Core\Exceptions\Error');
 
-        $this->objects['config']
+        $this->config
             ->expects($this->once())
             ->method('has')
             ->will($this->returnValue(false));
