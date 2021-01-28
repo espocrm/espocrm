@@ -35,7 +35,8 @@ define('controllers/portal-user', 'controllers/record', function (Dep) {
         getCollection: function (callback, context, usePreviouslyFetched) {
             context = context || this;
             Dep.prototype.getCollection.call(this, function (collection) {
-                collection.data.filterList = ['portal'];
+                collection.data.userType = 'portal';
+
                 callback.call(context, collection);
             }, context, usePreviouslyFetched);
         },

@@ -112,4 +112,21 @@ class User extends \Espo\Core\Controllers\Record
     {
         if (!$this->getUser()->isAdmin()) throw new Forbidden();
     }
+
+    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    {
+        parent::fetchListParamsFromRequest($params, $request, $data);
+
+        $userType = $request->get('userType');
+
+        if ($userType) {
+            $params['where'] = $params['where'] ?? [];
+
+            $params['where'][] = [
+                'type' => 'isOfType',
+                'attribute' => 'id',
+                'value' => $userType,
+            ];
+        }
+    }
 }

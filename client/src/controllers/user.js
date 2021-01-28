@@ -33,7 +33,8 @@ define('controllers/user', 'controllers/record', function (Dep) {
         getCollection: function (callback, context, usePreviouslyFetched) {
             context = context || this;
             Dep.prototype.getCollection.call(this, function (collection) {
-                collection.data.filterList = ['internal'];
+                collection.data.userType = 'internal';
+
                 callback.call(context, collection);
             }, context, usePreviouslyFetched);
         },
@@ -53,7 +54,7 @@ define('controllers/user', 'controllers/record', function (Dep) {
                 return;
             }
             Dep.prototype.createViewView.call(this, options, model, view);
-        }
+        },
 
     });
 });

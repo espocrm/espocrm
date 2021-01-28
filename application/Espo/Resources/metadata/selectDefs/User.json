@@ -1,0 +1,5 @@
+{
+    "whereItemConverterClassNameMap": {
+        "id_isOfType": "Espo\\Classes\\Select\\User\\Where\\ItemConverters\\IsOfType"
+    }
+}

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,39 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/api-user', 'controllers/record', function (Dep) {
+namespace Espo\Classes\Select\User\Where\ItemConverters;
 
-    return Dep.extend({
+use Espo\Core\{
+    Select\Where\ItemConverter,
+    Select\Where\Item,
+};
 
-        entityType: 'User',
+use Espo\{
+    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\QueryParams\Parts\WhereItem as WhereClauseItem,
+    ORM\QueryParams\Parts\WhereClause,
+};
 
-        getCollection: function (callback, context, usePreviouslyFetched) {
-            context = context || this;
-            Dep.prototype.getCollection.call(this, function (collection) {
-                collection.data.userType = 'api';
+class IsOfType implements ItemConverter
+{
+    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    {
+        $type = $item->getValue();
 
-                callback.call(context, collection);
-            }, context, usePreviouslyFetched);
-        },
+        switch ($type) {
+            case 'internal':
+                return WhereClause::fromRaw([
+                    'type!=' => ['portal', 'api', 'system'],
+                ]);
 
-        createViewView: function (options, model, view) {
-            if (!model.isApi()) {
-                if (model.isPortal()) {
-                    this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
-                    return;
-                }
-                this.getRouter().dispatch('User', 'view', {id: model.id, model: model});
-                return;
-            }
-            Dep.prototype.createViewView.call(this, options, model, view);
-        },
+            case 'api':
+                return WhereClause::fromRaw([
+                    'type' => 'api',
+                ]);
 
-        actionCreate: function (options) {
-            options = options || {};
-            options.attributes = options.attributes  || {};
-            options.attributes.type = 'api';
-            Dep.prototype.actionCreate.call(this, options);
-        },
+            case 'portal':
+                return WhereClause::fromRaw([
+                    'type' => 'portal',
+                ]);
+        }
 
-    });
-});
+        return WhereClause::fromRaw(['id' => null]);
+    }
+}
