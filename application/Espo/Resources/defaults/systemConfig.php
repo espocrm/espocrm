@@ -32,17 +32,29 @@ return [
         'dir' => '0755',
         'file' => '0644',
         'user' => '',
-        'group' => ''
+        'group' => '',
     ],
-    'jobMaxPortion' => 15, /** Max number of jobs per one execution. */
-    'jobPeriod' => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
-    'jobPeriodForActiveProcess' => 36000, /** Max execution time (in seconds) allocated for a sinle job with active process. If exceeded then set to Failed.*/
-    'jobRerunAttemptNumber' => 1, /** Number of attempts to re-run failed jobs. */
-    'jobRunInParallel' => false, /** Jobs will be executed in parallel processes. */
-    'jobPoolConcurrencyNumber' => 8, /** Max number of processes run simultaneously. */
-    'cronMinInterval' => 2, /** Min interval (in seconds) between two cron runs. */
-    'daemonMaxProcessNumber' => 5, /** Max number of cron processes run simultaneously. */
-    'daemonInterval' => 10, /** Interval between process runs in seconds. */
+    /** Max number of jobs per one execution. */
+    'jobMaxPortion' => 15,
+    /** Max execution time (in seconds) allocated for a single job. If exceeded then set to Failed.*/
+    'jobPeriod' => 7800,
+    /**
+     * Max execution time (in seconds) allocated for a single job with active process.
+     * If exceeded then set to Failed.
+     */
+    'jobPeriodForActiveProcess' => 36000,
+    /** Number of attempts to re-run failed jobs. */
+    'jobRerunAttemptNumber' => 1,
+    /** Jobs will be executed in parallel processes. */
+    'jobRunInParallel' => false,
+    /** Max number of processes run simultaneously. */
+    'jobPoolConcurrencyNumber' => 8,
+    /** Min interval (in seconds) between two CRON runs. */
+    'cronMinInterval' => 2,
+    /** Max number of CRON processes run simultaneously. */
+    'daemonMaxProcessNumber' => 5,
+    /** Interval between process runs in seconds. */
+    'daemonInterval' => 10,
     'daemonProcessTimeout' => 36000,
     'crud' => [
         'get' => 'read',
