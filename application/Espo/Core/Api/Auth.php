@@ -56,7 +56,7 @@ class Auth
     protected $authentication;
 
     protected $authRequired;
-    
+
     protected $isEntryPoint;
 
     public function __construct(
@@ -147,7 +147,7 @@ class Auth
         catch (Exception $e) {
             $this->handleException($response, $e);
 
-            $result = null;
+            return AuthResult::createNotResolved();
         }
 
         if ($result->isSuccess()) {
