@@ -168,7 +168,10 @@ class ClientManager
         }
 
         foreach ($data as $key => $value) {
-            if (array_key_exists($key, $vars)) continue;
+            if (array_key_exists($key, $vars)) {
+                continue;
+            }
+
             $html = str_replace('{{'.$key.'}}', $value, $html);
         }
 
