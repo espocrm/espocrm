@@ -512,6 +512,8 @@ class Installer
         /** afterInstall scripts */
         $result = $this->createRecords();
         $result &= $this->executeQueries();
+
+        $this->executeFinalScript();
         /** END: afterInstall scripts */
 
         $installerConfig = $this->getInstallerConfig();
@@ -666,5 +668,29 @@ class Installer
         }
 
         return $result;
+    }
+
+    protected function executeFinalScript()
+    {
+        $this->prepareDummyJob();
+    }
+
+    protected function prepareDummyJob()
+    {
+        $scheduledJob = $this->getEntityManager()
+            ->getRepository('ScheduledJob')
+            ->where([
+                'job' => 'Dummy',
+            ])
+            ->findOne();
+
+        if (!$scheduledJob) {
+            return;
+        }
+
+        $this->getEntityManager()->createEntity('Job', [
+            'name' => 'Dummy',
+            'scheduledJobId' => $scheduledJob->id,
+        ]);
     }
 }
