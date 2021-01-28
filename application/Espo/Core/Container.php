@@ -205,6 +205,10 @@ class Container
             throw new Error("Service '{$name}' is not settable.");
         }
 
+        if ($this->isSet($name)) {
+            throw new Error("Service '{$name}' is already set.");
+        }
+
         $this->setForced($name, $object);
     }
 
