@@ -36,11 +36,11 @@ use Espo\Entities\User;
 
 use Espo\Core\{
     Utils\ClassFinder,
-    Utils\Config,
     ORM\EntityManager,
     Acl\Acl as BaseAcl,
     Acl\ScopeAcl,
     Acl\GlobalRestricton,
+    Acl\GlobalRestrictonFactory,
     Acl as UserAclWrapper,
     Acl\Table as AclTable,
 };
@@ -66,20 +66,19 @@ class AclManager
 
     protected $injectableFactory;
     protected $classFinder;
-    protected $config;
     protected $entityManager;
 
     public function __construct(
-        InjectableFactory $injectableFactory, ClassFinder $classFinder, Config $config, EntityManager $entityManager
+        InjectableFactory $injectableFactory,
+        ClassFinder $classFinder,
+        EntityManager $entityManager,
+        GlobalRestrictonFactory $globalRestrictonFactory
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->classFinder = $classFinder;
-        $this->config = $config;
         $this->entityManager = $entityManager;
 
-        $this->globalRestricton = $this->injectableFactory->createWith(GlobalRestricton::class, [
-            'useCache' => $config->get('useCache'),
-        ]);
+        $this->globalRestricton = $globalRestrictonFactory->create();
     }
 
     public function getImplementation(string $scope) : ScopeAcl

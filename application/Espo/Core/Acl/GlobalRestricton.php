@@ -33,6 +33,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\DataCache,
     Utils\FieldUtil,
+    Utils\Log,
 };
 
 use StdClass;
@@ -65,13 +66,15 @@ class GlobalRestricton
     private $metadata;
     private $dataCache;
     private $fieldUtil;
+    private $log;
 
     public function __construct(
-        Metadata $metadata, DataCache $dataCache, FieldUtil $fieldUtil, bool $useCache = true
+        Metadata $metadata, DataCache $dataCache, FieldUtil $fieldUtil, Log $log, bool $useCache = true
     ) {
         $this->metadata = $metadata;
         $this->dataCache = $dataCache;
         $this->fieldUtil = $fieldUtil;
+        $this->log = $log;
 
         $isFromCache = false;
 
@@ -82,7 +85,7 @@ class GlobalRestricton
                 $isFromCache = true;
 
                 if (! $this->data instanceof StdClass) {
-                    $GLOBALS['log']->error("ACL GlobalRestricton: Bad data fetched from cache.");
+                    $this->log->error("ACL GlobalRestricton: Bad data fetched from cache.");
 
                     $this->data = null;
                 }
