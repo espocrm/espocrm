@@ -398,7 +398,9 @@ class Record implements Crud,
 
         $entity = $this->getEntity($id);
 
-        if (!$entity) throw new NotFoundSilent("Record {$id} does not exist.");
+        if (!$entity) {
+            throw new NotFoundSilent("Record {$id} does not exist.");
+        }
 
         $this->processActionHistoryRecord('read', $entity);
 
@@ -437,6 +439,7 @@ class Record implements Crud,
         if (empty($this->streamService)) {
             $this->streamService = $this->getServiceFactory()->create('Stream');
         }
+
         return $this->streamService;
     }
 
@@ -520,10 +523,21 @@ class Record implements Crud,
 
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] === 'link') {
-                if (!empty($defs['noLoad'])) continue;
-                if (empty($linkDefs[$field])) continue;
-                if (empty($linkDefs[$field]['type'])) continue;
-                if ($linkDefs[$field]['type'] !== 'hasOne') continue;
+                if (!empty($defs['noLoad'])) {
+                    continue;
+                }
+
+                if (empty($linkDefs[$field])) {
+                    continue;
+                }
+
+                if (empty($linkDefs[$field]['type'])) {
+                    continue;
+                }
+
+                if ($linkDefs[$field]['type'] !== 'hasOne') {
+                    continue;
+                }
 
                 $entity->loadLinkField($field);
             }
@@ -538,6 +552,7 @@ class Record implements Crud,
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
                 $parentId = $entity->get($field . 'Id');
                 $parentType = $entity->get($field . 'Type');
+
                 $entity->loadParentNameField($field);
             }
         }
@@ -663,7 +678,10 @@ class Record implements Crud,
 
         if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
             $dataAttributeName = 'emailAddressData';
-            $emailAddressData = $this->getEntityManager()->getRepository('EmailAddress')->getEmailAddressData($entity);
+
+            $emailAddressData = $this->getEntityManager()
+                ->getRepository('EmailAddress')
+                ->getEmailAddressData($entity);
 
             $entity->set($dataAttributeName, $emailAddressData);
             $entity->setFetched($dataAttributeName, $emailAddressData);
@@ -676,7 +694,10 @@ class Record implements Crud,
 
         if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
             $dataAttributeName = 'phoneNumberData';
-            $phoneNumberData = $this->getEntityManager()->getRepository('PhoneNumber')->getPhoneNumberData($entity);
+
+            $phoneNumberData = $this->getEntityManager()
+                ->getRepository('PhoneNumber')
+                ->getPhoneNumberData($entity);
 
             $entity->set($dataAttributeName, $phoneNumberData);
             $entity->setFetched($dataAttributeName, $phoneNumberData);
@@ -722,6 +743,7 @@ class Record implements Crud,
 
         $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
         $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
+
         $fieldValidatorManager = $this->fieldValidatorManager;
 
         foreach ($validationList as $type) {
@@ -752,11 +774,13 @@ class Record implements Crud,
     protected function isFieldSetInData(StdClass $data, string $field) : bool
     {
         $attributeList = $this->fieldUtil->getActualAttributeList($this->entityType, $field);
+
         $isSet = false;
 
         foreach ($attributeList as $attribute) {
             if (property_exists($data, $attribute)) {
                 $isSet = true;
+
                 break;
             }
         }
@@ -880,7 +904,11 @@ class Record implements Crud,
 
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
-        if ($assignmentPermission === true || $assignmentPermission === 'yes' || !in_array($assignmentPermission, ['team', 'no'])) {
+        if (
+            $assignmentPermission === true ||
+            $assignmentPermission === 'yes' ||
+            !in_array($assignmentPermission, ['team', 'no'])
+        ) {
             return true;
         }
 
@@ -899,15 +927,23 @@ class Record implements Crud,
                 if ($assignmentPermission == 'no' && !$this->getUser()->isApi()) {
                     return false;
                 }
+
                 return true;
             }
+
             if ($assignmentPermission == 'no') {
                 if ($this->getUser()->id != $assignedUserId) {
                     return false;
                 }
-            } else if ($assignmentPermission == 'team') {
+            }
+            else if ($assignmentPermission == 'team') {
                 $teamIdList = $this->getUser()->get('teamsIds');
-                if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($assignedUserId, $teamIdList)) {
+
+                if (
+                    !$this->getEntityManager()
+                        ->getRepository('User')
+                        ->checkBelongsToAnyOfTeams($assignedUserId, $teamIdList)
+                ) {
                     return false;
                 }
             }
@@ -920,27 +956,36 @@ class Record implements Crud,
     {
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
-        if (empty($assignmentPermission) || $assignmentPermission === true || !in_array($assignmentPermission, ['team', 'no'])) {
+        if (
+            empty($assignmentPermission) ||
+            $assignmentPermission === true ||
+            !in_array($assignmentPermission, ['team', 'no'])
+        ) {
             return true;
         }
 
         if (!$entity->hasLinkMultipleField('teams')) {
             return true;
         }
+
         $teamIdList = $entity->getLinkMultipleIdList('teams');
+
         if (empty($teamIdList)) {
             if ($assignmentPermission === 'team') {
                 if ($entity->hasLinkMultipleField('assignedUsers')) {
                     $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
+
                     if (empty($assignedUserIdList)) {
                         return false;
                     }
-                } else if ($entity->hasAttribute('assignedUserId')) {
+                }
+                else if ($entity->hasAttribute('assignedUserId')) {
                     if (!$entity->get('assignedUserId')) {
                         return false;
                     }
                 }
             }
+
             return true;
         }
 
@@ -979,6 +1024,7 @@ class Record implements Crud,
                 return false;
             }
         }
+
         return true;
     }
 
@@ -1077,8 +1123,10 @@ class Record implements Crud,
     {
         if (!$this->getUser()->isPortal()) {
             $forbiddenFieldList = null;
+
             if ($entity->hasAttribute('assignedUserId')) {
                 $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+
                 if (in_array('assignedUser', $forbiddenFieldList)) {
                     $entity->set('assignedUserId', $this->getUser()->id);
                     $entity->set('assignedUserName', $this->getUser()->get('name'));
@@ -1091,12 +1139,16 @@ class Record implements Crud,
                 }
                 if (in_array('teams', $forbiddenFieldList)) {
                     if ($this->getUser()->get('defaultTeamId')) {
+
                         $defaultTeamId = $this->getUser()->get('defaultTeamId');
                         $entity->addLinkMultipleId('teams', $defaultTeamId);
+
                         $teamsNames = $entity->get('teamsNames');
+
                         if (!$teamsNames || !is_object($teamsNames)) {
                             $teamsNames = (object) [];
                         }
+
                         $teamsNames->$defaultTeamId = $this->getUser()->get('defaultTeamName');
                         $entity->set('teamsNames', $teamsNames);
                     }
@@ -1106,6 +1158,7 @@ class Record implements Crud,
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
             $type = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, 'type');
+
             if ($type === 'currency') {
                 if ($entity->get($field) && !$entity->get($field . 'Currency')) {
                     $entity->set($field . 'Currency', $this->getConfig()->get('defaultCurrency'));
@@ -1124,8 +1177,9 @@ class Record implements Crud,
 
     public function create(StdClass $data) : Entity
     {
-        if (!$this->getAcl()->check($this->getEntityType(), 'create'))
+        if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
             throw new ForbiddenSilent("No create access.");
+        }
 
         $entity = $this->getRepository()->get();
 
@@ -1147,7 +1201,9 @@ class Record implements Crud,
 
         $this->populateDefaults($entity, $data);
 
-        if (!$this->getAcl()->check($entity, 'create')) throw new ForbiddenSilent("No create access.");
+        if (!$this->getAcl()->check($entity, 'create')) {
+            throw new ForbiddenSilent("No create access.");
+        }
 
         $this->processValidation($entity, $data);
         $this->processAssignmentCheck($entity);
@@ -1175,7 +1231,9 @@ class Record implements Crud,
 
     public function update(string $id, StdClass $data) : Entity
     {
-        if (empty($id)) throw new BadRequest("ID is empty.");
+        if (empty($id)) {
+            throw new BadRequest("ID is empty.");
+        }
 
         unset($data->deleted);
 
@@ -1197,9 +1255,13 @@ class Record implements Crud,
             $entity = $this->getRepository()->get($id);
         }
 
-        if (!$entity) throw new NotFound("Record {$id} not found.");
+        if (!$entity) {
+            throw new NotFound("Record {$id} not found.");
+        }
 
-        if (!$this->getAcl()->check($entity, 'edit')) throw new ForbiddenSilent("No edit access.");
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new ForbiddenSilent("No edit access.");
+        }
 
         $entity->set($data);
 
@@ -1494,6 +1556,7 @@ class Record implements Crud,
         }
 
         $methodName = 'findLinked' . ucfirst($link);
+
         if ($link !== 'entities' && method_exists($this, $methodName)) {
             return $this->$methodName($id, $params);
         }
@@ -1507,6 +1570,7 @@ class Record implements Crud,
         $foreignEntityType = $entity->relations[$link]['entity'];
 
         $linkParams = $this->linkParams[$link] ?? [];
+
         $skipAcl = $linkParams['skipAcl'] ?? false;
 
         if (!$skipAcl) {
@@ -1527,6 +1591,7 @@ class Record implements Crud,
         }
 
         $maxSize = 0;
+
         if ($disableCount) {
             if (!empty($params['maxSize'])) {
                 $maxSize = $params['maxSize'];
@@ -2364,6 +2429,7 @@ class Record implements Crud,
         if (!$entity) {
             throw new NotFound("Record not found.");
         }
+
         if (!$this->getAcl()->check($entity, 'edit')) {
             throw new Forbidden("No edit access.");
         }
@@ -2376,9 +2442,12 @@ class Record implements Crud,
         }
 
         $sourceList = [];
+
         foreach ($sourceIdList as $sourceId) {
             $source = $this->getEntity($sourceId);
+
             $sourceList[] = $source;
+
             if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
                 throw new Forbidden("No edit or delete access.");
             }
@@ -2403,6 +2472,7 @@ class Record implements Crud,
         if ($hasPhoneNumber) {
             $phoneNumberToRelateList = [];
             $phoneNumberList = $repository->findRelated($entity, 'phoneNumbers');
+
             foreach ($phoneNumberList as $phoneNumber) {
                 $phoneNumberToRelateList[] = $phoneNumber;
             }
@@ -2452,6 +2522,7 @@ class Record implements Crud,
         }
 
         $mergeLinkList = [];
+
         $linksDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
 
         foreach ($linksDefs as $link => $d) {
@@ -2502,6 +2573,7 @@ class Record implements Crud,
 
                 $emailAddressData[] = $o;
             }
+
             $attributes->emailAddressData = $emailAddressData;
         }
 
@@ -2525,6 +2597,7 @@ class Record implements Crud,
 
                 $phoneNumberData[] = $o;
             }
+
             $attributes->phoneNumberData = $phoneNumberData;
         }
 
@@ -2574,6 +2647,7 @@ class Record implements Crud,
         }
 
         $attributes = $entity->getValueMap();
+
         unset($attributes->id);
 
         $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []);
@@ -2634,6 +2708,7 @@ class Record implements Crud,
                             $typeHash->{$attachment->id} = $attachment->get('type');
                         }
                     }
+
                     $attributes->{$field . 'Ids'} = $idList;
                     $attributes->{$field . 'Names'} = $nameHash;
                     $attributes->{$field . 'Types'} = $typeHash;
@@ -2667,15 +2742,25 @@ class Record implements Crud,
 
     protected function afterCreateProcessDuplicating(Entity $entity, $data)
     {
-        if (!isset($data->_duplicatingEntityId)) return;
+        if (!isset($data->_duplicatingEntityId)) {
+            return;
+        }
 
         $duplicatingEntityId = $data->_duplicatingEntityId;
-        if (!$duplicatingEntityId) return;
+
+        if (!$duplicatingEntityId) {
+            return;
+        }
 
         $duplicatingEntity = $this->getEntityManager()->getEntity($entity->getEntityType(), $duplicatingEntityId);
 
-        if (!$duplicatingEntity) return;
-        if (!$this->getAcl()->check($duplicatingEntity, 'read')) return;
+        if (!$duplicatingEntity) {
+            return;
+        }
+
+        if (!$this->getAcl()->check($duplicatingEntity, 'read')) {
+            return;
+        }
 
         $this->duplicateLinks($entity, $duplicatingEntity);
     }
