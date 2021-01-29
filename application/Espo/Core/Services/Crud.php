@@ -35,11 +35,23 @@ use StdClass;
 
 interface Crud
 {
+    /**
+     * Create a record.
+     */
     public function create(StdClass $data) : Entity;
 
+    /**
+     * Read a record.
+     */
     public function read(string $id) : Entity;
 
+    /**
+     * Update a record.
+     */
     public function update(string $id, StdClass $data) : Entity;
 
+    /**
+     * Delete a record.
+     */
     public function delete(string $id);
 }

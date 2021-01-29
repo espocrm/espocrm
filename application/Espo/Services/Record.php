@@ -382,6 +382,9 @@ class Record implements Crud,
         $this->getEntityManager()->saveEntity($historyRecord);
     }
 
+    /**
+     * @deprecated
+     */
     public function readEntity($id) //TODO Remove in 5.8
     {
         return $this->read($id);
@@ -1111,8 +1114,10 @@ class Record implements Crud,
         }
     }
 
-    /** @deprecated */
-    public function createEntity($data) //TODO Remove in 5.8
+    /**
+     * @deprecated
+     */
+    public function createEntity($data)
     {
         return $this->create($data);
     }
@@ -1160,8 +1165,10 @@ class Record implements Crud,
         return $entity;
     }
 
-    /** @deprecated */
-    public function updateEntity($id, $data) //TODO Remove in 5.8
+    /**
+     * @deprecated
+     */
+    public function updateEntity($id, $data)
     {
         return $this->update($id, $data);
     }
@@ -1247,7 +1254,10 @@ class Record implements Crud,
     {
     }
 
-    public function deleteEntity($id)  //TODO Remove in 5.8
+    /**
+     * @deprecated
+     */
+    public function deleteEntity($id)
     {
         return $this->delete($id);
     }
@@ -1597,8 +1607,10 @@ class Record implements Crud,
         return new RecordCollection($collection, $total);
     }
 
-    /** @deprecated */
-    public function linkEntity($id, $link, $foreignId) //TODO Remove in 5.8
+    /**
+     * @deprecated
+     */
+    public function linkEntity($id, $link, $foreignId)
     {
         return $this->link($id, $link, $foreignId);
     }
@@ -1672,8 +1684,10 @@ class Record implements Crud,
         $this->getRepository()->relate($entity, $link, $foreignEntity);
     }
 
-    /** @deprecated */
-    public function unlinkEntity($id, $link, $foreignId) //TODO Remove in 5.8
+    /**
+     * @deprecated
+     */
+    public function unlinkEntity($id, $link, $foreignId)
     {
         return $this->unlink($id, $link, $foreignId);
     }
@@ -1752,23 +1766,37 @@ class Record implements Crud,
         return true;
     }
 
-    /** @deprecated */
-    public function linkEntityMass($id, $link, $where, $selectData = null) //TODO Remove in 5.8
+    /**
+     * @deprecated
+     */
+    public function linkEntityMass($id, $link, $where, $selectData = null)
     {
         return $this->massLink($id, $link, $where, $selectData);
     }
 
     public function linkFollowers(string $id, string $foreignId)
     {
-        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) throw new NotFound();
+        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) {
+            throw new NotFound();
+        }
 
         $entity = $this->getRepository()->get($id);
 
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
-        if (!$this->getAcl()->check($entity, 'stream')) throw new Forbidden();
+        if (!$entity) {
+            throw new NotFound();
+        }
 
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getAcl()->check($entity, 'stream')) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
         $result = $this->getStreamService()->followEntity($entity, $foreignId);
 
@@ -1781,15 +1809,27 @@ class Record implements Crud,
 
     public function unlinkFollowers(string $id, string $foreignId)
     {
-        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) throw new NotFound();
+        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) {
+            throw new NotFound();
+        }
 
         $entity = $this->getRepository()->get($id);
 
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
-        if (!$this->getAcl()->check($entity, 'stream')) throw new Forbidden();
+        if (!$entity) {
+            throw new NotFound();
+        }
 
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getAcl()->check($entity, 'stream')) {
+            throw new Forbidden();
+        }
+
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
         $this->getStreamService()->unfollowEntity($entity, $foreignId);
 
