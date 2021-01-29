@@ -35,13 +35,14 @@ define('views/login', 'view', function (Dep) {
         views: {
             footer: {
                 el: 'body > footer',
-                view: 'views/site/footer'
+                view: 'views/site/footer',
             },
         },
 
         events: {
             'submit #login-form': function (e) {
                 this.login();
+
                 return false;
             },
             'click a[data-action="passwordChangeRequest"]': function (e) {
@@ -58,17 +59,21 @@ define('views/login', 'view', function (Dep) {
 
         getLogoSrc: function () {
             var companyLogoId = this.getConfig().get('companyLogoId');
+
             if (!companyLogoId) {
                 return this.getBasePath() + ('client/img/logo.png');
             }
+
             return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
         },
 
         login: function () {
             var userName = $('#field-userName').val();
             var trimmedUserName = userName.trim();
+
             if (trimmedUserName !== userName) {
                 $('#field-userName').val(trimmedUserName);
+
                 userName = trimmedUserName;
             }
 
@@ -77,8 +82,8 @@ define('views/login', 'view', function (Dep) {
             var $submit = this.$el.find('#btn-login');
 
             if (userName == '') {
-
                 this.isPopoverDestroyed = false;
+
                 var $el = $("#field-userName");
 
                 var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
@@ -91,13 +96,21 @@ define('views/login', 'view', function (Dep) {
                 }).popover('show');
 
                 var $cell = $el.closest('.form-group');
+
                 $cell.addClass('has-error');
+
                 $el.one('mousedown click', function () {
                     $cell.removeClass('has-error');
-                    if (this.isPopoverDestroyed) return;
+
+                    if (this.isPopoverDestroyed) {
+                        return;
+                    }
+
                     $el.popover('destroy');
+
                     this.isPopoverDestroyed = true;
                 }.bind(this));
+
                 return;
             }
 
@@ -116,18 +129,23 @@ define('views/login', 'view', function (Dep) {
             }).then(
                 function (data) {
                     this.notify(false);
+
                     this.trigger('login', userName, data);
                 }.bind(this)
             ).fail(
                 function (xhr) {
                     $submit.removeClass('disabled').removeAttr('disabled');
+
                     if (xhr.status == 401) {
                         var data = xhr.responseJSON || {};
+
                         var statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                         if (statusReason === 'second-step-required') {
                             xhr.errorIsHandled = true;
+
                             this.onSecondStepRequired(userName, password, data);
+
                             return;
                         }
 
@@ -145,21 +163,26 @@ define('views/login', 'view', function (Dep) {
 
         onWrongCredentials: function () {
             var cell = $('#login .form-group');
+
             cell.addClass('has-error');
+
             this.$el.one('mousedown click', function () {
                 cell.removeClass('has-error');
             });
+
             Espo.Ui.error(this.translate('wrongUsernamePasword', 'messages', 'User'));
         },
 
         showPasswordChangeRequest: function () {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
             this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
-                url: window.location.href
+                url: window.location.href,
             }, function (view) {
                 view.render();
+
                 Espo.Ui.notify(false);
             });
-        }
+        },
     });
 });
