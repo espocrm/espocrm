@@ -698,6 +698,10 @@ define(
 
                             callback();
                         }
+
+                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 401) {
+                            Espo.Ui.error('Auth error');
+                        }
                     }.bind(this);
 
                     xhr.send('');
@@ -706,7 +710,9 @@ define(
         },
 
         requestUserData: function (callback) {
-            Espo.Ajax.getRequest('App/user').then(callback);
+            Espo.Ajax
+                .getRequest('App/user')
+                .then(callback);
         },
 
         setupAjax: function () {
