@@ -73,7 +73,12 @@ class Diff
 
         for (var i = 0; i < tagList.length; i++) {
             var tag = tagList[i];
+
             if (tag === '') {
+                continue;
+            }
+
+            if (tag === version) {
                 continue;
             }
 
@@ -90,6 +95,10 @@ class Diff
         if (hotfixVersionNumber !== '0') {
             for (var i = 0; i < tagList.length; i++) {
                 var tag = tagList[i];
+
+                if (tag === version) {
+                    continue;
+                }
 
                 if (!~tag.indexOf('beta') && !~tag.indexOf('alpha')) {
                     versionFromList.push(tag);
