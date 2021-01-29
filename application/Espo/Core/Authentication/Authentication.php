@@ -38,7 +38,7 @@ use Espo\Entities\{
     Portal,
     User,
     AuthLogRecord,
-    AuthToken,
+    AuthToken as AuthTokenEntity,
 };
 
 use Espo\Core\Authentication\{
@@ -47,6 +47,7 @@ use Espo\Core\Authentication\{
     TwoFactor\Factory as TwoFAFactory,
     AuthToken\AuthTokenManager,
     AuthToken\AuthTokenData,
+    AuthToken\AuthToken,
 };
 
 use Espo\Core\{
@@ -491,13 +492,14 @@ class Authentication
             $this->setSecretInCookie($authToken->getSecret());
         }
 
-        if ($this->config->get('authTokenPreventConcurrent')) {
+        if ($this->config->get('authTokenPreventConcurrent') && $authToken instanceof AuthTokenEntity) {
             $concurrentAuthTokenList = $this->entityManager
                 ->getRepository('AuthToken')
                 ->select(['id'])
                 ->where([
                     'userId' => $user->id,
                     'isActive' => true,
+                    'id!=' => $authToken->get('id'),
                 ])
                 ->find();
 
