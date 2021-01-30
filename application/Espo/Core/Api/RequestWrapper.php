@@ -162,7 +162,7 @@ class RequestWrapper implements ApiRequest
             $this->initParsedBody();
         }
 
-        return $this->parsedBody;
+        return Util::cloneObject($this->parsedBody);
     }
 
     protected function initParsedBody()

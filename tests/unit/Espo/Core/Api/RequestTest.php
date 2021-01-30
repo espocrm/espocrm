@@ -31,6 +31,7 @@ namespace tests\unit\Espo\Core\Api;
 
 use Psr\Http\Message\{
     ServerRequestInterface as Psr7Request,
+    StreamInterface,
 };
 
 use Espo\Core\Api\RequestWrapper;
@@ -111,5 +112,74 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertEquals('2', $request->get('id'));
+    }
+
+    protected function createRequestWithBody(string $contents) : RequestWrapper
+    {
+        $body = $this->createMock(StreamInterface::class);
+
+        $body
+            ->expects($this->any())
+            ->method('getContents')
+            ->willReturn($contents);
+
+        $this->request
+            ->expects($this->any())
+            ->method('getBody')
+            ->willReturn($body);
+
+        $this->request
+            ->expects($this->any())
+            ->method('hasHeader')
+            ->with('Content-Type')
+            ->willReturn(true);
+
+        $this->request
+            ->expects($this->any())
+            ->method('getHeader')
+            ->with('Content-Type')
+            ->willReturn(['application/json']);
+
+        return new RequestWrapper($this->request);
+    }
+
+    public function testGetParsedBody()
+    {
+        $original = (object) [
+            'key1' => '1',
+            'key2' => (object) [
+                'key21' => [
+                    '211',
+                    '212',
+                    (object) [
+                        '2111' => '1',
+                    ],
+                ],
+            ],
+            'key3' => [
+                '31',
+                '32',
+                null,
+            ],
+            'key4' => null,
+        ];
+
+        $contents = json_encode($original);
+
+        $request = $this->createRequestWithBody($contents);
+
+        $parsed = $request->getParsedBody();
+
+        $anotherParsed = $request->getParsedBody();
+
+        $this->assertEquals($parsed, $original);
+
+        $this->assertEquals($parsed, $anotherParsed);
+
+        $this->assertNotSame($parsed, $anotherParsed);
+
+        $this->assertNotSame($parsed->key2, $anotherParsed->key2);
+
+        $this->assertNotSame($parsed->key2->key21[2], $anotherParsed->key2->key21[2]);
     }
 }
