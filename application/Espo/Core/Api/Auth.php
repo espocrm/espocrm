@@ -185,6 +185,8 @@ class Auth
             }
             catch (Exception $e) {
                 $this->processException($response, $e);
+
+                return;
             }
 
             if ($authResult && ($authResult->isSuccess() || $authResult->isSecondStepRequired())) {
