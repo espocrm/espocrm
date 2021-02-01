@@ -147,7 +147,7 @@ class Auth
         catch (Exception $e) {
             $this->handleException($response, $e);
 
-            $result = Result::fail('Error');
+            return AuthResult::createNotResolved();
         }
 
         if ($result->isSuccess()) {

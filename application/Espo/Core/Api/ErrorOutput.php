@@ -50,10 +50,19 @@ class ErrorOutput
         404 => 'Page Not Found',
         409 => 'Conflict',
         500 => 'Internal Server Error',
+        503 => 'Service Unavailable',
     ];
 
     protected $allowedStatusCodeList = [
-        200, 201, 400, 401, 403, 404, 409, 500,
+        200,
+        201,
+        400,
+        401,
+        403,
+        404,
+        409,
+        500,
+        503,
     ];
 
     protected $ignorePrintXStatusReasonExceptionClassNameList = [
