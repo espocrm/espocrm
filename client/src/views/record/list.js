@@ -130,7 +130,7 @@ define('views/record/list', 'view', function (Dep) {
 
             'click .record-checkbox': function (e) {
                 var $target = $(e.currentTarget);
-                var id = $target.data('id');
+                var id = $target.data('id').toString();
                 if (e.currentTarget.checked) {
                     this.checkRecord(id, $target);
                 } else {
