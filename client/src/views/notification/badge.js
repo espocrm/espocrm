@@ -49,7 +49,7 @@ define('views/notification/badge', 'view', function (Dep) {
         setup: function () {
             this.soundPath = this.getBasePath() + (this.getConfig().get('notificationSound') || this.soundPath);
 
-            this.notificationSoundsDisabled = true;
+            this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
 
             this.useWebSocket = this.getConfig().get('useWebSocket');
 
@@ -124,14 +124,9 @@ define('views/notification/badge', 'view', function (Dep) {
                 return;
             }
 
-            var html = '' +
-                '<audio autoplay="autoplay">'+
-                    '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />'+
-                    '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />'+
-                    '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />'+
-                '</audio>';
-            $(html).get(0).volume = 0.3;
-            $(html).get(0).play();
+            try {
+                (new Audio(this.soundPath + '.mp3')).play();
+            } catch (e) {}
         },
 
         showNotRead: function (count) {
