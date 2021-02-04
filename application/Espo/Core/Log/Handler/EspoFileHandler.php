@@ -39,8 +39,8 @@ use Espo\Core\{
     Utils\Config,
 };
 
-use LogicException;
-use UnexpectedValueException;
+use RuntimeException;
+use Throwable;
 
 class EspoFileHandler extends MonologStreamHandler
 {
@@ -60,35 +60,34 @@ class EspoFileHandler extends MonologStreamHandler
     protected function write(array $record): void
     {
         if (!$this->url) {
-            throw new LogicException(
-                'Missing logger path. Check logger params in the data/config.php.'
+            throw new RuntimeException(
+                "Missing a logger file path. Check logger params in `data/config.php`."
             );
         }
 
-        $this->errorMessage = null;
+        try {
+            if (!is_writable($this->url)) {
+                $this->fileManager->checkCreateFile($this->url);
+            }
 
-        if (!is_writable($this->url)) {
-            $this->fileManager->checkCreateFile($this->url);
-        }
+            if (!is_writable($this->url)) {
+                return;
+            }
 
-        if (is_writable($this->url)) {
-            set_error_handler([$this, 'customErrorHandler']);
-
-            $this->fileManager->appendContents($this->url, $this->pruneMessage($record));
-
-            restore_error_handler();
-        }
-
-        if (isset($this->errorMessage)) {
-            throw new UnexpectedValueException(
-                sprintf('File "%s" could not be opened: ' . $this->errorMessage, $this->url)
+            $this->fileManager->appendContents(
+                $this->url,
+                $this->pruneMessage($record)
             );
         }
-    }
+        catch (Throwable $e) {
+            $msg = "Could not write file `" . $this->url . "`.";
 
-    private function customErrorHandler($code, $msg)
-    {
-        $this->errorMessage = $msg;
+            if ($e->getMessage()) {
+                $msg .= " Error message: " . $e->getMessage();
+            }
+
+            throw new RuntimeException($msg);
+        }
     }
 
     protected function pruneMessage(array $record)
@@ -97,6 +96,7 @@ class EspoFileHandler extends MonologStreamHandler
 
         if (strlen($message) > $this->maxErrorMessageLength) {
             $record['message'] = substr($message, 0, $this->maxErrorMessageLength) . '...';
+
             $record['formatted'] = $this->getFormatter()->format($record);
         }
 
