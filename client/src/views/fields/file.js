@@ -62,15 +62,21 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
         events: {
             'click a.remove-attachment': function (e) {
                 var $div = $(e.currentTarget).parent();
+
                 this.deleteAttachment();
+
                 $div.parent().remove();
+
                 this.$el.find('input.file').val(null);
             },
             'change input.file': function (e) {
                 var $file = $(e.currentTarget);
+
                 var files = e.currentTarget.files;
+
                 if (files.length) {
                     this.uploadFile(files[0]);
+
                     $file.replaceWith($file.clone(true));
                 }
             },
@@ -78,16 +84,18 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 e.preventDefault();
 
                 var id = this.model.get(this.idName);
+
                 this.createView('preview', 'views/modals/image-preview', {
                     id: id,
                     model: this.model,
-                    name: this.model.get(this.nameName)
+                    name: this.model.get(this.nameName),
                 }, function (view) {
                     view.render();
                 });
             },
             'click a.action[data-action="insertFromSource"]': function (e) {
                 var name = $(e.currentTarget).data('name');
+
                 this.insertFromSource(name);
             }
         },
@@ -109,9 +117,13 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
         showValidationMessage: function (msg, selector) {
             var $label = this.$el.find('label');
+
             var title = $label.attr('title');
+
             $label.attr('title', '');
+
             Dep.prototype.showValidationMessage.call(this, msg, selector);
+
             $label.attr('title', title);
         },
 
@@ -119,7 +131,9 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             if (this.isRequired()) {
                 if (this.model.get(this.idName) == null) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     var $target;
+
                     if (this.isUploading) {
                         $target = this.$el.find('.gray-box');
                     } else {
@@ -127,6 +141,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                     }
 
                     this.showValidationMessage(msg, $target);
+
                     return true;
                 }
             }
@@ -135,7 +150,9 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
         validateReady: function () {
             if (this.isUploading) {
                 var $target = this.$el.find('.gray-box');
-                var msg = this.translate('fieldIsUploading', 'messages').replace('{field}', this.getLabelText());
+
+                var msg = this.translate('fieldIsUploading', 'messages')
+                    .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, $target);
 
@@ -215,7 +232,9 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.$el.on('drop', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
+
                     var e = e.originalEvent;
+
                     if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
                         this.uploadFile(e.dataTransfer.files[0]);
                     }
@@ -224,6 +243,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.$el.on('dragover', function (e) {
                     e.preventDefault();
                 }.bind(this));
+
                 this.$el.on('dragleave', function (e) {
                     e.preventDefault();
                 }.bind(this));
@@ -231,6 +251,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             if (this.mode == 'search') {
                 var type = this.$el.find('select.search-type').val();
+
                 this.handleSearchType(type);
             }
 
@@ -248,6 +269,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
         handleResize: function () {
             var width = this.$el.width();
+
             this.$el.find('img.image-preview').css('maxWidth', width + 'px');
         },
 
@@ -375,7 +397,6 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         setAttachment: function (attachment) {
-            var arr = _.clone(this.model.get(this.idsName));
             var o = {};
 
             o[this.idName] = attachment.id;
@@ -391,6 +412,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             var maxFileSize = this.params.maxFileSize || 0;
             var appMaxUploadSize = this.getHelper().getAppParam('maxUploadSize') || 0;
+
             if (!maxFileSize || maxFileSize > appMaxUploadSize) {
                 maxFileSize = appMaxUploadSize;
             }
@@ -405,6 +427,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 var msg = this.translate('fieldMaxFileSizeError', 'messages')
                     .replace('{field}', this.getLabelText())
                     .replace('{max}', maxFileSize);
+
                 this.showValidationMessage(msg, '.attachment-button label');
 
                 return;
@@ -419,12 +442,16 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
                 $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
                     isCanceled = true;
+
                     this.$el.find('.attachment-button').removeClass('hidden');
+
                     this.isUploading = false;
+
                     this.$el.find('input.file').val(null);
                 }.bind(this));
 
                 var fileReader = new FileReader();
+
                 fileReader.onload = function (e) {
                     this.handleFileUpload(file, e.target.result, function (result, fileParams) {
                         attachment.set('name', fileParams.name);
@@ -456,6 +483,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                             );
                     }.bind(this));
                 }.bind(this);
+
                 fileReader.readAsDataURL(file);
             }, this);
         },
@@ -464,8 +492,9 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             var params = {
                 name: file.name,
                 type: file.type,
-                size: file.size
+                size: file.size,
             };
+
             callback(contents, params);
         },
 
@@ -474,7 +503,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             var self = this;
 
-            var removeLink = '<a href="javascript:" class="remove-attachment pull-right"><span class="fas fa-times"></span></a>';
+            var removeLink = '<a href="javascript:" class="remove-attachment pull-right">' +
+                '<span class="fas fa-times"></span></a>';
 
             var preview = name;
             if (this.showPreview && id) {
@@ -484,15 +514,20 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             }
 
             var $att = $('<div>').append(removeLink)
-                                 .append($('<span class="preview">' + preview + '</span>').css('width', 'cacl(100% - 30px)'))
+                                 .append($('<span class="preview">' + preview + '</span>')
+                                 .css('width', 'cacl(100% - 30px)'))
                                  .addClass('gray-box');
 
             var $container = $('<div>').append($att);
+
             this.$attachment.append($container);
 
             if (!id) {
-                var $loading = $('<span class="small uploading-message">' + this.translate('Uploading...') + '</span>');
+                var $loading = $('<span class="small uploading-message">' +
+                    this.translate('Uploading...') + '</span>');
+
                 $container.append($loading);
+
                 $att.on('ready', function () {
                     $loading.html(self.translate('Ready'));
                 });
@@ -511,6 +546,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.notify('Loading...');
 
                 var filters = null;
+
                 if (('getSelectFilters' + source) in this) {
                     filters = this['getSelectFilters' + source]();
 
@@ -521,44 +557,57 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                                     type: 'equals',
                                     field: 'accountId',
                                     value: this.model.get('parentId'),
-                                    valueName: this.model.get('parentName')
+                                    valueName: this.model.get('parentName'),
                                 }
                             };
                         }
                     }
                 }
-                var boolFilterList = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']);
+                var boolFilterList = this.getMetadata().get(
+                    ['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']
+                );
+
                 if (('getSelectBoolFilterList' + source) in this) {
                     boolFilterList = this['getSelectBoolFilterList' + source]();
                 }
-                var primaryFilterName = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']);
+
+                var primaryFilterName = this.getMetadata().get(
+                    ['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']
+                );
+
                 if (('getSelectPrimaryFilterName' + source) in this) {
                     primaryFilterName = this['getSelectPrimaryFilterName' + source]();
                 }
+
                 this.createView('insertFromSource', viewName, {
                     scope: source,
                     createButton: false,
                     filters: filters,
                     boolFilterList: boolFilterList,
                     primaryFilterName: primaryFilterName,
-                    multiple: false
+                    multiple: false,
                 }, function (view) {
                     view.render();
+
                     this.notify(false);
+
                     this.listenToOnce(view, 'select', function (modelList) {
                         if (Object.prototype.toString.call(modelList) !== '[object Array]') {
                             modelList = [modelList];
                         }
+
                         modelList.forEach(function (model) {
                             if (model.name === 'Attachment') {
                                 this.setAttachment(model);
-                            } else {
+                            }
+                            else {
                                 this.ajaxPostRequest(source + '/action/getAttachmentList', {
-                                    id: model.id
+                                    id: model.id,
                                 }).done(function (attachmentList) {
                                     attachmentList.forEach(function (item) {
                                         this.getModelFactory().create('Attachment', function (attachment) {
                                             attachment.set(item);
+
                                             this.setAttachment(attachment, true);
                                         }, this);
                                     }, this);
@@ -567,15 +616,18 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                         }, this);
                     });
                 }, this);
+
                 return;
             }
         },
 
         fetch: function () {
             var data = {};
+
             data[this.idName] = this.model.get(this.idName);
+
             return data;
-        }
+        },
 
     });
 });
