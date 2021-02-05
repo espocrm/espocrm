@@ -1,0 +1,10 @@
+{
+    "fields": {
+        "storage": {
+            "readOnly": true
+        },
+        "sourceId": {
+            "readOnly": true
+        }
+    }
+}
