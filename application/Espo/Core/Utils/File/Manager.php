@@ -31,13 +31,13 @@ namespace Espo\Core\Utils\File;
 
 use Espo\Core\{
     Exceptions\Error,
-    Utils\Config,
     Utils\Util,
     Utils\Json,
 };
 
 use Exception;
 use StdClass;
+use Throwable;
 
 class Manager
 {
@@ -261,8 +261,8 @@ class Manager
             $result = (file_put_contents($fullPath, $data, $flags) !== FALSE);
         }
 
-        if ($result && function_exists('opcache_invalidate')) {
-            opcache_invalidate($fullPath);
+        if ($result) {
+            $this->opcacheInvalidate($fullPath);
         }
 
         return $result;
@@ -620,9 +620,7 @@ class Manager
 
                 $this->getPermissionUtils()->setDefaultPermissions($destFile);
 
-                if (function_exists('opcache_invalidate')) {
-                    opcache_invalidate($destFile);
-                }
+                $this->opcacheInvalidate($destFile);
             }
         }
 
@@ -724,9 +722,7 @@ class Manager
             }
 
             if (file_exists($filePath) && is_file($filePath)) {
-                if (function_exists('opcache_invalidate')) {
-                    opcache_invalidate($filePath, true);
-                }
+                $this->opcacheInvalidate($filePath, true);
 
                 $result &= unlink($filePath);
             }
@@ -1111,5 +1107,17 @@ class Manager
         }
 
         return preg_replace('/^'. preg_quote($basePath, $dirSeparator) . '/', '', $path);
+    }
+
+    protected function opcacheInvalidate(string $filepath, bool $force = false)
+    {
+        if (!function_exists('opcache_invalidate')) {
+            return;
+        }
+
+        try {
+            opcache_invalidate($filepath, $force);
+        }
+        catch (Throwable $e) {}
     }
 }

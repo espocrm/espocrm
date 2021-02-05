@@ -86,7 +86,9 @@ define('views/record/list', 'view', function (Dep) {
                     return;
                 }
                 e.preventDefault();
-                var id = $(e.currentTarget).data('id');
+
+                var id = $(e.currentTarget).attr('data-id');
+
                 var model = this.collection.get(id);
 
                 var scope = this.getModelScope(id);
@@ -130,7 +132,9 @@ define('views/record/list', 'view', function (Dep) {
 
             'click .record-checkbox': function (e) {
                 var $target = $(e.currentTarget);
-                var id = $target.data('id');
+
+                var id = $target.attr('data-id');
+
                 if (e.currentTarget.checked) {
                     this.checkRecord(id, $target);
                 } else {
@@ -1080,7 +1084,9 @@ define('views/record/list', 'view', function (Dep) {
             if (this.selectable) {
                 this.events['click .list a.link'] = function (e) {
                     e.preventDefault();
-                    var id = $(e.target).data('id');
+
+                    var id = $(e.target).attr('data-id');
+
                     if (id) {
                         var model = this.collection.get(id);
                         if (this.checkboxes) {
@@ -1407,7 +1413,9 @@ define('views/record/list', 'view', function (Dep) {
         getSelected: function () {
             var list = [];
             this.$el.find('input.record-checkbox:checked').each(function (i, el) {
-                var id = $(el).data('id');
+
+                var id = $(el).attr('data-id');
+
                 var model = this.collection.get(id);
                 list.push(model);
             }.bind(this));
