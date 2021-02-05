@@ -580,7 +580,6 @@ class Stream
         $subscriptionSuperBuilder = clone $baseBuilder;
 
         $subscriptionSuperBuilder
-            ->leftJoin('createdBy')
             ->join(
                 'Subscription',
                 'subscription',
@@ -590,11 +589,21 @@ class Stream
                     'subscription.userId' => $user->id,
                 ]
             )
+            ->leftJoin(
+                'Subscription',
+                'subscriptionExclude',
+                [
+                    'entityType:' => 'parentType',
+                    'entityId:' => 'parentId',
+                    'subscription.userId' => $user->id,
+                ]
+            )
             ->where([
                 'OR' => [
                     'parentId!=:' => 'superParentId',
                     'parentType!=:' => 'superParentType',
                 ],
+                'subscriptionExclude.id' => null,
             ])
             ->useIndex('number');
 
