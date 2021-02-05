@@ -170,25 +170,43 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
 
-            this.sourceList = Espo.Utils.clone(this.params.sourceList || []).filter(function (item) {
-                if (!(item in sourceDefs)) {
-                    return true;
-                }
+            this.sourceList = Espo.Utils.clone(this.params.sourceList || []);
 
-                var defs = sourceDefs[item];
-
-                if (defs.configCheck) {
-                    var configCheck = defs.configCheck;
-
-                    if (configCheck) {
-                        var arr = configCheck.split('.');
-
-                        if (this.getConfig().getByPath(arr)) {
-                            return true;
-                        }
+            this.sourceList = this.sourceList
+                .concat(
+                    this.getMetadata().get(['clientDefs', 'Attachment', 'generalSourceList']) || []
+                )
+                .filter(
+                    function (item, i, self) {
+                        return self.indexOf(item) === i;
                     }
-                }
-            }, this);
+                )
+                .filter(
+                    function (item) {
+                        var defs = sourceDefs[item] || {};
+
+                        if (defs.accessDataList) {
+                            if (
+                                !Espo.Utils.checkAccessDataList(
+                                    defs.accessDataList, this.getAcl(), this.getUser()
+                                )
+                            ) {
+                                return false;
+                            }
+                        }
+
+                        if (defs.configCheck) {
+                            var arr = defs.configCheck.split('.');
+
+                            if (!this.getConfig().getByPath(arr)) {
+                                return false;
+                            }
+                        }
+
+                        return true;
+                    },
+                    this
+                );
 
             if ('showPreview' in this.params) {
                 this.showPreview = this.params.showPreview;
