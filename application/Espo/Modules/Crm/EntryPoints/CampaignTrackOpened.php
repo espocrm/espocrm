@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.phpppph
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  *
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
@@ -29,12 +29,8 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\Utils\Util;
-
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\{
     EntryPoint,
@@ -42,6 +38,8 @@ use Espo\Core\EntryPoints\{
 };
 
 use Espo\Core\{
+    Api\Request,
+    Api\Response,
     ORM\EntityManager,
     ServiceFactory,
 };
@@ -59,10 +57,13 @@ class CampaignTrackOpened implements EntryPoint
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run($request)
+    public function run(Request $request, Response $response) : void
     {
         $id = $request->get('id');
-        if (!$id) throw new BadRequest();
+
+        if (!$id) {
+            throw new BadRequest();
+        }
 
         $queueItemId = $id;
 
@@ -83,28 +84,45 @@ class CampaignTrackOpened implements EntryPoint
         }
 
         $massEmailId = $queueItem->get('massEmailId');
-        if (!$massEmailId) return;
+
+        if (!$massEmailId) {
+            return;
+        }
+
         $massEmail = $this->entityManager->getEntity('MassEmail', $massEmailId);
-        if (!$massEmail) return;
+
+        if (!$massEmail) {
+            return;
+        }
 
         $campaignId = $massEmail->get('campaignId');
-        if (!$campaignId) return;
+
+        if (!$campaignId) {
+            return;
+        }
 
         $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-        if (!$campaign) return;
 
+        if (!$campaign) {
+            return;
+        }
 
         if (!$target) {
             return;
         }
+
         $campaignService = $this->serviceFactory->create('Campaign');
+
         $campaignService->logOpened($campaignId, $queueItemId, $target, null, $queueItem->get('isTest'));
 
         header('Content-Type: image/png');
 
         $img  = imagecreatetruecolor(1, 1);
+
         imagesavealpha($img, true);
+
         $color = imagecolorallocatealpha($img, 127, 127, 127, 127);
+
         imagefill($img, 0, 0, $color);
 
         imagepng($img);

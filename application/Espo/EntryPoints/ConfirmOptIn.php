@@ -29,8 +29,6 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 
@@ -43,6 +41,7 @@ use Espo\Core\{
     Utils\ClientManager,
     ServiceFactory,
     Api\Request,
+    Api\Response,
 };
 
 class ConfirmOptIn implements EntryPoint
@@ -58,19 +57,23 @@ class ConfirmOptIn implements EntryPoint
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run(Request $request)
+    public function run(Request $request, Response $response) : void
     {
         $id = $request->get('id');
 
-        if (!$id) throw new BadRequest();
+        if (!$id) {
+            throw new BadRequest();
+        }
 
         $data = $this->serviceFactory->create('LeadCapture')->confirmOptIn($id);
 
         if ($data->status === 'success') {
             $action = 'optInConfirmationSuccess';
-        } else if ($data->status === 'expired') {
+        }
+        else if ($data->status === 'expired') {
             $action = 'optInConfirmationExpired';
-        } else {
+        }
+        else {
             throw new Error();
         }
 

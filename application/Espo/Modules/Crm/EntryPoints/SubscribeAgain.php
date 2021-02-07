@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.phpppph
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  *
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
@@ -29,12 +29,8 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\Utils\Util;
-
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\{
     EntryPoint,
@@ -42,6 +38,8 @@ use Espo\Core\EntryPoints\{
 };
 
 use Espo\Core\{
+    Api\Request,
+    Api\Response,
     ORM\EntityManager,
     Utils\ClientManager,
     HookManager,
@@ -77,7 +75,7 @@ class SubscribeAgain implements EntryPoint
         $this->hasher = $hasher;
     }
 
-    public function run($request)
+    public function run(Request $request, Response $response) : void
     {
         $id = $request->get('id') ?? null;
         $emailAddress = $request->get('emailAddress') ?? null;
@@ -92,6 +90,7 @@ class SubscribeAgain implements EntryPoint
         if (!$id) {
             throw new BadRequest();
         }
+
         $queueItemId = $id;
 
         $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
@@ -104,10 +103,13 @@ class SubscribeAgain implements EntryPoint
         $target = null;
 
         $massEmailId = $queueItem->get('massEmailId');
+
         if ($massEmailId) {
             $massEmail = $this->entityManager->getEntity('MassEmail', $massEmailId);
+
             if ($massEmail) {
                 $campaignId = $massEmail->get('campaignId');
+
                 if ($campaignId) {
                     $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
                 }
@@ -124,6 +126,7 @@ class SubscribeAgain implements EntryPoint
 
                     if ($massEmail->get('optOutEntirely')) {
                         $emailAddress = $target->get('emailAddress');
+
                         if ($emailAddress) {
                             $ea = $this->entityManager->getRepository('EmailAddress')->getByAddress($emailAddress);
 
@@ -190,7 +193,6 @@ class SubscribeAgain implements EntryPoint
                 $this->entityManager->removeEntity($logRecord);
             }
         }
-
     }
 
     protected function display(array $actionData)
@@ -214,8 +216,6 @@ class SubscribeAgain implements EntryPoint
 
     protected function processWithHash(string $emailAddress, string $hash)
     {
-        $secretKey = $this->config->get('hashSecretKey');
-
         $hash2 = $this->hasher->hash($emailAddress);
 
         if ($hash2 !== $hash) {
@@ -242,7 +242,8 @@ class SubscribeAgain implements EntryPoint
                 'emailAddress' => $emailAddress,
                 'hash' => $hash,
             ]);
-        } else {
+        }
+        else {
             throw new NotFound();
         }
     }

@@ -29,12 +29,8 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\Utils\Util;
-
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\{
     EntryPoint,
@@ -42,6 +38,8 @@ use Espo\Core\EntryPoints\{
 };
 
 use Espo\Core\{
+    Api\Request,
+    Api\Response,
     ORM\EntityManager,
     Utils\ClientManager,
     HookManager,
@@ -81,7 +79,7 @@ class Unsubscribe implements EntryPoint
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run($request)
+    public function run(Request $request, Response $response) : void
     {
         $id = $request->get('id') ?? null;
         $emailAddress = $request->get('emailAddress') ?? null;
@@ -89,12 +87,14 @@ class Unsubscribe implements EntryPoint
 
         if ($emailAddress && $hash) {
             $this->processWithHash($emailAddress, $hash);
+
             return;
         }
 
         if (!$id) {
             throw new BadRequest();
         }
+
         $queueItemId = $id;
 
         $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
@@ -107,10 +107,13 @@ class Unsubscribe implements EntryPoint
         $target = null;
 
         $massEmailId = $queueItem->get('massEmailId');
+
         if ($massEmailId) {
             $massEmail = $this->entityManager->getEntity('MassEmail', $massEmailId);
+
             if ($massEmail) {
                 $campaignId = $massEmail->get('campaignId');
+
                 if ($campaignId) {
                     $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
                 }
@@ -127,8 +130,10 @@ class Unsubscribe implements EntryPoint
 
                     if ($massEmail->get('optOutEntirely')) {
                         $emailAddress = $target->get('emailAddress');
+
                         if ($emailAddress) {
                             $ea = $this->entityManager->getRepository('EmailAddress')->getByAddress($emailAddress);
+
                             if ($ea) {
                                 $ea->set('optOut', true);
                                 $this->entityManager->saveEntity($ea);
@@ -181,6 +186,7 @@ class Unsubscribe implements EntryPoint
 
         if ($campaign && $target) {
             $campaignService = $this->serviceFactory->create('Campaign');
+
             $campaignService->logOptedOut(
                 $campaignId, $queueItemId, $target, $queueItem->get('emailAddress'), null, $queueItem->get('isTest')
             );
@@ -208,8 +214,6 @@ class Unsubscribe implements EntryPoint
 
     protected function processWithHash(string $emailAddress, string $hash)
     {
-        $secretKey = $this->config->get('hashSecretKey');
-
         $hash2 = $this->hasher->hash($emailAddress);
 
         if ($hash2 !== $hash) {
@@ -236,8 +240,8 @@ class Unsubscribe implements EntryPoint
                 'emailAddress' => $emailAddress,
                 'hash' => $hash,
             ]);
-
-        } else {
+        }
+        else {
             throw new NotFound();
         }
     }

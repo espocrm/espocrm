@@ -17,7 +17,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with EspoCRM. If not, see http://www.gnu.org/licenses/.phpppph
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  *
  * The interactive user interfaces in modified source and object code versions
  * of this program must display Appropriate Legal Notices, as required under
@@ -29,10 +29,10 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\Exceptions;
-
-use Espo\Modules\Crm\Entities\EmailQueueItem;
-use Espo\Modules\Crm\Entities\CampaignTrackingUrl;
+use Espo\{
+    Modules\Crm\Entities\EmailQueueItem,
+    Modules\Crm\Entities\CampaignTrackingUrl,
+};
 
 use Espo\Core\EntryPoints\{
     EntryPoint,
@@ -40,6 +40,10 @@ use Espo\Core\EntryPoints\{
 };
 
 use Espo\Core\{
+    Exceptions\NotFoundSilent,
+    Exceptions\BadRequest,
+    Api\Request,
+    Api\Response,
     ORM\EntityManager,
     ServiceFactory,
     Utils\Hasher,
@@ -75,40 +79,60 @@ class CampaignUrl implements EntryPoint
         $this->metadata = $metadata;
     }
 
-    public function run($request)
+    public function run(Request $request, Response $response) : void
     {
         $queueItemId = $request->get('queueItemId') ?? null;
         $trackingUrlId = $request->get('id') ?? null;
         $emailAddress = $request->get('emailAddress') ?? null;
         $hash = $request->get('hash') ?? null;
+        $uid = $request->get('uid') ?? null;
 
-        if (!$trackingUrlId) throw new Exceptions\BadRequest();
+        if (!$trackingUrlId) {
+            throw new BadRequest();
+        }
+
         $trackingUrl = $this->entityManager->getEntity('CampaignTrackingUrl', $trackingUrlId);
-        if (!$trackingUrl) throw new Exceptions\NotFound();
+
+        if (!$trackingUrl) {
+            throw new NotFoundSilent("Tracking URL '{$trackingUrlId}' not found.");
+        }
 
         if ($emailAddress && $hash) {
             $this->processWithHash($trackingUrl, $emailAddress, $hash);
-        } else {
-            if (!$queueItemId) throw new Exceptions\BadRequest();
+        }
+        else if ($uid && $hash) {
+            $this->processWithUniqueId($trackingUrl, $uid, $hash);
+        }
+        else {
+            if (!$queueItemId) {
+                throw new BadRequest();
+            }
+
             $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
-            if (!$queueItem) throw new Exceptions\NotFound();
+
+            if (!$queueItem) {
+                throw new NotFoundSilent();
+            }
 
             $this->processWithQueueItem($trackingUrl, $queueItem);
         }
 
         if ($trackingUrl->get('action') === 'Show Message') {
             $this->displayMessage($trackingUrl->get('message'));
+
             return;
         }
 
         if ($trackingUrl->get('url')) {
             ob_clean();
+
             header('Location: ' . $trackingUrl->get('url') . '');
+
             die;
         }
     }
 
-    protected function processWithQueueItem(CampaignTrackingUrl $trackingUrl, EmailQueueItem $queueItem)
+    protected function processWithQueueItem(CampaignTrackingUrl $trackingUrl, EmailQueueItem $queueItem) : void
     {
         $target = null;
         $campaign = null;
@@ -121,6 +145,7 @@ class CampaignUrl implements EntryPoint
         }
 
         $campaignId = $trackingUrl->get('campaignId');
+
         if ($campaignId) {
             $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
         }
@@ -134,23 +159,27 @@ class CampaignUrl implements EntryPoint
 
         if ($campaign && $target) {
             $campaignService = $this->serviceFactory->create('Campaign');
-            $campaignService->logClicked($campaignId, $queueItem->id, $target, $trackingUrl, null, $queueItem->get('isTest'));
+
+            $campaignService->logClicked(
+                $campaignId, $queueItem->id, $target, $trackingUrl, null, $queueItem->get('isTest')
+            );
         }
     }
 
-    protected function processWithHash(CampaignTrackingUrl $trackingUrl, string $emailAddress, string $hash)
+    protected function processWithHash(CampaignTrackingUrl $trackingUrl, string $emailAddress, string $hash) : void
     {
-        $hash2 = $this->hasher->hash($emailAddress);
+        $hashActual = $this->hasher->hash($emailAddress);
 
-        if ($hash2 !== $hash) {
-            throw new Exceptions\NotFound();
+        if ($hashActual !== $hash) {
+            throw new NotFoundSilent();
         }
 
         $eaRepository = $this->entityManager->getRepository('EmailAddress');
 
         $ea = $eaRepository->getByAddress($emailAddress);
+
         if (!$ea) {
-            throw new Exceptions\NotFound();
+            throw new NotFoundSilent();
         }
 
         $entityList = $eaRepository->getEntityListByAddressId($ea->id);
@@ -163,12 +192,23 @@ class CampaignUrl implements EntryPoint
         }
     }
 
-    protected function displayMessage(?string $message)
+    protected function processWithUniqueId(CampaignTrackingUrl $trackingUrl, string $uid, string $hash) : void
     {
-        $message = $message ?? '';
+        $hashActual = $this->hasher->hash($uid);
 
+        if ($hashActual !== $hash) {
+            throw new NotFoundSilent();
+        }
+
+        $this->hookManager->process('CampaignTrackingUrl', 'afterClick', $trackingUrl, [], [
+            'uid' => $uid,
+        ]);
+    }
+
+    protected function displayMessage(?string $message) : void
+    {
         $data = [
-            'message' => $message,
+            'message' => $message ?? '',
             'view' => $this->metadata->get(['clientDefs', 'Campaign', 'trackinkUrlMessageView']),
             'template' => $this->metadata->get(['clientDefs', 'Campaign', 'trackinkUrlMessageTemplate']),
         ];
@@ -177,9 +217,10 @@ class CampaignUrl implements EntryPoint
             Espo.require('crm:controllers/tracking-url', function (Controller) {
                 var controller = new Controller(app.baseController.params, app.getControllerInjection());
                 controller.masterView = app.masterView;
-                controller.doAction('displayMessage', ".json_encode($data).");
+                controller.doAction('displayMessage', " . json_encode($data) . ");
             });
         ";
+
         $this->clientManager->display($runScript);
     }
 }

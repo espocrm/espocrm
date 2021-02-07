@@ -57,6 +57,7 @@ class EntryPointManager
     public function checkAuthRequired(string $name) : bool
     {
         $className = $this->getClassName($name);
+
         if (!$className) {
             throw new NotFound("EntryPoint {$name} not found.");
         }
@@ -72,6 +73,7 @@ class EntryPointManager
     public function checkNotStrictAuth(string $name) : bool
     {
         $className = $this->getClassName($name);
+
         if (!$className) {
             throw new NotFound("EntryPoint {$name} not found.");
         }
@@ -82,6 +84,7 @@ class EntryPointManager
     public function run(string $name, Request $request, Response $response, ?StdClass $data = null)
     {
         $className = $this->getClassName($name);
+
         if (!$className) {
             throw new NotFound("EntryPoint {$name} not found.");
         }
@@ -94,6 +97,7 @@ class EntryPointManager
     protected function getClassName(string $name) : ?string
     {
         $name = ucfirst($name);
+
         return $this->classFinder->find('EntryPoints', $name);
     }
 }

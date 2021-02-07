@@ -40,6 +40,7 @@ use Espo\Core\{
     ORM\EntityManager,
     ServiceFactory,
     Api\Request,
+    Api\Response,
 };
 
 class Pdf implements EntryPoint
@@ -53,7 +54,7 @@ class Pdf implements EntryPoint
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run(Request $request)
+    public function run(Request $request, Response $response) : void
     {
         $entityId = $request->get('entityId');
         $entityType = $request->get('entityType');

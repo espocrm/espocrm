@@ -38,6 +38,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\EntryPoints\EntryPoint;
 
 use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
 
 use Espo\Core\Di;
 
@@ -76,7 +77,7 @@ class Image implements EntryPoint,
 
     protected $allowedFieldList = null;
 
-    public function run(Request $request)
+    public function run(Request $request, Response $response) : void
     {
         $id = $request->get('id');
         $size = $request->get('size') ?? null;

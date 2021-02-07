@@ -40,9 +40,9 @@ use Espo\Core\EntryPoints\{
 use Espo\Core\{
     Acl,
     ORM\EntityManager,
+    Api\Request,
+    Api\Response,
 };
-
-use Espo\Core\Api\Request;
 
 class Download implements EntryPoint
 {
@@ -66,11 +66,13 @@ class Download implements EntryPoint
         $this->entityManager = $entityManager;
     }
 
-    public function run(Request $request)
+    public function run(Request $request, Response $response) : void
     {
         $id = $request->get('id');
 
-        if (!$id) throw new BadRequest();
+        if (!$id) {
+            throw new BadRequest();
+        }
 
         $attachment = $this->entityManager->getEntity('Attachment', $id);
 
@@ -82,34 +84,42 @@ class Download implements EntryPoint
             throw new Forbidden();
         }
 
-        $sourceId = $attachment->getSourceId();
-
         if ($this->entityManager->getRepository('Attachment')->hasDownloadUrl($attachment)) {
-            $downloadUrl = $this->entityManager->getRepository('Attachment')->getDownloadUrl($attachment);
+            $downloadUrl = $this->entityManager
+                ->getRepository('Attachment')
+                ->getDownloadUrl($attachment);
+
             header('Location: ' . $downloadUrl);
+
             exit;
         }
 
-        $fileName = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
+        $fileName = $this->entityManager
+            ->getRepository('Attachment')
+            ->getFilePath($attachment);
 
         if (!file_exists($fileName)) {
             throw new NotFound();
         }
 
         $outputFileName = $attachment->get('name');
+
         $outputFileName = str_replace("\"", "\\\"", $outputFileName);
 
         $type = $attachment->get('type');
 
         $disposition = 'attachment';
+
         if (in_array($type, $this->fileTypesToShowInline)) {
             $disposition = 'inline';
         }
 
         header('Content-Description: File Transfer');
+
         if ($type) {
             header('Content-Type: ' . $type);
         }
+
         header("Content-Disposition: " . $disposition . ";filename=\"" . $outputFileName . "\"");
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
@@ -117,6 +127,7 @@ class Download implements EntryPoint
         header('Content-Length: ' . filesize($fileName));
 
         readfile($fileName);
+
         exit;
     }
 }
