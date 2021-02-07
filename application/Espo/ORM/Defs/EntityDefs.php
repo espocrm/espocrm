@@ -234,7 +234,7 @@ class EntityDefs
         return $this->data[$name] ?? null;
     }
 
-    private function cacheAttribute(string $name)
+    private function cacheAttribute(string $name) : void
     {
         if (array_key_exists($name, $this->attributeCache)) {
             return;
@@ -254,7 +254,7 @@ class EntityDefs
         return AttributeDefs::fromRaw($raw, $name);
     }
 
-    private function cacheRelation(string $name)
+    private function cacheRelation(string $name) : void
     {
         if (array_key_exists($name, $this->relationCache)) {
             return;
@@ -274,7 +274,7 @@ class EntityDefs
         return RelationDefs::fromRaw($raw, $name);
     }
 
-    private function cacheIndex(string $name)
+    private function cacheIndex(string $name) : void
     {
         if (array_key_exists($name, $this->indexCache)) {
             return;

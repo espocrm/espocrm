@@ -46,7 +46,7 @@ class DefsData
         $this->metadata = $metadata;
     }
 
-    public function clearCache()
+    public function clearCache() : void
     {
         $this->cache = [];
     }
@@ -74,7 +74,7 @@ class DefsData
         return $this->cache[$name];
     }
 
-    private function cacheEntity(string $name)
+    private function cacheEntity(string $name) : void
     {
         if (array_key_exists($name, $this->cache)) {
             return;
