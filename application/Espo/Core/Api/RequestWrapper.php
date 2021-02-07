@@ -62,8 +62,9 @@ class RequestWrapper implements ApiRequest
      * Get a route or query parameter. Route params have a higher priority.
      *
      * @todo Don't support NULL $name.
+     * @deprecated For backward compatibility.
      *
-     * @return ?string
+     * @return ?mixed
      */
     public function get(?string $name = null)
     {

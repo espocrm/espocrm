@@ -45,6 +45,8 @@ interface Request
 
     /**
      * Get a query parameter.
+     *
+     * @return ?string|array
      */
     public function getQueryParam(string $name);
 
