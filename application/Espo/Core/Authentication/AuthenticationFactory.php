@@ -47,8 +47,8 @@ class AuthenticationFactory
 
     public function createWithAnyAccessAllowed() : Authentication
     {
-            return $this->injectableFactory->createWith(Authentication::class, [
-                'allowAnyAccess' => true
-            ]);
+        return $this->injectableFactory->createWith(Authentication::class, [
+            'allowAnyAccess' => true,
+        ]);
     }
 }
