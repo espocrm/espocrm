@@ -59,6 +59,10 @@ class Url
 
         $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
 
+        if ($portalId === '') {
+            $portalId = null;
+        }
+
         return $portalId;
     }
 

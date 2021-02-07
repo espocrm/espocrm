@@ -30,7 +30,6 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\EntryPoints\{
@@ -43,6 +42,7 @@ use Espo\Core\{
     Utils\ClientManager,
     ORM\EntityManager,
     Api\Request,
+    Api\Response,
 };
 
 class ChangePassword implements EntryPoint
@@ -60,17 +60,20 @@ class ChangePassword implements EntryPoint
         $this->entityManager = $entityManager;
     }
 
-    public function run(Request $request)
+    public function run(Request $request, Response $response) : void
     {
-        $requestId = $request->get('id');
+        $requestId = $request->getQueryParam('id');
 
-        if (!$requestId) throw new BadRequest();
+        if (!$requestId) {
+            throw new BadRequest();
+        }
 
-        $config = $this->config;
-
-        $request = $this->entityManager->getRepository('PasswordChangeRequest')->where([
-            'requestId' => $requestId,
-        ])->findOne();
+        $passwordChangeRequest = $this->entityManager
+            ->getRepository('PasswordChangeRequest')
+            ->where([
+                'requestId' => $requestId,
+            ])
+            ->findOne();
 
         $strengthParams = [
             'passwordStrengthLength' => $this->config->get('passwordStrengthLength'),
@@ -79,7 +82,9 @@ class ChangePassword implements EntryPoint
             'passwordStrengthBothCases' => $this->config->get('passwordStrengthBothCases'),
         ];
 
-        if (!$request) throw new NotFound();
+        if (!$passwordChangeRequest) {
+            throw new NotFound();
+        }
 
         $options = [
             'id' => $requestId,

@@ -93,10 +93,18 @@ class EntryPoint implements ApplicationRunner
 
     public function run()
     {
-        $entryPoint = $this->params->entryPoint ?? $_GET['entryPoint'];
+        $requestWrapped = new RequestWrapper(
+            ServerRequestCreatorFactory::create()->createServerRequestFromGlobals(),
+            Route::detectBasePath()
+        );
+
+        if ($requestWrapped->getMethod() !== 'GET') {
+            throw new Error("Only GET requests allowed for entry points.");
+        }
+
+        $entryPoint = $this->params->entryPoint ?? $requestWrapped->getQueryParam('entryPoint');
 
         $final = $this->params->final ?? false;
-        $data = $this->params->data ?? null;
 
         if (!$entryPoint) {
             throw new Error();
@@ -106,26 +114,18 @@ class EntryPoint implements ApplicationRunner
         $authNotStrict = $this->entryPointManager->checkNotStrictAuth($entryPoint);
 
         if ($authRequired && !$authNotStrict && !$final) {
-            $portalId = $this->detectPortalId();
+            $portalId = $this->detectPortalId($requestWrapped);
 
             if ($portalId) {
-                $this->runThroughPortal($portalId, $entryPoint, $data);
+                $this->runThroughPortal($portalId, $entryPoint);
 
                 return;
             }
         }
 
-        $request = (ServerRequestCreatorFactory::create())->createServerRequestFromGlobals();
-
-        if ($request->getMethod() !== 'GET') {
-            throw new Error("Only GET request allowed for entry points.");
-        }
-
-        $requestWrapped = new RequestWrapper($request, Route::detectBasePath());
-
         $responseWrapped = new ResponseWrapper(new Response());
 
-        $this->processRequest($entryPoint, $requestWrapped, $responseWrapped, $data, $authRequired, $authNotStrict);
+        $this->processRequest($entryPoint, $requestWrapped, $responseWrapped, $authRequired, $authNotStrict);
 
         (new ResponseEmitter())->emit($responseWrapped->getResponse());
     }
@@ -134,11 +134,11 @@ class EntryPoint implements ApplicationRunner
         string $entryPoint,
         RequestWrapper $requestWrapped,
         ResponseWrapper $responseWrapped,
-        ?StdClass $data,
         bool $authRequired,
         bool $authNotStrict
     ) {
         try {
+            // @todo Use factory.
             $authentication = $this->injectableFactory->createWith(Authentication::class, [
                 'allowAnyAccess' => $authNotStrict,
             ]);
@@ -162,7 +162,7 @@ class EntryPoint implements ApplicationRunner
 
             ob_start();
 
-            $this->entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped, $data);
+            $this->entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped/*, $data*/);
 
             $contents = ob_get_clean();
 
@@ -175,17 +175,19 @@ class EntryPoint implements ApplicationRunner
         }
     }
 
-    protected function detectPortalId() : ?string
+    protected function detectPortalId(RequestWrapper $requestWrapped) : ?string
     {
-        if (!empty($_GET['portalId'])) {
-            return $_GET['portalId'];
+        if ($requestWrapped->hasQueryParam('portalId')) {
+            return $requestWrapped->getQueryParam('portalId');
         }
 
-        if (empty($_COOKIE['auth-token'])) {
+        $token = $requestWrapped->getCookieParam('auth-token');
+
+        if (!$token) {
             return null;
         }
 
-        $authToken = $this->authTokenManager->get($_COOKIE['auth-token']);
+        $authToken = $this->authTokenManager->get($token);
 
         if ($authToken) {
             return $authToken->getPortalId();
@@ -194,7 +196,7 @@ class EntryPoint implements ApplicationRunner
         return null;
     }
 
-    protected function runThroughPortal(string $portalId, string $entryPoint, ?StdClass $data)
+    protected function runThroughPortal(string $portalId, string $entryPoint) : void
     {
         $app = new PortalApplication($portalId);
 
@@ -202,7 +204,6 @@ class EntryPoint implements ApplicationRunner
 
         $app->run(EntryPoint::class, (object) [
             'entryPoint' => $entryPoint,
-            'data' => $data,
             'final' => true,
         ]);
     }

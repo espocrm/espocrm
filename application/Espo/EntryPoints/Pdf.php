@@ -56,9 +56,9 @@ class Pdf implements EntryPoint
 
     public function run(Request $request, Response $response) : void
     {
-        $entityId = $request->get('entityId');
-        $entityType = $request->get('entityType');
-        $templateId = $request->get('templateId');
+        $entityId = $request->getQueryParam('entityId');
+        $entityType = $request->getQueryParam('entityType');
+        $templateId = $request->getQueryParam('templateId');
 
         if (!$entityId || !$entityType || !$templateId) {
             throw new BadRequest();

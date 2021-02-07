@@ -165,6 +165,7 @@ class Api implements ApplicationRunner
         try {
             $authRequired = !($item['noAuth'] ?? false);
 
+            // @todo Use factory.
             $authentication = $this->injectableFactory->create(Authentication::class);
 
             $apiAuth = $this->authBuilderFactory

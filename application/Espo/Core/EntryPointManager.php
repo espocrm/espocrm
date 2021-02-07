@@ -38,8 +38,6 @@ use Espo\Core\{
     Api\Response,
 };
 
-use StdClass;
-
 /**
  * Runs entry points.
  */
@@ -59,7 +57,7 @@ class EntryPointManager
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new NotFound("EntryPoint {$name} not found.");
+            throw new NotFound("Entry point '{$name}' not found.");
         }
 
         if ($className::$noAuth ?? false) {
@@ -75,29 +73,27 @@ class EntryPointManager
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new NotFound("EntryPoint {$name} not found.");
+            throw new NotFound("Entry point '{$name}' not found.");
         }
 
         return $className::$notStrictAuth ?? false;
     }
 
-    public function run(string $name, Request $request, Response $response, ?StdClass $data = null)
+    public function run(string $name, Request $request, Response $response)
     {
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new NotFound("EntryPoint {$name} not found.");
+            throw new NotFound("Entry point '{$name}' not found.");
         }
 
         $entryPoint = $this->injectableFactory->create($className);
 
-        $entryPoint->run($request, $response, $data);
+        $entryPoint->run($request, $response);
     }
 
     protected function getClassName(string $name) : ?string
     {
-        $name = ucfirst($name);
-
-        return $this->classFinder->find('EntryPoints', $name);
+        return $this->classFinder->find('EntryPoints', ucfirst($name));
     }
 }

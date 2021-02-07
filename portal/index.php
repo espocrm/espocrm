@@ -32,6 +32,7 @@ include "../bootstrap.php";
 use Espo\Core\{
     Application,
     ApplicationRunners\EntryPoint,
+    ApplicationRunners\PortalClient,
     Portal\Utils\Url,
 };
 
@@ -57,9 +58,6 @@ if (!empty($_GET['entryPoint'])) {
     exit;
 }
 
-$app->run(
-    EntryPoint::class,
-    (object) [
-        'entryPoint' => 'portal',
-    ]
-);
+$app->run(PortalClient::class, (object) [
+    'basePath' => $basePath,
+]);
