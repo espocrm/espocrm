@@ -46,7 +46,7 @@ class AddressValue
 
     protected $state = null;
 
-    protected $portalCode = null;
+    protected $postalCode = null;
 
     public function getStreet() : ?string
     {

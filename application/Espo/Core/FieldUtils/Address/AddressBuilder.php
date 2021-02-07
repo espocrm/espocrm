@@ -42,7 +42,7 @@ class AddressBuilder
 
     protected $state;
 
-    protected $portalCode;
+    protected $postalCode;
 
     public function clone(AddressValue $address) : self
     {
