@@ -29,6 +29,10 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\{
+    Utils\File\Manager as FileManager,
+};
+
 /**
  * Renders the main HTML page.
  */
@@ -40,115 +44,129 @@ class ClientManager
 
     private $metadata;
 
+    private $fileManager;
+
     protected $mainHtmlFilePath = 'html/main.html';
 
     protected $runScript = "app.start();";
 
     protected $basePath = '';
 
-    public function __construct(Config $config, ThemeManager $themeManager, Metadata $metadata)
-    {
+    public function __construct(
+        Config $config, ThemeManager $themeManager, Metadata $metadata, FileManager $fileManager
+    ) {
         $this->config = $config;
         $this->themeManager = $themeManager;
         $this->metadata = $metadata;
+        $this->fileManager = $fileManager;
     }
 
-    protected function getThemeManager()
-    {
-        return $this->themeManager;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    public function setBasePath($basePath)
+    public function setBasePath(string $basePath)
     {
         $this->basePath = $basePath;
     }
 
-    public function getBasePath()
+    public function getBasePath() : string
     {
         return $this->basePath;
     }
 
     protected function getCacheTimestamp()
     {
-        if (!$this->getConfig()->get('useCache')) {
+        if (!$this->config->get('useCache')) {
             return (string) time();
         }
-        return $this->getConfig()->get('cacheTimestamp', 0);
+
+        return $this->config->get('cacheTimestamp', 0);
     }
 
-    public function display($runScript = null, $htmlFilePath = null, $vars = [])
+    public function display(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []) : void
+    {
+        echo $this->render($runScript, $htmlFilePath, $vars);
+    }
+
+    public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []) : string
     {
         if (is_null($runScript)) {
             $runScript = $this->runScript;
         }
+
         if (is_null($htmlFilePath)) {
             $htmlFilePath = $this->mainHtmlFilePath;
         }
 
-        $isDeveloperMode = $this->getConfig()->get('isDeveloperMode');
+        $isDeveloperMode = $this->config->get('isDeveloperMode');
 
         $cacheTimestamp = $this->getCacheTimestamp();
 
         if ($isDeveloperMode) {
-            $useCache = $this->getConfig()->get('useCacheInDeveloperMode');
-            $jsFileList = $this->getMetadata()->get(['app', 'client', 'developerModeScriptList'], []);
+            $useCache = $this->config->get('useCacheInDeveloperMode');
+            $jsFileList = $this->metadata->get(['app', 'client', 'developerModeScriptList'], []);
+
             $loaderCacheTimestamp = 'null';
-        } else {
-            $useCache = $this->getConfig()->get('useCache');
-            $jsFileList = $this->getMetadata()->get(['app', 'client', 'scriptList'], []);
+        }
+        else {
+            $useCache = $this->config->get('useCache');
+            $jsFileList = $this->metadata->get(['app', 'client', 'scriptList'], []);
+
             $loaderCacheTimestamp = $cacheTimestamp;
         }
 
-        $cssFileList = $this->getMetadata()->get(['app', 'client', 'cssList'], []);
+        $cssFileList = $this->metadata->get(['app', 'client', 'cssList'], []);
 
-        $linkList = $this->getMetadata()->get(['app', 'client', 'linkList'], []);
+        $linkList = $this->metadata->get(['app', 'client', 'linkList'], []);
 
         $scriptsHtml = '';
+
         foreach ($jsFileList as $jsFile) {
             $src = $this->basePath . $jsFile . '?r=' . $cacheTimestamp;
+
             $scriptsHtml .= "\n        " .
                 "<script type=\"text/javascript\" src=\"{$src}\" data-base-path=\"{$this->basePath}\"></script>";
         }
 
         $additionalStyleSheetsHtml = '';
+
         foreach ($cssFileList as $cssFile) {
             $src = $this->basePath . $cssFile . '?r=' . $cacheTimestamp;
+
             $additionalStyleSheetsHtml .= "\n        <link rel=\"stylesheet\" href=\"{$src}\">";
         }
 
         $linksHtml = '';
+
         foreach ($linkList as $item) {
             $href = $this->basePath . $item['href'];
+
             if (empty($item['noTimestamp'])) {
                 $href .= '?r=' . $cacheTimestamp;
             }
+
             $as = $item['as'] ?? '';
             $rel = $item['rel'] ?? '';
             $type = $item['type'] ?? '';
             $additinalPlaceholder = '';
+
             if (!empty($item['crossorigin'])) {
                 $additinalPlaceholder .= ' crossorigin';
             }
-            $linksHtml .= "\n        <link rel=\"{$rel}\" href=\"{$href}\" as=\"{$as}\" as=\"{$type}\"{$additinalPlaceholder}>";
+
+            $linksHtml .= "\n        " .
+                "<link rel=\"{$rel}\" href=\"{$href}\" as=\"{$as}\" as=\"{$type}\"{$additinalPlaceholder}>";
         }
+
+        $favicon196Path = $this->metadata->get(['app', 'client', 'favicon196']) ??
+            'client/img/favicon196x196.png';
+
+        $faviconPath = $this->metadata->get(['app', 'client', 'favicon']) ?? 'client/img/favicon.ico';
 
         $data = [
             'applicationId' => 'espocrm-application-id',
             'apiUrl' => 'api/v1',
-            'applicationName' => $this->getConfig()->get('applicationName', 'EspoCRM'),
+            'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
             'loaderCacheTimestamp' => $loaderCacheTimestamp,
-            'stylesheet' => $this->getThemeManager()->getStylesheet(),
+            'stylesheet' => $this->themeManager->getStylesheet(),
             'runScript' => $runScript,
             'basePath' => $this->basePath,
             'useCache' => $useCache ? 'true' : 'false',
@@ -156,12 +174,12 @@ class ClientManager
             'scriptsHtml' => $scriptsHtml,
             'additionalStyleSheetsHtml' => $additionalStyleSheetsHtml,
             'linksHtml' => $linksHtml,
-            'favicon196Path' => $this->getMetadata()->get(['app', 'client', 'favicon196']) ?? 'client/img/favicon196x196.png',
-            'faviconPath' => $this->getMetadata()->get(['app', 'client', 'favicon']) ?? 'client/img/favicon.ico',
-            'ajaxTimeout' => $this->getConfig()->get('ajaxTimeout') ?? 60000,
+            'favicon196Path' => $favicon196Path,
+            'faviconPath' => $faviconPath,
+            'ajaxTimeout' => $this->config->get('ajaxTimeout') ?? 60000,
         ];
 
-        $html = file_get_contents($htmlFilePath);
+        $html = $this->fileManager->getContents($htmlFilePath);
 
         foreach ($vars as $key => $value) {
             $html = str_replace('{{'.$key.'}}', $value, $html);
@@ -175,6 +193,6 @@ class ClientManager
             $html = str_replace('{{'.$key.'}}', $value, $html);
         }
 
-        echo $html;
+        return $html;
     }
 }
