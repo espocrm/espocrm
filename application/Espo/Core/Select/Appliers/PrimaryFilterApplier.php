@@ -56,7 +56,7 @@ class PrimaryFilterApplier
         $this->selectManager = $selectManager;
     }
 
-    public function apply(QueryBuilder $queryBuilder, string $filterName)
+    public function apply(QueryBuilder $queryBuilder, string $filterName) : void
     {
         if ($this->primaryFilterFactory->has($this->entityType, $filterName)) {
             $filter = $this->primaryFilterFactory->create($this->entityType, $this->user, $filterName);

@@ -36,7 +36,7 @@ use Espo\{
 
 class AdditionalApplier
 {
-    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams)
+    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams) : void
     {
     }
 }

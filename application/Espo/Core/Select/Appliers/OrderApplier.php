@@ -64,7 +64,7 @@ class OrderApplier
         $this->itemConverterFactory = $itemConverterFactory;
     }
 
-    public function apply(QueryBuilder $queryBuilder, OrderParams $params)
+    public function apply(QueryBuilder $queryBuilder, OrderParams $params) : void
     {
         if ($params->forceDefault()) {
             $this->applyDefaultOrder($queryBuilder, $params->getOrder());
@@ -95,7 +95,7 @@ class OrderApplier
         $this->applyOrder($queryBuilder, $orderBy, $params->getOrder());
     }
 
-    protected function applyDefaultOrder(QueryBuilder $queryBuilder, ?string $order)
+    protected function applyDefaultOrder(QueryBuilder $queryBuilder, ?string $order) : void
     {
         $orderBy = $this->metadataProvider->getDefaultOrderBy($this->entityType);
 
@@ -122,7 +122,7 @@ class OrderApplier
         $this->applyOrder($queryBuilder, $orderBy, $order);
     }
 
-    protected function applyOrder(QueryBuilder $queryBuilder, string $orderBy, ?string $order)
+    protected function applyOrder(QueryBuilder $queryBuilder, string $orderBy, ?string $order) : void
     {
         if (!$orderBy) {
             throw new Error("Could not apply order.");

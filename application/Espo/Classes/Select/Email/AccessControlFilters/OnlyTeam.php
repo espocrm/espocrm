@@ -50,7 +50,7 @@ class OnlyTeam implements AccessControlFilter
         $this->joinHelper = $joinHelper;
     }
 
-    public function apply(QueryBuilder $queryBuilder)
+    public function apply(QueryBuilder $queryBuilder) : void
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
 

@@ -30,7 +30,6 @@
 namespace Espo\Core\Select\AccessControl;
 
 use Espo\Core\{
-    Exceptions\Error,
     InjectableFactory,
     AclManager,
     Utils\Metadata,

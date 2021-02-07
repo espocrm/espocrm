@@ -268,7 +268,7 @@ class SearchParams
     /**
      * For compatibility with the legacy definition.
      */
-    protected function adjustParams(array &$params)
+    protected function adjustParams(array &$params) : void
     {
         if (!$params['where']) {
             return;

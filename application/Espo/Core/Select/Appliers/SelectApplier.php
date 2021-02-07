@@ -75,7 +75,7 @@ class SelectApplier
         $this->metadataProvider = $metadataProvider;
     }
 
-    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams)
+    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams) : void
     {
         $attributeList = $this->getSelectAttributeList($searchParams);
 

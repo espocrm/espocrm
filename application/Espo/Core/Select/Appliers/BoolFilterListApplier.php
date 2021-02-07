@@ -58,7 +58,7 @@ class BoolFilterListApplier
         $this->selectManager = $selectManager;
     }
 
-    public function apply(QueryBuilder $queryBuilder, array $boolFilterNameList)
+    public function apply(QueryBuilder $queryBuilder, array $boolFilterNameList) : void
     {
         $orGroup = new OrGroup();
 

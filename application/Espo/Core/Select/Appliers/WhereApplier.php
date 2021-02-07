@@ -30,9 +30,7 @@
 namespace Espo\Core\Select\Appliers;
 
 use Espo\Core\{
-    Exceptions\Error,
     Select\Where\Params,
-    Select\Where\Converter,
     Select\Where\ConverterFactory,
     Select\Where\CheckerFactory,
     Select\Where\Item as WhereItem,
@@ -40,7 +38,6 @@ use Espo\Core\{
 
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\WhereClause,
     Entities\User,
 };
 
@@ -63,7 +60,7 @@ class WhereApplier
         $this->checkerFactory = $checkerFactory;
     }
 
-    public function apply(QueryBuilder $queryBuilder, WhereItem $whereItem, Params $params)
+    public function apply(QueryBuilder $queryBuilder, WhereItem $whereItem, Params $params) : void
     {
         $checker = $this->checkerFactory->create($this->entityType, $this->user);
 

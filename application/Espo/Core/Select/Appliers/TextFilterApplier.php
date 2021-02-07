@@ -84,7 +84,7 @@ class TextFilterApplier
         $this->fullTextSearchDataComposerFactory = $fullTextSearchDataComposerFactory;
     }
 
-    public function apply(QueryBuilder $queryBuilder, string $filter, FilterParams $params)
+    public function apply(QueryBuilder $queryBuilder, string $filter, FilterParams $params) : void
     {
         $fullTextSearchData = null;
 
@@ -250,7 +250,8 @@ class TextFilterApplier
         array &$orGroup,
         string $field,
         bool $skipWidlcards
-    ) {
+    )  : void {
+
         $attributeType = null;
 
         if (strpos($field, '.') !== false) {
@@ -335,7 +336,7 @@ class TextFilterApplier
 
     protected function modifyOrGroup(
         QueryBuilder $queryBuilder, string $filter, array &$orGroup, bool $hasFullTextSearch
-    ) {
+    )  : void {
     }
 
     protected function getFullTextSearchData(string $filter, bool $isAuxiliaryUse = false) : ?FullTextSearchData

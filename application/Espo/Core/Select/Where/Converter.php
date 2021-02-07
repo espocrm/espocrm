@@ -40,7 +40,7 @@ use Espo\{
 };
 
 /**
- * Converts a search where (passed from frontend) to a where clause (for ORM).
+ * Converts a search where (passed from front-end) to a where clause (for ORM).
  */
 class Converter
 {

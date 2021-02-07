@@ -71,7 +71,7 @@ class AccessControlFilterApplier
         $this->acl = $this->aclManager->createUserAcl($this->user);
     }
 
-    public function apply(QueryBuilder $queryBuilder)
+    public function apply(QueryBuilder $queryBuilder) : void
     {
         // For backward compatibility.
         if ($this->selectManager->hasInheritedAccessMethod()) {

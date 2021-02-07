@@ -30,14 +30,9 @@
 namespace Espo\Modules\Crm\Classes\Select\Meeting\Where;
 
 use Espo\Core\{
-    Exceptions\Error,
     Select\Where\DateTimeItemTransformer as DateTimeItemTransformerOriginal,
     Select\Where\Item,
 };
-
-use DateTime;
-use DateTimeZone;
-use DateInterval;
 
 /**
  * Extends to take into account DateStartDate and DateEndDate fields.

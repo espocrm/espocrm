@@ -51,7 +51,7 @@ class AdditionalApplier extends AdditionalApplierBase
         $this->joinHelper = $joinHelper;
     }
 
-    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams)
+    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams) : void
     {
         $folder = $this->retrieveFolder($searchParams);
 
@@ -70,7 +70,7 @@ class AdditionalApplier extends AdditionalApplierBase
         }
     }
 
-    protected function joinEmailUser(QueryBuilder $queryBuilder)
+    protected function joinEmailUser(QueryBuilder $queryBuilder) : void
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
 

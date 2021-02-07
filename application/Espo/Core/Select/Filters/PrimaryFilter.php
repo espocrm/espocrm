@@ -35,5 +35,5 @@ use Espo\{
 
 interface PrimaryFilter
 {
-    public function apply(QueryBuilder $queryBuilder);
+    public function apply(QueryBuilder $queryBuilder) : void;
 }

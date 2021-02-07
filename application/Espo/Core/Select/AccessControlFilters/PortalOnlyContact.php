@@ -49,7 +49,7 @@ class PortalOnlyContact implements AccessControlFilter
         $this->fieldHelper = $fieldHelper;
     }
 
-    public function apply(QueryBuilder $queryBuilder)
+    public function apply(QueryBuilder $queryBuilder) : void
     {
         $orGroup = [];
 

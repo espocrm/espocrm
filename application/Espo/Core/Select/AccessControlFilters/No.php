@@ -36,7 +36,7 @@ use Espo\{
 
 class No implements AccessControlFilter
 {
-    public function apply(QueryBuilder $queryBuilder)
+    public function apply(QueryBuilder $queryBuilder) : void
     {
         $queryBuilder->where([
             'id' => null,

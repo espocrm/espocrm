@@ -44,9 +44,8 @@ class OnlyOwn implements AccessControlFilter
         $this->user = $user;
     }
 
-    public function apply(QueryBuilder $queryBuilder)
+    public function apply(QueryBuilder $queryBuilder) : void
     {
-        die;
         $queryBuilder->where([
             'userId' => $this->user->id,
         ]);

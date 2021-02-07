@@ -322,7 +322,7 @@ class SelectBuilder
         return $this;
     }
 
-    protected function applyPrimaryFilter()
+    protected function applyPrimaryFilter() : void
     {
         $this->createPrimaryFilterApplier()
             ->apply(
@@ -331,7 +331,7 @@ class SelectBuilder
             );
     }
 
-    protected function applyBoolFilterList()
+    protected function applyBoolFilterList() : void
     {
         $this->createBoolFilterListApplier()
             ->apply(
@@ -340,7 +340,7 @@ class SelectBuilder
             );
     }
 
-    protected function applyTextFilter()
+    protected function applyTextFilter() : void
     {
         $noFullTextSearch = false;
 
@@ -358,7 +358,7 @@ class SelectBuilder
             );
     }
 
-    protected function applyAccessControlFilter()
+    protected function applyAccessControlFilter() : void
     {
         $this->createAccessControlFilterApplier()
             ->apply(
@@ -366,7 +366,7 @@ class SelectBuilder
             );
     }
 
-    protected function applyDefaultOrder()
+    protected function applyDefaultOrder() : void
     {
         $order = null;
 
@@ -386,14 +386,14 @@ class SelectBuilder
             );
     }
 
-    protected function applyWhereItemList()
+    protected function applyWhereItemList() : void
     {
         foreach ($this->whereItemList as $whereItem) {
             $this->applyWhereItem($whereItem);
         }
     }
 
-    protected function applyWhereItem(WhereItem $whereItem)
+    protected function applyWhereItem(WhereItem $whereItem) : void
     {
         $params = WhereParams::fromArray([
             'applyPermissionCheck' => $this->applyWherePermissionCheck,
@@ -408,7 +408,7 @@ class SelectBuilder
             );
     }
 
-    protected function applyFromSearchParams()
+    protected function applyFromSearchParams() : void
     {
         if (!$this->searchParams) {
             return;
@@ -462,7 +462,7 @@ class SelectBuilder
         }
     }
 
-    protected function applyAdditional()
+    protected function applyAdditional() : void
     {
         $searchParams = SearchParams::fromRaw([
             'boolFilterList' => $this->boolFilterList,

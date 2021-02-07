@@ -49,7 +49,8 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
 
     protected function modifyOrGroup(
         QueryBuilder $queryBuilder, string $filter, array &$orGroup, bool $hasFullTextSearch
-    ) {
+    )  : void {
+
         if (strlen($filter) < self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
             return;
         }
@@ -78,7 +79,7 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
         $orGroup['emailEmailAddress.emailAddressId'] = $emailAddressId;
     }
 
-    protected function leftJoinEmailAddress(QueryBuilder $queryBuilder)
+    protected function leftJoinEmailAddress(QueryBuilder $queryBuilder) : void
     {
         if ($queryBuilder->hasLeftJoinAlias('emailEmailAddress')) {
             return;

@@ -35,7 +35,7 @@ use Espo\{
 
 class LimitApplier
 {
-    public function apply(QueryBuilder $queryBuilder, ?int $offset, ?int $maxSize)
+    public function apply(QueryBuilder $queryBuilder, ?int $offset, ?int $maxSize) : void
     {
         $queryBuilder->limit($offset, $maxSize);
     }

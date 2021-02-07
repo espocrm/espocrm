@@ -46,7 +46,7 @@ class Followed implements PrimaryFilter
         $this->user = $user;
     }
 
-    public function apply(QueryBuilder $queryBuilder)
+    public function apply(QueryBuilder $queryBuilder) : void
     {
         $alias = 'subscriptionFollowedPrimaryFilter';
 
