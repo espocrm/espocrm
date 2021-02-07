@@ -37,6 +37,7 @@ use Espo\Core\EntryPoints\EntryPoint;
 use Espo\Core\Di;
 
 use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
 
 class Attachment implements EntryPoint,
     Di\EntityManagerAware,
@@ -52,7 +53,7 @@ class Attachment implements EntryPoint,
         'image/webp',
     ];
 
-    public function run(Request $request)
+    public function run(Request $request, Response $response) : void
     {
         $id = $request->get('id');
 
@@ -88,7 +89,9 @@ class Attachment implements EntryPoint,
 
         header('Pragma: public');
         header('Content-Length: ' . filesize($fileName));
+
         readfile($fileName);
+
         exit;
     }
 }

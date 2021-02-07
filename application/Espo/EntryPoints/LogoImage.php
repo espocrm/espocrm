@@ -30,15 +30,15 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\{
     NoAuth,
 };
 
-use Espo\Core\Api\Request;
+use Espo\Core\{
+    Api\Request,
+    Api\Response,
+};
 
 use Espo\Core\Di;
 
@@ -51,7 +51,7 @@ class LogoImage extends Image implements Di\ConfigAware
 
     protected $allowedFieldList = ['companyLogo'];
 
-    public function run(Request $request)
+    public function run(Request $request, Response $response) : void
     {
         $id = $request->get('id');
         $size = $request->get('size') ?? null;

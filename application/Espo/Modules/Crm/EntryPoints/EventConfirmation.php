@@ -29,10 +29,7 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\Utils\Util;
-
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 
@@ -42,6 +39,8 @@ use Espo\Core\EntryPoints\{
 };
 
 use Espo\Core\{
+    Api\Request,
+    Api\Response,
     ORM\EntityManager,
     Utils\ClientManager,
     HookManager,
@@ -61,7 +60,7 @@ class EventConfirmation implements EntryPoint
         $this->hookManager = $hookManager;
     }
 
-    public function run($request)
+    public function run(Request $request, Response $response) : void
     {
         $uid = $request->get('uid') ?? null;
         $action = $request->get('action') ?? null;
@@ -102,6 +101,7 @@ class EventConfirmation implements EntryPoint
 
             $status = 'None';
             $hookMethodName = 'afterConfirmation';
+
             if ($action == 'accept') {
                 $status = 'Accepted';
             } else if ($action == 'decline') {

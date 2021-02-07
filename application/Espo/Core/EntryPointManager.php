@@ -94,6 +94,7 @@ class EntryPointManager
     protected function getClassName(string $name) : ?string
     {
         $name = ucfirst($name);
+
         return $this->classFinder->find('EntryPoints', $name);
     }
 }

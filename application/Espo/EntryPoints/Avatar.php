@@ -29,15 +29,13 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\NotStrictAuth;
 use Espo\Core\Di;
 
 use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
 
 class Avatar extends Image implements Di\MetadataAware
 {
@@ -73,7 +71,7 @@ class Avatar extends Image implements Di\MetadataAware
         return $colorList[$index];
     }
 
-    public function run(Request $request)
+    public function run(Request $request, Response $response) : void
     {
         $userId = $request->get('id');
         $size = $request->get('size') ?? null;
