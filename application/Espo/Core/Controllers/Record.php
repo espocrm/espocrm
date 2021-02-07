@@ -148,7 +148,7 @@ class Record extends Base
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
-        $result = $this->getRecordService()->find($params);
+        $result = $this->getRecordService()->find($listParams);
 
         if ($result instanceof RecordCollection) {
             return (object) [
