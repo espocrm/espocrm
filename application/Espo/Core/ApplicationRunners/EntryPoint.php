@@ -31,7 +31,6 @@ namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
     Exceptions\Error,
-    InjectableFactory,
     EntryPointManager,
     ApplicationUser,
     ORM\EntityManager,
@@ -39,6 +38,7 @@ use Espo\Core\{
     Utils\Route,
     Utils\ClientManager,
     Authentication\Authentication,
+    Authentication\AuthenticationFactory,
     Api\AuthBuilderFactory,
     Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
@@ -62,7 +62,7 @@ class EntryPoint implements ApplicationRunner
 {
     protected $params;
 
-    protected $injectableFactory;
+    protected $authenticationFactory;
     protected $entryPointManager;
     protected $entityManager;
     protected $clientManager;
@@ -71,7 +71,7 @@ class EntryPoint implements ApplicationRunner
     protected $authBuilderFactory;
 
     public function __construct(
-        InjectableFactory $injectableFactory,
+        AuthenticationFactory $authenticationFactory,
         EntryPointManager $entryPointManager,
         EntityManager $entityManager,
         ClientManager $clientManager,
@@ -80,7 +80,7 @@ class EntryPoint implements ApplicationRunner
         AuthBuilderFactory $authBuilderFactory,
         ?StdClass $params = null
     ) {
-        $this->injectableFactory = $injectableFactory;
+        $this->authenticationFactory = $authenticationFactory;
         $this->entryPointManager = $entryPointManager;
         $this->entityManager = $entityManager;
         $this->clientManager = $clientManager;
@@ -136,12 +136,12 @@ class EntryPoint implements ApplicationRunner
         ResponseWrapper $responseWrapped,
         bool $authRequired,
         bool $authNotStrict
-    ) {
+    ) : void {
+
         try {
-            // @todo Use factory.
-            $authentication = $this->injectableFactory->createWith(Authentication::class, [
-                'allowAnyAccess' => $authNotStrict,
-            ]);
+            $authentication = $authNotStrict ?
+                $this->authenticationFactory->createWithAnyAccessAllowed() :
+                $this->authenticationFactory->create();
 
             $apiAuth = $this->authBuilderFactory
                 ->create()

@@ -32,7 +32,7 @@ namespace Espo\Core\ApplicationRunners;
 use Espo\Core\{
     InjectableFactory,
     ApplicationUser,
-    Authentication\Authentication,
+    Authentication\AuthenticationFactory,
     Api\AuthBuilderFactory,
     Api\ErrorOutput as ApiErrorOutput,
     Api\RequestWrapper,
@@ -60,20 +60,23 @@ use Throwable;
  */
 class Api implements ApplicationRunner
 {
-    protected $injectableFactory;
+    protected $routeProcessor;
+    protected $authenticationFactory;
     protected $applicationUser;
     protected $routeUtil;
     protected $authBuilderFactory;
     protected $log;
 
     public function __construct(
-        InjectableFactory $injectableFactory,
+        RouteProcessor $routeProcessor,
+        AuthenticationFactory $authenticationFactory,
         ApplicationUser $applicationUser,
         Route $routeUtil,
         AuthBuilderFactory $authBuilderFactory,
         Log $log
     ) {
-        $this->injectableFactory = $injectableFactory;
+        $this->routeProcessor = $routeProcessor;
+        $this->authenticationFactory = $authenticationFactory;
         $this->applicationUser = $applicationUser;
         $this->routeUtil = $routeUtil;
         $this->authBuilderFactory = $authBuilderFactory;
@@ -165,8 +168,7 @@ class Api implements ApplicationRunner
         try {
             $authRequired = !($item['noAuth'] ?? false);
 
-            // @todo Use factory.
-            $authentication = $this->injectableFactory->create(Authentication::class);
+            $authentication = $this->authenticationFactory->create();
 
             $apiAuth = $this->authBuilderFactory
                 ->create()
@@ -184,11 +186,9 @@ class Api implements ApplicationRunner
                 $this->applicationUser->setupSystemUser();
             }
 
-            $routeProcessor = $this->injectableFactory->create(RouteProcessor::class);
-
             ob_start();
 
-            $routeProcessor->process($item['route'], $requestWrapped, $responseWrapped);
+            $this->routeProcessor->process($item['route'], $requestWrapped, $responseWrapped);
 
             ob_clean();
         }
