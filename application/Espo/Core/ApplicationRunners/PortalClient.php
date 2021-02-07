@@ -69,7 +69,7 @@ class PortalClient implements ApplicationRunner
         $this->params = $params ?? (object) [];
     }
 
-    public function run()
+    public function run() : void
     {
         $id = $this->params->id ??
             Url::detectPortalId() ??

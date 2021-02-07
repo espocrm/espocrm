@@ -44,7 +44,7 @@ class Preload implements ApplicationRunner
 {
     use Cli;
 
-    public function run()
+    public function run() : void
     {
         $preload = new PreloadUtil();
 

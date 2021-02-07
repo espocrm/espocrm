@@ -33,7 +33,6 @@ use Espo\Core\{
     Exceptions\Error,
     Interfaces\Injectable,
     Binding\BindingContainer,
-    Binding\BindingLoader,
     Binding\Binding,
 };
 
@@ -253,8 +252,10 @@ class InjectableFactory
         throw new Error("InjectableFactory: Bad binding.");
     }
 
-    protected function areDependencyClassesMatching(ReflectionClass $paramHintClass, ReflectionClass $returnHintClass) : bool
-    {
+    protected function areDependencyClassesMatching(
+        ReflectionClass $paramHintClass, ReflectionClass $returnHintClass
+    ) : bool {
+
         if ($paramHintClass->getName() === $returnHintClass->getName()) {
             return true;
         }
@@ -292,8 +293,10 @@ class InjectableFactory
         }
     }
 
-    protected function classHasDependencySetter(ReflectionClass $class, string $name, bool $skipInstanceCheck = false) : bool
-    {
+    protected function classHasDependencySetter(
+        ReflectionClass $class, string $name, bool $skipInstanceCheck = false
+    ) : bool {
+
         $methodName = 'set' . ucfirst($name);
 
         if (!$class->hasMethod($methodName) || !$class->getMethod($methodName)->isPublic()) {

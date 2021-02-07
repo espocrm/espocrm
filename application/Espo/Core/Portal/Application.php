@@ -57,7 +57,7 @@ class Application extends BaseApplication
         $this->initPreloads();
     }
 
-    protected function initContainer()
+    protected function initContainer() : void
     {
         $this->container = (new ContainerBuilder())
             ->withConfigClassName(Config::class)
@@ -66,7 +66,7 @@ class Application extends BaseApplication
             ->build();
     }
 
-    protected function initPortal(?string $portalId)
+    protected function initPortal(?string $portalId) : void
     {
         if (!$portalId) {
             throw new Error("Portal ID was not passed to Portal\Application.");
@@ -95,12 +95,7 @@ class Application extends BaseApplication
         $this->container->setPortal($portal);
     }
 
-    protected function getPortal()
-    {
-        return $this->portal;
-    }
-
-    protected function initPreloads()
+    protected function initPreloads() : void
     {
         parent::initPreloads();
 

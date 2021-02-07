@@ -199,7 +199,7 @@ class Container
     /**
      * Set a service object. Must be configured as settable.
      */
-    public function set(string $name, object $object)
+    public function set(string $name, object $object) : void
     {
         if (!$this->configuration->isSettable($name)) {
             throw new Error("Service '{$name}' is not settable.");
@@ -233,7 +233,7 @@ class Container
         return $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);
     }
 
-    private function load(string $name)
+    private function load(string $name) : void
     {
         $loadMethodName = 'load' . ucfirst($name);
 

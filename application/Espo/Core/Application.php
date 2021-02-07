@@ -60,7 +60,7 @@ class Application
         $this->initPreloads();
     }
 
-    protected function initContainer()
+    protected function initContainer() : void
     {
         $this->container = (new ContainerBuilder())->build();
     }
@@ -68,7 +68,7 @@ class Application
     /**
      * Run a specific application runner.
      */
-    public function run(string $className, ?StdClass $params = null)
+    public function run(string $className, ?StdClass $params = null) : void
     {
         if (!$className || !class_exists($className)) {
             $this->getLog()->error("Application runner '{$className}' does not exist.");
@@ -147,7 +147,7 @@ class Application
         return $this->container->get('config');
     }
 
-    protected function initAutoloads()
+    protected function initAutoloads() : void
     {
         $autoload = $this->getInjectableFactory()->create(Autoload::class);
 
@@ -157,7 +157,7 @@ class Application
     /**
      * Initialize services that has the 'preload' parameter.
      */
-    protected function initPreloads()
+    protected function initPreloads() : void
     {
         foreach ($this->getMetadata()->get(['app', 'containerServices']) ?? [] as $name => $defs) {
             if ($defs['preload'] ?? false) {
@@ -169,7 +169,7 @@ class Application
     /**
      * Set a base path of an index file related to the application directory. Used for a portal.
      */
-    public function setClientBasePath(string $basePath)
+    public function setClientBasePath(string $basePath) : void
     {
         $this->getClientManager()->setBasePath($basePath);
     }
@@ -177,7 +177,7 @@ class Application
     /**
      * Setup the system user. The system user is used when no user is logged in.
      */
-    public function setupSystemUser()
+    public function setupSystemUser() : void
     {
         $this->getApplicationUser()->setupSystemUser();
     }

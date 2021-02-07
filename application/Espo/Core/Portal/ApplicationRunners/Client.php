@@ -49,7 +49,7 @@ class Client implements ApplicationRunner
         $this->applicationState = $applicationState;
     }
 
-    public function run()
+    public function run() : void
     {
         $portalId = $this->applicationState->getPortal()->id;
 

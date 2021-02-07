@@ -54,7 +54,7 @@ class Job implements ApplicationRunner
         $this->params = $params;
     }
 
-    public function run()
+    public function run() : void
     {
         $this->cronManager->runJobById($this->params->id);
     }

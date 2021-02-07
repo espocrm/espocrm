@@ -51,10 +51,11 @@ class Cron implements ApplicationRunner
         $this->config = $config;
     }
 
-    public function run()
+    public function run() : void
     {
         if ($this->config->get('cronDisabled')) {
             $GLOBALS['log']->warning("Cron is not run because it's disabled with 'cronDisabled' param.");
+
             return;
         }
 

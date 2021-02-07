@@ -85,7 +85,7 @@ class WebSocket implements ApplicationRunner
         }
     }
 
-    public function run()
+    public function run() : void
     {
         $loop = EventLoopFactory::create();
 

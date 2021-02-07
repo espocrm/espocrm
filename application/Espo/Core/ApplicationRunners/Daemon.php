@@ -47,7 +47,7 @@ class Daemon implements ApplicationRunner
 
     protected $config;
 
-    public function __construct(Config $config)
+    public function __construct(Config $config) : void
     {
         $this->config = $config;
     }
@@ -59,12 +59,14 @@ class Daemon implements ApplicationRunner
         $timeout = $this->config->get('daemonProcessTimeout');
 
         $phpExecutablePath = $this->config->get('phpExecutablePath');
+
         if (!$phpExecutablePath) {
             $phpExecutablePath = (new PhpExecutableFinder)->find();
         }
 
         if (!$maxProcessNumber || !$interval) {
             $GLOBALS['log']->error("Daemon config params are not set.");
+
             return;
         }
 
@@ -73,6 +75,7 @@ class Daemon implements ApplicationRunner
         while (true) {
             $toSkip = false;
             $runningCount = 0;
+
             foreach ($processList as $i => $process) {
                 if ($process->isRunning()) {
                     $runningCount++;
@@ -80,16 +83,23 @@ class Daemon implements ApplicationRunner
                     unset($processList[$i]);
                 }
             }
+
             $processList = array_values($processList);
+
             if ($runningCount >= $maxProcessNumber) {
                 $toSkip = true;
             }
+
             if (!$toSkip) {
                 $process = new Process([$phpExecutablePath, 'cron.php']);
+
                 $process->setTimeout($timeout);
+
                 $process->run();
+
                 $processList[] = $process;
             }
+
             sleep($interval);
         }
     }

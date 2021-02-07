@@ -49,7 +49,7 @@ class Command implements ApplicationRunner
         $this->commandManager = $commandManager;
     }
 
-    public function run()
+    public function run() : void
     {
         ob_start();
 

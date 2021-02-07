@@ -80,7 +80,7 @@ class Api implements ApplicationRunner
         $this->log = $log;
     }
 
-    public function run()
+    public function run() : void
     {
         $slim = SlimAppFactory::create();
 

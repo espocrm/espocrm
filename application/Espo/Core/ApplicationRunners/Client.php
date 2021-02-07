@@ -45,7 +45,7 @@ class Client implements ApplicationRunner
         $this->clientManager = $clientManager;
     }
 
-    public function run()
+    public function run() : void
     {
         $this->clientManager->display();
     }

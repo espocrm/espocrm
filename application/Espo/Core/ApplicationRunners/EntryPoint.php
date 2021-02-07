@@ -91,7 +91,7 @@ class EntryPoint implements ApplicationRunner
         $this->params = $params ?? (object) [];
     }
 
-    public function run()
+    public function run() : void
     {
         $requestWrapped = new RequestWrapper(
             ServerRequestCreatorFactory::create()->createServerRequestFromGlobals(),

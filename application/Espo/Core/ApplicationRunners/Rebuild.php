@@ -47,7 +47,7 @@ class Rebuild implements ApplicationRunner
         $this->dataManager = $dataManager;
     }
 
-    public function run()
+    public function run() : void
     {
         $this->dataManager->rebuild();
     }
