@@ -179,6 +179,10 @@
         {
             "name": "env\\userAttribute",
             "insertText": "env\\userAttribute(ATTRIBUTE)"
+        },
+        {
+            "name": "util\\generateId",
+            "insertText": "util\\generateId()"
         }
     ]
 }
