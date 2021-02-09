@@ -54,6 +54,8 @@ use Espo\Core\{
     Utils\Util,
     Services\Crud,
     Record\Collection as RecordCollection,
+    Record\MassAction\QueryBuilder as MassActionQueryBuilder,
+    Record\MassAction\Params as MassActionParams,
     Select\SearchParams,
 };
 
@@ -2264,49 +2266,16 @@ class Record implements Crud,
 
     protected function buildQueryFromMassActionParams(array $params) : SelectQuery
     {
-        $builder = $this->selectBuilderFactory->create();
+        $builder = $this->injectableFactory->create(MassActionQueryBuilder::class);
 
-        $builder
-            ->from($this->entityType)
-            ->withStrictAccessControl();
-
-        if (array_key_exists('ids', $params)) {
-            if (!is_array($params['ids'])) {
-                throw new BadRequest("Bad mass action parameters.");
-            }
-
-            $query = $this->entityManager
-                ->getQueryBuilder()
-                ->clone($builder->build())
-                ->where([
-                    'id' => $params['ids'],
-                ])
-                ->build();
-
-            return $query;
+        try {
+            $massActionParams = MassActionParams::fromRaw($this->entityType, $params);
+        }
+        catch (Exception $e) {
+            throw new BadRequest($e->getMessage());
         }
 
-        if (array_key_exists('where', $params)) {
-            $searchParams = [
-                'where' => $params['where'],
-            ];
-
-            $selectData = $params['selectData'] ?? [];
-
-            foreach ($selectData as $k => $v) {
-                $searchParams[$k] = $v;
-            }
-
-            unset($searchParams['select']);
-
-            $query = $builder
-                ->withSearchParams(SearchParams::fromRaw($searchParams))
-                ->build();
-
-            return $query;
-        }
-
-        throw new BadRequest("Bad mass action parameters.");
+        return $builder->build($massActionParams);
     }
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
