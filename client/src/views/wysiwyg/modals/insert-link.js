@@ -30,8 +30,6 @@ define('views/wysiwyg/modals/insert-link', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
-        backdrop: true,
-
         template: 'wysiwyg/modals/insert-link',
 
         events: {
