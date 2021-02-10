@@ -65,9 +65,9 @@ class Webhook extends Record implements
         }
     }
 
-    protected function filtetInput($data)
+    protected function filterInput($data)
     {
-        parent::filtetInput($data);
+        parent::filterInput($data);
 
         unset($data->entityType);
         unset($data->field);
