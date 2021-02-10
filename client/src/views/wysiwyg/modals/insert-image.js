@@ -30,8 +30,6 @@ define('views/wysiwyg/modals/insert-image', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
-        backdrop: true,
-
         template: 'wysiwyg/modals/insert-image',
 
         events: {

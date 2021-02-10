@@ -452,4 +452,15 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($result);
     }
+
+    public function testGenerateId()
+    {
+        $expression = "util\generateId()";
+
+        $id = $this->evaluator->process($expression);
+
+        $this->assertIsString($id);
+
+        $this->assertNotEmpty($id);
+    }
 }
