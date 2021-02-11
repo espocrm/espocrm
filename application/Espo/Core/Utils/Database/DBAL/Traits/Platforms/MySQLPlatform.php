@@ -178,12 +178,6 @@ trait MySQLPlatform
             }
             // Espo: end
 
-            // Espo: do not change collation for column changes
-            if (!$columnDiff->hasChanged('collation') && !empty($columnArray['collation'])) {
-                unset($columnArray['collation']);
-            }
-            // Espo: end
-
             $columnArray['comment'] = $this->getColumnComment($column);
             $queryParts[]           =  'CHANGE ' . ($columnDiff->getOldColumnName()->getQuotedName($this)) . ' '
                     . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
