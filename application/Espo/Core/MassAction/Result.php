@@ -38,8 +38,10 @@ class Result
 
     private $count = null;
 
-    private function __construct()
+    public function __construct(int $count, ?array $ids = null)
     {
+        $this->count = $count;
+        $this->ids = $ids;
     }
 
     public function hasIds() : bool
@@ -94,10 +96,10 @@ class Result
 
     public static function fromArray(array $data) : self
     {
-        $obj = new self();
-
-        $obj->ids = $data['ids'] ?? null;
-        $obj->count = $data['count'] ?? null;
+        $obj = new self(
+            $data['count'] ?? null,
+            $data['ids'] ?? null
+        );
 
         return $obj;
     }
