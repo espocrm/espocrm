@@ -144,6 +144,22 @@ class GlobalRestricton
                 $scopeData->fields->$type = $resultFieldList;
                 $scopeData->attributes->$type = $resultAttributeList;
             }
+
+            foreach ($fieldList as $field) {
+                $fieldAcl = $this->metadata->get(['entityDefs', $scope, 'fields', $field, 'acl']) ?? [];
+
+                foreach ($this->fieldTypeList as $type) {
+                    if ($fieldAcl[$type] === true) {
+                        $isNotEmpty = true;
+                        $scopeData->fields->$type[] = $field;
+                        $fieldAttributeList = $this->fieldUtil->getAttributeList($scope, $field);
+                        foreach ($fieldAttributeList as $attribute) {
+                            $scopeData->attributes->$type[] = $attribute;
+                        }
+                    }
+                }
+            }
+
             foreach ($this->linkTypeList as $type) {
                 $resultLinkList = [];
 
