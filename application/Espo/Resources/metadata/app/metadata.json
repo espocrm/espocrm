@@ -18,7 +18,9 @@
         ["app", "auth2FAMethods", "__ANY__", "implementationClassName"],
         ["app", "auth2FAMethods", "__ANY__", "implementationUserClassName"],
         ["app", "select"],
+        ["app", "massActions", "__ANY__", "implementationClassName"],
         ["selectDefs"],
+        ["recordDefs"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]
     ]
 }

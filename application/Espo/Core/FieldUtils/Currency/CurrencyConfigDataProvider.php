@@ -91,4 +91,16 @@ class CurrencyConfigDataProvider
 
         return $rate;
     }
+
+    /**
+     * Get rates.
+     */
+    public function getCurrencyRates() : CurrencyRates
+    {
+        $rates = $this->config->get('currencyRates') ?? [];
+
+        $rates[$this->getBaseCurrency()] = 1.0;
+
+        return CurrencyRates::fromArray($rates);
+    }
 }

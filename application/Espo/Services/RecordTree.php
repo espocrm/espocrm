@@ -207,12 +207,13 @@ class RecordTree extends Record
         return parent::update($id, $data);
     }
 
-    public function link(string $id, string $link, string $foreignId)
+    public function link(string $id, string $link, string $foreignId) : void
     {
         if ($id == $foreignId ) {
             throw new Forbidden();
         }
-        return parent::link($id, $link, $foreignId);
+
+        parent::link($id, $link, $foreignId);
     }
 
     public function getLastChildrenIdList(?string $parentId = null) : array

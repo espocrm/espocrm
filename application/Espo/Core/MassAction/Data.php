@@ -27,43 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record\MassAction;
+namespace Espo\Core\MassAction;
 
-use Espo\{
-    ORM\QueryParams\Select,
-};
+use Espo\Core\Utils\ObjectUtil;
 
-use Espo\Core\{
-    Select\SelectBuilderFactory,
-};
+use StdClass;
 
-class QueryBuilder
+class Data
 {
-    protected $selectBuilderFactory;
-
-    public function __construct(SelectBuilderFactory $selectBuilderFactory)
+    private function __construct()
     {
-        $this->selectBuilderFactory = $selectBuilderFactory;
+        $this->data = (object) [];
     }
 
-    public function build(Params $params) : Select
+    public function getRaw() : StdClass
     {
-        $builder = $this->selectBuilderFactory
-            ->create()
-            ->from($params->getEntityType())
-            ->withStrictAccessControl();
+        return ObjectUtil::clone($this->data);
+    }
 
-        if ($params->hasIds()) {
-            return $builder
-                ->buildQueryBuilder()
-                ->where([
-                    'id' => $params->getIds(),
-                ])
-                ->build();
-        }
+    /**
+     * @return ?mixed
+     */
+    public function get(string $name)
+    {
+        return $this->getRaw()->$name ?? null;
+    }
 
-        return $builder
-            ->withSearchParams($params->getSearchParams())
-            ->build();
+    public function has(string $name) : bool
+    {
+        return property_exists($this->data, $name);
+    }
+
+    public static function fromRaw(StdClass $data) : self
+    {
+        $obj = new self();
+
+        $obj->data = $data;
+
+        return $obj;
     }
 }

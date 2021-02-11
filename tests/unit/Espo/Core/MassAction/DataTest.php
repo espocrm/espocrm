@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,41 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace tests\unit\Espo\Core\MassAction;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+use Espo\Core\{
+    MassAction\Data,
+};
 
-    return Dep.extend({
+class DataTest extends \PHPUnit\Framework\TestCase
+{
+    protected function setUp() : void
+    {
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    public function testData()
+    {
+        $original = (object) [
+            'test' => 'hello',
+        ];
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+        $data = Data::fromRaw($original);
 
-        actionConvert: function () {
-            this.disableButton('convert');
+        $this->assertEquals('hello', $data->get('test'));
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+        $this->assertTrue($data->has('test'));
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+        $this->assertFalse($data->has('no'));
 
-            this.ajaxPostRequest(this.options.entityType + '/action/convertCurrency', {
-                fieldList: this.options.fieldList || null,
-                currency: currency,
-                id: this.options.model.id,
-                targetCurrency: currency,
-                rates: currencyRates,
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
+        $this->assertEquals($data->getRaw(), $original);
 
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});
+        $this->assertNotSame($data->getRaw(), $original);
+    }
+}

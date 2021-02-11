@@ -704,7 +704,7 @@ class User extends Record implements
         $sender->send($email);
     }
 
-    public function delete(string $id)
+    public function delete(string $id) : void
     {
         if ($id == 'system') {
             throw new Forbidden();
@@ -714,39 +714,7 @@ class User extends Record implements
             throw new Forbidden();
         }
 
-        return parent::delete($id);
-    }
-
-    protected function checkEntityForMassRemove(Entity $entity)
-    {
-        if ($entity->id == 'system') {
-            return false;
-        }
-
-        if ($entity->id == $this->getUser()->id) {
-            return false;
-        }
-
-        return true;
-    }
-
-    protected function checkEntityForMassUpdate(Entity $entity, $data)
-    {
-        if ($entity->id == 'system') {
-            return false;
-        }
-
-        if ($entity->id == $this->getUser()->id) {
-            if (property_exists($data, 'isActive')) {
-                return false;
-            }
-
-            if (property_exists($data, 'type')) {
-                return false;
-            }
-        }
-
-        return true;
+        parent::delete($id);
     }
 
     public function afterUpdateEntity(Entity $entity, $data)
@@ -814,46 +782,6 @@ class User extends Record implements
         $this->dataManager->updateCacheTimestamp();
     }
 
-    public function massUpdate(array $params, $data)
-    {
-        unset($data->type);
-        unset($data->isAdmin);
-        unset($data->isSuperAdmin);
-        unset($data->isPortalUser);
-        unset($data->emailAddress);
-        unset($data->password);
-
-        return parent::massUpdate($params, $data);
-    }
-
-    protected function afterMassUpdate(array $idList, $data)
-    {
-        parent::afterMassUpdate($idList, $data);
-
-        if (
-            property_exists($data, 'rolesIds') ||
-            property_exists($data, 'teamsIds') ||
-            property_exists($data, 'type') ||
-            property_exists($data, 'portalRolesIds') ||
-            property_exists($data, 'portalsIds')
-        ) {
-            foreach ($idList as $id) {
-                $this->clearRoleCache($id);
-            }
-        }
-
-        if (
-            property_exists($data, 'portalRolesIds')
-            ||
-            property_exists($data, 'portalsIds')
-            ||
-            property_exists($data, 'contactId')
-            ||
-            property_exists($data, 'accountsIds')
-        ) {
-            $this->clearPortalRolesCache();
-        }
-    }
 
     public function loadAdditionalFields(Entity $entity)
     {

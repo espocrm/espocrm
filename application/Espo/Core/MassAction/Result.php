@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,41 +27,78 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Core\MassAction;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+use RuntimeException;
+use StdClass;
 
-    return Dep.extend({
+class Result
+{
+    private $ids = null;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    private $count = null;
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+    private function __construct()
+    {
+    }
 
-        actionConvert: function () {
-            this.disableButton('convert');
+    public function hasIds() : bool
+    {
+        return $this->ids !== null;
+    }
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+    public function hasCount() : bool
+    {
+        return $this->count !== null;
+    }
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+    public function getIds() : array
+    {
+        if (!$this->hasIds()) {
+            throw new RuntimeException("No IDs.");
+        }
 
-            this.ajaxPostRequest(this.options.entityType + '/action/convertCurrency', {
-                fieldList: this.options.fieldList || null,
-                currency: currency,
-                id: this.options.model.id,
-                targetCurrency: currency,
-                rates: currencyRates,
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
+        return $this->ids;
+    }
 
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});
+    public function getCount() : int
+    {
+        if (!$this->hasCount()) {
+            throw new RuntimeException("No count.");
+        }
+
+        return $this->count;
+    }
+
+    public function withNoIds() : self
+    {
+        return self::fromArray([
+            'count' => $this->count,
+        ]);
+    }
+
+    public function getValueMap() : StdClass
+    {
+        $obj = (object) [];
+
+        if ($this->hasCount()) {
+            $obj->count = $this->count;
+        }
+
+        if ($this->hasIds()) {
+            $obj->ids = $this->ids;
+        }
+
+        return $obj;
+    }
+
+    public static function fromArray(array $data) : self
+    {
+        $obj = new self();
+
+        $obj->ids = $data['ids'] ?? null;
+        $obj->count = $data['count'] ?? null;
+
+        return $obj;
+    }
+}

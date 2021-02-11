@@ -61,9 +61,9 @@ class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test'
         ]);
 
-        $result = $service->delete($account->id);
+        $service->delete($account->id);
 
-        $result = $service->restoreDeleted($account->id);
+        $service->restoreDeleted($account->id);
 
         $account = $service->read($account->id);
 

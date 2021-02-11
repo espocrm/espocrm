@@ -36,6 +36,8 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 
+use StdClass;
+
 class Attachment extends Record
 {
     protected $notFilteringAttributeList = ['contents'];
@@ -83,66 +85,81 @@ class Attachment extends Record
         }
     }
 
-    protected function handleCreateInput($data)
+    public function filterCreateInput(StdClass $data) : void
     {
-        if (!empty($data->file)) {
-            $arr = explode(',', $data->file);
-            $contents = '';
-            if (count($arr) > 1) {
-                $contents = $arr[1];
+        parent::filterCreateInput($data);
+
+        if (empty($data->file)) {
+            return;
+        }
+
+        $arr = explode(',', $data->file);
+
+        $contents = '';
+
+        if (count($arr) > 1) {
+            $contents = $arr[1];
+        }
+
+        $contents = base64_decode($contents);
+
+        $data->contents = $contents;
+
+        $relatedEntityType = null;
+        $field = null;
+        $role = 'Attachment';
+
+        if (isset($data->parentType)) {
+            $relatedEntityType = $data->parentType;
+        }
+        else if (isset($data->relatedType)) {
+            $relatedEntityType = $data->relatedType;
+        }
+
+        if (isset($data->field)) {
+            $field = $data->field;
+        }
+
+        if (isset($data->role)) {
+            $role = $data->role;
+        }
+
+        if (!$relatedEntityType || !$field) {
+            throw new BadRequest("Params 'field' and 'parentType' not passed along with 'file'.");
+        }
+
+        if (!$role || !in_array($role, ['Attachment', 'Inline Attachment'])) {
+            throw new BadRequest("Not supported attachment 'role'.");
+        }
+
+        $this->checkAttachmentField($relatedEntityType, $field, $role);
+
+        $size = mb_strlen($contents, '8bit');
+
+        if ($role === 'Attachment') {
+            $maxSize = $this->getMetadata()->get(
+                ['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']
+            );
+
+            if (!$maxSize) {
+                $maxSize = $this->getConfig()->get('attachmentUploadMaxSize');
             }
 
-            $contents = base64_decode($contents);
-            $data->contents = $contents;
-
-            $relatedEntityType = null;
-            $field = null;
-            $role = 'Attachment';
-            if (isset($data->parentType)) {
-                $relatedEntityType = $data->parentType;
-            } else if (isset($data->relatedType)) {
-                $relatedEntityType = $data->relatedType;
-            }
-            if (isset($data->field)) {
-                $field = $data->field;
-            }
-            if (isset($data->role)) {
-                $role = $data->role;
-            }
-            if (!$relatedEntityType || !$field) {
-                throw new BadRequest("Params 'field' and 'parentType' not passed along with 'file'.");
-            }
-
-            if (!$role || !in_array($role, ['Attachment', 'Inline Attachment'])) {
-                throw new BadRequest("Not supported attachment 'role'.");
-            }
-
-            $this->checkAttachmentField($relatedEntityType, $field, $role);
-
-            $size = mb_strlen($contents, '8bit');
-
-            if ($role === 'Attachment') {
-                $maxSize = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
-                if (!$maxSize) {
-                    $maxSize = $this->getConfig()->get('attachmentUploadMaxSize');
+            if ($maxSize) {
+                if ($size > $maxSize * 1024 * 1024) {
+                    throw new Error("File size should not exceed {$maxSize}Mb.");
                 }
-                if ($maxSize) {
-                    if ($size > $maxSize * 1024 * 1024) {
-                        throw new Error("File size should not exceed {$maxSize}Mb.");
-                    }
-                }
-
-            } else if ($role === 'Inline Attachment') {
-
-                $inlineAttachmentUploadMaxSize = $this->getConfig()->get('inlineAttachmentUploadMaxSize');
-                if ($inlineAttachmentUploadMaxSize) {
-                    if ($size > $inlineAttachmentUploadMaxSize * 1024 * 1024) {
-                        throw new Error("File size should not exceed {$inlineAttachmentUploadMaxSize}Mb.");
-                    }
-                }
-            } else {
-                throw new BadRequest("Not supported attachment role.");
             }
+        } else if ($role === 'Inline Attachment') {
+            $inlineAttachmentUploadMaxSize = $this->getConfig()->get('inlineAttachmentUploadMaxSize');
+
+            if ($inlineAttachmentUploadMaxSize) {
+                if ($size > $inlineAttachmentUploadMaxSize * 1024 * 1024) {
+                    throw new Error("File size should not exceed {$inlineAttachmentUploadMaxSize}Mb.");
+                }
+            }
+        } else {
+            throw new BadRequest("Not supported attachment role.");
         }
     }
 

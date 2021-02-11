@@ -319,47 +319,6 @@ class Record extends Base
         ];
     }
 
-    public function actionMassUpdate($params, $data, $request)
-    {
-        if (!$request->isPut()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden("No edit access for {$this->name}.");
-        }
-        if (empty($data->attributes)) {
-            throw new BadRequest();
-        }
-
-        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
-            throw new Forbidden("No massUpdatePermission.");
-        }
-
-        $actionParams = $this->getMassActionParamsFromData($data);
-
-        $attributes = $data->attributes;
-
-        return $this->getRecordService()->massUpdate($actionParams, $attributes);
-    }
-
-    public function postActionMassDelete($params, $data, $request)
-    {
-        if (!$this->getAcl()->check($this->name, 'delete')) {
-            throw new Forbidden();
-        }
-
-        $actionParams = $this->getMassActionParamsFromData($data);
-
-        if (array_key_exists('where', $actionParams)) {
-            if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
-                throw new Forbidden("No massUpdatePermission.");
-            }
-        }
-
-        return $this->getRecordService()->massDelete($actionParams);
-    }
-
     public function actionCreateLink($params, $data, $request)
     {
         if (!$request->isPost()) {
@@ -504,7 +463,9 @@ class Record extends Base
             throw new Forbidden("No edit access for {$this->name}.");
         }
 
-        return $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
+        $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
+
+        return true;
     }
 
     public function postActionGetDuplicateAttributes($params, $data, $request)
@@ -521,28 +482,6 @@ class Record extends Base
         }
 
         return $this->getRecordService()->getDuplicateAttributes($data->id);
-    }
-
-    public function postActionMassFollow($params, $data, $request)
-    {
-        if (!$this->getAcl()->check($this->name, 'stream')) {
-            throw new Forbidden();
-        }
-
-        $actionParams = $this->getMassActionParamsFromData($data);
-
-        return $this->getRecordService()->massFollow($actionParams);
-    }
-
-    public function postActionMassUnfollow($params, $data, $request)
-    {
-        if (!$this->getAcl()->check($this->name, 'stream')) {
-            throw new Forbidden("No stream access for {$this->name}.");
-        }
-
-        $actionParams = $this->getMassActionParamsFromData($data);
-
-        return $this->getRecordService()->massUnfollow($actionParams);
     }
 
     protected function getMassActionParamsFromData($data)
@@ -566,19 +505,6 @@ class Record extends Base
         return $params;
     }
 
-    public function postActionMassRecalculateFormula($params, $data, $request)
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->massRecalculateFormula($this->getMassActionParamsFromData($data));
-    }
-
     public function postActionRestoreDeleted($params, $data, $request)
     {
         if (!$this->getUser()->isAdmin()) {
@@ -591,46 +517,9 @@ class Record extends Base
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->restoreDeleted($id);
-    }
+        $this->getRecordService()->restoreDeleted($id);
 
-    public function postActionMassConvertCurrency($params, $data, $request)
-    {
-        if (!$this->getAcl()->checkScope($this->name, 'edit')) {
-            throw new Forbidden();
-        }
-
-        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
-            throw new Forbidden();
-        }
-
-        $actionParams = $this->getMassActionParamsFromData($data);
-
-        $fieldList = $data->fieldList ?? null;
-
-        if (!empty($data->field)) {
-            if (!is_array($fieldList)) {
-                $fieldList = [];
-            }
-
-            $fieldList[] = $data->field;
-        }
-
-        if (empty($data->currencyRates)) {
-            throw new BadRequest();
-        }
-
-        if (empty($data->targetCurrency)) {
-            throw new BadRequest();
-        }
-
-        if (empty($data->baseCurrency)) {
-            throw new BadRequest();
-        }
-
-        return $this->getRecordService()->massConvertCurrency(
-            $actionParams, $data->targetCurrency, $data->baseCurrency, $data->currencyRates, $fieldList
-        );
+        return true;
     }
 
     public function postActionConvertCurrency($params, $data, $request)
@@ -653,7 +542,7 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        if (empty($data->currencyRates)) {
+        if (empty($data->rates)) {
             throw new BadRequest();
         }
 
@@ -661,12 +550,8 @@ class Record extends Base
             throw new BadRequest();
         }
 
-        if (empty($data->baseCurrency)) {
-            throw new BadRequest();
-        }
-
         return $this->getRecordService()->convertCurrency(
-            $data->id, $data->targetCurrency, $data->baseCurrency, $data->currencyRates, $fieldList
+            $data->id, $data->targetCurrency, $data->rates, $fieldList
         );
     }
 }

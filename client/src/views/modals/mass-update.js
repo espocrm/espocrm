@@ -85,13 +85,20 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
             var fobiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 
             this.wait(true);
+
             this.getModelFactory().create(this.entityType, function (model) {
                 this.model = model;
+
                 this.getHelper().layoutManager.get(this.entityType, this.layoutName, function (layout) {
                     layout = layout || [];
+
                     this.fieldList = [];
+
                     layout.forEach(function (field) {
-                        if (~fobiddenList.indexOf(field)) return;
+                        if (~fobiddenList.indexOf(field)) {
+                            return;
+                        }
+
                         if (model.hasField(field)) {
                             this.fieldList.push(field);
                         }
@@ -111,13 +118,18 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
 
-            if (this.$el.find('ul.filter-list li:not(.hidden)').length == 0) {
+            if (this.$el.find('ul.filter-list li:not(.hidden)').length === 0) {
                 this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
             }
 
             this.notify('Loading...');
+
             var label = this.translate(name, 'fields', this.entityType);
-            var html = '<div class="cell form-group col-sm-6" data-name="'+name+'"><label class="control-label">'+label+'</label><div class="field" data-name="'+name+'" /></div>';
+
+            var html = '<div class="cell form-group col-sm-6" data-name="'+name+'">' +
+                '<label class="control-label">' + label + '</label>' +
+                '<div class="field" data-name="'+name+'" /></div>';
+
             this.$el.find('.fields-container').append(html);
 
             var type = this.model.getFieldType(name);
@@ -130,10 +142,12 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
                 defs: {
                     name: name,
                 },
-                mode: 'edit'
+                mode: 'edit',
             }, function (view) {
                 this.addedFieldList.push(name);
+
                 view.render();
+
                 view.notify(false);
             }.bind(this));
         },
@@ -144,44 +158,56 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
             var self = this;
 
             var attributes = {};
+
             this.addedFieldList.forEach(function (field) {
                 var view = self.getView(field);
+
                 _.extend(attributes, view.fetch());
             });
 
             this.model.set(attributes);
 
             var notValid = false;
+
             this.addedFieldList.forEach(function (field) {
                 var view = self.getView(field);
+
                 notValid = view.validate() || notValid;
             });
 
             if (!notValid) {
-                self.notify('Saving...');
-                $.ajax({
-                    url: this.entityType + '/action/massUpdate',
-                    type: 'PUT',
-                    data: JSON.stringify({
-                        attributes: attributes,
-                        ids: self.ids || null,
-                        where: (!self.ids || self.ids.length == 0) ? self.options.where : null,
-                        selectData: (!self.ids || self.ids.length == 0) ? self.options.selectData : null,
-                        byWhere: this.byWhere
-                    }),
-                    success: function (result) {
-                        var result = result || {};
-                        var count = result.count;
+                Espo.Ui.notify(
+                    this.translate('Saving...')
+                );
 
-                        self.trigger('after:update', count);
+                Espo.Ajax.postRequest('MassAction', {
+                    action: 'update',
+                    entityType: this.entityType,
+                    params: {
+                        ids: self.ids || null,
+                        where: (!self.ids || self.ids.length === 0) ? self.options.where : null,
+                        selectData: (!self.ids || self.ids.length === 0) ? self.options.selectData : null,
                     },
-                    error: function () {
-                        self.notify('Error occurred', 'error');
-                        self.enableButton('update');
-                    }
-                });
+                    data: attributes,
+                })
+                    .then(
+                        function (result) {
+                            var result = result || {};
+                            var count = result.count;
+
+                            self.trigger('after:update', count);
+                        }
+                    )
+                    .fail(
+                        function () {
+                            self.notify('Error occurred', 'error');
+
+                            self.enableButton('update');
+                        }
+                    );
             } else {
                 this.notify('Not valid', 'error');
+
                 this.enableButton('update');
             }
         },
@@ -189,6 +215,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
         reset: function () {
             this.addedFieldList.forEach(function (field) {
                 this.clearView(field);
+
                 this.$el.find('.cell[data-name="'+field+'"]').remove();
             }, this);
 
@@ -202,6 +229,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.$el.find('ul.filter-list').find('li').removeClass('hidden');
 
             this.disableButton('update');
-        }
+        },
+
     });
 });

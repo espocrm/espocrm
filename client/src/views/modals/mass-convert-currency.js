@@ -102,26 +102,31 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
             var currency = this.model.get('currency');
             var currencyRates = this.model.get('currencyRates');
 
-            var hasWhere = !this.options.ids || this.options.ids.length == 0;
+            var hasWhere = !this.options.ids || this.options.ids.length === 0;
 
-            this.ajaxPostRequest(this.options.entityType + '/action/massConvertCurrency', {
-                field: this.options.field,
-                fieldList: this.options.fieldList,
-                currency: currency,
-                ids: this.options.ids || null,
-                where: hasWhere ? this.options.where : null,
-                selectData: hasWhere ? this.options.selectData : null,
-                byWhere: this.options.byWhere,
-                targetCurrency: currency,
-                currencyRates: currencyRates,
-                baseCurrency: this.getConfig().get('baseCurrency'),
-            }).then(function (result) {
-                this.trigger('after:update', result.count);
-                this.close();
-            }.bind(this)).fail(function () {
-                this.enableButton('convert');
-            }.bind(this));
-        }
+            this.ajaxPostRequest('MassAction', {
+                entityType: this.options.entityType,
+                action: 'convertCurrency',
+                params: {
+                   ids: this.options.ids || null,
+                   where: hasWhere ? this.options.where : null,
+                   searchParams: hasWhere ? this.options.selectData : null,
+                },
+                data: {
+                    fieldList: this.options.fieldList || null,
+                    currency: currency,
+                    targetCurrency: currency,
+                    rates: currencyRates,
+                },
+            })
+                .then(function (result) {
+                    this.trigger('after:update', result.count);
+                    this.close();
+                }.bind(this))
+                .fail(function () {
+                    this.enableButton('convert');
+                }.bind(this));
+        },
 
     });
 });

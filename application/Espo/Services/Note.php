@@ -211,20 +211,22 @@ class Note extends Record
         return true;
     }
 
-    public function link($id, $link, $foreignId)
+    public function link(string $id, string $link, string $foreignId) : void
     {
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
         }
-        return parent::link($id, $link, $foreignId);
+
+        parent::link($id, $link, $foreignId);
     }
 
-    public function unlink($id, $link, $foreignId)
+    public function unlink(string $id, string $link, string $foreignId) : void
     {
         if ($link === 'teams' || $link === 'users') {
             throw new Forbidden();
         }
-        return parent::unlink($id, $link, $foreignId);
+
+        parent::unlink($id, $link, $foreignId);
     }
 
     public function processNoteAclJob($data)

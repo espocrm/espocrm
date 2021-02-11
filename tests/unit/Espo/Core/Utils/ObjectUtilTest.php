@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,41 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace tests\Espo\Core\Utils;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+use Espo\Core\Utils\ObjectUtil;
 
-    return Dep.extend({
+class ObjectUtilTest extends \PHPUnit\Framework\TestCase
+{
+    public function testClone1()
+    {
+        $original = (object) [
+            'key1' => '1',
+            'key2' => (object) [
+                'key21' => [
+                    '211',
+                    '212',
+                    (object) [
+                        '2111' => '1',
+                    ],
+                ],
+            ],
+            'key3' => [
+                '31',
+                '32',
+                null,
+            ],
+            'key4' => null,
+        ];
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        $cloned = ObjectUtil::clone($original);
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+        $this->assertEquals($cloned, $original);
 
-        actionConvert: function () {
-            this.disableButton('convert');
+        $this->assertNotSame($cloned, $original);
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+        $this->assertNotSame($cloned->key2, $original->key2);
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+        $this->assertNotSame($cloned->key2->key21[2], $original->key2->key21[2]);
+    }
+}
 
-            this.ajaxPostRequest(this.options.entityType + '/action/convertCurrency', {
-                fieldList: this.options.fieldList || null,
-                currency: currency,
-                id: this.options.model.id,
-                targetCurrency: currency,
-                rates: currencyRates,
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
-
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});

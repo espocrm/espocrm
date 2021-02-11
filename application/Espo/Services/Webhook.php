@@ -32,10 +32,10 @@ namespace Espo\Services;
 use Espo\ORM\Entity;
 
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\Di;
+
+use StdClass;
 
 class Webhook extends Record implements
     Di\WebhookManagerAware
@@ -56,7 +56,7 @@ class Webhook extends Record implements
 
     protected $readOnlyAttributeList = ['secretKey'];
 
-    public function populateDefaults(Entity $entity, $data)
+    public function populateDefaults(Entity $entity, StdClass $data) : void
     {
         parent::populateDefaults($entity, $data);
 
@@ -74,11 +74,13 @@ class Webhook extends Record implements
         unset($data->type);
     }
 
-    protected function filterUpdateInput($data)
+    public function filterUpdateInput(StdClass $data) : void
     {
         if (!$this->getUser()->isAdmin()) {
             unset($data->event);
         }
+
+        parent::filterUpdateInput($data);
     }
 
     protected function beforeCreateEntity(Entity $entity, $data)
@@ -95,9 +97,12 @@ class Webhook extends Record implements
     {
         $maxCount = $this->getConfig()->get('webhookMaxCountPerUser', self::WEBHOOK_MAX_COUNT_PER_USER);
 
-        $count = $this->getEntityManager()->getRepository('Webhook')->where([
-            'userId' => $this->getUser()->id,
-        ])->count();
+        $count = $this->getEntityManager()
+            ->getRepository('Webhook')
+            ->where([
+                'userId' => $this->getUser()->id,
+            ])
+            ->count();
 
         if ($maxCount && $count >= $maxCount) {
             throw new Forbidden("Webhook number per user exceeded the limit.");
@@ -113,16 +118,25 @@ class Webhook extends Record implements
     protected function checkEntityUserIsApi(Entity $entity)
     {
         $userId = $entity->get('userId');
-        if (!$userId) return;
+
+        if (!$userId) {
+            return;
+        }
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
-        if (!$user || !$user->isApi()) throw new Forbidden("User must be an API User.");
+
+        if (!$user || !$user->isApi()) {
+            throw new Forbidden("User must be an API User.");
+        }
     }
 
     protected function processEntityEventData(Entity $entity)
     {
         $event = $entity->get('event');
-        if (!$event) throw new Forbidden("Event is empty.");
+
+        if (!$event) {
+            throw new Forbidden("Event is empty.");
+        }
 
         if (!$entity->isNew()) {
             if ($entity->isAttributeChanged('event')) {
@@ -131,7 +145,10 @@ class Webhook extends Record implements
         }
 
         $arr = explode('.', $event);
-        if (count($arr) !== 2 && count($arr) !== 3) throw new Forbidden("Not supported event.");
+
+        if (count($arr) !== 2 && count($arr) !== 3) {
+            throw new Forbidden("Not supported event.");
+        }
 
         $arr = explode('.', $event);
         $entityType = $arr[0];
@@ -142,24 +159,46 @@ class Webhook extends Record implements
 
         $field = null;
 
-        if (!$entityType) throw new Forbidden("Entity Type is empty.");
-        if (!$this->getMetadata()->get(['scopes', $entityType, 'object'])) throw new Forbidden("Entity type is not available for Webhooks.");
-        if (!$this->getEntityManager()->hasRepository($entityType)) throw new Forbidden("Not existing Entity Type.");
-        if (!$this->getAcl()->checkScope($entityType, 'read')) throw new Forbidden("Entity type is forbidden.");
+        if (!$entityType) {
+            throw new Forbidden("Entity Type is empty.");
+        }
 
-        if (!in_array($type, $this->eventTypeList)) throw new Forbidden("Not supported event.");
+        if (!$this->getMetadata()->get(['scopes', $entityType, 'object'])) {
+            throw new Forbidden("Entity type is not available for Webhooks.");
+        }
+
+        if (!$this->getEntityManager()->hasRepository($entityType)) {
+            throw new Forbidden("Not existing Entity Type.");
+        }
+
+        if (!$this->getAcl()->checkScope($entityType, 'read')) {
+            throw new Forbidden("Entity type is forbidden.");
+        }
+
+        if (!in_array($type, $this->eventTypeList)) {
+            throw new Forbidden("Not supported event.");
+        }
 
         if ($type === 'fieldUpdate') {
             if (count($arr) == 3) {
                 $field = $arr[2];
             }
+
             $entity->set('field', $field);
 
-            if (!$field) throw new Forbidden("Field is empty.");
-            $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($entityType);
-            if (in_array($field, $forbiddenFieldList)) throw new Forbidden("Field is forbidden.");
+            if (!$field) {
+                throw new Forbidden("Field is empty.");
+            }
 
-            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field])) throw new Forbidden("Field does not exist.");
+            $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($entityType);
+
+            if (in_array($field, $forbiddenFieldList)) {
+                throw new Forbidden("Field is forbidden.");
+            }
+
+            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field])) {
+                throw new Forbidden("Field does not exist.");
+            }
         } else {
             $entity->set('field', null);
         }
@@ -184,7 +223,8 @@ class Webhook extends Record implements
         if (isset($data->isActive)) {
             if ($entity->get('isActive')) {
                 $this->webhookManager->addEvent($entity->get('event'));
-            } else {
+            }
+            else {
                 $this->webhookManager->removeEvent($entity->get('event'));
             }
         }

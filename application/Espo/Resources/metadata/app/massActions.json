@@ -1,0 +1,20 @@
+{
+    "convertCurrency": {
+        "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassConvertCurrency"
+    },
+    "follow": {
+        "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassFollow"
+    },
+    "unfollow": {
+        "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassUnfollow"
+    },
+    "recalculateFormula": {
+        "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassRecalculateFormula"
+    },
+    "update": {
+        "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassUpdate"
+    },
+    "delete": {
+        "implementationClassName": "Espo\\Core\\MassAction\\Actions\\MassDelete"
+    }
+}

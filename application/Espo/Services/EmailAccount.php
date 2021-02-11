@@ -71,9 +71,9 @@ class EmailAccount extends Record implements
 
     const PORTION_LIMIT = 10;
 
-    protected function handleInput($data)
+    protected function filterInput($data)
     {
-        parent::handleInput($data);
+        parent::filterInput($data);
 
         if (property_exists($data, 'password')) {
             $data->password = $this->crypt->encrypt($data->password);

@@ -53,5 +53,5 @@ interface Crud
     /**
      * Delete a record.
      */
-    public function delete(string $id);
+    public function delete(string $id) : void;
 }

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,41 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Core\MassAction;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+use Espo\{
+    ORM\QueryParams\Select,
+};
 
-    return Dep.extend({
+use Espo\Core\{
+    Select\SelectBuilderFactory,
+};
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+class QueryBuilder
+{
+    protected $selectBuilderFactory;
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+    public function __construct(SelectBuilderFactory $selectBuilderFactory)
+    {
+        $this->selectBuilderFactory = $selectBuilderFactory;
+    }
 
-        actionConvert: function () {
-            this.disableButton('convert');
+    public function build(Params $params) : Select
+    {
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->from($params->getEntityType())
+            ->withStrictAccessControl();
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+        if ($params->hasIds()) {
+            return $builder
+                ->buildQueryBuilder()
+                ->where([
+                    'id' => $params->getIds(),
+                ])
+                ->build();
+        }
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
-
-            this.ajaxPostRequest(this.options.entityType + '/action/convertCurrency', {
-                fieldList: this.options.fieldList || null,
-                currency: currency,
-                id: this.options.model.id,
-                targetCurrency: currency,
-                rates: currencyRates,
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
-
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});
+        return $builder
+            ->withSearchParams($params->getSearchParams())
+            ->build();
+    }
+}

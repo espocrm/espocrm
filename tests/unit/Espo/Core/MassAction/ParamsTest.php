@@ -27,10 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Record\MassAction;
+namespace tests\unit\Espo\Core\MassAction;
 
 use Espo\Core\{
-    Record\MassAction\Params,
+    MassAction\Params,
+    Select\SearchParams,
 };
 
 use RuntimeException;
@@ -44,9 +45,9 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     public function testFromRawIds()
     {
         $params = Params::fromRaw(
-            'Test',
             [
                 'ids' => ['1'],
+                'entityType' => 'Test',
             ]
         );
 
@@ -55,6 +56,26 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['1'], $params->getIds());
 
         $this->assertTrue($params->hasIds());
+    }
+
+    public function testFromIds()
+    {
+        $params = Params::fromIds('Test', ['1']);
+
+        $this->assertEquals('Test', $params->getEntityType());
+
+        $this->assertEquals(['1'], $params->getIds());
+    }
+
+    public function testFromSearchParams()
+    {
+        $searchParams = $this->createMock(SearchParams::class);
+
+        $params = Params::fromSearchParams('Test', $searchParams);
+
+        $this->assertEquals('Test', $params->getEntityType());
+
+        $this->assertEquals($searchParams, $params->getSearchParams());
     }
 
     public function testFromRawSearchParams1()
@@ -68,16 +89,18 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         ];
 
         $params = Params::fromRaw(
-            'Test',
             [
                 'where' => $where,
                 'selectData' => [
                     'primaryFilter' => 'testFilter',
                 ],
-            ]
+            ],
+            'Test'
         );
 
         $searchParams = $params->getSearchParams();
+
+        $this->assertEquals('Test', $params->getEntityType());
 
         $this->assertEquals($where, $searchParams->getWhere());
 
@@ -97,13 +120,13 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         ];
 
         $params = Params::fromRaw(
-            'Test',
             [
                 'searchParams' => [
                     'primaryFilter' => 'testFilter',
                     'where' => $where,
                 ],
-            ]
+            ],
+            'Test'
         );
 
         $searchParams = $params->getSearchParams();
@@ -120,14 +143,14 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         $this->expectException(RuntimeException::class);
 
         Params::fromRaw(
-            'Test',
             [
                 'ids' => ['1'],
                 'searchParams' => [
                     'primaryFilter' => 'testFilter',
                     'where' => [],
                 ],
-            ]
+            ],
+            'Test'
         );
     }
 }

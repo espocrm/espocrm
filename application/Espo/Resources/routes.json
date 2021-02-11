@@ -237,6 +237,14 @@
         }
     },
     {
+        "route": "/MassAction",
+        "method": "post",
+        "params": {
+            "controller": "MassAction",
+            "action": "process"
+        }
+    },
+    {
         "route": "/Attachment/file/:id",
         "method": "get",
         "params": {

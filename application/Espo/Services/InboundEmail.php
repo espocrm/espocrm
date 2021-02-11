@@ -62,6 +62,7 @@ use Exception;
 use Throwable;
 use DateTime;
 use DateTimeZone;
+use StdClass;
 
 class InboundEmail extends RecordService implements
 
@@ -86,9 +87,9 @@ class InboundEmail extends RecordService implements
         return $this->crypt;
     }
 
-    protected function handleInput($data)
+    protected function filterInput($data)
     {
-        parent::handleInput($data);
+        parent::filterInput($data);
 
         if (property_exists($data, 'password')) {
             $data->password = $this->getCrypt()->encrypt($data->password);

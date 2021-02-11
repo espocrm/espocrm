@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,41 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Core\Utils;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+use StdClass;
 
-    return Dep.extend({
+class ObjectUtil
+{
+    public static function clone(StdClass $source) : StdClass
+    {
+        $cloned = (object) [];
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        foreach (get_object_vars($source) as $k => $v) {
+            $cloned->$k = self::cloneItem($v);
+        }
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+        return $cloned;
+    }
 
-        actionConvert: function () {
-            this.disableButton('convert');
+    private static function cloneItem($item)
+    {
+        if (is_array($item)) {
+            $cloned = [];
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+            foreach ($item as $v) {
+                $cloned[] = self::cloneItem($v);
+            }
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+            return $cloned;
+        }
 
-            this.ajaxPostRequest(this.options.entityType + '/action/convertCurrency', {
-                fieldList: this.options.fieldList || null,
-                currency: currency,
-                id: this.options.model.id,
-                targetCurrency: currency,
-                rates: currencyRates,
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
+        if ($item instanceof StdClass) {
+            return self::clone($item);
+        }
 
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});
+        if (is_object($item)) {
+            return clone $item;
+        }
+
+        return $item;
+    }
+}

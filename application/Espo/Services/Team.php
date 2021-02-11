@@ -55,28 +55,24 @@ class Team extends Record implements
         $this->dataManager->updateCacheTimestamp();
     }
 
-    public function link(string $id, string $link, string $foreignId)
+    public function link(string $id, string $link, string $foreignId) : void
     {
-        $result = parent::link($id, $link, $foreignId);
+        parent::link($id, $link, $foreignId);
 
         if ($link === 'users') {
             $this->fileManager->removeFile('data/cache/application/acl/' . $foreignId . '.php');
             $this->dataManager->updateCacheTimestamp();
         }
-
-        return $result;
     }
 
-    public function unlink(string $id, string $link, string $foreignId)
+    public function unlink(string $id, string $link, string $foreignId) : void
     {
-        $result = parent::unlink($id, $link, $foreignId);
+        parent::unlink($id, $link, $foreignId);
 
         if ($link === 'users') {
             $this->fileManager->removeFile('data/cache/application/acl/' . $foreignId . '.php');
             $this->dataManager->updateCacheTimestamp();
         }
-
-        return $result;
     }
 
     public function massLink(string $id, string $link, array $where, ?array $selectData = null)

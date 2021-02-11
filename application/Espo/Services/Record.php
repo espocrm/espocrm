@@ -43,7 +43,6 @@ use Espo\ORM\{
     Entity,
     EntityCollection,
     Repository\Repository,
-    QueryParams\Select as SelectQuery,
 };
 
 use Espo\Entities\User;
@@ -53,10 +52,12 @@ use Espo\Core\{
     AclManager,
     Utils\Util,
     Services\Crud,
-    Record\Collection as RecordCollection,
-    Record\MassAction\QueryBuilder as MassActionQueryBuilder,
-    Record\MassAction\Params as MassActionParams,
     Select\SearchParams,
+    Record\Collection as RecordCollection,
+    MassAction\Params as MassActionParams,
+    MassAction\Result as MassActionResult,
+    MassAction\Data as MassActionData,
+    MassAction\MassActionFactory,
 };
 
 use Espo\Tools\{
@@ -65,10 +66,9 @@ use Espo\Tools\{
     Kanban\Result as KanbanResult,
 };
 
-use StdClass;
-use Exception;
-
 use Espo\Core\Di;
+
+use StdClass;
 
 /**
  * The layer between Controller and Repository. For CRUD and other operations with records.
@@ -356,7 +356,7 @@ class Record implements Crud,
         return $this->recordServiceContainer->get($name);
     }
 
-    protected function processActionHistoryRecord($action, Entity $entity)
+    public function processActionHistoryRecord(string $action, Entity $entity)
     {
         if ($this->actionHistoryDisabled) {
             return;
@@ -1030,13 +1030,6 @@ class Record implements Crud,
         return true;
     }
 
-    protected function stripTags($string)
-    {
-        return strip_tags($string,
-            '<a><img><p><br><span><ol><ul><li><blockquote><pre><h1><h2><h3><h4><h5><table><tr><td><th><thead><tbody><i><b>'
-        );
-    }
-
     protected function filterInputAttribute($attribute, $value)
     {
         if (in_array($attribute, $this->notFilteringAttributeList)) {
@@ -1080,18 +1073,49 @@ class Record implements Crud,
         }
     }
 
-    protected function filterCreateInput(StdClass $data)
+    public function filterCreateInput(StdClass $data) : void
     {
+        unset($data->deleted);
+        unset($data->id);
+        unset($data->modifiedById);
+        unset($data->modifiedByName);
+        unset($data->modifiedAt);
+        unset($data->createdById);
+        unset($data->createdByName);
+        unset($data->createdAt);
+
+        $this->filterInput($data);
+
+        $this->handleInput($data);
+        $this->handleCreateInput($data);
     }
 
-    protected function filterUpdateInput(StdClass $data)
+    public function filterUpdateInput(StdClass $data) : void
     {
+        unset($data->deleted);
+        unset($data->id);
+        unset($data->modifiedById);
+        unset($data->modifiedByName);
+        unset($data->modifiedAt);
+        unset($data->createdById);
+        unset($data->createdByName);
+        unset($data->createdAt);
+
+        $this->filterInput($data);
+
+        $this->handleInput($data);
     }
 
+    /**
+     * @deprecated
+     */
     protected function handleCreateInput($data)
     {
     }
 
+    /**
+     * @deprecated
+     */
     protected function handleInput($data)
     {
     }
@@ -1121,7 +1145,7 @@ class Record implements Crud,
         throw ConflictSilent::createWithBody('duplicate', json_encode($list));
     }
 
-    public function populateDefaults(Entity $entity, $data)
+    public function populateDefaults(Entity $entity, StdClass $data) : void
     {
         if (!$this->getUser()->isPortal()) {
             $forbiddenFieldList = null;
@@ -1139,6 +1163,7 @@ class Record implements Crud,
                 if (is_null($forbiddenFieldList)) {
                     $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
                 }
+
                 if (in_array('teams', $forbiddenFieldList)) {
                     if ($this->getUser()->get('defaultTeamId')) {
 
@@ -1185,19 +1210,7 @@ class Record implements Crud,
 
         $entity = $this->getRepository()->get();
 
-        $this->handleInput($data);
-        $this->handleCreateInput($data);
-
-        $this->filterInput($data);
         $this->filterCreateInput($data);
-
-        unset($data->id);
-        unset($data->modifiedById);
-        unset($data->modifiedByName);
-        unset($data->modifiedAt);
-        unset($data->createdById);
-        unset($data->createdByName);
-        unset($data->createdAt);
 
         $entity->set($data);
 
@@ -1237,19 +1250,7 @@ class Record implements Crud,
             throw new BadRequest("ID is empty.");
         }
 
-        unset($data->deleted);
-
-        $this->filterInput($data);
         $this->filterUpdateInput($data);
-        $this->handleInput($data);
-
-        unset($data->id);
-        unset($data->modifiedById);
-        unset($data->modifiedByName);
-        unset($data->modifiedAt);
-        unset($data->createdById);
-        unset($data->createdByName);
-        unset($data->createdAt);
 
         if ($this->getEntityBeforeUpdate) {
             $entity = $this->getEntity($id);
@@ -1280,7 +1281,9 @@ class Record implements Crud,
         $this->storeEntity($entity);
 
         $this->afterUpdateEntity($entity, $data);
+
         $this->prepareEntityForOutput($entity);
+
         $this->processActionHistoryRecord('update', $entity);
 
         return $entity;
@@ -1310,14 +1313,6 @@ class Record implements Crud,
     {
     }
 
-    protected function afterMassUpdate(array $idList, $data)
-    {
-    }
-
-    protected function afterMassDelete(array $idList)
-    {
-    }
-
     /**
      * @deprecated
      */
@@ -1326,7 +1321,7 @@ class Record implements Crud,
         return $this->delete($id);
     }
 
-    public function delete(string $id)
+    public function delete(string $id) : void
     {
         if (empty($id)) {
             throw new BadRequest("ID is empty.");
@@ -1367,6 +1362,9 @@ class Record implements Crud,
         return $selectParams;
     }
 
+    /**
+     * @deprecated
+     */
     public function findEntities($params)
     {
         return $this->find($params);
@@ -1388,6 +1386,7 @@ class Record implements Crud,
         if ($disableCount) {
            if (!empty($params['maxSize'])) {
                $maxSize = $params['maxSize'];
+
                $params['maxSize'] = $params['maxSize'] + 1;
            }
         }
@@ -1489,7 +1488,7 @@ class Record implements Crud,
         return $this->getRepository()->clone($query)->findOne();
     }
 
-    public function restoreDeleted(string $id)
+    public function restoreDeleted(string $id) : void
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
@@ -1506,8 +1505,6 @@ class Record implements Crud,
         }
 
         $this->getRepository()->restoreDeleted($entity->id);
-
-        return true;
     }
 
     public function getMaxSelectTextAttributeLength() : ?int
@@ -1682,7 +1679,7 @@ class Record implements Crud,
         return $this->link($id, $link, $foreignId);
     }
 
-    public function link(string $id, string $link, string $foreignId)
+    public function link(string $id, string $link, string $foreignId) : void
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
@@ -1723,7 +1720,9 @@ class Record implements Crud,
         $methodName = 'link' . ucfirst($link);
 
         if ($link !== 'entity' && $link !== 'entityMass' && method_exists($this, $methodName)) {
-            return $this->$methodName($id, $foreignId);
+            $this->$methodName($id, $foreignId);
+
+            return;
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
@@ -1759,7 +1758,7 @@ class Record implements Crud,
         return $this->unlink($id, $link, $foreignId);
     }
 
-    public function unlink(string $id, string $link, string $foreignId)
+    public function unlink(string $id, string $link, string $foreignId) : void
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
@@ -1786,6 +1785,7 @@ class Record implements Crud,
         }
 
         $entity = $this->getRepository()->get($id);
+
         if (!$entity) {
             throw new NotFound();
         }
@@ -1803,7 +1803,9 @@ class Record implements Crud,
         $methodName = 'unlink' . ucfirst($link);
 
         if ($link !== 'entity' && method_exists($this, $methodName)) {
-            return $this->$methodName($id, $foreignId);
+            $this->$methodName($id, $foreignId);
+
+            return;
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
@@ -1829,8 +1831,6 @@ class Record implements Crud,
         }
 
         $this->getRepository()->unrelate($entity, $link, $foreignEntity);
-
-        return true;
     }
 
     /**
@@ -1841,7 +1841,7 @@ class Record implements Crud,
         return $this->massLink($id, $link, $where, $selectData);
     }
 
-    public function linkFollowers(string $id, string $foreignId)
+    public function linkFollowers(string $id, string $foreignId) : void
     {
         if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) {
             throw new NotFound();
@@ -1870,11 +1870,9 @@ class Record implements Crud,
         if (!$result) {
             throw new Forbidden("Could not add a user to followers. The user needs to have 'stream' access.");
         }
-
-        return true;
     }
 
-    public function unlinkFollowers(string $id, string $foreignId)
+    public function unlinkFollowers(string $id, string $foreignId) : void
     {
         if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) {
             throw new NotFound();
@@ -1899,8 +1897,6 @@ class Record implements Crud,
         }
 
         $this->getStreamService()->unfollowEntity($entity, $foreignId);
-
-        return true;
     }
 
     public function massLink(string $id, string $link, array $where, ?array $selectData = null)
@@ -1941,7 +1937,6 @@ class Record implements Crud,
             return $this->$methodName($id, $where, $selectData);
         }
 
-        $entityType = $entity->getEntityType();
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (empty($foreignEntityType)) {
@@ -2008,148 +2003,6 @@ class Record implements Crud,
         return false;
     }
 
-    public function massUpdate(array $params, StdClass $data)
-    {
-        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
-            throw new Forbidden();
-        }
-
-        $resultIdList = [];
-        $repository = $this->getRepository();
-
-        $count = 0;
-
-        $this->filterInput($data);
-
-        $query = $this->buildQueryFromMassActionParams($params);
-
-        $collection = $repository
-            ->clone($query)
-            ->sth()
-            ->find();
-
-        foreach ($collection as $entity) {
-            if (!$this->getAcl()->check($entity, 'edit') || !$this->checkEntityForMassUpdate($entity, $data)) {
-                continue;
-            }
-
-            $entity->set($data);
-
-            try {
-                $this->processValidation($entity, $data);
-            }
-            catch (Exception $e) {
-                continue;
-            }
-
-            if (!$this->checkAssignment($entity)) {
-                continue;
-            }
-
-            $repository->save($entity, [
-                'massUpdate' => true,
-                'skipStreamNotesAcl' => true,
-            ]);
-
-            $resultIdList[] = $entity->id;
-
-            $count++;
-
-            $this->processActionHistoryRecord('update', $entity);
-        }
-
-        $this->afterMassUpdate($resultIdList, $data);
-
-        $result = ['count' => $count];
-
-        if (isset($params['ids'])) {
-            $result['ids'] = $resultIdList;
-        }
-
-        return (object) $result;
-    }
-
-    protected function checkEntityForMassRemove(Entity $entity)
-    {
-        return true;
-    }
-
-    protected function checkEntityForMassUpdate(Entity $entity, $data)
-    {
-        return true;
-    }
-
-    public function massRemove(array $params)
-    {
-        return $this->massDelete();
-    }
-
-    public function massDelete(array $params)
-    {
-        $resultIdList = [];
-
-        $repository = $this->getRepository();
-
-        $count = 0;
-
-        $query = $this->buildQueryFromMassActionParams($params);
-
-        $collection = $repository
-            ->clone($query)
-            ->sth()
-            ->find();
-
-        foreach ($collection as $entity) {
-            if (!$this->getAcl()->check($entity, 'delete') || !$this->checkEntityForMassRemove($entity)) {
-                continue;
-            }
-
-            $repository->remove($entity);
-
-            $resultIdList[] = $entity->id;
-
-            $count++;
-
-            $this->processActionHistoryRecord('delete', $entity);
-        }
-
-        $this->afterMassDelete($resultIdList);
-
-        $result = ['count' => $count];
-
-        if (isset($params['ids'])) {
-            $result['ids'] = $resultIdList;
-        }
-
-        return $result;
-    }
-
-    public function massRecalculateFormula(array $params)
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $count = 0;
-
-        $query = $this->buildQueryFromMassActionParams($params);
-
-        $collection = $this->getRepository()
-            ->clone($query)
-            ->sth()
-            ->find();
-
-        foreach ($collection as $entity) {
-            $this->getEntityManager()->saveEntity($entity);
-
-            $count++;
-        }
-
-        return [
-            'count' => $count,
-        ];
-    }
-
     public function follow(string $id, ?string $userId = null)
     {
         $entity = $this->getRepository()->get($id);
@@ -2182,100 +2035,6 @@ class Record implements Crud,
         }
 
         return $this->getStreamService()->unfollowEntity($entity, $userId);
-    }
-
-    public function massFollow(array $params, ?string $userId = null)
-    {
-        $resultIdList = [];
-
-        if (empty($userId)) {
-            $userId = $this->getUser()->id;
-        }
-
-        $streamService = $this->getStreamService();
-
-        if (empty($userId)) {
-            $userId = $this->getUser()->id;
-        }
-
-        $query = $this->buildQueryFromMassActionParams($params);
-
-        $collection = $this->getRepository()
-            ->clone($query)
-            ->sth()
-            ->find();
-
-        foreach ($collection as $entity) {
-            if (!$this->getAcl()->check($entity, 'stream') || !$this->getAcl()->check($entity, 'read')) {
-                continue;
-            }
-
-            $itemResult = $streamService->followEntity($entity, $userId);
-
-            if ($itemResult) {
-                $resultIdList[] = $entity->id;
-            }
-        }
-
-        $result = [
-            'count' => count($resultIdList),
-        ];
-
-        if (isset($params['ids'])) {
-            $result['ids'] = $resultIdList;
-        }
-
-        return $result;
-    }
-
-    public function massUnfollow(array $params, ?string $userId = null)
-    {
-        $resultIdList = [];
-
-        $streamService = $this->getStreamService();
-
-        if (empty($userId)) {
-            $userId = $this->getUser()->id;
-        }
-
-        $query = $this->buildQueryFromMassActionParams($params);
-
-        $collection = $this->getRepository()
-            ->clone($query)
-            ->sth()
-            ->find();
-
-        foreach ($collection as $entity) {
-            $itemResult = $streamService->unfollowEntity($entity, $userId);
-
-            if ($itemResult) {
-                $resultIdList[] = $entity->id;
-            }
-        }
-
-        $result = [
-            'count' => count($resultIdList),
-        ];
-
-        if (isset($params['ids'])) {
-            $result['ids'] = $resultIdList;
-        }
-
-        return $result;
-    }
-
-    protected function buildQueryFromMassActionParams(array $params) : SelectQuery
-    {
-        $builder = $this->injectableFactory->create(MassActionQueryBuilder::class);
-
-        try {
-            $massActionParams = MassActionParams::fromRaw($this->entityType, $params);
-        }
-        catch (Exception $e) {
-            throw new BadRequest($e->getMessage());
-        }
-
-        return $builder->build($massActionParams);
     }
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
@@ -2385,7 +2144,7 @@ class Record implements Crud,
         }
     }
 
-    public function merge(string $id, array $sourceIdList, StdClass $attributes)
+    public function merge(string $id, array $sourceIdList, StdClass $attributes) : void
     {
         if (empty($id)) {
             throw new Error("No ID passed.");
@@ -2403,7 +2162,7 @@ class Record implements Crud,
             throw new Forbidden("No edit access.");
         }
 
-        $this->filterInput($attributes);
+        $this->filterUpdateInput($attributes);
 
         $entity->set($attributes);
         if (!$this->checkAssignment($entity)) {
@@ -2551,6 +2310,7 @@ class Record implements Crud,
 
             foreach ($phoneNumberToRelateList as $i => $phoneNumber) {
                 $o = (object) [];
+
                 $o->phoneNumber = $phoneNumber->get('name');
                 $o->primary = false;
 
@@ -2576,8 +2336,6 @@ class Record implements Crud,
         $this->processActionHistoryRecord('update', $entity);
 
         $this->afterMerge($entity, $sourceList, $attributes);
-
-        return true;
     }
 
     protected function beforeMerge(Entity $entity, array $sourceList, $attributes)
@@ -2795,75 +2553,41 @@ class Record implements Crud,
         }
     }
 
-    public function massConvertCurrency(
-        array $params, string $targetCurrency, string $baseCurrency, StdClass $rates, ?array $fieldList = null
-    ) {
-        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') {
-            throw new Forbidden("No mass-update permission.");
+    public function massAction(string $action, array $params, StdClass $data) : MassActionResult
+    {
+        if (!$this->acl->checkScope($this->entityType)) {
+            throw new Forbidden();
         }
 
-        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) {
-            throw new Forbidden("No edit access.");
+        $massActionFactory = $this->injectableFactory->create(MassActionFactory::class);
+
+        $massActionParams = MassActionParams::fromRaw($params, $this->entityType);
+
+        $massAction = $massActionFactory->create($action, $this->entityType);
+
+        $result = $massAction->process(
+            $massActionParams,
+            MassActionData::fromRaw($data)
+        );
+
+        if ($massActionParams->hasIds()) {
+            return $result;
         }
 
-        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
-
-        $allFields = !$fieldList;
-        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
-
-        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency)) {
-            throw new Error("targetCurrency rate is not specified.");
-        }
-
-        foreach ($fieldList as $i => $field) {
-            if (in_array($field, $forbiddenFieldList)) {
-                unset($fieldList[$i]);
-            }
-
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
-                throw new Error("Can't convert field not of currency type.");
-            }
-        }
-
-        $fieldList = array_values($fieldList);
-
-        if (empty($fieldList)) {
-            throw new Forbidden("No fields to convert.");
-        }
-
-        $count = 0;
-
-        $idUpdatedList = [];
-
-        $query = $this->buildQueryFromMassActionParams($params);
-
-        $collection = $this->getRepository()
-            ->clone($query)
-            ->sth()
-            ->find();
-
-        foreach ($collection as $entity) {
-            $result = $this->convertEntityCurrency(
-                $entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList
-            );
-
-            if ($result) {
-                $idUpdatedList[] = $entity->id;
-                $count++;
-            }
-        }
-
-        return [
-            'count' => $count,
-        ];
+        return $result->withNoIds();
     }
 
+    /**
+     * @deprecated
+     */
     public function convertCurrency(
-        string $id, string $targetCurrency, string $baseCurrency, StdClass $rates, ?array $fieldList = null
+        string $id, string $targetCurrency, StdClass $rates, ?array $fieldList = null
     ) {
         if (!$this->getAcl()->checkScope($this->entityType, 'edit')) {
             throw new Forbidden();
         }
+
+        $baseCurrency = $this->config->get('baseCurrency');
 
         $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
 
@@ -2917,6 +2641,9 @@ class Record implements Crud,
         return null;
     }
 
+    /**
+     * @deprecated
+     */
     protected function getConvertCurrencyFieldList()
     {
         if (isset($this->convertCurrencyFieldList)) {
@@ -2942,6 +2669,9 @@ class Record implements Crud,
         return $list;
     }
 
+    /**
+     * @deprecated
+     */
     protected function convertEntityCurrency(
         Entity $entity, string $targetCurrency, string $baseCurrency,
         StdClass $rates, bool $allFields = false, ?array $fieldList = null
@@ -2959,6 +2689,9 @@ class Record implements Crud,
         return true;
     }
 
+    /**
+     * @deprecated Use `Espo\Core\FieldUtils\Currency\CurrencyConverter`.
+     */
     public function getConvertCurrencyValues(
         Entity $entity, string $targetCurrency, string $baseCurrency,
         StdClass $rates, bool $allFields = false, ?array $fieldList = null

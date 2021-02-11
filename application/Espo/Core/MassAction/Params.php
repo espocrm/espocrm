@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record\MassAction;
+namespace Espo\Core\MassAction;
 
 use Espo\Core\{
     Select\SearchParams,
@@ -75,11 +75,34 @@ class Params
         return !is_null($this->ids);
     }
 
-    public static function fromRaw(string $entityType, array $params) : self
+    public static function fromIds(string $entityType, array $ids) : self
+    {
+        return self::fromRaw([
+            'entityType' => $entityType,
+            'ids' => $ids,
+        ]);
+    }
+
+    public static function fromSearchParams(string $entityType, SearchParams $searchParams) : self
     {
         $obj = new self();
 
         $obj->entityType = $entityType;
+
+        $obj->searchParams = $searchParams;
+
+        return $obj;
+    }
+
+    public static function fromRaw(array $params, ?string $entityType = null) : self
+    {
+        $obj = new self();
+
+        $obj->entityType = $entityType ?? $params['entityType'] ?? null;
+
+        if (!$obj->entityType) {
+            throw new RuntimeException("No 'entityType'.");
+        }
 
         $where = $params['where'] ?? null;
         $ids = $params['ids'] ?? null;
