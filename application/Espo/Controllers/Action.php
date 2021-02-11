@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Controllers;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+use Espo\Core\{
+    Exceptions\BadRequest,
+    RecordServiceContainer,
+    Api\Request,
+};
 
-    return Dep.extend({
+use StdClass;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+class Action
+{
+    protected $recordServiceContainer;
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+    public function __construct(RecordServiceContainer $recordServiceContainer)
+    {
+        $this->recordServiceContainer = $recordServiceContainer;
+    }
 
-        actionConvert: function () {
-            this.disableButton('convert');
+    public function postActionProcess(Request $request) : StdClass
+    {
+        $body = $request->getParsedBody();
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+        $entityType = $body->entityType ?? null;
+        $id = $body->id ?? null;
+        $action = $body->action ?? null;
+        $data = $body->data ?? (object) [];
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+        if (!$entityType || !$action || !$id) {
+            throw new BadRequest();
+        }
 
-            this.ajaxPostRequest('Action', {
-                entityType: this.options.entityType,
-                action: 'convertCurrency',
-                id: this.options.model.id,
-                data: {
-                    targetCurrency: currency,
-                    rates: currencyRates,
-                    fieldList: this.options.fieldList || null,
-                },
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
+        $service = $this->recordServiceContainer->get($entityType);
 
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});
+        $entity = $service->action($action, $id, $data);
+
+        return $entity->getValueMap();
+    }
+}

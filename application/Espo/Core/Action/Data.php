@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Core\Action;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+use Espo\Core\Utils\ObjectUtil;
 
-    return Dep.extend({
+use StdClass;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+class Data
+{
+    private function __construct()
+    {
+        $this->data = (object) [];
+    }
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+    public function getRaw() : StdClass
+    {
+        return ObjectUtil::clone($this->data);
+    }
 
-        actionConvert: function () {
-            this.disableButton('convert');
+    /**
+     * @return ?mixed
+     */
+    public function get(string $name)
+    {
+        return $this->getRaw()->$name ?? null;
+    }
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+    public function has(string $name) : bool
+    {
+        return property_exists($this->data, $name);
+    }
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+    public static function fromRaw(StdClass $data) : self
+    {
+        $obj = new self();
 
-            this.ajaxPostRequest('Action', {
-                entityType: this.options.entityType,
-                action: 'convertCurrency',
-                id: this.options.model.id,
-                data: {
-                    targetCurrency: currency,
-                    rates: currencyRates,
-                    fieldList: this.options.fieldList || null,
-                },
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
+        $obj->data = $data;
 
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});
+        return $obj;
+    }
+}

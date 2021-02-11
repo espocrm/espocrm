@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Core\Action;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
-
-    return Dep.extend({
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
-
-        actionConvert: function () {
-            this.disableButton('convert');
-
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
-
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
-
-            this.ajaxPostRequest('Action', {
-                entityType: this.options.entityType,
-                action: 'convertCurrency',
-                id: this.options.model.id,
-                data: {
-                    targetCurrency: currency,
-                    rates: currencyRates,
-                    fieldList: this.options.fieldList || null,
-                },
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
-
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});
+interface Action
+{
+    public function process(Params $params, Data $data) : void;
+}

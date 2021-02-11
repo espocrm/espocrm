@@ -27,16 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\MassAction\Actions;
+namespace Espo\Core\Action\Actions;
 
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\BadRequest,
-    MassAction\QueryBuilder,
-    MassAction\Params,
-    MassAction\Result,
-    MassAction\Data,
-    MassAction\MassAction,
+    Exceptions\NotFound,
+    Action\Action,
+    Action\Params,
+    Action\Data,
     Acl,
     ORM\EntityManager,
     Utils\FieldUtil,
@@ -51,10 +50,8 @@ use Espo\{
     ORM\Entity,
 };
 
-class MassConvertCurrency implements MassAction
+class ConvertCurrency implements Action
 {
-    protected $queryBuilder;
-
     protected $acl;
 
     protected $entityManager;
@@ -68,7 +65,6 @@ class MassConvertCurrency implements MassAction
     protected $currencyConverter;
 
     public function __construct(
-        QueryBuilder $queryBuilder,
         Acl $acl,
         EntityManager $entityManager,
         FieldUtil $fieldUtil,
@@ -76,7 +72,6 @@ class MassConvertCurrency implements MassAction
         CurrencyConfigDataProvider $configDataProvider,
         CurrencyConverter $currencyConverter
     ) {
-        $this->queryBuilder = $queryBuilder;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
@@ -85,29 +80,16 @@ class MassConvertCurrency implements MassAction
         $this->currencyConverter = $currencyConverter;
     }
 
-    public function process(Params $params, Data $dataWrapped) : Result
+    public function process(Params $params, Data $data) : void
     {
         $entityType = $params->getEntityType();
+        $id = $params->getId();
 
-        if (!$this->acl->check($entityType, 'delete')) {
-            throw new Forbidden("No delete access for '{$entityType}'.");
+        if (!$this->acl->checkScope($entityType, 'edit')) {
+            throw new Forbidden();
         }
 
-        if ($this->acl->get('massUpdatePermission') !== 'yes') {
-            throw new Forbidden("No mass-update permission.");
-        }
-
-        $data = $dataWrapped->getRaw();
-
-        if (empty($data->targetCurrency)) {
-            throw new BadRequest("No target currency.");
-        }
-
-        if (isset($data->rates) && !is_object($data->rates)) {
-            throw new BadRequest();
-        }
-
-        $fieldList = $this->getFieldList($entityType, $dataWrapped);
+        $fieldList = $this->getFieldList($entityType, $data);
 
         if (empty($fieldList)) {
             throw new Forbidden("No fields to convert.");
@@ -115,46 +97,31 @@ class MassConvertCurrency implements MassAction
 
         $baseCurrency = $this->configDataProvider->getBaseCurrency();
 
-        $targetCurrency = $data->targetCurrency;
+        $targetCurrency = $data->get('targetCurrency');
+
+        if (!$targetCurrency) {
+            throw new BadRequest("No target currency.");
+        }
 
         $rates =
-            $this->getRatesFromData($dataWrapped) ??
+            $this->getRatesFromData($data) ??
             $this->configDataProvider->getCurrencyRates();
 
         if ($targetCurrency !== $baseCurrency && !$rates->hasRate($targetCurrency)) {
             throw new BadRequest("Target currency rate is not specified.");
         }
 
-        $query = $this->queryBuilder->build($params);
+        $entity = $this->entityManager->getEntity($entityType, $id);
 
-        $collection = $this->entityManager
-            ->getRepository($entityType)
-            ->clone($query)
-            ->sth()
-            ->find();
-
-        $ids = [];
-
-        $count = 0;
-
-        foreach ($collection as $entity) {
-            if (!$this->acl->checkEntity($entity, 'edit')) {
-                continue;
-            }
-
-            $this->convertEntity($entity, $fieldList, $targetCurrency, $rates);
-
-            $ids[] = $entity->id;
-
-            $count++;
+        if (!$entity) {
+            throw new NotFound();
         }
 
-        $result = [
-            'count' => $count,
-            'ids' => $ids,
-        ];
+        if (!$this->acl->checkEntity($entity, 'edit')) {
+            throw new Forbidden();
+        }
 
-        return Result::fromArray($result);
+        $this->convertEntity($entity, $fieldList, $targetCurrency, $rates);
     }
 
     protected function convertEntity(

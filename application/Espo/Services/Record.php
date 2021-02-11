@@ -58,6 +58,9 @@ use Espo\Core\{
     MassAction\Result as MassActionResult,
     MassAction\Data as MassActionData,
     MassAction\MassActionFactory,
+    Action\Params as ActionParams,
+    Action\Data as ActionData,
+    Action\ActionFactory,
 };
 
 use Espo\Tools\{
@@ -2511,7 +2514,7 @@ class Record implements Crud,
     }
 
     /**
-     * Handle list parameters (passed from frontend).
+     * Handle list parameters (passed from front-end).
      */
     public function handleListParams(array &$params)
     {
@@ -2577,68 +2580,34 @@ class Record implements Crud,
         return $result->withNoIds();
     }
 
-    /**
-     * @deprecated
-     */
-    public function convertCurrency(
-        string $id, string $targetCurrency, StdClass $rates, ?array $fieldList = null
-    ) {
-        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) {
+    public function action(string $action, string $id, StdClass $data) : Entity
+    {
+        if (!$this->acl->checkScope($this->entityType)) {
             throw new Forbidden();
         }
 
-        $baseCurrency = $this->config->get('baseCurrency');
-
-        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
-
-        $allFields = !$fieldList;
-        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
-
-        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency)) {
-            throw new Error("targetCurrency rate is not specified.");
+        if (!$action || !$id) {
+            throw new BadRequest();
         }
 
-        foreach ($fieldList as $i => $field) {
-            if (in_array($field, $forbiddenFieldList)) {
-                unset($fieldList[$i]);
-            }
+        $actionParams = new ActionParams($this->entityType, $id);
 
-            if (
-                $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency'
-            ) {
-                throw new Error("Can't convert not currency field.");
-            }
-        }
+        $actionFactory = $this->injectableFactory->create(ActionFactory::class);
 
-        $fieldList = array_values($fieldList);
+        $actionProcessor = $actionFactory->create($action, $this->entityType);
 
-        if (empty($fieldList)) {
-            throw new Forbidden("No fields to convert.");
-        }
+        $actionProcessor->process(
+            $actionParams,
+            ActionData::fromRaw($data)
+        );
 
         $entity = $this->getEntity($id);
 
-        $initialValueMap = $entity->getValueMap();
-
-        $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
-
-        if ($result) {
-            $valueMap = (object) [];
-
-            foreach ($entity->getAttributeList() as $a) {
-                if (in_array($a, ['modifiedAt', 'modifiedById', 'modifiedByName'])) {
-                    continue;
-                }
-
-                if ($entity->get($a) !== ($initialValueMap->$a ?? null)) {
-                    $valueMap->$a = $entity->get($a);
-                }
-            }
-
-            return $valueMap;
+        if (!$entity) {
+            throw new NotFound();
         }
 
-        return null;
+        return $entity;
     }
 
     /**
@@ -2667,26 +2636,6 @@ class Record implements Crud,
         }
 
         return $list;
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function convertEntityCurrency(
-        Entity $entity, string $targetCurrency, string $baseCurrency,
-        StdClass $rates, bool $allFields = false, ?array $fieldList = null
-    ) {
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            return;
-        }
-
-        $data = $this->getConvertCurrencyValues($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
-
-        $entity->set($data);
-        $this->getRepository()->save($entity);
-        $this->processActionHistoryRecord('update', $entity);
-
-        return true;
     }
 
     /**

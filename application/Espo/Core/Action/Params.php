@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,44 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+namespace Espo\Core\Action;
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+use RuntimeException;
 
-    return Dep.extend({
+class Params
+{
+    private $entityType;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    private $id;
 
-            this.headerHtml = this.translate('convertCurrency', 'massActions');
-        },
+    public function __construct(string $entityType, string $id)
+    {
+        $this->entityType = $entityType;
+        $this->id = $id;
 
-        actionConvert: function () {
-            this.disableButton('convert');
+        if (!$entityType || !$id) {
+            throw new RuntimeException();
+        }
+    }
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+    public function getEntityType() : string
+    {
+        return $this->entityType;
+    }
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
-
-            this.ajaxPostRequest('Action', {
-                entityType: this.options.entityType,
-                action: 'convertCurrency',
-                id: this.options.model.id,
-                data: {
-                    targetCurrency: currency,
-                    rates: currencyRates,
-                    fieldList: this.options.fieldList || null,
-                },
-            })
-                .then(function (attributes) {
-                    this.trigger('after:update', attributes);
-
-                    this.close();
-                }.bind(this))
-                .fail(function () {
-                    this.enableButton('convert');
-                }.bind(this));
-        },
-    });
-});
+    public function getId() : string
+    {
+        return $this->id;
+    }
+}

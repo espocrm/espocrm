@@ -237,6 +237,14 @@
         }
     },
     {
+        "route": "/Action",
+        "method": "post",
+        "params": {
+            "controller": "Action",
+            "action": "process"
+        }
+    },
+    {
         "route": "/MassAction",
         "method": "post",
         "params": {

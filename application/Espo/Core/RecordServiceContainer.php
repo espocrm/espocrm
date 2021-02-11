@@ -34,12 +34,12 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Metadata;
 
-use Espo\Core\Services\Crud;
+use Espo\Services\Record;
 
 /**
  * Container for record services. Lazy loading is used.
  * Usually there's no need to have multiple record service instances of the same entity type.
- * Use this contanier instead of serviceFactory to get record services.
+ * Use this container instead of serviceFactory to get record services.
  */
 class RecordServiceContainer
 {
@@ -50,6 +50,7 @@ class RecordServiceContainer
     ];
 
     protected $serviceFactory;
+
     protected $metadata;
 
     public function __construct(ServiceFactory $serviceFactory, Metadata $metadata)
@@ -58,7 +59,7 @@ class RecordServiceContainer
         $this->metadata = $metadata;
     }
 
-    public function get(string $entityType) : Crud
+    public function get(string $entityType) : Record
     {
         $name = $entityType;
 
@@ -69,15 +70,21 @@ class RecordServiceContainer
 
             if ($this->serviceFactory->checkExists($name)) {
                 $obj = $this->serviceFactory->create($name);
-            } else {
+            }
+            else {
                 $default = 'Record';
+
                 $type = $this->metadata->get(['scopes', $name, 'type']);
+
                 if ($type) {
                     $default = $this->defaultTypeMap[$type] ?? $default;
                 }
+
                 $obj = $this->serviceFactory->create($default);
+
                 $obj->setEntityType($name);
             }
+
             $this->data[$name] = $obj;
         }
 

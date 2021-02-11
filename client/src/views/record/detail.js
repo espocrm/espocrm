@@ -204,18 +204,23 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 model: this.model,
             }, function (view) {
                 view.render();
+
                 this.listenToOnce(view, 'after:update', function (attributes) {
                     var isChanged = false;
+
                     for (var a in attributes) {
                         if (attributes[a] !== this.model.get(a)) {
                             isChanged = true;
+
                             break;
                         }
                     }
                     if (!isChanged) {
                         Espo.Ui.warning(this.translate('notUpdated', 'messages'));
+
                         return;
                     }
+
                     this.model.fetch().then(function () {
                         Espo.Ui.success(this.translate('done', 'messages'));
                     }.bind(this));
@@ -235,7 +240,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (this.duplicateAction) {
-                if (this.getAcl().check(this.entityType, 'create') && !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled'])) {
+                if (
+                    this.getAcl().check(this.entityType, 'create') &&
+                    !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled'])
+                ) {
                     this.addDropdownItem({
                         'label': 'Duplicate',
                         'name': 'duplicate'
@@ -323,12 +331,16 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.additionalActionsDefs = {};
 
                 var additionalActionList = [];
-                (this.getMetadata().get(['clientDefs', this.scope, this.type + 'ActionList']) || []).forEach(function (item) {
+
+                (
+                    this.getMetadata().get(['clientDefs', this.scope, this.type + 'ActionList']) || []
+                ).forEach(function (item) {
                     if (typeof item === 'string') {
                         item = {
                             name: item,
                         };
                     }
+
                     var item = Espo.Utils.clone(item);
                     var name = item.name;
 
@@ -336,16 +348,21 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                     this.addDropdownItem(item);
 
-                    if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) return;
+                    if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
+                        return;
+                    }
 
                     additionalActionList.push(item);
 
                     var viewObject = this;
+
                     if (item.initFunction && item.data.handler) {
                         this.wait(new Promise(function (resolve) {
                             require(item.data.handler, function (Handler) {
                                 var handler = new Handler(viewObject);
+
                                 handler[item.initFunction].call(handler);
+
                                 resolve();
                             });
                         }));
@@ -389,12 +406,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             for (var i in this.buttonList) {
                 if (this.buttonList[i].name == name) {
                     this.buttonList[i].hidden = true;
+
                     break;
                 }
             }
             for (var i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name == name) {
                     this.dropdownItemList[i].hidden = true;
+
                     break;
                 }
             }
@@ -412,19 +431,28 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             for (var i in this.buttonList) {
                 if (this.buttonList[i].name == name) {
                     this.buttonList[i].hidden = false;
+
                     break;
                 }
             }
             for (var i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name == name) {
                     this.dropdownItemList[i].hidden = false;
+
                     break;
                 }
             }
 
             if (this.isRendered()) {
-                this.$detailButtonContainer.find('li > .action[data-action="'+name+'"]').parent().removeClass('hidden');
-                this.$detailButtonContainer.find('button.action[data-action="'+name+'"]').removeClass('hidden');
+                this.$detailButtonContainer
+                    .find('li > .action[data-action="'+name+'"]')
+                    .parent()
+                    .removeClass('hidden');
+
+                this.$detailButtonContainer
+                    .find('button.action[data-action="'+name+'"]')
+                    .removeClass('hidden');
+
                 if (!this.isDropdownItemListEmpty()) {
                     this.$dropdownItemListButton.removeClass('hidden');
                 }
@@ -432,7 +460,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         showPanel: function (name, softLockedType) {
-            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) return;
+            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
+                return;
+            }
 
             softLockedType = softLockedType || 'default';
 
@@ -442,19 +472,28 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
                 var iType = this.panelSoftLockedTypeList[i];
-                if (iType === softLockedType) continue;
+
+                if (iType === softLockedType) {
+                    continue;
+                }
+
                 var iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
-                if (this.recordHelper.getPanelStateParam(name, iParam)) return;
+
+                if (this.recordHelper.getPanelStateParam(name, iParam)) {
+                    return;
+                }
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
             var middleView = this.getView('middle');
+
             if (middleView) {
                 middleView.showPanel(name);
             }
 
             var bottomView = this.getView('bottom');
+
             if (bottomView) {
                 if ('showPanel' in bottomView) {
                     bottomView.showPanel(name);
@@ -462,6 +501,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             } else if (this.bottomView) {
                 this.once('after:render', function () {
                     var bottomView = this.getView('bottom');
+
                     if (bottomView && 'showPanel' in bottomView) {
                         bottomView.showPanel(name);
                     }
@@ -469,6 +509,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             var sideView = this.getView('side');
+
             if (sideView) {
                 if ('showPanel' in sideView) {
                     sideView.showPanel(name);
@@ -476,6 +517,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             } else if (this.sideView) {
                 this.once('after:render', function () {
                     var sideView = this.getView('side');
+
                     if (sideView && 'showPanel' in sideView) {
                         sideView.showPanel(name);
                     }
@@ -499,11 +541,13 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             var middleView = this.getView('middle');
+
             if (middleView) {
                 middleView.hidePanel(name);
             }
 
             var bottomView = this.getView('bottom');
+
             if (bottomView) {
                 if ('hidePanel' in bottomView) {
                     bottomView.hidePanel(name);
@@ -543,20 +587,25 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             var fieldInEditMode = null;
             for (var field in fields) {
                 var fieldView = fields[field];
+
                 this.listenTo(fieldView, 'edit', function (view) {
-                    if (fieldInEditMode && fieldInEditMode.mode == 'edit') {
+                    if (fieldInEditMode && fieldInEditMode.mode === 'edit') {
                         fieldInEditMode.inlineEditClose();
                     }
+
                     fieldInEditMode = view;
                 }, this);
 
                 this.listenTo(fieldView, 'inline-edit-on', function () {
                     this.inlineEditModeIsOn = true;
                 }, this);
+
                 this.listenTo(fieldView, 'inline-edit-off', function () {
                     this.inlineEditModeIsOn = false;
+
                     this.setIsNotChanged();
                 }, this);
+
                 this.listenTo(fieldView, 'after:inline-edit-off', function () {
                     if (this.updatedAttributes) {
                         this.resetModelChanges();
@@ -571,7 +620,12 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             var stickTop = this.getThemeManager().getParam('stickTop') || 62;
             var blockHeight = this.getThemeManager().getParam('blockHeight') || 21;
 
-            var $block = $('<div>').css('height', blockHeight + 'px').html('&nbsp;').hide().insertAfter($container);
+            var $block = $('<div>')
+                .css('height', blockHeight + 'px')
+                .html('&nbsp;')
+                .hide()
+                .insertAfter($container);
+
             var $middle = this.getView('middle').$el;
             var $window = $(window);
 
@@ -654,7 +708,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             for (var field in fields) {
                 var fieldView = fields[field];
                 if (!fieldView.readOnly) {
-                    if (fieldView.mode == 'edit') {
+                    if (fieldView.mode === 'edit') {
                         fieldView.fetchToModel();
                         fieldView.removeInlineEditLinks();
                         fieldView.setIsInlineEditMode(false);
@@ -675,7 +729,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             var fields = this.getFieldViews(true);
             for (var field in fields) {
                 var fieldView = fields[field];
-                if (fieldView.mode != 'detail') {
+                if (fieldView.mode !== 'detail') {
                     if (fieldView.mode === 'edit') {
                         fieldView.trigger('inline-edit-off');
                     }
