@@ -484,27 +484,6 @@ class Record extends Base
         return $this->getRecordService()->getDuplicateAttributes($data->id);
     }
 
-    protected function getMassActionParamsFromData($data)
-    {
-        $params = [];
-
-        if (property_exists($data, 'where') && !empty($data->byWhere)) {
-
-            $where = json_decode(json_encode($data->where), true);
-
-            $params['where'] = $where;
-
-            if (property_exists($data, 'selectData')) {
-                $params['selectData'] = json_decode(json_encode($data->selectData), true);
-            }
-        }
-        else if (property_exists($data, 'ids')) {
-            $params['ids'] = $data->ids;
-        }
-
-        return $params;
-    }
-
     public function postActionRestoreDeleted($params, $data, $request)
     {
         if (!$this->getUser()->isAdmin()) {
