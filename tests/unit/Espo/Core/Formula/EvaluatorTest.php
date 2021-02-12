@@ -29,8 +29,6 @@
 
 namespace tests\unit\Espo\Core\Formula;
 
-use Espo\ORM\Entity;
-
 use Espo\Core\Formula\Evaluator;
 use Espo\Core\InjectableFactory;
 
@@ -181,6 +179,17 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $expression = "array\\at(list(1, 2, 4, 8, 16), 2)";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(4, $actual);
+    }
+
+    public function testArrayJoin()
+    {
+        $expression = "array\\join(list('0', '1'), '-')";
+
+        $expected = '0-1';
+
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals($expected, $actual);
     }
 
     public function testWhile()
