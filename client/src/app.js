@@ -393,6 +393,8 @@ define(
 
             if (name in this.controllers) {
                 callback(this.controllers[name]);
+
+                return;
             }
 
             try {
