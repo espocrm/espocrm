@@ -40,9 +40,9 @@ class FieldUtil
         $this->metadata = $metadata;
     }
 
-    private function getAttributeListByType($scope, $name, $type)
+    private function getAttributeListByType($entityType, $name, $type)
     {
-        $fieldType = $this->metadata->get('entityDefs.' . $scope . '.fields.' . $name . '.type');
+        $fieldType = $this->metadata->get('entityDefs.' . $entityType . '.fields.' . $name . '.type');
 
         if (!$fieldType) {
             return [];
@@ -62,10 +62,13 @@ class FieldUtil
 
         if (isset($defs[$type . 'Fields'])) {
             $list = $defs[$type . 'Fields'];
+
             $naming = 'suffix';
+
             if (isset($defs['naming'])) {
                 $naming = $defs['naming'];
             }
+
             if ($naming == 'prefix') {
                 foreach ($list as $f) {
                     if ($f === '') {
@@ -88,17 +91,17 @@ class FieldUtil
         return $fieldList;
     }
 
-    public function getAdditionalActualAttributeList(string $scope, string $name) : array
+    public function getAdditionalActualAttributeList(string $entityType, string $name) : array
     {
         $attributeList = [];
 
-        $list = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'additionalAttributeList']);
+        $list = $this->metadata->get(['entityDefs', $entityType, 'fields', $name, 'additionalAttributeList']);
 
         if (empty($list)) {
             return [];
         }
 
-        $type = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
+        $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $name, 'type']);
 
         if (!$type) {
             return [];
@@ -119,41 +122,51 @@ class FieldUtil
         return $attributeList;
     }
 
-    public function getActualAttributeList(string $scope, string $name) : array
+    public function getActualAttributeList(string $entityType, string $name) : array
     {
         return array_merge(
-            $this->getAttributeListByType($scope, $name, 'actual'), $this->getAdditionalActualAttributeList($scope, $name)
+            $this->getAttributeListByType($entityType, $name, 'actual'),
+            $this->getAdditionalActualAttributeList($entityType, $name)
         );
     }
 
-    public function getNotActualAttributeList(string $scope, string $name) : array
+    public function getNotActualAttributeList(string $entityType, string $name) : array
     {
-        return $this->getAttributeListByType($scope, $name, 'notActual');
+        return $this->getAttributeListByType($entityType, $name, 'notActual');
     }
 
-    public function getAttributeList(string $scope, string $name) : array
+    public function getAttributeList(string $entityType, string $name) : array
     {
-        return array_merge($this->getActualAttributeList($scope, $name), $this->getNotActualAttributeList($scope, $name));
+        return array_merge(
+            $this->getActualAttributeList($entityType, $name),
+            $this->getNotActualAttributeList($entityType, $name)
+        );
     }
 
-    public function getFieldByTypeList(string $scope, string $type) : array
+    /**
+     * Get a list of fields of a specific type in an entity type.
+     */
+    public function getFieldByTypeList(string $entityType, string $type) : array
     {
-        if (!array_key_exists($scope, $this->fieldByTypeListCache)) {
-            $this->fieldByTypeListCache[$scope] = [];
+        if (!array_key_exists($entityType, $this->fieldByTypeListCache)) {
+            $this->fieldByTypeListCache[$entityType] = [];
         }
 
-        if (!array_key_exists($type, $this->fieldByTypeListCache[$scope])) {
-            $fieldDefs = $this->metadata->get(['entityDefs', $scope, 'fields'], []);
+        if (!array_key_exists($type, $this->fieldByTypeListCache[$entityType])) {
+            $fieldDefs = $this->metadata->get(['entityDefs', $entityType, 'fields'], []);
+
             $list = [];
+
             foreach ($fieldDefs as $field => $defs) {
                 if (isset($defs['type']) && $defs['type'] === $type) {
                     $list[] = $field;
                 }
             }
-            $this->fieldByTypeListCache[$scope][$type] = $list;
+
+            $this->fieldByTypeListCache[$entityType][$type] = $list;
         }
 
-        return $this->fieldByTypeListCache[$scope][$type];
+        return $this->fieldByTypeListCache[$entityType][$type];
     }
 
     private function getFieldTypeAttributeListByType($fieldType, $name, $type)
@@ -168,10 +181,13 @@ class FieldUtil
 
         if (isset($defs[$type . 'Fields'])) {
             $list = $defs[$type . 'Fields'];
+
             $naming = 'suffix';
+
             if (isset($defs['naming'])) {
                 $naming = $defs['naming'];
             }
+
             if ($naming == 'prefix') {
                 foreach ($list as $f) {
                     $attributeList[] = $f . ucfirst($name);
@@ -190,6 +206,9 @@ class FieldUtil
         return $attributeList;
     }
 
+    /**
+     * Get an attribute list for a given field type and field name.
+     */
     public function getFieldTypeAttributeList(string $fieldType, string $name) : array
     {
         return array_merge(
@@ -198,6 +217,9 @@ class FieldUtil
         );
     }
 
+    /**
+     * Get a list of fields in an entity type.
+     */
     public function getEntityTypeFieldList(string $entityType) : array
     {
         return array_keys($this->metadata->get(['entityDefs', $entityType, 'fields'], []));
