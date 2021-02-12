@@ -84,7 +84,7 @@ class Lead extends PersonService implements
         }
     }
 
-    public function getConvertAttributes(string $id)
+    public function getConvertAttributes(string $id) : array
     {
         $lead = $this->getEntity($id);
 
@@ -106,8 +106,6 @@ class Lead extends PersonService implements
             }
 
             $attributes = [];
-
-            $target = $this->getEntityManager()->getEntity($entityType);
 
             $fieldMap = [];
 
@@ -165,7 +163,9 @@ class Lead extends PersonService implements
                         $typeHash = (object) [];
 
                         foreach ($attachmentList as $attachment) {
-                            $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+                            $attachment = $this->getEntityManager()
+                                ->getRepository('Attachment')
+                                ->getCopiedAttachment($attachment);
 
                             if ($attachment) {
                                 $idList[] = $attachment->id;
@@ -182,10 +182,21 @@ class Lead extends PersonService implements
 
                     continue;
                 }
+                else if ($type === 'linkMultiple') {
+                    $attributes[$field . 'Ids'] = $lead->get($leadField . 'Ids');
+                    $attributes[$field . 'Names'] = $lead->get($leadField . 'Names');
+                    $attributes[$field . 'Columns'] = $lead->get($leadField . 'Columns');
+
+                    continue;
+                }
 
                 $leadAttributeList = $this->fieldUtil->getAttributeList('Lead', $leadField);
 
                 $attributeList = $this->fieldUtil->getAttributeList($entityType, $field);
+
+                if (count($attributeList) !== count($leadAttributeList)) {
+                    continue;
+                }
 
                 foreach ($attributeList as $i => $attribute) {
                     if (in_array($attribute, $ignoreAttributeList)) {
@@ -193,10 +204,6 @@ class Lead extends PersonService implements
                     }
 
                     $leadAttribute = $leadAttributeList[$i] ?? null;
-
-                    if (!$leadAttribute) {
-                        throw new Error("Not compatible fields in 'convertFields' map.");
-                    }
 
                     if (!$lead->has($leadAttribute)) {
                         continue;
