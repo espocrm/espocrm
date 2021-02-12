@@ -106,6 +106,7 @@ class EntityManager
         }
 
         $this->entityFactory = $entityFactory;
+
         $this->entityFactory->setEntityManager($this);
 
         $this->repositoryFactory = $repositoryFactory;
@@ -131,6 +132,7 @@ class EntityManager
 
         if (!$className) {
             $platform = $this->params['platform'];
+
             $className = 'Espo\\ORM\\QueryComposer\\' . ucfirst($platform) . 'QueryComposer';
         }
 
@@ -147,6 +149,7 @@ class EntityManager
 
         if (!$className) {
             $platform = $this->params['platform'];
+
             $className = 'Espo\\ORM\\Locker\\' . ucfirst($platform) . 'Locker';
 
             if (!class_exists($className)) {
@@ -243,10 +246,6 @@ class EntityManager
     {
         $params = $this->params;
 
-        $port = empty($params['port']) ? '' : 'port=' . $params['port'] . ';';
-
-        $platform = strtolower($params['platform']);
-
         $options = [];
 
         if (isset($params['sslCA'])) {
@@ -269,10 +268,44 @@ class EntityManager
             $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
         }
 
-        $this->pdo = new PDO(
-            $platform . ':host=' . $params['host'] . ';'. $port.'dbname=' . $params['dbname'] . ';charset=' . $params['charset'],
-            $params['user'], $params['password'], $options
-        );
+        $platform = strtolower($params['platform'] ?? '');
+
+        $host = $params['host'] ?? null;
+        $port = $params['port'] ?? null;
+        $dbname = $params['dbname'] ?? null;
+        $charset = $params['charset'] ?? null;
+        $user = $params['user'] ?? null;
+        $password = $params['password'] ?? null;
+
+        if (!$platform) {
+            throw new RuntimeException("No 'platform' parameter.");
+        }
+
+        if (!$host) {
+            throw new RuntimeException("No 'host' parameter.");
+        }
+
+        if (!$dbname) {
+            throw new RuntimeException("No 'dbname' parameter.");
+        }
+
+        $dsn =
+            $platform . ':' .
+            'host=' . $host;
+
+        if ($port) {
+            $dsn .= ';' . 'port=' . $port;
+        }
+
+        if ($dbname) {
+            $dsn .= ';' . 'dbname=' . $dbname;
+        }
+
+        if ($charset) {
+            $dsn .= ';' . 'charset=' . $charset;
+        }
+
+        $this->pdo = new PDO($dsn, $user, $password, $options);
 
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
