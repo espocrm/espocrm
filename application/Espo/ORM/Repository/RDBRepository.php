@@ -628,7 +628,7 @@ class RDBRepository extends Repository
      *
      * @return int|float
      */
-    public function sum(string $attributel)
+    public function sum(string $attribute)
     {
         return $this->createSelectBuilder()->sum($attribute);
     }
