@@ -32,38 +32,54 @@ define('utils', [], function () {
 
         handleAction: function (viewObject, e) {
             var $target = $(e.currentTarget);
+
             var action = $target.data('action');
 
             var fired = false;
+
             if (action) {
                 var data = $target.data();
+
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                if (typeof viewObject[method] == 'function') {
+
+                if (typeof viewObject[method] === 'function') {
                     viewObject[method].call(viewObject, data, e);
+
                     e.preventDefault();
                     e.stopPropagation();
+
                     fired = true;
-                } else if (data.handler) {
+                }
+                else if (data.handler) {
                     e.preventDefault();
                     e.stopPropagation();
+
                     fired = true;
+
                     require(data.handler, function (Handler) {
                         var handler = new Handler(viewObject);
+
                         handler[method].call(handler, data, e);
                     });
                 }
 
                 if (fired) {
                     var $dropdown = $target.closest('.dropdown-menu');
+
                     if ($dropdown.length) {
                         var $dropdownToggle = $dropdown.parent().find('[data-toggle="dropdown"]');
+
                         if ($dropdownToggle.length) {
                             var isDisabled = false;
+
                             if ($dropdownToggle.attr('disabled')) {
                                 isDisabled = true;
+
                                 $dropdownToggle.removeAttr('disabled').removeClass('disabled');
                             }
+
                             $dropdownToggle.dropdown('toggle');
+
                             if (isDisabled) {
                                 $dropdownToggle.attr('disabled', 'disabled').addClass('disabled');
                             }
@@ -78,16 +94,24 @@ define('utils', [], function () {
 
             if (item.configCheck) {
                 var configCheck = item.configCheck;
+
                 var opposite = false;
+
                 if (configCheck.substr(0, 1) === '!') {
                     opposite = true;
+
                     configCheck = configCheck.substr(1);
                 }
+
                 var configCheckResult = config.getByPath(configCheck.split('.'));
+
                 if (opposite) {
                     configCheckResult = !configCheckResult;
                 }
-                if (!configCheckResult) return false;
+
+                if (!configCheckResult) {
+                    return false;
+                }
             }
 
             return true;
@@ -95,23 +119,29 @@ define('utils', [], function () {
 
         checkActionAccess: function (acl, obj, item, isPrecise) {
             var hasAccess = true;
+
             if (item.acl) {
                 if (!item.aclScope) {
                     if (obj) {
-                        if (typeof obj == 'string' || obj instanceof String) {
+                        if (typeof obj === 'string' || obj instanceof String) {
                             hasAccess = acl.check(obj, item.acl);
-                        } else {
+                        }
+                        else {
                             hasAccess = acl.checkModel(obj, item.acl, isPrecise);
                         }
-                    } else {
+                    }
+                    else {
                         hasAccess = acl.check(item.scope, item.acl);
                     }
-                } else {
+                }
+                else {
                     hasAccess = acl.check(item.aclScope, item.acl);
                 }
-            } else if (item.aclScope) {
+            }
+            else if (item.aclScope) {
                 hasAccess = acl.checkScope(item.aclScope);
             }
+
             return hasAccess;
         },
 
@@ -122,6 +152,7 @@ define('utils', [], function () {
 
             for (var i in dataList) {
                 var item = dataList[i];
+
                 if (item.scope) {
                     if (item.action) {
                         if (!acl.check(item.scope, item.action)) {
@@ -142,23 +173,31 @@ define('utils', [], function () {
                 if (item.teamIdList) {
                     if (user && !(allowAllForAdmin && user.isAdmin())) {
                         var inTeam = false;
+
                         user.getLinkMultipleIdList('teams').forEach(function (teamId) {
                             if (~item.teamIdList.indexOf(teamId)) {
                                 inTeam = true;
                             }
                         });
-                        if (!inTeam) return false;
+
+                        if (!inTeam) {
+                            return false;
+                        }
                     }
                 }
                 if (item.portalIdList) {
                     if (user && !(allowAllForAdmin && user.isAdmin())) {
                         var inPortal = false;
+
                         user.getLinkMultipleIdList('portals').forEach(function (portalId) {
                             if (~item.portalIdList.indexOf(portalId)) {
                                 inPortal = true;
                             }
                         });
-                        if (!inPortal) return false;
+
+                        if (!inPortal) {
+                            return false;
+                        }
                     }
                 }
                 if (item.isPortalOnly) {
@@ -167,7 +206,8 @@ define('utils', [], function () {
                             return false;
                         }
                     }
-                } else if (item.inPortalDisabled) {
+                }
+                else if (item.inPortalDisabled) {
                     if (user && !(allowAllForAdmin && user.isAdmin())) {
                         if (user.isPortal()) {
                             return false;
@@ -187,23 +227,30 @@ define('utils', [], function () {
         },
 
         convert: function (string, p) {
-            if (string == null) {
+            if (string === null) {
                 return string;
             }
 
             var result = string;
+
             switch (p) {
                 case 'c-h':
                 case 'C-h':
                     result = Espo.Utils.camelCaseToHyphen(string);
+
                     break;
+
                 case 'h-c':
                     result = Espo.Utils.hyphenToCamelCase(string);
+
                     break;
+
                 case 'h-C':
                     result = Espo.Utils.hyphenToUpperCamelCase(string);
+
                     break;
             }
+
             return result;
         },
 
@@ -211,6 +258,7 @@ define('utils', [], function () {
             if (obj === null) {
                 return false;
             }
+
             return typeof obj === 'object';
         },
 
@@ -218,6 +266,7 @@ define('utils', [], function () {
             if (!Espo.Utils.isObject(obj)) {
                 return obj;
             }
+
             return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
         },
 
@@ -246,8 +295,10 @@ define('utils', [], function () {
                 location = this.camelCaseToHyphen(location || '');
 
                 return module + ':' + location + '/' + name;
-            } else {
+            }
+            else {
                 name = this.camelCaseToHyphen(name).split('.').join('/');
+
                 return location + '/' + name;
             }
         },
@@ -256,16 +307,20 @@ define('utils', [], function () {
             if (name && name[0] === name[0].toLowerCase()) {
                 return name;
             }
-            if (name.indexOf(':') != -1) {
+
+            if (name.indexOf(':') !== -1) {
                 var arr = name.split(':');
                 var modPart = arr[0];
                 var namePart = arr[1];
+
                 modPart = this.camelCaseToHyphen(modPart);
                 namePart = this.camelCaseToHyphen(namePart).split('.').join('/');
 
                 return modPart + ':' + 'views' + '/' + namePart;
-            } else {
+            }
+            else {
                 name = this.camelCaseToHyphen(name).split('.').join('/');
+
                 return 'views' + '/' + name;
             }
         },
@@ -275,44 +330,62 @@ define('utils', [], function () {
         },
 
         lowerCaseFirst: function (string) {
-            if (string == null) {
+            if (string === null) {
                 return string;
             }
+
             return string.charAt(0).toLowerCase() + string.slice(1);
         },
 
         upperCaseFirst: function (string) {
-            if (string == null) {
+            if (string === null) {
                 return string;
             }
+
             return string.charAt(0).toUpperCase() + string.slice(1);
         },
 
         hyphenToUpperCamelCase: function (string) {
-            if (string == null) {
+            if (string === null) {
                 return string;
             }
-            return this.upperCaseFirst(string.replace(/-([a-z])/g, function (g) {return g[1].toUpperCase();}));
+
+            return this.upperCaseFirst(
+                string.replace(
+                    /-([a-z])/g,
+                    function (g) {
+                        return g[1].toUpperCase();
+                    }
+                )
+            );
         },
 
         hyphenToCamelCase: function (string) {
-            if (string == null) {
+            if (string === null) {
                 return string;
             }
-            return string.replace(/-([a-z])/g, function (g) {return g[1].toUpperCase();});
+
+            return string.replace(
+                /-([a-z])/g,
+                function (g) {
+                    return g[1].toUpperCase();
+                }
+            );
         },
 
         camelCaseToHyphen: function (string) {
-            if (string == null) {
+            if (string === null) {
                 return string;
             }
+
             return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
         },
 
         trimSlash: function (str) {
-            if (str.substr(-1) == '/') {
+            if (str.substr(-1) === '/') {
                 return str.substr(0, str.length - 1);
             }
+
             return str;
         }
     };
