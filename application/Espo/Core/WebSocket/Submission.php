@@ -31,6 +31,10 @@ namespace Espo\Core\WebSocket;
 
 use Espo\Core\Utils\Config;
 
+use ZMQContext;
+use ZMQ;
+use Throwable;
+
 class Submission
 {
     protected $config;
@@ -42,25 +46,32 @@ class Submission
 
     public function submit(string $topic, ?string $userId = null, $data = null)
     {
-        if (!$data) $data = (object) [];
+        if (!$data) {
+            $data = (object) [];
+        }
 
         $dsn = $this->config->get('webSocketSubmissionDsn', 'tcp://localhost:5555');
 
         if ($userId) {
             $data->userId = $userId;
         }
+
         $data->topicId = $topic;
 
         try {
-            $context = new \ZMQContext();
-            $socket = $context->getSocket(\ZMQ::SOCKET_PUSH, 'my pusher');
+            $context = new ZMQContext();
+
+            $socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
+
             $socket->connect($dsn);
 
             $socket->send(json_encode($data));
 
-            $socket->setSockOpt(\ZMQ::SOCKOPT_LINGER, 1000);
+            $socket->setSockOpt(ZMQ::SOCKOPT_LINGER, 1000);
+
             $socket->disconnect($dsn);
-        } catch (\Throwable $e) {
+        }
+        catch (Throwable $e) {
             $GLOBALS['log']->error("WebSocketSubmission: " . $e->getMessage());
         }
     }
