@@ -1719,8 +1719,10 @@ define('views/record/list', 'view', function (Dep) {
             var key = model.id;
 
             this.rowList.push(key);
+
             this.getInternalLayout(function (internalLayout) {
                 internalLayout = Espo.Utils.cloneDeep(internalLayout);
+
                 this.prepareInternalLayout(internalLayout, model);
 
                 var acl =  {
@@ -1801,6 +1803,7 @@ define('views/record/list', 'view', function (Dep) {
             collection = collection || this.collection;
 
             $showMore =  $showMore || this.$el.find('.show-more');
+            
             $list = $list || this.$el.find(this.listContainerEl);
 
             $showMore.children('a').addClass('disabled');

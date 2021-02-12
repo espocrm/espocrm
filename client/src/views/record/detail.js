@@ -200,6 +200,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     }
                 }
             }
+
             this.model.save(attributes, {
                 patch: true,
             }).then(function () {
@@ -326,7 +327,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (this.type === 'detail' && this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])) {
-                if (this.getAcl().get('dataPrivacyPermission') == 'yes') {
+                if (this.getAcl().get('dataPrivacyPermission') === 'yes') {
                     this.dropdownItemList.push({
                         'label': 'View Personal Data',
                         'name': 'viewPersonalData'
@@ -1714,6 +1715,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     break;
                 }
             }
+
             for (var i in this.dropdownItemList) {
                 if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList.splice(i, 1);
@@ -1721,6 +1723,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     break;
                 }
             }
+
             if (this.isRendered()) {
             	this.$el.find('.detail-button-container .action[data-action="'+name+'"]').remove();
             }
@@ -2062,7 +2065,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             if (this.returnUrl) {
                 url = this.returnUrl;
-            } else {
+            }
+            else {
                 if (after === 'delete') {
                     url = this.options.rootUrl || '#' + this.scope;
 
@@ -2091,7 +2095,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                         this.getRouter().dispatch(this.scope, 'view', options);
                     }
-                } else {
+                }
+                else {
                     url = this.options.rootUrl || '#' + this.scope;
                 }
             }
