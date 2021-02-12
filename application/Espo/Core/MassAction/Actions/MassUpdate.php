@@ -178,7 +178,7 @@ class MassUpdate implements MassAction
         return $clonedValueMap;
     }
 
-    protected function copyFileField(string $field, StdClass $valueMap)
+    protected function copyFileField(string $field, StdClass $valueMap) : void
     {
         $idAttribute = $field . 'Id';
 
@@ -203,7 +203,7 @@ class MassUpdate implements MassAction
         $valueMap->$idAttribute = $copiedAttachment->id;
     }
 
-    protected function copyAttachmentMultipleField(string $field, StdClass $valueMap)
+    protected function copyAttachmentMultipleField(string $field, StdClass $valueMap) : void
     {
         $idsAttribute = $field . 'Ids';
 
