@@ -82,9 +82,11 @@ define('views/record/list', 'view', function (Dep) {
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
+
                 if (!this.scope || this.selectable) {
                     return;
                 }
+
                 e.preventDefault();
 
                 var id = $(e.currentTarget).attr('data-id');
@@ -95,13 +97,15 @@ define('views/record/list', 'view', function (Dep) {
 
                 var options = {
                     id: id,
-                    model: model
+                    model: model,
                 };
+
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
 
                 this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
+
                 this.getRouter().dispatch(scope, 'view', options);
             },
             'click [data-action="showMore"]': function () {
@@ -109,14 +113,18 @@ define('views/record/list', 'view', function (Dep) {
             },
             'click a.sort': function (e) {
                 var field = $(e.currentTarget).data('name');
+
                 this.toggleSort(field);
             },
             'click .pagination a': function (e) {
                 var page = $(e.currentTarget).data('page');
+
                 if ($(e.currentTarget).parent().hasClass('disabled')) {
                     return;
                 }
+
                 Espo.Ui.notify(this.translate('loading', 'messages'));
+
                 this.collection.once('sync', function () {
                     this.notify(false);
                 }.bind(this));
@@ -127,6 +135,7 @@ define('views/record/list', 'view', function (Dep) {
                     this.collection[page + 'Page'].call(this.collection);
                     this.trigger('paginate');
                 }
+
                 this.deactivate();
             },
 
@@ -152,9 +161,11 @@ define('views/record/list', 'view', function (Dep) {
             },
             'click .actions-menu a.mass-action': function (e) {
                 $el = $(e.currentTarget);
+
                 var action = $el.data('action');
 
                 var method = 'massAction' + Espo.Utils.upperCaseFirst(action);
+
                 if (method in this) {
                     this[method]();
                 } else {
@@ -168,15 +179,19 @@ define('views/record/list', 'view', function (Dep) {
             if (orderBy === this.collection.orderBy && this.collection.order === 'asc') {
                 asc = false;
             }
+
             var order = asc ? 'asc' : 'desc';
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
+
             this.collection.once('sync', function () {
                 this.notify(false);
+
                 this.trigger('sort', {orderBy: orderBy, order: order});
             }, this);
 
             var maxSizeLimit = this.getConfig().get('recordListMaxSizeLimit') || 200;
+
             while (this.collection.length > maxSizeLimit) {
                 this.collection.pop();
             }
@@ -202,12 +217,17 @@ define('views/record/list', 'view', function (Dep) {
 
             function getOffsetTop (element) {
                 var offsetTop = 0;
+
                 do {
-                    if (element.classList.contains('modal-body')) break;
+                    if (element.classList.contains('modal-body')) {
+                        break;
+                    }
+
                     if (!isNaN(element.offsetTop)) {
                         offsetTop += element.offsetTop;
                     }
                 } while (element = element.offsetParent);
+
                 return offsetTop;
             }
 
@@ -215,9 +235,11 @@ define('views/record/list', 'view', function (Dep) {
 
             if (this.$el.closest('.modal-body').length) {
                 $scrollable = this.$el.closest('.modal-body');
+
                 top = 0;
             } else {
                 top = getOffsetTop(this.getParentView().$el.get(0));
+
                 if ($(window.document).width() < screenWidthXs) {
                     top = 0;
                 }
@@ -225,35 +247,44 @@ define('views/record/list', 'view', function (Dep) {
 
             top += this.$el.find('.list-buttons-container').height();
 
-            var topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
 
             $scrollable.off('scroll.list-' + this.cid);
+
             $scrollable.on('scroll.list-' + this.cid, function (e) {
                 cotrolSticking();
             }.bind(this));
 
             $window.off('resize.list-' + this.cid);
+
             $window.on('resize.list-' + this.cid, function (e) {
                 cotrolSticking();
             }.bind(this));
 
             this.on('check', function () {
-                if (this.checkedList.length === 0 && !this.allResultIsChecked) return;
+                if (this.checkedList.length === 0 && !this.allResultIsChecked) {
+                    return;
+                }
+
                 cotrolSticking();
             }, this);
 
             this.once('remove', function () {
                 $scrollable.off('scroll.list-' + this.cid);
+
                 $window.off('resize.list-' + this.cid);
             });
 
             var cotrolSticking = function () {
-                if (this.checkedList.length === 0 && !this.allResultIsChecked) return;
+                if (this.checkedList.length === 0 && !this.allResultIsChecked) {
+                    return;
+                }
 
                 var middleTop = getOffsetTop($middle.get(0));
 
                 var stickTop = middleTop - top;
+
                 var edge = middleTop + $middle.outerHeight(true);
+
                 var scrollTop = $scrollable.scrollTop();
 
                 if (scrollTop < edge) {
@@ -291,17 +322,24 @@ define('views/record/list', 'view', function (Dep) {
 
             if (isChecked) {
                 this.$el.find('input.record-checkbox').prop('checked', true);
+
                 this.showActions();
+
                 this.collection.models.forEach(function (model) {
                     this.checkedList.push(model.id);
                 }, this);
+
                 this.$el.find('.list > table tbody tr').addClass('active');
-            } else {
+            }
+            else {
                 if (this.allResultIsChecked) {
                     this.unselectAllResult();
                 }
+
                 this.$el.find('input.record-checkbox').prop('checked', false);
+
                 this.hideActions();
+
                 this.$el.find('.list > table tbody tr').removeClass('active');
             }
 
@@ -328,10 +366,6 @@ define('views/record/list', 'view', function (Dep) {
 
         quickEditDisabled: false,
 
-        /**
-         * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
-         *
-         */
         listLayout: null,
 
         _internalLayout: null,
@@ -345,8 +379,13 @@ define('views/record/list', 'view', function (Dep) {
         allResultIsChecked: false,
 
         data: function () {
-            var paginationTop = this.pagination === 'both' || this.pagination === true || this.pagination === 'top';
-            var paginationBottom = this.pagination === 'both' || this.pagination === true || this.pagination === 'bottom';
+            var paginationTop = this.pagination === 'both' ||
+                this.pagination === true ||
+                this.pagination === 'top';
+
+            var paginationBottom = this.pagination === 'both' ||
+                this.pagination === true ||
+                this.pagination === 'bottom';
 
             var moreCount = this.collection.total - this.collection.length;
 
@@ -373,7 +412,7 @@ define('views/record/list', 'view', function (Dep) {
                 paginationEnabled: this.pagination,
                 paginationTop: paginationTop,
                 paginationBottom: paginationBottom,
-                showMoreActive: this.collection.total > this.collection.length || this.collection.total == -1,
+                showMoreActive: this.collection.total > this.collection.length || this.collection.total === -1,
                 showMoreEnabled: this.showMore,
                 showCount: this.showCount && this.collection.total > 0,
                 moreCount: moreCount,
@@ -386,7 +425,8 @@ define('views/record/list', 'view', function (Dep) {
                 buttonList: this.buttonList,
                 dropdownItemList: this.dropdownItemList,
                 displayTotalCount: this.displayTotalCount && this.collection.total > 0,
-                displayActionsButtonGroup: this.checkboxes || this.massActionList || this.buttonList.length || this.dropdownItemList.length,
+                displayActionsButtonGroup: this.checkboxes ||
+                    this.massActionList || this.buttonList.length || this.dropdownItemList.length,
                 totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
                 moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
                 checkboxColumnWidth: this.checkboxColumnWidth,
@@ -395,20 +435,27 @@ define('views/record/list', 'view', function (Dep) {
 
         init: function () {
             this.listLayout = this.options.listLayout || this.listLayout;
+
             this.type = this.options.type || this.type;
 
             this.layoutName = this.options.layoutName || this.layoutName || this.type;
 
             this.headerDisabled = this.options.headerDisabled || this.headerDisabled;
+
             if (!this.headerDisabled) {
                 this.header = _.isUndefined(this.options.header) ? this.header : this.options.header;
             } else {
                 this.header = false;
             }
+
             this.pagination = _.isUndefined(this.options.pagination) ? this.pagination : this.options.pagination;
             this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes : this.options.checkboxes;
             this.selectable = _.isUndefined(this.options.selectable) ? this.selectable : this.options.selectable;
-            this.rowActionsView = _.isUndefined(this.options.rowActionsView) ? this.rowActionsView : this.options.rowActionsView;
+
+            this.rowActionsView = _.isUndefined(this.options.rowActionsView) ?
+                this.rowActionsView :
+                this.options.rowActionsView;
+
             this.showMore = _.isUndefined(this.options.showMore) ? this.showMore : this.options.showMore;
 
             this.massActionsDisabled = this.options.massActionsDisabled || this.massActionsDisabled;
@@ -445,10 +492,12 @@ define('views/record/list', 'view', function (Dep) {
 
             this.massActionList.forEach(function(item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find(
-                        'div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]'
-                    )
-                    .parent().addClass('hidden');
+                    this.$el
+                        .find(
+                            'div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]'
+                        )
+                        .parent()
+                        .addClass('hidden');
                 }
             }, this);
 
@@ -467,12 +516,12 @@ define('views/record/list', 'view', function (Dep) {
             this.$el.find('input.record-checkbox').prop('checked', false).removeAttr('disabled');
             this.$el.find('input.select-all').prop('checked', false);
 
-
             this.massActionList.forEach(function(item) {
                 if (!~this.checkAllResultMassActionList.indexOf(item)) {
-                    this.$el.find(
-                        'div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]'
-                    )
+                    this.$el
+                        .find(
+                            'div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]'
+                        )
                         .parent()
                         .removeClass('hidden');
                 }
@@ -507,7 +556,8 @@ define('views/record/list', 'view', function (Dep) {
 
             if (fieldList) {
                 o.fieldList = fieldList;
-            } else {
+            }
+            else {
                 var layoutFieldList = [];
 
                 (this.listLayout || []).forEach(function (item) {
@@ -534,6 +584,7 @@ define('views/record/list', 'view', function (Dep) {
 
                     Espo.Ajax.postRequest(url, data, {timeout: 0}).then(function (data) {
                         Espo.Ui.notify(false);
+
                         if ('id' in data) {
                             window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
                         }
@@ -1303,17 +1354,21 @@ define('views/record/list', 'view', function (Dep) {
                 return this._cachedFilteredListLayout;
             }
 
-            var forbiddenFieldList =this._cachedScopeForbiddenFieldList =
-                this._cachedScopeForbiddenFieldList || this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+            var forbiddenFieldList = this._cachedScopeForbiddenFieldList =
+                this._cachedScopeForbiddenFieldList ||
+                this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
 
             if (!forbiddenFieldList.length) {
                 this._cachedFilteredListLayout = listLayout;
+
                 return this._cachedFilteredListLayout;
             }
 
-            filteredListLayout = Espo.Utils.clone(listLayout);
+            var filteredListLayout = Espo.Utils.clone(listLayout);
+
             for (var i in listLayout) {
                 var name = listLayout[i].name;
+
                 if (name && ~forbiddenFieldList.indexOf(name)) {
                     filteredListLayout[i].customLabel = '';
                     filteredListLayout[i].notSortable = true;
@@ -1336,45 +1391,65 @@ define('views/record/list', 'view', function (Dep) {
 
             this._helper.layoutManager.get(this.collection.name, layoutName, function (listLayout) {
                 var filteredListLayout = this.filterListLayout(listLayout);
+
                 this.layoutLoadCallbackList.forEach(function (callbackItem) {
                     callbackItem(filteredListLayout);
+
                     this.layoutLoadCallbackList = [];
+
                     this.layoutIsBeingLoaded = false;
                 }, this);
             }.bind(this));
         },
 
         getSelectAttributeList: function (callback) {
-            if (this.scope == null || this.rowHasOwnLayout) {
+            if (this.scope === null || this.rowHasOwnLayout) {
                 callback(null);
+
                 return;
             }
 
             if (this.listLayout) {
                 var attributeList = this.fetchAttributeListFromLayout();
+
                 callback(attributeList);
+
                 return;
             } else {
                 this._loadListLayout(function (listLayout) {
                     this.listLayout = listLayout;
+
                     var attributeList = this.fetchAttributeListFromLayout();
+
                     callback(attributeList);
                 }.bind(this));
+
                 return;
             }
         },
 
         fetchAttributeListFromLayout: function () {
             var list = [];
+
             this.listLayout.forEach(function (item) {
-                if (!item.name) return;
+                if (!item.name) {
+                    return;
+                }
+
                 var field = item.name;
+
                 var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
-                if (!fieldType) return;
-                this.getFieldManager().getEntityTypeFieldAttributeList(this.scope, field).forEach(function (attribute) {
-                    list.push(attribute);
-                }, this);
+
+                if (!fieldType) {
+                    return;
+                }
+
+                this.getFieldManager().getEntityTypeFieldAttributeList(this.scope, field)
+                    .forEach(function (attribute) {
+                        list.push(attribute);
+                    }, this);
             }, this);
+
             return list;
         },
 
@@ -1386,9 +1461,11 @@ define('views/record/list', 'view', function (Dep) {
 
                 if ('width' in this.listLayout[i] && this.listLayout[i].width !== null) {
                     width = this.listLayout[i].width + '%';
-                } else if ('widthPx' in this.listLayout[i]) {
+                }
+                else if ('widthPx' in this.listLayout[i]) {
                     width = this.listLayout[i].widthPx;
                 }
+
                 var itemName = this.listLayout[i].name;
 
                 var item = {
@@ -1397,26 +1474,33 @@ define('views/record/list', 'view', function (Dep) {
                     width: width,
                     align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false,
                 };
+
                 if ('customLabel' in this.listLayout[i]) {
                     item.customLabel = this.listLayout[i].customLabel;
                     item.hasCustomLabel = true;
                     item.label = item.customLabel;
-                } else {
+                }
+                else {
                     item.label = this.translate(itemName, 'fields', this.collection.entityType);
                 }
+
                 if (item.isSortable) {
                     item.isSorted = this.collection.orderBy === itemName;
+
                     if (item.isSorted) {
                         item.isDesc = this.collection.order === 'desc' ;
                     }
                 }
+
                 defs.push(item);
             };
+
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 defs.push({
                     width: this.rowActionsColumnWidth
                 });
             }
+
             return defs;
         },
 
@@ -1436,6 +1520,7 @@ define('views/record/list', 'view', function (Dep) {
             for (var i in listLayout) {
                 var col = listLayout[i];
                 var type = col.type || model.getFieldType(col.name) || 'base';
+
                 if (!col.name) {
                     continue;
                 }
@@ -1443,7 +1528,9 @@ define('views/record/list', 'view', function (Dep) {
                 var item = {
                     columnName: col.name,
                     name: col.name + 'Field',
-                    view: col.view || model.getFieldParam(col.name, 'view') || this.getFieldManager().getViewName(type),
+                    view: col.view ||
+                        model.getFieldParam(col.name, 'view') ||
+                        this.getFieldManager().getViewName(type),
                     options: {
                         defs: {
                             name: col.name,
@@ -1452,9 +1539,11 @@ define('views/record/list', 'view', function (Dep) {
                         mode: 'list'
                     }
                 };
+
                 if (col.width) {
                     item.options.defs.width = col.width;
                 }
+
                 if (col.widthPx) {
                     item.options.defs.widthPx = col.widthPx;
                 }
@@ -1465,23 +1554,28 @@ define('views/record/list', 'view', function (Dep) {
                 if (col.align) {
                     item.options.defs.align = col.align;
                 }
+
                 layout.push(item);
             }
             if (this.rowActionsView && !this.rowActionsDisabled) {
                 layout.push(this.getRowActionsDefs());
             }
+
             return layout;
         },
 
         checkRecord: function (id, $target, isSilent) {
             $target = $target || this.$el.find('.record-checkbox[data-id="' + id + '"]');
 
-            if (!$target.length) return;
+            if (!$target.length) {
+                return;
+            }
 
             $target.get(0).checked = true;
 
             var index = this.checkedList.indexOf(id);
-            if (index == -1) {
+
+            if (index === -1) {
                 this.checkedList.push(id);
             }
 
@@ -1497,7 +1591,8 @@ define('views/record/list', 'view', function (Dep) {
             }
 
             var index = this.checkedList.indexOf(id);
-            if (index != -1) {
+
+            if (index !== -1) {
                 this.checkedList.splice(index, 1);
             }
 
@@ -1515,7 +1610,7 @@ define('views/record/list', 'view', function (Dep) {
                 this.hideActions();
             }
 
-            if (this.checkedList.length == this.collection.models.length) {
+            if (this.checkedList.length === this.collection.models.length) {
                 this.$el.find('.select-all').prop('checked', true);
             } else {
                 this.$el.find('.select-all').prop('checked', false);
@@ -1563,44 +1658,55 @@ define('views/record/list', 'view', function (Dep) {
 
         getInternalLayoutForModel: function (callback, model) {
             var scope = model.name;
-            if (this._internalLayout == null) {
+
+            if (this._internalLayout === null) {
                 this._internalLayout = {};
             }
+
             if (!(scope in this._internalLayout)) {
                 this._internalLayout[scope] = this._convertLayout(this.listLayout[scope], model);
             }
+
             callback(this._internalLayout[scope]);
         },
 
         getInternalLayout: function (callback, model) {
-            if (this.scope == null || this.rowHasOwnLayout) {
+            if (this.scope === null || this.rowHasOwnLayout) {
                 if (!model) {
                     callback(null);
+
                     return;
                 } else {
                     this.getInternalLayoutForModel(callback, model);
+
                     return;
                 }
             }
             if (this._internalLayout !== null) {
                 callback(this._internalLayout);
+
                 return;
             }
             if (this.listLayout !== null) {
                 this._internalLayout = this._convertLayout(this.listLayout);
+
                 callback(this._internalLayout);
+
                 return;
             }
             this._loadListLayout(function (listLayout) {
                 this.listLayout = listLayout;
                 this._internalLayout = this._convertLayout(listLayout);
+
                 callback(this._internalLayout);
+
                 return;
             }.bind(this));
         },
 
         getItemEl: function (model, item) {
-            return this.options.el + ' tr[data-id="' + model.id + '"] td.cell[data-name="' + item.columnName + '"]';
+            return this.options.el + ' tr[data-id="' + model.id + '"] ' +
+                'td.cell[data-name="' + item.columnName + '"]';
         },
 
         prepareInternalLayout: function (internalLayout, model) {
@@ -1633,36 +1739,43 @@ define('views/record/list', 'view', function (Dep) {
                         layout: internalLayout
                     },
                     name: this.type + '-' + model.name,
-                    setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered()
+                    setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
                 }, callback);
             }.bind(this), model);
         },
 
         buildRows: function (callback) {
             this.checkedList = [];
+
             this.rowList = [];
 
             if (this.collection.length > 0) {
                 var i = 0;
                 var c = !this.pagination ? 1 : 2;
+
                 var func = function () {
                     i++;
-                    if (i == c) {
-                        if (typeof callback == 'function') {
+
+                    if (i === c) {
+                        if (typeof callback === 'function') {
                             callback();
                         }
                     }
-                }
+                };
 
                 this.wait(true);
 
                 var modelList = this.collection.models;
+
                 var count = modelList.length;
+
                 var built = 0;
+
                 modelList.forEach(function (model) {
                     this.buildRow(i, model, function () {
                         built++;
-                        if (built == count) {
+
+                        if (built === count) {
                             func();
                             this.wait(false);
                             this.trigger('after:build-rows');
@@ -1677,7 +1790,7 @@ define('views/record/list', 'view', function (Dep) {
                     }, func);
                 }
             } else {
-                if (typeof callback == 'function') {
+                if (typeof callback === 'function') {
                     callback();
                     this.trigger('after:build-rows');
                 }
@@ -1696,12 +1809,15 @@ define('views/record/list', 'view', function (Dep) {
 
             var final = function () {
                 $showMore.parent().append($showMore);
+
                 if (
-                    (collection.total > collection.length + collection.lengthCorrection || collection.total == -1)
+                    (collection.total > collection.length + collection.lengthCorrection || collection.total === -1)
                 ) {
                     var moreCount = collection.total - collection.length - collection.lengthCorrection;
                     var moreCountString = this.getNumberUtil().formatInt(moreCount);
+
                     this.$el.find('.more-count').text(moreCountString);
+
                     $showMore.removeClass('hidden');
                 }
                 $showMore.children('a').removeClass('disabled');
@@ -1752,7 +1868,7 @@ define('views/record/list', 'view', function (Dep) {
 
                             rowsReady++;
 
-                            if (rowsReady == rowCount) {
+                            if (rowsReady === rowCount) {
                                 final();
                             }
 
@@ -1804,7 +1920,8 @@ define('views/record/list', 'view', function (Dep) {
 
             var scope = data.scope || model.name || this.scope;
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') ||
+                'views/modals/detail';
 
             if (!this.quickDetailDisabled) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
@@ -1815,13 +1932,16 @@ define('views/record/list', 'view', function (Dep) {
                     id: id,
                     quickEditDisabled: this.quickEditDisabled,
                 };
+
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
+
                 this.createView('modal', viewName, options, function (view) {
                     this.listenToOnce(view, 'after:render', function () {
                         Espo.Ui.notify(false);
                     });
+
                     view.render();
 
                     this.listenToOnce(view, 'remove', function () {
@@ -1842,14 +1962,20 @@ define('views/record/list', 'view', function (Dep) {
         },
 
         actionQuickEdit: function (data) {
-            data = data || {}
+            data = data || {};
+
             var id = data.id;
-            if (!id) return;
+
+            if (!id) {
+                return;
+            }
+
 
             var model = null;
             if (this.collection) {
                 model = this.collection.get(id);
             }
+
             if (!data.scope && !model) {
                 return;
             }
@@ -1860,6 +1986,7 @@ define('views/record/list', 'view', function (Dep) {
 
             if (!this.quickEditDisabled) {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
+
                 var options = {
                     scope: scope,
                     id: id,
@@ -1871,12 +1998,13 @@ define('views/record/list', 'view', function (Dep) {
                         action: null,
                         options: {
                             isReturn: true
-                        }
-                    }
+                        },
+                    },
                 };
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
+
                 this.createView('modal', viewName, options, function (view) {
                     view.once('after:render', function () {
                         Espo.Ui.notify(false);
@@ -1906,14 +2034,17 @@ define('views/record/list', 'view', function (Dep) {
                         controller: scope,
                         action: null,
                         options: {
-                            isReturn: true
+                            isReturn: true,
                         }
-                    }
+                    },
                 };
+
                 if (this.options.keepCurrentRootUrl) {
                     options.rootUrl = this.getRouter().getCurrentUrl();
                 }
+
                 this.getRouter().navigate('#' + scope + '/edit/' + id, {trigger: false});
+
                 this.getRouter().dispatch(scope, 'edit', options);
             }
         },
@@ -1923,31 +2054,41 @@ define('views/record/list', 'view', function (Dep) {
         },
 
         actionQuickRemove: function (data) {
-            data = data || {}
+            data = data || {};
+
             var id = data.id;
-            if (!id) return;
+
+            if (!id) {
+                return;
+            }
 
             var model = this.collection.get(id);
+
             if (!this.getAcl().checkModel(model, 'delete')) {
                 this.notify('Access denied', 'error');
+
                 return false;
             }
 
             this.confirm({
                 message: this.translate('removeRecordConfirmation', 'messages', this.scope),
-                confirmText: this.translate('Remove')
+                confirmText: this.translate('Remove'),
             }, function () {
                 this.collection.trigger('model-removing', id);
                 this.collection.remove(model);
+
                 this.notify('Removing...');
+
                 model.destroy({
                     wait: true,
                     success: function () {
                         this.notify('Removed', 'success');
+
                         this.removeRecordFromList(id);
                     }.bind(this),
                     error: function () {
                         this.notify('Error occured', 'error');
+
                         this.collection.push(model);
                     }.bind(this)
                 });
@@ -1956,13 +2097,16 @@ define('views/record/list', 'view', function (Dep) {
 
         removeRecordFromList: function (id) {
             this.collection.remove(id);
+
             if (this.collection.total > 0) {
                 this.collection.total--;
             }
+
             this.$el.find('.total-count-span').text(this.collection.total.toString());
 
             var index = this.checkedList.indexOf(id);
-            if (index != -1) {
+
+            if (index !== -1) {
                 this.checkedList.splice(index, 1);
             }
 
@@ -1977,13 +2121,16 @@ define('views/record/list', 'view', function (Dep) {
 
         removeRowHtml: function (id) {
             this.$el.find(this.getRowSelector(id)).remove();
-            if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
+
+            if (this.collection.length === 0 && (this.collection.total === 0 || this.collection.total === -2)) {
                 this.reRender();
             }
         },
 
         getTableMinWidth: function () {
-            if (!this.listLayout) return;
+            if (!this.listLayout) {
+                return;
+            }
 
             var totalWidth = 0;
             var totalWidthPx = 0;
@@ -1992,8 +2139,19 @@ define('views/record/list', 'view', function (Dep) {
 
             this.listLayout.forEach(function (item) {
                 columnCount ++;
-                if (item.widthPx) {totalWidthPx += item.widthPx; return;}
-                if (item.width) {totalWidth += item.width; return;}
+
+                if (item.widthPx) {
+                    totalWidthPx += item.widthPx;
+
+                    return;
+                }
+
+                if (item.width) {
+                    totalWidth += item.width;
+
+                    return;
+                }
+
                 emptyCount ++;
             }, this);
 
@@ -2009,12 +2167,14 @@ define('views/record/list', 'view', function (Dep) {
 
             if (totalWidth >= 100) {
                 minWidth = columnCount * this.minColumnWidth;
-            } else {
+            }
+            else {
                 minWidth = (totalWidthPx + this.minColumnWidth * emptyCount) / (1 - totalWidth / 100);
                 minWidth = Math.round(minWidth);
             }
 
             return minWidth;
         },
+
     });
 });
