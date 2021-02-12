@@ -35,6 +35,7 @@ use Espo\ORM\{
     Mapper\BaseMapper,
     Repository\RepositoryFactory,
     Repository\Repository,
+    Repository\RDBRepository,
     Locker\Locker,
     Locker\BaseLocker,
 };
@@ -396,6 +397,20 @@ class EntityManager
         }
 
         return $this->repositoryHash[$entityType] ?? null;
+    }
+
+    /**
+     * Get an RDB repository for a specific entity type.
+     */
+    public function getRDBRepository(string $entityType) : RDBRepository
+    {
+        $repository = $this->getRepository($entityType);
+
+        if (!$repository instanceof RDBRepository) {
+            throw new RuntimeException("Repository '{$entityType}' is not RDB.");
+        }
+
+        return $repository;
     }
 
     /**
