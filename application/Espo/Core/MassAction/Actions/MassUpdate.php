@@ -65,7 +65,7 @@ class MassUpdate implements MassAction
         $this->entityManager = $entityManager;
     }
 
-    public function process(Params $params, Data $dataWrapped) : Result
+    public function process(Params $params, Data $data) : Result
     {
         $entityType = $params->getEntityType();
 
@@ -77,13 +77,13 @@ class MassUpdate implements MassAction
             throw new Forbidden("No mass-update permission.");
         }
 
-        $data = $dataWrapped->getRaw();
+        $valueMap = $data->getRaw();
 
         $service = $this->recordServiceContainer->get($entityType);
 
         $repository = $this->entityManager->getRepository($entityType);
 
-        $service->filterUpdateInput($data);
+        $service->filterUpdateInput($valueMap);
 
         $query = $this->queryBuilder->build($params);
 
@@ -101,10 +101,10 @@ class MassUpdate implements MassAction
                 continue;
             }
 
-            $entity->set($data);
+            $entity->set($valueMap);
 
             try {
-                $service->processValidation($entity, $data);
+                $service->processValidation($entity, $valueMap);
             }
             catch (Exception $e) {
                 continue;
