@@ -2364,7 +2364,7 @@ class Record implements Crud,
         return $this->getStreamService()->findEntityFollowers($entity, $params);
     }
 
-    public function getDuplicateAttributes($id)
+    public function getDuplicateAttributes(string $id) : StdClass
     {
         if (empty($id)) {
             throw new BadRequest("No ID passed.");
@@ -2403,8 +2403,8 @@ class Record implements Crud,
 
             if (in_array($type, ['file', 'image'])) {
                 $attachment = $entity->get($field);
-                if ($attachment) {
 
+                if ($attachment) {
                     $attachment = $this->getEntityManager()
                         ->getRepository('Attachment')
                         ->getCopiedAttachment($attachment);
