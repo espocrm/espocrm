@@ -40,7 +40,6 @@ use Espo\ORM\{
 };
 
 use PDO;
-use PDOStatement;
 use Exception;
 use RuntimeException;
 
@@ -188,8 +187,6 @@ class EntityManager
 
     protected function getMapperClassName(string $name) : string
     {
-        $className = null;
-
         $classNameMap = $this->params['mapperClassNameMap'] ?? [];
 
         $className = $classNameMap[$name] ?? null;
@@ -255,15 +252,19 @@ class EntityManager
         if (isset($params['sslCA'])) {
             $options[PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
         }
+
         if (isset($params['sslCert'])) {
             $options[PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
         }
+
         if (isset($params['sslKey'])) {
             $options[PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
         }
+
         if (isset($params['sslCAPath'])) {
             $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
         }
+
         if (isset($params['sslCipher'])) {
             $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
         }
