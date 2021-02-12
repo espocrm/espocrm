@@ -92,6 +92,9 @@ class Comparator extends OriginalComparator
             if ($length2 > $length1) {
                 $changedProperties[] = 'length';
             }
+            if ($length2 < $length1) {
+                $column2->setLength($length1);
+            }
             // Espo: end
 
             if ($properties1['fixed'] !== $properties2['fixed']) {
@@ -136,7 +139,10 @@ class Comparator extends OriginalComparator
             }
 
             // Espo: skip collation changes
-            if ($key == 'collation') continue;
+            if ($key == 'collation') {
+                $column2->setPlatformOption('collation', $platformOptions1['collation']);
+                continue;
+            }
             // Espo: end
 
             $changedProperties[] = $key;

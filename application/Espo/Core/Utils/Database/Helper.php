@@ -54,7 +54,7 @@ class Helper
 
     protected $dbalDrivers = [
         'mysqli' => '\\Doctrine\\DBAL\\Driver\\Mysqli\\Driver',
-        'pdo_mysql' => '\\Doctrine\\DBAL\\Driver\\PDO\\MySQL\\Driver',
+        'pdo_mysql' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Driver\\PDO\\MySQL\\Driver',
     ];
 
     protected $dbalPlatforms = [
