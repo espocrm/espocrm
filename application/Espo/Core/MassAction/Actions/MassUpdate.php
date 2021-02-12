@@ -38,10 +38,13 @@ use Espo\Core\{
     Acl,
     RecordServiceContainer,
     ORM\EntityManager,
+    Utils\FieldUtil,
+    Utils\ObjectUtil,
     Exceptions\Forbidden,
 };
 
 use Exception;
+use StdClass;
 
 class MassUpdate implements MassAction
 {
@@ -53,16 +56,20 @@ class MassUpdate implements MassAction
 
     protected $entityManager;
 
+    protected $fieldUtil;
+
     public function __construct(
         QueryBuilder $queryBuilder,
         Acl $acl,
         RecordServiceContainer $recordServiceContainer,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        FieldUtil $fieldUtil
     ) {
         $this->queryBuilder = $queryBuilder;
         $this->acl = $acl;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->entityManager = $entityManager;
+        $this->fieldUtil = $fieldUtil;
     }
 
     public function process(Params $params, Data $data) : Result
@@ -85,6 +92,8 @@ class MassUpdate implements MassAction
 
         $service->filterUpdateInput($valueMap);
 
+        $fieldToCopyList = $this->detectFieldToCopyList($entityType, $valueMap);
+
         $query = $this->queryBuilder->build($params);
 
         $collection = $repository
@@ -96,15 +105,17 @@ class MassUpdate implements MassAction
 
         $count = 0;
 
-        foreach ($collection as $entity) {
+        foreach ($collection as $i => $entity) {
             if (!$this->acl->check($entity, 'edit')) {
                 continue;
             }
 
-            $entity->set($valueMap);
+            $itemValueMap = $this->prepareItemValueMap($entityType, $valueMap, $i, $fieldToCopyList);
+
+            $entity->set($itemValueMap);
 
             try {
-                $service->processValidation($entity, $valueMap);
+                $service->processValidation($entity, $itemValueMap);
             }
             catch (Exception $e) {
                 continue;
@@ -132,5 +143,123 @@ class MassUpdate implements MassAction
         ];
 
         return Result::fromArray($result);
+    }
+
+    protected function prepareItemValueMap(
+        string $entityType, StdClass $valueMap, int $i, array $fieldToCopyList
+    ) : StdClass {
+
+        $clonedValueMap = ObjectUtil::clone($valueMap);
+
+        if (!count($fieldToCopyList)) {
+            return $clonedValueMap;
+        }
+
+        if ($i === 0) {
+            return $clonedValueMap;
+        }
+
+        foreach ($fieldToCopyList as $field) {
+            $type = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
+
+            if ($type === 'file' || $type === 'image') {
+                $this->copyFileField($field, $clonedValueMap);
+
+                continue;
+            }
+
+             if ($type === 'attachmentMultiple') {
+                $this->copyAttachmentMultipleField($field, $clonedValueMap);
+
+                continue;
+            }
+        }
+
+        return $clonedValueMap;
+    }
+
+    protected function copyFileField(string $field, StdClass $valueMap)
+    {
+        $idAttribute = $field . 'Id';
+
+        $id = $valueMap->$idAttribute ?? null;
+
+        if (!$id) {
+            return;
+        }
+
+        $attachment = $this->entityManager->getEntity('Attachment', $id);
+
+        if (!$attachment) {
+            $valueMap->$idAttribute = null;
+
+            return;
+        }
+
+        $copiedAttachment = $this->entityManager
+            ->getRepository('Attachment')
+            ->getCopiedAttachment($attachment);
+
+        $valueMap->$idAttribute = $copiedAttachment->id;
+    }
+
+    protected function copyAttachmentMultipleField(string $field, StdClass $valueMap)
+    {
+        $idsAttribute = $field . 'Ids';
+
+        $ids = $valueMap->$idsAttribute ?? [];
+
+        if (!count($ids)) {
+            return;
+        }
+
+        $copiedIds = [];
+
+        foreach ($ids as $id) {
+            $attachment = $this->entityManager->getEntity('Attachment', $id);
+
+            if (!$attachment) {
+                continue;
+            }
+
+            $copiedAttachment = $this->entityManager
+                ->getRepository('Attachment')
+                ->getCopiedAttachment($attachment);
+
+            $copiedIds[] = $copiedAttachment->id;
+        }
+
+        $valueMap->$idsAttribute = $copiedIds;
+    }
+
+    protected function detectFieldToCopyList(string $entityType, StdClass $valueMap) : array
+    {
+        $resultFieldList = [];
+
+        $fieldList = array_merge(
+            $this->fieldUtil->getFieldByTypeList($entityType, 'file'),
+            $this->fieldUtil->getFieldByTypeList($entityType, 'image'),
+            $this->fieldUtil->getFieldByTypeList($entityType, 'attachmentMultiple')
+        );
+
+        foreach ($fieldList as $field) {
+            $actualAttributeList = $this->fieldUtil->getActualAttributeList($entityType, $field);
+
+            $met = false;
+
+            foreach ($actualAttributeList as $attribute) {
+                $value = $valueMap->$attribute ?? null;
+
+                if ($value) {
+                    $met = true;
+                }
+            }
+
+            if ($met) {
+                $resultFieldList[] = $field;
+            }
+        }
+
+        return $resultFieldList;
     }
 }
