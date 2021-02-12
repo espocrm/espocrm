@@ -347,9 +347,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                 var additionalActionList = [];
 
-                var actionDefsList = this.getMetadata().get(
-                    ['clientDefs', this.scope, this.type + 'ActionList']
-                ) || [];
+                var actionDefsList = (
+                        this.getMetadata().get(['clientDefs', this.scope, this.type + 'ActionList']) || []
+                    ).concat(
+                        this.getMetadata().get(['clientDefs', 'Global', this.type + 'ActionList']) || []
+                    );
 
                 actionDefsList.forEach(function (item) {
                     if (typeof item === 'string') {
@@ -375,10 +377,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                     var viewObject = this;
 
-                    if (item.initFunction && item.data.handler) {
+                    var data = item.data || {};
+
+                    var handler = item.handler || data.handler;
+
+                    if (item.initFunction && handler) {
                         this.wait(
                             new Promise(function (resolve) {
-                                require(item.data.handler, function (Handler) {
+                                require(handler, function (Handler) {
                                     var handler = new Handler(viewObject);
 
                                     handler[item.initFunction].call(handler);
@@ -426,14 +432,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         hideActionItem: function (name) {
             for (var i in this.buttonList) {
-                if (this.buttonList[i].name == name) {
+                if (this.buttonList[i].name === name) {
                     this.buttonList[i].hidden = true;
 
                     break;
                 }
             }
             for (var i in this.dropdownItemList) {
-                if (this.dropdownItemList[i].name == name) {
+                if (this.dropdownItemList[i].name === name) {
                     this.dropdownItemList[i].hidden = true;
 
                     break;
