@@ -52,7 +52,10 @@ class RDBRepository extends Repository
     protected $transactionManager;
 
     public function __construct(
-        string $entityType, EntityManager $entityManager, EntityFactory $entityFactory, ?HookMediator $hookMediator = null
+        string $entityType,
+        EntityManager $entityManager,
+        EntityFactory $entityFactory,
+        ?HookMediator $hookMediator = null
     ) {
         $this->entityType = $entityType;
         $this->entityManager = $entityManager;
@@ -300,6 +303,7 @@ class RDBRepository extends Repository
 
         if ($entityType) {
             $params['from'] = $entityType;
+
             $select = Select::fromRaw($params);
         }
 
@@ -315,6 +319,7 @@ class RDBRepository extends Repository
     protected function applyRelationAdditionalColumns(
         Entity $entity, string $relationName, array $columns, Select $select
     ) : Select {
+
         if (empty($columns)) {
             return $select;
         }
@@ -378,9 +383,11 @@ class RDBRepository extends Repository
 
         if ($foreign instanceof Entity) {
             $id = $foreign->id;
-        } else if (is_string($foreign)) {
+        }
+        else if (is_string($foreign)) {
             $id = $foreign;
-        } else {
+        }
+        else {
             throw new RuntimeException("Bad 'foreign' value.");
         }
 
@@ -437,7 +444,8 @@ class RDBRepository extends Repository
 
         if (method_exists($this, $methodName)) {
             $result = $this->$methodName($entity, $foreign, $columnData, $options);
-        } else {
+        }
+        else {
             $data = $columnData;
 
             if ($columnData instanceof StdClass) {
@@ -455,7 +463,9 @@ class RDBRepository extends Repository
 
         if ($result) {
             $this->afterRelate($entity, $relationName, $foreign, $columnData, $options);
+
             $afterMethodName = 'afterRelate' . ucfirst($relationName);
+
             if (method_exists($this, $afterMethodName)) {
                 $this->$afterMethodName($entity, $foreign, $columnData, $options);
             }
