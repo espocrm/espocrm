@@ -46,14 +46,12 @@ class BaseEntity implements Entity
     protected $entityType;
 
     /**
-     * @todo Make private. Rename to `attributes`.
+     * @todo Make protected. Rename to `attributes`.
+     * @deprecated
      */
     public $fields = [];
 
-    /**
-     * @todo Make private.
-     */
-    public $relations = [];
+    protected $relations = [];
 
     /**
      * @var array Field-Value pairs.
@@ -434,7 +432,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Get attribute definitions.
+     * @deprecated
      */
     public function getAttributes()
     {
@@ -442,7 +440,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Get relation definitions.
+     * @deprecated
      */
     public function getRelations()
     {

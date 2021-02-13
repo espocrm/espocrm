@@ -93,20 +93,16 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
              ['Lead', $emptyRepository],
         ];
 
-        $email = $this->email = new Email('Email', [], $entityManager);
-
         $emailDefs = require('tests/unit/testData/Core/Mail/email_defs.php');
-        $email->fields = $emailDefs['fields'];
-        $email->relations = $emailDefs['relations'];
 
-        $attachment = new Attachment('Attachment', [], $entityManager);
+        $email = $this->email = new Email('Email', $emailDefs, $entityManager);
+
         $attachmentDefs = require('tests/unit/testData/Core/Mail/attachment_defs.php');
-        $attachment->fields = $attachmentDefs['fields'];
-        $attachment->relations = $attachmentDefs['relations'];
+
+        $attachment = new Attachment('Attachment', $attachmentDefs, $entityManager);
 
         $this->attachment = $attachment;
     }
-
 
     function testImport1()
     {

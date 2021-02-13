@@ -30,7 +30,6 @@
 namespace Espo\Core\Htmlizer;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\File\Manager as FileManager,
     Utils\DateTime,
     Utils\NumberUtil,
@@ -278,8 +277,6 @@ class Htmlizer
         }
 
         if (!$skipLinks) {
-
-            $relationDefs = $entity->getRelations();
 
             foreach ($entity->getRelationList() as $relation) {
                 if (in_array($relation, $forbiddenLinkList)) {

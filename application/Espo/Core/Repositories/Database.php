@@ -58,7 +58,9 @@ class Database extends RDBRepository
     private $restoreData = null;
 
     protected $metadata;
+
     protected $hookManager;
+
     protected $applicationState;
 
     public function __construct(
@@ -92,67 +94,6 @@ class Database extends RDBRepository
      */
     public function handleSelectParams(&$params)
     {
-    }
-
-    protected function handleCurrencyParams(&$params)
-    {
-        $entityType = $this->entityType;
-
-        $metadata = $this->getMetadata();
-
-        if (!$metadata) {
-            return;
-        }
-
-        $defs = $metadata->get(['entityDefs', $entityType]);
-
-        foreach ($defs['fields'] as $field => $d) {
-            if (isset($d['type']) && $d['type'] == 'currency') {
-                if (!empty($d['notStorable'])) {
-                    continue;
-                }
-
-                if (empty($params['leftJoins'])) {
-                    $params['leftJoins'] = [];
-                }
-
-                $alias = $field . 'CurrencyRate';
-
-                $params['leftJoins'][] = ['Currency', $alias, [
-                    $alias . '.id:' => $field . 'Currency'
-                ]];
-            }
-        }
-    }
-
-    protected function handleEmailAddressParams(&$params)
-    {
-        $defs = $this->getEntityManager()->getMetadata()->get($this->entityType);
-
-        if (!empty($defs['relations']) && array_key_exists('emailAddresses', $defs['relations'])) {
-            if (empty($params['leftJoins'])) {
-                $params['leftJoins'] = [];
-            }
-
-            $params['leftJoins'][] = ['emailAddresses', null, [
-                'primary' => 1
-            ]];
-        }
-    }
-
-    protected function handlePhoneNumberParams(&$params)
-    {
-        $defs = $this->getEntityManager()->getMetadata()->get($this->entityType);
-
-        if (!empty($defs['relations']) && array_key_exists('phoneNumbers', $defs['relations'])) {
-            if (empty($params['leftJoins'])) {
-                $params['leftJoins'] = [];
-            }
-
-            $params['leftJoins'][] = ['phoneNumbers', null, [
-                'primary' => 1
-            ]];
-        }
     }
 
     protected function beforeRemove(Entity $entity, array $options = [])
@@ -351,15 +292,38 @@ class Database extends RDBRepository
 
     protected function processFileFieldsSave(Entity $entity)
     {
-        foreach ($entity->getRelations() as $name => $defs) {
-            if (!isset($defs['type']) || !isset($defs['entity'])) continue;
-            if (!($defs['type'] === $entity::BELONGS_TO && $defs['entity'] === 'Attachment')) continue;
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType());
+
+        foreach ($entity->getRelationList() as $name) {
+            $defs = $entityDefs->getRelation($name);
+
+            $type = $defs->getType();
+
+            if (!$defs->hasForeignEntityType()) {
+                continue;
+            }
+
+            $foreignEntityType = $defs->getForeignEntityType();
+
+            if (!($type === $entity::BELONGS_TO && $foreignEntityType === 'Attachment')) {
+                continue;
+            }
 
             $attribute = $name . 'Id';
 
-            if (!$entity->hasAttribute($attribute)) continue;
-            if (!$entity->get($attribute)) continue;
-            if (!$entity->isAttributeChanged($attribute)) continue;
+            if (!$entity->hasAttribute($attribute)) {
+                continue;
+            }
+
+            if (!$entity->get($attribute)) {
+                continue;
+            }
+
+            if (!$entity->isAttributeChanged($attribute)) {
+                continue;
+            }
 
             $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get($attribute));
 
@@ -375,21 +339,23 @@ class Database extends RDBRepository
             $this->getEntityManager()->saveEntity($attachment);
         }
 
-        if (!$entity->isNew()) {
-            foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $defs) {
-                if (!empty($defs['type']) && in_array($defs['type'], ['file', 'image'])) {
-                    $attribute = $name . 'Id';
+        if ($entity->isNew()) {
+            return;
+        }
 
-                    if ($entity->isAttributeChanged($attribute)) {
-                        $previousAttachmentId = $entity->getFetched($attribute);
+        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $defs) {
+            if (!empty($defs['type']) && in_array($defs['type'], ['file', 'image'])) {
+                $attribute = $name . 'Id';
 
-                        if ($previousAttachmentId) {
-                            $attachment = $this->getEntityManager()
-                                ->getEntity('Attachment', $previousAttachmentId);
+                if ($entity->isAttributeChanged($attribute)) {
+                    $previousAttachmentId = $entity->getFetched($attribute);
 
-                            if ($attachment) {
-                                $this->getEntityManager()->removeEntity($attachment);
-                            }
+                    if ($previousAttachmentId) {
+                        $attachment = $this->getEntityManager()
+                            ->getEntity('Attachment', $previousAttachmentId);
+
+                        if ($attachment) {
+                            $this->getEntityManager()->removeEntity($attachment);
                         }
                     }
                 }
@@ -399,14 +365,32 @@ class Database extends RDBRepository
 
     protected function processArrayFieldsSave(Entity $entity)
     {
-        foreach ($entity->getAttributes() as $attribute => $defs) {
-            if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
-            if (!$entity->has($attribute)) continue;
-            if (!$entity->isAttributeChanged($attribute)) continue;
-            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) continue;
-            if ($entity->getAttributeParam($attribute, 'notStorable')) continue;
+        foreach ($entity->getAttributeList() as $attribute) {
+            $type = $entity->getAttributeType($attribute);
 
-            $this->getEntityManager()->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute);
+            if ($type !== Entity::JSON_ARRAY) {
+                continue;
+            }
+
+            if (!$entity->has($attribute)) {
+                continue;
+            }
+
+            if (!$entity->isAttributeChanged($attribute)) {
+                continue;
+            }
+
+            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) {
+                continue;
+            }
+
+            if ($entity->getAttributeParam($attribute, 'notStorable')) {
+                continue;
+            }
+
+            $this->getEntityManager()
+                ->getRepository('ArrayValue')
+                ->storeEntityAttribute($entity, $attribute);
         }
     }
 
@@ -477,9 +461,17 @@ class Database extends RDBRepository
         $skipRemove = false;
         $skipUpdate = false;
 
-        if (!empty($options['skipLinkMultipleCreate'])) $skipCreate = true;
-        if (!empty($options['skipLinkMultipleRemove'])) $skipRemove = true;
-        if (!empty($options['skipLinkMultipleUpdate'])) $skipUpdate = true;
+        if (!empty($options['skipLinkMultipleCreate'])) {
+            $skipCreate = true;
+        }
+
+        if (!empty($options['skipLinkMultipleRemove'])) {
+            $skipRemove = true;
+        }
+
+        if (!empty($options['skipLinkMultipleUpdate'])) {
+            $skipUpdate = true;
+        }
 
         if ($entity->isNew()) {
             $skipRemove = true;
@@ -488,7 +480,8 @@ class Database extends RDBRepository
 
         if ($entity->has($idListAttribute)) {
             $specifiedIdList = $entity->get($idListAttribute);
-        } else if ($entity->has($columnsAttribute)) {
+        }
+        else if ($entity->has($columnsAttribute)) {
             $skipRemove = true;
             $specifiedIdList = [];
 
@@ -508,8 +501,6 @@ class Database extends RDBRepository
         $toUpdateIdList = [];
         $toCreateIdList = [];
         $existingColumnsData = (object) [];
-
-        $defs = [];
 
         $columns = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'columns']);
 
@@ -557,7 +548,8 @@ class Database extends RDBRepository
                 if (!$skipRemove) {
                     $toRemoveIdList[] = $id;
                 }
-            } else {
+            }
+            else {
                 if (!$skipUpdate && !empty($columns)) {
                     foreach ($columns as $columnName => $columnField) {
                         if (isset($columnData->$id) && is_object($columnData->$id)) {
@@ -609,27 +601,43 @@ class Database extends RDBRepository
 
     protected function processSpecifiedRelationsSave(Entity $entity, array $options = [])
     {
-        $relationTypeList = [$entity::HAS_MANY, $entity::MANY_MANY, $entity::HAS_CHILDREN];
+        $relationTypeList = [
+            $entity::HAS_MANY,
+            $entity::MANY_MANY,
+            $entity::HAS_CHILDREN,
+        ];
 
-        foreach ($entity->getRelations() as $name => $defs) {
-            if (in_array($defs['type'], $relationTypeList)) {
+        foreach ($entity->getRelationList() as $name) {
+
+            $type = $entity->getRelationType($name);
+
+            $foreignEntityType = $entity->getRelationParam($name, 'entity');
+            $foreignKey = $entity->getRelationParam($name, 'foreignKey');
+
+            if (in_array($type, $relationTypeList)) {
                 $idListAttribute = $name . 'Ids';
                 $columnsAttribute = $name . 'Columns';
 
                 if ($entity->has($idListAttribute) || $entity->has($columnsAttribute)) {
                     $this->processLinkMultipleFieldSave($entity, $name, $options);
                 }
-            } else if ($defs['type'] === $entity::HAS_ONE) {
-                if (empty($defs['entity']) || empty($defs['foreignKey'])) {
+
+                continue;
+            }
+
+            if ($type === $entity::HAS_ONE) {
+                if (!$foreignEntityType || !$foreignKey) {
                     continue;
                 }
 
-                if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
+                $noSave = $this->getMetadata()->get(
+                    ['entityDefs', $entity->getEntityType(), 'fields', $name, 'noSave']
+                );
+
+                if ($noSave) {
                     continue;
                 }
 
-                $foreignEntityType = $defs['entity'];
-                $foreignKey = $defs['foreignKey'];
                 $idAttribute = $name . 'Id';
 
                 if (!$entity->has($idAttribute)) {
@@ -637,6 +645,7 @@ class Database extends RDBRepository
                 }
 
                 $where = [];
+
                 $where[$foreignKey] = $entity->id;
 
                 $previousForeignEntity = $this->getEntityManager()
@@ -652,6 +661,7 @@ class Database extends RDBRepository
 
                     if (!$entity->get($idAttribute)) {
                         $previousForeignEntity->set($foreignKey, null);
+
                         $this->getEntityManager()->saveEntity($previousForeignEntity, ['skipAll' => true]);
                     }
                 } else {
@@ -662,16 +672,25 @@ class Database extends RDBRepository
 
                 if ($entity->get($idAttribute)) {
                     $relateResult = $this->relate($entity, $name, $entity->get($idAttribute));
+
                     if (!$relateResult) {
                         $entity->set($idAttribute, null);
                     }
                 }
-            } else if ($defs['type'] === $entity::BELONGS_TO) {
-                if (!$entity->get($name . 'Id')) continue;
-                if (!$entity->isAttributeChanged($name . 'Id')) continue;
 
-                $foreignEntityType = $defs['entity'] ?? null;
-                $foreignLink = $defs['foreign'] ?? null;
+                continue;
+            }
+
+            if ($type === $entity::BELONGS_TO) {
+                if (!$entity->get($name . 'Id')) {
+                    continue;
+                }
+
+                if (!$entity->isAttributeChanged($name . 'Id')) {
+                    continue;
+                }
+
+                $foreignLink = $entity->getRelationParam($name, 'foreign');
 
                 if (
                     $this->getMetadata()->get(
@@ -692,6 +711,8 @@ class Database extends RDBRepository
                         $this->getEntityManager()->saveEntity($anotherEntity, ['skipAll' => true]);
                     }
                 }
+
+                continue;
             }
         }
     }

@@ -32,7 +32,6 @@ namespace Espo\Services;
 use Espo\ORM\Entity;
 use Espo\Core\Entities\Person;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\Di;
@@ -276,8 +275,6 @@ class EmailTemplate extends Record implements
         }
 
         if (!$skipLinks && $entity->id) {
-            $relationDefs = $entity->getRelations();
-
             foreach ($entity->getRelationList() as $relation) {
                 if (in_array($relation, $forbiddenLinkList)) {
                     continue;
