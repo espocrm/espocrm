@@ -36,6 +36,7 @@ use Espo\{
     ORM\QueryParams\Parts\WhereItem as WhereClauseItem,
     ORM\EntityManager,
     ORM\Entity,
+    ORM\Defs\Defs as ORMDefs,
     Entities\User,
     Core\Utils\Config,
     Core\Select\Helpers\RandomStringGenerator,
@@ -49,8 +50,6 @@ use DateInterval;
  */
 class ItemGeneralConverter
 {
-    protected $ormMetadata;
-
     protected $entityType;
     protected $user;
     protected $dateTimeItemTransformer;
@@ -58,6 +57,7 @@ class ItemGeneralConverter
     protected $itemConverterFactory;
     protected $randomStringGenerator;
     protected $entityManager;
+    protected $ormDefs;
     protected $config;
 
     public function __construct(
@@ -68,6 +68,7 @@ class ItemGeneralConverter
         ItemConverterFactory $itemConverterFactory,
         RandomStringGenerator $randomStringGenerator,
         EntityManager $entityManager,
+        ORMDefs $ormDefs,
         Config $config
     ) {
         $this->entityType = $entityType;
@@ -77,9 +78,8 @@ class ItemGeneralConverter
         $this->itemConverterFactory = $itemConverterFactory;
         $this->randomStringGenerator = $randomStringGenerator;
         $this->entityManager = $entityManager;
+        $this->ormDefs = $ormDefs;
         $this->config = $config;
-
-        $this->ormMetadata = $this->entityManager->getMetadata();
     }
 
     public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
@@ -303,6 +303,7 @@ class ItemGeneralConverter
     protected function groupProcessArray(
         QueryBuilder $queryBuilder, string $type, string $attribute, $value
     ) : array {
+
         $arrayValueAlias = 'arrayFilter' . $this->randomStringGenerator->generate();
 
         $arrayAttribute = $attribute;
@@ -313,20 +314,18 @@ class ItemGeneralConverter
 
         $isForeignType = false;
 
+        $entityDefs = $this->ormDefs->getEntity($this->entityType);
+
         if (!$isForeign) {
-            $isForeignType = $this->ormMetadata->get(
-                $this->entityType, ['fields', $attribute, 'type']
-            ) === Entity::FOREIGN;
+            $isForeignType = $entityDefs->getAttribute($attribute)->getType() === Entity::FOREIGN;
 
             $isForeign = $isForeignType;
         }
 
         if ($isForeign) {
-            $defs = $this->ormMetadata->get($this->entityType, ['fields', $attribute]);
-
             if ($isForeignType) {
-                $arrayAttributeLink = $defs['relation'] ?? null;
-                $arrayAttribute = $defs['foreign'] ?? null;
+                $arrayAttributeLink = $entityDefs->getAttribute($attribute)->getParam('relation');
+                $arrayAttribute = $entityDefs->getAttribute($attribute)->getParam('foreign');
             }
             else {
                 list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
@@ -336,9 +335,7 @@ class ItemGeneralConverter
                 throw Error("Bad where item.");
             }
 
-            $arrayEntityType = $this->ormMetadata->get(
-                $this->entityType, ['relations', $arrayAttributeLink, 'entity']
-            );
+            $arrayEntityType = $entityDefs->getRelation($arrayAttributeLink)->getForeignEntityType();
 
             $arrayLinkAlias = $arrayAttributeLink . 'ArrayFilter' . $this->randomStringGenerator->generate();
 
@@ -346,9 +343,7 @@ class ItemGeneralConverter
 
             $queryBuilder->leftJoin($arrayAttributeLink, $arrayLinkAlias);
 
-            $relationType = $this->ormMetadata->get(
-                $this->entityType, ['relations', $arrayAttributeLink, 'type']
-            );
+            $relationType = $entityDefs->getRelation($arrayAttributeLink)->getType();
 
             if ($relationType === Entity::MANY_MANY || $relationType === Entity::HAS_MANY) {
                 $queryBuilder->distinct();
@@ -986,11 +981,11 @@ class ItemGeneralConverter
     {
         $link = $attribute;
 
-        $defs = $this->ormMetadata->get($this->entityType, ['relations', $link]);
-
-        if (!$defs) {
-            throw new Error("Bad link '{$link}' in where item.");
+        if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
+            throw new Error("Not existing link '{$link}' in where item.");
         }
+
+        $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
         $alias =  $link . 'LinkedWithFilter' . $this->randomStringGenerator->generate();
 
@@ -998,14 +993,14 @@ class ItemGeneralConverter
             throw new Error("Bad where item. Empty value.");
         }
 
-        $relationType = $defs['type'] ?? null;
+        $relationType = $defs->getType();
 
         $queryBuilder->distinct();
 
         if ($relationType == Entity::MANY_MANY) {
             $queryBuilder->leftJoin($link, $alias);
 
-            $key = $defs['midKeys'][1] ?? null;
+            $key = $defs->getForeignMidKey();
 
             if (!$key) {
                 throw new Error("Bad link '{$link}' in where item.");
@@ -1023,7 +1018,7 @@ class ItemGeneralConverter
             ];
         }
         else if ($relationType == Entity::BELONGS_TO) {
-            $key = $defs['key'] ?? null;
+            $key = $defs->getKey();
 
             if (!$key) {
                 throw new Error("Bad link '{$link}' in where item.");
@@ -1048,11 +1043,11 @@ class ItemGeneralConverter
     {
         $link = $attribute;
 
-        $defs = $this->ormMetadata->get($this->entityType, ['relations', $link]);
-
-        if (!$defs) {
-            throw new Error("Bad link '{$link}' in where item.");
+        if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
+            throw new Error("Not existing link '{$link}' in where item.");
         }
+
+        $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
         $alias =  $link . 'NotLinkedWithFilter' . $this->randomStringGenerator->generate();
 
@@ -1060,12 +1055,12 @@ class ItemGeneralConverter
             throw new Error("Bad where item. Empty value.");
         }
 
-        $relationType = $defs['type'] ?? null;
+        $relationType = $defs->getType();
 
         $queryBuilder->distinct();
 
         if ($relationType == Entity::MANY_MANY) {
-            $key = $defs['midKeys'][1] ?? null;
+            $key = $defs->getForeignMidKey();
 
             if (!$key) {
                 throw new Error("Bad link '{$link}' in where item.");
@@ -1093,7 +1088,7 @@ class ItemGeneralConverter
             ];
         }
         else if ($relationType == Entity::BELONGS_TO) {
-            $key = $defs['key'] ?? null;
+            $key = $defs->getKey();
 
             if (!$key) {
                 throw new Error("Bad link '{$link}' in where item.");

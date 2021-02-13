@@ -30,7 +30,6 @@
 namespace tests\unit\Espo\Core\Select\Where;
 
 use Espo\Core\{
-    Exceptions\Error,
     Select\Where\Converter,
     Select\Where\Item,
     Select\Where\Scanner,
@@ -50,6 +49,8 @@ use Espo\{
     ORM\QueryParams\Parts\WhereClause,
     ORM\QueryBuilder as BaseQueryBuilder,
     ORM\QueryParams\Select,
+    ORM\Defs\Defs as ORMDefs,
+    ORM\Defs\EntityDefs,
     Entities\User,
 };
 
@@ -61,7 +62,6 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
 
         $this->user = $this->createMock(User::class);
 
-        $this->entityManager = $this->createMock(EntityManager::class);
         $this->config = $this->createMock(Config::class);
 
         $this->scanner = $this->createMock(Scanner::class);
@@ -83,6 +83,8 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             ->method('getQueryBuilder')
             ->willReturn($this->baseQueryBuilder);
 
+        $this->ormDefs = $this->createMock(ORMDefs::class);
+
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
 
         $this->randomStringGenerator
@@ -103,6 +105,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             $this->itemConverterFactory,
             $this->randomStringGenerator,
             $this->entityManager,
+            $this->ormDefs,
             $this->config
         );
 
@@ -112,7 +115,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             $this->itemConverter,
             $this->scanner,
             $this->randomStringGenerator,
-            $this->entityManager
+            $this->ormDefs
         );
     }
 
@@ -129,7 +132,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             ->method('applyLeftJoins')
             ->with($this->queryBuilder, $item);
 
-        $whereClause = $this->converter->convert($this->queryBuilder, $item);
+        $this->converter->convert($this->queryBuilder, $item);
     }
 
     public function testConvertEquals1()
@@ -220,16 +223,23 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertInCategoryManyMany()
     {
-        $this->ormMetadata
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->entityType, ['relations', 'test'])
+        $this->ormDefs
+            ->expects($this->any())
+            ->method('getEntity')
+            ->with($this->entityType)
             ->willReturn(
-                [
-                    'type' => Entity::MANY_MANY,
-                    'entity' => 'Foreign',
-                    'midKeys' => ['localId', 'foreignId'],
-                ]
+                EntityDefs::fromRaw(
+                    [
+                        'relations' => [
+                            'test' => [
+                                'type' => Entity::MANY_MANY,
+                                'entity' => 'Foreign',
+                                'midKeys' => ['localId', 'foreignId'],
+                            ],
+                        ],
+                    ],
+                    $this->entityType
+                )
             );
 
         $item = Item::fromRaw([
@@ -274,16 +284,23 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertInCategoryBelongsTo()
     {
-        $this->ormMetadata
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->entityType, ['relations', 'test'])
+        $this->ormDefs
+            ->expects($this->any())
+            ->method('getEntity')
+            ->with($this->entityType)
             ->willReturn(
-                [
-                    'type' => Entity::BELONGS_TO,
-                    'entity' => 'Foreign',
-                    'key' => 'foreignId',
-                ]
+                EntityDefs::fromRaw(
+                    [
+                        'relations' => [
+                            'test' => [
+                                'type' => Entity::BELONGS_TO,
+                                'entity' => 'Foreign',
+                                'key' => 'foreignId',
+                            ],
+                        ],
+                    ],
+                    $this->entityType
+                )
             );
 
         $item = Item::fromRaw([
@@ -325,16 +342,23 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
 
     public function testConvertIsUserFromTeams()
     {
-        $this->ormMetadata
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->entityType, ['relations', 'user'])
+        $this->ormDefs
+            ->expects($this->any())
+            ->method('getEntity')
+            ->with($this->entityType)
             ->willReturn(
-                [
-                    'type' => Entity::BELONGS_TO,
-                    'entity' => 'User',
-                    'key' => 'userId',
-                ]
+                EntityDefs::fromRaw(
+                    [
+                        'relations' => [
+                            'user' => [
+                                'type' => Entity::BELONGS_TO,
+                                'entity' => 'User',
+                                'key' => 'userId',
+                            ],
+                        ],
+                    ],
+                    $this->entityType
+                )
             );
 
         $item = Item::fromRaw([
@@ -506,16 +530,23 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             ],
         ]);
 
-        $this->ormMetadata
-            ->expects($this->once())
-            ->method('get')
-            ->with($this->entityType, ['relations', $link])
+        $this->ormDefs
+            ->expects($this->any())
+            ->method('getEntity')
+            ->with($this->entityType)
             ->willReturn(
-                [
-                    'type' => Entity::MANY_MANY,
-                    'entity' => 'Foreign',
-                    'midKeys' => ['localId', 'foreignId'],
-                ]
+                EntityDefs::fromRaw(
+                    [
+                        'relations' => [
+                            $link => [
+                                'type' => Entity::MANY_MANY,
+                                'entity' => 'Foreign',
+                                'midKeys' => ['localId', 'foreignId'],
+                            ],
+                        ],
+                    ],
+                    $this->entityType
+                )
             );
 
         $alias = $link . 'LinkedWithFilterRandom';

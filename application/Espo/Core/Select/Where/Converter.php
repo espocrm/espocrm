@@ -33,8 +33,8 @@ use Espo\{
     Core\Exceptions\Error,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
-    ORM\EntityManager,
     ORM\Entity,
+    ORM\Defs\Defs as ORMDefs,
     Entities\User,
     Core\Select\Helpers\RandomStringGenerator,
 };
@@ -44,14 +44,12 @@ use Espo\{
  */
 class Converter
 {
-    protected $ormMetadata;
-
     protected $entityType;
     protected $user;
     protected $itemConverter;
     protected $scanner;
     protected $randomStringGenerator;
-    protected $entityManager;
+    protected $ormDefs;
 
     public function __construct(
         string $entityType,
@@ -59,16 +57,14 @@ class Converter
         ItemGeneralConverter $itemConverter,
         Scanner $scanner,
         RandomStringGenerator $randomStringGenerator,
-        EntityManager $entityManager
+        ORMDefs $ormDefs
     ) {
         $this->entityType = $entityType;
         $this->user = $user;
         $this->itemConverter = $itemConverter;
         $this->scanner = $scanner;
         $this->randomStringGenerator = $randomStringGenerator;
-        $this->entityManager = $entityManager;
-
-        $this->ormMetadata = $this->entityManager->getMetadata();
+        $this->ormDefs = $ormDefs;
     }
 
     public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClause
@@ -138,34 +134,28 @@ class Converter
     {
         $link = $attribute;
 
-        $defs = $this->ormMetadata->get($this->entityType, ['relations', $link]) ?? null;
+        $entityDefs = $this->ormDefs->getEntity($this->entityType);
 
-        if (!$defs) {
-            throw new Error("Bad link '{$link}' in where item.");
+        if (!$entityDefs->hasRelation($link)) {
+            throw new Error("Not existing '{$link}' in where item.");
         }
 
-        $foreignEntity = $defs['entity'] ?? null;
+        $defs = $entityDefs->getRelation($link);
 
-        if (!$foreignEntity) {
-            throw new Error("Bad link '{$link}' in where item.");
-        }
+        $foreignEntity = $defs->getForeignEntityType();
 
         $pathName = lcfirst($foreignEntity) . 'Path';
 
-        $relationType = $defs['type'] ?? null;
+        $relationType = $defs->getType();
 
-        if ($relationType == Entity::MANY_MANY) {
-            if (empty($defs['midKeys'])) {
-                throw new Error("Bad link '{$link}' in where item.");
-            }
-
+        if ($relationType === Entity::MANY_MANY) {
             $queryBuilder->distinct();
 
             $alias = $link . 'InCategoryFilter';
 
             $queryBuilder->join($link, $alias);
 
-            $key = $defs['midKeys'][1];
+            $key = $defs->getForeignMidKey();
 
             $middleName = $alias . 'Middle';
 
@@ -182,12 +172,8 @@ class Converter
             ];
         }
 
-        if ($relationType == Entity::BELONGS_TO) {
-            if (empty($defs['key'])) {
-                throw new Error("Bad link '{$link}' in where item.");
-            }
-
-            $key = $defs['key'];
+        if ($relationType === Entity::BELONGS_TO) {
+            $key = $defs->getKey();
 
             $queryBuilder->join(
                 ucfirst($pathName),
@@ -213,25 +199,23 @@ class Converter
             $value = $value[0];
         }
 
-        $defs = $this->ormMetadata->get($this->entityType, ['relations', $link]) ?? null;
+        $entityDefs = $this->ormDefs->getEntity($this->entityType);
 
-        if (!$defs) {
-            throw new Error("Bad link '{$link}' in where item.");
+        if (!$entityDefs->hasRelation($link)) {
+            throw new Error("Not existing '{$link}' in where item.");
         }
 
-        $relationType = $defs['type'] ?? null;
-        $entityType = $defs['entity'] ?? null;
+        $defs = $entityDefs->getRelation($link);
+
+        $relationType = $defs->getType();
+        $entityType = $defs->getForeignEntityType();
 
         if ($entityType !== 'User') {
-            new Error("Not supported link '{$link}' in where item.");
+            throw new Error("Not supported link '{$link}' in where item.");
         }
 
-        if ($relationType == Entity::BELONGS_TO) {
-            $key = $defs['key'] ?? null;
-
-            if (!$key) {
-                throw new Error("Bad link '{$link}' in where item.");
-            }
+        if ($relationType === Entity::BELONGS_TO) {
+            $key = $defs->getKey();
 
             $aliasName = $link . 'IsUserFromTeamsFilter' . $this->randomStringGenerator->generate();
 
