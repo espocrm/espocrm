@@ -131,12 +131,13 @@ class RelationDefs
 
     /**
      * Get a foreign entity type.
+     * @throws RuntimeException
      */
-    public function getForeignEntityType() : ?string
+    public function getForeignEntityType() : string
     {
         if (!$this->hasForeignEntityType()) {
             throw new RuntimeException(
-                "No 'entity' paramater defined in the relation  {$this->name}'."
+                "No 'entity' paramater defined in the relation '{$this->name}'."
             );
         }
 
@@ -153,6 +154,7 @@ class RelationDefs
 
     /**
      * Get a foreign relation name.
+     * @throws RuntimeException
      */
     public function getForeignRelationName() : string
     {
@@ -175,6 +177,7 @@ class RelationDefs
 
     /**
      * Get a foreign key.
+     * @throws RuntimeException
      */
     public function getForeignKey() : string
     {
@@ -197,6 +200,7 @@ class RelationDefs
 
     /**
      * Get a key.
+     * @throws RuntimeException
      */
     public function getKey() : string
     {
@@ -219,6 +223,7 @@ class RelationDefs
 
     /**
      * Get a mid key. For Many-to-Many relationships only.
+     * @throws RuntimeException
      */
     public function getMidKey() : string
     {
@@ -233,6 +238,7 @@ class RelationDefs
 
     /**
      * Whether a foreign mid key is defined. For Many-to-Many relationships only.
+     * @throws RuntimeException
      */
     public function hasForeignMidKey() : bool
     {
@@ -241,6 +247,7 @@ class RelationDefs
 
     /**
      * Get a foreign mid key. For Many-to-Many relationships only.
+     * @throws RuntimeException
      */
     public function getForeignMidKey() : string
     {
@@ -263,6 +270,7 @@ class RelationDefs
 
     /**
      * Get a relationship name.
+     * @throws RuntimeException
      */
     public function getRelationshipName() : string
     {

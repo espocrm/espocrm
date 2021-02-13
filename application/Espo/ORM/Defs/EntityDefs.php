@@ -176,6 +176,7 @@ class EntityDefs
 
     /**
      * Get an attribute definitions.
+     * @throws RuntimeException
      */
     public function getAttribute(string $name) : AttributeDefs
     {
@@ -190,6 +191,7 @@ class EntityDefs
 
     /**
      * Get a relation definitions.
+     * @throws RuntimeException
      */
     public function getRelation(string $name) : RelationDefs
     {
@@ -204,6 +206,7 @@ class EntityDefs
 
     /**
      * Get an index definitions.
+     * @throws RuntimeException
      */
     public function getIndex(string $name) : IndexDefs
     {
