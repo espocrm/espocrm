@@ -32,6 +32,8 @@ define('views/email-template/record/detail', 'views/record/detail', function (De
 
         duplicateAction: true,
 
+        saveAndContinueEditingAction: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
             this.listenToInsertField();
