@@ -40,6 +40,7 @@ use Espo\ORM\{
     QueryComposer\MysqlQueryComposer as QueryComposer,
     Mapper\MysqlMapper,
     QueryParams\Select,
+    MetadataDataProvider,
 };
 
 use tests\unit\testData\DB\{
@@ -47,7 +48,6 @@ use tests\unit\testData\DB\{
     Comment,
     Tag,
     Note,
-    Job,
 };
 
 use PDO;
@@ -68,34 +68,47 @@ class MapperTest extends \PHPUnit\Framework\TestCase
     {
         $this->pdo = $this->getMockBuilder(PDO::class)->disableOriginalConstructor()->getMock();
         $this->pdo
-                ->expects($this->any())
-                ->method('quote')
-                ->will($this->returnCallback(function() {
-                    $args = func_get_args();
-                    return "'" . $args[0] . "'";
-                }));
+            ->expects($this->any())
+            ->method('quote')
+            ->will($this->returnCallback(function() {
+                $args = func_get_args();
 
-        $metadata = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
-        $metadata
+                return "'" . $args[0] . "'";
+            }));
+
+        $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
+
+        $metadataDataProvider = $this->createMock(MetadataDataProvider::class);
+
+        $metadataDataProvider
+            ->expects($this->any())
             ->method('get')
-            ->will($this->returnValue(false));
+            ->willReturn($ormMetadata);
 
-        $sqlExecutor = $this->sqlExecutor = $this->getMockBuilder(SqlExecutor::class)->disableOriginalConstructor()->getMock();
+        $this->metadata = new Metadata($metadataDataProvider);
+
+        $this->sqlExecutor = $this->getMockBuilder(SqlExecutor::class)->disableOriginalConstructor()->getMock();
 
         $entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
+
         $entityManager
             ->method('getMetadata')
-            ->will($this->returnValue($metadata));
+            ->will($this->returnValue($this->metadata));
 
         $this->entityFactory = $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
+
         $this->entityFactory
             ->expects($this->any())
             ->method('create')
             ->will($this->returnCallback(
                 function () use ($entityManager) {
                     $args = func_get_args();
+
                     $className = "tests\\unit\\testData\\DB\\" . $args[0];
-                    return new $className($args[0], [], $entityManager);
+
+                    $defs = $this->metadata->get($args[0]) ?? [];
+
+                    return new $className($args[0], $defs, $entityManager);
                 }
             ));
 
@@ -105,15 +118,15 @@ class MapperTest extends \PHPUnit\Framework\TestCase
 
         $entityFactory = $this->entityFactory;
 
-        $this->collectionFactory = $this->getMockBuilder(CollectionFactory::class)->disableOriginalConstructor()->getMock();
-
-
-        $this->metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->collectionFactory = $this->getMockBuilder(CollectionFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
 
         $this->db = new MysqlMapper(
-            $this->pdo, $this->entityFactory, $this->collectionFactory, $this->query, $this->metadata, $this->sqlExecutor
+            $this->pdo, $this->entityFactory, $this->collectionFactory,
+            $this->query, $this->metadata, $this->sqlExecutor
         );
 
         $this->post = $entityFactory->create('Post');

@@ -2,7 +2,6 @@
 
 namespace tests\unit\testData\DB;
 
-use Espo\ORM\Entity;
 use Espo\ORM\BaseEntity;
 
 class TEntity extends BaseEntity
@@ -12,7 +11,7 @@ class TEntity extends BaseEntity
 
 class Account extends TEntity
 {
-    public $fields = [
+    /*public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -40,12 +39,12 @@ class Account extends TEntity
             ],
             'conditions' => ['entityType' => 'Account'],
         ],
-    ];
+    ];*/
 }
 
 class Team extends TEntity
 {
-    public $fields = [
+    /*public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -58,12 +57,12 @@ class Team extends TEntity
             'default' => 0,
         ],
     ];
-    public $relations = [];
+    public $relations = [];*/
 }
 
 class EntityTeam extends TEntity
 {
-    public $fields = [
+   /* public $fields = [
         'id' => [
             'type' => Entity::ID,
             'autoincrement' => true,
@@ -85,12 +84,12 @@ class EntityTeam extends TEntity
             'type' => Entity::BOOL,
             'default' => 0,
         ],
-    ];
+    ];*/
 }
 
 class Contact extends TEntity
 {
-    public $fields = [
+/*    public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -115,12 +114,12 @@ class Contact extends TEntity
             'default' => 0,
         ],
     ];
-    public $relations = [];
+    public $relations = [];*/
 }
 
 class Post extends TEntity
 {
-    public $fields = [
+    /*public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -191,12 +190,12 @@ class Post extends TEntity
             'foreign' => 'post',
             'noJoin' => true,
         ],
-    ];
+    ];*/
 }
 
 class Comment extends TEntity
 {
-    public $fields = [
+/*    public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -225,12 +224,12 @@ class Comment extends TEntity
             'key' => 'postId',
             'foreignKey' => 'id',
         ],
-    ];
+    ];*/
 }
 
 class PostData extends TEntity
 {
-    public $fields = [
+    /*public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -251,12 +250,12 @@ class PostData extends TEntity
             'foreignKey' => 'id',
             'foreign' => 'postData',
         ],
-    ];
+    ];*/
 }
 
 class Tag extends TEntity
 {
-    public $fields = [
+   /* public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -283,12 +282,12 @@ class Tag extends TEntity
                 'role' => 'postRole',
             ],
         ],
-    ];
+    ];*/
 }
 
 class PostTag extends TEntity
 {
-    public $fields = [
+    /*public $fields = [
         'id' => [
             'type' => Entity::ID,
             'autoincrement' => true,
@@ -309,12 +308,12 @@ class PostTag extends TEntity
             'type' => Entity::BOOL,
             'default' => 0,
         ],
-    ];
+    ];*/
 }
 
 class Note extends TEntity
 {
-    public $fields = [
+   /* public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -344,13 +343,13 @@ class Note extends TEntity
             'entities' => ['Post'],
             'foreign' => 'notes',
         ],
-    ];
+    ];*/
 }
 
 
 class Article extends TEntity
 {
-    public $fields = [
+    /*public $fields = [
         'id' => [
             'type' => Entity::ID
         ],
@@ -365,12 +364,12 @@ class Article extends TEntity
             'type' => Entity::BOOL,
             'default' => 0
         ]
-    ];
+    ];*/
 }
 
 class Job extends TEntity
 {
-    public $fields = [
+   /* public $fields = [
         'id' => [
             'type' => Entity::ID
         ],
@@ -392,12 +391,12 @@ class Job extends TEntity
             'type' => Entity::BOOL,
             'default' => 0
         ],
-    ];
+    ];*/
 }
 
 class Test extends TEntity
 {
-    public $fields = [
+   /* public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -427,12 +426,12 @@ class Test extends TEntity
             'type' => Entity::BOOL,
             'default' => 0,
         ]
-    ];
+    ];*/
 }
 
 class Dependee extends TEntity
 {
-    public $fields = [
+   /* public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -450,12 +449,12 @@ class Dependee extends TEntity
     ];
     public $relations = [
 
-    ];
+    ];*/
 }
 
 class TestWhere extends TEntity
 {
-    public $fields = [
+    /*public $fields = [
         'id' => [
             'type' => Entity::ID,
         ],
@@ -511,57 +510,13 @@ class TestWhere extends TEntity
                 ],
             ],
         ],
-    ];
+    ];*/
 }
 
 class TestSelect extends TEntity
 {
-    public $fields = [
-        'id' => [
-            'type' => Entity::ID,
-        ],
-        'test' => [
-            'type' => Entity::VARCHAR,
-            'notStorable' => true,
-            'select' => [
-                'select' => 'MUL:(id, 1)',
-            ],
-            'selectForeign' => [
-                'select' => 'MUL:({alias}.id, 1)',
-            ],
-            'order' => [
-                'order' => [
-                    ['MUL:({alias}.id, 1)', '{direction}'],
-                ],
-            ],
-        ],
-    ];
-
-    public $relations = [
-        'right' => [
-            'type' => Entity::HAS_MANY,
-            'foreign' => 'left',
-            'entity' => 'TestSelectRight',
-        ],
-    ];
 }
 
 class TestSelectRight extends TEntity
 {
-    public $fields = [
-        'id' => [
-            'type' => Entity::ID,
-        ],
-        'leftId' => [
-            'type' => Entity::FOREIGN_ID,
-        ],
-    ];
-
-    public $relations = [
-        'left' => [
-            'type' => Entity::BELONGS_TO,
-            'foreign' => 'right',
-            'entity' => 'TestSelect',
-        ],
-    ];
 }

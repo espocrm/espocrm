@@ -44,6 +44,8 @@ use Espo\ORM\{
     EntityFactory,
     SthCollection,
     CollectionFactory,
+    Metadata,
+    MetadataDataProvider,
 };
 
 use RuntimeException;
@@ -60,6 +62,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
 
         $entityFactory = $this->entityFactory =
+
         $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
 
         $this->collectionFactory = new CollectionFactory($this->entityManager);
@@ -88,9 +91,21 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->method('getEntityFactory')
             ->will($this->returnValue($this->entityFactory));
 
-        $entity = $this->seed = $this->createEntity('Test', Test::class);
+        $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
+
+        $metadataDataProvider = $this->createMock(MetadataDataProvider::class);
+
+        $metadataDataProvider
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($ormMetadata);
+
+        $this->metadata = new Metadata($metadataDataProvider);
+
+        $this->seed = $this->createEntity('Test', Test::class);
 
         $this->account = $this->createEntity('Account', Entities\Account::class);
+
         $this->team = $this->createEntity('Team', Entities\Team::class);
 
         $this->collection = $this->createCollectionMock();
@@ -145,7 +160,9 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 
     protected function createEntity(string $entityType, string $className)
     {
-        return new $className($entityType, [], $this->entityManager);
+        $defs = $this->metadata->get($entityType);
+
+        return new $className($entityType, $defs, $this->entityManager);
     }
 
     /**

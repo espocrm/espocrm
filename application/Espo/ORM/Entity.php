@@ -84,4 +84,10 @@ interface Entity
      * Clear an attribute value.
      */
     public function clear(?string $name);
+
+
+    /**
+     * Get an entity type.
+     */
+    public function getEntityType() : string;
 }

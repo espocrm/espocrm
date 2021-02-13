@@ -33,6 +33,8 @@ use Espo\ORM\{
     DB\MysqlMapper,
     DB\Query\Mysql as Query,
     EntityFactory,
+    Metadata,
+    MetadataDataProvider,
 };
 
 use tests\unit\testData\DB\Job;
@@ -45,6 +47,16 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
+        $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
+
+        $metadataDataProvider = $this->createMock(MetadataDataProvider::class);
+
+        $metadataDataProvider
+            ->expects($this->any())
+            ->method('get')
+            ->willReturn($ormMetadata);
+
+        $this->metadata = new Metadata($metadataDataProvider);
     }
 
     protected function tearDown() : void
@@ -54,7 +66,10 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     protected function createEntity(string $entityType, string $className)
     {
         $em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-        $entity = new $className($entityType, [], $em);
+
+        $defs = $this->metadata->get($entityType);
+
+        $entity = new $className($entityType, $defs, $em);
 
         return $entity;
     }

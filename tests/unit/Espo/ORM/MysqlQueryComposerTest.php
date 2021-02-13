@@ -46,13 +46,6 @@ use Espo\ORM\QueryParams\{
     LockTableBuilder,
 };
 
-use tests\unit\testData\DB\{
-    Post,
-    Comment,
-    Tag,
-    Note,
-};
-
 require_once 'tests/unit/testData/DB/Entities.php';
 require_once 'tests/unit/testData/DB/MockPDO.php';
 require_once 'tests/unit/testData/DB/MockDBResult.php';
@@ -71,25 +64,16 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->pdo = $this->createMock('MockPDO');
         $this->pdo
-                ->expects($this->any())
-                ->method('quote')
-                ->will($this->returnCallback(function() {
-                    $args = func_get_args();
-                    return "'" . $args[0] . "'";
-                }));
+            ->expects($this->any())
+            ->method('quote')
+            ->will($this->returnCallback(function() {
+                $args = func_get_args();
+                return "'" . $args[0] . "'";
+            }));
 
-        $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();;
+        $this->entityManager = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
 
         $this->entityFactory = $this->getMockBuilder(EntityFactory::class)->disableOriginalConstructor()->getMock();
-        $this->entityFactory->expects($this->any())
-                            ->method('create')
-                            ->will(
-                                $this->returnCallback(function() {
-                                    $args = func_get_args();
-                                    $className = "tests\\unit\\testData\\DB\\" . $args[0];
-                                    return new $className($args[0], [], $this->entityManager);
-                                }
-                            ));
 
         $ormMetadata = include('tests/unit/testData/DB/ormMetadata.php');
 
@@ -102,7 +86,22 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $this->metadata = new Metadata($metadataDataProvider);
 
-        $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->entityFactory
+            ->expects($this->any())
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function () {
+                        $args = func_get_args();
+
+                        $className = "tests\\unit\\testData\\DB\\" . $args[0];
+
+                        $defs = $this->metadata->get($args[0]) ?? [];
+
+                        return new $className($args[0], $defs, $this->entityManager);
+                    }
+                )
+            );
 
         $this->query = new QueryComposer($this->pdo, $this->entityFactory, $this->metadata);
 

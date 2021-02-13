@@ -47,24 +47,24 @@ class Helper
 
     public function getRelationKeys(Entity $entity, string $relationName) : array
     {
-        if (!$entity->hasRelation($relationName)) {
-            throw new RuntimeException("Relation '{$relationName}' does not exist.");
-        }
+        $entityType = $entity->getEntityType();
 
-        $params = $entity->getRelations()[$relationName];
+        $defs = $this->metadata->getDefs()
+            ->getEntity($entityType)
+            ->getRelation($relationName);
 
-        $type = $params['type'] ?? null;
+        $type = $defs->getType();
 
         switch ($type) {
 
             case Entity::BELONGS_TO:
-                $key = $params['key'] ?? ($relationName . 'Id');
+                $key = $defs->hasKey() ?
+                    $defs->getKey() :
+                    $relationName . 'Id';
 
-                $foreignKey = 'id';
-
-                if (isset($params['foreignKey'])){
-                    $foreignKey = $params['foreignKey'];
-                }
+                $foreignKey = $defs->hasForeignKey() ?
+                    $defs->getForeignKey() :
+                    'id';
 
                 return [
                     'key' => $key,
@@ -73,11 +73,15 @@ class Helper
 
             case Entity::HAS_MANY:
             case Entity::HAS_ONE:
-                $key = $params['key'] ?? 'id';
+                $key = $defs->hasKey() ? $defs->getKey() : 'id';
 
-                $foreign = $params['foreign'] ?? null;
+                $foreign = $defs->hasForeignRelationName() ?
+                    $defs->getForeignRelationName() :
+                    null;
 
-                $foreignKey = $params['foreignKey'] ?? null;
+                $foreignKey = $defs->hasForeignKey() ?
+                    $defs->getForeignKey() :
+                    null;
 
                 if (!$foreignKey && $foreign) {
                     $foreignKey = $foreign . 'Id';
@@ -93,23 +97,13 @@ class Helper
                 ];
 
             case Entity::HAS_CHILDREN:
-                $key = 'id';
+                $key = $defs->hasKey() ? $defs->getKey() : 'id';
 
-                if (isset($params['key'])){
-                    $key = $params['key'];
-                }
+                $foreignKey = $defs->hasForeignKey() ?
+                    $defs->getForeignKey() :
+                    'parentId';
 
-                $foreignKey = 'parentId';
-
-                if (isset($params['foreignKey'])) {
-                    $foreignKey = $params['foreignKey'];
-                }
-
-                $foreignType = 'parentType';
-
-                if (isset($params['foreignType'])) {
-                    $foreignType = $params['foreignType'];
-                }
+                $foreignType = $defs->getParam('foreignType') ?? 'parentType';
 
                 return [
                     'key' => $key,
@@ -118,25 +112,21 @@ class Helper
                 ];
 
             case Entity::MANY_MANY:
-                $key = 'id';
+                $key = $defs->hasKey() ?
+                    $defs->getKey() :
+                    'id';
 
-                if (isset($params['key'])){
-                    $key = $params['key'];
-                }
+                $foreignKey = $defs->hasForeignKey() ?
+                    $defs->getForeignKey() :
+                    'id';
 
-                $foreignKey = 'id';
+                $nearKey = $defs->hasMidKey() ?
+                    $defs->getMidKey() :
+                    lcfirst($entityType) . 'Id';
 
-                if (isset($params['foreignKey'])){
-                    $foreignKey = $params['foreignKey'];
-                }
-
-                $nearKey = lcfirst($entity->getEntityType()) . 'Id';
-                $distantKey = lcfirst($params['entity']) . 'Id';
-
-                if (isset($params['midKeys']) && is_array($params['midKeys'])){
-                    $nearKey = $params['midKeys'][0];
-                    $distantKey = $params['midKeys'][1];
-                }
+                $distantKey = $defs->hasForeignMidKey() ?
+                    $defs->getForeignMidKey() :
+                    lcfirst($defs->getForeignEntityType()) . 'Id';
 
                 return [
                     'key' => $key,
