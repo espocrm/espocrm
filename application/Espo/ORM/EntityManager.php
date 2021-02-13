@@ -38,6 +38,7 @@ use Espo\ORM\{
     Repository\RDBRepository,
     Locker\Locker,
     Locker\BaseLocker,
+    Defs\Defs,
 };
 
 use PDO;
@@ -414,6 +415,14 @@ class EntityManager
     }
 
     /**
+     * Get metadata definitions.
+     */
+    public function getDefs() : Defs
+    {
+        return $this->metadata->getDefs();
+    }
+
+    /**
      * Get a query builder.
      */
     public function getQueryBuilder() : QueryBuilder
@@ -421,6 +430,9 @@ class EntityManager
         return $this->queryBuilder;
     }
 
+    /**
+     * Get metadata.
+     */
     public function getMetadata() : Metadata
     {
         return $this->metadata;
