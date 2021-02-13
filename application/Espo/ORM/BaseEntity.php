@@ -75,29 +75,26 @@ class BaseEntity implements Entity
 
         $this->entityManager = $entityManager;
 
-        $this->fields = $defs['fields'] ?? $this->fields;
+        $this->fields = $defs['attributes'] ?? $defs['fields'] ?? $this->fields;
         $this->relations = $defs['relations'] ?? $this->relations;
     }
 
-    public function clear(?string $name = null)
+    public function clear(string $name) : void
     {
-        if (is_null($name)) {
-            $this->reset();
-        }
         unset($this->valuesContainer[$name]);
     }
 
-    public function reset()
+    public function reset() : void
     {
         $this->valuesContainer = [];
     }
 
-    protected function setValue($name, $value)
+    protected function setValue($name, $value) : void
     {
         $this->valuesContainer[$name] = $value;
     }
 
-    public function set($p1, $p2 = null)
+    public function set($p1, $p2 = null) : void
     {
         if (is_array($p1) || is_object($p1)) {
             if (is_object($p1)) {
@@ -146,6 +143,8 @@ class BaseEntity implements Entity
 
     /**
      * @param $params @deprecated
+     *
+     * @retrun ?mixed
      */
     public function get(string $name, $params = [])
     {
@@ -204,7 +203,7 @@ class BaseEntity implements Entity
         return false;
     }
 
-    public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false)
+    public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false) : void
     {
         if ($reset) {
             $this->reset();
@@ -221,16 +220,14 @@ class BaseEntity implements Entity
                 continue;
             }
 
-            if ($onlyAccessible) {
-                if (isset($defs['notAccessible']) && $defs['notAccessible'] == true) {
-                    continue;
-                }
+            if ($onlyAccessible && $this->getAttributeParam($attribute, 'notAccessible')) {
+                continue;
             }
 
             $value = $data[$attribute];
 
             if (!is_null($value)) {
-                $valueType = $defs['type'];
+                $valueType = $this->getAttributeType($attribute);
 
                 if ($valueType === self::FOREIGN) {
                     $relation = $this->getAttributeParam($attribute, 'relation');
@@ -249,32 +246,40 @@ class BaseEntity implements Entity
 
                 switch ($valueType) {
                     case self::VARCHAR:
+
                         break;
 
                     case self::BOOL:
                         $value = ($value === 'true' || $value === '1' || $value === true);
+
                         break;
 
                     case self::INT:
                         $value = intval($value);
+
                         break;
 
                     case self::FLOAT:
                         $value = floatval($value);
+
                         break;
 
                     case self::JSON_ARRAY:
                         $value = is_string($value) ? json_decode($value) : $value;
+
                         if (!is_array($value)) {
                             $value = null;
                         }
+
                         break;
 
                     case self::JSON_OBJECT:
                         $value = is_string($value) ? json_decode($value) : $value;
+
                         if (!($value instanceof StdClass) && !is_array($value)) {
                             $value = null;
                         }
+
                         break;
 
                     default:
@@ -286,22 +291,24 @@ class BaseEntity implements Entity
 
             if (method_exists($this, $method)) {
                 $this->$method($value);
-            } else {
-                $this->valuesContainer[$attribute] = $value;
+
+                continue;
             }
+
+            $this->valuesContainer[$attribute] = $value;
         }
     }
 
     /**
      * Is an entity new.
      */
-    public function isNew()
+    public function isNew() : bool
     {
         return $this->isNew;
     }
 
     /**
-     * Set as new.
+     * Set as new or not.
      */
     public function setIsNew(bool $isNew)
     {
@@ -317,9 +324,9 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Set as saved.
+     * Set as saved or not.
      */
-    public function setIsSaved(bool $isSaved)
+    public function setIsSaved(bool $isSaved) : void
     {
         $this->isSaved = $isSaved;
     }
@@ -375,7 +382,7 @@ class BaseEntity implements Entity
     /**
      * Get relation list defined for an entity type.
      */
-    public function getRelationList()
+    public function getRelationList() : array
     {
         return array_keys($this->getRelations());
     }
@@ -390,6 +397,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated
+     * @todo Make protected.
      */
     public function toArray()
     {
@@ -399,15 +407,14 @@ class BaseEntity implements Entity
             $arr['id'] = $this->id;
         }
 
-        foreach ($this->fields as $field => $defs) {
-            if ($field == 'id') {
+        foreach ($this->getAttributeList() as $attribute) {
+            if ($attribute === 'id') {
                 continue;
             }
 
-            if ($this->has($field)) {
-                $arr[$field] = $this->get($field);
+            if ($this->has($attribute)) {
+                $arr[$attribute] = $this->get($attribute);
             }
-
         }
 
         return $arr;
@@ -528,11 +535,11 @@ class BaseEntity implements Entity
             $this->getAttributeType($name),
             $this->get($name),
             $this->getFetched($name),
-            $this->getAttributeParam($name, 'isUnordered')
+            $this->getAttributeParam($name, 'isUnordered') ?? false
         );
     }
 
-    public static function areValuesEqual($type, $v1, $v2, $isUnordered = false)
+    protected static function areValuesEqual(string $type, $v1, $v2, bool $isUnordered = false) : bool
     {
         if ($type === self::JSON_ARRAY) {
             if (is_array($v1) && is_array($v2)) {
@@ -560,11 +567,13 @@ class BaseEntity implements Entity
 
                 return true;
             }
-        } else if ($type === self::JSON_OBJECT) {
+        }
+        else if ($type === self::JSON_OBJECT) {
             if (is_object($v1) && is_object($v2)) {
                 if ($v1 != $v2) {
                     return false;
                 }
+
                 $a1 = get_object_vars($v1);
                 $a2 = get_object_vars($v2);
 

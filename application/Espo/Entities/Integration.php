@@ -29,6 +29,8 @@
 
 namespace Espo\Entities;
 
+use StdClass;
+
 class Integration extends \Espo\Core\ORM\Entity
 {
     public function get(string $name, $params = [])
@@ -45,28 +47,33 @@ class Integration extends \Espo\Core\ORM\Entity
             if ($this->get('data')) {
                 $data = $this->get('data');
             } else {
-                $data = new \stdClass();
+                $data = new StdClass();
             }
+
             if (isset($data->$name)) {
                 return $data->$name;
             }
         }
+
         return null;
     }
 
-    public function clear(?string $name = null)
+    public function clear(string $name) : void
     {
         parent::clear($name);
 
         $data = $this->get('data');
+
         if (empty($data)) {
-            $data = new \stdClass();
+            $data = new StdClass();
         }
+
         unset($data->$name);
+
         $this->set('data', $data);
     }
 
-    public function set($p1, $p2 = null)
+    public function set($p1, $p2 = null) : void
     {
         if (is_object($p1)) {
             $p1 = get_object_vars($p1);
@@ -76,7 +83,9 @@ class Integration extends \Espo\Core\ORM\Entity
             if ($p2 === null) {
                 $p2 = false;
             }
+
             $this->populateFromArray($p1, $p2);
+
             return;
         }
 
@@ -85,16 +94,20 @@ class Integration extends \Espo\Core\ORM\Entity
 
         if ($name == 'id') {
             $this->id = $value;
+
             return;
         }
 
         if ($this->hasAttribute($name)) {
             $this->valuesContainer[$name] = $value;
-        } else {
+        }
+        else {
             $data = $this->get('data');
+
             if (empty($data)) {
-                $data = new \stdClass();
+                $data = new StdClass();
             }
+
             $data->$name = $value;
             $this->set('data', $data);
         }
@@ -102,90 +115,98 @@ class Integration extends \Espo\Core\ORM\Entity
 
     public function isAttributeChanged(string $name) : bool
     {
-        if ($name === 'data') return true;
+        if ($name === 'data') {
+            return true;
+        }
 
         return parent::isAttributeChanged($name);
     }
 
-    public function populateFromArray(array $arr, $onlyAccessible = true, $reset = false)
+    public function populateFromArray(array $array, bool $onlyAccessible = true, bool $reset = false) : void
     {
         if ($reset) {
             $this->reset();
         }
 
-        foreach ($arr as $attribute => $value) {
-            if (is_string($attribute)) {
+        foreach ($array as $attribute => $value) {
+            if (!is_string($attribute)) {
+                continue;
+            }
 
-                if ($this->hasAttribute($attribute)) {
-                    $attributes = $this->getAttributes();
-                    $defs = $attributes[$attribute];
+            if ($this->hasAttribute($attribute)) {
+                $attributes = $this->getAttributes();
 
-                    if (!is_null($value)) {
-                        switch ($defs['type']) {
-                            case self::VARCHAR:
-                                break;
-                            case self::BOOL:
-                                $value = ($value === 'true' || $value === '1' || $value === true);
-                                break;
-                            case self::INT:
-                                $value = intval($value);
-                                break;
-                            case self::FLOAT:
-                                $value = floatval($value);
-                                break;
-                            case self::JSON_ARRAY:
-                                $value = is_string($value) ? json_decode($value) : $value;
-                                if (!is_array($value)) {
-                                    $value = null;
-                                }
-                                break;
-                            case self::JSON_OBJECT:
-                                $value = is_string($value) ? json_decode($value) : $value;
-                                if (!($value instanceof \StdClass) && !is_array($value)) {
-                                    $value = null;
-                                }
-                                break;
-                            default:
-                                break;
-                        }
+                $defs = $attributes[$attribute];
+
+                if (!is_null($value)) {
+                    switch ($defs['type']) {
+                        case self::VARCHAR:
+                            break;
+                        case self::BOOL:
+                            $value = ($value === 'true' || $value === '1' || $value === true);
+                            break;
+                        case self::INT:
+                            $value = intval($value);
+                            break;
+                        case self::FLOAT:
+                            $value = floatval($value);
+                            break;
+                        case self::JSON_ARRAY:
+                            $value = is_string($value) ? json_decode($value) : $value;
+                            if (!is_array($value)) {
+                                $value = null;
+                            }
+                            break;
+                        case self::JSON_OBJECT:
+                            $value = is_string($value) ? json_decode($value) : $value;
+                            if (!($value instanceof \StdClass) && !is_array($value)) {
+                                $value = null;
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
-
-                $this->set($attribute, $value);
             }
+
+            $this->set($attribute, $value);
         }
     }
 
     public function toArray()
     {
-        $arr = array();
+        $arr = [];
+
         if (isset($this->id)) {
             $arr['id'] = $this->id;
         }
-        foreach ($this->getAttributes() as $attribute => $defs) {
-            if ($attribute == 'id') {
+
+        foreach ($this->getAttributeList() as $attribute) {
+            if ($attribute === 'id') {
                 continue;
             }
-            if ($attribute == 'data') {
+
+            if ($attribute === 'data') {
                 continue;
             }
+
             if ($this->has($attribute)) {
                 $arr[$attribute] = $this->get($attribute);
             }
         }
 
         $data = $this->get('data');
+
         if (empty($data)) {
-            $data = new \StdClass();
+            $data = new StdClass();
         }
 
         $dataArr = get_object_vars($data);
 
-        $arr = array_merge($arr, $dataArr);
-        return $arr;
+        return array_merge($arr, $dataArr);
     }
 
-    public function getValueMap() : \StdClass
+    public function getValueMap() : StdClass
     {
         $arr = $this->toArray();
 

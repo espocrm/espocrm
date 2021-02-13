@@ -59,7 +59,7 @@ interface Entity
     /**
      * Reset all attributes (empty an entity).
      */
-    public function reset();
+    public function reset() : void;
 
     /**
      * Set an attribute or multiple attributes.
@@ -67,11 +67,16 @@ interface Entity
      * Two usage options:
      * * `set(string $name, mixed $value)`
      * * `set(array|object $valueMap)`
+     *
+     * @param string|object|array
+     * @param ?mixed
      */
-    public function set($name, $value);
+    public function set($name, $value = null) : void;
 
     /**
      * Get an attribute value.
+     *
+     * @retrun ?mixed
      */
     public function get(string $name);
 
@@ -83,7 +88,7 @@ interface Entity
     /**
      * Clear an attribute value.
      */
-    public function clear(?string $name);
+    public function clear(string $name) : void;
 
     /**
      * Get an entity type.
