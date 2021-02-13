@@ -30,6 +30,8 @@ define('views/template/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
 
+        saveAndContinueEditingAction: true,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
