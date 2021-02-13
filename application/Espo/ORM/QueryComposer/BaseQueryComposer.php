@@ -802,6 +802,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         $list = [];
+
         foreach ($params['groupBy'] as $field) {
             $list[] = $this->convertComplexExpression($entity, $field, false, $params);
         }
@@ -1392,10 +1393,14 @@ abstract class BaseQueryComposer implements QueryComposer
             foreach ($defs['joins'] as $j) {
                 $jAlias = $this->obtainJoinAlias($j);
                 $jAlias = str_replace('{alias}', $alias, $jAlias);
-                if (isset($j[1])) $j[1] = $jAlias;
+
+                if (isset($j[1])) {
+                    $j[1] = $jAlias;
+                }
 
                 foreach ($params['joins'] as $jE) {
                     $jEAlias = $this->obtainJoinAlias($jE);
+
                     if ($jEAlias === $jAlias) {
                         continue 2;
                     }
@@ -1404,12 +1409,16 @@ abstract class BaseQueryComposer implements QueryComposer
                 if ($alias) {
                     if (count($j) >= 3) {
                         $conditions = [];
+
                         foreach ($j[2] as $k => $value) {
                             $value = str_replace('{alias}', $alias, $value);
+
                             $left = $k;
                             $left = str_replace('{alias}', $alias, $left);
+
                             $conditions[$left] = $value;
                         }
+
                         $j[2] = $conditions;
                     }
                 }
@@ -1539,8 +1548,10 @@ abstract class BaseQueryComposer implements QueryComposer
             if (is_string($item)) {
                 if (strpos($item, ':')) {
                     $itemList[$i] = [$item, $item];
+
                     continue;
                 }
+
                 continue;
             }
         }
@@ -2730,13 +2741,16 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 if ($indexList) {
                     $indexKeyList = [];
+
                     if (is_string($indexList)) {
                         $indexList = [$indexList];
                     }
+
                     foreach ($indexList as $indexName) {
                         $indexKey = $this->metadata->get(
                             $entity->getEntityType(), ['relations', $relationName, 'indexes', $indexName, 'key']
                         );
+
                         if ($indexKey) {
                             $indexKeyList[] = $indexKey;
                         }
@@ -2747,11 +2761,13 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 if ($indexKeyList && count($indexKeyList)) {
                     $sanitizedIndexList = [];
+
                     foreach ($indexKeyList as $indexKey) {
                         $sanitizedIndexList[] = $this->quoteIdentifier(
                             $this->sanitizeIndexName($indexKey)
                         );
                     }
+
                     $indexPart = " USE INDEX (".implode(', ', $sanitizedIndexList).")";
                 }
 
@@ -2799,9 +2815,11 @@ abstract class BaseQueryComposer implements QueryComposer
                     . "{$alias}.deleted = " . $this->quote(false);
 
                 $joinSqlList = [];
+
                 foreach ($conditions as $left => $right) {
                     $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right, $params);
                 }
+
                 if (count($joinSqlList)) {
                     $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
@@ -2811,6 +2829,7 @@ abstract class BaseQueryComposer implements QueryComposer
             case Entity::HAS_CHILDREN:
                 $foreignKey = $keySet['foreignKey'];
                 $foreignType = $keySet['foreignType'];
+
                 $distantTable = $this->toDb($relParams['entity']);
 
                 $sql =
@@ -2824,9 +2843,11 @@ abstract class BaseQueryComposer implements QueryComposer
                     . "{$alias}.deleted = " . $this->quote(false) . "";
 
                 $joinSqlList = [];
+
                 foreach ($conditions as $left => $right) {
                     $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right, $params);
                 }
+
                 if (count($joinSqlList)) {
                     $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
@@ -3011,6 +3032,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
             if (strpos($attribute, '.') > 0) {
                 list($alias, $attribute) = explode('.', $attribute);
+
                 $alias = $this->sanitize($alias);
                 $column = $this->toDb($this->sanitize($attribute));
                 $left = "{$alias}.{$column}";
