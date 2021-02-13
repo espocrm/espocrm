@@ -1569,7 +1569,11 @@ class Record implements Crud,
             return $this->$methodName($id, $params);
         }
 
-        $foreignEntityType = $entity->relations[$link]['entity'];
+        $foreignEntityType = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType)
+            ->getRelation($link)
+            ->getForeignEntityType();
 
         $linkParams = $this->linkParams[$link] ?? [];
 

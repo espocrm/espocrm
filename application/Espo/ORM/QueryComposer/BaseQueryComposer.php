@@ -1447,7 +1447,7 @@ abstract class BaseQueryComposer implements QueryComposer
                             $value = str_replace('{alias}', $alias, $value);
                             $left = $k;
                             $left = str_replace('{alias}', $alias, $left);
-                            
+
                             $conditions[$left] = $value;
                         }
 
@@ -1803,19 +1803,18 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getBelongsToJoinItemPart(
-        Entity $entity, string $relationName, $r = null, ?string $alias = null, ?array $params = null
+        Entity $entity, string $relationName, ?string $alias = null, ?array $params = null
     ) : ?string {
-        if (empty($r)) {
-            $r = $entity->relations[$relationName];
-        }
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
+
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
 
         if (!$alias) {
             $alias = $this->getAlias($entity, $relationName);
-        } else {
+        }
+        else {
             $alias = $this->sanitizeSelectAlias($alias);
         }
 
@@ -1823,7 +1822,10 @@ abstract class BaseQueryComposer implements QueryComposer
             return null;
         }
 
-        $table = $this->toDb($r['entity']);
+        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
+        $table = $this->toDb($foreignEntityType);
+
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
         return
@@ -1880,11 +1882,11 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        foreach ($entity->getRelations() as $relationName => $r) {
-            $type = $r['type'] ?? null;
+        foreach ($entity->getRelationList() as $relationName) {
+            $type = $entity->getRelationType($relationName);
 
-            if ($type == Entity::BELONGS_TO || $type == Entity::HAS_ONE) {
-                if (!empty($r['noJoin'])) {
+            if ($type === Entity::BELONGS_TO || $type === Entity::HAS_ONE) {
+                if ($entity->getRelationParam($relationName, 'noJoin')) {
                     continue;
                 }
 
@@ -1907,7 +1909,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
 
                 if ($type == Entity::BELONGS_TO) {
-                    $join = $this->getBelongsToJoinItemPart($entity, $relationName, $r, null, $params);
+                    $join = $this->getBelongsToJoinItemPart($entity, $relationName, null, $params);
 
                     if (!$join) {
                         continue;
@@ -1917,6 +1919,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
                 else if ($type == Entity::HAS_ONE) {
                     $join =  $this->getJoinItemPart($entity, $relationName, true, [], null, $params);
+
                     $joinsArr[] = $join;
                 }
             }
@@ -2982,7 +2985,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 return $sql;
 
             case Entity::BELONGS_TO:
-                $sql = $prefix . $this->getBelongsToJoinItemPart($entity, $relationName, null, $alias, $params);
+                $sql = $prefix . $this->getBelongsToJoinItemPart($entity, $relationName, $alias, $params);
 
                 return $sql;
         }
