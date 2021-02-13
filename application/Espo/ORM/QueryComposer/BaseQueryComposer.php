@@ -1085,7 +1085,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function convertComplexExpression(
-        ?Entity $entity = null, string $attribute, bool $distinct, array &$params
+        ?Entity $entity, string $attribute, bool $distinct, array &$params
     ) : string {
         $function = null;
 
@@ -1501,7 +1501,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $list;
     }
 
-    protected function getSelectPart(?Entity $entity = null, array &$params) : string
+    protected function getSelectPart(?Entity $entity, array &$params) : string
     {
         $itemList = $params['select'] ?? [];
 
@@ -1579,7 +1579,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $selectPart;
     }
 
-    protected function getSelectPartItemPair(?Entity $entity = null, array &$params, $attribute) : ?array
+    protected function getSelectPartItemPair(?Entity $entity, array &$params, $attribute) : ?array
     {
         $maxTextColumnsLength = $params['maxTextColumnsLength'] ?? null;
         $skipTextColumns = $params['skipTextColumns'] ?? false;
@@ -2842,7 +2842,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function composeSelectQuery(
-        ?string $from = null,
+        ?string $from,
         string $select,
         ?string $alias = null,
         ?string $joins = null,
