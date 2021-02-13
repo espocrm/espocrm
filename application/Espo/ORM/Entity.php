@@ -85,7 +85,6 @@ interface Entity
      */
     public function clear(?string $name);
 
-
     /**
      * Get an entity type.
      */
