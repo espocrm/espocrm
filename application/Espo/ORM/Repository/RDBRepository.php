@@ -137,7 +137,7 @@ class RDBRepository extends Repository
             $this->getMapper()->update($entity);
         }
 
-        $entity->setIsSaved(true);
+        $entity->setAsSaved();
 
         if (empty($options['skipAfterSave']) && empty($options['skipAll'])) {
             $this->afterSave($entity, $options);

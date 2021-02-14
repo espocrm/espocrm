@@ -310,7 +310,7 @@ class BaseEntity implements Entity
     /**
      * Set as new or not.
      */
-    public function setIsNew(bool $isNew)
+    public function setIsNew(bool $isNew) : void
     {
         $this->isNew = $isNew;
     }
@@ -324,11 +324,11 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Set as saved or not.
+     * Set as saved.
      */
-    public function setIsSaved(bool $isSaved) : void
+    public function setAsSaved() : void
     {
-        $this->isSaved = $isSaved;
+        $this->isSaved = true;
     }
 
     /**
@@ -609,14 +609,15 @@ class BaseEntity implements Entity
     /**
      * Set a fetched value for a specific attribute.
      */
-    public function setFetched(string $name, $value)
+    public function setFetched(string $name, $value) : void
     {
         if ($value) {
             $type = $this->getAttributeType($name);
 
             if ($type === self::JSON_OBJECT) {
                 $value = self::cloneObject($value);
-            } else if ($type === self::JSON_ARRAY) {
+            }
+            else if ($type === self::JSON_ARRAY) {
                 $value = self::cloneArray($value);
             }
         }
@@ -626,6 +627,8 @@ class BaseEntity implements Entity
 
     /**
      * Get a fetched value of a specific attribute.
+     *
+     * @return ?mixed
      */
     public function getFetched(string $name)
     {
@@ -643,10 +646,10 @@ class BaseEntity implements Entity
     /**
      * Whether a fetched value is set for a specific attribute.
      */
-    public function hasFetched(string $name)
+    public function hasFetched(string $name) : bool
     {
         if ($name === 'id') {
-            return !!$this->id;
+            return !is_null($this->id);
         }
 
         return array_key_exists($name, $this->fetchedValuesContainer);
@@ -655,7 +658,7 @@ class BaseEntity implements Entity
     /**
      * Clear all set fetched values.
      */
-    public function resetFetchedValues()
+    public function resetFetchedValues() : void
     {
         $this->fetchedValuesContainer = [];
     }
@@ -663,7 +666,7 @@ class BaseEntity implements Entity
     /**
      * Copy all current values to fetched values.
      */
-    public function updateFetchedValues()
+    public function updateFetchedValues() : void
     {
         $this->fetchedValuesContainer = $this->valuesContainer;
 
@@ -675,7 +678,7 @@ class BaseEntity implements Entity
     /**
      * Set an entity as fetched.
      */
-    public function setAsFetched()
+    public function setAsFetched() : void
     {
         $this->isFetched = true;
 
@@ -685,7 +688,7 @@ class BaseEntity implements Entity
     /**
      * Set an entity as not fetched.
      */
-    public function setAsNotFetched()
+    public function setAsNotFetched() : void
     {
         $this->isFetched = false;
 
@@ -700,12 +703,12 @@ class BaseEntity implements Entity
         return $this->isBeingSaved;
     }
 
-    public function setAsBeingSaved()
+    public function setAsBeingSaved() : void
     {
         $this->isBeingSaved = true;
     }
 
-    public function setAsNotBeingSaved()
+    public function setAsNotBeingSaved() : void
     {
         $this->isBeingSaved = false;
     }
@@ -713,7 +716,7 @@ class BaseEntity implements Entity
     /**
      * Set defined default values.
      */
-    public function populateDefaults()
+    public function populateDefaults() : void
     {
         foreach ($this->fields as $field => $defs) {
             if (array_key_exists('default', $defs)) {
@@ -722,7 +725,7 @@ class BaseEntity implements Entity
         }
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager() : EntityManager
     {
         return $this->entityManager;
     }
@@ -736,6 +739,7 @@ class BaseEntity implements Entity
                 if (is_object($v)) {
                     $v = clone $v;
                 }
+
                 $copy[] = $v;
             }
 
@@ -762,9 +766,11 @@ class BaseEntity implements Entity
 
             foreach (get_object_vars($value) as $k => $v) {
                 $key = $k;
+
                 if (!is_string($key)) {
                     $key = strval($key);
                 }
+
                 $copy->$key = self::cloneObject($v);
             }
 
