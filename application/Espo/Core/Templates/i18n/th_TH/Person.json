@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "address": "ที่อยู่"
+  },
+  "links": {
+    "meetings": "การประชุม",
+    "calls": "โทร",
+    "tasks": "งาน"
+  },
+  "labels": {
+    "Create {entityType}": "สร้าง {entityTypeTranslated}"
+  }
+}

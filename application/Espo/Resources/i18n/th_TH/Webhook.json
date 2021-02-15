@@ -1,0 +1,16 @@
+{
+  "labels": {
+    "Create Webhook": "สร้าง Webhook"
+  },
+  "fields": {
+    "event": "เหตุการณ์",
+    "isActive": "ใช้งานอยู่",
+    "user": "ผู้ใช้ API",
+    "entityType": "ประเภทเอนทิตี",
+    "field": "ฟิลด์",
+    "secretKey": "คีย์ลับ"
+  },
+  "links": {
+    "user": "ผู้ใช้"
+  }
+}

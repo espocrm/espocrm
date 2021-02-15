@@ -1,0 +1,86 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "emailAddress": "ที่อยู่อีเมล",
+    "team": "ทีมเป้าหมาย",
+    "status": "สถานะ",
+    "assignToUser": "กำหนดให้กับผู้ใช้",
+    "host": "โฮสต์",
+    "username": "ชื่อผู้ใช้",
+    "password": "รหัสผ่าน",
+    "port": "ท่าเรือ",
+    "monitoredFolders": "โฟลเดอร์ที่ตรวจสอบ",
+    "trashFolder": "โฟลเดอร์ถังขยะ",
+    "security": "ความปลอดภัย",
+    "createCase": "สร้างเรื่อง",
+    "reply": "ตอบกลับอัตโนมัติ",
+    "caseDistribution": "การกระจายเรื่อง",
+    "replyEmailTemplate": "ตอบกลับเทมเพลตอีเมล",
+    "replyFromAddress": "ตอบกลับจากที่อยู่",
+    "replyToAddress": "ตอบกลับที่อยู่",
+    "replyFromName": "ตอบกลับจากชื่อ",
+    "targetUserPosition": "ตำแหน่งผู้ใช้เป้าหมาย",
+    "fetchSince": "ดึงข้อมูลตั้งแต่",
+    "addAllTeamUsers": "สำหรับผู้ใช้ในทีมทั้งหมด",
+    "teams": "ทีม",
+    "sentFolder": "โฟลเดอร์ที่ส่ง",
+    "storeSentEmails": "จัดเก็บอีเมลที่ส่ง",
+    "keepFetchedEmailsUnread": "ไม่ให้ดึงอีเมลที่ไม่ได้อ่าน",
+    "useImap": "ดึงอีเมล",
+    "useSmtp": "ใช้ SMTP",
+    "smtpHost": "โฮสต์ SMTP",
+    "smtpPort": "พอร์ต SMTP",
+    "smtpAuth": "การตรวจสอบสิทธิ์ SMTP",
+    "smtpSecurity": "ความปลอดภัย SMTP",
+    "smtpAuthMechanism": "กลไกการตรวจสอบสิทธิ์ SMTP",
+    "smtpUsername": "ชื่อผู้ใช้ SMTP",
+    "smtpPassword": "รหัสผ่าน SMTP",
+    "fromName": "จากชื่อ",
+    "smtpIsShared": "SMTP ถูกแชร์",
+    "smtpIsForMassEmail": "SMTP สำหรับอีเมลจำนวนมาก"
+  },
+  "tooltips": {
+    "useSmtp": "ความสามารถในการส่งอีเมล",
+    "reply": "แจ้งผู้ส่งอีเมลว่าได้รับอีเมลแล้ว \\ n \\ n จะมีอีเมลเพียงฉบับเดียวเท่านั้นที่ส่งไปยังผู้รับบางรายในบางช่วง",
+    "createCase": "สร้างเรื่องโดยอัตโนมัติจากอีเมลขาเข้า",
+    "replyToAddress": "ระบุที่อยู่อีเมลของกล่องจดหมายนี้เพื่อตอบกลับมาที่นี่",
+    "caseDistribution": "เรื่องจะถูกกำหนดให้อย่างไร มอบหมายโดยตรงให้กับผู้ใช้หรือระหว่างทีม",
+    "assignToUser": "เรื่องของผู้ใช้จะถูกกำหนดให้",
+    "team": "ทีมงานจะถูกกำหนดให้",
+    "teams": "อีเมลของทีมจะถูกกำหนดให้",
+    "targetUserPosition": "ผู้ใช้ที่มีตำแหน่งที่ระบุจะถูกแจกจ่ายด้วยเรื่อง",
+    "addAllTeamUsers": "อีเมลจะปรากฏในกล่องจดหมายของผู้ใช้ทั้งหมดของทีมที่ระบุ",
+    "monitoredFolders": "ควรคั่นหลายโฟลเดอร์ด้วยลูกน้ำ",
+    "smtpIsShared": "หากเลือกผู้ใช้จะสามารถส่งอีเมลโดยใช้ SMTP นี้ได้ ความพร้อมใช้งานถูกควบคุมโดยบทบาทผ่านอีเมลกลุ่ม",
+    "smtpIsForMassEmail": "หากเลือกแล้ว SMTP จะพร้อมใช้งานสำหรับ Mass Email",
+    "storeSentEmails": "อีเมลที่ส่งจะถูกเก็บไว้บนเซิร์ฟเวอร์ IMAP"
+  },
+  "links": {
+    "filters": "ฟิลเตอร์",
+    "emails": "อีเมล",
+    "assignToUser": "กำหนดให้กับผู้ใช้"
+  },
+  "options": {
+    "status": {
+      "Active": "คล่องแคล่ว",
+      "Inactive": "ไม่ใช้งาน"
+    },
+    "caseDistribution": {
+      "": "ไม่มี",
+      "Direct-Assignment": "การมอบหมายโดยตรง",
+      "Least-Busy": "ยุ่งน้อยที่สุด"
+    },
+    "smtpAuthMechanism": {
+      "plain": "ที่ราบ",
+      "login": "เข้าสู่ระบบ"
+    }
+  },
+  "labels": {
+    "Create InboundEmail": "สร้างบัญชีอีเมล",
+    "Actions": "การดำเนินการ",
+    "Main": "หลัก"
+  },
+  "messages": {
+    "couldNotConnectToImap": "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ IMAP"
+  }
+}

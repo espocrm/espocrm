@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "status": "สถานะ",
+    "job": "งาน",
+    "scheduling": "การตั้งเวลา"
+  },
+  "links": {
+    "log": "บันทึก"
+  },
+  "labels": {
+    "As often as possible": "บ่อยเท่าที่เป็นไปได้",
+    "Create ScheduledJob": "สร้างงานตามกำหนดเวลา"
+  },
+  "options": {
+    "job": {
+      "Cleanup": "ทำความสะอาด",
+      "CheckInboundEmails": "ตรวจสอบบัญชีอีเมลกลุ่ม",
+      "CheckEmailAccounts": "ตรวจสอบบัญชีอีเมลส่วนตัว",
+      "SendEmailReminders": "ส่งการแจ้งเตือนทางอีเมล",
+      "SendEmailNotifications": "ส่งการแจ้งเตือนทางอีเมล",
+      "CheckNewVersion": "ตรวจสอบเวอร์ชันใหม่",
+      "ProcessWebhookQueue": "ประมวลผลคิว Webhook"
+    },
+    "cronSetup": {
+      "linux": "หมายเหตุ: เพิ่มบรรทัดนี้ลงในไฟล์ crontab เพื่อเรียกใช้งานตามกำหนดการของ Espo:",
+      "mac": "หมายเหตุ: เพิ่มบรรทัดนี้ลงในไฟล์ crontab เพื่อเรียกใช้งานตามกำหนดการของ Espo:",
+      "windows": "หมายเหตุ: สร้างไฟล์แบตช์โดยใช้คำสั่งต่อไปนี้เพื่อเรียกใช้งาน Espo ตามกำหนดการโดยใช้ Windows Scheduled Tasks:",
+      "default": "หมายเหตุ: เพิ่มคำสั่งนี้ใน Cron Job (งานตามกำหนดเวลา):"
+    },
+    "status": {
+      "Active": "คล่องแคล่ว",
+      "Inactive": "ไม่ใช้งาน"
+    }
+  },
+  "tooltips": {
+    "scheduling": "สัญกรณ์ Crontab กำหนดความถี่ในการทำงาน \\ n \\ n` * / 5 * * * * `- ทุก 5 นาที \\ n \\ n`0 * / 2 * * *` - ทุก 2 ชั่วโมง \\ n \\ n`30 1 * * * `"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "ผู้ปกครอง",
+    "dateStart": "วันที่เริ่มต้น",
+    "dateEnd": "วันที่สิ้นสุด",
+    "duration": "ระยะเวลา",
+    "status": "สถานะ",
+    "reminders": "การแจ้งเตือน",
+    "dateStartDate": "วันที่เริ่มต้น (ทั้งวัน)",
+    "dateEndDate": "วันที่สิ้นสุด (ทั้งวัน)",
+    "isAllDay": "เป็นตลอดทั้งวัน"
+  },
+  "links": {
+    "parent": "ผู้ปกครอง"
+  },
+  "options": {
+    "status": {
+      "Planned": "วางแผน",
+      "Held": "จัดขึ้น",
+      "Not Held": "ไม่ได้จัดขึ้น"
+    }
+  },
+  "labels": {
+    "Create {entityType}": "สร้าง {entityTypeTranslated}",
+    "Schedule {entityType}": "กำหนดเวลา {entityTypeTranslated}",
+    "Log {entityType}": "บันทึก {entityTypeTranslated}",
+    "Set Held": "ตั้งค่าไว้",
+    "Set Not Held": "ตั้งค่าไม่ถูกระงับ"
+  },
+  "massActions": {
+    "setHeld": "ตั้งไว้",
+    "setNotHeld": "ตั้งค่าไม่ถูกระงับ"
+  },
+  "presetFilters": {
+    "planned": "วางแผน",
+    "held": "จัดขึ้น",
+    "todays": "วันนี้"
+  }
+}

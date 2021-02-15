@@ -1,0 +1,58 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "status": "สถานะ",
+    "storeSentEmails": "จัดเก็บอีเมลที่ส่ง",
+    "startAt": "วันที่เริ่มต้น",
+    "fromAddress": "จากที่อยู่",
+    "fromName": "จากชื่อ",
+    "replyToAddress": "ที่อยู่ตอบกลับ",
+    "replyToName": "ชื่อตอบกลับ",
+    "campaign": "แคมเปญ",
+    "emailTemplate": "เทมเพลตอีเมล",
+    "inboundEmail": "บัญชีอีเมล์",
+    "targetLists": "รายการเป้าหมาย",
+    "excludingTargetLists": "ไม่รวมรายการเป้าหมาย",
+    "optOutEntirely": "เลือกไม่รับโดยสิ้นเชิง",
+    "smtpAccount": "บัญชี SMTP"
+  },
+  "links": {
+    "targetLists": "รายการเป้าหมาย",
+    "excludingTargetLists": "ไม่รวมรายการเป้าหมาย",
+    "queueItems": "รายการคิว",
+    "campaign": "แคมเปญ",
+    "emailTemplate": "เทมเพลตอีเมล",
+    "inboundEmail": "บัญชีอีเมล์"
+  },
+  "options": {
+    "status": {
+      "Draft": "ร่าง",
+      "Pending": "รอดำเนินการ",
+      "In Process": "ในกระบวนการ",
+      "Complete": "เสร็จสมบูรณ์",
+      "Canceled": "ยกเลิก",
+      "Failed": "ล้มเหลว"
+    }
+  },
+  "labels": {
+    "Create MassEmail": "สร้างอีเมลจำนวนมาก",
+    "Send Test": "ส่งการทดสอบ",
+    "System SMTP": "ระบบ SMTP",
+    "system": "ระบบ",
+    "group": "กลุ่ม"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "เลือกอย่างน้อยหนึ่งเป้าหมาย",
+    "testSent": "ควรส่งอีเมลทดสอบ"
+  },
+  "tooltips": {
+    "optOutEntirely": "ที่อยู่อีเมลของผู้รับที่ยกเลิกการสมัครจะถูกทำเครื่องหมายว่าเลือกไม่รับและจะไม่ได้รับอีเมลจำนวนมากอีกต่อไป",
+    "targetLists": "เป้าหมายที่ควรได้รับข้อความ",
+    "excludingTargetLists": "เป้าหมายที่ไม่ควรรับข้อความ",
+    "storeSentEmails": "อีเมลจะถูกเก็บไว้ใน CRM"
+  },
+  "presetFilters": {
+    "actual": "ตามจริง",
+    "complete": "เสร็จสมบูรณ์"
+  }
+}

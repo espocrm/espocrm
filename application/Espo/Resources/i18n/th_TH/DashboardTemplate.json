@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "layout": "เค้าโครง",
+    "append": "ต่อท้าย (อย่าลบแท็บของผู้ใช้)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "สร้างเทมเพลต",
+    "Deploy to Users": "ปรับใช้กับผู้ใช้",
+    "Deploy to Team": "ปรับใช้กับทีม"
+  }
+}

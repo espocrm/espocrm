@@ -19,3 +19,5 @@
 /vendor/
 /custom/Espo/Custom/*
 /install/config.php
+
+.DS_Store

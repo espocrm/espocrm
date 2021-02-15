@@ -1,0 +1,26 @@
+{
+  "fields": {
+    "user": "ผู้ใช้",
+    "action": "หนังบู๊",
+    "createdAt": "วันที่",
+    "userType": "ประเภทผู้ใช้",
+    "target": "เป้าหมาย",
+    "targetType": "ประเภทเป้าหมาย",
+    "ipAddress": "ที่อยู่ IP"
+  },
+  "links": {
+    "user": "ผู้ใช้",
+    "target": "เป้าหมาย"
+  },
+  "presetFilters": {
+    "onlyMy": "แค่ฉัน"
+  },
+  "options": {
+    "action": {
+      "read": "อ่าน",
+      "update": "อัปเดต",
+      "delete": "ลบ",
+      "create": "สร้าง"
+    }
+  }
+}

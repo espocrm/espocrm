@@ -1,0 +1,23 @@
+{
+  "fields": {
+    "user": "ผู้ใช้",
+    "ipAddress": "ที่อยู่ IP",
+    "lastAccess": "วันที่เข้าถึงล่าสุด",
+    "createdAt": "วันที่เข้าสู่ระบบ",
+    "isActive": "ใช้งานอยู่",
+    "portal": "พอร์ทัล"
+  },
+  "links": {
+    "actionHistoryRecords": "ประวัติการดำเนินการ"
+  },
+  "presetFilters": {
+    "active": "คล่องแคล่ว",
+    "inactive": "ไม่ใช้งาน"
+  },
+  "labels": {
+    "Set Inactive": "ตั้งค่าไม่ใช้งาน"
+  },
+  "massActions": {
+    "setInactive": "ตั้งค่าไม่ใช้งาน"
+  }
+}

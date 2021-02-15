@@ -1,0 +1,46 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "campaign": "แคมเปญ",
+    "isActive": "ใช้งานอยู่",
+    "subscribeToTargetList": "สมัครสมาชิกรายการเป้าหมาย",
+    "subscribeContactToTargetList": "สมัครผู้ติดต่อหากมีอยู่",
+    "targetList": "รายการเป้าหมาย",
+    "fieldList": "ช่อง Payload",
+    "optInConfirmationEmailTemplate": "เทมเพลตอีเมลยืนยันการเลือกใช้",
+    "optInConfirmationLifetime": "อายุการยืนยันการเลือกใช้ (ชั่วโมง)",
+    "optInConfirmationSuccessMessage": "ข้อความที่จะแสดงหลังจากการยืนยันการเลือกใช้",
+    "leadSource": "แหล่งที่มาของลูกค้าเป้าหมาย",
+    "apiKey": "คีย์ API",
+    "targetTeam": "ทีมเป้าหมาย",
+    "exampleRequestMethod": "วิธี",
+    "exampleRequestPayload": "น้ำหนักบรรทุก",
+    "createLeadBeforeOptInConfirmation": "สร้างว่าที่ลูกค้าก่อนยืนยัน",
+    "skipOptInConfirmationIfSubscribed": "ข้ามการยืนยันหากลูกค้าเป้าหมายอยู่ในรายการเป้าหมายแล้ว",
+    "smtpAccount": "บัญชี SMTP",
+    "inboundEmail": "บัญชีอีเมลกลุ่ม",
+    "duplicateCheck": "ตรวจสอบซ้ำ"
+  },
+  "links": {
+    "targetList": "รายการเป้าหมาย",
+    "campaign": "แคมเปญ",
+    "optInConfirmationEmailTemplate": "เทมเพลตอีเมลยืนยันการเลือกใช้",
+    "targetTeam": "ทีมเป้าหมาย",
+    "inboundEmail": "บัญชีอีเมลกลุ่ม",
+    "logRecords": "บันทึก"
+  },
+  "labels": {
+    "Create LeadCapture": "สร้างจุดเริ่มต้น",
+    "Generate New API Key": "สร้างคีย์ API ใหม่",
+    "Request": "ขอ",
+    "Confirm Opt-In": "ยืนยันการเลือกใช้"
+  },
+  "messages": {
+    "generateApiKey": "สร้างคีย์ API ใหม่",
+    "optInConfirmationExpired": "ลิงก์ยืนยันการเลือกใช้หมดอายุ",
+    "optInIsConfirmed": "ยืนยันการเลือกใช้แล้ว"
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "รองรับ Markdown"
+  }
+}

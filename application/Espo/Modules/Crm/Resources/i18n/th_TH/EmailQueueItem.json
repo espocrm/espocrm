@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "status": "สถานะ",
+    "target": "เป้าหมาย",
+    "sentAt": "วันที่ส่ง",
+    "attemptCount": "ความพยายาม",
+    "emailAddress": "ที่อยู่อีเมล",
+    "massEmail": "อีเมลจำนวนมาก",
+    "isTest": "เป็นการทดสอบ"
+  },
+  "links": {
+    "target": "เป้าหมาย",
+    "massEmail": "อีเมลจำนวนมาก"
+  },
+  "options": {
+    "status": {
+      "Pending": "รอดำเนินการ",
+      "Sent": "ส่งแล้ว",
+      "Failed": "ล้มเหลว",
+      "Sending": "การส่ง"
+    }
+  },
+  "presetFilters": {
+    "pending": "รอดำเนินการ",
+    "sent": "ส่งแล้ว",
+    "failed": "ล้มเหลว"
+  }
+}

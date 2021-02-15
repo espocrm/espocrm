@@ -1,0 +1,56 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "parent": "ผู้ปกครอง",
+    "status": "สถานะ",
+    "dateStart": "วันที่เริ่มต้น",
+    "dateEnd": "วันที่สิ้นสุด",
+    "duration": "ระยะเวลา",
+    "description": "คำอธิบาย",
+    "users": "ผู้ใช้",
+    "contacts": "ผู้ติดต่อ",
+    "leads": "ว่าที่ลูกค้า",
+    "reminders": "การแจ้งเตือน",
+    "account": "ลูกค้า",
+    "acceptanceStatus": "สถานะการยอมรับ",
+    "dateStartDate": "วันที่เริ่มต้น (ทั้งวัน)",
+    "dateEndDate": "วันที่สิ้นสุด (ทั้งวัน)",
+    "isAllDay": "เป็นตลอดทั้งวัน",
+    "Acceptance": "การยอมรับ"
+  },
+  "options": {
+    "status": {
+      "Planned": "วางแผน",
+      "Held": "จัดขึ้น",
+      "Not Held": "ไม่ได้จัดขึ้น"
+    },
+    "acceptanceStatus": {
+      "None": "ไม่มี",
+      "Accepted": "ได้รับการยอมรับ",
+      "Declined": "ปฏิเสธ",
+      "Tentative": "ไม่แน่นอน"
+    }
+  },
+  "massActions": {
+    "setHeld": "ตั้งไว้",
+    "setNotHeld": "ตั้งค่าไม่ถูกระงับ"
+  },
+  "labels": {
+    "Create Meeting": "สร้างการประชุม",
+    "Set Held": "ตั้งไว้",
+    "Set Not Held": "ตั้งค่าไม่ถูกระงับ",
+    "Send Invitations": "ส่งคำเชิญ",
+    "on time": "ตรงเวลา",
+    "before": "ก่อน",
+    "All-Day": "ทั้งวัน"
+  },
+  "presetFilters": {
+    "planned": "วางแผน",
+    "held": "จัดขึ้น",
+    "todays": "วันนี้"
+  },
+  "messages": {
+    "selectAcceptanceStatus": "ตั้งค่าสถานะการยอมรับของคุณ",
+    "nothingHasBeenSent": "ไม่มีอะไรถูกส่ง"
+  }
+}

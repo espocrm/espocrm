@@ -1,0 +1,15 @@
+{
+  "fields": {
+    "billingAddress": "ที่อยู่เรียกเก็บเงิน",
+    "shippingAddress": "ที่อยู่จัดส่ง",
+    "website": "เว็บไซต์"
+  },
+  "links": {
+    "meetings": "การประชุม",
+    "calls": "โทร",
+    "tasks": "งาน"
+  },
+  "labels": {
+    "Create {entityType}": "สร้าง {entityTypeTranslated}"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "layouts": {
+    "detailConvert": "เปลี่ยนลูกค้าเป้าหมาย",
+    "listForAccount": "รายการ (สำหรับลูกค้า)",
+    "listForContact": "รายชื่อ (สำหรับผู้ติดต่อ)"
+  },
+  "templates": {
+    "invitation": "คำเชิญ",
+    "reminder": "การแจ้งเตือน"
+  }
+}

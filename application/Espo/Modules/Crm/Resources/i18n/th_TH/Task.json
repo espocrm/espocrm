@@ -1,0 +1,51 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "parent": "ผู้ปกครอง",
+    "status": "สถานะ",
+    "dateStart": "วันที่เริ่มต้น",
+    "dateEnd": "วันที่ครบกำหนด",
+    "dateStartDate": "วันที่เริ่มต้น (ทั้งวัน)",
+    "dateEndDate": "วันที่สิ้นสุด (ทั้งวัน)",
+    "priority": "ลำดับความสำคัญ",
+    "description": "คำอธิบาย",
+    "isOverdue": "เกินกำหนด",
+    "account": "ลูกค้า",
+    "dateCompleted": "วันที่เสร็จสิ้น",
+    "attachments": "ไฟล์แนบ",
+    "reminders": "การแจ้งเตือน",
+    "contact": "ผู้ติดต่อ"
+  },
+  "links": {
+    "attachments": "ไฟล์แนบ",
+    "account": "ลูกค้า",
+    "contact": "ผู้ติดต่อ"
+  },
+  "options": {
+    "status": {
+      "Not Started": "ยังไม่เริ่ม",
+      "Started": "เริ่มแล้ว",
+      "Completed": "เสร็จเรียบร้อย",
+      "Canceled": "ยกเลิก",
+      "Deferred": "รอตัดบัญชี"
+    },
+    "priority": {
+      "Low": "ต่ำ",
+      "Normal": "ปกติ",
+      "High": "สูง",
+      "Urgent": "ด่วน"
+    }
+  },
+  "labels": {
+    "Create Task": "สร้างงาน",
+    "Complete": "เสร็จสมบูรณ์",
+    "overdue": "หนี้ที่ค้างชำระ"
+  },
+  "presetFilters": {
+    "actual": "ตามจริง",
+    "completed": "เสร็จเรียบร้อย",
+    "deferred": "รอตัดบัญชี",
+    "todays": "วันนี้",
+    "overdue": "หนี้ที่ค้างชำระ"
+  }
+}

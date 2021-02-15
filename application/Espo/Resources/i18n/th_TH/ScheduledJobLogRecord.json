@@ -1,0 +1,7 @@
+{
+  "fields": {
+    "status": "สถานะ",
+    "executionTime": "เวลาดำเนินการ",
+    "target": "เป้าหมาย"
+  }
+}

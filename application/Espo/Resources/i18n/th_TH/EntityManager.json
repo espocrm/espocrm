@@ -1,0 +1,83 @@
+{
+  "labels": {
+    "Fields": "ฟิลด์",
+    "Relationships": "ความสัมพันธ์",
+    "Layouts": "เลย์เอาต์",
+    "Schedule": "กำหนดการ",
+    "Log": "บันทึก",
+    "Formula": "สูตร"
+  },
+  "fields": {
+    "name": "ชื่อ",
+    "type": "ประเภท",
+    "labelSingular": "ป้ายเอกพจน์",
+    "labelPlural": "ป้ายพหูพจน์",
+    "stream": "กระแส",
+    "label": "ฉลาก",
+    "linkType": "ประเภทลิงก์",
+    "entityForeign": "นิติบุคคลต่างประเทศ",
+    "linkForeign": "ลิงค์ต่างประเทศ",
+    "link": "ลิงค์",
+    "labelForeign": "ฉลากต่างประเทศ",
+    "sortBy": "คำสั่งเริ่มต้น (ฟิลด์)",
+    "sortDirection": "ลำดับเริ่มต้น (ทิศทาง)",
+    "relationName": "ชื่อตารางกลาง",
+    "linkMultipleField": "เชื่อมโยงหลายฟิลด์",
+    "linkMultipleFieldForeign": "ลิงค์ต่างประเทศหลายฟิลด์",
+    "disabled": "ปิดการใช้งาน",
+    "textFilterFields": "ฟิลด์ตัวกรองข้อความ",
+    "audited": "ตรวจสอบแล้ว",
+    "auditedForeign": "ตรวจสอบจากต่างประเทศ",
+    "statusField": "ฟิลด์สถานะ",
+    "beforeSaveCustomScript": "ก่อนบันทึกสคริปต์ที่กำหนดเอง",
+    "color": "สี",
+    "kanbanViewMode": "มุมมอง Kanban",
+    "kanbanStatusIgnoreList": "กลุ่มที่ละเว้นในมุมมอง Kanban",
+    "iconClass": "ไอคอน",
+    "countDisabled": "ปิดใช้งานการนับบันทึก",
+    "fullTextSearch": "การค้นหาข้อความแบบเต็ม",
+    "parentEntityTypeList": "ประเภทเอนทิตีหลัก",
+    "foreignLinkEntityTypeList": "ลิงค์ต่างประเทศ"
+  },
+  "options": {
+    "type": {
+      "": "ไม่มี",
+      "Base": "ฐาน",
+      "Person": "บุคคล",
+      "CategoryTree": "หมวดหมู่ต้นไม้",
+      "Event": "เหตุการณ์",
+      "BasePlus": "เบสพลัส",
+      "Company": "บริษัท"
+    },
+    "linkType": {
+      "manyToMany": "หลายต่อหลายคน",
+      "oneToMany": "หนึ่งต่อหลาย",
+      "manyToOne": "หลายต่อหนึ่ง",
+      "oneToOneRight": "ขวาแบบตัวต่อตัว",
+      "oneToOneLeft": "หนึ่งต่อหนึ่งซ้าย",
+      "parentToChildren": "ผู้ปกครองกับเด็ก",
+      "childrenToParent": "เด็กกับผู้ปกครอง"
+    },
+    "sortDirection": {
+      "asc": "จากน้อยไปมาก",
+      "desc": "จากมากไปน้อย"
+    }
+  },
+  "messages": {
+    "confirmRemove": "แน่ใจไหมว่าต้องการลบประเภทเอนทิตีออกจากระบบ",
+    "entityCreated": "สร้างเอนทิตีแล้ว",
+    "linkAlreadyExists": "ความขัดแย้งของชื่อลิงก์",
+    "linkConflict": "ชื่อขัดแย้ง: มีลิงก์หรือฟิลด์ที่มีชื่อเดียวกันอยู่แล้ว"
+  },
+  "tooltips": {
+    "statusField": "การอัปเดตของฟิลด์นี้เข้าสู่ระบบสตรีม",
+    "textFilterFields": "ฟิลด์ที่ใช้โดยการค้นหาข้อความ",
+    "stream": "ว่าเอนทิตีมีสตรีมหรือไม่",
+    "disabled": "ตรวจสอบว่าคุณไม่ต้องการเอนทิตีนี้ในระบบของคุณหรือไม่",
+    "linkAudited": "การสร้างเรกคอร์ดที่เกี่ยวข้องและการเชื่อมโยงกับเรกคอร์ดที่มีอยู่จะถูกบันทึกในสตรีม",
+    "linkMultipleField": "ช่องลิงก์หลายช่องเป็นวิธีที่สะดวกในการแก้ไขความสัมพันธ์ อย่าใช้หากคุณมีระเบียนที่เกี่ยวข้องจำนวนมาก",
+    "entityType": "Base Plus - มีแผงกิจกรรมประวัติและงาน \\ n \\ nEvent - พร้อมใช้งานในแผงปฏิทินและกิจกรรม",
+    "countDisabled": "จำนวนทั้งหมดจะไม่แสดงในมุมมองรายการ สามารถลดเวลาในการโหลดเมื่อตาราง DB มีขนาดใหญ่",
+    "fullTextSearch": "ต้องรันการสร้างใหม่"
+  }
+}

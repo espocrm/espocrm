@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "logo": "โลโก้",
+    "companyLogo": "โลโก้",
+    "portalRoles": "บทบาท",
+    "isActive": "ใช้งานอยู่",
+    "isDefault": "เป็นค่าเริ่มต้น",
+    "tabList": "รายการแท็บ",
+    "quickCreateList": "สร้างรายการด่วน",
+    "theme": "ธีม",
+    "language": "ภาษา",
+    "dashboardLayout": "เค้าโครงแดชบอร์ด",
+    "dateFormat": "รูปแบบวันที่",
+    "timeFormat": "รูปแบบเวลา",
+    "timeZone": "เขตเวลา",
+    "weekStart": "วันแรกของสัปดาห์",
+    "defaultCurrency": "สกุลเงินเริ่มต้น",
+    "layoutSet": "ชุดเค้าโครง",
+    "customUrl": "URL ที่กำหนดเอง",
+    "customId": "รหัสที่กำหนดเอง"
+  },
+  "links": {
+    "users": "ผู้ใช้",
+    "portalRoles": "บทบาท",
+    "layoutSet": "ชุดเค้าโครง",
+    "notes": "หมายเหตุ"
+  },
+  "tooltips": {
+    "layoutSet": "ให้ความสามารถในการมีเลย์เอาต์ที่แตกต่างจากแบบมาตรฐาน",
+    "portalRoles": "บทบาทพอร์ทัลที่ระบุจะถูกนำไปใช้กับผู้ใช้ทั้งหมดของพอร์ทัลนี้"
+  },
+  "labels": {
+    "Create Portal": "สร้างพอร์ทัล",
+    "User Interface": "หน้าจอผู้ใช้",
+    "General": "ทั่วไป",
+    "Settings": "การตั้งค่า"
+  }
+}

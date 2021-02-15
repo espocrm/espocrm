@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create Lead": "สร้างว่าที่ลูกค้า",
+    "Create Contact": "สร้างผู้ติดต่อ",
+    "Add to Contact": "เพิ่มในผู้ติดต่อ",
+    "Add to Lead": "เพิ่มเป็นลูกค้าเป้าหมาย",
+    "Create Task": "สร้างงาน",
+    "Create Case": "สร้างเรื่อง"
+  }
+}

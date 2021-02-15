@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "acceptanceStatus": "สถานะการยอมรับ",
+    "acceptanceStatusMeetings": "สถานะการยอมรับ (การประชุม)",
+    "acceptanceStatusCalls": "สถานะการตอบรับ (การโทร)"
+  },
+  "links": {
+    "targetLists": "รายการเป้าหมาย"
+  }
+}

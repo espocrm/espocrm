@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "layoutList": "เลย์เอาต์"
+  },
+  "labels": {
+    "Create LayoutSet": "สร้างชุดเค้าโครง",
+    "Edit Layouts": "แก้ไขเลย์เอาต์"
+  }
+}

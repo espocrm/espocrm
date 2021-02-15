@@ -1,0 +1,53 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "account": "ลูกค้า",
+    "stage": "ขั้นตอน",
+    "amount": "จำนวน",
+    "probability": "ความน่าจะเป็น%",
+    "leadSource": "แหล่งที่มาของลูกค้าเป้าหมาย",
+    "doNotCall": "อย่าโทร",
+    "closeDate": "วันที่ปิด",
+    "contacts": "ผู้ติดต่อ",
+    "contact": "ติดต่อ (หลัก)",
+    "description": "คำอธิบาย",
+    "amountConverted": "จำนวนเงิน (ขายแล้ว)",
+    "amountWeightedConverted": "จำนวนเงินที่ถ่วงน้ำหนัก",
+    "campaign": "แคมเปญ",
+    "originalLead": "ว่าที่ลูกค้าเดิม",
+    "amountCurrency": "จำนวนสกุลเงิน",
+    "contactRole": "บทบาทการติดต่อ",
+    "lastStage": "ด่านสุดท้าย"
+  },
+  "links": {
+    "contacts": "ผู้ติดต่อ",
+    "contact": "ติดต่อ (หลัก)",
+    "documents": "เอกสาร",
+    "campaign": "แคมเปญ",
+    "originalLead": "ว่าที่ลูกค้าเดิม"
+  },
+  "options": {
+    "stage": {
+      "Prospecting": "การสำรวจ",
+      "Qualification": "ตรวจความเหมาะสม",
+      "Proposal": "ข้อเสนอ",
+      "Negotiation": "การเจรจาต่อรอง",
+      "Needs Analysis": "การวิเคราะห์ความต้องการ",
+      "Value Proposition": "ข้อเสนอที่มีค่า",
+      "Id. Decision Makers": "Id. ผู้มีอำนาจตัดสินใจ",
+      "Perception Analysis": "การวิเคราะห์การรับรู้",
+      "Proposal/Price Quote": "ข้อเสนอ / ใบเสนอราคา",
+      "Negotiation/Review": "การเจรจาต่อรอง / ทบทวน",
+      "Closed Won": "ปิดการขายสำเร็จ",
+      "Closed Lost": "ไม่สำเร็จ"
+    }
+  },
+  "labels": {
+    "Create Opportunity": "สร้างโอกาส"
+  },
+  "presetFilters": {
+    "open": "เปิด",
+    "won": "ชนะ",
+    "lost": "สูญหาย"
+  }
+}

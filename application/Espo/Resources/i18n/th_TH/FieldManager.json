@@ -1,0 +1,136 @@
+{
+  "labels": {
+    "Dynamic Logic": "ไดนามิกลอจิก",
+    "Name": "ชื่อ",
+    "Label": "ฉลาก",
+    "Type": "ประเภท"
+  },
+  "options": {
+    "dateTimeDefault": {
+      "": "ไม่มี",
+      "javascript: return this.dateTime.getNow(1);": "ตอนนี้",
+      "javascript: return this.dateTime.getNow(5);": "ตอนนี้ (5 นาที)",
+      "javascript: return this.dateTime.getNow(15);": "ตอนนี้ (15 นาที)",
+      "javascript: return this.dateTime.getNow(30);": "ตอนนี้ (30m)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 ชั่วโมง",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 วัน",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 วัน",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 วัน",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 วัน",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 วัน",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 วัน",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 สัปดาห์"
+    },
+    "dateDefault": {
+      "": "ไม่มี",
+      "javascript: return this.dateTime.getToday();": "วันนี้",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 วัน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 สัปดาห์",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 สัปดาห์",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 สัปดาห์",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 เดือน",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 ปี"
+    },
+    "barcodeType": {
+      "QRcode": "คิวอาร์โค้ด"
+    }
+  },
+  "tooltips": {
+    "audited": "การอัปเดตจะเข้าสู่ระบบสตรีม",
+    "required": "ฟิลด์จะบังคับ ไม่สามารถเว้นว่างได้",
+    "default": "ค่าจะถูกกำหนดโดยค่าเริ่มต้นเมื่อสร้าง",
+    "min": "ค่าต่ำสุดที่ยอมรับได้",
+    "max": "ค่าสูงสุดที่ยอมรับได้",
+    "seeMoreDisabled": "หากไม่ตรวจสอบข้อความยาวจะสั้นลง",
+    "lengthOfCut": "ข้อความยาวแค่ไหนก่อนจะตัด",
+    "maxLength": "ความยาวข้อความสูงสุดที่ยอมรับได้",
+    "before": "ค่าวันที่ควรอยู่ก่อนค่าวันที่ของฟิลด์ที่ระบุ",
+    "after": "ค่าวันที่ควรอยู่หลังค่าวันที่ของฟิลด์ที่ระบุ",
+    "readOnly": "ผู้ใช้ไม่สามารถระบุค่าฟิลด์ได้ แต่สามารถคำนวณได้ด้วยสูตร",
+    "fileAccept": "ประเภทไฟล์ที่จะยอมรับ เป็นไปได้ที่จะเพิ่มรายการที่กำหนดเอง",
+    "barcodeLastChar": "สำหรับประเภท EAN-13",
+    "maxFileSize": "ถ้าว่างหรือ 0 ก็ไม่ จำกัด"
+  },
+  "fieldParts": {
+    "address": {
+      "street": "ถนน",
+      "city": "เมือง",
+      "state": "สถานะ",
+      "country": "ประเทศ",
+      "postalCode": "รหัสไปรษณีย์",
+      "map": "แผนที่"
+    },
+    "personName": {
+      "salutation": "คำทักทาย",
+      "first": "อันดับแรก",
+      "middle": "กลาง",
+      "last": "ล่าสุด"
+    },
+    "currency": {
+      "converted": "(ขายแล้ว)",
+      "currency": "(สกุลเงิน)"
+    },
+    "datetimeOptional": {
+      "date": "วันที่"
+    }
+  },
+  "fieldInfo": {
+    "varchar": "ข้อความบรรทัดเดียว",
+    "enum": "Selectbox สามารถเลือกได้เพียงค่าเดียว",
+    "text": "ข้อความหลายบรรทัดพร้อมการรองรับ markdown",
+    "date": "วันที่ไม่มีเวลา",
+    "datetime": "วันและเวลา",
+    "currency": "มูลค่าสกุลเงิน หมายเลขลอยพร้อมรหัสสกุลเงิน",
+    "int": "จำนวนเต็ม",
+    "float": "ตัวเลขที่มีส่วนทศนิยม",
+    "bool": "ช่องทำเครื่องหมาย ค่าที่เป็นไปได้สองค่า: จริงและเท็จ",
+    "multiEnum": "รายการค่าสามารถเลือกได้หลายค่า รายการสั่งซื้อ",
+    "checklist": "รายการช่องทำเครื่องหมาย",
+    "array": "รายการของค่าคล้ายกับฟิลด์ Multi-Enum",
+    "address": "ที่อยู่พร้อมถนนเมืองรัฐรหัสไปรษณีย์และประเทศ",
+    "url": "สำหรับเก็บลิงค์.",
+    "wysiwyg": "ข้อความที่รองรับ HTML",
+    "file": "สำหรับการอัพโหลดไฟล์",
+    "image": "สำหรับการอัพโหลดภาพ",
+    "attachmentMultiple": "อนุญาตให้อัปโหลดหลายไฟล์",
+    "number": "จำนวนประเภทสตริงที่เพิ่มขึ้นโดยอัตโนมัติพร้อมด้วยคำนำหน้าและความยาวที่เฉพาะเจาะจง",
+    "autoincrement": "หมายเลขจำนวนเต็มเพิ่มขึ้นอัตโนมัติแบบอ่านอย่างเดียวที่สร้างขึ้น",
+    "barcode": "บาร์โค้ด สามารถพิมพ์เป็น PDF",
+    "email": "ชุดที่อยู่อีเมลที่มีพารามิเตอร์: เลือกไม่ใช้ไม่ถูกต้องหลัก",
+    "phone": "ชุดหมายเลขโทรศัพท์ที่มีพารามิเตอร์: ประเภทเลือกไม่ใช้ไม่ถูกต้องหลัก",
+    "foreign": "ฟิลด์ของระเบียนที่เกี่ยวข้อง อ่านเท่านั้น.",
+    "link": "บันทึกที่เกี่ยวข้องกับความสัมพันธ์แบบ Belongs-To (หลายต่อหนึ่งหรือหนึ่งต่อหนึ่ง)",
+    "linkParent": "บันทึกที่เกี่ยวข้องกับความสัมพันธ์ระหว่างเป็นของพ่อแม่ สามารถเป็นเอนทิตีประเภทต่างๆ",
+    "linkMultiple": "ชุดของเร็กคอร์ดที่เกี่ยวข้องกับความสัมพันธ์ Has-Many (แบบกลุ่มต่อกลุ่มหรือแบบหนึ่งต่อกลุ่ม) relatioships ไม่ใช่ทั้งหมดที่มีลิงก์หลายลิงก์"
+  }
+}

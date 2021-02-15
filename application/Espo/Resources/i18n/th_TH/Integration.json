@@ -1,0 +1,17 @@
+{
+  "fields": {
+    "enabled": "เปิดใช้งาน",
+    "clientId": "รหัสลูกค้า",
+    "clientSecret": "ความลับของลูกค้า",
+    "redirectUri": "เปลี่ยนเส้นทาง URI",
+    "apiKey": "คีย์ API"
+  },
+  "messages": {
+    "selectIntegration": "เลือกการรวมจากเมนู",
+    "noIntegrations": "ไม่มีการผสานรวม"
+  },
+  "help": {
+    "Google": "** รับข้อมูลรับรอง OAuth 2.0 จาก Google Developers Console ** \\ n \\ n ไปที่ [Google Developers",
+    "GoogleMaps": "รับคีย์ API [ที่นี่] (https://developers.google.com/maps/documentation/javascript/get-api-key)"
+  }
+}

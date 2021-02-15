@@ -1,0 +1,55 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "emailAddress": "อีเมล์",
+    "title": "ชื่อบัญชี",
+    "account": "ลูกค้า",
+    "accounts": "บัญชี",
+    "phoneNumber": "โทรศัพท์",
+    "accountType": "ประเภทบัญชี",
+    "doNotCall": "อย่าโทร",
+    "address": "ที่อยู่",
+    "opportunityRole": "บทบาทของโอกาส",
+    "accountRole": "หัวข้อ",
+    "description": "คำอธิบาย",
+    "campaign": "แคมเปญ",
+    "targetLists": "รายการเป้าหมาย",
+    "targetList": "รายการเป้าหมาย",
+    "portalUser": "ผู้ใช้พอร์ทัล",
+    "hasPortalUser": "มีผู้ใช้พอร์ทัล",
+    "originalLead": "ว่าที่ลูกค้าเดิม",
+    "acceptanceStatus": "สถานะการยอมรับ",
+    "accountIsInactive": "บัญชีไม่ได้ใช้งาน",
+    "acceptanceStatusMeetings": "สถานะการยอมรับ (การประชุม)",
+    "acceptanceStatusCalls": "สถานะการตอบรับ (การโทร)"
+  },
+  "links": {
+    "opportunities": "โอกาส",
+    "cases": "เรื่อง",
+    "targetLists": "รายการเป้าหมาย",
+    "campaignLogRecords": "บันทึกแคมเปญ",
+    "campaign": "แคมเปญ",
+    "account": "บัญชี (หลัก)",
+    "accounts": "บัญชี",
+    "casesPrimary": "เรื่อง (หลัก)",
+    "tasksPrimary": "งาน (ขยาย)",
+    "opportunitiesPrimary": "โอกาส (หลัก)",
+    "portalUser": "ผู้ใช้พอร์ทัล",
+    "originalLead": "ว่าที่ลูกค้าเดิม",
+    "documents": "เอกสาร"
+  },
+  "labels": {
+    "Create Contact": "สร้างผู้ติดต่อ"
+  },
+  "options": {
+    "opportunityRole": {
+      "Decision Maker": "ผู้ตัดสินใจ",
+      "Evaluator": "ผู้ประเมิน"
+    }
+  },
+  "presetFilters": {
+    "portalUsers": "ผู้ใช้พอร์ทัล",
+    "notPortalUsers": "ไม่ใช่ผู้ใช้พอร์ทัล",
+    "accountActive": "คล่องแคล่ว"
+  }
+}

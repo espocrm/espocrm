@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "action": "หนังบู๊",
+    "urlToUse": "โค้ดที่จะแทรกแทน URL",
+    "message": "ข้อความ",
+    "campaign": "แคมเปญ"
+  },
+  "links": {
+    "campaign": "แคมเปญ"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "สร้าง URL ติดตาม"
+  },
+  "options": {
+    "action": {
+      "Redirect": "เปลี่ยนเส้นทาง",
+      "Show Message": "แสดงข้อความ"
+    }
+  },
+  "tooltips": {
+    "url": "ผู้รับจะถูกเปลี่ยนเส้นทางไปยังตำแหน่งนี้หลังจากที่พวกเขาไปที่ลิงก์",
+    "message": "ข้อความจะแสดงต่อผู้รับหลังจากที่พวกเขาไปตามลิงค์ รองรับ Markdown"
+  }
+}

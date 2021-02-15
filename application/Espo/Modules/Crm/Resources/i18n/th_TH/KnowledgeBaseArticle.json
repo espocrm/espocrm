@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "Create KnowledgeBaseArticle": "สร้างบทความ",
+    "Any": "ๆ",
+    "Send in Email": "ส่งในอีเมล",
+    "Move Up": "ขยับขึ้น",
+    "Move Down": "ย้ายลง",
+    "Move to Top": "ย้ายไปด้านบน",
+    "Move to Bottom": "ย้ายไปด้านล่าง"
+  },
+  "fields": {
+    "name": "ชื่อ",
+    "status": "สถานะ",
+    "type": "ประเภท",
+    "attachments": "ไฟล์แนบ",
+    "publishDate": "วันที่เผยแพร่",
+    "expirationDate": "วันหมดอายุ",
+    "description": "คำอธิบาย",
+    "body": "ร่างกาย",
+    "categories": "หมวดหมู่",
+    "language": "ภาษา",
+    "portals": "พอร์ทัล"
+  },
+  "links": {
+    "cases": "เรื่อง",
+    "opportunities": "โอกาส",
+    "categories": "หมวดหมู่",
+    "portals": "พอร์ทัล"
+  },
+  "options": {
+    "status": {
+      "In Review": "อยู่ระหว่างตรวจสอบ",
+      "Draft": "ร่าง",
+      "Archived": "เก็บถาวร",
+      "Published": "เผยแพร่แล้ว"
+    },
+    "type": {
+      "Article": "บทความ"
+    }
+  },
+  "tooltips": {
+    "portals": "บทความจะพร้อมใช้งานในพอร์ทัลที่ระบุเท่านั้น"
+  },
+  "presetFilters": {
+    "published": "เผยแพร่แล้ว"
+  }
+}
