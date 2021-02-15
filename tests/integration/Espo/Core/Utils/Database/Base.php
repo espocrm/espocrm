@@ -94,4 +94,12 @@ abstract class Base extends \tests\integration\Core\BaseTestCase
             $this->getContainer()->get('dataManager')->rebuild([$entityName]);
         }
     }
+
+    protected function executeQuery($query)
+    {
+        $entityManager = $this->getContainer()->get('entityManager');
+
+        $sth = $entityManager->getPDO()->prepare($query);
+        $sth->execute();
+    }
 }

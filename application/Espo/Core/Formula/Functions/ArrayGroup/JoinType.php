@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,24 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/record/detail', 'views/record/detail', function (Dep) {
+namespace Espo\Core\Formula\Functions\ArrayGroup;
 
-    return Dep.extend({
+use Espo\Core\Formula\{
+    Functions\BaseFunction,
+    ArgumentList,
+};
 
-        saveAndContinueEditingAction: true,
+class JoinType extends BaseFunction
+{
+    public function process(ArgumentList $args)
+    {
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
+        }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        $list = $this->evaluate($args[0]);
 
-            this.hideField('variables');
+        $separator = $this->evaluate($args[1]);
 
-            this.on('after:set-edit-mode', function () {
-                this.showField('variables');
-            }, this);
-            this.on('after:set-detail-mode', function () {
-                this.hideField('variables');
-            }, this);
-        },
+        if (!is_string($separator)) {
+            $this->throwBadArgumentValue(2, 'string');
+        }
 
-    });
-});
+        if (is_null($list)) {
+            return '';
+        }
+
+        return implode($separator, $list);
+    }
+}

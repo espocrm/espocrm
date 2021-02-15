@@ -7,6 +7,7 @@
         "editQuick":"crm:views/knowledge-base-article/record/edit-quick",
         "detailQuick":"crm:views/knowledge-base-article/record/detail-quick",
         "detail":"crm:views/knowledge-base-article/record/detail",
+        "edit":"crm:views/knowledge-base-article/record/edit",
         "list":"crm:views/knowledge-base-article/record/list"
     },
     "modalViews": {
