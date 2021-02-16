@@ -122,6 +122,10 @@ class Integration extends \Espo\Core\ORM\Entity
         return parent::isAttributeChanged($name);
     }
 
+    /**
+     * @deprecated
+     * @todo Make protected.
+     */
     public function populateFromArray(array $array, bool $onlyAccessible = true, bool $reset = false) : void
     {
         if ($reset) {
@@ -141,29 +145,43 @@ class Integration extends \Espo\Core\ORM\Entity
                 if (!is_null($value)) {
                     switch ($defs['type']) {
                         case self::VARCHAR:
+
                             break;
+
                         case self::BOOL:
                             $value = ($value === 'true' || $value === '1' || $value === true);
+
                             break;
+
                         case self::INT:
                             $value = intval($value);
+
                             break;
+
                         case self::FLOAT:
                             $value = floatval($value);
+
                             break;
+
                         case self::JSON_ARRAY:
                             $value = is_string($value) ? json_decode($value) : $value;
+
                             if (!is_array($value)) {
                                 $value = null;
                             }
                             break;
+
                         case self::JSON_OBJECT:
                             $value = is_string($value) ? json_decode($value) : $value;
-                            if (!($value instanceof \StdClass) && !is_array($value)) {
+
+                            if (!($value instanceof StdClass) && !is_array($value)) {
                                 $value = null;
                             }
+
                             break;
+
                         default:
+
                             break;
                     }
                 }

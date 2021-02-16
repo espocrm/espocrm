@@ -29,21 +29,24 @@
 
 namespace Espo\ORM;
 
-use StdClass;
-
 use const E_USER_DEPRECATED;
 
+use StdClass;
 use InvalidArgumentException;
 
 class BaseEntity implements Entity
 {
     public $id = null;
 
+    protected $entityType;
+
     private $isNew = false;
 
     private $isSaved = false;
 
-    protected $entityType;
+    protected $isFetched = false;
+
+    protected $isBeingSaved = false;
 
     /**
      * @todo Make protected. Rename to `attributes`.
@@ -54,20 +57,19 @@ class BaseEntity implements Entity
     protected $relations = [];
 
     /**
-     * @var array Field-Value pairs.
+     * A field-value map.
      */
     protected $valuesContainer = [];
 
     /**
-     * @var array Field-Value pairs of initial values (fetched from DB).
+     * A field-value map of values fetched from DB (before changed).
      */
     protected $fetchedValuesContainer = [];
 
+    /**
+     * @var ?EntityManager
+     */
     protected $entityManager;
-
-    protected $isFetched = false;
-
-    protected $isBeingSaved = false;
 
     public function __construct(string $entityType, array $defs = [], ?EntityManager $entityManager = null)
     {
@@ -77,6 +79,11 @@ class BaseEntity implements Entity
 
         $this->fields = $defs['attributes'] ?? $defs['fields'] ?? $this->fields;
         $this->relations = $defs['relations'] ?? $this->relations;
+    }
+
+    public function getId() : ?string
+    {
+        return $this->get('id');
     }
 
     public function clear(string $name) : void
@@ -125,15 +132,21 @@ class BaseEntity implements Entity
                 $this->id = $value;
             }
 
-            if ($this->hasAttribute($name)) {
-                $method = '_set' . ucfirst($name);
-
-                if (method_exists($this, $method)) {
-                    $this->$method($value);
-                } else {
-                    $this->valuesContainer[$name] = $value;
-                }
+            if (!$this->hasAttribute($name)) {
+                return;
             }
+
+            $method = '_set' . ucfirst($name);
+
+            if (method_exists($this, $method)) {
+                $this->$method($value);
+
+                return;
+            }
+
+            $this->populateFromArray([
+                $name => $value,
+            ]);
 
             return;
         }
@@ -148,7 +161,7 @@ class BaseEntity implements Entity
      */
     public function get(string $name, $params = [])
     {
-        if ($name == 'id') {
+        if ($name === 'id') {
             return $this->id;
         }
 
@@ -172,7 +185,8 @@ class BaseEntity implements Entity
         // @todo Remove this.
         if ($this->hasRelation($name) && $this->id && $this->entityManager) {
             trigger_error(
-                "Accessing related records with Entity::get is deprecated. Use \$repository->getRelation(...)->find()",
+                "Accessing related records with Entity::get is deprecated. " .
+                "Use \$repository->getRelation(...)->find()",
                 E_USER_DEPRECATED
             );
 
@@ -203,13 +217,17 @@ class BaseEntity implements Entity
         return false;
     }
 
+    /**
+     * @deprecated
+     * @todo Make protected.
+     */
     public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false) : void
     {
         if ($reset) {
             $this->reset();
         }
 
-        foreach ($this->getAttributes() as $attribute => $defs) {
+        foreach ($this->getAttributeList() as $attribute) {
             if (!array_key_exists($attribute, $data)) {
                 continue;
             }
@@ -226,77 +244,120 @@ class BaseEntity implements Entity
 
             $value = $data[$attribute];
 
-            if (!is_null($value)) {
-                $valueType = $this->getAttributeType($attribute);
-
-                if ($valueType === self::FOREIGN) {
-                    $relation = $this->getAttributeParam($attribute, 'relation');
-                    $foreign = $this->getAttributeParam($attribute, 'foreign');
-
-                    if (is_string($foreign)) {
-                        $foreignEntityType = $this->getRelationParam($relation, 'entity');
-
-                        if ($foreignEntityType && $this->entityManager) {
-                            $valueType = $this->entityManager->getMetadata()->get(
-                                $foreignEntityType, ['fields', $foreign, 'type']
-                            );
-                        }
-                    }
-                }
-
-                switch ($valueType) {
-                    case self::VARCHAR:
-
-                        break;
-
-                    case self::BOOL:
-                        $value = ($value === 'true' || $value === '1' || $value === true);
-
-                        break;
-
-                    case self::INT:
-                        $value = intval($value);
-
-                        break;
-
-                    case self::FLOAT:
-                        $value = floatval($value);
-
-                        break;
-
-                    case self::JSON_ARRAY:
-                        $value = is_string($value) ? json_decode($value) : $value;
-
-                        if (!is_array($value)) {
-                            $value = null;
-                        }
-
-                        break;
-
-                    case self::JSON_OBJECT:
-                        $value = is_string($value) ? json_decode($value) : $value;
-
-                        if (!($value instanceof StdClass) && !is_array($value)) {
-                            $value = null;
-                        }
-
-                        break;
-
-                    default:
-                        break;
-                }
-            }
-
-            $method = '_set' . ucfirst($attribute);
-
-            if (method_exists($this, $method)) {
-                $this->$method($value);
-
-                continue;
-            }
-
-            $this->valuesContainer[$attribute] = $value;
+            $this->populateFromArrayItem($attribute, $value);
         }
+    }
+
+    protected function populateFromArrayItem(string $attribute, $value) : void
+    {
+        $preparedValue = $this->preparePopulateFromArrayItemValue($attribute, $value);
+
+        $method = '_set' . ucfirst($attribute);
+
+        if (method_exists($this, $method)) {
+            $this->$method($preparedValue);
+
+            return;
+        }
+
+        $this->valuesContainer[$attribute] = $preparedValue;
+    }
+
+    /**
+     * @return ?mixed
+     */
+    protected function preparePopulateFromArrayItemValue(string $attribute, $value)
+    {
+        if (is_null($value)) {
+            return $value;
+        }
+
+        $attributeType = $this->getAttributeType($attribute);
+
+        if ($attributeType === self::FOREIGN) {
+            $attributeType = $this->getForeignAttributeType($attribute) ?? $attributeType;
+        }
+
+        switch ($attributeType) {
+            case self::VARCHAR:
+                break;
+
+            case self::BOOL:
+                return ($value === true || $value === 'true' || $value === '1');
+
+            case self::INT:
+                return intval($value);
+
+            case self::FLOAT:
+                return floatval($value);
+
+            case self::JSON_ARRAY:
+                $preparedValue = is_string($value) ? json_decode($value) : $value;
+
+                if (!is_array($preparedValue)) {
+                    $value = null;
+                }
+
+                return $preparedValue;
+
+            case self::JSON_OBJECT:
+                $preparedValue = is_string($value) ? json_decode($value) : $value;
+
+                if (!($preparedValue instanceof StdClass) && !is_array($preparedValue)) {
+                    $preparedValue = null;
+                }
+
+                return $preparedValue;
+
+            default:
+                break;
+        }
+
+        return $value;
+    }
+
+    private function getForeignAttributeType(string $attribute) : ?string
+    {
+        if (!$this->entityManager) {
+            return null;
+        }
+
+        $defs = $this->entityManager->getDefs();
+
+        $entityDefs = $defs->getEntity($this->entityType);
+
+        $relation = $entityDefs->getAttribute($attribute)->getParam('relation');
+        $foreign = $entityDefs->getAttribute($attribute)->getParam('foreign');
+
+        if (!$relation) {
+            return null;
+        }
+
+        if (!$foreign) {
+            return null;
+        }
+
+        if (!is_string($foreign)) {
+            return self::VARCHAR;
+        }
+
+        if (!$entityDefs->getRelation($relation)->hasForeignEntityType()) {
+            return null;
+        }
+
+        $entityType = $entityDefs->getRelation($relation)->getForeignEntityType();
+
+        if (!$defs->hasEntity($entityType)) {
+            return null;
+        }
+
+        $foreignEntityDefs = $defs->getEntity($entityType);
+
+        if (!$foreignEntityDefs->hasAttribute($foreign)) {
+            return null;
+        }
+
+        return $foreignEntityDefs->getAttribute($foreign)->getType();
     }
 
     /**

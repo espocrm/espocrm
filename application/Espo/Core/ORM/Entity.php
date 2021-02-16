@@ -56,7 +56,7 @@ class Entity extends BaseEntity
             $this->hasRelation($field);
     }
 
-    public function loadParentNameField(string $field)
+    public function loadParentNameField(string $field) : void
     {
         if (!$this->hasAttribute($field. 'Id') || !$this->hasAttribute($field . 'Type')) {
             throw new LogicException("There's no link-parent field '{$field}'.");
@@ -81,12 +81,16 @@ class Entity extends BaseEntity
 
             if ($foreignEntity) {
                 $this->set($field . 'Name', $foreignEntity->get('name'));
-            } else {
-                $this->set($field . 'Name', null);
+
+                return;
             }
-        } else {
+
             $this->set($field . 'Name', null);
+
+            return;
         }
+
+        $this->set($field . 'Name', null);
     }
 
     protected function getRelationOrderParams(string $link) : ?array
@@ -141,7 +145,7 @@ class Entity extends BaseEntity
         ];
     }
 
-    public function loadLinkMultipleField(string $field, $columns = null)
+    public function loadLinkMultipleField(string $field, $columns = null) : void
     {
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) {
             return;
@@ -158,7 +162,7 @@ class Entity extends BaseEntity
         }
 
         if (!empty($columns)) {
-            foreach ($columns as $key => $item) {
+            foreach ($columns as $item) {
                 $select[] = $item;
             }
         }
@@ -186,7 +190,9 @@ class Entity extends BaseEntity
 
         foreach ($collection as $e) {
             $id = $e->id;
+
             $ids[] = $id;
+
             $names->$id = $e->get('name');
 
             if ($hasType) {
@@ -221,7 +227,7 @@ class Entity extends BaseEntity
         }
     }
 
-    public function loadLinkField(string $field)
+    public function loadLinkField(string $field) : void
     {
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Id')) {
             throw new LogicException("There's no link field '{$field}'.");
@@ -254,9 +260,13 @@ class Entity extends BaseEntity
         }
 
         $this->set($idAttribute, $entityId);
+
         $this->set($field . 'Name', $entityName);
     }
 
+    /**
+     * @return ?mixed
+     */
     public function getLinkMultipleName(string $field, string $id)
     {
         $namesAttribute = $field . 'Names';
@@ -267,18 +277,14 @@ class Entity extends BaseEntity
 
         $names = $this->get($namesAttribute);
 
-        if ($names instanceof StdClass) {
-            if (isset($names->$id)) {
-                if (isset($names->$id)) {
-                    return $names->$id;
-                }
-            }
+        if ($names instanceof StdClass && isset($names->$id) && isset($names->$id)) {
+            return $names->$id;
         }
 
         return null;
     }
 
-    public function setLinkMultipleName(string $field, string $id, ?string $value)
+    public function setLinkMultipleName(string $field, string $id, ?string $value) : void
     {
         $namesAttribute = $field . 'Names';
 
@@ -293,9 +299,13 @@ class Entity extends BaseEntity
         }
 
         $object->$id = $value;
+
         $this->set($namesAttribute, $object);
     }
 
+    /**
+     * @return ?mixed
+     */
     public function getLinkMultipleColumn(string $field, string $column, string $id)
     {
         $columnsAttribute = $field . 'Columns';
@@ -306,18 +316,14 @@ class Entity extends BaseEntity
 
         $columns = $this->get($columnsAttribute);
 
-        if ($columns instanceof StdClass) {
-            if (isset($columns->$id)) {
-                if (isset($columns->$id->$column)) {
-                    return $columns->$id->$column;
-                }
-            }
+        if ($columns instanceof StdClass && isset($columns->$id) && isset($columns->$id->$column)) {
+            return $columns->$id->$column;
         }
 
         return null;
     }
 
-    public function setLinkMultipleColumn(string $field, string $column, string $id, $value)
+    public function setLinkMultipleColumn(string $field, string $column, string $id, $value) : void
     {
         $columnsAttribute = $field . 'Columns';
 
@@ -344,14 +350,14 @@ class Entity extends BaseEntity
         $this->set($columnsAttribute, $object);
     }
 
-    public function setLinkMultipleIdList(string $field, array $idList)
+    public function setLinkMultipleIdList(string $field, array $idList) : void
     {
         $idsAttribute = $field . 'Ids';
 
         $this->set($idsAttribute, $idList);
     }
 
-    public function addLinkMultipleId(string $field, string $id)
+    public function addLinkMultipleId(string $field, string $id) : void
     {
         $idsAttribute = $field . 'Ids';
 
@@ -379,7 +385,7 @@ class Entity extends BaseEntity
         }
     }
 
-    public function removeLinkMultipleId(string $field, string $id)
+    public function removeLinkMultipleId(string $field, string $id) : void
     {
         if ($this->hasLinkMultipleId($field, $id)) {
             $list = $this->getLinkMultipleIdList($field);
@@ -421,7 +427,9 @@ class Entity extends BaseEntity
     {
         $idsAttribute = $field . 'Ids';
 
-        if (!$this->hasAttribute($idsAttribute)) return false;
+        if (!$this->hasAttribute($idsAttribute)) {
+            return false;
+        }
 
         if (!$this->has($idsAttribute)) {
             if (!$this->isNew()) {

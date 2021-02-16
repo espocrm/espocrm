@@ -30,11 +30,11 @@
 namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\{
-    DB\MysqlMapper,
-    DB\Query\Mysql as Query,
-    EntityFactory,
     Metadata,
     MetadataDataProvider,
+    Defs\Defs,
+    Defs\DefsData,
+    BaseEntity,
 };
 
 use tests\unit\testData\DB\Job;
@@ -57,19 +57,30 @@ class EntityTest extends \PHPUnit\Framework\TestCase
             ->willReturn($ormMetadata);
 
         $this->metadata = new Metadata($metadataDataProvider);
+
+        $defsData = new DefsData($this->metadata);
+
+        $defs = new Defs($defsData);
+
+        $this->entityManager = $this->createMock(EntityManager::class);
+
+        $this->entityManager
+            ->expects($this->any())
+            ->method('getDefs')
+            ->willReturn($defs);
     }
 
     protected function tearDown() : void
     {
     }
 
-    protected function createEntity(string $entityType, string $className)
+    protected function createEntity(string $entityType, ?string $className = null)
     {
-        $em = $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
-
         $defs = $this->metadata->get($entityType);
 
-        $entity = new $className($entityType, $defs, $em);
+        $classNameToUse = $className ?? BaseEntity::class;
+
+        $entity = new $classNameToUse($entityType, $defs, $this->entityManager);
 
         return $entity;
     }
@@ -235,5 +246,44 @@ class EntityTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
         $this->assertTrue($job->isAttributeChanged('object'));
+    }
+
+    public function testSetForeign()
+    {
+        $entity = $this->createEntity('Comment');
+
+        $entity->set([
+            'postName' => 'test',
+        ]);
+
+        $this->assertEquals('test', $entity->get('postName'));
+    }
+
+    public function testSetJsonObject()
+    {
+        $entity = $this->createEntity('Test');
+
+        $value = '{"test": "1"}';
+
+        $entity->set([
+            'object' => '{"test": "1"}',
+        ]);
+
+        $this->assertEquals(json_decode($value), $entity->get('object'));
+    }
+
+    public function testSetWrongType()
+    {
+        $entity = $this->createEntity('Test');
+
+        $entity->set([
+            'int' => '1',
+        ]);
+
+        $this->assertEquals(1, $entity->get('int'));
+
+        $entity->set('int', '1');
+
+        $this->assertEquals(1, $entity->get('int'));
     }
 }

@@ -57,6 +57,11 @@ interface Entity
     const HAS_CHILDREN = 'hasChildren';
 
     /**
+     * Get an entity ID.
+     */
+    public function getId() : ?string;
+
+    /**
      * Reset all attributes (empty an entity).
      */
     public function reset() : void;
