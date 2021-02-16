@@ -114,13 +114,13 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
         $template = "{{float}}";
         $entity->set('float', 3);
         $html = $this->htmlizer->render($entity, $template);
-        $this->assertEquals('3', $html);
+        $this->assertEquals('3.00', $html);
 
 
         $template = "{{float}}";
         $entity->set('float', 3);
         $html = $this->htmlizer->render($entity, $template);
-        $this->assertEquals('3', $html);
+        $this->assertEquals('3.00', $html);
 
         $template = "{{float}}";
         $entity->set('float', 10000.50);
