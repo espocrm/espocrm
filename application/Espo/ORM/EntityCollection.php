@@ -52,8 +52,11 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     protected $dataList = [];
 
-    public function __construct(array $dataList = [], ?string $entityType = null, ?EntityFactory $entityFactory = null)
-    {
+    public function __construct(
+        array $dataList = [],
+        ?string $entityType = null,
+        ?EntityFactory $entityFactory = null
+    ) {
         $this->dataList = $dataList;
         $this->entityType = $entityType;
         $this->entityFactory = $entityFactory;
@@ -183,7 +186,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return null;
     }
 
-    protected function buildEntityFromArray(array $dataArray)
+    protected function buildEntityFromArray(array $dataArray) : ?Entity
     {
         if (!$this->entityFactory) {
             throw new RuntimeException("Can't build from array. EntityFactory was not passed to the constructor.");
@@ -200,6 +203,8 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
             return $entity;
         }
+
+        return null;
     }
 
     /**
@@ -261,7 +266,8 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
                     if ($value['id'] == $v['id']) {
                         return $index;
                     }
-                } else if ($v instanceof Entity) {
+                }
+                else if ($v instanceof Entity) {
                     if ($value['id'] == $v->id) {
                         return $index;
                     }
@@ -269,13 +275,15 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
                 $index ++;
             }
-        } else if ($value instanceof Entity) {
+        }
+        else if ($value instanceof Entity) {
             foreach ($this->dataList as $v) {
                 if (is_array($v)) {
                     if ($value->id == $v['id']) {
                         return $index;
                     }
-                } else if ($v instanceof Entity) {
+                }
+                else if ($v instanceof Entity) {
                     if ($value === $v) {
                         return $index;
                     }
@@ -298,7 +306,8 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         foreach ($this as $entity) {
             if ($itemsAsObjects) {
                 $item = $entity->getValueMap();
-            } else {
+            }
+            else {
                 $item = $entity->toArray();
             }
 
@@ -316,7 +325,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * Mark as fetched from DB.
      */
-    public function setAsFetched()
+    public function setAsFetched() : void
     {
         $this->isFetched = true;
     }
@@ -324,7 +333,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * Mark as not fetched from DB.
      */
-    public function setAsNotFetched()
+    public function setAsNotFetched() : void
     {
         $this->isFetched = false;
     }

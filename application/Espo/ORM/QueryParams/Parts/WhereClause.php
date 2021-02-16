@@ -65,7 +65,7 @@ class WhereClause implements WhereItem
         return 'AND';
     }
 
-    public function add(WhereItem $item)
+    public function add(WhereItem $item) : void
     {
         if ($item instanceof WhereClause) {
             $this->rawValue[] = $item->getRawValue();

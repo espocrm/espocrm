@@ -43,6 +43,7 @@ class TransactionManager
     protected $level = 0;
 
     protected $pdo;
+
     protected $queryComposer;
 
     public function __construct(PDO $pdo, QueryComposer $queryComposer)

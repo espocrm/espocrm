@@ -87,7 +87,7 @@ class SqlExecutor
         return $sth;
     }
 
-    protected function isExceptionIsDeadlock(Exception $e)
+    protected function isExceptionIsDeadlock(Exception $e) : bool
     {
         if (! $e instanceof PDOException) {
             return false;

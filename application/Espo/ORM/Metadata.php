@@ -63,7 +63,7 @@ class Metadata
     /**
      * Update data from the data provider.
      */
-    public function updateData()
+    public function updateData() : void
     {
         $this->data = $this->dataProvider->get();
 

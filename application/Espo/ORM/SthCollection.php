@@ -74,7 +74,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->entityManager->getEntityFactory();
     }
 
-    protected function setSql(string $sql)
+    protected function setSql(string $sql) : void
     {
         $this->sql = $sql;
     }
@@ -84,7 +84,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->entityManager->getPDO();
     }
 
-    protected function executeQuery()
+    protected function executeQuery() : void
     {
         $sql = $this->getSql();
 
@@ -131,7 +131,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         })();
     }
 
-    protected function executeQueryIfNotExecuted()
+    protected function executeQueryIfNotExecuted() : void
     {
         if (!$this->sth) {
             $this->executeQuery();
@@ -142,7 +142,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     {
         $this->executeQueryIfNotExecuted();
 
-        return $this->sth->fetch(\PDO::FETCH_ASSOC);
+        return $this->sth->fetch(PDO::FETCH_ASSOC);
     }
 
     public function count() : int
@@ -159,7 +159,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return count($this->getValueMapList());
     }
 
-    protected function prepareEntity(Entity $entity)
+    protected function prepareEntity(Entity $entity) : void
     {
     }
 
@@ -169,14 +169,18 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     public function toArray(bool $itemsAsObjects = false) : array
     {
         $arr = [];
+
         foreach ($this as $entity) {
             if ($itemsAsObjects) {
                 $item = $entity->getValueMap();
-            } else {
+            }
+            else {
                 $item = $entity->toArray();
             }
+
             $arr[] = $item;
         }
+
         return $arr;
     }
 

@@ -59,7 +59,7 @@ class OrGroup implements WhereItem
         return 'OR';
     }
 
-    public function add(WhereItem $item)
+    public function add(WhereItem $item) : void
     {
         $key = $item->getRawKey();
         $value = $item->getRawValue();
