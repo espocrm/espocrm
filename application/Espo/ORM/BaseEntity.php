@@ -361,7 +361,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Is an entity new.
+     * Whether an entity is new.
      */
     public function isNew() : bool
     {
@@ -369,7 +369,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Set as not new.
+     * Set as not new. Meaning an entity is fetched or already saved.
      */
     public function setAsNotNew() : void
     {
@@ -377,7 +377,8 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Whether an entity was saved.
+     * Whether an entity has been saved. An entity can be already saved but not yet set as not-new.
+     * To prevent inserting second time if save is called in an after-save hook.
      */
     public function isSaved() : bool
     {
