@@ -32,13 +32,11 @@ namespace Espo\Core\ORM;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
-    InjectableFactory,
     Utils\ClassFinder,
     ORM\Entity as BaseEntity,
 };
 
 use Espo\ORM\{
-    Metadata,
     Entity,
     EntityManager,
     EntityFactory as EntityFactoryInterface,
@@ -60,17 +58,19 @@ class EntityFactory implements EntityFactoryInterface
         return $this->classFinder->find('Entities', $name);
     }
 
-    public function setEntityManager(EntityManager $entityManager)
+    public function setEntityManager(EntityManager $entityManager) : void
     {
         if ($this->entityManager) {
             throw new Error("EntityManager can be set only once.");
         }
+
         $this->entityManager = $entityManager;
     }
 
     public function create(string $name) : Entity
     {
         $className = $this->getClassName($name);
+
         if (!class_exists($className)) {
             $className = BaseEntity::class;
         }

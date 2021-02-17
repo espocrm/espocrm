@@ -33,5 +33,5 @@ interface EntityFactory
 {
     public function create(string $name) : Entity;
 
-    public function setEntityManager(EntityManager $entityManager);
+    public function setEntityManager(EntityManager $entityManager) : void;
 }
