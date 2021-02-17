@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\NotFound;
-
-use Espo\Core\Container;
 use Espo\Core\{
     Utils\ClassFinder,
     Utils\Language,
     Utils\System,
+    Utils\DateTime as DateTimeUtil,
     ORM\EntityManager,
 };
+
+use DateTime;
 
 class ScheduledJob
 {
@@ -60,7 +60,9 @@ class ScheduledJob
     ];
 
     protected $classFinder;
+
     protected $language;
+
     protected $entityManager;
 
     public function __construct(ClassFinder $classFinder, EntityManager $entityManager, Language $language)
@@ -92,6 +94,7 @@ class ScheduledJob
     public function getJobClassName(string $name) : ?string
     {
         $name = ucfirst($name);
+
         $className = $this->classFinder->find('Jobs', $name);
 
         return $className;
@@ -112,6 +115,7 @@ class ScheduledJob
         );
 
         $message = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
+
         $command = isset($this->cronSetup[$OS]) ? $this->cronSetup[$OS] : $this->cronSetup['default'];
 
         foreach ($data as $name => $value) {
@@ -131,13 +135,13 @@ class ScheduledJob
      */
     public function isCronConfigured()
     {
-        $r1From = new \DateTime('-' . $this->checkingCronPeriod);
-        $r1To = new \DateTime('+' . $this->checkingCronPeriod);
+        $r1From = new DateTime('-' . $this->checkingCronPeriod);
+        $r1To = new DateTime('+' . $this->checkingCronPeriod);
 
-        $r2From = new \DateTime('- 1 hour');
-        $r2To = new \DateTime();
+        $r2From = new DateTime('- 1 hour');
+        $r2To = new DateTime();
 
-        $format = \Espo\Core\Utils\DateTime::$systemDateTimeFormat;
+        $format = DateTimeUtil::$systemDateTimeFormat;
 
         $selectParams = [
             'select' => ['id'],
@@ -157,6 +161,6 @@ class ScheduledJob
             ]
         ];
 
-        return !!$this->entityManager->getRepository('Job')->findOne($selectParams);
+        return (bool) $this->entityManager->getRepository('Job')->findOne($selectParams);
     }
 }

@@ -28,61 +28,52 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Cron;
-use \PDO;
-use \Espo\Core\Utils\Config;
-use \Espo\Core\ORM\EntityManager;
+
+use Espo\ORM\{
+    Collection,
+    EntityManager,
+};
 
 class ScheduledJob
 {
-    private $config;
-
     private $entityManager;
 
-    public function __construct(Config $config, EntityManager $entityManager)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->config = $config;
         $this->entityManager = $entityManager;
     }
 
-    protected function getConfig()
+    /**
+     * Get active scheduled job list.
+     */
+    public function getActiveScheduledJobList() : Collection
     {
-        return $this->config;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
+        return $this->entityManager
+            ->getRepository('ScheduledJob')
+            ->select([
+                'id',
+                'scheduling',
+                'job',
+                'name',
+            ])
+            ->where([
+                'status' => 'Active'
+            ])
+            ->find();
     }
 
     /**
-     * Get active Scheduler Job List
-     *
-     * @return EntityCollection
+     * Add record to ScheduledJobLogRecord about executed job.
      */
-    public function getActiveScheduledJobList()
-    {
-        return $this->getEntityManager()->getRepository('ScheduledJob')->select([
-            'id', 'scheduling', 'job', 'name'
-        ])->where([
-            'status' => 'Active'
-        ])->find();
-    }
+    public function addLogRecord(
+        $scheduledJobId, $status, $runTime = null, $targetId = null, $targetType = null
+    ) {
 
-    /**
-     * Add record to ScheduledJobLogRecord about executed job
-     *
-     * @param string $scheduledJobId
-     * @param string $status
-     *
-     * @return string ID of created ScheduledJobLogRecord
-     */
-    public function addLogRecord($scheduledJobId, $status, $runTime = null, $targetId = null, $targetType = null)
-    {
         if (!isset($runTime)) {
             $runTime = date('Y-m-d H:i:s');
         }
 
-        $entityManager = $this->getEntityManager();
+        $entityManager = $this->entityManager;
 
         $scheduledJob = $entityManager->getEntity('ScheduledJob', $scheduledJobId);
 
@@ -91,19 +82,20 @@ class ScheduledJob
         }
 
         $scheduledJob->set('lastRun', $runTime);
+
         $entityManager->saveEntity($scheduledJob, ['silent' => true]);
 
         $scheduledJobLog = $entityManager->getEntity('ScheduledJobLogRecord');
-        $scheduledJobLog->set(array(
+
+        $scheduledJobLog->set([
             'scheduledJobId' => $scheduledJobId,
             'name' => $scheduledJob->get('name'),
             'status' => $status,
             'executionTime' => $runTime,
             'targetId' => $targetId,
-            'targetType' => $targetType
-        ));
-        $scheduledJobLogId = $entityManager->saveEntity($scheduledJobLog);
+            'targetType' => $targetType,
+        ]);
 
-        return $scheduledJobLogId;
+        $entityManager->saveEntity($scheduledJobLog);
     }
 }

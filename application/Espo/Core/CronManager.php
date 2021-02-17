@@ -104,7 +104,8 @@ class CronManager
         $this->scheduledJob = $scheduledJob;
 
         $this->cronJobUtil = new CronJob($this->config, $this->entityManager);
-        $this->cronScheduledJobUtil = new CronScheduledJob($this->config, $this->entityManager);
+
+        $this->cronScheduledJobUtil = new CronScheduledJob($this->entityManager);
 
         if ($this->config->get('jobRunInParallel')) {
             if (AsyncPool::isSupported()) {

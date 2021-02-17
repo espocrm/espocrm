@@ -31,6 +31,8 @@ namespace tests\unit\Espo\Core;
 
 use tests\unit\ReflectionHelper;
 
+use Espo\Core\CronManager;
+
 class CronManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -41,15 +43,15 @@ class CronManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['serviceFactory'] = $this->getMockBuilder('\\Espo\\Core\\ServiceFactory')->disableOriginalConstructor()->getMock();
-        $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
-        $this->objects['fileManager'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
-        $this->objects['scheduledJob'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\ScheduledJob')->disableOriginalConstructor()->getMock();
-        $this->objects['entityManager'] = $this->getMockBuilder('\\Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+        $this->objects['serviceFactory'] = $this->getMockBuilder('Espo\\Core\\ServiceFactory')->disableOriginalConstructor()->getMock();
+        $this->objects['config'] = $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $this->objects['fileManager'] = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
+        $this->objects['scheduledJob'] = $this->getMockBuilder('Espo\\Core\\Utils\\ScheduledJob')->disableOriginalConstructor()->getMock();
+        $this->objects['entityManager'] = $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
 
-        $this->objects['injectableFactory'] = $this->getMockBuilder('\\Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
+        $this->objects['injectableFactory'] = $this->getMockBuilder('Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\CronManager(
+        $this->object = new CronManager(
             $this->objects['config'],
             $this->objects['fileManager'],
             $this->objects['entityManager'],
