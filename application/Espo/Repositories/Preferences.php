@@ -74,7 +74,7 @@ class Preferences extends Repository implements
 
         $this->fetchAutoFollowEntityTypeList($entity);
 
-        $entity->setAsFetched($this->data[$id]);
+        $entity->setAsFetched();
 
         return $entity;
     }
