@@ -42,7 +42,7 @@ use Espo\Core\Exceptions\{
 
 use Espo\ORM\{
     Entity,
-    EntityCollection,
+    Collection,
     EntityManager,
 };
 
@@ -2128,7 +2128,7 @@ class Record implements Crud,
         return false;
     }
 
-    public function findDuplicates(Entity $entity, $data = null) : ?EntityCollection
+    public function findDuplicates(Entity $entity, $data = null) : ?Collection
     {
         if (!$data) {
             $data = (object) [];
