@@ -45,9 +45,7 @@ use Espo\ORM\{
 };
 
 use PDO;
-use PDOStatement;
-
-use Exception;
+use StdClass;
 use LogicException;
 use RuntimeException;
 
@@ -171,7 +169,7 @@ class BaseMapper implements Mapper
     }
 
     /**
-     * Select enities from DB by a SQL query.
+     * Select entities from DB by a SQL query.
      */
     public function selectBySql(string $entityType, string $sql) : SthCollection
     {
@@ -248,6 +246,7 @@ class BaseMapper implements Mapper
             }
 
             $relEntityType = $entity->getRelationParam($relationName, 'entity');
+
             $relEntity = $this->entityFactory->create($relEntityType);
         }
 
@@ -282,11 +281,13 @@ class BaseMapper implements Mapper
                     while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
+
                     return 0;
                 }
 
                 while ($row = $sth->fetch()) {
                     $this->populateEntityFromRow($relEntity, $row);
+
                     $relEntity->setAsFetched();
 
                     return $relEntity;
@@ -325,6 +326,7 @@ class BaseMapper implements Mapper
                     while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
+
                     return 0;
                 }
 
@@ -362,6 +364,7 @@ class BaseMapper implements Mapper
                     while ($row = $sth->fetch()) {
                         return (int) $row['value'];
                     }
+
                     return 0;
                 }
 
@@ -398,6 +401,8 @@ class BaseMapper implements Mapper
                 while ($row = $sth->fetch()) {
                     $this->populateEntityFromRow($relEntity, $row);
 
+                    $relEntity->setAsFetched();
+
                     return $relEntity;
                 }
 
@@ -410,7 +415,7 @@ class BaseMapper implements Mapper
     }
 
     /**
-     * Get a number of related enities in DB.
+     * Get a number of related entities in DB.
      */
     public function countRelated(Entity $entity, string $relationName, ?Select $select = null) : int
     {
@@ -686,6 +691,7 @@ class BaseMapper implements Mapper
     protected function addRelation(
         Entity $entity, string $relationName, ?string $id = null, ?Entity $relEntity = null, ?array $data = null
     ) : bool {
+
         $entityType = $entity->getEntityType();
 
         if ($relEntity) {
@@ -711,11 +717,14 @@ class BaseMapper implements Mapper
         $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
-            throw new LogicException("Not appropriate definition for relationship {$relationName} in '{$entityType}' entity.");
+            throw new LogicException(
+                "Not appropriate definition for relationship {$relationName} in '{$entityType}' entity."
+            );
         }
 
         if (is_null($relEntity)) {
             $relEntity = $this->entityFactory->create($foreignEntityType);
+
             $relEntity->id = $id;
         }
 
@@ -727,7 +736,10 @@ class BaseMapper implements Mapper
 
                 $foreignRelationName = $entity->getRelationParam($relationName, 'foreign');
 
-                if ($foreignRelationName && $relEntity->getRelationParam($foreignRelationName, 'type') === Entity::HAS_ONE) {
+                if (
+                    $foreignRelationName &&
+                    $relEntity->getRelationParam($foreignRelationName, 'type') === Entity::HAS_ONE
+                ) {
                     $sql = $this->queryComposer->compose(
                         Update::fromRaw([
                             'from' => $entityType,
@@ -1003,12 +1015,14 @@ class BaseMapper implements Mapper
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
             throw new LogicException(
-                "Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity."
+                "Not appropriate definition for relationship {$relationName} in " .
+                $entity->getEntityType() . " entity."
             );
         }
 
         if (is_null($relEntity) && $relType !== Entity::BELONGS_TO_PARENT) {
             $relEntity = $this->entityFactory->create($foreignEntityType);
+
             $relEntity->id = $id;
         }
 
@@ -1143,7 +1157,7 @@ class BaseMapper implements Mapper
     /**
      * Insert an entity into DB.
      *
-     * @todo Set 'id' if autoincrement (as fetched).
+     * @todo Set 'id' if auto-increment (as fetched).
      */
     public function insert(Entity $entity)
     {
@@ -1175,7 +1189,7 @@ class BaseMapper implements Mapper
             ])
         );
 
-        $sth = $this->executeSql($sql, true);
+        $this->executeSql($sql, true);
 
         if ($entity->getAttributeParam('id', 'autoincrement')) {
             $this->setLastInsertIdWithinConnection($entity);
@@ -1314,9 +1328,11 @@ class BaseMapper implements Mapper
     {
         if ($type == Entity::JSON_ARRAY && is_array($value)) {
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
-        } else if ($type == Entity::JSON_OBJECT && (is_array($value) || $value instanceof \StdClass)) {
+        }
+        else if ($type == Entity::JSON_OBJECT && (is_array($value) || $value instanceof StdClass)) {
             $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
-        } else {
+        }
+        else {
             if (is_array($value) || is_object($value)) {
                 return null;
             }
@@ -1474,6 +1490,7 @@ class BaseMapper implements Mapper
         ];
 
         $conditions = $conditions ?? [];
+
         if (!empty($defs['conditions']) && is_array($defs['conditions'])) {
             $conditions = array_merge($conditions, $defs['conditions']);
         }

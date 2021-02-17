@@ -331,14 +331,6 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * Mark as not fetched from DB.
-     */
-    public function setAsNotFetched() : void
-    {
-        $this->isFetched = false;
-    }
-
-    /**
      * Is fetched from DB.
      */
     public function isFetched() : bool

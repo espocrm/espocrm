@@ -43,7 +43,7 @@ interface Mapper
     public function selectOne(Select $select) : ?Entity;
 
     /**
-     * Select enities from DB.
+     * Select entities from DB.
      */
     public function select(Select $select) : Collection;
 

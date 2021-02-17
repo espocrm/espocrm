@@ -40,7 +40,7 @@ class BaseEntity implements Entity
 
     protected $entityType;
 
-    private $isNew = false;
+    private $isNotNew = false;
 
     private $isSaved = false;
 
@@ -365,15 +365,15 @@ class BaseEntity implements Entity
      */
     public function isNew() : bool
     {
-        return $this->isNew;
+        return !$this->isNotNew;
     }
 
     /**
-     * Set as new or not.
+     * Set as not new.
      */
-    public function setIsNew(bool $isNew) : void
+    public function setAsNotNew() : void
     {
-        $this->isNew = $isNew;
+        $this->isNotNew = true;
     }
 
     /**
@@ -725,7 +725,8 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Copy all current values to fetched values.
+     * Copy all current values to fetched values. All current attribute values will beset as those
+     * that are fetched from DB.
      */
     public function updateFetchedValues() : void
     {
@@ -737,23 +738,16 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Set an entity as fetched.
+     * Set an entity as fetched. All current attribute values will be set as those that are fetched
+     * from DB.
      */
     public function setAsFetched() : void
     {
         $this->isFetched = true;
 
+        $this->setAsNotNew();
+
         $this->updateFetchedValues();
-    }
-
-    /**
-     * Set an entity as not fetched.
-     */
-    public function setAsNotFetched() : void
-    {
-        $this->isFetched = false;
-
-        $this->resetFetchedValues();
     }
 
     /**

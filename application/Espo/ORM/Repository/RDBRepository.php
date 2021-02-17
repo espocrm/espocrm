@@ -81,7 +81,6 @@ class RDBRepository extends Repository
         $entity = $this->entityFactory->create($this->entityType);
 
         if ($entity) {
-            $entity->setIsNew(true);
             $entity->populateDefaults();
 
             return $entity;
@@ -131,9 +130,11 @@ class RDBRepository extends Repository
         if (empty($options['skipBeforeSave']) && empty($options['skipAll'])) {
             $this->beforeSave($entity, $options);
         }
+
         if ($entity->isNew() && !$entity->isSaved()) {
             $this->getMapper()->insert($entity);
-        } else {
+        }
+        else {
             $this->getMapper()->update($entity);
         }
 
@@ -145,10 +146,12 @@ class RDBRepository extends Repository
 
         if ($entity->isNew()) {
             if (empty($options['keepNew'])) {
-                $entity->setIsNew(false);
+                $entity->setAsNotNew();
+
                 $entity->updateFetchedValues();
             }
-        } else {
+        }
+        else {
             $entity->updateFetchedValues();
         }
 
