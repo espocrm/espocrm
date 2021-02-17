@@ -189,7 +189,7 @@ class SearchBuilderTest extends \PHPUnit\Framework\TestCase
             ->method('apply')
             ->with(
                 $this->isInstanceOf(QueryBuilder::class),
-                $orderParams,
+                $orderParams
             );
 
         $this->additionalApplier

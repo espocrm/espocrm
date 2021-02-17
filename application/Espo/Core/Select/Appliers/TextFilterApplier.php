@@ -188,7 +188,7 @@ class TextFilterApplier
                     [
                         [$relevanceExpression, 'desc']
                     ],
-                    $previousOrderBy,
+                    $previousOrderBy
                 );
 
                 $queryBuilder->order($newOrderBy);

@@ -113,11 +113,11 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
             ->method('hasAttribute')
             ->withConsecutive(
                 ['test1'],
-                ['test2'],
+                ['test2']
             )
             ->willReturnOnConsecutiveCalls(
                 true,
-                true,
+                true
             );
 
         $this->entity
@@ -155,10 +155,10 @@ class CheckerTest extends \PHPUnit\Framework\TestCase
         $this->entity
             ->method('hasAttribute')
             ->withConsecutive(
-                ['test1'],
+                ['test1']
             )
             ->willReturnOnConsecutiveCalls(
-                false,
+                false
             );
 
         $this->expectException(BadRequest::class);

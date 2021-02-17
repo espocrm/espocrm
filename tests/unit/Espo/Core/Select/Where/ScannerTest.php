@@ -112,7 +112,7 @@ class ScannerTest extends \PHPUnit\Framework\TestCase
             ->withConsecutive(
                 ['link2'],
                 ['link3'],
-                ['link4'],
+                ['link4']
             );
 
         $this->queryBuilder

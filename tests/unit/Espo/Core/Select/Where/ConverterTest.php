@@ -270,7 +270,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                     [
                          "foreignPath.descendorId:" => "testInCategoryFilterMiddle.foreignId",
                     ]
-                ],
+                ]
             );
 
         $whereClause = $this->converter->convert($this->queryBuilder, $item);
@@ -327,9 +327,8 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                     [
                         "foreignPath.descendorId:" => "foreignId",
                     ]
-                ],
+                ]
             );
-
 
         $whereClause = $this->converter->convert($this->queryBuilder, $item);
 
@@ -388,9 +387,8 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                         $aliasName . 'Middle.userId:' => 'userId',
                         $aliasName . 'Middle.deleted' => false,
                     ]
-                ],
+                ]
             );
-
 
         $whereClause = $this->converter->convert($this->queryBuilder, $item);
 
@@ -479,7 +477,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                 ],
                 [
                     $this->queryBuilder, $item
-                ],
+                ]
             );
 
         $query = Select::fromRaw([
@@ -561,7 +559,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                 [
                     $link,
                     $alias,
-                ],
+                ]
             );
 
         $expected = [
