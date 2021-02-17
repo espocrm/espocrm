@@ -117,7 +117,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                 'Account' => [
                     'read' => 'team',
                 ],
-            ],
+            ]
         );
 
         $container = $app->getContainer();
@@ -213,7 +213,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                 'Meeting' => [
                     'read' => 'team',
                 ],
-            ],
+            ]
         );
 
         $container = $app->getContainer();
@@ -267,7 +267,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                 'Email' => [
                     'read' => 'own',
                 ],
-            ],
+            ]
         );
 
         $container = $app->getContainer();
@@ -313,7 +313,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                 'Email' => [
                     'read' => 'team',
                 ],
-            ],
+            ]
         );
 
         $container = $app->getContainer();
@@ -366,7 +366,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                 'Email' => [
                     'read' => 'account',
                 ],
-            ],
+            ]
         );
 
         $builder = $this->factory->create();
@@ -415,7 +415,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                 'Email' => [
                     'read' => 'contact',
                 ],
-            ],
+            ]
         );
 
         $builder = $this->factory->create();
@@ -459,7 +459,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
     public function testBuildDefaultOrder()
     {
         $this->initTest(
-            [],
+            []
         );
 
         $searchParams = SearchParams::fromRaw([]);
@@ -484,7 +484,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
     public function testBuildMeetingDateTime()
     {
         $this->initTest(
-            [],
+            []
         );
 
         $searchParams = SearchParams::fromRaw([
@@ -534,7 +534,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
     public function testEmailInbox()
     {
         $app = $this->initTest(
-            [],
+            []
         );
 
         $container = $app->getContainer();
@@ -609,7 +609,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
     public function testEmailSent()
     {
         $app = $this->initTest(
-            [],
+            []
         );
 
         $container = $app->getContainer();
@@ -670,7 +670,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
     public function testEmailEmailAddressEquals()
     {
         $app = $this->initTest(
-            [],
+            []
         );
 
         $em = $app->getContainer()->get('entityManager');

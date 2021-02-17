@@ -76,56 +76,6 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
         ]);
     }
 
-    public function testMassUpdateRequiredVarchar1()
-    {
-        $app = $this->createApplication();
-        $this->setFieldsDefs($app, 'Account', [
-            'name' => [
-                'required' => true
-            ]
-        ]);
-
-        $entity = $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => 'test'
-        ]);
-
-        $result = (object) $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
-            [
-                'ids' => [$entity->id]
-            ],
-            (object) [
-                'name' => ''
-            ]
-        );
-
-        $this->assertEquals(0, $result->count);
-    }
-
-    public function testMassUpdateRequiredVarchar2()
-    {
-        $app = $this->createApplication();
-        $this->setFieldsDefs($app, 'Account', [
-            'name' => [
-                'required' => true
-            ]
-        ]);
-
-        $entity = $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => 'test'
-        ]);
-
-        $result = (object) $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
-            [
-                'ids' => [$entity->id]
-            ],
-            (object) [
-                'name' => 'hello'
-            ]
-        );
-
-        $this->assertEquals(1, $result->count);
-    }
-
     public function testRequiredVarchar2()
     {
         $app = $this->createApplication();
