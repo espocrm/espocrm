@@ -69,13 +69,19 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         parent::beforeSave($entity, $options);
 
         $storage = $entity->get('storage');
+
         if (!$storage) {
             $entity->set('storage', $this->config->get('defaultFileStorage', null));
         }
 
         if ($entity->isNew()) {
             if (!$entity->has('size') && $entity->has('contents')) {
-                $entity->set('size', mb_strlen($entity->get('contents')));
+                $contents = $entity->get('contents');
+
+                $entity->set(
+                    'size',
+                    mb_strlen($contents, '8bit')
+                );
             }
         }
     }
