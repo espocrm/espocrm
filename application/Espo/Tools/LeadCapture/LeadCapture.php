@@ -36,7 +36,6 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\FieldUtil,
     Utils\Language,
-    ServicaFactory,
     HookManager,
     Mail\EmailSender,
     Utils\Config,
