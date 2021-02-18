@@ -146,7 +146,6 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(10.0, $value->getAmount());
         $this->assertEquals('USD', $value->getCode());
-
     }
 
     public function testCreatableFromEntityTrue()
