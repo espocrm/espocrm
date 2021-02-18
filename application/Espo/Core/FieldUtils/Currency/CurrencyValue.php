@@ -29,10 +29,6 @@
 
 namespace Espo\Core\FieldUtils\Currency;
 
-use Espo\{
-    ORM\Entity,
-};
-
 use RuntimeException;
 
 /**
@@ -134,18 +130,5 @@ class CurrencyValue
         $amount = round($this->getAmount(), $precision);
 
         return new self($amount, $this->getCode());
-    }
-
-    public static function isSetInEntity(Entity $entity, string $field) : bool
-    {
-        return $entity->has($field) && $entity->has($field . 'Currency');
-    }
-
-    public static function fromEntity(Entity $entity, string $field) : self
-    {
-        return new self(
-            $entity->get($field),
-            $entity->get($field . 'Currency')
-        );
     }
 }

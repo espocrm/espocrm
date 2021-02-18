@@ -31,6 +31,7 @@ namespace tests\unit\Espo\Core\FieldUtils\Address;
 
 use Espo\Core\{
     FieldUtils\Address\AddressValue,
+    FieldUtils\Address\AddressValueFactory,
 };
 
 use Espo\ORM\Entity;
@@ -96,7 +97,7 @@ class AddressValueTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('city', $address->getCity());
     }
 
-    public function testFromEntity()
+    public function testCreateFromEntity()
     {
         $entity = $this->createMock(Entity::class);
 
@@ -111,7 +112,9 @@ class AddressValueTest extends \PHPUnit\Framework\TestCase
                 ['addressPostalCode', null],
             ]);
 
-        $address = AddressValue::fromEntity($entity, 'address');
+        $factory = new AddressValueFactory();
+
+        $address = $factory->createFromEntity($entity, 'address');
 
         $this->assertEquals('street', $address->getStreet());
         $this->assertEquals('city', $address->getCity());

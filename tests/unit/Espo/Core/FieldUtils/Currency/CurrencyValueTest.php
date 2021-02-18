@@ -31,6 +31,7 @@ namespace tests\unit\Espo\Core\FieldUtils\Currency;
 
 use Espo\Core\{
     FieldUtils\Currency\CurrencyValue,
+    FieldUtils\Currency\CurrencyValueFactory,
 };
 
 use Espo\{
@@ -119,7 +120,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
         new CurrencyValue(2.0, '');
     }
 
-    public function testGetFromEntity()
+    public function testCreateFromEntity()
     {
         $entity = $this->createMock(Entity::class);
 
@@ -131,14 +132,24 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
                 ['testCurrency', 'USD'],
             ]);
 
-        $value = CurrencyValue::fromEntity($entity, 'test');
+        $entity
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['test', true],
+                ['testCurrency', true],
+            ]);
+
+        $factory = new CurrencyValueFactory();
+
+        $value = $factory->createFromEntity($entity, 'test');
 
         $this->assertEquals(10.0, $value->getAmount());
         $this->assertEquals('USD', $value->getCode());
 
     }
 
-    public function testIsSetInEntityTrue()
+    public function testCreatableFromEntityTrue()
     {
         $entity = $this->createMock(Entity::class);
 
@@ -150,12 +161,14 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
                 ['testCurrency', true],
             ]);
 
+        $factory = new CurrencyValueFactory();
+
         $this->assertTrue(
-            CurrencyValue::isSetInEntity($entity, 'test')
+            $factory->isCreatableFromEntity($entity, 'test')
         );
     }
 
-    public function testIsSetInEntityFalse()
+    public function testCreatableFromEntityFalse()
     {
         $entity = $this->createMock(Entity::class);
 
@@ -163,12 +176,14 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('has')
             ->willReturnMap([
-                ['test', false],
-                ['testCurrency', true],
+                ['test', true],
+                ['testCurrency', False],
             ]);
 
+        $factory = new CurrencyValueFactory();
+
         $this->assertFalse(
-            CurrencyValue::isSetInEntity($entity, 'test')
+            $factory->isCreatableFromEntity($entity, 'test')
         );
     }
 }
