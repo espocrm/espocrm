@@ -33,6 +33,8 @@ use Espo\{
     ORM\Entity,
 };
 
+use LogicException;
+
 /**
  * An address value.
  */
@@ -47,6 +49,31 @@ class AddressValue
     protected $state = null;
 
     protected $postalCode = null;
+
+    public function hasStreet() : bool
+    {
+        return $this->street !== null;
+    }
+
+    public function hasCity() : bool
+    {
+        return $this->city !== null;
+    }
+
+    public function hasCountry() : bool
+    {
+        return $this->country !== null;
+    }
+
+    public function hasState() : bool
+    {
+        return $this->state !== null;
+    }
+
+    public function hasPostalCode() : bool
+    {
+        return $this->postalCode !== null;
+    }
 
     public function getStreet() : ?string
     {
@@ -123,6 +150,11 @@ class AddressValue
         return $newAddress;
     }
 
+    public static function isSetInEntity(Entity $entity, string $field) : bool
+    {
+        return true;
+    }
+
     public static function fromEntity(Entity $entity, string $field) : self
     {
         $obj = new self();
@@ -140,11 +172,11 @@ class AddressValue
     {
         $obj = new self();
 
-        $obj->street = $raw['street'];
-        $obj->city = $raw['city'];
-        $obj->country = $raw['country'];
-        $obj->state = $raw['state'];
-        $obj->postalCode = $raw['postalCode'];
+        $obj->street = $raw['street'] ?? null;
+        $obj->city = $raw['city'] ?? null;
+        $obj->country = $raw['country'] ?? null;
+        $obj->state = $raw['state'] ?? null;
+        $obj->postalCode = $raw['postalCode'] ?? null;
 
         return $obj;
     }

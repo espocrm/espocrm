@@ -33,6 +33,10 @@ use Espo\Core\{
     FieldUtils\Currency\CurrencyValue,
 };
 
+use Espo\{
+    ORM\Entity,
+};
+
 use RuntimeException;
 
 class CurrencyValueTest extends \PHPUnit\Framework\TestCase
@@ -113,5 +117,58 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
         $this->expectException(RuntimeException::class);
 
         new CurrencyValue(2.0, '');
+    }
+
+    public function testGetFromEntity()
+    {
+        $entity = $this->createMock(Entity::class);
+
+        $entity
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ['test', 10.0],
+                ['testCurrency', 'USD'],
+            ]);
+
+        $value = CurrencyValue::fromEntity($entity, 'test');
+
+        $this->assertEquals(10.0, $value->getAmount());
+        $this->assertEquals('USD', $value->getCode());
+
+    }
+
+    public function testIsSetInEntityTrue()
+    {
+        $entity = $this->createMock(Entity::class);
+
+        $entity
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['test', true],
+                ['testCurrency', true],
+            ]);
+
+        $this->assertTrue(
+            CurrencyValue::isSetInEntity($entity, 'test')
+        );
+    }
+
+    public function testIsSetInEntityFalse()
+    {
+        $entity = $this->createMock(Entity::class);
+
+        $entity
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap([
+                ['test', false],
+                ['testCurrency', true],
+            ]);
+
+        $this->assertFalse(
+            CurrencyValue::isSetInEntity($entity, 'test')
+        );
     }
 }
