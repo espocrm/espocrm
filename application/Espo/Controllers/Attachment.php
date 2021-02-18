@@ -29,31 +29,45 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Exceptions\BadRequest,
+};
 
-class Attachment extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+
+class Attachment extends Record
 {
     public function actionList($params, $data, $request)
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
+
         return parent::actionList($params, $data, $request);
     }
 
     public function postActionGetAttachmentFromImageUrl($params, $data)
     {
-        if (empty($data->url)) throw new BadRequest();
-        if (empty($data->field)) throw new BadRequest('postActionGetAttachmentFromImageUrl: No field specified');
+        if (empty($data->url)) {
+            throw new BadRequest();
+        }
+
+        if (empty($data->field)) {
+            throw new BadRequest('postActionGetAttachmentFromImageUrl: No field specified');
+        }
 
         return $this->getRecordService()->getAttachmentFromImageUrl($data)->getValueMap();
     }
 
     public function postActionGetCopiedAttachment($params, $data)
     {
-        if (empty($data->id)) throw new BadRequest();
-        if (empty($data->field)) throw new BadRequest('postActionGetCopiedAttachment copy: No field specified');
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
+        if (empty($data->field)) {
+            throw new BadRequest('postActionGetCopiedAttachment copy: No field specified');
+        }
 
         return $this->getRecordService()->getCopiedAttachment($data)->getValueMap();
     }
@@ -62,12 +76,19 @@ class Attachment extends \Espo\Core\Controllers\Record
     {
         $id = $params['id'] ?? null;
 
-        if (!$id) throw new BadRequest();
+        if (!$id) {
+            throw new BadRequest();
+        }
 
         $fileData = $this->getRecordService()->getFileData($id);
 
         $response->setHeader('Content-Type', $fileData->type);
-        $response->setHeader('Content-Disposition', 'Content-Disposition: attachment; filename="'.$fileData->name.'"');
+
+        $response->setHeader(
+            'Content-Disposition',
+            'Content-Disposition: attachment; filename="' . $fileData->name . '"'
+        );
+
         if ($fileData->size) {
             $response->setHeader('Content-Length', strlen($fileData->contents));
         }
