@@ -33,8 +33,6 @@ use Espo\{
     ORM\Entity,
 };
 
-use LogicException;
-
 /**
  * An address value.
  */
