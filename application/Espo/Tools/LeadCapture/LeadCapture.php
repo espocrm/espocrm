@@ -32,10 +32,10 @@ namespace Espo\Tools\LeadCapture;
 use Espo\Core\{
     Exceptions\Error,
     Exceptions\NotFound,
+    Exceptions\BadRequest,
     ORM\EntityManager,
     Utils\FieldUtil,
     Utils\Language,
-    ServicaFactory,
     HookManager,
     Mail\EmailSender,
     Utils\Config,

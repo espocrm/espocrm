@@ -69,7 +69,7 @@ class Attachment extends \Espo\Core\Controllers\Record
         $response->setHeader('Content-Type', $fileData->type);
         $response->setHeader('Content-Disposition', 'Content-Disposition: attachment; filename="'.$fileData->name.'"');
         if ($fileData->size) {
-            $response->setHeader('Content-Length', $fileData->size);
+            $response->setHeader('Content-Length', strlen($fileData->contents));
         }
 
         return $fileData->contents;
