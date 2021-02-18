@@ -31,13 +31,20 @@ namespace Espo\Core\FieldUtils\Currency;
 
 use StdClass;
 
-class CurrencyValueAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractor
+class CurrencyValueAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
 {
-    /*public function extract(\Espo\ORM\Value\Value $value, string $field) : StdClass
+    private $value;
+
+    public function __construct(CurrencyValue $value)
+    {
+        $this->value = $value;
+    }
+
+    public function extract(string $field) : StdClass
     {
         return (object) [
-            $field => $value->getAmount(),
-            $field . 'Currency' => $value->getCode(),
+            $field => $this->value->getAmount(),
+            $field . 'Currency' => $this->value->getCode(),
         ];
-    }*/
+    }
 }

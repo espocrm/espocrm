@@ -31,16 +31,23 @@ namespace Espo\Core\FieldUtils\Address;
 
 use StdClass;
 
-class AddressValueAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractor
+class AddressValueAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
 {
-    /*public function extract(\Espo\ORM\Value\Value $value, string $field) : StdClass
+    private $value;
+
+    public function __construct(AddressValue $value)
+    {
+        $this->value = $value;
+    }
+
+    public function extract(string $field) : StdClass
     {
         return (object) [
-            $field . 'Street' => $value->getStreet(),
-            $field . 'City' => $value->getCity(),
-            $field . 'Country' => $value->getCountry(),
-            $field . 'State' => $value->getState(),
-            $field . 'PostalCode' => $value->getPostalCode(),
+            $field . 'Street' => $this->value->getStreet(),
+            $field . 'City' => $this->value->getCity(),
+            $field . 'Country' => $this->value->getCountry(),
+            $field . 'State' => $this->value->getState(),
+            $field . 'PostalCode' => $this->value->getPostalCode(),
         ];
-    }*/
+    }
 }
