@@ -42,7 +42,7 @@
         "doctrine/dbal": "^3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8"
+        "phpunit/phpunit": "^9"
     },
     "autoload": {
         "psr-0": {
