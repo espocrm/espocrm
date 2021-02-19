@@ -25,7 +25,7 @@
         "laminas/laminas-servicemanager": "^3.3.1",
         "monolog/monolog": "2.*",
         "yzalis/identicon": "*",
-        "zordius/lightncandy": "1.*",
+        "zordius/lightncandy": "dev-espo",
         "composer/semver": "^3",
         "tecnickcom/tcpdf": "^6.3",
         "spatie/async": "dev-for-espocrm",
@@ -55,6 +55,10 @@
         {
             "type": "git",
             "url": "https://github.com/yurikuzn/async.git"
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/yurikuzn/lightncandy.git"
         }
     ]
 }

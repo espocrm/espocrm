@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f95d8c1b15356c3531ef9dd3b950c1e1",
+    "content-hash": "0c26b0afe87fe62773d965e0e8610e7b",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -4071,20 +4071,14 @@
         },
         {
             "name": "zordius/lightncandy",
-            "version": "v1.2.4",
+            "version": "dev-espo",
             "source": {
                 "type": "git",
-                "url": "https://github.com/zordius/lightncandy.git",
-                "reference": "dfdb910ae7b59e274f1ff97d29b724871f01b4cc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zordius/lightncandy/zipball/dfdb910ae7b59e274f1ff97d29b724871f01b4cc",
-                "reference": "dfdb910ae7b59e274f1ff97d29b724871f01b4cc",
-                "shasum": ""
+                "url": "https://github.com/yurikuzn/lightncandy.git",
+                "reference": "207d424c4ced34644663fdc0758c19d5b6974adc"
             },
             "require": {
-                "php": ">=5.4.0"
+                "php": ">=7.1.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^7"
@@ -4100,7 +4094,6 @@
                     "LightnCandy\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -4113,13 +4106,13 @@
             "description": "An extremely fast PHP implementation of handlebars ( http://handlebarsjs.com/ ) and mustache ( http://mustache.github.io/ ).",
             "homepage": "https://github.com/zordius/lightncandy",
             "keywords": [
+                "PHP",
                 "handlebars",
                 "logicless",
                 "mustache",
-                "php",
                 "template"
             ],
-            "time": "2019-06-09T04:10:55+00:00"
+            "time": "2021-02-18T13:06:28+00:00"
         }
     ],
     "packages-dev": [
@@ -5668,6 +5661,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "zordius/lightncandy": 20,
         "spatie/async": 20
     },
     "prefer-stable": false,
@@ -5685,5 +5679,5 @@
         "ext-exif": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
