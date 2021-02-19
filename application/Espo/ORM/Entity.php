@@ -73,8 +73,8 @@ interface Entity
      * * `set(string $name, mixed $value)`
      * * `set(array|object $valueMap)`
      *
-     * @param string|object|array
-     * @param ?mixed
+     * @param string|object|array $name
+     * @param ?mixed $value
      */
     public function set($name, $value = null) : void;
 
