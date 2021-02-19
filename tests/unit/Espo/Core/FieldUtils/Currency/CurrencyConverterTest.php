@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\FieldUtils\Currency;
 
 use Espo\Core\{
-    FieldUtils\Currency\CurrencyValue,
+    FieldUtils\Currency\Currency,
     FieldUtils\Currency\CurrencyConverter,
     FieldUtils\Currency\CurrencyConfigDataProvider,
     FieldUtils\Currency\CurrencyRates,
@@ -61,7 +61,7 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
                 ['EUR', 1.2],
             ]);
 
-        $value = new CurrencyValue(2.0, 'USD');
+        $value = new Currency(2.0, 'USD');
 
         $converer = new CurrencyConverter($currencyConfigDataProvider);
 
@@ -91,7 +91,7 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
                 ['UAH', 0.035],
             ]);
 
-        $value = new CurrencyValue(2.0, 'UAH');
+        $value = new Currency(2.0, 'UAH');
 
         $converer = new CurrencyConverter($currencyConfigDataProvider);
 
@@ -125,7 +125,7 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
                 ['EUR', 1.2],
             ]);
 
-        $value = new CurrencyValue(2.0, 'EUR');
+        $value = new Currency(2.0, 'EUR');
 
         $converer = new CurrencyConverter($currencyConfigDataProvider);
 
@@ -146,7 +146,7 @@ class CurrencyConverterTest extends \PHPUnit\Framework\TestCase
             'UAH' => 0.035,
         ]);
 
-        $value = new CurrencyValue(2.0, 'UAH');
+        $value = new Currency(2.0, 'UAH');
 
         $converer = new CurrencyConverter($currencyConfigDataProvider);
 

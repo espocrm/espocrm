@@ -27,15 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldUtils\Currency;
+namespace Espo\Core\FieldUtils\Address;
 
 use StdClass;
 
-class CurrencyValueAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
+class AddressAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
 {
     private $value;
 
-    public function __construct(CurrencyValue $value)
+    public function __construct(Address $value)
     {
         $this->value = $value;
     }
@@ -43,8 +43,11 @@ class CurrencyValueAttributeExtractor // implements \Espo\ORM\Value\AttributeExt
     public function extract(string $field) : StdClass
     {
         return (object) [
-            $field => $this->value->getAmount(),
-            $field . 'Currency' => $this->value->getCode(),
+            $field . 'Street' => $this->value->getStreet(),
+            $field . 'City' => $this->value->getCity(),
+            $field . 'Country' => $this->value->getCountry(),
+            $field . 'State' => $this->value->getState(),
+            $field . 'PostalCode' => $this->value->getPostalCode(),
         ];
     }
 }

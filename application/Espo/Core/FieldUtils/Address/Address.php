@@ -29,16 +29,10 @@
 
 namespace Espo\Core\FieldUtils\Address;
 
-use Espo\{
-    ORM\Entity,
-};
-
-use StdClass;
-
 /**
  * An address value.
  */
-class AddressValue
+class Address
 {
     protected $street = null;
 
@@ -148,35 +142,6 @@ class AddressValue
             ->build();
 
         return $newAddress;
-    }
-
-    public function getValueMap(string $field) : StdClass
-    {
-        return (object) [
-            $field . 'Street' => $this->street,
-            $field . 'City' => $this->city,
-            $field . 'Country' => $this->country,
-            $field . 'State' => $this->state,
-            $field . 'PostalCode' => $this->postalCode,
-        ];
-    }
-
-    public static function isSetInEntity(Entity $entity, string $field) : bool
-    {
-        return true;
-    }
-
-    public static function fromEntity(Entity $entity, string $field) : self
-    {
-        $obj = new self();
-
-        $obj->street = $entity->get($field . 'Street');
-        $obj->city = $entity->get($field . 'City');
-        $obj->country = $entity->get($field . 'Country');
-        $obj->state = $entity->get($field . 'State');
-        $obj->postalCode = $entity->get($field . 'PostalCode');
-
-        return $obj;
     }
 
     public static function fromRaw(array $raw) : self

@@ -29,28 +29,22 @@
 
 namespace Espo\Core\FieldUtils\Currency;
 
-use Espo\{
-    ORM\Entity,
-};
+use StdClass;
 
-use RuntimeException;
-
-class CurrencyValueFactory // implements \Espo\ORM\Value\ValueFactory
+class CurrencyAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
 {
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    private $value;
+
+    public function __construct(Currency $value)
     {
-        return $entity->has($field) && $entity->has($field . 'Currency');
+        $this->value = $value;
     }
 
-    public function createFromEntity(Entity $entity, string $field) : CurrencyValue
+    public function extract(string $field) : StdClass
     {
-        if (!$this->isCreatableFromEntity($entity, $field)) {
-            throw new RuntimeException();
-        }
-
-        return new CurrencyValue(
-            $entity->get($field),
-            $entity->get($field . 'Currency')
-        );
+        return (object) [
+            $field => $this->value->getAmount(),
+            $field . 'Currency' => $this->value->getCode(),
+        ];
     }
 }

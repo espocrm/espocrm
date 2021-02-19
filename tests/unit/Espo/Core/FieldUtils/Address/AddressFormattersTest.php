@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\FieldUtils\Address;
 
 use Espo\Core\{
-    FieldUtils\Address\AddressValue,
+    FieldUtils\Address\Address,
 };
 
 use Espo\Classes\{
@@ -49,7 +49,7 @@ class AddressFormattersTest extends \PHPUnit\Framework\TestCase
 
     public function testFormat1All()
     {
-        $address = AddressValue::createBuilder()
+        $address = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -71,7 +71,7 @@ class AddressFormattersTest extends \PHPUnit\Framework\TestCase
 
     public function testFormat1NoState()
     {
-        $address = AddressValue::createBuilder()
+        $address = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -93,7 +93,7 @@ class AddressFormattersTest extends \PHPUnit\Framework\TestCase
 
     public function testFormat2All()
     {
-        $address = AddressValue::createBuilder()
+        $address = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -115,7 +115,7 @@ class AddressFormattersTest extends \PHPUnit\Framework\TestCase
 
     public function testFormat3All()
     {
-        $address = AddressValue::createBuilder()
+        $address = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -137,7 +137,7 @@ class AddressFormattersTest extends \PHPUnit\Framework\TestCase
 
     public function testFormat4All()
     {
-        $address = AddressValue::createBuilder()
+        $address = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')

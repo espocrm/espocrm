@@ -30,13 +30,13 @@
 namespace tests\unit\Espo\Core\FieldUtils\Address;
 
 use Espo\Core\{
-    FieldUtils\Address\AddressValue,
-    FieldUtils\Address\AddressValueFactory,
+    FieldUtils\Address\Address,
+    FieldUtils\Address\AddressFactory,
 };
 
 use Espo\ORM\Entity;
 
-class AddressValueTest extends \PHPUnit\Framework\TestCase
+class AddressTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
@@ -45,7 +45,7 @@ class AddressValueTest extends \PHPUnit\Framework\TestCase
 
     public function testAddress1()
     {
-        $address = AddressValue::createBuilder()
+        $address = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -62,7 +62,7 @@ class AddressValueTest extends \PHPUnit\Framework\TestCase
 
     public function testBuilderClone()
     {
-        $addressOriginal = AddressValue::createBuilder()
+        $addressOriginal = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -70,7 +70,7 @@ class AddressValueTest extends \PHPUnit\Framework\TestCase
             ->setPostalCode('postalCode')
             ->build();
 
-        $address = AddressValue::createBuilder()
+        $address = Address::createBuilder()
             ->clone($addressOriginal)
             ->build();
 
@@ -83,7 +83,7 @@ class AddressValueTest extends \PHPUnit\Framework\TestCase
 
     public function testAddressWith()
     {
-        $addressOriginal = AddressValue::createBuilder()
+        $addressOriginal = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
@@ -112,7 +112,7 @@ class AddressValueTest extends \PHPUnit\Framework\TestCase
                 ['addressPostalCode', null],
             ]);
 
-        $factory = new AddressValueFactory();
+        $factory = new AddressFactory();
 
         $address = $factory->createFromEntity($entity, 'address');
 

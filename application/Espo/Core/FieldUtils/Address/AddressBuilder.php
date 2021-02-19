@@ -29,26 +29,75 @@
 
 namespace Espo\Core\FieldUtils\Address;
 
-use Espo\{
-    ORM\Entity,
-};
-
-class AddressValueFactory // implements \Espo\ORM\Value\ValueFactory
+/**
+ * An address value builder.
+ */
+class AddressBuilder
 {
+    protected $street;
 
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    protected $city;
+
+    protected $country;
+
+    protected $state;
+
+    protected $postalCode;
+
+    public function clone(Address $address) : self
     {
-        return true;
+        $this->setStreet($address->getStreet());
+        $this->setCity($address->getCity());
+        $this->setCountry($address->getCountry());
+        $this->setState($address->getState());
+        $this->setPostalCode($address->getPostalCode());
+
+        return $this;
     }
 
-    public function createFromEntity(Entity $entity, string $field) : AddressValue
+    public function setStreet(?string $street) : self
     {
-        return (new AddressValueBuilder())
-           ->setStreet($entity->get($field . 'Street'))
-           ->setCity($entity->get($field . 'City'))
-           ->setCountry($entity->get($field . 'Country'))
-           ->setState($entity->get($field . 'State'))
-           ->setPostalCode($entity->get($field . 'PostalCode'))
-           ->build();
+        $this->street = $street;
+
+        return $this;
+    }
+
+    public function setCity(?string $city) : self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function setCountry(?string $country) : self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function setState(?string $state) : self
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function setPostalCode(?string $postalCode) : self
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function build() : Address
+    {
+        return Address::fromRaw([
+            'street' => $this->street,
+            'city' => $this->city,
+            'country' => $this->country,
+            'state' => $this->state,
+            'postalCode' => $this->postalCode,
+        ]);
     }
 }

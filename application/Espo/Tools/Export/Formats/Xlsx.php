@@ -40,7 +40,7 @@ use Espo\Core\{
     FileStorage\Manager as FileStorageManager,
     Utils\File\Manager as FileManager,
     ORM\EntityManager,
-    FieldUtils\Address\AddressValue,
+    FieldUtils\Address\Address,
     FieldUtils\Address\AddressFormatterFactory,
 };
 
@@ -523,7 +523,7 @@ class Xlsx
                     }
                 }
                 else if ($type == 'address') {
-                    $address = AddressValue::createBuilder()
+                    $address = Address::createBuilder()
                         ->setStreet($row[$name . 'Street'] ?? null)
                         ->setCity($row[$name . 'City'] ?? null)
                         ->setState($row[$name . 'State'] ?? null)

@@ -42,7 +42,7 @@ use Espo\Core\{
     Utils\Metadata,
     FieldUtils\Currency\CurrencyConfigDataProvider,
     FieldUtils\Currency\CurrencyConverter,
-    FieldUtils\Currency\CurrencyValue,
+    FieldUtils\Currency\Currency,
     FieldUtils\Currency\CurrencyRates,
 };
 
@@ -139,7 +139,7 @@ class ConvertCurrency implements Action
                 continue;
             }
 
-            $value = new CurrencyValue($amount, $code);
+            $value = new Currency($amount, $code);
 
             $convertedValue = $this->currencyConverter->convertWithRates($value, $targetCurrency, $rates);
 

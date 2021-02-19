@@ -34,5 +34,5 @@ namespace Espo\Core\FieldUtils\Address;
  */
 interface AddressFormatter
 {
-    public function format(AddressValue $address) : string;
+    public function format(Address $address) : string;
 }

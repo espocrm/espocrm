@@ -31,12 +31,12 @@ namespace Espo\Classes\AddressFormatters;
 
 use Espo\Core\FieldUtils\Address\{
     AddressFormatter,
-    AddressValue,
+    Address,
 };
 
 class Formatter1 implements AddressFormatter
 {
-    public function format(AddressValue $address) : string
+    public function format(Address $address) : string
     {
         $result = '';
 

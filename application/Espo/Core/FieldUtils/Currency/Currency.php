@@ -34,7 +34,7 @@ use RuntimeException;
 /**
  * A currency value.
  */
-class CurrencyValue
+class Currency
 {
     private $amount;
 

@@ -27,27 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldUtils\Address;
+namespace Espo\Core\FieldUtils\Currency;
 
-use StdClass;
+use Espo\{
+    ORM\Entity,
+};
 
-class AddressValueAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
+use RuntimeException;
+
+class CurrencyFactory // implements \Espo\ORM\Value\ValueFactory
 {
-    private $value;
-
-    public function __construct(AddressValue $value)
+    public function isCreatableFromEntity(Entity $entity, string $field) : bool
     {
-        $this->value = $value;
+        return $entity->has($field) && $entity->has($field . 'Currency');
     }
 
-    public function extract(string $field) : StdClass
+    public function createFromEntity(Entity $entity, string $field) : Currency
     {
-        return (object) [
-            $field . 'Street' => $this->value->getStreet(),
-            $field . 'City' => $this->value->getCity(),
-            $field . 'Country' => $this->value->getCountry(),
-            $field . 'State' => $this->value->getState(),
-            $field . 'PostalCode' => $this->value->getPostalCode(),
-        ];
+        if (!$this->isCreatableFromEntity($entity, $field)) {
+            throw new RuntimeException();
+        }
+
+        return new Currency(
+            $entity->get($field),
+            $entity->get($field . 'Currency')
+        );
     }
 }

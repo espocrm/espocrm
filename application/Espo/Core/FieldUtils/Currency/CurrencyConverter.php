@@ -48,7 +48,7 @@ class CurrencyConverter
      *
      * @throws RuntimeException
      */
-    public function convert(CurrencyValue $value, string $targetCurrencyCode) : CurrencyValue
+    public function convert(Currency $value, string $targetCurrencyCode) : Currency
     {
         $amount = $value->getAmount();
 
@@ -64,13 +64,13 @@ class CurrencyConverter
 
         $amount /= $targetRate;
 
-        return new CurrencyValue($amount, $targetCurrencyCode);
+        return new Currency($amount, $targetCurrencyCode);
     }
 
     /**
      * Convert a currency value to the system default currency.
      */
-    public function convertToDefault(CurrencyValue $value) : CurrencyValue
+    public function convertToDefault(Currency $value) : Currency
     {
         $targetCurrencyCode = $this->configDataProvider->getDefaultCurrency();
 
@@ -84,8 +84,8 @@ class CurrencyConverter
      * @throws RuntimeException
      */
     public function convertWithRates(
-        CurrencyValue $value, string $targetCurrencyCode, CurrencyRates $rates
-    ) : CurrencyValue {
+        Currency $value, string $targetCurrencyCode, CurrencyRates $rates
+    ) : Currency {
 
         $amount = $value->getAmount();
 
@@ -107,6 +107,6 @@ class CurrencyConverter
 
         $amount /= $targetRate;
 
-        return new CurrencyValue($amount, $targetCurrencyCode);
+        return new Currency($amount, $targetCurrencyCode);
     }
 }

@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\FieldUtils\Currency;
 
 use Espo\Core\{
-    FieldUtils\Currency\CurrencyValue,
-    FieldUtils\Currency\CurrencyValueFactory,
+    FieldUtils\Currency\Currency,
+    FieldUtils\Currency\CurrencyFactory,
 };
 
 use Espo\{
@@ -40,7 +40,7 @@ use Espo\{
 
 use RuntimeException;
 
-class CurrencyValueTest extends \PHPUnit\Framework\TestCase
+class CurrencyTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
@@ -48,7 +48,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
 
     public function testValue()
     {
-        $value = new CurrencyValue(2.0, 'USD');
+        $value = new Currency(2.0, 'USD');
 
         $this->assertEquals(2.0, $value->getAmount());
 
@@ -57,8 +57,8 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
 
     public function testAdd()
     {
-        $value = (new CurrencyValue(2.0, 'USD'))->add(
-            new CurrencyValue(1.0, 'USD')
+        $value = (new Currency(2.0, 'USD'))->add(
+            new Currency(1.0, 'USD')
         );
 
         $this->assertEquals(3.0, $value->getAmount());
@@ -68,8 +68,8 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
 
     public function testSubtract()
     {
-        $value = (new CurrencyValue(2.0, 'USD'))->subtract(
-            new CurrencyValue(3.0, 'USD')
+        $value = (new Currency(2.0, 'USD'))->subtract(
+            new Currency(3.0, 'USD')
         );
 
         $this->assertEquals(-1.0, $value->getAmount());
@@ -79,7 +79,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
 
     public function testMultiply()
     {
-        $value = (new CurrencyValue(2.0, 'USD'))->multiply(3.0);
+        $value = (new Currency(2.0, 'USD'))->multiply(3.0);
 
         $this->assertEquals(6.0, $value->getAmount());
 
@@ -88,7 +88,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
 
     public function testDivide()
     {
-        $value = (new CurrencyValue(6.0, 'USD'))->divide(3.0);
+        $value = (new Currency(6.0, 'USD'))->divide(3.0);
 
         $this->assertEquals(2.0, $value->getAmount());
 
@@ -97,7 +97,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
 
     public function testRound()
     {
-        $value = (new CurrencyValue(2.306, 'USD'))->round(2);
+        $value = (new Currency(2.306, 'USD'))->round(2);
 
         $this->assertEquals(2.31, $value->getAmount());
 
@@ -108,8 +108,8 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        (new CurrencyValue(2.0, 'USD'))->add(
-            new CurrencyValue(1.0, 'EUR')
+        (new Currency(2.0, 'USD'))->add(
+            new Currency(1.0, 'EUR')
         );
     }
 
@@ -117,7 +117,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        new CurrencyValue(2.0, '');
+        new Currency(2.0, '');
     }
 
     public function testCreateFromEntity()
@@ -140,7 +140,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
                 ['testCurrency', true],
             ]);
 
-        $factory = new CurrencyValueFactory();
+        $factory = new CurrencyFactory();
 
         $value = $factory->createFromEntity($entity, 'test');
 
@@ -160,7 +160,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
                 ['testCurrency', true],
             ]);
 
-        $factory = new CurrencyValueFactory();
+        $factory = new CurrencyFactory();
 
         $this->assertTrue(
             $factory->isCreatableFromEntity($entity, 'test')
@@ -179,7 +179,7 @@ class CurrencyValueTest extends \PHPUnit\Framework\TestCase
                 ['testCurrency', False],
             ]);
 
-        $factory = new CurrencyValueFactory();
+        $factory = new CurrencyFactory();
 
         $this->assertFalse(
             $factory->isCreatableFromEntity($entity, 'test')

@@ -29,75 +29,25 @@
 
 namespace Espo\Core\FieldUtils\Address;
 
-/**
- * An address value builder.
- */
-class AddressValueBuilder
+use Espo\{
+    ORM\Entity,
+};
+
+class AddressFactory // implements \Espo\ORM\Value\ValueFactory
 {
-    protected $street;
-
-    protected $city;
-
-    protected $country;
-
-    protected $state;
-
-    protected $postalCode;
-
-    public function clone(AddressValue $address) : self
+    public function isCreatableFromEntity(Entity $entity, string $field) : bool
     {
-        $this->setStreet($address->getStreet());
-        $this->setCity($address->getCity());
-        $this->setCountry($address->getCountry());
-        $this->setState($address->getState());
-        $this->setPostalCode($address->getPostalCode());
-
-        return $this;
+        return true;
     }
 
-    public function setStreet(?string $street) : self
+    public function createFromEntity(Entity $entity, string $field) : Address
     {
-        $this->street = $street;
-
-        return $this;
-    }
-
-    public function setCity(?string $city) : self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function setCountry(?string $country) : self
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    public function setState(?string $state) : self
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    public function setPostalCode(?string $postalCode) : self
-    {
-        $this->postalCode = $postalCode;
-
-        return $this;
-    }
-
-    public function build() : AddressValue
-    {
-        return AddressValue::fromRaw([
-            'street' => $this->street,
-            'city' => $this->city,
-            'country' => $this->country,
-            'state' => $this->state,
-            'postalCode' => $this->postalCode,
-        ]);
+        return (new AddressBuilder())
+           ->setStreet($entity->get($field . 'Street'))
+           ->setCity($entity->get($field . 'City'))
+           ->setCountry($entity->get($field . 'Country'))
+           ->setState($entity->get($field . 'State'))
+           ->setPostalCode($entity->get($field . 'PostalCode'))
+           ->build();
     }
 }
