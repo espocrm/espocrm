@@ -38,8 +38,6 @@ use Espo\ORM\{
 };
 
 use PDO;
-use PDOException;
-use RuntimeException;
 
 class MysqlLockerTest extends \PHPUnit\Framework\TestCase
 {
@@ -51,7 +49,8 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
 
         $metadata = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
 
-        $this->transactionManager = $this->getMockBuilder(TransactionManager::class)->disableOriginalConstructor()->getMock();
+        $this->transactionManager = $this->getMockBuilder(TransactionManager::class)
+            ->disableOriginalConstructor()->getMock();
 
         $composer = new MysqlQueryComposer($this->pdo, $entityFactory, $metadata);
 
@@ -61,19 +60,13 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
     public function testLockCommit()
     {
         $this->pdo
-            ->expects($this->at(0))
+            ->expects($this->exactly(3))
             ->method('exec')
-            ->with('LOCK TABLES `account` WRITE');
-
-        $this->pdo
-            ->expects($this->at(1))
-            ->method('exec')
-            ->with('LOCK TABLES `contact` READ');
-
-        $this->pdo
-            ->expects($this->at(2))
-            ->method('exec')
-            ->with('UNLOCK TABLES');
+            ->withConsecutive(
+                ['LOCK TABLES `account` WRITE'],
+                ['LOCK TABLES `contact` READ'],
+                ['UNLOCK TABLES'],
+            );
 
         $this->locker->lockExclusive('Account');
         $this->locker->lockShare('Contact');
@@ -88,19 +81,13 @@ class MysqlLockerTest extends \PHPUnit\Framework\TestCase
     public function testLockRollback()
     {
         $this->pdo
-            ->expects($this->at(0))
+            ->expects($this->exactly(3))
             ->method('exec')
-            ->with('LOCK TABLES `account` WRITE');
-
-        $this->pdo
-            ->expects($this->at(1))
-            ->method('exec')
-            ->with('LOCK TABLES `contact` READ');
-
-        $this->pdo
-            ->expects($this->at(2))
-            ->method('exec')
-            ->with('UNLOCK TABLES');
+            ->withConsecutive(
+                ['LOCK TABLES `account` WRITE'],
+                ['LOCK TABLES `contact` READ'],
+                ['UNLOCK TABLES'],
+            );
 
         $this->locker->lockExclusive('Account');
         $this->locker->lockShare('Contact');

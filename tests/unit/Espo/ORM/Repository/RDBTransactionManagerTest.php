@@ -79,32 +79,17 @@ class RDBTransactionManagerTest extends \PHPUnit\Framework\TestCase
     public function testCommit()
     {
         $this->wrappee
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('start');
 
         $this->wrappee
-            ->expects($this->at(1))
+            ->expects($this->exactly(4))
             ->method('getLevel')
-            ->will($this->returnValue(1));
+            ->willReturnOnConsecutiveCalls(1, 2, 1, 0);
 
         $this->wrappee
-            ->expects($this->at(2))
-            ->method('getLevel')
-            ->will($this->returnValue(2));
-
-        $this->wrappee
-            ->expects($this->at(3))
+            ->expects($this->exactly(2))
             ->method('commit');
-
-        $this->wrappee
-            ->expects($this->at(4))
-            ->method('getLevel')
-            ->will($this->returnValue(1));
-
-        $this->wrappee
-            ->expects($this->at(5))
-            ->method('commit');
-
 
         $this->manager->start();
 

@@ -38,8 +38,6 @@ use Espo\ORM\{
 };
 
 use PDO;
-use PDOException;
-use RuntimeException;
 
 class BaseLockerTest extends \PHPUnit\Framework\TestCase
 {
@@ -51,7 +49,8 @@ class BaseLockerTest extends \PHPUnit\Framework\TestCase
 
         $metadata = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
 
-        $this->transactionManager = $this->getMockBuilder(TransactionManager::class)->disableOriginalConstructor()->getMock();
+        $this->transactionManager = $this->getMockBuilder(TransactionManager::class)
+            ->disableOriginalConstructor()->getMock();
 
         $composer = new MysqlQueryComposer($this->pdo, $entityFactory, $metadata);
 
@@ -60,22 +59,20 @@ class BaseLockerTest extends \PHPUnit\Framework\TestCase
 
     public function testLockCommit()
     {
-        $this->pdo
-            ->expects($this->at(0))
-            ->method('exec')
-            ->with('LOCK TABLES `account` WRITE');
-
         $this->transactionManager
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('start');
 
         $this->pdo
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('exec')
-            ->with('LOCK TABLES `contact` READ');
+            ->withConsecutive(
+                ['LOCK TABLES `account` WRITE'],
+                ['LOCK TABLES `contact` READ'],
+            );
 
         $this->transactionManager
-            ->expects($this->at(1))
+            ->expects($this->once())
             ->method('commit');
 
         $this->locker->lockExclusive('Account');
@@ -90,22 +87,20 @@ class BaseLockerTest extends \PHPUnit\Framework\TestCase
 
     public function testLockRollback()
     {
-        $this->pdo
-            ->expects($this->at(0))
-            ->method('exec')
-            ->with('LOCK TABLES `account` WRITE');
-
         $this->transactionManager
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('start');
 
         $this->pdo
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('exec')
-            ->with('LOCK TABLES `contact` READ');
+            ->withConsecutive(
+                ['LOCK TABLES `account` WRITE'],
+                ['LOCK TABLES `contact` READ'],
+            );
 
         $this->transactionManager
-            ->expects($this->at(1))
+            ->expects($this->once())
             ->method('rollback');
 
         $this->locker->lockExclusive('Account');
@@ -113,7 +108,7 @@ class BaseLockerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($this->locker->isLocked());
 
-        $this->locker->commit();
+        $this->locker->rollback();
 
         $this->assertFalse($this->locker->isLocked());
     }
