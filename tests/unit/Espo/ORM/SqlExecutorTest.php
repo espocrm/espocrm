@@ -131,17 +131,6 @@ class SqlExecutorTest extends \PHPUnit\Framework\TestCase
 
         $e->errorInfo = [40001, 1213];
 
-        /*$this->pdo
-            ->expects($this->at(0))
-            ->method('query')
-            ->will($this->throwException($e));
-
-        $this->pdo
-            ->expects($this->at(1))
-            ->method('query')
-            ->will($this->returnValue($this->sth));*/
-
-
         $this->pdo
             ->expects($this->exactly(2))
             ->method('query')
