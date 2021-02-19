@@ -98,18 +98,18 @@ class CurrencyConfigDataProviderTest extends \PHPUnit\Framework\TestCase
     public function testCurrencyRate1()
     {
         $this->config
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('get')
-            ->with('currencyRates')
-            ->willReturn([
-                'EUR' => 1.2,
-            ]);
-
-        $this->config
-            ->expects($this->at(1))
-            ->method('get')
-            ->with('currencyList')
-            ->willReturn(['USD', 'EUR']);
+            ->withConsecutive(
+                ['currencyRates'],
+                ['currencyList'],
+            )
+            ->willReturnOnConsecutiveCalls(
+                [
+                    'EUR' => 1.2,
+                ],
+                ['USD', 'EUR'],
+            );
 
         $result = $this->provider->getCurrencyRate('EUR');
 
@@ -119,18 +119,18 @@ class CurrencyConfigDataProviderTest extends \PHPUnit\Framework\TestCase
     public function testCurrencyRate2()
     {
         $this->config
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('get')
-            ->with('currencyRates')
-            ->willReturn([
-                'EUR' => 1.2,
-            ]);
-
-        $this->config
-            ->expects($this->at(1))
-            ->method('get')
-            ->with('currencyList')
-            ->willReturn(['USD', 'EUR']);
+            ->withConsecutive(
+                ['currencyRates'],
+                ['currencyList'],
+            )
+            ->willReturnOnConsecutiveCalls(
+                [
+                    'EUR' => 1.2,
+                ],
+                ['USD', 'EUR'],
+            );
 
         $result = $this->provider->getCurrencyRate('USD');
 
