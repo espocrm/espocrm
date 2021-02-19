@@ -35,7 +35,6 @@ use Espo\ORM\{
 };
 
 use PDO;
-use PDOException;
 use RuntimeException;
 
 class TransactionManagerTest extends \PHPUnit\Framework\TestCase
@@ -94,31 +93,21 @@ class TransactionManagerTest extends \PHPUnit\Framework\TestCase
     public function testNested()
     {
         $this->pdo
-            ->expects($this->at(0))
+            ->expects($this->exactly(1))
             ->method('beginTransaction');
 
         $this->pdo
-            ->expects($this->at(1))
+            ->expects($this->exactly(4))
             ->method('exec')
-            ->with('SAVEPOINT POINT_1');
+            ->withConsecutive(
+                ['SAVEPOINT POINT_1'],
+                ['SAVEPOINT POINT_2'],
+                ['RELEASE SAVEPOINT POINT_2'],
+                ['ROLLBACK TO SAVEPOINT POINT_1'],
+            );
 
-        $this->pdo
-            ->expects($this->at(2))
-            ->method('exec')
-            ->with('SAVEPOINT POINT_2');
-
-        $this->pdo
-            ->expects($this->at(3))
-            ->method('exec')
-            ->with('RELEASE SAVEPOINT POINT_2');
-
-        $this->pdo
-            ->expects($this->at(4))
-            ->method('exec')
-            ->with('ROLLBACK TO SAVEPOINT POINT_1');
-
-        $this->pdo
-            ->expects($this->at(5))
+       $this->pdo
+            ->expects($this->exactly(1))
             ->method('commit');
 
         $this->manager->start();
@@ -133,21 +122,15 @@ class TransactionManagerTest extends \PHPUnit\Framework\TestCase
     public function testNestedRollback()
     {
         $this->pdo
-            ->expects($this->at(0))
-            ->method('beginTransaction');
-
-        $this->pdo
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('exec')
-            ->with('SAVEPOINT POINT_1');
+            ->withConsecutive(
+                ['SAVEPOINT POINT_1'],
+                ['ROLLBACK TO SAVEPOINT POINT_1'],
+            );
 
         $this->pdo
-            ->expects($this->at(2))
-            ->method('exec')
-            ->with('ROLLBACK TO SAVEPOINT POINT_1');
-
-        $this->pdo
-            ->expects($this->at(3))
+            ->expects($this->once())
             ->method('rollBack');
 
         $this->manager->start();
@@ -206,11 +189,11 @@ class TransactionManagerTest extends \PHPUnit\Framework\TestCase
     public function testRunOnce()
     {
         $this->pdo
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('beginTransaction');
 
         $this->pdo
-            ->expects($this->at(1))
+            ->expects($this->once())
             ->method('commit');
 
         $this->manager->run(
@@ -221,21 +204,19 @@ class TransactionManagerTest extends \PHPUnit\Framework\TestCase
     public function testRunNested()
     {
         $this->pdo
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('beginTransaction');
 
         $this->pdo
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('exec')
-            ->with('SAVEPOINT POINT_1');
+            ->withConsecutive(
+                ['SAVEPOINT POINT_1'],
+                ['RELEASE SAVEPOINT POINT_1'],
+            );
 
         $this->pdo
-            ->expects($this->at(2))
-            ->method('exec')
-            ->with('RELEASE SAVEPOINT POINT_1');
-
-        $this->pdo
-            ->expects($this->at(3))
+            ->expects($this->once())
             ->method('commit');
 
         $this->manager->run(
@@ -250,11 +231,11 @@ class TransactionManagerTest extends \PHPUnit\Framework\TestCase
     public function testRunException()
     {
         $this->pdo
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('beginTransaction');
 
         $this->pdo
-            ->expects($this->at(1))
+            ->expects($this->once())
             ->method('rollback');
 
         try {

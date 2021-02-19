@@ -150,11 +150,15 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $sth = $this->getMockBuilder(PDOStatement::class)->disableOriginalConstructor()->getMock();
 
         if (!$noIteration) {
+            $values = [];
+
             foreach ($data as $i => $item) {
-                $sth->expects($this->at($i))
-                    ->method('fetch')
-                    ->will($this->returnValue($item));
+                $values[] = $item;
             }
+
+            $sth->expects($this->exactly(count($values)))
+                ->method('fetch')
+                ->willReturnOnConsecutiveCalls(...$values);
         }
 
         $sth->expects($this->any())

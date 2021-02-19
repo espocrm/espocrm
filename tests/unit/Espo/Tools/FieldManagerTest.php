@@ -391,7 +391,7 @@ class FieldManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->objects['metadata']
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('getObjects')
             ->will($this->returnValue((object) $data));
 
