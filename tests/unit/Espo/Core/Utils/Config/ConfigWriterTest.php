@@ -97,27 +97,25 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
             ->method('update');
 
         $this->fileManager
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('isFile')
             ->with($this->configPath)
             ->willReturn(true);
 
         $this->fileManager
-            ->expects($this->at(1))
-            ->method('getPhpContents')
-            ->with($this->configPath)
-            ->willReturn($previousData);
-
-        $this->fileManager
-            ->expects($this->at(2))
+            ->expects($this->once())
             ->method('putPhpContents')
-            ->with($this->configPath, $newData);
+            ->with($this->configPath, $newData)
+            ->willReturn($previousData);
 
         $this->fileManager
-            ->expects($this->at(3))
+            ->expects($this->exactly(2))
             ->method('getPhpContents')
-            ->with($this->configPath)
-            ->willReturn($previousData);
+            ->withConsecutive(
+                [$this->configPath],
+                [$this->configPath],
+            )
+            ->willReturnOnConsecutiveCalls($previousData);
 
         $this->configWriter->save();
     }

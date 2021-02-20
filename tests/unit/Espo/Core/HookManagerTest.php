@@ -366,7 +366,7 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue(false));
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('getModuleList')
             ->will($this->returnValue(array(
             )));

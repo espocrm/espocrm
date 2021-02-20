@@ -155,14 +155,13 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             ->method('distinct');
 
         $this->queryBuilder
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('leftJoin')
-            ->with('teams', 'teamsAccess');
-
-        $this->queryBuilder
-            ->expects($this->at(2))
-            ->method('leftJoin')
-            ->with('assignedUsers', 'assignedUsersAccess');
+            ->withConsecutive(
+                ['teams', 'teamsAccess'],
+                ['assignedUsers', 'assignedUsersAccess'],
+            )
+            ->willReturn($this->queryBuilder);
 
         $this->queryBuilder
             ->expects($this->once())
@@ -207,9 +206,11 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             ->method('distinct');
 
         $this->queryBuilder
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('leftJoin')
-            ->with('teams', 'teamsAccess');
+            ->withConsecutive(
+                ['teams', 'teamsAccess'],
+            );
 
         $this->queryBuilder
             ->expects($this->once())
@@ -219,7 +220,8 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
                     'teamsAccess.id' => ['team-id'],
                     'assignedUserId' => $this->user->id,
                 ],
-            ]);
+            ])
+            ->willReturn($this->queryBuilder);
 
         $filter->apply($this->queryBuilder);
     }
@@ -240,9 +242,12 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             ->method('distinct');
 
         $this->queryBuilder
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('leftJoin')
-            ->with('teams', 'teamsAccess');
+            ->withConsecutive(
+                ['teams', 'teamsAccess'],
+            )
+            ->willReturn($this->queryBuilder);
 
         $this->queryBuilder
             ->expects($this->once())
@@ -273,9 +278,12 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             ->method('distinct');
 
         $this->queryBuilder
-            ->expects($this->at(1))
+            ->expects($this->exactly(1))
             ->method('leftJoin')
-            ->with('teams', 'teamsAccess');
+            ->withConsecutive(
+                ['teams', 'teamsAccess'],
+            )
+            ->willReturn($this->queryBuilder);
 
         $this->queryBuilder
             ->expects($this->once())
@@ -320,15 +328,12 @@ class FiltersTest extends \PHPUnit\Framework\TestCase
             ->willReturn($this->queryBuilder);
 
         $this->queryBuilder
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('leftJoin')
-            ->with('accounts', 'accountsAccess')
-            ->willReturn($this->queryBuilder);
-
-        $this->queryBuilder
-            ->expects($this->at(2))
-            ->method('leftJoin')
-            ->with('contacts', 'contactsAccess')
+            ->withConsecutive(
+                ['accounts', 'accountsAccess'],
+                ['contacts', 'contactsAccess'],
+            )
             ->willReturn($this->queryBuilder);
 
         $this->queryBuilder

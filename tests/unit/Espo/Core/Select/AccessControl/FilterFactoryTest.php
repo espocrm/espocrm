@@ -72,55 +72,38 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $object = $this->createMock($defaultClassName);
 
-        $this->injectableFactory
-            ->expects($this->at(0))
-            ->method('createWith')
-            ->with(
-                FieldHelper::class,
-                [
-                    'entityType' => $entityType,
-                ]
-            )
-            ->willReturn($this->fieldHelper);
-
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
-            ->with([
-                'selectDefs',
-                $entityType,
-                'accessControlFilterClassNameMap',
-                $name,
-            ])
-            ->willReturn($className);
-
-        $this->metadata
-            ->expects($this->at(1))
-            ->method('get')
-            ->with([
-                'selectDefs',
-                $entityType,
-                'accessControlFilterClassNameMap',
-                $name,
-            ])
-            ->willReturn($className);
+            ->willReturnMap([
+                [['selectDefs', $entityType, 'accessControlFilterClassNameMap', $name], null, $className],
+            ]);
 
         $className = $className ?? $defaultClassName;
 
         $object = $this->createMock($defaultClassName);
 
         $this->injectableFactory
-            ->expects($this->at(1))
+            ->expects($this->exactly(2))
             ->method('createWith')
-            ->with(
-                $className,
+            ->willReturnMap([
                 [
-                    'entityType' => $entityType,
-                    'user' => $this->user,
-                    'fieldHelper' => $this->fieldHelper,
-                ]
-            )
-            ->willReturn($object);
+                    FieldHelper::class,
+                    [
+                        'entityType' => $entityType,
+                    ],
+                    $this->fieldHelper,
+                ],
+                [
+                    $className,
+                    [
+                        'entityType' => $entityType,
+                        'user' => $this->user,
+                        'fieldHelper' => $this->fieldHelper,
+                    ],
+                    $object,
+                ],
+            ]);
 
         $resultObject = $this->factory->create(
             $entityType,
@@ -135,15 +118,11 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
-            ->with([
-                'selectDefs',
-                $entityType,
-                'accessControlFilterClassNameMap',
-                'badName',
-            ])
-            ->willReturn(null);
+            ->willReturnMap([
+                [['selectDefs', $entityType, 'accessControlFilterClassNameMap', 'badName'], null, null],
+            ]);
 
         $this->assertFalse(
             $this->factory->has($entityType, 'badName')

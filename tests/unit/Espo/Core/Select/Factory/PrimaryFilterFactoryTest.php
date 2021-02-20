@@ -69,26 +69,11 @@ class PrimaryFilterFactoryTest extends \PHPUnit\Framework\TestCase
         $entityType = 'Test';
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
-            ->with([
-                'selectDefs',
-                $entityType,
-                'primaryFilterClassNameMap',
-                $name,
-            ])
-            ->willReturn($className);
-
-        $this->metadata
-            ->expects($this->at(1))
-            ->method('get')
-            ->with([
-                'selectDefs',
-                $entityType,
-                'primaryFilterClassNameMap',
-                $name,
-            ])
-            ->willReturn($className);
+            ->willReturnMap([
+                [['selectDefs', $entityType, 'primaryFilterClassNameMap', $name], null, $className],
+            ]);
 
         $className = $className ?? $defaultClassName;
 
@@ -118,7 +103,7 @@ class PrimaryFilterFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('get')
             ->with([
                 'selectDefs',

@@ -76,30 +76,23 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $className = $className1 ?? $className2 ?? null;
 
-        $this->metadata
-            ->expects($this->at(0))
-            ->method('get')
-            ->with([
-                'selectDefs', $entityType, 'orderItemConverterClassNameMap', $field
-            ])
-            ->willReturn($className1);
-
         if (!$className1) {
             $this->metadata
-                ->expects($this->at(1))
+                ->expects($this->any())
                 ->method('get')
-                ->with([
-                    'entityDefs', $entityType, 'fields', $field, 'type'
-                ])
-                ->willReturn($type);
-
+                ->willReturnMap([
+                    [['selectDefs', $entityType, 'orderItemConverterClassNameMap', $field], null, $className1],
+                    [['entityDefs', $entityType, 'fields', $field, 'type'], null, $type],
+                    [['app', 'select', 'orderItemConverterClassNameMap', $type], null, $className2],
+                ]);
+        }
+        else {
             $this->metadata
-                ->expects($this->at(2))
+                ->expects($this->any())
                 ->method('get')
-                ->with([
-                    'app', 'select', 'orderItemConverterClassNameMap', $type
-                ])
-                ->willReturn($className2);
+                ->willReturnMap([
+                    [['selectDefs', $entityType, 'orderItemConverterClassNameMap', $field], null, $className1],
+                ]);
         }
 
         if ($testHas) {
@@ -113,7 +106,7 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
         $object = $this->createMock($className);
 
         $this->injectableFactory
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('createWith')
             ->with(
                 $className,
@@ -140,28 +133,13 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
         $type = 'varchar';
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
-            ->with([
-                'selectDefs', $entityType, 'orderItemConverterClassNameMap', 'badName'
-            ])
-            ->willReturn(null);
-
-        $this->metadata
-            ->expects($this->at(1))
-            ->method('get')
-            ->with([
-                'entityDefs', $entityType, 'fields', 'badName', 'type'
-            ])
-            ->willReturn($type);
-
-        $this->metadata
-            ->expects($this->at(2))
-            ->method('get')
-            ->with([
-                'app', 'select', 'orderItemConverterClassNameMap', $type
-            ])
-            ->willReturn(null);
+            ->willReturnMap([
+                [['selectDefs', $entityType, 'orderItemConverterClassNameMap', 'badName'], null, null],
+                [['entityDefs', $entityType, 'fields', 'badName', 'type'], null, $type],
+                [['app', 'select', 'orderItemConverterClassNameMap', $type], null, null],
+            ]);
 
         $this->assertFalse(
             $this->factory->has($entityType, 'badName')

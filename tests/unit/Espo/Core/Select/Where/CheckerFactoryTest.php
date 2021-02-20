@@ -74,7 +74,7 @@ class CheckerFactoryTest extends \PHPUnit\Framework\TestCase
         $object = $this->createMock(Checker::class);
 
         $this->injectableFactory
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('createWith')
             ->with(
                 Checker::class,

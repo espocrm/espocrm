@@ -123,23 +123,28 @@ class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
 
     protected function initApplierTest(array $filterNameList, array $filterList, array $hasList)
     {
+        $hasMap = [];
+        $createMap = [];
+
         foreach ($filterNameList as $i => $filterName) {
-            $this->boolFilterFactory
-                ->expects($this->at($i * 2))
-                ->method('has')
-                ->with($this->entityType, $filterName)
-                ->willReturn($hasList[$i]);
+            $hasMap[] = [$this->entityType, $filterName, $hasList[$i]];
 
             if (!$hasList[$i]) {
                 continue;
             }
 
-            $this->boolFilterFactory
-                ->expects($this->at($i * 2 + 1))
-                ->method('create')
-                ->with($this->entityType, $this->user, $filterName)
-                ->willReturn($filterList[$i]);
+            $createMap[] = [$this->entityType, $this->user, $filterName, $filterList[$i]];
         }
+
+        $this->boolFilterFactory
+            ->expects($this->any())
+            ->method('has')
+            ->willReturnMap($hasMap);
+
+        $this->boolFilterFactory
+            ->expects($this->any())
+            ->method('create')
+            ->willReturnMap($createMap);
     }
 
     protected function createFilterMock(array $rawWhereClause) : BoolFilter

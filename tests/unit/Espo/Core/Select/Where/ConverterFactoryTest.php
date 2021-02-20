@@ -74,73 +74,53 @@ class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
         $entityType = 'Test';
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
-            ->with([
-                'selectDefs', $entityType, 'whereDateTimeItemTransformerClassName'
-            ])
-            ->willReturn($className1);
-
-        $this->metadata
-            ->expects($this->at(1))
-            ->method('get')
-            ->with([
-                'selectDefs', $entityType, 'whereItemConverterClassName'
-            ])
-            ->willReturn($className2);
-
-        $this->metadata
-            ->expects($this->at(2))
-            ->method('get')
-            ->with([
-                'selectDefs', $entityType, 'whereConverterClassName'
-            ])
-            ->willReturn($className3);
+            ->willReturnMap([
+                [['selectDefs', $entityType, 'whereDateTimeItemTransformerClassName'], null, $className1],
+                [['selectDefs', $entityType, 'whereItemConverterClassName'], null, $className2],
+                [['selectDefs', $entityType, 'whereConverterClassName'], null, $className3],
+            ]);
 
         $className1 = $className1 ?? DateTimeItemTransformer::class;
         $className2 = $className2 ?? ItemGeneralConverter::class;
         $className3 = $className3 ?? Converter::class;
 
-        $this->injectableFactory
-            ->expects($this->at(0))
-            ->method('createWith')
-            ->with(
-                $className1,
-                [
-                    'entityType' => $entityType,
-                    'user' => $this->user,
-                ]
-            )
-            ->willReturn($this->dateTimeItemTransformer);
-
-        $this->injectableFactory
-            ->expects($this->at(1))
-            ->method('createWith')
-            ->with(
-                $className2,
-                [
-                    'entityType' => $entityType,
-                    'user' => $this->user,
-                    'dateTimeItemTransformer' => $this->dateTimeItemTransformer,
-                ]
-            )
-            ->willReturn($this->itemConverter);
-
         $object = $this->createMock(Converter::class);
 
         $this->injectableFactory
-            ->expects($this->at(2))
+            ->expects($this->exactly(3))
             ->method('createWith')
-            ->with(
-                $className3,
+            ->withConsecutive(
                 [
-                    'entityType' => $entityType,
-                    'user' => $this->user,
-                    'itemConverter' => $this->itemConverter,
-
+                    $className1,
+                    [
+                        'entityType' => $entityType,
+                        'user' => $this->user,
+                    ]
+                ],
+                [
+                    $className2,
+                    [
+                        'entityType' => $entityType,
+                        'user' => $this->user,
+                        'dateTimeItemTransformer' => $this->dateTimeItemTransformer,
+                    ]
+                ],
+                [
+                    $className3,
+                    [
+                        'entityType' => $entityType,
+                        'user' => $this->user,
+                        'itemConverter' => $this->itemConverter,
+                    ]
                 ]
             )
-            ->willReturn($object);
+            ->willReturnOnConsecutiveCalls(
+                $this->dateTimeItemTransformer,
+                $this->itemConverter,
+                $object
+            );
 
         $resultObject = $this->factory->create($entityType, $this->user);
 

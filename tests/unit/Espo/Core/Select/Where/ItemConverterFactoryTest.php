@@ -43,6 +43,8 @@ use tests\unit\testClasses\Core\Select\Where\ItemConverters\TestConverter;
 
 class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
 {
+    private $metadata;
+
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
@@ -64,7 +66,7 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
     public function testHasFalseForType()
     {
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('get')
             ->with([
                 'app', 'select', 'whereItemConverterClassNameMap', 'someType'
@@ -89,7 +91,7 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
         $type = 'someType';
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
             ->with([
                 'app', 'select', 'whereItemConverterClassNameMap', $type
@@ -107,7 +109,7 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
         $object = $this->createMock($className);
 
         $this->injectableFactory
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('createWith')
             ->with(
                 $className,
@@ -136,7 +138,7 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
         $attribute = 'test';
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
             ->with([
                 'selectDefs', $entityType, 'whereItemConverterClassNameMap', $attribute . '_' . $type
@@ -158,7 +160,7 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
         $object = $this->createMock($className);
 
         $this->injectableFactory
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('createWith')
             ->with(
                 $className,

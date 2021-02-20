@@ -69,26 +69,11 @@ class BoolFilterFactoryTest extends \PHPUnit\Framework\TestCase
         $entityType = 'Test';
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
-            ->with([
-                'selectDefs',
-                $entityType,
-                'boolFilterClassNameMap',
-                $name,
-            ])
-            ->willReturn($className);
-
-        $this->metadata
-            ->expects($this->at(1))
-            ->method('get')
-            ->with([
-                'selectDefs',
-                $entityType,
-                'boolFilterClassNameMap',
-                $name,
-            ])
-            ->willReturn($className);
+            ->willReturnMap([
+                [['selectDefs', $entityType, 'boolFilterClassNameMap', $name], null, $className],
+            ]);
 
         $className = $className ?? $defaultClassName;
 
@@ -118,7 +103,7 @@ class BoolFilterFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('get')
             ->with([
                 'selectDefs',

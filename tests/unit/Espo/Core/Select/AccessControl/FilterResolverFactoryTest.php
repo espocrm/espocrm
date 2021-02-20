@@ -84,7 +84,7 @@ class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
         $object = $this->createMock($defaultClassName);
 
         $this->metadata
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('get')
             ->with([
                 'selectDefs', $entityType, 'accessControlFilterResolverClassName'
