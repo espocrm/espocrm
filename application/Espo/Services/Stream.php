@@ -297,7 +297,13 @@ class Stream
                 return false;
             }
 
-            if (!$this->aclManager->check($user, $entity, 'stream')) {
+            $aclManager = $this->getUserAclManager($user);
+
+            if (!$aclManager) {
+                return false;
+            }
+
+            if (!$aclManager->check($user, $entity, 'stream')) {
                 return false;
             }
         }
