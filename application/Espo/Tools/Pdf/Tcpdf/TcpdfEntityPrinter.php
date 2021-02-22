@@ -30,8 +30,6 @@
 namespace Espo\Tools\Pdf\Tcpdf;
 
 use Espo\Core\{
-    Utils\Config,
-    Htmlizer\Factory as HtmlizerFactory,
     Pdf\Tcpdf,
 };
 
@@ -47,15 +45,9 @@ class TcpdfEntityPrinter implements EntityPrinter
 {
     protected $entityProcessor;
 
-    protected $config;
-    protected $htmlizerFactory;
-
-    public function __construct(Config $config, HtmlizerFactory $htmlizerFactory)
+    public function __construct(EntityProcessor $entityProcessor)
     {
-        $this->config = $config;
-        $this->htmlizerFactory = $htmlizerFactory;
-
-        $this->entityProcessor = new EntityProcessor($config, $htmlizerFactory);
+        $this->entityProcessor = $entityProcessor;
     }
 
     public function print(Template $template, Entity $entity, Data $data) : Contents
