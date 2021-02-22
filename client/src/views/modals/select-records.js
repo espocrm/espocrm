@@ -161,15 +161,21 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 searchManager.setAdvanced(this.filters);
             }
 
-            var boolFilterList = this.boolFilterList || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
+            var boolFilterList = this.boolFilterList ||
+                this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
+
             if (boolFilterList) {
                 var d = {};
+
                 boolFilterList.forEach(function (item) {
                     d[item] = true;
                 });
+
                 searchManager.setBool(d);
             }
-            var primaryFilterName = this.primaryFilterName || this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
+            var primaryFilterName = this.primaryFilterName ||
+                this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
+
             if (primaryFilterName) {
                 searchManager.setPrimary(primaryFilterName);
             }
@@ -182,6 +188,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     el: this.containerSelector + ' .search-container',
                     searchManager: searchManager,
                     disableSavePreset: true,
+                    filterList: this.filterList,
                 }, function (view) {
                     this.listenTo(view, 'reset', function () {
                     }, this);

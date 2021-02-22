@@ -331,7 +331,9 @@ define('views/detail', 'views/main', function (Dep) {
                 boolFilterList = boolFilterList.call(this);
             }
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.selectFollowers') ||
+                this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') ||
+                'views/modals/select-records';
 
             this.notify('Loading...');
             this.createView('dialogSelectRelated', viewName, {

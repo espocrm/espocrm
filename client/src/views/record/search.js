@@ -148,7 +148,8 @@ define('views/record/search', 'view', function (Dep) {
                 this.tryReady();
             }.bind(this));
 
-            var filterList = this.options.filterList || this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
+            var filterList = this.options.filterList ||
+                this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
 
             this.presetFilterList = Espo.Utils.clone(filterList).filter(function (item) {
                 if (typeof item === 'string') {

@@ -14,6 +14,7 @@
       "list":"views/user/record/list"
    },
    "modalViews": {
+      "selectFollowers": "views/user/modals/select-followers",
       "detail": "views/user/modals/detail",
       "massUpdate": "views/user/modals/mass-update"
    },
