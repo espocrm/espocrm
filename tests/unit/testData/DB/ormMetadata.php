@@ -522,7 +522,7 @@ return [
                 'type' => Entity::VARCHAR,
                 'notStorable' => true,
                 'select' => [
-                    'select' => 'MUL:(id, 1)',
+                    'select' => 'MUL:({id, 1)',
                 ],
                 'selectForeign' => [
                     'select' => 'MUL:({alias}.id, 1)',
@@ -531,6 +531,13 @@ return [
                     'order' => [
                         ['MUL:({alias}.id, 1)', '{direction}'],
                     ],
+                ],
+            ],
+            'testAnother' => [
+                'type' => Entity::VARCHAR,
+                'notStorable' => true,
+                'select' => [
+                    'select' => 'MUL:({alias}.id, 1)',
                 ],
             ],
         ],

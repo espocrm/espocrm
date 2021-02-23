@@ -1682,6 +1682,26 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testCustomOrder2()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestSelect')
+            ->select(['test'])
+            ->order('test')
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT (test_select.id * 1) AS `test` " .
+            "FROM `test_select` " .
+            "ORDER BY (alias.id * 1) ASC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testCustomSelect1()
     {
         $queryBuilder = new QueryBuilder();
@@ -1737,6 +1757,24 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "FROM `test_select_right` ".
             "JOIN `test_select` AS `left` ON test_select_right.left_id = left.id ".
             "ORDER BY (left.id * 1) ASC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testCustomSelect4()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestSelect')
+            ->select(['testAnother'])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT (test_select.id * 1) AS `testAnother` ".
+            "FROM `test_select`";
 
         $this->assertEquals($expectedSql, $sql);
     }

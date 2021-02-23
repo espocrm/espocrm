@@ -1400,9 +1400,9 @@ abstract class BaseQueryComposer implements QueryComposer
         if (!empty($defs['select'])) {
             $expression = $defs['select'];
 
-            if ($alias) {
-                $expression = str_replace('{alias}', $alias, $expression);
-            }
+            $alias = $alias ?? $this->getFromAlias($params, $entity->getEntityType());
+
+            $expression = str_replace('{alias}', $alias, $expression);
 
             $pair = $this->getSelectPartItemPair($entity, $params, $expression);
 
