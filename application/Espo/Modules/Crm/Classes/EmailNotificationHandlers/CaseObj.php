@@ -27,9 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Business\EmailNotificationHandlers;
+namespace Espo\Modules\Crm\Classes\EmailNotificationHandlers;
 
 use Espo\Core\Di;
+
+use Espo\{
+    ORM\Entity,
+    Entities\User,
+};
 
 class CaseObj implements Di\EntityManagerAware
 {
@@ -37,23 +42,30 @@ class CaseObj implements Di\EntityManagerAware
 
     protected $inboundEmailEntityHash = [];
 
-    public function getSmtpParams($type, $case, $user = null) : ?array
+    public function getSmtpParams(string $type, Entity $case, User $user = null) : ?array
     {
         $inboundEmailId = $case->get('inboundEmailId');
 
-        if (!$inboundEmailId) return null;
+        if (!$inboundEmailId) {
+            return null;
+        }
 
         if (!array_key_exists($inboundEmailId, $this->inboundEmailEntityHash)) {
-            $this->inboundEmailEntityHash[$inboundEmailId] = $this->entityManager->getEntity('InboundEmail', $inboundEmailId);
+            $this->inboundEmailEntityHash[$inboundEmailId] =
+                $this->entityManager->getEntity('InboundEmail', $inboundEmailId);
         }
 
         $inboundEmail = $this->inboundEmailEntityHash[$inboundEmailId];
 
-        if (!$inboundEmail) return null;
+        if (!$inboundEmail) {
+            return null;
+        }
 
         $emailAddress = $inboundEmail->get('emailAddress');
 
-        if (!$emailAddress) return null;
+        if (!$emailAddress) {
+            return null;
+        }
 
         return [
             'replyToAddress' => $emailAddress,

@@ -29,23 +29,21 @@
 
 namespace Espo\Jobs;
 
-use Espo\Core\{
-    ServiceFactory,
-    Jobs\Job,
-};
+use Espo\Core\Jobs\Job;
+
+use Espo\Tools\EmailNotification\Processor;
 
 class SendEmailNotifications implements Job
 {
-    protected $serviceFactory;
+    private $processor;
 
-    public function __construct(ServiceFactory $serviceFactory)
+    public function __construct(Processor $processor)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->processor = $processor;
     }
 
     public function run()
     {
-        $service = $this->serviceFactory->create('EmailNotification');
-        $service->process();
+        $this->processor->process();
     }
 }

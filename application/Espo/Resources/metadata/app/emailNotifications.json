@@ -1,5 +1,5 @@
 {
     "handlerClassNameMap": {
-        "Case": "\\Espo\\Modules\\Crm\\Business\\EmailNotificationHandlers\\CaseObj"
+        "Case": "Espo\\Modules\\Crm\\Classes\\EmailNotificationHandlers\\CaseObj"
     }
 }
