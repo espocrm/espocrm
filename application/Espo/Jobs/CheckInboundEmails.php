@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Jobs;
+namespace Espo\Jobs;
 
 use Espo\Core\Exceptions\Error;
 
@@ -43,7 +43,7 @@ use Espo\Entities\ScheduledJob;
 use Throwable;
 use StdClass;
 
-class CheckEmailAccounts implements JobTargeted
+class CheckInboundEmails implements JobTargeted
 {
     protected $serviceFactory;
 
@@ -61,34 +61,32 @@ class CheckEmailAccounts implements JobTargeted
             throw new Error();
         }
 
-        $service = $this->serviceFactory->create('EmailAccount');
-
-        $entity = $this->entityManager->getEntity('EmailAccount', $targetId);
+        $service = $this->serviceFactory->create('InboundEmail');
+        $entity = $this->entityManager->getEntity('InboundEmail', $targetId);
 
         if (!$entity) {
-            throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount does not exist.", -1);
+            throw new Error("Job CheckInboundEmails '".$targetId."': InboundEmail does not exist.", -1);
         }
 
         if ($entity->get('status') !== 'Active') {
-            throw new Error("Job CheckEmailAccounts '".$targetId."': EmailAccount is not active.", -1);
+            throw new Error("Job CheckInboundEmails '".$targetId."': InboundEmail is not active.", -1);
         }
 
         try {
             $service->fetchFromMailServer($entity);
         }
         catch (Throwable $e) {
-            throw new Error('Job CheckEmailAccounts '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
+            throw new Error('Job CheckInboundEmails '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 
     public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void
     {
-        $collection = $this->entityManager->getRepository('EmailAccount')
-            ->join('assignedUser', 'assignedUserAdditional')
+        $collection = $this->entityManager
+            ->getRepository('InboundEmail')
             ->where([
                 'status' => 'Active',
                 'useImap' => true,
-                'assignedUserAdditional.isActive' => true,
             ])
             ->find();
 
@@ -98,7 +96,7 @@ class CheckEmailAccounts implements JobTargeted
                 ->where([
                     'scheduledJobId' => $scheduledJob->id,
                     'status' => [CronManager::RUNNING, CronManager::READY],
-                    'targetType' => 'EmailAccount',
+                    'targetType' => 'InboundEmail',
                     'targetId' => $entity->id,
                 ])
                 ->findOne();
@@ -112,7 +110,7 @@ class CheckEmailAccounts implements JobTargeted
                 ->where([
                     'scheduledJobId' => $scheduledJob->id,
                     'status' => CronManager::PENDING,
-                    'targetType' => 'EmailAccount',
+                    'targetType' => 'InboundEmail',
                     'targetId' => $entity->id,
                 ])
                 ->count();
@@ -127,7 +125,7 @@ class CheckEmailAccounts implements JobTargeted
                 'name' => $scheduledJob->get('name'),
                 'scheduledJobId' => $scheduledJob->id,
                 'executeTime' => $executeTime,
-                'targetType' => 'EmailAccount',
+                'targetType' => 'InboundEmail',
                 'targetId' => $entity->id,
             ]);
 
