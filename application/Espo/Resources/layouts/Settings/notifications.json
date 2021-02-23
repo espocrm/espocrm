@@ -9,10 +9,10 @@
     {
         "label": "Email Notifications",
         "rows": [
-            [{"name": "assignmentEmailNotifications"}, {"name": "mentionEmailNotifications"}],
-            [{"name": "assignmentEmailNotificationsEntityList"}, false],
-            [{"name": "streamEmailNotifications"}, {"name": "portalStreamEmailNotifications"}],
-            [{"name": "streamEmailNotificationsEntityList"}, {"name": "streamEmailNotificationsTypeList"}],
+            [{"name": "assignmentEmailNotifications"}, {"name": "assignmentEmailNotificationsEntityList"}],
+            [{"name": "mentionEmailNotifications"}, false],
+            [{"name": "streamEmailNotifications"}, {"name": "streamEmailNotificationsEntityList"}],
+            [{"name": "portalStreamEmailNotifications"}, {"name": "streamEmailNotificationsTypeList"}],
             [{"name": "emailNotificationsDelay"}, false]
         ]
     },
