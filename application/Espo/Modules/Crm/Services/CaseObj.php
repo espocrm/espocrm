@@ -39,17 +39,6 @@ use StdClass;
 
 class CaseObj extends Record
 {
-    protected $mergeLinkList = [
-        'tasks',
-        'meetings',
-        'calls',
-        'emails',
-    ];
-
-    protected $readOnlyAttributeList = [
-        'inboundEmailId',
-    ];
-
     protected $noEditAccessRequiredLinkList = [
         'articles',
     ];
@@ -62,6 +51,7 @@ class CaseObj extends Record
             if (!$entity->has('accountId')) {
                 if ($this->getUser()->get('contactId')) {
                     $contact = $this->getEntityManager()->getEntity('Contact', $this->getUser()->get('contactId'));
+
                     if ($contact && $contact->get('accountId')) {
                         $entity->set('accountId', $contact->get('accountId'));
                     }
@@ -78,13 +68,16 @@ class CaseObj extends Record
     public function afterCreateEntity(Entity $entity, $data)
     {
         parent::afterCreateEntity($entity, $data);
+
         if (!empty($data->emailId)) {
             $email = $this->getEntityManager()->getEntity('Email', $data->emailId);
+
             if ($email && !$email->get('parentId') && $this->getAcl()->check($email)) {
                 $email->set(array(
                     'parentType' => 'Case',
                     'parentId' => $entity->id
                 ));
+
                 $this->getEntityManager()->saveEntity($email);
             }
         }

@@ -1,0 +1,12 @@
+{
+    "fields": {
+        "inboundEmail": {
+            "readOnly": true
+        }
+    },
+    "links": {
+        "inboundEmail": {
+            "readOnly": true
+        }
+    }
+}
