@@ -29,12 +29,6 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\Entities\User;
-
-use Espo\Core\{
-    Utils\Util,
-};
-
 use Espo\ORM\{
     EntityManager as BaseEntityManager,
     Metadata,
