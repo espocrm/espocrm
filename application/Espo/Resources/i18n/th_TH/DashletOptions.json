@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "title": "หัวข้อ",
+    "dateFrom": "วันที่จาก",
+    "dateTo": "วันที่ถึง",
+    "autorefreshInterval": "ช่วงเวลารีเฟรชอัตโนมัติ",
+    "displayRecords": "แสดงบันทึก",
+    "isDoubleHeight": "ความสูง 2x",
+    "mode": "โหมด",
+    "enabledScopeList": "สิ่งที่จะแสดง",
+    "users": "ผู้ใช้",
+    "entityType": "ประเภทเอนทิตี",
+    "primaryFilter": "ตัวกรองหลัก",
+    "boolFilterList": "ตัวกรองเพิ่มเติม",
+    "sortBy": "คำสั่งซื้อ (ฟิลด์)",
+    "sortDirection": "คำสั่ง (ทิศทาง)",
+    "expandedLayout": "เค้าโครง",
+    "skipOwn": "อย่าแสดงบันทึกของตัวเอง",
+    "dateFilter": "ตัวกรองวันที่"
+  },
+  "options": {
+    "mode": {
+      "agendaWeek": "สัปดาห์ (วาระการประชุม)",
+      "basicWeek": "สัปดาห์",
+      "month": "เดือน",
+      "basicDay": "วัน",
+      "agendaDay": "วัน (วาระการประชุม)",
+      "timeline": "เส้นเวลา"
+    }
+  },
+  "messages": {
+    "selectEntityType": "เลือกประเภทเอนทิตีในตัวเลือกแดชเล็ต"
+  },
+  "tooltips": {
+    "skipOwn": "การดำเนินการที่ทำโดยบัญชีผู้ใช้ของคุณจะไม่ปรากฏขึ้น"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "exportPermission": "สิทธิ์ในการส่งออก",
+    "massUpdatePermission": "การอนุญาตการอัปเดตจำนวนมาก"
+  },
+  "links": {
+    "users": "ผู้ใช้"
+  },
+  "tooltips": {
+    "exportPermission": "กำหนดว่าผู้ใช้พอร์ทัลมีความสามารถในการเอ็กซ์พอร์ตเรกคอร์ดหรือไม่",
+    "massUpdatePermission": "กำหนดว่าผู้ใช้พอร์ทัลมีความสามารถในการอัพเดตเรกคอร์ดจำนวนมากหรือไม่"
+  },
+  "labels": {
+    "Access": "เข้าไป",
+    "Create PortalRole": "สร้างบทบาทพอร์ทัล",
+    "Scope Level": "ระดับขอบเขต",
+    "Field Level": "ระดับสนาม"
+  }
+}

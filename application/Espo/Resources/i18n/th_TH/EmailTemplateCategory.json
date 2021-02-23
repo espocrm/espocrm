@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Create EmailTemplateCategory": "สร้างหมวดหมู่",
+    "Manage Categories": "จัดการหมวดหมู่",
+    "EmailTemplates": "เทมเพลตอีเมล"
+  },
+  "fields": {
+    "order": "ใบสั่ง",
+    "childList": "รายชื่อเด็ก"
+  },
+  "links": {
+    "emailTemplates": "เทมเพลตอีเมล"
+  }
+}

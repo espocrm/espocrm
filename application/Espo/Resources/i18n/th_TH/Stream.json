@@ -1,0 +1,14 @@
+{
+  "messages": {
+    "infoMention": "พิมพ์ ** @ username ** เพื่อระบุผู้ใช้ในโพสต์",
+    "infoSyntax": "ไวยากรณ์ markdown ที่ใช้ได้"
+  },
+  "syntaxItems": {
+    "code": "รหัส",
+    "multilineCode": "รหัสหลายสาย",
+    "strongText": "ข้อความที่ชัดเจน",
+    "emphasizedText": "เน้นข้อความ",
+    "deletedText": "ข้อความที่ถูกลบ",
+    "link": "ลิงค์"
+  }
+}

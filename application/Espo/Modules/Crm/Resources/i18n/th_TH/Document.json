@@ -1,0 +1,41 @@
+{
+  "labels": {
+    "Create Document": "สร้างเอกสาร",
+    "Details": "รายละเอียด"
+  },
+  "fields": {
+    "name": "ชื่อ",
+    "status": "สถานะ",
+    "file": "ไฟล์",
+    "type": "ประเภท",
+    "publishDate": "วันที่เผยแพร่",
+    "expirationDate": "วันหมดอายุ",
+    "description": "คำอธิบาย",
+    "accounts": "บัญชี",
+    "folder": "โฟลเดอร์"
+  },
+  "links": {
+    "accounts": "บัญชี",
+    "opportunities": "โอกาส",
+    "folder": "โฟลเดอร์",
+    "leads": "ว่าที่ลูกค้า",
+    "contacts": "ผู้ติดต่อ"
+  },
+  "options": {
+    "status": {
+      "Active": "คล่องแคล่ว",
+      "Draft": "ร่าง",
+      "Expired": "หมดอายุ",
+      "Canceled": "ยกเลิก"
+    },
+    "type": {
+      "": "ไม่มี",
+      "Contract": "สัญญา",
+      "License Agreement": "ข้อตกลง"
+    }
+  },
+  "presetFilters": {
+    "active": "คล่องแคล่ว",
+    "draft": "ร่าง"
+  }
+}

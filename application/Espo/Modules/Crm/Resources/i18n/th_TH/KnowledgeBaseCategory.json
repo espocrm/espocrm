@@ -1,0 +1,10 @@
+{
+  "labels": {
+    "Create KnowledgeBaseCategory": "สร้างหมวดหมู่",
+    "Manage Categories": "จัดการหมวดหมู่",
+    "Articles": "บทความ"
+  },
+  "links": {
+    "articles": "บทความ"
+  }
+}

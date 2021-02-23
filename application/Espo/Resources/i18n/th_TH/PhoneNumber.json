@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "type": "ประเภท",
+    "optOut": "เลือกไม่ใช้",
+    "invalid": "ไม่ถูกต้อง"
+  },
+  "presetFilters": {
+    "orphan": "เด็กกำพร้า"
+  }
+}

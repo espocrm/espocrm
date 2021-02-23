@@ -1,0 +1,22 @@
+{
+  "modes": {
+    "month": "เดือน",
+    "week": "สัปดาห์",
+    "agendaWeek": "สัปดาห์",
+    "day": "วัน",
+    "agendaDay": "วัน",
+    "timeline": "เส้นเวลา"
+  },
+  "labels": {
+    "Today": "วันนี้",
+    "Create": "สร้าง",
+    "Shared": "แชร์",
+    "Add User": "เพิ่มผู้ใช้",
+    "current": "ปัจจุบัน",
+    "time": "เวลา",
+    "User List": "รายชื่อผู้ใช้",
+    "Manage Users": "จัดการผู้ใช้",
+    "View Calendar": "ดูปฏิทิน",
+    "Create Shared View": "สร้างมุมมองที่ใช้ร่วมกัน"
+  }
+}

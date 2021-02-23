@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "username": "ชื่อผู้ใช้",
+    "ipAddress": "ที่อยู่ IP",
+    "requestTime": "ขอเวลา",
+    "createdAt": "ร้องขอที่",
+    "isDenied": "ถูกปฏิเสธ",
+    "denialReason": "เหตุผลในการปฏิเสธ",
+    "portal": "พอร์ทัล",
+    "user": "ผู้ใช้",
+    "authToken": "สร้างโทเค็นรับรองความถูกต้องแล้ว",
+    "requestUrl": "ขอ URL",
+    "requestMethod": "วิธีการขอ",
+    "authTokenIsActive": "Auth Token ใช้งานอยู่",
+    "authenticationMethod": "วิธีการรับรองความถูกต้อง"
+  },
+  "links": {
+    "authToken": "สร้างโทเค็นรับรองความถูกต้องแล้ว",
+    "user": "ผู้ใช้",
+    "portal": "พอร์ทัล",
+    "actionHistoryRecords": "ประวัติการดำเนินการ"
+  },
+  "presetFilters": {
+    "denied": "ถูกปฏิเสธ",
+    "accepted": "ได้รับการยอมรับ"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "ข้อมูลประจำตัวที่ไม่ถูกต้อง",
+      "INACTIVE_USER": "ผู้ใช้ที่ไม่ได้ใช้งาน",
+      "IS_PORTAL_USER": "ผู้ใช้พอร์ทัล",
+      "IS_NOT_PORTAL_USER": "ไม่ใช่ผู้ใช้พอร์ทัล",
+      "USER_IS_NOT_IN_PORTAL": "ผู้ใช้ไม่เกี่ยวข้องกับพอร์ทัล"
+    }
+  }
+}

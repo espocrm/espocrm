@@ -1,0 +1,57 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "status": "สถานะ",
+    "host": "โฮสต์",
+    "username": "ชื่อผู้ใช้",
+    "password": "รหัสผ่าน",
+    "port": "ท่าเรือ",
+    "monitoredFolders": "โฟลเดอร์ที่ตรวจสอบ",
+    "security": "ความปลอดภัย",
+    "fetchSince": "ดึงข้อมูลตั้งแต่",
+    "emailAddress": "ที่อยู่อีเมล",
+    "sentFolder": "โฟลเดอร์ที่ส่ง",
+    "storeSentEmails": "จัดเก็บอีเมลที่ส่ง",
+    "keepFetchedEmailsUnread": "ไม่ให้ดึงอีเมลที่ไม่ได้อ่าน",
+    "emailFolder": "ใส่ในโฟลเดอร์",
+    "useImap": "ดึงอีเมล",
+    "useSmtp": "ใช้ SMTP",
+    "smtpHost": "โฮสต์ SMTP",
+    "smtpPort": "พอร์ต SMTP",
+    "smtpAuth": "การตรวจสอบสิทธิ์ SMTP",
+    "smtpSecurity": "ความปลอดภัย SMTP",
+    "smtpAuthMechanism": "กลไกการตรวจสอบสิทธิ์ SMTP",
+    "smtpUsername": "ชื่อผู้ใช้ SMTP",
+    "smtpPassword": "รหัสผ่าน SMTP"
+  },
+  "links": {
+    "filters": "ฟิลเตอร์",
+    "emails": "อีเมล"
+  },
+  "options": {
+    "status": {
+      "Active": "คล่องแคล่ว",
+      "Inactive": "ไม่ใช้งาน"
+    },
+    "smtpAuthMechanism": {
+      "plain": "ที่ราบ",
+      "login": "เข้าสู่ระบบ"
+    }
+  },
+  "labels": {
+    "Create EmailAccount": "สร้างบัญชีอีเมล",
+    "Main": "หลัก",
+    "Test Connection": "ทดสอบการเชื่อมต่อ",
+    "Send Test Email": "ส่งอีเมลทดสอบ"
+  },
+  "messages": {
+    "couldNotConnectToImap": "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ IMAP",
+    "connectionIsOk": "การเชื่อมต่อโอเค"
+  },
+  "tooltips": {
+    "useSmtp": "ความสามารถในการส่งอีเมล",
+    "emailAddress": "บันทึกผู้ใช้ (ผู้ใช้ที่กำหนด) ควรมีที่อยู่อีเมลเดียวกันเพื่อให้สามารถใช้บัญชีอีเมลนี้ในการส่งได้",
+    "monitoredFolders": "ควรคั่นหลายโฟลเดอร์ด้วยลูกน้ำ \\ n \\ n คุณสามารถเพิ่มโฟลเดอร์ \"ส่งแล้ว\" เพื่อซิงค์อีเมลที่ส่งจากไคลเอนต์อีเมลภายนอก",
+    "storeSentEmails": "อีเมลที่ส่งจะถูกเก็บไว้บนเซิร์ฟเวอร์ IMAP ช่องที่อยู่อีเมลควรตรงกับที่อยู่อีเมลที่จะส่งจาก"
+  }
+}

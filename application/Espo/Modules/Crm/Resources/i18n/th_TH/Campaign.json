@@ -1,0 +1,88 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "description": "คำอธิบาย",
+    "status": "สถานะ",
+    "type": "ประเภท",
+    "startDate": "วันที่เริ่มต้น",
+    "endDate": "วันที่สิ้นสุด",
+    "targetLists": "รายการเป้าหมาย",
+    "excludingTargetLists": "ไม่รวมรายการเป้าหมาย",
+    "sentCount": "ส่งแล้ว",
+    "openedCount": "เปิดแล้ว",
+    "clickedCount": "คลิกแล้ว",
+    "optedOutCount": "เลือกไม่ใช้",
+    "bouncedCount": "เด้ง",
+    "optedInCount": "เลือกใช้",
+    "hardBouncedCount": "เด้งยาก",
+    "softBouncedCount": "นุ่มเด้ง",
+    "leadCreatedCount": "สร้างว่าที่ลูกค้า",
+    "revenue": "รายได้",
+    "revenueConverted": "รายได้ (ขายแล้ว)",
+    "budget": "งบประมาณ",
+    "budgetConverted": "งบประมาณ (ขายแล้ว)",
+    "budgetCurrency": "สกุลเงินของงบประมาณ",
+    "contactsTemplate": "เทมเพลตผู้ติดต่อ",
+    "leadsTemplate": "เทมเพลตลูกค้าเป้าหมาย",
+    "accountsTemplate": "เทมเพลตบัญชี",
+    "usersTemplate": "เทมเพลตผู้ใช้",
+    "mailMergeOnlyWithAddress": "ข้ามบันทึกโดยไม่กรอกที่อยู่"
+  },
+  "links": {
+    "targetLists": "รายการเป้าหมาย",
+    "excludingTargetLists": "ไม่รวมรายการเป้าหมาย",
+    "accounts": "บัญชี",
+    "contacts": "ผู้ติดต่อ",
+    "leads": "ว่าที่ลูกค้า",
+    "opportunities": "โอกาส",
+    "campaignLogRecords": "บันทึก",
+    "massEmails": "อีเมลจำนวนมาก",
+    "trackingUrls": "URL ติดตามผล",
+    "contactsTemplate": "เทมเพลตผู้ติดต่อ",
+    "leadsTemplate": "เทมเพลตลูกค้าเป้าหมาย",
+    "accountsTemplate": "เทมเพลตบัญชี",
+    "usersTemplate": "เทมเพลตผู้ใช้"
+  },
+  "options": {
+    "type": {
+      "Email": "อีเมล์",
+      "Web": "เว็บ",
+      "Television": "โทรทัศน์",
+      "Radio": "วิทยุ",
+      "Newsletter": "จดหมายข่าว",
+      "Mail": "จดหมาย"
+    },
+    "status": {
+      "Planning": "การวางแผน",
+      "Active": "คล่องแคล่ว",
+      "Inactive": "ไม่ใช้งาน",
+      "Complete": "เสร็จสมบูรณ์"
+    }
+  },
+  "labels": {
+    "Create Campaign": "สร้างแคมเปญ",
+    "Target Lists": "รายการเป้าหมาย",
+    "Statistics": "สถิติ",
+    "hard": "ยาก",
+    "soft": "อ่อนนุ่ม",
+    "Unsubscribe": "ยกเลิกการสมัคร",
+    "Mass Emails": "อีเมลจำนวนมาก",
+    "Email Templates": "เทมเพลตอีเมล",
+    "Unsubscribe again": "ยกเลิกการสมัครอีกครั้ง",
+    "Subscribe again": "สมัครสมาชิกอีกครั้ง",
+    "Create Target List": "สร้างรายการเป้าหมาย",
+    "Mail Merge": "จดหมายเวียน",
+    "Generate Mail Merge PDF": "สร้างจดหมายเวียน PDF"
+  },
+  "presetFilters": {
+    "active": "คล่องแคล่ว"
+  },
+  "messages": {
+    "unsubscribed": "คุณได้ยกเลิกการสมัครรับข้อมูลจากรายชื่ออีเมลของเรา",
+    "subscribedAgain": "คุณสมัครรับข้อมูลอีกครั้ง"
+  },
+  "tooltips": {
+    "targetLists": "เป้าหมายที่ควรได้รับข้อความ",
+    "excludingTargetLists": "เป้าหมายที่ไม่ควรรับข้อความ"
+  }
+}

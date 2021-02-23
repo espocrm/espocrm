@@ -1,0 +1,29 @@
+{
+  "fields": {
+    "status": "สถานะ",
+    "executeTime": "ดำเนินการที่",
+    "executedAt": "ดำเนินการที่",
+    "startedAt": "เริ่มเมื่อ",
+    "attempts": "ความพยายามที่เหลือ",
+    "failedAttempts": "ความพยายามที่ล้มเหลว",
+    "serviceName": "บริการ",
+    "method": "วิธีการ (เลิกใช้แล้ว)",
+    "methodName": "วิธี",
+    "scheduledJob": "งานตามกำหนดการ",
+    "scheduledJobJob": "ชื่องานตามกำหนดการ",
+    "data": "ข้อมูล",
+    "targetType": "ประเภทเป้าหมาย",
+    "targetId": "รหัสเป้าหมาย",
+    "number": "จำนวน",
+    "queue": "คิว",
+    "job": "งาน"
+  },
+  "options": {
+    "status": {
+      "Pending": "รอดำเนินการ",
+      "Success": "ประสบความสำเร็จ",
+      "Running": "วิ่ง",
+      "Failed": "ล้มเหลว"
+    }
+  }
+}

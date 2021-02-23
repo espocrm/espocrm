@@ -1,0 +1,14 @@
+{
+  "labels": {
+    "Primary": "หลัก",
+    "Opted Out": "เลือกไม่ใช้",
+    "Invalid": "ไม่ถูกต้อง"
+  },
+  "fields": {
+    "optOut": "เลือกไม่ใช้",
+    "invalid": "ไม่ถูกต้อง"
+  },
+  "presetFilters": {
+    "orphan": "เด็กกำพร้า"
+  }
+}

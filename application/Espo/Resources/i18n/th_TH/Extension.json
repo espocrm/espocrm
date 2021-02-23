@@ -1,0 +1,16 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "version": "เวอร์ชัน",
+    "description": "คำอธิบาย",
+    "isInstalled": "ติดตั้งแล้ว",
+    "checkVersionUrl": "URL สำหรับตรวจสอบเวอร์ชันใหม่"
+  },
+  "labels": {
+    "Uninstall": "ถอนการติดตั้ง",
+    "Install": "ติดตั้ง"
+  },
+  "messages": {
+    "uninstalled": "ถอนการติดตั้งส่วนขยาย {name} แล้ว"
+  }
+}

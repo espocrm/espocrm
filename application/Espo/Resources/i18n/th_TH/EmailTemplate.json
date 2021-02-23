@@ -1,0 +1,34 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "status": "สถานะ",
+    "isHtml": "เป็น Html",
+    "body": "ร่างกาย",
+    "subject": "เรื่อง",
+    "attachments": "ไฟล์แนบ",
+    "insertField": "ตัวยึดตำแหน่ง",
+    "oneOff": "ครั้งเดียว",
+    "category": "ประเภท"
+  },
+  "labels": {
+    "Create EmailTemplate": "สร้างเทมเพลตอีเมล",
+    "Info": "ข้อมูล",
+    "Available placeholders": "ตัวยึดที่ใช้ได้"
+  },
+  "messages": {
+    "infoText": "ตัวยึดที่ใช้ได้: \\ n \\ n {optOutUrl} & # 8211; URL สำหรับลิงก์ยกเลิกการสมัคร \\ n \\ n {optOutLink} & # 8211; ลิงค์ยกเลิกการสมัคร"
+  },
+  "tooltips": {
+    "oneOff": "ตรวจสอบว่าคุณจะใช้เทมเพลตนี้เพียงครั้งเดียวหรือไม่ เช่น. สำหรับ Mass Email"
+  },
+  "presetFilters": {
+    "actual": "ตามจริง"
+  },
+  "placeholderTexts": {
+    "today": "วันนี้วันที่",
+    "now": "วันที่และเวลาปัจจุบัน",
+    "currentYear": "ปีนี้",
+    "optOutUrl": "URL สำหรับลิงก์ยกเลิกการสมัคร",
+    "optOutLink": "ลิงค์ยกเลิกการสมัคร"
+  }
+}

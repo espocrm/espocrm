@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "body": "ร่างกาย",
+    "entityType": "ประเภทเอนทิตี",
+    "header": "หัวข้อ",
+    "footer": "ส่วนท้าย",
+    "leftMargin": "ขอบซ้าย",
+    "topMargin": "อัตรากำไรสูงสุด",
+    "rightMargin": "ขอบขวา",
+    "bottomMargin": "ขอบล่าง",
+    "printFooter": "พิมพ์ส่วนท้าย",
+    "printHeader": "หัวพิมพ์ในแต่ละหน้า",
+    "footerPosition": "ตำแหน่งส่วนท้าย",
+    "headerPosition": "ตำแหน่งส่วนหัว",
+    "variables": "ตัวยึดตำแหน่งที่ใช้ได้",
+    "pageOrientation": "การวางแนวหน้า",
+    "pageFormat": "รูปแบบกระดาษ",
+    "pageWidth": "หน้ากว้าง (มม.)",
+    "pageHeight": "ความสูงของหน้า (มม.)",
+    "fontFace": "แบบอักษร"
+  },
+  "labels": {
+    "Create Template": "สร้างเทมเพลต"
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "แนวตั้ง",
+      "Landscape": "ภูมิทัศน์"
+    },
+    "pageFormat": {
+      "Custom": "กำหนดเอง"
+    },
+    "placeholders": {
+      "pagebreak": "ตัวแบ่งหน้า",
+      "today": "วันนี้ (วันที่)",
+      "now": "ตอนนี้ (วันที่ - เวลา)"
+    },
+    "fontFace": {
+      "aefurat": "เอฟูรัตน์",
+      "cid0ct": "CID-0 กะรัต",
+      "courier": "ผู้จัดส่ง",
+      "dejavusans": "เดจาวูแสน",
+      "dejavusansmono": "เดจาวูซันโมโน",
+      "dejavuserif": "เดจาวูเซริฟ",
+      "dejavuserifcondensed": "DejaVu Serif ควบแน่น",
+      "freesans": "ฟรี",
+      "hysmyeongjostdmedium": "Hysmyeongjostd ปานกลาง",
+      "kozgopromedium": "Kozgo Pro ปานกลาง",
+      "kozminproregular": "Kozmin Pro ปกติ",
+      "pdfasymbol": "สัญลักษณ์ PDFA",
+      "pdfatimes": "PDFA ครั้ง",
+      "symbol": "สัญลักษณ์",
+      "times": "ครั้ง"
+    }
+  },
+  "tooltips": {
+    "footer": "ใช้ {pageNumber} เพื่อพิมพ์หมายเลขหน้า",
+    "variables": "คัดลอกตัวยึดตำแหน่งที่จำเป็นสำหรับส่วนหัวเนื้อหาหรือส่วนท้าย"
+  }
+}

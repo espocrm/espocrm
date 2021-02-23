@@ -1,0 +1,62 @@
+{
+  "fields": {
+    "dateFormat": "รูปแบบวันที่",
+    "timeFormat": "รูปแบบเวลา",
+    "timeZone": "เขตเวลา",
+    "weekStart": "วันแรกของสัปดาห์",
+    "thousandSeparator": "ตัวคั่นพัน",
+    "decimalMark": "เครื่องหมายทศนิยม",
+    "defaultCurrency": "สกุลเงินเริ่มต้น",
+    "currencyList": "รายการสกุลเงิน",
+    "language": "ภาษา",
+    "smtpServer": "เซิร์ฟเวอร์",
+    "smtpPort": "ท่าเรือ",
+    "smtpSecurity": "ความปลอดภัย",
+    "smtpUsername": "ชื่อผู้ใช้",
+    "emailAddress": "อีเมล์",
+    "smtpPassword": "รหัสผ่าน",
+    "smtpEmailAddress": "ที่อยู่อีเมล",
+    "exportDelimiter": "ส่งออกตัวคั่น",
+    "receiveAssignmentEmailNotifications": "การแจ้งเตือนทางอีเมลเมื่อได้รับมอบหมาย",
+    "receiveMentionEmailNotifications": "การแจ้งเตือนทางอีเมลเกี่ยวกับการกล่าวถึงในโพสต์",
+    "receiveStreamEmailNotifications": "การแจ้งเตือนทางอีเมลเกี่ยวกับโพสต์และการอัปเดตสถานะ",
+    "assignmentNotificationsIgnoreEntityTypeList": "การแจ้งเตือนการมอบหมายในแอป",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "การแจ้งเตือนการมอบหมายอีเมล",
+    "autoFollowEntityTypeList": "ติดตามอัตโนมัติทั่วโลก",
+    "signature": "ลายเซ็นอีเมล",
+    "dashboardTabList": "รายการแท็บ",
+    "tabList": "รายการแท็บ",
+    "defaultReminders": "การแจ้งเตือนเริ่มต้น",
+    "theme": "ธีม",
+    "useCustomTabList": "รายการแท็บที่กำหนดเอง",
+    "emailReplyToAllByDefault": "อีเมลตอบกลับทุกคนตามค่าเริ่มต้น",
+    "dashboardLayout": "เค้าโครงแดชบอร์ด",
+    "emailReplyForceHtml": "ตอบอีเมลในรูปแบบ HTML",
+    "doNotFillAssignedUserIfNotRequired": "อย่ากรอกข้อมูลผู้ใช้ที่กำหนดไว้ล่วงหน้าในการสร้างเรกคอร์ด",
+    "followEntityOnStreamPost": "ติดตามบันทึกอัตโนมัติหลังจากโพสต์ในสตรีม",
+    "followCreatedEntities": "ติดตามบันทึกที่สร้างขึ้นโดยอัตโนมัติ",
+    "followCreatedEntityTypeList": "ติดตามอัตโนมัติสร้างเรกคอร์ดของประเภทเอนทิตีเฉพาะ",
+    "emailUseExternalClient": "ใช้ไคลเอนต์อีเมลภายนอก",
+    "scopeColorsDisabled": "ปิดใช้งานสีของขอบเขต",
+    "tabColorsDisabled": "ปิดการใช้งานสีของแท็บ"
+  },
+  "options": {
+    "weekStart": {
+      "0": "วันอาทิตย์",
+      "1": "วันจันทร์"
+    }
+  },
+  "labels": {
+    "Notifications": "การแจ้งเตือน",
+    "User Interface": "หน้าจอผู้ใช้",
+    "Misc": "อื่น ๆ",
+    "Locale": "สถานที่",
+    "Reset Dashboard to Default": "รีเซ็ตแดชบอร์ดเป็นค่าเริ่มต้น"
+  },
+  "tooltips": {
+    "autoFollowEntityTypeList": "ติดตามเรกคอร์ดใหม่ทั้งหมดโดยอัตโนมัติ (สร้างโดยผู้ใช้) ของประเภทเอนทิตีที่เลือก เพื่อให้สามารถดูข้อมูลในสตรีม",
+    "doNotFillAssignedUserIfNotRequired": "เมื่อสร้างเรกคอร์ดที่กำหนดผู้ใช้จะไม่ถูกกรอกด้วยผู้ใช้ของตัวเองเว้นแต่จะต้องระบุฟิลด์",
+    "followCreatedEntities": "เมื่อสร้างระเบียนใหม่ระบบจะติดตามโดยอัตโนมัติแม้ว่าจะกำหนดให้กับผู้ใช้รายอื่นก็ตาม",
+    "followCreatedEntityTypeList": "เมื่อสร้างเรกคอร์ดใหม่ของประเภทเอนทิตีที่เลือกพวกเขาจะถูกติดตามโดยอัตโนมัติแม้ว่าจะกำหนดให้กับผู้ใช้รายอื่นก็ตาม"
+  }
+}

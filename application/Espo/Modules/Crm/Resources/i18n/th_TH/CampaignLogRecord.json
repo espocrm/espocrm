@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "action": "หนังบู๊",
+    "actionDate": "วันที่",
+    "data": "ข้อมูล",
+    "campaign": "แคมเปญ",
+    "parent": "เป้าหมาย",
+    "object": "วัตถุ",
+    "application": "ใบสมัคร",
+    "queueItem": "รายการคิว",
+    "stringData": "ข้อมูลสตริง",
+    "stringAdditionalData": "สตริงข้อมูลเพิ่มเติม",
+    "isTest": "เป็นการทดสอบ"
+  },
+  "links": {
+    "queueItem": "รายการคิว",
+    "parent": "ผู้ปกครอง",
+    "object": "วัตถุ",
+    "campaign": "แคมเปญ"
+  },
+  "options": {
+    "action": {
+      "Sent": "ส่งแล้ว",
+      "Opened": "เปิดแล้ว",
+      "Opted Out": "เลือกไม่ใช้",
+      "Bounced": "เด้ง",
+      "Clicked": "คลิกแล้ว",
+      "Lead Created": "สร้างว่าที่ลูกค้าแล้ว",
+      "Opted In": "เลือกใช้"
+    }
+  },
+  "labels": {
+    "All": "ทั้งหมด"
+  },
+  "presetFilters": {
+    "sent": "ส่งแล้ว",
+    "opened": "เปิดแล้ว",
+    "optedOut": "เลือกไม่ใช้",
+    "optedIn": "เลือกใช้",
+    "bounced": "เด้ง",
+    "clicked": "คลิกแล้ว",
+    "leadCreated": "สร้างว่าที่ลูกค้าแล้ว"
+  }
+}

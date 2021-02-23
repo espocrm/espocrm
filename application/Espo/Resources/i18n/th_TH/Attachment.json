@@ -1,0 +1,28 @@
+{
+  "fields": {
+    "role": "บทบาท",
+    "related": "ที่เกี่ยวข้อง",
+    "file": "ไฟล์",
+    "type": "ประเภท",
+    "field": "ฟิลด์",
+    "sourceId": "รหัสแหล่งที่มา",
+    "storage": "การจัดเก็บ",
+    "size": "ขนาด (ไบต์)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "ไฟล์แนบ",
+      "Inline Attachment": "ไฟล์แนบแบบอินไลน์",
+      "Import File": "นำเข้าไฟล์",
+      "Export File": "ส่งออกไฟล์",
+      "Mail Merge": "จดหมายเวียน",
+      "Mass Pdf": "มวล Pdf"
+    }
+  },
+  "insertFromSourceLabels": {
+    "Document": "แทรกเอกสาร"
+  },
+  "presetFilters": {
+    "orphan": "เด็กกำพร้า"
+  }
+}

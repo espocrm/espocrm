@@ -1,0 +1,71 @@
+{
+  "labels": {
+    "Converted To": "แปลงเป็น",
+    "Create Lead": "สร้างว่าที่ลูกค้า",
+    "Convert": "แปลง",
+    "convert": "แปลง"
+  },
+  "fields": {
+    "name": "ชื่อ",
+    "emailAddress": "อีเมล์",
+    "title": "หัวข้อ",
+    "website": "เว็บไซต์",
+    "phoneNumber": "โทรศัพท์",
+    "accountName": "ชื่อบัญชี",
+    "doNotCall": "อย่าโทร",
+    "address": "ที่อยู่",
+    "status": "สถานะ",
+    "source": "ที่มา",
+    "opportunityAmount": "จำนวน",
+    "opportunityAmountConverted": "จำนวน (ขายแล้ว)",
+    "description": "คำอธิบาย",
+    "createdAccount": "ลูกค้า",
+    "createdContact": "ผู้ติดต่อ",
+    "createdOpportunity": "โอกาส",
+    "convertedAt": "ขายที่",
+    "campaign": "แคมเปญ",
+    "targetLists": "รายการเป้าหมาย",
+    "targetList": "รายการเป้าหมาย",
+    "industry": "อุตสาหกรรม",
+    "acceptanceStatus": "สถานะการยอมรับ",
+    "opportunityAmountCurrency": "โอกาสจำนวนสกุลเงิน",
+    "acceptanceStatusMeetings": "สถานะการยอมรับ (การประชุม)",
+    "acceptanceStatusCalls": "สถานะการตอบรับ (การโทร)"
+  },
+  "links": {
+    "targetLists": "รายการเป้าหมาย",
+    "campaignLogRecords": "บันทึกแคมเปญ",
+    "campaign": "แคมเปญ",
+    "createdAccount": "ลูกค้า",
+    "createdContact": "ผู้ติดต่อ",
+    "createdOpportunity": "โอกาส",
+    "cases": "เรื่อง",
+    "documents": "เอกสาร"
+  },
+  "options": {
+    "status": {
+      "New": "ใหม่",
+      "Assigned": "ที่ได้รับมอบหมาย",
+      "In Process": "ในกระบวนการ",
+      "Converted": "ขายแล้ว",
+      "Recycled": "รีไซเคิล",
+      "Dead": "ไม่เคลื่อนไหว"
+    },
+    "source": {
+      "": "ไม่มี",
+      "Call": "โทร",
+      "Email": "อีเมล์",
+      "Existing Customer": "ลูกค้าปัจจุบัน",
+      "Partner": "พันธมิตร",
+      "Public Relations": "ประชาสัมพันธ์",
+      "Web Site": "เว็บไซต์",
+      "Campaign": "แคมเปญ",
+      "Other": "อื่น ๆ"
+    }
+  },
+  "presetFilters": {
+    "active": "คล่องแคล่ว",
+    "actual": "ตามจริง",
+    "converted": "ขายแล้ว"
+  }
+}

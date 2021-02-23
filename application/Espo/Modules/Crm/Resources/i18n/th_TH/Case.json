@@ -1,0 +1,61 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "number": "จำนวน",
+    "status": "สถานะ",
+    "account": "ลูกค้า",
+    "contact": "ผู้ติดต่อ",
+    "contacts": "ผู้ติดต่อ",
+    "priority": "ลำดับความสำคัญ",
+    "type": "ประเภท",
+    "description": "คำอธิบาย",
+    "inboundEmail": "บัญชีอีเมลกลุ่ม",
+    "lead": "ว่าที่ลูกค้า",
+    "attachments": "ไฟล์แนบ"
+  },
+  "links": {
+    "inboundEmail": "บัญชีอีเมลกลุ่ม",
+    "account": "ลูกค้า",
+    "contact": "ติดต่อ (หลัก)",
+    "Contacts": "ผู้ติดต่อ",
+    "meetings": "การประชุม",
+    "calls": "โทร",
+    "tasks": "งาน",
+    "emails": "อีเมล",
+    "articles": "บทความฐานความรู้",
+    "lead": "ว่าที่ลูกค้า",
+    "attachments": "ไฟล์แนบ"
+  },
+  "options": {
+    "status": {
+      "New": "ใหม่",
+      "Assigned": "ที่ได้รับมอบหมาย",
+      "Pending": "รอดำเนินการ",
+      "Closed": "ปิด",
+      "Rejected": "ถูกปฏิเสธ",
+      "Duplicate": "ทำซ้ำ"
+    },
+    "priority": {
+      "Low": "ต่ำ",
+      "Normal": "ปกติ",
+      "High": "สูง",
+      "Urgent": "ด่วน"
+    },
+    "type": {
+      "Question": "คำถาม",
+      "Incident": "เหตุการณ์",
+      "Problem": "ปัญหา"
+    }
+  },
+  "labels": {
+    "Create Case": "สร้างเรื่อง",
+    "Close": "ปิด",
+    "Reject": "ปฏิเสธ",
+    "Closed": "ปิด",
+    "Rejected": "ถูกปฏิเสธ"
+  },
+  "presetFilters": {
+    "open": "เปิด",
+    "closed": "ปิด"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "labels": {
+    "Field": "ฟิลด์"
+  },
+  "options": {
+    "operators": {
+      "equals": "เท่ากับ",
+      "notEquals": "ไม่เท่ากับ",
+      "greaterThan": "มากกว่า",
+      "lessThan": "น้อยกว่า",
+      "greaterThanOrEquals": "มากกว่าหรือเท่ากับ",
+      "lessThanOrEquals": "น้อยกว่าหรือเท่ากับ",
+      "in": "ใน",
+      "notIn": "ไม่เข้า",
+      "inPast": "ในอดีต",
+      "inFuture": "คืออนาคต",
+      "isToday": "คือวันนี้",
+      "isTrue": "เป็นความจริง",
+      "isFalse": "เป็นเท็จ",
+      "isEmpty": "มันว่างเปล่า",
+      "isNotEmpty": "ไม่ว่างเปล่า",
+      "contains": "ประกอบด้วย",
+      "has": "ประกอบด้วย",
+      "notContains": "ไม่มี",
+      "notHas": "ไม่มี"
+    }
+  }
+}

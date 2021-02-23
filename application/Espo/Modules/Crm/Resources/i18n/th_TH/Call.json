@@ -1,0 +1,50 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "parent": "ผู้ปกครอง",
+    "status": "สถานะ",
+    "dateStart": "วันที่เริ่มต้น",
+    "dateEnd": "วันที่สิ้นสุด",
+    "direction": "ทิศทาง",
+    "duration": "ระยะเวลา",
+    "description": "คำอธิบาย",
+    "users": "ผู้ใช้",
+    "contacts": "ผู้ติดต่อ",
+    "leads": "ว่าที่ลูกค้า",
+    "reminders": "การแจ้งเตือน",
+    "account": "ลูกค้า",
+    "acceptanceStatus": "สถานะการยอมรับ"
+  },
+  "options": {
+    "status": {
+      "Planned": "วางแผน",
+      "Held": "จัดขึ้น",
+      "Not Held": "ไม่ได้จัดขึ้น"
+    },
+    "direction": {
+      "Outbound": "ขาออก",
+      "Inbound": "ขาเข้า"
+    },
+    "acceptanceStatus": {
+      "None": "ไม่มี",
+      "Accepted": "ได้รับการยอมรับ",
+      "Declined": "ปฏิเสธ",
+      "Tentative": "ไม่แน่นอน"
+    }
+  },
+  "massActions": {
+    "setHeld": "ตั้งไว้",
+    "setNotHeld": "ตั้งค่าไม่ถูกระงับ"
+  },
+  "labels": {
+    "Create Call": "สร้างการโทร",
+    "Set Held": "ตั้งไว้",
+    "Set Not Held": "ตั้งค่าไม่ถูกระงับ",
+    "Send Invitations": "ส่งคำเชิญ"
+  },
+  "presetFilters": {
+    "planned": "วางแผน",
+    "held": "จัดขึ้น",
+    "todays": "วันนี้"
+  }
+}

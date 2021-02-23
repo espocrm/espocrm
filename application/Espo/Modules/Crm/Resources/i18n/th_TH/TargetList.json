@@ -1,0 +1,41 @@
+{
+  "fields": {
+    "name": "ชื่อ",
+    "description": "คำอธิบาย",
+    "entryCount": "จำนวนรายการ",
+    "optedOutCount": "จำนวนที่เลือกไม่ใช้",
+    "campaigns": "แคมเปญ",
+    "endDate": "วันที่สิ้นสุด",
+    "targetLists": "รายการเป้าหมาย",
+    "includingActionList": "ได้แก่",
+    "excludingActionList": "ไม่รวม",
+    "targetStatus": "สถานะเป้าหมาย",
+    "isOptedOut": "ถูกเลือกไม่ใช้"
+  },
+  "links": {
+    "accounts": "บัญชี",
+    "contacts": "ผู้ติดต่อ",
+    "leads": "ว่าที่ลูกค้า",
+    "campaigns": "แคมเปญ",
+    "massEmails": "อีเมลจำนวนมาก"
+  },
+  "options": {
+    "type": {
+      "Email": "อีเมล์",
+      "Web": "เว็บ",
+      "Television": "โทรทัศน์",
+      "Radio": "วิทยุ",
+      "Newsletter": "จดหมายข่าว"
+    },
+    "targetStatus": {
+      "Opted Out": "เลือกไม่ใช้",
+      "Listed": "จดทะเบียน"
+    }
+  },
+  "labels": {
+    "Create TargetList": "สร้างรายการเป้าหมาย",
+    "Opted Out": "เลือกไม่ใช้",
+    "Cancel Opt-Out": "ยกเลิกการเลือกไม่ใช้",
+    "Opt-Out": "เลือกออก"
+  }
+}
