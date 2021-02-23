@@ -40,9 +40,13 @@ use Espo\Core\{
 
 use Espo\Entities\ScheduledJob;
 
+use Throwable;
+use StdClass;
+
 class CheckEmailAccounts implements JobTargeted
 {
     protected $serviceFactory;
+
     protected $entityManager;
 
     public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
@@ -51,13 +55,14 @@ class CheckEmailAccounts implements JobTargeted
         $this->entityManager = $entityManager;
     }
 
-    public function run(?object $data, string $targetId, string $targetType)
+    public function run(string $targetType, string $targetId, StdClass $data) : void
     {
         if (!$targetId) {
             throw new Error();
         }
 
         $service = $this->serviceFactory->create('EmailAccount');
+
         $entity = $this->entityManager->getEntity('EmailAccount', $targetId);
 
         if (!$entity) {
@@ -70,12 +75,13 @@ class CheckEmailAccounts implements JobTargeted
 
         try {
             $service->fetchFromMailServer($entity);
-        } catch (\Exception $e) {
+        }
+        catch (Throwable $e) {
             throw new Error('Job CheckEmailAccounts '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime)
+    public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void
     {
         $collection = $this->entityManager->getRepository('EmailAccount')
             ->join('assignedUser', 'assignedUserAdditional')
@@ -83,33 +89,48 @@ class CheckEmailAccounts implements JobTargeted
                 'status' => 'Active',
                 'useImap' => true,
                 'assignedUserAdditional.isActive' => true,
-            ])->find();
+            ])
+            ->find();
 
         foreach ($collection as $entity) {
-            $running = $this->entityManager->getRepository('Job')->where([
-                'scheduledJobId' => $scheduledJob->id,
-                'status' => [CronManager::RUNNING, CronManager::READY],
-                'targetType' => 'EmailAccount',
-                'targetId' => $entity->id
-            ])->findOne();
-            if ($running) continue;
+            $running = $this->entityManager
+                ->getRepository('Job')
+                ->where([
+                    'scheduledJobId' => $scheduledJob->id,
+                    'status' => [CronManager::RUNNING, CronManager::READY],
+                    'targetType' => 'EmailAccount',
+                    'targetId' => $entity->id,
+                ])
+                ->findOne();
 
-            $countPending = $this->entityManager->getRepository('Job')->where([
-                'scheduledJobId' => $scheduledJob->id,
-                'status' => CronManager::PENDING,
-                'targetType' => 'EmailAccount',
-                'targetId' => $entity->id
-            ])->count();
-            if ($countPending > 1) continue;
+            if ($running) {
+                continue;
+            }
+
+            $countPending = $this->entityManager
+                ->getRepository('Job')
+                ->where([
+                    'scheduledJobId' => $scheduledJob->id,
+                    'status' => CronManager::PENDING,
+                    'targetType' => 'EmailAccount',
+                    'targetId' => $entity->id,
+                ])
+                ->count();
+
+            if ($countPending > 1) {
+                continue;
+            }
 
             $jobEntity = $this->entityManager->getEntity('Job');
+
             $jobEntity->set([
                 'name' => $scheduledJob->get('name'),
                 'scheduledJobId' => $scheduledJob->id,
                 'executeTime' => $executeTime,
                 'targetType' => 'EmailAccount',
-                'targetId' => $entity->id
+                'targetId' => $entity->id,
             ]);
+
             $this->entityManager->saveEntity($jobEntity);
         }
     }

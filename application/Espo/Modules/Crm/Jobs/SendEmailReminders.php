@@ -37,6 +37,10 @@ use Espo\Core\{
 
 use Espo\Modules\Crm\Business\Reminder\EmailReminder;
 
+use Exception;
+use DateTime;
+use DateInterval;
+
 class SendEmailReminders implements Job
 {
     const MAX_PORTION_SIZE = 10;
@@ -50,18 +54,22 @@ class SendEmailReminders implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run()
+    public function run() : void
     {
-        $dt = new \DateTime();
+        $dt = new DateTime();
 
         $now = $dt->format('Y-m-d H:i:s');
-        $nowShifted = $dt->sub(new \DateInterval('PT1H'))->format('Y-m-d H:i:s');
 
-        $collection = $this->entityManager->getRepository('Reminder')->where([
-            'type' => 'Email',
-            'remindAt<=' => $now,
-            'startAt>' => $nowShifted,
-        ])->find();
+        $nowShifted = $dt->sub(new DateInterval('PT1H'))->format('Y-m-d H:i:s');
+
+        $collection = $this->entityManager
+            ->getRepository('Reminder')
+            ->where([
+                'type' => 'Email',
+                'remindAt<=' => $now,
+                'startAt>' => $nowShifted,
+            ])
+            ->find();
 
         if (empty($collection)) {
             return;
@@ -75,12 +83,18 @@ class SendEmailReminders implements Job
             if ($i >= self::MAX_PORTION_SIZE) {
                 break;
             }
+
             try {
                 $emailReminder->send($entity);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->error('Job SendEmailReminders '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
             }
-            $this->entityManager->getRepository('Reminder')->deleteFromDb($entity->id);
+            catch (Exception $e) {
+                $GLOBALS['log']->error(
+                    'Job SendEmailReminders '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage()
+                );
+            }
+            $this->entityManager
+                ->getRepository('Reminder')
+                ->deleteFromDb($entity->id);
         }
     }
 }

@@ -31,9 +31,11 @@ namespace Espo\Core\Jobs;
 
 use Espo\Entities\ScheduledJob;
 
+use StdClass;
+
 interface JobTargeted
 {
-    public function run(?object $data, string $targetId, string $targetType);
+    public function run(string $targetType, string $targetId, StdClass $data) : void;
 
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime);
+    public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void;
 }

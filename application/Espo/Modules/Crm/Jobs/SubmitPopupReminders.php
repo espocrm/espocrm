@@ -54,7 +54,7 @@ class SubmitPopupReminders implements Job
         $this->webSocketSubmission = $webSocketSubmission;
     }
 
-    public function run()
+    public function run() : void
     {
         if (!$this->config->get('useWebSocket')) {
             return;
@@ -147,8 +147,6 @@ class SubmitPopupReminders implements Job
                 $GLOBALS['log']->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }
-
-        return true;
     }
 
     protected function deleteReminder($reminder)

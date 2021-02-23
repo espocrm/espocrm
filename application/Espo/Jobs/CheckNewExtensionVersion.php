@@ -29,14 +29,15 @@
 
 namespace Espo\Jobs;
 
-use Espo\Core\Exceptions;
-
 class CheckNewExtensionVersion extends CheckNewVersion
 {
-    public function run()
+    public function run() : void
     {
-        if (!$this->config->get('adminNotifications') || !$this->config->get('adminNotificationsNewExtensionVersion')) {
-            return true;
+        if (
+            !$this->config->get('adminNotifications') ||
+            !$this->config->get('adminNotificationsNewExtensionVersion')
+        ) {
+            return;
         }
 
         $job = $this->entityManager->getEntity('Job');
@@ -48,7 +49,5 @@ class CheckNewExtensionVersion extends CheckNewVersion
         ]);
 
         $this->entityManager->saveEntity($job);
-
-        return true;
     }
 }

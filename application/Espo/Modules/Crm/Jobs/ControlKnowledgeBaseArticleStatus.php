@@ -36,18 +36,20 @@ class ControlKnowledgeBaseArticleStatus implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run()
+    public function run() : void
     {
-        $list = $this->entityManager->getRepository('KnowledgeBaseArticle')->where([
-            'expirationDate<=' => date('Y-m-d'),
-            'status' => 'Published',
-        ])->find();
+        $list = $this->entityManager
+            ->getRepository('KnowledgeBaseArticle')
+            ->where([
+                'expirationDate<=' => date('Y-m-d'),
+                'status' => 'Published',
+            ])
+            ->find();
 
         foreach ($list as $e) {
             $e->set('status', 'Archived');
+
             $this->entityManager->saveEntity($e);
         }
-
-        return true;
     }
 }

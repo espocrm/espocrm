@@ -51,7 +51,7 @@ class ProcessWebhookQueue implements Job
         $this->aclManager = $aclManager;
     }
 
-    public function run()
+    public function run() : void
     {
         $sender = new Sender($this->config);
 

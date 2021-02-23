@@ -49,10 +49,10 @@ class CheckNewVersion implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run()
+    public function run() : void
     {
         if (!$this->config->get('adminNotifications') || !$this->config->get('adminNotificationsNewVersion')) {
-            return true;
+            return;
         }
 
         $job = $this->entityManager->getEntity('Job');
@@ -65,7 +65,7 @@ class CheckNewVersion implements Job
 
         $this->entityManager->saveEntity($job);
 
-        return true;
+        return;
     }
 
     protected function getRunTime()

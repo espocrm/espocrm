@@ -41,6 +41,7 @@ use Espo\Core\{
     Utils\Cron\Job as CronJob,
     ORM\EntityManager,
     Utils\Cron\JobTask,
+    Jobs\JobTargeted,
 };
 
 use Espo\Entities\Job as JobEntity;
@@ -82,10 +83,15 @@ class CronManager
     protected $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
 
     protected $config;
+
     protected $fileManager;
+
     protected $entityManager;
+
     protected $serviceFactory;
+
     protected $injectableFactory;
+
     protected $scheduledJob;
 
     public function __construct(
@@ -110,7 +116,8 @@ class CronManager
         if ($this->config->get('jobRunInParallel')) {
             if (AsyncPool::isSupported()) {
                 $this->useProcessPool = true;
-            } else {
+            }
+            else {
                 $GLOBALS['log']->warning("CronManager: useProcessPool requires pcntl and posix extensions.");
             }
         }
@@ -137,7 +144,8 @@ class CronManager
 
         if (is_array($lastRunData) && !empty($lastRunData['time'])) {
             $lastRunTime = $lastRunData['time'];
-        } else {
+        }
+        else {
             $lastRunTime = time() - intval($this->config->get('cronMinInterval', 0)) - 1;
         }
 
@@ -265,7 +273,8 @@ class CronManager
             if (!$noLock) {
                 if ($lockTable) {
                     $this->entityManager->getLocker()->rollback();
-                } else {
+                }
+                else {
                     $this->entityManager->getTransactionManager()->rollback();
                 }
             }
@@ -306,7 +315,7 @@ class CronManager
     /**
      * Run a specific job by ID. A job status should be set to 'Ready'.
      */
-    public function runJobById(string $id)
+    public function runJobById(string $id) : void
     {
         if (empty($id)) {
             throw new Error();
@@ -328,6 +337,7 @@ class CronManager
 
         $job->set('status', self::RUNNING);
         $job->set('pid', System::getPid());
+
         $this->entityManager->saveEntity($job);
 
         $this->runJob($job);
@@ -339,14 +349,17 @@ class CronManager
     public function runJob(JobEntity $job)
     {
         $isSuccess = true;
+
         $skipLog = false;
 
         try {
             if ($job->get('scheduledJobId')) {
                 $this->runScheduledJob($job);
-            } else if ($job->get('job')) {
+            }
+            else if ($job->get('job')) {
                 $this->runJobByName($job);
-            } else {
+            }
+            else {
                 $this->runService($job);
             }
         } catch (Throwable $e) {
@@ -354,8 +367,10 @@ class CronManager
 
             if ($e->getCode() === -1) {
                 $job->set('attempts', 0);
+
                 $skipLog = true;
-            } else {
+            }
+            else {
                 $GLOBALS['log']->error(
                     'CronManager: Failed job running, job ['. $job->id .']. Error Details: '.
                     $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine()
@@ -386,7 +401,7 @@ class CronManager
         return false;
     }
 
-    protected function runScheduledJob(JobEntity $job)
+    protected function runScheduledJob(JobEntity $job) : void
     {
         $jobName = $job->get('scheduledJobJob');
 
@@ -404,17 +419,19 @@ class CronManager
 
         $obj = $this->injectableFactory->create($className);
 
+        if ($obj instanceof JobTargeted) {
+            $data = $job->get('data') ?? (object) [];
+
+            $obj->run($job->get('targetType'), $job->get('targetId'), $data);
+
+            return;
+        }
+
         if (!method_exists($obj, 'run')) {
-            throw new Error("No 'run' method in job {$jobName}.");
+            throw new Error("No 'run' method in job '{$jobName}'.");
         }
 
-        $data = null;
-
-        if ($job->get('data')) {
-            $data = $job->get('data');
-        }
-
-        $obj->run($data, $job->get('targetId'), $job->get('targetType'));
+        $obj->run();
     }
 
     protected function runService(JobEntity $job)
@@ -446,7 +463,7 @@ class CronManager
         $service->$methodName($data, $job->get('targetId'), $job->get('targetType'));
     }
 
-    protected function runJobByName(JobEntity $job)
+    protected function runJobByName(JobEntity $job) : void
     {
         $jobName = $job->get('job');
 
@@ -462,9 +479,15 @@ class CronManager
             throw new Error("No 'run' method in job {$jobName}.");
         }
 
-        $data = $job->get('data') ?: null;
+        if ($obj instanceof JobTargeted) {
+            $data = $job->get('data') ?? (object) [];
 
-        $obj->run($data, $job->get('targetId'), $job->get('targetType'));
+            $obj->run($job->get('targetType'), $job->get('targetId'), $data);
+
+            return;
+        }
+
+        $obj->run();
     }
 
     protected function createJobsFromScheduledJobs()
@@ -474,6 +497,7 @@ class CronManager
 
         foreach ($activeScheduledJobList as $scheduledJob) {
             $scheduling = $scheduledJob->get('scheduling');
+
             $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
 
             if ($asSoonAsPossible) {
@@ -516,6 +540,7 @@ class CronManager
             if ($className) {
                 if (method_exists($className, 'prepare')) {
                     $obj = $this->injectableFactory->create($className);
+
                     $obj->prepare($scheduledJob, $nextDate);
 
                     continue;

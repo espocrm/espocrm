@@ -46,7 +46,7 @@ class ProcessJobQueueQ1 implements Job
         $this->config = $config;
     }
 
-    public function run()
+    public function run() : void
     {
         $limit = $this->config->get('jobQ1MaxPortion', 500);
 

@@ -31,5 +31,5 @@ namespace Espo\Core\Jobs;
 
 interface Job
 {
-    public function run();
+    public function run() : void;
 }

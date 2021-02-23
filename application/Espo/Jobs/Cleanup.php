@@ -29,8 +29,6 @@
 
 namespace Espo\Jobs;
 
-use Espo\Core\Exceptions;
-
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
@@ -87,7 +85,7 @@ class Cleanup implements Job
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run()
+    public function run() : void
     {
         $this->cleanupJobs();
         $this->cleanupScheduledJobLog();

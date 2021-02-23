@@ -35,9 +35,12 @@ use Espo\Core\{
     Jobs\Job,
 };
 
+use DateTime;
+
 class AuthTokenControl implements Job
 {
     protected $config;
+
     protected $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
@@ -46,7 +49,7 @@ class AuthTokenControl implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run()
+    public function run() : void
     {
         $authTokenLifetime = $this->config->get('authTokenLifetime');
         $authTokenMaxIdleTime = $this->config->get('authTokenMaxIdleTime');
@@ -55,30 +58,39 @@ class AuthTokenControl implements Job
             return;
         }
 
-        $whereClause = array(
-            'isActive' => true
-        );
+        $whereClause = [
+            'isActive' => true,
+        ];
 
         if ($authTokenLifetime) {
-            $dt = new \DateTime();
+            $dt = new DateTime();
+
             $dt->modify('-' . $authTokenLifetime . ' hours');
+
             $authTokenLifetimeThreshold = $dt->format('Y-m-d H:i:s');
 
             $whereClause['createdAt<'] = $authTokenLifetimeThreshold;
         }
 
         if ($authTokenMaxIdleTime) {
-            $dt = new \DateTime();
+            $dt = new DateTime();
+
             $dt->modify('-' . $authTokenMaxIdleTime . ' hours');
+
             $authTokenMaxIdleTimeThreshold = $dt->format('Y-m-d H:i:s');
 
             $whereClause['lastAccess<'] = $authTokenMaxIdleTimeThreshold;
         }
 
-        $tokenList = $this->entityManager->getRepository('AuthToken')->where($whereClause)->limit(0, 500)->find();
+        $tokenList = $this->entityManager
+            ->getRepository('AuthToken')
+            ->where($whereClause)
+            ->limit(0, 500)
+            ->find();
 
         foreach ($tokenList as $token) {
             $token->set('isActive', false);
+
             $this->entityManager->saveEntity($token);
         }
     }

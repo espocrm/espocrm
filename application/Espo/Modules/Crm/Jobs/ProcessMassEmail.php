@@ -35,6 +35,8 @@ use Espo\Core\{
     Jobs\Job,
 };
 
+use Exception;
+
 class ProcessMassEmail implements Job
 {
     protected $serviceFactory;
@@ -46,33 +48,45 @@ class ProcessMassEmail implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run()
+    public function run() : void
     {
         $service = $this->serviceFactory->create('MassEmail');
 
-        $massEmailList = $this->entityManager->getRepository('MassEmail')->where([
-            'status' => 'Pending',
-            'startAt<=' => date('Y-m-d H:i:s'),
-        ])->find();
+        $massEmailList = $this->entityManager
+            ->getRepository('MassEmail')
+            ->where([
+                'status' => 'Pending',
+                'startAt<=' => date('Y-m-d H:i:s'),
+            ])
+            ->find();
+
         foreach ($massEmailList as $massEmail) {
             try {
                 $service->createQueue($massEmail);
-            } catch (\Exception $e) {
+            }
+            catch (Exception $e) {
                 $GLOBALS['log']->error(
-                    'Job ProcessMassEmail#createQueue '.$massEmail->id.': [' . $e->getCode() . '] ' .$e->getMessage()
+                    'Job ProcessMassEmail#createQueue ' . $massEmail->id . ': [' . $e->getCode() . '] ' .
+                    $e->getMessage()
                 );
             }
         }
 
-        $massEmailList = $this->entityManager->getRepository('MassEmail')->where([
-            'status' => 'In Process',
-        ])->find();
+        $massEmailList = $this->entityManager
+            ->getRepository('MassEmail')
+            ->where([
+                'status' => 'In Process',
+            ])
+            ->find();
+
         foreach ($massEmailList as $massEmail) {
             try {
                 $service->processSending($massEmail);
-            } catch (\Exception $e) {
+            }
+            catch (Exception $e) {
                 $GLOBALS['log']->error(
-                    'Job ProcessMassEmail#processSending '.$massEmail->id.': [' . $e->getCode() . '] ' .$e->getMessage()
+                    'Job ProcessMassEmail#processSending '. $massEmail->id . ': [' . $e->getCode() . '] ' .
+                    $e->getMessage()
                 );
             }
         }
