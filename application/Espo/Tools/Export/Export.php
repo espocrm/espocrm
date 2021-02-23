@@ -345,8 +345,12 @@ class Export
 
         $type = $entity->getAttributeType($attribute);
 
+        if ($type === Entity::FOREIGN) {
+            $type = $this->getForeignAttributeType($entity, $attribute) ?? $type;
+        }
+
         switch ($type) {
-            case 'jsonObject':
+            case Entity::JSON_OBJECT:
                 if (!empty($defs[$attribute]['isLinkMultipleNameMap'])) {
                     break;
                 }
@@ -355,7 +359,7 @@ class Export
 
                 return Json::encode($value, \JSON_UNESCAPED_UNICODE);
 
-            case 'jsonArray':
+            case Entity::JSON_ARRAY:
                 if (!empty($defs[$attribute]['isLinkMultipleIdList'])) {
                     break;
                 }
@@ -368,23 +372,76 @@ class Export
 
                 return null;
 
-            case 'password':
+            case Entity::PASSWORD:
                 return null;
         }
 
         return $entity->get($attribute);
     }
 
-    protected function checkAttributeIsAllowedForExport(Entity $entity, string $attribute, bool $isExportAllFields = false) : bool
+    private function getForeignAttributeType(Entity $entity, string $attribute) : ?string
     {
+        $defs = $this->entityManager->getDefs();
+
+        $entityDefs = $defs->getEntity($this->entityType);
+
+        $relation = $entity->getAttributeParam($attribute, 'relation');
+        $foreign = $entity->getAttributeParam($attribute, 'foreign');
+
+        if (!$relation) {
+            return null;
+        }
+
+        if (!$foreign) {
+            return null;
+        }
+
+        if (!is_string($foreign)) {
+            return self::VARCHAR;
+        }
+
+        if (!$entityDefs->getRelation($relation)->hasForeignEntityType()) {
+            return null;
+        }
+
+        $entityType = $entityDefs->getRelation($relation)->getForeignEntityType();
+
+        if (!$defs->hasEntity($entityType)) {
+            return null;
+        }
+
+        $foreignEntityDefs = $defs->getEntity($entityType);
+
+        if (!$foreignEntityDefs->hasAttribute($foreign)) {
+            return null;
+        }
+
+        return $foreignEntityDefs->getAttribute($foreign)->getType();
+    }
+
+    protected function checkAttributeIsAllowedForExport(
+        Entity $entity, string $attribute, bool $isExportAllFields = false
+    ) : bool {
+
         if (!$isExportAllFields) {
             return true;
         }
 
-        if ($entity->getAttributeParam($attribute, 'notExportable')) return false;
-        if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) return false;
-        if ($entity->getAttributeParam($attribute, 'isLinkMultipleNameMap')) return false;
-        if ($entity->getAttributeParam($attribute, 'isLinkStub')) return false;
+        if ($entity->getAttributeParam($attribute, 'notExportable')) {
+            return false;
+        }
+
+        if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+            return false;
+        }
+
+        if ($entity->getAttributeParam($attribute, 'isLinkMultipleNameMap')) {
+            return false;
+        }
+
+        if ($entity->getAttributeParam($attribute, 'isLinkStub')) {
+            return false;
+        }
 
         return true;
     }
