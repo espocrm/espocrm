@@ -50,13 +50,19 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             },
             'click .action': function (e) {
                 var $el = $(e.currentTarget);
+
                 var action = $el.data('action');
+
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
+
                 var data = $el.data();
-                if (typeof this[method] == 'function') {
+
+                if (typeof this[method] === 'function') {
                     this[method](data, e);
+
                     e.preventDefault();
-                } else {
+                }
+                else {
                     this.trigger('action', action, data, e);
                 }
             }
@@ -68,7 +74,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Close'
+                    label: 'Close',
                 }
             ];
 
@@ -79,7 +85,9 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
             this.panelName = this.options.panelName;
             this.link = this.options.link;
+
             this.defs = this.options.defs || {};
+
             this.filterList = this.options.filterList;
             this.filter = this.options.filter;
             this.layoutName = this.options.layoutName || 'listSmall';
@@ -92,8 +100,11 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
             this.massUnlinkDisabled = this.options.massUnlinkDisabled || this.massUnlinkDisabled;
 
-            this.massActionRemoveDisabled = this.options.massActionRemoveDisabled || this.massActionRemoveDisabled;
-            this.massActionMassUpdateDisabled = this.options.massActionMassUpdateDisabled || this.massActionMassUpdateDisabled;
+            this.massActionRemoveDisabled = this.options.massActionRemoveDisabled ||
+                this.massActionRemoveDisabled;
+
+            this.massActionMassUpdateDisabled = this.options.massActionMassUpdateDisabled ||
+                this.massActionMassUpdateDisabled;
 
             this.panelCollection = this.options.panelCollection;
 
@@ -101,7 +112,8 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 this.listenTo(this.panelCollection, 'sync', function () {
                     this.collection.fetch();
                 }, this)
-            } else if (this.model) {
+            }
+            else if (this.model) {
                 this.listenTo(this.model, 'after:relate', function () {
                     this.collection.fetch();
                 });
@@ -129,6 +141,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 if (this.unlinkDisabled || this.defs.massUnlinkDisabled || this.defs.unlinkDisabled) {
                     this.massUnlinkDisabled = true;
                 }
+
                 if (!this.getAcl().check(this.model, 'edit')) {
                     this.massUnlinkDisabled = true;
                 }
@@ -138,7 +151,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 this.buttonList.unshift({
                     name: 'selectRelated',
                     label: 'Select',
-                    pullLeft: true
+                    pullLeft: true,
                 });
             }
 
@@ -146,15 +159,17 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 this.buttonList.unshift({
                     name: 'createRelated',
                     label: 'Create',
-                    pullLeft: true
+                    pullLeft: true,
                 });
             }
 
             this.headerHtml = '';
+
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
             if (this.model) {
                 this.headerHtml += Handlebars.Utils.escapeExpression(this.model.get('name'));
+
                 if (this.headerHtml) {
                     this.headerHtml += ' <span class="chevron-right"></span> ';
                 }
@@ -163,6 +178,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             var title = this.options.title;
             if (title) {
                 title = Handlebars.Utils.escapeExpression(this.options.title);
+
                 title = title.replace(/@right/, '<span class="chevron-right"></span>');
             }
             this.headerHtml += title || this.getLanguage().translate(this.link, 'links', this.model.name);
@@ -189,6 +205,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 if (this.panelCollection) {
                     this.listenTo(collection, 'change', function (model) {
                         var panelModel = this.panelCollection.get(model.id);
+
                         if (panelModel) {
                             panelModel.set(model.attributes);
                         }
@@ -196,7 +213,9 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 }
 
                 this.loadSearch();
+
                 this.wait(true);
+
                 this.loadList();
             }, this);
         },
@@ -206,10 +225,13 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
         },
 
         loadSearch: function () {
-            var searchManager = this.searchManager = new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+            var searchManager = this.searchManager =
+                new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+
             searchManager.emptyOnReset = true;
 
             var primaryFilterName = this.primaryFilterName;
+
             if (primaryFilterName) {
                 searchManager.setPrimary(primaryFilterName);
             }
@@ -221,14 +243,21 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             if (this.filterList) {
                 this.filterList.forEach(function (item1) {
                     var isFound = false;
+
                     var name1 = item1.name || item1;
-                    if (!name1 || name1 === 'all') return;
+
+                    if (!name1 || name1 === 'all') {
+                        return;
+                    }
+
                     filterList.forEach(function (item2) {
                         var name2 = item2.name || item2;
+
                         if (name1 === name2) {
                             isFound = true;
                         }
                     }, this);
+
                     if (!isFound) {
                         filterList.push(item1);
                     }
@@ -245,7 +274,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                     el: this.containerSelector + ' .search-container',
                     searchManager: searchManager,
                     disableSavePreset: true,
-                    filterList: filterList
+                    filterList: filterList,
                 }, function (view) {
                     this.listenTo(view, 'reset', function () {
 
@@ -274,11 +303,12 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 massActionRemoveDisabled: this.massActionRemoveDisabled,
                 massActionMassUpdateDisabled: this.massActionMassUpdateDisabled,
                 rowActionsOptions: {
-                    unlinkDisabled: this.unlinkDisabled
-                }
+                    unlinkDisabled: this.unlinkDisabled,
+                },
             }, function (view) {
                 this.listenToOnce(view, 'select', function (model) {
                     this.trigger('select', model);
+
                     this.close();
                 }.bind(this));
 
@@ -290,6 +320,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                             this.disableButton('select');
                         }
                     }, this);
+
                     this.listenTo(view, 'select-all-results', function () {
                         this.enableButton('select');
                     }, this);
@@ -299,14 +330,18 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                     this.listenToOnce(view, 'after:build-rows', function () {
                         this.wait(false);
                     }, this);
+
                     this.collection.fetch();
-                } else {
+                }
+                else {
                     view.getSelectAttributeList(function (selectAttributeList) {
                         if (!~selectAttributeList.indexOf('name')) {
                             selectAttributeList.push('name');
                         }
 
-                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || [];
+                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
+                            this.mandatorySelectAttributeList || [];
+
                         mandatorySelectAttributeList.forEach(function (attribute) {
                             if (!~selectAttributeList.indexOf(attribute)) {
                                 selectAttributeList.push(attribute);
@@ -316,9 +351,11 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
+
                         this.listenToOnce(view, 'after:build-rows', function () {
                             this.wait(false);
                         }, this);
+
                         this.collection.fetch();
                     }.bind(this));
                 }
@@ -330,15 +367,17 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
             this.confirm({
                 message: this.translate('unlinkRecordConfirmation', 'messages'),
-                confirmText: this.translate('Unlink')
+                confirmText: this.translate('Unlink'),
             }, function () {
-                var model = this.collection.get(id);
                 this.notify('Unlinking...');
+
                 Espo.Ajax.deleteRequest(this.collection.url, {
-                    id: id
+                    id: id,
                 }).then(function () {
                     this.notify('Unlinked', 'success');
+
                     this.collection.fetch();
+
                     this.model.trigger('after:unrelate');
                 }.bind(this));
             }, this);
@@ -346,29 +385,37 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
         actionCreateRelated: function () {
             var p = this.getParentView();
+
             var view = null;
+
             while (p) {
                 if (p.actionCreateRelated) {
                     view = p;
+
                     break;
                 }
+
                 p = p.getParentView();
             }
 
             p.actionCreateRelated({
                 link: this.link,
-                scope: this.scope
+                scope: this.scope,
             });
         },
 
         actionSelectRelated: function () {
             var p = this.getParentView();
+
             var view = null;
+
             while (p) {
                 if (p.actionSelectRelated) {
                     view = p;
+
                     break;
                 }
+
                 p = p.getParentView();
             }
 
@@ -376,7 +423,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 link: this.link,
                 primaryFilterName: this.defs.selectPrimaryFilterName,
                 boolFilterList: this.defs.selectBoolFilterList,
-                massSelect: this.defs.massSelect
+                massSelect: this.defs.massSelect,
             });
         },
     });

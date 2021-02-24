@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/panels/relationship', ['views/record/panels/bottom', 'search-manager'], function (Dep, SearchManager) {
+define('views/record/panels/relationship',
+    ['views/record/panels/bottom', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
 
@@ -104,7 +105,7 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                         html: '<span class="fas fa-plus"></span>',
                         data: {
                             link: this.link,
-                        }
+                        },
                     });
                     hasCreate = true;
                 }
@@ -112,12 +113,15 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
 
             if (this.defs.select) {
                 var data = {link: this.link};
+
                 if (this.defs.selectPrimaryFilterName) {
                     data.primaryFilterName = this.defs.selectPrimaryFilterName;
                 }
+
                 if (this.defs.selectBoolFilterList) {
                     data.boolFilterList = this.defs.selectBoolFilterList;
                 }
+
                 data.massSelect = this.defs.massSelect;
                 data.createButton = hasCreate;
 
@@ -146,9 +150,11 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
             }
 
             var listLayout = null;
+
             var layout = this.defs.layout || null;
+
             if (layout) {
-                if (typeof layout == 'string') {
+                if (typeof layout === 'string') {
                      layoutName = layout;
                 } else {
                      layoutName = 'listRelationshipCustom';
@@ -198,6 +204,7 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                     this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
                     this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
                     'views/record/list';
+
                 this.listViewName = viewName;
                 this.rowActionsView = this.defs.readOnly ? false : (this.defs.rowActionsView || this.rowActionsView);
 
@@ -212,8 +219,8 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                         el: this.options.el + ' .list-container',
                         skipBuildRows: true,
                         rowActionsOptions: {
-                            unlinkDisabled: this.defs.unlinkDisabled
-                        }
+                            unlinkDisabled: this.defs.unlinkDisabled,
+                        },
                     }, function (view) {
                         view.getSelectAttributeList(function (selectAttributeList) {
                             if (selectAttributeList) {
@@ -287,23 +294,27 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
 
         setupFilterActions: function () {
             if (this.filterList && this.filterList.length) {
-
                 this.actionList.push(false);
 
                 this.filterList.slice(0).forEach(function (item) {
                     var selected = false;
+
                     if (item == 'all') {
                         selected = !this.filter;
-                    } else {
+                    }
+                    else {
                         selected = item === this.filter;
                     }
+
                     var label = this.translateFilter(item);
+
                     this.actionList.push({
                         action: 'selectFilter',
-                        html: '<span class="check-icon fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span>' + '<div>' + label + '</div>',
+                        html: '<span class="check-icon fas fa-check pull-right' +
+                            (!selected ? ' hidden' : '') + '"></span>' + '<div>' + label + '</div>',
                         data: {
-                            name: item
-                        }
+                            name: item,
+                        },
                     });
                 }, this);
             }
@@ -315,11 +326,13 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
 
         getStoredFilter: function () {
             var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
+
             return this.getStorage().get('state', key) || null;
         },
 
         storeFilter: function (filter) {
             var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
+
             if (filter) {
                 this.getStorage().set('state', key, filter);
             } else {
@@ -330,6 +343,7 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
         setFilter: function (filter) {
             this.filter = filter;
             this.collection.data.primaryFilter = null;
+
             if (filter && filter !== 'all') {
                 this.collection.data.primaryFilter = filter;
             }
@@ -338,26 +352,33 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
         actionSelectFilter: function (data) {
             var filter = data.name;
             var filterInternal = filter;
-            if (filter == 'all') {
+
+            if (filter === 'all') {
                 filterInternal = false;
             }
+
             this.storeFilter(filterInternal);
             this.setFilter(filterInternal);
 
             this.filterList.forEach(function (item) {
                 var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+
                 if (item === filter) {
                     $el.removeClass('hidden');
                 } else {
                     $el.addClass('hidden');
                 }
             }, this);
+
             this.collection.reset();
 
             var listView = this.getView('list');
+
             if (listView && listView.$el) {
                 var height = listView.$el.height();
+
                 listView.$el.empty();
+
                 if (height) {
                     listView.$el.parent().css('height', height + 'px');
                 }
@@ -370,7 +391,9 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
             this.setupTitle();
 
             if (this.isRendered()) {
-                this.$el.closest('.panel').find('> .panel-heading > .panel-title > span').html(this.titleHtml);
+                this.$el.closest('.panel')
+                    .find('> .panel-heading > .panel-title > span')
+                    .html(this.titleHtml);
             }
         },
 
@@ -380,7 +403,9 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
 
         actionViewRelatedList: function (data) {
             var viewName =
-                this.getMetadata().get(['clientDefs', this.model.name, 'relationshipPanels', this.name, 'viewModalView']) ||
+                this.getMetadata().get(
+                    ['clientDefs', this.model.name, 'relationshipPanels', this.name, 'viewModalView']
+                ) ||
                 this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'relatedList']) ||
                 this.viewModalView ||
                 'views/modals/related-list';
@@ -410,7 +435,7 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                 selectDisabled: !this.isSelectAvailable(scope),
                 rowActionsView: this.rowActionsView,
                 panelCollection: this.collection,
-                filtersDisabled: this.relatedListFiltersDisabled
+                filtersDisabled: this.relatedListFiltersDisabled,
             };
 
             if (data.viewOptions) {
@@ -420,14 +445,18 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
             }
 
             Espo.Ui.notify(this.translate('loading', 'messages'));
+
             this.createView('modalRelatedList', viewName, options, function (view) {
                 Espo.Ui.notify(false);
+
                 view.render();
 
                 this.listenTo(view, 'action', function (action, data, e) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                    if (typeof this[method] == 'function') {
+
+                    if (typeof this[method] === 'function') {
                         this[method](data, e);
+
                         e.preventDefault();
                     }
                 }, this);
@@ -450,9 +479,11 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
             var id = data.id;
             var scope = this.collection.get(id).name;
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') || 'views/modals/detail';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.detail') ||
+                'views/modals/detail';
 
             this.notify('Loading...');
+
             this.createView('quickDetail', viewName, {
                 scope: scope,
                 id: id,
@@ -461,7 +492,9 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);
                 });
+
                 view.render();
+
                 view.once('after:save', function () {
                     this.collection.fetch();
                 }, this);
@@ -472,17 +505,21 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
             var id = data.id;
             var scope = this.collection.get(id).name;
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+                'views/modals/edit';
 
             this.notify('Loading...');
+
             this.createView('quickEdit', viewName, {
                 scope: scope,
-                id: id
+                id: id,
             }, function (view) {
                 view.once('after:render', function () {
                     Espo.Ui.notify(false);
                 });
+
                 view.render();
+
                 view.once('after:save', function () {
                     this.collection.fetch();
                 }, this);
@@ -496,13 +533,15 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
                 message: this.translate('unlinkRecordConfirmation', 'messages'),
                 confirmText: this.translate('Unlink')
             }, function () {
-                var model = this.collection.get(id);
                 this.notify('Unlinking...');
+
                 Espo.Ajax.deleteRequest(this.collection.url, {
-                    id: id
+                    id: id,
                 }).then(function () {
                     this.notify('Unlinked', 'success');
+
                     this.collection.fetch();
+
                     this.model.trigger('after:unrelate');
                 }.bind(this));
             }, this);
@@ -513,14 +552,18 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
 
             this.confirm({
                 message: this.translate('removeRecordConfirmation', 'messages'),
-                confirmText: this.translate('Remove')
+                confirmText: this.translate('Remove'),
             }, function () {
                 var model = this.collection.get(id);
+
                 this.notify('Removing...');
+
                 model.destroy({
                     success: function () {
                         this.notify('Removed', 'success');
+
                         this.collection.fetch();
+
                         this.model.trigger('after:unrelate');
                     }.bind(this),
                 });
@@ -530,17 +573,21 @@ define('views/record/panels/relationship', ['views/record/panels/bottom', 'searc
         actionUnlinkAllRelated: function (data) {
             this.confirm(this.translate('unlinkAllConfirmation', 'messages'), function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
                 $.ajax({
                     url: this.model.name + '/action/unlinkAll',
                     type: 'POST',
                     data: JSON.stringify({
                         link: data.link,
-                        id: this.model.id
+                        id: this.model.id,
                     }),
                 }).done(function () {
                     this.notify(false);
+
                     this.notify('Unlinked', 'success');
+
                     this.collection.fetch();
+
                     this.model.trigger('after:unrelate');
                 }.bind(this));
             }, this);
