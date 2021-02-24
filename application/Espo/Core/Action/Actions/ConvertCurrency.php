@@ -40,10 +40,10 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\FieldUtil,
     Utils\Metadata,
-    FieldUtils\Currency\CurrencyConfigDataProvider,
-    FieldUtils\Currency\CurrencyConverter,
-    FieldUtils\Currency\Currency,
-    FieldUtils\Currency\CurrencyRates,
+    Fields\Currency\CurrencyConfigDataProvider,
+    Fields\Currency\CurrencyConverter,
+    Fields\Currency\Currency,
+    Fields\Currency\CurrencyRates,
 };
 
 use Espo\{

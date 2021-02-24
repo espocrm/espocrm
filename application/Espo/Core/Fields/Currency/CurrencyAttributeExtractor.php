@@ -27,41 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldUtils\Currency;
+namespace Espo\Core\Fields\Currency;
 
-use RuntimeException;
+use StdClass;
 
-/**
- * Currency rates.
- */
-class CurrencyRates
+class CurrencyAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
 {
-    private $data = [];
+    private $value;
 
-    private function __construct()
+    public function __construct(Currency $value)
     {
+        $this->value = $value;
     }
 
-    public function hasRate(string $currencyCode) : bool
+    public function extract(string $field) : StdClass
     {
-        return array_key_exists($currencyCode, $this->data);
-    }
-
-    public function getRate(string $currencyCode) : float
-    {
-        if (!$this->hasRate($currencyCode)) {
-            throw new RuntimeException("No currency rate for '{$currencyCode}'.");
-        }
-
-        return $this->data[$currencyCode];
-    }
-
-    public static function fromArray(array $data) : self
-    {
-        $obj = new self();
-
-        $obj->data = $data;
-
-        return $obj;
+        return (object) [
+            $field => $this->value->getAmount(),
+            $field . 'Currency' => $this->value->getCode(),
+        ];
     }
 }

@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldUtils\Currency;
+namespace Espo\Core\Fields\Currency;
 
 use RuntimeException;
 

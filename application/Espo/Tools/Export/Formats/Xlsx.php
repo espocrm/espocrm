@@ -40,8 +40,8 @@ use Espo\Core\{
     FileStorage\Manager as FileStorageManager,
     Utils\File\Manager as FileManager,
     ORM\EntityManager,
-    FieldUtils\Address\Address,
-    FieldUtils\Address\AddressFormatterFactory,
+    Fields\Address\Address,
+    Fields\Address\AddressFormatterFactory,
 };
 
 use PhpOffice\PhpSpreadsheet\Cell\DataType;

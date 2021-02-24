@@ -27,11 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\FieldUtils\Currency;
+namespace tests\unit\Espo\Core\Fields\Currency;
 
 use Espo\Core\{
-    FieldUtils\Currency\Currency,
-    FieldUtils\Currency\CurrencyFactory,
+    Fields\Currency\Currency,
+    Fields\Currency\CurrencyFactory,
 };
 
 use Espo\{

@@ -27,27 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldUtils\Address;
+namespace Espo\Core\Fields\Address;
 
-use StdClass;
+use Espo\{
+    ORM\Entity,
+};
 
-class AddressAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
+class AddressFactory // implements \Espo\ORM\Value\ValueFactory
 {
-    private $value;
-
-    public function __construct(Address $value)
+    public function isCreatableFromEntity(Entity $entity, string $field) : bool
     {
-        $this->value = $value;
+        return true;
     }
 
-    public function extract(string $field) : StdClass
+    public function createFromEntity(Entity $entity, string $field) : Address
     {
-        return (object) [
-            $field . 'Street' => $this->value->getStreet(),
-            $field . 'City' => $this->value->getCity(),
-            $field . 'Country' => $this->value->getCountry(),
-            $field . 'State' => $this->value->getState(),
-            $field . 'PostalCode' => $this->value->getPostalCode(),
-        ];
+        return (new AddressBuilder())
+           ->setStreet($entity->get($field . 'Street'))
+           ->setCity($entity->get($field . 'City'))
+           ->setCountry($entity->get($field . 'Country'))
+           ->setState($entity->get($field . 'State'))
+           ->setPostalCode($entity->get($field . 'PostalCode'))
+           ->build();
     }
 }

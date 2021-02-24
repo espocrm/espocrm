@@ -27,13 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\FieldUtils\Currency;
+namespace tests\unit\Espo\Core\Fields\Currency;
 
 use Espo\Core\{
-    FieldUtils\Currency\Currency,
-    FieldUtils\Currency\CurrencyConverter,
-    FieldUtils\Currency\CurrencyConfigDataProvider,
-    FieldUtils\Currency\CurrencyRates,
+    Fields\Currency\Currency,
+    Fields\Currency\CurrencyConverter,
+    Fields\Currency\CurrencyConfigDataProvider,
+    Fields\Currency\CurrencyRates,
 };
 
 class CurrencyConverterTest extends \PHPUnit\Framework\TestCase

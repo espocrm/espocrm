@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\FieldUtils\Address;
+namespace tests\integration\Espo\Core\Fields\Address;
 
-use Espo\Core\FieldUtils\Address\{
+use Espo\Core\Fields\Address\{
     AddressFormatterFactory,
     AddressValue,
 };

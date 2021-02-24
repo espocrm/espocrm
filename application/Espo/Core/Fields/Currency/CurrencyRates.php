@@ -27,77 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldUtils\Address;
+namespace Espo\Core\Fields\Currency;
+
+use RuntimeException;
 
 /**
- * An address value builder.
+ * Currency rates.
  */
-class AddressBuilder
+class CurrencyRates
 {
-    protected $street;
+    private $data = [];
 
-    protected $city;
-
-    protected $country;
-
-    protected $state;
-
-    protected $postalCode;
-
-    public function clone(Address $address) : self
+    private function __construct()
     {
-        $this->setStreet($address->getStreet());
-        $this->setCity($address->getCity());
-        $this->setCountry($address->getCountry());
-        $this->setState($address->getState());
-        $this->setPostalCode($address->getPostalCode());
-
-        return $this;
     }
 
-    public function setStreet(?string $street) : self
+    public function hasRate(string $currencyCode) : bool
     {
-        $this->street = $street;
-
-        return $this;
+        return array_key_exists($currencyCode, $this->data);
     }
 
-    public function setCity(?string $city) : self
+    public function getRate(string $currencyCode) : float
     {
-        $this->city = $city;
+        if (!$this->hasRate($currencyCode)) {
+            throw new RuntimeException("No currency rate for '{$currencyCode}'.");
+        }
 
-        return $this;
+        return $this->data[$currencyCode];
     }
 
-    public function setCountry(?string $country) : self
+    public static function fromArray(array $data) : self
     {
-        $this->country = $country;
+        $obj = new self();
 
-        return $this;
-    }
+        $obj->data = $data;
 
-    public function setState(?string $state) : self
-    {
-        $this->state = $state;
-
-        return $this;
-    }
-
-    public function setPostalCode(?string $postalCode) : self
-    {
-        $this->postalCode = $postalCode;
-
-        return $this;
-    }
-
-    public function build() : Address
-    {
-        return Address::fromRaw([
-            'street' => $this->street,
-            'city' => $this->city,
-            'country' => $this->country,
-            'state' => $this->state,
-            'postalCode' => $this->postalCode,
-        ]);
+        return $obj;
     }
 }

@@ -27,23 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldUtils\Address;
+namespace Espo\Core\Fields\Address;
 
-use Espo\Core\Utils\Metadata;
+use StdClass;
 
-class AddressFormatterMetadataProvider
+class AddressAttributeExtractor // implements \Espo\ORM\Value\AttributeExtractable
 {
-    private $metadata;
+    private $value;
 
-    public function __construct(Metadata $metadata)
+    public function __construct(Address $value)
     {
-        $this->metadata = $metadata;
+        $this->value = $value;
     }
 
-    public function getFormatterClassName(int $format) : ?string
+    public function extract(string $field) : StdClass
     {
-        return $this->metadata->get([
-           'app', 'addressFormats', strval($format), 'formatterClassName',
-        ]);
+        return (object) [
+            $field . 'Street' => $this->value->getStreet(),
+            $field . 'City' => $this->value->getCity(),
+            $field . 'Country' => $this->value->getCountry(),
+            $field . 'State' => $this->value->getState(),
+            $field . 'PostalCode' => $this->value->getPostalCode(),
+        ];
     }
 }

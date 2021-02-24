@@ -2643,7 +2643,7 @@ class Record implements Crud,
     }
 
     /**
-     * @deprecated Use `Espo\Core\FieldUtils\Currency\CurrencyConverter`.
+     * @deprecated Use `Espo\Core\Fields\Currency\CurrencyConverter`.
      */
     public function getConvertCurrencyValues(
         Entity $entity, string $targetCurrency, string $baseCurrency,

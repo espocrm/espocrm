@@ -29,7 +29,7 @@
 
 namespace Espo\Classes\AddressFormatters;
 
-use Espo\Core\FieldUtils\Address\{
+use Espo\Core\Fields\Address\{
     AddressFormatter,
     Address,
 };
