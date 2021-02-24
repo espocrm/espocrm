@@ -109,9 +109,21 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             this.panelCollection = this.options.panelCollection;
 
             if (this.panelCollection) {
-                this.listenTo(this.panelCollection, 'sync', function () {
+                this.listenTo(this.panelCollection, 'sync', function (c, r, o) {
+                    if (o.skipCollectionSync) {
+                        return;
+                    }
+
                     this.collection.fetch();
-                }, this)
+                }, this);
+
+                if (this.model) {
+                    this.listenTo(this.model, 'after:unrelate', function () {
+                        this.panelCollection.fetch({
+                            skipCollectionSync: true,
+                        });
+                    }, this);
+                }
             }
             else if (this.model) {
                 this.listenTo(this.model, 'after:relate', function () {
@@ -190,6 +202,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
             this.headerHtml = iconHtml + this.headerHtml;
 
             this.waitForView('list');
+
             if (this.searchPanel) {
                 this.waitForView('search');
             }
