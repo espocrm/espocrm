@@ -46,7 +46,8 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 fieldList: this.fieldList,
                 isCustom: this.defs.isCustom,
                 isNew: this.isNew,
-                hasDynamicLogicPanel: this.hasDynamicLogicPanel
+                hasDynamicLogicPanel: this.hasDynamicLogicPanel,
+                hasResetToDefault: !this.defs.isCustom && !this.entityTypeIsCustom && !this.isNew,
             };
         },
 
@@ -74,13 +75,18 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 fields: {
                     name: {required: true, maxLength: 100},
                     label: {required: true},
-                    tooltipText: {}
+                    tooltipText: {},
                 }
             };
+
+            this.entityTypeIsCustom = !!this.getMetadata().get(['scopes', this.scope, 'isCustom']);
+
+            console.log(this.entityTypeIsCustom);
 
             if (!this.isNew) {
                 this.model.id = this.field;
                 this.model.scope = this.scope;
+
                 this.model.set('name', this.field);
                 this.model.set('label', this.getLanguage().translate(this.field, 'fields', this.scope));
 
