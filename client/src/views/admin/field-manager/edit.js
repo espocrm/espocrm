@@ -81,8 +81,6 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             this.entityTypeIsCustom = !!this.getMetadata().get(['scopes', this.scope, 'isCustom']);
 
-            console.log(this.entityTypeIsCustom);
-
             if (!this.isNew) {
                 this.model.id = this.field;
                 this.model.scope = this.scope;
