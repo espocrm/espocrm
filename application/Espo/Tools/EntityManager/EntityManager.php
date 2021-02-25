@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Conflict;
+
 use Espo\Core\{
     Container,
     Utils\Util,
@@ -43,6 +44,8 @@ use Espo\Core\{
     Utils\Config,
     Utils\Metadata\Helper as MetadataHelper,
 };
+
+use Exception;
 
 /**
  * Administration > Entity Manager.
@@ -61,6 +64,10 @@ class EntityManager
 
     private $container;
 
+    const MAX_ENTITY_NAME = 100;
+
+    const MAX_LINK_NAME = 100;
+
     private $reservedWordList = [
         '__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable',
         'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default',
@@ -72,7 +79,16 @@ class EntityManager
         'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common', 'fn',
     ];
 
-    private $linkForbiddenNameList = ['posts', 'stream', 'subscription', 'followers', 'action', 'null', 'false', 'true'];
+    private $linkForbiddenNameList = [
+        'posts',
+        'stream',
+        'subscription',
+        'followers',
+        'action',
+        'null',
+        'false',
+        'true',
+    ];
 
     private $forbiddenEntityTypeNameList = [
         'Common',
@@ -107,7 +123,9 @@ class EntityManager
 
     protected function getEntityManager()
     {
-        if (!$this->container) return;
+        if (!$this->container) {
+            return null;
+        }
 
         return $this->container->get('entityManager');
     }
@@ -139,28 +157,37 @@ class EntityManager
 
     protected function getServiceFactory()
     {
-        if (!$this->container) return;
+        if (!$this->container) {
+            return null;
+        }
 
         return $this->container->get('serviceFactory');
     }
 
-    protected function checkControllerExists($name)
+    protected function checkControllerExists(string $name) : bool
     {
-        $controllerClassName = '\\Espo\\Custom\\Controllers\\' . Util::normilizeClassName($name);
+        $controllerClassName = 'Espo\\Custom\\Controllers\\' . Util::normilizeClassName($name);
+
         if (class_exists($controllerClassName)) {
             return true;
-        } else {
+        }
+        else {
             foreach ($this->getMetadata()->getModuleList() as $moduleName) {
-                $controllerClassName = '\\Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normilizeClassName($name);
+                $controllerClassName =
+                    'Espo\\Modules\\' . $moduleName . '\\Controllers\\' . Util::normilizeClassName($name);
+
                 if (class_exists($controllerClassName)) {
                     return true;
                 }
             }
-            $controllerClassName = '\\Espo\\Controllers\\' . Util::normilizeClassName($name);
+
+            $controllerClassName = 'Espo\\Controllers\\' . Util::normilizeClassName($name);
+
             if (class_exists($controllerClassName)) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -172,10 +199,20 @@ class EntityManager
 
         foreach ($scopeList as $entityType) {
             $relationsDefs = $this->getEntityManager()->getMetadata()->get($entityType, 'relations');
-            if (empty($relationsDefs)) continue;
+
+            if (empty($relationsDefs)) {
+                continue;
+            }
+
             foreach ($relationsDefs as $link => $item) {
-                if (empty($item['type'])) continue;
-                if (empty($item['relationName'])) continue;
+                if (empty($item['type'])) {
+                    continue;
+                }
+
+                if (empty($item['relationName'])) {
+                    continue;
+                }
+
                 if ($item['type'] === 'manyMany') {
                     if (ucfirst($item['relationName']) === $name) {
                         return true;
@@ -195,8 +232,8 @@ class EntityManager
             throw new BadRequest();
         }
 
-        if (strlen($name) > 100) {
-            throw new Error('Entity name should not be longer than 100.');
+        if (strlen($name) > self::MAX_ENTITY_NAME) {
+            throw new Error("Entity name should not be longer than " . self::MAX_ENTITY_NAME . ".");
         }
 
         if (is_numeric($name[0])) {
@@ -249,13 +286,17 @@ class EntityManager
         $normalizedName = Util::normilizeClassName($name);
 
         $templateNamespace = "\Espo\Core\Templates";
+
         $templatePath = "application/Espo/Core/Templates";
 
         $templateModuleName = null;
         if (!empty($templateDefs['module'])) {
             $templateModuleName = $templateDefs['module'];
+
             $normalizedTemplateModuleName = Util::normilizeClassName($templateModuleName);
+
             $templateNamespace = "\Espo\Modules\\{$normalizedTemplateModuleName}\Core\Templates";
+
             $templatePath = "application/Espo/Modules/".$normalizedTemplateModuleName."/Core/Templates";
         }
 
@@ -267,6 +308,7 @@ class EntityManager
             "}\n";
 
         $filePath = "custom/Espo/Custom/Entities/{$normalizedName}.php";
+
         $this->getFileManager()->putContents($filePath, $contents);
 
         $contents = "<" . "?" . "php\n\n".
@@ -274,7 +316,9 @@ class EntityManager
             "class {$normalizedName} extends {$templateNamespace}\Controllers\\{$type}\n".
             "{\n".
             "}\n";
+
         $filePath = "custom/Espo/Custom/Controllers/{$normalizedName}.php";
+
         $this->getFileManager()->putContents($filePath, $contents);
 
         $contents = "<" . "?" . "php\n\n".
@@ -282,7 +326,9 @@ class EntityManager
             "class {$normalizedName} extends {$templateNamespace}\Services\\{$type}\n".
             "{\n".
             "}\n";
+
         $filePath = "custom/Espo/Custom/Services/{$normalizedName}.php";
+
         $this->getFileManager()->putContents($filePath, $contents);
 
         $contents = "<" . "?" . "php\n\n".
@@ -292,6 +338,7 @@ class EntityManager
             "}\n";
 
         $filePath = "custom/Espo/Custom/Repositories/{$normalizedName}.php";
+
         $this->getFileManager()->putContents($filePath, $contents);
 
         if (file_exists($templatePath . '/SelectManagers/' . $type . '.php')) {
@@ -302,22 +349,30 @@ class EntityManager
                 "}\n";
 
             $filePath = "custom/Espo/Custom/SelectManagers/{$normalizedName}.php";
+
             $this->getFileManager()->putContents($filePath, $contents);
         }
 
         $stream = false;
+
         if (!empty($params['stream'])) {
             $stream = $params['stream'];
         }
+
         $disabled = false;
+
         if (!empty($params['disabled'])) {
             $disabled = $params['disabled'];
         }
+
         $labelSingular = $name;
+
         if (!empty($params['labelSingular'])) {
             $labelSingular = $params['labelSingular'];
         }
+
         $labelPlural = $name;
+
         if (!empty($params['labelPlural'])) {
             $labelPlural = $params['labelPlural'];
         }
@@ -325,21 +380,29 @@ class EntityManager
         $languageList = $this->getMetadata()->get(['app', 'language', 'list'], []);
         foreach ($languageList as $language) {
             $filePath = $templatePath . '/i18n/' . $language . '/' . $type . '.json';
-            if (!file_exists($filePath)) continue;
+
+            if (!file_exists($filePath)) {
+                continue;
+            }
+
             $languageContents = $this->getFileManager()->getContents($filePath);
+
             $languageContents = str_replace('{entityType}', $name, $languageContents);
             $languageContents = str_replace('{entityTypeTranslated}', $labelSingular, $languageContents);
+
             foreach ($replaceData as $key => $value) {
                 $languageContents = str_replace('{'.$key.'}', $value, $languageContents);
             }
 
             $destinationFilePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $name . '.json';
+
             $this->getFileManager()->putContents($destinationFilePath, $languageContents);
         }
 
         $filePath = $templatePath . "/Metadata/{$type}/scopes.json";
         $scopesDataContents = $this->getFileManager()->getContents($filePath);
         $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
+
         foreach ($replaceData as $key => $value) {
             $scopesDataContents = str_replace('{'.$key.'}', $value, $scopesDataContents);
         }
@@ -353,7 +416,7 @@ class EntityManager
         $scopesData['object'] = true;
         $scopesData['isCustom'] = true;
 
-        if (!empty($templateDefs['isNotRemovable']) ||!empty($params['isNotRemovable'])) {
+        if (!empty($templateDefs['isNotRemovable']) || !empty($params['isNotRemovable'])) {
             $scopesData['isNotRemovable'] = true;
         }
 
@@ -366,6 +429,7 @@ class EntityManager
         $filePath = $templatePath . "/Metadata/{$type}/entityDefs.json";
 
         $entityDefsDataContents = $this->getFileManager()->getContents($filePath);
+
         $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
         $entityDefsDataContents = str_replace('{entityTypeLowerFirst}', lcfirst($name), $entityDefsDataContents);
 
@@ -378,7 +442,9 @@ class EntityManager
         $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
 
         $filePath = $templatePath . "/Metadata/{$type}/clientDefs.json";
+
         $clientDefsContents = $this->getFileManager()->getContents($filePath);
+
         $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
 
         foreach ($replaceData as $key => $value) {
@@ -423,23 +489,28 @@ class EntityManager
         }
 
         if (isset($data['stream']) || isset($data['disabled'])) {
-            $scopeData = array();
+            $scopeData = [];
+
             if (isset($data['stream'])) {
                 $scopeData['stream'] = true == $data['stream'];
             }
+
             if (isset($data['disabled'])) {
                 $scopeData['disabled'] = true == $data['disabled'];
             }
+
             $this->getMetadata()->set('scopes', $name, $scopeData);
         }
 
         $isCustom = false;
+
         if (!empty($scopeData['isCustom'])) {
             $isCustom = true;
         }
 
         if (array_key_exists('statusField', $data)) {
             $scopeData['statusField'] = $data['statusField'];
+
             $this->getMetadata()->set('scopes', $name, $scopeData);
         }
 
@@ -467,9 +538,10 @@ class EntityManager
         if (isset($data['sortBy'])) {
             $entityDefsData = [
                 'collection' => [
-                    'orderBy' => $data['sortBy']
-                ]
+                    'orderBy' => $data['sortBy'],
+                ],
             ];
+
             if (isset($data['sortDirection'])) {
                 $entityDefsData['collection']['order'] = $data['sortDirection'];
             }
@@ -478,11 +550,12 @@ class EntityManager
         }
 
         if (isset($data['textFilterFields'])) {
-            $entityDefsData = array(
-                'collection' => array(
+            $entityDefsData = [
+                'collection' => [
                     'textFilterFields' => $data['textFilterFields']
-                )
-            );
+                ]
+            ];
+
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
         }
 
@@ -490,23 +563,26 @@ class EntityManager
         if (isset($data['fullTextSearch'])) {
             $entityDefsData = [
                 'collection' => [
-                    'fullTextSearch' => !!$data['fullTextSearch']
-                ]
+                    'fullTextSearch' => !!$data['fullTextSearch'],
+                ],
             ];
+
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
         }
 
         if (isset($data['countDisabled'])) {
             $entityDefsData = [
                 'collection' => [
-                    'countDisabled' => !!$data['countDisabled']
-                ]
+                    'countDisabled' => !!$data['countDisabled'],
+                ],
             ];
+
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
         }
 
         if (array_key_exists('kanbanStatusIgnoreList', $data)) {
             $scopeData['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
+
             $this->getMetadata()->set('scopes', $name, $scopeData);
         }
 
@@ -514,6 +590,7 @@ class EntityManager
             $clientDefsData = [
                 'kanbanViewMode' => $data['kanbanViewMode']
             ];
+
             $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
         }
 
@@ -521,6 +598,7 @@ class EntityManager
             $clientDefsData = [
                 'color' => $data['color']
             ];
+
             $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
         }
 
@@ -528,11 +606,13 @@ class EntityManager
             $clientDefsData = [
                 'iconClass' => $data['iconClass']
             ];
+
             $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
         }
 
         $this->getMetadata()->save();
         $this->getLanguage()->save();
+
         if ($isCustom) {
             if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
                 $this->getBaseLanguage()->save();
@@ -557,6 +637,7 @@ class EntityManager
         $templateDefs = $this->getMetadata()->get(['app', 'entityTemplates', $type], []);
 
         $templateModuleName = null;
+
         if (!empty($templateDefs['module'])) {
             $templateModuleName = $templateDefs['module'];
         }
@@ -568,8 +649,9 @@ class EntityManager
         $unsets = array(
             'entityDefs',
             'clientDefs',
-            'scopes'
+            'scopes',
         );
+
         $res = $this->getMetadata()->delete('entityDefs', $name);
         $res = $this->getMetadata()->delete('clientDefs', $name);
         $res = $this->getMetadata()->delete('scopes', $name);
@@ -577,7 +659,8 @@ class EntityManager
         foreach ($this->getMetadata()->get(['entityDefs', $name, 'links'], []) as $link => $item) {
             try {
                 $this->deleteLink(['entity' => $name, 'link' => $link]);
-            } catch (\Exception $e) {}
+            }
+            catch (Exception $e) {}
         }
 
         $this->getFileManager()->removeFile("custom/Espo/Custom/Resources/metadata/entityDefs/{$name}.json");
@@ -597,9 +680,14 @@ class EntityManager
         $this->getFileManager()->removeDir("custom/Espo/Custom/Resources/layouts/{$normalizedName}");
 
         $languageList = $this->getConfig()->get('languageList', []);
+
         foreach ($languageList as $language) {
             $filePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $normalizedName . '.json' ;
-            if (!file_exists($filePath)) continue;
+
+            if (!file_exists($filePath)) {
+                continue;
+            }
+
             $this->getFileManager()->removeFile($filePath);
         }
 
@@ -609,7 +697,8 @@ class EntityManager
 
             $this->getBaseLanguage()->delete('Global', 'scopeNames', $name);
             $this->getBaseLanguage()->delete('Global', 'scopeNamesPlural', $name);
-        } catch (\Exception $e) {}
+        }
+        catch (Exception $e) {}
 
         $this->getMetadata()->save();
         $this->getLanguage()->save();
@@ -636,6 +725,7 @@ class EntityManager
 
         $entity = $params['entity'];
         $link = trim($params['link']);
+
         $entityForeign = $params['entityForeign'];
         $linkForeign = trim($params['linkForeign']);
 
@@ -645,15 +735,22 @@ class EntityManager
         if ($linkType === 'manyToMany') {
             if (!empty($params['relationName'])) {
                 $relationName = $params['relationName'];
-            } else {
+            }
+            else {
                 $relationName = lcfirst($entity) . $entityForeign;
             }
-            if (strlen($relationName) > 100) {
-                throw new Error('Relation name should not be longer than 100.');
+
+            if (
+                strlen($relationName) > self::MAX_LINK_NAME
+            ) {
+
+                throw new Error("Relation name should not be longer than " . self::MAX_LINK_NAME . ".");
             }
+
             if ($this->getMetadata()->get(['scopes', ucfirst($relationName)])) {
                 throw new Conflict("Entity with the same name '{$relationName}' exists.");
             }
+
             if ($this->checkRelationshipExists($relationName)) {
                 throw new Conflict("Relationship with the same name '{$relationName}' exists.");
             }
@@ -663,8 +760,8 @@ class EntityManager
             throw new BadRequest();
         }
 
-        if (strlen($link) > 100 || strlen($linkForeign) > 100) {
-            throw new Error('Link name should not be longer than 100.');
+        if (strlen($link) > self::MAX_LINK_NAME || strlen($linkForeign) > self::MAX_LINK_NAME) {
+            throw new Error("Link name should not be longer than " . self::MAX_LINK_NAME . ".");
         }
 
         if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
@@ -680,22 +777,26 @@ class EntityManager
         }
 
         $linkMultipleField = false;
+
         if (!empty($params['linkMultipleField'])) {
             $linkMultipleField = true;
         }
 
         $linkMultipleFieldForeign = false;
+
         if (!empty($params['linkMultipleFieldForeign'])) {
             $linkMultipleFieldForeign = true;
         }
 
 
         $audited = false;
+
         if (!empty($params['audited'])) {
             $audited = true;
         }
 
         $auditedForeign = false;
+
         if (!empty($params['auditedForeign'])) {
             $auditedForeign = true;
         }
@@ -731,21 +832,27 @@ class EntityManager
         switch ($linkType) {
             case 'oneToOneRight':
             case 'oneToOneLeft':
+
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign)) {
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
                 }
+
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Id')) {
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Id] already exists.');
                 }
+
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Name')) {
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Name] already exists.');
                 }
-                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link)) {
+
+                if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link)) {
                     throw new Conflict('Field ['.$entity.'::'.$link.'] already exists.');
                 }
+
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Id')) {
                     throw new Conflict('Field ['.$entity.'::'.$link.'Id] already exists.');
                 }
+
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Name')) {
                     throw new Conflict('Field ['.$entity.'::'.$link.'Name] already exists.');
                 }
@@ -763,9 +870,10 @@ class EntityManager
                                 'foreign' => $linkForeign,
                                 'entity' => $entityForeign,
                                 'isCustom' => true,
-                            ]
-                        ]
+                            ],
+                        ],
                     ];
+
                     $dataRight = [
                         'fields' => [
                             $linkForeign => [
@@ -778,10 +886,11 @@ class EntityManager
                                 'foreign' => $link,
                                 'entity' => $entity,
                                 'isCustom' => true,
-                            ]
-                        ]
+                            ],
+                        ],
                     ];
-                } else {
+                }
+                else {
                     $dataLeft = [
                         'fields' => [
                             $link => [
@@ -795,9 +904,10 @@ class EntityManager
                                 'foreign' => $linkForeign,
                                 'entity' => $entityForeign,
                                 'isCustom' => true,
-                            ]
-                        ]
+                            ],
+                        ],
                     ];
+
                     $dataRight = [
                         'fields' => [
                             $linkForeign => [
@@ -811,156 +921,176 @@ class EntityManager
                                 'foreign' => $link,
                                 'entity' => $entity,
                                 'isCustom' => true,
-                            ]
-                        ]
+                            ],
+                        ],
                     ];
                 }
+
                 break;
+
             case 'oneToMany':
+
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign)) {
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'] already exists.');
                 }
+
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Id')) {
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Id] already exists.');
                 }
+
                 if ($this->getMetadata()->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign . 'Name')) {
                     throw new Conflict('Field ['.$entityForeign.'::'.$linkForeign.'Name] already exists.');
                 }
-                $dataLeft = array(
-                    'fields' => array(
-                        $link => array(
+
+                $dataLeft = [
+                    'fields' => [
+                        $link => [
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleField,
                             "layoutMassUpdateDisabled"  => !$linkMultipleField,
                             "noLoad"  => !$linkMultipleField,
                             "importDisabled" => !$linkMultipleField,
-                            'isCustom' => true
-                        )
-                    ),
-                    'links' => array(
-                        $link => array(
+                            'isCustom' => true,
+                        ],
+                    ],
+                    'links' => [
+                        $link => [
                             'type' => 'hasMany',
                             'foreign' => $linkForeign,
                             'entity' => $entityForeign,
                             'audited' => $auditedForeign,
-                            'isCustom' => true
-                        )
-                    )
-                );
-                $dataRight = array(
-                    'fields' => array(
-                        $linkForeign => array(
-                            'type' => 'link'
-                        )
-                    ),
-                    'links' => array(
-                        $linkForeign => array(
+                            'isCustom' => true,
+                       ],
+                    ],
+                ];
+
+                $dataRight = [
+                    'fields' => [
+                        $linkForeign => [
+                            'type' => 'link',
+                        ],
+                    ],
+                    'links' => [
+                        $linkForeign => [
                             'type' => 'belongsTo',
                             'foreign' => $link,
                             'entity' => $entity,
                             'audited' => $audited,
-                            'isCustom' => true
-                        )
-                    )
-                );
+                            'isCustom' => true,
+                        ],
+                    ],
+                ];
+
                 break;
+
             case 'manyToOne':
+
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link)) {
                     throw new Conflict('Field ['.$entity.'::'.$link.'] already exists.');
                 }
+
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Id')) {
                     throw new Conflict('Field ['.$entity.'::'.$link.'Id] already exists.');
                 }
+
                 if ($this->getMetadata()->get('entityDefs.' . $entity . '.fields.' . $link . 'Name')) {
                     throw new Conflict('Field ['.$entity.'::'.$link.'Name] already exists.');
                 }
-                $dataLeft = array(
-                    'fields' => array(
-                        $link => array(
-                            'type' => 'link'
-                        )
-                    ),
-                    'links' => array(
-                        $link => array(
+
+                $dataLeft = [
+                    'fields' => [
+                        $link => [
+                            'type' => 'link',
+                        ],
+                    ],
+                    'links' => [
+                        $link => [
                             'type' => 'belongsTo',
                             'foreign' => $linkForeign,
                             'entity' => $entityForeign,
                             'audited' => $auditedForeign,
-                            'isCustom' => true
-                        )
-                    )
-                );
-                $dataRight = array(
-                    'fields' => array(
-                        $linkForeign => array(
+                            'isCustom' => true,
+                        ],
+                    ],
+                ];
+
+                $dataRight = [
+                    'fields' => [
+                        $linkForeign => [
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
                             "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
                             "noLoad"  => !$linkMultipleFieldForeign,
                             "importDisabled" => !$linkMultipleFieldForeign,
-                            'isCustom' => true
-                        )
-                    ),
-                    'links' => array(
-                        $linkForeign => array(
+                            'isCustom' => true,
+                        ]
+                    ],
+                    'links' => [
+                        $linkForeign => [
                             'type' => 'hasMany',
                             'foreign' => $link,
                             'entity' => $entity,
                             'audited' => $audited,
-                            'isCustom' => true
-                        )
-                    )
-                );
+                            'isCustom' => true,
+                        ],
+                    ],
+                ];
+
                 break;
+
             case 'manyToMany':
-                $dataLeft = array(
-                    'fields' => array(
-                        $link => array(
+                $dataLeft = [
+                    'fields' => [
+                        $link => [
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleField,
                             "layoutMassUpdateDisabled"  => !$linkMultipleField,
                             "importDisabled" => !$linkMultipleField,
                             "noLoad"  => !$linkMultipleField,
-                            'isCustom' => true
-                        )
-                    ),
-                    'links' => array(
-                        $link => array(
+                            'isCustom' => true,
+                        ]
+                    ],
+                    'links' => [
+                        $link => [
                             'type' => 'hasMany',
                             'relationName' => $relationName,
                             'foreign' => $linkForeign,
                             'entity' => $entityForeign,
                             'audited' => $auditedForeign,
-                            'isCustom' => true
-                        )
-                    )
-                );
-                $dataRight = array(
-                    'fields' => array(
-                        $linkForeign => array(
+                            'isCustom' => true,
+                        ],
+                    ],
+                ];
+
+                $dataRight = [
+                    'fields' => [
+                        $linkForeign => [
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
                             "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
                             "importDisabled" => !$linkMultipleFieldForeign,
                             "noLoad"  => !$linkMultipleFieldForeign,
-                            'isCustom' => true
-                        )
-                    ),
-                    'links' => array(
-                        $linkForeign => array(
+                            'isCustom' => true,
+                        ]
+                    ],
+                    'links' => [
+                        $linkForeign => [
                             'type' => 'hasMany',
                             'relationName' => $relationName,
                             'foreign' => $link,
                             'entity' => $entity,
                             'audited' => $audited,
-                            'isCustom' => true
-                        )
-                    )
-                );
+                            'isCustom' => true,
+                        ]
+                    ]
+                ];
+
                 if ($entityForeign == $entity) {
                     $dataLeft['links'][$link]['midKeys'] = ['leftId', 'rightId'];
+
                     $dataRight['links'][$linkForeign]['midKeys'] = ['rightId', 'leftId'];
                 }
+
                 break;
 
             case 'childrenToParent':
@@ -979,6 +1109,7 @@ class EntityManager
                         ],
                     ],
                 ];
+
                 break;
 
             default:
@@ -986,31 +1117,38 @@ class EntityManager
         }
 
         $this->getMetadata()->set('entityDefs', $entity, $dataLeft);
+
         if ($entityForeign) {
             $this->getMetadata()->set('entityDefs', $entityForeign, $dataRight);
         }
+
         $this->getMetadata()->save();
 
         $this->getLanguage()->set($entity, 'fields', $link, $label);
         $this->getLanguage()->set($entity, 'links', $link, $label);
+
         if ($entityForeign) {
             $this->getLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
             $this->getLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
         }
+
         $this->getLanguage()->save();
 
         if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
             $this->getBaseLanguage()->set($entity, 'fields', $link, $label);
             $this->getBaseLanguage()->set($entity, 'links', $link, $label);
+
             if ($entityForeign) {
                 $this->getBaseLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
                 $this->getBaseLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
             }
+
             $this->getBaseLanguage()->save();
         }
 
         if ($linkType === 'childrenToParent') {
             $foreignLinkEntityTypeList = $params['foreignLinkEntityTypeList'] ?? null;
+
             if ($linkForeign && is_array($foreignLinkEntityTypeList)) {
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, $foreignLinkEntityTypeList);
             }
@@ -1026,8 +1164,13 @@ class EntityManager
         $entityForeign = $params['entityForeign'] ?? null;
         $linkForeign = $params['linkForeign'];
 
-        if (empty($link)) throw new BadRequest();
-        if (empty($entity)) throw new BadRequest();
+        if (empty($link)) {
+            throw new BadRequest();
+        }
+
+        if (empty($entity)) {
+            throw new BadRequest();
+        }
 
         $linkType = $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.type");
         $isCustom = $this->getMetadata()->get("entityDefs.{$entity}.links.{$link}.isCustom");
@@ -1035,8 +1178,13 @@ class EntityManager
         if ($linkType === 'belongsToParent') {
 
         } else {
-            if (empty($entityForeign)) throw new BadRequest();
-            if (empty($linkForeign)) throw new BadRequest();
+            if (empty($entityForeign)) {
+                throw new BadRequest();
+            }
+
+            if (empty($linkForeign)) {
+                throw new BadRequest();
+            }
         }
 
         if (
@@ -1046,19 +1194,22 @@ class EntityManager
         ) {
             if (array_key_exists('linkMultipleField', $params)) {
                 $linkMultipleField = $params['linkMultipleField'];
-                $dataLeft = array(
-                    'fields' => array(
-                        $link => array(
+
+                $dataLeft = [
+                    'fields' => [
+                        $link => [
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleField,
                             "layoutMassUpdateDisabled"  => !$linkMultipleField,
                             "noLoad"  => !$linkMultipleField,
                             "importDisabled" => !$linkMultipleField,
-                            'isCustom' => true
-                        )
-                    )
-                );
+                            'isCustom' => true,
+                        ]
+                    ]
+                ];
+
                 $this->getMetadata()->set('entityDefs', $entity, $dataLeft);
+
                 $this->getMetadata()->save();
             }
         }
@@ -1070,18 +1221,20 @@ class EntityManager
         ) {
             if (array_key_exists('linkMultipleFieldForeign', $params)) {
                 $linkMultipleFieldForeign = $params['linkMultipleFieldForeign'];
-                $dataRight = array(
-                    'fields' => array(
-                        $linkForeign => array(
+
+                $dataRight = [
+                    'fields' => [
+                        $linkForeign => [
                             "type" => "linkMultiple",
                             "layoutDetailDisabled"  => !$linkMultipleFieldForeign,
                             "layoutMassUpdateDisabled"  => !$linkMultipleFieldForeign,
                             "noLoad"  => !$linkMultipleFieldForeign,
                             "importDisabled" => !$linkMultipleFieldForeign,
-                            'isCustom' => true
-                        )
-                    )
-                );
+                            'isCustom' => true,
+                        ]
+                    ]
+                ];
+
                 $this->getMetadata()->set('entityDefs', $entityForeign, $dataRight);
                 $this->getMetadata()->save();
             }
@@ -1092,13 +1245,14 @@ class EntityManager
         ) {
             if (array_key_exists('audited', $params)) {
                 $audited = $params['audited'];
-                $dataLeft = array(
-                    'links' => array(
-                        $link => array(
-                            "audited" => $audited
-                        )
-                    )
-                );
+
+                $dataLeft = [
+                    'links' => [
+                        $link => [
+                            "audited" => $audited,
+                        ],
+                    ],
+                ];
                 $this->getMetadata()->set('entityDefs', $entity, $dataLeft);
                 $this->getMetadata()->save();
             }
@@ -1106,17 +1260,22 @@ class EntityManager
 
         if (
             $linkForeign &&
-            in_array($this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type"), ['hasMany', 'hasChildren'])
+            in_array(
+                $this->getMetadata()->get("entityDefs.{$entityForeign}.links.{$linkForeign}.type"),
+                ['hasMany', 'hasChildren']
+            )
         ) {
             if (array_key_exists('auditedForeign', $params)) {
                 $auditedForeign = $params['auditedForeign'];
-                $dataRight = array(
-                    'links' => array(
-                        $linkForeign => array(
-                            "audited" => $auditedForeign
-                        )
-                    )
-                );
+
+                $dataRight = [
+                    'links' => [
+                        $linkForeign => [
+                            "audited" => $auditedForeign,
+                        ],
+                    ],
+                ];
+
                 $this->getMetadata()->set('entityDefs', $entityForeign, $dataRight);
                 $this->getMetadata()->save();
             }
@@ -1133,20 +1292,24 @@ class EntityManager
                         ],
                     ],
                 ];
+
                 $this->getMetadata()->set('entityDefs', $entity, $data);
                 $this->getMetadata()->save();
             }
 
             $foreignLinkEntityTypeList = $params['foreignLinkEntityTypeList'] ?? null;
+
             if ($linkForeign && is_array($foreignLinkEntityTypeList)) {
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, $foreignLinkEntityTypeList);
             }
         }
 
         $label = null;
+
         if (isset($params['label'])) {
             $label = $params['label'];
         }
+
         if ($label) {
             $this->getLanguage()->set($entity, 'fields', $link, $label);
             $this->getLanguage()->set($entity, 'links', $link, $label);
@@ -1154,9 +1317,11 @@ class EntityManager
 
         if ($linkType !== 'belongsToParent') {
             $labelForeign = null;
+
             if (isset($params['labelForeign'])) {
                 $labelForeign = $params['labelForeign'];
             }
+
             if ($labelForeign) {
                 $this->getLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
                 $this->getLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
@@ -1167,14 +1332,17 @@ class EntityManager
 
         if ($isCustom) {
             if ($this->getBaseLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
+
                 if ($label) {
                     $this->getBaseLanguage()->set($entity, 'fields', $link, $label);
                     $this->getBaseLanguage()->set($entity, 'links', $link, $label);
                 }
+
                 if ($labelForeign && $linkType !== 'belongsToParent') {
                     $this->getBaseLanguage()->set($entityForeign, 'fields', $linkForeign, $labelForeign);
                     $this->getBaseLanguage()->set($entityForeign, 'links', $linkForeign, $labelForeign);
                 }
+
                 $this->getBaseLanguage()->save();
             }
         }
@@ -1207,7 +1375,9 @@ class EntityManager
             $this->getMetadata()->delete('entityDefs', $entity, [
                 'links.' . $link,
             ]);
+
             $this->getMetadata()->save();
+
             return true;
         }
 
@@ -1216,10 +1386,13 @@ class EntityManager
                 'fields.' . $link,
                 'links.' . $link,
             ]);
+
             $this->getMetadata()->save();
+
             if ($linkForeign) {
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, []);
             }
+
             return true;
         }
 
@@ -1231,10 +1404,12 @@ class EntityManager
             'fields.' . $link,
             'links.' . $link
         ));
+
         $this->getMetadata()->delete('entityDefs', $entityForeign, array(
             'fields.' . $linkForeign,
             'links.' . $linkForeign
         ));
+
         $this->getMetadata()->save();
 
         return true;
@@ -1249,9 +1424,14 @@ class EntityManager
     protected function processHook($methodName, $type, $name, &$params = null)
     {
         $hook = $this->getHook($type);
-        if (!$hook) return;
 
-        if (!method_exists($hook, $methodName)) return;
+        if (!$hook) {
+            return;
+        }
+
+        if (!method_exists($hook, $methodName)) {
+            return;
+        }
 
         $hook->$methodName($name, $params);
     }
@@ -1266,8 +1446,11 @@ class EntityManager
 
         if (!empty($templateDefs['module'])) {
             $templateModuleName = $templateDefs['module'];
+
             $normalizedTemplateModuleName = Util::normilizeClassName($templateModuleName);
-            $className = 'Espo\\Modules\\'.$normalizedTemplateModuleName.'\\Tools\\EntityManager\\Hooks\\' . $type . 'Type';
+
+            $className =
+                'Espo\\Modules\\' . $normalizedTemplateModuleName . '\\Tools\\EntityManager\\Hooks\\' . $type . 'Type';
         }
 
         $className = $this->getMetadata()->get(['app', 'entityTemplates', $type, 'hookClassName'], $className);
@@ -1275,6 +1458,7 @@ class EntityManager
         if (class_exists($className)) {
             return $this->container->get('injectableFactory')->create($className);
         }
+
         return;
     }
 
@@ -1288,20 +1472,23 @@ class EntityManager
             'disabled',
             'stream',
             'statusField',
-            'kanbanStatusIgnoreList'
+            'kanbanStatusIgnoreList',
         ]);
+
         $this->getMetadata()->delete('clientDefs', $scope, [
             'iconClass',
             'statusField',
-            'kanbanViewMode'
+            'kanbanViewMode',
         ]);
+
         $this->getMetadata()->delete('entityDefs', $scope, [
             'collection.sortBy',
             'collection.asc',
             'collection.orderBy',
             'collection.order',
-            'collection.textFilterFields'
+            'collection.textFilterFields',
         ]);
+
         $this->getMetadata()->save();
 
         $this->getLanguage()->delete('Global', 'scopeNames', $scope);
@@ -1311,8 +1498,7 @@ class EntityManager
 
     protected function updateParentForeignLinks(
         string $entityType, string $link, string $linkForeign, array $foreignLinkEntityTypeList
-    )
-    {
+    ) {
         $toCreateList = [];
 
         foreach ($foreignLinkEntityTypeList as $foreignEntityType) {
@@ -1325,10 +1511,14 @@ class EntityManager
 
                 if (
                     $kForeign === $link && !$kIsCustom && $kEntity == $entityType
-                ) continue 2;
+                ) {
+                    continue 2;
+                }
 
                 if ($kLink == $linkForeign) {
-                    if ($defs['type'] !== 'hasChildren') continue 2;
+                    if ($defs['type'] !== 'hasChildren') {
+                        continue 2;
+                    }
                 }
             }
 
@@ -1346,8 +1536,8 @@ class EntityManager
                 $kEntity = $defs['entity'] ?? null;
 
                 if (
-                    $kForeign === $link && $kIsCustom && $kEntity == $entityType && $defs['type'] == 'hasChildren' &&
-                    $kLink === $linkForeign
+                    $kForeign === $link && $kIsCustom && $kEntity == $entityType &&
+                    $defs['type'] == 'hasChildren' && $kLink === $linkForeign
                 ) {
                     if (!in_array($itemEntityType, $toCreateList)) {
                         $this->getMetadata()->delete('entityDefs', $itemEntityType, [
@@ -1356,7 +1546,9 @@ class EntityManager
 
                         $this->getLanguage()->delete($itemEntityType, 'links', $linkForeign);
 
-                        if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
+                        if (
+                            $this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()
+                        ) {
                             $this->getBaseLanguage()->delete($itemEntityType, 'links', $linkForeign);
                         }
                     }
@@ -1380,6 +1572,7 @@ class EntityManager
             $label = $this->getLanguage()->translate($entityType, 'scopeNamesPlural');
 
             $this->getLanguage()->set($itemEntityType, 'links', $linkForeign, $label);
+
             if ($this->getLanguage()->getLanguage() !== $this->getBaseLanguage()->getLanguage()) {
                 $this->getBaseLanguage()->set($itemEntityType, 'links', $linkForeign, $label);
             }
