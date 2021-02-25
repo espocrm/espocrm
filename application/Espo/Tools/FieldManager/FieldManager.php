@@ -129,17 +129,21 @@ class FieldManager
         }
 
         $existingField = $this->getFieldDefs($scope, $name);
+
         if (isset($existingField)) {
             throw new Conflict('Field ['.$name.'] exists in '.$scope);
         }
+
         if ($this->getMetadata()->get(['entityDefs', $scope, 'links', $name])) {
             throw new Conflict('Link with name ['.$name.'] exists in '.$scope);
         }
+
         if (in_array($name, $this->forbiddenFieldNameList)) {
             throw new Conflict('Field ['.$name.'] is not allowed');
         }
 
         $firstLatter = $name[0];
+
         if (is_numeric($firstLatter)) {
             throw new Conflict('Field name should begin with a letter');
         }
@@ -150,6 +154,7 @@ class FieldManager
     public function update(string $scope, string $name, array $fieldDefs, bool $isNew = false)
     {
         $name = trim($name);
+
         $this->isChanged = false;
 
         if (!$this->isCore($scope, $name)) {
@@ -157,23 +162,30 @@ class FieldManager
         }
 
         $isCustom = false;
+
         if (!empty($fieldDefs['isCustom'])) {
             $isCustom = true;
         }
 
         $result = true;
+
         $isLabelChanged = false;
 
         if (isset($fieldDefs['label'])) {
             $this->setLabel($scope, $name, $fieldDefs['label'], $isNew, $isCustom);
-            $isLabelChanged = true;
-        }
-        if (isset($fieldDefs['tooltipText'])) {
-            $this->setTooltipText($scope, $name, $fieldDefs['tooltipText'], $isNew, $isCustom);
+
             $isLabelChanged = true;
         }
 
-        $type = isset($fieldDefs['type']) ? $fieldDefs['type'] : $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
+        if (isset($fieldDefs['tooltipText'])) {
+            $this->setTooltipText($scope, $name, $fieldDefs['tooltipText'], $isNew, $isCustom);
+
+            $isLabelChanged = true;
+        }
+
+        $type = isset($fieldDefs['type']) ?
+            $fieldDefs['type'] :
+            $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
         $this->processHook('beforeSave', $type, $scope, $name, $fieldDefs, array('isNew' => $isNew));
 
@@ -181,30 +193,38 @@ class FieldManager
             if (isset($fieldDefs['translatedOptions'])) {
                 $translatedOptions = $fieldDefs['translatedOptions'];
                 $translatedOptions = json_decode(json_encode($fieldDefs['translatedOptions']), true);
+
                 if (isset($translatedOptions['_empty_'])) {
                     $translatedOptions[''] = $translatedOptions['_empty_'];
+
                     unset($translatedOptions['_empty_']);
                 }
 
                 $this->setTranslatedOptions($scope, $name, $translatedOptions, $isNew, $isCustom);
+
                 $isLabelChanged = true;
             }
         }
 
         if ($isNew) {
             $subFieldsDefs = $this->getMetadata()->get(['fields', $type, 'fields']);
+
             if ($subFieldsDefs) {
                 foreach ($subFieldsDefs as $partField => $partFieldData) {
                     $partLabel = $this->getLanguage()->get('FieldManager.fieldParts.' . $type . '.' . $partField);
+
                     if ($partLabel) {
                         if ($this->getMetadata()->get(['fields', $type, 'fields', 'naming']) === 'prefix') {
                             $subFieldName = $partField . ucfirst($name);
                             $subFieldLabel = $partLabel . ' ' . $fieldDefs['label'];
-                        } else {
+                        }
+                        else {
                             $subFieldName = $name . ucfirst($partField);
                             $subFieldLabel = $fieldDefs['label'] . ' ' . $partLabel;
                         }
+
                         $this->setLabel($scope, $subFieldName, $subFieldLabel, $isNew, $isCustom);
+
                         $isLabelChanged = true;
                     }
                 }
@@ -213,6 +233,7 @@ class FieldManager
 
         if ($isLabelChanged) {
             $this->getLanguage()->save();
+
             if ($isNew || $isCustom) {
                 if ($this->getBaseLanguage()->getLanguage() !== $this->getLanguage()->getLanguage()) {
                     $this->getBaseLanguage()->save();
@@ -229,10 +250,12 @@ class FieldManager
             if (!is_null($fieldDefs['dynamicLogicVisible'])) {
                 $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
                 $clientDefs['dynamicLogic']['fields'][$name]['visible'] = $fieldDefs['dynamicLogicVisible'];
+
                 $clientDefsToBeSet = true;
             } else {
                 if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'visible'])) {
                     $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
+
                     $clientDefs['dynamicLogic']['fields'][$name]['visible'] = null;
                     $clientDefsToBeSet = true;
                 }
@@ -242,11 +265,16 @@ class FieldManager
         if (array_key_exists('dynamicLogicReadOnly', $fieldDefs)) {
             if (!is_null($fieldDefs['dynamicLogicReadOnly'])) {
                 $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
+
                 $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = $fieldDefs['dynamicLogicReadOnly'];
                 $clientDefsToBeSet = true;
-            } else {
-                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'readOnly'])) {
+            }
+            else {
+                if (
+                    $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'readOnly'])
+                ) {
                     $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
+
                     $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = null;
                     $clientDefsToBeSet = true;
                 }
@@ -256,11 +284,15 @@ class FieldManager
         if (array_key_exists('dynamicLogicRequired', $fieldDefs)) {
             if (!is_null($fieldDefs['dynamicLogicRequired'])) {
                 $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
+
                 $clientDefs['dynamicLogic']['fields'][$name]['required'] = $fieldDefs['dynamicLogicRequired'];
                 $clientDefsToBeSet = true;
             } else {
-                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'required'])) {
+                if (
+                    $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'required'])
+                ) {
                     $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
+
                     $clientDefs['dynamicLogic']['fields'][$name]['required'] = null;
                     $clientDefsToBeSet = true;
                 }
@@ -270,11 +302,13 @@ class FieldManager
         if (array_key_exists('dynamicLogicOptions', $fieldDefs)) {
             if (!is_null($fieldDefs['dynamicLogicOptions'])) {
                 $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
+
                 $clientDefs['dynamicLogic']['options'][$name] = $fieldDefs['dynamicLogicOptions'];
                 $clientDefsToBeSet = true;
             } else {
                 if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'options', $name])) {
                     $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
+
                     $clientDefs['dynamicLogic']['options'][$name] = null;
                     $clientDefsToBeSet = true;
                 }
@@ -283,6 +317,7 @@ class FieldManager
 
         if ($clientDefsToBeSet) {
             $this->getMetadata()->set('clientDefs', $scope, $clientDefs);
+
             $metadataToBeSaved = true;
         }
 
@@ -290,6 +325,7 @@ class FieldManager
 
         if (!empty((array) $entityDefs)) {
             $result &= $this->saveCustomEntityDefs($scope, $entityDefs);
+
             $this->isChanged = true;
         }
 
@@ -310,9 +346,11 @@ class FieldManager
         if (!array_key_exists('dynamicLogic', $clientDefs)) {
             $clientDefs['dynamicLogic'] = array();
         }
+
         if (!array_key_exists('fields', $clientDefs['dynamicLogic'])) {
             $clientDefs['dynamicLogic']['fields'] = array();
         }
+
         if (!array_key_exists($name, $clientDefs['dynamicLogic']['fields'])) {
             $clientDefs['dynamicLogic']['fields'][$name] = array();
         }
@@ -323,9 +361,11 @@ class FieldManager
         if (!array_key_exists('dynamicLogic', $clientDefs)) {
             $clientDefs['dynamicLogic'] = array();
         }
+
         if (!array_key_exists('options', $clientDefs['dynamicLogic'])) {
             $clientDefs['dynamicLogic']['options'] = array();
         }
+
         if (!array_key_exists($name, $clientDefs['dynamicLogic']['options'])) {
             $clientDefs['dynamicLogic']['options'][$name] = array();
         }
@@ -354,9 +394,11 @@ class FieldManager
         ]);
 
         $res = $this->getMetadata()->save();
+
         $this->deleteLabel($scope, $name);
 
         $subFieldsDefs = $this->getMetadata()->get(['fields', $type, 'fields']);
+
         if ($subFieldsDefs) {
             foreach ($subFieldsDefs as $partField => $partFieldData) {
                 if ($this->getMetadata()->get(['fields', $type, 'fields', 'naming']) === 'prefix') {
@@ -364,11 +406,13 @@ class FieldManager
                 } else {
                     $subFieldName = $name . ucfirst($partField);
                 }
+
                 $this->deleteLabel($scope, $subFieldName);
             }
         }
 
         $this->getLanguage()->save();
+
         if ($this->getBaseLanguage()->getLanguage() !== $this->getLanguage()->getLanguage()) {
             $this->getBaseLanguage()->save();
         }
@@ -389,10 +433,12 @@ class FieldManager
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ['fields.' . $name]);
+
         $this->getMetadata()->delete('clientDefs', $scope, [
             'dynamicLogic.fields.' . $name,
             'dynamicLogic.options.' . $name
         ]);
+
         $this->getMetadata()->save();
 
         $this->getLanguage()->delete($scope, 'fields', $name);
@@ -425,7 +471,8 @@ class FieldManager
         if ($value && $value !== '') {
             $this->getLanguage()->set($scope, 'tooltips', $name, $value);
             $this->getBaseLanguage()->set($scope, 'tooltips', $name, $value);
-        } else {
+        }
+        else {
             $this->getLanguage()->delete($scope, 'tooltips', $name);
             $this->getBaseLanguage()->delete($scope, 'tooltips', $name);
         }
@@ -445,6 +492,7 @@ class FieldManager
     protected function getFieldDefs($scope, $name, $default = null)
     {
         $defs = $this->getMetadata()->getObjects(['entityDefs', $scope, 'fields', $name], $default);
+
         if (is_object($defs)) {
             return get_object_vars($defs);
         }
@@ -498,27 +546,27 @@ class FieldManager
     {
         $additionalParamList = [
             'type' => [
-                'type' => 'varchar'
+                'type' => 'varchar',
             ],
             'isCustom' => [
                 'type' => 'bool',
-                'default' => false
+                'default' => false,
             ],
             'isPersonalData' => [
                 'type' => 'bool',
-                'default' => false
+                'default' => false,
             ],
             'tooltip' => [
                 'type' => 'bool',
-                'default' => false
+                'default' => false,
             ],
             'inlineEditDisabled' => [
                 'type' => 'bool',
-                'default' => false
+                'default' => false,
             ],
             'defaultAttributes' => [
-                'type' => 'jsonObject'
-            ]
+                'type' => 'jsonObject',
+            ],
         ];
 
         if (isset($fieldDefs['fieldManagerAdditionalParamList'])) {
@@ -530,14 +578,17 @@ class FieldManager
         }
 
         $fieldDefsByType = $this->getMetadataHelper()->getFieldDefsByType($fieldDefs);
+
         if (!isset($fieldDefsByType['params'])) {
             return $fieldDefs;
         }
 
         $params = [];
+
         foreach ($fieldDefsByType['params'] as $paramData) {
             $params[$paramData['name']] = $paramData;
         }
+
         foreach ($additionalParamList as $paramName => $paramValue) {
             if (!isset($params[$paramName])) {
                 $params[$paramName] = array_merge(['name' => $paramName], $paramValue);
@@ -561,10 +612,16 @@ class FieldManager
                         break;
                 }
 
-                $actualValue = array_key_exists($paramName, $actualFieldDefs) ? $actualFieldDefs[$paramName] : $defaultParamValue;
+                $actualValue = array_key_exists($paramName, $actualFieldDefs) ?
+                    $actualFieldDefs[$paramName] :
+                    $defaultParamValue;
 
-                if (!array_key_exists($paramName, $actualCustomFieldDefs) && !Util::areValuesEqual($actualValue, $paramValue)) {
+                if (
+                    !array_key_exists($paramName, $actualCustomFieldDefs) &&
+                    !Util::areValuesEqual($actualValue, $paramValue)
+                ) {
                     $filteredFieldDefs[$paramName] = $paramValue;
+
                     continue;
                 }
 
@@ -599,9 +656,9 @@ class FieldManager
         $normalizedFieldDefs = $this->prepareFieldDefs($scope, $fieldName, $fieldDefs);
 
         if (!empty($normalizedFieldDefs)) {
-            $defs->fields = (object) array(
+            $defs->fields = (object) [
                 $fieldName => (object) $normalizedFieldDefs,
-            );
+            ];
         }
 
         /** Save links for a field. */
