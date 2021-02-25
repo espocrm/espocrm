@@ -15,7 +15,7 @@
         "ext-curl": "*",
         "ext-exif": "*",
         "psr/log": "1.1.*",
-        "slim/slim": "^4.5",
+        "slim/slim": "^4.7",
         "slim/psr7": "^1",
         "dragonmantank/cron-expression": "^3",
         "laminas/laminas-mail": "2.10.0",
