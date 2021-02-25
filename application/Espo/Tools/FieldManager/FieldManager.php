@@ -64,6 +64,8 @@ class FieldManager
         'true',
     ];
 
+    const MAX_NAME_LENGTH = 100;
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -116,36 +118,36 @@ class FieldManager
 
     public function create(string $scope, string $name, array $fieldDefs)
     {
-        if (empty($name)) {
-            throw new BadRequest();
+        if (strlen($name) === 0) {
+            throw new BadRequest("Empty field name.");
         }
 
-        if (strlen($name) > 100) {
-            throw new Error('Field name should not be longer than 100.');
-        }
-
-        if (is_numeric($name[0])) {
-            throw new Error('Bad field name.');
+        if (strlen($name) > self::MAX_NAME_LENGTH) {
+            throw new Error("Field name should not be longer than " . self::MAX_NAME_LENGTH . ".");
         }
 
         $existingField = $this->getFieldDefs($scope, $name);
 
         if (isset($existingField)) {
-            throw new Conflict('Field ['.$name.'] exists in '.$scope);
+            throw new Conflict("Field '{$name}' already exists in '{$scope}'.");
         }
 
         if ($this->getMetadata()->get(['entityDefs', $scope, 'links', $name])) {
-            throw new Conflict('Link with name ['.$name.'] exists in '.$scope);
+            throw new Conflict("Link with name '{$name}' already exists in '{$scope}'.");
         }
 
         if (in_array($name, $this->forbiddenFieldNameList)) {
-            throw new Conflict('Field ['.$name.'] is not allowed');
+            throw new Conflict("Field '{$name}' is not allowed.");
         }
 
         $firstLatter = $name[0];
 
         if (is_numeric($firstLatter)) {
-            throw new Conflict('Field name should begin with a letter');
+            throw new Error('Field name should start with a letter.');
+        }
+
+        if (preg_match('/[^a-zA-Z\d]/', $name)) {
+            throw new Error("Field name should contain only letters and numbers.");
         }
 
         return $this->update($scope, $name, $fieldDefs, true);
@@ -249,11 +251,15 @@ class FieldManager
         if (array_key_exists('dynamicLogicVisible', $fieldDefs)) {
             if (!is_null($fieldDefs['dynamicLogicVisible'])) {
                 $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
+
                 $clientDefs['dynamicLogic']['fields'][$name]['visible'] = $fieldDefs['dynamicLogicVisible'];
 
                 $clientDefsToBeSet = true;
-            } else {
-                if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'visible'])) {
+            }
+            else {
+                if (
+                    $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'visible'])
+                ) {
                     $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
 
                     $clientDefs['dynamicLogic']['fields'][$name]['visible'] = null;
@@ -276,6 +282,7 @@ class FieldManager
                     $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
 
                     $clientDefs['dynamicLogic']['fields'][$name]['readOnly'] = null;
+
                     $clientDefsToBeSet = true;
                 }
             }
@@ -294,6 +301,7 @@ class FieldManager
                     $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
 
                     $clientDefs['dynamicLogic']['fields'][$name]['required'] = null;
+
                     $clientDefsToBeSet = true;
                 }
             }
@@ -304,12 +312,15 @@ class FieldManager
                 $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
 
                 $clientDefs['dynamicLogic']['options'][$name] = $fieldDefs['dynamicLogicOptions'];
+
                 $clientDefsToBeSet = true;
-            } else {
+            }
+            else {
                 if ($this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'options', $name])) {
                     $this->prepareClientDefsOptionsDynamicLogic($clientDefs, $name);
 
                     $clientDefs['dynamicLogic']['options'][$name] = null;
+
                     $clientDefsToBeSet = true;
                 }
             }
@@ -374,7 +385,7 @@ class FieldManager
     public function delete(string $scope, string $name)
     {
         if ($this->isCore($scope, $name)) {
-            throw new Error('Cannot delete core field ['.$name.'] in '.$scope);
+            throw new Error("Cannot delete core field '{$name}' in '{$scope}'.");
         }
 
         $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $name, 'type']);
@@ -390,7 +401,7 @@ class FieldManager
 
         $this->getMetadata()->delete('clientDefs', $scope, [
             'dynamicLogic.fields.' . $name,
-            'dynamicLogic.options.' . $name
+            'dynamicLogic.options.' . $name,
         ]);
 
         $res = $this->getMetadata()->save();
@@ -425,18 +436,18 @@ class FieldManager
     public function resetToDefault(string $scope, string $name)
     {
         if (!$this->isCore($scope, $name)) {
-            throw new Error('Cannot reset to default custom field ['.$name.'] in '.$scope);
+            throw new Error("Cannot reset to default custom field '{$name}' in '{$scope}'.");
         }
 
         if (!$this->getMetadata()->get(['entityDefs', $scope, 'fields', $name])) {
-            throw new Error('Not found field ['.$name.'] in '.$scope);
+            throw new Error("Not found field  field '{$name}' in '{$scope}'.");
         }
 
         $this->getMetadata()->delete('entityDefs', $scope, ['fields.' . $name]);
 
         $this->getMetadata()->delete('clientDefs', $scope, [
             'dynamicLogic.fields.' . $name,
-            'dynamicLogic.options.' . $name
+            'dynamicLogic.options.' . $name,
         ]);
 
         $this->getMetadata()->save();
@@ -496,6 +507,7 @@ class FieldManager
         if (is_object($defs)) {
             return get_object_vars($defs);
         }
+
         return $defs;
     }
 
@@ -539,7 +551,7 @@ class FieldManager
 
     protected function getLinkDefs($scope, $name)
     {
-        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.links.'.$name);
+        return $this->getMetadata()->get('entityDefs' . '.' . $scope . '.links.' . $name);
     }
 
     protected function prepareFieldDefs($scope, $name, $fieldDefs)
