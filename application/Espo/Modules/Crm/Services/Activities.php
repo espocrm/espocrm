@@ -1250,7 +1250,9 @@ class Activities implements
             ]);
 
         if ($seed->hasRelation('users')) {
-            $queryBuilder->leftJoin('users');
+            $queryBuilder
+                ->distinct()
+                ->leftJoin('users');
         }
 
         if ($seed->hasRelation('assignedUsers')) {
