@@ -146,6 +146,10 @@ class FieldManager
             throw new Error('Field name should start with a letter.');
         }
 
+        if (preg_match('/[^a-z]/', $firstLatter)) {
+            throw new Error("Field name should start with a lower case letter.");
+        }
+
         if (preg_match('/[^a-zA-Z\d]/', $name)) {
             throw new Error("Field name should contain only letters and numbers.");
         }

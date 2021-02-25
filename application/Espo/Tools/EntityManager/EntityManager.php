@@ -267,6 +267,7 @@ class EntityManager
         }
 
         $serviceFactory = $this->getServiceFactory();
+
         if ($serviceFactory && $serviceFactory->checKExists($name)) {
             throw new Conflict('Entity name \''.$name.'\' is not allowed.');
         }
@@ -281,6 +282,16 @@ class EntityManager
 
         if ($this->checkRelationshipExists($name)) {
             throw new Conflict('Relationship with the same name \''.$name.'\' exists.');
+        }
+
+        if (preg_match('/[^a-zA-Z\d]/', $name)) {
+            throw new Error("Entity name should contain only letters and numbers.");
+        }
+
+        $firstLatter = $name[0];
+
+        if (preg_match('/[^A-Z]/', $firstLatter)) {
+            throw new Error("Entity name should start with an upper case letter.");
         }
 
         $normalizedName = Util::normilizeClassName($name);
@@ -747,6 +758,10 @@ class EntityManager
                 throw new Error("Relation name should not be longer than " . self::MAX_LINK_NAME . ".");
             }
 
+            if (preg_match('/[^a-z]/', $relationName[0])) {
+                throw new Error("Relation name should start with a lower case letter.");
+            }
+
             if ($this->getMetadata()->get(['scopes', ucfirst($relationName)])) {
                 throw new Conflict("Entity with the same name '{$relationName}' exists.");
             }
@@ -766,6 +781,14 @@ class EntityManager
 
         if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
             throw new Error('Bad link name.');
+        }
+
+        if (preg_match('/[^a-z]/', $link[0])) {
+            throw new Error("Link name should start with a lower case letter.");
+        }
+
+        if (preg_match('/[^a-z]/', $linkForeign[0])) {
+            throw new Error("Link name should start with a lower case letter.");
         }
 
         if (in_array($link, $this->linkForbiddenNameList)) {
