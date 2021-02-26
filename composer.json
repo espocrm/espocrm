@@ -27,7 +27,7 @@
         "yzalis/identicon": "*",
         "zordius/lightncandy": "dev-espo#v1.2.5e",
         "composer/semver": "^3",
-        "tecnickcom/tcpdf": "^6.3",
+        "tecnickcom/tcpdf": "dev-main#456b794f1fae9aee5c151a1ee515aae2aaa619a3 as 6.3.6",
         "spatie/async": "1.5.3",
         "symfony/process": "4.1.7",
         "symfony/http-foundation": "4.4.7",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb9a84ccd6b8361485fcee16347d8649",
+    "content-hash": "5b602df3bb0da708790d2b552feb3940",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -4059,21 +4059,22 @@
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.3.5",
+            "version": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549"
+                "reference": "456b794f1fae9aee5c151a1ee515aae2aaa619a3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/19a535eaa7fb1c1cac499109deeb1a7a201b4549",
-                "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/456b794f1fae9aee5c151a1ee515aae2aaa619a3",
+                "reference": "456b794f1fae9aee5c151a1ee515aae2aaa619a3",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -4119,9 +4120,15 @@
             ],
             "support": {
                 "issues": "https://github.com/tecnickcom/TCPDF/issues",
-                "source": "https://github.com/tecnickcom/TCPDF/tree/6.3.5"
+                "source": "https://github.com/tecnickcom/TCPDF/tree/main"
             },
-            "time": "2020-02-14T14:20:12+00:00"
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project",
+                    "type": "custom"
+                }
+            ],
+            "time": "2020-12-09T07:15:50+00:00"
         },
         {
             "name": "true/punycode",
@@ -6565,10 +6572,18 @@
             "time": "2020-07-08T17:02:28+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "tecnickcom/tcpdf",
+            "version": "dev-main",
+            "alias": "6.3.6",
+            "alias_normalized": "6.3.6.0"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "zordius/lightncandy": 20
+        "zordius/lightncandy": 20,
+        "tecnickcom/tcpdf": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
