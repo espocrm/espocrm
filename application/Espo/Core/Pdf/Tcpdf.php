@@ -123,7 +123,7 @@ class Tcpdf extends \TCPDF
             $html = str_replace('{pageNumber}', '{{:png:}}', $html);
             $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
         } else {
-            $html = str_replace('{pageNumber}', '{{:pnp:}', $html);
+            $html = str_replace('{pageNumber}', '{{:pnp:}}', $html);
             $html = str_replace('{pageAbsoluteNumber}', '{{:pnp:}}', $html);
         }
 
