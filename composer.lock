@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e7e1430f4d041b5a3940805b1cb9b44",
+    "content-hash": "bb9a84ccd6b8361485fcee16347d8649",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -3303,27 +3303,31 @@
         },
         {
             "name": "spatie/async",
-            "version": "0.0.4",
+            "version": "1.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/async.git",
-                "reference": "8b76df4ab77dcf7680eee4b83353d038e28f92f7"
+                "reference": "d371b76ff876530c4906596490fd977720477e48"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/async/zipball/8b76df4ab77dcf7680eee4b83353d038e28f92f7",
-                "reference": "8b76df4ab77dcf7680eee4b83353d038e28f92f7",
+                "url": "https://api.github.com/repos/spatie/async/zipball/d371b76ff876530c4906596490fd977720477e48",
+                "reference": "d371b76ff876530c4906596490fd977720477e48",
                 "shasum": ""
             },
             "require": {
-                "opis/closure": "^3.0",
-                "php": "^7.1",
-                "symfony/process": "^3.3 || ^4.0"
+                "opis/closure": "^3.4.2",
+                "php": "^7.1 || ^8.0",
+                "symfony/process": "^3.3 || ^4.0 || ^5.0"
             },
             "require-dev": {
                 "larapack/dd": "^1.1",
-                "phpunit/phpunit": "^6.0",
-                "symfony/stopwatch": "^4.0"
+                "phpunit/phpunit": "^7.5 || ^8.0 || ^9.0",
+                "symfony/stopwatch": "^4.0 || ^5.0"
+            },
+            "suggest": {
+                "ext-pcntl": "Required to use async processes",
+                "ext-posix": "Required to use async processes"
             },
             "type": "library",
             "autoload": {
@@ -3354,9 +3358,15 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/async/issues",
-                "source": "https://github.com/spatie/async/tree/master"
+                "source": "https://github.com/spatie/async/tree/1.5.3"
             },
-            "time": "2018-01-29T15:09:29+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-12-29T22:19:12+00:00"
         },
         {
             "name": "symfony/http-foundation",
