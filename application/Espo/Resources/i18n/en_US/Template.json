@@ -10,7 +10,7 @@
         "rightMargin": "Right Margin",
         "bottomMargin": "Bottom Margin",
         "printFooter": "Print Footer",
-        "printHeader": "Print Header on each page",
+        "printHeader": "Print Header",
         "footerPosition": "Footer Position",
         "headerPosition": "Header Position",
         "variables": "Available Placeholders",

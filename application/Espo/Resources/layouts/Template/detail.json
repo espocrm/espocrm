@@ -1,7 +1,7 @@
 [
     {
-        "label":"",
-        "rows":[
+        "label": "",
+        "rows": [
             [
                 {
                     "name":"name"
@@ -11,15 +11,31 @@
                 }
             ],
             [{"name":"variables","fullWidth":true, "view": "Template.Fields.Variables"}],
-            [{"name":"header","fullWidth":true}],
-            [{"name":"body","fullWidth":true}],
+            [{"name":"body","fullWidth":true}]
+        ]
+    },
+    {
+        "label": "",
+        "rows": [
             [{"name":"pageOrientation"}, {"name":"pageFormat"}],
             [{"name":"pageWidth"}, {"name":"pageHeight"}],
-            [{"name":"fontFace"}, false],
-            [{"name":"topMargin"}, {"name":"bottomMargin"}],
-            [{"name":"leftMargin"}, {"name":"rightMargin"}],
-            [{"name":"printFooter"}, {"name":"printHeader"}],
-            [{"name":"footerPosition"}, {"name":"headerPosition"}],
+            [{"name":"fontFace"}, false]
+        ]
+    },
+    {
+        "label": "",
+        "rows": [
+            [false, {"name":"topMargin"}, false],
+            [{"name":"leftMargin"}, false, {"name":"rightMargin"}],
+            [false, {"name":"bottomMargin"}, false]
+        ]
+    },
+    {
+        "label": "",
+        "rows": [
+            [{"name":"printHeader"}, {"name":"headerPosition"}],
+            [{"name":"header","fullWidth":true}],
+            [{"name":"printFooter"}, {"name":"footerPosition"}],
             [{"name":"footer","fullWidth":true}]
         ]
     }

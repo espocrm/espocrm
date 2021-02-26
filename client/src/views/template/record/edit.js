@@ -41,7 +41,8 @@ define('views/template/record/edit', 'views/record/edit', function (Dep) {
 
             if (this.model.get('entityType')) {
                 this.showField('variables');
-            } else {
+            }
+            else {
                 this.hideField('variables');
             }
 
@@ -55,7 +56,9 @@ define('views/template/record/edit', 'views/record/edit', function (Dep) {
                         this.model.set('header', '');
                         this.model.set('body', '');
                         this.model.set('footer', '');
+
                         this.hideField('variables');
+
                         return;
                     }
                     this.showField('variables');
@@ -64,56 +67,77 @@ define('views/template/record/edit', 'views/record/edit', function (Dep) {
                         this.model.set('header', storedData[entityType].header);
                         this.model.set('body', storedData[entityType].body);
                         this.model.set('footer', storedData[entityType].footer);
+
                         return;
                     }
 
                     var header, body, footer;
-                    if (this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', entityType])) {
-                        header = this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', entityType, 'header']);
-                        body = this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', entityType, 'body']);
-                        footer = this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', entityType, 'footer']);
-                    } else {
+
+                    var sourceType = null;
+
+                    if (
+                        this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', entityType])
+                    ) {
+                        var sourceType = entityType;
+                    }
+                    else {
                         var scopeType = this.getMetadata().get(['scopes', entityType, 'type']);
-                        if (scopeType) {
-                            if (this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', scopeType])) {
-                                header = this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', scopeType, 'header']);
-                                body = this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', scopeType, 'body']);
-                                footer = this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', scopeType, 'footer']);
-                            }
+
+                        if (
+                            scopeType &&
+                            this.getMetadata().get(['entityDefs', 'Template', 'defaultTemplates', scopeType])
+                        ) {
+
+                            var sourceType = scopeType;
                         }
                     }
 
-                    if (header) {
-                        this.model.set('header', header);
-                    } else {
-                        this.model.set('header', '');
+                    if (sourceType) {
+                        header = this.getMetadata().get(
+                            ['entityDefs', 'Template', 'defaultTemplates', sourceType, 'header']
+                        );
+
+                        body = this.getMetadata().get(
+                            ['entityDefs', 'Template', 'defaultTemplates', sourceType, 'body']
+                        );
+
+                        footer = this.getMetadata().get(
+                            ['entityDefs', 'Template', 'defaultTemplates', sourceType, 'footer']
+                        );
                     }
-                    if (body) {
-                        this.model.set('body', body);
-                    } else {
-                        this.model.set('body', '');
-                    }
-                    if (footer) {
-                        this.model.set('footer', footer);
-                    } else {
-                        this.model.set('footer', '');
-                    }
+
+                    body = body || '';
+                    header = header || null;
+                    footer = footer || null;
+
+                    this.model.set('body', body);
+                    this.model.set('header', header);
+                    this.model.set('footer', footer);
                 }, this);
 
                 this.listenTo(this.model, 'change', function (e, o) {
-                    if (!o.ui) return;
+                    if (!o.ui) {
+                        return;
+                    }
 
-                    if (!this.model.hasChanged('header') && !this.model.hasChanged('body') && !this.model.hasChanged('footer')) {
+                    if (
+                        !this.model.hasChanged('header') &&
+                        !this.model.hasChanged('body') &&
+                        !this.model.hasChanged('footer')
+                    ) {
                         return;
                     }
 
                     var entityType = this.model.get('entityType');
-                    if (!entityType) return;
+
+                    if (!entityType) {
+                        return;
+                    }
 
                     storedData[entityType] = {
                         header: this.model.get('header'),
                         body: this.model.get('body'),
-                        footer: this.model.get('footer')
+                        footer: this.model.get('footer'),
                     };
                 }, this);
             }

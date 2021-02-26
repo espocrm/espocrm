@@ -66,16 +66,6 @@
                     ]
                 }
             },
-            "header": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "entityType"
-                        }
-                    ]
-                }
-            },
             "pageWidth": {
                 "visible": {
                     "conditionGroup": [

@@ -80,18 +80,6 @@ class EntityProcessor
             $template->getRightMargin()
         );
 
-        if ($template->hasFooter()) {
-            $htmlFooter = $this->render($htmlizer, $entity, $template->getFooter(), $additionalData);
-
-            $pdf->setFooterFont([$fontFace, '', $this->fontSize]);
-            $pdf->setFooterPosition($template->getFooterPosition());
-
-            $pdf->setFooterHtml($htmlFooter);
-        }
-        else {
-            $pdf->setPrintFooter(false);
-        }
-
         $pageOrientation = $template->getPageOrientation();
 
         $pageFormat = $template->getPageFormat();
@@ -109,27 +97,31 @@ class EntityProcessor
             $pageOrientationCode = 'L';
         }
 
-        $htmlHeader = '';
+        if ($template->hasFooter()) {
+            $htmlFooter = $this->render($htmlizer, $entity, $template->getFooter(), $additionalData);
 
-        if ($template->getHeader() !== '') {
-            $htmlHeader = $this->render($htmlizer, $entity, $template->getHeader(), $additionalData);
+            $pdf->setFooterFont([$fontFace, '', $this->fontSize]);
+            $pdf->setFooterPosition($template->getFooterPosition());
+
+            $pdf->setFooterHtml($htmlFooter);
+        }
+        else {
+            $pdf->setPrintFooter(false);
         }
 
         if ($template->hasHeader()) {
+            $htmlHeader = $this->render($htmlizer, $entity, $template->getHeader(), $additionalData);
+
             $pdf->setHeaderFont([$fontFace, '', $this->fontSize]);
             $pdf->setHeaderPosition($template->getHeaderPosition());
 
             $pdf->setHeaderHtml($htmlHeader);
-
-            $pdf->addPage($pageOrientationCode, $pageFormat);
         }
         else {
-            $pdf->addPage($pageOrientationCode, $pageFormat);
-
             $pdf->setPrintHeader(false);
-
-            $pdf->writeHTML($htmlHeader, true, false, true, false, '');
         }
+
+        $pdf->addPage($pageOrientationCode, $pageFormat);
 
         $htmlBody = $this->render($htmlizer, $entity, $template->getBody(), $additionalData);
 
