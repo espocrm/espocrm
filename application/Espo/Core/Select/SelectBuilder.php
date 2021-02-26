@@ -56,7 +56,7 @@ use LogicException;
 
 /**
  * Builds select queries for ORM.
- * Applies search parameters (passed from frontend), ACL restrictions, filters, etc.
+ * Applies search parameters (passed from front-end), ACL restrictions, filters, etc.
  */
 class SelectBuilder
 {
