@@ -2,7 +2,12 @@
     <div class="btn-group">
     <button class="btn btn-primary" data-action="save">{{translate 'Save'}}</button>
     <button class="btn btn-default" data-action="close">{{translate 'Close'}}</button>
-    {{#unless isCustom}}{{#unless isNew}}<button class="btn btn-default" data-action="resetToDefault">{{translate 'Reset to Default' scope='Admin'}}</button>{{/unless}}{{/unless}}
+    {{#if hasResetToDefault}}
+    <button
+        class="btn btn-default"
+        data-action="resetToDefault"
+    >{{translate 'Reset to Default' scope='Admin'}}</button>
+    {{/if}}
     </div>
 </div>
 
