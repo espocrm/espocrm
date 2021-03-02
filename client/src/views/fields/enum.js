@@ -220,22 +220,31 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                 var $element = this.$element = this.$el.find('.main-element');
 
                 var type = this.$el.find('select.search-type').val();
+
                 this.handleSearchType(type);
 
                 var valueList = this.getSearchParamsData().valueList || this.searchParams.value || [];
+
                 this.$element.val(valueList.join(':,:'));
 
                 var data = [];
+
                 (this.params.options || []).forEach(function (value) {
                     var label = this.getLanguage().translateOption(value, this.name, this.scope);
+
                     if (this.translatedOptions) {
                         if (value in this.translatedOptions) {
                             label = this.translatedOptions[value];
                         }
                     }
+
+                    if (label === '') {
+                        return;
+                    }
+
                     data.push({
                         value: value,
-                        label: label
+                        label: label,
                     });
                 }, this);
 
@@ -249,14 +258,17 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                     plugins: ['remove_button'],
                     score: function (search) {
                         var score = this.getScoreFunction(search);
+
                         search = search.toLowerCase();
+
                         return function (item) {
                             if (item.label.toLowerCase().indexOf(search) === 0) {
                                 return score(item);
                             }
+
                             return 0;
                         };
-                    }
+                    },
                 });
 
                 this.$el.find('.selectize-dropdown-content').addClass('small');
