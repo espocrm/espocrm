@@ -47,6 +47,9 @@ class RequestNull implements ApiRequest
         return false;
     }
 
+    /**
+     * @return ?string|array
+     */
     public function getQueryParam(string $name)
     {
         return null;
@@ -112,6 +115,9 @@ class RequestNull implements ApiRequest
         return null;
     }
 
+    /**
+     * @return ?mixed
+     */
     public function getServerParam(string $name)
     {
         return null;

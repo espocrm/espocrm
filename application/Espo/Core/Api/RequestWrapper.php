@@ -102,6 +102,9 @@ class RequestWrapper implements ApiRequest
         return array_key_exists($name, $this->request->getQueryParams());
     }
 
+    /**
+     * @return ?string|array
+     */
     public function getQueryParam(string $name)
     {
         $value = $this->request->getQueryParams()[$name] ?? null;
@@ -192,7 +195,10 @@ class RequestWrapper implements ApiRequest
         return $params[$name] ?? null;
     }
 
-    public function getServerParam(string $name) : ?string
+    /**
+     * @return ?mixed
+     */
+    public function getServerParam(string $name)
     {
         $params = $this->request->getServerParams();
 

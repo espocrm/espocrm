@@ -112,6 +112,8 @@ interface Request
 
     /**
      * Get a server param value.
+     *
+     * @return ?mixed
      */
     public function getServerParam(string $name);
 }
