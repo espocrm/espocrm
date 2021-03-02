@@ -283,19 +283,27 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             var $element = this.$element = this.$el.find('.main-element');
 
             var valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
+
             this.$element.val(valueList.join(':,:'));
 
             var data = [];
+
             (this.params.options || []).forEach(function (value) {
                 var label = this.getLanguage().translateOption(value, this.name, this.scope);
+
                 if (this.translatedOptions) {
                     if (value in this.translatedOptions) {
                         label = this.translatedOptions[value];
                     }
                 }
+
+                if (label === '') {
+                    return;
+                };
+
                 data.push({
                     value: value,
-                    label: label
+                    label: label,
                 });
             }, this);
 
@@ -312,11 +320,14 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             if (!this.matchAnyWord) {
                 selectizeOptions.score = function (search) {
                     var score = this.getScoreFunction(search);
+
                     search = search.toLowerCase();
+
                     return function (item) {
                         if (item.label.toLowerCase().indexOf(search) === 0) {
                             return score(item);
                         }
+
                         return 0;
                     };
                 };
@@ -324,16 +335,17 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             if (this.allowCustomOptions) {
                 selectizeOptions.persist = false;
+
                 selectizeOptions.create = function (input) {
                     return {
                         value: input,
-                        label: input
+                        label: input,
                     }
                 };
                 selectizeOptions.render = {
                     option_create: function (data, escape) {
                         return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip;</div>';
-                    }
+                    },
                 };
             }
 
@@ -342,6 +354,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             this.$el.find('.selectize-dropdown-content').addClass('small');
 
             var type = this.$el.find('select.search-type').val();
+
             this.handleSearchType(type);
 
             this.$el.find('select.search-type').on('change', function () {
@@ -355,10 +368,13 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         fetchFromDom: function () {
             var selected = [];
+
             this.$el.find('.list-group .list-group-item').each(function (i, el) {
                 var value = $(el).data('value').toString();
+
                 selected.push(value);
             });
+
             this.selected = selected;
         },
 
