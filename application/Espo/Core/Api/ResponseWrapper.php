@@ -41,6 +41,9 @@ use Espo\Core\Api\Response as ApiResponse;
  */
 class ResponseWrapper implements ApiResponse
 {
+    /**
+     * @var Psr7Response
+     */
     protected $response;
 
     public function __construct(Psr7Response $response)
@@ -51,14 +54,18 @@ class ResponseWrapper implements ApiResponse
         $this->response = $this->response->withoutHeader('Authorization');
     }
 
-    public function setStatus(int $code, ?string $reason = null)
+    public function setStatus(int $code, ?string $reason = null) : self
     {
         $this->response = $this->response->withStatus($code, $reason ?? '');
+
+        return $this;
     }
 
-    public function setHeader(string $name, string $value)
+    public function setHeader(string $name, string $value) : self
     {
         $this->response = $this->response->withHeader($name, $value);
+
+        return $this;
     }
 
     public function getHeader(string $name) : ?string
@@ -80,13 +87,17 @@ class ResponseWrapper implements ApiResponse
         return $this->response;
     }
 
-    public function writeBody(string $string)
+    public function writeBody(string $string) : self
     {
         $this->response->getBody()->write($string);
+
+        return $this;
     }
 
-    public function setBody(StreamInterface $body)
+    public function setBody(StreamInterface $body) : self
     {
-        $this->response->setBody($body);
+        $this->response = $this->response->withBody($body);
+
+        return $this;
     }
 }

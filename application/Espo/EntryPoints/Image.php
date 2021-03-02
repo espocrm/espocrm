@@ -37,14 +37,18 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\EntryPoint;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-
 use Espo\Core\Di;
 
+use Espo\Core\{
+    Acl,
+    ORM\EntityManager,
+    Api\Request,
+    Api\Response,
+    FileStorage\Manager as FileStorageManager,
+};
+
 class Image implements EntryPoint,
-    Di\EntityManagerAware,
-    Di\AclAware,
+
     Di\FileManagerAware
 {
     use Di\EntityManagerSetter;
@@ -77,19 +81,26 @@ class Image implements EntryPoint,
 
     protected $allowedFieldList = null;
 
+    public function __construct(FileStorageManager $fileStorageManager, Acl $acl, EntityManager $entityManager)
+    {
+        $this->fileStorageManager = $fileStorageManager;
+        $this->acl = $acl;
+        $this->entityManager = $entityManager;
+    }
+
     public function run(Request $request, Response $response) : void
     {
-        $id = $request->get('id');
-        $size = $request->get('size') ?? null;
+        $id = $request->getQueryParam('id');
+        $size = $request->getQueryParam('size') ?? null;
 
         if (!$id) {
             throw new BadRequest();
         }
 
-        $this->show($id, $size, false);
+        $this->show($response, $id, $size, false);
     }
 
-    protected function show($id, $size, $disableAccessCheck = false)
+    protected function show(Response $response, string $id, ?string $size, bool $disableAccessCheck = false) : void
     {
         $attachment = $this->entityManager->getEntity('Attachment', $id);
 
@@ -127,75 +138,102 @@ class Image implements EntryPoint,
             }
         }
 
-        if (!empty($size)) {
+        if ($size) {
             if (!empty($this->imageSizes[$size])) {
                 $thumbFilePath = "data/upload/thumbs/{$sourceId}_{$size}";
 
                 if (!file_exists($thumbFilePath)) {
                     $targetImage = $this->getThumbImage($filePath, $fileType, $size);
+
                     ob_start();
 
                     switch ($fileType) {
                         case 'image/jpeg':
                             imagejpeg($targetImage);
+
                             break;
+
                         case 'image/png':
                             imagepng($targetImage);
+
                             break;
+
                         case 'image/gif':
                             imagegif($targetImage);
+
                             break;
+
                         case 'image/webp':
                             imagewebp($targetImage);
+
                             break;
                     }
+
                     $contents = ob_get_contents();
+
                     ob_end_clean();
+
                     imagedestroy($targetImage);
+
                     $this->fileManager->putContents($thumbFilePath, $contents);
                 }
-                $filePath = $thumbFilePath;
 
-            } else {
+                $filePath = $thumbFilePath;
+            }
+            else {
                 throw new Error();
             }
         }
 
-        if (!empty($size)) {
+        if ($size) {
             $fileName = $size . '-' . $attachment->get('name');
-        } else {
+
+            $fileSize = filesize($filePath);
+
+            $contents = $this->fileManager->getContents($filePath);
+
+            $response->writeBody($contents);
+        }
+        else {
             $fileName = $attachment->get('name');
+
+            $stream = $this->fileStorageManager->getStream($attachment);
+
+            $fileSize = $stream->getSize();
+
+            $response->setBody($stream);
         }
-        header('Content-Disposition:inline;filename="'.$fileName.'"');
-        if (!empty($fileType)) {
-            header('Content-Type: ' . $fileType);
+
+        if ($fileType) {
+            $response->setHeader('Content-Type', $fileType);
         }
-        header('Pragma: public');
-        header('Cache-Control: max-age=360000, must-revalidate');
-        $fileSize = filesize($filePath);
-        if ($fileSize) {
-            header('Content-Length: ' . $fileSize);
-        }
-        readfile($filePath);
-        exit;
+
+        $response
+            ->setHeader('Content-Disposition', 'inline;filename="' . $fileName . '"')
+            ->setHeader('Pragma', 'public')
+            ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
+            ->setHeader('Content-Length', $fileSize);
     }
 
     protected function getThumbImage($filePath, $fileType, $size)
     {
-        if (!@is_array(getimagesize($filePath))) {
+        if (!is_array(getimagesize($filePath))) {
             throw new Error();
         }
 
         list($originalWidth, $originalHeight) = getimagesize($filePath);
+
         list($width, $height) = $this->imageSizes[$size];
 
         if ($originalWidth <= $width && $originalHeight <= $height) {
             $targetWidth = $originalWidth;
             $targetHeight = $originalHeight;
-        } else {
+        }
+        else {
             if ($originalWidth > $originalHeight) {
                 $targetWidth = $width;
                 $targetHeight = $originalHeight / ($originalWidth / $width);
+
                 if ($targetHeight > $height) {
                     $targetHeight = $height;
                     $targetWidth = $originalWidth / ($originalHeight / $height);
@@ -203,6 +241,7 @@ class Image implements EntryPoint,
             } else {
                 $targetHeight = $height;
                 $targetWidth = $originalWidth / ($originalHeight / $height);
+
                 if ($targetWidth > $width) {
                     $targetWidth = $width;
                     $targetHeight = $originalHeight / ($originalWidth / $width);
@@ -211,26 +250,57 @@ class Image implements EntryPoint,
         }
 
         $targetImage = imagecreatetruecolor($targetWidth, $targetHeight);
+
         switch ($fileType) {
+
             case 'image/jpeg':
+
                 $sourceImage = imagecreatefromjpeg($filePath);
-                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+
+                imagecopyresampled(
+                    $targetImage, $sourceImage, 0, 0, 0, 0,
+                    $targetWidth, $targetHeight, $originalWidth, $originalHeight
+                );
                 break;
+
             case 'image/png':
+
                 $sourceImage = imagecreatefrompng($filePath);
+
                 imagealphablending($targetImage, false);
                 imagesavealpha($targetImage, true);
+
                 $transparent = imagecolorallocatealpha($targetImage, 255, 255, 255, 127);
+
                 imagefilledrectangle($targetImage, 0, 0, $targetWidth, $targetHeight, $transparent);
-                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+
+                imagecopyresampled(
+                    $targetImage, $sourceImage, 0, 0, 0, 0,
+                    $targetWidth, $targetHeight, $originalWidth, $originalHeight
+                );
+
                 break;
+
             case 'image/gif':
+
                 $sourceImage = imagecreatefromgif($filePath);
-                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+
+                imagecopyresampled(
+                    $targetImage, $sourceImage, 0, 0, 0, 0,
+                    $targetWidth, $targetHeight, $originalWidth, $originalHeight
+                );
+
                 break;
+
             case 'image/webp':
+
                 $sourceImage = imagecreatefromwebp($filePath);
-                imagecopyresampled($targetImage, $sourceImage, 0, 0, 0, 0, $targetWidth, $targetHeight, $originalWidth, $originalHeight);
+
+                imagecopyresampled(
+                    $targetImage, $sourceImage, 0, 0, 0, 0,
+                    $targetWidth, $targetHeight, $originalWidth, $originalHeight
+                );
+
                 break;
         }
 
@@ -244,17 +314,21 @@ class Image implements EntryPoint,
     protected function getOrientation($filePath)
     {
         $orientation = 0;
+
         if (function_exists('exif_read_data')) {
-            $orientation = @exif_read_data($filePath)['Orientation'];
+            $orientation = exif_read_data($filePath)['Orientation'];
         }
+
         return $orientation;
     }
 
     protected function fixOrientation($targetImage, $filePath)
     {
         $orientation = $this->getOrientation($filePath);
+
         if ($orientation) {
             $angle = array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[$orientation];
+
             $targetImage = imagerotate($targetImage, $angle, 0);
         }
 

@@ -14,6 +14,9 @@
     "classFinder": {
         "className": "Espo\\Core\\Utils\\ClassFinder"
     },
+    "fileStorageManager": {
+        "className": "Espo\\Core\\FileStorage\\Manager"
+    },
     "cronManager": {
         "className": "Espo\\Core\\CronManager"
     },

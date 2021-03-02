@@ -27,47 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FileStorage\Storages;
+namespace Espo\Core\FileStorage;
 
-use Espo\Entities\Attachment;
+use Espo\Entities\Attachment as AttachmentEntity;
 
-/**
- * File storing and fetching. Files are represented as Attachment entities.
- */
-interface Storage
+use RuntimeException;
+
+class AttachmentEntityWrapper implements Attachment
 {
-    /**
-     * Get file contents.
-     */
-    public function getContents(Attachment $attachment) : ?string;
+    private $attachment;
 
-    /**
-     * Whether a file exists in a storage.
-     */
-    public function isFile(Attachment $attachment) : bool;
+    public function __construct(AttachmentEntity $attachment)
+    {
+        if (!$attachment->getSourceId()) {
+            throw new RuntimeException("Attachment w/o a source ID.");
+        }
 
-    /**
-     * Store file contents.
-     */
-    public function putContents(Attachment $attachment, string $contents);
+        $this->attachment = $attachment;
+    }
 
-    /**
-     * Get a file path.
-     */
-    public function getLocalFilePath(Attachment $attachment) : string;
-
-    /**
-     * Remove a file.
-     */
-    public function unlink(Attachment $attachment);
-
-    /**
-     * Whether a file can be downloaded by URL.
-     */
-    public function hasDownloadUrl(Attachment $attachment) : bool;
-
-    /**
-     * Get download URL.
-     */
-    public function getDownloadUrl(Attachment $attachment) : string;
+    public function getSourceId() : string
+    {
+        return $this->attachment->getSourceId();
+    }
 }

@@ -27,29 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\FileStorage;
 
-use Espo\Core\{
-    Utils\Metadata,
-    InjectableFactory,
-    FileStorage\Manager as FileStorageManagerService,
-};
-
-class FileStorageManager implements Loader
+interface Attachment
 {
-    protected $metadata;
-    protected $injectableFactory;
-
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    public function load() : FileStorageManagerService
-    {
-        $implementationClassNameMap = $this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap']) ?? [];
-
-        return new FileStorageManagerService($implementationClassNameMap, $this->injectableFactory);
-    }
+    /**
+     * Get a source ID.
+     */
+    public function getSourceId() : string;
 }

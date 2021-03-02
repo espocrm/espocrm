@@ -29,13 +29,15 @@
 
 namespace Espo\Repositories;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\ORM\Entity;
 
 use Espo\Core\Utils\Util;
 
+use Espo\Entities\Attachment as AttachmentEntity;
+
 use Espo\Core\Di;
+
+use Psr\Http\Message\StreamInterface;
 
 class Attachment extends \Espo\Core\Repositories\Database implements
     Di\FileManagerAware,
@@ -95,6 +97,7 @@ class Attachment extends \Espo\Core\Repositories\Database implements
 
             if ($entity->has('contents')) {
                 $contents = $entity->get('contents');
+
                 if (is_string($contents)) {
                     $this->fileStorageManager->putContents($entity, $contents);
                 }
@@ -130,27 +133,28 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function removeImageThumbs($entity)
+    public function removeImageThumbs(AttachmentEntity $entity)
     {
         foreach ($this->imageThumbList as $suffix) {
-            $filePath = "data/upload/thumbs/".$entity->getSourceId()."_{$suffix}";
+            $filePath = "data/upload/thumbs/" . $entity->getSourceId() . "_{$suffix}";
+
             if ($this->fileManager->isFile($filePath)) {
                 $this->fileManager->removeFile($filePath);
             }
         }
     }
 
-    public function getCopiedAttachment(Entity $entity, $role = null)
+    public function getCopiedAttachment(AttachmentEntity $entity, $role = null)
     {
         $attachment = $this->get();
 
-        $attachment->set(array(
+        $attachment->set([
             'sourceId' => $entity->getSourceId(),
             'name' => $entity->get('name'),
             'type' => $entity->get('type'),
             'size' => $entity->get('size'),
-            'role' => $entity->get('role')
-        ));
+            'role' => $entity->get('role'),
+        ]);
 
         if ($role) {
             $attachment->set('role', $role);
@@ -161,23 +165,18 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         return $attachment;
     }
 
-    public function getContents(Entity $entity) : ?string
+    public function getContents(AttachmentEntity $entity) : string
     {
         return $this->fileStorageManager->getContents($entity);
     }
 
-    public function getFilePath(Entity $entity) : string
+    public function getStream(AttachmentEntity $entity) : StreamInterface
+    {
+        return $this->fileStorageManager->getStream($entity);
+    }
+
+    public function getFilePath(AttachmentEntity $entity) : string
     {
         return $this->fileStorageManager->getLocalFilePath($entity);
-    }
-
-    public function hasDownloadUrl(Entity $entity) : bool
-    {
-        return $this->fileStorageManager->hasDownloadUrl($entity);
-    }
-
-    public function getDownloadUrl(Entity $entity) : string
-    {
-        return $this->fileStorageManager->getDownloadUrl($entity);
     }
 }

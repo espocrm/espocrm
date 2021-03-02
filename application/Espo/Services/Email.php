@@ -907,11 +907,15 @@ class Email extends Record implements
                     $attachment->set('parentId', $parentId);
                 }
 
-                if ($this->getFileStorageManager()->isFile($source)) {
+                if ($this->getFileStorageManager()->exists($source)) {
                     $this->getEntityManager()->saveEntity($attachment);
+
                     $contents = $this->getFileStorageManager()->getContents($source) ?? '';
+
                     $this->getFileStorageManager()->putContents($attachment, $contents);
+
                     $ids[] = $attachment->id;
+
                     $names->{$attachment->id} = $attachment->get('name');
                 }
             }

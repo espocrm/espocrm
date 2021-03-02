@@ -27,50 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Api;
+namespace Espo\Core\FileStorage;
 
-use Psr\Http\Message\{
-    ResponseInterface as Psr7Response,
-    StreamInterface,
-};
+use Psr\Http\Message\StreamInterface;
 
 /**
- * Representation of an HTTP response. An instance is mutable.
+ * File storing and fetching.
  */
-interface Response
+interface Storage
 {
     /**
-     * Set a status code.
+     * Get file contents as a stream.
      */
-    public function setStatus(int $code, ?string $reason = null) : self;
+    public function getStream(Attachment $attachment) : StreamInterface;
 
     /**
-     * Set a specific header.
+     * Store file contents.
      */
-    public function setHeader(string $name, string $value) : self;
+    public function putStream(Attachment $attachment, StreamInterface $stream) : void;
 
     /**
-     * Get a header value.
+     * Whether a file exists.
      */
-    public function getHeader(string $name) : ?string;
+    public function exists(Attachment $attachment) : bool;
 
     /**
-     * Whether a header is set.
+     * Delete a file.
      */
-    public function hasHeader(string $name) : bool;
-
-    /**
-     * Write a body.
-     */
-    public function writeBody(string $string) : self;
-
-    /**
-     * Set a body.
-     */
-    public function setBody(StreamInterface $body) : self;
-
-    /**
-     * Get a result PSR-7 response.
-     */
-    public function getResponse() : Psr7Response;
+    public function unlink(Attachment $attachment) : void;
 }

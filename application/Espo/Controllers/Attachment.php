@@ -32,6 +32,8 @@ namespace Espo\Controllers;
 use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\BadRequest,
+    Api\Request,
+    Api\Response,
 };
 
 use Espo\Core\Controllers\Record;
@@ -72,9 +74,9 @@ class Attachment extends Record
         return $this->getRecordService()->getCopiedAttachment($data)->getValueMap();
     }
 
-    public function getActionFile($params, $data, $request, $response)
+    public function getActionFile(Request $request, Response $response)
     {
-        $id = $params['id'] ?? null;
+        $id = $request->getRouteParam('id');
 
         if (!$id) {
             throw new BadRequest();
@@ -82,17 +84,10 @@ class Attachment extends Record
 
         $fileData = $this->getRecordService()->getFileData($id);
 
-        $response->setHeader('Content-Type', $fileData->type);
-
-        $response->setHeader(
-            'Content-Disposition',
-            'Content-Disposition: attachment; filename="' . $fileData->name . '"'
-        );
-
-        if ($fileData->size) {
-            $response->setHeader('Content-Length', strlen($fileData->contents));
-        }
-
-        return $fileData->contents;
+        $response
+            ->setHeader('Content-Type', $fileData->type)
+            ->setHeader('Content-Disposition', 'attachment; filename="' . $fileData->name . '"')
+            ->setHeader('Content-Length', $fileData->stream->getSize())
+            ->setBody($fileData->stream);
     }
 }

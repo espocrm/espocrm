@@ -29,106 +29,139 @@
 
 namespace Espo\Core\FileStorage;
 
-use Espo\Core\InjectableFactory;
+use Espo\Entities\Attachment as AttachmentEntity;
 
-use Espo\Entities\Attachment;
+use Psr\Http\Message\StreamInterface;
 
-use Espo\Core\Exceptions\Error;
+use function GuzzleHttp\Psr7\stream_for;
 
 /**
  * An access point for file storing and fetching. Files are represented as Attachment entities.
  */
 class Manager
 {
-    private $implementations = [];
+    private $implHash = [];
 
-    private $implementationClassNameMap = [];
+    private const DEFAULT_STORAGE = 'EspoUploadDir';
 
-    private $injectableFactory;
+    private $factory;
 
-    public function __construct(array $implementationClassNameMap, InjectableFactory $injectableFactory)
+    public function __construct(Factory $factory)
     {
-        $this->implementationClassNameMap = $implementationClassNameMap;
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    private function getImplementation(?string $storage = null)
-    {
-        if (!$storage) {
-            $storage = 'EspoUploadDir';
-        }
-
-        if (!array_key_exists($storage, $this->implementations)) {
-            if (!array_key_exists($storage, $this->implementationClassNameMap)) {
-                throw new Error("FileStorageManager: Unknown storage '{$storage}'");
-            }
-            $className = $this->implementationClassNameMap[$storage];
-            $this->implementations[$storage] = $this->injectableFactory->create($className);
-        }
-
-        return $this->implementations[$storage];
+        $this->factory = $factory;
     }
 
     /**
      * Whether a file exists in a storage.
      */
-    public function isFile(Attachment $attachment) : bool
+    public function exists(AttachmentEntity $attachment) : bool
     {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->isFile($attachment);
+        $implementation = $this->getImplementation($attachment);
+
+        return $implementation->exists(self::wrapAttachmentEntity($attachment));
     }
 
     /**
      * Get file contents.
      */
-    public function getContents(Attachment $attachment) : ?string
+    public function getContents(AttachmentEntity $attachment) : string
     {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->getContents($attachment);
+        $implementation = $this->getImplementation($attachment);
+
+        return $implementation->getStream(self::wrapAttachmentEntity($attachment))->getContents();
+    }
+
+    /**
+     * Get a file contents stream.
+     */
+    public function getStream(AttachmentEntity $attachment) : StreamInterface
+    {
+        $implementation = $this->getImplementation($attachment);
+
+        return $implementation->getStream(self::wrapAttachmentEntity($attachment));
+    }
+
+    /**
+     * Store file contents represented as a stream.
+     */
+    public function putStream(AttachmentEntity $attachment, StreamInterface $stream) : void
+    {
+        $implementation = $this->getImplementation($attachment);
+
+        $implementation->putStream(self::wrapAttachmentEntity($attachment), $stream);
     }
 
     /**
      * Store file contents.
      */
-    public function putContents(Attachment $attachment, string $contents)
+    public function putContents(AttachmentEntity $attachment, string $contents) : void
     {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        $implementation->putContents($attachment, $contents);
+        $implementation = $this->getImplementation($attachment);
+
+        $stream = stream_for($contents);
+
+        $implementation->putStream(self::wrapAttachmentEntity($attachment), $stream);
     }
 
     /**
      * Remove a file.
      */
-    public function unlink(Attachment $attachment)
+    public function unlink(AttachmentEntity $attachment) : void
     {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        $implementation->unlink($attachment);
+        $implementation = $this->getImplementation($attachment);
+
+        $implementation->unlink(self::wrapAttachmentEntity($attachment));
     }
 
     /**
-     * Get a file path.
+     * Whether an attachment storage is local.
      */
-    public function getLocalFilePath(Attachment $attachment) : string
+    public function isLocal(AttachmentEntity $attachment) : bool
     {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->getLocalFilePath($attachment);
+        $implementation = $this->getImplementation($attachment);
+
+        return $implementation instanceof Local;
     }
 
     /**
-     * Whether a file can be downloaded by URL.
+     * Get a local file path. If a file is not stored locally, a temporary file will be created.
      */
-    public function hasDownloadUrl(Attachment $attachment) : bool
+    public function getLocalFilePath(AttachmentEntity $attachment) : string
     {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->hasDownloadUrl($attachment);
+        $implementation = $this->getImplementation($attachment);
+
+        if ($this->isLocal($attachment)) {
+            return $implementation->getLocalFilePath(self::wrapAttachmentEntity($attachment));
+        }
+
+        $contents = $this->getContents($attachment);
+
+        $resource = tmpfile();
+
+        fwrite($resource, $contents);
+
+        $path = stream_get_meta_data($resource)['uri'];
+
+        return $path;
     }
 
-    /**
-     * Get download URL.
-     */
-    public function getDownloadUrl(Attachment $attachment) : string
+    private static function wrapAttachmentEntity(AttachmentEntity $attachment) : AttachmentEntityWrapper
     {
-        $implementation = $this->getImplementation($attachment->get('storage'));
-        return $implementation->getDownloadUrl($attachment);
+        return new AttachmentEntityWrapper($attachment);
+    }
+
+    private function getImplementation(AttachmentEntity $attachment) : Storage
+    {
+        $storage = $attachment->getStorage();
+
+        if (!$storage) {
+            $storage = self::DEFAULT_STORAGE;
+        }
+
+        if (!array_key_exists($storage, $this->implHash)) {
+            $this->implHash[$storage] = $this->factory->create($storage);
+        }
+
+        return $this->implHash[$storage];
     }
 }

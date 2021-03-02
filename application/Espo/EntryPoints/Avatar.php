@@ -37,6 +37,8 @@ use Espo\Core\Di;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 
+use Identicon\Identicon;
+
 class Avatar extends Image implements Di\MetadataAware
 {
     use Di\MetadataSetter;
@@ -59,21 +61,26 @@ class Avatar extends Image implements Di\MetadataAware
     protected function getColor($hash)
     {
         $length = strlen($hash);
+
         $sum = 0;
+
         for ($i = 0; $i < $length; $i++) {
             $sum += ord($hash[$i]);
         }
+
         $x = intval($sum % 128) + 1;
 
         $colorList = $this->metadata->get(['app', 'avatars', 'colorList']) ?? $this->colorList;
 
         $index = intval($x * count($colorList) / 128);
+
         return $colorList[$index];
     }
 
     public function run(Request $request, Response $response) : void
     {
         $userId = $request->get('id');
+
         $size = $request->get('size') ?? null;
 
         if (!$userId) {
@@ -81,43 +88,72 @@ class Avatar extends Image implements Di\MetadataAware
         }
 
         $user = $this->entityManager->getEntity('User', $userId);
+
         if (!$user) {
-            header('Content-Type: image/png');
-            $img  = imagecreatetruecolor(14, 14);
-            imagesavealpha($img, true);
-            $color = imagecolorallocatealpha($img, 127, 127, 127, 127);
-            imagefill($img, 0, 0, $color);
-            imagepng($img);
-            imagecolordeallocate($img, $color);
-            imagedestroy($img);
-            exit;
+            $this->renderBlank($response);
+
+            return;
         }
 
         $id = $user->get('avatarId');
 
-        if (!empty($id)) {
-            $this->show($id, $size, true);
-        } else {
-            $identicon = new \Identicon\Identicon();
-            if (empty($size)) {
-                $size = 'small';
-            }
-            if (!empty($this->imageSizes[$size])) {
-                $width = $this->imageSizes[$size][0];
-
-                header('Cache-Control: max-age=360000, must-revalidate');
-                header('Content-Type: image/png');
-
-                $hash = $userId;
-                $color = $this->getColor($userId);
-                if ($hash === 'system') {
-                    $color = $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
-                }
-
-                $imgContent = $identicon->getImageData($hash, $width, $color);
-                echo $imgContent;
-                exit;
-            }
+        if ($id) {
+            $this->show($response, $id, $size, true);
         }
+
+        $identicon = new Identicon();
+
+        if (!$size) {
+            $size = 'small';
+        }
+
+        if (empty($this->imageSizes[$size])) {
+            $this->renderBlank($response);
+
+            return;
+        }
+
+        $width = $this->imageSizes[$size][0];
+
+        $response
+            ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
+            ->setHeader('Content-Type', 'image/png');
+
+        $hash = $userId;
+
+        $color = $this->getColor($userId);
+
+        if ($hash === 'system') {
+            $color = $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
+        }
+
+        $imgContent = $identicon->getImageData($hash, $width, $color);
+
+        $response->writeBody($imgContent);
+    }
+
+    protected function renderBlank(Response $response) : void
+    {
+        ob_start();
+
+        $img  = imagecreatetruecolor(14, 14);
+
+        imagesavealpha($img, true);
+
+        $color = imagecolorallocatealpha($img, 127, 127, 127, 127);
+
+        imagefill($img, 0, 0, $color);
+        imagepng($img);
+        imagecolordeallocate($img, $color);
+
+        $contents = ob_get_contents();
+
+        ob_end_clean();
+
+        imagedestroy($img);
+
+        $response
+            ->setHeader('Content-Type', 'image/png')
+            ->writeBody($contents);
     }
 }

@@ -29,15 +29,23 @@
 
 namespace Espo\Entities;
 
-class Attachment extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Attachment extends Entity
 {
-    public function getSourceId()
+    public function getSourceId() : ?string
     {
         $sourceId = $this->get('sourceId');
+
         if (!$sourceId) {
             $sourceId = $this->id;
         }
+
         return $sourceId;
     }
 
+    public function getStorage() : ?string
+    {
+        return $this->get('storage');
+    }
 }

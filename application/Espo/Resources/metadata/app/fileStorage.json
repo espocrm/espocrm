@@ -1,5 +1,5 @@
 {
     "implementationClassNameMap": {
-        "EspoUploadDir": "\\Espo\\Core\\FileStorage\\Storages\\EspoUploadDir"
+        "EspoUploadDir": "Espo\\Core\\FileStorage\\Storages\\EspoUploadDir"
     }
 }

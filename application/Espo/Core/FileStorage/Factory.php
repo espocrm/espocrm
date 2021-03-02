@@ -27,50 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Api;
+namespace Espo\Core\FileStorage;
 
-use Psr\Http\Message\{
-    ResponseInterface as Psr7Response,
-    StreamInterface,
+use Espo\Core\{
+    InjectableFactory,
+    Utils\Metadata,
 };
 
-/**
- * Representation of an HTTP response. An instance is mutable.
- */
-interface Response
+use RuntimeExeption;
+
+class Factory
 {
-    /**
-     * Set a status code.
-     */
-    public function setStatus(int $code, ?string $reason = null) : self;
+    private $metadata;
 
-    /**
-     * Set a specific header.
-     */
-    public function setHeader(string $name, string $value) : self;
+    private $injectableFactory;
 
-    /**
-     * Get a header value.
-     */
-    public function getHeader(string $name) : ?string;
+    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
+    {
+        $this->metadata = $metadata;
+        $this->injectableFactory = $injectableFactory;
+    }
 
-    /**
-     * Whether a header is set.
-     */
-    public function hasHeader(string $name) : bool;
+    public function create(string $name) : Storage
+    {
+        $className = $this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $name]);
 
-    /**
-     * Write a body.
-     */
-    public function writeBody(string $string) : self;
+        if (!$className) {
+            throw new RuntimeExeption("Unknown file storage '{$storage}'.");
+        }
 
-    /**
-     * Set a body.
-     */
-    public function setBody(StreamInterface $body) : self;
-
-    /**
-     * Get a result PSR-7 response.
-     */
-    public function getResponse() : Psr7Response;
+        return $this->injectableFactory->create($className);
+    }
 }

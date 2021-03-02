@@ -64,15 +64,18 @@ class Attachment extends Record
         }
 
         $arr = explode(',', $fileData);
+
         if (count($arr) > 1) {
             list($prefix, $contents) = $arr;
             $contents = base64_decode($contents);
-        } else {
+        }
+        else {
             $contents = '';
         }
 
         $attachment = $this->getEntityManager()->getEntity('Attachment');
         $attachment->set('contents', $contents);
+
         $this->getEntityManager()->saveEntity($attachment);
 
         return $attachment;
@@ -166,7 +169,11 @@ class Attachment extends Record
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         $storage = $entity->get('storage');
-        if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
+
+        if (
+            $storage &&
+            !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
+        ) {
             $entity->clear('storage');
         }
     }
@@ -174,7 +181,11 @@ class Attachment extends Record
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
         $storage = $entity->get('storage');
-        if ($storage && !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])) {
+
+        if (
+            $storage &&
+            !$this->getMetadata()->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
+        ) {
             $entity->clear('storage');
         }
     }
@@ -218,8 +229,13 @@ class Attachment extends Record
 
     public function getCopiedAttachment($data)
     {
-        if (empty($data->id)) throw new BadRequest();
-        if (empty($data->field)) throw new BadRequest();
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        if (empty($data->field)) {
+            throw new BadRequest();
+        }
 
         if (isset($data->parentType)) {
             $relatedEntityType = $data->parentType;
@@ -234,7 +250,10 @@ class Attachment extends Record
         $this->checkAttachmentField($relatedEntityType, $field);
 
         $attachment = $this->getEntity($data->id);
-        if (!$attachment) throw new NotFound();
+
+        if (!$attachment) {
+            throw new NotFound();
+        }
 
         $copied = $this->getRepository()->getCopiedAttachment($attachment);
 
@@ -243,9 +262,11 @@ class Attachment extends Record
         if (isset($data->parentType)) {
             $attachment->set('parentType', $data->parentType);
         }
+
         if (isset($data->relatedType)) {
             $attachment->set('relatedType', $data->relatedType);
         }
+
         $attachment->set('field', $field);
         $attachment->set('role', 'Attachment');
 
@@ -258,24 +279,35 @@ class Attachment extends Record
     {
         $attachment = $this->getEntity();
 
-        if (empty($data->url)) throw new BadRequest();
-        if (empty($data->field)) throw new BadRequest();
+        if (empty($data->url)) {
+            throw new BadRequest();
+        }
+
+        if (empty($data->field)) {
+            throw new BadRequest();
+        }
 
         if (isset($data->parentType)) {
             $relatedEntityType = $data->parentType;
-        } else if (isset($data->relatedType)) {
+        }
+        else if (isset($data->relatedType)) {
             $relatedEntityType = $data->relatedType;
-        } else {
+        }
+        else {
             throw new BadRequest();
         }
 
         $url = $data->url;
+
         $field = $data->field;
 
         $this->checkAttachmentField($relatedEntityType, $field);
 
         $data = $this->getImageDataByUrl($url);
-        if (!$data) throw new Error('Attachment::getAttachmentFromImageUrl: Bad image data.');
+
+        if (!$data) {
+            throw new Error('Attachment::getAttachmentFromImageUrl: Bad image data.');
+        }
 
         $type = $data['type'];
         $contents = $data['contents'];
@@ -283,9 +315,11 @@ class Attachment extends Record
         $size = mb_strlen($contents, '8bit');
 
         $maxSize = $this->getMetadata()->get(['entityDefs', $relatedEntityType, 'fields', $field, 'maxFileSize']);
+
         if (!$maxSize) {
             $maxSize = $this->getConfig()->get('attachmentUploadMaxSize');
         }
+
         if ($maxSize) {
             if ($size > $maxSize * 1024 * 1024) {
                 throw new Error("File size should not exceed {$maxSize}Mb.");
@@ -296,15 +330,17 @@ class Attachment extends Record
             'name' => $url,
             'type' => $type,
             'contents' => $contents,
-            'role' => 'Attachment'
+            'role' => 'Attachment',
         ]);
 
         if (isset($data->parentType)) {
             $attachment->set('parentType', $data->parentType);
         }
+
         if (isset($data->relatedType)) {
             $attachment->set('relatedType', $data->relatedType);
         }
+
         $attachment->set('field', $field);
 
         $this->getRepository()->save($attachment);
@@ -318,85 +354,100 @@ class Attachment extends Record
     {
         $type = null;
 
-        if (function_exists('curl_init')) {
-            $opts = [];
-            $httpHeaders = [];
-            $httpHeaders[] = 'Expect:';
-            $opts[\CURLOPT_URL]  = $url;
-            $opts[\CURLOPT_HTTPHEADER] = $httpHeaders;
-            $opts[\CURLOPT_CONNECTTIMEOUT] = 10;
-            $opts[\CURLOPT_TIMEOUT] = 10;
-            $opts[\CURLOPT_HEADER] = true;
-            $opts[\CURLOPT_BINARYTRANSFER] = true;
-            $opts[\CURLOPT_VERBOSE] = true;
-            $opts[\CURLOPT_SSL_VERIFYPEER] = true;
-            $opts[\CURLOPT_SSL_VERIFYHOST] = 2;
-            $opts[\CURLOPT_RETURNTRANSFER] = true;
-            $opts[\CURLOPT_FOLLOWLOCATION] = true;
-            $opts[\CURLOPT_MAXREDIRS] = 2;
-            $opts[\CURLOPT_IPRESOLVE] = \CURL_IPRESOLVE_V4;
+        if (!function_exists('curl_init')) {
+            return null;
+        }
 
-            $ch = curl_init();
-            curl_setopt_array($ch, $opts);
-            $response = curl_exec($ch);
+        $opts = [];
 
-            $headerSize = curl_getinfo($ch, \CURLINFO_HEADER_SIZE);
+        $httpHeaders = [];
+        $httpHeaders[] = 'Expect:';
 
-            $header = substr($response, 0, $headerSize);
-            $body = substr($response, $headerSize);
+        $opts[\CURLOPT_URL]  = $url;
+        $opts[\CURLOPT_HTTPHEADER] = $httpHeaders;
+        $opts[\CURLOPT_CONNECTTIMEOUT] = 10;
+        $opts[\CURLOPT_TIMEOUT] = 10;
+        $opts[\CURLOPT_HEADER] = true;
+        $opts[\CURLOPT_BINARYTRANSFER] = true;
+        $opts[\CURLOPT_VERBOSE] = true;
+        $opts[\CURLOPT_SSL_VERIFYPEER] = true;
+        $opts[\CURLOPT_SSL_VERIFYHOST] = 2;
+        $opts[\CURLOPT_RETURNTRANSFER] = true;
+        $opts[\CURLOPT_FOLLOWLOCATION] = true;
+        $opts[\CURLOPT_MAXREDIRS] = 2;
+        $opts[\CURLOPT_IPRESOLVE] = \CURL_IPRESOLVE_V4;
 
-            $headLineList = explode("\n", $header);
-            foreach ($headLineList as $i => $line) {
-                if ($i === 0) continue;
-                if (strpos(strtolower($line), strtolower('Content-Type:')) === 0) {
-                    $part = trim(substr($line, 13));
-                    if ($part) {
-                        $type = trim(explode(";", $part)[0]);
-                    }
+        $ch = curl_init();
+
+        curl_setopt_array($ch, $opts);
+
+        $response = curl_exec($ch);
+
+        $headerSize = curl_getinfo($ch, \CURLINFO_HEADER_SIZE);
+
+        $header = substr($response, 0, $headerSize);
+        $body = substr($response, $headerSize);
+
+        $headLineList = explode("\n", $header);
+
+        foreach ($headLineList as $i => $line) {
+            if ($i === 0) {
+                continue;
+            }
+
+            if (strpos(strtolower($line), strtolower('Content-Type:')) === 0) {
+                $part = trim(substr($line, 13));
+
+                if ($part) {
+                    $type = trim(explode(";", $part)[0]);
                 }
             }
+        }
 
-            if (!$type) {
-                $extTypeMap = [
-                    'png' => 'image/png',
-                    'jpg' => 'image/jpeg',
-                    'jpeg' => 'image/jpeg',
-                    'gif' => 'image/gif',
-                    'webp' => 'image/webp',
-                ];
-
-                $extension = preg_replace('#\?.*#', '', pathinfo($url, \PATHINFO_EXTENSION));
-
-                if (isset($extTypeMap[$extension])) {
-                    $type = $extTypeMap[$extension];
-                }
-            }
-
-            if (!$type) return;
-
-            if (!in_array($type, $this->imageTypeList)) {
-                return;
-            }
-
-            return [
-                'type' => $type,
-                'contents' => $body
+        if (!$type) {
+            $extTypeMap = [
+                'png' => 'image/png',
+                'jpg' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'gif' => 'image/gif',
+                'webp' => 'image/webp',
             ];
 
-            curl_close($ch);
+            $extension = preg_replace('#\?.*#', '', pathinfo($url, \PATHINFO_EXTENSION));
+
+            if (isset($extTypeMap[$extension])) {
+                $type = $extTypeMap[$extension];
+            }
         }
-        return null;
+
+        curl_close($ch);
+
+        if (!$type) {
+            return;
+        }
+
+        if (!in_array($type, $this->imageTypeList)) {
+            return;
+        }
+
+        return [
+            'type' => $type,
+            'contents' => $body,
+        ];
     }
 
-    public function getFileData(string $id)
+    public function getFileData(string $id) : StdClass
     {
         $attachment = $this->getEntity($id);
-        if (!$attachment) throw new NotFound();
+
+        if (!$attachment) {
+            throw new NotFound();
+        }
 
         $data = (object) [
             'name' => $attachment->get('name'),
             'type' => $attachment->get('type'),
-            'contents' => $this->getRepository()->getContents($attachment),
+            'stream' => $this->getRepository()->getStream($attachment),
             'size' => $attachment->get('size'),
         ];
 

@@ -29,22 +29,25 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\{
+    Exceptions\NotFound,
+    Exceptions\Forbidden,
+    Exceptions\BadRequest,
+    EntryPoints\EntryPoint,
+    Api\Request,
+    Api\Response,
+    FileStorage\Manager as FileStorageManager,
+    ORM\EntityManager,
+    Acl,
+};
 
-use Espo\Core\EntryPoints\EntryPoint;
-use Espo\Core\Di;
-
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-
-class Attachment implements EntryPoint,
-    Di\EntityManagerAware,
-    Di\AclAware
+class Attachment implements EntryPoint
 {
-    use Di\EntityManagerSetter;
-    use Di\AclSetter;
+    protected $fileStorageManager;
+
+    protected $entityManager;
+
+    protected $acl;
 
     protected $allowedFileTypes = [
         'image/jpeg',
@@ -53,9 +56,16 @@ class Attachment implements EntryPoint,
         'image/webp',
     ];
 
+    public function __construct(FileStorageManager $fileStorageManager, EntityManager $entityManager, Acl $acl)
+    {
+        $this->fileStorageManager = $fileStorageManager;
+        $this->entityManager = $entityManager;
+        $this->acl = $acl;
+    }
+
     public function run(Request $request, Response $response) : void
     {
-        $id = $request->get('id');
+        $id = $request->getQueryParam('id');
 
         if (!$id) {
             throw new BadRequest();
@@ -71,27 +81,25 @@ class Attachment implements EntryPoint,
             throw new Forbidden();
         }
 
-        $fileName = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
-
-        if (!file_exists($fileName)) {
+        if (!$this->fileStorageManager->exists($attachment)) {
             throw new NotFound();
         }
 
         $fileType = $attachment->get('type');
 
         if (!in_array($fileType, $this->allowedFileTypes)) {
-            throw new Forbidden("EntryPoint Attachment: Not allowed type {$fileType}.");
+            throw new Forbidden("EntryPoint Attachment: Not allowed type '{$fileType}'.");
         }
 
         if ($attachment->get('type')) {
-            header('Content-Type: ' . $fileType);
+            $response->setHeader('Content-Type', $fileType);
         }
 
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($fileName));
+        $stream = $this->fileStorageManager->getStream($attachment);
 
-        readfile($fileName);
-
-        exit;
+        $response
+            ->setHeader('Pragma', 'public')
+            ->setHeader('Content-Length', (string) $stream->getSize())
+            ->setBody($stream);
     }
 }

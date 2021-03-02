@@ -29,7 +29,7 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
@@ -42,6 +42,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Api\Request,
     Api\Response,
+    FileStorage\Manager as FileStorageManager,
 };
 
 class Download implements EntryPoint
@@ -57,18 +58,22 @@ class Download implements EntryPoint
         'application/msexcel',
     ];
 
+    protected $fileStorageManager;
+
     protected $acl;
+
     protected $entityManager;
 
-    public function __construct(Acl $acl, EntityManager $entityManager)
+    public function __construct(FileStorageManager $fileStorageManager, Acl $acl, EntityManager $entityManager)
     {
+        $this->fileStorageManager = $fileStorageManager;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
     }
 
     public function run(Request $request, Response $response) : void
     {
-        $id = $request->get('id');
+        $id = $request->getQueryParam('id');
 
         if (!$id) {
             throw new BadRequest();
@@ -77,34 +82,16 @@ class Download implements EntryPoint
         $attachment = $this->entityManager->getEntity('Attachment', $id);
 
         if (!$attachment) {
-            throw new NotFound();
+            throw new NotFoundSilent();
         }
 
         if (!$this->acl->checkEntity($attachment)) {
             throw new Forbidden();
         }
 
-        if ($this->entityManager->getRepository('Attachment')->hasDownloadUrl($attachment)) {
-            $downloadUrl = $this->entityManager
-                ->getRepository('Attachment')
-                ->getDownloadUrl($attachment);
+        $stream = $this->fileStorageManager->getStream($attachment);
 
-            header('Location: ' . $downloadUrl);
-
-            exit;
-        }
-
-        $fileName = $this->entityManager
-            ->getRepository('Attachment')
-            ->getFilePath($attachment);
-
-        if (!file_exists($fileName)) {
-            throw new NotFound();
-        }
-
-        $outputFileName = $attachment->get('name');
-
-        $outputFileName = str_replace("\"", "\\\"", $outputFileName);
+        $outputFileName = str_replace("\"", "\\\"", $attachment->get('name'));
 
         $type = $attachment->get('type');
 
@@ -114,20 +101,18 @@ class Download implements EntryPoint
             $disposition = 'inline';
         }
 
-        header('Content-Description: File Transfer');
+        $response->setHeader('Content-Description', 'File Transfer');
 
         if ($type) {
-            header('Content-Type: ' . $type);
+            $response->setHeader('Content-Type', $type);
         }
 
-        header("Content-Disposition: " . $disposition . ";filename=\"" . $outputFileName . "\"");
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($fileName));
-
-        readfile($fileName);
-
-        exit;
+        $response
+            ->setHeader('Content-Disposition', $disposition . ";filename=\"" . $outputFileName . "\"")
+            ->setHeader('Expires', '0')
+            ->setHeader('Cache-Control', 'must-revalidate')
+            ->setHeader('Pragma', 'public')
+            ->setHeader('Content-Length', $stream->getSize())
+            ->setBody($stream);
     }
 }

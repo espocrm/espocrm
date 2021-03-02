@@ -66,6 +66,6 @@ class LogoImage extends Image implements Di\ConfigAware
             throw new NotFound();
         }
 
-        $this->show($id, $size);
+        $this->show($response, $id, $size);
     }
 }

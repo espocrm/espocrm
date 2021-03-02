@@ -192,7 +192,7 @@ class EmailTemplate extends Record implements
                     $clone->set('sourceId', $attachment->getSourceId());
                     $clone->set('storage', $attachment->get('storage'));
 
-                    if (!$this->getFileStorageManager()->isFile($attachment)) {
+                    if (!$this->getFileStorageManager()->exists($attachment)) {
                         continue;
                     }
 

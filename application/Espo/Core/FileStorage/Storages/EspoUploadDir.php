@@ -29,12 +29,19 @@
 
 namespace Espo\Core\FileStorage\Storages;
 
-use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Entities\Attachment;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\File\Manager as FileManager,
+    FileStorage\Storage,
+    FileStorage\Local,
+    FileStorage\Attachment,
+};
 
-use Espo\Core\Exceptions\Error;
+use Psr\Http\Message\StreamInterface;
 
-class EspoUploadDir implements Storage
+use GuzzleHttp\Psr7\Stream;
+
+class EspoUploadDir implements Storage, Local
 {
     protected $fileManager;
 
@@ -43,38 +50,43 @@ class EspoUploadDir implements Storage
         $this->fileManager = $fileManager;
     }
 
-    protected function getFileManager()
+    public function unlink(Attachment $attachment) : void
     {
-        return $this->fileManager;
+        $this->fileManager->unlink(
+            $this->getFilePath($attachment)
+        );
     }
 
-    public function unlink(Attachment $attachment)
-    {
-        return $this->getFileManager()->unlink($this->getFilePath($attachment));
-    }
-
-    public function isFile(Attachment $attachment) : bool
-    {
-        return $this->getFileManager()->isFile($this->getFilePath($attachment));
-    }
-
-    public function getContents(Attachment $attachment) : ?string
-    {
-        $contents = $this->getFileManager()->getContents($this->getFilePath($attachment));
-
-        if ($contents === false) {
-            return null;
-        }
-
-        return $contents;
-    }
-
-    public function putContents(Attachment $attachment, string $contents)
+    public function exists(Attachment $attachment) : bool
     {
         $filePath = $this->getFilePath($attachment);
-        $result = $this->getFileManager()->putContents($filePath, $contents);
+
+        return $this->fileManager->isFile($filePath);
+    }
+
+    public function getStream(Attachment $attachment) : StreamInterface
+    {
+        $filePath = $this->getFilePath($attachment);
+
+        if (!$this->exists($attachment)) {
+            throw new Error("Could not get stream for the file '{$filePath}'.");
+        }
+
+        $resouce = fopen($filePath, 'r');
+
+        return new Stream($resouce);
+    }
+
+    public function putStream(Attachment $attachment, StreamInterface $stream) : void
+    {
+        $filePath = $this->getFilePath($attachment);
+
+        $contents = $stream->getContents();
+
+        $result = $this->fileManager->putContents($filePath, $contents);
+
         if (!$result) {
-            throw new Error("Could not store a file {$filePath}.");
+            throw new Error("Could not store a file '{$filePath}'.");
         }
     }
 
@@ -86,16 +98,7 @@ class EspoUploadDir implements Storage
     protected function getFilePath(Attachment $attachment)
     {
         $sourceId = $attachment->getSourceId();
+
         return 'data/upload/' . $sourceId;
-    }
-
-    public function getDownloadUrl(Attachment $attachment) : string
-    {
-        throw new Error();
-    }
-
-    public function hasDownloadUrl(Attachment $attachment) : bool
-    {
-        return false;
     }
 }
