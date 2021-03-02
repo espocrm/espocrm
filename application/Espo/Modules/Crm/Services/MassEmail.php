@@ -31,6 +31,9 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\Core\{
     Exceptions\Forbidden,
+    Exceptions\BadRequest,
+    Exceptions\NotFound,
+    Exceptions\Error,
 };
 
 use Espo\{
@@ -71,19 +74,62 @@ class MassEmail extends RecordService
         $this->getEntityManager()->getQueryExecutor()->execute($delete);
     }
 
+    public function processTest(string $id, array $targetDataList) : void
+    {
+        $targetList = [];
 
-    public function createQueue(Entity $massEmail, bool $isTest = false, iterable $additionalTargetList = []) : void
+        if (count($targetDataList) === 0) {
+            throw new BadRequest("Empty target list.");
+        }
+
+        foreach ($targetDataList as $item) {
+            if (empty($item->id) || empty($item->type)) {
+                throw new BadRequest();
+            }
+
+            $targetId = $item->id;
+            $targetType = $item->type;
+
+            $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+
+            if (!$target) {
+                throw new Error("Target not found.");
+            }
+
+            if (!$this->getAcl()->check($target, 'read')) {
+                throw new Forbidden();
+            }
+
+            $targetList[] = $target;
+        }
+
+        $massEmail = $this->getEntityManager()->getEntity('MassEmail', $id);
+
+        if (!$massEmail) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($massEmail, 'read')) {
+            throw new Forbidden();
+        }
+
+        $this->createTestQueue($massEmail, $targetList);
+
+        $this->processTestSending($massEmail);
+    }
+
+    protected function createTestQueue(Entity $massEmail, iterable $targetList) : void
     {
         $queue = $this->injectableFactory->create(Queue::class);
 
-        $queue->create($massEmail, $isTest, $additionalTargetList);
+        $queue->create($massEmail, true, $targetList);
     }
 
-    public function processSending(Entity $massEmail, bool $isTest = false) : void
+    protected function processTestSending(Entity $massEmail) : void
     {
         $processor = $this->injectableFactory->create(Processor::class);
 
-        $processor->process($massEmail, $isTest);
+        $processor->process($massEmail, true);
     }
 
     public function getSmtpAccountDataList() : array

@@ -30,28 +30,34 @@
 namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\{
-    ServiceFactory,
     ORM\EntityManager,
     Jobs\Job,
 };
 
-use Exception;
+use Espo\{
+    Modules\Crm\Tools\MassEmail\Processor,
+    Modules\Crm\Tools\MassEmail\Queue,
+};
+
+use Throwable;
 
 class ProcessMassEmail implements Job
 {
-    protected $serviceFactory;
+    protected $processor;
+
+    protected $queue;
+
     protected $entityManager;
 
-    public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
+    public function __construct(Processor $processor, Queue $queue, EntityManager $entityManager)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->processor = $processor;
+        $this->queue = $queue;
         $this->entityManager = $entityManager;
     }
 
     public function run() : void
     {
-        $service = $this->serviceFactory->create('MassEmail');
-
         $massEmailList = $this->entityManager
             ->getRepository('MassEmail')
             ->where([
@@ -62,9 +68,9 @@ class ProcessMassEmail implements Job
 
         foreach ($massEmailList as $massEmail) {
             try {
-                $service->createQueue($massEmail);
+                $this->queue->create($massEmail);
             }
-            catch (Exception $e) {
+            catch (Throwable $e) {
                 $GLOBALS['log']->error(
                     'Job ProcessMassEmail#createQueue ' . $massEmail->id . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()
@@ -81,9 +87,9 @@ class ProcessMassEmail implements Job
 
         foreach ($massEmailList as $massEmail) {
             try {
-                $service->processSending($massEmail);
+                $this->processor->process($massEmail);
             }
-            catch (Exception $e) {
+            catch (Throwable $e) {
                 $GLOBALS['log']->error(
                     'Job ProcessMassEmail#processSending '. $massEmail->id . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()

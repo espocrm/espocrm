@@ -29,49 +29,34 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
+use Espo\Core\{
+    Exceptions\BadRequest,
+    Exceptions\Forbidden,
+    Api\Request,
+};
 
 class MassEmail extends \Espo\Core\Controllers\Record
 {
-    public function postActionSendTest($params, $data)
+    public function postActionSendTest(Request $request)
     {
-        if (empty($data->id) || empty($data->targetList) || !is_array($data->targetList)) {
+        $id = $request->getParsedBody()->id ?? null;
+        $targetList = $request->getParsedBody()->targetList ?? null;
+
+        if (!$id || !is_array($targetList)) {
             throw new BadRequest();
         }
 
-        $id = $data->id;
+        $this->getServiceFactory()->create('MassEmail')->processTest($id, $targetList);
 
-        $targetList = [];
-        foreach ($data->targetList as $item) {
-            if (empty($item->id) || empty($item->type)) continue;
-            $targetId = $item->id;
-            $targetType = $item->type;
-            $target = $this->getEntityManager()->getEntity($targetType, $targetId);
-            if (!$target) continue;
-            if (!$this->getAcl()->check($target, 'read')) {
-                continue;
-            }
-            $targetList[] = $target;
-        }
-
-        $massEmail = $this->getEntityManager()->getEntity('MassEmail', $id);
-        if (!$massEmail) {
-            throw new NotFound();
-        }
-        if (!$this->getAcl()->check($massEmail, 'read')) {
-            throw new Forbidden();
-        }
-
-        $this->getRecordService()->createQueue($massEmail, true, $targetList);
-        $this->getRecordService()->processSending($massEmail, true);
         return true;
     }
 
     public function getActionSmtpAccountDataList()
     {
-        if (!$this->getAcl()->checkScope('MassEmail', 'create') && !$this->getAcl()->checkScope('MassEmail', 'edit')) {
+        if (
+            !$this->getAcl()->checkScope('MassEmail', 'create') &&
+            !$this->getAcl()->checkScope('MassEmail', 'edit')
+        ) {
             throw new Forbidden();
         }
 
