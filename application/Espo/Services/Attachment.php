@@ -448,7 +448,7 @@ class Attachment extends Record
             'name' => $attachment->get('name'),
             'type' => $attachment->get('type'),
             'stream' => $this->getRepository()->getStream($attachment),
-            'size' => $attachment->get('size'),
+            'size' => $this->getRepository()->getSize($attachment),
         ];
 
         return $data;

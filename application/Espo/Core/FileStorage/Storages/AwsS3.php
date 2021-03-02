@@ -30,86 +30,91 @@
 namespace Espo\Core\FileStorage\Storages;
 
 use Espo\Core\{
-    Exceptions\Error,
-    Utils\File\Manager as FileManager,
+    Utils\Config,
     FileStorage\Storage,
-    FileStorage\Local,
     FileStorage\Attachment,
 };
 
 use Psr\Http\Message\StreamInterface;
 
+use Aws\S3\S3Client;
+
+use League\Flysystem\{
+    AwsS3V3\AwsS3V3Adapter,
+    Filesystem,
+};
+
 use GuzzleHttp\Psr7\Stream;
 
-class EspoUploadDir implements Storage, Local
-{
-    protected $fileManager;
+use RuntimeException;
 
-    public function __construct(FileManager $fileManager)
+class AwsS3 implements Storage
+{
+    protected $filesystem;
+
+    public function __construct(Config $config)
     {
-        $this->fileManager = $fileManager;
+        $bucketName = $config->get('awsS3Storage.bucketName') ?? null;
+        $path = $config->get('awsS3Storage.path') ?? null;
+
+        $region = $config->get('awsS3Storage.region') ?? null;
+        $version = $config->get('awsS3Storage.version') ?? null;
+        $credentials = $config->get('awsS3Storage.credentials') ?? null;
+
+        if (!$bucketName) {
+            throw new RuntimeException("AWS S3 bucket name is not specified in config.");
+        }
+
+        $clientOptions = [
+            'region' => $region,
+            'version' => $version,
+        ];
+
+        if ($credentials) {
+            $clientOptions['credentials'] = $credentials;
+        }
+
+        $client = new S3Client($clientOptions);
+
+        $adapter = new AwsS3V3Adapter($client, $bucketName, $path);
+
+        $this->filesystem = new Filesystem($adapter);
     }
 
     public function unlink(Attachment $attachment) : void
     {
-        $this->fileManager->unlink(
-            $this->getFilePath($attachment)
-        );
+        $this->filesystem->delete($attachment->getSourceId());
     }
 
     public function exists(Attachment $attachment) : bool
     {
-        $filePath = $this->getFilePath($attachment);
-
-        return $this->fileManager->isFile($filePath);
+        return $this->filesystem->fileExists($attachment->getSourceId());
     }
 
     public function getSize(Attachment $attachment) : int
     {
-        $filePath = $this->getFilePath($attachment);
-
-        if (!$this->exists($attachment)) {
-            throw new Error("Could not get size for non-existing file '{$filePath}'.");
-        }
-
-        return filesize($filePath);
+        return $this->filesystem->fileSize($attachment->getSourceId());
     }
 
     public function getStream(Attachment $attachment) : StreamInterface
     {
-        $filePath = $this->getFilePath($attachment);
+        $resource = $this->filesystem->readStream($attachment->getSourceId());
 
-        if (!$this->exists($attachment)) {
-            throw new Error("Could not get stream for non-existing '{$filePath}'.");
-        }
-
-        $resouce = fopen($filePath, 'r');
-
-        return new Stream($resouce);
+        return new Stream($resource);
     }
 
     public function putStream(Attachment $attachment, StreamInterface $stream) : void
     {
-        $filePath = $this->getFilePath($attachment);
+        // League\Flysystem does not support StreamInterface.
+        // Need to pass a resource.
 
-        $contents = $stream->getContents();
+        $resource = fopen('php://memory', 'r+');
 
-        $result = $this->fileManager->putContents($filePath, $contents);
+        fwrite($resource, $stream->getContents());
+        rewind($resource);
 
-        if (!$result) {
-            throw new Error("Could not store a file '{$filePath}'.");
-        }
-    }
+        $this->filesystem->writeStream($attachment->getSourceId(), $resource);
 
-    public function getLocalFilePath(Attachment $attachment) : string
-    {
-        return $this->getFilePath($attachment);
-    }
-
-    protected function getFilePath(Attachment $attachment)
-    {
-        $sourceId = $attachment->getSourceId();
-
-        return 'data/upload/' . $sourceId;
+        fclose($resource);
     }
 }

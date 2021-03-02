@@ -66,47 +66,34 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         'xx-large',
     ];
 
-    public function beforeSave(Entity $entity, array $options = [])
+    protected function beforeSave(Entity $entity, array $options = [])
     {
         parent::beforeSave($entity, $options);
 
-        $storage = $entity->get('storage');
-
-        if (!$storage) {
-            $entity->set('storage', $this->config->get('defaultFileStorage', null));
-        }
-
         if ($entity->isNew()) {
-            if (!$entity->has('size') && $entity->has('contents')) {
-                $contents = $entity->get('contents');
-
-                $entity->set(
-                    'size',
-                    mb_strlen($contents, '8bit')
-                );
-            }
+            $this->processBeforeSaveNew($entity);
         }
     }
 
-    public function save(Entity $entity, array $options = [])
+    protected function processBeforeSaveNew(Entity $entity) : void
     {
-        $isNew = $entity->isNew();
+        if (!$entity->get('storage')) {
+            $defaultStorage = $this->config->get('defaultFileStorage');
 
-        if ($isNew) {
-            $entity->id = Util::generateId();
-
-            if ($entity->has('contents')) {
-                $contents = $entity->get('contents');
-
-                if (is_string($contents)) {
-                    $this->fileStorageManager->putContents($entity, $contents);
-                }
-            }
+            $entity->set('storage', $defaultStorage);
         }
 
-        $result = parent::save($entity, $options);
+        $entity->id = Util::generateId();
 
-        return $result;
+        $contents = $entity->get('contents');
+
+        if (is_null($contents)) {
+            return;
+        }
+
+        $entity->set('size', strlen($contents));
+
+        $this->fileStorageManager->putContents($entity, $contents);
     }
 
     protected function afterRemove(Entity $entity, array $options = [])
@@ -173,6 +160,11 @@ class Attachment extends \Espo\Core\Repositories\Database implements
     public function getStream(AttachmentEntity $entity) : StreamInterface
     {
         return $this->fileStorageManager->getStream($entity);
+    }
+
+    public function getSize(AttachmentEntity $entity) : int
+    {
+        return $this->fileStorageManager->getSize($entity);
     }
 
     public function getFilePath(AttachmentEntity $entity) : string

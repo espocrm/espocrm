@@ -157,5 +157,6 @@ return [
     'personNameFormat' => 'firstLast',
     'newNotificationCountInTitle' => false,
     'pdfEngine' => 'Tcpdf',
+    'defaultFileStorage' => 'EspoUploadDir',
     'isInstalled' => false,
 ];

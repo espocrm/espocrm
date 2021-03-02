@@ -87,7 +87,7 @@ class Attachment extends Record
         $response
             ->setHeader('Content-Type', $fileData->type)
             ->setHeader('Content-Disposition', 'attachment; filename="' . $fileData->name . '"')
-            ->setHeader('Content-Length', $fileData->stream->getSize())
+            ->setHeader('Content-Length', (string) $fileData->size)
             ->setBody($fileData->stream);
     }
 }

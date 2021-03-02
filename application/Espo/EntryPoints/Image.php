@@ -199,7 +199,7 @@ class Image implements EntryPoint,
 
             $stream = $this->fileStorageManager->getStream($attachment);
 
-            $fileSize = $stream->getSize();
+            $fileSize = $stream->getSize() ?? $this->fileStorageManager->getSize($attachment);
 
             $response->setBody($stream);
         }
@@ -212,7 +212,7 @@ class Image implements EntryPoint,
             ->setHeader('Content-Disposition', 'inline;filename="' . $fileName . '"')
             ->setHeader('Pragma', 'public')
             ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
-            ->setHeader('Content-Length', $fileSize);
+            ->setHeader('Content-Length', (string) $fileSize);
     }
 
     protected function getThumbImage($filePath, $fileType, $size)

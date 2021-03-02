@@ -55,4 +55,9 @@ interface Storage
      * Delete a file.
      */
     public function unlink(Attachment $attachment) : void;
+
+    /**
+     * Get a file size.
+     */
+    public function getSize(Attachment $attachment) : int;
 }

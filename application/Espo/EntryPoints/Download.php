@@ -107,12 +107,14 @@ class Download implements EntryPoint
             $response->setHeader('Content-Type', $type);
         }
 
+        $size = $stream->getSize() ?? $this->fileStorageManager->getSize($attachment);
+
         $response
             ->setHeader('Content-Disposition', $disposition . ";filename=\"" . $outputFileName . "\"")
             ->setHeader('Expires', '0')
             ->setHeader('Cache-Control', 'must-revalidate')
             ->setHeader('Pragma', 'public')
-            ->setHeader('Content-Length', $stream->getSize())
+            ->setHeader('Content-Length', (string) $size)
             ->setBody($stream);
     }
 }

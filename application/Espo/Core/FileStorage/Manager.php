@@ -62,6 +62,16 @@ class Manager
     }
 
     /**
+     * Get a file size.
+     */
+    public function getSize(AttachmentEntity $attachment) : int
+    {
+        $implementation = $this->getImplementation($attachment);
+
+        return $implementation->getSize(self::wrapAttachmentEntity($attachment));
+    }
+
+    /**
      * Get file contents.
      */
     public function getContents(AttachmentEntity $attachment) : string

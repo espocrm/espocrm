@@ -635,6 +635,10 @@
         "useWebSocket": {
             "type": "bool",
             "tooltip": true
+        },
+        "awsS3Storage": {
+            "type": "jsonObject",
+            "onlySystem": true
         }
     }
 }
