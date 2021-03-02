@@ -50,6 +50,7 @@ use Espo\{
 };
 
 use Exception;
+use DateTime;
 
 class MassEmail extends RecordService implements
 
@@ -121,7 +122,6 @@ class MassEmail extends RecordService implements
         }
 
         $em = $this->getEntityManager();
-        $pdo = $this->getEntityManager()->getPDO();
 
         if (!$isTest) {
             $this->cleanupQueueItems($massEmail);
@@ -133,6 +133,7 @@ class MassEmail extends RecordService implements
 
         if (!$isTest) {
             $excludingTargetListList = $massEmail->get('excludingTargetLists');
+
             foreach ($excludingTargetListList as $excludingTargetList) {
                 foreach ($this->targetsLinkList as $link) {
                     $excludingList = $em->getRepository('TargetList')->findRelated(
@@ -145,8 +146,11 @@ class MassEmail extends RecordService implements
 
                     foreach ($excludingList as $excludingTarget) {
                         $hashId = $excludingTarget->getEntityType() . '-'. $excludingTarget->id;
+
                         $metTargetHash[$hashId] = true;
+
                         $emailAddress = $excludingTarget->get('emailAddress');
+
                         if ($emailAddress) {
                             $metEmailAddressHash[$emailAddress] = true;
                         }
@@ -187,6 +191,7 @@ class MassEmail extends RecordService implements
                         }
 
                         $item = $record->getValueMap();
+
                         $item->entityType = $record->getEntityType();
 
                         $itemList[] = $item;
@@ -200,7 +205,9 @@ class MassEmail extends RecordService implements
 
         foreach ($additionalTargetList as $record) {
             $item = $record->getValueMap();
+
             $item->entityType = $record->getEntityType();
+
             $itemList[] = $item;
         }
 
@@ -215,7 +222,10 @@ class MassEmail extends RecordService implements
                 continue;
             }
 
-            $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+            $emailAddressRecord = $this->getEntityManager()
+                ->getRepository('EmailAddress')
+                ->getByAddress($emailAddress);
+
             if ($emailAddressRecord) {
                 if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
                     continue;
@@ -223,6 +233,7 @@ class MassEmail extends RecordService implements
             }
 
             $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem');
+
             $queueItem->set([
                 'massEmailId' => $massEmail->id,
                 'status' => 'Pending',
@@ -230,11 +241,13 @@ class MassEmail extends RecordService implements
                 'targetType' => $item->entityType,
                 'isTest' => $isTest,
             ]);
+
             $this->getEntityManager()->saveEntity($queueItem);
         }
 
         if (!$isTest) {
             $massEmail->set('status', 'In Process');
+
             if (empty($itemList)) {
                 $massEmail->set('status', 'Complete');
             }
@@ -246,30 +259,39 @@ class MassEmail extends RecordService implements
     protected function setFailed(Entity $massEmail)
     {
         $massEmail->set('status', 'Failed');
+
         $this->getEntityManager()->saveEntity($massEmail);
 
-        $queueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
-            'status' => 'Pending',
-            'massEmailId' => $massEmail->id
-        ))->find();
+        $queueItemList = $this->getEntityManager()
+            ->getRepository('EmailQueueItem')
+            ->where([
+                'status' => 'Pending',
+                'massEmailId' => $massEmail->id,
+            ])
+            ->find();
+
         foreach ($queueItemList as $queueItem) {
             $queueItem->set('status', 'Failed');
             $this->getEntityManager()->saveEntity($queueItem);
         }
     }
 
-    public function processSending(Entity $massEmail, $isTest = false)
+    public function processSending(Entity $massEmail, bool $isTest = false) : void
     {
         $maxBatchSize = $this->getConfig()->get('massEmailMaxPerHourCount', self::MAX_PER_HOUR_COUNT);
 
         if (!$isTest) {
-            $threshold = new \DateTime();
+            $threshold = new DateTime();
+
             $threshold->modify('-1 hour');
 
-            $sentLastHourCount = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
-                'status' => 'Sent',
-                'sentAt>' => $threshold->format('Y-m-d H:i:s')
-            ))->count();
+            $sentLastHourCount = $this->getEntityManager()
+                ->getRepository('EmailQueueItem')
+                ->where([
+                    'status' => 'Sent',
+                    'sentAt>' => $threshold->format('Y-m-d H:i:s'),
+                ])
+                ->count();
 
             if ($sentLastHourCount >= $maxBatchSize) {
                 return;
@@ -278,20 +300,26 @@ class MassEmail extends RecordService implements
             $maxBatchSize = $maxBatchSize - $sentLastHourCount;
         }
 
-        $queueItemList = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
-            'status' => 'Pending',
-            'massEmailId' => $massEmail->id,
-            'isTest' => $isTest
-        ))->limit(0, $maxBatchSize)->find();
+        $queueItemList = $this->getEntityManager()
+            ->getRepository('EmailQueueItem')
+            ->where([
+                'status' => 'Pending',
+                'massEmailId' => $massEmail->id,
+                'isTest' => $isTest,
+            ])
+            ->limit(0, $maxBatchSize)
+            ->find();
 
         $templateId = $massEmail->get('emailTemplateId');
 
         if (!$templateId) {
             $this->setFailed($massEmail);
+
             return;
         }
 
         $campaign = null;
+
         $campaignId = $massEmail->get('campaignId');
 
         if ($campaignId) {
@@ -302,6 +330,7 @@ class MassEmail extends RecordService implements
 
         if (!$emailTemplate) {
             $this->setFailed($massEmail);
+
             return;
         }
 
@@ -317,7 +346,9 @@ class MassEmail extends RecordService implements
             $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $massEmail->get('inboundEmailId'));
 
             if (!$inboundEmail) {
-                throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' is not available.");
+                throw new Error(
+                    "Group Email Account '".$massEmail->get('inboundEmailId')."' is not available."
+                );
             }
 
             if (
@@ -327,7 +358,9 @@ class MassEmail extends RecordService implements
                 ||
                 !$inboundEmail->get('smtpIsForMassEmail')
             ) {
-                throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' can't be used for Mass Email.");
+                throw new Error(
+                    "Group Email Account '".$massEmail->get('inboundEmailId')."' can't be used for Mass Email."
+                );
             }
 
             $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
@@ -335,7 +368,9 @@ class MassEmail extends RecordService implements
             $smtpParams = $inboundEmailService->getSmtpParamsFromAccount($inboundEmail);
 
             if (!$smtpParams) {
-                throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' has no SMTP params.");
+                throw new Error(
+                    "Group Email Account '".$massEmail->get('inboundEmailId')."' has no SMTP params."
+                );
             }
 
             if ($inboundEmail->get('replyToAddress')) {
@@ -344,18 +379,30 @@ class MassEmail extends RecordService implements
         }
 
         foreach ($queueItemList as $queueItem) {
-            $this->sendQueueItem($queueItem, $massEmail, $emailTemplate, $attachmentList, $campaign, $isTest, $smtpParams);
+            $this->sendQueueItem(
+                $queueItem,
+                $massEmail,
+                $emailTemplate,
+                $attachmentList,
+                $campaign,
+                $isTest,
+                $smtpParams
+            );
         }
 
         if (!$isTest) {
-            $countLeft = $this->getEntityManager()->getRepository('EmailQueueItem')->where(array(
-                'status' => 'Pending',
-                'massEmailId' => $massEmail->id,
-                'isTest' => false
-            ))->count();
+            $countLeft = $this->getEntityManager()
+                ->getRepository('EmailQueueItem')
+                ->where([
+                    'status' => 'Pending',
+                    'massEmailId' => $massEmail->id,
+                    'isTest' => false,
+                ])
+                ->count();
 
             if ($countLeft == 0) {
                 $massEmail->set('status', 'Complete');
+
                 $this->getEntityManager()->saveEntity($massEmail);
             }
         }
@@ -364,6 +411,7 @@ class MassEmail extends RecordService implements
     protected function getPreparedEmail(
         Entity $queueItem, Entity $massEmail, Entity $emailTemplate, Entity $target, iterable $trackingUrlList = []
     ) : ?Email {
+
         $templateParams = [
             'parent' => $target,
         ];
@@ -373,13 +421,19 @@ class MassEmail extends RecordService implements
         $body = $emailData['body'];
 
         $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
-        $optOutLink = '<a href="'.$optOutUrl.'">'.$this->getLanguage()->translate('Unsubscribe', 'labels', 'Campaign').'</a>';
+
+        $optOutLink =
+            '<a href="' . $optOutUrl . '">' .
+            $this->getLanguage()->translate('Unsubscribe', 'labels', 'Campaign') .
+            '</a>';
 
         $body = str_replace('{optOutUrl}', $optOutUrl, $body);
         $body = str_replace('{optOutLink}', $optOutLink, $body);
 
         foreach ($trackingUrlList as $trackingUrl) {
-            $url = $this->getSiteUrl() . '?entryPoint=campaignUrl&id=' . $trackingUrl->id . '&queueItemId=' . $queueItem->id;
+            $url = $this->getSiteUrl() .
+                '?entryPoint=campaignUrl&id=' . $trackingUrl->id . '&queueItemId=' . $queueItem->id;
+
             $body = str_replace($trackingUrl->get('urlToUse'), $url, $body);
         }
 
@@ -389,7 +443,8 @@ class MassEmail extends RecordService implements
         ) {
             if ($emailData['isHtml']) {
                 $body .= "<br><br>" . $optOutLink;
-            } else {
+            }
+            else {
                 $body .= "\n\n" . $optOutUrl;
             }
         }
@@ -397,7 +452,9 @@ class MassEmail extends RecordService implements
         $trackImageAlt = $this->getLanguage()->translate('Campaign', 'scopeNames');
 
         $trackOpenedUrl = $this->getSiteUrl() . '?entryPoint=campaignTrackOpened&id=' . $queueItem->id;
-        $trackOpenedHtml = '<img alt="'.$trackImageAlt.'" width="1" height="1" border="0" src="'.$trackOpenedUrl.'">';
+
+        $trackOpenedHtml =
+            '<img alt="' . $trackImageAlt . '" width="1" height="1" border="0" src="' . $trackOpenedUrl . '">';
 
         if ($massEmail->get('campaignId') && $this->getConfig()->get('massEmailOpenTracking')) {
             if ($emailData['isHtml']) {
@@ -408,6 +465,7 @@ class MassEmail extends RecordService implements
         $emailData['body'] = $body;
 
         $email = $this->getEntityManager()->getEntity('Email');
+
         $email->set($emailData);
 
         $emailAddress = $target->get('emailAddress');
@@ -421,6 +479,7 @@ class MassEmail extends RecordService implements
         if ($massEmail->get('fromAddress')) {
             $email->set('from', $massEmail->get('fromAddress'));
         }
+
         if ($massEmail->get('replyToAddress')) {
             $email->set('replyTo', $massEmail->get('replyToAddress'));
         }
@@ -433,12 +492,14 @@ class MassEmail extends RecordService implements
         $header = new XQueueItemId();
 
         $header->setId($queueItem->id);
+
         $message->getHeaders()->addHeader($header);
 
         $message->getHeaders()->addHeaderLine('Precedence', 'bulk');
 
         if (!$this->getConfig()->get('massEmailDisableMandatoryOptOutLink')) {
             $optOutUrl = $this->getSiteUrl() . '?entryPoint=unsubscribe&id=' . $queueItem->id;
+
             $message->getHeaders()->addHeaderLine('List-Unsubscribe', '<' . $optOutUrl . '>');
         }
 
@@ -465,6 +526,7 @@ class MassEmail extends RecordService implements
         bool $isTest = false,
         $smtpParams = null
     ) : bool {
+
         $queueItemFetched = $this->getEntityManager()->getEntity($queueItem->getEntityType(), $queueItem->id);
 
         if ($queueItemFetched->get('status') !== 'Pending') {
@@ -479,6 +541,7 @@ class MassEmail extends RecordService implements
 
         if (!$target || !$target->id || !$target->get('emailAddress')) {
             $queueItem->set('status', 'Failed');
+
             $this->getEntityManager()->saveEntity($queueItem);
 
             return false;
@@ -488,16 +551,20 @@ class MassEmail extends RecordService implements
 
         if (!$emailAddress) {
             $queueItem->set('status', 'Failed');
+
             $this->getEntityManager()->saveEntity($queueItem);
 
             return false;
         }
 
-        $emailAddressRecord = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+        $emailAddressRecord = $this->getEntityManager()
+            ->getRepository('EmailAddress')
+            ->getByAddress($emailAddress);
 
         if ($emailAddressRecord) {
             if ($emailAddressRecord->get('invalid') || $emailAddressRecord->get('optOut')) {
                 $queueItem->set('status', 'Failed');
+
                 $this->getEntityManager()->saveEntity($queueItem);
 
                 return false;
@@ -535,13 +602,16 @@ class MassEmail extends RecordService implements
         if ($massEmail->get('fromName')) {
             $params['fromName'] = $massEmail->get('fromName');
         }
+
         if ($massEmail->get('replyToName')) {
             $params['replyToName'] = $massEmail->get('replyToName');
         }
 
         try {
             $attemptCount = $queueItem->get('attemptCount');
+
             $attemptCount++;
+
             $queueItem->set('attemptCount', $attemptCount);
 
             $sender = $this->emailSender->create();
@@ -562,11 +632,14 @@ class MassEmail extends RecordService implements
         }
         catch (Exception $e) {
             $maxAttemptCount = $this->getConfig()->get('massEmailMaxAttemptCount', self::MAX_ATTEMPT_COUNT);
+
             if ($queueItem->get('attemptCount') >= $maxAttemptCount) {
                 $queueItem->set('status', 'Failed');
-            } else {
+            }
+            else {
                 $queueItem->set('status', 'Pending');
             }
+
             $this->getEntityManager()->saveEntity($queueItem);
 
             $GLOBALS['log']->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
@@ -577,7 +650,6 @@ class MassEmail extends RecordService implements
         $emailObject = $emailTemplate;
 
         if ($massEmail->get('storeSentEmails') && !$isTest) {
-
             $this->getEntityManager()->saveEntity($email);
 
             $emailObject = $email;
@@ -587,6 +659,7 @@ class MassEmail extends RecordService implements
 
         $queueItem->set('status', 'Sent');
         $queueItem->set('sentAt', date('Y-m-d H:i:s'));
+
         $this->getEntityManager()->saveEntity($queueItem);
 
         if ($campaign) {
@@ -604,6 +677,7 @@ class MassEmail extends RecordService implements
         if (!$this->emailTemplateService) {
             $this->emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
         }
+
         return $this->emailTemplateService;
     }
 
@@ -612,6 +686,7 @@ class MassEmail extends RecordService implements
         if (!$this->campaignService) {
             $this->campaignService = $this->getServiceFactory()->create('Campaign');
         }
+
         return $this->campaignService;
     }
 
@@ -657,22 +732,31 @@ class MassEmail extends RecordService implements
 
     public function getSmtpAccountDataList()
     {
-        if (!$this->getAcl()->checkScope('MassEmail', 'create') && !$this->getAcl()->checkScope('MassEmail', 'edit')) {
+        if (
+            !$this->getAcl()->checkScope('MassEmail', 'create') &&
+            !$this->getAcl()->checkScope('MassEmail', 'edit')
+        ) {
             throw new Forbidden();
         }
+
         $dataList = [];
 
-        $inboundEmailList = $this->getEntityManager()->getRepository('InboundEmail')->where([
-            'useSmtp' => true,
-            'status' => 'Active',
-            'smtpIsForMassEmail' => true,
-            ['emailAddress!=' => ''],
-            ['emailAddress!=' => null],
-        ])->find();
+        $inboundEmailList = $this->getEntityManager()
+            ->getRepository('InboundEmail')
+            ->where([
+                'useSmtp' => true,
+                'status' => 'Active',
+                'smtpIsForMassEmail' => true,
+                ['emailAddress!=' => ''],
+                ['emailAddress!=' => null],
+            ])
+            ->find();
 
         foreach ($inboundEmailList as $inboundEmail) {
             $item = (object) [];
+
             $key = 'inboundEmail:' . $inboundEmail->id;
+
             $item->key = $key;
             $item->emailAddress = $inboundEmail->get('emailAddress');
             $item->fromName = $inboundEmail->get('fromName');
