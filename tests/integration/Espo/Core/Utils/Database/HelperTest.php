@@ -39,6 +39,8 @@ use Espo\Core\Utils\Database\Helper;
 
 use Doctrine\DBAL\Connection;
 
+use Espo\Core\Exceptions\Error;
+
 use PDO;
 
 class HelperTest extends \tests\integration\Core\BaseTestCase
@@ -56,6 +58,30 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
         $this->helper = new Helper($config);
 
         $this->reflection = new ReflectionHelper($this->helper);
+    }
+
+    private function getDatabaseInfo()
+    {
+        $pdo = $this->getContainer()->get('entityManager')->getPDO();
+
+        $sth = $pdo->prepare("select version()");
+        $sth->execute();
+
+        $version = $sth->fetchColumn();
+
+        $type = 'mysql';
+        if (preg_match('/mariadb/i', $version)) {
+            $type = 'mariadb';
+        }
+
+        if (preg_match('/[0-9]+\.[0-9]+\.[0-9]+/', $version, $match)) {
+            $version = $match[0];
+        }
+
+        return [
+            'type' => $type,
+            'version' => $version,
+        ];
     }
 
     public function testGetDbalConnectionWithNoConfig()
@@ -86,42 +112,85 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
         $this->assertInstanceOf(PDO::class, $this->helper->getPdoConnection());
     }
 
-    /*public function testGetMaxIndexLength()
+    public function testGetMaxIndexLength()
     {
         $this->initTest();
 
-        $this->assertEquals(1000, $this->helper->getMaxIndexLength());
-        $this->assertEquals(1000, $this->helper->getMaxIndexLength('table_name'));
-        $this->assertEquals(2000, $this->helper->getMaxIndexLength('table_name', 2000));
-        $this->assertEquals(1000, $this->helper->getTableMaxIndexLength('table_name'));
-        $this->assertEquals(2000, $this->helper->getTableMaxIndexLength('table_name', 2000));
-    }*/
+        $databaseInfo = $this->getDatabaseInfo();
+        if (empty($databaseInfo)) {
+            return;
+        }
 
-    /*public function testGetDatabaseVersion()
+        $expectedMaxIndexLength = 767;
+
+        switch ($databaseInfo['type']) {
+            case 'mysql':
+                if (version_compare($databaseInfo['version'], '5.7.0') >= 0) {
+                    $expectedMaxIndexLength = 3072;
+                }
+                break;
+
+            case 'mariadb':
+                if (version_compare($databaseInfo['version'], '10.2.2') >= 0) {
+                    $expectedMaxIndexLength = 3072;
+                }
+                break;
+        }
+
+        $engine = $this->reflection->invokeMethod('getTableEngine');
+        $result = ($engine == 'MyISAM') ? 1000 : $expectedMaxIndexLength;
+        $this->assertEquals($result, $this->helper->getMaxIndexLength());
+
+        $engine = $this->reflection->invokeMethod('getTableEngine', ['account']);
+        $result = ($engine == 'MyISAM') ? 1000 : $expectedMaxIndexLength;
+        $this->assertEquals($expectedMaxIndexLength, $this->helper->getMaxIndexLength('account'));
+    }
+
+    public function testGetDatabaseInfo()
     {
         $this->initTest();
 
-        $this->assertNull($this->reflection->invokeMethod('getDatabaseVersion'));
-    }*/
+        $databaseInfo = $this->getDatabaseInfo();
+        if (empty($databaseInfo)) {
+            return;
+        }
 
-    /*public function testGetTableEngine()
+        $this->assertEquals($databaseInfo['type'], strtolower($this->helper->getDatabaseType()));
+        $this->assertEquals($databaseInfo['version'], $this->helper->getDatabaseVersion());
+    }
+
+    public function testIsSupportsFulltext()
     {
         $this->initTest();
 
-        $this->assertNull($this->reflection->invokeMethod('getTableEngine'));
-        $this->assertEquals('InnoDB', $this->reflection->invokeMethod('getTableEngine', [null, 'InnoDB']));
-    }*/
+        $databaseInfo = $this->getDatabaseInfo();
+        if (empty($databaseInfo)) {
+            return;
+        }
 
-    /*public function testIsSupportsFulltext()
-    {
-        $this->initTest();
+        switch ($databaseInfo['type']) {
+            case 'mysql':
+                if (version_compare($databaseInfo['version'], '5.7.0', '<')) {
+                    throw new Error('You have to upgrade your MySQL to use EspoCRM.');
+                }
+                break;
 
-        $this->assertFalse($this->helper->isSupportsFulltext());
-        $this->assertFalse($this->helper->isSupportsFulltext('table_name'));
-        $this->assertTrue($this->helper->isSupportsFulltext('table_name', true));
-        $this->assertFalse($this->helper->isTableSupportsFulltext('table_name'));
-        $this->assertTrue($this->helper->isTableSupportsFulltext('table_name', true));
-    }*/
+            case 'mariadb':
+                if (version_compare($databaseInfo['version'], '10.1.0', '<')) {
+                    throw new Error('You have to upgrade your MariaDB to use EspoCRM.');
+                }
+                break;
+
+            default:
+                throw new Error('Uknown database type.');
+                break;
+        }
+
+        $this->assertTrue($this->helper->isSupportsFulltext());
+        $this->assertTrue($this->helper->isSupportsFulltext('dummy_table', false));
+        $this->assertTrue($this->helper->isTableSupportsFulltext('account'));
+        $this->assertTrue($this->helper->isTableSupportsFulltext('account', true));
+    }
 
     public function testGetDatabaseType()
     {
