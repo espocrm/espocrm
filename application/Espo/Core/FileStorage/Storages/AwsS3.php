@@ -37,10 +37,10 @@ use Espo\Core\{
 
 use Psr\Http\Message\StreamInterface;
 
-use Aws\S3\S3Client;
+use AsyncAws\S3\S3Client;
 
 use League\Flysystem\{
-    AwsS3V3\AwsS3V3Adapter,
+    AsyncAwsS3\AsyncAwsS3Adapter,
     Filesystem,
 };
 
@@ -58,7 +58,6 @@ class AwsS3 implements Storage
         $path = $config->get('awsS3Storage.path') ?? null;
 
         $region = $config->get('awsS3Storage.region') ?? null;
-        $version = $config->get('awsS3Storage.version') ?? null;
         $credentials = $config->get('awsS3Storage.credentials') ?? null;
 
         if (!$bucketName) {
@@ -67,16 +66,16 @@ class AwsS3 implements Storage
 
         $clientOptions = [
             'region' => $region,
-            'version' => $version,
         ];
 
         if ($credentials) {
-            $clientOptions['credentials'] = $credentials;
+            $clientOptions['accessKeyId'] = $credentials['key'] ?? null;
+            $clientOptions['accessKeySecret'] = $credentials['secret'] ?? null;
         }
 
         $client = new S3Client($clientOptions);
 
-        $adapter = new AwsS3V3Adapter($client, $bucketName, $path);
+        $adapter = new AsyncAwsS3Adapter($client, $bucketName, $path);
 
         $this->filesystem = new Filesystem($adapter);
     }
