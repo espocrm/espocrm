@@ -6,5 +6,6 @@
     "field",
     "type",
     "createdBy",
-    "createdAt"
+    "createdAt",
+    "storage"
 ]
