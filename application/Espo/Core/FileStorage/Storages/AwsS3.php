@@ -107,7 +107,7 @@ class AwsS3 implements Storage
         // League\Flysystem does not support StreamInterface.
         // Need to pass a resource.
 
-        $resource = fopen('php://memory', 'r+');
+        $resource = fopen('php://temp', 'r+');
 
         fwrite($resource, $stream->getContents());
         rewind($resource);
