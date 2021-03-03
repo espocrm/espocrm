@@ -305,10 +305,10 @@ class LDAP extends Espo
             $data[$fieldName] = $fieldValue;
         }
 
-        $this->useSystemUser();
-
         $user = $this->entityManager->getEntity('User');
         $user->set($data);
+
+        $this->applicationUser->setUser($user);
 
         $this->entityManager->saveEntity($user);
 
