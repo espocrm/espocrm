@@ -46,6 +46,8 @@ class Manager
 
     private $factory;
 
+    private $resourceMap = [];
+
     public function __construct(Factory $factory)
     {
         $this->factory = $factory;
@@ -151,6 +153,9 @@ class Manager
         fwrite($resource, $contents);
 
         $path = stream_get_meta_data($resource)['uri'];
+
+        // To prevent deleting.
+        $this->resourceMap[$path] = $resource;
 
         return $path;
     }

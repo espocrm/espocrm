@@ -37,24 +37,19 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\EntryPoint;
 
-use Espo\Core\Di;
-
 use Espo\Core\{
     Acl,
     ORM\EntityManager,
     Api\Request,
     Api\Response,
     FileStorage\Manager as FileStorageManager,
+    Utils\File\Manager as FileManager,
 };
 
-class Image implements EntryPoint,
+use Espo\Entities\Attachment;
 
-    Di\FileManagerAware
+class Image implements EntryPoint
 {
-    use Di\EntityManagerSetter;
-    use Di\AclSetter;
-    use Di\FileManagerSetter;
-
     protected $allowedFileTypes = [
         'image/jpeg',
         'image/png',
@@ -81,11 +76,24 @@ class Image implements EntryPoint,
 
     protected $allowedFieldList = null;
 
-    public function __construct(FileStorageManager $fileStorageManager, Acl $acl, EntityManager $entityManager)
-    {
+    protected $fileStorageManager;
+
+    protected $acl;
+
+    protected $entityManager;
+
+    protected $fileManager;
+
+    public function __construct(
+        FileStorageManager $fileStorageManager,
+        Acl $acl,
+        EntityManager $entityManager,
+        FileManager $fileManager
+    ) {
         $this->fileStorageManager = $fileStorageManager;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
+        $this->fileManager = $fileManager;
     }
 
     public function run(Request $request, Response $response) : void
@@ -112,15 +120,7 @@ class Image implements EntryPoint,
             throw new Forbidden();
         }
 
-        $sourceId = $attachment->getSourceId();
-
-        $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
-
         $fileType = $attachment->get('type');
-
-        if (!file_exists($filePath)) {
-            throw new NotFoundSilent();
-        }
 
         if (!in_array($fileType, $this->allowedFileTypes)) {
             throw new Error();
@@ -139,53 +139,8 @@ class Image implements EntryPoint,
         }
 
         if ($size) {
-            if (!empty($this->imageSizes[$size])) {
-                $thumbFilePath = "data/upload/thumbs/{$sourceId}_{$size}";
+            $filePath = $this->getThumbFilePath($attachment, $size);
 
-                if (!file_exists($thumbFilePath)) {
-                    $targetImage = $this->getThumbImage($filePath, $fileType, $size);
-
-                    ob_start();
-
-                    switch ($fileType) {
-                        case 'image/jpeg':
-                            imagejpeg($targetImage);
-
-                            break;
-
-                        case 'image/png':
-                            imagepng($targetImage);
-
-                            break;
-
-                        case 'image/gif':
-                            imagegif($targetImage);
-
-                            break;
-
-                        case 'image/webp':
-                            imagewebp($targetImage);
-
-                            break;
-                    }
-
-                    $contents = ob_get_contents();
-
-                    ob_end_clean();
-
-                    imagedestroy($targetImage);
-
-                    $this->fileManager->putContents($thumbFilePath, $contents);
-                }
-
-                $filePath = $thumbFilePath;
-            }
-            else {
-                throw new Error();
-            }
-        }
-
-        if ($size) {
             $fileName = $size . '-' . $attachment->get('name');
 
             $fileSize = filesize($filePath);
@@ -215,7 +170,66 @@ class Image implements EntryPoint,
             ->setHeader('Content-Length', (string) $fileSize);
     }
 
-    protected function getThumbImage($filePath, $fileType, $size)
+    protected function getThumbFilePath(Attachment $attachment, string $size) : string
+    {
+        if (!array_key_exists($size, $this->imageSizes)) {
+            throw new Error("Bad size.");
+        }
+
+        $sourceId = $attachment->getSourceId();
+
+        $thumbFilePath = "data/upload/thumbs/{$sourceId}_{$size}";
+
+        if ($this->fileManager->isFile($thumbFilePath)) {
+            return $thumbFilePath;
+        }
+
+        $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
+
+        if (!$this->fileManager->isFile($filePath)) {
+            throw new NotFound();
+        }
+
+        $fileType = $attachment->get('type');
+
+        $targetImage = $this->getThumbImage($filePath, $fileType, $size);
+
+        ob_start();
+
+        switch ($fileType) {
+            case 'image/jpeg':
+                imagejpeg($targetImage);
+
+                break;
+
+            case 'image/png':
+                imagepng($targetImage);
+
+                break;
+
+            case 'image/gif':
+                imagegif($targetImage);
+
+                break;
+
+            case 'image/webp':
+                imagewebp($targetImage);
+
+                break;
+        }
+
+        $contents = ob_get_contents();
+
+        ob_end_clean();
+
+        imagedestroy($targetImage);
+
+        $this->fileManager->putContents($thumbFilePath, $contents);
+
+        return $thumbFilePath;
+    }
+
+    protected function getThumbImage(string $filePath, string $fileType, string $size)
     {
         if (!is_array(getimagesize($filePath))) {
             throw new Error();
@@ -316,7 +330,7 @@ class Image implements EntryPoint,
         $orientation = 0;
 
         if (function_exists('exif_read_data')) {
-            $orientation = exif_read_data($filePath)['Orientation'];
+            $orientation = exif_read_data($filePath)['Orientation'] ?? null;
         }
 
         return $orientation;
