@@ -61,14 +61,14 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
         $upgradeManager->install(array('id' => $upgradeId));
 
-        $this->assertFileNotExists('data/upload/upgrades/' . $upgradeId . 'z');
-        $this->assertFileNotExists('data/upload/upgrades/' . $upgradeId);
+        $this->assertFileDoesNotExist('data/upload/upgrades/' . $upgradeId . 'z');
+        $this->assertFileDoesNotExist('data/upload/upgrades/' . $upgradeId);
         $this->assertFileExists('data/.backup/upgrades/' . $upgradeId);
 
         $this->assertFileExists('custom/Espo/Custom/test.php');
-        $this->assertFileNotExists('vendor/zendframework');
-        $this->assertFileNotExists('extension.php');
-        $this->assertFileNotExists('upgrade.php');
+        $this->assertFileDoesNotExist('vendor/zendframework');
+        $this->assertFileDoesNotExist('extension.php');
+        $this->assertFileDoesNotExist('upgrade.php');
 
         return $upgradeId;
     }
