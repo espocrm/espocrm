@@ -29,21 +29,20 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\NotFoundSilent;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\EntryPoints\EntryPoint;
-
 use Espo\Core\{
+    Exceptions\NotFound,
+    Exceptions\NotFoundSilent,
+    Exceptions\Forbidden,
+    Exceptions\BadRequest,
+    Exceptions\Error,
+    EntryPoints\EntryPoint,
     Acl,
     ORM\EntityManager,
     Api\Request,
     Api\Response,
     FileStorage\Manager as FileStorageManager,
     Utils\File\Manager as FileManager,
+    Utils\Config,
 };
 
 use Espo\Entities\Attachment;
@@ -84,16 +83,20 @@ class Image implements EntryPoint
 
     protected $fileManager;
 
+    protected $config;
+
     public function __construct(
         FileStorageManager $fileStorageManager,
         Acl $acl,
         EntityManager $entityManager,
-        FileManager $fileManager
+        FileManager $fileManager,
+        Config $config
     ) {
         $this->fileStorageManager = $fileStorageManager;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
         $this->fileManager = $fileManager;
+        $this->config = $config;
     }
 
     public function run(Request $request, Response $response) : void
@@ -139,13 +142,11 @@ class Image implements EntryPoint
         }
 
         if ($size) {
-            $filePath = $this->getThumbFilePath($attachment, $size);
-
             $fileName = $size . '-' . $attachment->get('name');
 
-            $fileSize = filesize($filePath);
+            $contents = $this->getThumbContents($attachment, $size);
 
-            $contents = $this->fileManager->getContents($filePath);
+            $fileSize = strlen($contents);
 
             $response->writeBody($contents);
         }
@@ -170,18 +171,20 @@ class Image implements EntryPoint
             ->setHeader('Content-Length', (string) $fileSize);
     }
 
-    protected function getThumbFilePath(Attachment $attachment, string $size) : string
+    protected function getThumbContents(Attachment $attachment, string $size) : string
     {
         if (!array_key_exists($size, $this->imageSizes)) {
             throw new Error("Bad size.");
         }
 
+        $useCache = !$this->config->get('thumbImageCacheDisabled', false);
+
         $sourceId = $attachment->getSourceId();
 
-        $thumbFilePath = "data/upload/thumbs/{$sourceId}_{$size}";
+        $cacheFilePath = "data/upload/thumbs/{$sourceId}_{$size}";
 
-        if ($this->fileManager->isFile($thumbFilePath)) {
-            return $thumbFilePath;
+        if ($useCache && $this->fileManager->isFile($cacheFilePath)) {
+            return $cacheFilePath;
         }
 
         $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
@@ -192,7 +195,7 @@ class Image implements EntryPoint
 
         $fileType = $attachment->get('type');
 
-        $targetImage = $this->getThumbImage($filePath, $fileType, $size);
+        $targetImage = $this->createThumbImage($filePath, $fileType, $size);
 
         ob_start();
 
@@ -224,12 +227,14 @@ class Image implements EntryPoint
 
         imagedestroy($targetImage);
 
-        $this->fileManager->putContents($thumbFilePath, $contents);
+        if ($useCache) {
+            $this->fileManager->putContents($cacheFilePath, $contents);
+        }
 
-        return $thumbFilePath;
+        return $contents;
     }
 
-    protected function getThumbImage(string $filePath, string $fileType, string $size)
+    protected function createThumbImage(string $filePath, string $fileType, string $size)
     {
         if (!is_array(getimagesize($filePath))) {
             throw new Error();

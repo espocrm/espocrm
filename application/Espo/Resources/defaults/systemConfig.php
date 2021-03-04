@@ -198,6 +198,7 @@ return [
         'passwordRecoveryForAdminDisabled',
         'passwordRecoveryForInternalUsersDisabled',
         'passwordRecoveryRequestDelay',
+        'thumbImageCacheDisabled',
         'latestVersion',
     ],
     'superAdminItems' => [
