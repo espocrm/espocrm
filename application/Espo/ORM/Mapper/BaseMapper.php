@@ -641,7 +641,7 @@ class BaseMapper implements Mapper
 
                 foreach ($conditions as $left => $value) {
                     $columns[] = $left;
-                    $valueList[] = $v;
+                    $valueList[] = $value;
                 }
 
                 $columns[] = $distantKey;
