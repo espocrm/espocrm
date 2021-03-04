@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Core\Formula\Functions\ExtGroup\AccountGroup;
+namespace Espo\Modules\Crm\Classes\FormulaFunctions\ExtGroup\AccountGroup;
 
 use Espo\Core\Formula\{
     Functions\BaseFunction,
@@ -53,14 +53,18 @@ class FindByEmailAddressType extends BaseFunction implements
 
         $emailAddress = $args[0];
 
-        if (!$emailAddress) return null;
+        if (!$emailAddress) {
+            return null;
+        }
 
         if (!is_string($emailAddress)) {
             $this->log("Formula: ext\\account\\findByEmailAddress: Bad argument type.");
+
             return null;
         }
 
         $domain = $emailAddress;
+
         if (strpos($emailAddress, '@') !== false) {
             list($p1, $domain) = explode('@', $emailAddress);
         }
@@ -69,39 +73,62 @@ class FindByEmailAddressType extends BaseFunction implements
 
         $em = $this->entityManager;
 
-        $account = $em->getRepository('Account')->where([
-            'emailAddress' => $emailAddress,
-        ])->findOne();
+        $account = $em->getRepository('Account')
+            ->where([
+                'emailAddress' => $emailAddress,
+            ])
+            ->findOne();
 
-        if ($account) return $account->id;
+        if ($account) {
+            return $account->id;
+        }
 
-        $ignoreList = json_decode($this->fileManager->getContents(
-            'application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json'
-        )) ?? [];
+        $ignoreList = json_decode(
+            $this->fileManager->getContents(
+                'application/Espo/Modules/Crm/Resources/data/freeEmailProviderDomains.json'
+            )
+        ) ?? [];
 
-        $contact = $em->getRepository('Contact')->where([
-            'emailAddress' => $emailAddress,
-        ])->findOne();
+        $contact = $em->getRepository('Contact')
+            ->where([
+                'emailAddress' => $emailAddress,
+            ])
+            ->findOne();
 
         if ($contact) {
             if (!in_array($domain, $ignoreList)) {
-                $account = $em->getRepository('Account')->join('contacts')->where([
-                    'emailAddress*' => '%' . $domain,
-                    'contacts.id' => $contact->id,
-                ])->findOne();
-                if ($account) return $account->id;
-            } else {
-                if ($contact->get('accountId')) return $contact->get('accountId');
+                $account = $em->getRepository('Account')
+                    ->join('contacts')
+                    ->where([
+                        'emailAddress*' => '%' . $domain,
+                        'contacts.id' => $contact->id,
+                    ])
+                    ->findOne();
+
+                if ($account) {
+                    return $account->id;
+                }
+            }
+            else {
+                if ($contact->get('accountId')) {
+                    return $contact->get('accountId');
+                }
             }
         }
 
-        if (in_array($domain, $ignoreList)) return null;
+        if (in_array($domain, $ignoreList)) {
+            return null;
+        }
 
-        $account = $em->getRepository('Account')->where([
-            'emailAddress*' => '%' . $domain,
-        ])->findOne();
+        $account = $em->getRepository('Account')
+            ->where([
+                'emailAddress*' => '%' . $domain,
+            ])
+            ->findOne();
 
-        if (!$account) return null;
+        if (!$account) {
+            return null;
+        }
 
         return $account->id;
     }
