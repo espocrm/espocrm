@@ -66,7 +66,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $extensionManager->install(array('id' => $extensionId));
 
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
-        $this->assertFileNotExists('data/upload/extensions/' . $extensionId); //directory
+        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory
         $this->assertFileExists('data/.backup/extensions/' . $extensionId); //directory
 
         $this->assertFileExists('application/Espo/Modules/Test'); //directory
@@ -74,9 +74,9 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertFileExists('client/modules/test'); //directory
         $this->assertFileExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
-        $this->assertFileNotExists('vendor/symfony'); //directory
-        $this->assertFileNotExists('extension.php');
-        $this->assertFileNotExists('upgrade.php');
+        $this->assertFileDoesNotExist('vendor/symfony'); //directory
+        $this->assertFileDoesNotExist('extension.php');
+        $this->assertFileDoesNotExist('upgrade.php');
 
         return $extensionId;
     }
@@ -88,14 +88,14 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $extensionManager = new \Espo\Core\ExtensionManager($this->getContainer());
         $extensionManager->uninstall(array('id' => $extensionId));
 
-        $this->assertFileNotExists('data/.backup/extensions/' . $extensionId); //directory
-        $this->assertFileNotExists('data/upload/extensions/' . $extensionId); //directory
+        $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId); //directory
+        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
 
-        $this->assertFileNotExists('application/Espo/Modules/Test'); //directory
-        $this->assertFileNotExists('application/Espo/Modules/Test/Resources/metadata/scopes/TestEntity.json');
-        $this->assertFileNotExists('client/modules/test'); //directory
-        $this->assertFileNotExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
+        $this->assertFileDoesNotExist('application/Espo/Modules/Test'); //directory
+        $this->assertFileDoesNotExist('application/Espo/Modules/Test/Resources/metadata/scopes/TestEntity.json');
+        $this->assertFileDoesNotExist('client/modules/test'); //directory
+        $this->assertFileDoesNotExist('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
         $this->assertFileExists('vendor/symfony'); //directory
         $this->assertFileExists('extension.php');
@@ -111,14 +111,14 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $extensionManager = new \Espo\Core\ExtensionManager($this->getContainer());
         $extensionManager->delete(array('id' => $extensionId));
 
-        $this->assertFileNotExists('data/.backup/extensions/' . $extensionId); //directory
-        $this->assertFileNotExists('data/upload/extensions/' . $extensionId); //directory
-        $this->assertFileNotExists('data/upload/extensions/' . $extensionId . 'z');
+        $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId); //directory
+        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId); //directory
+        $this->assertFileDoesNotExist('data/upload/extensions/' . $extensionId . 'z');
 
-        $this->assertFileNotExists('application/Espo/Modules/Test'); //directory
-        $this->assertFileNotExists('application/Espo/Modules/Test/Resources/metadata/scopes/TestEntity.json');
-        $this->assertFileNotExists('client/modules/test'); //directory
-        $this->assertFileNotExists('client/modules/test/src/views/test-entity/fields/custom-type.js');
+        $this->assertFileDoesNotExist('application/Espo/Modules/Test'); //directory
+        $this->assertFileDoesNotExist('application/Espo/Modules/Test/Resources/metadata/scopes/TestEntity.json');
+        $this->assertFileDoesNotExist('client/modules/test'); //directory
+        $this->assertFileDoesNotExist('client/modules/test/src/views/test-entity/fields/custom-type.js');
 
         $this->assertFileExists('vendor/symfony'); //directory
         $this->assertFileExists('extension.php');
