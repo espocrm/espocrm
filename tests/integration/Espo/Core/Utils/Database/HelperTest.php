@@ -196,7 +196,22 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
     {
         $this->initTest();
 
-        $this->assertEquals('MySQL', $this->helper->getDatabaseType());
+        $databaseInfo = $this->getDatabaseInfo();
+        if (empty($databaseInfo)) {
+            return;
+        }
+
+        switch ($databaseInfo['type']) {
+            case 'mysql':
+                $this->assertEquals('MySQL', $this->helper->getDatabaseType());
+                break;
+
+            case 'mariadb':
+                $this->assertEquals('MariaDB', $this->helper->getDatabaseType());
+                break;
+        }
+
+        $this->assertEquals('MySQL', $this->helper->getDatabaseType('MySQL'));
         $this->assertEquals('MariaDB', $this->helper->getDatabaseType('MariaDB'));
     }
 }
