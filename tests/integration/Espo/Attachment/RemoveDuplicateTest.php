@@ -51,7 +51,7 @@ class RemoveDuplicateTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->removeEntity($copy);
 
-        $this->assertTrue($fileStorageManager->isFile($attachment));
+        $this->assertTrue($fileStorageManager->exists($attachment));
     }
 
     public function testRemoveOriginal()
@@ -73,7 +73,7 @@ class RemoveDuplicateTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager->removeEntity($attachment);
 
-        $this->assertTrue($fileStorageManager->isFile($copy));
+        $this->assertTrue($fileStorageManager->exists($copy));
     }
 
     public function testRemoveOriginalAndDuplicate()
@@ -96,6 +96,6 @@ class RemoveDuplicateTest extends \tests\integration\Core\BaseTestCase
         $entityManager->removeEntity($attachment);
         $entityManager->removeEntity($copy);
 
-        $this->assertFalse($fileStorageManager->isFile($copy));
+        $this->assertFalse($fileStorageManager->exists($copy));
     }
 }
