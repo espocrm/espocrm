@@ -31,7 +31,7 @@ namespace tests\integration\Espo\Core\Fields\Address;
 
 use Espo\Core\Fields\Address\{
     AddressFormatterFactory,
-    AddressValue,
+    Address,
 };
 
 class AddressFormatterTest extends \tests\integration\Core\BaseTestCase
@@ -42,7 +42,7 @@ class AddressFormatterTest extends \tests\integration\Core\BaseTestCase
 
         $formatter = $formatterFactory->create(1);
 
-        $address = AddressValue::createBuilder()
+        $address = Address::createBuilder()
             ->setStreet('street')
             ->setCity('city')
             ->setCountry('country')
