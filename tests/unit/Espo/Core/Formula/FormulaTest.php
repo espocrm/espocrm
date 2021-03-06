@@ -787,11 +787,11 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
                 "value": [
                     {
                         "type": "value",
-                        "value": 3
+                        "value": 124
                     },
                     {
                         "type": "value",
-                        "value": 2
+                        "value": 5
                     }
                 ]
             }
@@ -799,7 +799,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
 
         $result = $this->createProcessor()->process($item);
 
-        $this->assertEquals(3 % 2, $result);
+        $this->assertEquals(124 % 5, $result);
     }
 
     function testIfThenElse1()

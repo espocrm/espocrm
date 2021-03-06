@@ -472,4 +472,20 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertNotEmpty($id);
     }
+
+    public function testModulo1() : void
+    {
+        $expression = "123 % 5";
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(123 % 5, $actual);
+    }
+
+    public function testModulo2() : void
+    {
+        $expression = "124 % 5";
+        $actual = $this->evaluator->process($expression);
+
+        $this->assertEquals(124 % 5, $actual);
+    }
 }
