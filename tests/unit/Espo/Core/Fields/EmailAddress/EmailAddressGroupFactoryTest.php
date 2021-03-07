@@ -174,10 +174,22 @@ class EmailAddressGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->initEmailAddressRepository($entity, $dataList);
 
         $entity
-            ->expects($this->once())
             ->method('has')
-            ->with('testData')
-            ->willReturn(false);
+            ->will(
+                $this->returnValueMap([
+                    ['testData', false],
+                    ['test', true],
+                ])
+            );
+
+        $entity
+            ->method('get')
+            ->will(
+                $this->returnValueMap([
+                    ['testData', null],
+                    ['test', 'ONE@test.com'],
+                ])
+            );
 
         $group = $this->factory->createFromEntity($entity, 'test');
 
@@ -255,7 +267,7 @@ class EmailAddressGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('ONE@test.com', $group->getPrimary()->getAddress());
     }
 
-    public function testCreateEmpty() : void
+    public function testCreateEmpty1() : void
     {
         $this->initField('Test', 'test', 'email');
 
@@ -264,6 +276,39 @@ class EmailAddressGroupFactoryTest extends \PHPUnit\Framework\TestCase
         $dataList = [];
 
         $this->initEmailAddressRepository($entity, $dataList);
+
+        $group = $this->factory->createFromEntity($entity, 'test');
+
+        $this->assertTrue($group->isEmpty());
+    }
+
+    public function testCreateEmpty2() : void
+    {
+        $this->initField('Test', 'test', 'email');
+
+        $entity = $this->createEntityMock('Test');
+
+        $dataList = [];
+
+        $this->initEmailAddressRepository($entity, $dataList);
+
+        $entity
+            ->method('has')
+            ->will(
+                $this->returnValueMap([
+                    ['testData', false],
+                    ['test', true],
+                ])
+            );
+
+        $entity
+            ->method('get')
+            ->will(
+                $this->returnValueMap([
+                    ['testData', null],
+                    ['test', null],
+                ])
+            );
 
         $group = $this->factory->createFromEntity($entity, 'test');
 

@@ -89,6 +89,10 @@ class EmailAddressGroupFactory
             );
         }
 
+        if (!$dataList && $entity->has($field) && !$entity->get($field)) {
+            $dataList = [];
+        }
+
         if (!$dataList) {
             $dataList = $this->entityManager
                 ->getRepository('EmailAddress')
