@@ -36,6 +36,8 @@ use Espo\{
 
 class MetadataDataProvider implements MetadataDataProviderInterface
 {
+    private $ormMetadataData;
+
     public function __construct(OrmMetadataData $ormMetadataData)
     {
         $this->ormMetadataData = $ormMetadataData;
