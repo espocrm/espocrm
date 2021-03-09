@@ -74,7 +74,7 @@ class IndexDefs
      */
     public function isUnique() : bool
     {
-        $type = $this->data['tyoe'] ?? null;
+        $type = $this->data['type'] ?? null;
 
         return $type === 'unique';
     }

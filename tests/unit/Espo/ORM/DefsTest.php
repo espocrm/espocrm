@@ -228,7 +228,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
         $this->defs->getEntity('Test')->getRelation('r1');
     }
 
-    public function getIndex1()
+    public function testGetIndex1()
     {
         $data = [
             'Test' => [
@@ -251,7 +251,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
 
         $entityDefs = $this->defs->getEntity('Test');
 
-        $this->assertEquals(['i1', 'i2'], $entityDefs->getIndexList());
+        $this->assertEquals(['i1', 'i2'], $entityDefs->getIndexNameList());
 
         $this->assertEquals('i1', $entityDefs->getIndex('i1')->getName());
 
