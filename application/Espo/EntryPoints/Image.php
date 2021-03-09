@@ -184,7 +184,7 @@ class Image implements EntryPoint
         $cacheFilePath = "data/upload/thumbs/{$sourceId}_{$size}";
 
         if ($useCache && $this->fileManager->isFile($cacheFilePath)) {
-            return $cacheFilePath;
+            return $this->fileManager->getContents($cacheFilePath);
         }
 
         $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
