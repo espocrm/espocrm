@@ -125,11 +125,11 @@ class HelperTest extends \PHPUnit\Framework\TestCase
     {
         $this->initDatabaseHelper(null);
 
-        $this->assertFalse($this->object->isSupportsFulltext());
-        $this->assertFalse($this->object->isSupportsFulltext('table_name'));
-        $this->assertTrue($this->object->isSupportsFulltext('table_name', true));
-        $this->assertFalse($this->object->isTableSupportsFulltext('table_name'));
-        $this->assertTrue($this->object->isTableSupportsFulltext('table_name', true));
+        $this->assertFalse($this->object->doesSupportFulltext());
+        $this->assertFalse($this->object->doesSupportFulltext('table_name'));
+        $this->assertTrue($this->object->doesSupportFulltext('table_name', true));
+        $this->assertFalse($this->object->doesTableSupportFulltext('table_name'));
+        $this->assertTrue($this->object->doesTableSupportFulltext('table_name', true));
     }
 
     public function testGetDatabaseType()
