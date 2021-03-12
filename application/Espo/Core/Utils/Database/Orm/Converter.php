@@ -604,7 +604,7 @@ class Converter
 
     protected function applyFullTextSearch(array &$ormMetadata, string $entityType)
     {
-        if (!$this->getDatabaseHelper()->isTableSupportsFulltext(Util::toUnderScore($entityType))) return;
+        if (!$this->getDatabaseHelper()->doesTableSupportFulltext(Util::toUnderScore($entityType))) return;
         if (!$this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) return;
 
         $fieldList = $this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'textFilterFields'], ['name']);

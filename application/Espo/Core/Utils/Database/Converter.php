@@ -29,8 +29,11 @@
 
 namespace Espo\Core\Utils\Database;
 
-use Espo\Core\Utils\Util;
-use Espo\ORM\Entity;
+use Espo\Core\{
+    Utils\Metadata,
+    Utils\File\Manager as FileManager,
+    Utils\Config,
+};
 
 class Converter
 {
@@ -40,11 +43,7 @@ class Converter
 
     private $config;
 
-    private $schemaConverter;
-
-    private $schemaFromMetadata = null;
-
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Config $config = null)
+    public function __construct(Metadata $metadata, FileManager $fileManager, Config $config = null)
     {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;

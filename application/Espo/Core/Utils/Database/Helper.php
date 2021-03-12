@@ -29,13 +29,8 @@
 
 namespace Espo\Core\Utils\Database;
 
-use PDO;
-use ReflectionClass;
-use Espo\ORM\Entity;
-
 use Espo\Core\{
     Exceptions\Error,
-    Utils\Util,
     Utils\Config,
 };
 
@@ -43,6 +38,9 @@ use Doctrine\DBAL\{
     Connection as DbalConnection,
     Platforms\AbstractPlatform as DbalPlatform,
 };
+
+use PDO;
+use ReflectionClass;
 
 class Helper
 {
@@ -53,15 +51,15 @@ class Helper
     private $pdoConnection;
 
     protected $dbalDrivers = [
-        'mysqli' => '\\Doctrine\\DBAL\\Driver\\Mysqli\\Driver',
-        'pdo_mysql' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Driver\\PDO\\MySQL\\Driver',
+        'mysqli' => 'Doctrine\\DBAL\\Driver\\Mysqli\\Driver',
+        'pdo_mysql' => 'Espo\\Core\\Utils\\Database\\DBAL\\Driver\\PDO\\MySQL\\Driver',
     ];
 
     protected $dbalPlatforms = [
-        'MariaDb1027Platform' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MariaDb1027Platform',
-        'MySQL57Platform' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL57Platform',
-        'MySQL80Platform' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL80Platform',
-        'MySQLPlatform' => '\\Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQLPlatform',
+        'MariaDb1027Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MariaDb1027Platform',
+        'MySQL57Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL57Platform',
+        'MySQL80Platform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQL80Platform',
+        'MySQLPlatform' => 'Espo\\Core\\Utils\\Database\\DBAL\\Platforms\\MySQLPlatform',
     ];
 
     public function __construct(Config $config = null)
@@ -106,6 +104,7 @@ class Helper
     {
         if (!isset($params)) {
             $config = $this->getConfig();
+
             if ($config) {
                 $params = $config->get('database');
             }
@@ -116,6 +115,7 @@ class Helper
         }
 
         $driverName = isset($params['driver']) ? $params['driver'] : 'pdo_mysql';
+
         unset($params['driver']);
 
         if (!isset($this->dbalDrivers[$driverName])) {
@@ -131,23 +131,23 @@ class Helper
         $driver = new $driverClass();
 
         $version = $this->getFullDatabaseVersion();
+
         $platform = $driver->createDatabasePlatformForVersion($version);
 
         $params['platform'] = $this->createDbalPlatform($platform);
 
-        return new DbalConnection(
-            $params,
-            $driver
-        );
+        return new DbalConnection($params, $driver);
     }
 
     protected function createDbalPlatform(DbalPlatform $platform)
     {
         $reflect = new ReflectionClass($platform);
+
         $platformClass = $reflect->getShortName();
 
         if (isset($this->dbalPlatforms[$platformClass])) {
             $class = $this->dbalPlatforms[$platformClass];
+
             return new $class();
         }
 
@@ -155,14 +155,16 @@ class Helper
     }
 
     /**
-     * Create PDO connection
-     * @param  array $params
-     * @return \Pdo| \PDOException
+     * Create PDO connection.
+     *
+     * @param array $params
+     * @return PDO|\PDOException
      */
     public function createPdoConnection(array $params = null)
     {
         if (!isset($params)) {
             $config = $this->getConfig();
+
             if ($config) {
                 $params = $config->get('database');
             }
@@ -176,40 +178,45 @@ class Helper
         $port = empty($params['port']) ? '' : ';port=' . $params['port'];
         $dbname = empty($params['dbname']) ? '' : ';dbname=' . $params['dbname'];
 
-        $options = array();
+        $options = [];
 
         if (isset($params['sslCA'])) {
             $options[PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
         }
+
         if (isset($params['sslCert'])) {
             $options[PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
         }
+
         if (isset($params['sslKey'])) {
             $options[PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
         }
+
         if (isset($params['sslCAPath'])) {
             $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
         }
+
         if (isset($params['sslCipher'])) {
             $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
         }
 
         $dsn = $platform . ':host='.$params['host'].$port.$dbname;
-        $dbh = new \PDO($dsn, $params['user'], $params['password'], $options);
+
+        $dbh = new PDO($dsn, $params['user'], $params['password'], $options);
 
         return $dbh;
     }
 
     /**
-     * Get maximum index length. If $tableName is empty get a value for all database tables
+     * Get maximum index length. If $tableName is empty get a value for all database tables.
      *
-     * @param  string|null $tableName
-     *
+     * @param ?string $tableName
      * @return int
      */
     public function getMaxIndexLength($tableName = null, $default = 1000)
     {
         $tableEngine = $this->getTableEngine($tableName);
+
         if (!$tableEngine) {
             return $default;
         }
@@ -224,17 +231,18 @@ class Helper
                         if (version_compare($version, '10.2.2') >= 0) {
                             return 3072; //InnoDB, MariaDB 10.2.2+
                         }
+
                         break;
 
                     case 'MySQL':
                         if (version_compare($version, '5.7.0') >= 0) {
                             return 3072; //InnoDB, MySQL 5.7+
                         }
+
                         break;
                 }
 
                 return 767; //InnoDB
-                break;
         }
 
         return 1000; //MyISAM
@@ -263,19 +271,22 @@ class Helper
     protected function getFullDatabaseVersion()
     {
         $connection = $this->getPdoConnection();
+
         if (!$connection) {
             return null;
         }
 
         $sth = $connection->prepare("select version()");
+
         $sth->execute();
 
         return $sth->fetchColumn();
     }
 
     /**
-     * Get Database version
-     * @return string|null
+     * Get Database version.
+     *
+     * @return ?string
      */
     public function getDatabaseVersion()
     {
@@ -287,7 +298,7 @@ class Helper
     }
 
     /**
-     * Get table/database tables engine. If $tableName is empty get a value for all database tables
+     * Get table/database tables engine. If $tableName is empty get a value for all database tables.
      *
      * @param  string|null $tableName
      *
@@ -318,15 +329,16 @@ class Helper
     }
 
     /**
-     * Check if full text supports. If $tableName is empty get a value for all database tables
+     * Check if full text is supported. If $tableName is empty get a value for all database tables.
      *
-     * @param  string $tableName
+     * @param string $tableName
      *
      * @return boolean
      */
-    public function isSupportsFulltext($tableName = null, $default = false)
+    public function doesSupportFulltext($tableName = null, $default = false)
     {
         $tableEngine = $this->getTableEngine($tableName);
+
         if (!$tableEngine) {
             return $default;
         }
@@ -340,33 +352,34 @@ class Helper
                 }
 
                 return false; //InnoDB
-                break;
         }
 
         return true; //MyISAM
     }
 
-    public function isTableSupportsFulltext($tableName, $default = false)
+    public function doesTableSupportFulltext($tableName, $default = false)
     {
-        return $this->isSupportsFulltext($tableName, $default);
+        return $this->doesSupportFulltext($tableName, $default);
     }
 
-    public function getPdoDatabaseParam($name, \PDO $pdoConnection)
+    public function getPdoDatabaseParam($name, PDO $pdoConnection)
     {
         if (!method_exists($pdoConnection, 'prepare')) {
             return null;
         }
 
         $sth = $pdoConnection->prepare("SHOW VARIABLES LIKE '" . $name . "'");
+
         $sth->execute();
-        $res = $sth->fetch(\PDO::FETCH_NUM);
+
+        $res = $sth->fetch(PDO::FETCH_NUM);
 
         $version = empty($res[1]) ? null : $res[1];
 
         return $version;
     }
 
-    public function getPdoDatabaseVersion(\PDO $pdoConnection)
+    public function getPdoDatabaseVersion(PDO $pdoConnection)
     {
         return $this->getPdoDatabaseParam('version', $pdoConnection);
     }

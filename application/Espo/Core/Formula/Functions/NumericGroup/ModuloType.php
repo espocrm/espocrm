@@ -38,17 +38,18 @@ class ModuloType extends BaseFunction
 {
     public function process(ArgumentList $args)
     {
-        $result = 1;
-
-        foreach ($args as $subItem) {
-            $part = $this->evaluate($subItem);
-
-            if (!is_float($part) && !is_int($part)) {
-                $part = floatval($part);
-            }
-
-            $result %= $part;
+        if (count($args) < 2) {
+            $this->throwTooFewArguments();
         }
+
+        $result = $this->evaluate($args[0]);
+        $part = $this->evaluate($args[1]);
+
+        if (!is_float($part) && !is_int($part)) {
+            $part = floatval($part);
+        }
+
+        $result %= $part;
 
         return $result;
     }
