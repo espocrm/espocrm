@@ -243,11 +243,14 @@ var Espo = Espo || {classMap:{}};
 
                 if (realName in this.libsConfig) {
                     var libData = this.libsConfig[realName] || {};
+
                     path = libData.path || path;
                     exportsTo = libData.exportsTo || exportsTo;
                     exportsAs = libData.exportsAs || exportsAs;
-                    noAppCache = libData.noAppCache || noAppCache;
+                    //noAppCache = libData.noAppCache || noAppCache;
                 }
+
+                noAppCache = true;
 
                 fetchObject = function () {
                     var from = root;
