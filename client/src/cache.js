@@ -130,7 +130,7 @@ define('cache', [], function () {
                 localStorage.setItem(key, value);
             }
             catch (error) {
-                console.error(error);
+                console.log('Local storage limit exceeded.');
             }
         },
 
