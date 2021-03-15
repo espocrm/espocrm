@@ -729,7 +729,7 @@ class LeadCapture
         ]);
 
         if (!empty($data->description)) {
-            $logRecord->set('description', $description);
+            $logRecord->set('description', $data->description);
         }
 
         $this->entityManager->saveEntity($logRecord);
