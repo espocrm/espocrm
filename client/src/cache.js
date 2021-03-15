@@ -30,9 +30,11 @@ define('cache', [], function () {
 
     var Cache = function (cacheTimestamp) {
         this.basePrefix = this.prefix;
+
         if (cacheTimestamp) {
             this.prefix =  this.basePrefix + '-' + cacheTimestamp;
         }
+
         if (!this.get('app', 'timestamp')) {
             this.storeTimestamp();
         }
@@ -44,15 +46,20 @@ define('cache', [], function () {
 
         handleActuality: function (cacheTimestamp) {
             var stored = parseInt(this.get('app', 'cacheTimestamp'));
+
             if (stored) {
                 if (stored !== cacheTimestamp) {
                     this.clear();
+
                     this.set('app', 'cacheTimestamp', cacheTimestamp);
+
                     this.storeTimestamp();
                 }
             } else {
                 this.clear();
+
                 this.set('app', 'cacheTimestamp', cacheTimestamp);
+
                 this.storeTimestamp();
             }
         },
@@ -83,8 +90,10 @@ define('cache', [], function () {
 
             try {
                 var stored = localStorage.getItem(key);
-            } catch (error) {
+            }
+            catch (error) {
                 console.error(error);
+
                 return null;
             }
 
@@ -93,42 +102,55 @@ define('cache', [], function () {
 
                 if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
                     var jsonString = stored.substr(9);
+
                     try {
                         result = JSON.parse(jsonString);
-                    } catch (error) {
+                    }
+                    catch (error) {
                         result = stored;
                     }
                 }
+
                 return result;
             }
+
             return null;
         },
 
         set: function (type, name, value) {
             this.checkType(type);
+
             var key = this.composeKey(type, name);
+
             if (value instanceof Object || Array.isArray(value)) {
                 value = '__JSON__:' + JSON.stringify(value);
             }
+
             try {
                 localStorage.setItem(key, value);
-            } catch (error) {
+            }
+            catch (error) {
                 console.error(error);
             }
         },
 
         clear: function (type, name) {
             var reText;
+
             if (typeof type !== 'undefined') {
                 if (typeof name === 'undefined') {
                     reText = '^' + this.composeFullPrefix(type);
-                } else {
+                }
+                else {
                     reText = '^' + this.composeKey(type, name);
                 }
-            } else {
+            }
+            else {
                 reText = '^' + this.basePrefix + '-';
             }
+
             var re = new RegExp(reText);
+
             for (var i in localStorage) {
                 if (re.test(i)) {
                     delete localStorage[i];
