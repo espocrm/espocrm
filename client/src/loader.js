@@ -51,6 +51,8 @@ var Espo = Espo || {classMap:{}};
 
         cache: null,
 
+        responseCache: null,
+
         data: null,
 
         classMap: Espo,
@@ -81,10 +83,12 @@ var Espo = Espo || {classMap:{}};
 
                 if (modulePart == 'custom') {
                     path = 'client/custom/src/' + namePart;
-                } else {
+                }
+                else {
                     path = 'client/modules/' + modulePart + '/src/' + namePart;
                 }
-            } else {
+            }
+            else {
                 path = 'client/src/' + name;
             }
 
@@ -111,12 +115,14 @@ var Espo = Espo || {classMap:{}};
             if (subject) {
                 subject = this.normalizeClassName(subject);
             }
+
             if (this.loadingSubject) {
                 subject = subject || this.loadingSubject;
                 this.loadingSubject = null;
             }
 
             var self = this;
+
             var proceed = function (relObj) {
                 var o = callback.apply(this, arguments);
 
@@ -134,7 +140,8 @@ var Espo = Espo || {classMap:{}};
 
             if (!dependency) {
                 proceed();
-            } else {
+            }
+            else {
                 this.require(dependency, function () {
                     proceed.apply(this, arguments);
                 });
@@ -146,6 +153,7 @@ var Espo = Espo || {classMap:{}};
 
             if (Object.prototype.toString.call(subject) === '[object Array]') {
                 list = subject;
+
                 list.forEach(function (item, i) {
                     list[i] = this.normalizeClassName(list[i]);
                 }, this);
@@ -162,20 +170,26 @@ var Espo = Espo || {classMap:{}};
 
             if (totalCount === 1) {
                 this.load(list[0], callback, errorCallback);
+
                 return;
             }
             else if (totalCount) {
                 var readyCount = 0;
                 var loaded = {};
+
                 list.forEach(function (name) {
                     this.load(name, function (c) {
                         loaded[name] = c;
+
                         readyCount++;
+
                         if (readyCount == totalCount) {
                             var args = [];
+
                             for (var i in list) {
                                 args.push(loaded[list[i]]);
                             }
+
                             callback.apply(this, args);
                         }
                     });
@@ -206,7 +220,9 @@ var Espo = Espo || {classMap:{}};
                     var arr = name.split(':');
                     var modulePart = arr[0];
                     var namePart = arr[1];
-                    normalizedName = this.convertCamelCaseToHyphen(modulePart) + ':' + this.convertCamelCaseToHyphen(namePart).split('.').join('/');
+
+                    normalizedName = this.convertCamelCaseToHyphen(modulePart) + ':' +
+                        this.convertCamelCaseToHyphen(namePart).split('.').join('/');
                 } else {
                     normalizedName = this.convertCamelCaseToHyphen(name).split('.').join('/');
                 }
@@ -226,7 +242,8 @@ var Espo = Espo || {classMap:{}};
         dataLoaded: {},
 
         load: function (name, callback, errorCallback) {
-            var dataType, type, path, fetchObject;
+            var dataType, type, path, fetchObjectFunction;
+
             var realName = name;
 
             var noAppCache = false;
@@ -247,17 +264,17 @@ var Espo = Espo || {classMap:{}};
                     path = libData.path || path;
                     exportsTo = libData.exportsTo || exportsTo;
                     exportsAs = libData.exportsAs || exportsAs;
-                    //noAppCache = libData.noAppCache || noAppCache;
                 }
 
                 noAppCache = true;
 
-                fetchObject = function () {
+                fetchObjectFunction = function () {
                     var from = root;
 
-                    if (exportsTo == 'window') {
+                    if (exportsTo === 'window') {
                         from = root;
-                    } else {
+                    }
+                    else {
                         exportsTo.split('.').forEach(function (item) {
                             from = from[item];
                         });
@@ -268,7 +285,7 @@ var Espo = Espo || {classMap:{}};
                     }
                 }
 
-                var obj = fetchObject();
+                var obj = fetchObjectFunction();
 
                 if (obj) {
                     callback(obj);
@@ -308,40 +325,24 @@ var Espo = Espo || {classMap:{}};
                 return;
             }
 
-            if (this.cache) {
+            var dtObject = {
+                name: name,
+                type: type,
+                dataType: dataType,
+                realName: realName,
+                fetchObjectFunction: fetchObjectFunction,
+                noAppCache: noAppCache,
+                useCache: useCache,
+                path: path,
+                callback: callback,
+                errorCallback: errorCallback,
+            };
+
+            if (this.cache && !this.responseCache) {
                 var cached = this.cache.get('a', name);
 
                 if (cached) {
-                    if (type == 'class') {
-                        this.loadingSubject = name;
-                    }
-
-                    if (dataType == 'script') {
-                        this._execute(cached);
-                    }
-
-                    if (type == 'class') {
-                        var c = this._getClass(name);
-
-                        if (c) {
-                            callback(c);
-
-                            return;
-                        }
-
-                        this._addLoadCallback(name, callback);
-                    }
-                    else {
-                        var d = cached;
-
-                        if (typeof fetchObject == 'function') {
-                            d = fetchObject(realName, cached);
-                        }
-
-                        this.dataLoaded[name] = d;
-
-                        callback(d);
-                    }
+                    this._processCached(dtObject, cached);
 
                     return;
                 }
@@ -361,8 +362,95 @@ var Espo = Espo || {classMap:{}};
                 useCache = true;
 
                 var sep = (path.indexOf('?') > -1) ? '&' : '?';
+
                 path += sep + 'r=' + this.cacheTimestamp;
             }
+
+            var url = this.basePath + path;
+
+            dtObject.path = path;
+            dtObject.url = url;
+
+            if (!this.responseCache) {
+                this._processRequest(dtObject);
+
+                return;
+            }
+
+            this.responseCache
+                .match(new Request(url))
+                .then(
+                    function (response) {
+                        if (!response) {
+                            this._processRequest(dtObject);
+
+                            return
+                        }
+
+                        response
+                            .text()
+                            .then(
+                                function (cached) {
+                                    this._handleResponse(dtObject, cached);
+                                }
+                                .bind(this)
+                            );
+                    }
+                    .bind(this)
+                );
+        },
+
+        _processCached: function (dtObject, cached) {
+
+            var name = dtObject.name;
+            var callback = dtObject.callback;
+            var type = dtObject.type;
+            var dataType = dtObject.dataType;
+            var realName = dtObject.realName;
+            var fetchObjectFunction = dtObject.fetchObjectFunction;
+
+
+            if (type === 'class') {
+                this.loadingSubject = name;
+            }
+
+            if (dataType === 'script') {
+                this._execute(cached);
+            }
+
+            if (type === 'class') {
+                var classObj = this._getClass(name);
+
+                if (classObj) {
+                    callback(classObj);
+
+                    return;
+                }
+
+                this._addLoadCallback(name, callback);
+
+                return;
+            }
+
+            var data = cached;
+
+            if (typeof fetchObjectFunction === 'function') {
+                data = fetchObjectFunction(realName, cached);
+            }
+
+            this.dataLoaded[name] = data;
+
+            callback(data);
+        },
+
+        _processRequest: function (dtObject) {
+
+            var name = dtObject.name;
+            var url = dtObject.url;
+            var errorCallback = dtObject.errorCallback;
+            var path = dtObject.path;
+            var useCache = dtObject.useCache;
+            var noAppCache = dtObject.noAppCache;
 
             $.ajax({
                 type: 'GET',
@@ -370,44 +458,18 @@ var Espo = Espo || {classMap:{}};
                 dataType: 'text',
                 mimeType: 'text/plain',
                 local: true,
-                url: this.basePath + path,
+                url: url,
 
                 success: function (response) {
-                    if (this.cache && !noAppCache) {
+                    if (this.cache && !noAppCache && !this.responseCache) {
                         this.cache.set('a', name, response);
                     }
 
-                    this._addLoadCallback(name, callback);
-
-                    if (type == 'class') {
-                        this.loadingSubject = name;
+                    if (this.responseCache) {
+                        this.responseCache.put(url, new Response(response));
                     }
 
-                    if (dataType == 'script') {
-                        this._execute(response);
-                    }
-
-                    var data;
-
-                    if (type == 'class') {
-                        data = this._getClass(name);
-
-                        if (data && typeof data === 'function') {
-                            this._executeLoadCallback(name, data);
-                        }
-                    }
-                    else {
-                        data = response;
-
-                        if (typeof fetchObject == 'function') {
-                            data = fetchObject(realName, response);
-                        }
-
-                        this.dataLoaded[name] = data;
-                        this._executeLoadCallback(name, data);
-                    }
-
-                    return;
+                    this._handleResponse(dtObject, response);
                 }
                 .bind(this),
 
@@ -423,6 +485,47 @@ var Espo = Espo || {classMap:{}};
             });
         },
 
+        _handleResponse: function (dtObject, response) {
+
+            var name = dtObject.name;
+            var callback = dtObject.callback;
+            var type = dtObject.type;
+            var dataType = dtObject.dataType;
+            var realName = dtObject.realName;
+            var fetchObjectFunction = dtObject.fetchObjectFunction;
+
+            this._addLoadCallback(name, callback);
+
+            if (type === 'class') {
+                this.loadingSubject = name;
+            }
+
+            if (dataType === 'script') {
+                this._execute(response);
+            }
+
+            var data;
+
+            if (type === 'class') {
+                data = this._getClass(name);
+
+                if (data && typeof data === 'function') {
+                    this._executeLoadCallback(name, data);
+                }
+
+                return;
+            }
+
+            data = response;
+
+            if (typeof fetchObjectFunction === 'function') {
+                data = fetchObjectFunction(realName, response);
+            }
+
+            this.dataLoaded[name] = data;
+
+            this._executeLoadCallback(name, data);
+        },
 
         loadLib: function (url, callback) {
             if (this.cache) {
@@ -430,9 +533,11 @@ var Espo = Espo || {classMap:{}};
 
                 if (script) {
                     this._execute(script);
+
                     if (typeof callback == 'function') {
                         callback();
                     }
+
                     return;
                 }
             }
@@ -484,16 +589,20 @@ var Espo = Espo || {classMap:{}};
         var subject = null;
         var dependency = null;
         var callback = null;
+
         if (typeof arg1 === 'function') {
             callback = arg1;
-        } else if (typeof arg1 !== 'undefined' && typeof arg2 === 'function') {
+        }
+        else if (typeof arg1 !== 'undefined' && typeof arg2 === 'function') {
             dependency = arg1;
             callback = arg2;
-        } else {
+        }
+        else {
             subject = arg1;
             dependency = arg2;
             callback = arg3;
         }
+
         Espo.loader.define(subject, dependency, callback);
     }
 

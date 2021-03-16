@@ -70,7 +70,10 @@ define('views/fields/barcode', [
             Dep.prototype.setup.call(this);
 
             $(window).on('resize.' + this.cid, function () {
-                if (!this.isRendered()) return;
+                if (!this.isRendered()) {
+                    return;
+                }
+
                 this.controlWidth();
             }.bind(this));
         },
@@ -84,16 +87,21 @@ define('views/fields/barcode', [
 
             if (this.mode === 'list' || this.mode === 'detail') {
                 var value = this.model.get(this.name);
+
                 if (value) {
                     if (this.params.codeType === 'QRcode') {
                         var size = 128;
+
                         if (this.isListMode()) {
                             size = 64;
                         }
+
                         var containerWidth = this.$el.width() ;
+
                         if (containerWidth < size && containerWidth) {
                             size = containerWidth;
                         }
+
                         var qrCode = new QRCode(this.$el.find('.barcode').get(0), {
                             text: value,
                             width: size,
@@ -102,18 +110,41 @@ define('views/fields/barcode', [
                             colorLight : '#ffffff',
                             correctLevel : QRCode.CorrectLevel.H,
                         });
-                    } else {
-                        JsBarcode(this.getSelector() + ' .barcode', value, {
-                            format: this.params.codeType,
-                            height: 50,
-                            fontSize: 14,
-                            margin: 0,
-                            lastChar: this.params.lastChar,
-                        });
+                    }
+                    else {
+                        var $barcode = $(this.getSelector() + ' .barcode');
+
+                        if ($barcode.length) {
+                            this.initBarcode(value);
+                        }
+                        else {
+                            // SVG may be not available yet (in webkit).
+                            setTimeout(
+                                function () {
+                                    this.initBarcode(value);
+
+                                    this.controlWidth();
+                                }
+                                .bind(this),
+                                100
+                            );
+                        }
+
                     }
                 }
+
                 this.controlWidth();
             }
+        },
+
+        initBarcode: function (value) {
+            JsBarcode(this.getSelector() + ' .barcode', value, {
+                format: this.params.codeType,
+                height: 50,
+                fontSize: 14,
+                margin: 0,
+                lastChar: this.params.lastChar,
+            });
         },
 
         controlWidth: function () {

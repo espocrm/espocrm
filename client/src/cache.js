@@ -45,23 +45,29 @@ define('cache', [], function () {
         prefix: 'cache',
 
         handleActuality: function (cacheTimestamp) {
-            var stored = parseInt(this.get('app', 'cacheTimestamp'));
+            var storedTimestamp = this.getCacheTimestamp();
 
-            if (stored) {
-                if (stored !== cacheTimestamp) {
+            if (storedTimestamp) {
+                if (storedTimestamp !== cacheTimestamp) {
                     this.clear();
 
                     this.set('app', 'cacheTimestamp', cacheTimestamp);
 
                     this.storeTimestamp();
                 }
-            } else {
-                this.clear();
 
-                this.set('app', 'cacheTimestamp', cacheTimestamp);
-
-                this.storeTimestamp();
+                return;
             }
+
+            this.clear();
+
+            this.set('app', 'cacheTimestamp', cacheTimestamp);
+
+            this.storeTimestamp();
+        },
+
+        getCacheTimestamp: function () {
+            return parseInt(this.get('app', 'cacheTimestamp') || 0);
         },
 
         storeTimestamp: function () {

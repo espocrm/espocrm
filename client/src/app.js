@@ -92,86 +92,15 @@ define(
         this.useCache = options.useCache || this.useCache;
         this.apiUrl = options.apiUrl || this.apiUrl;
         this.basePath = options.basePath || '';
-
         this.ajaxTimeout = options.ajaxTimeout || 0;
 
-        this.appParams = {};
-
-        this.loader = Espo.loader;
-
-        this.loader.basePath = this.basePath;
-
-        this.controllers = {};
-
-        if (this.useCache) {
-            this.cache = new Cache(options.cacheTimestamp);
-            if (options.cacheTimestamp) {
-                this.cache.handleActuality(options.cacheTimestamp);
-            } else {
-                this.cache.storeTimestamp();
-            }
-        }
-
-        this.storage = new Storage();
-        this.sessionStorage = new SessionStorage();
-
-        this.loader.cache = this.cache;
-
-        if (this.useCache && !this.loader.cacheTimestamp && options.cacheTimestamp) {
-            this.loader.cacheTimestamp = options.cacheTimestamp;
-        }
-
-        this.setupAjax();
-
-        this.settings = new Settings(null);
-        this.language = new Language(this.cache);
-        this.metadata = new Metadata(this.cache);
-        this.fieldManager = new FieldManager();
-
-        Promise.all([
-            new Promise(function (resolve) {
-                this.settings.load(function () {
-                    resolve();
-                });
-            }.bind(this)),
-            new Promise(function (resolve) {
-                this.language.load(function () {
-                    resolve();
-                }, false, true);
-            }.bind(this))
-        ]).then(function () {
-            this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
-
-            this.user = new User();
-
-            this.preferences = new Preferences();
-
-            this.preferences.settings = this.settings;
-
-            this.acl = this.createAclManager();
-
-            this.fieldManager.acl = this.acl;
-
-            this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
-
-            this.modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
-
-            this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory);
-
-            if (this.settings.get('useWebSocket')) {
-                this.webSocketManager = new WebSocketManager(this.settings);
-            }
-
-            this.initUtils();
-            this.initView();
-            this.initBaseController();
-
-            this.preLoader = new PreLoader(this.cache, this.viewFactory, this.basePath);
-
-            this.preLoad(function () {
-                callback.call(this, this);
-            });
-        }.bind(this));
+        this
+            .initCache(options)
+            .then(
+                function () {
+                    this.init(options, callback);
+                }.bind(this)
+            );
     }
 
     _.extend(App.prototype, {
@@ -216,12 +145,152 @@ define(
 
         masterView: 'views/site/master',
 
+        responseCache: null,
+
+        initCache: function (options) {
+            var cacheTimestamp = options.cacheTimestamp || null;
+            var storedCacheTimestamp = null;
+
+            if (this.useCache) {
+                this.cache = new Cache(cacheTimestamp);
+
+                storedCacheTimestamp = this.cache.getCacheTimestamp();
+
+                if (cacheTimestamp) {
+                    this.cache.handleActuality(cacheTimestamp);
+                }
+                else {
+                    this.cache.storeTimestamp();
+                }
+            }
+
+            var handleActuality = function () {
+                if (
+                    !cacheTimestamp ||
+                    !storedCacheTimestamp ||
+                    cacheTimestamp !== storedCacheTimestamp
+                ) {
+                    return caches.delete('espo');
+                }
+
+                return new Promise(
+                    function (resolve) {
+                        resolve();
+                    }
+                );
+            };
+
+            return new Promise(
+                function (resolve) {
+                    if (!this.useCache) {
+                        resolve();
+                    }
+
+                    if (!window.caches) {
+                        resolve();
+                    }
+
+                    handleActuality()
+                        .then(
+                            function () {
+                                return caches.open('espo');
+                            }
+                        )
+                        .then(
+                            function (responseCache) {
+                                this.responseCache = responseCache;
+                            }
+                            .bind(this)
+                        )
+                        .then(
+                            function () {
+                                resolve();
+                            }
+                        )
+                }
+                .bind(this)
+            );
+        },
+
+        init: function (options, callback) {
+            this.appParams = {};
+            this.controllers = {};
+
+            this.loader = Espo.loader;
+
+            this.loader.responseCache = this.responseCache;
+
+            this.loader.basePath = this.basePath;
+
+            this.storage = new Storage();
+            this.sessionStorage = new SessionStorage();
+
+            this.loader.cache = this.cache;
+
+            if (this.useCache && !this.loader.cacheTimestamp && options.cacheTimestamp) {
+                this.loader.cacheTimestamp = options.cacheTimestamp;
+            }
+
+            this.setupAjax();
+
+            this.settings = new Settings(null);
+            this.language = new Language(this.cache);
+            this.metadata = new Metadata(this.cache);
+            this.fieldManager = new FieldManager();
+
+            Promise.all([
+                new Promise(function (resolve) {
+                    this.settings.load(function () {
+                        resolve();
+                    });
+                }.bind(this)),
+                new Promise(function (resolve) {
+                    this.language.load(function () {
+                        resolve();
+                    }, false, true);
+                }.bind(this))
+            ]).then(function () {
+                this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
+
+                this.user = new User();
+
+                this.preferences = new Preferences();
+
+                this.preferences.settings = this.settings;
+
+                this.acl = this.createAclManager();
+
+                this.fieldManager.acl = this.acl;
+
+                this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
+
+                this.modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
+
+                this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory);
+
+                if (this.settings.get('useWebSocket')) {
+                    this.webSocketManager = new WebSocketManager(this.settings);
+                }
+
+                this.initUtils();
+                this.initView();
+                this.initBaseController();
+
+                this.preLoader = new PreLoader(this.cache, this.viewFactory, this.basePath);
+
+                this.preLoad(function () {
+                    callback.call(this, this);
+                });
+            }.bind(this));
+        },
+
         start: function () {
             this.initAuth();
 
             if (!this.auth) {
                 this.baseController.login();
-            } else {
+            }
+            else {
                 this.initUserData(null, function () {
                     this.onAuth.call(this);
                 }.bind(this));
