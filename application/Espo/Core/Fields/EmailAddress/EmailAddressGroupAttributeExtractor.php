@@ -29,16 +29,28 @@
 
 namespace Espo\Core\Fields\EmailAddress;
 
+use Espo\ORM\Value\AttributeExtractor;
+
+use Espo\Core\Fields\EmailAddressGroup;
+
 use StdClass;
+use InvalidArgumentException;
 
 /**
- * @implements \Espo\ORM\Value\AttributeExtractable<EmailAddress>
+ * @implements AttributeExtractor<EmailAddressGroup>
  */
-class EmailAddressGroupAttributeExtractor
+class EmailAddressGroupAttributeExtractor implements AttributeExtractor
 {
-    public function extract(EmailAddressGroup $group, string $field) : StdClass
+    /**
+     * @param EmailAddressGroup $group
+     */
+    public function extract(object $group, string $field) : StdClass
     {
-        $primaryAddress = !$group->isEmpty() ? $group->getPrimary()->getAddress() : null;
+        if (!$group instanceof EmailAddressGroup) {
+            throw new InvalidArgumentException();
+        }
+
+        $primaryAddress = $group->getPrimary() ? $group->getPrimary()->getAddress() : null;
 
         $dataList = [];
 
@@ -55,6 +67,14 @@ class EmailAddressGroupAttributeExtractor
         return (object) [
             $field => $primaryAddress,
             $field . 'Data' => $dataList,
+        ];
+    }
+
+    public function extractFromNull(string $field) : StdClass
+    {
+        return (object) [
+            $field => null,
+            $field . 'Data' => [],
         ];
     }
 }

@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\Fields\EmailAddress;
 
 use Espo\Core\{
-    Fields\EmailAddress\EmailAddress,
-    Fields\EmailAddress\EmailAddressGroup,
+    Fields\EmailAddress,
+    Fields\EmailAddressGroup,
     Fields\EmailAddress\EmailAddressGroupAttributeExtractor,
 };
 

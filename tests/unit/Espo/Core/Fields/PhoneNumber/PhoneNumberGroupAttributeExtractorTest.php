@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\Fields\PhoneNumber;
 
 use Espo\Core\{
-    Fields\PhoneNumber\PhoneNumber,
-    Fields\PhoneNumber\PhoneNumberGroup,
+    Fields\PhoneNumber,
+    Fields\PhoneNumberGroup,
     Fields\PhoneNumber\PhoneNumberGroupAttributeExtractor,
 };
 

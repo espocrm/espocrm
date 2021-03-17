@@ -263,6 +263,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('I_1', $entityDefs->getIndex('i1')->getKey());
     }
 
+
     public function testIndexNotExisting()
     {
         $data = [
@@ -275,6 +276,56 @@ class DefsTest extends \PHPUnit\Framework\TestCase
         $this->expectException(RuntimeException::class);
 
         $this->defs->getEntity('Test')->getIndex('i1');
+    }
+
+    public function testGetField1()
+    {
+        $data = [
+            'Test' => [
+                'vFields' => [
+                    'f1' => [
+                        'type' => 'varchar',
+                        'length' => 100,
+                    ],
+                    'f2' => [
+                        'type' => 'enum',
+                        'notStorable' => true,
+                    ],
+                ],
+            ],
+        ];
+
+        $this->initMetadata($data);
+
+        $entityDefs = $this->defs->getEntity('Test');
+
+        $this->assertEquals(['f1', 'f2'], $entityDefs->getFieldNameList());
+
+        $this->assertTrue($entityDefs->hasField('f1'));
+
+        $this->assertFalse($entityDefs->hasField('fBad'));
+
+        $this->assertEquals('varchar', $entityDefs->getField('f1')->getType());
+
+        $this->assertEquals('f1', $entityDefs->getField('f1')->getName());
+
+        $this->assertEquals(100, $entityDefs->getField('f1')->getParam('length'));
+
+        $this->assertTrue($entityDefs->getField('f2')->isNotStorable());
+    }
+
+    public function testFieldNotExisting()
+    {
+        $data = [
+            'Test' => [
+            ],
+        ];
+
+        $this->initMetadata($data);
+
+        $this->expectException(RuntimeException::class);
+
+        $this->defs->getEntity('Test')->getField('f1');
     }
 
     public function testClearCache()

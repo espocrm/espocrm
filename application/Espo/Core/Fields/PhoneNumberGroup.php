@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Fields\PhoneNumber;
+namespace Espo\Core\Fields;
 
 use RuntimeException;
 
@@ -49,8 +49,10 @@ class PhoneNumberGroup
 
     /**
      * @param array<PhoneNumber> $list
+     *
+     * @throws RuntimeException
      */
-    private function __construct(array $list)
+    public function __construct(array $list = [])
     {
         foreach ($list as $item) {
             $this->list[] = clone $item;
@@ -63,12 +65,19 @@ class PhoneNumberGroup
         }
     }
 
-    /**
-     * Whether the group is empty.
-     */
-    public function isEmpty() : bool
+    public function __clone()
     {
-        return count($this->list) === 0;
+        $newList = [];
+
+        foreach ($this->list as $item) {
+            $newList[] = clone $item;
+        }
+
+        $this->list = $newList;
+
+        if ($this->primary) {
+            $this->primary = clone $this->primary;
+        }
     }
 
     /**
@@ -216,9 +225,17 @@ class PhoneNumberGroup
      */
     public function withRemoved(PhoneNumber $phoneNumber) : self
     {
+        return $this->withRemovedByNumber($phoneNumber->getNumber());
+    }
+
+    /**
+     * Clone with removed phone number passed by a number.
+     */
+    public function withRemovedByNumber(string $number) : self
+    {
         $newList = $this->list;
 
-        $index = $this->searchNumberInList($phoneNumber->getNumber());
+        $index = $this->searchNumberInList($number);
 
         if ($index !== null) {
             unset($newList[$index]);
@@ -263,11 +280,20 @@ class PhoneNumberGroup
         $numberList = [];
 
         foreach ($this->list as $item) {
+            if (!$item instanceof PhoneNumber) {
+                throw new RuntimeException("Bad item.");
+            }
+
             if (in_array($item->getNumber(), $numberList)) {
                 throw new RuntimeException("Number list contains a duplicate.");
             }
 
             $numberList[] = strtolower($item->getNumber());
         }
+    }
+    
+    private function isEmpty() : bool
+    {
+        return count($this->list) === 0;
     }
 }

@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\Fields\EmailAddress;
 
 use Espo\Core\{
-    Fields\EmailAddress\EmailAddress,
-    Fields\EmailAddress\EmailAddressGroup,
+    Fields\EmailAddress,
+    Fields\EmailAddressGroup,
 };
 
 use RuntimeException;
@@ -47,7 +47,7 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertNull($group->getPrimary());
 
-        $this->assertTrue($group->isEmpty());
+        $this->assertEquals(0, $group->getCount());
     }
 
     public function testDuplicate1()
@@ -136,7 +136,7 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(2, count($group->getList()));
 
-        $this->assertFalse($group->isEmpty());
+        $this->assertEquals(2, $group->getCount());
     }
 
     public function testWithAddedList()
@@ -195,7 +195,7 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(0, count($group->getList()));
 
-        $this->assertTrue($group->isEmpty());
+        $this->assertEquals(0, $group->getCount());
     }
 
     public function testHasAddress()
@@ -223,6 +223,26 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('one@test.com', $group->getByAddress('one@test.com')->getAddress());
 
-        $this->assertNull( $group->getByAddress('four@test.com'));
+        $this->assertNull($group->getByAddress('four@test.com'));
+    }
+
+    public function testClone()
+    {
+        $group = EmailAddressGroup
+            ::fromList([
+                EmailAddress::fromAddress('one@test.com'),
+                EmailAddress::fromAddress('two@test.com'),
+                EmailAddress::fromAddress('three@test.com'),
+            ]);
+
+        $cloned = clone $group;
+
+        $this->assertEquals('one@test.com', $cloned->getByAddress('one@test.com')->getAddress());
+
+        $this->assertEquals($cloned->getPrimary()->getAddress(), $group->getPrimary()->getAddress());
+
+        $this->assertNotSame($cloned->getPrimary(), $group->getPrimary());
+
+        $this->assertNotSame($cloned->getList()[1], $group->getList()[1]);
     }
 }

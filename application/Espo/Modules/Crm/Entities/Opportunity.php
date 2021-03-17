@@ -25,11 +25,35 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Entities;
 
-class Opportunity extends \Espo\Core\ORM\Entity
-{
+use Espo\Core\{
+    ORM\Entity,
+    Fields\Currency,
+    Fields\Date,
+};
 
+class Opportunity extends Entity
+{
+    public function getAmount() : ?Currency
+    {
+        return $this->getValueObject('amount');
+    }
+
+    public function setAmount(?Currency $amount) : void
+    {
+        $this->setValueObject('amount', $amount);
+    }
+
+    public function getCloseDate() : ?Date
+    {
+        return $this->getValueObject('closeDate');
+    }
+
+    public function setCloseDate(?Date $closeDate) : void
+    {
+        $this->setValueObject('closeDate', $closeDate);
+    }
 }

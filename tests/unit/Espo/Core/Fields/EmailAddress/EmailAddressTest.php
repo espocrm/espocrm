@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Fields\EmailAddress;
 
 use Espo\Core\{
-    Fields\EmailAddress\EmailAddress,
+    Fields\EmailAddress,
 };
 
 use RuntimeException;

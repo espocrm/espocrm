@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Fields\Address;
 
+use Espo\Core\Fields\Address;
+
 /**
  * An address value builder.
  */

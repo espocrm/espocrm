@@ -281,7 +281,7 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
         $group = $this->factory->createFromEntity($entity, 'test');
 
-        $this->assertTrue($group->isEmpty());
+        $this->assertEquals(0, $group->getCount());
     }
 
     public function testCreateEmpty2() : void
@@ -314,6 +314,6 @@ class PhoneNumberGroupFactoryTest extends \PHPUnit\Framework\TestCase
 
         $group = $this->factory->createFromEntity($entity, 'test');
 
-        $this->assertTrue($group->isEmpty());
+        $this->assertEquals(0, $group->getCount());
     }
 }

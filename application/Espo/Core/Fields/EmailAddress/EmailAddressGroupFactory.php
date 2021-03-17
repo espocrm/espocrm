@@ -29,11 +29,16 @@
 
 namespace Espo\Core\Fields\EmailAddress;
 
-use Espo\Core\Utils\Metadata;
-
 use Espo\ORM\{
     EntityManager,
     Entity,
+    Value\ValueFactory,
+};
+
+use Espo\Core\{
+    Utils\Metadata,
+    Fields\EmailAddressGroup,
+    Fields\EmailAddress,
 };
 
 use RuntimeException;
@@ -41,7 +46,7 @@ use RuntimeException;
 /**
  * An email address group factory.
  */
-class EmailAddressGroupFactory
+class EmailAddressGroupFactory implements ValueFactory
 {
     private $metadata;
 

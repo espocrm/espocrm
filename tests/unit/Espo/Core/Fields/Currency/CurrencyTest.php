@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Fields\Currency;
 
 use Espo\Core\{
-    Fields\Currency\Currency,
+    Fields\Currency,
     Fields\Currency\CurrencyFactory,
 };
 
@@ -48,7 +48,7 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
 
     public function testValue()
     {
-        $value = new Currency(2.0, 'USD');
+        $value = Currency::fromAmountAndCode(2.0, 'USD');
 
         $this->assertEquals(2.0, $value->getAmount());
 

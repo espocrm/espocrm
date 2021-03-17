@@ -29,8 +29,8 @@
 
 namespace tests\integration\Espo\Core\Fields\Address;
 
-use Espo\Core\Fields\Address\{
-    AddressFormatterFactory,
+use Espo\Core\Fields\{
+    Address\AddressFormatterFactory,
     Address,
 };
 

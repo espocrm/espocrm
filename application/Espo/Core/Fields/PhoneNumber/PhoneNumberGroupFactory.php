@@ -29,11 +29,16 @@
 
 namespace Espo\Core\Fields\PhoneNumber;
 
-use Espo\Core\Utils\Metadata;
-
 use Espo\ORM\{
     EntityManager,
     Entity,
+    Value\ValueFactory,
+};
+
+use Espo\Core\{
+    Utils\Metadata,
+    Fields\PhoneNumberGroup,
+    Fields\PhoneNumber,
 };
 
 use RuntimeException;
@@ -41,7 +46,7 @@ use RuntimeException;
 /**
  * A phone number group factory.
  */
-class PhoneNumberGroupFactory
+class PhoneNumberGroupFactory implements ValueFactory
 {
     private $metadata;
 

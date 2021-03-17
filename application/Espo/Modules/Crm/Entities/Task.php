@@ -25,11 +25,34 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Entities;
 
-class Task extends \Espo\Core\ORM\Entity
-{
+use Espo\Core\{
+    ORM\Entity,
+    Fields\DateTimeOptional,
+};
 
+class Task extends Entity
+{
+    public function getDateStart() : ?DateTimeOptional
+    {
+        return $this->getValueObject('dateStart');
+    }
+
+    public function setDateStart(?DateTimeOptional $dateStart) : void
+    {
+        $this->setValueObject('dateStart', $dateStart);
+    }
+
+    public function getDateEnd() : ?DateTimeOptional
+    {
+        return $this->getValueObject('dateEnd');
+    }
+
+    public function setDateEnd(?DateTimeOptional $dateEnd) : void
+    {
+        $this->setValueObject('dateEnd', $dateEnd);
+    }
 }

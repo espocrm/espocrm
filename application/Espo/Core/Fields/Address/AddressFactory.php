@@ -31,9 +31,12 @@ namespace Espo\Core\Fields\Address;
 
 use Espo\{
     ORM\Entity,
+    ORM\Value\ValueFactory,
 };
 
-class AddressFactory // implements \Espo\ORM\Value\ValueFactory
+use Espo\Core\Fields\Address;
+
+class AddressFactory implements ValueFactory
 {
     public function isCreatableFromEntity(Entity $entity, string $field) : bool
     {

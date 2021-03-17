@@ -59,5 +59,7 @@
    "notCreatable": false,
    "filter": true,
    "skipOrmDefs": true,
-   "personalData": true
+   "personalData": true,
+   "valueFactoryClassName": "Espo\\Core\\Fields\\Address\\AddressFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Fields\\Address\\AddressAttributeExtractor"
 }

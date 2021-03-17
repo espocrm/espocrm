@@ -41,5 +41,7 @@
       "notStorable":true
    },
    "textFilter": true,
-   "personalData": true
+   "personalData": true,
+   "valueFactoryClassName": "Espo\\Core\\Fields\\EmailAddress\\EmailAddressGroupFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Fields\\EmailAddress\\EmailAddressGroupAttributeExtractor"
 }

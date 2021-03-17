@@ -40,7 +40,7 @@ use Espo\Core\{
     FileStorage\Manager as FileStorageManager,
     Utils\File\Manager as FileManager,
     ORM\EntityManager,
-    Fields\Address\Address,
+    Fields\Address,
     Fields\Address\AddressFormatterFactory,
 };
 

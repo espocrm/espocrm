@@ -64,5 +64,7 @@
       "max"
    ],
    "filter": true,
-   "personalData": true
+   "personalData": true,
+   "valueFactoryClassName": "Espo\\Core\\Fields\\Currency\\CurrencyFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Fields\\Currency\\CurrencyAttributeExtractor"
 }

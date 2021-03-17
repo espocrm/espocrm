@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Fields\Address;
 
 use Espo\Core\{
-    Fields\Address\Address,
+    Fields\Address,
 };
 
 use Espo\Classes\{

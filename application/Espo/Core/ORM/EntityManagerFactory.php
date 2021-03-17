@@ -36,22 +36,29 @@ use Espo\Core\{
 
 use Espo\{
     ORM\Metadata,
+    ORM\EventDispatcher,
 };
 
 class EntityManagerFactory
 {
-    protected $config;
-    protected $injectableFactory;
-    protected $metadataDataProvider;
+    private $config;
+
+    private $injectableFactory;
+
+    private $metadataDataProvider;
+
+    private $eventDispatcher;
 
     public function __construct(
         Config $config,
         InjectableFactory $injectableFactory,
-        MetadataDataProvider $metadataDataProvider
+        MetadataDataProvider $metadataDataProvider,
+        EventDispatcher $eventDispatcher
     ) {
         $this->config = $config;
         $this->injectableFactory = $injectableFactory;
         $this->metadataDataProvider = $metadataDataProvider;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function create() : EntityManager
@@ -82,15 +89,35 @@ class EntityManagerFactory
             'sslCipher' => $config->get('database.sslCipher'),
         ];
 
-        $metadata = new Metadata($this->metadataDataProvider);
+        $metadata = new Metadata($this->metadataDataProvider, $this->eventDispatcher);
 
-        $entityManager = $this->injectableFactory->createWith(EntityManager::class, [
-            'params' => $params,
-            'metadata' => $metadata,
-            'repositoryFactory' => $repositoryFactory,
-            'entityFactory' => $entityFactory,
-            'helper' => $helper,
-        ]);
+        $valueFactoryFactory = $this->injectableFactory->createWith(
+            ValueFactoryFactory::class,
+            [
+                'ormMetadata' => $metadata,
+            ]
+        );
+
+        $attributeExtractorFactory = $this->injectableFactory->createWith(
+            AttributeExtractorFactory::class,
+            [
+                'ormMetadata' => $metadata,
+            ]
+        );
+
+        $entityManager = $this->injectableFactory->createWith(
+            EntityManager::class,
+            [
+                'params' => $params,
+                'metadata' => $metadata,
+                'repositoryFactory' => $repositoryFactory,
+                'entityFactory' => $entityFactory,
+                'valueFactoryFactory' => $valueFactoryFactory,
+                'attributeExtractorFactory' => $attributeExtractorFactory,
+                'eventDispatcher' => $this->eventDispatcher,
+                'helper' => $helper,
+            ]
+        );
 
         return $entityManager;
     }

@@ -29,16 +29,29 @@
 
 namespace Espo\Core\Fields\PhoneNumber;
 
+use Espo\ORM\Value\AttributeExtractor;
+
+use Espo\Core\Fields\PhoneNumberGroup;
+
 use StdClass;
+use InvalidArgumentException;
+
 
 /**
- * @implements \Espo\ORM\Value\AttributeExtractable<PhoneNumber>
+ * @implements AttributeExtractor<PhoneNumberGroup>
  */
-class PhoneNumberGroupAttributeExtractor
+class PhoneNumberGroupAttributeExtractor implements AttributeExtractor
 {
-    public function extract(PhoneNumberGroup $group, string $field) : StdClass
+    /**
+     * @param PhoneNumberGroup $group
+     */
+    public function extract(object $group, string $field) : StdClass
     {
-        $primaryNumber = !$group->isEmpty() ? $group->getPrimary()->getNumber() : null;
+        if (!$group instanceof PhoneNumberGroup) {
+            throw new InvalidArgumentException();
+        }
+
+        $primaryNumber = $group->getPrimary() ? $group->getPrimary()->getNumber() : null;
 
         $dataList = [];
 
@@ -55,6 +68,14 @@ class PhoneNumberGroupAttributeExtractor
         return (object) [
             $field => $primaryNumber,
             $field . 'Data' => $dataList,
+        ];
+    }
+
+    public function extractFromNull(string $field) : StdClass
+    {
+        return (object) [
+            $field => null,
+            $field . 'Data' => [],
         ];
     }
 }

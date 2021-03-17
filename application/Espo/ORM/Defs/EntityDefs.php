@@ -43,6 +43,8 @@ class EntityDefs
 
     private $indexCache = [];
 
+    private $fieldCache = [];
+
     private function __construct()
     {
     }
@@ -97,6 +99,16 @@ class EntityDefs
     }
 
     /**
+     * Get a field name list.
+     *
+     * @return array<string>
+     */
+    public function getFieldNameList() : array
+    {
+        return array_keys($this->data['vFields'] ?? []);
+    }
+
+    /**
      * Get an attribute definitions list.
      *
      * @return array<AttributeDefs>
@@ -145,6 +157,22 @@ class EntityDefs
     }
 
     /**
+     * Get a field definitions list.
+     *
+     * @return array<FieldDefs>
+     */
+    public function getFieldList() : array
+    {
+        $list = [];
+
+        foreach ($this->getFieldNameList() as $name) {
+            $list[] = $this->getField($name);
+        }
+
+        return $list;
+    }
+
+    /**
      * Whether has an attribute.
      */
     public function hasAttribute(string $name) : bool
@@ -172,6 +200,16 @@ class EntityDefs
         $this->cacheIndex($name);
 
         return !is_null($this->indexCache[$name]);
+    }
+
+    /**
+     * Whether has a field.
+     */
+    public function hasField(string $name) : bool
+    {
+        $this->cacheField($name);
+
+        return !is_null($this->fieldCache[$name]);
     }
 
     /**
@@ -217,6 +255,21 @@ class EntityDefs
         }
 
         return $this->indexCache[$name];
+    }
+
+    /**
+     * Get a field definitions.
+     * @throws RuntimeException
+     */
+    public function getField(string $name) : FieldDefs
+    {
+        $this->cacheField($name);
+
+        if (!$this->hasField($name)) {
+            throw new RuntimeException("Field '{$name}' does not exist.");
+        }
+
+        return $this->fieldCache[$name];
     }
 
     /**
@@ -295,5 +348,25 @@ class EntityDefs
         }
 
         return IndexDefs::fromRaw($raw, $name);
+    }
+
+    private function cacheField(string $name) : void
+    {
+        if (array_key_exists($name, $this->fieldCache)) {
+            return;
+        }
+
+        $this->fieldCache[$name] = $this->loadField($name);
+    }
+
+    private function loadField(string $name) : ?FieldDefs
+    {
+        $raw = $this->data['vFields'][$name] ?? /*$this->data['fields'][$name] ??*/ null;
+
+        if (!$raw) {
+            return null;
+        }
+
+        return FieldDefs::fromRaw($raw, $name);
     }
 }

@@ -40,20 +40,23 @@ use Espo\ORM\{
     Entity,
     EntityManager,
     EntityFactory as EntityFactoryInterface,
+    Value\ValueAccessorFactory,
 };
 
 class EntityFactory implements EntityFactoryInterface
 {
-    protected $classFinder;
+    private $classFinder;
 
-    protected $entityManager = null;
+    private $entityManager = null;
+
+    private $valueAccessorFactory = null;
 
     public function __construct(ClassFinder $classFinder)
     {
         $this->classFinder = $classFinder;
     }
 
-    protected function getClassName(string $name) : ?string
+    private function getClassName(string $name) : ?string
     {
         return $this->classFinder->find('Entities', $name);
     }
@@ -65,6 +68,15 @@ class EntityFactory implements EntityFactoryInterface
         }
 
         $this->entityManager = $entityManager;
+    }
+
+    public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory) : void
+    {
+        if ($this->valueAccessorFactory) {
+            throw new Error("ValueAccessorFactory can be set only once.");
+        }
+
+        $this->valueAccessorFactory = $valueAccessorFactory;
     }
 
     public function create(string $name) : Entity
@@ -81,6 +93,6 @@ class EntityFactory implements EntityFactoryInterface
             throw new Error("Entity '{$name}' is not defined in metadata.");
         }
 
-        return new $className($name, $defs, $this->entityManager);
+        return new $className($name, $defs, $this->entityManager, $this->valueAccessorFactory);
     }
 }

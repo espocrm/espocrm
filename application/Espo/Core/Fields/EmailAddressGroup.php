@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Fields\EmailAddress;
+namespace Espo\Core\Fields;
 
 use RuntimeException;
 
@@ -49,8 +49,10 @@ class EmailAddressGroup
 
     /**
      * @param array<EmailAddress> $list
+     *
+     * @throws RuntimeException
      */
-    private function __construct(array $list)
+    public function __construct(array $list = [])
     {
         foreach ($list as $item) {
             $this->list[] = clone $item;
@@ -63,12 +65,19 @@ class EmailAddressGroup
         }
     }
 
-    /**
-     * Whether the group is empty.
-     */
-    public function isEmpty() : bool
+    public function __clone()
     {
-        return count($this->list) === 0;
+        $newList = [];
+
+        foreach ($this->list as $item) {
+            $newList[] = clone $item;
+        }
+
+        $this->list = $newList;
+
+        if ($this->primary) {
+            $this->primary = clone $this->primary;
+        }
     }
 
     /**
@@ -216,9 +225,17 @@ class EmailAddressGroup
      */
     public function withRemoved(EmailAddress $emailAddress) : self
     {
+        return $this->withRemovedByAddress($emailAddress->getAddress());
+    }
+
+    /**
+     * Clone with removed email address passed by an address.
+     */
+    public function withRemovedByAddress(string $address) : self
+    {
         $newList = $this->list;
 
-        $index = $this->searchAddressInList($emailAddress->getAddress());
+        $index = $this->searchAddressInList($address);
 
         if ($index !== null) {
             unset($newList[$index]);
@@ -263,11 +280,20 @@ class EmailAddressGroup
         $addressList = [];
 
         foreach ($this->list as $item) {
+            if (!$item instanceof EmailAddress) {
+                throw new RuntimeException("Bad item.");
+            }
+
             if (in_array(strtolower($item->getAddress()), $addressList)) {
                 throw new RuntimeException("Address list contains a duplicate.");
             }
 
             $addressList[] = strtolower($item->getAddress());
         }
+    }
+
+    private function isEmpty() : bool
+    {
+        return count($this->list) === 0;
     }
 }

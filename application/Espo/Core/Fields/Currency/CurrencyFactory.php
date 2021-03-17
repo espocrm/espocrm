@@ -31,11 +31,14 @@ namespace Espo\Core\Fields\Currency;
 
 use Espo\{
     ORM\Entity,
+    ORM\Value\ValueFactory,
 };
+
+use Espo\Core\Fields\Currency;
 
 use RuntimeException;
 
-class CurrencyFactory // implements \Espo\ORM\Value\ValueFactory
+class CurrencyFactory implements ValueFactory
 {
     public function isCreatableFromEntity(Entity $entity, string $field) : bool
     {

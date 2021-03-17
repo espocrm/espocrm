@@ -29,10 +29,15 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\{
+    Value\ValueAccessorFactory,
+};
+
 use const E_USER_DEPRECATED;
 
 use StdClass;
 use InvalidArgumentException;
+use RuntimeException;
 
 class BaseEntity implements Entity
 {
@@ -71,14 +76,28 @@ class BaseEntity implements Entity
      */
     protected $entityManager;
 
-    public function __construct(string $entityType, array $defs = [], ?EntityManager $entityManager = null)
-    {
+    /**
+     * @var ?Value\ValueAccessor
+     */
+    protected $valueAccessor = null;
+
+    public function __construct(
+        string $entityType,
+        array $defs = [],
+        ?EntityManager $entityManager = null,
+        ?ValueAccessorFactory $valueAccessorFactory = null
+    ) {
         $this->entityType = $entityType ?? null;
 
         $this->entityManager = $entityManager;
+        $this->valueAccessorFactory = $valueAccessorFactory;
 
         $this->fields = $defs['attributes'] ?? $defs['fields'] ?? $this->fields;
         $this->relations = $defs['relations'] ?? $this->relations;
+
+        if ($valueAccessorFactory) {
+            $this->valueAccessor = $valueAccessorFactory->create($this);
+        }
     }
 
     public function getId() : ?string
@@ -215,6 +234,44 @@ class BaseEntity implements Entity
         }
 
         return false;
+    }
+
+    /**
+     * Whether a value object for a field can be gotten.
+     */
+    public function isValueObjectGettable(string $field) : bool
+    {
+        if (!$this->valueAccessor) {
+            throw new RuntimeException("No ValueAccessor.");
+        }
+
+        return $this->valueAccessor->isGettable($field);
+    }
+
+    /**
+     * Get a value object for a field. NULL can be returned.
+     */
+    public function getValueObject(string $field) : ?object
+    {
+        if (!$this->valueAccessor) {
+            throw new RuntimeException("No ValueAccessor.");
+        }
+
+        return $this->valueAccessor->get($field);
+    }
+
+    /**
+     * Set a value object for a field. NULL can be set.
+     *
+     * @throws RuntimeException
+     */
+    public function setValueObject(string $field, ?object $value) : void
+    {
+        if (!$this->valueAccessor) {
+            throw new RuntimeException("No ValueAccessor.");
+        }
+
+        $this->valueAccessor->set($field, $value);
     }
 
     /**

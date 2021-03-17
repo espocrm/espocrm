@@ -49,5 +49,7 @@
    },
    "translatedOptions": true,
    "textFilter": true,
-   "personalData": true
+   "personalData": true,
+   "valueFactoryClassName": "Espo\\Core\\Fields\\PhoneNumber\\PhoneNumberGroupFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Fields\\PhoneNumber\\PhoneNumberGroupAttributeExtractor"
 }

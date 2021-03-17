@@ -42,7 +42,7 @@ use Espo\Core\{
     Utils\Metadata,
     Fields\Currency\CurrencyConfigDataProvider,
     Fields\Currency\CurrencyConverter,
-    Fields\Currency\Currency,
+    Fields\Currency,
     Fields\Currency\CurrencyRates,
 };
 

@@ -39,6 +39,9 @@ use Espo\ORM\{
     Locker\Locker,
     Locker\BaseLocker,
     Defs\Defs,
+    Value\ValueAccessorFactory,
+    Value\ValueFactoryFactory,
+    Value\AttributeExtractorFactory,
 };
 
 use PDO;
@@ -50,31 +53,33 @@ use RuntimeException;
  */
 class EntityManager
 {
-    protected $pdo;
+    private $pdo;
 
-    protected $entityFactory;
+    private $entityFactory;
 
-    protected $collectionFactory;
+    private $collectionFactory;
 
-    protected $repositoryFactory;
+    private $repositoryFactory;
 
-    protected $mappers = [];
+    protected $eventDispatcher;
 
-    protected $metadata;
+    private $mappers = [];
 
-    protected $repositoryHash = [];
+    private $metadata;
 
-    protected $params = [];
+    private $repositoryHash = [];
 
-    protected $queryComposer;
+    private $params = [];
 
-    protected $queryExecutor;
+    private $queryComposer;
 
-    protected $sqlExecutor;
+    private $queryExecutor;
 
-    protected $transactionManager;
+    private $sqlExecutor;
 
-    protected $locker;
+    private $transactionManager;
+
+    private $locker;
 
     protected $defaultMapperName = 'RDB';
 
@@ -87,7 +92,10 @@ class EntityManager
         array $params,
         Metadata $metadata,
         RepositoryFactory $repositoryFactory,
-        EntityFactory $entityFactory
+        EntityFactory $entityFactory,
+        ValueFactoryFactory $valueFactoryFactory,
+        AttributeExtractorFactory $attributeExtractorFactory,
+        EventDispatcher $eventDispatcher
     ) {
         $this->params = $params;
 
@@ -107,9 +115,18 @@ class EntityManager
             $this->params['platform'] = $this->driverPlatformMap[$this->params['driver']];
         }
 
+        $this->eventDispatcher = $eventDispatcher;
+
+        $valueAccessorFactory = new ValueAccessorFactory(
+            $valueFactoryFactory,
+            $attributeExtractorFactory,
+            $eventDispatcher
+        );
+
         $this->entityFactory = $entityFactory;
 
         $this->entityFactory->setEntityManager($this);
+        $this->entityFactory->setValueAccessorFactory($valueAccessorFactory);
 
         $this->repositoryFactory = $repositoryFactory;
 

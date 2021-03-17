@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\Fields\PhoneNumber;
 
 use Espo\Core\{
-    Fields\PhoneNumber\PhoneNumber,
-    Fields\PhoneNumber\PhoneNumberGroup,
+    Fields\PhoneNumber,
+    Fields\PhoneNumberGroup,
 };
 
 use RuntimeException;
@@ -47,7 +47,7 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertNull($group->getPrimary());
 
-        $this->assertTrue($group->isEmpty());
+        $this->assertEquals(0, $group->getCount());
     }
 
     public function testDuplicate()
@@ -124,7 +124,7 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(2, count($group->getList()));
 
-        $this->assertFalse($group->isEmpty());
+        $this->assertEquals(2, $group->getCount());
     }
 
     public function testWithAddedList()
@@ -183,7 +183,7 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(0, count($group->getList()));
 
-        $this->assertTrue($group->isEmpty());
+        $this->assertEquals(0, $group->getCount());
     }
 
     public function testHasNumber()
@@ -212,5 +212,25 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('+100', $group->getByNumber('+100')->getNumber());
 
         $this->assertNull($group->getByNumber('+400'));
+    }
+
+    public function testClone()
+    {
+        $group = PhoneNumberGroup
+            ::fromList([
+                PhoneNumber::fromNumber('+100'),
+                PhoneNumber::fromNumber('+200'),
+                PhoneNumber::fromNumber('+300'),
+            ]);
+
+        $cloned = clone $group;
+
+        $this->assertEquals('+100', $cloned->getByNumber('+100')->getNumber());
+
+        $this->assertEquals($cloned->getPrimary()->getNumber(), $group->getPrimary()->getNumber());
+
+        $this->assertNotSame($cloned->getPrimary(), $group->getPrimary());
+
+        $this->assertNotSame($cloned->getList()[1], $group->getList()[1]);
     }
 }

@@ -29,9 +29,16 @@
 
 namespace Espo\Core\Entities;
 
-class Person extends \Espo\Core\ORM\Entity
+use Espo\Core\{
+    ORM\Entity,
+    Fields\EmailAddressGroup,
+    Fields\PhoneNumberGroup,
+    Fields\Address,
+};
+
+class Person extends Entity
 {
-    public function _setLastName($value)
+    protected function _setLastName($value)
     {
         $this->setValue('lastName', $value);
 
@@ -40,7 +47,7 @@ class Person extends \Espo\Core\ORM\Entity
         $this->setValue('name', $name);
     }
 
-    public function _setFirstName($value)
+    protected function _setFirstName($value)
     {
         $this->setValue('firstName', $value);
 
@@ -49,12 +56,42 @@ class Person extends \Espo\Core\ORM\Entity
         $this->setValue('name', $name);
     }
 
-    public function _setMiddleName($value)
+    protected function _setMiddleName($value)
     {
         $this->setValue('middleName', $value);
 
         $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
 
         $this->setValue('name', $name);
+    }
+
+    public function getEmailAddressGroup() : EmailAddressGroup
+    {
+        return $this->getValueObject('emailAddress');
+    }
+
+    public function getPhoneNumberGroup() : PhoneNumberGroup
+    {
+        return $this->getValueObject('phoneNumber');
+    }
+
+    public function setEmailAddressGroup(EmailAddressGroup $group) : void
+    {
+        $this->setValueObject('emailAddress', $group);
+    }
+
+    public function setPhoneNumberGroup(PhoneNumberGroup $group) : void
+    {
+        $this->setValueObject('phoneNumber', $group);
+    }
+
+    public function getAddress() : Address
+    {
+        return $this->getValueObject('address');
+    }
+
+    public function setAddress(Address $address) : void
+    {
+        $this->setValueObject('address', $address);
     }
 }

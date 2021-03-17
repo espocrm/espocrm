@@ -29,8 +29,53 @@
 
 namespace Espo\Core\Templates\Entities;
 
-class Company extends \Espo\Core\ORM\Entity
-{
+use Espo\Core\{
+    ORM\Entity,
+    Fields\EmailAddressGroup,
+    Fields\PhoneNumberGroup,
+    Fields\Address,
+};
 
+class Company extends Entity
+{
+    public function getEmailAddressGroup() : EmailAddressGroup
+    {
+        return $this->getValueObject('emailAddress');
+    }
+
+    public function getPhoneNumberGroup() : PhoneNumberGroup
+    {
+        return $this->getValueObject('phoneNumber');
+    }
+
+    public function setEmailAddressGroup(EmailAddressGroup $group) : void
+    {
+        $this->setValueObject('emailAddress', $group);
+    }
+
+    public function setPhoneNumberGroup(PhoneNumberGroup $group) : void
+    {
+        $this->setValueObject('phoneNumber', $group);
+    }
+
+    public function getBillingAddress() : Address
+    {
+        return $this->getValueObject('billingAddress');
+    }
+
+    public function setBillingAddress(Address $address) : void
+    {
+        $this->setValueObject('billingAddress', $address);
+    }
+
+    public function getShippingAddress() : Address
+    {
+        return $this->getValueObject('shippingAddress');
+    }
+
+    public function setShippingAddress(Address $address) : void
+    {
+        $this->setValueObject('shippingAddress', $address);
+    }
 }
 

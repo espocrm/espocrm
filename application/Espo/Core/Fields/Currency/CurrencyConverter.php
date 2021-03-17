@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Fields\Currency;
 
+use Espo\Core\Fields\Currency;
+
 use RuntimeException;
 
 /**

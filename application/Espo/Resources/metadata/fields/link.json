@@ -29,5 +29,7 @@
       "required"
    ],
    "filter": true,
-   "notCreatable": true
+   "notCreatable": true,
+   "valueFactoryClassName": "Espo\\Core\\Fields\\Link\\LinkFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Fields\\Link\\LinkAttributeExtractor"
 }

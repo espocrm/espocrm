@@ -25,11 +25,56 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Entities;
 
-class Account extends \Espo\Core\ORM\Entity
-{
+use Espo\Core\{
+    ORM\Entity,
+    Fields\EmailAddressGroup,
+    Fields\PhoneNumberGroup,
+    Fields\Address,
+};
 
+class Account extends Entity
+{
+    public function getEmailAddressGroup() : EmailAddressGroup
+    {
+        return $this->getValueObject('emailAddress');
+    }
+
+    public function getPhoneNumberGroup() : PhoneNumberGroup
+    {
+        return $this->getValueObject('phoneNumber');
+    }
+
+    public function setEmailAddressGroup(EmailAddressGroup $group) : void
+    {
+        $this->setValueObject('emailAddress', $group);
+    }
+
+    public function setPhoneNumberGroup(PhoneNumberGroup $group) : void
+    {
+        $this->setValueObject('phoneNumber', $group);
+    }
+
+    public function getBillingAddress() : Address
+    {
+        return $this->getValueObject('billingAddress');
+    }
+
+    public function setBillingAddress(Address $address) : void
+    {
+        $this->setValueObject('billingAddress', $address);
+    }
+
+    public function getShippingAddress() : Address
+    {
+        return $this->getValueObject('shippingAddress');
+    }
+
+    public function setShippingAddress(Address $address) : void
+    {
+        $this->setValueObject('shippingAddress', $address);
+    }
 }

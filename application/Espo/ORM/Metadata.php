@@ -41,15 +41,20 @@ use InvalidArgumentException;
  */
 class Metadata
 {
-    protected $data;
+    private $data;
 
-    protected $dataProvider;
+    private $defs;
 
-    protected $defs;
+    private $defsData;
 
-    protected $defsData;
+    private $dataProvider;
 
-    public function __construct(MetadataDataProvider $dataProvider)
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    public function __construct(MetadataDataProvider $dataProvider, ?EventDispatcher $eventDispatcher = null)
     {
         $this->data = $dataProvider->get();
 
@@ -58,6 +63,8 @@ class Metadata
         $this->defsData = new DefsData($this);
 
         $this->defs = new Defs($this->defsData);
+
+        $this->eventDispatcher = $eventDispatcher ?? new EventDispatcher();
     }
 
     /**
@@ -68,6 +75,8 @@ class Metadata
         $this->data = $this->dataProvider->get();
 
         $this->defsData->clearCache();
+
+        $this->eventDispatcher->dispatchMetadataUpdate();
     }
 
     /**

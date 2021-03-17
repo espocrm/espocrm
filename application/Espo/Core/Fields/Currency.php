@@ -27,12 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Fields\Currency;
+namespace Espo\Core\Fields;
 
 use RuntimeException;
 
 /**
- * A currency value.
+ * A currency value object. Immutable.
  */
 class Currency
 {
@@ -130,5 +130,13 @@ class Currency
         $amount = round($this->getAmount(), $precision);
 
         return new self($amount, $this->getCode());
+    }
+
+    /**
+     * Create from an amount and code.
+     */
+    public static function fromAmountAndCode(float $amount, string $code) : self
+    {
+        return new self($amount, $code);
     }
 }

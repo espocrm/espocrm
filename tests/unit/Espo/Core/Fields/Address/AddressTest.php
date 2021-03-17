@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Fields\Address;
 
 use Espo\Core\{
-    Fields\Address\Address,
+    Fields\Address,
     Fields\Address\AddressFactory,
 };
 
@@ -121,5 +121,12 @@ class AddressTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('country', $address->getCountry());
         $this->assertEquals(null, $address->getState());
         $this->assertEquals(null, $address->getPostalCode());
+    }
+
+    public function testCreateFromNothing()
+    {
+        $address = Address::fromNothing();
+
+        $this->assertEquals(null, $address->getState());
     }
 }

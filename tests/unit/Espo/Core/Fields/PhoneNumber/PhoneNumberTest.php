@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Fields\PhoneNumber;
 
 use Espo\Core\{
-    Fields\PhoneNumber\PhoneNumber,
+    Fields\PhoneNumber,
 };
 
 use RuntimeException;

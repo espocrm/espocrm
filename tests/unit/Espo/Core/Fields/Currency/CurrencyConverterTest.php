@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Fields\Currency;
 
 use Espo\Core\{
-    Fields\Currency\Currency,
+    Fields\Currency,
     Fields\Currency\CurrencyConverter,
     Fields\Currency\CurrencyConfigDataProvider,
     Fields\Currency\CurrencyRates,

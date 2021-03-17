@@ -29,18 +29,35 @@
 
 namespace Espo\Core\Fields\Currency;
 
+use Espo\ORM\Value\AttributeExtractor;
+
+use Espo\Core\Fields\Currency;
+
 use StdClass;
+use InvalidArgumentException;
 
 /**
- * @implements \Espo\ORM\Value\AttributeExtractable<Currency>
+ * @implements AttributeExtractor<Currency>
  */
-class CurrencyAttributeExtractor
+class CurrencyAttributeExtractor implements AttributeExtractor
 {
-    public function extract(Currency $value, string $field) : StdClass
+    public function extract(object $value, string $field) : StdClass
     {
+        if (!$value instanceof Currency) {
+            throw new InvalidArgumentException();
+        }
+
         return (object) [
             $field => $value->getAmount(),
             $field . 'Currency' => $value->getCode(),
+        ];
+    }
+
+    public function extractFromNull(string $field) : StdClass
+    {
+        return (object) [
+            $field => null,
+            $field . 'Currency' => null,
         ];
     }
 }

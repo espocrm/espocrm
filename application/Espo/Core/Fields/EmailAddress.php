@@ -27,46 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Fields\PhoneNumber;
+namespace Espo\Core\Fields;
 
 use RuntimeException;
 
-/**
- * A phone number value. Immutable.
- */
-class PhoneNumber
-{
-    private $number;
+use FILTER_VALIDATE_EMAIL;
 
-    private $type = null;
+/**
+ * An email address value. Immutable.
+ */
+class EmailAddress
+{
+    private $address;
 
     private $isOptedOut = false;
 
     private $isInvalid = false;
 
-    private function __construct(string $number)
+    public function __construct(string $address)
     {
-        if ($number === '') {
-            throw new RuntimeException("Empty phone number.");
+        if ($address === '') {
+            throw new RuntimeException("Empty email address.");
         }
 
-        $this->number = $number;
+        if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+            throw new RuntimeException("Not valid email address.");
+        }
+
+        $this->address = $address;
     }
 
     /**
-     * Get a type.
+     * Get an address.
      */
-    public function getType() : ?string
+    public function getAddress() : string
     {
-        return $this->type;
-    }
-
-    /**
-     * Get a number.
-     */
-    public function getNumber() : string
-    {
-        return $this->number;
+        return $this->address;
     }
 
     /**
@@ -83,18 +79,6 @@ class PhoneNumber
     public function isInvalid() : bool
     {
         return $this->isInvalid;
-    }
-
-    /**
-     * Clone with a type.
-     */
-    public function withType(string $type) : self
-    {
-        $obj = $this->clone();
-
-        $obj->type = $type;
-
-        return $obj;
     }
 
     /**
@@ -146,26 +130,17 @@ class PhoneNumber
     }
 
     /**
-     * Create from a number.
+     * Create from an address.
      */
-    public static function fromNumber(string $number) : self
+    public static function fromAddress(string $address) : self
     {
-        return new self($number);
-    }
-
-    /**
-     * Create from a number and type.
-     */
-    public static function fromNumberAndType(string $number, string $type) : self
-    {
-        return self::fromNumber($number)->withType($type);
+        return new self($address);
     }
 
     private function clone() : self
     {
-        $obj = new self($this->number);
+        $obj = new self($this->address);
 
-        $obj->type = $this->type;
         $obj->isInvalid = $this->isInvalid;
         $obj->isOptedOut = $this->isOptedOut;
 

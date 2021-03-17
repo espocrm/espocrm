@@ -31,6 +31,7 @@ namespace Espo\Core\ORM;
 
 use Espo\{
     Core\Utils\Metadata\OrmMetadataData,
+    Core\Utils\Metadata,
     ORM\MetadataDataProvider as MetadataDataProviderInterface,
 };
 
@@ -38,13 +39,22 @@ class MetadataDataProvider implements MetadataDataProviderInterface
 {
     private $ormMetadataData;
 
-    public function __construct(OrmMetadataData $ormMetadataData)
+    private $metadata;
+
+    public function __construct(OrmMetadataData $ormMetadataData, Metadata $metadata)
     {
         $this->ormMetadataData = $ormMetadataData;
+        $this->metadata = $metadata;
     }
 
     public function get() : array
     {
-        return $this->ormMetadataData->getData();
+        $data = $this->ormMetadataData->getData();
+
+        foreach (array_keys($data) as $entityType) {
+            $data[$entityType]['vFields'] = $this->metadata->get(['entityDefs', $entityType, 'fields']) ?? [];
+        }
+
+        return $data;
     }
 }
