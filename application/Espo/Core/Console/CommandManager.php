@@ -35,14 +35,13 @@ use Espo\Core\{
     Utils\Util,
 };
 
-use Espo\Core\Exceptions\Error;
-
 /**
- * Processes console commands. A console command can be run in CLI by runnig `php command.php`.
+ * Processes console commands. A console command can be run in CLI by running `php command.php`.
  */
 class CommandManager
 {
     protected $injectableFactory;
+
     protected $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
@@ -108,17 +107,24 @@ class CommandManager
         }
 
         foreach ($argv as $i => $item) {
-            if ($i < $skipIndex) continue;
+            if ($i < $skipIndex) {
+                continue;
+            }
 
             if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
                 list($name, $value) = explode('=', substr($item, 2));
+
                 $name = Util::hyphenToCamelCase($name);
+
                 $options[$name] = $value;
-            } else if (strpos($item, '--') === 0) {
+            }
+            else if (strpos($item, '--') === 0) {
                 $flagList[] = Util::hyphenToCamelCase(substr($item, 2));
-            } else if (strpos($item, '-') === 0) {
+            }
+            else if (strpos($item, '-') === 0) {
                 $flagList[] = substr($item, 1);
-            } else {
+            }
+            else {
                 $argumentList[] = $item;
             }
         }
