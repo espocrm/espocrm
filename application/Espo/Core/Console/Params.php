@@ -111,42 +111,4 @@ class Params
     {
         return $this->argumentList[$index] ?? null;
     }
-    
-    public static function fromArgv(array $argv) : self
-    {
-        $argumentList = [];
-        $options = [];
-        $flagList = [];
-
-        $skipIndex = 2;
-
-        foreach ($argv as $i => $item) {
-            if ($i < $skipIndex) {
-                continue;
-            }
-
-            if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
-                list($name, $value) = explode('=', substr($item, 2));
-
-                $name = Util::hyphenToCamelCase($name);
-
-                $options[$name] = $value;
-            }
-            else if (strpos($item, '--') === 0) {
-                $flagList[] = Util::hyphenToCamelCase(substr($item, 2));
-            }
-            else if (strpos($item, '-') === 0) {
-                $flagList[] = substr($item, 1);
-            }
-            else {
-                $argumentList[] = $item;
-            }
-        }
-
-        return new self([
-            'argumentList' => $argumentList,
-            'options' => $options,
-            'flagList' => $flagList,
-        ]);
-    }
 }
