@@ -187,25 +187,6 @@ class Diff
 
             var beforeUpgradeFileList = upgradeData.beforeUpgradeFiles || [];
 
-            var deleteDirRecursively = function (path) {
-                if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
-                    fs.readdirSync(path).forEach(function (file, index) {
-                        var curPath = path + "/" + file;
-
-                        if (fs.lstatSync(curPath).isDirectory()) {
-                            deleteDirRecursively(curPath);
-                        } else {
-                            fs.unlinkSync(curPath);
-                        }
-                    });
-
-                    fs.rmdirSync(path);
-                }
-                else if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
-                    fs.unlinkSync(path);
-                }
-            };
-
             deleteDirRecursively(diffFilePath);
             deleteDirRecursively(diffBeforeUpgradeFolderPath);
             deleteDirRecursively(upgradePath);
@@ -430,6 +411,8 @@ class Diff
                     }
 
                     for (var folder of folderList) {
+                        this.deleteGitFolderInVendor(vendorPath + '/' + folder);
+
                         if (fs.existsSync(vendorPath + '/'+ folder)) {
                             cp.execSync("mv " + vendorPath + '/'+ folder+" "+ upgradePath + '/vendorFiles/' + folder);
                         }
@@ -439,7 +422,8 @@ class Diff
 
                     resolve();
 
-                }).then(function () {
+                }.bind(this))
+                .then(function () {
                     var zipOutput = fs.createWriteStream(zipPath);
 
                     var archive = archiver('zip');
@@ -458,7 +442,7 @@ class Diff
 
                     archive.finalize();
                 });
-            });
+            }.bind(this));
         }.bind(this));
     }
 
@@ -544,7 +528,42 @@ class Diff
 
         return previousAllFileList;
     }
+
+    deleteGitFolderInVendor (dir) {
+        var folderList = fs.readdirSync(dir, {withFileTypes: true})
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => dirent.name);
+
+        folderList.forEach(function (folder) {
+            var path = dir + '/' + folder;
+
+            var gitPath = path + '/.git';
+
+            if (fs.existsSync(gitPath)) {
+                deleteDirRecursively(gitPath);
+            }
+        });
+    }
 }
+
+var deleteDirRecursively = function (path) {
+    if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
+        fs.readdirSync(path).forEach(function (file, index) {
+            var curPath = path + "/" + file;
+
+            if (fs.lstatSync(curPath).isDirectory()) {
+                deleteDirRecursively(curPath);
+            } else {
+                fs.unlinkSync(curPath);
+            }
+        });
+
+        fs.rmdirSync(path);
+    }
+    else if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
+        fs.unlinkSync(path);
+    }
+};
 
 function execute (command, callback) {
     exec(command, function (error, stdout, stderr) {
