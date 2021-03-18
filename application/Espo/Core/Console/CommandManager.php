@@ -60,7 +60,17 @@ class CommandManager
 
         $io = new IO();
 
-        $this->createCommand($command)->run($params, $io);
+        $commandObj = $this->createCommand($command);
+
+        if (!$commandObj instanceof Command) {
+            // for backward compatibility
+
+            $commandObj->run($params->getOptions(), $params->getFlagList(), $params->getArgumentList());
+
+            return;
+        }
+
+        $commandObj->run($params, $io);
     }
 
     private function getCommandNameFromArgv(array $argv) : string
@@ -74,7 +84,7 @@ class CommandManager
         return ucfirst(Util::hyphenToCamelCase($command));
     }
 
-    private function createCommand(string $command) : Command
+    private function createCommand(string $command) : object
     {
         $className = $this->getClassName($command);
 
