@@ -64,18 +64,18 @@ class Extension implements Command
                 return;
             }
 
-            $params = [];
+            $uninstallParams = [];
 
             if ($id) {
-                $params['id'] = $id;
+                $uninstallParams['id'] = $id;
             }
             else {
-                $params['name'] = $name;
+                $uninstallParams['name'] = $name;
             }
 
-            $params['delete'] = !$params->hasFlag('k');
+            $uninstallParams['delete'] = !$params->hasFlag('k');
 
-            $this->runUninstall($params);
+            $this->runUninstall($uninstallParams);
 
             return;
         }
