@@ -29,85 +29,102 @@
 
 namespace Espo\Core\Console;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-    Utils\Util,
-    Console\Exceptions\CommandNotSpecified,
-    Console\Exceptions\CommandNotFound,
-};
-
 /**
- * Processes console commands. A console command can be run in CLI by running `php command.php`.
+ * Command parameters.
  */
-class CommandManager
+class Params
 {
-    private $injectableFactory;
+    /**
+     * @var array<string,string>
+     */
+    private $options;
 
-    private $metadata;
+    /**
+     * @var array<string>
+     */
+    private $flagList;
 
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
+    /**
+     * @var array<string>
+     */
+    private $argumentList;
+
+    public function __construct(array $params)
     {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
+        $this->options = $params['options'] ?? [];
+        $this->flagList = $params['flagList'] ?? [];
+        $this->argumentList = $params['argumentList'] ?? [];
     }
 
-    public function run(array $argv) : void
+    /**
+     * @return array<string,string>
+     */
+    public function getOptions() : array
     {
-        $command = $this->getCommandNameFromArgv($argv);
-
-        $params = $this->createParams($argv);
-
-        $io = new IO();
-
-        $this->createCommand($command)->run($params, $io);
+        return $this->options;
     }
 
-    private function getCommandNameFromArgv(array $argv) : string
+    /**
+     * @return array<string>
+     */
+    public function getFlagList() : array
     {
-        $command = isset($argv[1]) ? trim($argv[1]) : null;
-
-        if (!$command) {
-            throw new CommandNotSpecified("Command name is not specifed.");
-        }
-
-        return ucfirst(Util::hyphenToCamelCase($command));
+        return $this->flagList;
     }
 
-    private function createCommand(string $command) : Command
+    /**
+     * @return array<string>
+     */
+    public function getArgumentList() : array
     {
-        $className = $this->getClassName($command);
-
-        return $this->injectableFactory->create($className);
+        return $this->argumentList;
     }
 
-    private function getClassName(string $command) : string
+    /**
+     * Has an option.
+     */
+    public function hasOption(string $name) : bool
     {
-        $className =
-            $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'className']);
-
-        if ($className) {
-            return $className;
-        }
-
-        $className = 'Espo\\Core\\Console\\Commands\\' . $command;
-
-        if (!class_exists($className)) {
-            throw new CommandNotFound("Command '{$command}' does not exist.");
-        }
-
-        return $className;
+        return array_key_exists($name, $this->options);
     }
 
-    private function createParams(array $argv) : Params
+    /**
+     * Get an option.
+     */
+    public function getOption(string $name) : ?string
+    {
+        return $this->options[$name] ?? null;
+    }
+
+    /**
+     * Has a flag.
+     */
+    public function hasFlag(string $name) : bool
+    {
+        return in_array($name, $this->flagList);
+    }
+
+    /**
+     * Get an argument by index.
+     */
+    public function getArgument(int $index) : ?string
+    {
+        return $this->argumentList[$index] ?? null;
+    }
+    
+    public static function fromArgv(array $argv) : self
     {
         $argumentList = [];
         $options = [];
         $flagList = [];
 
-        $itemList = array_slice($argv, 2);
+        $skipIndex = 2;
 
-        foreach ($itemList as $item) {
+        foreach ($argv as $i => $item) {
+            if ($i < $skipIndex) {
+                continue;
+            }
+
             if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
                 list($name, $value) = explode('=', substr($item, 2));
 
@@ -126,7 +143,7 @@ class CommandManager
             }
         }
 
-        return new Params([
+        return new self([
             'argumentList' => $argumentList,
             'options' => $options,
             'flagList' => $flagList,

@@ -32,6 +32,7 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\{
     InjectableFactory,
     Utils\File\Manager as FileManager,
+    Console\Command,
 };
 
 class AppInfo implements Command

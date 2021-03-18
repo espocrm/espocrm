@@ -29,14 +29,20 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\CronManager;
-use Espo\Core\Utils\Util;
-use Espo\Core\ORM\EntityManager;
+use Espo\Core\{
+    ORM\EntityManager,
+    Utils\Util,
+    CronManager,
+    Console\Command,
+    Console\Params,
+    Console\IO,
+};
 
 class RunJob implements Command
 {
-    protected $cronManager;
-    protected $entityManager;
+    private $cronManager;
+
+    private $entityManager;
 
     public function __construct(CronManager $cronManager, EntityManager $entityManager)
     {
@@ -44,8 +50,11 @@ class RunJob implements Command
         $this->entityManager = $entityManager;
     }
 
-    public function run(array $options, array $flags, array $argumentList)
+    public function run(Params $params, IO $io) : void
     {
+        $options = $params->getOptions();
+        $argumentList = $params->getArgumentList();
+
         $jobName = $options['job'] ?? null;
         $targetId = $options['targetId'] ?? null;
         $targetType = $options['targetType'] ?? null;
@@ -54,7 +63,11 @@ class RunJob implements Command
             $jobName = $argumentList[0];
         }
 
-        if (!$jobName) echo "No job specified.\n";
+        if (!$jobName) {
+            $io->writeLine("Error: No job specified.");
+
+            return;
+        }
 
         $jobName = ucfirst(Util::hyphenToCamelCase($jobName));
 
@@ -69,10 +82,12 @@ class RunJob implements Command
 
         $result = $this->cronManager->runJob($job);
 
-        if ($result) {
-            echo "Job '{$jobName}' has been executed.\n";
-        } else {
-            echo "Job '{$jobName}' failed to execute.\n";
+        if (!$result) {
+            $io->writeLine("Error: Job '{$jobName}' failed to execute.");
+
+            return;
         }
+
+        $io->writeLine("Job '{$jobName}' has been executed.");
     }
 }

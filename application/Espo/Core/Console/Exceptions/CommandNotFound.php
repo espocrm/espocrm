@@ -27,28 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Core\Console\Exceptions;
 
-use Espo\Core\{
-    DataManager,
-    Console\Command,
-    Console\Params,
-    Console\IO,
-};
+use RuntimeException;
 
-class ClearCache implements Command
+class CommandNotFound extends RuntimeException
 {
-    protected $dataManager;
 
-    public function __construct(DataManager $dataManager)
-    {
-        $this->dataManager = $dataManager;
-    }
-
-    public function run(Params $params, IO $io) : void
-    {
-        $this->dataManager->clearCache();
-
-        $io->writeLine("Cache has been cleared.");
-    }
 }

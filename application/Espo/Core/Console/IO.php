@@ -27,28 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Core\Console;
 
-use Espo\Core\{
-    DataManager,
-    Console\Command,
-    Console\Params,
-    Console\IO,
-};
+use const STDOUT;
+use const PHP_EOL;
 
-class ClearCache implements Command
+/**
+ * Input/Output methods.
+ */
+class IO
 {
-    protected $dataManager;
-
-    public function __construct(DataManager $dataManager)
+    /**
+     * Write a string to output.
+     */
+    public function write(string $string) : void
     {
-        $this->dataManager = $dataManager;
+        fwrite(STDOUT, $string);
     }
 
-    public function run(Params $params, IO $io) : void
+    /**
+     * Write a string followed by the current line terminator to output.
+     */
+    public function writeLine(string $string) : void
     {
-        $this->dataManager->clearCache();
+        fwrite(STDOUT, $string . PHP_EOL);
+    }
 
-        $io->writeLine("Cache has been cleared.");
+    /**
+     * Read a line from input. A string is trimmed.
+     */
+    public function readLine() : string
+    {
+        $resource = fopen('php://stdin', 'r');
+
+        $string = trim(fgets($resource));
+
+        fclose($resource);
+
+        return $string;
     }
 }

@@ -29,13 +29,19 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\Container;
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\PasswordHash;
+use Espo\Core\{
+    ORM\EntityManager,
+    Utils\PasswordHash,
+    Console\Command,
+    Console\Params,
+    Console\IO,
+};
 
 class SetPassword implements Command
 {
-    protected $entityManager;
+    private $entityManager;
+
+    private $passwordHash;
 
     public function __construct(EntityManager $entityManager, PasswordHash $passwordHash)
     {
@@ -43,38 +49,46 @@ class SetPassword implements Command
         $this->passwordHash = $passwordHash;
     }
 
-    public function run(array $options, array $flagList, array $argumentList)
+    public function run(Params $params, IO $io) : void
     {
-        $userName = $argumentList[0] ?? null;
+        $userName = $params->getArgument(0);
 
         if (!$userName) {
-            $this->out("User name must be specified.\n");
-            die;
+            $io->writeLine("User name must be specified.");
+
+            return;
         }
 
         $em = $this->entityManager;
 
-        $user = $em->getRepository('User')->where(['userName' => $userName])->findOne();
+        $user = $em->getRepository('User')
+            ->where(['userName' => $userName])
+            ->findOne();
 
         if (!$user) {
-            $this->out("User '{$userName}' not found.\n");
-            die;
+            $io->writeLine("User '{$userName}' not found.");
+
+            return;
         }
 
         if (!in_array($user->get('type'), ['admin', 'super-admin', 'portal', 'regular'])) {
-            $this->out("Can't set password for user of type '".$user->get('type')."'.\n");
-            die;
+            $userType = $user->get('type');
+
+            $io->writeLine(
+                "Can't set password for a user of the type '{$userType}'."
+            );
+
+            return;
         }
 
-        $this->out("Enter a new password:\n");
+        $io->writeLine("Enter a new password:");
 
-        $password = $this->ask();
-
-        $password = trim($password);
+        $password = $io->readLine();
 
         if (!$password) {
-            $this->out("Password can not be empty.\n");
-            die;
+            $io->writeLine("Password can not be empty.");
+
+            return;
         }
 
         $hash = $this->passwordHash;
@@ -83,18 +97,6 @@ class SetPassword implements Command
 
         $em->saveEntity($user);
 
-        $this->out("Password for user '{$userName}' is changed.\n");
-    }
-
-    protected function ask()
-    {
-        $input = fgets(\STDIN);
-
-        return rtrim($input, "\n");
-    }
-
-    protected function out($string)
-    {
-        fwrite(\STDOUT, $string);
+        $io->writeLine("Password for user '{$userName}' is changed.");
     }
 }

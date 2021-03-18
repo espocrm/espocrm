@@ -34,11 +34,4 @@ use Espo\Core\{
     ApplicationRunners\Command,
 };
 
-ob_start();
-
-$result = (new Application())->run(Command::class);
-
-if (is_string($result)) {
-    ob_end_clean();
-    echo $result;
-}
+(new Application())->run(Command::class);

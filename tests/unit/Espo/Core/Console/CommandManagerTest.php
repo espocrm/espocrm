@@ -29,44 +29,77 @@
 
 namespace tests\unit\Espo\Core\Console;
 
-use tests\unit\ReflectionHelper;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Console\CommandManager;
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Params;
+use Espo\Core\Console\IO;
 
 class CommandManagerTest extends \PHPUnit\Framework\TestCase
 {
+    private $injectableFactory;
+
+    private $metadata;
+
+    private $manager;
 
     protected function setUp() : void
     {
-        $injectableFactory =
-            $this->getMockBuilder('\\Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
-        $metadata =
-            $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
+        $this->injectableFactory = $this->createMock(InjectableFactory::class);
 
-        $this->object = new \Espo\Core\Console\CommandManager($injectableFactory, $metadata);
+        $this->metadata = $this->createMock(Metadata::class);
 
-        $this->reflection = new ReflectionHelper($this->object);
+        $this->manager = new CommandManager($this->injectableFactory, $this->metadata);
+
+        $this->command = $this->createMock(Command::class);
     }
 
-    protected function tearDown() : void
+    private function initTest(array $argv)
     {
+        $className = 'Test';
+
+        $this->metadata
+            ->expects($this->once())
+            ->method('get')
+            ->with(['app', 'consoleCommands', 'commandName', 'className'])
+            ->willReturn($className);
+
+        $this->injectableFactory
+            ->expects($this->once())
+            ->method('create')
+            ->with($className)
+            ->willReturn($this->command);
+
+        $expectedParams = new Params([
+           'argumentList' => ['a1', 'a2'],
+           'flagList' => ['flag', 'flagA', 'f'],
+           'options' => [
+               'optionOne' => 'test',
+            ],
+        ]);
+
+        $io = new IO();
+
+        $this->command
+            ->expects($this->once())
+            ->method('run')
+            ->with($expectedParams, $io);
+
+        $this->manager->run($argv);
     }
 
-    public function testGetParams1()
+    public function testWithCommandPhp()
     {
         $argv = ['command.php', 'command-name', 'a1', 'a2', '--flag', '--flag-a', '-f', '--option-one=test'];
-        $params = $this->reflection->invokeMethod('getParams', [$argv]);
 
-        $this->assertEquals(['a1', 'a2'], $params['argumentList']);
-        $this->assertEquals(['flag', 'flagA', 'f'], $params['flagList']);
-        $this->assertEquals(['optionOne' => 'test'], $params['options']);
+        $this->initTest($argv);
     }
 
-    public function testGetParams2()
+    public function testWithoutCommandPhp()
     {
-        $argv = ['command-name', 'a1', 'a2', '--flag', '--flag-a', '-f', '--option-one=test'];
-        $params = $this->reflection->invokeMethod('getParams', [$argv]);
+        $argv = ['bin/command', 'command-name', 'a1', 'a2', '--flag', '--flag-a', '-f', '--option-one=test'];
 
-        $this->assertEquals(['a1', 'a2'], $params['argumentList']);
-        $this->assertEquals(['flag', 'flagA', 'f'], $params['flagList']);
-        $this->assertEquals(['optionOne' => 'test'], $params['options']);
+        $this->initTest($argv);
     }
 }

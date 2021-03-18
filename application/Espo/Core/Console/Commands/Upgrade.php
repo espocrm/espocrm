@@ -36,6 +36,9 @@ use Espo\Core\{
     Utils\Util,
     Utils\File\Manager as FileManager,
     Utils\Config,
+    Console\Command,
+    Console\Params,
+    Console\IO,
 };
 
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -61,6 +64,7 @@ class Upgrade implements Command
     ];
 
     private $fileManager;
+
     private $config;
 
     public function __construct(FileManager $fileManager, Config $config)
@@ -69,25 +73,29 @@ class Upgrade implements Command
         $this->config = $config;
     }
 
-    public function run(array $options, array $flagList, array $argumentList)
+    public function run(Params $params, IO $io) : void
     {
-        $params = $this->normalizeParams($options, $flagList, $argumentList);
+        $options = $params->getOptions();
+        $flagList = $params->getFlagList();
+        $argumentList = $params->getArgumentList();
+
+        $upgradeParams = $this->normalizeParams($options, $flagList, $argumentList);
 
         $fromVersion = $this->config->get('version');
-        $toVersion = $params->toVersion ?? null;
+        $toVersion = $upgradeParams->toVersion ?? null;
 
         $versionInfo = $this->getVersionInfo($toVersion);
 
         $nextVersion = $versionInfo->nextVersion ?? null;
         $lastVersion = $versionInfo->lastVersion ?? null;
 
-        $packageFile = $this->getPackageFile($params, $versionInfo);
+        $packageFile = $this->getPackageFile($upgradeParams, $versionInfo);
 
         if (!$packageFile) {
             return;
         }
 
-        if ($params->localMode) {
+        if ($upgradeParams->localMode) {
             $upgradeId = $this->upload($packageFile);
 
             $manifest = $this->getUpgradeManager()->getManifestById($upgradeId);
@@ -97,7 +105,7 @@ class Upgrade implements Command
 
         fwrite(\STDOUT, "Current version is {$fromVersion}.\n");
 
-        if (!$params->skipConfirmation) {
+        if (!$upgradeParams->skipConfirmation) {
             fwrite(\STDOUT, "EspoCRM will be upgraded to version {$nextVersion} now. Enter [Y] to continue.\n");
 
             if (!$this->confirm()) {
@@ -126,7 +134,7 @@ class Upgrade implements Command
         fwrite(\STDOUT, "Upgrading... This may take a while...");
 
         try {
-            $this->runUpgradeProcess($upgradeId, $params);
+            $this->runUpgradeProcess($upgradeId, $upgradeParams);
         }
         catch (Throwable $e) {
             $errorMessage = $e->getMessage();
@@ -134,12 +142,13 @@ class Upgrade implements Command
 
         fwrite(\STDOUT, "\n");
 
-        if (!$params->keepPackageFile) {
+        if (!$upgradeParams->keepPackageFile) {
             $this->fileManager->unlink($packageFile);
         }
 
         if (isset($errorMessage)) {
             $errorMessage = !empty($errorMessage) ? $errorMessage : "Error: An unexpected error occurred.";
+
             fwrite(\STDOUT, $errorMessage . "\n");
 
             return;
@@ -264,6 +273,7 @@ class Upgrade implements Command
     protected function runUpgradeProcess(string $upgradeId, object $params = null)
     {
         $params = $params ?? (object) [];
+
         $useSingleProcess = property_exists($params, 'singleProcess') ? $params->singleProcess : false;
 
         $stepList = !empty($params->step) ? [$params->step] : $this->upgradeStepList;

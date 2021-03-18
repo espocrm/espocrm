@@ -29,8 +29,13 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\Portal\Application as PortalApplication;
-use Espo\Core\Container;
+use Espo\Core\{
+    Portal\Application as PortalApplication,
+    Container,
+    Console\Command,
+    Console\Params,
+    Console\IO,
+};
 
 class AclCheck implements Command
 {
@@ -41,23 +46,25 @@ class AclCheck implements Command
         $this->container = $container;
     }
 
-    public function run(array $options) : ?string
+    public function run(Params $params, IO $io) : void
     {
+        $options = $params->getOptions();
+
         $userId = $options['userId'] ?? null;
         $scope = $options['scope'] ?? null;
         $id = $options['id'] ?? null;
         $action = $options['action'] ?? null;
 
         if (empty($userId)) {
-            return null;
+            return;
         }
 
         if (empty($scope)) {
-            return null;
+            return;
         }
 
         if (empty($id)) {
-            return null;
+            return;
         }
 
         $container = $this->container;
@@ -67,7 +74,7 @@ class AclCheck implements Command
         $user = $entityManager->getEntity('User', $userId);
 
         if (!$user) {
-            return null;
+            return;
         }
 
         if ($user->isPortal()) {
@@ -75,33 +82,37 @@ class AclCheck implements Command
 
             foreach ($portalIdList as $portalId) {
                 $application = new PortalApplication($portalId);
+
                 $containerPortal = $application->getContainer();
+
                 $entityManager = $containerPortal->get('entityManager');
 
                 $user = $entityManager->getEntity('User', $userId);
 
                 if (!$user) {
-                    return null;
+                    return;
                 }
 
                 $result = $this->check($user, $scope, $id, $action, $containerPortal);
 
                 if ($result) {
-                    return 'true';
+                    $io->write('true');;
+
+                    return;
                 }
             }
 
-            return null;
+            return;
         }
 
         if ($this->check($user, $scope, $id, $action, $container)) {
-            return 'true';
-        }
+            $io->write('true');
 
-        return null;
+            return;
+        }
     }
 
-    protected function check($user, $scope, $id, $action, $container)
+    protected function check($user, $scope, $id, $action, $container) : bool
     {
         $entityManager = $container->get('entityManager');
 

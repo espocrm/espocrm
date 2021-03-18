@@ -29,7 +29,16 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\Container;
+use Espo\Core\{
+    Container,
+    Application,
+    UpgradeManager,
+    Console\Command,
+    Console\Params,
+    Console\IO,
+};
+
+use Exception;
 
 class UpgradeStep implements Command
 {
@@ -45,39 +54,49 @@ class UpgradeStep implements Command
         return $this->container;
     }
 
-    public function run(array $options)
+    public function run(Params $params, IO $io) : void
     {
+        $options = $params->getOptions();
+
         if (empty($options['step'])) {
             echo "Step is not specified.\n";
+
             return;
         }
 
         if (empty($options['id'])) {
             echo "Upgrade ID is not specified.\n";
+
             return;
         }
 
         $stepName = $options['step'];
         $upgradeId = $options['id'];
 
-        return $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
-    }
+        $result = $this->runUpgradeStep($stepName, ['id' => $upgradeId]);
 
-    protected function runUpgradeStep($stepName, array $params)
-    {
-        $app = new \Espo\Core\Application();
-        $app->setupSystemUser();
+        if (!$result) {
+            echo "false";
 
-        $upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
-
-        try {
-            $result = $upgradeManager->runInstallStep($stepName, $params); // throw Exception on error
-        } catch (\Exception $e) {
-            die("Error: " . $e->getMessage());
+            return;
         }
 
-        if (is_bool($result)) {
-            $result = $result ? "true" : "false";
+        echo "true";
+    }
+
+    protected function runUpgradeStep($stepName, array $params) : bool
+    {
+        $app = new Application();
+
+        $app->setupSystemUser();
+
+        $upgradeManager = new UpgradeManager($app->getContainer());
+
+        try {
+            $result = $upgradeManager->runInstallStep($stepName, $params);
+        }
+        catch (Exception $e) {
+            die("Error: " . $e->getMessage());
         }
 
         return $result;

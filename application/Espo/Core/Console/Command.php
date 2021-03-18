@@ -27,20 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Console\Commands;
+namespace Espo\Core\Console;
 
-/** @deprecated */
-abstract class Base
+/**
+ * A command.
+ */
+interface Command
 {
-    private $container;
-
-    public function __construct(\Espo\Core\Container $container)
-    {
-        $this->container = $container;
-    }
-
-    protected function getContainer()
-    {
-        return $this->container;
-    }
+    public function run(Params $params, IO $io) : void;
 }

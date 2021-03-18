@@ -29,18 +29,23 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\{
+    Utils\Config,
+    Console\Command,
+    Console\Params,
+    Console\IO,
+};
 
 class Version implements Command
 {
-    protected $config;
+    private $config;
 
     public function __construct(Config $config)
     {
         $this->config = $config;
     }
 
-    public function run()
+    public function run(Params $params, IO $io) : void
     {
         $version = $this->config->get('version');
 
@@ -48,6 +53,6 @@ class Version implements Command
             return;
         }
 
-        echo $version . "\n";
+        $io->writeLine($version);
     }
 }

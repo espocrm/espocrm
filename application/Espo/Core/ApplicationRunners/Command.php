@@ -34,6 +34,8 @@ use Espo\Core\{
     Console\CommandManager as ConsoleCommandManager,
 };
 
+use Exception;
+
 /**
  * Runs a console command.
  */
@@ -51,13 +53,11 @@ class Command implements ApplicationRunner
 
     public function run() : void
     {
-        ob_start();
-
-        $result = $this->commandManager->run($_SERVER['argv']);
-
-        if (is_string($result)) {
-            ob_end_clean();
-            echo $result;
+        try {
+            $this->commandManager->run($_SERVER['argv']);
+        }
+        catch (Exception $e) {
+            echo "Error: " . $e->getMessage() . "\n";
         }
     }
 }

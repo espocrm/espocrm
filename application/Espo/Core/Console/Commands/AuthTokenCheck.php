@@ -32,11 +32,15 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\{
     ORM\EntityManager,
     Authentication\AuthToken\AuthTokenManager,
+    Console\Command,
+    Console\Params,
+    Console\IO,
 };
 
 class AuthTokenCheck implements Command
 {
     protected $entityManager;
+
     protected $authTokenManager;
 
     public function __construct(EntityManager $entityManager, AuthTokenManager $authTokenManager)
@@ -45,26 +49,26 @@ class AuthTokenCheck implements Command
         $this->authTokenManager = $authTokenManager;
     }
 
-    public function run(array $options, array $flagList, array $argumentList) : ?string
+    public function run(Params $params, IO $io) : void
     {
-        $token = $argumentList[0] ?? null;
+        $token = $params->getArgument(0);
 
         if (empty($token)) {
-            return null;
+            return;
         }
 
         $authToken = $this->authTokenManager->get($token);
 
         if (!$authToken) {
-            return null;
+            return;
         }
 
         if (!$authToken->isActive()) {
-            return null;
+            return;
         }
 
         if (!$authToken->getUserId()) {
-            return null;
+            return;
         }
 
         $userId = $authToken->getUserId();
@@ -79,9 +83,9 @@ class AuthTokenCheck implements Command
             ->findOne();
 
         if (!$user) {
-            return null;
+            return;
         }
 
-        return $user->id;
+        $io->write($user->getId());
     }
 }
