@@ -31,7 +31,9 @@ namespace Espo\Classes\ConsoleCommands;
 
 use Espo\Core\{
     ServiceFactory,
-    Console\Commands\Command,
+    Console\Command,
+    Console\Params,
+    Console\IO,
 };
 
 use Throwable;
@@ -45,26 +47,26 @@ class Import implements Command
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run(array $options, array $flagList)
+    public function run(Params $params, IO $io) : void
     {
-        $id = $options['id'] ?? null;
-        $filePath = $options['file'] ?? null;
-        $paramsId = $options['paramsId'] ?? null;
+        $id = $params->getOption('id');
+        $filePath = $params->getOption('file');
+        $paramsId = $params->getOption('paramsId');
+
+        $forceResume = $params->hasFlag('resume');
+        $revert = $params->hasFlag('revert');
 
         $service = $this->serviceFactory->create('Import');
 
-        $forceResume = in_array('resume', $flagList);
-        $revert = in_array('revert', $flagList);
-
         if (!$id && $filePath) {
             if (!$paramsId) {
-                $this->out("You need to specify --params-id option.\n");
+                $io->writeLine("You need to specify --params-id option.");
 
                 return;
             }
 
             if (!file_exists($filePath)) {
-                $this->out("File not found.\n");
+                $io->writeLine("File not found.");
 
                 return;
             }
@@ -79,41 +81,41 @@ class Import implements Command
                 $countUpdated = $result->countUpdated;
             }
             catch (Throwable $e) {
-                $this->out("Error occured: ".$e->getMessage()."\n");
+                $io->writeLine("Error occured: ". $e->getMessage() . "");
 
                 return;
             }
 
-            $this->out("Finished. Import ID: {$resultId}. Created: {$countCreated}. Updated: {$countUpdated}.\n");
+            $io->writeLine("Finished. Import ID: {$resultId}. Created: {$countCreated}. Updated: {$countUpdated}.");
 
             return;
         }
 
         if ($id && $revert) {
-            $this->out("Reverting import...\n");
+            $io->writeLine("Reverting import...");
 
             try {
                 $service->revert($id);
             }
             catch (Throwable $e) {
-                $this->out("Error occured: " . $e->getMessage() . "\n");
+                $io->writeLine("Error occured: " . $e->getMessage() . "");
 
                 return;
             }
 
-            $this->out("Finished.\n");
+            $io->writeLine("Finished.");
 
             return;
         }
 
         if ($id) {
-            $this->out("Running import, this may take a while...\n");
+            $io->writeLine("Running import, this may take a while...");
 
             try {
                 $result = $service->importById($id, true, $forceResume);
             }
             catch (Throwable $e) {
-                $this->out("Error occured: " . $e->getMessage() . "\n");
+                $io->writeLine("Error occured: " . $e->getMessage() . "");
 
                 return;
             }
@@ -121,18 +123,11 @@ class Import implements Command
             $countCreated = $result->countCreated;
             $countUpdated = $result->countUpdated;
 
-            $this->out("Finished. Created: {$countCreated}. Updated: {$countUpdated}.\n");
+            $io->writeLine("Finished. Created: {$countCreated}. Updated: {$countUpdated}.");
 
             return;
         }
 
-        $this->out("Not enough params passed.\n");
-
-        return;
-    }
-
-    protected function out($string)
-    {
-        fwrite(\STDOUT, $string);
+        $io->writeLine("Not enough params passed.");
     }
 }

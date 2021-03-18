@@ -37,8 +37,6 @@ use Espo\Core\{
     Console\IO,
 };
 
-use RuntimeException;
-
 class AppInfo implements Command
 {
     protected $injectableFactory;
