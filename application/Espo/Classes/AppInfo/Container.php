@@ -32,6 +32,7 @@ namespace Espo\Classes\AppInfo;
 use Espo\Core\{
     Container as ContainerService,
     Utils\Metadata,
+    Console\Params,
 };
 
 class Container
@@ -45,9 +46,9 @@ class Container
         $this->metadata = $metadata;
     }
 
-    public function process(array $options, array $flagList) : ?string
+    public function process(Params $params) : ?string
     {
-        $nameOnly = in_array('nameOnly', $flagList);
+        $nameOnly = $params->hasFlag('nameOnly');
 
         $result = '';
 

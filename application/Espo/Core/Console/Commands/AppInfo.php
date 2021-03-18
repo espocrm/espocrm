@@ -33,11 +33,16 @@ use Espo\Core\{
     InjectableFactory,
     Utils\File\Manager as FileManager,
     Console\Command,
+    Console\Params,
+    Console\IO,
 };
+
+use RuntimeException;
 
 class AppInfo implements Command
 {
     protected $injectableFactory;
+
     protected $fileManager;
 
     public function __construct(InjectableFactory $injectableFactory, FileManager $fileManager)
@@ -46,41 +51,49 @@ class AppInfo implements Command
         $this->fileManager = $fileManager;
     }
 
-    public function run(array $options, array $flagList)
+    public function run(Params $params, IO $io) : void
     {
         $fileList = $this->fileManager->getFileList('application/Espo/Classes/AppInfo');
 
-        $typeList = array_map(function ($item) {
-            return lcfirst(substr($item, 0, -4));
-        }, $fileList);
+        $typeList = array_map(
+            function ($item) {
+                return lcfirst(substr($item, 0, -4));
+            },
+            $fileList
+        );
 
         foreach ($typeList as $type) {
-            if (in_array($type, $flagList)) {
-                $this->processType($type, $options, $flagList);
+            if ($params->hasFlag($type)) {
+                $this->processType($io, $type, $params);
 
                 return;
             }
         }
 
-        if (empty($flagList)) {
-            echo "No parameters specified.\n";
+        if (count($params->getFlagList()) === 0) {
+            $io->writeLine("No flag specified.");
+
+            $io->writeLine("");
+            $io->writeLine("Available flags:");
+            $io->writeLine("  --container");
+            $io->writeLine("  --binding");
 
             return;
         }
 
-        echo "Bad parameters specified.\n";
+        $io->writeLine("Not supported flag specified.");
     }
 
-    protected function processType(string $type, array $options, array $flagList)
+    protected function processType(IO $io, string $type, Params $params) : void
     {
         $className = 'Espo\\Classes\\AppInfo\\' . ucfirst($type);
 
         $obj = $this->injectableFactory->create($className);
 
-        $result = $obj->process($options, $flagList);
+        $result = $obj->process($params);
 
         if ($result) {
-            echo $result;
+            $io->write($result);
         }
     }
 }

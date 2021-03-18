@@ -34,6 +34,7 @@ use Espo\Core\{
     Utils\Module,
     Binding\EspoBindingLoader,
     Binding\Binding as BindingItem,
+    Console\Params,
 };
 
 class Binding
@@ -45,7 +46,7 @@ class Binding
         $this->fileManager = $fileManager;
     }
 
-    public function process(array $options, array $flagList) : ?string
+    public function process(Params $params) : ?string
     {
         $result = '';
 
