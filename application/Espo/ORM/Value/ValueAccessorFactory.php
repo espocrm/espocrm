@@ -93,8 +93,8 @@ class ValueAccessorFactory
     {
         $this->eventDispatcher->subscribeToMetadataUpdate(
             function () {
+                $this->generalValueFactory = null;
                 $this->generalAttributeExtractor = null;
-                $this->attributeExtractorFactory = null;
             }
         );
     }
