@@ -30,7 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
-    InjectableFactory,
+    Application\Runner,
     Console\CommandManager as ConsoleCommandManager,
 };
 
@@ -39,7 +39,7 @@ use Exception;
 /**
  * Runs a console command.
  */
-class Command implements ApplicationRunner
+class Command implements Runner
 {
     use Cli;
     use SetupSystemUser;

@@ -30,6 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     Utils\Config,
 };
 
@@ -41,7 +42,7 @@ use Symfony\Component\Process\{
 /**
  * Runs daemon. The daemon runs the cron more often than once a minute.
  */
-class Daemon implements ApplicationRunner
+class Daemon implements Runner
 {
     use Cli;
 

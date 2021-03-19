@@ -30,6 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     CronManager,
 };
 
@@ -38,7 +39,7 @@ use StdClass;
 /**
  * Runs a job by ID. A job record should exist in database.
  */
-class Job implements ApplicationRunner
+class Job implements Runner
 {
     use Cli;
     use SetupSystemUser;

@@ -30,7 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
-    InjectableFactory,
+    Application\Runner,
     ApplicationUser,
     Authentication\AuthenticationFactory,
     Api\AuthBuilderFactory,
@@ -58,13 +58,18 @@ use Throwable;
 /**
  * Runs API request processing.
  */
-class Api implements ApplicationRunner
+class Api implements Runner
 {
     protected $routeProcessor;
+
     protected $authenticationFactory;
+
     protected $applicationUser;
+
     protected $routeUtil;
+
     protected $authBuilderFactory;
+
     protected $log;
 
     public function __construct(

@@ -30,6 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     Utils\Config,
     Utils\Metadata,
     WebSocket\Pusher,
@@ -54,17 +55,22 @@ use ZMQ;
 /**
  * Runs WebSocket.
  */
-class WebSocket implements ApplicationRunner
+class WebSocket implements Runner
 {
     use Cli;
 
     protected $categoriesData;
+
     protected $phpExecutablePath;
+
     protected $isDebugMode;
+
     protected $useSecureServer;
+
     protected $port;
 
     protected $config;
+
     protected $metadata;
 
     public function __construct(Config $config, Metadata $metadata)

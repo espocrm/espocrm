@@ -30,13 +30,14 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     DataManager,
 };
 
 /**
  * Rebuilds an application.
  */
-class Rebuild implements ApplicationRunner
+class Rebuild implements Runner
 {
     use Cli;
 

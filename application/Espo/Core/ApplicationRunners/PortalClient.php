@@ -30,6 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     Exceptions\NotFound,
     Utils\ClientManager,
     Utils\Config,
@@ -53,7 +54,7 @@ use Exception;
 /**
  * Runs a portal client.
  */
-class PortalClient implements ApplicationRunner
+class PortalClient implements Runner
 {
     protected $params;
 

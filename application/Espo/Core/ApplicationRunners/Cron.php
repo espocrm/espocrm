@@ -30,6 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     CronManager,
     Utils\Config,
 };
@@ -37,7 +38,7 @@ use Espo\Core\{
 /**
  * Runs cron.
  */
-class Cron implements ApplicationRunner
+class Cron implements Runner
 {
     use Cli;
     use SetupSystemUser;

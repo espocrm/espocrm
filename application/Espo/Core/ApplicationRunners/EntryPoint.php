@@ -30,6 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     Exceptions\Error,
     EntryPointManager,
     ApplicationUser,
@@ -37,7 +38,6 @@ use Espo\Core\{
     Portal\Application as PortalApplication,
     Utils\Route,
     Utils\ClientManager,
-    Authentication\Authentication,
     Authentication\AuthenticationFactory,
     Api\AuthBuilderFactory,
     Api\ErrorOutput as ApiErrorOutput,
@@ -58,7 +58,7 @@ use Exception;
 /**
  * Runs an entry point.
  */
-class EntryPoint implements ApplicationRunner
+class EntryPoint implements Runner
 {
     protected $params;
 

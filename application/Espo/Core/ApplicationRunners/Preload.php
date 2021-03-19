@@ -30,6 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     Utils\Preload as PreloadUtil,
 };
 
@@ -40,7 +41,7 @@ use Throwable;
  *
  * @see https://www.php.net/manual/en/opcache.preloading.php
  */
-class Preload implements ApplicationRunner
+class Preload implements Runner
 {
     use Cli;
 

@@ -27,29 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
-
-use Espo\Core\{
-    Application\Runner,
-    DataManager,
-};
+namespace Espo\Core\Application;
 
 /**
- * Clears an application cache.
+ * Runs an application.
  */
-class ClearCache implements Runner
+interface Runner
 {
-    use Cli;
-
-    protected $dataManager;
-
-    public function __construct(DataManager $dataManager)
-    {
-        $this->dataManager = $dataManager;
-    }
-
-    public function run() : void
-    {
-        $this->dataManager->clearCache();
-    }
+    public function run() : void;
 }

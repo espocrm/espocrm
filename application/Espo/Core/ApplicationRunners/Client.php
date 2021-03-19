@@ -30,13 +30,14 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
+    Application\Runner,
     Utils\ClientManager,
 };
 
 /**
  * Displays the main HTML page.
  */
-class Client implements ApplicationRunner
+class Client implements Runner
 {
     protected $clientManager;
 
