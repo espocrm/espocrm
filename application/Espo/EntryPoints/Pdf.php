@@ -29,14 +29,10 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
-
-use Espo\Core\EntryPoints\{
-    EntryPoint,
-};
-
 use Espo\Core\{
+    Exceptions\NotFound,
+    Exceptions\BadRequest,
+    EntryPoint\EntryPoint,
     ORM\EntityManager,
     ServiceFactory,
     Api\Request,
@@ -46,6 +42,7 @@ use Espo\Core\{
 class Pdf implements EntryPoint
 {
     protected $entityManager;
+
     protected $serviceFactory;
 
     public function __construct(EntityManager $entityManager, ServiceFactory $serviceFactory)

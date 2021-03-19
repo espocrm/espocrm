@@ -29,15 +29,14 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\EntryPoints\{
-    EntryPoint,
     NoAuth,
 };
 
 use Espo\Core\{
+    Exceptions\NotFound,
+    Exceptions\BadRequest,
+    EntryPoint\EntryPoint,
     Api\Request,
     Api\Response,
     ORM\EntityManager,
@@ -54,11 +53,17 @@ class Unsubscribe implements EntryPoint
     use NoAuth;
 
     protected $entityManager;
+
     protected $clientManager;
+
     protected $hookManager;
+
     protected $config;
+
     protected $metadata;
+
     protected $hasher;
+
     protected $serviceFactory;
 
     public function __construct(

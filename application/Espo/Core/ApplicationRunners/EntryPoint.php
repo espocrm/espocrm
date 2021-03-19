@@ -32,7 +32,7 @@ namespace Espo\Core\ApplicationRunners;
 use Espo\Core\{
     Application\Runner,
     Exceptions\Error,
-    EntryPointManager,
+    EntryPoint\EntryPointManager,
     ApplicationUser,
     ORM\EntityManager,
     Portal\Application as PortalApplication,
@@ -60,15 +60,21 @@ use Exception;
  */
 class EntryPoint implements Runner
 {
-    protected $params;
+    private $params;
 
-    protected $authenticationFactory;
-    protected $entryPointManager;
-    protected $entityManager;
-    protected $clientManager;
-    protected $applicationUser;
-    protected $authTokenManager;
-    protected $authBuilderFactory;
+    private $authenticationFactory;
+
+    private $entryPointManager;
+
+    private $entityManager;
+
+    private $clientManager;
+
+    private $applicationUser;
+
+    private $authTokenManager;
+
+    private $authBuilderFactory;
 
     public function __construct(
         AuthenticationFactory $authenticationFactory,

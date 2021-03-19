@@ -27,44 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\EntryPoints;
-
-use Espo\Core\EntryPoints\{
-    NoAuth,
-};
+namespace Espo\Core\EntryPoint;
 
 use Espo\Core\{
-    Exceptions\NotFound,
     Api\Request,
     Api\Response,
 };
 
-use Espo\Core\Di;
-
-class LogoImage extends Image implements Di\ConfigAware
+interface EntryPoint
 {
-    use NoAuth;
-    use Di\ConfigSetter;
-
-    protected $allowedRelatedTypeList = ['Settings', 'Portal'];
-
-    protected $allowedFieldList = ['companyLogo'];
-
-    public function run(Request $request, Response $response) : void
-    {
-        $id = $request->get('id');
-        $size = $request->get('size') ?? null;
-
-        $this->imageSizes['small-logo'] = [181, 44];
-
-        if (!$id) {
-            $id = $this->config->get('companyLogoId');
-        }
-
-        if (!$id) {
-            throw new NotFound();
-        }
-
-        $this->show($response, $id, $size);
-    }
+    public function run(Request $request, Response $response) : void;
 }

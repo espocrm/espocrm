@@ -35,7 +35,7 @@ use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\BadRequest,
     Exceptions\Error,
-    EntryPoints\EntryPoint,
+    EntryPoint\EntryPoint,
     Acl,
     ORM\EntityManager,
     Api\Request,

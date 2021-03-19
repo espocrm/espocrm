@@ -30,12 +30,14 @@
 namespace Espo\EntryPoints;
 
 use Espo\Core\EntryPoints\{
-    EntryPoint,
     NoAuth,
 };
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
+use Espo\Core\{
+    EntryPoint\EntryPoint,
+    Api\Request,
+    Api\Response,
+};
 
 class OauthCallback implements EntryPoint
 {

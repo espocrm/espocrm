@@ -35,13 +35,13 @@ use Espo\{
 };
 
 use Espo\Core\EntryPoints\{
-    EntryPoint,
     NoAuth,
 };
 
 use Espo\Core\{
     Exceptions\NotFoundSilent,
     Exceptions\BadRequest,
+    EntryPoint\EntryPoint,
     Api\Request,
     Api\Response,
     ORM\EntityManager,
@@ -57,10 +57,15 @@ class CampaignUrl implements EntryPoint
     use NoAuth;
 
     protected $entityManager;
+
     protected $serviceFactory;
+
     protected $hasher;
+
     protected $hookManager;
+
     protected $clientManager;
+
     protected $metadata;
 
     public function __construct(

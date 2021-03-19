@@ -29,17 +29,16 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\EntryPoints\{
-    EntryPoint,
     NoAuth,
 };
 
 use Espo\Core\{
+    Exceptions\NotFound,
+    Exceptions\BadRequest,
     Api\Request,
     Api\Response,
+    EntryPoint\EntryPoint,
     ORM\EntityManager,
     Utils\ClientManager,
     HookManager,
@@ -53,10 +52,15 @@ class SubscribeAgain implements EntryPoint
     use NoAuth;
 
     protected $entityManager;
+
     protected $clientManager;
+
     protected $hookManager;
+
     protected $config;
+
     protected $metadata;
+
     protected $hasher;
 
     public function __construct(

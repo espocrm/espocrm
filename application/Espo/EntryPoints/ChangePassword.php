@@ -33,11 +33,11 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\EntryPoints\{
-    EntryPoint,
     NoAuth,
 };
 
 use Espo\Core\{
+    EntryPoint\EntryPoint,
     Utils\Config,
     Utils\ClientManager,
     ORM\EntityManager,
@@ -50,7 +50,9 @@ class ChangePassword implements EntryPoint
     use NoAuth;
 
     protected $config;
+
     protected $clientManager;
+
     protected $entityManager;
 
     public function __construct(Config $config, ClientManager $clientManager, EntityManager $entityManager)

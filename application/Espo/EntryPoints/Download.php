@@ -29,15 +29,11 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\NotFoundSilent;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-
-use Espo\Core\EntryPoints\{
-    EntryPoint,
-};
-
 use Espo\Core\{
+    Exceptions\BadRequest,
+    Exceptions\Forbidden,
+    Exceptions\NotFoundSilent,
+    EntryPoint\EntryPoint,
     Acl,
     ORM\EntityManager,
     Api\Request,

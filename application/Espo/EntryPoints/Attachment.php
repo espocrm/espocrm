@@ -33,7 +33,7 @@ use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\Forbidden,
     Exceptions\BadRequest,
-    EntryPoints\EntryPoint,
+    EntryPoint\EntryPoint,
     Api\Request,
     Api\Response,
     FileStorage\Manager as FileStorageManager,

@@ -33,11 +33,11 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\EntryPoints\{
-    EntryPoint,
     NoAuth,
 };
 
 use Espo\Core\{
+    EntryPoint\EntryPoint,
     Utils\ClientManager,
     ServiceFactory,
     Api\Request,
@@ -49,6 +49,7 @@ class ConfirmOptIn implements EntryPoint
     use NoAuth;
 
     protected $clientManager;
+
     protected $serviceFactory;
 
     public function __construct(ClientManager $clientManager, ServiceFactory $serviceFactory)

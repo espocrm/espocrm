@@ -29,7 +29,12 @@
 
 namespace Espo\Core\EntryPoints;
 
-interface EntryPoint
+use Espo\Core\EntryPoint\EntryPoint as EntryPointBase;
+
+/**
+ * @deprecated For backward compatibility.
+ */
+interface EntryPoint extends EntryPointBase
 {
 
 }

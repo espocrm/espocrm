@@ -30,9 +30,6 @@
 namespace Espo\Core\EntryPoints;
 
 use Espo\Core\Container;
-use Espo\Core\EntryPoint;
-
-use Espo\Core\Exceptions\Forbidden;
 
 /** @deprecated */
 abstract class Base

@@ -29,16 +29,15 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\EntryPoints\{
-    EntryPoint,
     NoAuth,
 };
 
 use Espo\Core\{
+    Exceptions\NotFound,
+    Exceptions\BadRequest,
+    Exceptions\Error,
+    EntryPoint\EntryPoint,
     Api\Request,
     Api\Response,
     ORM\EntityManager,
@@ -51,7 +50,9 @@ class EventConfirmation implements EntryPoint
     use NoAuth;
 
     protected $entityManager;
+
     protected $clientManager;
+
     protected $hookManager;
 
     public function __construct(EntityManager $entityManager, ClientManager $clientManager, HookManager $hookManager) {
