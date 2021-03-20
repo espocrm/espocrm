@@ -34,6 +34,10 @@ use Espo\Core\{
     Api\Response,
 };
 
+/**
+ * An entry point to the application by `?entryPoint={entityPointName}` URI.
+ * Only GET requests are handled.
+ */
 interface EntryPoint
 {
     public function run(Request $request, Response $response) : void;
