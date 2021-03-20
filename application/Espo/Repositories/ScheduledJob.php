@@ -31,7 +31,7 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\CronManager;
+use Espo\Core\Job\JobManager;
 
 class ScheduledJob extends \Espo\Core\Repositories\Database
 {
@@ -46,10 +46,13 @@ class ScheduledJob extends \Espo\Core\Repositories\Database
         parent::afterSave($entity, $options);
 
         if ($entity->isAttributeChanged('scheduling')) {
-            $jobList = $this->getEntityManager()->getRepository('Job')->where([
-                'scheduledJobId' => $entity->id,
-                'status' => CronManager::PENDING,
-            ])->find();
+            $jobList = $this->getEntityManager()
+                ->getRepository('Job')
+                ->where([
+                    'scheduledJobId' => $entity->id,
+                    'status' => JobManager::PENDING,
+                ])
+                ->find();
 
             foreach ($jobList as $job) {
                 $this->getEntityManager()->removeEntity($job);

@@ -30,19 +30,20 @@
 namespace Espo\Jobs;
 
 use Espo\Core\{
-    CronManager,
+    Job\JobManager,
     Utils\Config,
     Jobs\Job,
 };
 
 class ProcessJobQueueQ0 implements Job
 {
-    protected $cronManager;
-    protected $config;
+    private $jobManager;
 
-    public function __construct(CronManager $cronManager, Config $config)
+    private $config;
+
+    public function __construct(JobManager $jobManager, Config $config)
     {
-        $this->cronManager = $cronManager;
+        $this->jobManager = $jobManager;
         $this->config = $config;
     }
 
@@ -50,6 +51,6 @@ class ProcessJobQueueQ0 implements Job
     {
         $limit = $this->config->get('jobQ0MaxPortion', 200);
 
-        $this->cronManager->processPendingJobs('q0', $limit, true, true);
+        $this->jobManager->processQueue('q0', $limit);
     }
 }

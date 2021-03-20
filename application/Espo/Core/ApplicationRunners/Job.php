@@ -31,7 +31,7 @@ namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
     Application\Runner,
-    CronManager,
+    Job\JobManager,
 };
 
 use StdClass;
@@ -46,17 +46,17 @@ class Job implements Runner
 
     protected $params;
 
-    protected $cronManager;
+    private $jobManager;
 
-    public function __construct(CronManager $cronManager, StdClass $params)
+    public function __construct(JobManager $jobManager, StdClass $params)
     {
-        $this->cronManager = $cronManager;
+        $this->jobManager = $jobManager;
 
         $this->params = $params;
     }
 
     public function run() : void
     {
-        $this->cronManager->runJobById($this->params->id);
+        $this->jobManager->runJobById($this->params->id);
     }
 }

@@ -17,8 +17,8 @@
     "fileStorageManager": {
         "className": "Espo\\Core\\FileStorage\\Manager"
     },
-    "cronManager": {
-        "className": "Espo\\Core\\CronManager"
+    "jobManager": {
+        "className": "Espo\\Core\\Job\\JobManager"
     },
     "webSocketSubmission": {
         "className": "Espo\\Core\\WebSocket\\Submission"

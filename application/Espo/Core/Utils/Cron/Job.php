@@ -30,7 +30,7 @@
 namespace Espo\Core\Utils\Cron;
 
 use Espo\Core\{
-    CronManager,
+    Job\JobManager,
     Utils\Config,
     ORM\EntityManager,
     Utils\System,
@@ -73,7 +73,7 @@ class Job
             return false;
         }
 
-        return $job->get('status') === CronManager::PENDING;
+        return $job->get('status') === JobManager::PENDING;
     }
 
     public function getPendingJobList($queue = null, $limit = 0)
@@ -92,7 +92,7 @@ class Job
                 'data',
             ],
             'whereClause' => [
-                'status' => CronManager::PENDING,
+                'status' => JobManager::PENDING,
                 'executeTime<=' => date('Y-m-d H:i:s'),
                 'queue' => $queue,
             ],
@@ -113,7 +113,7 @@ class Job
 
         $where = [
             'scheduledJobId' => $scheduledJobId,
-            'status' => [CronManager::RUNNING, CronManager::READY],
+            'status' => [JobManager::RUNNING, JobManager::READY],
         ];
 
         if ($targetId && $targetType) {
@@ -173,7 +173,7 @@ class Job
             ->getRepository('Job')
             ->where([
                 'scheduledJobId' => $scheduledJobId,
-                'status' => CronManager::PENDING,
+                'status' => JobManager::PENDING,
             ])
             ->count();
 
@@ -209,7 +209,7 @@ class Job
                 'startedAt'
             ])
             ->where([
-                'status' => CronManager::RUNNING,
+                'status' => JobManager::RUNNING,
                 'startedAt<' => $dateTimeThreshold,
             ])
             ->find();
@@ -244,7 +244,7 @@ class Job
                 'startedAt',
             ])
             ->where([
-                'status' => CronManager::READY,
+                'status' => JobManager::READY,
                 'startedAt<' => $dateTimeThreshold,
             ])
             ->find();
@@ -276,7 +276,7 @@ class Job
                 'startedAt'
             ])
             ->where([
-                'status' => CronManager::RUNNING,
+                'status' => JobManager::RUNNING,
                 'executeTime<' => $dateTimeThreshold,
             ])
             ->find();
@@ -310,7 +310,7 @@ class Job
             ->update()
             ->in('Job')
             ->set([
-                'status' => CronManager::FAILED,
+                'status' => JobManager::FAILED,
                 'attempts' => 0,
             ])
             ->where([
@@ -327,7 +327,7 @@ class Job
 
             $this->cronScheduledJob->addLogRecord(
                 $job->get('scheduledJobId'),
-                CronManager::FAILED,
+                JobManager::FAILED,
                 $job->get('startedAt'),
                 $job->get('targetId'),
                 $job->get('targetType')
@@ -345,7 +345,7 @@ class Job
             ->select(['scheduledJobId'])
             ->where([
                 'scheduledJobId!=' => null,
-                'status' => CronManager::PENDING,
+                'status' => JobManager::PENDING,
                 'executeTime<=' => date('Y-m-d H:i:s'),
                 'targetId' => null,
             ])
@@ -372,7 +372,7 @@ class Job
                 ->select(['id'])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
-                    'status' => CronManager::PENDING,
+                    'status' => JobManager::PENDING,
                 ])
                 ->order('executeTime')
                 ->limit(0, 1000)
@@ -408,7 +408,7 @@ class Job
         $jobList = $this->entityManager->getRepository('Job')
             ->select(['id', 'attempts', 'failedAttempts'])
             ->where([
-                'status' => CronManager::FAILED,
+                'status' => JobManager::FAILED,
                 'executeTime<=' => date('Y-m-d H:i:s'),
                 'attempts>' => 0,
             ])
@@ -422,7 +422,7 @@ class Job
             $failedAttempts = $failedAttempts + 1;
 
             $job->set([
-                'status' => CronManager::PENDING,
+                'status' => JobManager::PENDING,
                 'attempts' => $attempts,
                 'failedAttempts' => $failedAttempts,
             ]);

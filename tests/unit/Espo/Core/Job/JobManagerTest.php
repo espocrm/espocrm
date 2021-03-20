@@ -27,93 +27,113 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core;
+namespace tests\unit\Espo\Core\Job;
 
 use tests\unit\ReflectionHelper;
 
-use Espo\Core\CronManager;
+use Espo\Core\{
+    Job\JobManager,
+    ServiceFactory,
+    Utils\Config,
+    Utils\File\Manager as FileManager,
+    Utils\ScheduledJob,
+    ORM\EntityManager,
+    InjectableFactory,
+    Utils\Log,
+};
 
-class CronManagerTest extends \PHPUnit\Framework\TestCase
+class JobManagerTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
-
-    protected $objects;
-
-    protected $filesPath= 'tests/unit/testData/EntryPoints';
-
     protected function setUp() : void
     {
-        $this->objects['serviceFactory'] = $this->getMockBuilder('Espo\\Core\\ServiceFactory')->disableOriginalConstructor()->getMock();
-        $this->objects['config'] = $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
-        $this->objects['fileManager'] = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
-        $this->objects['scheduledJob'] = $this->getMockBuilder('Espo\\Core\\Utils\\ScheduledJob')->disableOriginalConstructor()->getMock();
-        $this->objects['entityManager'] = $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+        $this->serviceFactory = $this->getMockBuilder(ServiceFactory::class)
+            ->disableOriginalConstructor()->getMock();
 
-        $this->objects['injectableFactory'] = $this->getMockBuilder('Espo\\Core\\InjectableFactory')->disableOriginalConstructor()->getMock();
+        $this->config = $this->getMockBuilder(Config::class)
+            ->disableOriginalConstructor()->getMock();
 
-        $this->object = new CronManager(
-            $this->objects['config'],
-            $this->objects['fileManager'],
-            $this->objects['entityManager'],
-            $this->objects['serviceFactory'],
-            $this->objects['injectableFactory'],
-            $this->objects['scheduledJob']
+        $this->fileManager = $this->getMockBuilder(FileManager::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $this->scheduledJob = $this->getMockBuilder(ScheduledJob::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $this->entityManager = $this->getMockBuilder(EntityManager::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $this->injectableFactory = $this->getMockBuilder(InjectableFactory::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $this->log = $this->createMock(Log::class);
+
+        $this->manager = new JobManager(
+            $this->config,
+            $this->fileManager,
+            $this->entityManager,
+            $this->serviceFactory,
+            $this->injectableFactory,
+            $this->scheduledJob,
+            $this->log
         );
 
-        $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection = new ReflectionHelper($this->manager);
     }
 
     protected function tearDown() : void
     {
-        $this->object = NULL;
+        $this->manager = NULL;
     }
 
-    function testCheckLastRunTimeFileDoesnotExist()
+    public function testCheckLastRunTimeFileDoesnotExist()
     {
-        $this->objects['fileManager']
+        $this->fileManager
             ->expects($this->once())
             ->method('getPhpContents')
             ->will($this->returnValue(false));
 
-        $this->objects['config']
+        $this->config
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValue(50));
 
-        $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()));
+        $this->assertTrue($this->reflection->invokeMethod('checkLastRunTime', []));
     }
 
     public function testCheckLastRunTime()
     {
-        $this->objects['fileManager']
+        $this->fileManager
             ->expects($this->once())
             ->method('getPhpContents')
-            ->will($this->returnValue(array(
+            ->will(
+                $this->returnValue([
                     'time' => time() - 60,
-            )));
+                ])
+            );
 
-        $this->objects['config']
+        $this->config
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValue(50));
 
-        $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', array()));
+        $this->assertTrue( $this->reflection->invokeMethod('checkLastRunTime', []));
     }
 
     public function testCheckLastRunTimeTooFrequency()
     {
-        $this->objects['fileManager']
+        $this->fileManager
             ->expects($this->once())
             ->method('getPhpContents')
-            ->will($this->returnValue(array(
+            ->will(
+                $this->returnValue([
                     'time' => time() - 49,
-            )));
+                ])
+            );
 
-        $this->objects['config']
+        $this->config
             ->expects($this->exactly(1))
             ->method('get')
             ->will($this->returnValue(50));
 
-        $this->assertFalse($this->reflection->invokeMethod('checkLastRunTime', array()));
+        $this->assertFalse($this->reflection->invokeMethod('checkLastRunTime', []));
     }
 }
