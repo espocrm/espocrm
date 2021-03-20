@@ -29,7 +29,13 @@
 
 namespace Espo\Core\Jobs;
 
+/**
+ * A job. Processed by a cron or daemon. Running is conducted according a scheduling of a scheduled job record.
+ */
 interface Job
 {
+    /**
+     * Run a job.
+     */
     public function run() : void;
 }

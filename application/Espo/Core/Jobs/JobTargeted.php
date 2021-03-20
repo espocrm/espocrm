@@ -33,9 +33,19 @@ use Espo\Entities\ScheduledJob;
 
 use StdClass;
 
+/**
+ * A targeted job. Processed by a cron or daemon.
+ * Running is conducted according a scheduling of a scheduled job record.
+ */
 interface JobTargeted
 {
+    /**
+     * Run a job for a specific target.
+     */
     public function run(string $targetType, string $targetId, StdClass $data) : void;
 
+    /**
+     * Create multiple job records for a scheduled job.
+     */
     public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void;
 }
