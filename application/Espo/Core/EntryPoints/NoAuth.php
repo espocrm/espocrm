@@ -29,7 +29,10 @@
 
 namespace Espo\Core\EntryPoints;
 
+/**
+ * @deprecated Use `Espo\Core\EntryPoint\Traits\NoAuth` instead.
+ */
 trait NoAuth
 {
-    public static $noAuth = true;
+    use \Espo\Core\EntryPoint\Traits\NoAuth;
 }

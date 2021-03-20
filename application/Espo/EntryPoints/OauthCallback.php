@@ -29,12 +29,9 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\EntryPoints\{
-    NoAuth,
-};
-
 use Espo\Core\{
     EntryPoint\EntryPoint,
+    EntryPoint\Traits\NoAuth,
     Api\Request,
     Api\Response,
 };

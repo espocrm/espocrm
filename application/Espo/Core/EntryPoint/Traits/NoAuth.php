@@ -27,12 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\EntryPoints;
+namespace Espo\Core\EntryPoint\Traits;
 
 /**
- * @deprecated Use `Espo\Core\EntryPoint\Traits\NotStrictAuth` instead.
+ * Auth is not required for entry point.
+ * To be used with EntryPoint interface.
  */
-trait NotStrictAuth
+trait NoAuth
 {
-    use \Espo\Core\EntryPoint\Traits\NotStrictAuth;
+    public static $noAuth = true;
 }

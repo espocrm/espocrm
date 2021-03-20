@@ -29,15 +29,12 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
-use Espo\Core\EntryPoints\{
-    NoAuth,
-};
-
 use Espo\Core\{
     Exceptions\NotFound,
     Exceptions\BadRequest,
     Exceptions\Error,
     EntryPoint\EntryPoint,
+    EntryPoint\Traits\NoAuth,
     Api\Request,
     Api\Response,
     ORM\EntityManager,

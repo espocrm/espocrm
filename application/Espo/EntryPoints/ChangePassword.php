@@ -32,12 +32,9 @@ namespace Espo\EntryPoints;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\EntryPoints\{
-    NoAuth,
-};
-
 use Espo\Core\{
     EntryPoint\EntryPoint,
+    EntryPoint\Traits\NoAuth,
     Utils\Config,
     Utils\ClientManager,
     ORM\EntityManager,
