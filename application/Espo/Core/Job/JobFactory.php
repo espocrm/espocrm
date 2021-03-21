@@ -27,91 +27,65 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Core\Job;
 
-use Espo\Core\ORM\Entity;
+use Espo\Core\{
+    Exceptions\Error,
+    Utils\ClassFinder,
+    InjectableFactory,
+};
 
-use StdClass;
-
-class Job extends Entity
+class JobFactory
 {
-    /**
-     * Get a status.
-     */
-    public function getStatus() : string
+    private $classFinder;
+
+    private $injectableFactory;
+
+    public function __construct(ClassFinder $classFinder, InjectableFactory $injectableFactory)
     {
-        return $this->get('status');
+        $this->classFinder = $classFinder;
+        $this->injectableFactory = $injectableFactory;
     }
 
     /**
-     * Get a job name.
+     * Create a job implementation.
+     *
+     * @return Job|JobTargeted
+     * @throws Error
      */
-    public function getJob() : ?string
+    public function create(string $name) : object
     {
-        return $this->get('job');
+        $className = $this->getClassName($name);
+
+        if (!$className) {
+            throw new Error("Job '{$name}' not found.");
+        }
+
+        return $this->injectableFactory->create($className);
     }
 
     /**
-     * Get a scheduled job name.
+     * Whether a job has prepare method. Prepare method creates job records from a scheduled job record.
+     *
+     * @throws Error
      */
-    public function getScheduledJobJob() : ?string
+    public function isPreparable(string $name) : bool
     {
-        return $this->get('scheduledJobJob');
+        $className = $this->getClassName($name);
+
+        if (!$className) {
+            throw new Error("Job '{$name}' not found.");
+        }
+
+        if (method_exists($className, 'prepare')) {
+            return true;
+        }
+
+        return false;
     }
 
-    /**
-     * Get a target type.
-     */
-    public function getTargetType() : ?string
+    private function getClassName(string $name) : ?string
     {
-        return $this->get('targetType');
-    }
-
-    /**
-     * Get a target ID.
-     */
-    public function getTargetId() : ?string
-    {
-        return $this->get('targetId');
-    }
-
-    /**
-     * Get data.
-     */
-    public function getData() : StdClass
-    {
-        return $this->get('data') ?? (object) [];
-    }
-
-    /**
-     * Get a service name.
-     */
-    public function getServiceName() : ?string
-    {
-        return $this->get('serviceName');
-    }
-
-    /**
-     * Get a method name.
-     */
-    public function getMethodName() : ?string
-    {
-        return $this->get('methodName');
-    }
-
-    /**
-     * Get a scheduled job ID.
-     */
-    public function getScheduledJobId() : ?string
-    {
-        return $this->get('scheduledJobId');
-    }
-
-    /**
-     * Get a started date-time.
-     */
-    public function getStartedAt() : ?string
-    {
-        return $this->get('startedAt');
+        return $this->classFinder->find('Jobs', ucfirst($name));
     }
 }

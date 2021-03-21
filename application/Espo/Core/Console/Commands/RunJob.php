@@ -80,6 +80,7 @@ class RunJob implements Command
             'job' => $jobName,
             'targetType' => $targetType,
             'targetId' => $targetId,
+            'attempts' => 0,
         ]);
 
         try {

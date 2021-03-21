@@ -32,11 +32,9 @@ namespace Espo\Core\Job;
 use Espo\Core\{
     Exceptions\Error,
     ServiceFactory,
-    InjectableFactory,
     Utils\Config,
     Utils\File\Manager as FileManager,
     Utils\System,
-    Utils\ScheduledJob,
     Utils\Cron\ScheduledJob as CronScheduledJob,
     Utils\Cron\Job as CronJob,
     ORM\EntityManager,
@@ -45,7 +43,10 @@ use Espo\Core\{
     Utils\Log,
 };
 
-use Espo\Entities\Job as JobEntity;
+use Espo\{
+    Entities\Job as JobEntity,
+    Entities\ScheduledJob as ScheduledJobEntity,
+};
 
 use Spatie\Async\Pool as AsyncPool;
 
@@ -54,6 +55,9 @@ use Cron\CronExpression;
 use Exception;
 use Throwable;
 
+/**
+ * Handles running jobs.
+ */
 class JobManager
 {
     private $cronJobUtil;
@@ -91,9 +95,7 @@ class JobManager
 
     private $serviceFactory;
 
-    private $injectableFactory;
-
-    private $scheduledJobUtil;
+    private $jobFactory;
 
     private $log;
 
@@ -102,16 +104,14 @@ class JobManager
         FileManager $fileManager,
         EntityManager $entityManager,
         ServiceFactory $serviceFactory,
-        InjectableFactory $injectableFactory,
-        ScheduledJob $scheduledJobUtil,
+        JobFactory $jobFactory,
         Log $log
     ) {
         $this->config = $config;
         $this->fileManager = $fileManager;
         $this->entityManager = $entityManager;
         $this->serviceFactory = $serviceFactory;
-        $this->injectableFactory = $injectableFactory;
-        $this->scheduledJobUtil = $scheduledJobUtil;
+        $this->jobFactory = $jobFactory;
         $this->log = $log;
 
         $this->cronJobUtil = new CronJob($this->config, $this->entityManager);
@@ -229,7 +229,8 @@ class JobManager
         $pool = null;
 
         if ($useProcessPool) {
-            $pool = AsyncPool::create()
+            $pool = AsyncPool
+                ::create()
                 ->autoload(getcwd() . '/vendor/autoload.php')
                 ->concurrency($this->config->get('jobPoolConcurrencyNumber'))
                 ->timeout($this->config->get('jobPeriodForActiveProcess'));
@@ -248,7 +249,7 @@ class JobManager
     {
         $useProcessPool = (bool) $pool;
 
-        $lockTable = (bool) $job->get('scheduledJobId') && !$noLock;
+        $lockTable = (bool) $job->getScheduledJobId() && !$noLock;
 
         $skip = false;
 
@@ -256,33 +257,37 @@ class JobManager
             if ($lockTable) {
                 // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
                 $this->entityManager->getLocker()->lockExclusive('Job');
-            } else {
+            }
+            else {
                 $this->entityManager->getTransactionManager()->start();
             }
         }
 
         if ($noLock || $this->cronJobUtil->isJobPending($job->id)) {
-            if ($job->get('scheduledJobId')) {
-                if ($this->cronJobUtil->isScheduledJobRunning(
-                    $job->get('scheduledJobId'), $job->get('targetId'), $job->get('targetType'))
-                ) {
-                    $skip = true;
-                }
+            if (
+                $job->getScheduledJobId() &&
+                $this->cronJobUtil->isScheduledJobRunning(
+                    $job->getScheduledJobId(),
+                    $job->getTargetId(),
+                    $job->getTargetType()
+                )
+            ) {
+                $skip = true;
             }
         } else {
             $skip = true;
         }
 
-        if ($skip) {
-            if (!$noLock) {
-                if ($lockTable) {
-                    $this->entityManager->getLocker()->rollback();
-                }
-                else {
-                    $this->entityManager->getTransactionManager()->rollback();
-                }
+        if ($skip && !$noLock) {
+            if ($lockTable) {
+                $this->entityManager->getLocker()->rollback();
             }
+            else {
+                $this->entityManager->getTransactionManager()->rollback();
+            }
+        }
 
+        if ($skip) {
             return;
         }
 
@@ -290,7 +295,8 @@ class JobManager
 
         if ($useProcessPool) {
             $job->set('status', self::READY);
-        } else {
+        }
+        else {
             $job->set('status', self::RUNNING);
             $job->set('pid', System::getPid());
         }
@@ -300,7 +306,8 @@ class JobManager
         if (!$noLock) {
             if ($lockTable) {
                 $this->entityManager->getLocker()->commit();
-            } else {
+            }
+            else {
                 $this->entityManager->getTransactionManager()->commit();
             }
         }
@@ -331,11 +338,11 @@ class JobManager
             throw new Error("Job {$id} not found.");
         }
 
-        if ($job->get('status') !== self::READY) {
+        if ($job->getStatus() !== self::READY) {
             throw new Error("Can't run job {$id} with no status Ready.");
         }
 
-        if (!$job->get('startedAt')) {
+        if (!$job->getStartedAt()) {
             $job->set('startedAt', date('Y-m-d H:i:s'));
         }
 
@@ -363,15 +370,22 @@ class JobManager
 
         $skipLog = false;
 
+        $exception = null;
+
         try {
-            if ($job->get('scheduledJobId')) {
+            if ($job->getScheduledJobId()) {
                 $this->runScheduledJob($job);
             }
-            else if ($job->get('job')) {
+            else if ($job->getJob()) {
                 $this->runJobByName($job);
             }
-            else {
+            else if ($job->getServiceName()) {
                 $this->runService($job);
+            }
+            else {
+                $id = $job->getId();
+
+                throw new Error("Not runnable job '{$id}'.");
             }
         }
         catch (Throwable $e) {
@@ -390,7 +404,7 @@ class JobManager
             }
 
             if ($throwException) {
-                throw new $e;
+                $exception = $e;
             }
         }
 
@@ -404,35 +418,35 @@ class JobManager
 
         $this->entityManager->saveEntity($job);
 
-        if ($job->get('scheduledJobId') && !$skipLog) {
+        if ($throwException && $exception) {
+            throw new $exception;
+        }
+
+        if ($job->getScheduledJobId() && !$skipLog) {
             $this->cronScheduledJobUtil->addLogRecord(
-                $job->get('scheduledJobId'), $status, null, $job->get('targetId'), $job->get('targetType')
+                $job->getScheduledJobId(),
+                $status,
+                null,
+                $job->getTargetId(),
+                $job->getTargetType()
             );
         }
     }
 
     protected function runScheduledJob(JobEntity $job) : void
     {
-        $jobName = $job->get('scheduledJobJob');
+        $jobName = $job->getScheduledJobJob();
 
         if (!$jobName) {
             throw new Error(
-                "Can't run job with ID '" . $job->id . "'. No schedule job."
+                "Can't run job '" . $job->getId() . "'. Not a scheduled job."
             );
         }
 
-        $className = $this->scheduledJobUtil->getJobClassName($jobName);
-
-        if (!$className) {
-            throw new Error("No class name for job {$jobName}.");
-        }
-
-        $obj = $this->injectableFactory->create($className);
+        $obj = $this->jobFactory->create($jobName);
 
         if ($obj instanceof JobTargeted) {
-            $data = $job->get('data') ?? (object) [];
-
-            $obj->run($job->get('targetType'), $job->get('targetId'), $data);
+            $obj->run($job->getTargetType(), $job->getTargetId(), $job->getData());
 
             return;
         }
@@ -446,7 +460,7 @@ class JobManager
 
     protected function runService(JobEntity $job) : void
     {
-        $serviceName = $job->get('serviceName');
+        $serviceName = $job->getServiceName();
 
         if (!$serviceName) {
             throw new Error("Job with empty serviceName.");
@@ -458,7 +472,7 @@ class JobManager
 
         $service = $this->serviceFactory->create($serviceName);
 
-        $methodName = $job->get('methodName');
+        $methodName = $job->getMethodName();
 
         if (!$methodName) {
             throw new Error('Job with empty methodName.');
@@ -468,33 +482,23 @@ class JobManager
             throw new Error();
         }
 
-        $data = $job->get('data');
-
-        $service->$methodName($data, $job->get('targetId'), $job->get('targetType'));
+        $service->$methodName($job->getData(), $job->getTargetId(), $job->getTargetType());
     }
 
     protected function runJobByName(JobEntity $job) : void
     {
-        $jobName = $job->get('job');
+        $jobName = $job->getJob();
 
-        $className = $this->scheduledJobUtil->getJobClassName($jobName);
-
-        if (!$className) {
-            throw new Error("No class name for job {$jobName}.");
-        }
-
-        $obj = $this->injectableFactory->create($className);
-
-        if (!method_exists($obj, 'run')) {
-            throw new Error("No 'run' method in job {$jobName}.");
-        }
+        $obj = $this->jobFactory->create($jobName);
 
         if ($obj instanceof JobTargeted) {
-            $data = $job->get('data') ?? (object) [];
-
-            $obj->run($job->get('targetType'), $job->get('targetId'), $data);
+            $obj->run($job->getTargetType(), $job->getTargetId(), $job->getData());
 
             return;
+        }
+
+        if (!method_exists($obj, 'run')) {
+            throw new Error("No 'run' method in job '{$jobName}'.");
         }
 
         $obj->run();
@@ -503,86 +507,97 @@ class JobManager
     protected function createJobsFromScheduledJobs() : void
     {
         $activeScheduledJobList = $this->cronScheduledJobUtil->getActiveScheduledJobList();
+
         $runningScheduledJobIdList = $this->cronJobUtil->getRunningScheduledJobIdList();
 
         foreach ($activeScheduledJobList as $scheduledJob) {
-            $scheduling = $scheduledJob->get('scheduling');
-
-            $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
-
-            if ($asSoonAsPossible) {
-                $nextDate = date('Y-m-d H:i:s');
+            try {
+                $this->createJobsFromScheduledJob($scheduledJob, $runningScheduledJobIdList);
             }
-            else {
-                try {
-                    $cronExpression = CronExpression::factory($scheduling);
-                }
-                catch (Exception $e) {
-                    $this->log->error(
-                        'JobManager (ScheduledJob ' . $scheduledJob->id . '): Scheduling string error - ' .
-                        $e->getMessage() . '.'
-                    );
+            catch (Throwable $e) {
+                $id = $scheduledJob->getId();
 
-                    continue;
-                }
-
-                try {
-                    $nextDate = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
-                }
-                catch (Exception $e) {
-                    $this->log->error(
-                        'JobManager (ScheduledJob '. $scheduledJob->id . '): ' .
-                        'Unsupported CRON expression ' . $scheduling . '.'
-                    );
-
-                    continue;
-                }
-
-                $jobAlreadyExists = $this->cronJobUtil->hasScheduledJobOnMinute($scheduledJob->id, $nextDate);
-
-                if ($jobAlreadyExists) {
-                    continue;
-                }
+                $this->log->error("Scheduled Job '{$id}': " . $e->getMessage());
             }
-
-            $className = $this->scheduledJobUtil->getJobClassName($scheduledJob->get('job'));
-
-            if ($className) {
-                if (method_exists($className, 'prepare')) {
-                    $obj = $this->injectableFactory->create($className);
-
-                    $obj->prepare($scheduledJob, $nextDate);
-
-                    continue;
-                }
-            }
-
-            if (in_array($scheduledJob->id, $runningScheduledJobIdList)) {
-                continue;
-            }
-
-            $pendingCount = $this->cronJobUtil->getPendingCountByScheduledJobId($scheduledJob->id);
-
-            if ($asSoonAsPossible) {
-                if ($pendingCount > 0) {
-                    continue;
-                }
-            } else {
-                if ($pendingCount > 1) {
-                    continue;
-                }
-            }
-
-            $jobEntity = $this->entityManager->getEntity('Job');
-
-            $jobEntity->set([
-                'name' => $scheduledJob->get('name'),
-                'status' => self::PENDING,
-                'scheduledJobId' => $scheduledJob->id,
-                'executeTime' => $nextDate,
-            ]);
-
-            $this->entityManager->saveEntity($jobEntity);
         }
+    }
+
+    private function createJobsFromScheduledJob(
+        ScheduledJobEntity $scheduledJob, array $runningScheduledJobIdList
+    ) : void {
+
+        $scheduling = $scheduledJob->getScheduling();
+
+        $id = $scheduledJob->getId();
+
+        $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
+
+        if ($asSoonAsPossible) {
+            $executeTime = date('Y-m-d H:i:s');
+        }
+        else {
+            try {
+                $cronExpression = CronExpression::factory($scheduling);
+            }
+            catch (Exception $e) {
+                $this->log->error(
+                    "Scheduled Job '{$id}': Scheduling expression error: " .
+                    $e->getMessage() . '.'
+                );
+
+                return;
+            }
+
+            try {
+                $executeTime = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+            }
+            catch (Exception $e) {
+                $this->log->error(
+                    "Scheduled Job '{$id}': Unsupported scheduling expression '{$scheduling}'."
+                );
+
+                return;
+            }
+
+            $jobAlreadyExists = $this->cronJobUtil->hasScheduledJobOnMinute($id, $executeTime);
+
+            if ($jobAlreadyExists) {
+                return;
+            }
+        }
+
+        $jobName = $scheduledJob->getJob();
+
+        if ($this->jobFactory->isPreparable($jobName)) {
+            $jobObj = $this->jobFactory->create($jobName);
+
+            $jobObj->prepare($scheduledJob, $executeTime);
+
+            return;
+        }
+
+        if (in_array($id, $runningScheduledJobIdList)) {
+            return;
+        }
+
+        $pendingCount = $this->cronJobUtil->getPendingCountByScheduledJobId($id);
+
+        if ($asSoonAsPossible) {
+            if ($pendingCount > 0) {
+                return;
+            }
+        }
+        else {
+            if ($pendingCount > 1) {
+                return;
+            }
+        }
+
+        $this->entityManager->createEntity('Job', [
+            'name' => $scheduledJob->getName(),
+            'status' => self::PENDING,
+            'scheduledJobId' => $id,
+            'executeTime' => $executeTime,
+        ]);
     }
 }

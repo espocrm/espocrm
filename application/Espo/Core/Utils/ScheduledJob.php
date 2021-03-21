@@ -46,7 +46,7 @@ class ScheduledJob
     protected $cronFile = 'cron.php';
 
     /**
-     * Period to check if crontab is configured properly
+     * Period to check if crontab is configured properly.
      *
      * @var string
      */
@@ -74,45 +74,29 @@ class ScheduledJob
         $this->systemUtil = new System();
     }
 
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getSystemUtil()
-    {
-        return $this->systemUtil;
-    }
-
-    public function getAvailableList()
+    public function getAvailableList() : array
     {
         $map = $this->classFinder->getMap('Jobs');
+
         $list = array_keys($map);
+
         return $list;
     }
 
-    public function getJobClassName(string $name) : ?string
-    {
-        $name = ucfirst($name);
-
-        $className = $this->classFinder->find('Jobs', $name);
-
-        return $className;
-    }
-
-    public function getSetupMessage()
+    public function getSetupMessage() : array
     {
         $language = $this->language;
 
-        $OS = $this->getSystemUtil()->getOS();
+        $OS = $this->systemUtil->getOS();
+
         $desc = $language->translate('cronSetup', 'options', 'ScheduledJob');
 
-        $data = array(
-            'PHP-BINARY' => $this->getSystemUtil()->getPhpBinary(),
+        $data = [
+            'PHP-BINARY' => $this->systemUtil->getPhpBinary(),
             'CRON-FILE' => $this->cronFile,
-            'DOCUMENT_ROOT' => $this->getSystemUtil()->getRootDir(),
-            'FULL-CRON-PATH' => Util::concatPath($this->getSystemUtil()->getRootDir(), $this->cronFile),
-        );
+            'DOCUMENT_ROOT' => $this->systemUtil->getRootDir(),
+            'FULL-CRON-PATH' => Util::concatPath($this->systemUtil->getRootDir(), $this->cronFile),
+        ];
 
         $message = isset($desc[$OS]) ? $desc[$OS] : $desc['default'];
 
@@ -130,15 +114,13 @@ class ScheduledJob
 
     /**
      * Check if crontab is configured properly.
-     *
-     * @return boolean
      */
-    public function isCronConfigured()
+    public function isCronConfigured() : bool
     {
         $r1From = new DateTime('-' . $this->checkingCronPeriod);
         $r1To = new DateTime('+' . $this->checkingCronPeriod);
 
-        $r2From = new DateTime('- 1 hour');
+        $r2From = new DateTime('-1 hour');
         $r2To = new DateTime();
 
         $format = DateTimeUtil::$systemDateTimeFormat;

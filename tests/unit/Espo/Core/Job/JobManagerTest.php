@@ -33,12 +33,11 @@ use tests\unit\ReflectionHelper;
 
 use Espo\Core\{
     Job\JobManager,
+    Job\JobFactory,
     ServiceFactory,
     Utils\Config,
     Utils\File\Manager as FileManager,
-    Utils\ScheduledJob,
     ORM\EntityManager,
-    InjectableFactory,
     Utils\Log,
 };
 
@@ -46,24 +45,11 @@ class JobManagerTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp() : void
     {
-        $this->serviceFactory = $this->getMockBuilder(ServiceFactory::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $this->config = $this->getMockBuilder(Config::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $this->fileManager = $this->getMockBuilder(FileManager::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $this->scheduledJob = $this->getMockBuilder(ScheduledJob::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $this->entityManager = $this->getMockBuilder(EntityManager::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $this->injectableFactory = $this->getMockBuilder(InjectableFactory::class)
-            ->disableOriginalConstructor()->getMock();
-
+        $this->serviceFactory = $this->createMock(ServiceFactory::class);
+        $this->config = $this->createMock(Config::class);
+        $this->fileManager = $this->createMock(FileManager::class);
+        $this->jobFactory = $this->createMock(JobFactory::class);
+        $this->entityManager = $this->createMock(EntityManager::class);
         $this->log = $this->createMock(Log::class);
 
         $this->manager = new JobManager(
@@ -71,8 +57,7 @@ class JobManagerTest extends \PHPUnit\Framework\TestCase
             $this->fileManager,
             $this->entityManager,
             $this->serviceFactory,
-            $this->injectableFactory,
-            $this->scheduledJob,
+            $this->jobFactory,
             $this->log
         );
 
