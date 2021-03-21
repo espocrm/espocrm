@@ -32,12 +32,13 @@ namespace Espo\Modules\Crm\Jobs;
 use Espo\Core\{
     InjectableFactory,
     ORM\EntityManager,
+    Utils\Config,
     Job\Job,
 };
 
 use Espo\Modules\Crm\Business\Reminder\EmailReminder;
 
-use Exception;
+use Throwable;
 use DateTime;
 use DateInterval;
 
@@ -49,10 +50,13 @@ class SendEmailReminders implements Job
 
     private $entityManager;
 
-    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
+    private $config;
+
+    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager, Config $config)
     {
         $this->injectableFactory = $injectableFactory;
         $this->entityManager = $entityManager;
+        $this->config = $config;
     }
 
     public function run() : void
@@ -63,32 +67,31 @@ class SendEmailReminders implements Job
 
         $nowShifted = $dt->sub(new DateInterval('PT1H'))->format('Y-m-d H:i:s');
 
+        $maxPortionSize = $this->config->get('emailReminderPortionSize') ?? self::MAX_PORTION_SIZE;
+
         $collection = $this->entityManager
-            ->getRepository('Reminder')
+            ->getRDBRepository('Reminder')
             ->where([
                 'type' => 'Email',
                 'remindAt<=' => $now,
                 'startAt>' => $nowShifted,
             ])
+            ->limit(0, $maxPortionSize)
             ->find();
 
-        if (empty($collection)) {
+        if (count($collection) === 0) {
             return;
         }
 
         $emailReminder = $this->injectableFactory->create(EmailReminder::class);
 
-        foreach ($collection as $i => $entity) {
-            if ($i >= self::MAX_PORTION_SIZE) {
-                break;
-            }
-
+        foreach ($collection as $entity) {
             try {
                 $emailReminder->send($entity);
             }
-            catch (Exception $e) {
+            catch (Throwable $e) {
                 $GLOBALS['log']->error(
-                    'Job SendEmailReminders '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage()
+                    "Email reminder '{$entity->id}': " . $e->getMessage()
                 );
             }
 
