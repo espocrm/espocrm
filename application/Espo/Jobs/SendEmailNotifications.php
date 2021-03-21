@@ -29,7 +29,7 @@
 
 namespace Espo\Jobs;
 
-use Espo\Core\Jobs\Job;
+use Espo\Core\Job\Job;
 
 use Espo\Tools\EmailNotification\Processor;
 

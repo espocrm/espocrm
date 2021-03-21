@@ -27,25 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Jobs;
-
-use Espo\Entities\ScheduledJob;
-
-use StdClass;
+namespace Espo\Core\Job;
 
 /**
- * A targeted job. Processed by a cron or daemon.
- * Running is conducted according a scheduling of a scheduled job record.
+ * A job. Processed by the Cron or Daemon. Running is conducted according a scheduling of a scheduled job record.
  */
-interface JobTargeted
+interface Job
 {
     /**
-     * Run a job for a specific target.
+     * Run a job.
      */
-    public function run(string $targetType, string $targetId, StdClass $data) : void;
-
-    /**
-     * Create multiple job records for a scheduled job.
-     */
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void;
+    public function run() : void;
 }

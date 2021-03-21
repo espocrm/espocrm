@@ -27,30 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Job\JobManager,
-    Utils\Config,
-    Job\Job,
-};
+use Espo\Entities\ScheduledJob;
 
-class ProcessJobQueueQ0 implements Job
+use StdClass;
+
+/**
+ * A targeted job. Processed by a cron or daemon.
+ * Running is conducted according a scheduling of a scheduled job record.
+ */
+interface JobTargeted
 {
-    private $jobManager;
+    /**
+     * Run a job for a specific target.
+     */
+    public function run(string $targetType, string $targetId, StdClass $data) : void;
 
-    private $config;
-
-    public function __construct(JobManager $jobManager, Config $config)
-    {
-        $this->jobManager = $jobManager;
-        $this->config = $config;
-    }
-
-    public function run() : void
-    {
-        $limit = $this->config->get('jobQ0MaxPortion', 200);
-
-        $this->jobManager->processQueue('q0', $limit);
-    }
+    /**
+     * Create multiple job records for a scheduled job.
+     */
+    public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void;
 }

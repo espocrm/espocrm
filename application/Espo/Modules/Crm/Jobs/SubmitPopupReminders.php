@@ -33,7 +33,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\Config,
     WebSocket\Submission as WebSocketSubmission,
-    Jobs\Job,
+    Job\Job,
 };
 
 use Throwable;
@@ -41,11 +41,13 @@ use DateTime;
 
 class SubmitPopupReminders implements Job
 {
-    const REMINDER_PAST_HOURS = 24;
+    private const REMINDER_PAST_HOURS = 24;
 
-    protected $entityManager;
-    protected $config;
-    protected $webSocketSubmission;
+    private $entityManager;
+
+    private $config;
+
+    private $webSocketSubmission;
 
     public function __construct(EntityManager $entityManager, Config $config, WebSocketSubmission $webSocketSubmission)
     {

@@ -32,7 +32,7 @@ namespace Espo\Jobs;
 use Espo\Core\{
     Job\JobManager,
     Utils\Config,
-    Jobs\Job,
+    Job\Job,
 };
 
 class ProcessJobQueueQ1 implements Job

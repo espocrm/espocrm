@@ -33,9 +33,9 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
     Job\JobManager,
+    Job\JobTargeted,
     ServiceFactory,
     ORM\EntityManager,
-    Jobs\JobTargeted,
 };
 
 use Espo\Entities\ScheduledJob;

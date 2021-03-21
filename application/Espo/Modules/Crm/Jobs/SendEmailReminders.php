@@ -32,7 +32,7 @@ namespace Espo\Modules\Crm\Jobs;
 use Espo\Core\{
     InjectableFactory,
     ORM\EntityManager,
-    Jobs\Job,
+    Job\Job,
 };
 
 use Espo\Modules\Crm\Business\Reminder\EmailReminder;
@@ -43,10 +43,11 @@ use DateInterval;
 
 class SendEmailReminders implements Job
 {
-    const MAX_PORTION_SIZE = 10;
+    private const MAX_PORTION_SIZE = 10;
 
-    protected $injectableFactory;
-    protected $entityManager;
+    private $injectableFactory;
+
+    private $entityManager;
 
     public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager)
     {
@@ -77,8 +78,6 @@ class SendEmailReminders implements Job
 
         $emailReminder = $this->injectableFactory->create(EmailReminder::class);
 
-        $pdo = $this->entityManager->getPDO();
-
         foreach ($collection as $i => $entity) {
             if ($i >= self::MAX_PORTION_SIZE) {
                 break;
@@ -92,6 +91,7 @@ class SendEmailReminders implements Job
                     'Job SendEmailReminders '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage()
                 );
             }
+
             $this->entityManager
                 ->getRepository('Reminder')
                 ->deleteFromDb($entity->id);

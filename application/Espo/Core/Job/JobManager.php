@@ -39,8 +39,8 @@ use Espo\Core\{
     Utils\Cron\Job as CronJob,
     ORM\EntityManager,
     Utils\Cron\JobTask,
-    Jobs\JobTargeted,
     Utils\Log,
+    Job\JobTargeted,
 };
 
 use Espo\{

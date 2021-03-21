@@ -32,7 +32,7 @@ namespace Espo\Jobs;
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
-    Jobs\Job,
+    Job\Job,
     Utils\Metadata,
     Utils\File\Manager as FileManager,
     InjectableFactory,

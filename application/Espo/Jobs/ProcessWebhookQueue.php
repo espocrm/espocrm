@@ -30,7 +30,7 @@
 namespace Espo\Jobs;
 
 use Espo\Core\{
-    Jobs\Job,
+    Job\Job,
     AclManager,
     Utils\Config,
     ORM\EntityManager,
