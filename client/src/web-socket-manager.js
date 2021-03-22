@@ -95,7 +95,8 @@ define('web-socket-manager', [], function () {
 
                 url += '?authToken=' + authToken + '&userId=' + userId;
 
-                this.connection = new ab.Session(url,
+                this.connection = new ab.Session(
+                    url,
                     function () {
                         this.isConnected = true;
 
@@ -105,8 +106,21 @@ define('web-socket-manager', [], function () {
 
                         this.subscribeQueue = [];
                     }.bind(this),
-                    function () {},
-                    {'skipSubprotocolCheck': true}
+                    function (e) {
+                        if (e === ab.CONNECTION_CLOSED) {
+                            this.subscribeQueue = [];
+                        }
+
+                        if (e === ab.CONNECTION_LOST || e === ab.CONNECTION_UNREACHABLE) {
+                            setTimeout(
+                                function () {
+                                    this.connect(auth, userId);
+                                }.bind(this),
+                                3000
+                            );
+                        }
+                    }.bind(this),
+                    {skipSubprotocolCheck: true}
                 );
             } catch (e) {
                 console.error(e.message);
@@ -143,6 +157,10 @@ define('web-socket-manager', [], function () {
             if (!this.connection) {
                 return;
             }
+
+            this.subscribeQueue = this.subscribeQueue.filter(function (item) {
+                return item.category !== category && item.callback !== callback;
+            });
 
             try {
                 this.connection.unsubscribe(category, callback);
