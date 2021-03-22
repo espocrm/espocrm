@@ -128,7 +128,7 @@ class JobManager
         }
     }
 
-    protected function getLastRunTime()
+    protected function getLastRunTime() : int
     {
         $lastRunData = $this->fileManager->getPhpContents($this->lastRunTimeFile);
 
@@ -139,19 +139,19 @@ class JobManager
             $lastRunTime = time() - intval($this->config->get('cronMinInterval', 0)) - 1;
         }
 
-        return $lastRunTime;
+        return (int) $lastRunTime;
     }
 
-    protected function setLastRunTime($time)
+    protected function updateLastRunTime() : void
     {
         $data = [
-            'time' => $time,
+            'time' => time(),
         ];
 
-        return $this->fileManager->putPhpContents($this->lastRunTimeFile, $data, false, true);
+        $this->fileManager->putPhpContents($this->lastRunTimeFile, $data, false, true);
     }
 
-    protected function checkLastRunTime()
+    protected function checkLastRunTime() : bool
     {
         $currentTime = time();
         $lastRunTime = $this->getLastRunTime();
@@ -187,7 +187,7 @@ class JobManager
             return;
         }
 
-        $this->setLastRunTime(time());
+        $this->updateLastRunTime();
 
         $this->cronJobUtil->markJobsFailed();
         $this->cronJobUtil->updateFailedJobAttempts();
@@ -328,7 +328,7 @@ class JobManager
      */
     public function runJobById(string $id) : void
     {
-        if (empty($id)) {
+        if ($id === '') {
             throw new Error();
         }
 
