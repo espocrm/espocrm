@@ -27,14 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\Job;
 
 use Espo\ORM\{
     Collection,
     EntityManager,
 };
 
-class ScheduledJob
+class ScheduleUtil
 {
     private $entityManager;
 
@@ -66,8 +66,12 @@ class ScheduledJob
      * Add record to ScheduledJobLogRecord about executed job.
      */
     public function addLogRecord(
-        $scheduledJobId, $status, $runTime = null, $targetId = null, $targetType = null
-    ) {
+        string $scheduledJobId,
+        string $status,
+        ?string $runTime = null,
+        ?string $targetId = null,
+        ?string $targetType = null
+    ) : void{
 
         if (!isset($runTime)) {
             $runTime = date('Y-m-d H:i:s');

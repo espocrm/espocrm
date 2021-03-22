@@ -35,10 +35,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\File\Manager as FileManager,
     Utils\System,
-    Utils\Cron\ScheduledJob as CronScheduledJob,
-    Utils\Cron\Job as CronJob,
     ORM\EntityManager,
-    Utils\Cron\JobTask,
     Utils\Log,
     Job\JobTargeted,
 };
@@ -60,9 +57,9 @@ use Throwable;
  */
 class JobManager
 {
-    private $cronJobUtil;
+    private $queueUtil;
 
-    private $cronScheduledJobUtil;
+    private $scheduleUtil;
 
     private $useProcessPool = false;
 
@@ -105,7 +102,9 @@ class JobManager
         EntityManager $entityManager,
         ServiceFactory $serviceFactory,
         JobFactory $jobFactory,
-        Log $log
+        Log $log,
+        QueueUtil $queueUtil,
+        ScheduleUtil $scheduleUtil
     ) {
         $this->config = $config;
         $this->fileManager = $fileManager;
@@ -113,10 +112,8 @@ class JobManager
         $this->serviceFactory = $serviceFactory;
         $this->jobFactory = $jobFactory;
         $this->log = $log;
-
-        $this->cronJobUtil = new CronJob($this->config, $this->entityManager);
-
-        $this->cronScheduledJobUtil = new CronScheduledJob($this->entityManager);
+        $this->queueUtil = $queueUtil;
+        $this->scheduleUtil = $scheduleUtil;
 
         if ($this->config->get('jobRunInParallel')) {
             if (AsyncPool::isSupported()) {
@@ -189,12 +186,12 @@ class JobManager
 
         $this->updateLastRunTime();
 
-        $this->cronJobUtil->markJobsFailed();
-        $this->cronJobUtil->updateFailedJobAttempts();
+        $this->queueUtil->markJobsFailed();
+        $this->queueUtil->updateFailedJobAttempts();
 
         $this->createJobsFromScheduledJobs();
 
-        $this->cronJobUtil->removePendingJobDuplicates();
+        $this->queueUtil->removePendingJobDuplicates();
 
         $this->processPendingJobs();
     }
@@ -218,7 +215,7 @@ class JobManager
             $limit = intval($this->config->get('jobMaxPortion', 0));
         }
 
-        $pendingJobList = $this->cronJobUtil->getPendingJobList($queue, $limit);
+        $pendingJobList = $this->queueUtil->getPendingJobList($queue, $limit);
 
         $useProcessPool = $this->useProcessPool();
 
@@ -263,10 +260,10 @@ class JobManager
             }
         }
 
-        if ($noLock || $this->cronJobUtil->isJobPending($job->id)) {
+        if ($noLock || $this->queueUtil->isJobPending($job->id)) {
             if (
                 $job->getScheduledJobId() &&
-                $this->cronJobUtil->isScheduledJobRunning(
+                $this->queueUtil->isScheduledJobRunning(
                     $job->getScheduledJobId(),
                     $job->getTargetId(),
                     $job->getTargetType()
@@ -423,7 +420,7 @@ class JobManager
         }
 
         if ($job->getScheduledJobId() && !$skipLog) {
-            $this->cronScheduledJobUtil->addLogRecord(
+            $this->scheduleUtil->addLogRecord(
                 $job->getScheduledJobId(),
                 $status,
                 null,
@@ -506,9 +503,9 @@ class JobManager
 
     protected function createJobsFromScheduledJobs() : void
     {
-        $activeScheduledJobList = $this->cronScheduledJobUtil->getActiveScheduledJobList();
+        $activeScheduledJobList = $this->scheduleUtil->getActiveScheduledJobList();
 
-        $runningScheduledJobIdList = $this->cronJobUtil->getRunningScheduledJobIdList();
+        $runningScheduledJobIdList = $this->queueUtil->getRunningScheduledJobIdList();
 
         foreach ($activeScheduledJobList as $scheduledJob) {
             try {
@@ -559,7 +556,7 @@ class JobManager
                 return;
             }
 
-            $jobAlreadyExists = $this->cronJobUtil->hasScheduledJobOnMinute($id, $executeTime);
+            $jobAlreadyExists = $this->queueUtil->hasScheduledJobOnMinute($id, $executeTime);
 
             if ($jobAlreadyExists) {
                 return;
@@ -580,7 +577,7 @@ class JobManager
             return;
         }
 
-        $pendingCount = $this->cronJobUtil->getPendingCountByScheduledJobId($id);
+        $pendingCount = $this->queueUtil->getPendingCountByScheduledJobId($id);
 
         if ($asSoonAsPossible) {
             if ($pendingCount > 0) {

@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\Job;
 
 use Espo\Core\{
     Job\JobManager,
@@ -36,26 +36,27 @@ use Espo\Core\{
     Utils\System,
 };
 
+use Espo\ORM\Collection;
+
 use DateTime;
 
-class Job
+class QueueUtil
 {
     private $config;
 
     private $entityManager;
 
-    private $cronScheduledJob;
+    private $scheduleUtil;
 
-    const NOT_EXISTING_PROCESS_PERIOD = 300;
+    private const NOT_EXISTING_PROCESS_PERIOD = 300;
 
-    const READY_NOT_STARTED_PERIOD = 60;
+    private const READY_NOT_STARTED_PERIOD = 60;
 
-    public function __construct(Config $config, EntityManager $entityManager)
+    public function __construct(Config $config, EntityManager $entityManager, ScheduleUtil $scheduleUtil)
     {
         $this->config = $config;
         $this->entityManager = $entityManager;
-
-        $this->cronScheduledJob = new ScheduledJob($this->entityManager);
+        $this->scheduleUtil = $scheduleUtil;
     }
 
     public function isJobPending(string $id) : bool
@@ -76,10 +77,11 @@ class Job
         return $job->get('status') === JobManager::PENDING;
     }
 
-    public function getPendingJobList($queue = null, $limit = 0)
+    public function getPendingJobList(?string $queue = null, int $limit = 0) : Collection
     {
-        $selectParams = [
-            'select' => [
+        $builder = $this->entityManager
+            ->getRDBRepository('Job')
+            ->select([
                 'id',
                 'scheduledJobId',
                 'scheduledJobJob',
@@ -90,21 +92,19 @@ class Job
                 'serviceName',
                 'job',
                 'data',
-            ],
-            'whereClause' => [
+            ])
+            ->where([
                 'status' => JobManager::PENDING,
                 'executeTime<=' => date('Y-m-d H:i:s'),
                 'queue' => $queue,
-            ],
-            'orderBy' => 'number',
-        ];
+            ])
+            ->order('number');
 
         if ($limit) {
-            $selectParams['offset'] = 0;
-            $selectParams['limit'] = $limit;
+            $builder->limit(0, $limit);
         }
 
-        return $this->entityManager->getRepository('Job')->find($selectParams);
+        return $builder->find();
     }
 
     public function isScheduledJobRunning(
@@ -153,10 +153,11 @@ class Job
     public function hasScheduledJobOnMinute(string $scheduledJobId, string $time) : bool
     {
         $dateObj = new DateTime($time);
+
         $timeWithoutSeconds = $dateObj->format('Y-m-d H:i:');
 
         $job = $this->entityManager
-            ->getRepository('Job')
+            ->getRDBRepository('Job')
             ->select(['id'])
             ->where([
                 'scheduledJobId' => $scheduledJobId,
@@ -170,7 +171,7 @@ class Job
     public function getPendingCountByScheduledJobId(string $scheduledJobId) : int
     {
         $countPending = $this->entityManager
-            ->getRepository('Job')
+            ->getRDBRepository('Job')
             ->where([
                 'scheduledJobId' => $scheduledJobId,
                 'status' => JobManager::PENDING,
@@ -180,7 +181,7 @@ class Job
         return $countPending;
     }
 
-    public function markJobsFailed()
+    public function markJobsFailed() : void
     {
         $this->markJobsFailedByNotExistingProcesses();
         $this->markJobsFailedReadyNotStarted();
@@ -188,7 +189,7 @@ class Job
         $this->markJobsFailedByPeriod();
     }
 
-    protected function markJobsFailedByNotExistingProcesses()
+    protected function markJobsFailedByNotExistingProcesses() : void
     {
         $timeThreshold = time() - $this->config->get(
             'jobPeriodForNotExistingProcess',
@@ -206,7 +207,7 @@ class Job
                 'targetId',
                 'targetType',
                 'pid',
-                'startedAt'
+                'startedAt',
             ])
             ->where([
                 'status' => JobManager::RUNNING,
@@ -225,7 +226,7 @@ class Job
         $this->markJobListFailed($failedJobList);
     }
 
-    protected function markJobsFailedReadyNotStarted()
+    protected function markJobsFailedReadyNotStarted() : void
     {
         $timeThreshold = time() -
             $this->config->get('jobPeriodForReadyNotStarted', SELF::READY_NOT_STARTED_PERIOD);
@@ -252,7 +253,7 @@ class Job
         $this->markJobListFailed($failedJobList);
     }
 
-    protected function markJobsFailedByPeriod($isForActiveProcesses = false)
+    protected function markJobsFailedByPeriod(bool $isForActiveProcesses = false) : void
     {
         $period = 'jobPeriod';
 
@@ -296,14 +297,16 @@ class Job
         $this->markJobListFailed($failedJobList);
     }
 
-    protected function markJobListFailed($jobList)
+    protected function markJobListFailed(iterable $jobList) : void
     {
-        if (!count($jobList)) return;
+        if (!count($jobList)) {
+            return;
+        }
 
         $jobIdList = [];
 
         foreach ($jobList as $job) {
-            $jobIdList[] = $job->id;
+            $jobIdList[] = $job->getId();
         }
 
         $updateQuery = $this->entityManager->getQueryBuilder()
@@ -325,7 +328,7 @@ class Job
                 continue;
             }
 
-            $this->cronScheduledJob->addLogRecord(
+            $this->scheduleUtil->addLogRecord(
                 $job->get('scheduledJobId'),
                 JobManager::FAILED,
                 $job->get('startedAt'),
@@ -338,7 +341,7 @@ class Job
     /**
      * Remove pending duplicate jobs, no need to run twice the same job.
      */
-    public function removePendingJobDuplicates()
+    public function removePendingJobDuplicates() : void
     {
         $duplicateJobList = $this->entityManager
             ->getRepository('Job')
@@ -403,10 +406,15 @@ class Job
     /**
      * Handle job attempts. Change failed to pending if attempts left.
      */
-    public function updateFailedJobAttempts()
+    public function updateFailedJobAttempts() : void
     {
-        $jobList = $this->entityManager->getRepository('Job')
-            ->select(['id', 'attempts', 'failedAttempts'])
+        $jobCollection = $this->entityManager
+            ->getRDBRepository('Job')
+            ->select([
+                'id',
+                'attempts',
+                'failedAttempts'
+            ])
             ->where([
                 'status' => JobManager::FAILED,
                 'executeTime<=' => date('Y-m-d H:i:s'),
@@ -414,17 +422,14 @@ class Job
             ])
             ->find();
 
-        foreach ($jobList as $job) {
+         foreach ($jobCollection as $job) {
             $failedAttempts = $job->get('failedAttempts') ?? 0;
             $attempts = $job->get('attempts');
 
-            $attempts = $attempts - 1;
-            $failedAttempts = $failedAttempts + 1;
-
             $job->set([
                 'status' => JobManager::PENDING,
-                'attempts' => $attempts,
-                'failedAttempts' => $failedAttempts,
+                'attempts' => $attempts - 1,
+                'failedAttempts' => $failedAttempts + 1,
             ]);
 
             $this->entityManager->saveEntity($job);

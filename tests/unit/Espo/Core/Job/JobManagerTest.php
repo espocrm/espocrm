@@ -39,6 +39,8 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     ORM\EntityManager,
     Utils\Log,
+    Job\QueueUtil,
+    Job\ScheduleUtil,
 };
 
 class JobManagerTest extends \PHPUnit\Framework\TestCase
@@ -51,6 +53,8 @@ class JobManagerTest extends \PHPUnit\Framework\TestCase
         $this->jobFactory = $this->createMock(JobFactory::class);
         $this->entityManager = $this->createMock(EntityManager::class);
         $this->log = $this->createMock(Log::class);
+        $this->queueUtil = $this->createMock(QueueUtil::class);
+        $this->scheduleUtil = $this->createMock(ScheduleUtil::class);
 
         $this->manager = new JobManager(
             $this->config,
@@ -58,7 +62,9 @@ class JobManagerTest extends \PHPUnit\Framework\TestCase
             $this->entityManager,
             $this->serviceFactory,
             $this->jobFactory,
-            $this->log
+            $this->log,
+            $this->queueUtil,
+            $this->scheduleUtil
         );
 
         $this->reflection = new ReflectionHelper($this->manager);

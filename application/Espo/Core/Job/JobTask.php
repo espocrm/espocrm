@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\Job;
 
 use Espo\Core\{
     Application,
@@ -36,11 +36,13 @@ use Espo\Core\{
 
 use Spatie\Async\Task as AsyncTask;
 
+use Throwable;
+
 class JobTask extends AsyncTask
 {
     private $jobId;
 
-    public function __construct($jobId)
+    public function __construct(string $jobId)
     {
         $this->jobId = $jobId;
     }
@@ -52,12 +54,18 @@ class JobTask extends AsyncTask
     public function run()
     {
         $app = new Application();
+
+        $data = (object) [
+            'id' => $this->jobId,
+        ];
+
         try {
-            $app->run(JobRunner::class, (object) [
-                'id' => $this->jobId,
-            ]);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("JobTask: Failed job run. Job id: ".$this->jobId.". Error details: ".$e->getMessage());
+            $app->run(JobRunner::class, $data);
+        }
+        catch (Throwable $e) {
+            $GLOBALS['log']->error(
+                "JobTask: Failed to run job '{$this->jobId}'. Error: " . $e->getMessage()
+            );
         }
     }
 }
