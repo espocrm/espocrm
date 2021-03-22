@@ -41,7 +41,6 @@ use Espo\ORM\{
 
 use StdClass;
 use RuntimeException;
-use InvalidArgumentException;
 
 class RDBRepository extends Repository
 {
@@ -232,7 +231,7 @@ class RDBRepository extends Repository
         $params = $params ?? [];
 
         if ($entity->getEntityType() !== $this->entityType) {
-            throw new InvalidArgumentException("Not supported entity type.");
+            throw new RuntimeException("Not supported entity type.");
         }
 
         if (!$entity->id) {
@@ -283,7 +282,7 @@ class RDBRepository extends Repository
         $params = $params ?? [];
 
         if ($entity->getEntityType() !== $this->entityType) {
-            throw new InvalidArgumentException("Not supported entity type.");
+            throw new RuntimeException("Not supported entity type.");
         }
 
         if (!$entity->id) {
@@ -373,7 +372,7 @@ class RDBRepository extends Repository
         }
 
         if ($entity->getEntityType() !== $this->entityType) {
-            throw new InvalidArgumentException("Not supported entity type.");
+            throw new RuntimeException("Not supported entity type.");
         }
 
         if ($foreign instanceof Entity) {
@@ -421,7 +420,7 @@ class RDBRepository extends Repository
         }
 
         if ($entity->getEntityType() !== $this->entityType) {
-            throw new InvalidArgumentException("Not supported entity type.");
+            throw new RuntimeException("Not supported entity type.");
         }
 
         $this->beforeRelate($entity, $relationName, $foreign, $columnData, $options);
@@ -478,7 +477,7 @@ class RDBRepository extends Repository
         }
 
         if ($entity->getEntityType() !== $this->entityType) {
-            throw new InvalidArgumentException("Not supported entity type.");
+            throw new RuntimeException("Not supported entity type.");
         }
 
         $this->beforeUnrelate($entity, $relationName, $foreign, $options);
