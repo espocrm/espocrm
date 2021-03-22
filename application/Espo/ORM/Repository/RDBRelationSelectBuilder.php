@@ -40,7 +40,6 @@ use Espo\ORM\{
 };
 
 use RuntimeException;
-use BadMethodCallException;
 
 /**
  * Builds select parameters for related records for RDB repository.

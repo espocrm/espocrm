@@ -292,7 +292,7 @@ class RDBRelation
     protected function processCheckForeignEntity(Entity $entity)
     {
         if ($this->foreignEntityType && $this->foreignEntityType !== $entity->getEntityType()) {
-            throw new InvalidArgumentException("Entity type doesn't match an entity type of the relation.");
+            throw new RuntimeException("Entity type doesn't match an entity type of the relation.");
         }
 
         if (!$entity->id) {
@@ -370,7 +370,7 @@ class RDBRelation
         }
 
         if ($id === '') {
-            throw new InvalidArgumentException();
+            throw new RuntimeException();
         }
 
         $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
@@ -389,7 +389,7 @@ class RDBRelation
         }
 
         if ($id === '') {
-            throw new InvalidArgumentException();
+            throw new RuntimeException();
         }
 
         $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
@@ -408,7 +408,7 @@ class RDBRelation
         }
 
         if ($id === '') {
-            throw new InvalidArgumentException();
+            throw new RuntimeException();
         }
 
         $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
