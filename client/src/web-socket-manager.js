@@ -30,22 +30,26 @@ define('web-socket-manager', [], function () {
 
     var WebSocketManager = function (config) {
         this.config = config;
+
         var url = this.config.get('webSocketUrl');
 
         if (url) {
             if (url.indexOf('wss://') === 0) {
                 this.url = url.substr(6);
                 this.protocolPart = 'wss://';
-            } else {
+            }
+            else {
                 this.url = url.substr(5);
                 this.protocolPart = 'ws://';
             }
         } else {
             var siteUrl = this.config.get('siteUrl') || '';
+
             if (siteUrl.indexOf('https://') === 0) {
                 this.url = siteUrl.substr(8);
                 this.protocolPart = 'wss://';
-            } else {
+            }
+            else {
                 this.url = siteUrl.substr(7);
                 this.protocolPart = 'ws://';
             }
@@ -57,18 +61,21 @@ define('web-socket-manager', [], function () {
 
             if (this.protocolPart === 'wss://') {
                 var port = 443;
-            } else {
+            }
+            else {
                 var port = 8080;
             }
 
             var si = this.url.indexOf('/');
+
             if (~si) {
                 this.url = this.url.substr(0, si) + ':' + port;
-            } else {
+            }
+            else {
                 this.url += ':' + port;
             }
 
-            if (this.protocolPart == 'wss://') {
+            if (this.protocolPart === 'wss://') {
                 this.url += '/wss';
             }
         }
@@ -81,18 +88,21 @@ define('web-socket-manager', [], function () {
         connect: function (auth, userId) {
             try {
                 var authArray = Base64.decode(auth).split(':');
-                var username = authArray[0];
+
                 var authToken = authArray[1];
+
                 var url = this.protocolPart + this.url;
 
                 url += '?authToken=' + authToken + '&userId=' + userId;
 
-                var connection = this.connection = new ab.Session(url,
+                this.connection = new ab.Session(url,
                     function () {
                         this.isConnected = true;
+
                         this.subscribeQueue.forEach(function (item) {
                             this.subscribe(item.category, item.callback);
                         }, this);
+
                         this.subscribeQueue = [];
                     }.bind(this),
                     function () {},
@@ -100,45 +110,62 @@ define('web-socket-manager', [], function () {
                 );
             } catch (e) {
                 console.error(e.message);
+
                 this.connection = null;
             }
         },
 
         subscribe: function (category, callback) {
-            if (!this.connection) return;
-            if (!this.isConnected) {
-                this.subscribeQueue.push({category: category, callback: callback});
+            if (!this.connection) {
                 return;
             }
+
+            if (!this.isConnected) {
+                this.subscribeQueue.push({category: category, callback: callback});
+
+                return;
+            }
+
             try {
                 this.connection.subscribe(category, callback);
-            } catch (e) {
+            }
+            catch (e) {
                 if (e.message) {
                     console.error(e.message);
-                } else {
+                }
+                else {
                     console.error("WebSocket: Could not subscribe to "+category+".");
                 }
             }
         },
 
         unsubscribe: function (category, callback) {
-            if (!this.connection) return;
+            if (!this.connection) {
+                return;
+            }
+
             try {
                 this.connection.unsubscribe(category, callback);
-            } catch (e) {
+            }
+            catch (e) {
                 if (e.message) {
                     console.error(e.message);
-                } else {
+                }
+                else {
                     console.error("WebSocket: Could not unsubscribe from "+category+".");
                 }
             }
         },
 
         close: function () {
-            if (!this.connection) return;
+            if (!this.connection) {
+                return;
+            }
+
             try {
                 this.connection.close();
-            } catch (e) {
+            }
+            catch (e) {
                 console.error(e.message);
             }
 
