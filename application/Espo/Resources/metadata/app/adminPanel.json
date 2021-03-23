@@ -279,7 +279,7 @@
             {
                 "url": "#Admin/jobs",
                 "label": "Jobs",
-                "iconClass": "fas fa-clock",
+                "iconClass": "fas fa-list-ul",
                 "description": "jobs"
             },
             {
