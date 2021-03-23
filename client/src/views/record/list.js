@@ -1835,51 +1835,56 @@ define('views/record/list', 'view', function (Dep) {
 
             this.rowList = [];
 
-            if (this.collection.length > 0) {
-                var i = 0;
-                var c = !this.pagination ? 1 : 2;
-
-                var func = function () {
-                    i++;
-
-                    if (i === c) {
-                        if (typeof callback === 'function') {
-                            callback();
-                        }
-                    }
-                };
-
-                this.wait(true);
-
-                var modelList = this.collection.models;
-
-                var count = modelList.length;
-
-                var built = 0;
-
-                modelList.forEach(function (model) {
-                    this.buildRow(i, model, function () {
-                        built++;
-
-                        if (built === count) {
-                            func();
-                            this.wait(false);
-                            this.trigger('after:build-rows');
-                        }
-                    }.bind(this));
-                }, this);
-
-
-                if (this.pagination) {
-                    this.createView('pagination', 'views/record/list-pagination', {
-                        collection: this.collection
-                    }, func);
-                }
-            } else {
+            if (this.collection.length <= 0) {
                 if (typeof callback === 'function') {
                     callback();
+
                     this.trigger('after:build-rows');
                 }
+
+                return;
+            }
+
+            var iteration = 0;
+            var repeatCount = !this.pagination ? 1 : 2;
+
+            var callbackWrapped = function () {
+                iteration++;
+
+                if (iteration === repeatCount) {
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+            };
+
+            this.wait(true);
+
+            var modelList = this.collection.models;
+
+            var count = modelList.length;
+
+            var builtCount = 0;
+
+            modelList.forEach(function (model) {
+                this.buildRow(iteration, model, function () {
+                    builtCount++;
+
+                    if (builtCount === count) {
+                        callbackWrapped();
+
+                        this.wait(false);
+
+                        this.trigger('after:build-rows');
+                    }
+                }.bind(this));
+            }, this);
+
+
+            if (this.pagination) {
+                this.createView('pagination', 'views/record/list-pagination', {
+                    collection: this.collection,
+                }, func);
             }
         },
 
