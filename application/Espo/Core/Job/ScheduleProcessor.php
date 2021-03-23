@@ -43,6 +43,9 @@ use Cron\CronExpression;
 use Throwable;
 use Exception;
 
+/**
+ * Creates jobs from scheduled jobs according scheduling.
+ */
 class ScheduleProcessor
 {
     private $asSoonAsPossibleSchedulingList = [
@@ -78,7 +81,7 @@ class ScheduleProcessor
         $this->jobFactory = $jobFactory;
     }
 
-    public function createJobsFromScheduledJobs() : void
+    public function process() : void
     {
         $activeScheduledJobList = $this->scheduleUtil->getActiveScheduledJobList();
 

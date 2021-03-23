@@ -164,7 +164,7 @@ class JobManager
         $this->queueUtil->markJobsFailed();
         $this->queueUtil->updateFailedJobAttempts();
 
-        $this->scheduleProcessor->createJobsFromScheduledJobs();
+        $this->scheduleProcessor->process();
 
         $this->queueUtil->removePendingJobDuplicates();
 
