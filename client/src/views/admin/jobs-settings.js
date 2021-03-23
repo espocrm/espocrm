@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/jobs-settings', 'views/settings/record/edit', function (Dep) {
+define('views/admin/jobs-settings', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 
@@ -49,7 +49,19 @@ Espo.define('views/admin/jobs-settings', 'views/settings/record/edit', function 
 
         setup: function () {
             Dep.prototype.setup.call(this);
-        }
+
+            console.log(1);
+
+            if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
+
+                this.setFieldReadOnly('jobRunInParallel');
+                this.setFieldReadOnly('jobMaxPortion');
+                this.setFieldReadOnly('jobPoolConcurrencyNumber');
+                this.setFieldReadOnly('daemonInterval');
+                this.setFieldReadOnly('daemonMaxProcessNumber');
+                this.setFieldReadOnly('daemonProcessTimeout');
+            }
+        },
 
     });
 });

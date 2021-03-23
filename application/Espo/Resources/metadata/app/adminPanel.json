@@ -57,6 +57,12 @@
                 "description": "systemRequirements"
             },
             {
+                "url": "#Admin/jobsSettings",
+                "label": "Job Settings",
+                "iconClass": "fas fa-list-ul",
+                "description": "jobsSettings"
+            },
+            {
                 "url": "#Admin/upgrade",
                 "label": "Upgrade",
                 "iconClass": "fas fa-arrow-alt-circle-up",
