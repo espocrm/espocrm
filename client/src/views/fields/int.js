@@ -183,7 +183,7 @@ define('views/fields/int', 'views/fields/base', function (Dep) {
 
         validateInt: function () {
             var value = this.model.get(this.name);
-            if (isNaN(value)) {
+            if (typeof value !== 'undefined' && isNaN(value)) {
                 var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg);
                 return true;

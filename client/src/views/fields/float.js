@@ -72,7 +72,7 @@ Espo.define('views/fields/float', 'views/fields/int', function (Dep) {
 
         validateFloat: function () {
             var value = this.model.get(this.name);
-            if (isNaN(value)) {
+            if (typeof value !== 'undefined' && isNaN(value)) {
                 var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg);
                 return true;
