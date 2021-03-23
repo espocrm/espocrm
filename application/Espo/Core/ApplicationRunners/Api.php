@@ -60,17 +60,17 @@ use Throwable;
  */
 class Api implements Runner
 {
-    protected $routeProcessor;
+    private $routeProcessor;
 
-    protected $authenticationFactory;
+    private $authenticationFactory;
 
-    protected $applicationUser;
+    private $applicationUser;
 
-    protected $routeUtil;
+    private $routeUtil;
 
-    protected $authBuilderFactory;
+    private $authBuilderFactory;
 
-    protected $log;
+    private $log;
 
     public function __construct(
         RouteProcessor $routeProcessor,
@@ -107,7 +107,7 @@ class Api implements Runner
         $slim->run();
     }
 
-    protected function addRoute(SlimApp $slim, array $item)
+    private function addRoute(SlimApp $slim, array $item)
     {
         $method = strtolower($item['method']);
         $route = $item['route'];
@@ -129,7 +129,7 @@ class Api implements Runner
         );
     }
 
-    protected function getRouteParams(array $item, array $args) : array
+    private function getRouteParams(array $item, array $args) : array
     {
         $params = [];
 
@@ -168,7 +168,7 @@ class Api implements Runner
         return $params;
     }
 
-    protected function processRequest(array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped)
+    private function processRequest(array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped)
     {
         try {
             $authRequired = !($item['noAuth'] ?? false);
@@ -202,7 +202,7 @@ class Api implements Runner
         }
     }
 
-    protected function handleException(
+    private function handleException(
         Throwable $exception, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped, string $route
     ) {
         $errorOutput = new ApiErrorOutput($requestWrapped, $route);
