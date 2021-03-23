@@ -137,7 +137,8 @@ Espo.define('views/admin/integrations/edit', ['view', 'model'], function (Dep, M
         },
 
         createFieldView: function (type, name, readOnly, params) {
-            this.createView(name, this.getFieldManager().getViewName(type), {
+            var viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+            this.createView(name, viewName, {
                 model: this.model,
                 el: this.options.el + ' .field[data-name="'+name+'"]',
                 defs: {
