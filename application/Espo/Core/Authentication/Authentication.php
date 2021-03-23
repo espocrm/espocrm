@@ -53,8 +53,6 @@ use Espo\Core\Authentication\{
 use Espo\Core\{
     ApplicationUser,
     ApplicationState,
-    Utils\Config,
-    Utils\Metadata,
     ORM\EntityManagerProxy,
     Api\Request,
     Utils\Log,
@@ -67,28 +65,28 @@ use DateTime;
  */
 class Authentication
 {
-    const FAILED_ATTEMPTS_PERIOD = '60 seconds';
-
-    const MAX_FAILED_ATTEMPT_NUMBER = 10;
-
-    protected $allowAnyAccess;
+    private $allowAnyAccess;
 
     private $portal;
 
-    protected $applicationUser;
-    protected $applicationState;
-    protected $config;
-    protected $metadata;
-    protected $entityManager;
-    protected $authLoginFactory;
-    protected $auth2FAFactory;
-    protected $log;
+    private $applicationUser;
+
+    private $applicationState;
+
+    private $configDataProvider;
+
+    private $entityManager;
+
+    private $authLoginFactory;
+
+    private $auth2FAFactory;
+
+    private $log;
 
     public function __construct(
         ApplicationUser $applicationUser,
         ApplicationState $applicationState,
-        Config $config,
-        Metadata $metadata,
+        ConfigDataProvider $configDataProvider,
         EntityManagerProxy $entityManagerProxy,
         LoginFactory $authLoginFactory,
         TwoFAFactory $auth2FAFactory,
@@ -100,18 +98,13 @@ class Authentication
 
         $this->applicationUser = $applicationUser;
         $this->applicationState = $applicationState;
-        $this->config = $config;
-        $this->metadata = $metadata;
+
+        $this->configDataProvider = $configDataProvider;
         $this->entityManager = $entityManagerProxy;
         $this->authLoginFactory = $authLoginFactory;
         $this->auth2FAFactory = $auth2FAFactory;
         $this->authTokenManager = $authTokenManager;
         $this->log = $log;
-    }
-
-    protected function getDefaultAuthenticationMethod()
-    {
-        return $this->config->get('authenticationMethod', 'Espo');
     }
 
     protected function setPortal(Portal $portal)
@@ -140,23 +133,18 @@ class Authentication
         ?string $username, ?string $password, Request $request, ?string $authenticationMethod = null
     ) : Result {
 
-        $isByTokenOnly = false;
+        if (
+            $authenticationMethod &&
+            !$this->configDataProvider->authenticationMethodIsApi($authenticationMethod)
+        ) {
+            $this->log->warning(
+                "AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'."
+            );
 
-        if ($authenticationMethod) {
-            if (!$this->metadata->get(['authenticationMethods', $authenticationMethod, 'api'])) {
-                $this->log->warning(
-                    "AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'."
-                );
-
-                return Result::fail('Not allowed authentication method');
-            }
+            return Result::fail('Not allowed authentication method');
         }
 
-        if (!$authenticationMethod) {
-            if ($request->getHeader('Espo-Authorization-By-Token') === 'true') {
-                $isByTokenOnly = true;
-            }
-        }
+        $isByTokenOnly = !$authenticationMethod && $request->getHeader('Espo-Authorization-By-Token') === 'true';
 
         if (!$isByTokenOnly) {
             $this->checkFailedAttemptsLimit($request);
@@ -167,13 +155,13 @@ class Authentication
 
         if (!$authenticationMethod) {
             $authToken = $this->authTokenManager->get($password);
+        }
 
-            if ($authToken && $authToken->getSecret()) {
-                $sentSecret = $request->getCookieParam('auth-token-secret');
+        if ($authToken && $authToken->getSecret()) {
+            $sentSecret = $request->getCookieParam('auth-token-secret');
 
-                if ($sentSecret !== $authToken->getSecret()) {
-                    $authToken = null;
-                }
+            if ($sentSecret !== $authToken->getSecret()) {
+                $authToken = null;
             }
         }
 
@@ -181,36 +169,16 @@ class Authentication
             $authTokenIsFound = true;
         }
 
-        if ($authToken && $authToken->isActive()) {
-            if (!$this->allowAnyAccess) {
-                if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->id) {
-                    $this->log->info(
-                        "AUTH: Trying to login to portal with a token not related to portal."
-                    );
-
-                    return Result::fail('Denied');
-                }
-
-                if (!$this->isPortal() && $authToken->getPortalId()) {
-                    $this->log->info(
-                        "AUTH: Trying to login to crm with a token related to portal."
-                    );
-
-                    return Result::fail('Denied');
-                }
-            }
-
-            if ($this->allowAnyAccess) {
-                if ($authToken->getPortalId() && !$this->isPortal()) {
-                    $portal = $this->entityManager->getEntity('Portal', $authToken->getPortalId());
-
-                    if ($portal) {
-                        $this->setPortal($portal);
-                    }
-                }
-            }
-        } else {
+        if ($authToken && !$authToken->isActive()) {
             $authToken = null;
+        }
+
+        if ($authToken) {
+            $authTokenCheckResult = $this->processAuthTokenCheck($authToken);
+
+            if (!$authTokenCheckResult) {
+                return Result::fail('Denied');
+            }
         }
 
         if ($isByTokenOnly && !$authToken) {
@@ -224,12 +192,13 @@ class Authentication
         }
 
         if (!$authenticationMethod) {
-            $authenticationMethod = $this->getDefaultAuthenticationMethod();
+            $authenticationMethod = $this->configDataProvider->getDefaultAuthenticationMethod();
         }
 
         $login = $this->authLoginFactory->create($authenticationMethod, $this->isPortal());
 
-        $loginData = LoginData::createBuilder()
+        $loginData = LoginData
+            ::createBuilder()
             ->setUsername($username)
             ->setPassword($password)
             ->setAuthToken($authToken)
@@ -253,7 +222,7 @@ class Authentication
             return Result::fail();
         }
 
-        if (!$user->isAdmin() && $this->config->get('maintenanceMode')) {
+        if (!$user->isAdmin() && $this->configDataProvider->isMaintenanceMode()) {
             throw new ServiceUnavailable("Application is in maintenance mode.");
         }
 
@@ -273,7 +242,11 @@ class Authentication
 
         $this->applicationUser->setUser($user);
 
-        if (!$result->isSecondStepRequired() && !$authToken && $this->config->get('auth2FA')) {
+        if (
+            !$result->isSecondStepRequired() &&
+            !$authToken &&
+            $this->configDataProvider->isTwoFactorEnabled()
+        ) {
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
@@ -288,7 +261,7 @@ class Authentication
                 $this->authTokenManager->renew($authToken);
             }
 
-        	$user->set('token', $authToken->getToken());
+            $user->set('token', $authToken->getToken());
             $user->set('authTokenId', $authToken->id ?? null);
 
             if ($authLogRecord) {
@@ -318,7 +291,40 @@ class Authentication
         return $result;
     }
 
-    protected function processUserCheck(User $user, ?AuthLogRecord $authLogRecord) : bool
+    private function processAuthTokenCheck(AuthToken $authToken) : bool
+    {
+        if ($this->allowAnyAccess && $authToken->getPortalId() && !$this->isPortal()) {
+            $portal = $this->entityManager->getEntity('Portal', $authToken->getPortalId());
+
+            if ($portal) {
+                $this->setPortal($portal);
+            }
+        }
+
+        if ($this->allowAnyAccess) {
+            return true;
+        }
+
+        if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->id) {
+            $this->log->info(
+                "AUTH: Trying to login to portal with a token not related to portal."
+            );
+
+            return false;
+        }
+
+        if (!$this->isPortal() && $authToken->getPortalId()) {
+            $this->log->info(
+                "AUTH: Trying to login to crm with a token related to portal."
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    private function processUserCheck(User $user, ?AuthLogRecord $authLogRecord) : bool
     {
         if (!$user->isActive()) {
             $this->log->info(
@@ -370,7 +376,7 @@ class Authentication
         return true;
     }
 
-    protected function processTwoFactor(Result $result, Request $request) : Result
+    private function processTwoFactor(Result $result, Request $request) : Result
     {
         $loggedUser = $result->getLoggedUser();
 
@@ -395,7 +401,7 @@ class Authentication
         return Result::secondStepRequired($result->getUser(), $impl->getLoginData($loggedUser));
     }
 
-    protected function getUser2FAMethod(User $user) : ?string
+    private function getUser2FAMethod(User $user) : ?string
     {
         $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
 
@@ -413,22 +419,17 @@ class Authentication
             return null;
         }
 
-        if (
-            !in_array(
-                $method,
-                $this->config->get('auth2FAMethodList', [])
-            )
-        ) {
+        if (!in_array($method, $this->configDataProvider->getTwoFactorMethodList())) {
             return null;
         }
 
         return $method;
     }
 
-    protected function checkFailedAttemptsLimit(Request $request)
+    private function checkFailedAttemptsLimit(Request $request) : void
     {
-        $failedAttemptsPeriod = $this->config->get('authFailedAttemptsPeriod', self::FAILED_ATTEMPTS_PERIOD);
-        $maxFailedAttempts = $this->config->get('authMaxFailedAttemptNumber', self::MAX_FAILED_ATTEMPT_NUMBER);
+        $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
+        $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
 
         $requestTime = intval($request->getServerParam('REQUEST_TIME_FLOAT'));
 
@@ -466,12 +467,12 @@ class Authentication
         }
     }
 
-    protected function createAuthToken(User $user, Request $request) : AuthToken
+    private function createAuthToken(User $user, Request $request) : AuthToken
     {
         $createSecret = $request->getHeader('Espo-Authorization-Create-Token-Secret') === 'true';
 
         if ($createSecret) {
-            if ($this->config->get('authTokenSecretDisabled')) {
+            if ($this->configDataProvider->isAuthTokenSecretDisabled()) {
                 $createSecret = false;
             }
         }
@@ -492,7 +493,7 @@ class Authentication
             $this->setSecretInCookie($authToken->getSecret());
         }
 
-        if ($this->config->get('authTokenPreventConcurrent') && $authToken instanceof AuthTokenEntity) {
+        if ($this->configDataProvider->preventConcurrentAuthToken() && $authToken instanceof AuthTokenEntity) {
             $concurrentAuthTokenList = $this->entityManager
                 ->getRepository('AuthToken')
                 ->select(['id'])
@@ -513,7 +514,7 @@ class Authentication
         return $authToken;
     }
 
-    public function destroyAuthToken(string $token, Request $request)
+    public function destroyAuthToken(string $token, Request $request) : bool
     {
         $authToken = $this->authTokenManager->get($token);
 
@@ -537,6 +538,7 @@ class Authentication
     protected function createAuthLogRecord(
         ?string $username, ?User $user, Request $request, ?string $authenticationMethod = null
     ) : ?AuthLogRecord {
+
         if ($username === '**logout') {
             return null;
         }
@@ -567,7 +569,8 @@ class Authentication
 
         if ($user) {
             $authLogRecord->set('userId', $user->id);
-        } else {
+        }
+        else {
             $authLogRecord->set('isDenied', true);
             $authLogRecord->set('denialReason', 'CREDENTIALS');
 
@@ -577,7 +580,7 @@ class Authentication
         return $authLogRecord;
     }
 
-    protected function logDenied(?AuthLogRecord $authLogRecord, string $denialReason)
+    private function logDenied(?AuthLogRecord $authLogRecord, string $denialReason) : void
     {
         if (!$authLogRecord) {
             return;
@@ -588,19 +591,9 @@ class Authentication
         $this->entityManager->saveEntity($authLogRecord);
     }
 
-    protected function setSecretInCookie(?string $secret)
+    private function setSecretInCookie(?string $secret) : void
     {
-        if (!$secret) {
-            $time = -1;
-        } else {
-            $time = strtotime('+1000 days');
-        }
-
-        if (version_compare(\PHP_VERSION, '7.3.0') < 0) {
-            setcookie('auth-token-secret', $secret, $time, '/', '', false, true);
-
-            return;
-        }
+        $time = $secret ? strtotime('+1000 days') : -1;
 
         setcookie('auth-token-secret', $secret, [
             'expires' => $time,
