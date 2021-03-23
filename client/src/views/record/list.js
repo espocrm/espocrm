@@ -1402,6 +1402,7 @@ define('views/record/list', 'view', function (Dep) {
 
                     return;
                 }
+
                 this.checkedList = [];
 
                 this.allResultIsChecked = false;
@@ -1412,6 +1413,7 @@ define('views/record/list', 'view', function (Dep) {
             }, this);
 
             this.checkedList = [];
+
             if (!this.options.skipBuildRows) {
                 this.buildRows();
             }
