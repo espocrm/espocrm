@@ -128,6 +128,9 @@ class Authentication
 
     /**
      * Process logging in.
+     *
+     * @throws Forbidden
+     * @throws ServiceUnavailable
      */
     public function login(
         ?string $username, ?string $password, Request $request, ?string $authenticationMethod = null
