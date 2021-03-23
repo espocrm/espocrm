@@ -50,8 +50,6 @@ define('views/admin/jobs-settings', 'views/settings/record/edit', function (Dep)
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            console.log(1);
-
             if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
 
                 this.setFieldReadOnly('jobRunInParallel');
