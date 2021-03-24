@@ -29,44 +29,15 @@
 
 namespace Espo\Core\WebSocket;
 
-use Espo\Core\Utils\Log;
+use React\EventLoop\LoopInterface;
 
-use StdClass;
-
-class Submission
+/**
+ * Subscribes messages to Pusher::onMessageReceive method.
+ */
+interface Subscriber
 {
-    private $sender;
-
-    private $log;
-
-    public function __construct(Sender $sender, Log $log)
-    {
-        $this->sender = $sender;
-        $this->log = $log;
-    }
-
     /**
-     * Submit to a web-socket server.
+     * Subscribe messages to Pusher::onMessageReceive method.
      */
-    public function submit(string $topic, ?string $userId = null, ?StdClass $data = null) : void
-    {
-        if (!$data) {
-            $data = (object) [];
-        }
-
-        if ($userId) {
-            $data->userId = $userId;
-        }
-
-        $data->topicId = $topic;
-
-        $message = json_encode($data);
-
-        try {
-            $this->sender->send($message);
-        }
-        catch (Throwable $e) {
-            $this->log->error("WebSocketSubmission: " . $e->getMessage());
-        }
-    }
+    public function subscribe(Pusher $pusher, LoopInterface $loop) : void;
 }

@@ -29,44 +29,34 @@
 
 namespace Espo\Core\WebSocket;
 
-use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Config;
 
-use StdClass;
+use ZMQContext;
+use ZMQ;
 
-class Submission
+class ZeroMQSender implements Sender
 {
-    private $sender;
+    private $config;
 
-    private $log;
-
-    public function __construct(Sender $sender, Log $log)
+    public function __construct(Config $config)
     {
-        $this->sender = $sender;
-        $this->log = $log;
+        $this->config = $config;
     }
 
-    /**
-     * Submit to a web-socket server.
-     */
-    public function submit(string $topic, ?string $userId = null, ?StdClass $data = null) : void
+    public function send(string $message) : void
     {
-        if (!$data) {
-            $data = (object) [];
-        }
+        $dsn = $this->config->get('webSocketSubmissionDsn', 'tcp://localhost:5555');
 
-        if ($userId) {
-            $data->userId = $userId;
-        }
+        $context = new ZMQContext();
 
-        $data->topicId = $topic;
+        $socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
 
-        $message = json_encode($data);
+        $socket->connect($dsn);
 
-        try {
-            $this->sender->send($message);
-        }
-        catch (Throwable $e) {
-            $this->log->error("WebSocketSubmission: " . $e->getMessage());
-        }
+        $socket->send($message);
+
+        $socket->setSockOpt(ZMQ::SOCKOPT_LINGER, 1000);
+
+        $socket->disconnect($dsn);
     }
 }

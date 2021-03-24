@@ -31,26 +31,8 @@ namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
     Application\Runner,
-    Utils\Config,
-    Utils\Metadata,
-    WebSocket\Pusher,
+    WebSocket\ServerStarter,
 };
-
-use React\{
-    EventLoop\Factory as EventLoopFactory,
-    ZMQ\Context as ZMQContext,
-    Socket\Server as SocketServer,
-    Socket\SecureServer as SocketSecureServer,
-};
-
-use Ratchet\{
-    Server\IoServer,
-    Http\HttpServer,
-    WebSocket\WsServer,
-    Wamp\WampServer,
-};
-
-use ZMQ;
 
 /**
  * Runs WebSocket.
@@ -59,87 +41,15 @@ class WebSocket implements Runner
 {
     use Cli;
 
-    protected $categoriesData;
+    private $serverStarter;
 
-    protected $phpExecutablePath;
-
-    protected $isDebugMode;
-
-    protected $useSecureServer;
-
-    protected $port;
-
-    protected $config;
-
-    protected $metadata;
-
-    public function __construct(Config $config, Metadata $metadata)
+    public function __construct(ServerStarter $serverStarter)
     {
-        $this->config = $config;
-        $this->metadata = $metadata;
-
-        $this->categoriesData = $metadata->get(['app', 'webSocket', 'categories'], []);
-
-        $this->phpExecutablePath = $config->get('phpExecutablePath');
-        $this->isDebugMode = (bool) $config->get('webSocketDebugMode');
-        $this->useSecureServer = (bool) $config->get('webSocketUseSecureServer');
-
-        $this->port = $this->config->get('webSocketPort');
-
-        if (!$this->port) {
-            $this->port = $this->useSecureServer ? '8443' : '8080';
-        }
+        $this->serverStarter = $serverStarter;
     }
 
     public function run() : void
     {
-        $loop = EventLoopFactory::create();
-
-        $pusher = new Pusher($this->categoriesData, $this->phpExecutablePath, $this->isDebugMode);
-
-        $context = new ZMQContext($loop);
-
-        $pull = $context->getSocket(ZMQ::SOCKET_PULL);
-
-        $pull->bind('tcp://127.0.0.1:5555');
-        $pull->on('message', [$pusher, 'onMessageReceive']);
-
-        $socketServer = new SocketServer('0.0.0.0:' . $this->port, $loop);
-
-        if ($this->useSecureServer) {
-            $sslParams = $this->getSslParams();
-
-            $socketServer = new SocketSecureServer($socketServer, $loop, $sslParams);
-        }
-
-        $webServer = new IoServer(
-            new HttpServer(
-                new WsServer(
-                    new WampServer($pusher)
-                )
-            ),
-            $socketServer
-        );
-
-        $loop->run();
-    }
-
-    protected function getSslParams() : array
-    {
-        $sslParams = [
-            'local_cert' => $this->config->get('webSocketSslCertificateFile'),
-            'allow_self_signed' => $this->config->get('webSocketSslAllowSelfSigned', false),
-            'verify_peer' => false,
-        ];
-
-        if ($this->config->get('webSocketSslCertificatePassphrase')) {
-            $sslParams['passphrase'] = $this->config->get('webSocketSslCertificatePassphrase');
-        }
-
-        if ($this->config->get('webSocketSslCertificateLocalPrivateKey')) {
-            $sslParams['local_pk'] = $this->config->get('webSocketSslCertificateLocalPrivateKey');
-        }
-
-        return $sslParams;
+        $this->serverStarter->start();
     }
 }

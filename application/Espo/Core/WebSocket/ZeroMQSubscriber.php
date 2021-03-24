@@ -29,44 +29,23 @@
 
 namespace Espo\Core\WebSocket;
 
-use Espo\Core\Utils\Log;
+use React\{
+    EventLoop\LoopInterface,
+    ZMQ\Context as ZMQContext,
+};
 
-use StdClass;
+use ZMQ;
 
-class Submission
+class ZeroMQSubscriber implements Subscriber
 {
-    private $sender;
-
-    private $log;
-
-    public function __construct(Sender $sender, Log $log)
+    public function subscribe(Pusher $pusher, LoopInterface $loop) : void
     {
-        $this->sender = $sender;
-        $this->log = $log;
-    }
+        $context = new ZMQContext($loop);
 
-    /**
-     * Submit to a web-socket server.
-     */
-    public function submit(string $topic, ?string $userId = null, ?StdClass $data = null) : void
-    {
-        if (!$data) {
-            $data = (object) [];
-        }
+        $pull = $context->getSocket(ZMQ::SOCKET_PULL);
 
-        if ($userId) {
-            $data->userId = $userId;
-        }
+        $pull->bind('tcp://127.0.0.1:5555');
 
-        $data->topicId = $topic;
-
-        $message = json_encode($data);
-
-        try {
-            $this->sender->send($message);
-        }
-        catch (Throwable $e) {
-            $this->log->error("WebSocketSubmission: " . $e->getMessage());
-        }
+        $pull->on('message', [$pusher, 'onMessageReceive']);
     }
 }

@@ -42,7 +42,9 @@ class WebSocketSubmit
     public static $order = 20;
 
     protected $metadata;
+
     protected $webSocketSubmission;
+
     protected $config;
 
     public function __construct(Metadata $metadata, WebSocketSubmission $webSocketSubmission, Config $config)
@@ -54,18 +56,27 @@ class WebSocketSubmit
 
     public function afterSave(Entity $entity, array $options = [])
     {
-        if ($options['silent'] ?? false) return;
-        if ($entity->isNew()) return;
-        if (!$this->config->get('useWebSocket')) return;
+        if ($options['silent'] ?? false) {
+            return;
+        }
+
+        if ($entity->isNew()) {
+            return;
+        }
+
+        if (!$this->config->get('useWebSocket')) {
+            return;
+        }
 
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
-        if (!$this->metadata->get(['scopes', $scope, 'object'])) return;
-
-        $data = (object) [];
+        if (!$this->metadata->get(['scopes', $scope, 'object'])) {
+            return;
+        }
 
         $topic = "recordUpdate.{$scope}.{$id}";
-        $this->webSocketSubmission->submit($topic, null, $data);
+
+        $this->webSocketSubmission->submit($topic, null);
     }
 }

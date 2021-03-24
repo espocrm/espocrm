@@ -381,16 +381,16 @@ class Pusher implements WampServerInterface
     {
     }
 
-    public function onMessageReceive($dataString)
+    public function onMessageReceive(string $message) : void
     {
-        $data = json_decode($dataString);
+        $data = json_decode($message);
 
         if (!property_exists($data, 'topicId')) {
             return;
         }
 
         $userId = $data->userId ?? null;
-        $topicId = $data->topicId;
+        $topicId = $data->topicId ?? null;
 
         if (!$topicId) {
             return;
@@ -424,24 +424,26 @@ class Pusher implements WampServerInterface
             if ($this->isDebugMode) {
                 $this->log("message {$topicId} for user {$userId}");
             }
-        } else {
-            $topic = $this->topicHash[$topicId] ?? null;
 
-            if ($topic) {
-                $topic->broadcast($data);
+            return;
+        }
 
-                if ($this->isDebugMode) {
-                    $this->log("send {$topicId} to all");
-                }
-            }
+        $topic = $this->topicHash[$topicId] ?? null;
+
+        if ($topic) {
+            $topic->broadcast($data);
 
             if ($this->isDebugMode) {
-                $this->log("message {$topicId} for all");
+                $this->log("send {$topicId} to all");
             }
+        }
+
+        if ($this->isDebugMode) {
+            $this->log("message {$topicId} for all");
         }
     }
 
-    protected function log($msg)
+    protected function log(string $msg) : void
     {
         echo "[" . date('Y-m-d H:i:s') . "] " . $msg . "\n";
     }
