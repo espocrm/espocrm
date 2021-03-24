@@ -41,6 +41,7 @@ class Webhook
     public static $order = 101;
 
     protected $metadata;
+
     protected $webhookManager;
 
     public function __construct(Metadata $metadata, WebhookManager $webhookManager)
@@ -51,20 +52,31 @@ class Webhook
 
     public function afterSave(Entity $entity, array $options = [])
     {
-        if (!empty($options['silent'])) return;
-        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'object'])) return;
+        if (!empty($options['silent'])) {
+            return;
+        }
+
+        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'object'])) {
+            return;
+        }
 
         if ($entity->isNew()) {
             $this->webhookManager->processCreate($entity);
-        } else {
+        }
+        else {
             $this->webhookManager->processUpdate($entity);
         }
     }
 
     public function afterRemove(Entity $entity, array $options = [])
     {
-        if (!empty($options['silent'])) return;
-        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'object'])) return;
+        if (!empty($options['silent'])) {
+            return;
+        }
+
+        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'object'])) {
+            return;
+        }
 
         $this->webhookManager->processDelete($entity);
     }
