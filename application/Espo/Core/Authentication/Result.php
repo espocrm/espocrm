@@ -73,29 +73,29 @@ class Result
     /**
      * Create an instance for a successful login.
      */
-    public static function success(User $user)
+    public static function success(User $user) : self
     {
-        return new Result(self::STATUS_SUCCESS, $user);
+        return new self(self::STATUS_SUCCESS, $user);
     }
 
     /**
      * Create an instance for a failed login.
      */
-    public static function fail(?string $reason = null)
+    public static function fail(?string $reason = null) : self
     {
         $data = $reason ?
             ResultData::fromFailReason($reason) :
             ResultData::fromNothing();
 
-        return new Result(self::STATUS_FAIL, null, $data);
+        return new self(self::STATUS_FAIL, null, $data);
     }
 
     /**
      * Create an instance for a login requiring a second step. E.g. for 2FA.
      */
-    public static function secondStepRequired(User $user, ResultData $data)
+    public static function secondStepRequired(User $user, ResultData $data) : self
     {
-        return new Result(self::STATUS_SECOND_STEP_REQUIRED, $user, $data);
+        return new self(self::STATUS_SECOND_STEP_REQUIRED, $user, $data);
     }
 
     /**
