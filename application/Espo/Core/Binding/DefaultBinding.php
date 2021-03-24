@@ -44,6 +44,11 @@ class DefaultBinding
         );
 
         $binder->bindService(
+            'Espo\\Core\\Container\\Container',
+            'container'
+        );
+
+        $binder->bindService(
             'Espo\\ORM\\EntityManager',
             'entityManager'
         );

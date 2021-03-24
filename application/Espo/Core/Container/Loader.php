@@ -27,24 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Container;
 
-use Espo\Core\{
-    Container\Loader,
-    InjectableFactory,
-    Portal\AclManagerContainer as PortalAclManagerContainerService
-};
-
-class PortalAclManagerContainer implements Loader
+interface Loader
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory) {
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    public function load() : PortalAclManagerContainerService
-    {
-        return new PortalAclManagerContainerService($this->injectableFactory);
-    }
+    // @todo Uncomment when PHP 7.4 is a min supported version.
+    //public function load() : object;
 }

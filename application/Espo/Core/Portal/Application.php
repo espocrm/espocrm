@@ -36,9 +36,9 @@ use Espo\Core\Exceptions\{
 };
 
 use Espo\Core\{
-    ContainerBuilder,
+    Container\ContainerBuilder,
     Portal\Container as PortalContainer,
-    Portal\ContainerConfiguration as PortalContainerConfiguration,
+    Portal\Container\ContainerConfiguration as PortalContainerConfiguration,
     Portal\Utils\Config,
     Application as BaseApplication,
 };

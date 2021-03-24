@@ -27,24 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+namespace Espo\Core\Container;
 
-use Espo\Core\{
-    Container\Loader,
-    InjectableFactory,
-    Portal\AclManagerContainer as PortalAclManagerContainerService
-};
+use ReflectionClass;
+use RuntimeException;
 
-class PortalAclManagerContainer implements Loader
+/**
+ * DI container for services. Lazy initialization is used. Services are instantiated only once.
+ *
+ * See https://docs.espocrm.com/development/di/.
+ */
+interface Container
 {
-    private $injectableFactory;
+    /**
+     * Obtain a service object.
+     *
+     * @throws RuntimeException If not gettable.
+     */
+    public function get(string $name) : object;
 
-    public function __construct(InjectableFactory $injectableFactory) {
-        $this->injectableFactory = $injectableFactory;
-    }
+    /**
+     * Check whether a service can be obtained.
+     */
+    public function has(string $name) : bool;
 
-    public function load() : PortalAclManagerContainerService
-    {
-        return new PortalAclManagerContainerService($this->injectableFactory);
-    }
+    /**
+     * Set a service object. Must be configured as settable.
+     *
+     * @throws RuntimeException Is not settable or already set.
+     */
+    public function set(string $name, object $object) : void;
+
+    /**
+     * Get a class of a service.
+     *
+     * @throws RuntimeException If not gettable.
+     */
+    public function getClass(string $name) : ReflectionClass;
 }

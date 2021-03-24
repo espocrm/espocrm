@@ -30,6 +30,7 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     ORM\EntityManager,
     ApplicationState,
 };
@@ -40,8 +41,9 @@ use Espo\Entities\{
 
 class Preferences implements Loader
 {
-    protected $entityManager;
-    protected $applicationState;
+    private $entityManager;
+
+    private $applicationState;
 
     public function __construct(EntityManager $entityManager, ApplicationState $applicationState)
     {

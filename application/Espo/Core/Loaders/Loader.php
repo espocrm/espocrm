@@ -29,8 +29,11 @@
 
 namespace Espo\Core\Loaders;
 
-interface Loader
+use Espo\Core\Container\Loader as BaseLoader;
+
+/**
+ * @deprecated Since v6.2.0. Use `Espo\Core\Container\Loader`.
+ */
+interface Loader extends BaseLoader
 {
-    // @todo Uncomment when PHP 7.4 is a min supported version.
-    //public function load() : object;
 }

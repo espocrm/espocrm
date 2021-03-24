@@ -30,13 +30,14 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     Container,
     ApplicationState as ApplicationStateService,
 };
 
 class ApplicationState implements Loader
 {
-    protected $container;
+    private $container;
 
     public function __construct(Container $container)
     {
