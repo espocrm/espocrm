@@ -42,21 +42,21 @@ class Result
 
     const STATUS_FAIL = 'fail';
 
-    protected $user;
+    private $user;
 
-    protected $status;
+    private $status;
 
-    protected $message = null;
+    private $message = null;
 
-    protected $token = null;
+    private $token = null;
 
-    protected $view = null;
+    private $view = null;
 
-    protected $loggedUser = null;
+    private $loggedUser = null;
 
-    protected $failReason = null;
+    private $failReason = null;
 
-    protected function __construct(string $status, ?User $user = null, ?ResultData $data = null)
+    private function __construct(string $status, ?User $user = null, ?ResultData $data = null)
     {
         $this->user = $user;
         $this->status = $status;
