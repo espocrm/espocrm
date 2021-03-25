@@ -108,19 +108,18 @@
   "options": {
     "modRewriteInstruction": {
       "apache": {
-        "windows": "<br> <pre>1. Encontrar el archivo httpd.conf (generalmente lo encontrará en una carpeta llamada conf, config o o algo similar a esas dis líneas)<br>\n2. Dentro del archivo httpd.conf descomentamos la línea LoadModule rewrite_module modules/mod_rewrite.so (eliminar el '#' que está al comienzo de la línea)<br>\n3. También encuentre que la línea ClearModuleList no esté comentada después busque y asegurese que la línea  AddModule mod_rewrite.c no está comentada tampoco.\n</pre>",
-        "linux": "<br><br>1. Permita \"mod_rewrite\". Para hacerlo, ejecute estos comandos en una sesión de Terminal:<pre>{APACHE1}</pre><br>2. Permita soporte .htaccess  Agregue/edite la configuración del servidor (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Después de correr esto en una sesión de Terminal:<pre>{APACHE3}</pre><br>3. Trate de agregar la ruta RewriteBase, abra el archivo {API_PATH}.htaccess y reemplace la línea:<pre>{APACHE4}</pre> por <pre>{APACHE5}</pre><br> Para más información, vea la guía <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\">Apache server configuration for EspoCRM (en inglés)</a>.<br><br>"
+        "windows": "<br> <pre>1. Encontrar el archivo httpd.conf (generalmente lo encontrará en una carpeta llamada conf, config o o algo similar a esas dis líneas)<br>\n2. Dentro del archivo httpd.conf descomentamos la línea <code>{WINDOWS_APACHE1}</code> (eliminar el '#' que está al comienzo de la línea)<br>\n3. También encuentre que la línea ClearModuleList no esté comentada después busque y asegurese que la línea  AddModule mod_rewrite.c no está comentada tampoco.\n</pre>",
+        "linux": "<br><br>1. Permita \"mod_rewrite\". Para hacerlo, ejecute estos comandos en una sesión de Terminal:<pre>{APACHE1}</pre><br>2. Permita soporte .htaccess  Agregue/edite la configuración del servidor (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>):<pre>{APACHE2}</pre>\n Después de correr esto en una sesión de Terminal:<pre>{APACHE3}</pre><br>3. Trate de agregar la ruta RewriteBase, abra el archivo {API_PATH}.htaccess y reemplace la línea:<pre>{APACHE4}</pre> por <pre>{APACHE5}</pre><br> Para más información, vea la guía <a href=\"{APACHE_LINK}\" target=\"_blank\">Apache server configuration for EspoCRM (en inglés)</a>.<br><br>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Para obtener más información, vea la guía <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM (en inglés)</a>.<br><br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Para obtener más información, vea la guía <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM (en inglés)</a>.<br><br>"
+        "linux": "<br> Añada este código al archivo de configuración de su servidor Nginx <code>{NGINX_PATH}</code> en la sección \"server\": \n<pre>\n{NGINX}\n</pre> <br> Para obtener más información, vea la guía <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM (en inglés)</a>.<br><br>"
       }
     },
     "modRewriteTitle": {
-      "apache": "API Error: EspoCRM API is unavailable.<br> Posibles problemas: \"mod_rewrite\" deshabilitado en el servidor Apache, soporte .htaccess deshabilitado o problema en RewriteBase.<br>Avance paso por paso.  Después de cada paso, verifique si resolvió su problema. ",
-      "nginx": "API Error: EspoCRM API is unavailable.<br> Añada este código al archivo de configuración de su servidor Nginx (/etc/nginx/sites-available/YOUR_SITE) en la sección \"server\": ",
-      "microsoft-iis": "API Error: EspoCRM API is unavailable.<br> Posible problema: \"URL Rewrite\" deshabilitado. Verifique y active el módulo \"URL Rewrite\" en su servidor IIS",
-      "default": "API Error: EspoCRM API is unavailable.<br> Posible problema: Módulo Rewrite deshabilitado.  Verifique y Active el Módulo Rewrite en su servidor (e.g. mod_rewrite en Apache) y el soporte .htaccess. "
+      "apache": "<h3>API Error: EspoCRM API is unavailable.</h3><br>Avance paso por paso.  Después de cada paso, verifique si resolvió su problema. ",
+      "nginx": "<h3>API Error: EspoCRM API is unavailable.</h3>",
+      "microsoft-iis": "<h3>API Error: EspoCRM API is unavailable.</h3><br> Posible problema: \"URL Rewrite\" deshabilitado. Verifique y active el módulo \"URL Rewrite\" en su servidor IIS",
+      "default": "<h3>API Error: EspoCRM API is unavailable.</h3><br> Posible problema: Módulo Rewrite deshabilitado.  Verifique y Active el Módulo Rewrite en su servidor (e.g. mod_rewrite en Apache) y el soporte .htaccess. "
     }
   },
   "systemRequirements": {
