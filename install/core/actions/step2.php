@@ -34,7 +34,9 @@ $clearedCookieList = [
 ];
 
 foreach ($clearedCookieList as $cookieName) {
-    if (!isset($_COOKIE[$cookieName])) continue;
+    if (!isset($_COOKIE[$cookieName])) {
+        continue;
+    }
 
     setcookie($cookieName, null, -1, '/');
 }
