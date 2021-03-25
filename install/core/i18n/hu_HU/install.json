@@ -98,18 +98,17 @@
     "modRewriteInstruction": {
       "apache": {
         "windows": "<br> <pre>1. Keresse meg a httpd.conf fájlt (általában megtalálja azt egy mappában, amit conf, config vagy valami hasonló sorok mentén talál) <br>\n2. A httpd.conf fájl belsejében olvassa el a LoadModule rewrite_module modulok / mod_rewrite.so sorát (távolítsa el a font \"#\" jelet a sor elejéről) <br>\n3. Keresse meg a ClearModuleList vonalat sem, majd keresse meg és győződjön meg róla, hogy a mod_rewrite.c AddModule vonalat nem kommentálta.\n</pre>",
-        "linux": "Matton 1. Engedélyezze a \"mod_rewrite\" beállítást. Ehhez futtassa ezeket a parancsokat egy terminálban: <pre>{APACHE1}</pre> <br> 2. Engedélyezze a .htaccess támogatást. A kiszolgáló konfigurációs beállításainak hozzáadása / szerkesztése (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf): <pre>{APACHE2}</pre>\nEzután futtassa ezt a parancsot egy terminálban: <pre>{APACHE3}</pre> <br> 3. Próbálja meg hozzáadni a RewriteBase elérési utat, nyisson meg egy {API_PATH} .htaccess fájlt, és cserélje ki a következő sort: <pre>{APACHE4}</pre> A <pre>{APACHE5}</pre> az <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\"> Apache kiszolgáló konfigurációja az EspoCRM-hez </a>. <br> <br>"
+        "linux": "<br><br>Matton 1. Engedélyezze a \"mod_rewrite\" beállítást. Ehhez futtassa ezeket a parancsokat egy terminálban: <pre>{APACHE1}</pre> <br> 2. Engedélyezze a .htaccess támogatást. A kiszolgáló konfigurációs beállításainak hozzáadása / szerkesztése (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>): <pre>{APACHE2}</pre>\nEzután futtassa ezt a parancsot egy terminálban: <pre>{APACHE3}</pre> <br> 3. Próbálja meg hozzáadni a RewriteBase elérési utat, nyisson meg egy {API_PATH} .htaccess fájlt, és cserélje ki a következő sort: <pre>{APACHE4}</pre> A <pre>{APACHE5}</pre> az <a href=\"{APACHE_LINK}\" target=\"_blank\"> Apache kiszolgáló konfigurációja az EspoCRM-hez </a>. <br> <br>"
       },
       "nginx": {
-        "linux": "<pre>\n{Nginx}\n</pre> <br> További információkért látogasson el a <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Útmutató a Nginx kiszolgáló konfigurációjához EspoCRM </a>.",
-        "windows": "<pre>\n{Nginx}\n</pre> <br> További információkért látogasson el a <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Útmutató a Nginx kiszolgáló konfigurációjához EspoCRM </a>."
+        "linux": "<br> Adja hozzá ezt a kódot a \"server\" szakaszban a Nginx kiszolgáló blokk konfigurációs fájljához <code>{NGINX_PATH}</code>:<br><pre>\n{NGINX}\n</pre> <br> További információkért látogasson el a <a href=\"{NGINX_LINK}\" target=\"_blank\"> Útmutató a Nginx kiszolgáló konfigurációjához EspoCRM </a>."
       }
     },
     "modRewriteTitle": {
-      "apache": "API hiba: Az EspoCRM API nem érhető el. <br> Lehetséges problémák: letiltott \"mod_rewrite\" az Apache szerveren, letiltott .htaccess támogatás vagy RewriteBase kiadás. <br> Csak a szükséges lépéseket tegye meg. Minden lépés után ellenőrizze, hogy a probléma megoldódott-e.",
-      "nginx": "API hiba: Az EspoCRM API nem érhető el. <br> Adja hozzá ezt a kódot a \"server\" szakaszban a Nginx kiszolgáló blokk konfigurációs fájljához (/etc/nginx/sites-available/YOUR_SITE)",
-      "microsoft-iis": "API-hiba: az EspoCRM API nem érhető el. <br> Lehetséges probléma: letiltva \"URL Rewrite\". Kérjük, ellenőrizze és engedélyezze az \"URL Rewrite\" modult az IIS kiszolgálón",
-      "default": "API hiba: Az EspoCRM API nem érhető el. <br> Lehetséges probléma: letiltva újraírható modul. Kérjük, ellenőrizze és engedélyezze a Rewrite Modult a kiszolgálón (például mod_rewrite az Apache-ban) és a .htaccess támogatást."
+      "apache": "<h3>API hiba: Az EspoCRM API nem érhető el.</h3> <br> Csak a szükséges lépéseket tegye meg. Minden lépés után ellenőrizze, hogy a probléma megoldódott-e.",
+      "nginx": "<h3>API hiba: Az EspoCRM API nem érhető el.</h3>",
+      "microsoft-iis": "<h3>API-hiba: az EspoCRM API nem érhető el.</h3> <br> Lehetséges probléma: letiltva \"URL Rewrite\". Kérjük, ellenőrizze és engedélyezze az \"URL Rewrite\" modult az IIS kiszolgálón",
+      "default": "<h3>API hiba: Az EspoCRM API nem érhető el.<h3> <br> Lehetséges probléma: letiltva újraírható modul. Kérjük, ellenőrizze és engedélyezze a Rewrite Modult a kiszolgálón (például mod_rewrite az Apache-ban) és a .htaccess támogatást."
     }
   },
   "systemRequirements": {

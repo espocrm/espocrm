@@ -27,6 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+$clearedCookieList = [
+    'auth-token-secret',
+    'auth-username',
+    'auth-token',
+];
+
+foreach ($clearedCookieList as $cookieName) {
+    if (!isset($_COOKIE[$cookieName])) {
+        continue;
+    }
+
+    setcookie($cookieName, null, -1, '/');
+}
+
 $config = $installer->getConfig();
 
 $fields = array(

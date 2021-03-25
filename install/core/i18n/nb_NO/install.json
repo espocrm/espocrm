@@ -95,19 +95,18 @@
   "options": {
     "modRewriteInstruction": {
       "apache": {
-        "windows": "<br> <pre>1. Finn httpd.conf file (du finner den vanligvis i en mappe kalt conf, config eller lignende)<br>\n2. I httpd.conf-filen må du avkommentere linjen LoadModule rewrite_module modules/mod_rewrite.so (ved å fjerne '#'-symbolet i starten av linjen)<br>\n3. Sjekk også at linjen ClearModuleList og AddModule mod_rewrite.c er avkommentert.\n</pre> ",
-        "linux": "<br><br>1. Aktiver \"mod_rewrite\". For å gjøre det, kjør disse kommandoene:<pre>{APACHE1}</pre><br>2. Aktiver støtte for .htaccess. Legg til / rediger tjenerens konfigurasjon (/etc/apache/apache2.conf, /etc/httpd/conf/httpd.conf):<pre>{APACHE2}</pre>\n Kjør følgende kommando etterpå:<pre>{APACHE3}</pre><br>3. Forsøk å legg til RewriteBase-banen, åpne filen {API_PATH}.htaccess og erstatt følgende linje:<pre>{APACHE4}</pre>til<pre>{APACHE5}</pre><br> For mer informasjon kan du gå til veiledningen <a href=\"https://www.espocrm.com/documentation/administration/apache-server-configuration/\" target=\"_blank\">\"Konfigurasjon av Apache-tjener for EspoCRM</a>.<br><br>"
+        "windows": "<br> <pre>1. Finn httpd.conf file (du finner den vanligvis i en mappe kalt conf, config eller lignende)<br>\n2. I httpd.conf-filen må du avkommentere linjen <code>{WINDOWS_APACHE1}</code> (ved å fjerne '#'-symbolet i starten av linjen)<br>\n3. Sjekk også at linjen ClearModuleList og AddModule mod_rewrite.c er avkommentert.\n</pre> ",
+        "linux": "<br><br>1. Aktiver \"mod_rewrite\". For å gjøre det, kjør disse kommandoene:<pre>{APACHE1}</pre><br>2. Aktiver støtte for .htaccess. Legg til / rediger tjenerens konfigurasjon (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>):<pre>{APACHE2}</pre>\n Kjør følgende kommando etterpå:<pre>{APACHE3}</pre><br>3. Forsøk å legg til RewriteBase-banen, åpne filen {API_PATH}.htaccess og erstatt følgende linje:<pre>{APACHE4}</pre>til<pre>{APACHE5}</pre><br> For mer informasjon kan du gå til veiledningen <a href=\"{APACHE_LINK}\" target=\"_blank\">Konfigurasjon av Apache-tjener for EspoCRM</a>.<br><br>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> For mer informasjon kan du besøke <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">\"konfigurasjon av Nginx-tjener for EspoCRM</a>.<br><br> ",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> For mer informasjon kan du besøke <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">\"konfigurasjon av Nginx-tjener for EspoCRM</a>.<br><br> "
+        "linux": "<br> Legg følgende kode inn i nginx-tjenerens block-konfigureringsfilen <code>{NGINX_PATH}</code>, i \"server\"-seksjonen:<pre>{NGINX}</pre> <br> For mer informasjon kan du besøke <a href=\"{NGINX_LINK}\" target=\"_blank\">\"konfigurasjon av Nginx-tjener for EspoCRM</a>.<br><br> "
       }
     },
     "modRewriteTitle": {
-      "apache": "API-feil: EspoCRMs API er utilgjengelig.<br> Mulige problemer: \"mod_rewrite\" er ikke aktivert på Apache-tjeneren, støtte for .htaccess er ikke aktivert eller problemer med RewriteBase.<br>Begynn øverst på listen og sjekk om problemet er løst før du prøver neste løsning.",
-      "nginx": "API-feil: EspoCRMs API er utilgjengelig.<br> Legg følgende kode inn i nginx-tjenerens block-konfigureringsfilen (/etc/nginx/sites-available/YOUR_SITE), i \"server\"-seksjonen:",
-      "microsoft-iis": "API-feil: EspoCRMs API er utilgjengelig.<br> Mulig problem: \"URL Rewrite\" er kanskje ikke aktivert, vennligst sjekk og aktiver \"URL Rewrite\"-modulen på IIS-tjeneren.",
-      "default": "API-feil: EspoCRMs API er utilgjengelig.<br> Mulig problem: Rewrite modulen er kanskje ikke aktivert. Sjekk serveren din for å finne det ut (f.eks mod_rewrite på Apache) og at .htaccess støttes."
+      "apache": "<h3>API-feil: EspoCRMs API er utilgjengelig.</h3>Begynn øverst på listen og sjekk om problemet er løst før du prøver neste løsning.",
+      "nginx": "<h3>API-feil: EspoCRMs API er utilgjengelig.</h3>",
+      "microsoft-iis": "<h3>API-feil: EspoCRMs API er utilgjengelig.</h3><br> Mulig problem: \"URL Rewrite\" er kanskje ikke aktivert, vennligst sjekk og aktiver \"URL Rewrite\"-modulen på IIS-tjeneren.",
+      "default": "<h3>API-feil: EspoCRMs API er utilgjengelig.</h3><br> Mulig problem: Rewrite modulen er kanskje ikke aktivert. Sjekk serveren din for å finne det ut (f.eks mod_rewrite på Apache) og at .htaccess støttes."
     }
   },
   "systemRequirements": {

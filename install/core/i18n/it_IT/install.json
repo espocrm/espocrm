@@ -110,18 +110,17 @@
   "options": {
     "modRewriteInstruction": {
       "apache": {
-        "windows": "<br> <pre>1.Trovare il file httpd.conf (di solito si trova in una cartella denominata conf , configurazione o qualcosa del genere)<br>\n2. All'interno del file httpd.conf decommentare la riga LoadModule rewrite_module modules/mod_rewrite.so (rimuovere il simbolo '#' all'inizio della riga)<br>\n3. Controllare che la linea ClearModuleList è commentata, quindi trovare e fare in modo che la linea AddModule mod_rewrite.c non sia commentata.\n</pre>"
+        "windows": "<br> <pre>1.Trovare il file httpd.conf (di solito si trova in una cartella denominata conf , configurazione o qualcosa del genere)<br>\n2. All'interno del file httpd.conf decommentare la riga <code>{WINDOWS_APACHE1}</code> (rimuovere il simbolo '#' all'inizio della riga)<br>\n3. Controllare che la linea ClearModuleList è commentata, quindi trovare e fare in modo che la linea AddModule mod_rewrite.c non sia commentata.\n</pre>"
       },
       "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Per maggiori informazioni, visitare la Guida in Linea <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Per maggiori informazioni, visitare la Guida in Linea <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
+        "linux": "<br> Aggiungere questo codice al file di configurazione del server blocco Nginx <code>{NGINX_PATH}</code> nella sezione \"server\":\n<pre>\n{NGINX}\n</pre> <br> Per maggiori informazioni, visitare la Guida in Linea <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
       }
     },
     "modRewriteTitle": {
-      "apache": "API Error: EspoCRM API non è disponibile.<br> Possibili problemi : disattivato \"mod_rewrite\" nel server Apache, disabilitato il supporto a .htaccess oppure un problema di RewriteBase.<br>Procedi un passo all volta. Dopo ogni passo controlla se il problema è risolto .",
-      "nginx": "API Error: EspoCRM API non è disponibile.<br> Aggiungere questo codice al file di configurazione del server blocco Nginx (/etc/nginx/sites-available/YOUR_SITE) nella sezione \"server\" :",
-      "microsoft-iis": "API Error: EspoCRM API non è disponibile.<br> Possibili problemi : disattivato \"URL Rewrite\". Si prega di controllare e attivare il Modulo nel IIS server \"URL Rewrite\" ",
-      "default": "API Error: EspoCRM API non è disponibile.<br> Possibili problemi : disattivato il Modulo Rewrite. Si prega di controllare e attivare il Rewrite Module sul vostro server (e.g. mod_rewrite in Apache) e il supporto .htaccess."
+      "apache": "<h3>API Error: EspoCRM API non è disponibile.</h3><br>Procedi un passo all volta. Dopo ogni passo controlla se il problema è risolto .",
+      "nginx": "<h3>API Error: EspoCRM API non è disponibile.</h3>",
+      "microsoft-iis": "<h3>API Error: EspoCRM API non è disponibile.</h3><br> Possibili problemi : disattivato \"URL Rewrite\". Si prega di controllare e attivare il Modulo nel IIS server \"URL Rewrite\" ",
+      "default": "<h3>API Error: EspoCRM API non è disponibile.<h3><br> Possibili problemi : disattivato il Modulo Rewrite. Si prega di controllare e attivare il Rewrite Module sul vostro server (e.g. mod_rewrite in Apache) e il supporto .htaccess."
     }
   },
   "systemRequirements": {

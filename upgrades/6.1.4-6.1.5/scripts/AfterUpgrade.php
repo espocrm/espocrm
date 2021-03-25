@@ -49,7 +49,9 @@ class AfterUpgrade
         ];
 
         foreach ($fileList as $file) {
-            if (!file_exists($file)) continue;
+            if (!file_exists($file)) {
+                continue;
+            }
 
             $result = unlink($file);
 
@@ -72,7 +74,9 @@ class AfterUpgrade
         ];
 
         foreach ($directoryList as $directory) {
-            if (!file_exists($directory)) continue;
+            if (!file_exists($directory)) {
+                continue;
+            }
 
             $this->container->get('fileManager')->removeInDir($directory, true);
         }

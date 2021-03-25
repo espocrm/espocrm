@@ -30,14 +30,19 @@
 return [
     'apiPath' => '/api/v1',
     'rewriteRules' => [
-        'APACHE1' => 'a2enmod rewrite
-service apache2 restart',
+        'APACHE1' => 'sudo a2enmod rewrite
+sudo service apache2 restart',
         'APACHE2' => '&#60;Directory /PATH_TO_ESPO/&#62;
  AllowOverride <b>All</b>
 &#60;/Directory&#62;',
-        'APACHE3' => 'service apache2 restart',
+        'APACHE2_PATH1' => '/etc/apache2/sites-available/ESPO_VIRTUAL_HOST.conf',
+        'APACHE2_PATH2' => '/etc/apache2/apache2.conf',
+        'APACHE2_PATH3' => '/etc/httpd/conf/httpd.conf',
+        'APACHE3' => 'sudo service apache2 restart',
         'APACHE4' => '# RewriteBase /',
         'APACHE5' => 'RewriteBase {ESPO_PATH}{API_PATH}',
+        'WINDOWS_APACHE1' => 'LoadModule rewrite_module modules/mod_rewrite.so',
+        'NGINX_PATH' => '/etc/nginx/sites-available/YOUR_SITE',
         'NGINX' => 'server {
     # ...
 
@@ -88,5 +93,7 @@ service apache2 restart',
         deny all;
     }
 }',
+    'APACHE_LINK' => 'https://www.espocrm.com/documentation/administration/apache-server-configuration/',
+    'NGINX_LINK' => 'https://www.espocrm.com/documentation/administration/nginx-server-configuration/',
     ],
 ];
