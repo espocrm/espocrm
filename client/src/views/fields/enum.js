@@ -124,37 +124,56 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
         },
 
         setupTranslation: function () {
-            if (this.params.translation) {
-                var translationObj;
-                var data = this.getLanguage().data;
-                var arr = this.params.translation.split('.');
-                var pointer = this.getLanguage().data;
-                arr.forEach(function (key) {
-                    if (key in pointer) {
-                        pointer = pointer[key];
-                        translationObj = pointer;
-                    }
-                }, this);
+            if (!this.params.translation) {
+                return;
+            }
 
-                this.translatedOptions = null;
-                var translatedOptions = {};
-                if (this.params.options) {
-                    this.params.options.forEach(function (item) {
-                        if (typeof translationObj === 'object' && item in translationObj) {
-                            translatedOptions[item] = translationObj[item];
-                        } else {
-                            translatedOptions[item] = item;
-                        }
-                    }, this);
-                    var value = this.model.get(this.name);
-                    if ((value || value === '') && !(value in translatedOptions)) {
-                        if (typeof translationObj === 'object' && value in translationObj) {
-                            translatedOptions[value] = translationObj[value];
-                        }
-                    }
-                    this.translatedOptions = translatedOptions;
+            var translationObj;
+
+            var data = this.getLanguage().data;
+            var arr = this.params.translation.split('.');
+            var pointer = this.getLanguage().data;
+
+            arr.forEach(function (key) {
+                if (key in pointer) {
+                    pointer = pointer[key];
+                    translationObj = pointer;
+                }
+            }, this);
+
+            this.translatedOptions = null;
+
+            var translatedOptions = {};
+
+            if (!this.params.options) {
+                return;
+            }
+
+            this.params.options.forEach(function (item) {
+                if (typeof translationObj === 'object' && item in translationObj) {
+                    translatedOptions[item] = translationObj[item];
+                }
+                else if (
+                    typeof translationObj === 'array' &&
+                    typeof item === 'integer' &&
+                    typeof translationObj[item] !== 'undefined'
+                ) {
+                    translatedOptions[item.toString()] = translationObj[item];
+                }
+                else {
+                    translatedOptions[item] = item;
+                }
+            }, this);
+
+            var value = this.model.get(this.name);
+
+            if ((value || value === '') && !(value in translatedOptions)) {
+                if (typeof translationObj === 'object' && value in translationObj) {
+                    translatedOptions[value] = translationObj[value];
                 }
             }
+
+            this.translatedOptions = translatedOptions;
         },
 
         setupOptions: function () {
