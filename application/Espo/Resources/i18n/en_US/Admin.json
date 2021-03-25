@@ -57,6 +57,7 @@
         "Edit Link": "Edit Link",
         "Notifications": "Notifications",
         "Jobs": "Jobs",
+        "Job Settings": "Job Settings",
         "Reset to Default": "Reset to Default",
         "Email Filters": "Email Filters",
         "Action History": "Action History",
@@ -274,6 +275,7 @@
         "phoneNumbers": "All phone numbers stored in the system.",
         "dashboardTemplates": "Deploy dashboards to users.",
         "layoutSets": "Collections of layouts that can be assigned to teams & portals.",
+        "jobsSettings": "Job processing settings. Jobs execute tasks in the background.",
         "pdfTemplates": "Templates for printing to PDF."
     },
     "keywords": {

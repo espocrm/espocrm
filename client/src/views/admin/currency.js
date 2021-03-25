@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/currency', 'views/settings/record/edit', function (Dep) {
+define('views/admin/currency', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 
@@ -36,9 +36,12 @@ Espo.define('views/admin/currency', 'views/settings/record/edit', function (Dep)
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'change:currencyList', function (model, value, o) {
-                if (!o.ui) return;
+                if (!o.ui) {
+                    return;
+                }
 
                 var currencyList = Espo.Utils.clone(model.get('currencyList'));
+
                 this.setFieldOptionList('defaultCurrency', currencyList);
                 this.setFieldOptionList('baseCurrency', currencyList);
 
@@ -46,28 +49,31 @@ Espo.define('views/admin/currency', 'views/settings/record/edit', function (Dep)
             }, this);
 
             this.listenTo(this.model, 'change', function (model, o) {
-                if (!o.ui) return;
+                if (!o.ui) {
+                    return;
+                }
 
                 if (model.hasChanged('currencyList') || model.hasChanged('baseCurrency')) {
                     var currencyRatesField = this.getFieldView('currencyRates');
+
                     if (currencyRatesField) {
                         currencyRatesField.reRender();
                     }
                 }
             }, this);
+
             this.controlCurrencyRatesVisibility();
         },
 
         controlCurrencyRatesVisibility: function () {
             var currencyList = this.model.get('currencyList');
+
             if (currencyList.length < 2) {
                 this.hideField('currencyRates');
             } else {
                 this.showField('currencyRates');
             }
-        }
+        },
 
     });
-
 });
-

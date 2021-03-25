@@ -95,7 +95,7 @@ class Address
     }
 
     /**
-     * Get a city..
+     * Get a city.
      */
     public function getCity() : ?string
     {

@@ -30,8 +30,8 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     Utils\Metadata as MetadataService,
-    InjectableFactory,
     Utils\File\Manager as FileManager,
     Utils\DataCache,
     Utils\Config,
@@ -39,9 +39,11 @@ use Espo\Core\{
 
 class Metadata implements Loader
 {
-    protected $fileManager;
-    protected $dataCache;
-    protected $config;
+    private $fileManager;
+
+    private $dataCache;
+
+    private $config;
 
     public function __construct(FileManager $fileManager, DataCache $dataCache, Config $config)
     {

@@ -30,6 +30,7 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     Utils\Metadata,
     Utils\Config,
     Utils\File\Manager as FileManager,
@@ -42,9 +43,13 @@ use Espo\Entities\Preferences;
 class Language implements Loader
 {
     protected $fileManager;
+
     protected $config;
+
     protected $metadata;
+
     protected $dataCache;
+
     protected $preferences;
 
     public function __construct(

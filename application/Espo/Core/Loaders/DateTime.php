@@ -30,6 +30,7 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     Utils\Config,
     Utils\DateTime as DateTimeService,
 };

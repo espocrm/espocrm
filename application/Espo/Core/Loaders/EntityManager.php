@@ -30,13 +30,14 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     ORM\EntityManagerFactory,
     ORM\EntityManager as EntityManagerService,
 };
 
 class EntityManager implements Loader
 {
-    protected $entityManagerFactory;
+    private $entityManagerFactory;
 
     public function __construct(EntityManagerFactory $entityManagerFactory)
     {

@@ -310,7 +310,7 @@ define('views/fields/duration', 'views/fields/enum', function (Dep) {
                     }).first();
 
                     if ($found.length) {
-                        if ($found.val() !== seconds) {
+                        if (parseInt($found.val()) !== seconds) {
                             $o.insertBefore($found);
                         };
                     }

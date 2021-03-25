@@ -32,21 +32,23 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\{
     ORM\EntityManager,
     Utils\Util,
-    CronManager,
+    Job\JobManager,
     Console\Command,
     Console\Params,
     Console\IO,
 };
 
+use Throwable;
+
 class RunJob implements Command
 {
-    private $cronManager;
+    private $jobManager;
 
     private $entityManager;
 
-    public function __construct(CronManager $cronManager, EntityManager $entityManager)
+    public function __construct(JobManager $jobManager, EntityManager $entityManager)
     {
-        $this->cronManager = $cronManager;
+        $this->jobManager = $jobManager;
         $this->entityManager = $entityManager;
     }
 
@@ -78,11 +80,13 @@ class RunJob implements Command
             'job' => $jobName,
             'targetType' => $targetType,
             'targetId' => $targetId,
+            'attempts' => 0,
         ]);
 
-        $result = $this->cronManager->runJob($job);
-
-        if (!$result) {
+        try {
+            $this->jobManager->runJob($job);
+        }
+        catch (Throwable $e) {
             $io->writeLine("Error: Job '{$jobName}' failed to execute.");
 
             return;

@@ -30,13 +30,14 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     Log\LogLoader,
     Utils\Log as LogService,
 };
 
 class Log implements Loader
 {
-    protected $logLoader;
+    private $logLoader;
 
     public function __construct(LogLoader $logLoader)
     {
@@ -47,6 +48,7 @@ class Log implements Loader
     {
         $log = $this->logLoader->load();
 
+        // @todo Remove in future.
         $GLOBALS['log'] = $log;
 
         return $log;

@@ -25,11 +25,93 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Entities;
 
-class Job extends \Espo\Core\ORM\Entity
-{
+use Espo\Core\ORM\Entity;
 
+use StdClass;
+
+class Job extends Entity
+{
+    /**
+     * Get a status.
+     */
+    public function getStatus() : string
+    {
+        return $this->get('status');
+    }
+
+    /**
+     * Get a job name.
+     */
+    public function getJob() : ?string
+    {
+        return $this->get('job');
+    }
+
+    /**
+     * Get a scheduled job name.
+     */
+    public function getScheduledJobJob() : ?string
+    {
+        return $this->get('scheduledJobJob');
+    }
+
+    /**
+     * Get a target type.
+     */
+    public function getTargetType() : ?string
+    {
+        return $this->get('targetType');
+    }
+
+    /**
+     * Get a target ID.
+     */
+    public function getTargetId() : ?string
+    {
+        return $this->get('targetId');
+    }
+
+    /**
+     * Get data.
+     */
+    public function getData() : StdClass
+    {
+        return $this->get('data') ?? (object) [];
+    }
+
+    /**
+     * Get a service name.
+     */
+    public function getServiceName() : ?string
+    {
+        return $this->get('serviceName');
+    }
+
+    /**
+     * Get a method name.
+     */
+    public function getMethodName() : ?string
+    {
+        return $this->get('methodName');
+    }
+
+    /**
+     * Get a scheduled job ID.
+     */
+    public function getScheduledJobId() : ?string
+    {
+        return $this->get('scheduledJobId');
+    }
+
+    /**
+     * Get a started date-time.
+     */
+    public function getStartedAt() : ?string
+    {
+        return $this->get('startedAt');
+    }
 }

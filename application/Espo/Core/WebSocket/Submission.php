@@ -29,28 +29,30 @@
 
 namespace Espo\Core\WebSocket;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 
-use ZMQContext;
-use ZMQ;
-use Throwable;
+use StdClass;
 
 class Submission
 {
-    protected $config;
+    private $sender;
 
-    public function __construct(Config $config)
+    private $log;
+
+    public function __construct(Sender $sender, Log $log)
     {
-        $this->config = $config;
+        $this->sender = $sender;
+        $this->log = $log;
     }
 
-    public function submit(string $topic, ?string $userId = null, $data = null)
+    /**
+     * Submit to a web-socket server.
+     */
+    public function submit(string $topic, ?string $userId = null, ?StdClass $data = null) : void
     {
         if (!$data) {
             $data = (object) [];
         }
-
-        $dsn = $this->config->get('webSocketSubmissionDsn', 'tcp://localhost:5555');
 
         if ($userId) {
             $data->userId = $userId;
@@ -58,21 +60,13 @@ class Submission
 
         $data->topicId = $topic;
 
+        $message = json_encode($data);
+
         try {
-            $context = new ZMQContext();
-
-            $socket = $context->getSocket(ZMQ::SOCKET_PUSH, 'my pusher');
-
-            $socket->connect($dsn);
-
-            $socket->send(json_encode($data));
-
-            $socket->setSockOpt(ZMQ::SOCKOPT_LINGER, 1000);
-
-            $socket->disconnect($dsn);
+            $this->sender->send($message);
         }
         catch (Throwable $e) {
-            $GLOBALS['log']->error("WebSocketSubmission: " . $e->getMessage());
+            $this->log->error("WebSocketSubmission: " . $e->getMessage());
         }
     }
 }

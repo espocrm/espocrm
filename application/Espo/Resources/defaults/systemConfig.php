@@ -199,6 +199,7 @@ return [
         'passwordRecoveryForInternalUsersDisabled',
         'passwordRecoveryRequestDelay',
         'thumbImageCacheDisabled',
+        'emailReminderPortionSize',
         'latestVersion',
     ],
     'superAdminItems' => [

@@ -38,8 +38,9 @@
         },
         "weekStart": {
             "type": "enumInt",
-            "options": [0, 1],
-            "default": 0
+            "options": [0, 1, 2, 3, 4, 5, 6],
+            "default": 0,
+            "translation": "Global.lists.dayNames"
         },
         "fiscalYearShift": {
             "type": "enumInt",

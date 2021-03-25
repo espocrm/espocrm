@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Jobs;
 
-interface Job
+/**
+ * @deprecated Use `Espo\Core\Job\Job` instead.
+ */
+interface Job extends \Espo\Core\Job\Job
 {
-    public function run() : void;
 }

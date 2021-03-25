@@ -29,6 +29,8 @@
 
 namespace Espo\Core\ExternalAccount\OAuth2;
 
+use Exception;
+
 class Client
 {
     const AUTH_TYPE_URI = 0;
@@ -79,7 +81,7 @@ class Client
     public function __construct(array $params = [])
     {
         if (!extension_loaded('curl')) {
-            throw new \Exception('CURL extension not found.');
+            throw new Exception('CURL extension not found.');
         }
     }
 
@@ -139,16 +141,21 @@ class Client
             switch ($this->tokenType) {
                 case self::TOKEN_TYPE_URI:
                     $params[$this->accessTokenParamName] = $this->accessToken;
+
                     break;
+
                 case self::TOKEN_TYPE_BEARER:
                     $httpHeaders['Authorization'] = 'Bearer ' . $this->accessToken;
+
                     break;
+
                 case self::TOKEN_TYPE_OAUTH:
                     $httpHeaders['Authorization'] = 'OAuth ' . $this->accessToken;
-                    break;
-                default:
-                    throw new \Exception('Unknown access token type.');
 
+                    break;
+
+                default:
+                    throw new Exception('Unknown access token type.');
             }
         }
 
@@ -157,15 +164,16 @@ class Client
 
     private function execute($url, $params, $httpMethod, array $httpHeaders = [])
     {
-        $curlOptions = array(
+        $curlOptions = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_CUSTOMREQUEST => $httpMethod
-        );
+            CURLOPT_CUSTOMREQUEST => $httpMethod,
+        ];
 
         switch ($httpMethod) {
             case self::HTTP_METHOD_POST:
                 $curlOptions[CURLOPT_POST] = true;
+
             case self::HTTP_METHOD_PUT:
             case self::HTTP_METHOD_PATCH:
                 if (is_array($params)) {
@@ -173,36 +181,49 @@ class Client
                 } else {
                     $postFields = $params;
                 }
+
                 $curlOptions[CURLOPT_POSTFIELDS] = $postFields;
+
                 break;
+
             case self::HTTP_METHOD_HEAD:
                 $curlOptions[CURLOPT_NOBODY] = true;
+
             case self::HTTP_METHOD_DELETE:
             case self::HTTP_METHOD_GET:
+
                 if (strpos($url, '?') === false) {
                     $url .= '?';
                 }
+
                 if (is_array($params)) {
                     $url .= http_build_query($params, null, '&');
                 }
+
                 break;
+
             default:
                 break;
         }
 
         $curlOptions[CURLOPT_URL] = $url;
 
-        $curlOptHttpHeader = array();
+        $curlOptHttpHeader = [];
+
         foreach ($httpHeaders as $key => $value) {
             if (is_int($key) && !is_string($key)) {
                 $curlOptHttpHeader[] = $value;
+
                 continue;
             }
+
             $curlOptHttpHeader[] = "{$key}: {$value}";
         }
+
         $curlOptions[CURLOPT_HTTPHEADER] = $curlOptHttpHeader;
 
         $ch = curl_init();
+
         curl_setopt_array($ch, $curlOptions);
 
         curl_setopt($ch, CURLOPT_HEADER, 1);
@@ -230,18 +251,20 @@ class Client
         $resultArray = null;
 
         if ($curlError = curl_error($ch)) {
-            throw new \Exception($curlError);
-        } else {
+            throw new Exception($curlError);
+        }
+        else {
             $resultArray = json_decode($responceBody, true);
         }
+
         curl_close($ch);
 
-        return array(
+        return [
             'result' => (null !== $resultArray) ? $resultArray: $responceBody,
             'code' => intval($httpCode),
             'contentType' => $contentType,
             'header' => $responceHeader,
-        );
+        ];
     }
 
     public function getAccessToken($url, $grantType, array $params)
@@ -249,18 +272,24 @@ class Client
         $params['grant_type'] = $grantType;
 
         $httpHeaders = [];
-        switch ($this->tokenType) {
+
+        switch ($this->authType) {
             case self::AUTH_TYPE_URI:
             case self::AUTH_TYPE_FORM:
                 $params['client_id'] = $this->clientId;
                 $params['client_secret'] = $this->clientSecret;
+
                 break;
+
             case self::AUTH_TYPE_AUTHORIZATION_BASIC:
                 $params['client_id'] = $this->clientId;
+
                 $httpHeaders['Authorization'] = 'Basic ' . base64_encode($this->clientId .  ':' . $this->clientSecret);
+
                 break;
+
             default:
-                throw new \Exception();
+                throw new Exception("Bad auth type.");
         }
 
         return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders);

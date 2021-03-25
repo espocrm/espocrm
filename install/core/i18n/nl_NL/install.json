@@ -105,15 +105,14 @@
   },
   "options": {
     "modRewriteTitle": {
-      "apache": "API-fout: EspoCRM API is niet beschikbaar. <br> Mogelijke problemen: uitgeschakeld \"mod_rewrite\" in Apache-server, uitgeschakelde .htaccess-ondersteuning of RewriteBase-probleem. <br> Voer alleen noodzakelijke stappen uit. Controleer na elke stap of het probleem is opgelost.",
-      "nginx": "API-fout: EspoCRM API is niet beschikbaar. <br> Voeg deze code toe aan uw Nginx-serverblokconfiguratiebestand (/ etc / nginx / sites-available / YOUR_SITE) in de sectie \"server\":",
-      "microsoft-iis": "API-fout: EspoCRM API is niet beschikbaar. <br> Mogelijk probleem: uitgeschakeld \"URL Rewrite\". Controleer en schakel de module \"URL Rewrite\" in IIS-server in",
-      "default": "API-fout: EspoCRM API is niet beschikbaar. <br> Mogelijk probleem: uitgeschakeld Herschrijfmodule. Controleer en schakel de Rewrite-module in uw server (bijvoorbeeld mod_rewrite in Apache) en .htaccess-ondersteuning in."
+      "apache": "<h3>API-fout: EspoCRM API is niet beschikbaar.</h3><br> Voer alleen noodzakelijke stappen uit. Controleer na elke stap of het probleem is opgelost.",
+      "nginx": "<h3>API-fout: EspoCRM API is niet beschikbaar.</h3>",
+      "microsoft-iis": "<h3>API-fout: EspoCRM API is niet beschikbaar.</h3> Mogelijk probleem: uitgeschakeld \"URL Rewrite\". Controleer en schakel de module \"URL Rewrite\" in IIS-server in",
+      "default": "<h3>API-fout: EspoCRM API is niet beschikbaar.</h3> <br> Mogelijk probleem: uitgeschakeld Herschrijfmodule. Controleer en schakel de Rewrite-module in uw server (bijvoorbeeld mod_rewrite in Apache) en .htaccess-ondersteuning in."
     },
     "modRewriteInstruction": {
       "nginx": {
-        "linux": "<br>\n<pre>\n{NGINX}\n</pre> <br> Ga voor meer informatie naar de handleiding <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>",
-        "windows": "<br>\n<pre>\n{NGINX}\n</pre> <br> Ga voor meer informatie naar de handleiding <a href=\"https://www.espocrm.com/documentation/administration/nginx-server-configuration/\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>"
+        "linux": "<br> Voeg deze code toe aan uw Nginx-serverblokconfiguratiebestand <code>{NGINX_PATH}</code> in de sectie \"server\":\n<pre>\n{NGINX}\n</pre> <br> Ga voor meer informatie naar de handleiding <a href=\"{NGINX_LINK}\" target=\"_blank\"> Nginx-serverconfiguratie voor EspoCRM </a>. <br>"
       }
     }
   },

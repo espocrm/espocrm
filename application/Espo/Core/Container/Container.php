@@ -27,15 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Jobs;
+namespace Espo\Core\Container;
 
-use Espo\Entities\ScheduledJob;
+use ReflectionClass;
+use RuntimeException;
 
-use StdClass;
-
-interface JobTargeted
+/**
+ * DI container for services. Lazy initialization is used. Services are instantiated only once.
+ *
+ * See https://docs.espocrm.com/development/di/.
+ */
+interface Container
 {
-    public function run(string $targetType, string $targetId, StdClass $data) : void;
+    /**
+     * Obtain a service object.
+     *
+     * @throws RuntimeException If not gettable.
+     */
+    public function get(string $name) : object;
 
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void;
+    /**
+     * Check whether a service can be obtained.
+     */
+    public function has(string $name) : bool;
+
+    /**
+     * Set a service object. Must be configured as settable.
+     *
+     * @throws RuntimeException Is not settable or already set.
+     */
+    public function set(string $name, object $object) : void;
+
+    /**
+     * Get a class of a service.
+     *
+     * @throws RuntimeException If not gettable.
+     */
+    public function getClass(string $name) : ReflectionClass;
 }

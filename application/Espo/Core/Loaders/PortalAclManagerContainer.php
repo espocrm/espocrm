@@ -30,13 +30,14 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     InjectableFactory,
     Portal\AclManagerContainer as PortalAclManagerContainerService
 };
 
 class PortalAclManagerContainer implements Loader
 {
-    protected $injectableFactory;
+    private $injectableFactory;
 
     public function __construct(InjectableFactory $injectableFactory) {
         $this->injectableFactory = $injectableFactory;

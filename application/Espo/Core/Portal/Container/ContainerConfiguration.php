@@ -27,75 +27,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Portal\Container;
 
 use Espo\Core\{
-    Utils\Log,
-    Utils\Metadata,
+    Container\ContainerConfiguration as BaseContainerConfiguration,
 };
 
-use ReflectionClass;
-use Exception;
-
-class ContainerConfiguration
+class ContainerConfiguration extends BaseContainerConfiguration
 {
-    protected $log;
-    protected $metadata;
-
-    public function __construct(Log $log, Metadata $metadata)
-    {
-        // Log must be loaded before anything.
-        $this->log = $log;
-        $this->metadata = $metadata;
-    }
-
     public function getLoaderClassName(string $name) : ?string
     {
-        $className = null;
-
         try {
-            $className = $this->metadata->get(['app', 'containerServices', $name, 'loaderClassName']);
-
-            if (!$className) {
-                /** @deprecated */
-                /** @todo Remove in 6.4. */
-                $className = $this->metadata->get(['app', 'loaders', ucfirst($name)]);
-            }
-        } catch (Exception $e) {}
+            $className = $this->metadata->get(['app', 'portalContainerServices', $name, 'loaderClassName']);
+        } catch (\Exception $e) {}
 
         if ($className && class_exists($className)) {
             return $className;
         }
 
-        $className = 'Espo\Custom\Core\Loaders\\' . ucfirst($name);
-
+        $className = 'Espo\Custom\Core\Portal\Loaders\\' . ucfirst($name);
         if (!class_exists($className)) {
-            $className = 'Espo\Core\Loaders\\' . ucfirst($name);
+            $className = 'Espo\Core\Portal\Loaders\\' . ucfirst($name);
         }
 
         if (class_exists($className)) {
-            $class = new ReflectionClass($className);
-
-            if ($class->isInstantiable()) {
-                return $className;
-            }
+            return $className;
         }
 
-        return null;
+        return parent::getLoaderClassName($name);
     }
 
     public function getServiceClassName(string $name) : ?string
     {
-        return $this->metadata->get(['app', 'containerServices', $name, 'className']) ?? null;
+        $className =
+            $this->metadata->get(['app', 'portalContainerServices', $name, 'className']) ??
+            parent::getServiceClassName($name);
+
+        return $className;
     }
 
     public function getServiceDependencyList(string $name) : ?array
     {
-        return $this->metadata->get(['app', 'containerServices', $name, 'dependencyList']) ?? null;
+        return
+            $this->metadata->get(['app', 'portalContainerServices', $name, 'dependencyList']) ??
+            parent::getServiceDependencyList($name);
     }
 
     public function isSettable(string $name) : bool
     {
-        return $this->metadata->get(['app', 'containerServices', $name, 'settable']) ?? false;
+        return
+            $this->metadata->get(['app', 'portalContainerServices', $name, 'settable']) ??
+            parent::isSettable($name);
     }
 }

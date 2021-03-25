@@ -138,10 +138,6 @@
         "auth2FAMethodList": "Available 2FA methods"
     },
     "options": {
-        "weekStart": {
-            "0": "Sunday",
-            "1": "Monday"
-        },
         "currencyFormat": {
             "1": "10 USD",
             "2": "$10",

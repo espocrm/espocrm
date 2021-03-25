@@ -30,12 +30,15 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     Container,
     AclManager as AclManagerService,
 };
 
 class InternalAclManager implements Loader
 {
+    private $container;
+
     public function __construct(Container $container)
     {
         $this->container = $container;

@@ -32,7 +32,7 @@ namespace Espo\Jobs;
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
-    Jobs\Job,
+    Job\Job,
 };
 
 use DateTime;
@@ -41,6 +41,7 @@ use DateTimeZone;
 class CheckNewVersion implements Job
 {
     protected $config;
+
     protected $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
@@ -77,6 +78,7 @@ class CheckNewVersion implements Job
         $time = $nextDay->format('Y-m-d') . ' ' . $hour . ':' . $minute . ':00';
 
         $timeZone = $this->config->get('timeZone');
+
         if (empty($timeZone)) {
             $timeZone = 'UTC';
         }
@@ -88,6 +90,7 @@ class CheckNewVersion implements Job
 
     /**
      * For backward compatibility.
+     * @deprecated
      */
     protected function getEntityManager()
     {

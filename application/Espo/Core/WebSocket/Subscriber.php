@@ -27,37 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Cron;
+namespace Espo\Core\WebSocket;
 
-use Espo\Core\{
-    Application,
-    ApplicationRunners\Job as JobRunner,
-};
+use React\EventLoop\LoopInterface;
 
-use Spatie\Async\Task as AsyncTask;
-
-class JobTask extends AsyncTask
+/**
+ * Subscribes messages to Pusher::onMessageReceive method.
+ */
+interface Subscriber
 {
-    private $jobId;
-
-    public function __construct($jobId)
-    {
-        $this->jobId = $jobId;
-    }
-
-    public function configure()
-    {
-    }
-
-    public function run()
-    {
-        $app = new Application();
-        try {
-            $app->run(JobRunner::class, (object) [
-                'id' => $this->jobId,
-            ]);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error("JobTask: Failed job run. Job id: ".$this->jobId.". Error details: ".$e->getMessage());
-        }
-    }
+    /**
+     * Subscribe messages to Pusher::onMessageReceive method.
+     */
+    public function subscribe(Pusher $pusher, LoopInterface $loop) : void;
 }

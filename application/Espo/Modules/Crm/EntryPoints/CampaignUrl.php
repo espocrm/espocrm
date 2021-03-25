@@ -34,14 +34,11 @@ use Espo\{
     Modules\Crm\Entities\CampaignTrackingUrl,
 };
 
-use Espo\Core\EntryPoints\{
-    NoAuth,
-};
-
 use Espo\Core\{
     Exceptions\NotFoundSilent,
     Exceptions\BadRequest,
     EntryPoint\EntryPoint,
+    EntryPoint\Traits\NoAuth,
     Api\Request,
     Api\Response,
     ORM\EntityManager,

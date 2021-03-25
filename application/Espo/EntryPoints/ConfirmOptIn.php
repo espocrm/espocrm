@@ -29,15 +29,11 @@
 
 namespace Espo\EntryPoints;
 
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\EntryPoints\{
-    NoAuth,
-};
-
 use Espo\Core\{
+    Exceptions\BadRequest,
+    Exceptions\Error,
     EntryPoint\EntryPoint,
+    EntryPoint\Traits\NoAuth,
     Utils\ClientManager,
     ServiceFactory,
     Api\Request,

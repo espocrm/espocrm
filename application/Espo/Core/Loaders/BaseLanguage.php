@@ -30,6 +30,7 @@
 namespace Espo\Core\Loaders;
 
 use Espo\Core\{
+    Container\Loader,
     Utils\Metadata,
     Utils\Config,
     Utils\File\Manager as FileManager,
@@ -40,8 +41,11 @@ use Espo\Core\{
 class BaseLanguage implements Loader
 {
     protected $fileManager;
+
     protected $config;
+
     protected $metadata;
+
     protected $dataCache;
 
     public function __construct(FileManager $fileManager, Config $config, Metadata $metadata, DataCache $dataCache)

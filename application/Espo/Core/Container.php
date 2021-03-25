@@ -30,20 +30,21 @@
 namespace Espo\Core;
 
 use Espo\Core\{
-    Exceptions\Error,
     InjectableFactory,
-    Loaders\Loader,
+    Container\Loader,
+    Container\Container as ContainerInterface,
     Binding\BindingContainer,
 };
 
 use ReflectionClass;
+use RuntimeException;
 
 /**
  * DI container for services. Lazy initialization is used. Services are instantiated only once.
  *
  * See https://docs.espocrm.com/development/di/.
  */
-class Container
+class Container implements ContainerInterface
 {
     private $data = [];
 
@@ -51,9 +52,9 @@ class Container
 
     private $loaderClassNames;
 
-    protected $configuration = null;
+    private $configuration = null;
 
-    protected $injectableFactory;
+    private $injectableFactory;
 
     public function __construct(
         string $configurationClassName,
@@ -65,7 +66,7 @@ class Container
 
         foreach ($services as $name => $service) {
             if (!is_string($name) || !is_object($service)) {
-                throw new Error("Container: Bad service passed.");
+                throw new RuntimeException("Container: Bad service passed.");
             }
 
             $this->setForced($name, $service);
@@ -80,6 +81,8 @@ class Container
 
     /**
      * Obtain a service object.
+     *
+     * @throws RuntimeException If not gettable.
      */
     public function get(string $name) : object
     {
@@ -87,7 +90,7 @@ class Container
             $this->load($name);
 
             if (!$this->isSet($name)) {
-                throw new Error("Could not load '{$name}' service.");
+                throw new RuntimeException("Could not load '{$name}' service.");
             }
         }
 
@@ -133,7 +136,7 @@ class Container
         return isset($this->data[$name]);
     }
 
-    private function initClass(string $name)
+    private function initClass(string $name) : void
     {
         if ($this->isSet($name)) {
             $object = $this->get($name);
@@ -165,7 +168,7 @@ class Container
             $loadMethod = $loaderClass->getMethod('load');
 
             if (!$loadMethod->hasReturnType()) {
-                throw new Error("Loader method for service '{$name}' does not have a return type.");
+                throw new RuntimeException("Loader method for service '{$name}' does not have a return type.");
             }
 
             $className = $loadMethod->getReturnType()->getName();
@@ -182,11 +185,13 @@ class Container
 
     /**
      * Get a class of a service.
+     *
+     * @throws RuntimeException If not gettable.
      */
     public function getClass(string $name) : ReflectionClass
     {
         if (!$this->has($name)) {
-            throw new Error("Service '{$name}' does not exist.");
+            throw new RuntimeException("Service '{$name}' does not exist.");
         }
 
         if (!isset($this->classCache[$name])) {
@@ -198,21 +203,23 @@ class Container
 
     /**
      * Set a service object. Must be configured as settable.
+     *
+     * @throws RuntimeException Is not settable or already set.
      */
     public function set(string $name, object $object) : void
     {
         if (!$this->configuration->isSettable($name)) {
-            throw new Error("Service '{$name}' is not settable.");
+            throw new RuntimeException("Service '{$name}' is not settable.");
         }
 
         if ($this->isSet($name)) {
-            throw new Error("Service '{$name}' is already set.");
+            throw new RuntimeException("Service '{$name}' is already set.");
         }
 
         $this->setForced($name, $object);
     }
 
-    protected function setForced(string $name, object $object)
+    protected function setForced(string $name, object $object) : void
     {
         $this->data[$name] = $object;
     }
@@ -254,7 +261,7 @@ class Container
         $className = $this->configuration->getServiceClassName($name);
 
         if (!$className || !class_exists($className)) {
-            throw new Error("Could not load '{$name}' service.");
+            throw new RuntimeException("Could not load '{$name}' service.");
         }
 
         $dependencyList = $this->configuration->getServiceDependencyList($name);

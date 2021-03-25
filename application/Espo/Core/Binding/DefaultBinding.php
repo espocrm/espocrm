@@ -44,6 +44,11 @@ class DefaultBinding
         );
 
         $binder->bindService(
+            'Espo\\Core\\Container\\Container',
+            'container'
+        );
+
+        $binder->bindService(
             'Espo\\ORM\\EntityManager',
             'entityManager'
         );
@@ -176,6 +181,16 @@ class DefaultBinding
         $binder->bindService(
             'Espo\\Core\\Acl',
             'acl'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\WebSocket\\Sender',
+            'Espo\\Core\\WebSocket\\ZeroMQSender'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\WebSocket\\Subscriber',
+            'Espo\\Core\\WebSocket\\ZeroMQSubscriber'
         );
     }
 }

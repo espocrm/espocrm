@@ -34,6 +34,12 @@ class Language{
 
     private $data = array();
 
+    protected $defaultLabels = [
+        'nginx' => 'linux',
+        'apache' => 'linux',
+        'microsoft-iis' => 'windows',
+    ];
+
     public function __construct()
     {
         require_once 'SystemHelper.php';
@@ -118,19 +124,35 @@ class Language{
         $serverOs = $this->getSystemHelper()->getOs();
 
         $rewriteRules = $this->getSystemHelper()->getRewriteRules();
-        if (isset($i18n['options']['modRewriteInstruction'][$serverType][$serverOs])) {
-            $modRewriteInstruction = $i18n['options']['modRewriteInstruction'][$serverType][$serverOs];
 
-            preg_match_all('/\{(.*?)\}/', $modRewriteInstruction, $match);
-            if (isset($match[1])) {
-                foreach ($match[1] as $varName) {
-                    if (isset($rewriteRules[$varName])) {
-                        $modRewriteInstruction = str_replace('{'.$varName.'}', $rewriteRules[$varName], $modRewriteInstruction);
-                    }
-                }
+        $label = $i18n['options']['modRewriteInstruction'][$serverType][$serverOs] ?? null;
+
+        if (!isset($label) && isset($this->defaultLabels[$serverType])) {
+            $defaultLabel = $this->defaultLabels[$serverType];
+
+            if (!isset($i18n['options']['modRewriteInstruction'][$serverType][$defaultLabel])) {
+                $defaultLangFile = 'install/core/i18n/' . $this->defaultLanguage . '/install.json';
+                $defaultData = $this->getLangData($defaultLangFile);
+
+                $i18n['options']['modRewriteInstruction'][$serverType][$defaultLabel] = $defaultData['options']['modRewriteInstruction'][$serverType][$defaultLabel];
             }
 
-            $i18n['options']['modRewriteInstruction'][$serverType][$serverOs] = $modRewriteInstruction;
+            $label = $i18n['options']['modRewriteInstruction'][$serverType][$defaultLabel];
         }
+
+        if (!$label) {
+            return;
+        }
+
+        preg_match_all('/\{(.*?)\}/', $label, $match);
+        if (isset($match[1])) {
+            foreach ($match[1] as $varName) {
+                if (isset($rewriteRules[$varName])) {
+                    $label = str_replace('{'.$varName.'}', $rewriteRules[$varName], $label);
+                }
+            }
+        }
+
+        $i18n['options']['modRewriteInstruction'][$serverType][$serverOs] = $label;
     }
 }

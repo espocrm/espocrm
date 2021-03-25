@@ -31,7 +31,7 @@ namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\{
     ORM\EntityManager,
-    Jobs\Job,
+    Job\Job,
 };
 
 use Espo\{
@@ -43,11 +43,11 @@ use Throwable;
 
 class ProcessMassEmail implements Job
 {
-    protected $processor;
+    private $processor;
 
-    protected $queue;
+    private $queue;
 
-    protected $entityManager;
+    private $entityManager;
 
     public function __construct(Processor $processor, Queue $queue, EntityManager $entityManager)
     {
@@ -58,7 +58,7 @@ class ProcessMassEmail implements Job
 
     public function run() : void
     {
-        $massEmailList = $this->entityManager
+        $pendingMassEmailList = $this->entityManager
             ->getRepository('MassEmail')
             ->where([
                 'status' => 'Pending',
@@ -66,7 +66,7 @@ class ProcessMassEmail implements Job
             ])
             ->find();
 
-        foreach ($massEmailList as $massEmail) {
+        foreach ($pendingMassEmailList as $massEmail) {
             try {
                 $this->queue->create($massEmail);
             }

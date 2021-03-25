@@ -41,6 +41,7 @@ class WebSocketSubmit
     public static $order = 20;
 
     protected $webSocketSubmission;
+
     protected $config;
 
     public function __construct(WebSocketSubmission $webSocketSubmission, Config $config)
@@ -51,18 +52,31 @@ class WebSocketSubmit
 
     public function afterSave(Entity $entity, array $options = [])
     {
-        if (!$this->config->get('useWebSocket')) return;
-        if (!$entity->isNew()) return;
+        if (!$this->config->get('useWebSocket')) {
+            return;
+        }
+
+        if (!$entity->isNew()) {
+            return;
+        }
+
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
-        if (!$parentId) return;
-        if (!$parentType) return;
+
+        if (!$parentId) {
+            return;
+        }
+
+        if (!$parentType) {
+            return;
+        }
 
         $data = (object) [
             'createdById' => $entity->get('createdById'),
         ];
 
         $topic = "streamUpdate.{$parentType}.{$parentId}";
+
         $this->webSocketSubmission->submit($topic, null, $data);
     }
 }

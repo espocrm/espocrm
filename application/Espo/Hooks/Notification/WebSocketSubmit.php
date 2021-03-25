@@ -41,6 +41,7 @@ class WebSocketSubmit
     public static $order = 20;
 
     protected $webSocketSubmission;
+
     protected $config;
 
     public function __construct(WebSocketSubmission $webSocketSubmission, Config $config)
@@ -51,10 +52,19 @@ class WebSocketSubmit
 
     public function afterSave(Entity $entity, array $options = [])
     {
-        if (!$this->config->get('useWebSocket')) return;
-        if (!$entity->isNew()) return;
+        if (!$this->config->get('useWebSocket')) {
+            return;
+        }
+
+        if (!$entity->isNew()) {
+            return;
+        }
+
         $userId = $entity->get('userId');
-        if (!$userId) return;
+
+        if (!$userId) {
+            return;
+        }
 
         $this->webSocketSubmission->submit('newNotification', $userId);
     }

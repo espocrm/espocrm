@@ -25,11 +25,26 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Entities;
 
-class ScheduledJob extends \Espo\Core\ORM\Entity
-{
+use Espo\Core\ORM\Entity;
 
+class ScheduledJob extends Entity
+{
+    public function getName() : ?string
+    {
+        return $this->get('name');
+    }
+
+    public function getScheduling() : ?string
+    {
+        return $this->get('scheduling');
+    }
+
+    public function getJob() : ?string
+    {
+        return $this->get('job');
+    }
 }

@@ -136,7 +136,7 @@ class Auth
     }
 
     protected function processWithAuthData(
-        string $username, ?string $password, Request $request, Response $response, ?string $authenticationMethod
+        ?string $username, ?string $password, Request $request, Response $response, ?string $authenticationMethod
     ) : AuthResult {
 
         $showDialog = $this->isEntryPoint;

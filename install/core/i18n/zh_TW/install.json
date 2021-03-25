@@ -116,18 +116,14 @@
   "options": {
     "modRewriteInstruction": {
       "apache": {
-        "windows": "<br> <pre>1. 找出 httpd.conf 的位置  (通常會在一個叫 conf, config 的資料夾，或是這行中的)<br>2. 在 httpd.conf 檔案中取消註解 LoadModule rewrite_module modules/mod_rewrite.so  (在要移除該行前面移除井字號 '#' )<br>3. 另外也找出 ClearModuleList 並取消註解，也請留意 AddModule mod_rewrite.c 這行不要被註解掉。\n</pre>"
-      },
-      "nginx": {
-        "linux": "SMTP帳號",
-        "windows": "SMTP帳號"
+        "windows": "<br> <pre>1. 找出 httpd.conf 的位置  (通常會在一個叫 conf, config 的資料夾，或是這行中的)<br>2. 在 httpd.conf 檔案中取消註解 <code>{WINDOWS_APACHE1}</code> (在要移除該行前面移除井字號 '#')<br>3. 另外也找出 ClearModuleList 並取消註解，也請留意 AddModule mod_rewrite.c 這行不要被註解掉。\n</pre>"
       }
     },
     "modRewriteTitle": {
-      "apache": "API錯誤：EspoCRM API無法連線。<br>可能的問題：在Apache中停用了 mod_rewrite，停用了.htaccess 功能或 RewriteBase 功能。<br>請試必要的步驟。在試過每個步驟之後，回來檢查問題是否已解決。",
-      "nginx": "API錯誤：EspoCRM API無法連線。<br>將此和式碼加入到 Nginx 伺服器內的配置文件 (/etc/nginx/sites-available/YOUR_SITE)：",
-      "microsoft-iis": "API錯誤：EspoCRM API無法連線。<br>可能的問題：停用了 URL Rewrite。請檢查並啟用 IIS 中的 URL Rewrite 模組",
-      "default": "API錯誤：EspoCRM API無法連線。<br>可能的問題：停用了 Rewrite 模組。請檢查並啟用伺服器中的 Rewrite 模組 (例如Apache 中的 mod_rewrite)和 .htaccess 功能。"
+      "apache": "<h3>API錯誤：EspoCRM API無法連線。</h3><br>可能的問題：在Apache中停用了 mod_rewrite，停用了.htaccess 功能或 RewriteBase 功能。<br>請試必要的步驟。在試過每個步驟之後，回來檢查問題是否已解決。",
+      "nginx": "<h3>API錯誤：EspoCRM API無法連線。</h3>",
+      "microsoft-iis": "<h3>API錯誤：EspoCRM API無法連線。</h3><br>可能的問題：停用了 URL Rewrite。請檢查並啟用 IIS 中的 URL Rewrite 模組",
+      "default": "<h3>API錯誤：EspoCRM API無法連線。</h3><br>可能的問題：停用了 Rewrite 模組。請檢查並啟用伺服器中的 Rewrite 模組 (例如Apache 中的 mod_rewrite)和 .htaccess 功能。"
     }
   },
   "systemRequirements": {

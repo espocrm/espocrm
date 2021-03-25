@@ -332,7 +332,6 @@ var Espo = Espo || {classMap:{}};
                 realName: realName,
                 fetchObjectFunction: fetchObjectFunction,
                 noAppCache: noAppCache,
-                useCache: useCache,
                 path: path,
                 callback: callback,
                 errorCallback: errorCallback,
@@ -370,6 +369,7 @@ var Espo = Espo || {classMap:{}};
 
             dtObject.path = path;
             dtObject.url = url;
+            dtObject.useCache = useCache;
 
             if (!this.responseCache) {
                 this._processRequest(dtObject);

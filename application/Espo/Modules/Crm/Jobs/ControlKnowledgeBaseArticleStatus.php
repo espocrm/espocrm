@@ -24,7 +24,7 @@ namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\{
     ORM\EntityManager,
-    Jobs\Job,
+    Job\Job,
 };
 
 class ControlKnowledgeBaseArticleStatus implements Job
