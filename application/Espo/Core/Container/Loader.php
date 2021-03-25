@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Container;
 
+/**
+ * Loads a container service.
+ */
 interface Loader
 {
     // @todo Uncomment when PHP 7.4 is a min supported version.
