@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d17acc621622ae9ec63aa33f87b8a8e",
+    "content-hash": "a32e7a77ab0ae1e795186b26455beb14",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -2938,11 +2938,17 @@
         },
         {
             "name": "spatie/async",
-            "version": "dev-for-espocrm",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/yurikuzn/async.git",
+                "url": "https://github.com/spatie/async.git",
                 "reference": "8b76df4ab77dcf7680eee4b83353d038e28f92f7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/async/zipball/8b76df4ab77dcf7680eee4b83353d038e28f92f7",
+                "reference": "8b76df4ab77dcf7680eee4b83353d038e28f92f7",
+                "shasum": ""
             },
             "require": {
                 "opis/closure": "^3.0",
@@ -2963,16 +2969,7 @@
                     "Spatie\\Async\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Spatie\\Async\\Tests\\": "tests"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "vendor/bin/phpunit"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -5508,8 +5505,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "zordius/lightncandy": 20,
-        "spatie/async": 20
+        "zordius/lightncandy": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
