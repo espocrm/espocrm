@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a32e7a77ab0ae1e795186b26455beb14",
+    "content-hash": "7d17acc621622ae9ec63aa33f87b8a8e",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -2938,17 +2938,11 @@
         },
         {
             "name": "spatie/async",
-            "version": "0.0.4",
+            "version": "dev-for-espocrm",
             "source": {
                 "type": "git",
-                "url": "https://github.com/spatie/async.git",
+                "url": "https://github.com/yurikuzn/async.git",
                 "reference": "8b76df4ab77dcf7680eee4b83353d038e28f92f7"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/spatie/async/zipball/8b76df4ab77dcf7680eee4b83353d038e28f92f7",
-                "reference": "8b76df4ab77dcf7680eee4b83353d038e28f92f7",
-                "shasum": ""
             },
             "require": {
                 "opis/closure": "^3.0",
@@ -2969,7 +2963,16 @@
                     "Spatie\\Async\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Spatie\\Async\\Tests\\": "tests"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "vendor/bin/phpunit"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -2987,10 +2990,6 @@
                 "async",
                 "spatie"
             ],
-            "support": {
-                "issues": "https://github.com/spatie/async/issues",
-                "source": "https://github.com/spatie/async/tree/master"
-            },
             "time": "2018-01-29T15:09:29+00:00"
         },
         {
@@ -5509,7 +5508,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "zordius/lightncandy": 20
+        "zordius/lightncandy": 20,
+        "spatie/async": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
