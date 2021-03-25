@@ -35,7 +35,7 @@ class SystemHelper extends \Espo\Core\Utils\System
 
     protected $apiPath;
 
-    protected $modRewriteUrl = '/Metadata';
+    protected $modRewriteUrl = '/';
 
     protected $writableDir = 'data';
 
