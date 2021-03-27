@@ -33,19 +33,26 @@ use Espo\ORM\Entity;
 
 class PersonNameType extends BaseType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field) : bool
     {
         $isEmpty = true;
+
         foreach ($this->getActualAttributeList($entity, $field) as $attribute) {
             if ($attribute === 'salutation' . ucfirst($field)) {
                 continue;
             }
+
             if ($entity->has($attribute) && $entity->get($attribute) !== '') {
                 $isEmpty = false;
+
                 break;
             }
         }
-        if ($isEmpty) return false;
+
+        if ($isEmpty) {
+            return false;
+        }
+
         return true;
     }
 }

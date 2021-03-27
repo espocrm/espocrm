@@ -91,7 +91,7 @@ class Record implements Crud,
     Di\SelectManagerFactoryAware,
     Di\InjectableFactoryAware,
     Di\FieldUtilAware,
-    Di\FieldValidatorManagerAware,
+    Di\FieldValidationManagerAware,
     Di\RecordServiceContainerAware,
     Di\SelectBuilderFactoryAware,
 
@@ -109,7 +109,7 @@ class Record implements Crud,
     use Di\SelectManagerFactorySetter;
     use Di\InjectableFactorySetter;
     use Di\FieldUtilSetter;
-    use Di\FieldValidatorManagerSetter;
+    use Di\FieldValidationManagerSetter;
     use Di\RecordServiceContainerSetter;
     use Di\SelectBuilderFactorySetter;
 
@@ -749,8 +749,6 @@ class Record implements Crud,
         $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
         $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
 
-        $fieldValidatorManager = $this->fieldValidatorManager;
-
         foreach ($validationList as $type) {
             $value = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, $type);
 
@@ -770,7 +768,7 @@ class Record implements Crud,
                 }
             }
 
-            if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
+            if (!$this->fieldValidationManager->check($entity, $field, $type, $data)) {
                 throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
             }
         }

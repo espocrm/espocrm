@@ -33,15 +33,21 @@ use Espo\ORM\Entity;
 
 class DatetimeOptionalType extends DatetimeType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field) : bool
     {
         return $this->isNotEmpty($entity, $field);
     }
 
-    protected function isNotEmpty(Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, string $field) : bool
     {
-        if ($entity->has($field) && $entity->get($field) !== null) return true;
-        if ($entity->has($field . 'Date') && $entity->get($field . 'Date') !== null) return true;
+        if ($entity->has($field) && $entity->get($field) !== null) {
+            return true;
+        }
+
+        if ($entity->has($field . 'Date') && $entity->get($field . 'Date') !== null) {
+            return true;
+        }
+
         return false;
     }
 }

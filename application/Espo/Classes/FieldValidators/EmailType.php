@@ -31,46 +31,61 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class EmailType extends BaseType
+class EmailType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field) : bool
     {
-        if ($this->isNotEmpty($entity, $field)) return true;
+        if ($this->isNotEmpty($entity, $field)) {
+            return true;
+        }
 
         $dataList = $entity->get($field . 'Data');
-        if (!is_array($dataList)) return false;
+
+        if (!is_array($dataList)) {
+            return false;
+        }
 
         foreach ($dataList as $item) {
-            if (!empty($item->emailAddress)) return true;
+            if (!empty($item->emailAddress)) {
+                return true;
+            }
         }
 
         return false;
     }
 
-    public function checkEmailAddress(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkEmailAddress(Entity $entity, string $field) : bool
     {
         if ($this->isNotEmpty($entity, $field)) {
             $address = $entity->get($field);
+
             if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
                 return false;
             }
         }
 
         $dataList = $entity->get($field . 'Data');
-        if (is_array($dataList)) {
-            foreach ($dataList as $item) {
-                if (empty($item->emailAddress)) continue;
-                $address = $item->emailAddress;
-                if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
-                    return false;
-                }
+
+        if (!is_array($dataList)) {
+            return true;
+        }
+
+        foreach ($dataList as $item) {
+            if (empty($item->emailAddress)) {
+                continue;
+            }
+
+            $address = $item->emailAddress;
+
+            if (!filter_var($address, FILTER_VALIDATE_EMAIL)) {
+                return false;
             }
         }
 
         return true;
     }
 
-    protected function isNotEmpty(Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, string $field) : bool
     {
         return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
     }

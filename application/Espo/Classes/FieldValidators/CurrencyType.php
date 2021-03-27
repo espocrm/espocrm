@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class CurrencyType extends FloatType
 {
-    protected function isNotEmpty(Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, string $field) : bool
     {
         return
             $entity->has($field) && $entity->get($field) !== null &&

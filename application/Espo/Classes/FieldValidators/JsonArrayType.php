@@ -31,21 +31,33 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class JsonArrayType extends BaseType
+class JsonArrayType
 {
-    public function checkArray(Entity $entity, string $field, $validationValue, $data) : bool
+    public function rawCheckArray(StdClass $data, string $field) : bool
     {
-        if (!$entity->has($field) || $entity->get($field) === null) return true;
+        if (isset($data->$field) && $data->$field !== null && !is_array($data->$field)) {
+            return false;
+        }
 
-        return is_array($entity->get($field));
+        return true;
     }
 
-    protected function isNotEmpty(Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, string $field) : bool
     {
-        if (!$entity->has($field) || $entity->get($field) === null) return false;
+        if (!$entity->has($field) || $entity->get($field) === null) {
+            return false;
+        }
+
         $list = $entity->get($field);
-        if (!is_array($list)) return false;
-        if (count($list)) return true;
+
+        if (!is_array($list)) {
+            return false;
+        }
+
+        if (count($list)) {
+            return true;
+        }
+
         return false;
     }
 }

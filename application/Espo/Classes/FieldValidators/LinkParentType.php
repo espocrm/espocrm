@@ -33,12 +33,16 @@ use Espo\ORM\Entity;
 
 class LinkParentType extends BaseType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field) : bool
     {
         $idAttribute = $field . 'Id';
         $typeAttribute = $field . 'Type';
 
-        if (!$entity->has($idAttribute) || $entity->get($idAttribute) === '' || $entity->get($idAttribute) === null) {
+        if (
+            !$entity->has($idAttribute) ||
+            $entity->get($idAttribute) === '' ||
+            $entity->get($idAttribute) === null
+        ) {
             return false;
         }
 

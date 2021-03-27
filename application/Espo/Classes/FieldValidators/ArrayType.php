@@ -31,22 +31,31 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class ArrayType extends BaseType
+use StdClass;
+
+class ArrayType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field) : bool
     {
         return $this->isNotEmpty($entity, $field);
     }
 
-    public function checkMaxCount(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkMaxCount(Entity $entity, string $field, int $validationValue) : bool
     {
-        if (!$this->isNotEmpty($entity, $field)) return true;
+        if (!$this->isNotEmpty($entity, $field)) {
+            return true;
+        }
+
         $list = $entity->get($field);
-        if (count($list) > $validationValue) return false;
+
+        if (count($list) > $validationValue) {
+            return false;
+        }
+
         return true;
     }
 
-    public function checkArray(Entity $entity, string $field, $validationValue, $data) : bool
+    public function rawCheckArray(StdClass $data, string $field) : bool
     {
         if (isset($data->$field) && $data->$field !== null && !is_array($data->$field)) {
             return false;
@@ -55,12 +64,22 @@ class ArrayType extends BaseType
         return true;
     }
 
-    protected function isNotEmpty(Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, string $field) : bool
     {
-        if (!$entity->has($field) || $entity->get($field) === null) return false;
+        if (!$entity->has($field) || $entity->get($field) === null) {
+            return false;
+        }
+
         $list = $entity->get($field);
-        if (!is_array($list)) return false;
-        if (count($list)) return true;
+
+        if (!is_array($list)) {
+            return false;
+        }
+
+        if (count($list)) {
+            return true;
+        }
+
         return false;
     }
 }

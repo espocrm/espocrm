@@ -31,9 +31,9 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class LinkType extends BaseType
+class LinkType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field) : bool
     {
         $idAttribute = $field . 'Id';
 

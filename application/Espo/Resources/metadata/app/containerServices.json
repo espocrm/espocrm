@@ -83,8 +83,8 @@
     "htmlizerFactory": {
         "className": "Espo\\Core\\Htmlizer\\Factory"
     },
-    "fieldValidatorManager": {
-        "className": "Espo\\Core\\Utils\\FieldValidatorManager"
+    "fieldValidationManager": {
+        "className": "Espo\\Core\\FieldValidation\\FieldValidationManager"
     },
     "hasher": {
         "className": "Espo\\Core\\Utils\\Hasher"

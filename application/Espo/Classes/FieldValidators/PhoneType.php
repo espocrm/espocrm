@@ -31,23 +31,30 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class PhoneType extends BaseType
+class PhoneType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field) : bool
     {
-        if ($this->isNotEmpty($entity, $field)) return true;
+        if ($this->isNotEmpty($entity, $field)) {
+            return true;
+        }
 
         $dataList = $entity->get($field . 'Data');
-        if (!is_array($dataList)) return false;
+
+        if (!is_array($dataList)) {
+            return false;
+        }
 
         foreach ($dataList as $item) {
-            if (!empty($item->phoneNumber)) return true;
+            if (!empty($item->phoneNumber)) {
+                return true;
+            }
         }
 
         return false;
     }
 
-    protected function isNotEmpty(Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, string $field) : bool
     {
         return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
     }

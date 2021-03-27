@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Di;
 
-use Espo\Core\Utils\FieldValidatorManager;
+use Espo\Core\FieldValidation\FieldValidationManager;
 
-interface FieldValidatorManagerAware
+interface FieldValidationManagerAware
 {
-    public function setFieldValidatorManager(FieldValidatorManager $fieldValidatorManager);
+    public function setFieldValidationManager(FieldValidationManager $fieldValidationManager);
 }

@@ -31,14 +31,14 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class EnumType extends BaseType
+class EnumType
 {
-    public function checkRequired(Entity $entity, string $field, $validationValue, $data) : bool
+    public function checkRequired(Entity $entity, string $field) : bool
     {
         return $this->isNotEmpty($entity, $field);
     }
 
-    protected function isNotEmpty(Entity $entity, $field)
+    protected function isNotEmpty(Entity $entity, string $field) : bool
     {
         return $entity->has($field) && $entity->get($field) !== null;
     }

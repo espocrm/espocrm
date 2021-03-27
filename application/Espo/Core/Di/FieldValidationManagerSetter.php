@@ -29,14 +29,14 @@
 
 namespace Espo\Core\Di;
 
-use Espo\Core\Utils\FieldValidatorManager;
+use Espo\Core\FieldValidation\FieldValidationManager;
 
-trait FieldValidatorManagerSetter
+trait FieldValidationManagerSetter
 {
-    protected $fieldValidatorManager;
+    protected $fieldValidationManager;
 
-    public function setFieldValidatorManager(FieldValidatorManager $fieldValidatorManager)
+    public function setFieldValidationManager(FieldValidationManager $fieldValidationManager)
     {
-        $this->fieldValidatorManager = $fieldValidatorManager;
+        $this->fieldValidationManager = $fieldValidationManager;
     }
 }

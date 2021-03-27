@@ -44,7 +44,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Config\ConfigWriter,
     DataManager,
-    Utils\FieldValidatorManager,
+    FieldValidation\FieldValidationManager,
     Currency\DatabasePopulator as CurrencyDatabasePopulator,
 };
 
@@ -58,7 +58,7 @@ class Settings
     protected $acl;
     protected $entityManager;
     protected $dataManager;
-    protected $fieldValidatorManager;
+    protected $fieldValidationManager;
     protected $injectableFactory;
 
     public function __construct(
@@ -70,7 +70,7 @@ class Settings
         FieldUtil $fieldUtil,
         EntityManager $entityManager,
         DataManager $dataManager,
-        FieldValidatorManager $fieldValidatorManager,
+        FieldValidationManager $fieldValidationManager,
         InjectableFactory $injectableFactory
     ) {
         $this->applicationState = $applicationState;
@@ -81,7 +81,7 @@ class Settings
         $this->fieldUtil = $fieldUtil;
         $this->entityManager = $entityManager;
         $this->dataManager = $dataManager;
-        $this->fieldValidatorManager = $fieldValidatorManager;
+        $this->fieldValidationManager = $fieldValidationManager;
         $this->injectableFactory = $injectableFactory;
     }
 
@@ -372,7 +372,6 @@ class Settings
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam('Settings', $field, 'type');
         $validationList = $this->metadata->get(['fields', $fieldType, 'validationList'], []);
         $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
-        $fieldValidatorManager = $this->fieldValidatorManager;
 
         foreach ($validationList as $type) {
             $value = $this->fieldUtil->getEntityTypeFieldParam('Settings', $field, $type);
@@ -381,7 +380,7 @@ class Settings
                 continue;
             }
 
-            if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
+            if (!$this->fieldValidationManager->check($entity, $field, $type, $data)) {
                 throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
             }
         }

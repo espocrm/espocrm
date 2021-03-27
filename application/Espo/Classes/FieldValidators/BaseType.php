@@ -39,6 +39,7 @@ use Espo\Core\{
 class BaseType
 {
     protected $metadata;
+
     protected $fieldUtil;
 
     public function __construct(Metadata $metadata, FieldUtil $fieldUtil)
