@@ -31,13 +31,26 @@ namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
 
-class PersonNameType extends BaseType
+use Espo\Core\{
+    Utils\FieldUtil,
+};
+
+class PersonNameType
 {
+    private $fieldUtil;
+
+    public function __construct(FieldUtil $fieldUtil)
+    {
+        $this->fieldUtil = $fieldUtil;
+    }
+
     public function checkRequired(Entity $entity, string $field) : bool
     {
         $isEmpty = true;
 
-        foreach ($this->getActualAttributeList($entity, $field) as $attribute) {
+        $attributeList = $this->fieldUtil->getActualAttributeList($entity->getEntityType(), $field);
+
+        foreach ($attributeList as $attribute) {
             if ($attribute === 'salutation' . ucfirst($field)) {
                 continue;
             }
