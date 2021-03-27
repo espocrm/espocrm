@@ -34,7 +34,6 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     Utils\Metadata,
     Utils\FieldUtil,
-    InjectableFactory,
 };
 
 use StdClass;
@@ -47,25 +46,24 @@ class FieldValidationManager
 
     private $fieldUtil;
 
-    private $injectableFactory;
+    private $factory;
 
-    public function __construct(Metadata $metadata, FieldUtil $fieldUtil, InjectableFactory $injectableFactory)
+    public function __construct(Metadata $metadata, FieldUtil $fieldUtil, ValidatorFactory $factory)
     {
         $this->metadata = $metadata;
         $this->fieldUtil = $fieldUtil;
-        $this->injectableFactory= $injectableFactory;
+        $this->factory = $factory;
     }
 
     public function check(Entity $entity, string $field, string $type, ?StdClass $data = null) : bool
     {
         if (!$data) {
-            $data = (object) [];
+            $data = $data ?? (object) [];
         }
 
         $entityType = $entity->getEntityType();
 
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
-
         $validationValue = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);
 
         $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
@@ -76,13 +74,13 @@ class FieldValidationManager
             }
         }
 
-        $result = $this->processFieldCheck($entityType, $fieldType, $type, $entity, $field, $validationValue);
+        $result = $this->processFieldCheck($entityType, $type, $entity, $field, $validationValue);
 
         if (!$result) {
             return false;
         }
 
-        $resultRaw = $this->processFieldRawCheck($entityType, $fieldType, $type, $data, $field, $validationValue);
+        $resultRaw = $this->processFieldRawCheck($entityType, $type, $data, $field, $validationValue);
 
         if (!$resultRaw) {
             return false;
@@ -92,10 +90,10 @@ class FieldValidationManager
     }
 
     private function processFieldCheck(
-        string $entityType, string $fieldType, string $type, Entity $entity, string $field, $validationValue
+        string $entityType, string $type, Entity $entity, string $field, $validationValue
     ) : bool {
 
-        $checker = $this->getFieldTypeChecker($entityType, $field, $fieldType);
+        $checker = $this->getFieldTypeChecker($entityType, $field);
 
         if (!$checker) {
             return true;
@@ -111,10 +109,10 @@ class FieldValidationManager
     }
 
     private function processFieldRawCheck(
-        string $entityType, string $fieldType, string $type, StdClass $data, string $field, $validationValue
+        string $entityType, string $type, StdClass $data, string $field, $validationValue
     ) : bool {
 
-        $checker = $this->getFieldTypeChecker($entityType, $field, $fieldType);
+        $checker = $this->getFieldTypeChecker($entityType, $field);
 
         if (!$checker) {
             return true;
@@ -129,42 +127,27 @@ class FieldValidationManager
         return $checker->$methodName($data, $field, $validationValue);
     }
 
-    private function getFieldTypeChecker(string $entityType, string $field, string $fieldType) : ?object
+    private function getFieldTypeChecker(string $entityType, string $field) : ?object
     {
         $key = $entityType . '_' . $field;
 
         if (!array_key_exists($key, $this->checkerCache)) {
-            $this->loadFieldTypeChecker($entityType, $field, $fieldType);
+            $this->loadFieldTypeChecker($entityType, $field);
         }
 
         return $this->checkerCache[$key];
     }
 
-    private function loadFieldTypeChecker(string $entityType, string $field, string $fieldType) : void
+    private function loadFieldTypeChecker(string $entityType, string $field) : void
     {
-        $className = $this->metadata
-            ->get(['entityDefs', $entityType, 'fields', $field, 'validatorClassName']);
-
-        if (!$className) {
-            $className = $this->metadata->get(['fields', $fieldType, 'validatorClassName']);
-        }
-
-        if (!$className) {
-            $className = 'Espo\\Classes\\FieldValidators\\' . ucfirst($fieldType) . 'Type';
-
-            if (!class_exists($className)) {
-                $className = null;
-            }
-        }
-
         $key = $entityType . '_' . $field;
 
-        if (!$className) {
+        if (!$this->factory->isCreatable($entityType, $field)) {
             $this->checkerCache[$key] = null;
 
             return;
         }
 
-        $this->checkerCache[$key] = $this->injectableFactory->create($className);
+        $this->checkerCache[$key] = $this->factory->create($entityType, $field);
     }
 }
