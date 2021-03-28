@@ -33,6 +33,9 @@ use RuntimeException;
 
 trait BaseBuilderTrait
 {
+    /**
+     * Needs to be protected.
+     */
     protected $params = [];
 
     public function __construct()
