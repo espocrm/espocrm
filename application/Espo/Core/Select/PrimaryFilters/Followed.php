@@ -37,8 +37,9 @@ use Espo\{
 
 class Followed implements PrimaryFilter
 {
-    protected $entityType;
-    protected $user;
+    private $entityType;
+
+    private $user;
 
     public function __construct(string $entityType, User $user)
     {

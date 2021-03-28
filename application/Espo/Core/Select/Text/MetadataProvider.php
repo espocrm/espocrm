@@ -37,8 +37,9 @@ use Espo\ORM\Defs\Defs;
 
 class MetadataProvider
 {
-    protected $metadata;
-    protected $ormDefs;
+    private $metadata;
+
+    private $ormDefs;
 
     public function __construct(Metadata $metadata, Defs $ormDefs)
     {

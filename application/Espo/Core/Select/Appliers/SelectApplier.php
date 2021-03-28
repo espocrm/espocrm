@@ -60,7 +60,9 @@ class SelectApplier
     protected $entityType;
 
     protected $user;
+
     protected $fieldUtil;
+
     protected $metadataProvider;
 
     public function __construct(

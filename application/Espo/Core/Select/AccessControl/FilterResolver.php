@@ -34,10 +34,15 @@ use Espo\{
     Entities\User,
 };
 
+/**
+ * @todo Use interface.
+ */
 class FilterResolver
 {
     protected $entityType;
+
     protected $user;
+
     protected $acl;
 
     public function __construct(string $entityType, User $user, Acl $acl)

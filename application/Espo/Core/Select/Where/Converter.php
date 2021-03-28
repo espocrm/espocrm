@@ -45,10 +45,15 @@ use Espo\{
 class Converter
 {
     protected $entityType;
+
     protected $user;
+
     protected $itemConverter;
+
     protected $scanner;
+
     protected $randomStringGenerator;
+
     protected $ormDefs;
 
     public function __construct(

@@ -39,16 +39,16 @@ use Espo\{
 
 class Scanner
 {
-    protected $entityManager;
+    private $entityManager;
 
     private $seedHash = [];
 
-    protected $nestingTypeList = [
+    private $nestingTypeList = [
         'or',
         'and',
     ];
 
-    protected $subQueryTypeList = [
+    private $subQueryTypeList = [
         'subQueryIn',
         'subQueryNotIn',
         'not',
@@ -70,7 +70,7 @@ class Scanner
         $this->applyLeftJoinsFromItem($queryBuilder, $item, $entityType);
     }
 
-    protected function applyLeftJoinsFromItem(QueryBuilder $queryBuilder, Item $item, string $entityType) : void
+    private function applyLeftJoinsFromItem(QueryBuilder $queryBuilder, Item $item, string $entityType) : void
     {
         $type = $item->getType();
         $value = $item->getValue();
@@ -99,7 +99,7 @@ class Scanner
         $this->applyLeftJoinsFromAttribute($queryBuilder, $attribute, $entityType);
     }
 
-    protected function applyLeftJoinsFromAttribute(
+    private function applyLeftJoinsFromAttribute(
         QueryBuilder $queryBuilder, string $attribute, string $entityType
     ) : void {
 
@@ -142,7 +142,7 @@ class Scanner
         }
     }
 
-    protected function getSeed(string $entityType) : Entity
+    private function getSeed(string $entityType) : Entity
     {
         if (!isset($this->seedHash[$entityType])) {
             $this->seedHash[$entityType] = $this->entityManager->getEntity($entityType);

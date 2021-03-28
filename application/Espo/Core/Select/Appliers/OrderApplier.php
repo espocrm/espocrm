@@ -49,7 +49,9 @@ class OrderApplier
     protected $entityType;
 
     protected $user;
+
     protected $metadataProvider;
+
     protected $itemConverterFactory;
 
     public function __construct(

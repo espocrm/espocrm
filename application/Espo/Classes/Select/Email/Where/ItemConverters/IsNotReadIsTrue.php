@@ -45,6 +45,7 @@ use Espo\{
 class IsNotReadIsTrue implements ItemConverter
 {
     protected $user;
+
     protected $joinHelper;
 
     public function __construct(User $user, JoinHelper $joinHelper)

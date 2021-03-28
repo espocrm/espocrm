@@ -39,7 +39,9 @@ use Espo\{
 class PortalOnlyOwn implements AccessControlFilter
 {
     protected $entityType;
+
     protected $user;
+
     protected $fieldHelper;
 
     public function __construct(string $entityType, User $user, FieldHelper $fieldHelper)

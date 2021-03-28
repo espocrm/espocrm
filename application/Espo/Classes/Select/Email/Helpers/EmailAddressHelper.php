@@ -35,6 +35,8 @@ use Espo\{
 
 class EmailAddressHelper
 {
+    private $entityManager;
+
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;

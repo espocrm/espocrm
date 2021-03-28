@@ -44,6 +44,7 @@ use DateInterval;
 class DateTimeItemTransformer
 {
     protected $entityType;
+
     protected $user;
 
     public function __construct(string $entityType, User $user)

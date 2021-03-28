@@ -47,10 +47,15 @@ class AccessControlFilterApplier
     protected $acl;
 
     protected $entityType;
+
     protected $user;
+
     protected $accessControlFilterFactory;
+
     protected $accessControlFilterResolverFactory;
+
     protected $aclManager;
+
     protected $selectManager;
 
     public function __construct(

@@ -51,9 +51,11 @@ class ApplierFactory
     const BOOL_FILTER_LIST = 'boolFilterList';
     const ADDITIONAL = 'additional';
 
-    protected $injectableFactory;
-    protected $metadata;
-    protected $selectManagerFactory;
+    private $injectableFactory;
+
+    private $metadata;
+
+    private $selectManagerFactory;
 
     public function __construct(
         InjectableFactory $injectableFactory, Metadata $metadata, SelectManagerFactory $selectManagerFactory

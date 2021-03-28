@@ -42,8 +42,9 @@ use Espo\{
 
 class PrimaryFilterFactory
 {
-    protected $injectableFactory;
-    protected $metadata;
+    private $injectableFactory;
+
+    private $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {

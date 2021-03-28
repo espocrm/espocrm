@@ -43,8 +43,11 @@ use Espo\{
 class PrimaryFilterApplier
 {
     protected $entityType;
+
     protected $user;
+
     protected $selectManager;
+
     protected $primaryFilterFactory;
 
     public function __construct(

@@ -38,7 +38,7 @@ use Espo\Core\{
  */
 class SelectBuilderFactory
 {
-    protected $injectableFactory;
+    private $injectableFactory;
 
     public function __construct(InjectableFactory $injectableFactory)
     {

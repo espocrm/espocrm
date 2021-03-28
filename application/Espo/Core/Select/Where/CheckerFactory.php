@@ -37,8 +37,9 @@ use Espo\{
 
 class CheckerFactory
 {
-    protected $injectableFactory;
-    protected $aclManager;
+    private $injectableFactory;
+
+    private $aclManager;
 
     public function __construct(InjectableFactory $injectableFactory, AclManager $aclManager)
     {

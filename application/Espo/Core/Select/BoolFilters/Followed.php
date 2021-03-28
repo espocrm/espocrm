@@ -39,6 +39,7 @@ use Espo\{
 class Followed implements BoolFilter
 {
     protected $entityType;
+
     protected $user;
 
     public function __construct(string $entityType, User $user)

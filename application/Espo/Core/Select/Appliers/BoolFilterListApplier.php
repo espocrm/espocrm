@@ -45,8 +45,11 @@ use Espo\{
 class BoolFilterListApplier
 {
     protected $entityType;
+
     protected $user;
+
     protected $selectManager;
+
     protected $boolFilterFactory;
 
     public function __construct(

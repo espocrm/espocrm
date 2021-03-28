@@ -43,6 +43,7 @@ use Espo\{
 class AdditionalApplier extends AdditionalApplierBase
 {
     protected $user;
+
     protected $joinHelper;
 
     public function __construct(User $user, JoinHelper $joinHelper)

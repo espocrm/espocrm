@@ -40,8 +40,9 @@ use Espo\{
 
 class ConverterFactory
 {
-    protected $injectableFactory;
-    protected $metadata;
+    private $injectableFactory;
+
+    private $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -75,7 +76,7 @@ class ConverterFactory
         ]);
     }
 
-    protected function getConverterClassName(string $entityType) : string
+    private function getConverterClassName(string $entityType) : string
     {
         $className = $this->metadata->get(['selectDefs', $entityType, 'whereConverterClassName']);
 
@@ -86,7 +87,7 @@ class ConverterFactory
         return Converter::class;
     }
 
-    protected function getItemConverterClassName(string $entityType) : string
+    private function getItemConverterClassName(string $entityType) : string
     {
         $className = $this->metadata->get(['selectDefs', $entityType, 'whereItemConverterClassName']);
 
@@ -97,7 +98,7 @@ class ConverterFactory
         return ItemGeneralConverter::class;
     }
 
-    protected function getDateTimeItemTransformerClassName(string $entityType) : string
+    private function getDateTimeItemTransformerClassName(string $entityType) : string
     {
         $className = $this->metadata->get(['selectDefs', $entityType, 'whereDateTimeItemTransformerClassName']);
 

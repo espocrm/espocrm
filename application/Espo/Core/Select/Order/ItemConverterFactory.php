@@ -37,8 +37,9 @@ use Espo\Core\{
 
 class ItemConverterFactory
 {
-    protected $injectableFactory;
-    protected $metadata;
+    private $injectableFactory;
+
+    private $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -64,7 +65,7 @@ class ItemConverterFactory
         ]);
     }
 
-    protected function getClassName(string $entityType, string $field) : ?string
+    private function getClassName(string $entityType, string $field) : ?string
     {
         $className = $this->metadata->get([
             'selectDefs', $entityType, 'orderItemConverterClassNameMap', $field

@@ -44,8 +44,11 @@ use Espo\{
 class WhereApplier
 {
     protected $entityType;
+
     protected $user;
+
     protected $converterFactory;
+
     protected $checkerFactory;
 
     public function __construct(

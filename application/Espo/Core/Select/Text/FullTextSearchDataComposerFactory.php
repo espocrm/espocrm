@@ -36,8 +36,9 @@ use Espo\Core\{
 
 class FullTextSearchDataComposerFactory
 {
-    protected $injectableFactory;
-    protected $metadata;
+    private $injectableFactory;
+
+    private $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -54,7 +55,7 @@ class FullTextSearchDataComposerFactory
         ]);
     }
 
-    protected function getClassName(string $entityType) : string
+    private function getClassName(string $entityType) : string
     {
         return
             $this->metadata->get([

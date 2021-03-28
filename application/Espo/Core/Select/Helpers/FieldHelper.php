@@ -41,9 +41,9 @@ class FieldHelper
 {
     private $seed = null;
 
-    protected $entityType;
+    private $entityType;
 
-    protected $entityManager;
+    private $entityManager;
 
     public function __construct(string $entityType, EntityManager $entityManager)
     {
@@ -51,7 +51,7 @@ class FieldHelper
         $this->entityManager = $entityManager;
     }
 
-    protected function getSeed() : Entity
+    private function getSeed() : Entity
     {
         return $this->seed ?? $this->entityManager->getEntity($this->entityType);
     }

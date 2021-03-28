@@ -66,8 +66,11 @@ class TextFilterApplier
     protected $entityType;
 
     protected $user;
+
     protected $config;
+
     protected $metadataProvider;
+
     protected $fullTextSearchDataComposerFactory;
 
     public function __construct(

@@ -38,9 +38,9 @@ use Espo\Core\{
 
 class EnumType implements ItemConverter
 {
-    protected $entityType;
+    private $entityType;
 
-    protected $metadata;
+    private $metadata;
 
     public function __construct(
         string $entityType,

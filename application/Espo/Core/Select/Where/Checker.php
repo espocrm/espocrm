@@ -45,12 +45,13 @@ class Checker
 {
     private $seed = null;
 
-    protected $entityType;
+    private $entityType;
 
-    protected $entityManager;
-    protected $acl;
+    private $entityManager;
 
-    protected $nestingTypeList = [
+    private $acl;
+
+    private $nestingTypeList = [
         'or',
         'and',
         'subQueryIn',
@@ -58,13 +59,13 @@ class Checker
         'not',
     ];
 
-    protected $subQueryTypeList = [
+    private $subQueryTypeList = [
         'subQueryIn',
         'subQueryNotIn',
         'not',
     ];
 
-    protected $linkTypeList = [
+    private $linkTypeList = [
         'inCategory',
         'isLinked',
         'isNotLinked',
@@ -86,7 +87,7 @@ class Checker
         $this->checkItem($item, $params);
     }
 
-    protected function checkItem(Item $item, Params $params) : void
+    private function checkItem(Item $item, Params $params) : void
     {
         $type = $item->getType();
         $attribute = $item->getAttribute();
@@ -129,7 +130,7 @@ class Checker
         }
     }
 
-    protected function checkAttributeExistence(string $attribute, string $type) : void
+    private function checkAttributeExistence(string $attribute, string $type) : void
     {
         if (strpos($attribute, '.') !== false) {
             // @todo Check existance of foreign attributes.
@@ -149,7 +150,7 @@ class Checker
         }
     }
 
-    protected function checkAttributePermission(string $attribute, string $type) : void
+    private function checkAttributePermission(string $attribute, string $type) : void
     {
         $entityType = $this->entityType;
 
@@ -210,7 +211,7 @@ class Checker
         }
     }
 
-    protected function getSeed() : Entity
+    private function getSeed() : Entity
     {
         return $this->seed ?? $this->entityManager->getEntity($this->entityType);
     }

@@ -46,7 +46,9 @@ use Espo\{
 class InFolder implements ItemConverter
 {
     protected $user;
+
     protected $entityManager;
+
     protected $joinHelper;
 
     public function __construct(User $user, EntityManager $entityManager, JoinHelper $joinHelper)

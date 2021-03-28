@@ -42,6 +42,7 @@ use Espo\{
 class PortalOnlyContact implements AccessControlFilter
 {
     protected $user;
+
     protected $joinHelper;
 
     public function __construct(User $user, JoinHelper $joinHelper)

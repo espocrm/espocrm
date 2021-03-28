@@ -36,7 +36,7 @@ use InvalidArgumentException;
  */
 class SearchParams
 {
-    protected $rawParams;
+    private $rawParams;
 
     const ORDER_ASC = 'ASC';
     const ORDER_DESC = 'DESC';
@@ -268,7 +268,7 @@ class SearchParams
     /**
      * For compatibility with the legacy definition.
      */
-    protected function adjustParams(array &$params) : void
+    private function adjustParams(array &$params) : void
     {
         if (!$params['where']) {
             return;

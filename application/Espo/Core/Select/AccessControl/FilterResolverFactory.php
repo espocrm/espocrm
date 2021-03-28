@@ -41,9 +41,11 @@ use Espo\{
 
 class FilterResolverFactory
 {
-    protected $injectableFactory;
-    protected $metadata;
-    protected $aclManager;
+    private $injectableFactory;
+
+    private $metadata;
+
+    private $aclManager;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, AclManager $aclManager)
     {
@@ -65,7 +67,7 @@ class FilterResolverFactory
         ]);
     }
 
-    protected function getClassName(string $entityType) : string
+    private function getClassName(string $entityType) : string
     {
         return $this->metadata->get([
             'selectDefs', $entityType, 'accessControlFilterResolverClassName'

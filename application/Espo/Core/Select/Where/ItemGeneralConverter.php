@@ -51,13 +51,21 @@ use DateInterval;
 class ItemGeneralConverter
 {
     protected $entityType;
+
     protected $user;
+
     protected $dateTimeItemTransformer;
+
     protected $scanner;
+
     protected $itemConverterFactory;
+
     protected $randomStringGenerator;
+
     protected $entityManager;
+
     protected $ormDefs;
+
     protected $config;
 
     public function __construct(

@@ -43,8 +43,9 @@ use Espo\{
 
 class FilterFactory
 {
-    protected $injectableFactory;
-    protected $metadata;
+    private $injectableFactory;
+
+    private $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -76,7 +77,7 @@ class FilterFactory
         return (bool) $this->getClassName($entityType, $name);
     }
 
-    protected function getClassName(string $entityType, string $name) : ?string
+    private function getClassName(string $entityType, string $name) : ?string
     {
         if (!$name) {
             throw new Error("Empty access control filter name.");
@@ -104,7 +105,7 @@ class FilterFactory
         return $className;
     }
 
-    protected function getDefaultClassName(string $name) : string
+    private function getDefaultClassName(string $name) : string
     {
         $className = 'Espo\\Core\\Select\\AccessControlFilters\\' . ucfirst($name);
 

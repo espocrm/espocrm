@@ -45,6 +45,7 @@ use Espo\{
 class EmailAddressEquals implements ItemConverter
 {
     protected $emailAddressHelper;
+
     protected $randomStringGenerator;
 
     public function __construct(

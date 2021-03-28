@@ -39,8 +39,9 @@ use Espo\{
 
 class MetadataProvider
 {
-    protected $metadata;
-    protected $entityManager;
+    private $metadata;
+
+    private $entityManager;
 
     public function __construct(Metadata $metadata, EntityManager $entityManager)
     {
