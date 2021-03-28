@@ -29,21 +29,22 @@
 
 namespace Espo\Core\Mail;
 
-use Espo\Entities\Email;
+use Espo\{
+    Entities\Email,
+    Entities\InboundEmail,
+    Services\InboundEmail as InboundEmailService,
+};
 
 use Laminas\Mail\Message;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Config,
     ORM\EntityManager,
     ServiceFactory,
 };
 
-use Traversable;
-
 /**
- * An util for email sending. Can send with SMTP parameters of the system email account or with specific parameters.
+ * A service for email sending. Can send with SMTP parameters of the system email account or with specific parameters.
  * Uses a builder to send with specific parameters.
  */
 class EmailSender
@@ -54,10 +55,13 @@ class EmailSender
 
     private $systemInboundEmailIsCached = false;
 
-    protected $config;
-    protected $entityManager;
-    protected $serviceFactory;
-    protected $transportFactory;
+    private $config;
+
+    private $entityManager;
+
+    private $serviceFactory;
+
+    private $transportFactory;
 
     public function __construct(
         Config $config,
@@ -71,7 +75,7 @@ class EmailSender
         $this->transportFactory = $transportFactory;
     }
 
-    protected function createSender() : Sender
+    private function createSender() : Sender
     {
         return new Sender(
             $this->config,
@@ -149,7 +153,7 @@ class EmailSender
         return false;
     }
 
-    protected function getSystemInboundEmail()
+    private function getSystemInboundEmail() : ?InboundEmail
     {
         $address = $this->config->get('outboundEmailFromAddress');
 
@@ -169,10 +173,8 @@ class EmailSender
         return $this->systemInboundEmail;
     }
 
-    protected function getInboundEmailService()
+    private function getInboundEmailService() : InboundEmailService
     {
-        if (!$this->serviceFactory) return null;
-
         if (!$this->inboundEmailService) {
             $this->inboundEmailService = $this->serviceFactory->create('InboundEmail');
         }
@@ -183,7 +185,7 @@ class EmailSender
     /**
      * Send an email.
      */
-    public function send(Email $email)
+    public function send(Email $email) : void
     {
         $this->createSender()->send($email);
     }

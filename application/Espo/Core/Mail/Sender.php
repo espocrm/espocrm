@@ -47,7 +47,9 @@ use Espo\Entities\{
     InboundEmail,
 };
 
-use Espo\Services\InboundEmail as InboundEmailService;
+use Espo\{
+    Services\InboundEmail as InboundEmailService,
+};
 
 use Espo\Core\{
     Exceptions\Error,
@@ -56,7 +58,6 @@ use Espo\Core\{
     ServiceFactory,
 };
 
-use Traversable;
 use Exception;
 
 /**
@@ -64,21 +65,21 @@ use Exception;
  */
 class Sender
 {
-    protected $config;
+    private $config;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $serviceFactory;
+    private $serviceFactory;
 
-    protected $transportFactory;
+    private $transportFactory;
 
-    protected $transport;
+    private $transport;
 
-    protected $isGlobal = false;
+    private $isGlobal = false;
 
-    protected $params = [];
+    private $params = [];
 
-    protected $overrideParams = [];
+    private $overrideParams = [];
 
     private $systemInboundEmail = null;
 
@@ -144,7 +145,7 @@ class Sender
         ];
 
         foreach ($params as $key => $value) {
-            if (! in_array($key, $paramList)) {
+            if (!in_array($key, $paramList)) {
                 unset($params[$key]);
             }
         }
@@ -191,8 +192,6 @@ class Sender
     }
 
     /**
-     * Set params.
-     *
      * @deprecated
      */
     public function setParams(array $params = []) : self
@@ -204,32 +203,30 @@ class Sender
 
 
     /**
-     * Use specific SMTP parameters.
-     *
      * @deprecated
      */
     public function useSmtp(array $params = []) : self
     {
         $this->isGlobal = false;
+
         $this->applySmtp($params);
 
         return $this;
     }
 
     /**
-     * Use the system SMTP parameters.
-     *
      * @deprecated
      */
     public function useGlobal() : self
     {
         $this->params = [];
+
         $this->isGlobal = true;
 
         return $this;
     }
 
-    protected function applySmtp(array $params = [])
+    private function applySmtp(array $params = []) : void
     {
         $this->params = $params;
 
@@ -247,6 +244,7 @@ class Sender
         ];
 
         $connectionOptions = $params['connectionOptions'] ?? [];
+
         foreach ($connectionOptions as $key => $value) {
             $options['connectionConfig'][$key] = $value;
         }
@@ -259,10 +257,12 @@ class Sender
 
                 if (in_array($authMechanism, ['login', 'crammd5', 'plain'])) {
                     $options['connectionClass'] = $authMechanism;
-                } else {
+                }
+                else {
                     $options['connectionClass'] = 'login';
                 }
-            } else {
+            }
+            else {
                 $options['connectionClass'] = 'login';
             }
 
@@ -297,7 +297,7 @@ class Sender
         }
     }
 
-    protected function applyGlobal()
+    private function applyGlobal() : void
     {
         $config = $this->config;
 
@@ -309,6 +309,7 @@ class Sender
 
                 if ($service) {
                     $params = $service->getSmtpParamsFromAccount($inboundEmail);
+
                     $this->applySmtp($params);
 
                     return;
@@ -330,7 +331,7 @@ class Sender
     /**
      * @deprecated
      */
-    public function hasSystemSmtp()
+    public function hasSystemSmtp() : bool
     {
         if ($this->config->get('smtpServer')) {
             return true;
@@ -343,16 +344,19 @@ class Sender
         return false;
     }
 
-    protected function getSystemInboundEmail()
+    private function getSystemInboundEmail() : ?InboundEmail
     {
         $address = $this->config->get('outboundEmailFromAddress');
 
         if (!$this->systemInboundEmailIsCached && $address) {
-            $this->systemInboundEmail = $this->entityManager->getRepository('InboundEmail')->where([
-                'status' => 'Active',
-                'useSmtp' => true,
-                'emailAddress' => $address,
-            ])->findOne();
+            $this->systemInboundEmail = $this->entityManager
+                ->getRepository('InboundEmail')
+                ->where([
+                    'status' => 'Active',
+                    'useSmtp' => true,
+                    'emailAddress' => $address,
+                ])
+                ->findOne();
         }
 
         $this->systemInboundEmailIsCached = true;
@@ -360,7 +364,7 @@ class Sender
         return $this->systemInboundEmail;
     }
 
-    protected function getInboundEmailService()
+    private function getInboundEmailService() : ?InboundEmailService
     {
         if (!$this->serviceFactory) {
             return null;
@@ -380,8 +384,10 @@ class Sender
      * @param $message @deprecated
      * @param $attachmentList @deprecated
      */
-    public function send(Email $email, ?array $params = [], ?Message $message = null, iterable $attachmentList = [])
-    {
+    public function send(
+        Email $email, ?array $params = [], ?Message $message = null, iterable $attachmentList = []
+    ) : void {
+
         if ($this->isGlobal) {
             $this->applyGlobal();
         }
@@ -404,7 +410,8 @@ class Sender
             $fromAddress = trim(
                 $email->get('from')
             );
-        } else {
+        }
+        else {
             if (empty($params['fromAddress']) && !$config->get('outboundEmailFromAddress')) {
                 throw new Error('outboundEmailFromAddress is not specified in config.');
             }
@@ -461,7 +468,8 @@ class Sender
             foreach ($attachmentCollection as $a) {
                 if ($a->get('contents')) {
                     $contents = $a->get('contents');
-                } else {
+                }
+                else {
                     $fileName = $this->entityManager
                         ->getRepository('Attachment')
                         ->getFilePath($a);
@@ -493,7 +501,8 @@ class Sender
             foreach ($attachmentInlineList as $a) {
                 if ($a->get('contents')) {
                     $contents = $a->get('contents');
-                } else {
+                }
+                else {
                     $fileName = $this->entityManager->getRepository('Attachment')->getFilePath($a);
 
                     if (!is_file($fileName)) {
@@ -504,6 +513,7 @@ class Sender
                 }
 
                 $attachment = new MimePart($contents);
+
                 $attachment->disposition = Mime::DISPOSITION_INLINE;
                 $attachment->encoding = Mime::ENCODING_BASE64;
                 $attachment->id = $a->id;
@@ -511,6 +521,7 @@ class Sender
                 if ($a->get('type')) {
                     $attachment->type = $a->get('type');
                 }
+
                 $attachmentPartList[] = $attachment;
             }
         }
@@ -520,12 +531,14 @@ class Sender
         $body = new MimeMessage();
 
         $textPart = new MimePart($email->getBodyPlainForSending());
+
         $textPart->type = 'text/plain';
         $textPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
         $textPart->charset = 'utf-8';
 
         if ($email->get('isHtml')) {
             $htmlPart = new MimePart($email->getBodyForSending());
+
             $htmlPart->encoding = Mime::ENCODING_QUOTEDPRINTABLE;
             $htmlPart->type = 'text/html';
             $htmlPart->charset = 'utf-8';
@@ -533,30 +546,39 @@ class Sender
 
         if (!empty($attachmentPartList)) {
             $messageType = 'multipart/related';
+
             if ($email->get('isHtml')) {
                 $content = new MimeMessage();
+
                 $content->addPart($textPart);
                 $content->addPart($htmlPart);
 
                 $messageType = 'multipart/mixed';
 
                 $contentPart = new MimePart($content->generateMessage());
-                $contentPart->type = "multipart/alternative;\n boundary=\"" . $content->getMime()->boundary() . '"';
+
+                $contentPart->type = "multipart/alternative;\n boundary=\"" .
+                    $content->getMime()->boundary() . '"';
 
                 $body->addPart($contentPart);
-            } else {
+            }
+            else {
                 $body->addPart($textPart);
             }
 
             foreach ($attachmentPartList as $attachmentPart) {
                 $body->addPart($attachmentPart);
             }
-        } else {
+        }
+        else {
             if ($email->get('isHtml')) {
                 $body->setParts([$textPart, $htmlPart]);
+
                 $messageType = 'multipart/alternative';
-            } else {
+            }
+            else {
                 $body = $email->getBodyPlainForSending();
+
                 $messageType = 'text/plain';
             }
         }
@@ -569,9 +591,11 @@ class Sender
             }
 
             $message->getHeaders()->addHeaderLine('Content-Type', 'text/plain; charset=UTF-8');
-        } else {
+        }
+        else {
             if (!$message->getHeaders()->has('content-type')) {
                 $contentTypeHeader = new ContentTypeHeader();
+
                 $message->getHeaders()->addHeader($contentTypeHeader);
             }
 
@@ -583,14 +607,21 @@ class Sender
         try {
             $messageId = $email->get('messageId');
 
-            if (empty($messageId) || !is_string($messageId) || strlen($messageId) < 4 || strpos($messageId, 'dummy:') === 0) {
+            if (
+                empty($messageId) ||
+                !is_string($messageId) ||
+                strlen($messageId) < 4 ||
+                strpos($messageId, 'dummy:') === 0
+            ) {
                 $messageId = $this->generateMessageId($email);
+
                 $email->set('messageId', '<' . $messageId . '>');
 
                 if ($email->id) {
                     $this->entityManager->saveEntity($email, ['silent' => true]);
                 }
-            } else {
+            }
+            else {
                 $messageId = substr($messageId, 1, strlen($messageId) - 2);
             }
 
@@ -618,7 +649,7 @@ class Sender
         $this->useGlobal();
     }
 
-    protected function handleException(Exception $e)
+    private function handleException(Exception $e) : void
     {
         if ($e instanceof ProtocolRuntimeException) {
             $message = "Email sending error.";
@@ -646,9 +677,14 @@ class Sender
         $rand = mt_rand(1000, 9999);
 
         if ($email->get('parentType') && $email->get('parentId')) {
-            $messageId = '' . $email->get('parentType') .'/' . $email->get('parentId') . '/' . time() . '/' . $rand . '@espo';
-        } else {
-            $messageId = '' . md5($email->get('name')) . '/' . time() . '/' . $rand .  '@espo';
+            $messageId =
+                '' . $email->get('parentType') . '/' .
+                $email->get('parentId') . '/' . time() . '/' . $rand . '@espo';
+        }
+        else {
+            $messageId =
+                '' . md5($email->get('name')) . '/' .time() . '/' .
+                $rand .  '@espo';
         }
 
         if ($email->get('isSystem')) {
@@ -668,7 +704,7 @@ class Sender
         return $this;
     }
 
-    protected function addAddresses(Email $email, Message $message)
+    private function addAddresses(Email $email, Message $message) : void
     {
         $value = $email->get('to');
 
