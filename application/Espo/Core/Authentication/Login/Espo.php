@@ -32,6 +32,7 @@ namespace Espo\Core\Authentication\Login;
 use Espo\Core\{
     Api\Request,
     Utils\PasswordHash,
+    Authentication\Login,
     Authentication\LoginData,
     Authentication\Result,
     Authentication\Helpers\UserFinder,
@@ -39,8 +40,9 @@ use Espo\Core\{
 
 class Espo implements Login
 {
-    protected $userFinder;
-    protected $passwordHash;
+    private $userFinder;
+
+    private $passwordHash;
 
     public function __construct(UserFinder $userFinder, PasswordHash $passwordHash)
     {

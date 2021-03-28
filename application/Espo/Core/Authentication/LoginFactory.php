@@ -29,14 +29,16 @@
 
 namespace Espo\Core\Authentication;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Metadata;
-use Espo\Core\Authentication\Login\Login;
+use Espo\Core\{
+    InjectableFactory,
+    Utils\Metadata,
+};
 
 class LoginFactory
 {
-    protected $injectableFactory;
-    protected $metadata;
+    private $injectableFactory;
+
+    private $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -52,6 +54,7 @@ class LoginFactory
             $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
             $className = "Espo\\Custom\\Core\\Authentication\\Login\\" . $sanitizedName;
+
             if (!class_exists($className)) {
                 $className = "Espo\\Core\\Authentication\\Login\\" . $sanitizedName;
             }

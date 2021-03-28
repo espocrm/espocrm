@@ -31,6 +31,7 @@ namespace Espo\Core\Authentication\Login;
 
 use Espo\Core\{
     Api\Request,
+    Authentication\Login,
     Authentication\LoginData,
     Authentication\Result,
     Authentication\Helpers\UserFinder,
@@ -38,7 +39,7 @@ use Espo\Core\{
 
 class ApiKey implements Login
 {
-    protected $userFinder;
+    private $userFinder;
 
     public function __construct(UserFinder $userFinder)
     {

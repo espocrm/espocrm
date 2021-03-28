@@ -32,6 +32,7 @@ namespace Espo\Core\Authentication\Login;
 use Espo\Core\{
     Api\Request,
     Utils\ApiKey,
+    Authentication\Login,
     Authentication\LoginData,
     Authentication\Result,
     Authentication\Helpers\UserFinder,
@@ -40,8 +41,9 @@ use Espo\Core\{
 
 class Hmac implements Login
 {
-    protected $userFinder;
-    protected $apiKeyUtil;
+    private $userFinder;
+
+    private $apiKeyUtil;
 
     public function __construct(UserFinder $userFinder, ApiKey $apiKeyUtil)
     {
