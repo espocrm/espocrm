@@ -29,8 +29,6 @@
 
 namespace Espo\ORM\QueryParams;
 
-use RuntimeException;
-
 trait SelectingBuilderTrait
 {
     use BaseBuilderTrait;
