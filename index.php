@@ -39,11 +39,13 @@ $app = new Application();
 
 if (!$app->isInstalled()) {
     header("Location: install/");
+
     exit;
 }
 
 if (!empty($_GET['entryPoint'])) {
     $app->run(EntryPoint::class);
+
     exit;
 }
 

@@ -31,6 +31,17 @@ namespace Espo\Core\Portal\Utils;
 
 class Url
 {
+    public static function detectPortalIdForApi() : ?string
+    {
+        if (!empty($_GET['portalId'])) {
+            return $_GET['portalId'];
+        }
+
+        $url = $_SERVER['REQUEST_URI'];
+
+        return explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
+    }
+
     public static function detectPortalId() : ?string
     {
         $portalId = $_SERVER['ESPO_PORTAL_ID'] ?? null;

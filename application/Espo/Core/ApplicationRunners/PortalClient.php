@@ -31,6 +31,7 @@ namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
     Application\Runner,
+    Application\RunnerParams,
     Exceptions\NotFound,
     Utils\ClientManager,
     Utils\Config,
@@ -48,7 +49,6 @@ use Slim\{
     Psr7\Response,
 };
 
-use StdClass;
 use Exception;
 
 /**
@@ -56,27 +56,27 @@ use Exception;
  */
 class PortalClient implements Runner
 {
-    protected $params;
+    private $params;
 
-    protected $clientManager;
+    private $clientManager;
 
-    protected $config;
+    private $config;
 
-    public function __construct(ClientManager $clientManager, Config $config, ?StdClass $params = null)
+    public function __construct(ClientManager $clientManager, Config $config, ?RunnerParams $params = null)
     {
         $this->clientManager = $clientManager;
         $this->config = $config;
 
-        $this->params = $params ?? (object) [];
+        $this->params = $params ?? RunnerParams::fromNothing();
     }
 
     public function run() : void
     {
-        $id = $this->params->id ??
+        $id = $this->params->get('id') ??
             Url::detectPortalId() ??
             $this->config->get('defaultPortalId');
 
-        $basePath = $this->params->basePath ?? $this->clientManager->getBasePath();
+        $basePath = $this->params->get('basePath') ?? $this->clientManager->getBasePath();
 
         $requestWrapped = new RequestWrapper(
             ServerRequestCreatorFactory::create()->createServerRequestFromGlobals()
@@ -108,7 +108,7 @@ class PortalClient implements Runner
         $application->run(PortalPortalClient::class);
     }
 
-    protected function processError(RequestWrapper $request, ResponseWrapper $response, Exception $exception)
+    private function processError(RequestWrapper $request, ResponseWrapper $response, Exception $exception) : void
     {
         (new ApiErrorOutput($request))->process($response, $exception, true);
 

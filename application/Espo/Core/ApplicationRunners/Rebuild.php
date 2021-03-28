@@ -41,7 +41,7 @@ class Rebuild implements Runner
 {
     use Cli;
 
-    protected $dataManager;
+    private $dataManager;
 
     public function __construct(DataManager $dataManager)
     {

@@ -44,7 +44,7 @@ class Command implements Runner
     use Cli;
     use SetupSystemUser;
 
-    protected $commandManager;
+    private $commandManager;
 
     public function __construct(ConsoleCommandManager $commandManager)
     {

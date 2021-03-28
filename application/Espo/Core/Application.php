@@ -33,6 +33,8 @@ use Espo\Core\{
     Container\ContainerBuilder,
     InjectableFactory,
     Container,
+    Application\Runner,
+    Application\RunnerParams,
     ApplicationUser,
     Utils\Autoload,
     Utils\Config,
@@ -42,7 +44,6 @@ use Espo\Core\{
 };
 
 use ReflectionClass;
-use StdClass;
 
 /**
  * A central access point of the application.
@@ -66,9 +67,12 @@ class Application
     }
 
     /**
-     * Run a specific application runner.
+     * Run an application runner.
+     *
+     * @param $className A runner class name.
+     * @param $params Runner parameters. Will be passed to a runner's constructor.
      */
-    public function run(string $className, ?StdClass $params = null) : void
+    public function run(string $className, ?RunnerParams $params = null) : void
     {
         if (!$className || !class_exists($className)) {
             $this->getLog()->error("Application runner '{$className}' does not exist.");
@@ -89,8 +93,12 @@ class Application
         }
 
         $runner = $this->getInjectableFactory()->createWith($className, [
-            'params' => $params,
+            'params' => $params ?? RunnerParams::fromNothing(),
         ]);
+
+        if (!$runner instanceof Runner) {
+            die("Class should implement Runner interface.");
+        }
 
         $runner->run();
     }

@@ -32,12 +32,9 @@ require_once('../../../bootstrap.php');
 use Espo\Core\{
     Portal\Application,
     Portal\ApplicationRunners\Api,
+    Portal\Utils\Url,
 };
 
-if (!empty($_GET['portalId'])) {
-    $portalId = $_GET['portalId'];
-} else {
-    $portalId = explode('/', $_SERVER['REQUEST_URI'])[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1];
-}
+$portalId = Url::detectPortalIdForApi();
 
 (new Application($portalId))->run(Api::class);

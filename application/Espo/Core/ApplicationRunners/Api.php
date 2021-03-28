@@ -107,7 +107,7 @@ class Api implements Runner
         $slim->run();
     }
 
-    private function addRoute(SlimApp $slim, array $item)
+    private function addRoute(SlimApp $slim, array $item) : void
     {
         $method = strtolower($item['method']);
         $route = $item['route'];
@@ -168,8 +168,10 @@ class Api implements Runner
         return $params;
     }
 
-    private function processRequest(array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped)
-    {
+    private function processRequest(
+        array $item, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped
+    ) : void {
+
         try {
             $authRequired = !($item['noAuth'] ?? false);
 
@@ -204,7 +206,8 @@ class Api implements Runner
 
     private function handleException(
         Throwable $exception, RequestWrapper $requestWrapped, ResponseWrapper $responseWrapped, string $route
-    ) {
+    )  : void {
+
         $errorOutput = new ApiErrorOutput($requestWrapped, $route);
 
         try {

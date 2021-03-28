@@ -27,40 +27,68 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-include "../bootstrap.php";
+namespace Espo\Core\Application;
 
-use Espo\Core\{
-    Application,
-    Application\RunnerParams,
-    ApplicationRunners\EntryPoint,
-    ApplicationRunners\PortalClient,
-    Portal\Utils\Url,
-};
+/**
+ * Parameters for an application runner.
+ */
+class RunnerParams
+{
+    private $data;
 
-$app = new Application();
-
-if (!$app->isInstalled()) {
-    exit;
-}
-
-if (Url::detectIsInPortalDir()) {
-    $basePath = '../';
-
-    if (Url::detectIsInPortalWithId()) {
-        $basePath = '../../';
+    private function __construct()
+    {
     }
 
-    $app->setClientBasePath($basePath);
+    /**
+     * Get a parameter value.
+     *
+     * @return ?mixed
+     */
+    public function get(string $name)
+    {
+        return $this->data[$name] ?? null;
+    }
+
+    /**
+     * Whether a parameter is set.
+     */
+    public function has(string $name) : bool
+    {
+        return array_key_exists($name, $this->data);
+    }
+
+    /**
+     * Clone with a parameter value.
+     *
+     * @param ?mixed $value
+     */
+    public function with(string $name, $value) : self
+    {
+        $obj = clone $this;
+
+        $obj->data[$name] = $value;
+
+        return $obj;
+    }
+
+    /**
+     * Create from an array.
+     */
+    public static function fromArray(array $data) : self
+    {
+        $obj = new self();
+
+        $obj->data = $data;
+
+        return $obj;
+    }
+
+    /**
+     * Create an empty instance.
+     */
+    public static function fromNothing() : self
+    {
+        return new self();
+    }
 }
-
-if (!empty($_GET['entryPoint'])) {
-    $app->run(EntryPoint::class);
-
-    exit;
-}
-
-$params = RunnerParams::fromArray([
-    'basePath' => $basePath,
-]);
-
-$app->run(PortalClient::class, $params);

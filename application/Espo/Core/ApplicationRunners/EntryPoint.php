@@ -31,6 +31,7 @@ namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
     Application\Runner,
+    Application\RunnerParams,
     Exceptions\Error,
     EntryPoint\EntryPointManager,
     ApplicationUser,
@@ -52,7 +53,6 @@ use Slim\{
     Psr7\Response,
 };
 
-use StdClass;
 use Exception;
 
 /**
@@ -84,7 +84,7 @@ class EntryPoint implements Runner
         ApplicationUser $applicationUser,
         AuthTokenManager $authTokenManager,
         AuthBuilderFactory $authBuilderFactory,
-        ?StdClass $params = null
+        ?RunnerParams $params = null
     ) {
         $this->authenticationFactory = $authenticationFactory;
         $this->entryPointManager = $entryPointManager;
@@ -94,7 +94,7 @@ class EntryPoint implements Runner
         $this->authTokenManager = $authTokenManager;
         $this->authBuilderFactory = $authBuilderFactory;
 
-        $this->params = $params ?? (object) [];
+        $this->params = $params ?? RunnerParams::fromNothing();
     }
 
     public function run() : void
@@ -108,9 +108,9 @@ class EntryPoint implements Runner
             throw new Error("Only GET requests allowed for entry points.");
         }
 
-        $entryPoint = $this->params->entryPoint ?? $requestWrapped->getQueryParam('entryPoint');
+        $entryPoint = $this->params->get('entryPoint') ?? $requestWrapped->getQueryParam('entryPoint');
 
-        $final = $this->params->final ?? false;
+        $final = $this->params->get('final') ?? false;
 
         if (!$entryPoint) {
             throw new Error();
@@ -136,7 +136,7 @@ class EntryPoint implements Runner
         (new ResponseEmitter())->emit($responseWrapped->getResponse());
     }
 
-    protected function processRequest(
+    private function processRequest(
         string $entryPoint,
         RequestWrapper $requestWrapped,
         ResponseWrapper $responseWrapped,
@@ -181,7 +181,7 @@ class EntryPoint implements Runner
         }
     }
 
-    protected function detectPortalId(RequestWrapper $requestWrapped) : ?string
+    private function detectPortalId(RequestWrapper $requestWrapped) : ?string
     {
         if ($requestWrapped->hasQueryParam('portalId')) {
             return $requestWrapped->getQueryParam('portalId');
@@ -202,15 +202,17 @@ class EntryPoint implements Runner
         return null;
     }
 
-    protected function runThroughPortal(string $portalId, string $entryPoint) : void
+    private function runThroughPortal(string $portalId, string $entryPoint) : void
     {
         $app = new PortalApplication($portalId);
 
         $app->setClientBasePath($this->clientManager->getBasePath());
 
-        $app->run(EntryPoint::class, (object) [
+        $params = RunnerParams::fromArray([
             'entryPoint' => $entryPoint,
             'final' => true,
         ]);
+
+        $app->run(EntryPoint::class, $params);
     }
 }

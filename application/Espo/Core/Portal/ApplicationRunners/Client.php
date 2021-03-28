@@ -40,9 +40,9 @@ use Espo\Core\{
  */
 class Client implements Runner
 {
-    protected $clientManager;
+    private $clientManager;
 
-    protected $applicationState;
+    private $applicationState;
 
     public function __construct(ClientManager $clientManager, ApplicationState $applicationState)
     {

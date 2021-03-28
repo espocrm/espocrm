@@ -32,6 +32,7 @@ namespace Espo\Core\Job;
 use Espo\Core\{
     Application,
     ApplicationRunners\Job as JobRunner,
+    Application\RunnerParams,
 };
 
 use Spatie\Async\Task as AsyncTask;
@@ -55,12 +56,12 @@ class JobTask extends AsyncTask
     {
         $app = new Application();
 
-        $data = (object) [
+        $params = RunnerParams::fromArray([
             'id' => $this->jobId,
-        ];
+        ]);
 
         try {
-            $app->run(JobRunner::class, $data);
+            $app->run(JobRunner::class, $params);
         }
         catch (Throwable $e) {
             $GLOBALS['log']->error(
