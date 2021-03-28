@@ -33,5 +33,5 @@ use Espo\ORM\Entity;
 
 interface Notificator
 {
-    public function process(Entity $entity, array $options = []);
+    public function process(Entity $entity, array $options = []) : void;
 }

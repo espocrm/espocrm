@@ -43,15 +43,15 @@ use Espo\Services\Record;
  */
 class RecordServiceContainer
 {
-    protected $data = [];
+    private $data = [];
 
     protected $defaultTypeMap = [
         'CategoryTree' => 'RecordTree',
     ];
 
-    protected $serviceFactory;
+    private $serviceFactory;
 
-    protected $metadata;
+    private $metadata;
 
     public function __construct(ServiceFactory $serviceFactory, Metadata $metadata)
     {

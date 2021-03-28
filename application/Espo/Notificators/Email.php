@@ -31,17 +31,19 @@ namespace Espo\Notificators;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Notificators\DefaultNotificator;
-
 use Espo\Services\Email as EmailService;
 
 use Espo\Entities\User;
 
 use Espo\Core\{
+    Notificators\DefaultNotificator,
     ORM\EntityManager,
     ServiceFactory,
     AclManager,
 };
+
+use DateTime;
+use Exception;
 
 class Email extends DefaultNotificator
 {
@@ -50,8 +52,11 @@ class Email extends DefaultNotificator
     private $streamService = null;
 
     protected $user;
+
     protected $entityManager;
+
     protected $serviceFactory;
+
     protected $aclManager;
 
     public function __construct(
@@ -71,6 +76,7 @@ class Email extends DefaultNotificator
         if (empty($this->streamService)) {
             $this->streamService = $this->serviceFactory->create('Stream');
         }
+
         return $this->streamService;
     }
 
@@ -82,23 +88,35 @@ class Email extends DefaultNotificator
 
         if (!empty($options['isJustSent'])) {
             $previousUserIdList = [];
-        } else {
+        }
+        else {
             $previousUserIdList = $entity->getFetched('usersIds');
+
             if (!is_array($previousUserIdList)) {
                 $previousUserIdList = [];
             }
         }
 
         $dateSent = $entity->get('dateSent');
-        if (!$dateSent) return;
+
+        if (!$dateSent) {
+            return;
+        }
 
         $dt = null;
-        try {
-            $dt = new \DateTime($dateSent);
-        } catch (\Exception $e) {}
-        if (!$dt) return;
 
-        if ($dt->diff(new \DateTime())->days > self::DAYS_THRESHOLD) return;
+        try {
+            $dt = new DateTime($dateSent);
+        }
+        catch (Exception $e) {}
+
+        if (!$dt) {
+            return;
+        }
+
+        if ($dt->diff(new DateTime())->days > self::DAYS_THRESHOLD) {
+            return;
+        }
 
         $emailUserIdList = $entity->get('usersIds');
 
@@ -107,8 +125,13 @@ class Email extends DefaultNotificator
         }
 
         $userIdList = [];
+
         foreach ($emailUserIdList as $userId) {
-            if (!in_array($userId, $userIdList) && !in_array($userId, $previousUserIdList) && $userId != $this->user->id) {
+            if (
+                !in_array($userId, $userIdList) &&
+                !in_array($userId, $previousUserIdList) &&
+                $userId != $this->user->id
+            ) {
                 $userIdList[] = $userId;
             }
         }
@@ -125,12 +148,16 @@ class Email extends DefaultNotificator
         if (!$entity->has('to')) {
             $this->entityManager->getRepository('Email')->loadToField($entity);
         }
+
         $person = null;
 
         $from = $entity->get('from');
+
         if ($from) {
-            $person = $this->entityManager->getRepository('EmailAddress')
+            $person = $this->entityManager
+                ->getRepository('EmailAddress')
                 ->getEntityByAddress($from, null, ['User', 'Contact', 'Lead']);
+
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
@@ -139,40 +166,60 @@ class Email extends DefaultNotificator
         }
 
         $userIdFrom = null;
+
         if ($person && $person->getEntityType() == 'User') {
             $userIdFrom = $person->id;
         }
 
         if (empty($data['personEntityId'])) {
             $data['fromString'] = EmailService::parseFromName($entity->get('fromString'));
+
             if (empty($data['fromString']) && $from) {
                 $data['fromString'] = $from;
             }
         }
 
         $parent = null;
+
         if ($entity->get('parentId') && $entity->get('parentType')) {
             $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
         }
+
         $account = null;
+
         if ($entity->get('accountId')) {
             $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
         }
 
         foreach ($userIdList as $userId) {
-            if (!$userId) continue;
-            if ($userIdFrom === $userId) continue;
-            if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) continue;
-            if (!$this->isNotificationsEnabledForUser($userId)) return;
+            if (!$userId) {
+                continue;
+            }
+
+            if ($userIdFrom === $userId) {
+                continue;
+            }
+
+            if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) {
+                continue;
+            }
+
+            if (!$this->isNotificationsEnabledForUser($userId)) {
+                return;
+            }
 
             if (!empty($options['isBeingImported']) || !empty($options['isJustSent'])) {
                 $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);
+
                 if ($folderId) {
                     if (
-                        $this->entityManager->getRepository('EmailFolder')->where([
-                            'id' => $folderId,
-                            'skipNotifications' => true
-                        ])->count()
+                        $this->entityManager
+                            ->getRepository('EmailFolder')
+                            ->where([
+                                'id' => $folderId,
+                                'skipNotifications' => true,
+                            ])
+                            ->count()
                     ) {
                         continue;
                     }
@@ -180,17 +227,26 @@ class Email extends DefaultNotificator
             }
 
             $user = $this->entityManager->getEntity('User', $userId);
-            if (!$user) continue;
-            if ($user->isPortal()) continue;
+
+            if (!$user) {
+                continue;
+            }
+
+            if ($user->isPortal()) {
+                continue;
+            }
+
             if (!$this->aclManager->checkScope($user, 'Email')) {
                 continue;
             }
+
             if ($entity->get('status') == 'Archived' || !empty($options['isBeingImported'])) {
                 if ($parent) {
                     if ($this->getStreamService()->checkIsFollowed($parent, $userId)) {
                         continue;
                     }
                 }
+
                 if ($account) {
                     if ($this->getStreamService()->checkIsFollowed($account, $userId)) {
                         continue;
@@ -198,15 +254,22 @@ class Email extends DefaultNotificator
                 }
             }
             if (
-                $this->entityManager->getRepository('Notification')->where([
-                    'type' => 'EmailReceived',
-                    'userId' => $userId,
-                    'relatedId' => $entity->id,
-                    'relatedType' => 'Email',
-                ])->select(['id'])->findOne()
-            ) continue;
+                $this->entityManager
+                    ->getRepository('Notification')
+                    ->where([
+                        'type' => 'EmailReceived',
+                        'userId' => $userId,
+                        'relatedId' => $entity->id,
+                        'relatedType' => 'Email',
+                    ])
+                    ->select(['id'])
+                    ->findOne()
+            ) {
+                continue;
+            }
 
             $notification = $this->entityManager->getEntity('Notification');
+
             $notification->set([
                 'type' => 'EmailReceived',
                 'userId' => $userId,
@@ -214,6 +277,7 @@ class Email extends DefaultNotificator
                 'relatedId' => $entity->id,
                 'relatedType' => 'Email',
             ]);
+
             $this->entityManager->saveEntity($notification);
         }
     }

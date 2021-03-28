@@ -50,9 +50,9 @@ use Throwable;
  */
 class InjectableFactory
 {
-    protected $container;
+    private $container;
 
-    protected $bindingContainer;
+    private $bindingContainer;
 
     public function __construct(Container $container, ?BindingContainer $bindingContainer = null)
     {
@@ -109,7 +109,7 @@ class InjectableFactory
      * @deprecated
      * @todo Remove in 6.4.
      */
-    protected function applyInjectable(ReflectionClass $class, object $obj)
+    private function applyInjectable(ReflectionClass $class, object $obj)
     {
         $setList = [];
 
@@ -132,7 +132,7 @@ class InjectableFactory
         return $obj;
     }
 
-    protected function getConstructorInjectionList(ReflectionClass $class, ?array $with = null) : array
+    private function getConstructorInjectionList(ReflectionClass $class, ?array $with = null) : array
     {
         $injectionList = [];
 
@@ -151,7 +151,10 @@ class InjectableFactory
         return $injectionList;
     }
 
-    protected function getMethodParamInjection(?ReflectionClass $class, ReflectionParameter $param, ?array $with)
+    /**
+     * @return ?mixed
+     */
+    private function getMethodParamInjection(?ReflectionClass $class, ReflectionParameter $param, ?array $with)
     {
         $name = $param->getName();
 
@@ -211,7 +214,7 @@ class InjectableFactory
         throw new Error("InjectableFactory: Could not create '{$className}', the dependency '{$name}' is not resolved.");
     }
 
-    protected function getCallbackInjectionList(callable $callback, ?array $with = null) : array
+    private function getCallbackInjectionList(callable $callback, ?array $with = null) : array
     {
         $injectionList = [];
 
@@ -224,7 +227,10 @@ class InjectableFactory
         return $injectionList;
     }
 
-    protected function resolveBinding(Binding $binding)
+    /**
+     * @return ?mixed
+     */
+    private function resolveBinding(Binding $binding)
     {
         $type = $binding->getType();
         $value = $binding->getValue();
@@ -252,7 +258,7 @@ class InjectableFactory
         throw new Error("InjectableFactory: Bad binding.");
     }
 
-    protected function areDependencyClassesMatching(
+    private function areDependencyClassesMatching(
         ReflectionClass $paramHintClass, ReflectionClass $returnHintClass
     ) : bool {
 
@@ -267,7 +273,7 @@ class InjectableFactory
         return false;
     }
 
-    protected function applyAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = [])
+    private function applyAwareInjections(ReflectionClass $class, object $obj, array $ignoreList = []) : void
     {
         foreach ($class->getInterfaces() as $interface) {
             $interfaceName = $interface->getShortName();
@@ -289,11 +295,12 @@ class InjectableFactory
             $injection = $this->container->get($name);
 
             $methodName = 'set' . ucfirst($name);
+
             $obj->$methodName($injection);
         }
     }
 
-    protected function classHasDependencySetter(
+    private function classHasDependencySetter(
         ReflectionClass $class, string $name, bool $skipInstanceCheck = false
     ) : bool {
 

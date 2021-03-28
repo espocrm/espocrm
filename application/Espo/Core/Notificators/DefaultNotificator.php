@@ -37,7 +37,7 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-class DefaultNotificator implements Notificator
+class DefaultNotificator // implements Notificator
 {
     private $userIdEnabledMap = [];
 
@@ -46,6 +46,7 @@ class DefaultNotificator implements Notificator
     public static $order = 9;
 
     protected $user;
+
     protected $entityManager;
 
     public function __construct(User $user, EntityManager $entityManager)
@@ -59,38 +60,57 @@ class DefaultNotificator implements Notificator
         if ($entity->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
             $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
+
             if (!is_array($fetchedAssignedUserIdList)) {
                 $fetchedAssignedUserIdList = [];
             }
 
             foreach ($userIdList as $userId) {
-                if (in_array($userId, $fetchedAssignedUserIdList)) continue;
+                if (in_array($userId, $fetchedAssignedUserIdList)) {
+                    continue;
+                }
+
                 $this->processForUser($entity, $userId);
             }
         } else {
-            if (!$entity->get('assignedUserId')) return;
-            if (!$entity->isAttributeChanged('assignedUserId')) return;
+            if (!$entity->get('assignedUserId')) {
+                return;
+            }
+
+            if (!$entity->isAttributeChanged('assignedUserId')) {
+                return;
+            }
+
             $assignedUserId = $entity->get('assignedUserId');
+
             $this->processForUser($entity, $assignedUserId);
         }
     }
 
     protected function processForUser(Entity $entity, string $assignedUserId)
     {
-        if (!$this->isNotificationsEnabledForUser($assignedUserId)) return;
+        if (!$this->isNotificationsEnabledForUser($assignedUserId)) {
+            return;
+        }
 
         if ($entity->hasAttribute('createdById') && $entity->hasAttribute('modifiedById')) {
             if ($entity->isNew()) {
                 $isNotSelfAssignment = $assignedUserId !== $entity->get('createdById');
-            } else {
+            }
+            else {
                 $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
             }
-        } else {
+        }
+        else {
             $isNotSelfAssignment = $assignedUserId !== $this->user->id;
         }
-        if (!$isNotSelfAssignment) return;
+
+        if (!$isNotSelfAssignment) {
+            return;
+        }
 
         $notification = $this->entityManager->getEntity('Notification');
+
         $notification->set([
             'type' => 'Assign',
             'userId' => $assignedUserId,
@@ -103,6 +123,7 @@ class DefaultNotificator implements Notificator
                 'userName' => $this->user->get('name'),
             ]
         ]);
+
         $this->entityManager->saveEntity($notification);
     }
 
@@ -110,14 +131,19 @@ class DefaultNotificator implements Notificator
     {
         if (!array_key_exists($userId, $this->userIdEnabledMap)) {
             $preferences = $this->entityManager->getEntity('Preferences', $userId);
+
             $isEnabled = false;
+
             if ($preferences) {
                 $isEnabled = true;
+
                 $ignoreList = $preferences->get('assignmentNotificationsIgnoreEntityTypeList') ?? [];
+
                 if (in_array($this->entityType, $ignoreList)) {
                     $isEnabled = false;
                 }
             }
+
             $this->userIdEnabledMap[$userId] = $isEnabled;
         }
 
