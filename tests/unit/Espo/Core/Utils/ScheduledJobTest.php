@@ -31,6 +31,8 @@ namespace tests\unit\Espo\Core\Cron;
 
 use tests\unit\ReflectionHelper;
 
+use Espo\Core\Utils\ScheduledJob;
+
 class ScheduledJobTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -48,18 +50,18 @@ class ScheduledJobTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['classFinder'] =
-            $this->getMockBuilder('\Espo\Core\Utils\classFinder')->disableOriginalConstructor()->getMock();
+        $this->classFinder =
+            $this->getMockBuilder('Espo\Core\Utils\ClassFinder')->disableOriginalConstructor()->getMock();
 
-        $this->objects['language'] = $this->getMockBuilder('\Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
-        $this->objects['entityManager'] =
-            $this->getMockBuilder('\Espo\Core\ORM\EntityManager')->disableOriginalConstructor()->getMock();
+        $this->language = $this->getMockBuilder('Espo\Core\Utils\Language')->disableOriginalConstructor()->getMock();
 
+        $this->entityManager =
+            $this->getMockBuilder('Espo\Core\ORM\EntityManager')->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\ScheduledJob(
-            $this->objects['classFinder'],
-            $this->objects['entityManager'],
-            $this->objects['language']
+        $this->object = new ScheduledJob(
+            $this->classFinder,
+            $this->entityManager,
+            $this->language
         );
 
         $this->reflection = new ReflectionHelper($this->object);
@@ -71,47 +73,4 @@ class ScheduledJobTest extends \PHPUnit\Framework\TestCase
     {
         $this->object = NULL;
     }
-
-
-    public function testGetSetupMessage()
-    {
-        $cronSetup = array (
-            'linux' => 'linux message',
-            'mac' => 'mac message',
-            'windows' => 'windows message',
-            'default' => 'default message',
-        );
-
-        $this->objects['language']
-            ->expects($this->once())
-            ->method('translate')
-            ->will($this->returnValue($cronSetup));
-
-        $res = array(
-            'linux' => array(
-                'message' => 'linux message',
-                'command' => 'linux command',
-            ),
-            'windows' => array(
-                'message' => 'windows message',
-                'command' => 'windows command',
-            ),
-            'mac' => array(
-                'message' => 'mac message',
-                'command' => 'mac command',
-            ),
-            'default' => array(
-                'message' => 'default message',
-                'command' => 'default command',
-            ),
-        );
-
-        $os = $this->reflection->invokeMethod('getSystemUtil')->getOS();
-        $this->assertEquals( $res[$os], $this->reflection->invokeMethod('getSetupMessage', array()) );
-    }
-
-
-
 }
-
-?>
