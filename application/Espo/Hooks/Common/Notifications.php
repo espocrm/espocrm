@@ -29,7 +29,10 @@
 
 namespace Espo\Hooks\Common;
 
-use Espo\ORM\Entity;
+use Espo\{
+    ORM\Entity,
+    Services\Stream as StreamService,
+};
 
 use Espo\Core\{
     Utils\Metadata,
