@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Select\AccessControl;
 
 use Espo\Core\{
     Select\AccessControl\FilterResolverFactory,
-    Select\AccessControl\FilterResolver,
+    Select\AccessControl\DefaultFilterResolver,
     Utils\Metadata,
     InjectableFactory,
     AclManager,
@@ -79,7 +79,7 @@ class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
     {
         $entityType = 'Test';
 
-        $defaultClassName = FilterResolver::class;
+        $defaultClassName = DefaultFilterResolver::class;
 
         $object = $this->createMock($defaultClassName);
 

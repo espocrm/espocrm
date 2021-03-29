@@ -29,10 +29,65 @@
 
 namespace Espo\Core\Select\AccessControl;
 
-/**
- * Resolves an access filter. An entity type and user to be passed to the constructor.
- */
-interface FilterResolver
+use Espo\{
+    Core\Acl,
+    Entities\User,
+};
+
+class DefaultFilterResolver implements FilterResolver
 {
-    public function resolve() : ?string;
+    protected $entityType;
+
+    protected $user;
+
+    protected $acl;
+
+    public function __construct(string $entityType, User $user, Acl $acl)
+    {
+        $this->entityType = $entityType;
+        $this->user = $user;
+        $this->acl = $acl;
+    }
+
+    public function resolve() : ?string
+    {
+        if ($this->user->isAdmin()) {
+            return null;
+        }
+
+        if ($this->user->isPortal()) {
+
+            if ($this->acl->checkReadOnlyOwn($this->entityType)) {
+                return 'portalOnlyOwn';
+            }
+
+            if ($this->acl->checkReadOnlyAccount($this->entityType)) {
+                return 'portalOnlyAccount';
+            }
+
+            if ($this->acl->checkReadOnlyContact($this->entityType)) {
+                return 'portalOnlyContact';
+            }
+
+            if ($this->acl->checkReadNo($this->entityType)) {
+                return 'no';
+            }
+
+            return null;
+        }
+
+        if ($this->acl->checkReadOnlyOwn($this->entityType)) {
+            return 'onlyOwn';
+        }
+
+        if ($this->acl->checkReadOnlyTeam($this->entityType)) {
+            return 'onlyTeam';
+        }
+
+        if ($this->acl->checkReadNo($this->entityType)) {
+            return 'no';
+        }
+
+        return null;
+    }
 }

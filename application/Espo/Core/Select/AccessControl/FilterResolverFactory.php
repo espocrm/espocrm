@@ -71,6 +71,6 @@ class FilterResolverFactory
     {
         return $this->metadata->get([
             'selectDefs', $entityType, 'accessControlFilterResolverClassName'
-        ]) ?? FilterResolver::class;
+        ]) ?? DefaultFilterResolver::class;
     }
 }

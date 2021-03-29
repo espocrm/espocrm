@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Select\AccessControl;
 
 use Espo\Core\{
-    Select\AccessControl\FilterResolver,
+    Select\AccessControl\DefaultFilterResolver,
     Acl,
     Portal\Acl as AclPortal,
 };
@@ -122,7 +122,7 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
             $acl = $this->aclPortal;
         }
 
-        $this->resolver = new FilterResolver(
+        $this->resolver = new DefaultFilterResolver(
             $this->entityType,
             $this->user,
             $acl
