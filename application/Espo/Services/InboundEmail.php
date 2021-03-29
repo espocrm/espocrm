@@ -35,12 +35,13 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     Exceptions\Error,
-    Exceptions\Forbidden,
     Exceptions\BadRequest,
     Mail\Importer,
     Mail\MessageWrapper,
     Mail\Mail\Storage\Imap,
     Mail\Parsers\MailMimeParser,
+    Notification\AssignmentNotificatorFactory,
+    Notification\AssignmentNotificator,
 };
 
 use Espo\Services\{
@@ -62,17 +63,16 @@ use Exception;
 use Throwable;
 use DateTime;
 use DateTimeZone;
-use StdClass;
 
 class InboundEmail extends RecordService implements
 
     Di\CryptAware,
-    Di\EmailSenderAware,
-    Di\NotificatorFactoryAware
+    Di\EmailSenderAware
 {
     use Di\CryptSetter;
     use Di\EmailSenderSetter;
-    use Di\NotificatorFactorySetter;
+
+    private $notificator = null;
 
     private $campaignService = null;
 
@@ -160,9 +160,12 @@ class InboundEmail extends RecordService implements
             throw new Error("Group Email Account {$emailAccount->id} is not active.");
         }
 
-        $notificator = $this->notificatorFactory->create('Email');
-
-        $importer = new Importer($this->getEntityManager(), $this->getConfig(), $notificator, $this->parserClassName);
+        $importer = new Importer(
+            $this->getEntityManager(),
+            $this->getConfig(),
+            $this->getNotificator(),
+            $this->parserClassName
+        );
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
@@ -1222,5 +1225,16 @@ class InboundEmail extends RecordService implements
         if (method_exists($handler, 'applyParams')) {
             $handler->applyParams($emailAccount->id, $params);
         }
+    }
+
+    private function getNotificator() : AssignmentNotificator
+    {
+        if (!$this->notificator) {
+            $factory = $this->injectableFactory->create(AssignmentNotificatorFactory::class);
+
+            $this->notificator = $factory->create('Email');
+        }
+
+        return $this->notificator;
     }
 }

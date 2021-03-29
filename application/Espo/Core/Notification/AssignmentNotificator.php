@@ -27,16 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Di;
+namespace Espo\Core\Notification;
 
-use Espo\Core\NotificatorFactory;
+use Espo\ORM\Entity;
 
-trait NotificatorFactorySetter
+/**
+ * Processes assignment notifications. Called after entity is saved.
+ */
+interface AssignmentNotificator
 {
-    protected $notificatorFactory;
-
-    public function setNotificatorFactory(NotificatorFactory $notificatorFactory)
-    {
-        $this->notificatorFactory = $notificatorFactory;
-    }
+    public function process(Entity $entity, array $options = []) : void;
 }

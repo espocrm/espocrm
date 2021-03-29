@@ -27,16 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Notificators;
+namespace Espo\Classes\AssignmentNotificators;
 
-use Espo\ORM\Entity;
-
-use Espo\Services\Email as EmailService;
-
-use Espo\Entities\User;
+use Espo\{
+    Services\Email as EmailService,
+    Services\Stream as StreamService,
+    Entities\User,
+    ORM\Entity,
+};
 
 use Espo\Core\{
-    Notificators\DefaultNotificator,
+    Notification\AssignmentNotificator,
+    Notification\UserEnabledChecker,
     ORM\EntityManager,
     ServiceFactory,
     AclManager,
@@ -45,42 +47,37 @@ use Espo\Core\{
 use DateTime;
 use Exception;
 
-class Email extends DefaultNotificator
+class Email implements AssignmentNotificator
 {
-    const DAYS_THRESHOLD = 2;
+    private const DAYS_THRESHOLD = 2;
 
     private $streamService = null;
 
-    protected $user;
+    private $user;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $serviceFactory;
+    private $serviceFactory;
 
-    protected $aclManager;
+    private $aclManager;
+
+    private $userChecker;
 
     public function __construct(
         User $user,
         EntityManager $entityManager,
+        UserEnabledChecker $userChecker,
         ServiceFactory $serviceFactory,
         AclManager $aclManager
     ) {
         $this->user = $user;
         $this->entityManager = $entityManager;
+        $this->userChecker = $userChecker;
         $this->serviceFactory = $serviceFactory;
         $this->aclManager = $aclManager;
     }
 
-    protected function getStreamService()
-    {
-        if (empty($this->streamService)) {
-            $this->streamService = $this->serviceFactory->create('Stream');
-        }
-
-        return $this->streamService;
-    }
-
-    public function process(Entity $entity, array $options = [])
+    public function process(Entity $entity, array $options = []) : void
     {
         if (!in_array($entity->get('status'), ['Archived', 'Sent', 'Being Imported'])) {
             return;
@@ -204,8 +201,8 @@ class Email extends DefaultNotificator
                 continue;
             }
 
-            if (!$this->isNotificationsEnabledForUser($userId)) {
-                return;
+            if (!$this->userChecker->checkAssignment('Email', $userId)) {
+                continue;
             }
 
             if (!empty($options['isBeingImported']) || !empty($options['isJustSent'])) {
@@ -235,6 +232,8 @@ class Email extends DefaultNotificator
             if ($user->isPortal()) {
                 continue;
             }
+
+            echo $user->getId();
 
             if (!$this->aclManager->checkScope($user, 'Email')) {
                 continue;
@@ -274,11 +273,20 @@ class Email extends DefaultNotificator
                 'type' => 'EmailReceived',
                 'userId' => $userId,
                 'data' => $data,
-                'relatedId' => $entity->id,
+                'relatedId' => $entity->getId(),
                 'relatedType' => 'Email',
             ]);
 
             $this->entityManager->saveEntity($notification);
         }
+    }
+
+    private function getStreamService() : StreamService
+    {
+        if (empty($this->streamService)) {
+            $this->streamService = $this->serviceFactory->create('Stream');
+        }
+
+        return $this->streamService;
     }
 }

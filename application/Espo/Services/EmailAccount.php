@@ -41,6 +41,8 @@ use Espo\Core\{
     Mail\MessageWrapper,
     Mail\Mail\Storage\Imap,
     Mail\Parsers\MailMimeParser,
+    Notification\AssignmentNotificatorFactory,
+    Notification\AssignmentNotificator,
 };
 
 use Espo\Entities\{
@@ -59,11 +61,11 @@ use StdClass;
 
 class EmailAccount extends Record implements
 
-    Di\CryptAware,
-    Di\NotificatorFactoryAware
+    Di\CryptAware
 {
     use Di\CryptSetter;
-    use Di\NotificatorFactorySetter;
+
+    private $notificator = null;
 
     protected $storageClassName = Imap::class;
 
@@ -289,13 +291,17 @@ class EmailAccount extends Record implements
             throw new Error("Email Account {$emailAccount->id} is not active.");
         }
 
-        $notificator = $this->notificatorFactory->create('Email');
-
-        $importer = new Importer($this->getEntityManager(), $this->getConfig(), $notificator, $this->parserClassName);
+        $importer = new Importer(
+            $this->getEntityManager(),
+            $this->getConfig(),
+            $this->getNotificator(),
+            $this->parserClassName
+        );
 
         $maxSize = $this->getConfig()->get('emailMessageMaxSize');
 
         $user = $this->getEntityManager()->getEntity('User', $emailAccount->get('assignedUserId'));
+
         if (!$user) {
             throw new Error();
         }
@@ -303,37 +309,47 @@ class EmailAccount extends Record implements
         $userId = $user->id;
         $teamId = $user->get('defaultTeamId');
         $teamIdList = [];
+
         if (!empty($teamId)) {
             $teamIdList[] = $teamId;
         }
 
-        $filterCollection = $this->getEntityManager()->getRepository('EmailFilter')->where([
-            'action' => 'Skip',
-            'OR' => [
-                [
-                    'parentType' => $emailAccount->getEntityType(),
-                    'parentId' => $emailAccount->id
-                ],
-                [
-                    'parentId' => null
+        $filterCollection = $this->getEntityManager()
+            ->getRepository('EmailFilter')
+            ->where([
+                'action' => 'Skip',
+                'OR' => [
+                    [
+                        'parentType' => $emailAccount->getEntityType(),
+                        'parentId' => $emailAccount->id
+                    ],
+                    [
+                        'parentId' => null
+                    ]
                 ]
-            ]
-        ])->find();
+            ])
+            ->find();
 
         $fetchData = $emailAccount->get('fetchData');
+
         if (empty($fetchData)) {
             $fetchData = (object) [];
         }
+
         $fetchData = clone $fetchData;
+
         if (!property_exists($fetchData, 'lastUID')) {
             $fetchData->lastUID = (object) [];
         }
+
         if (!property_exists($fetchData, 'lastDate')) {
             $fetchData->lastDate = (object) [];
         }
+
         if (!property_exists($fetchData, 'byDate')) {
             $fetchData->byDate = (object) [];
         }
+
         $fetchData->lastUID = clone $fetchData->lastUID;
         $fetchData->lastDate = clone $fetchData->lastDate;
         $fetchData->byDate = clone $fetchData->byDate;
@@ -341,10 +357,10 @@ class EmailAccount extends Record implements
         $storage = $this->getStorage($emailAccount);
 
         $monitoredFolders = $emailAccount->get('monitoredFolders');
+
         if (empty($monitoredFolders)) {
             throw new Error();
         }
-
 
         $monitoredFoldersArr = explode(',', $monitoredFolders);
 
@@ -355,7 +371,8 @@ class EmailAccount extends Record implements
 
             try {
                 $storage->selectFolder($folder);
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 $GLOBALS['log']->error(
                     'EmailAccount '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
                 );
@@ -381,13 +398,16 @@ class EmailAccount extends Record implements
 
             if (!empty($lastUID) && !$forceByDate) {
                 $idList = $storage->getIdsFromUID($lastUID);
-            } else {
+            }
+            else {
                 $fetchSince = $emailAccount->get('fetchSince');
+
                 if ($lastDate) {
                     $fetchSince = $lastDate;
                 }
 
                 $dt = null;
+
                 try {
                     $dt = new DateTime($fetchSince);
                 } catch (Exception $e) {}
@@ -406,6 +426,7 @@ class EmailAccount extends Record implements
             }
 
             $k = 0;
+
             foreach ($idList as $i => $id) {
                 if ($k == count($idList) - 1) {
                     $lastUID = $storage->getUniqueId($id);
@@ -413,6 +434,7 @@ class EmailAccount extends Record implements
 
                 if ($forceByDate && $previousLastUID) {
                     $uid = $storage->getUniqueId($id);
+
                     if ($uid <= $previousLastUID) {
                         $k++;
                         continue;
@@ -420,6 +442,7 @@ class EmailAccount extends Record implements
                 }
 
                 $fetchOnlyHeader = false;
+
                 if ($maxSize) {
                     if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
                         $fetchOnlyHeader = true;
@@ -427,6 +450,7 @@ class EmailAccount extends Record implements
                 }
 
                 $folderData = null;
+
                 if ($emailAccount->get('emailFolderId')) {
                     $folderData = [];
                     $folderData[$userId] = $emailAccount->get('emailFolderId');
@@ -434,6 +458,7 @@ class EmailAccount extends Record implements
 
                 $message = null;
                 $email = null;
+
                 try {
                     $parser = new $this->parserClassName($this->getEntityManager());
                     $message = new MessageWrapper($storage, $id, $parser);
@@ -480,6 +505,7 @@ class EmailAccount extends Record implements
 
                     if ($email && $email->get('dateSent')) {
                         $dt = null;
+
                         try {
                             $dt = new DateTime($email->get('dateSent'));
                         } catch (Exception $e) {}
@@ -511,8 +537,10 @@ class EmailAccount extends Record implements
             if ($forceByDate) {
                 if ($previousLastUID) {
                     $idList = $storage->getIdsFromUID($previousLastUID);
+
                     if (count($idList)) {
                         $uid1 = $storage->getUniqueId($idList[0]);
+
                         if ($uid1 && $uid1 > $previousLastUID) {
                             unset($fetchData->byDate->$folder);
                         }
@@ -578,11 +606,14 @@ class EmailAccount extends Record implements
 
     public function findAccountForUser(User $user, $address)
     {
-        $emailAccount = $this->getEntityManager()->getRepository('EmailAccount')->where([
-            'emailAddress' => $address,
-            'assignedUserId' => $user->id,
-            'status' => 'Active'
-        ])->findOne();
+        $emailAccount = $this->getEntityManager()
+            ->getRepository('EmailAccount')
+            ->where([
+                'emailAddress' => $address,
+                'assignedUserId' => $user->id,
+                'status' => 'Active'
+            ])
+            ->findOne();
 
         return $emailAccount;
     }
@@ -590,16 +621,20 @@ class EmailAccount extends Record implements
     public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount) : ?array
     {
         $smtpParams = [];
+
         $smtpParams['server'] = $emailAccount->get('smtpHost');
+
         if ($smtpParams['server']) {
             $smtpParams['port'] = $emailAccount->get('smtpPort');
             $smtpParams['auth'] = $emailAccount->get('smtpAuth');
             $smtpParams['security'] = $emailAccount->get('smtpSecurity');
+
             if ($emailAccount->get('smtpAuth')) {
                 $smtpParams['username'] = $emailAccount->get('smtpUsername');
                 $smtpParams['password'] = $emailAccount->get('smtpPassword');
                 $smtpParams['authMechanism'] = $emailAccount->get('smtpAuthMechanism');
             }
+
             if (array_key_exists('password', $smtpParams)) {
                 $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
             }
@@ -608,23 +643,41 @@ class EmailAccount extends Record implements
 
             return $smtpParams;
         }
+
         return null;
     }
 
     public function applySmtpHandler(EmailAccountEntity $emailAccount, array &$params)
     {
         $handlerClassName = $emailAccount->get('smtpHandler');
-        if (!$handlerClassName) return;
+
+        if (!$handlerClassName) {
+            return;
+        }
 
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
-        } catch (Throwable $e) {
+        }
+        catch (Throwable $e) {
             $GLOBALS['log']->error(
-                "EmailAccount: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()
+                "EmailAccount: Could not create Smtp Handler for account {$emailAccount->id}. Error: " .
+                $e->getMessage()
             );
         }
+        
         if (method_exists($handler, 'applyParams')) {
             $handler->applyParams($emailAccount->id, $params);
         }
+    }
+
+    private function getNotificator() : AssignmentNotificator
+    {
+        if (!$this->notificator) {
+            $factory = $this->injectableFactory->create(AssignmentNotificatorFactory::class);
+
+            $this->notificator = $factory->create('Email');
+        }
+
+        return $this->notificator;
     }
 }

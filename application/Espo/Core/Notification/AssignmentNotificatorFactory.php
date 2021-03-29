@@ -27,42 +27,60 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Notification;
 
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
-    Notificators\Notificator,
-    Notificators\DefaultNotificator,
+    Utils\Metadata,
+    Notification\DefaultAssignmentNotificator,
+    Notification\AssignmentNotificator,
 };
 
-class NotificatorFactory
+class AssignmentNotificatorFactory
 {
-    protected $defaultClassName = DefaultNotificator::class;
+    protected $defaultClassName = DefaultAssignmentNotificator::class;
 
     private $injectableFactory;
 
     private $classFinder;
 
-    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
+    private $metadata;
+
+    public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder, Metadata $metadata)
     {
         $this->injectableFactory = $injectableFactory;
         $this->classFinder = $classFinder;
+        $this->metadata = $metadata;
     }
 
     /**
-     * @todo Change return type to Notificator.
+     * @todo Change return type to AssignmentNotificator.
+     *
+     * @return AssignmentNotificator
      */
-    public function create(string $entityType) : object // Notificator
+    public function create(string $entityType) : object // AssignmentNotificator
     {
-        $className = $this->classFinder->find('Notificators', $entityType);
+        $className = $this->getClassName($entityType);
 
-        if (!$className || !class_exists($className)) {
-            $className = $this->defaultClassName;
+        return $this->injectableFactory->create($className);
+    }
+
+    private function getClassName(string $entityType) : string
+    {
+        $className1 = $this->metadata->get(['recordDefs', $entityType, 'assignmentNotificatorClassName']);
+
+        if ($className1) {
+            return $className1;
         }
 
-        $obj = $this->injectableFactory->create($className);
+        /* For backward compatibility. */
+        $className2 = $this->classFinder->find('Notificators', $entityType);
 
-        return $obj;
+        if ($className2) {
+            return $className2;
+        }
+
+        return $this->defaultClassName;
     }
 }

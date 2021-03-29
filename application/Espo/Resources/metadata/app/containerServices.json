@@ -56,9 +56,6 @@
     "hookManager": {
         "className": "Espo\\Core\\HookManager"
     },
-    "notificatorFactory": {
-        "className": "Espo\\Core\\NotificatorFactory"
-    },
     "clientManager": {
         "className": "Espo\\Core\\Utils\\ClientManager"
     },
