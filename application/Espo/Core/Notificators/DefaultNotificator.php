@@ -41,7 +41,7 @@ use Espo\Core\{
 /**
  * @deprecated
  */
-class DefaultNotificator // implements Notificator
+class DefaultNotificator
 {
     protected $entityType;
 

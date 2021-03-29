@@ -233,8 +233,6 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
-            echo $user->getId();
-
             if (!$this->aclManager->checkScope($user, 'Email')) {
                 continue;
             }
