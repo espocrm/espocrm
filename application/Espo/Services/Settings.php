@@ -29,12 +29,10 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-
 use Espo\ORM\Entity;
 
 use Espo\Core\{
+    Exceptions\Forbidden,
     ApplicationState,
     Acl,
     InjectableFactory,
@@ -48,17 +46,28 @@ use Espo\Core\{
     Currency\DatabasePopulator as CurrencyDatabasePopulator,
 };
 
+use StdClass;
+
 class Settings
 {
     protected $applicationState;
+
     protected $config;
+
     protected $configWriter;
+
     protected $fieldUtil;
+
     protected $metadata;
+
     protected $acl;
+
     protected $entityManager;
+
     protected $dataManager;
+
     protected $fieldValidationManager;
+
     protected $injectableFactory;
 
     public function __construct(
@@ -85,7 +94,7 @@ class Settings
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function getConfigData()
+    public function getConfigData() : StdClass
     {
         $data = $this->config->getAllData();
 
@@ -200,7 +209,7 @@ class Settings
         return $data;
     }
 
-    public function setConfigData($data)
+    public function setConfigData(StdClass $data) : void
     {
         $user = $this->applicationState->getUser();
 
@@ -232,6 +241,8 @@ class Settings
 
         $entity->set($data);
 
+        $entity->setAsNotNew();
+
         $this->processValidation($entity, $data);
 
         if (
@@ -255,12 +266,12 @@ class Settings
         }
     }
 
-    protected function populateDatabaseWithCurrencyRates()
+    protected function populateDatabaseWithCurrencyRates() : void
     {
         $this->injectableFactory->create(CurrencyDatabasePopulator::class)->process();
     }
 
-    protected function filterData($data)
+    protected function filterData(StdCLass $data) : void
     {
         $user = $this->applicationState->getUser();
 
@@ -287,7 +298,7 @@ class Settings
         }
     }
 
-    public function getAdminOnlyItemList()
+    public function getAdminOnlyItemList() : array
     {
         $itemList = $this->config->getAdminOnlyItemList();
 
@@ -303,7 +314,7 @@ class Settings
         return $itemList;
     }
 
-    public function getUserOnlyItemList()
+    public function getUserOnlyItemList() : array
     {
         $itemList = $this->config->getUserOnlyItemList();
 
@@ -320,7 +331,7 @@ class Settings
         return $itemList;
     }
 
-    public function getSystemOnlyItemList()
+    public function getSystemOnlyItemList() : array
     {
         $itemList = $this->config->getSystemOnlyItemList();
 
@@ -337,7 +348,7 @@ class Settings
         return $itemList;
     }
 
-    public function getGlobalItemList()
+    public function getGlobalItemList() : array
     {
         $itemList = $this->config->get('globalItems', []);
 
@@ -354,52 +365,8 @@ class Settings
         return $itemList;
     }
 
-    protected function processValidation(Entity $entity, $data)
+    protected function processValidation(Entity $entity, StdClass $data) : void
     {
-        $fieldList = $this->fieldUtil->getEntityTypeFieldList('Settings');
-
-        foreach ($fieldList as $field) {
-            if (!$this->isFieldSetInData($data, $field)) {
-                continue;
-            }
-
-            $this->processValidationField($entity, $field, $data);
-        }
-    }
-
-    protected function processValidationField(Entity $entity, string $field, $data)
-    {
-        $fieldType = $this->fieldUtil->getEntityTypeFieldParam('Settings', $field, 'type');
-        $validationList = $this->metadata->get(['fields', $fieldType, 'validationList'], []);
-        $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
-
-        foreach ($validationList as $type) {
-            $value = $this->fieldUtil->getEntityTypeFieldParam('Settings', $field, $type);
-
-            if (is_null($value) && !in_array($type, $mandatoryValidationList)) {
-                continue;
-            }
-
-            if (!$this->fieldValidationManager->check($entity, $field, $type, $data)) {
-                throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
-            }
-        }
-    }
-
-    protected function isFieldSetInData($data, $field)
-    {
-        $attributeList = $this->fieldUtil->getActualAttributeList('Settings', $field);
-
-        $isSet = false;
-
-        foreach ($attributeList as $attribute) {
-            if (property_exists($data, $attribute)) {
-                $isSet = true;
-
-                break;
-            }
-        }
-
-        return $isSet;
+        $this->fieldValidationManager->process($entity, $data);
     }
 }

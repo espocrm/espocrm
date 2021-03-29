@@ -61,6 +61,7 @@ use Espo\Core\{
     Action\Params as ActionParams,
     Action\Data as ActionData,
     Action\ActionFactory,
+    FieldValidation\Params as FieldValidationParams,
 };
 
 use Espo\Tools\{
@@ -179,6 +180,8 @@ class Record implements Crud,
 
     protected $validateSkipFieldList = [];
 
+    protected $validateRequiredSkipFieldList = [];
+
     protected $findDuplicatesSelectAttributeList = ['id', 'name'];
 
     protected $duplicateIgnoreFieldList = [];
@@ -295,6 +298,9 @@ class Record implements Crud,
         return $this->serviceFactory;
     }
 
+    /**
+     * @deprecated Since v6.2.0.
+     */
     protected function getSelectManagerFactory()
     {
         return $this->selectManagerFactory;
@@ -709,6 +715,9 @@ class Record implements Crud,
         }
     }
 
+    /**
+     * @deprecated
+     */
     protected function getSelectManager($entityType = null)
     {
         if (!$entityType) {
@@ -723,74 +732,26 @@ class Record implements Crud,
         $this->getRepository()->save($entity);
     }
 
+    /**
+     * @return void
+     *
+     * @throws BadRequest
+     */
     public function processValidation(Entity $entity, $data)
     {
-        $fieldList = $this->fieldUtil->getEntityTypeFieldList($this->entityType);
+        $params = FieldValidationParams
+            ::fromNothing()
+            ->withSkipFieldList($this->validateSkipFieldList)
+            ->withTypeSkipFieldList('required', $this->validateRequiredSkipFieldList);
 
-        foreach ($fieldList as $field) {
-            if (in_array($field, $this->validateSkipFieldList)) {
-                continue;
-            }
-
-            if (!$entity->isNew()) {
-                if (!$this->isFieldSetInData($data, $field)) {
-                    continue;
-                }
-            }
-
-            $this->processValidationField($entity, $field, $data);
-        }
+        $this->fieldValidationManager->process($entity, $data, $params);
     }
 
-    protected function processValidationField(Entity $entity, string $field, $data)
-    {
-        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, 'type');
-
-        $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
-        $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
-
-        foreach ($validationList as $type) {
-            $value = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, $type);
-
-            if (is_null($value)) {
-                if (!in_array($type, $mandatoryValidationList)) {
-                    continue;
-                }
-            }
-
-            $skipPropertyName = 'validate' . ucfirst($type) . 'SkipFieldList';
-
-            if (property_exists($this, $skipPropertyName)) {
-                $skipList = $this->$skipPropertyName;
-
-                if (in_array($field, $skipList)) {
-                    continue;
-                }
-            }
-
-            if (!$this->fieldValidationManager->check($entity, $field, $type, $data)) {
-                throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
-            }
-        }
-    }
-
-    protected function isFieldSetInData(StdClass $data, string $field) : bool
-    {
-        $attributeList = $this->fieldUtil->getActualAttributeList($this->entityType, $field);
-
-        $isSet = false;
-
-        foreach ($attributeList as $attribute) {
-            if (property_exists($data, $attribute)) {
-                $isSet = true;
-
-                break;
-            }
-        }
-
-        return $isSet;
-    }
-
+    /**
+     * @return void
+     *
+     * @throws Forbidden
+     */
     public function processAssignmentCheck(Entity $entity)
     {
         if (!$this->checkAssignment($entity)) {

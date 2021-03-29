@@ -32,12 +32,16 @@ namespace Espo\Core\FieldValidation;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
+    Exceptions\BadRequest,
     Utils\Metadata,
     Utils\FieldUtil,
 };
 
 use StdClass;
 
+/**
+ * A field validation manager.
+ */
 class FieldValidationManager
 {
     private $checkerCache = [];
@@ -55,6 +59,52 @@ class FieldValidationManager
         $this->factory = $factory;
     }
 
+    /**
+     * Process validation.
+     *
+     * @param Entity $entity An entity.
+     * @param ?StdClass $data Raw request payload data.
+     * @param ?Params $params Validation additional parameters.
+
+     *
+     * @throws BadRequest If data is not valid.
+     */
+    public function process(Entity $entity, ?StdClass $data = null, ?Params $params = null) : void
+    {
+        $dataIsSet = $data !== null;
+
+        if (!$data) {
+            $data = $data ?? (object) [];
+        }
+
+        if (!$params) {
+            $params = new Params();
+        }
+
+        $fieldList = $this->fieldUtil->getEntityTypeFieldList($entity->getEntityType());
+
+        $skipFieldList = $params->getSkipFieldList();
+
+        foreach ($fieldList as $field) {
+            if (in_array($field, $skipFieldList)) {
+                continue;
+            }
+
+            if (
+                !$entity->isNew() &&
+                $dataIsSet &&
+                !$this->isFieldSetInData($entity->getEntityType(), $field, $data)
+            ) {
+                continue;
+            }
+
+            $this->processField($entity, $field, $params, $data);
+        }
+    }
+
+    /**
+     * Check a specific field for a specific validation type.
+     */
     public function check(Entity $entity, string $field, string $type, ?StdClass $data = null) : bool
     {
         if (!$data) {
@@ -87,6 +137,34 @@ class FieldValidationManager
         }
 
         return true;
+    }
+
+    private function processField(Entity $entity, string $field, Params $params, StdClass $data) : void
+    {
+        $entityType = $entity->getEntityType();
+
+        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
+
+        $validationList = $this->metadata->get(['fields', $fieldType, 'validationList'], []);
+        $mandatoryValidationList = $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList'], []);
+
+        foreach ($validationList as $type) {
+            $value = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, $type);
+
+            if (is_null($value) && !in_array($type, $mandatoryValidationList)) {
+                continue;
+            }
+
+            if (in_array($field, $params->getTypeSkipFieldList($type))) {
+                continue;
+            }
+
+            $result = $this->check($entity, $field, $type, $data);
+
+            if (!$result) {
+                throw new BadRequest("Not valid data. Field: {$field}, validation type: {$type}.");
+            }
+        }
     }
 
     private function processFieldCheck(
@@ -149,5 +227,22 @@ class FieldValidationManager
         }
 
         $this->checkerCache[$key] = $this->factory->create($entityType, $field);
+    }
+
+    private function isFieldSetInData(string $entityType, string $field, StdClass $data) : bool
+    {
+        $attributeList = $this->fieldUtil->getActualAttributeList($entityType, $field);
+
+        $isSet = false;
+
+        foreach ($attributeList as $attribute) {
+            if (property_exists($data, $attribute)) {
+                $isSet = true;
+
+                break;
+            }
+        }
+
+        return $isSet;
     }
 }
