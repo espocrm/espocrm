@@ -1296,6 +1296,13 @@ class Record implements Crud,
         return $this->update($id, $data);
     }
 
+    /**
+     * Update a record.
+     *
+     * @throws BadRequest
+     * @throws NotFound If record not found.
+     * @throws ForbiddenSilent If no access.
+     */
     public function update(string $id, StdClass $data) : Entity
     {
         if (empty($id)) {
