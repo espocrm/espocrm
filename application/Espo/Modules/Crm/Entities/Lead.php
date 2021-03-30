@@ -31,32 +31,43 @@ namespace Espo\Modules\Crm\Entities;
 
 class Lead extends \Espo\Core\Entities\Person
 {
-
     protected function _getName()
     {
-        if (!array_key_exists('name', $this->valuesContainer) || !$this->valuesContainer['name']) {
+        if (!$this->hasInContainer('name') || !$this->getFromContainer('name')) {
             if ($this->get('accountName')) {
                 return $this->get('accountName');
-            } else if ($this->get('emailAddress')) {
+            }
+
+            if ($this->get('emailAddress')) {
                 return $this->get('emailAddress');
-            } else if ($this->get('phoneNumber')) {
+            }
+
+            if ($this->get('phoneNumber')) {
                 return $this->get('phoneNumber');
             }
         }
-        return $this->valuesContainer['name'] ?? null;
+
+        return $this->getFromContainer('name');
     }
 
     protected function _hasName()
     {
-        if (array_key_exists('name', $this->valuesContainer)) {
+        if ($this->hasInContainer('name')) {
             return true;
         }
+
         if ($this->has('accountName')) {
             return true;
-        } else if ($this->has('emailAddress')) {
-            return true;
-        } else if ($this->has('phoneNumber')) {
+        }
+
+        if ($this->has('emailAddress')) {
             return true;
         }
+
+        if ($this->has('phoneNumber')) {
+            return true;
+        }
+
+        return false;
     }
 }

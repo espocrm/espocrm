@@ -29,9 +29,11 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\ORM\Entity;
+
 use StdClass;
 
-class Integration extends \Espo\Core\ORM\Entity
+class Integration extends Entity
 {
     public function get(string $name, $params = [])
     {
@@ -40,13 +42,14 @@ class Integration extends \Espo\Core\ORM\Entity
         }
 
         if ($this->hasAttribute($name)) {
-            if (array_key_exists($name, $this->valuesContainer)) {
-                return $this->valuesContainer[$name];
+            if ($this->hasInContainer($name)) {
+                return $this->getFromContainer($name);
             }
         } else {
             if ($this->get('data')) {
                 $data = $this->get('data');
-            } else {
+            }
+            else {
                 $data = new StdClass();
             }
 
@@ -99,16 +102,13 @@ class Integration extends \Espo\Core\ORM\Entity
         }
 
         if ($this->hasAttribute($name)) {
-            $this->valuesContainer[$name] = $value;
+            $this->setInContainer($name, $value);
         }
         else {
-            $data = $this->get('data');
-
-            if (empty($data)) {
-                $data = new StdClass();
-            }
+            $data = $this->get('data') ?? (object) [];
 
             $data->$name = $value;
+
             $this->set('data', $data);
         }
     }
@@ -138,53 +138,7 @@ class Integration extends \Espo\Core\ORM\Entity
             }
 
             if ($this->hasAttribute($attribute)) {
-                $attributes = $this->getAttributes();
-
-                $defs = $attributes[$attribute];
-
-                if (!is_null($value)) {
-                    switch ($defs['type']) {
-                        case self::VARCHAR:
-
-                            break;
-
-                        case self::BOOL:
-                            $value = ($value === 'true' || $value === '1' || $value === true);
-
-                            break;
-
-                        case self::INT:
-                            $value = intval($value);
-
-                            break;
-
-                        case self::FLOAT:
-                            $value = floatval($value);
-
-                            break;
-
-                        case self::JSON_ARRAY:
-                            $value = is_string($value) ? json_decode($value) : $value;
-
-                            if (!is_array($value)) {
-                                $value = null;
-                            }
-                            break;
-
-                        case self::JSON_OBJECT:
-                            $value = is_string($value) ? json_decode($value) : $value;
-
-                            if (!($value instanceof StdClass) && !is_array($value)) {
-                                $value = null;
-                            }
-
-                            break;
-
-                        default:
-
-                            break;
-                    }
-                }
+                $value = $this->prepareAttributeValue($attribute, $value);
             }
 
             $this->set($attribute, $value);
@@ -193,10 +147,10 @@ class Integration extends \Espo\Core\ORM\Entity
 
     public function toArray()
     {
-        $arr = [];
+        $array = [];
 
         if (isset($this->id)) {
-            $arr['id'] = $this->id;
+            $array['id'] = $this->id;
         }
 
         foreach ($this->getAttributeList() as $attribute) {
@@ -209,19 +163,16 @@ class Integration extends \Espo\Core\ORM\Entity
             }
 
             if ($this->has($attribute)) {
-                $arr[$attribute] = $this->get($attribute);
+                $array[$attribute] = $this->get($attribute);
             }
         }
 
-        $data = $this->get('data');
+        $data = $this->get('data') ?? (object) [];
 
-        if (empty($data)) {
-            $data = new StdClass();
-        }
-
-        $dataArr = get_object_vars($data);
-
-        return array_merge($arr, $dataArr);
+        return array_merge(
+            $array,
+            get_object_vars($data)
+        );
     }
 
     public function getValueMap() : StdClass

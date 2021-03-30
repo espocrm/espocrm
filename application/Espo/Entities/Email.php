@@ -158,18 +158,18 @@ class Email extends \Espo\Core\ORM\Entity
         return $this->getBodyPlain();
     }
 
-    public function hasBodyPlain()
+    public function hasBodyPlain() : bool
     {
-        return !empty($this->valuesContainer['bodyPlain']);
+        return $this->hasInContainer('bodyPlain') && $this->getFromContainer('bodyPlain');
     }
 
-    public function getBodyPlain()
+    public function getBodyPlain() : ?string
     {
-        if (!empty($this->valuesContainer['bodyPlain'])) {
-            return $this->valuesContainer['bodyPlain'];
+        if ($this->getFromContainer('bodyPlain')) {
+            return $this->getFromContainer('bodyPlain');
         }
 
-        $body = $this->get('body');
+        $body = $this->get('body') ?? '';
 
         $breaks = ["<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;"];
 

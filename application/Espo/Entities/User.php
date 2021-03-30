@@ -92,17 +92,18 @@ class User extends Person
 
     protected function _getName()
     {
-        if (!array_key_exists('name', $this->valuesContainer) || !$this->valuesContainer['name']) {
+        if (!$this->hasInContainer('name') || !$this->getFromContainer('name')) {
             if ($this->get('userName')) {
                 return $this->get('userName');
             }
         }
-        return $this->valuesContainer['name'] ?? null;
+
+        return $this->getFromContainer('name');
     }
 
     protected function _hasName()
     {
-        if (array_key_exists('name', $this->valuesContainer)) {
+        if ($this->hasInContainer('name')) {
             return true;
         }
 

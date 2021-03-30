@@ -25,7 +25,7 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Entities;
 
@@ -38,7 +38,8 @@ class PhoneNumber extends \Espo\Core\ORM\Entity
         if (empty($value)) {
             throw new Error("Phone number can't be empty");
         }
-        $this->valuesContainer['name'] = $value;
+
+        $this->setInContainer('name', $value);
     }
 }
 

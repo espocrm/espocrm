@@ -54,22 +54,32 @@ class BaseEntity implements Entity
     private $isBeingSaved = false;
 
     /**
-     * @todo Make protected. Rename to `attributes`.
+     * @todo Make private. Rename to `attributes`.
      * @deprecated
      */
     public $fields = [];
 
+    /**
+     * @todo Make private.
+     * @deprecated
+     */
     protected $relations = [];
 
     /**
-     * A field-value map.
+     * An attribute-value map.
+     *
+     * @deprecated
+     * @todo Make private.
      */
     protected $valuesContainer = [];
 
     /**
-     * A field-value map of values fetched from DB (before changed).
+     * An attribute-value map of values fetched from DB (before changed).
+     *
+     * @deprecated
+     * @todo Make private.
      */
-    protected $fetchedValuesContainer = [];
+    private $fetchedValuesContainer = [];
 
     /**
      * @var ?EntityManager
@@ -114,7 +124,6 @@ class BaseEntity implements Entity
     public function clear(string $attribute) : void
     {
         unset($this->valuesContainer[$attribute]);
-        $this->clearInContainer($attribute);
     }
 
     /**
@@ -249,7 +258,7 @@ class BaseEntity implements Entity
     /**
      * Set a value in the container.
      *
-     * @param mixec $value
+     * @param mixed $value
      */
     protected function setInContainer(string $attribute, $value) : void
     {
@@ -268,8 +277,6 @@ class BaseEntity implements Entity
      * Get a value from the container.
      *
      * @return mixed
-     *
-     * @throws RuntimeException If an attribute is not set.
      */
     protected function getFromContainer(string $attribute)
     {
@@ -308,13 +315,11 @@ class BaseEntity implements Entity
      * Get a value from the fetched-container.
      *
      * @return mixed
-     *
-     * @throws RuntimeException If an attribute is not set.
      */
     protected function getFromFetchedContainer(string $attribute)
     {
         if (!$this->hasInFetchedContainer($attribute)) {
-            throw new RuntimeException("Attribute '{$attribute}' is not set in fetched-container.");
+            return null;
         }
 
         $value = $this->fetchedValuesContainer[$attribute] ?? null;
