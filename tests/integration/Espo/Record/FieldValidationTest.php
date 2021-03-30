@@ -320,4 +320,16 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertTrue(true);
     }
+
+    public function testSkipRequired()
+    {
+        $this->getContainer()->get('serviceFactory')->create('Meeting')->create((object) [
+            'name' => 'test',
+            'dateStart' => '2021-01-01 00:00:00',
+            'duration' => 1000,
+            'assignedUserId' => '1',
+        ]);
+
+        $this->assertTrue(true);
+    }
 }
