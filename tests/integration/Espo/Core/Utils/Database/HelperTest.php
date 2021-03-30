@@ -31,10 +31,6 @@ namespace tests\integration\Espo\Core\Utils\Database;
 
 use tests\unit\ReflectionHelper;
 
-use Espo\Core\Utils\Util;
-
-use Espo\Core\Utils\Config;
-
 use Espo\Core\Utils\Database\Helper;
 
 use Doctrine\DBAL\Connection;
@@ -45,10 +41,6 @@ use PDO;
 
 class HelperTest extends \tests\integration\Core\BaseTestCase
 {
-    protected $object;
-
-    protected $objects;
-
     protected $reflection;
 
     protected function initTest(bool $noConfig = false)
@@ -186,10 +178,10 @@ class HelperTest extends \tests\integration\Core\BaseTestCase
                 break;
         }
 
-        $this->assertTrue($this->helper->isSupportsFulltext());
-        $this->assertTrue($this->helper->isSupportsFulltext('dummy_table', false));
-        $this->assertTrue($this->helper->isTableSupportsFulltext('account'));
-        $this->assertTrue($this->helper->isTableSupportsFulltext('account', true));
+        $this->assertTrue($this->helper->doesSupportFulltext());
+        $this->assertTrue($this->helper->doesSupportFulltext('dummy_table', false));
+        $this->assertTrue($this->helper->doesTableSupportFulltext('account'));
+        $this->assertTrue($this->helper->doesTableSupportFulltext('account', true));
     }
 
     public function testGetDatabaseType()

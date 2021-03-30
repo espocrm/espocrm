@@ -30,8 +30,7 @@
 namespace tests\integration\Espo\Core\Binding;
 
 use Espo\Core\{
-    ContainerBuilder,
-    ServiceFactory,
+    Container\ContainerBuilder,
     Binding\BindingLoader,
     Binding\BindingData,
     Binding\Binding,
