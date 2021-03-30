@@ -50,9 +50,9 @@ use Espo\Entities\User;
 use Espo\Core\{
     Acl,
     AclManager,
-    Utils\Util,
-    Services\Crud,
+    Utils\Util,    
     Select\SearchParams,
+    Record\Crud,
     Record\Collection as RecordCollection,
     MassAction\Params as MassActionParams,
     MassAction\Result as MassActionResult,

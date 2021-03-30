@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Services;
+namespace Espo\Core\Record;
 
 use Espo\ORM\Entity;
 
