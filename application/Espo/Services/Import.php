@@ -45,6 +45,7 @@ use Espo\{
 };
 
 use StdClass;
+use DateTime;
 
 class Import extends Record implements
 
@@ -55,31 +56,6 @@ class Import extends Record implements
     use Di\FileStorageManagerSetter;
 
     const REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS = 2;
-
-    protected function getFileStorageManager()
-    {
-        return $this->fileStorageManager;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getAcl()
-    {
-        return $this->acl;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getServiceFactory()
-    {
-        return $this->serviceFactory;
-    }
 
     public function loadAdditionalFields(Entity $entity)
     {
@@ -106,11 +82,11 @@ class Import extends Record implements
 
         $foreignEntityType = $entity->get('entityType');
 
-        if (!$this->getAcl()->check($entity, 'read')) {
+        if (!$this->acl->check($entity, 'read')) {
             throw new Forbidden();
         }
 
-        if (!$this->getAcl()->check($foreignEntityType, 'read')) {
+        if (!$this->acl->check($foreignEntityType, 'read')) {
             throw new Forbidden();
         }
 
@@ -149,14 +125,15 @@ class Import extends Record implements
         return $attachment->id;
     }
 
-    public function revert(string $id)
+    public function revert(string $id) : void
     {
         $import = $this->entityManager->getEntity('Import', $id);
+
         if (empty($import)) {
             throw new NotFound("Could not find import record.");
         }
 
-        if (!$this->getAcl()->check($import, 'delete')) {
+        if (!$this->acl->check($import, 'delete')) {
             throw new Forbidden("No access import record.");
         }
 
@@ -169,12 +146,15 @@ class Import extends Record implements
             ->find();
 
         $removeFromDb = false;
+
         $createdAt = $import->get('createdAt');
 
         if ($createdAt) {
-            $dtNow = new \DateTime();
-            $createdAtDt = new \DateTime($createdAt);
+            $dtNow = new DateTime();
+            $createdAtDt = new DateTime($createdAt);
+
             $dayDiff = ($dtNow->getTimestamp() - $createdAtDt->getTimestamp()) / 60 / 60 / 24;
+
             if ($dayDiff < self::REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS) {
                 $removeFromDb = true;
             }
@@ -216,18 +196,17 @@ class Import extends Record implements
         $this->getEntityManager()->removeEntity($import);
 
         $this->processActionHistoryRecord('delete', $import);
-
-        return true;
     }
 
-    public function removeDuplicates(string $id)
+    public function removeDuplicates(string $id) : void
     {
         $import = $this->entityManager->getEntity('Import', $id);
+
         if (empty($import)) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($import, 'delete')) {
+        if (!$this->acl->check($import, 'delete')) {
             throw new Forbidden();
         }
 
@@ -276,7 +255,7 @@ class Import extends Record implements
         return $this->injectableFactory->create(ImportTool::class);
     }
 
-    public function jobRunIdleImport(StdClass $data)
+    public function jobRunIdleImport(StdClass $data) : StdClass
     {
         if (
             empty($data->userId) ||
@@ -354,8 +333,10 @@ class Import extends Record implements
             ->run();
     }
 
-    public function import(string $entityType, array $attributeList, string $attachmentId, array $params = []) : StdClass
-    {
+    public function import(
+        string $entityType, array $attributeList, string $attachmentId, array $params = []
+    ) : StdClass {
+
         $result = $this->createImportTool()
             ->setEntityType($entityType)
             ->setAttributeList($attributeList)
@@ -392,6 +373,7 @@ class Import extends Record implements
         $attributeList = $source->get('attributeList') ?? [];
 
         $params = $source->get('params') ?? (object) [];
+
         $params = json_decode(json_encode($params), true);
 
         unset($params['idleMode']);
@@ -402,7 +384,7 @@ class Import extends Record implements
         return $this->import($entityType, $attributeList, $attachmentId, $params);
     }
 
-    public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId)
+    public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId) : void
     {
         $e = $this->getEntityManager()
             ->getRepository('ImportEntity')

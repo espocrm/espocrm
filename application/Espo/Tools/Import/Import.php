@@ -30,7 +30,6 @@
 namespace Espo\Tools\Import;
 
 use Espo\Core\{
-    Exceptions\Forbidden,
     Exceptions\Error,
     Utils\Json,
     AclManager,
@@ -84,10 +83,15 @@ class Import
     protected $entityType = null;
 
     protected $aclManager;
+
     protected $entityManager;
+
     protected $metadata;
+
     protected $config;
+
     protected $user;
+
     protected $fileStorageManager;
 
     public function __construct(
