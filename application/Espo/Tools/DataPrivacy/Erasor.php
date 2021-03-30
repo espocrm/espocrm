@@ -27,16 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\DataPrivacy;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    RecordServiceContainer,
+};
 
 use Espo\Core\Di;
 
-class DataPrivacy implements
+class Erasor implements
 
     Di\AclAware,
     Di\AclManagerAware,
@@ -54,18 +56,20 @@ class DataPrivacy implements
     use Di\FieldUtilSetter;
     use Di\UserSetter;
 
-    public function erase(string $entityType, string $id, array $fieldList)
+    private $recordServiceContainer;
+
+    public function __construct(RecordServiceContainer $recordServiceContainer)
+    {
+        $this->recordServiceContainer = $recordServiceContainer;
+    }
+
+    public function erase(string $entityType, string $id, array $fieldList) : void
     {
         if ($this->acl->get('dataPrivacyPermission') === 'no') {
             throw new Forbidden();
         }
 
-        if ($this->serviceFactory->checkExists($entityType)) {
-            $service = $this->serviceFactory->create($entityType);
-        } else {
-            $service = $this->serviceFactory->create('Record');
-            $service->setEntityType($entityType);
-        }
+        $service = $this->recordServiceContainer->get($entityType);
 
         $entity = $this->entityManager->getEntity($entityType, $id);
 
@@ -91,10 +95,12 @@ class DataPrivacy implements
 
         foreach ($fieldList as $field) {
             $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+
             $attributeList = $fieldUtil->getActualAttributeList($entityType, $field);
 
             if ($type === 'email') {
                 $emailAddressList = $entity->get('emailAddresses');
+
                 foreach ($emailAddressList as $emailAddress) {
                     if (
                         $this
@@ -115,6 +121,7 @@ class DataPrivacy implements
             }
             else if ($type === 'phone') {
                 $phoneNumberList = $entity->get('phoneNumbers');
+
                 foreach ($phoneNumberList as $phoneNumber) {
                     if (
                         $this
@@ -134,6 +141,7 @@ class DataPrivacy implements
             }
             else if ($type === 'file' || $type === 'image') {
                 $attachmentId = $entity->get($field . 'Id');
+
                 if ($attachmentId) {
                     $attachment = $this->entityManager->getEntity('Attachment', $attachmentId);
                     $this->entityManager->removeEntity($attachment);
@@ -142,22 +150,25 @@ class DataPrivacy implements
             }
             else if ($type === 'attachmentMultiple') {
                 $attachmentList = $entity->get($field);
+
                 foreach ($attachmentList as $attachment) {
                     $this->entityManager->removeEntity($attachment);
                 }
             }
 
             foreach ($attributeList as $attribute) {
-                if (in_array($entity->getAttributeType($attribute), [$entity::VARCHAR, $entity::TEXT]) && $entity->get($attribute)) {
+                if (
+                    in_array($entity->getAttributeType($attribute), [$entity::VARCHAR, $entity::TEXT]) &&
+                    $entity->get($attribute)
+                ) {
                     $entity->set($attribute, null);
-                } else {
+                }
+                else {
                     $entity->set($attribute, null);
                 }
             }
         }
 
         $this->entityManager->saveEntity($entity);
-
-        return true;
     }
 }

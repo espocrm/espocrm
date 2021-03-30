@@ -32,17 +32,23 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\ServiceFactory;
-use Espo\Core\Acl;
+use Espo\Core\{
+    Api\Request,
+    Api\Response,
+    Acl,
+};
+
+use Espo\Tools\DataPrivacy\Erasor;
 
 class DataPrivacy
 {
-    protected $serviceFactory;
-    protected $acl;
+    private $erasor;
 
-    public function __construct(ServiceFactory $serviceFactory, Acl $acl)
+    private $acl;
+
+    public function __construct(Erasor $erasor, Acl $acl)
     {
-        $this->serviceFactory = $serviceFactory;
+        $this->erasor = $erasor;
         $this->acl = $acl;
 
         if ($this->acl->get('dataPrivacyPermission') === 'no') {
@@ -50,12 +56,16 @@ class DataPrivacy
         }
     }
 
-    public function postActionErase($params, \StdClass $data)
+    public function postActionErase(Request $request, Response $response) : void
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->entityType) || empty($data->id) || empty($data->fieldList) || !is_array($data->fieldList)) {
             throw new BadRequest();
         }
 
-        return $this->serviceFactory->create('DataPrivacy')->erase($data->entityType, $data->id, $data->fieldList);
+        $this->erasor->erase($data->entityType, $data->id, $data->fieldList);
+
+        $response->writeBody('true');
     }
 }

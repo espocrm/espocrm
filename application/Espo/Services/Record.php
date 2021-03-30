@@ -242,8 +242,12 @@ class Record implements Crud,
 
     public function setEntityType(string $entityType) : void
     {
-        if ($this->entityType) {
+        if ($this->entityType && $this->entityType !== $entityType) {
             throw new RuntimeException("entityType is already set.");
+        }
+
+        if ($this->entityType) {
+            return;
         }
 
         $initAclParams = false;

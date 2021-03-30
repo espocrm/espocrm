@@ -61,33 +61,37 @@ class RecordServiceContainer
 
     public function get(string $entityType) : Record
     {
-        $name = $entityType;
-
-        if (!array_key_exists($name, $this->data)) {
-            if (!$this->metadata->get(['scopes', $name, 'entity'])) {
-                throw new Error("Can't create record service {$name}, there's no such entity type.");
-            }
-
-            if ($this->serviceFactory->checkExists($name)) {
-                $obj = $this->serviceFactory->create($name);
-            }
-            else {
-                $default = 'Record';
-
-                $type = $this->metadata->get(['scopes', $name, 'type']);
-
-                if ($type) {
-                    $default = $this->defaultTypeMap[$type] ?? $default;
-                }
-
-                $obj = $this->serviceFactory->create($default);
-
-                $obj->setEntityType($name);
-            }
-
-            $this->data[$name] = $obj;
+        if (!array_key_exists($entityType, $this->data)) {
+            $this->load($entityType);
         }
 
-        return $this->data[$name];
+        return $this->data[$entityType];
+    }
+
+    private function load(string $entityType) : void
+    {
+        if (!$this->metadata->get(['scopes', $entityType, 'entity'])) {
+            throw new Error("Can't create record service {$entityType}, there's no such entity type.");
+        }
+
+        if ($this->serviceFactory->checkExists($entityType)) {
+            $this->data[$entityType] = $this->serviceFactory->create($entityType);
+
+            return;
+        }
+
+        $default = 'Record';
+
+        $type = $this->metadata->get(['scopes', $entityType, 'type']);
+
+        if ($type) {
+            $default = $this->defaultTypeMap[$type] ?? $default;
+        }
+
+        $obj = $this->serviceFactory->create($default);
+
+        $obj->setEntityType($entityType);
+
+        $this->data[$entityType] = $obj;
     }
 }
