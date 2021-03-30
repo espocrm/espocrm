@@ -70,30 +70,30 @@ interface Entity
      * Set an attribute or multiple attributes.
      *
      * Two usage options:
-     * * `set(string $name, mixed $value)`
+     * * `set(string $attribute, mixed $value)`
      * * `set(array|object $valueMap)`
      *
-     * @param string|object|array $name
+     * @param string|object|array $attribute
      * @param ?mixed $value
      */
-    public function set($name, $value = null) : void;
+    public function set($attribute, $value = null) : void;
 
     /**
      * Get an attribute value.
      *
      * @retrun ?mixed
      */
-    public function get(string $name);
+    public function get(string $attribute);
 
     /**
      * Whether an attribute value is set.
      */
-    public function has(string $name) : bool;
+    public function has(string $attribute) : bool;
 
     /**
      * Clear an attribute value.
      */
-    public function clear(string $name) : void;
+    public function clear(string $attribute) : void;
 
     /**
      * Get an entity type.

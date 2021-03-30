@@ -49,9 +49,9 @@ class BaseEntity implements Entity
 
     private $isSaved = false;
 
-    protected $isFetched = false;
+    private $isFetched = false;
 
-    protected $isBeingSaved = false;
+    private $isBeingSaved = false;
 
     /**
      * @todo Make protected. Rename to `attributes`.
@@ -77,9 +77,9 @@ class BaseEntity implements Entity
     protected $entityManager;
 
     /**
-     * @var ?Value\ValueAccessor
+     * @var Value\ValueAccessor
      */
-    protected $valueAccessor = null;
+    private $valueAccessor = null;
 
     public function __construct(
         string $entityType,
@@ -100,28 +100,54 @@ class BaseEntity implements Entity
         }
     }
 
+    /**
+     * Get an entity ID.
+     */
     public function getId() : ?string
     {
         return $this->get('id');
     }
 
-    public function clear(string $name) : void
+    /**
+     * Clear an attribute value.
+     */
+    public function clear(string $attribute) : void
     {
-        unset($this->valuesContainer[$name]);
+        unset($this->valuesContainer[$attribute]);
+        $this->clearInContainer($attribute);
     }
 
+    /**
+     * Reset all attributes (empty an entity).
+     */
     public function reset() : void
     {
         $this->valuesContainer = [];
     }
 
-    protected function setValue($name, $value) : void
+    /**
+     * @deprecated Use `setInContainer` method.
+     */
+    protected function setValue($attribute, $value) : void
     {
-        $this->valuesContainer[$name] = $value;
+        $this->setInContainer($attribute, $value);
     }
 
-    public function set($p1, $p2 = null) : void
+    /**
+     * Set an attribute value or multiple attribute values.
+     *
+     * Two usage options:
+     * * `set(string $attribute, mixed $value)`
+     * * `set(array|object $valueMap)`
+     *
+     * @param string|object|array $attribute
+     * @param ?mixed $value
+     */
+    public function set($attribute, $value = null) : void
     {
+        $p1 = $attribute;
+        $p2 = $value;
+
         if (is_array($p1) || is_object($p1)) {
             if (is_object($p1)) {
                 $p1 = get_object_vars($p1);
@@ -174,26 +200,29 @@ class BaseEntity implements Entity
     }
 
     /**
+     * Get an attribute value.
+     *
      * @param $params @deprecated
      *
      * @retrun ?mixed
      */
-    public function get(string $name, $params = [])
+    public function get(string $attribute, $params = [])
     {
-        if ($name === 'id') {
+        if ($attribute === 'id') {
             return $this->id;
         }
 
-        $method = '_get' . ucfirst($name);
+        $method = '_get' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
             return $this->$method();
         }
 
-        if ($this->hasAttribute($name) && isset($this->valuesContainer[$name])) {
-            return $this->valuesContainer[$name];
+        if ($this->hasAttribute($attribute) && $this->hasInContainer($attribute)) {
+            return $this->getFromContainer($attribute);
         }
 
+        // @todo Remove this.
         if (!empty($params)) {
             trigger_error(
                 'Second parameter will be removed from the method Entity::get.',
@@ -202,7 +231,7 @@ class BaseEntity implements Entity
         }
 
         // @todo Remove this.
-        if ($this->hasRelation($name) && $this->id && $this->entityManager) {
+        if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. " .
                 "Use \$repository->getRelation(...)->find()",
@@ -211,25 +240,118 @@ class BaseEntity implements Entity
 
             return $this->entityManager
                 ->getRepository($this->getEntityType())
-                ->findRelated($this, $name, $params);
+                ->findRelated($this, $attribute, $params);
         }
 
         return null;
     }
 
-    public function has(string $name) : bool
+    /**
+     * Set a value in the container.
+     *
+     * @param mixec $value
+     */
+    protected function setInContainer(string $attribute, $value) : void
     {
-        if ($name == 'id') {
+        $this->valuesContainer[$attribute] = $value;
+    }
+
+    /**
+     * whether an attribute is set in the container.
+     */
+    protected function hasInContainer(string $attribute) : bool
+    {
+        return array_key_exists($attribute, $this->valuesContainer);
+    }
+
+    /**
+     * Get a value from the container.
+     *
+     * @return mixed
+     *
+     * @throws RuntimeException If an attribute is not set.
+     */
+    protected function getFromContainer(string $attribute)
+    {
+        if (!$this->hasInContainer($attribute)) {
+            return null;
+        }
+
+        $value = $this->valuesContainer[$attribute] ?? null;
+
+        if ($value === null) {
+            return $value;
+        }
+
+        $type = $this->getAttributeType($attribute);
+
+        if ($type === self::JSON_ARRAY) {
+            return $this->cloneArray($value);
+        }
+
+        if ($type === self::JSON_OBJECT) {
+            return $this->cloneObject($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * whether an attribute is set in the fetched-container.
+     */
+    protected function hasInFetchedContainer(string $attribute) : bool
+    {
+        return array_key_exists($attribute, $this->fetchedValuesContainer);
+    }
+
+    /**
+     * Get a value from the fetched-container.
+     *
+     * @return mixed
+     *
+     * @throws RuntimeException If an attribute is not set.
+     */
+    protected function getFromFetchedContainer(string $attribute)
+    {
+        if (!$this->hasInFetchedContainer($attribute)) {
+            throw new RuntimeException("Attribute '{$attribute}' is not set in fetched-container.");
+        }
+
+        $value = $this->fetchedValuesContainer[$attribute] ?? null;
+
+        if ($value === null) {
+            return $value;
+        }
+
+        $type = $this->getAttributeType($attribute);
+
+        if ($type === self::JSON_ARRAY) {
+            return $this->cloneArray($value);
+        }
+
+        if ($type === self::JSON_OBJECT) {
+            return $this->cloneObject($value);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Whether an attribute value is set.
+     */
+    public function has(string $attribute) : bool
+    {
+        if ($attribute == 'id') {
             return (bool) $this->id;
         }
 
-        $method = '_has' . ucfirst($name);
+        $method = '_has' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
             return (bool) $this->$method();
         }
 
-        if (array_key_exists($name, $this->valuesContainer)) {
+        if (array_key_exists($attribute, $this->valuesContainer)) {
             return true;
         }
 
@@ -307,7 +429,7 @@ class BaseEntity implements Entity
 
     protected function populateFromArrayItem(string $attribute, $value) : void
     {
-        $preparedValue = $this->preparePopulateFromArrayItemValue($attribute, $value);
+        $preparedValue = $this->prepareAttributeValue($attribute, $value);
 
         $method = '_set' . ucfirst($attribute);
 
@@ -317,13 +439,14 @@ class BaseEntity implements Entity
             return;
         }
 
-        $this->valuesContainer[$attribute] = $preparedValue;
+        $this->setInContainer($attribute, $preparedValue);
     }
 
     /**
+     * @param mixed $value
      * @return ?mixed
      */
-    protected function preparePopulateFromArrayItemValue(string $attribute, $value)
+    protected function prepareAttributeValue(string $attribute, $value)
     {
         if (is_null($value)) {
             return $value;
@@ -337,7 +460,7 @@ class BaseEntity implements Entity
 
         switch ($attributeType) {
             case self::VARCHAR:
-                break;
+                return $value;
 
             case self::BOOL:
                 return ($value === true || $value === 'true' || $value === '1');
@@ -349,28 +472,64 @@ class BaseEntity implements Entity
                 return floatval($value);
 
             case self::JSON_ARRAY:
-                $preparedValue = is_string($value) ? json_decode($value) : $value;
-
-                if (!is_array($preparedValue)) {
-                    $value = null;
-                }
-
-                return $preparedValue;
+                return $this->prepareArrayAttributeValue($value);
 
             case self::JSON_OBJECT:
-                $preparedValue = is_string($value) ? json_decode($value) : $value;
-
-                if (!($preparedValue instanceof StdClass) && !is_array($preparedValue)) {
-                    $preparedValue = null;
-                }
-
-                return $preparedValue;
+                return $this->prepareObjectAttributeValue($value);
 
             default:
                 break;
         }
 
         return $value;
+    }
+
+    private function prepareArrayAttributeValue($value) : ?array
+    {
+        if (is_string($value)) {
+            $preparedValue = json_decode($value);
+
+            if (!is_array($preparedValue)) {
+                return null;
+            }
+
+            return $preparedValue;
+        }
+
+        if (!is_array($value)) {
+            return null;
+        }
+
+        return $this->cloneArray($value);
+    }
+
+    private function prepareObjectAttributeValue($value) : ?StdClass
+    {
+        if (is_string($value)) {
+            $preparedValue = json_decode($value);
+
+            if (!$preparedValue instanceof StdClass) {
+                return null;
+            }
+
+            return $preparedValue;
+        }
+
+        $preparedValue = $value;
+
+        if (is_array($value)) {
+            $preparedValue = json_decode(json_encode($value));
+
+            if ($preparedValue instanceof StdClass) {
+                return $preparedValue;
+            }
+        }
+
+        if (!$preparedValue instanceof StdClass) {
+            return null;
+        }
+
+        return $this->cloneObject($preparedValue);
     }
 
     private function getForeignAttributeType(string $attribute) : ?string
@@ -485,9 +644,9 @@ class BaseEntity implements Entity
     /**
      * Whether an entity type has a relation defined.
      */
-    public function hasRelation(string $relationName) : bool
+    public function hasRelation(string $name) : bool
     {
-        return isset($this->relations[$relationName]);
+        return isset($this->relations[$name]);
     }
 
     /**
@@ -507,7 +666,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated
+     * @deprecated Use `getValueMap`.
      */
     public function getValues()
     {
@@ -515,7 +674,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated
+     * @deprecated Use `getValueMap`.
      * @todo Make protected.
      */
     public function toArray()
@@ -728,20 +887,11 @@ class BaseEntity implements Entity
     /**
      * Set a fetched value for a specific attribute.
      */
-    public function setFetched(string $name, $value) : void
+    public function setFetched(string $attribute, $value) : void
     {
-        if ($value) {
-            $type = $this->getAttributeType($name);
+        $preparedValue = $this->prepareAttributeValue($attribute, $value);
 
-            if ($type === self::JSON_OBJECT) {
-                $value = self::cloneObject($value);
-            }
-            else if ($type === self::JSON_ARRAY) {
-                $value = self::cloneArray($value);
-            }
-        }
-
-        $this->fetchedValuesContainer[$name] = $value;
+        $this->fetchedValuesContainer[$attribute] = $preparedValue;
     }
 
     /**
@@ -749,14 +899,14 @@ class BaseEntity implements Entity
      *
      * @return ?mixed
      */
-    public function getFetched(string $name)
+    public function getFetched(string $attribute)
     {
-        if ($name === 'id') {
+        if ($attribute === 'id') {
             return $this->id;
         }
 
-        if (isset($this->fetchedValuesContainer[$name])) {
-            return $this->fetchedValuesContainer[$name];
+        if ($this->hasInFetchedContainer($attribute)) {
+            return $this->getFromFetchedContainer($attribute);
         }
 
         return null;
@@ -765,13 +915,13 @@ class BaseEntity implements Entity
     /**
      * Whether a fetched value is set for a specific attribute.
      */
-    public function hasFetched(string $name) : bool
+    public function hasFetched(string $attribute) : bool
     {
-        if ($name === 'id') {
+        if ($attribute === 'id') {
             return !is_null($this->id);
         }
 
-        return array_key_exists($name, $this->fetchedValuesContainer);
+        return $this->hasInFetchedContainer($attribute);
     }
 
     /**
@@ -831,65 +981,98 @@ class BaseEntity implements Entity
      */
     public function populateDefaults() : void
     {
-        foreach ($this->fields as $field => $defs) {
+        foreach ($this->fields as $attribute => $defs) {
             if (array_key_exists('default', $defs)) {
-                $this->valuesContainer[$field] = $defs['default'];
+                $this->setInContainer($attribute, $defs['default']);
             }
         }
     }
 
+    /**
+     * @deprecated Use `$this->entityManager`.
+     */
     protected function getEntityManager() : EntityManager
     {
         return $this->entityManager;
     }
 
-    protected function cloneArray($value)
+    /**
+     * Clone an array value.
+     */
+    protected function cloneArray(?array $value) : ?array
     {
-        if (is_array($value)) {
-            $copy = [];
-
-            foreach ($value as $v) {
-                if (is_object($v)) {
-                    $v = clone $v;
-                }
-
-                $copy[] = $v;
-            }
-
-            return $copy;
+        if (!$value) {
+            return null;
         }
 
-        return $value;
+        $toClone = false;
+
+        foreach ($value as $item) {
+            if (is_object($item) || is_array($item)) {
+                $toClone = true;
+
+                break;
+            }
+        }
+
+        if (!$toClone) {
+            return $value;
+        }
+
+        $copy = [];
+
+        foreach ($value as $item) {
+            if (is_object($item)) {
+                $copy[] = $this->cloneObject($item);
+
+                continue;
+            }
+
+            if (is_array($item)) {
+                $copy[] = $this->cloneArray($item);
+
+                continue;
+            }
+
+            $copy[] = $item;
+        }
+
+        return $copy;
     }
 
-    protected function cloneObject($value)
+    /**
+     * Clone an object value.
+     */
+    protected function cloneObject(?StdClass $value) : ?StdClass
     {
-        if (is_array($value)) {
-            $copy = [];
-
-            foreach ($value as $v) {
-                $copy[] = self::cloneObject($v);
-            }
-
-            return $copy;
+        if (!$value) {
+            return null;
         }
 
-        if (is_object($value)) {
-            $copy = (object) [];
+        $copy = (object) [];
 
-            foreach (get_object_vars($value) as $k => $v) {
-                $key = $k;
+        foreach (get_object_vars($value) as $k => $item) {
+            $key = $k;
 
-                if (!is_string($key)) {
-                    $key = strval($key);
-                }
-
-                $copy->$key = self::cloneObject($v);
+            if (!is_string($key)) {
+                $key = strval($key);
             }
 
-            return $copy;
+            if (is_object($item)) {
+                $copy->$key = $this->cloneObject($item);
+
+                continue;
+            }
+
+            if (is_array($item)) {
+                $copy->$key = $this->cloneArray($item);
+
+                continue;
+            }
+
+            $copy->$key = $item;
         }
 
-        return $value;
+        return $copy;
     }
 }

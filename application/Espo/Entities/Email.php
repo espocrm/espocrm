@@ -29,6 +29,8 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Utils\Util;
+
 use Espo\Entities\Attachment;
 
 use Espo\Services\Email as EmailService;
@@ -72,25 +74,33 @@ class Email extends \Espo\Core\ORM\Entity
 
     protected function _getFromName()
     {
-        if (!$this->has('fromString')) return null;
+        if (!$this->has('fromString')) {
+            return null;
+        }
 
         return EmailService::parseFromName($this->get('fromString'));
     }
 
     protected function _getFromAddress()
     {
-        if (!$this->has('fromString')) return null;
+        if (!$this->has('fromString')) {
+            return null;
+        }
 
         return EmailService::parseFromAddress($this->get('fromString'));
     }
 
     protected function _getReplyToName()
     {
-        if (!$this->has('replyToString')) return null;
+        if (!$this->has('replyToString')) {
+            return null;
+        }
 
         $string = $this->get('replyToString');
 
-        if (!$string) return null;
+        if (!$string) {
+            return null;
+        }
 
         $string = trim(explode(';', $string)[0]);
 
@@ -99,9 +109,16 @@ class Email extends \Espo\Core\ORM\Entity
 
     protected function _getReplyToAddress()
     {
-        if (!$this->has('replyToString')) return null;
+        if (!$this->has('replyToString')) {
+            return null;
+        }
+
         $string = $this->get('replyToString');
-        if (!$string) return null;
+
+        if (!$string) {
+            return null;
+        }
+
         $string = trim(explode(';', $string)[0]);
 
         return EmailService::parseFromAddress($string);
@@ -109,23 +126,24 @@ class Email extends \Espo\Core\ORM\Entity
 
     protected function _setIsRead($value)
     {
-        $this->setValue('isRead', $value !== false);
+        $this->setInContainer('isRead', $value !== false);
 
         if ($value === true || $value === false) {
-            $this->setValue('isUsers', true);
-        } else {
-            $this->setValue('isUsers', false);
+            $this->setInContainer('isUsers', true);
+        }
+        else {
+            $this->setInContainer('isUsers', false);
         }
     }
 
-    public function isManuallyArchived()
+    public function isManuallyArchived() : bool
     {
         return $this->get('status') === 'Archived' && $this->get('createdById') !== 'system';
     }
 
-    public function addAttachment(Attachment $attachment)
+    public function addAttachment(Attachment $attachment) : void
     {
-        if (empty($this->id)) {
+        if (!$this->id) {
             return;
         }
 
@@ -133,8 +151,6 @@ class Email extends \Espo\Core\ORM\Entity
         $attachment->set('parentType', 'Email');
 
         $this->entityManager->saveEntity($attachment);
-
-        return true;
     }
 
     protected function _getBodyPlain()
@@ -156,6 +172,7 @@ class Email extends \Espo\Core\ORM\Entity
         $body = $this->get('body');
 
         $breaks = ["<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;"];
+
         $body = str_ireplace($breaks, "\r\n", $body);
         $body = strip_tags($body);
 
@@ -202,6 +219,7 @@ class Email extends \Espo\Core\ORM\Entity
 
         if (!empty($body)) {
             $attachmentList = $this->getInlineAttachments();
+
             foreach ($attachmentList as $attachment) {
                 $body = str_replace(
                     "\"?entryPoint=attachment&amp;id={$attachment->id}\"",
@@ -220,39 +238,52 @@ class Email extends \Espo\Core\ORM\Entity
         return $body;
     }
 
-    public function getInlineAttachments()
+    public function getInlineAttachments() : array
     {
-        $attachmentList = [];
         $idList = [];
+
         $body = $this->get('body');
 
-        if (!empty($body)) {
-            if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $body, $matches)) {
-                if (!empty($matches[1]) && is_array($matches[1])) {
-                    foreach ($matches[1] as $id) {
-                        if (in_array($id, $idList)) continue;
+        if (empty($body)) {
+            return [];
+        }
 
-                        $idList[] = $id;
+        $matches = [];
 
-                        $attachment = $this->entityManager->getEntity('Attachment', $id);
+        if (!preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $body, $matches)) {
+            return [];
+        }
 
-                        if ($attachment) {
-                            $attachmentList[] = $attachment;
-                        }
-                    }
-                }
+        if (empty($matches[1]) || !is_array($matches[1])) {
+            return [];
+        }
+
+        $attachmentList = [];
+
+        foreach ($matches[1] as $id) {
+            if (in_array($id, $idList)) {
+                continue;
+            }
+
+            $idList[] = $id;
+
+            $attachment = $this->entityManager->getEntity('Attachment', $id);
+
+            if ($attachment) {
+                $attachmentList[] = $attachment;
             }
         }
 
         return $attachmentList;
     }
 
-    public function getToList()
+    public function getToList() : array
     {
         $value = $this->get('to');
 
         if ($value) {
             $arr = explode(';', $value);
+
             if (is_array($arr)) {
                 return $arr;
             }
@@ -261,12 +292,13 @@ class Email extends \Espo\Core\ORM\Entity
         return [];
     }
 
-    public function getCcList()
+    public function getCcList() : array
     {
         $value = $this->get('cc');
 
         if ($value) {
             $arr = explode(';', $value);
+
             if (is_array($arr)) {
                 return $arr;
             }
@@ -275,12 +307,13 @@ class Email extends \Espo\Core\ORM\Entity
         return [];
     }
 
-    public function getBccList()
+    public function getBccList() : array
     {
         $value = $this->get('bcc');
 
         if ($value) {
             $arr = explode(';', $value);
+
             if (is_array($arr)) {
                 return $arr;
             }
@@ -295,6 +328,7 @@ class Email extends \Espo\Core\ORM\Entity
 
         if ($value) {
             $arr = explode(';', $value);
+
             if (is_array($arr)) {
                 return $arr;
             }
@@ -303,8 +337,8 @@ class Email extends \Espo\Core\ORM\Entity
         return [];
     }
 
-    public function setDummyMessageId()
+    public function setDummyMessageId() : void
     {
-        $this->set('messageId', 'dummy:' . \Espo\Core\Utils\Util::generateId());
+        $this->set('messageId', 'dummy:' . Util::generateId());
     }
 }

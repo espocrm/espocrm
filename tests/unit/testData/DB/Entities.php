@@ -68,7 +68,10 @@ class Article extends TEntity
 
 class Job extends TEntity
 {
-
+    public function getFromContainerOriginal(string $attribute)
+    {
+        return $this->valuesContainer[$attribute] ?? null;
+    }
 }
 
 class Test extends TEntity

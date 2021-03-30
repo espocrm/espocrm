@@ -48,7 +48,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     private $position = 0;
 
-    protected $isFetched = false;
+    private $isFetched = false;
 
     protected $dataList = [];
 
@@ -233,8 +233,6 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
      */
     public function merge(EntityCollection $collection)
     {
-        $newData = $this->dataList;
-
         $incomingDataList = $collection->getDataList();
 
         foreach ($incomingDataList as $v) {
@@ -297,7 +295,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @deprecated
+     * @deprecated Use `getValueMapList`.
      */
     public function toArray(bool $itemsAsObjects = false) : array
     {

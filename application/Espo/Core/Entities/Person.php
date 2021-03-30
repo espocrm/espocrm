@@ -40,29 +40,29 @@ class Person extends Entity
 {
     protected function _setLastName($value)
     {
-        $this->setValue('lastName', $value);
+        $this->setInContainer('lastName', $value);
 
         $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
 
-        $this->setValue('name', $name);
+        $this->setInContainer('name', $name);
     }
 
     protected function _setFirstName($value)
     {
-        $this->setValue('firstName', $value);
+        $this->setInContainer('firstName', $value);
 
         $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
 
-        $this->setValue('name', $name);
+        $this->setInContainer('name', $name);
     }
 
     protected function _setMiddleName($value)
     {
-        $this->setValue('middleName', $value);
+        $this->setInContainer('middleName', $value);
 
         $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
 
-        $this->setValue('name', $name);
+        $this->setInContainer('name', $name);
     }
 
     public function getEmailAddressGroup() : EmailAddressGroup

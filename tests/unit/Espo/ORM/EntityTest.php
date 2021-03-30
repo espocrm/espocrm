@@ -201,7 +201,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $job = $this->createEntity('Job', Job::class);
         $job->setFetched('object', (object) ['a1' => 'value-1']);
         $job->set('object', ['a1' => 'value-1']);
-        $this->assertTrue($job->isAttributeChanged('object'));
+        $this->assertFalse($job->isAttributeChanged('object'));
 
         $job = $this->createEntity('Job', Job::class);
         $job->setFetched('object', (object) ['1' => '1']);
@@ -245,7 +245,51 @@ class EntityTest extends \PHPUnit\Framework\TestCase
                 'k11' => 'v1'
             ]
         ]);
-        $this->assertTrue($job->isAttributeChanged('object'));
+        $this->assertFalse($job->isAttributeChanged('object'));
+    }
+
+    public function testCloningObject() : void
+    {
+        $original = (object) [
+            'k1' => (object) [
+                'k11' => 'v1'
+            ]
+        ];
+
+        $job = $this->createEntity('Job', Job::class);
+
+        $job->set('object', $original);
+
+        $gotten = $job->get('object');
+
+        $this->assertEquals($gotten, $original);
+        $this->assertNotSame($gotten, $original);
+        $this->assertNotSame($gotten->k1, $original->k1);
+
+        $this->assertEquals($job->getFromContainerOriginal('object'), $original);
+        $this->assertNotSame($job->getFromContainerOriginal('object'), $original);
+
+    }
+
+    public function testCloningArray() : void
+    {
+        $original =  [
+            (object) [
+                'k1' => 'v1',
+            ]
+        ];
+
+        $job = $this->createEntity('Job', Job::class);
+
+        $job->set('array', $original);
+
+        $gotten = $job->get('array');
+
+        $this->assertEquals($gotten, $original);
+        $this->assertNotSame($gotten[0], $original[0]);
+
+        $this->assertEquals($job->getFromContainerOriginal('array'), $original);
+        $this->assertNotSame($job->getFromContainerOriginal('array'), $original);
     }
 
     public function testSetForeign()
