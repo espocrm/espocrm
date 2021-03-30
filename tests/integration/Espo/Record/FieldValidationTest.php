@@ -34,6 +34,8 @@ use Espo\Core\{
     Application,
 };
 
+use Espo\Services\Settings as SettingsService;
+
 class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 {
     private function setFieldsDefs(Application $app, string $entityType, array $data)
@@ -331,5 +333,17 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $this->assertTrue(true);
+    }
+
+    public function testSettings()
+    {
+        /* @var $service SettingsService */
+        $service = $this->getContainer()->get('serviceFactory')->create('Settings');
+
+        $this->expectException(BadRequest::class);
+
+        $service->setConfigData((object) [
+            'activitiesEntityList' => 'should-be-array',
+        ]);
     }
 }
