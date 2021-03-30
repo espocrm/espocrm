@@ -29,63 +29,73 @@
 
 namespace tests\integration\Espo\Record;
 
+use Espo\Core\{
+    Exceptions\BadRequest,
+    Application,
+};
+
 class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 {
-    private function setFieldsDefs($app, $entityType, $data)
+    private function setFieldsDefs(Application $app, string $entityType, array $data)
     {
         $metadata = $app->getContainer()->get('metadata');
+
         $metadata->set('entityDefs', $entityType, [
-            'fields' => $data
+            'fields' => $data,
         ]);
+
         $metadata->save();
     }
 
     public function testRequiredVarchar1()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'name' => [
-                'required' => true
-            ]
+                'required' => true,
+            ],
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
         $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => null
+            'name' => null,
         ]);
     }
 
     public function testUpdateRequiredVarchar1()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'name' => [
-                'required' => true
-            ]
+                'required' => true,
+            ],
         ]);
 
         $entity = $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
             'name' => 'test'
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
         $app->getContainer()->get('serviceFactory')->create('Account')->update($entity->id, (object) [
-            'name' => ''
+            'name' => '',
         ]);
     }
 
     public function testRequiredVarchar2()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'name' => [
-                'required' => true
-            ]
+                'required' => true,
+            ],
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
         $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
 
@@ -95,14 +105,15 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testRequiredVarchar3()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'name' => [
-                'required' => true
-            ]
+                'required' => true,
+            ],
         ]);
 
         $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => 'test'
+            'name' => 'test',
         ]);
 
         $this->assertTrue(true);
@@ -111,32 +122,34 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testMaxLength1()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'name' => [
                 'required' => true,
-                'maxLength' => 5
-            ]
+                'maxLength' => 5,
+            ],
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
         $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => '123456'
+            'name' => '123456',
         ]);
     }
 
     public function testMaxLength2()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'name' => [
                 'required' => true,
-                'maxLength' => 5
+                'maxLength' => 5,
             ]
         ]);
 
         $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => '12345'
+            'name' => '12345',
         ]);
 
         $this->assertTrue(true);
@@ -145,13 +158,14 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testRequiredLink1()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'assignedUser' => [
-                'required' => true
+                'required' => true,
             ]
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
         $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
             'name' => 'test',
@@ -162,9 +176,10 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testRequiredLink2()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'assignedUser' => [
-                'required' => true
+                'required' => true,
             ]
         ]);
 
@@ -179,13 +194,14 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testRequiredLinkMultiple1()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Account', [
             'teams' => [
-                'required' => true
+                'required' => true,
             ]
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
         $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
             'name' => 'test',
@@ -196,13 +212,14 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testRequiredCurrency1()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Lead', [
             'opportunityAmount' => [
-                'required' => true
+                'required' => true,
             ]
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
         $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
             'lastName' => 'test',
@@ -213,9 +230,10 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testRequiredCurrency2()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Lead', [
             'opportunityAmount' => [
-                'required' => true
+                'required' => true,
             ]
         ]);
 
@@ -231,9 +249,10 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testRequiredCurrency3()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Lead', [
             'opportunityAmount' => [
-                'required' => true
+                'required' => true,
             ]
         ]);
 
@@ -249,52 +268,54 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
     public function testRequiredEnum1()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Lead', [
             'status' => [
                 'required' => true,
-                'default' => null
+                'default' => null,
             ]
         ]);
+
         $app = $this->createApplication();
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
-        $e = $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
-            'lastName' => 'test'
+        $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
+            'lastName' => 'test',
         ]);
-
-        $this->assertTrue($status === null);
     }
 
     public function testRequiredEnum2()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Lead', [
             'status' => [
-                'required' => true
+                'required' => true,
             ]
         ]);
 
-        $this->expectException(\Espo\Core\Exceptions\BadRequest::class);
+        $this->expectException(BadRequest::class);
 
         $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
             'lastName' => 'test',
-            'status' => null
+            'status' => null,
         ]);
     }
 
     public function testRequiredEnum3()
     {
         $app = $this->createApplication();
+
         $this->setFieldsDefs($app, 'Lead', [
             'status' => [
-                'required' => true
+                'required' => true,
             ]
         ]);
 
-        $e = $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
+        $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
             'lastName' => 'test',
-            'status' => 'New'
+            'status' => 'New',
         ]);
 
         $this->assertTrue(true);
