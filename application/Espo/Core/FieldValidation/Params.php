@@ -90,7 +90,7 @@ class Params
     /**
      * Create an empty instance.
      */
-    public function fromNothing() : self
+    public static function fromNothing() : self
     {
         return new self();
     }
