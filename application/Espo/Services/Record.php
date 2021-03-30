@@ -45,12 +45,15 @@ use Espo\ORM\{
     Collection,
 };
 
-use Espo\Entities\User;
+use Espo\{
+    Entities\User,
+    Services\Stream as StreamService,
+};
 
 use Espo\Core\{
     Acl,
     AclManager,
-    Utils\Util,    
+    Utils\Util,
     Select\SearchParams,
     Record\Crud,
     Record\Collection as RecordCollection,
@@ -73,6 +76,7 @@ use Espo\Tools\{
 use Espo\Core\Di;
 
 use StdClass;
+use RuntimeException;
 
 /**
  * The layer between Controller and Repository. For CRUD and other operations with records.
@@ -204,12 +208,14 @@ class Record implements Crud,
 
     public function __construct()
     {
-        if (empty($this->entityType)) {
+        if (!$this->entityType) {
             $name = get_class($this);
+
             if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
                 $name = $matches[1];
             }
-            if ($name != 'Record') {
+
+            if ($name !== 'Record') {
                 $this->entityType = Util::normilizeScopeName($name);
             }
         }
@@ -218,7 +224,9 @@ class Record implements Crud,
         $this->init();
     }
 
-    // for backward compatibility, to be removed
+    /**
+     * @deprecated For backward compatibility, to be removed.
+     */
     protected function init()
     {
     }
@@ -232,9 +240,14 @@ class Record implements Crud,
         }
     }
 
-    public function setEntityType(string $entityType)
+    public function setEntityType(string $entityType) : void
     {
+        if ($this->entityType) {
+            throw new RuntimeException("entityType is already set.");
+        }
+
         $initAclParams = false;
+
         if (!$this->entityType) {
             $initAclParams = true;
         }
@@ -246,40 +259,68 @@ class Record implements Crud,
         }
     }
 
-    protected function initAclParams()
+    protected function initAclParams() : void
     {
         $aclManager = $this->aclManager;
 
         foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'forbidden') as $item) {
-            if (!in_array($item, $this->forbiddenAttributeList)) $this->forbiddenAttributeList[] = $item;
+            if (!in_array($item, $this->forbiddenAttributeList)) {
+                $this->forbiddenAttributeList[] = $item;
+            }
         }
+
         foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'internal') as $item) {
-            if (!in_array($item, $this->internalAttributeList)) $this->internalAttributeList[] = $item;
+            if (!in_array($item, $this->internalAttributeList)) {
+                $this->internalAttributeList[] = $item;
+            }
         }
+
         foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'onlyAdmin') as $item) {
-            if (!in_array($item, $this->onlyAdminAttributeList)) $this->onlyAdminAttributeList[] = $item;
+            if (!in_array($item, $this->onlyAdminAttributeList)) {
+                $this->onlyAdminAttributeList[] = $item;
+            }
         }
+
         foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'readOnly') as $item) {
-            if (!in_array($item, $this->readOnlyAttributeList)) $this->readOnlyAttributeList[] = $item;
+            if (!in_array($item, $this->readOnlyAttributeList)) {
+                $this->readOnlyAttributeList[] = $item;
+            }
         }
+
         foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'nonAdminReadOnly') as $item) {
-            if (!in_array($item, $this->nonAdminReadOnlyAttributeList)) $this->nonAdminReadOnlyAttributeList[] = $item;
+            if (!in_array($item, $this->nonAdminReadOnlyAttributeList)) {
+                $this->nonAdminReadOnlyAttributeList[] = $item;
+            }
         }
 
         foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'forbidden') as $item) {
-            if (!in_array($item, $this->forbiddenLinkList)) $this->forbiddenLinkList[] = $item;
+            if (!in_array($item, $this->forbiddenLinkList)) {
+                $this->forbiddenLinkList[] = $item;
+            }
         }
+
         foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'internal') as $item) {
-            if (!in_array($item, $this->internalLinkList)) $this->internalLinkList[] = $item;
+            if (!in_array($item, $this->internalLinkList)) {
+                $this->internalLinkList[] = $item;
+            }
         }
+
         foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'onlyAdmin') as $item) {
-            if (!in_array($item, $this->onlyAdminLinkList)) $this->onlyAdminLinkList[] = $item;
+            if (!in_array($item, $this->onlyAdminLinkList)) {
+                $this->onlyAdminLinkList[] = $item;
+            }
         }
+
         foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'readOnly') as $item) {
-            if (!in_array($item, $this->readOnlyLinkList)) $this->readOnlyLinkList[] = $item;
+            if (!in_array($item, $this->readOnlyLinkList)) {
+                $this->readOnlyLinkList[] = $item;
+            }
         }
+
         foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'nonAdminReadOnly') as $item) {
-            if (!in_array($item, $this->nonAdminReadOnlyLinkList)) $this->nonAdminReadOnlyLinkList[] = $item;
+            if (!in_array($item, $this->nonAdminReadOnlyLinkList)) {
+                $this->nonAdminReadOnlyLinkList[] = $item;
+            }
         }
     }
 
@@ -288,11 +329,17 @@ class Record implements Crud,
         return $this->entityType;
     }
 
+    /**
+     * @deprecated Use `$this->config`.
+     */
     protected function getConfig()
     {
         return $this->config;
     }
 
+    /**
+     * @deprecated Use `$this->serviceFactory`.
+     */
     protected function getServiceFactory()
     {
         return $this->serviceFactory;
@@ -306,12 +353,18 @@ class Record implements Crud,
         return $this->selectManagerFactory;
     }
 
-    protected function getAcl()
+    /**
+     * @deprecated Use `$this->acl`.
+     */
+    protected function getAcl() : Acl
     {
         return $this->acl;
     }
 
-    protected function getUser()
+    /**
+     * @deprecated Use `$this->user`.
+     */
+    protected function getUser() : User
     {
         return $this->user;
     }
@@ -326,29 +379,41 @@ class Record implements Crud,
         $this->user = $user;
     }
 
+    /**
+     * @deprecated Use `$this->aclManager`.
+     */
     protected function getAclManager()
     {
         return $this->aclManager;
     }
 
+    /**
+     * @deprecated Use `$this->fileManager`.
+     */
     protected function getFileManager()
     {
         return $this->fileManager;
     }
 
+    /**
+     * @deprecated Use `$this->metadata`.
+     */
     protected function getMetadata()
     {
         return $this->metadata;
     }
 
     /**
-     * @deprecated
+     * @deprecated Use `$this->fieldUtil`.
      */
     protected function getFieldManagerUtil()
     {
         return $this->fieldUtil;
     }
 
+    /**
+     * @deprecated Use `$this->entityManager`.
+     */
     protected function getEntityManager()
     {
         return $this->entityManager;
@@ -359,13 +424,15 @@ class Record implements Crud,
         return $this->getEntityManager()->getRepository($this->entityType);
     }
 
-    /** @deprecated */
+    /**
+     * @deprecated Use `$this->recordServiceContainer->get($name)`.
+     */
     protected function getRecordService($name)
     {
         return $this->recordServiceContainer->get($name);
     }
 
-    public function processActionHistoryRecord(string $action, Entity $entity)
+    public function processActionHistoryRecord(string $action, Entity $entity) : void
     {
         if ($this->actionHistoryDisabled) {
             return;
@@ -394,13 +461,20 @@ class Record implements Crud,
     }
 
     /**
-     * @deprecated
+     * @deprecated Use `read` method.
+     * @todo Remove in 6.3.
      */
-    public function readEntity($id) //TODO Remove in 5.8
+    public function readEntity($id)
     {
         return $this->read($id);
     }
 
+    /**
+     * Read a record by ID. Access control check is performed.
+     *
+     * @throws Error
+     * @throws NotFoundSilent If no read access.
+     */
     public function read(string $id) : Entity
     {
         if (empty($id)) {
@@ -418,6 +492,12 @@ class Record implements Crud,
         return $entity;
     }
 
+    /**
+     * Get an entity by ID. Access control check is performed.
+     * If ID is not specified then it will return an empty entity.
+     *
+     * @throws ForbiddenSilent If no read access.
+     */
     public function getEntity(?string $id = null) : ?Entity
     {
         if ($id === null) {
@@ -445,20 +525,21 @@ class Record implements Crud,
         return $entity;
     }
 
-    protected function getStreamService()
+    protected function getStreamService() : StreamService
     {
         if (empty($this->streamService)) {
-            $this->streamService = $this->getServiceFactory()->create('Stream');
+            $this->streamService = $this->serviceFactory->create('Stream');
         }
 
         return $this->streamService;
     }
 
-    protected function loadIsFollowed(Entity $entity)
+    protected function loadIsFollowed(Entity $entity) : void
     {
         if ($this->getStreamService()->checkIsFollowed($entity)) {
             $entity->set('isFollowed', true);
-        } else {
+        }
+        else {
             $entity->set('isFollowed', false);
         }
     }
@@ -1164,6 +1245,11 @@ class Record implements Crud,
         return $this->create($data);
     }
 
+    /**
+     * Create a record.
+     *
+     * @throws ForbiddenSilent If no create access.
+     */
     public function create(StdClass $data) : Entity
     {
         if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
@@ -1332,6 +1418,12 @@ class Record implements Crud,
         return $this->find($params);
     }
 
+    /**
+     * Find records.
+     *
+     * @params $params Raw search parameters.
+     * @return RecordCollection
+     */
     public function find(array $params) : RecordCollection
     {
         $disableCount = false;
@@ -1401,6 +1493,11 @@ class Record implements Crud,
         return new RecordCollection($collection, $total);
     }
 
+    /**
+     * Get kanban data.
+     *
+     * @params $params Raw search parameters.
+     */
     public function getListKanban(array $params) : KanbanResult
     {
         $disableCount = false;
@@ -1450,6 +1547,12 @@ class Record implements Crud,
         return $this->getRepository()->clone($query)->findOne();
     }
 
+    /**
+     * Restore a deleted record.
+     *
+     * @throws NotFound If not found.
+     * @throws Forbidden If no access.
+     */
     public function restoreDeleted(string $id) : void
     {
         if (!$this->getUser()->isAdmin()) {
@@ -1471,15 +1574,16 @@ class Record implements Crud,
 
     public function getMaxSelectTextAttributeLength() : ?int
     {
-        if (!$this->maxSelectTextAttributeLengthDisabled) {
-            if ($this->maxSelectTextAttributeLength) {
-                return $this->maxSelectTextAttributeLength;
-            } else {
-                return $this->getConfig()->get('maxSelectTextAttributeLengthForList', self::MAX_SELECT_TEXT_ATTRIBUTE_LENGTH);
-            }
+        if ($this->maxSelectTextAttributeLengthDisabled) {
+            return null;
         }
 
-        return null;
+        if ($this->maxSelectTextAttributeLength) {
+            return $this->maxSelectTextAttributeLength;
+        }
+
+        return $this->getConfig()->get('maxSelectTextAttributeLengthForList') ??
+            self::MAX_SELECT_TEXT_ATTRIBUTE_LENGTH;
     }
 
     /** @deprecated */
@@ -1488,6 +1592,13 @@ class Record implements Crud,
         return $this->findLinked($id, $link, $params);
     }
 
+    /**
+     * Find linked records.
+     *
+     * @throws NotFound If a record not found.
+     * @throws Forbidden If no access.
+     * @throws Error
+     */
     public function findLinked(string $id, string $link, array $params) : RecordCollection
     {
         $entity = $this->getRepository()->get($id);
@@ -1501,7 +1612,7 @@ class Record implements Crud,
         }
 
         if (empty($link)) {
-            throw new Error();
+            throw new Error("Empty link.");
         }
 
         if (in_array($link, $this->forbiddenLinkList)) {
@@ -1645,6 +1756,14 @@ class Record implements Crud,
         return $this->link($id, $link, $foreignId);
     }
 
+    /**
+     * Link records.
+     *
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     */
     public function link(string $id, string $link, string $foreignId) : void
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
@@ -1724,6 +1843,14 @@ class Record implements Crud,
         return $this->unlink($id, $link, $foreignId);
     }
 
+    /**
+     * Unlink records.
+     *
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Error
+     */
     public function unlink(string $id, string $link, string $foreignId) : void
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
@@ -1969,6 +2096,15 @@ class Record implements Crud,
         return false;
     }
 
+    /**
+     * Follow a record.
+     *
+     * @param $id A record ID.
+     * @param $userId A user ID. If not specified then a current user will be used.
+     *
+     * @throws NotFoundSilent
+     * @throws Forbidden
+     */
     public function follow(string $id, ?string $userId = null)
     {
         $entity = $this->getRepository()->get($id);
@@ -1988,6 +2124,14 @@ class Record implements Crud,
         return $this->getStreamService()->followEntity($entity, $userId);
     }
 
+    /**
+     * Unfollow a record.
+     *
+     * @param $id A record ID.
+     * @param string|null A user ID. If not specified then a current user will be used.
+     *
+     * @throws NotFoundSilent
+     */
     public function unfollow(string $id, ?string $userId = null)
     {
         $entity = $this->getRepository()->get($id);
@@ -2030,7 +2174,10 @@ class Record implements Crud,
         return false;
     }
 
-    public function findDuplicates(Entity $entity, $data = null) : ?Collection
+    /**
+     * Find duplicates for an entity.
+     */
+    public function findDuplicates(Entity $entity, ?StdClass $data = null) : ?Collection
     {
         if (!$data) {
             $data = (object) [];
@@ -2069,14 +2216,28 @@ class Record implements Crud,
         return null;
     }
 
-    public function exportCollection(array $params, $collection)
+    /**
+     * Export a collection.
+     *
+     * @param $params Raw export parameters.
+     * @param $collection A collection.
+     *
+     * @return An attachment ID.
+     */
+    public function exportCollection(array $params, Collection $collection) : string
     {
         $params['collection'] = $collection;
 
         return $this->export($params);
     }
 
-    public function export(array $params)
+    /**
+     * Run an export.
+     *
+     * @param Raw export parameters.
+     * @return An attachment ID.
+     */
+    public function export(array $params) : string
     {
         $export = $this->injectableFactory->create(ExportTool::class);
 
@@ -2089,6 +2250,11 @@ class Record implements Crud,
             ->run();
     }
 
+    /**
+     * Prepare an entity for output. Clears not allowed attributes.
+     *
+     * @return void
+     */
     public function prepareEntityForOutput(Entity $entity)
     {
         foreach ($this->internalAttributeList as $attribute) {
@@ -2110,6 +2276,13 @@ class Record implements Crud,
         }
     }
 
+    /**
+     * Merge records.
+     *
+     * @throws Error
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function merge(string $id, array $sourceIdList, StdClass $attributes) : void
     {
         if (empty($id)) {
@@ -2519,6 +2692,11 @@ class Record implements Crud,
         }
     }
 
+    /**
+     * Perform a mass action.
+     *
+     * @throws Forbidden
+     */
     public function massAction(string $action, array $params, StdClass $data) : MassActionResult
     {
         if (!$this->acl->checkScope($this->entityType)) {
@@ -2543,6 +2721,12 @@ class Record implements Crud,
         return $result->withNoIds();
     }
 
+    /**
+     * Perform an action.
+     *
+     * @throws Forbidden
+     * @throws BadRequest
+     */
     public function action(string $action, string $id, StdClass $data) : Entity
     {
         if (!$this->acl->checkScope($this->entityType)) {
