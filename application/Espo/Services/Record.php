@@ -360,7 +360,7 @@ class Record implements Crud,
     /**
      * @deprecated Use `$this->acl`.
      */
-    protected function getAcl() : Acl
+    protected function getAcl()
     {
         return $this->acl;
     }

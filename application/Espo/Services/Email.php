@@ -389,14 +389,6 @@ class Email extends Record implements
         }
     }
 
-    protected function getStreamService()
-    {
-        if (empty($this->streamService)) {
-            $this->streamService = $this->getServiceFactory()->create('Stream');
-        }
-        return $this->streamService;
-    }
-
     public function create(StdClass $data) : Entity
     {
         $entity = parent::create($data);
