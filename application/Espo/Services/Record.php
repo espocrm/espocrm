@@ -1957,16 +1957,22 @@ class Record implements Crud,
             throw new NotFound();
         }
 
+        $user = $this->entityManager->getEntity('User', $foreignId);
+
+        if (!$user) {
+            throw new NotFound();
+        }
+
         if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
+            throw new Forbidden("No 'edit' access.");
         }
 
         if (!$this->getAcl()->check($entity, 'stream')) {
-            throw new Forbidden();
+            throw new Forbidden("No 'stream' access.");
         }
 
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
+        if (!$this->getAcl()->check($user, 'edit')) {
+            throw new Forbidden("No 'read' access to user.");
         }
 
         $result = $this->getStreamService()->followEntity($entity, $foreignId);
@@ -1988,17 +1994,28 @@ class Record implements Crud,
             throw new NotFound();
         }
 
+        $user = $this->entityManager->getEntity('User', $foreignId);
+
+        if (!$user) {
+            throw new NotFound();
+        }
+
         if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
+            throw new Forbidden("No 'edit' access.");
         }
 
         if (!$this->getAcl()->check($entity, 'stream')) {
-            throw new Forbidden();
+            throw new Forbidden("No 'stream' access.");
+        }
+
+        if (!$this->getAcl()->check($user, 'edit')) {
+            throw new Forbidden("No 'read' access to user.");
         }
 
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
+
 
         $this->getStreamService()->unfollowEntity($entity, $foreignId);
     }
