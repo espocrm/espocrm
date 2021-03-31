@@ -33,26 +33,25 @@ use Espo\ORM\Entity;
 
 use Espo\Core\Acl as BaseAcl;
 
-
 class Acl extends BaseAcl
 {
     public function checkReadOnlyAccount(string $scope) : bool
     {
-        return $this->getAclManager()->checkReadOnlyAccount($this->getUser(), $scope);
+        return $this->aclManager->checkReadOnlyAccount($this->user, $scope);
     }
 
     public function checkReadOnlyContact(string $scope) : bool
     {
-        return $this->getAclManager()->checkReadOnlyContact($this->getUser(), $scope);
+        return $this->aclManager->checkReadOnlyContact($this->user, $scope);
     }
 
     public function checkInAccount(Entity $entity) : bool
     {
-        return $this->getAclManager()->checkInAccount($this->getUser(), $entity);
+        return $this->aclManager->checkInAccount($this->user, $entity);
     }
 
     public function checkIsOwnContact(Entity $entity) : bool
     {
-        return $this->getAclManager()->checkIsOwnContact($this->getUser(), $entity);
+        return $this->aclManager->checkIsOwnContact($this->user, $entity);
     }
 }

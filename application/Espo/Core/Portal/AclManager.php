@@ -40,6 +40,7 @@ use Espo\Core\{
     AclPortal\Acl as BasePortalAcl,
     AclPortal\PortalScopeAcl,
     Acl\ScopeAcl,
+    Acl\Table as TableBase,
     Portal\Acl as UserAclWrapper,
     AclManager as BaseAclManager,
 };
@@ -105,7 +106,7 @@ class AclManager extends BaseAclManager
         return $this->portal ?? null;
     }
 
-    protected function getTable(User $user)
+    protected function getTable(User $user) : TableBase
     {
         $key = $user->id;
 

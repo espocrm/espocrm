@@ -32,6 +32,7 @@ namespace Espo\Core;
 use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\Entity;
+
 use Espo\Entities\User;
 
 use Espo\Core\{
@@ -106,7 +107,7 @@ class AclManager
         return $this->implementationHashMap[$scope];
     }
 
-    protected function getTable(User $user)
+    protected function getTable(User $user) : Table
     {
         $key = $user->id;
 
