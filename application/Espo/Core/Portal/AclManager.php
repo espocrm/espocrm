@@ -46,6 +46,7 @@ use Espo\Core\{
 };
 
 use StdClass;
+use RuntimeException;
 
 class AclManager extends BaseAclManager
 {
@@ -86,24 +87,28 @@ class AclManager extends BaseAclManager
         return $this->implementationHashMap[$scope];
     }
 
-    public function setMainManager(BaseAclManager $mainManager)
+    public function setMainManager(BaseAclManager $mainManager) : void
     {
         $this->mainManager = $mainManager;
     }
 
-    protected function getMainManager()
+    protected function getMainManager() : BaseAclManager
     {
         return $this->mainManager;
     }
 
-    public function setPortal(Portal $portal)
+    public function setPortal(Portal $portal) : void
     {
         $this->portal = $portal;
     }
 
     protected function getPortal() : Portal
     {
-        return $this->portal ?? null;
+        if (!$this->portal) {
+            throw new RuntimeException("Portal is not set.");
+        }
+
+        return $this->portal;
     }
 
     protected function getTable(User $user) : TableBase
