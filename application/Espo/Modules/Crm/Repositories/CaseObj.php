@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
 
+use Espo\Services\Stream as StreamService;
+
 use Espo\Core\Di;
 
 class CaseObj extends \Espo\Core\Repositories\Database implements
@@ -40,31 +42,39 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
 
     protected $streamService;
 
-   public function afterSave(Entity $entity, array $options = [])
+    public function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);
-        $this->handleAfterSaveContacts($entity, $options);
+
+        $this->handleAfterSaveContacts($entity);
     }
 
-    protected function getStreamService()
+    protected function getStreamService() : StreamService
     {
         $this->streamService = $this->streamService ?? $this->serviceFactory->create('Stream');
+
         return $this->streamService;
     }
 
-    protected function handleAfterSaveContacts(Entity $entity, array $options = [])
+    protected function handleAfterSaveContacts(Entity $entity) : void
     {
-        if (!$entity->isAttributeChanged('contactId')) return;
+        if (!$entity->isAttributeChanged('contactId')) {
+            return;
+        }
 
         $contactId = $entity->get('contactId');
         $contactIdList = $entity->get('contactsIds') ?? [];
         $fetchedContactId = $entity->getFetched('contactId');
 
         if ($fetchedContactId) {
-            $previousPortalUser = $this->getEntityManager()->getRepository('User')->select(['id'])->where([
-                'contactId' => $fetchedContactId,
-                'type' => 'portal',
-            ])->findOne();
+            $previousPortalUser = $this->getEntityManager()
+                ->getRepository('User')
+                ->select(['id'])
+                ->where([
+                    'contactId' => $fetchedContactId,
+                    'type' => 'portal',
+                ])
+                ->findOne();
 
             if ($previousPortalUser) {
                 $this->getStreamService()->unfollowEntity($entity, $previousPortalUser->id);
@@ -75,14 +85,19 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
             if ($fetchedContactId) {
                 $this->unrelate($entity, 'contacts', $fetchedContactId);
             }
+
             return;
         }
 
-        $portalUser = $this->getEntityManager()->getRepository('User')->select(['id'])->where([
-            'contactId' => $contactId,
-            'type' => 'portal',
-            'isActive' => true,
-        ])->findOne();
+        $portalUser = $this->getEntityManager()
+            ->getRepository('User')
+            ->select(['id'])
+            ->where([
+                'contactId' => $contactId,
+                'type' => 'portal',
+                'isActive' => true,
+            ])
+            ->findOne();
 
         if ($portalUser) {
             $this->getStreamService()->followEntity($entity, $portalUser->id, true);
