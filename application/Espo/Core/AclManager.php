@@ -396,7 +396,7 @@ class AclManager
     /**
      * Whether a user has an access to another user over a specific permission.
      *
-     * @param $target User|string User entity or user ID.
+     * @param User|string $target User entity or user ID.
      */
     public function checkUserPermission(User $user, $target, string $permissionType = 'user') : bool
     {
@@ -434,7 +434,7 @@ class AclManager
     /**
      * Whether a user can assign to another user.
      *
-     * @param $target User|string User entity or user ID.
+     * @param User|string $target User entity or user ID.
      */
     public function checkAssignmentPermission(User $user, $target) : bool
     {
@@ -466,6 +466,7 @@ class AclManager
 
             return $list;
         }
+        
         return $this->globalRestricton->getScopeRestrictedFieldList($scope, $type);
     }
 

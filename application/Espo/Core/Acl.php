@@ -153,31 +153,39 @@ class Acl
     /**
      * Get attributes forbidden for a user.
      */
-    public function getScopeForbiddenAttributeList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
-    {
-        return $this->getAclManager()->getScopeForbiddenAttributeList($this->getUser(), $scope, $action, $thresholdLevel);
+    public function getScopeForbiddenAttributeList(
+        string $scope, string $action = 'read', string $thresholdLevel = 'no'
+    ) : array {
+
+        return $this->getAclManager()
+            ->getScopeForbiddenAttributeList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
     /**
      * Get fields forbidden for a user.
      */
-    public function getScopeForbiddenFieldList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
-    {
-        return $this->getAclManager()->getScopeForbiddenFieldList($this->getUser(), $scope, $action, $thresholdLevel);
+    public function getScopeForbiddenFieldList(
+        string $scope, string $action = 'read', string $thresholdLevel = 'no'
+    ) : array {
+
+        return $this->getAclManager()
+            ->getScopeForbiddenFieldList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
     /**
      * Get links forbidden for a user.
      */
-    public function getScopeForbiddenLinkList(string $scope, string $action = 'read', string $thresholdLevel = 'no') : array
-    {
+    public function getScopeForbiddenLinkList(
+        string $scope, string $action = 'read', string $thresholdLevel = 'no'
+    ) : array {
+
         return $this->getAclManager()->getScopeForbiddenLinkList($this->getUser(), $scope, $action, $thresholdLevel);
     }
 
     /**
      * Whether a user has an access to another user over a specific permission.
      *
-     * @param $target User|string User entity or user ID.
+     * @param User|string $target User entity or user ID.
      */
     public function checkUserPermission($target, string $permissionType = 'user') : bool
     {
@@ -187,7 +195,7 @@ class Acl
     /**
      * Whether a user can assign to another user.
      *
-     * @param $target User|string User entity or user ID.
+     * @param User|string $target User entity or user ID.
      */
     public function checkAssignmentPermission($target) : bool
     {
