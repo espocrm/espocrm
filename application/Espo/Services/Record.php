@@ -1979,6 +1979,10 @@ class Record implements Crud,
             throw new Forbidden("No 'portal' permission.");
         }
 
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
         $result = $this->getStreamService()->followEntity($entity, $foreignId);
 
         if (!$result) {
