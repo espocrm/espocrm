@@ -55,7 +55,9 @@ class App implements
         if (empty($data->token)) {
             throw new BadRequest();
         }
+
         $auth = $this->injectableFactory->create(Authentication::class);
+
         return $auth->destroyAuthToken($data->token, $request);
     }
 }

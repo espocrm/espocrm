@@ -49,9 +49,13 @@ class Layout extends \Espo\Core\Controllers\Base
     {
         $data = json_decode($request->getBodyContents());
 
-        if (is_object($data)) $data = get_object_vars($data);
+        if (is_object($data)) {
+            $data = get_object_vars($data);
+        }
 
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
         $scope = $params['scope'] ?? null;
         $name = $params['name'] ?? null;
@@ -62,19 +66,29 @@ class Layout extends \Espo\Core\Controllers\Base
 
     public function postActionResetToDefault($params, $data, $request)
     {
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
-        if (empty($data->scope) || empty($data->name)) throw new BadRequest();
+        if (empty($data->scope) || empty($data->name)) {
+            throw new BadRequest();
+        }
 
-        return $this->getServiceFactory()->create('Layout')->resetToDefault($data->scope, $data->name, $data->setId ?? null);
+        return $this->getServiceFactory()
+            ->create('Layout')
+            ->resetToDefault($data->scope, $data->name, $data->setId ?? null);
     }
 
     public function getActionGetOriginal($params, $data, $request)
     {
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
 
-        return $this->getServiceFactory()->create('Layout')->getOriginal(
-            $request->get('scope'), $request->get('name'), $request->get('setId')
-        );
+        return $this->getServiceFactory()
+            ->create('Layout')
+            ->getOriginal(
+                $request->get('scope'), $request->get('name'), $request->get('setId')
+            );
     }
 }

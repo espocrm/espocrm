@@ -56,7 +56,9 @@ class Email extends \Espo\Core\Controllers\Record
                 if (!$this->getUser()->isAdmin() && $data->id !== $this->getUser()->id) {
                     throw new Forbidden();
                 }
+
                 $preferences = $this->getEntityManager()->getEntity('Preferences', $data->id);
+
                 if (!$preferences) {
                     throw new NotFound();
                 }
@@ -64,15 +66,19 @@ class Email extends \Espo\Core\Controllers\Record
                 if (is_null($data->password)) {
                     $data->password = $this->getContainer()->get('crypt')->decrypt($preferences->get('smtpPassword'));
                 }
-            } else if ($data->type == 'emailAccount') {
+            }
+            else if ($data->type == 'emailAccount') {
                 if (!$this->getAcl()->checkScope('EmailAccount')) {
                     throw new Forbidden();
                 }
+
                 if (!empty($data->id)) {
                     $emailAccount = $this->getEntityManager()->getEntity('EmailAccount', $data->id);
+
                     if (!$emailAccount) {
                         throw new NotFound();
                     }
+
                     if (!$this->getUser()->isAdmin()) {
                         if ($emailAccount->get('assignedUserId') !== $this->getUser()->id) {
                             throw new Forbidden();
@@ -82,23 +88,31 @@ class Email extends \Espo\Core\Controllers\Record
                         $data->password = $this->getContainer()->get('crypt')->decrypt($emailAccount->get('smtpPassword'));
                     }
                 }
-            } else if ($data->type == 'inboundEmail') {
+            }
+            else if ($data->type == 'inboundEmail') {
                 if (!$this->getUser()->isAdmin()) {
                     throw new Forbidden();
                 }
+
                 if (!empty($data->id)) {
                     $emailAccount = $this->getEntityManager()->getEntity('InboundEmail', $data->id);
+
                     if (!$emailAccount) {
                         throw new NotFound();
                     }
+
                     if (is_null($data->password)) {
-                        $data->password = $this->getContainer()->get('crypt')->decrypt($emailAccount->get('smtpPassword'));
+                        $data->password = $this->getContainer()
+                            ->get('crypt')
+                            ->decrypt($emailAccount->get('smtpPassword'));
                     }
                 }
-            } else {
+            }
+            else {
                 if (!$this->getUser()->isAdmin()) {
                     throw new Forbidden();
                 }
+
                 if (is_null($data->password)) {
                     $data->password = $this->getConfig()->get('smtpPassword');
                 }
@@ -112,13 +126,16 @@ class Email extends \Espo\Core\Controllers\Record
     {
         if (!empty($data->ids)) {
             $idList = $data->ids;
-        } else {
+        }
+        else {
             if (!empty($data->id)) {
                 $idList = [$data->id];
-            } else {
+            }
+            else {
                 throw new BadRequest();
             }
         }
+
         return $this->getRecordService()->markAsReadByIdList($idList);
     }
 
@@ -126,13 +143,16 @@ class Email extends \Espo\Core\Controllers\Record
     {
         if (!empty($data->ids)) {
             $idList = $data->ids;
-        } else {
+        }
+        else {
             if (!empty($data->id)) {
                 $idList = [$data->id];
-            } else {
+            }
+            else {
                 throw new BadRequest();
             }
         }
+
         return $this->getRecordService()->markAsNotReadByIdList($idList);
     }
 
@@ -145,13 +165,16 @@ class Email extends \Espo\Core\Controllers\Record
     {
         if (!empty($data->ids)) {
             $idList = $data->ids;
-        } else {
+        }
+        else {
             if (!empty($data->id)) {
                 $idList = [$data->id];
-            } else {
+            }
+            else {
                 throw new BadRequest();
             }
         }
+
         return $this->getRecordService()->markAsImportantByIdList($idList);
     }
 
@@ -159,13 +182,16 @@ class Email extends \Espo\Core\Controllers\Record
     {
         if (!empty($data->ids)) {
             $idList = $data->ids;
-        } else {
+        }
+        else {
             if (!empty($data->id)) {
                 $idList = [$data->id];
-            } else {
+            }
+            else {
                 throw new BadRequest();
             }
         }
+
         return $this->getRecordService()->markAsNotImportantByIdList($idList);
     }
 
@@ -173,13 +199,16 @@ class Email extends \Espo\Core\Controllers\Record
     {
         if (!empty($data->ids)) {
             $idList = $data->ids;
-        } else {
+        }
+        else {
             if (!empty($data->id)) {
                 $idList = [$data->id];
-            } else {
+            }
+            else {
                 throw new BadRequest();
             }
         }
+
         return $this->getRecordService()->moveToTrashByIdList($idList);
     }
 
@@ -187,13 +216,16 @@ class Email extends \Espo\Core\Controllers\Record
     {
         if (!empty($data->ids)) {
             $idList = $data->ids;
-        } else {
+        }
+        else {
             if (!empty($data->id)) {
                 $idList = [$data->id];
-            } else {
+            }
+            else {
                 throw new BadRequest();
             }
         }
+
         return $this->getRecordService()->retrieveFromTrashByIdList($idList);
     }
 
@@ -226,10 +258,12 @@ class Email extends \Espo\Core\Controllers\Record
     {
         if (!empty($data->ids)) {
             $idList = $data->ids;
-        } else {
+        }
+        else {
             if (!empty($data->id)) {
                 $idList = [$data->id];
-            } else {
+            }
+            else {
                 throw new BadRequest();
             }
         }
@@ -237,12 +271,15 @@ class Email extends \Espo\Core\Controllers\Record
         if (empty($data->folderId)) {
             throw new BadRequest();
         }
+
         return $this->getRecordService()->moveToFolderByIdList($idList, $data->folderId);
     }
 
     public function getActionGetInsertFieldData($params, $data, $request)
     {
-        if (!$this->getAcl()->checkScope('Email', 'create')) throw new Forbidden();
+        if (!$this->getAcl()->checkScope('Email', 'create')) {
+            throw new Forbidden();
+        }
 
         return $this->getServiceFactory()->create('EmailTemplate')->getInsertFieldData([
             'parentId' => $request->get('parentId'),

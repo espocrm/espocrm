@@ -38,11 +38,13 @@ class Target extends \Espo\Core\Controllers\Record
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         $entity = $this->getRecordService()->convert($data->id);
 
         if (!empty($entity)) {
             return $entity->getValueMap();
         }
+
         throw new Error();
     }
 }

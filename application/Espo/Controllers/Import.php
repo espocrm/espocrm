@@ -92,9 +92,11 @@ class Import extends \Espo\Core\Controllers\Record
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         if (!$request->isPost()) {
             throw new BadRequest();
         }
+
         $this->getService('Import')->revert($data->id);
 
         return true;
@@ -105,9 +107,11 @@ class Import extends \Espo\Core\Controllers\Record
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         if (!$request->isPost()) {
             throw new BadRequest();
         }
+
         $this->getService('Import')->removeDuplicates($data->id);
 
         return true;

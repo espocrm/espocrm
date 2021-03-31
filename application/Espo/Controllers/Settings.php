@@ -46,7 +46,9 @@ class Settings extends \Espo\Core\Controllers\Base
         $data->jsLibs = $this->getMetadata()->get(['app', 'jsLibs']);
 
         unset($data->loginView);
+
         $loginView = $this->getMetadata()->get(['clientDefs', 'App', 'loginView']);
+
         if ($loginView) {
             $data->loginView = $loginView;
         }

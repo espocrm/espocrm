@@ -47,9 +47,13 @@ use Espo\Core\{
 class EntityManager
 {
     protected $user;
+
     protected $dataManager;
+
     protected $config;
+
     protected $entityManagerTool;
+
     protected $configWriter;
 
     public function __construct(
@@ -397,7 +401,7 @@ class EntityManager
         }
 
         $this->entityManagerTool->resetToDefaults($data->scope);
-        
+
         $this->dataManager->clearCache();
 
         return true;

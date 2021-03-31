@@ -31,6 +31,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\ExtensionManager;
+
 class Extension extends \Espo\Core\Controllers\Record
 {
     protected function checkControllerAccess()
@@ -46,7 +48,7 @@ class Extension extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $manager = new ExtensionManager($this->getContainer());
 
         $id = $manager->upload($data);
         $manifest = $manager->getManifest();
@@ -64,13 +66,14 @@ class Extension extends \Espo\Core\Controllers\Record
         if (!$request->isPost()) {
             throw new Forbidden();
         }
+
         if ($this->getConfig()->get('restrictedMode')) {
             if (!$this->getUser()->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
 
-        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $manager = new ExtensionManager($this->getContainer());
 
         $manager->install(get_object_vars($data));
 
@@ -82,14 +85,17 @@ class Extension extends \Espo\Core\Controllers\Record
         if (!$request->isPost()) {
             throw new Forbidden();
         }
+
         if ($this->getConfig()->get('restrictedMode')) {
             if (!$this->getUser()->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
 
-        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $manager = new ExtensionManager($this->getContainer());
+
         $manager->uninstall(get_object_vars($data));
+
         return true;
     }
 
@@ -99,13 +105,17 @@ class Extension extends \Espo\Core\Controllers\Record
         if (!$request->isDelete()) {
             throw BadRequest();
         }
+
         if ($this->getConfig()->get('restrictedMode')) {
             if (!$this->getUser()->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
-        $manager = new \Espo\Core\ExtensionManager($this->getContainer());
+
+        $manager = new ExtensionManager($this->getContainer());
+
         $manager->delete($params);
+
         return true;
     }
 

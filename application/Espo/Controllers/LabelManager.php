@@ -44,7 +44,9 @@ use Espo\{
 class LabelManager
 {
     protected $user;
+
     protected $dataManager;
+
     protected $labelManagerTool;
 
     public function __construct(User $user, DataManager $dataManager, LabelManagerTool $labelManagerTool)

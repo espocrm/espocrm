@@ -43,7 +43,11 @@ class Webhook extends \Espo\Core\Controllers\Record
     public function actionCreate($params, $data, $request, $response = null)
     {
         $result = parent::actionCreate($params, $data, $request, $response);
-        if ($response) $response->setStatus(201);
+
+        if ($response) {
+            $response->setStatus(201);
+        }
+
         return $result;
     }
 }

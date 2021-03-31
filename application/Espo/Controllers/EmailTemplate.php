@@ -37,16 +37,17 @@ class EmailTemplate extends \Espo\Core\Controllers\Record
     {
         $id = $request->get('id');
         $emailAddress = $request->get('emailAddress');
+
         if (empty($id)) {
             throw new Error();
         }
 
-        return $this->getRecordService()->parse($id, array(
+        return $this->getRecordService()->parse($id, [
             'emailAddress' => $request->get('emailAddress'),
             'parentType' => $request->get('parentType'),
             'parentId' => $request->get('parentId'),
             'relatedType' => $request->get('relatedType'),
             'relatedId' => $request->get('relatedId')
-        ), true);
+        ], true);
     }
 }

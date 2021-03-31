@@ -38,11 +38,15 @@ class EmailAddress extends \Espo\Core\Controllers\Record
         if (!$this->getAcl()->checkScope('Email')) {
             throw new Forbidden();
         }
+
         if (!$this->getAcl()->checkScope('Email', 'create')) {
             throw new Forbidden();
         }
+
         $q = $request->get('q');
+
         $maxSize = intval($request->get('maxSize'));
+
         if (empty($maxSize) || $maxSize > 50) {
             $maxSize = $this->getConfig()->get('recordsPerPage', 20);
         }

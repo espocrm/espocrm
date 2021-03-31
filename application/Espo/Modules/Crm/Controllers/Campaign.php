@@ -39,6 +39,7 @@ class Campaign extends \Espo\Core\Controllers\Record
         if (empty($data->campaignId)) {
             throw new BadRequest();
         }
+
         if (empty($data->link)) {
             throw new BadRequest();
         }

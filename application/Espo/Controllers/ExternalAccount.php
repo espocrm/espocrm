@@ -49,8 +49,12 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
         $integrations = $this->getEntityManager()->getRepository('Integration')->find();
 
         $list = [];
+
         foreach ($integrations as $entity) {
-            if ($entity->get('enabled') && $this->getMetadata()->get('integrations.' . $entity->id .'.allowUserAccounts')) {
+            if (
+                $entity->get('enabled') &&
+                $this->getMetadata()->get('integrations.' . $entity->id .'.allowUserAccounts')
+            ) {
 
                 $userAccountAclScope = $this->getMetadata()->get(['integrations', $entity->id, 'userAccountAclScope']);
 
@@ -61,10 +65,11 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
                 }
 
                 $list[] = [
-                    'id' => $entity->id
+                    'id' => $entity->id,
                 ];
             }
         }
+
         return [
             'list' => $list
         ];
@@ -73,6 +78,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
     public function actionGetOAuth2Info($params, $data, $request)
     {
         $id = $request->get('id');
+
         list($integration, $userId) = explode('__', $id);
 
         if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
@@ -80,12 +86,13 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
         }
 
         $entity = $this->getEntityManager()->getEntity('Integration', $integration);
+
         if ($entity) {
-            return array(
+            return [
                 'clientId' => $entity->get('clientId'),
                 'redirectUri' => $this->getConfig()->get('siteUrl') . '?entryPoint=oauthCallback',
                 'isConnected' => $this->getRecordService()->ping($integration, $userId)
-            );
+            ];
         }
     }
 
@@ -118,7 +125,9 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
         }
 
         $entity = $this->getEntityManager()->getEntity('ExternalAccount', $params['id']);
+
         $entity->set($data);
+
         $this->getEntityManager()->saveEntity($entity);
 
         return $entity->toArray();
@@ -140,6 +149,7 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
         }
 
         $service = $this->getRecordService();
+
         return $service->authorizationCode($integration, $userId, $code);
     }
 }

@@ -45,8 +45,13 @@ class UserSecurity extends \Espo\Core\Controllers\Base
     {
         $id = $params['id'] ?? null;
 
-        if (!$id) throw new BadRequest();
-        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) throw new Forbidden();
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) {
+            throw new Forbidden();
+        }
 
         return $this->getService('UserSecurity')->read($id);
     }
@@ -54,10 +59,16 @@ class UserSecurity extends \Espo\Core\Controllers\Base
     public function postActionGenerate2FAData($params, $data)
     {
         $data = $data ?? (object) [];
+
         $id = $data->id;
 
-        if (!$id) throw new BadRequest();
-        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) throw new Forbidden();
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) {
+            throw new Forbidden();
+        }
 
         return $this->getService('UserSecurity')->generate2FAData($id, $data);
     }
@@ -67,8 +78,13 @@ class UserSecurity extends \Espo\Core\Controllers\Base
         $id = $params['id'] ?? null;
         $data = $data ?? (object) [];
 
-        if (!$id) throw new BadRequest();
-        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) throw new Forbidden();
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) {
+            throw new Forbidden();
+        }
 
         return $this->getService('UserSecurity')->update($id, $data);
     }

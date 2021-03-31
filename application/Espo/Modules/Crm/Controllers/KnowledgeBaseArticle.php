@@ -36,6 +36,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         $id = $data->id;
 
         return $this->getRecordService()->getCopiedAttachments($id);
@@ -47,6 +48,7 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
         $where = null;
+
         if (!empty($data->where)) {
             $where = $data->where;
             $where = json_decode(json_encode($where), true);
@@ -62,7 +64,9 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         $where = null;
+
         if (!empty($data->where)) {
             $where = $data->where;
             $where = json_decode(json_encode($where), true);
@@ -78,7 +82,9 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         $where = null;
+
         if (!empty($data->where)) {
             $where = $data->where;
             $where = json_decode(json_encode($where), true);
@@ -94,7 +100,9 @@ class KnowledgeBaseArticle extends \Espo\Core\Controllers\Record
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         $where = null;
+
         if (!empty($data->where)) {
             $where = $data->where;
             $where = json_decode(json_encode($where), true);

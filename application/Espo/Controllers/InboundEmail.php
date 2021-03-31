@@ -56,9 +56,11 @@ class InboundEmail extends \Espo\Core\Controllers\Record
     {
         if (is_null($data->password)) {
             $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $data->id);
+
             if (!$inboundEmail || !$inboundEmail->id) {
                 throw new Error();
             }
+
             $data->password = $this->getContainer()->get('crypt')->decrypt($inboundEmail->get('password'));
         }
 

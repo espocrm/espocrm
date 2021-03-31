@@ -41,6 +41,7 @@ class Stream
     public static $defaultAction = 'list';
 
     protected $serviceFactory;
+
     protected $config;
 
     public function __construct(ServiceFactory $serviceFactory, Config $config)
@@ -56,14 +57,17 @@ class Stream
 
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
+
         $after = $request->get('after');
         $filter = $request->get('filter');
         $skipOwn = $request->get('skipOwn') === 'true';
 
         $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+
         if (empty($maxSize)) {
             $maxSize = $maxSizeLimit;
         }
+
         if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
@@ -94,6 +98,7 @@ class Stream
         $where = $request->get('where');
 
         $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+
         if (empty($maxSize)) {
             $maxSize = $maxSizeLimit;
         }
@@ -111,7 +116,7 @@ class Stream
 
         return (object) [
             'total' => $result->total,
-            'list' => $result->collection->getValueMapList()
+            'list' => $result->collection->getValueMapList(),
         ];
     }
 }

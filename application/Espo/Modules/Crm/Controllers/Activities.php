@@ -60,6 +60,7 @@ class Activities extends \Espo\Core\Controllers\Base
         $service = $this->getService('Activities');
 
         $scopeList = null;
+
         if ($request->get('scopeList') !== null) {
             $scopeList = explode(',', $request->get('scopeList'));
         }
@@ -70,13 +71,16 @@ class Activities extends \Espo\Core\Controllers\Base
 
         if ($teamIdList) {
             $teamIdList = explode(',', $teamIdList);
+
             return $userResultList = $service->getTeamsEventList($teamIdList, $from, $to, $scopeList);
         }
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);
+
             return $service->getUsersEventList($userIdList, $from, $to, $scopeList);
-        } else {
+        }
+        else {
             if (!$userId) {
                 $userId = $this->getUser()->id;
             }
@@ -105,6 +109,7 @@ class Activities extends \Espo\Core\Controllers\Base
         $service = $this->getService('Activities');
 
         $scopeList = null;
+
         if ($request->get('scopeList') !== null) {
             $scopeList = explode(',', $request->get('scopeList'));
         }
@@ -114,9 +119,11 @@ class Activities extends \Espo\Core\Controllers\Base
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);
-        } else {
+        }
+        else {
             $userIdList = [];
         }
+
         if ($userId) {
             $userIdList[] = $userId;
         }
@@ -129,6 +136,7 @@ class Activities extends \Espo\Core\Controllers\Base
         $service = $this->getService('Activities');
 
         $userId = $request->get('userId');
+
         if (!$userId) {
             $userId = $this->getUser()->id;
         }
@@ -141,17 +149,24 @@ class Activities extends \Espo\Core\Controllers\Base
         $futureDays = intval($request->get('futureDays'));
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+
         if (empty($maxSize)) {
             $maxSize = $maxSizeLimit;
         }
+
         if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
             throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
-        return $service->getUpcomingActivities($userId, array(
-            'offset' => $offset,
-            'maxSize' => $maxSize
-        ), $entityTypeList, $futureDays);
+        return $service->getUpcomingActivities(
+            $userId,
+            [
+                'offset' => $offset,
+                'maxSize' => $maxSize
+            ],
+            $entityTypeList,
+            $futureDays
+        );
     }
 
     public function actionPopupNotifications()
@@ -170,6 +185,7 @@ class Activities extends \Espo\Core\Controllers\Base
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         $id = $data->id;
 
         return $this->getService('Activities')->removeReminder($id);
@@ -190,6 +206,7 @@ class Activities extends \Espo\Core\Controllers\Base
         if (empty($params['scope'])) {
             throw new BadRequest();
         }
+
         if (empty($params['id'])) {
             throw new BadRequest();
         }
@@ -204,14 +221,17 @@ class Activities extends \Espo\Core\Controllers\Base
         $where = $request->get('where');
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+
         if (empty($maxSize)) {
             $maxSize = $maxSizeLimit;
         }
+
         if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
             throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
 
         $scope = null;
+
         if (is_array($where) && !empty($where[0]) && $where[0] !== 'false') {
             $scope = $where[0];
         }
@@ -231,10 +251,21 @@ class Activities extends \Espo\Core\Controllers\Base
 
     public function getActionEntityTypeList($params, $data, $request)
     {
-        if (empty($params['scope'])) throw new BadRequest();
-        if (empty($params['id'])) throw new BadRequest();
-        if (empty($params['name'])) throw new BadRequest();
-        if (empty($params['entityType'])) throw new BadRequest();
+        if (empty($params['scope'])) {
+            throw new BadRequest();
+        }
+
+        if (empty($params['id'])) {
+            throw new BadRequest();
+        }
+
+        if (empty($params['name'])) {
+            throw new BadRequest();
+        }
+
+        if (empty($params['entityType'])) {
+            throw new BadRequest();
+        }
 
         $scope = $params['scope'];
         $id = $params['id'];
@@ -243,9 +274,11 @@ class Activities extends \Espo\Core\Controllers\Base
 
         if ($name === 'activities') {
             $isHistory = false;
-        } else  if ($name === 'history') {
+        }
+        else  if ($name === 'history') {
             $isHistory = true;
-        } else {
+        }
+        else {
             throw new BadRequest();
         }
 
@@ -254,9 +287,11 @@ class Activities extends \Espo\Core\Controllers\Base
         ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
 
         $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', 200);
+
         if (empty($params['maxSize'])) {
             $params['maxSize'] = $maxSizeLimit;
         }
+
         if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
             throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
         }
@@ -277,7 +312,9 @@ class Activities extends \Espo\Core\Controllers\Base
         $to = $request->get('to');
         $userIdList = $request->get('userIdList');
 
-        if (!$from || !$to || !$userIdList) throw new BadRequest();
+        if (!$from || !$to || !$userIdList) {
+            throw new BadRequest();
+        }
 
         $userIdList = explode(',', $userIdList);
 

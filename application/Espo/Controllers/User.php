@@ -39,6 +39,7 @@ class User extends \Espo\Core\Controllers\Record
     public function actionAcl($params, $data, $request)
     {
         $userId = $request->get('id');
+
         if (empty($userId)) {
             throw new Error();
         }
@@ -48,6 +49,7 @@ class User extends \Espo\Core\Controllers\Record
         }
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
+
         if (empty($user)) {
             throw new NotFound();
         }
@@ -60,7 +62,9 @@ class User extends \Espo\Core\Controllers\Record
         if (!property_exists($data, 'password') || !property_exists($data, 'currentPassword')) {
             throw new BadRequest();
         }
-        return $this->getService('User')->changePassword($this->getUser()->id, $data->password, true, $data->currentPassword);
+
+        return $this->getService('User')
+            ->changePassword($this->getUser()->id, $data->password, true, $data->currentPassword);
     }
 
     public function postActionChangePasswordByRequest($params, $data, $request)
@@ -80,7 +84,9 @@ class User extends \Espo\Core\Controllers\Record
 
         $userName = $data->userName;
         $emailAddress = $data->emailAddress;
+
         $url = null;
+
         if (!empty($data->url)) {
             $url = $data->url;
         }
@@ -90,27 +96,44 @@ class User extends \Espo\Core\Controllers\Record
 
     public function postActionGenerateNewApiKey($params, $data, $request)
     {
-        if (empty($data->id)) throw new BadRequest();
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
         return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
     }
 
     public function postActionGenerateNewPassword($params, $data, $request)
     {
-        if (empty($data->id)) throw new BadRequest();
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
+
         $this->getRecordService()->generateNewPasswordForUser($data->id);
+
         return true;
     }
 
     public function beforeCreateLink()
     {
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
     }
 
     public function beforeRemoveLink($params, $data, $request)
     {
-        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        if (!$this->getUser()->isAdmin()) {
+            throw new Forbidden();
+        }
     }
 
     protected function fetchListParamsFromRequest(&$params, $request, $data)

@@ -56,12 +56,15 @@ class TargetList extends \Espo\Core\Controllers\Record
 		if (empty($data->id)) {
 			throw new BadRequest();
 		}
+
 		if (empty($data->targetType)) {
 			throw new BadRequest();
 		}
+
 		if (empty($data->targetId)) {
 			throw new BadRequest();
 		}
+
 		$data->id = strval($data->id);
 		$data->targetId = strval($data->targetId);
 
@@ -73,12 +76,15 @@ class TargetList extends \Espo\Core\Controllers\Record
 		if (empty($data->id)) {
 			throw new BadRequest();
 		}
+
 		if (empty($data->targetType)) {
 			throw new BadRequest();
 		}
+
 		if (empty($data->targetId)) {
 			throw new BadRequest();
 		}
+
 		$data->id = strval($data->id);
 		$data->targetId = strval($data->targetId);
 

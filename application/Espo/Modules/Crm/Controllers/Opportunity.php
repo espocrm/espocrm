@@ -37,6 +37,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
     public function actionReportByLeadSource($params, $data, $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
+
         if (!$level || $level == 'no') {
             throw new Forbidden();
         }
@@ -51,6 +52,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
     public function actionReportByStage($params, $data, $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
+
         if (!$level || $level == 'no') {
             throw new Forbidden();
         }
@@ -65,6 +67,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
     public function actionReportSalesByMonth($params, $data, $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
+
         if (!$level || $level == 'no') {
             throw new Forbidden();
         }
@@ -79,6 +82,7 @@ class Opportunity extends \Espo\Core\Controllers\Record
     public function actionReportSalesPipeline($params, $data, $request)
     {
         $level = $this->getAcl()->getLevel('Opportunity', 'read');
+
         if (!$level || $level == 'no') {
             throw new Forbidden();
         }
@@ -89,13 +93,19 @@ class Opportunity extends \Espo\Core\Controllers\Record
         $useLastStage = $request->get('useLastStage') === 'true';
         $teamId = $request->get('teamId') ?? null;
 
-        return $this->getService('Opportunity')->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage, $teamId);
+        return $this->getService('Opportunity')
+            ->reportSalesPipeline($dateFilter, $dateFrom, $dateTo, $useLastStage, $teamId);
     }
 
     public function getActionEmailAddressList($params, $data, $request)
     {
-        if (!$request->get('id')) throw new BadRequest();
-        if (!$this->getAcl()->checkScope($this->name, 'read')) throw new Forbidden();
+        if (!$request->get('id')) {
+            throw new BadRequest();
+        }
+
+        if (!$this->getAcl()->checkScope($this->name, 'read')) {
+            throw new Forbidden();
+        }
 
         return $this->getRecordService()->getEmailAddressList($request->get('id'));
     }

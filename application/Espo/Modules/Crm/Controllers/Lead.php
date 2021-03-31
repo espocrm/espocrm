@@ -38,6 +38,7 @@ class Lead extends \Espo\Core\Controllers\Record
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         if (empty($data->records)) {
             $data->records = (object) [];
         }
@@ -51,6 +52,7 @@ class Lead extends \Espo\Core\Controllers\Record
         if (!empty($entity)) {
             return $entity->toArray();
         }
+
         throw new Error();
     }
 

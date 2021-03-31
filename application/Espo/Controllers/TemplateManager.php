@@ -39,11 +39,16 @@ use Espo\Core\ApplicationState;
 class TemplateManager
 {
     protected $metadata;
+
     protected $templateFileManager;
+
     protected $applicationState;
 
-    public function __construct(Metadata $metadata, TemplateFileManager $templateFileManager, ApplicationState $applicationState)
-    {
+    public function __construct(
+        Metadata $metadata,
+        TemplateFileManager $templateFileManager,
+        ApplicationState $applicationState
+    ) {
         $this->metadata = $metadata;
         $this->templateFileManager = $templateFileManager;
         $this->applicationState = $applicationState;
@@ -56,15 +61,21 @@ class TemplateManager
     public function getActionGetTemplate($params, $data, $request)
     {
         $name = $request->get('name');
-        if (empty($name)) throw new BadRequest();
+
+        if (empty($name)) {
+            throw new BadRequest();
+        }
+
         $scope = $request->get('scope');
         $module = null;
+
         $module = $this->metadata->get(['app', 'templates', $name, 'module']);
         $hasSubject = !$this->metadata->get(['app', 'templates', $name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;
 
         $returnData = (object) [];
+
         $returnData->body = $templateFileManager->getTemplate($name, 'body', $scope, $module);
 
         if ($hasSubject) {
@@ -77,9 +88,11 @@ class TemplateManager
     public function postActionSaveTemplate($params, $data)
     {
         $scope = null;
+
         if (empty($data->name)) {
             throw new BadRequest();
         }
+
         if (!empty($data->scope)) {
             $scope = $data->scope;
         }
@@ -100,15 +113,19 @@ class TemplateManager
     public function postActionResetTemplate($params, $data)
     {
         $scope = null;
+
         if (empty($data->name)) {
             throw new BadRequest();
         }
+
         if (!empty($data->scope)) {
             $scope = $data->scope;
         }
 
         $module = null;
+
         $module = $this->metadata->get(['app', 'templates', $data->name, 'module']);
+
         $hasSubject = !$this->metadata->get(['app', 'templates', $data->name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;
@@ -120,6 +137,7 @@ class TemplateManager
         $templateFileManager->resetTemplate($data->name, 'body', $scope);
 
         $returnData = (object) [];
+
         $returnData->body = $templateFileManager->getTemplate($data->name, 'body', $scope, $module);
 
         if ($hasSubject) {

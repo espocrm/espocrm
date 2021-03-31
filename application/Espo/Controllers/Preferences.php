@@ -63,12 +63,15 @@ class Preferences extends \Espo\Core\Controllers\Base
     public function actionDelete($params, $data, $request)
     {
         $userId = $params['id'];
+
         if (empty($userId)) {
             throw new BadRequest();
         }
+
         if (!$request->isDelete()) {
             throw new BadRequest();
         }
+
         $this->handleUserAccess($userId);
 
         return $this->getEntityManager()->getRepository('Preferences')->resetToDefaults($userId);
@@ -82,6 +85,7 @@ class Preferences extends \Espo\Core\Controllers\Base
     public function actionUpdate($params, $data, $request)
     {
         $userId = $params['id'];
+
         $this->handleUserAccess($userId);
 
         if (!$request->isPost() && !$request->isPatch() && !$request->isPut()) {
@@ -106,6 +110,7 @@ class Preferences extends \Espo\Core\Controllers\Base
 
         if ($entity && $user) {
             $entity->set($data);
+
             $this->getEntityManager()->saveEntity($entity);
 
             $entity->set('smtpEmailAddress', $user->get('emailAddress'));
@@ -115,12 +120,14 @@ class Preferences extends \Espo\Core\Controllers\Base
 
             return $entity->getValueMap();
         }
+
         throw new Error();
     }
 
     public function actionRead($params)
     {
         $userId = $params['id'];
+
         $this->handleUserAccess($userId);
 
         $entity = $this->getEntityManager()->getEntity('Preferences', $userId);
@@ -145,7 +152,9 @@ class Preferences extends \Espo\Core\Controllers\Base
 
     public function postActionResetDashboard($params, $data)
     {
-        if (empty($data->id)) throw new BadRequest();
+        if (empty($data->id)) {
+            throw new BadRequest();
+        }
 
         $userId = $data->id;
 
@@ -153,10 +162,18 @@ class Preferences extends \Espo\Core\Controllers\Base
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
         $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
-        if (!$user)  throw new NotFound();
-        if (!$preferences)  throw new NotFound();
 
-        if ($user->isPortal()) throw new Forbidden();
+        if (!$user) {
+            throw new NotFound();
+        }
+
+        if (!$preferences) {
+            throw new NotFound();
+        }
+
+        if ($user->isPortal()) {
+            throw new Forbidden();
+        }
 
         if ($this->getAcl()->getLevel('Preferences', 'edit') === 'no') {
             throw new Forbidden();
@@ -173,14 +190,14 @@ class Preferences extends \Espo\Core\Controllers\Base
 
         $preferences->set([
             'dashboardLayout' => $dashboardLayout,
-            'dashletsOptions' => $dashletsOptions
+            'dashletsOptions' => $dashletsOptions,
         ]);
 
         $this->getEntityManager()->saveEntity($preferences);
 
         return (object) [
             'dashboardLayout' => $preferences->get('dashboardLayout'),
-            'dashletsOptions' => $preferences->get('dashletsOptions')
+            'dashletsOptions' => $preferences->get('dashletsOptions'),
         ];
     }
 }
