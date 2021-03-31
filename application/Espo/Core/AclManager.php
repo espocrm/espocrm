@@ -230,12 +230,10 @@ class AclManager
             $action = Table::ACTION_READ;
         }
 
-        if ($action) {
-            $methodName = 'checkEntity' . ucfirst($action);
+        $methodName = 'checkEntity' . ucfirst($action);
 
-            if (method_exists($impl, $methodName)) {
-                return (bool) $impl->$methodName($user, $entity, $data);
-            }
+        if (method_exists($impl, $methodName)) {
+            return (bool) $impl->$methodName($user, $entity, $data);
         }
 
         return (bool) $impl->checkEntity($user, $entity, $data, $action);
