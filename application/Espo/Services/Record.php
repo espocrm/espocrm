@@ -1975,7 +1975,7 @@ class Record implements Crud,
             throw new Forbidden("No 'read' access to user.");
         }
 
-        if ($user->isPortal() && !$this->getAcl()->get('portal')) {
+        if ($user->isPortal() && $this->getAcl()->get('portal') !== 'yes') {
             throw new Forbidden("No 'portal' permission.");
         }
 
@@ -2020,7 +2020,7 @@ class Record implements Crud,
             throw new Forbidden("No 'read' access to user.");
         }
 
-        if ($user->isPortal() && !$this->getAcl()->get('portal')) {
+        if ($user->isPortal() && $this->getAcl()->get('portal') !== 'yes') {
             throw new Forbidden("No 'portal' permission.");
         }
 
