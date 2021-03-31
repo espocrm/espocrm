@@ -35,13 +35,10 @@ class AfterUpgrade
     {
         $this->container = $container;
 
-        $this->updateConfig();
-
-        $this->removeUnnecessaryFiles();
-        $this->removeUnnecessaryDirectories();
+        $this->fixTimeFormat();
     }
 
-    protected function updateConfig()
+    protected function fixTimeFormat()
     {
         $config = $this->container->get('config');
 
@@ -49,53 +46,7 @@ class AfterUpgrade
 
         if ($actualTimeFormat === 'hh:mm') {
             $config->set('timeFormat', 'HH:mm');
-        }
-
-        $config->set('pdfEngine', 'Tcpdf');
-
-        $config->save();
-    }
-
-    protected function removeUnnecessaryFiles()
-    {
-        $fileList = [
-            'vendor/spatie/async/.git/objects/pack/pack-14ab89d3ff365322e20cfd44252880928aaa4ed6.idx',
-            'vendor/spatie/async/.git/objects/pack/pack-14ab89d3ff365322e20cfd44252880928aaa4ed6.pack',
-            'vendor/zordius/lightncandy/.git/objects/pack/pack-8b009a4f84cb95d704fb194c5fee79c724dee033.pack',
-            'vendor/zordius/lightncandy/.git/objects/pack/pack-8b009a4f84cb95d704fb194c5fee79c724dee033.idx',
-        ];
-
-        foreach ($fileList as $file) {
-            if (!file_exists($file)) {
-                continue;
-            }
-
-            $result = unlink($file);
-
-            if (!$result) {
-                $this->container->get('fileManager')->getPermissionUtils()->chmod($file, [
-                    'file' => '0664',
-                    'dir' => '0775',
-                ]);
-
-                unlink($file);
-            }
-        }
-    }
-
-    protected function removeUnnecessaryDirectories()
-    {
-        $directoryList = [
-            'vendor/spatie/async/.git',
-            'vendor/zordius/lightncandy/.git',
-        ];
-
-        foreach ($directoryList as $directory) {
-            if (!file_exists($directory)) {
-                continue;
-            }
-
-            $this->container->get('fileManager')->removeInDir($directory, true);
+            $config->save();
         }
     }
 }
