@@ -852,7 +852,7 @@ class Table
         return $data;
     }
 
-    private function mergeFieldTableList(array $tableList)
+    private function mergeFieldTableList(array $tableList) : StdClass
     {
         $data = (object) [];
 
