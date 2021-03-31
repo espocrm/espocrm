@@ -29,8 +29,14 @@
 
 namespace Espo\Core;
 
+use Espo\Core\{
+    Acl\Table,
+};
+
 use Espo\ORM\Entity;
 use Espo\Entities\User;
+
+use StdClass;
 
 /**
  * A wrapper for AclManager. To check access for a current user.
@@ -57,7 +63,7 @@ class Acl
         return $this->user;
     }
 
-    public function getMap() : \StdClass
+    public function getMap() : StdClass
     {
         return $this->getAclManager()->getMap($this->getUser());
     }
@@ -121,7 +127,7 @@ class Acl
     /**
      * Check access to a specific entity (record).
      */
-    public function checkEntity(Entity $entity, string $action = 'read') : bool
+    public function checkEntity(Entity $entity, string $action = Table::ACTION_READ) : bool
     {
         return $this->getAclManager()->checkEntity($this->getUser(), $entity, $action);
     }
@@ -154,7 +160,7 @@ class Acl
      * Get attributes forbidden for a user.
      */
     public function getScopeForbiddenAttributeList(
-        string $scope, string $action = 'read', string $thresholdLevel = 'no'
+        string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
     ) : array {
 
         return $this->getAclManager()
@@ -165,7 +171,7 @@ class Acl
      * Get fields forbidden for a user.
      */
     public function getScopeForbiddenFieldList(
-        string $scope, string $action = 'read', string $thresholdLevel = 'no'
+        string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
     ) : array {
 
         return $this->getAclManager()
@@ -176,7 +182,7 @@ class Acl
      * Get links forbidden for a user.
      */
     public function getScopeForbiddenLinkList(
-        string $scope, string $action = 'read', string $thresholdLevel = 'no'
+        string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
     ) : array {
 
         return $this->getAclManager()->getScopeForbiddenLinkList($this->getUser(), $scope, $action, $thresholdLevel);

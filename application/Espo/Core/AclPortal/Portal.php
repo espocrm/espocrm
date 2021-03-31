@@ -43,25 +43,33 @@ trait Portal
         if (is_null($data)) {
             return false;
         }
+
         if ($data === false) {
             return false;
         }
+
         if ($data === true) {
             return true;
         }
+
         if (is_string($data)) {
             return true;
         }
 
         $isOwner = null;
+
         if (isset($entityAccessData['isOwner'])) {
             $isOwner = $entityAccessData['isOwner'];
         }
+
         $inAccount = null;
+
         if (isset($entityAccessData['inAccount'])) {
             $inAccount = $entityAccessData['inAccount'];
         }
+
         $isOwnContact = null;
+
         if (isset($entityAccessData['isOwnContact'])) {
             $isOwnContact = $entityAccessData['isOwnContact'];
         }
@@ -76,48 +84,53 @@ trait Portal
 
         $value = $data->$action;
 
-        if ($value === 'all' || $value === 'yes' || $value === true) {
+        if ($value === Table::LEVEL_ALL || $value === Table::LEVEL_YES || $value === true) {
             return true;
         }
 
-        if (!$value || $value === 'no') {
+        if (!$value || $value === Table::LEVEL_NO) {
             return false;
         }
 
         if (is_null($isOwner)) {
             if ($entity) {
                 $isOwner = $this->checkIsOwner($user, $entity);
-            } else {
+            }
+            else {
                 return true;
             }
         }
 
         if ($isOwner) {
-            if ($value === 'own' || $value === 'account' || $value === 'contact') {
+            if ($value === Table::LEVEL_OWN || $value === Table::LEVEL_ACCOUNT || $value === Table::LEVEL_CONTACT) {
                 return true;
             }
         }
 
-        if ($value === 'account') {
+        if ($value === Table::LEVEL_ACCOUNT) {
             if (is_null($inAccount) && $entity) {
                 $inAccount = $this->checkInAccount($user, $entity);
             }
+
             if ($inAccount) {
                 return true;
-            } else {
+            }
+            else {
                 if (is_null($isOwnContact) && $entity) {
                     $isOwnContact = $this->checkIsOwnContact($user, $entity);
                 }
+
                 if ($isOwnContact) {
                     return true;
                 }
             }
         }
 
-        if ($value === 'contact') {
+        if ($value === Table::LEVEL_CONTACT) {
             if (is_null($isOwnContact) && $entity) {
                 $isOwnContact = $this->checkIsOwnContact($user, $entity);
             }
+
             if ($isOwnContact) {
                 return true;
             }
@@ -131,7 +144,8 @@ trait Portal
         if (empty($data) || !is_object($data) || !isset($data->read)) {
             return false;
         }
-        return $data->read === 'account';
+
+        return $data->read === Table::LEVEL_ACCOUNT;
     }
 
     public function checkReadOnlyContact(User $user, $data)
@@ -139,46 +153,51 @@ trait Portal
         if (empty($data) || !is_object($data) || !isset($data->read)) {
             return false;
         }
-        return $data->read === 'contact';
+
+        return $data->read === Table::LEVEL_CONTACT;
     }
 
     public function checkIsOwner(User $user, Entity $entity)
     {
         if ($entity->hasAttribute('createdById')) {
-            if ($entity->has('createdById')) {
-                if ($user->id === $entity->get('createdById')) {
-                    return true;
-                }
+            if ($entity->has('createdById') && $user->id === $entity->get('createdById')) {
+                return true;
             }
         }
+
         return false;
     }
 
     public function checkInAccount(User $user, Entity $entity)
     {
         $accountIdList = $user->getLinkMultipleIdList('accounts');
-        if (count($accountIdList)) {
-            if ($entity->hasAttribute('accountId') && $entity->getRelationParam('account', 'entity') === 'Account') {
-                if (in_array($entity->get('accountId'), $accountIdList)) {
+
+        if (!count($accountIdList)) {
+            return false;
+        }
+
+        if ($entity->hasAttribute('accountId') && $entity->getRelationParam('account', 'entity') === 'Account') {
+            if (in_array($entity->get('accountId'), $accountIdList)) {
+                return true;
+            }
+        }
+
+        if ($entity->hasRelation('accounts') && $entity->getRelationParam('accounts', 'entity') === 'Account') {
+            $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
+
+            foreach ($accountIdList as $accountId) {
+                if ($repository->isRelated($entity, 'accounts', $accountId)) {
                     return true;
                 }
             }
+        }
 
-            if ($entity->hasRelation('accounts') && $entity->getRelationParam('accounts', 'entity') === 'Account') {
-                $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
-                foreach ($accountIdList as $accountId) {
-                    if ($repository->isRelated($entity, 'accounts', $accountId)) {
-                        return true;
-                    }
-                }
-            }
-
-            if ($entity->hasAttribute('parentId') && $entity->hasRelation('parent')) {
-                if ($entity->get('parentType') === 'Account') {
-                    if (in_array($entity->get('parentId'), $accountIdList)) {
-                        return true;
-                    }
-                }
+        if ($entity->hasAttribute('parentId') && $entity->hasRelation('parent')) {
+            if (
+                $entity->get('parentType') === 'Account' &&
+                in_array($entity->get('parentId'), $accountIdList)
+            ) {
+                return true;
             }
         }
 
@@ -188,26 +207,28 @@ trait Portal
     public function checkIsOwnContact(User $user, Entity $entity)
     {
         $contactId = $user->get('contactId');
-        if ($contactId) {
-            if ($entity->hasAttribute('contactId') && $entity->getRelationParam('contact', 'entity') === 'Contact') {
-                if ($entity->get('contactId') === $contactId) {
-                    return true;
-                }
-            }
 
-            if ($entity->hasRelation('contacts') && $entity->getRelationParam('contacts', 'entity') === 'Contact') {
-                $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
-                if ($repository->isRelated($entity, 'contacts', $contactId)) {
-                    return true;
-                }
-            }
+        if (!$contactId) {
+            return false;
+        }
 
-            if ($entity->hasAttribute('parentId') && $entity->hasRelation('parent')) {
-                if ($entity->get('parentType') === 'Contact') {
-                    if ($entity->get('parentId') === $contactId) {
-                        return true;
-                    }
-                }
+        if ($entity->hasAttribute('contactId') && $entity->getRelationParam('contact', 'entity') === 'Contact') {
+            if ($entity->get('contactId') === $contactId) {
+                return true;
+            }
+        }
+
+        if ($entity->hasRelation('contacts') && $entity->getRelationParam('contacts', 'entity') === 'Contact') {
+            $repository = $this->getEntityManager()->getRepository($entity->getEntityType());
+
+            if ($repository->isRelated($entity, 'contacts', $contactId)) {
+                return true;
+            }
+        }
+
+        if ($entity->hasAttribute('parentId') && $entity->hasRelation('parent')) {
+            if ($entity->get('parentType') === 'Contact' && $entity->get('parentId') === $contactId) {
+                return true;
             }
         }
 

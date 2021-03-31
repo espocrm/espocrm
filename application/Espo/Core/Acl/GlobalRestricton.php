@@ -43,6 +43,16 @@ use StdClass;
  */
 class GlobalRestricton
 {
+    public const TYPE_FORBIDDEN = 'forbidden';
+
+    public const TYPE_INTERNAL = 'internal';
+
+    public const TYPE_ONLY_ADMIN = 'onlyAdmin';
+
+    public const TYPE_READ_ONLY = 'readOnly';
+
+    public const TYPE_NON_ADMIN_READ_ONLY = 'nonAdminReadOnly';
+
     protected $fieldTypeList = [
         'forbidden', // totally forbidden
         'internal', // reading forbidden, writing allowed
@@ -64,8 +74,11 @@ class GlobalRestricton
     protected $cacheKey = 'entityAcl';
 
     private $metadata;
+
     private $dataCache;
+
     private $fieldUtil;
+
     private $log;
 
     public function __construct(
@@ -84,7 +97,7 @@ class GlobalRestricton
 
                 $isFromCache = true;
 
-                if (! $this->data instanceof StdClass) {
+                if (!$this->data instanceof StdClass) {
                     $this->log->error("ACL GlobalRestricton: Bad data fetched from cache.");
 
                     $this->data = null;

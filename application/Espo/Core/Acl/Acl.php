@@ -33,13 +33,15 @@ use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
+    Acl\Table,
     ORM\EntityManager,
     AclManager,
     Utils\Config,
+    Utils\DateTime as DateTimeUtil,
 };
 
 /**
- * An implementation for access checking for entities. Can be overriden in `Acl` namespece.
+ * An implementation for access checking for entities. Can be overridden in `Acl` namespace.
  */
 class Acl implements ScopeAcl, EntityAcl
 {
@@ -50,7 +52,9 @@ class Acl implements ScopeAcl, EntityAcl
     protected $allowDeleteCreatedThresholdPeriod = '24 hours';
 
     protected $entityManager;
+
     protected $aclManager;
+
     protected $config;
 
     public function __construct(string $scope, EntityManager $entityManager, AclManager $aclManager, Config $config)
@@ -82,7 +86,8 @@ class Acl implements ScopeAcl, EntityAcl
         if (empty($data) || !is_object($data) || !isset($data->read)) {
             return false;
         }
-        return $data->read === 'team';
+
+        return $data->read === Table::LEVEL_TEAM;
     }
 
     public function checkReadNo(User $user, $data)
@@ -90,7 +95,8 @@ class Acl implements ScopeAcl, EntityAcl
         if (empty($data) || !is_object($data) || !isset($data->read)) {
             return false;
         }
-        return $data->read === 'no';
+
+        return $data->read === Table::LEVEL_NO;
     }
 
     public function checkReadOnlyOwn(User $user, $data)
@@ -98,7 +104,8 @@ class Acl implements ScopeAcl, EntityAcl
         if (empty($data) || !is_object($data) || !isset($data->read)) {
             return false;
         }
-        return $data->read === 'own';
+
+        return $data->read === Table::LEVEL_OWN;
     }
 
     public function checkEntity(User $user, Entity $entity, $data, $action)
@@ -106,6 +113,7 @@ class Acl implements ScopeAcl, EntityAcl
         if ($user->isAdmin()) {
             return true;
         }
+
         return $this->checkScope($user, $data, $action, $entity);
     }
 
@@ -118,21 +126,27 @@ class Acl implements ScopeAcl, EntityAcl
         if (is_null($data)) {
             return false;
         }
+
         if ($data === false) {
             return false;
         }
+
         if ($data === true) {
             return true;
         }
+
         if (is_string($data)) {
             return true;
         }
 
         $isOwner = null;
+
         if (isset($entityAccessData['isOwner'])) {
             $isOwner = $entityAccessData['isOwner'];
         }
+
         $inTeam = null;
+
         if (isset($entityAccessData['inTeam'])) {
             $inTeam = $entityAccessData['inTeam'];
         }
@@ -147,36 +161,39 @@ class Acl implements ScopeAcl, EntityAcl
 
         $value = $data->$action;
 
-        if ($value === 'all' || $value === 'yes' || $value === true) {
+        if ($value === Table::LEVEL_ALL || $value === Table::LEVEL_YES || $value === true) {
             return true;
         }
 
-        if (!$value || $value === 'no') {
+        if (!$value || $value === Table::LEVEL_NO) {
             return false;
         }
 
         if (is_null($isOwner)) {
             if ($entity) {
                 $isOwner = $this->checkIsOwner($user, $entity);
-            } else {
+            }
+            else {
                 return true;
             }
         }
 
         if ($isOwner) {
-            if ($value === 'own' || $value === 'team') {
+            if ($value === Table::LEVEL_OWN || $value === Table::LEVEL_TEAM) {
                 return true;
             }
         }
+
         if (is_null($inTeam) && $entity) {
             $inTeam = $this->checkInTeam($user, $entity);
         }
 
         if ($inTeam) {
-            if ($value === 'team') {
+            if ($value === Table::LEVEL_TEAM) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -188,7 +205,8 @@ class Acl implements ScopeAcl, EntityAcl
                     return true;
                 }
             }
-        } else if ($entity->hasAttribute('createdById')) {
+        }
+        else if ($entity->hasAttribute('createdById')) {
             if ($entity->has('createdById')) {
                 if ($user->id === $entity->get('createdById')) {
                     return true;
@@ -224,6 +242,7 @@ class Acl implements ScopeAcl, EntityAcl
                 return true;
             }
         }
+
         return false;
     }
 
@@ -233,46 +252,60 @@ class Acl implements ScopeAcl, EntityAcl
             return true;
         }
 
-        if ($this->checkEntity($user, $entity, $data, 'delete')) {
+        if ($this->checkEntity($user, $entity, $data, Table::ACTION_DELETE)) {
             return true;
         }
 
-        if (is_object($data)) {
-            if ($data->edit !== 'no' || $data->create !== 'no') {
-                if (
-                    $this->config->get('aclAllowDeleteCreated')
-                    &&
-                    $entity->has('createdById') && $entity->get('createdById') == $user->id
-                ) {
-                    $isDeletedAllowed = false;
-                    if (!$entity->has('assignedUserId')) {
-                        $isDeletedAllowed = true;
-                    } else {
-                        if (!$entity->get('assignedUserId')) {
-                            $isDeletedAllowed = true;
-                        } else if ($entity->get('assignedUserId') == $entity->get('createdById')) {
-                            $isDeletedAllowed = true;
-                        }
-                    }
+        if (!is_object($data)) {
+            return false;
+        }
 
-                    if ($isDeletedAllowed) {
-                        $createdAt = $entity->get('createdAt');
-                        if ($createdAt) {
-                            $deleteThresholdPeriod = $this->config->get(
-                                'aclAllowDeleteCreatedThresholdPeriod',
-                                $this->allowDeleteCreatedThresholdPeriod
-                            );
-                            if (\Espo\Core\Utils\DateTime::isAfterThreshold($createdAt, $deleteThresholdPeriod)) {
-                                return false;
-                            }
-                        }
-                        return true;
-                    }
-                }
+        if ($data->edit === Table::LEVEL_NO && $data->create === Table::LEVEL_NO) {
+            return false;
+        }
+
+        if (
+            !$this->config->get('aclAllowDeleteCreated') ||
+            !$entity->has('createdById') ||
+            !$entity->get('createdById') !== $user->getId()
+        ) {
+            return false;
+        }
+
+        $isDeletedAllowed = false;
+
+        if (!$entity->has('assignedUserId')) {
+            $isDeletedAllowed = true;
+        }
+        else {
+            if (!$entity->get('assignedUserId')) {
+                $isDeletedAllowed = true;
+            }
+            else if ($entity->get('assignedUserId') === $entity->get('createdById')) {
+                $isDeletedAllowed = true;
             }
         }
 
-        return false;
+        if (!$isDeletedAllowed) {
+            return false;
+        }
+
+        $createdAt = $entity->get('createdAt');
+
+        if (!$createdAt) {
+            return true;
+        }
+
+        $deleteThresholdPeriod = $this->config->get(
+            'aclAllowDeleteCreatedThresholdPeriod',
+            $this->allowDeleteCreatedThresholdPeriod
+        );
+
+        if (DateTimeUtil::isAfterThreshold($createdAt, $deleteThresholdPeriod)) {
+            return false;
+        }
+
+        return true;
     }
 
     public function getOwnerUserIdAttribute(Entity $entity)

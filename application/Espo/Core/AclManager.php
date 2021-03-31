@@ -40,8 +40,9 @@ use Espo\Core\{
     Acl\Acl as BaseAcl,
     Acl\ScopeAcl,
     Acl\GlobalRestrictonFactory,
+    Acl\GlobalRestricton,
     Acl as UserAclWrapper,
-    Acl\Table as AclTable,
+    Acl\Table as Table,
 };
 
 use StdClass;
@@ -55,7 +56,7 @@ class AclManager
 
     private $tableHashMap = [];
 
-    protected $tableClassName = AclTable::class;
+    protected $tableClassName = Table::class;
 
     protected $userAclClassName = UserAclWrapper::class;
 
@@ -205,7 +206,7 @@ class AclManager
         $entity = $subject;
 
         if ($entity instanceof Entity) {
-            $action = $action ?? 'read';
+            $action = $action ?? Table::ACTION_READ;
 
             return $this->checkEntity($user, $entity, $action);
         }
@@ -216,7 +217,7 @@ class AclManager
     /**
      * Check access to a specific entity (record).
      */
-    public function checkEntity(User $user, Entity $entity, string $action = 'read') : bool
+    public function checkEntity(User $user, Entity $entity, string $action = Table::ACTION_READ) : bool
     {
         $scope = $entity->getEntityType();
 
@@ -225,7 +226,7 @@ class AclManager
         $impl = $this->getImplementation($scope);
 
         if (!$action) {
-            $action = 'read';
+            $action = Table::ACTION_READ;
         }
 
         if ($action) {
@@ -270,55 +271,64 @@ class AclManager
      */
     public function checkUser(User $user, string $permission, User $target) : bool
     {
-        if ($user->isAdmin()) {
+        if ($this->get($user, $permission) === Table::LEVEL_ALL) {
             return true;
         }
 
-        if ($this->get($user, $permission) === 'no') {
-            if ($target->id !== $user->id) {
-                return false;
+        if ($this->get($user, $permission) === Table::LEVEL_NO) {
+            if ($target->id === $user->id) {
+                return true;
             }
-        } else if ($this->get($user, $permission) === 'team') {
-            if ($target->id != $user->id) {
-                $teamIdList1 = $user->getTeamIdList();
-                $teamIdList2 = $target->getTeamIdList();
 
-                $inTeam = false;
-
-                foreach ($teamIdList1 as $id) {
-                    if (in_array($id, $teamIdList2)) {
-                        $inTeam = true;
-
-                        break;
-                    }
-                }
-
-                if (!$inTeam) {
-                    return false;
-                }
-            }
+            return false;
         }
 
-        return true;
+        if ($this->get($user, $permission) === Table::LEVEL_TEAM) {
+            if ($target->id === $user->id) {
+                return true;
+            }
+
+            $targetTeamIdList = $target->getTeamIdList();
+
+            $inTeam = false;
+
+            foreach ($user->getTeamIdList() as $id) {
+                if (in_array($id, $targetTeamIdList)) {
+                    $inTeam = true;
+
+                    break;
+                }
+            }
+
+            if ($inTeam) {
+                return true;
+            }
+
+            return false;
+        }
+
+        return false;
     }
 
-    protected function getGlobalRestrictionTypeList(User $user, string $action = 'read') : array
+    protected function getGlobalRestrictionTypeList(User $user, string $action = Table::ACTION_READ) : array
     {
-        $typeList = ['forbidden'];
+        $typeList = [
+            GlobalRestricton::TYPE_FORBIDDEN,
+        ];
 
-        if ($action === 'read') {
-            $typeList[] = 'internal';
+        if ($action === Table::ACTION_READ) {
+            $typeList[] = GlobalRestricton::TYPE_INTERNAL;
         }
 
         if (!$user->isAdmin()) {
-            $typeList[] = 'onlyAdmin';
+            $typeList[] = GlobalRestricton::TYPE_ONLY_ADMIN;
         }
 
-        if ($action === 'edit') {
-            $typeList[] = 'readOnly';
+        if ($action === Table::ACTION_EDIT) {
+            $typeList[] = GlobalRestricton::TYPE_READ_ONLY;
 
             if (!$user->isAdmin()) {
-                $typeList[] = 'nonAdminReadOnly';
+                $typeList[] = GlobalRestricton::TYPE_NON_ADMIN_READ_ONLY;
             }
         }
 
@@ -329,15 +339,16 @@ class AclManager
      * Get attributes forbidden for a user.
      */
     public function getScopeForbiddenAttributeList(
-        User $user, string $scope, string $action = 'read', string $thresholdLevel = 'no'
+        User $user, string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
     ) : array {
+
         $list = [];
 
         if (!$user->isAdmin()) {
             $list = $this->getTable($user)->getScopeForbiddenAttributeList($scope, $action, $thresholdLevel);
         }
 
-        if ($thresholdLevel === 'no') {
+        if ($thresholdLevel === Table::LEVEL_NO) {
             $list = array_merge(
                 $list,
                 $this->getScopeRestrictedAttributeList($scope, $this->getGlobalRestrictionTypeList($user, $action))
@@ -353,15 +364,16 @@ class AclManager
      * Get fields forbidden for a user.
      */
     public function getScopeForbiddenFieldList(
-        User $user, string $scope, string $action = 'read', string $thresholdLevel = 'no'
+        User $user, string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
     ) : array {
+
         $list = [];
 
         if (!$user->isAdmin()) {
             $list = $this->getTable($user)->getScopeForbiddenFieldList($scope, $action, $thresholdLevel);
         }
 
-        if ($thresholdLevel === 'no') {
+        if ($thresholdLevel === Table::LEVEL_NO) {
             $list = array_merge(
                 $list,
                 $this->getScopeRestrictedFieldList($scope, $this->getGlobalRestrictionTypeList($user, $action))
@@ -377,11 +389,12 @@ class AclManager
      * Get links forbidden for a user.
      */
     public function getScopeForbiddenLinkList(
-        User $user, string $scope, string $action = 'read', string $thresholdLevel = 'no'
+        User $user, string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
     ) : array {
+
         $list = [];
 
-        if ($thresholdLevel === 'no') {
+        if ($thresholdLevel === Table::LEVEL_NO) {
             $list = array_merge(
                 $list,
                 $this->getScopeRestrictedLinkList($scope, $this->getGlobalRestrictionTypeList($user, $action))
@@ -412,15 +425,15 @@ class AclManager
             return true;
         }
 
-        if ($permission === 'no') {
+        if ($permission === Table::LEVEL_NO) {
             return false;
         }
 
-        if ($permission === 'yes') {
+        if ($permission === Table::LEVEL_YES) {
             return true;
         }
 
-        if ($permission === 'team') {
+        if ($permission === Table::LEVEL_TEAM) {
             $teamIdList = $user->getLinkMultipleIdList('teams');
 
             if (!$this->entityManager->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
@@ -456,17 +469,16 @@ class AclManager
     {
         if (is_array($type)) {
             $typeList = $type;
+
             $list = [];
 
             foreach ($typeList as $type) {
                 $list = array_merge($list, $this->globalRestricton->getScopeRestrictedFieldList($scope, $type));
             }
 
-            $list = array_values($list);
-
-            return $list;
+            return array_values($list);
         }
-        
+
         return $this->globalRestricton->getScopeRestrictedFieldList($scope, $type);
     }
 
@@ -474,15 +486,14 @@ class AclManager
     {
         if (is_array($type)) {
             $typeList = $type;
+
             $list = [];
 
             foreach ($typeList as $type) {
                 $list = array_merge($list, $this->globalRestricton->getScopeRestrictedAttributeList($scope, $type));
             }
 
-            $list = array_values($list);
-
-            return $list;
+            return array_values($list);
         }
 
         return $this->globalRestricton->getScopeRestrictedAttributeList($scope, $type);
@@ -492,15 +503,14 @@ class AclManager
     {
         if (is_array($type)) {
             $typeList = $type;
+
             $list = [];
 
             foreach ($typeList as $type) {
                 $list = array_merge($list, $this->globalRestricton->getScopeRestrictedLinkList($scope, $type));
             }
 
-            $list = array_values($list);
-
-            return $list;
+            return array_values($list);
         }
 
         return $this->globalRestricton->getScopeRestrictedLinkList($scope, $type);

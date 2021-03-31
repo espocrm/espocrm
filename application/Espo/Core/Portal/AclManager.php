@@ -36,7 +36,7 @@ use Espo\Entities\Portal;
 
 use Espo\Core\{
     Exceptions\Error,
-    AclPortal\Table as AclPortalTable,
+    AclPortal\Table as Table,
     AclPortal\Acl as BasePortalAcl,
     AclPortal\PortalScopeAcl,
     Acl\ScopeAcl,
@@ -44,10 +44,11 @@ use Espo\Core\{
     AclManager as BaseAclManager,
 };
 
+use StdClass;
 
 class AclManager extends BaseAclManager
 {
-    protected $tableClassName = AclPortalTable::class;
+    protected $tableClassName = Table::class;
 
     private $mainManager = null;
 
@@ -107,6 +108,7 @@ class AclManager extends BaseAclManager
     protected function getTable(User $user)
     {
         $key = $user->id;
+
         if (empty($key)) {
             $key = spl_object_hash($user);
         }
@@ -126,7 +128,9 @@ class AclManager extends BaseAclManager
         if ($user->isAdmin()) {
             return false;
         }
+
         $data = $this->getTable($user)->getScopeData($scope);
+
         return $this->getImplementation($scope)->checkReadOnlyAccount($user, $data);
     }
 
@@ -135,7 +139,9 @@ class AclManager extends BaseAclManager
         if ($user->isAdmin()) {
             return false;
         }
+
         $data = $this->getTable($user)->getScopeData($scope);
+
         return $this->getImplementation($scope)->checkReadOnlyContact($user, $data);
     }
 
@@ -149,11 +155,12 @@ class AclManager extends BaseAclManager
         return (bool) $this->getImplementation($entity->getEntityType())->checkIsOwnContact($user, $entity);
     }
 
-    public function getMap(User $user) : \StdClass
+    public function getMap(User $user) : StdClass
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getMap($user);
         }
+
         return parent::getMap($user);
     }
 
@@ -162,6 +169,7 @@ class AclManager extends BaseAclManager
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getLevel($user, $scope, $action);
         }
+
         return parent::getLevel($user, $scope, $action);
     }
 
@@ -170,6 +178,7 @@ class AclManager extends BaseAclManager
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->get($user, $permission);
         }
+
         return parent::get($user, $permission);
     }
 
@@ -177,8 +186,10 @@ class AclManager extends BaseAclManager
     {
         if ($this->checkUserIsNotPortal($user)) {
             $data = $this->getTable($user)->getScopeData($scope);
+
             return $this->getMainManager()->checkReadOnlyTeam($user, $data);
         }
+
         return parent::checkReadOnlyTeam($user, $scope);
     }
 
@@ -186,8 +197,10 @@ class AclManager extends BaseAclManager
     {
         if ($this->checkUserIsNotPortal($user)) {
             $data = $this->getTable($user)->getScopeData($scope);
+
             return $this->getMainManager()->checkReadNo($user, $data);
         }
+
         return parent::checkReadNo($user, $scope);
     }
 
@@ -195,8 +208,10 @@ class AclManager extends BaseAclManager
     {
         if ($this->checkUserIsNotPortal($user)) {
             $data = $this->getTable($user)->getScopeData($scope);
+
             return $this->getMainManager()->checkReadOnlyOwn($user, $data);
         }
+
         return parent::checkReadOnlyOwn($user, $scope);
     }
 
@@ -205,14 +220,16 @@ class AclManager extends BaseAclManager
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->check($user, $subject, $action);
         }
+
         return parent::check($user, $subject, $action);
     }
 
-    public function checkEntity(User $user, Entity $entity, string $action = 'read') : bool
+    public function checkEntity(User $user, Entity $entity, string $action = Table::ACTION_READ) : bool
     {
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkEntity($user, $entity, $action);
         }
+
         return parent::checkEntity($user, $entity, $action);
     }
 
@@ -221,6 +238,7 @@ class AclManager extends BaseAclManager
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkIsOwner($user, $entity);
         }
+
         return parent::checkIsOwner($user, $entity);
     }
 
@@ -229,6 +247,7 @@ class AclManager extends BaseAclManager
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkInTeam($user, $entity);
         }
+
         return parent::checkInTeam($user, $entity);
     }
 
@@ -237,6 +256,7 @@ class AclManager extends BaseAclManager
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkScope($user, $scope, $action);
         }
+
         return parent::checkScope($user, $scope, $action);
     }
 
@@ -245,24 +265,29 @@ class AclManager extends BaseAclManager
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->checkUser($user, $permission, $entity);
         }
+
         return parent::checkUser($user, $permission, $entity);
     }
 
     public function getScopeForbiddenAttributeList(
-        User $user, string $scope, string $action = 'read', string $thresholdLevel = 'no'
+        User $user, string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
     ) : array {
+
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getScopeForbiddenAttributeList($user, $scope, $action, $thresholdLevel);
         }
+
         return parent::getScopeForbiddenAttributeList($user, $scope, $action, $thresholdLevel);
     }
 
     public function getScopeForbiddenFieldList(
-        User $user, string $scope, string $action = 'read', string $thresholdLevel = 'no'
+        User $user, string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
     ) : array {
+
         if ($this->checkUserIsNotPortal($user)) {
             return $this->getMainManager()->getScopeForbiddenFieldList($user, $scope, $action, $thresholdLevel);
         }
+
         return parent::getScopeForbiddenFieldList($user, $scope, $action, $thresholdLevel);
     }
 

@@ -37,19 +37,22 @@ use Espo\Entities\{
 };
 
 use Espo\Core\{
+    Acl\Table as BaseTable,
     ORM\EntityManager,
-    ORM\Entity,
     Utils\Config,
     Utils\Metadata,
     Utils\FieldUtil,
-    Utils\File\Manager as FileManager,
     Utils\DataCache,
 };
 
 use Traversable;
 
-class Table extends \Espo\Core\Acl\Table
+class Table extends BaseTable
 {
+    public const LEVEL_ACCOUNT = 'account';
+
+    public const LEVEL_CONTACT = 'contact';
+
     protected $type = 'aclPortal';
 
     protected $portal;
@@ -64,9 +67,9 @@ class Table extends \Espo\Core\Acl\Table
         EntityManager $entityManager,
         User $user,
         Portal $portal,
-        Config $config = null,
-        Metadata $metadata = null,
-        FieldUtil $fieldUtil = null,
+        Config $config,
+        Metadata $metadata,
+        FieldUtil $fieldUtil,
         DataCache $dataCache
     ) {
         if (empty($portal)) {
@@ -78,23 +81,18 @@ class Table extends \Espo\Core\Acl\Table
         parent::__construct($entityManager, $user, $config, $metadata, $fieldUtil, $dataCache);
     }
 
-    protected function getPortal()
+    protected function initCacheKey() : void
     {
-        return $this->portal;
+        $this->cacheKey = 'aclPortal/' . $this->portal->id.'/' . $this->user->id;
     }
 
-    protected function initCacheKey()
-    {
-        $this->cacheKey = 'aclPortal/' . $this->getPortal()->id.'/' . $this->getUser()->id;
-    }
-
-    protected function getRoleList()
+    protected function getRoleList() : array
     {
         $roleList = [];
 
         $userRoleList = $this->entityManager
             ->getRepository('User')
-            ->getRelation($this->getUser(), 'portalRoles')
+            ->getRelation($this->user, 'portalRoles')
             ->find();
 
         if (! $userRoleList instanceof Traversable) {
@@ -107,7 +105,7 @@ class Table extends \Espo\Core\Acl\Table
 
         $portalRoleList = $this->entityManager
             ->getRepository('Portal')
-            ->getRelation($this->getPortal(), 'portalRoles')
+            ->getRelation($this->portal, 'portalRoles')
             ->find();
 
         if (! $portalRoleList instanceof Traversable) {
@@ -121,19 +119,28 @@ class Table extends \Espo\Core\Acl\Table
         return $roleList;
     }
 
-    protected function getScopeWithAclList()
+    protected function getScopeWithAclList() : array
     {
         $scopeList = [];
-        $scopes = $this->getMetadata()->get('scopes');
+
+        $scopes = $this->metadata->get('scopes');
+
         foreach ($scopes as $scope => $d) {
-            if (empty($d['acl'])) continue;
-            if (empty($d['aclPortal'])) continue;
+            if (empty($d['acl'])) {
+                continue;
+            }
+
+            if (empty($d['aclPortal'])) {
+                continue;
+            }
+
             $scopeList[] = $scope;
         }
+
         return $scopeList;
     }
 
-    protected function applyDefault(&$table, &$fieldTable)
+    protected function applyDefault(&$table, &$fieldTable) : void
     {
         parent::applyDefault($table, $fieldTable);
 
@@ -144,18 +151,20 @@ class Table extends \Espo\Core\Acl\Table
         }
     }
 
-    protected function applyDisabled(&$table, &$fieldTable)
+    protected function applyDisabled(&$table, &$fieldTable) : void
     {
         foreach ($this->getScopeList() as $scope) {
-            $d = $this->getMetadata()->get('scopes.' . $scope);
+            $d = $this->metadata->get('scopes.' . $scope);
+
             if (!empty($d['disabled']) || !empty($d['portalDisabled'])) {
                 $table->$scope = false;
+
                 unset($fieldTable->$scope);
             }
         }
     }
 
-    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists)
+    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists) : void
     {
     }
 }

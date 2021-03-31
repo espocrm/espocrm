@@ -30,9 +30,11 @@
 namespace Espo\Core\Portal;
 
 use Espo\ORM\Entity;
-use Espo\Entities\User;
 
-class Acl extends \Espo\Core\Acl
+use Espo\Core\Acl as BaseAcl;
+
+
+class Acl extends BaseAcl
 {
     public function checkReadOnlyAccount(string $scope) : bool
     {
