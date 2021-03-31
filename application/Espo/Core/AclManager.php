@@ -39,7 +39,6 @@ use Espo\Core\{
     ORM\EntityManager,
     Acl\Acl as BaseAcl,
     Acl\ScopeAcl,
-    Acl\GlobalRestricton,
     Acl\GlobalRestrictonFactory,
     Acl as UserAclWrapper,
     Acl\Table as AclTable,
@@ -65,7 +64,9 @@ class AclManager
     protected $globalRestricton;
 
     protected $injectableFactory;
+
     protected $classFinder;
+
     protected $entityManager;
 
     public function __construct(

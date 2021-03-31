@@ -30,12 +30,12 @@
 namespace Espo\Core\Portal;
 
 use Espo\ORM\Entity;
-use Espo\Entities\User;
-use Espo\Core\Utils\Util;
 
+use Espo\Entities\User;
 use Espo\Entities\Portal;
 
 use Espo\Core\{
+    Exceptions\Error,
     AclPortal\Table as AclPortalTable,
     AclPortal\Acl as BasePortalAcl,
     AclPortal\PortalScopeAcl,
@@ -44,7 +44,6 @@ use Espo\Core\{
     AclManager as BaseAclManager,
 };
 
-use Espo\Core\Exceptions\Error;
 
 class AclManager extends BaseAclManager
 {

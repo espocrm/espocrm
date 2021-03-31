@@ -38,7 +38,10 @@ use Espo\ORM\{
     Collection,
 };
 
-use Espo\Entities\User;
+use Espo\{
+    Entities\User,
+    Services\Notification as NotificationService,
+};
 
 use Espo\Core\{
     ORM\EntityManager,
@@ -54,6 +57,8 @@ use Espo\Core\{
     Select\SearchParams,
 };
 
+use StdClass;
+
 class Stream
 {
     protected $statusStyles = null;
@@ -64,15 +69,28 @@ class Stream
 
     protected $dangerDefaultStyleList = ['Not Held', 'Closed Lost', 'Dead'];
 
+    protected $auditedFieldsCache = [];
+
+    private $notificationService = null;
+
     protected $entityManager;
+
     protected $config;
+
     protected $user;
+
     protected $metadata;
+
     protected $acl;
+
     protected $aclManager;
+
     protected $serviceFactory;
+
     protected $portalAclManagerContainer;
+
     protected $fieldUtil;
+
     protected $selectBuilderFactory;
 
     public function __construct(
@@ -99,66 +117,76 @@ class Stream
         $this->selectBuilderFactory = $selectBuilderFactory;
     }
 
-    protected $auditedFieldsCache = [];
-
-    private $notificationService = null;
-
-    protected function getNotificationService()
+    protected function getNotificationService() : NotificationService
     {
-        if (empty($this->notificationService)) {
+        if (!$this->notificationService) {
             $this->notificationService = $this->serviceFactory->create('Notification');
         }
+
         return $this->notificationService;
     }
 
-    protected function getStatusStyles()
+    protected function getStatusStyles() : array
     {
         if (empty($this->statusStyles)) {
             $this->statusStyles = $this->metadata->get('entityDefs.Note.statusStyles', []);
         }
+
         return $this->statusStyles;
     }
 
-    protected function getStatusFields()
+    protected function getStatusFields() : array
     {
         if (is_null($this->statusFields)) {
-            $this->statusFields = array();
+            $this->statusFields = [];
+
             $scopes = $this->metadata->get('scopes', []);
+
             foreach ($scopes as $scope => $data) {
-                if (empty($data['statusField'])) continue;
+                if (empty($data['statusField'])) {
+                    continue;
+                }
+
                 $this->statusFields[$scope] = $data['statusField'];
             }
         }
+
         return $this->statusFields;
     }
 
-    public function afterRecordCreatedJob($data)
+    public function afterRecordCreatedJob(StdClass $data) : void
     {
         if (empty($data)) {
             return;
         }
+
         if (empty($data->entityId) || empty($data->entityType) || empty($data->userIdList)) {
             return;
         }
+
         $userIdList = $data->userIdList;
         $entityType = $data->entityType;
         $entityId = $data->entityId;
 
         $entity = $this->entityManager->getEntity($entityType, $entityId);
+
         if (!$entity) {
             return;
         }
 
         foreach ($userIdList as $i => $userId) {
             $user = $this->entityManager->getEntity('User', $userId);
+
             if (!$user) {
                 unset($userIdList[$i]);
                 continue;
             }
+
             if (!$this->aclManager->check($user, $entity, 'stream')) {
                 unset($userIdList[$i]);
             }
         }
+
         $userIdList = array_values($userIdList);
 
         foreach ($userIdList as $i => $userId) {
@@ -166,6 +194,7 @@ class Stream
                 unset($userIdList[$i]);
             }
         }
+
         $userIdList = array_values($userIdList);
 
         if (empty($userIdList)) {
@@ -174,10 +203,14 @@ class Stream
 
         $this->followEntityMass($entity, $userIdList);
 
-        $noteList = $this->entityManager->getRepository('Note')->where([
-            'parentType' => $entityType,
-            'parentId' => $entityId
-        ])->order('number', 'ASC')->find();
+        $noteList = $this->entityManager
+            ->getRepository('Note')
+            ->where([
+                'parentType' => $entityType,
+                'parentId' => $entityId
+            ])
+            ->order('number', 'ASC')
+            ->find();
 
         foreach ($noteList as $note) {
             $this->getNotificationService()->notifyAboutNote($userIdList, $note);
@@ -186,7 +219,7 @@ class Stream
 
     public function checkIsFollowed(Entity $entity, ?string $userId = null) : bool
     {
-        if (empty($userId)) {
+        if (!$userId) {
             $userId = $this->user->id;
         }
 
@@ -202,10 +235,10 @@ class Stream
         return $isFollowed;
     }
 
-    public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false)
+    public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false) : void
     {
         if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
-            return false;
+            return;
         }
 
         $userIdList = [];
@@ -274,12 +307,13 @@ class Stream
         $this->entityManager->getMapper()->massInsert($collection);
     }
 
-    public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false)
+    public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false) : bool
     {
-        if ($userId == 'system') {
+        if ($userId === 'system') {
             return false;
         }
-        if (!$this->metadata->get('scopes.' . $entity->getEntityType() . '.stream')) {
+
+        if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
             return false;
         }
 
@@ -321,7 +355,7 @@ class Stream
         return true;
     }
 
-    public function unfollowEntity(Entity $entity, string $userId)
+    public function unfollowEntity(Entity $entity, string $userId) : bool
     {
         if (!$this->metadata->get('scopes.' . $entity->getEntityType() . '.stream')) {
             return false;
@@ -342,9 +376,9 @@ class Stream
         return true;
     }
 
-    public function unfollowAllUsersFromEntity(Entity $entity)
+    public function unfollowAllUsersFromEntity(Entity $entity) : void
     {
-        if (empty($entity->id)) {
+        if (!$entity->getId()) {
             return;
         }
 
@@ -352,7 +386,7 @@ class Stream
             ->delete()
             ->from('Subscription')
             ->where([
-                'entityId' => $entity->id,
+                'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
             ])
             ->build();
@@ -360,7 +394,7 @@ class Stream
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    public function findUserStream(string $userId, array $params = [])
+    public function findUserStream(string $userId, array $params = []) : StdClass
     {
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
@@ -872,7 +906,7 @@ class Stream
         return $whereClause;
     }
 
-    protected function loadNoteAdditionalFields(Entity $e)
+    protected function loadNoteAdditionalFields(Entity $e) : void
     {
         if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
             $e->loadAttachments();
@@ -881,25 +915,30 @@ class Stream
         if ($e->get('parentId') && $e->get('parentType')) {
             $e->loadParentNameField('parent');
         }
+
         if ($e->get('relatedId') && $e->get('relatedType')) {
             $e->loadParentNameField('related');
         }
+
         if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
             $targetType = $e->get('targetType');
+
             if (!$targetType || $targetType === 'users' || $targetType === 'self') {
                 $e->loadLinkMultipleField('users');
             }
+
             if ($targetType !== 'users' && $targetType !== 'self') {
                 if (!$targetType || $targetType === 'teams') {
                     $e->loadLinkMultipleField('teams');
-                } else if ($targetType === 'portals') {
+                }
+                else if ($targetType === 'portals') {
                     $e->loadLinkMultipleField('portals');
                 }
             }
         }
     }
 
-    public function find(string $scope, ?string $id, array $params = [])
+    public function find(string $scope, ?string $id, array $params = []) : StdClass
     {
         if ($scope === 'User') {
             if (empty($id)) {
@@ -1154,52 +1193,69 @@ class Stream
         ];
     }
 
-    protected function loadAssignedUserName(Entity $entity)
+    protected function loadAssignedUserName(Entity $entity) : void
     {
-        $user = $this->entityManager->getRepository('User')->select(['name'])->where([
-            'id' =>  $entity->get('assignedUserId'),
-        ])->findOne();
+        $user = $this->entityManager
+            ->getRepository('User')
+            ->select(['name'])
+            ->where([
+                'id' =>  $entity->get('assignedUserId'),
+            ])
+            ->findOne();
+
         if ($user) {
             $entity->set('assignedUserName', $user->get('name'));
         }
     }
 
-    protected function processNoteTeamsUsers(Entity $note, Entity $entity)
+    protected function processNoteTeamsUsers(Entity $note, Entity $entity) : void
     {
         $note->setAclIsProcessed();
+
         $note->set('teamsIds', []);
         $note->set('usersIds', []);
 
         if ($entity->hasLinkMultipleField('teams') && $entity->has('teamsIds')) {
             $teamIdList = $entity->get('teamsIds');
+
             if (!empty($teamIdList)) {
                 $note->set('teamsIds', $teamIdList);
             }
         }
 
-        $ownerUserIdAttribute = $this->aclManager->getImplementation($entity->getEntityType())->getOwnerUserIdAttribute($entity);
+        $ownerUserIdAttribute = $this->aclManager
+            ->getImplementation($entity->getEntityType())
+            ->getOwnerUserIdAttribute($entity);
+
         if ($ownerUserIdAttribute && $entity->get($ownerUserIdAttribute)) {
             if ($entity->getAttributeParam($ownerUserIdAttribute, 'isLinkMultipleIdList')) {
                 $userIdList = $entity->get($ownerUserIdAttribute);
-            } else {
+            }
+            else {
                 $userId = $entity->get($ownerUserIdAttribute);
                 $userIdList = [$userId];
             }
+
             $note->set('usersIds', $userIdList);
         }
     }
 
-    public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false)
+    public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false) : void
     {
         $entityType = $entity->getEntityType();
 
-        if ($this->entityManager->getRepository('Note')->where([
-            'type' => 'EmailReceived',
-            'parentId' => $entity->id,
-            'parentType' => $entityType,
-            'relatedId' => $email->id,
-            'relatedType' => 'Email'
-        ])->findOne()) {
+        if (
+            $this->entityManager
+                ->getRepository('Note')
+                ->where([
+                    'type' => 'EmailReceived',
+                    'parentId' => $entity->id,
+                    'parentType' => $entityType,
+                    'relatedId' => $email->id,
+                    'relatedType' => 'Email',
+                ])
+                ->findOne()
+        ) {
             return;
         }
 
@@ -1235,8 +1291,10 @@ class Stream
         }
 
         $from = $email->get('from');
+
         if ($from) {
             $person = $this->entityManager->getRepository('EmailAddress')->getEntityByAddress($from);
+
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
@@ -1246,11 +1304,10 @@ class Stream
 
         $note->set('data', (object) $data);
 
-
         $this->entityManager->saveEntity($note);
     }
 
-    public function noteEmailSent(Entity $entity, Entity $email)
+    public function noteEmailSent(Entity $entity, Entity $email) : void
     {
         $entityType = $entity->getEntityType();
 
@@ -1276,6 +1333,7 @@ class Stream
         }
 
         $data = [];
+
         $data['emailId'] = $email->id;
         $data['emailName'] = $email->get('name');
 
@@ -1287,8 +1345,10 @@ class Stream
 
         if ($user->id != 'system') {
             $person = $user;
-        } else {
+        }
+        else {
             $from = $email->get('from');
+
             if ($from) {
                 $person = $this->entityManager->getRepository('EmailAddress')->getEntityByAddress($from);
             }
@@ -1305,7 +1365,7 @@ class Stream
         $this->entityManager->saveEntity($note);
     }
 
-    public function noteCreate(Entity $entity, array $options = [])
+    public function noteCreate(Entity $entity, array $options = []) : void
     {
         $entityType = $entity->getEntityType();
 
@@ -1328,14 +1388,17 @@ class Stream
             if (!$entity->has('assignedUserName')) {
                 $this->loadAssignedUserName($entity);
             }
+
             $data['assignedUserId'] = $entity->get('assignedUserId');
             $data['assignedUserName'] = $entity->get('assignedUserName');
         }
 
         $statusFields = $this->getStatusFields();
+
         if (!empty($statusFields[$entityType])) {
             $field = $statusFields[$entityType];
             $value = $entity->get($field);
+
             if (!empty($value)) {
                 $data['statusValue'] = $value;
                 $data['statusField'] = $field;
@@ -1346,6 +1409,7 @@ class Stream
         $note->set('data', (object) $data);
 
         $o = [];
+
         if (!empty($options['createdById'])) {
             $o['createdById'] = $options['createdById'];
         }
@@ -1353,30 +1417,35 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    protected function getStatusStyle($entityType, $field, $value)
+    protected function getStatusStyle(string $entityType, string $field, $value) : string
     {
         $style = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'style', $value]);
+
         if ($style) {
             return $style;
         }
 
         $statusStyles = $this->getStatusStyles();
-        $style = 'default';
-        if (!empty($statusStyles[$entityType]) && !empty($statusStyles[$entityType][$value])) {
-            $style = $statusStyles[$entityType][$value];
-        } else {
-            if (in_array($value, $this->successDefaultStyleList)) {
-                $style = 'success';
-            } else if (in_array($value, $this->dangerDefaultStyleList)) {
-                $style = 'danger';
-            }
+
+        if (isset($statusStyles[$entityType]) && isset($statusStyles[$entityType][$value])) {
+            return (string) $statusStyles[$entityType][$value];
         }
 
-        return $style;
+        if (in_array($value, $this->successDefaultStyleList)) {
+            return 'success';
+        }
+
+        if (in_array($value, $this->dangerDefaultStyleList)) {
+            return 'danger';
+        }
+
+        return 'default';
     }
 
-    public function noteCreateRelated(Entity $entity, $parentType, $parentId, array $options = [])
-    {
+    public function noteCreateRelated(
+        Entity $entity, string $parentType, string $parentId, array $options = []
+    ) : void {
+
         $note = $this->entityManager->getEntity('Note');
 
         $entityType = $entity->getEntityType();
@@ -1397,6 +1466,7 @@ class Stream
         }
 
         $o = [];
+
         if (!empty($options['createdById'])) {
             $o['createdById'] = $options['createdById'];
         }
@@ -1404,18 +1474,25 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    public function noteRelate(Entity $entity, $parentType, $parentId, array $options = [])
+    public function noteRelate(Entity $entity, string $parentType, string $parentId, array $options = []) : void
     {
         $entityType = $entity->getEntityType();
 
-        $existing = $this->entityManager->getRepository('Note')->select(['id'])->where([
-            'type' => 'Relate',
-            'parentId' => $parentId,
-            'parentType' => $parentType,
-            'relatedId' => $entity->id,
-            'relatedType' => $entityType,
-        ])->findOne();
-        if ($existing) return false;
+        $existing = $this->entityManager
+            ->getRepository('Note')
+            ->select(['id'])
+            ->where([
+                'type' => 'Relate',
+                'parentId' => $parentId,
+                'parentType' => $parentType,
+                'relatedId' => $entity->id,
+                'relatedType' => $entityType,
+            ])
+            ->findOne();
+
+        if ($existing) {
+            return;
+        }
 
         $note = $this->entityManager->getEntity('Note');
 
@@ -1430,6 +1507,7 @@ class Stream
         $this->processNoteTeamsUsers($note, $entity);
 
         $o = [];
+
         if (!empty($options['createdById'])) {
             $o['createdById'] = $options['createdById'];
         }
@@ -1437,7 +1515,7 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    public function noteAssign(Entity $entity, array $options = [])
+    public function noteAssign(Entity $entity, array $options = []) : void
     {
         $note = $this->entityManager->getEntity('Note');
 
@@ -1456,6 +1534,7 @@ class Stream
             if (!$entity->has('assignedUserName')) {
                 $this->loadAssignedUserName($entity);
             }
+
             $note->set('data', [
                 'assignedUserId' => $entity->get('assignedUserId'),
                 'assignedUserName' => $entity->get('assignedUserName'),
@@ -1467,9 +1546,11 @@ class Stream
         }
 
         $o = [];
+
         if (!empty($options['createdById'])) {
             $o['createdById'] = $options['createdById'];
         }
+
         if (!empty($options['modifiedById'])) {
             $o['createdById'] = $options['modifiedById'];
         }
@@ -1477,7 +1558,7 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    public function noteStatus(Entity $entity, $field, array $options = [])
+    public function noteStatus(Entity $entity, $field, array $options = []) : void
     {
         $note = $this->entityManager->getEntity('Note');
 
@@ -1493,6 +1574,7 @@ class Stream
         }
 
         $entityType = $entity->getEntityType();
+
         $value = $entity->get($field);
 
         $style = $this->getStatusStyle($entityType, $field, $value);
@@ -1500,7 +1582,7 @@ class Stream
         $note->set('data', [
             'field' => $field,
             'value' => $value,
-            'style' => $style
+            'style' => $style,
         ]);
 
         $o = [];
@@ -1516,95 +1598,118 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    protected function getAuditedFieldsData(Entity $entity)
+    protected function getAuditedFieldsData(Entity $entity) : array
     {
         $entityType = $entity->getEntityType();
 
         $statusFields = $this->getStatusFields();
 
-        if (!array_key_exists($entityType, $this->auditedFieldsCache)) {
-            $fields = $this->metadata->get('entityDefs.' . $entityType . '.fields');
-            $auditedFields = array();
-            foreach ($fields as $field => $d) {
-                if (!empty($d['audited'])) {
-                    if (!empty($statusFields[$entityType]) && $statusFields[$entityType] === $field) {
-                        continue;
-                    }
-                    $auditedFields[$field] = array();
-                    $auditedFields[$field]['actualList'] = $this->fieldUtil->getActualAttributeList($entityType, $field);
-                    $auditedFields[$field]['notActualList'] = $this->fieldUtil->getNotActualAttributeList($entityType, $field);
-                    $auditedFields[$field]['fieldType'] = $d['type'];
-                }
-            }
-            $this->auditedFieldsCache[$entityType] = $auditedFields;
+        if (array_key_exists($entityType, $this->auditedFieldsCache)) {
+            return $this->auditedFieldsCache[$entityType];
         }
+
+        $fields = $this->metadata->get('entityDefs.' . $entityType . '.fields');
+
+        $auditedFields = [];
+
+        foreach ($fields as $field => $d) {
+            if (empty($d['audited'])) {
+                continue;
+            }
+
+            if (!empty($statusFields[$entityType]) && $statusFields[$entityType] === $field) {
+                continue;
+            }
+
+            $auditedFields[$field] = [];
+
+            $auditedFields[$field]['actualList'] =
+                $this->fieldUtil->getActualAttributeList($entityType, $field);
+
+            $auditedFields[$field]['notActualList'] =
+                $this->fieldUtil->getNotActualAttributeList($entityType, $field);
+
+            $auditedFields[$field]['fieldType'] = $d['type'];
+        }
+
+        $this->auditedFieldsCache[$entityType] = $auditedFields;
 
         return $this->auditedFieldsCache[$entityType];
     }
 
-    public function handleAudited($entity, array $options = [])
+    public function handleAudited($entity, array $options = []) : void
     {
         $auditedFields = $this->getAuditedFieldsData($entity);
 
         $updatedFieldList = [];
+
         $was = [];
         $became = [];
 
         foreach ($auditedFields as $field => $item) {
             $updated = false;
+
             foreach ($item['actualList'] as $attribute) {
                 if ($entity->hasFetched($attribute) && $entity->isAttributeChanged($attribute)) {
                     $updated = true;
                 }
             }
-            if ($updated) {
-                $updatedFieldList[] = $field;
-                foreach ($item['actualList'] as $attribute) {
-                    $was[$attribute] = $entity->getFetched($attribute);
-                    $became[$attribute] = $entity->get($attribute);
-                }
-                foreach ($item['notActualList'] as $attribute) {
-                    $was[$attribute] = $entity->getFetched($attribute);
-                    $became[$attribute] = $entity->get($attribute);
-                }
 
-                if ($item['fieldType'] === 'linkParent') {
-                    $wasParentType = $was[$field . 'Type'];
-                    $wasParentId = $was[$field . 'Id'];
-                    if ($wasParentType && $wasParentId) {
-                        if ($this->entityManager->hasRepository($wasParentType)) {
-                            $wasParent = $this->entityManager->getEntity($wasParentType, $wasParentId);
-                            if ($wasParent) {
-                                $was[$field . 'Name'] = $wasParent->get('name');
-                            }
-                        }
+            if (!$updated) {
+                continue;
+            }
+
+            $updatedFieldList[] = $field;
+
+            foreach ($item['actualList'] as $attribute) {
+                $was[$attribute] = $entity->getFetched($attribute);
+                $became[$attribute] = $entity->get($attribute);
+            }
+
+            foreach ($item['notActualList'] as $attribute) {
+                $was[$attribute] = $entity->getFetched($attribute);
+                $became[$attribute] = $entity->get($attribute);
+            }
+
+            if ($item['fieldType'] === 'linkParent') {
+                $wasParentType = $was[$field . 'Type'];
+                $wasParentId = $was[$field . 'Id'];
+
+                if ($wasParentType && $wasParentId && $this->entityManager->hasRepository($wasParentType)) {
+                    $wasParent = $this->entityManager->getEntity($wasParentType, $wasParentId);
+
+                    if ($wasParent) {
+                        $was[$field . 'Name'] = $wasParent->get('name');
                     }
                 }
             }
         }
 
-        if (!empty($updatedFieldList)) {
-            $note = $this->entityManager->getEntity('Note');
-
-            $note->set('type', 'Update');
-            $note->set('parentId', $entity->id);
-            $note->set('parentType', $entity->getEntityType());
-
-            $note->set('data', [
-                'fields' => $updatedFieldList,
-                'attributes' => [
-                    'was' => $was,
-                    'became' => $became
-                ]
-            ]);
-
-            $o = [];
-            if (!empty($options['modifiedById'])) {
-                $o['createdById'] = $options['modifiedById'];
-            }
-
-            $this->entityManager->saveEntity($note, $o);
+        if (count($updatedFieldList) === 0) {
+            return;
         }
+
+        $note = $this->entityManager->getEntity('Note');
+
+        $note->set('type', 'Update');
+        $note->set('parentId', $entity->id);
+        $note->set('parentType', $entity->getEntityType());
+
+        $note->set('data', [
+            'fields' => $updatedFieldList,
+            'attributes' => [
+                'was' => $was,
+                'became' => $became,
+            ],
+        ]);
+
+        $o = [];
+
+        if (!empty($options['modifiedById'])) {
+            $o['createdById'] = $options['modifiedById'];
+        }
+
+        $this->entityManager->saveEntity($note, $o);
     }
 
     public function getEntityFolowerIdList(Entity $entity) : array
@@ -1668,7 +1773,7 @@ class Stream
         return new RecordCollection($collection, $total);
     }
 
-    public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false)
+    public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false) : array
     {
         if (!$limit) {
             $limit = 200;
@@ -1710,16 +1815,29 @@ class Stream
         return $data;
     }
 
-    protected function getOnlyTeamEntityTypeList(User $user)
+    protected function getOnlyTeamEntityTypeList(User $user) : array
     {
-        if ($user->isPortal()) return [];
+        if ($user->isPortal()) {
+            return [];
+        }
 
         $list = [];
+
         $scopes = $this->metadata->get('scopes', []);
+
         foreach ($scopes as $scope => $item) {
-            if ($scope === 'User') continue;
-            if (empty($item['entity'])) continue;
-            if (empty($item['object'])) continue;
+            if ($scope === 'User') {
+                continue;
+            }
+
+            if (empty($item['entity'])) {
+                continue;
+            }
+
+            if (empty($item['object'])) {
+                continue;
+            }
+
             if (
                 $this->aclManager->getLevel($user, $scope, 'read') === 'team'
             ) {
@@ -1730,26 +1848,40 @@ class Stream
         return $list;
     }
 
-    protected function getOnlyOwnEntityTypeList(User $user)
+    protected function getOnlyOwnEntityTypeList(User $user) : array
     {
-        if ($user->isPortal()) return [];
+        if ($user->isPortal()) {
+            return [];
+        }
 
         $list = [];
+
         $scopes = $this->metadata->get('scopes', []);
+
         foreach ($scopes as $scope => $item) {
-            if ($scope === 'User') continue;
-            if (empty($item['entity'])) continue;
-            if (empty($item['object'])) continue;
+            if ($scope === 'User') {
+                continue;
+            }
+
+            if (empty($item['entity'])) {
+                continue;
+            }
+
+            if (empty($item['object'])) {
+                continue;
+            }
+
             if (
                 $this->aclManager->getLevel($user, $scope, 'read') === 'own'
             ) {
                 $list[] = $scope;
             }
         }
+
         return $list;
     }
 
-    protected function getUserAclManager(User $user)
+    protected function getUserAclManager(User $user) : ?AclManager
     {
         $aclManager = $this->aclManager;
 
@@ -1759,47 +1891,68 @@ class Stream
                 ->getRelation($user, 'portals')
                 ->findOne();
 
-            if ($portal) {
-                $aclManager = $this->portalAclManagerContainer->get($portal);
-            } else {
-                $aclManager = null;
+            if (!$portal) {
+                return null;
             }
+
+            $aclManager = $this->portalAclManagerContainer->get($portal);
         }
 
         return $aclManager;
     }
 
-    protected function getNotAllEntityTypeList(User $user)
+    protected function getNotAllEntityTypeList(User $user) : array
     {
-        if (!$user->isPortal()) return [];
+        if (!$user->isPortal()) {
+            return [];
+        }
 
         $aclManager = $this->getUserAclManager($user);
 
         $list = [];
+
         $scopes = $this->metadata->get('scopes', []);
+
         foreach ($scopes as $scope => $item) {
-            if ($scope === 'User') continue;
-            if (empty($item['entity'])) continue;
-            if (empty($item['object'])) continue;
+            if ($scope === 'User') {
+                continue;
+            }
+
+            if (empty($item['entity'])) {
+                continue;
+            }
+
+            if (empty($item['object'])) {
+                continue;
+            }
+
             if (
                 !$aclManager || $aclManager->getLevel($user, $scope, 'read') !== 'all'
             ) {
                 $list[] = $scope;
             }
         }
+
         return $list;
     }
 
-    protected function getIgnoreScopeList(User $user)
+    protected function getIgnoreScopeList(User $user) : array
     {
         $ignoreScopeList = [];
+
         $scopes = $this->metadata->get('scopes', []);
 
         $aclManager = $this->getUserAclManager($user);
 
         foreach ($scopes as $scope => $item) {
-            if (empty($item['entity'])) continue;
-            if (empty($item['object'])) continue;
+            if (empty($item['entity'])) {
+                continue;
+            }
+
+            if (empty($item['object'])) {
+                continue;
+            }
+
             if (
                 !$aclManager
                 ||
@@ -1814,37 +1967,46 @@ class Stream
         return $ignoreScopeList;
     }
 
-    public function controlFollowersJob($data)
+    public function controlFollowersJob(StdClass $data) : void
     {
         if (empty($data)) {
             return;
         }
+
         if (empty($data->entityId) || empty($data->entityType)) {
             return;
         }
 
-        if (!$this->entityManager->hasRepository($data->entityType)) return;
+        if (!$this->entityManager->hasRepository($data->entityType)) {
+            return;
+        }
 
         $entity = $this->entityManager->getEntity($data->entityType, $data->entityId);
-        if (!$entity) return;
+
+        if (!$entity) {
+            return;
+        }
 
         $idList = $this->getEntityFolowerIdList($entity);
 
-        $userList = $this->entityManager->getRepository('User')->where(array(
-            'id' => $idList
-        ))->find();
+        $userList = $this->entityManager
+            ->getRepository('User')
+            ->where([
+                'id' => $idList,
+            ])
+            ->find();
 
         foreach ($userList as $user) {
             if (!$user->get('isActive')) {
                 $this->unfollowEntity($entity, $user->id);
+
                 continue;
             }
 
-            if (!$user->isPortal()) {
-                if (!$this->aclManager->check($user, $entity, 'stream')) {
-                    $this->unfollowEntity($entity, $user->id);
-                    continue;
-                }
+            if (!$user->isPortal() && !$this->aclManager->check($user, $entity, 'stream')) {
+                $this->unfollowEntity($entity, $user->id);
+
+                continue;
             }
         }
     }
