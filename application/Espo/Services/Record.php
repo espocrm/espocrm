@@ -1975,6 +1975,10 @@ class Record implements Crud,
             throw new Forbidden("No 'read' access to user.");
         }
 
+        if ($user->isPortal() && !$this->getAcl()->get('portal')) {
+            throw new Forbidden("No 'portal' permission.");
+        }
+
         $result = $this->getStreamService()->followEntity($entity, $foreignId);
 
         if (!$result) {
@@ -2012,10 +2016,13 @@ class Record implements Crud,
             throw new Forbidden("No 'read' access to user.");
         }
 
+        if ($user->isPortal() && !$this->getAcl()->get('portal')) {
+            throw new Forbidden("No 'portal' permission.");
+        }
+
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
-
 
         $this->getStreamService()->unfollowEntity($entity, $foreignId);
     }
