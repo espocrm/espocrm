@@ -30,9 +30,12 @@
 namespace Espo\Acl;
 
 use Espo\Entities\User as EntityUser;
+
 use Espo\ORM\Entity;
 
-class Email extends \Espo\Core\Acl\Acl
+use Espo\Core\Acl\Acl;
+
+class Email extends Acl
 {
     protected $ownerUserIdAttribute = 'usersIds';
 
@@ -42,32 +45,34 @@ class Email extends \Espo\Core\Acl\Acl
             return true;
         }
 
-        if ($data === false) {
+        if (!$data) {
             return false;
         }
-        if (is_object($data)) {
-            if ($data->read === false || $data->read === 'no') {
-                return false;
-            }
+
+        if ($data->read === false || $data->read === 'no') {
+            return false;
         }
 
         if (!$entity->has('usersIds')) {
             $entity->loadLinkMultipleField('users');
         }
+
         $userIdList = $entity->get('usersIds');
+
         if (is_array($userIdList) && in_array($user->id, $userIdList)) {
             return true;
         }
+
         return false;
     }
 
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
-        if ($user->id === $entity->get('assignedUserId')) {
+        if ($user->getId() === $entity->get('assignedUserId')) {
             return true;
         }
 
-        if ($user->id === $entity->get('createdById')) {
+        if ($user->getId() === $entity->get('createdById')) {
             return true;
         }
 
@@ -84,23 +89,28 @@ class Email extends \Espo\Core\Acl\Acl
             return true;
         }
 
-        if ($data === false) {
+        if (!$data) {
             return false;
         }
 
         if ($data->delete === 'own') {
-            if ($user->id === $entity->get('assignedUserId')) {
+            if ($user->getId() === $entity->get('assignedUserId')) {
                 return true;
             }
 
-            if ($user->id === $entity->get('createdById')) {
+            if ($user->getId() === $entity->get('createdById')) {
                 return true;
             }
 
             $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
-            if (count($assignedUserIdList) === 1 && $entity->hasLinkMultipleId('assignedUsers', $user->id)) {
+
+            if (
+                count($assignedUserIdList) === 1 &&
+                $entity->hasLinkMultipleId('assignedUsers', $user->getId())
+            ) {
                 return true;
             }
+
             return false;
         }
 
@@ -108,12 +118,16 @@ class Email extends \Espo\Core\Acl\Acl
             return true;
         }
 
-        if ($data->edit !== 'no' || $data->create !== 'no') {
-            if ($entity->get('createdById') === $user->id) {
-                if ($entity->get('status') !== 'Sent' && $entity->get('status') !== 'Archived') {
-                    return true;
-                }
-            }
+        if ($data->edit === 'no' && $data->create === 'no') {
+            return false;
+        }
+
+        if ($entity->get('createdById') !== $user->getId()) {
+            return false;
+        }
+
+        if ($entity->get('status') !== 'Sent' && $entity->get('status') !== 'Archived') {
+            return true;
         }
 
         return false;

@@ -30,26 +30,40 @@
 namespace Espo\Acl;
 
 use Espo\Entities\User as EntityUser;
+
 use Espo\ORM\Entity;
 
-class EmailFilter extends \Espo\Core\Acl\Acl
+use Espo\Core\Acl\Acl;
+
+class EmailFilter extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
-        if ($entity->has('parentId') && $entity->has('parentType')) {
-            $parentType = $entity->get('parentType');
-            $parentId = $entity->get('parentId');
-            if (!$parentType || !$parentId) return;
-
-            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
-
-            if ($parent->getEntityType() === 'User') {
-                return $parent->id === $user->id;
-            }
-            if ($parent && $parent->has('assignedUserId') && $parent->get('assignedUserId') === $user->id) {
-                return true;
-            }
+        if (!$entity->has('parentId') || !$entity->has('parentType')) {
+            return false;
         }
-        return;
+
+        $parentType = $entity->get('parentType');
+        $parentId = $entity->get('parentId');
+
+        if (!$parentType || !$parentId) {
+            return false;
+        }
+
+        $parent = $this->entityManager->getEntity($parentType, $parentId);
+
+        if (!$parent) {
+            return false;
+        }
+
+        if ($parent->getEntityType() === 'User') {
+            return $parent->getId() === $user->getId();
+        }
+
+        if ($parent->has('assignedUserId') && $parent->get('assignedUserId') === $user->getId()) {
+            return true;
+        }
+
+        return false;
     }
 }

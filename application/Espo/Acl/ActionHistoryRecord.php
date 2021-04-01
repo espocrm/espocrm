@@ -30,9 +30,12 @@
 namespace Espo\Acl;
 
 use Espo\Entities\User as EntityUser;
+
 use Espo\ORM\Entity;
 
-class ActionHistoryRecord extends \Espo\Core\Acl\Acl
+use Espo\Core\Acl\Acl;
+
+class ActionHistoryRecord extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {

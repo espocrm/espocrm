@@ -30,9 +30,12 @@
 namespace Espo\Acl;
 
 use Espo\Entities\User as EntityUser;
+
 use Espo\ORM\Entity;
 
-class Webhook extends \Espo\Core\Acl\Acl
+use Espo\Core\Acl\Acl;
+
+class Webhook extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
@@ -41,33 +44,69 @@ class Webhook extends \Espo\Core\Acl\Acl
 
     public function checkEntityCreate(EntityUser $user, Entity $entity, $data)
     {
-        if ($user->isAdmin()) return true;
-        if (!$data) return false;
-        if ($user->isApi() && $user->id === $entity->get('userId')) return true;
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if (!$data) {
+            return false;
+        }
+
+        if ($user->isApi() && $user->id === $entity->get('userId')) {
+            return true;
+        }
+
         return false;
     }
 
     public function checkEntityRead(EntityUser $user, Entity $entity, $data)
     {
-        if ($user->isAdmin()) return true;
-        if (!$data) return false;
-        if ($user->isApi() && $user->id === $entity->get('userId')) return true;
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if (!$data) {
+            return false;
+        }
+
+        if ($user->isApi() && $user->id === $entity->get('userId')) {
+            return true;
+        }
+
         return false;
     }
 
     public function checkEntityDelete(EntityUser $user, Entity $entity, $data)
     {
-        if ($user->isAdmin()) return true;
-        if (!$data) return false;
-        if ($user->isApi() && $user->id === $entity->get('userId')) return true;
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if (!$data) {
+            return false;
+        }
+
+        if ($user->isApi() && $user->id === $entity->get('userId')) {
+            return true;
+        }
+
         return false;
     }
 
     public function checkEntityEdit(EntityUser $user, Entity $entity, $data)
     {
-        if ($user->isAdmin()) return true;
-        if (!$data) return false;
-        if ($user->isApi() && $user->id === $entity->get('userId')) return true;
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if (!$data) {
+            return false;
+        }
+
+        if ($user->isApi() && $user->id === $entity->get('userId')) {
+            return true;
+        }
+
         return false;
     }
 }

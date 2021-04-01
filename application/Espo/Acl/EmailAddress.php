@@ -32,33 +32,43 @@ namespace Espo\Acl;
 use Espo\Entities\User as EntityUser;
 use Espo\ORM\Entity;
 
-class EmailAddress extends \Espo\Core\Acl\Acl
+use Espo\Core\{
+    Acl\Acl,
+    Acl\Table,
+};
+
+class EmailAddress extends Acl
 {
-    public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity)
+    /**
+     * To prevent editing an email address of a record that a user does not have access to.
+     */
+    public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity) : bool
     {
-        $id = $entity->id;
-
-        $isFobidden = false;
-
-        $repository = $this->getEntityManager()->getRepository('EmailAddress');
-
-        if (!$user->isAdmin()) {
-            $entityWithSameAddressList = $repository->getEntityListByAddressId($id, $excludeEntity);
-            foreach ($entityWithSameAddressList as $e) {
-                if (!$this->getAclManager()->check($user, $e, 'edit')) {
-                    $isFobidden = true;
-                    if (
-                        $e->getEntityType() === 'User' &&
-                        $e->isPortal() &&
-                        $excludeEntity->getEntityType() === 'Contact' &&
-                        $e->get('contactId') === $excludeEntity->id
-                    ) {
-                        $isFobidden = false;
-                    }
-                    if ($isFobidden) break;
-                }
-            }
+        if ($user->isAdmin()) {
+            return true;
         }
-        return !$isFobidden;
+
+        $repository = $this->entityManager->getRepository('EmailAddress');
+
+        $entityWithSameAddressList = $repository->getEntityListByAddressId($entity->getId(), $excludeEntity);
+
+        foreach ($entityWithSameAddressList as $e) {
+            if ($this->getAclManager()->check($user, $e, Table::ACTION_EDIT)) {
+                continue;
+            }
+
+            if (
+                $e->getEntityType() === 'User' &&
+                $e->isPortal() &&
+                $excludeEntity->getEntityType() === 'Contact' &&
+                $e->get('contactId') === $excludeEntity->getEntityType()
+            ) {
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 }

@@ -30,9 +30,12 @@
 namespace Espo\Acl;
 
 use Espo\ORM\Entity;
+
 use Espo\Entities\User as EntityUser;
 
-class User extends \Espo\Core\Acl\Acl
+use Espo\Core\Acl\Acl;
+
+class User extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
@@ -46,6 +49,7 @@ class User extends \Espo\Core\Acl\Acl
                 return true;
             }
         }
+
         return $this->checkEntity($user, $entity, $data, 'read');
     }
 
@@ -54,9 +58,11 @@ class User extends \Espo\Core\Acl\Acl
         if (!$user->isAdmin()) {
             return false;
         }
+
         if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
             return false;
         }
+
         return $this->checkEntity($user, $entity, $data, 'create');
     }
 
@@ -65,15 +71,19 @@ class User extends \Espo\Core\Acl\Acl
         if ($entity->id === 'system') {
             return false;
         }
+
         if (!$user->isAdmin()) {
             return false;
         }
+
         if ($entity->isSystem()) {
             return false;
         }
+
         if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
             return false;
         }
+
         return parent::checkEntityDelete($user, $entity, $data);
     }
 
@@ -85,14 +95,17 @@ class User extends \Espo\Core\Acl\Acl
         if ($entity->isSystem()) {
             return false;
         }
+
         if (!$user->isAdmin()) {
             if ($user->id !== $entity->id) {
                 return false;
             }
         }
+
         if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
             return false;
         }
+
         return $this->checkEntity($user, $entity, $data, 'edit');
     }
 }

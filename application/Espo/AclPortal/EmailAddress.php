@@ -34,7 +34,7 @@ use \Espo\ORM\Entity;
 
 class EmailAddress extends \Espo\Core\AclPortal\Base
 {
-    public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity)
+    public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity) : bool
     {
         $id = $entity->id;
 
@@ -44,9 +44,11 @@ class EmailAddress extends \Espo\Core\AclPortal\Base
 
         if (!$user->isAdmin()) {
             $entityWithSameAddressList = $repository->getEntityListByAddressId($id, $excludeEntity);
+
             foreach ($entityWithSameAddressList as $e) {
                 if (!$this->getAclManager()->check($user, $e, 'edit')) {
                     $isFobidden = true;
+
                     break;
                 }
             }
