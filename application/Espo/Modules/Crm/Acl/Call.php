@@ -29,9 +29,6 @@
 
 namespace Espo\Modules\Crm\Acl;
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
-
 class Call extends Meeting
 {
 

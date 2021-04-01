@@ -29,23 +29,31 @@
 
 namespace Espo\Modules\Crm\Acl;
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+use Espo\Entities\User;
 
-class CampaignTrackingUrl extends \Espo\Core\Acl\Base
+use Espo\ORM\Entity;
+
+use Espo\Core\Acl\Base;
+
+class CampaignTrackingUrl extends Base
 {
 
     public function checkIsOwner(User $user, Entity $entity)
     {
         if ($entity->has('campaignId')) {
             $campaignId = $entity->get('campaignId');
-            if (!$campaignId) return;
 
-            $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
-            if ($campaign && $this->getAclManager()->getImplementation('Campaign')->checkIsOwner($user, $campaign)) {
+            if (!$campaignId) {
+                return false;
+            }
+
+            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
+
+            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkIsOwner($user, $campaign)) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -53,13 +61,18 @@ class CampaignTrackingUrl extends \Espo\Core\Acl\Base
     {
         if ($entity->has('campaignId')) {
             $campaignId = $entity->get('campaignId');
-            if (!$campaignId) return;
 
-            $campaign = $this->getEntityManager()->getEntity('Campaign', $campaignId);
-            if ($campaign && $this->getAclManager()->getImplementation('Campaign')->checkInTeam($user, $campaign)) {
+            if (!$campaignId) {
+                return false;
+            }
+
+            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
+
+            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkInTeam($user, $campaign)) {
                 return true;
             }
         }
+
         return false;
     }
 }

@@ -29,10 +29,13 @@
 
 namespace Espo\Modules\Crm\Acl;
 
-use \Espo\Entities\User;
-use \Espo\ORM\Entity;
+use Espo\Entities\User;
 
-class Meeting extends \Espo\Core\Acl\Base
+use Espo\ORM\Entity;
+
+use Espo\Core\Acl\Base;
+
+class Meeting extends Base
 {
     protected $ownerUserIdAttribute = 'usersIds';
 
@@ -42,11 +45,13 @@ class Meeting extends \Espo\Core\Acl\Base
             return true;
         }
 
-        if (is_object($data)) {
-            if ($data->read === 'own' || $data->read === 'team') {
-                if ($entity->hasLinkMultipleId('users', $user->id)) {
-                    return true;
-                }
+        if (!$data) {
+            return false;
+        }
+
+        if ($data->read === 'own' || $data->read === 'team') {
+            if ($entity->hasLinkMultipleId('users', $user->id)) {
+                return true;
             }
         }
 
