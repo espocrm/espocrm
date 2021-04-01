@@ -413,6 +413,15 @@ class EmailTemplate extends Record implements
                 return '';
             }
 
+            if (
+                $fieldType === 'autoincrement' ||
+                $fieldType === 'int' &&
+                $this->metadata
+                    ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'disableFormatting'])
+            ) {
+                return (string) $value;
+            }
+
             return $this->number->format($value);
         }
 
