@@ -1006,7 +1006,7 @@ class BaseEntity implements Entity
      */
     protected function cloneArray(?array $value) : ?array
     {
-        if (!$value) {
+        if ($value === null) {
             return null;
         }
 
@@ -1050,7 +1050,7 @@ class BaseEntity implements Entity
      */
     protected function cloneObject(?StdClass $value) : ?StdClass
     {
-        if (!$value) {
+        if ($value === null) {
             return null;
         }
 

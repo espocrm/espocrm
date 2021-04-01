@@ -271,6 +271,24 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 
     }
 
+    public function testEmptyArray() : void
+    {
+        $job = $this->createEntity('Job', Job::class);
+
+        $job->set('array', []);
+
+        $this->assertEquals([], $job->get('array'));
+    }
+
+    public function testEmptyObject() : void
+    {
+        $job = $this->createEntity('Job', Job::class);
+
+        $job->set('object', (object) []);
+
+        $this->assertEquals((object) [], $job->get('object'));
+    }
+
     public function testCloningArray() : void
     {
         $original =  [
