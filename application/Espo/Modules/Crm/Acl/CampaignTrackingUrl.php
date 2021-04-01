@@ -37,7 +37,6 @@ use Espo\Core\Acl\Base;
 
 class CampaignTrackingUrl extends Base
 {
-
     public function checkIsOwner(User $user, Entity $entity)
     {
         if ($entity->has('campaignId')) {
