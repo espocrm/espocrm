@@ -44,6 +44,8 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
 
         fixedHeaderHeight: true,
 
+        mandatorySelectAttributeList: null,
+
         events: {
             'click button[data-action="createRelated"]': function () {
                 this.actionCreateRelated();
@@ -315,6 +317,7 @@ define('views/modals/related-list', ['views/modal', 'search-manager'], function 
                 unlinkMassAction: !this.massUnlinkDisabled,
                 massActionRemoveDisabled: this.massActionRemoveDisabled,
                 massActionMassUpdateDisabled: this.massActionMassUpdateDisabled,
+                mandatorySelectAttributeList: this.mandatorySelectAttributeList,
                 rowActionsOptions: {
                     unlinkDisabled: this.unlinkDisabled,
                 },

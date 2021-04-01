@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/record/row-actions/relationship-followers', 'views/record/row-actions/relationship', function (Dep) {
+define('views/user/record/row-actions/relationship-followers', 'views/record/row-actions/relationship', function (Dep) {
 
     return Dep.extend({
 
@@ -39,7 +39,12 @@ Espo.define('views/user/record/row-actions/relationship-followers', 'views/recor
                 },
                 link: '#' + this.model.name + '/view/' + this.model.id
             }];
-            if (this.getUser().isAdmin()) {
+
+            if (
+                this.getUser().isAdmin() ||
+                this.model.isPortal() && this.getAcl().get('portalPermission') === 'yes' ||
+                this.model.id === this.getUser().id
+            ) {
                 list.push({
                     action: 'unlinkRelated',
                     label: 'Unlink',
@@ -48,6 +53,7 @@ Espo.define('views/user/record/row-actions/relationship-followers', 'views/recor
                     }
                 });
             }
+
             return list;
         }
     });

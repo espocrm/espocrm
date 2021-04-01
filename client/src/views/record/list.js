@@ -79,6 +79,8 @@ define('views/record/list', 'view', function (Dep) {
 
         minColumnWidth: 100,
 
+        mandatorySelectAttributeList: null,
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -1159,6 +1161,10 @@ define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
+            this.mandatorySelectAttributeList = Espo.Utils.clone(
+                this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || []
+            );
+
             this.editDisabled = this.options.editDisabled ||
                 this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']);
 
@@ -1504,6 +1510,10 @@ define('views/record/list', 'view', function (Dep) {
                     this.listLayout = listLayout;
 
                     var attributeList = this.fetchAttributeListFromLayout();
+
+                    if (this.mandatorySelectAttributeList) {
+                        attributeList = attributeList.concat(attributeList);
+                    }
 
                     callback(attributeList);
                 }.bind(this));

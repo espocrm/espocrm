@@ -34,8 +34,10 @@ define('views/modals/followers-list', ['views/modals/related-list'], function (D
 
         massActionMassUpdateDisabled: true,
 
+        mandatorySelectAttributeList: ['type'],
+
         setup: function () {
-            if (!this.getUser().isAdmin()) {
+            if (!this.getUser().isAdmin() && this.getAcl().get('portalPermission') === 'no') {
                 this.unlinkDisabled = true;
             }
 
@@ -44,22 +46,32 @@ define('views/modals/followers-list', ['views/modals/related-list'], function (D
 
         actionSelectRelated: function () {
             var p = this.getParentView();
+
             var view = null;
+
             while (p) {
                 if (p.actionSelectRelated) {
                     view = p;
+
                     break;
                 }
+
                 p = p.getParentView();
+            }
+
+            var filter = 'active';
+
+            if (!this.getUser().isAdmin() && this.getAcl().get('portalPermission') === 'yes') {
+                filter = 'activePortal';
             }
 
             p.actionSelectRelated({
                 link: this.link,
-                primaryFilterName: 'active',
+                primaryFilterName: filter,
                 massSelect: false,
-                foreignEntityType: 'User'
+                foreignEntityType: 'User',
             });
-        }
+        },
 
     });
 });

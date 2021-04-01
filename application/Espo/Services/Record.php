@@ -1964,22 +1964,22 @@ class Record implements Crud,
         }
 
         if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden("No 'edit' access.");
+            throw new ForbiddenSilent("No 'edit' access.");
         }
 
         if (!$this->getAcl()->check($entity, 'stream')) {
-            throw new Forbidden("No 'stream' access.");
+            throw new ForbiddenSilent("No 'stream' access.");
         }
 
-        if (!$this->getAcl()->check($user, 'edit')) {
-            throw new Forbidden("No 'read' access to user.");
+        if (!$user->isPortal() && !$this->getAcl()->check($user, 'read')) {
+            throw new ForbiddenSilent("No 'read' access to user.");
         }
 
         if ($user->isPortal() && $this->getAcl()->get('portal') !== 'yes') {
-            throw new Forbidden("No 'portal' permission.");
+            throw new ForbiddenSilent("No 'portal' permission.");
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$user->isPortal() && !$this->getUser()->isAdmin() && $this->getUser()->getId() !== $user->getId()) {
             throw new Forbidden();
         }
 
@@ -2009,22 +2009,22 @@ class Record implements Crud,
         }
 
         if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden("No 'edit' access.");
+            throw new ForbiddenSilent("No 'edit' access.");
         }
 
         if (!$this->getAcl()->check($entity, 'stream')) {
-            throw new Forbidden("No 'stream' access.");
+            throw new ForbiddenSilent("No 'stream' access.");
         }
 
-        if (!$this->getAcl()->check($user, 'edit')) {
-            throw new Forbidden("No 'read' access to user.");
+        if (!$user->isPortal() && !$this->getAcl()->check($user, 'read')) {
+            throw new ForbiddenSilent("No 'read' access to user.");
         }
 
         if ($user->isPortal() && $this->getAcl()->get('portal') !== 'yes') {
-            throw new Forbidden("No 'portal' permission.");
+            throw new ForbiddenSilent("No 'portal' permission.");
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$user->isPortal() && !$this->getUser()->isAdmin() && $this->getUser()->getId() !== $user->getId()) {
             throw new Forbidden();
         }
 

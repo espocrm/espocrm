@@ -1387,6 +1387,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
                 'views/modals/followers-list';
 
+            var selectDisabled = !this.getUser().isAdmin() && this.getAcl().get('portalPermission') === 'no';
+
             var options = {
                 model: this.model,
                 link: 'followers',
@@ -1395,7 +1397,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 filtersDisabled: true,
                 url: this.model.entityType + '/' + this.model.id + '/followers',
                 createDisabled: true,
-                selectDisabled: !this.getUser().isAdmin(),
+                selectDisabled: selectDisabled,
                 rowActionsView: 'views/user/record/row-actions/relationship-followers',
             };
 
@@ -1627,10 +1629,17 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         },
 
         manageAccessStream: function (second) {
-            if (this.isNew) return;
+            if (this.isNew) {
+                return;
+            }
 
-            if (~['no', 'own'].indexOf(this.getAcl().getLevel('User', 'read'))) {
+            if (
+                ~['no', 'own'].indexOf(this.getAcl().getLevel('User', 'read'))
+                &&
+                this.getAcl().get('portalPermission') === 'no'
+            ) {
                 this.hideActionItem('viewFollowers');
+
                 return;
             }
 
