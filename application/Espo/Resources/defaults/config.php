@@ -44,7 +44,7 @@ return [
     'version' => '@@version',
     'timeZone' => 'UTC',
     'dateFormat' => 'DD.MM.YYYY',
-    'timeFormat' => 'hh:mm',
+    'timeFormat' => 'HH:mm',
     'weekStart' => 0,
     'thousandSeparator' => ',',
     'decimalMark' => '.',

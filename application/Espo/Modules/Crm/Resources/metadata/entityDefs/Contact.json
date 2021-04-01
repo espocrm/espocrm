@@ -645,8 +645,7 @@
         "campaign": {
             "type": "belongsTo",
             "entity": "Campaign",
-            "foreign": "contacts",
-            "noJoin": true
+            "foreign": "contacts"
         },
         "campaignLogRecords": {
             "type": "hasChildren",
