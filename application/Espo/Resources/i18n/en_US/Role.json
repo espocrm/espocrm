@@ -8,6 +8,7 @@
         "groupEmailAccountPermission": "Group Email Account Permission",
         "exportPermission": "Export Permission",
         "massUpdatePermission": "Mass Update Permission",
+        "followerManagementPermission": "Follower Management Permission",
         "dataPrivacyPermission": "Data Privacy Permission"
     },
     "links": {
@@ -21,6 +22,7 @@
         "groupEmailAccountPermission": "Defines an access to group email accounts, an ability to send emails from group SMTP.",
         "exportPermission": "Defines whether users have an ability to export records.",
         "massUpdatePermission": "Defines whether users have an ability to do mass update of records.",
+        "followerManagementPermission": "Allows to manage followers of specific records.",
         "dataPrivacyPermission": "Allows to view and erase personal data."
     },
     "labels": {

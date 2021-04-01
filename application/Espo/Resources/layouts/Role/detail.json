@@ -22,7 +22,7 @@
             ],
             [
                 {"name": "massUpdatePermission"},
-                false,
+                {"name": "followerManagementPermission"},
                 false
             ]
         ]

@@ -1979,7 +1979,11 @@ class Record implements Crud,
             throw new ForbiddenSilent("No 'portal' permission.");
         }
 
-        if (!$user->isPortal() && !$this->getUser()->isAdmin() && $this->getUser()->getId() !== $user->getId()) {
+        if (
+            !$user->isPortal() &&
+            $this->getUser()->getId() !== $user->getId() &&
+            !$this->getAcl()->checkUserPermission($user, 'followerManagement')
+        ) {
             throw new Forbidden();
         }
 
@@ -2024,7 +2028,11 @@ class Record implements Crud,
             throw new ForbiddenSilent("No 'portal' permission.");
         }
 
-        if (!$user->isPortal() && !$this->getUser()->isAdmin() && $this->getUser()->getId() !== $user->getId()) {
+        if (
+            !$user->isPortal() &&
+            $this->getUser()->getId() !== $user->getId() &&
+            !$this->getAcl()->checkUserPermission($user, 'followerManagement')
+        ) {
             throw new Forbidden();
         }
 

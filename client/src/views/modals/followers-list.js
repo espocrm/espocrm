@@ -37,7 +37,11 @@ define('views/modals/followers-list', ['views/modals/related-list'], function (D
         mandatorySelectAttributeList: ['type'],
 
         setup: function () {
-            if (!this.getUser().isAdmin() && this.getAcl().get('portalPermission') === 'no') {
+            if (
+                !this.getUser().isAdmin() &&
+                this.getAcl().get('followerManagementPermission') === 'no' &&
+                this.getAcl().get('portalPermission') === 'no'
+            ) {
                 this.unlinkDisabled = true;
             }
 
@@ -61,7 +65,11 @@ define('views/modals/followers-list', ['views/modals/related-list'], function (D
 
             var filter = 'active';
 
-            if (!this.getUser().isAdmin() && this.getAcl().get('portalPermission') === 'yes') {
+            if (
+                !this.getUser().isAdmin() &&
+                this.getAcl().get('followerManagementPermission') === 'no' &&
+                this.getAcl().get('portalPermission') === 'yes'
+            ) {
                 filter = 'activePortal';
             }
 

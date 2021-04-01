@@ -130,6 +130,7 @@
         "groupEmailAccountPermission",
         "exportPermission",
         "massUpdatePermission",
+        "followerManagementPermission",
         "dataPrivacyPermission"
     ],
     "valuePermissionHighestLevels": {
@@ -139,6 +140,7 @@
         "groupEmailAccountPermission": "all",
         "exportPermission": "yes",
         "massUpdatePermission": "yes",
+        "followerManagementPermission": "all",
         "dataPrivacyPermission": "yes"
     },
     "permissionsDefaults": {
@@ -148,6 +150,7 @@
         "groupEmailAccountPermission": "no",
         "exportPermission": "yes",
         "massUpdatePermission": "yes",
+        "followerManagementPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "permissionsStrictDefaults": {
@@ -157,6 +160,7 @@
         "groupEmailAccountPermission": "no",
         "exportPermission": "no",
         "massUpdatePermission": "no",
+        "followerManagementPermission": "no",
         "dataPrivacyPermission": "no"
     },
     "scopeLevelTypesDefaults": {

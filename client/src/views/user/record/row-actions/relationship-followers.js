@@ -42,6 +42,7 @@ define('views/user/record/row-actions/relationship-followers', 'views/record/row
 
             if (
                 this.getUser().isAdmin() ||
+                this.getAcl().get('followerManagementPermission') !== 'no' ||
                 this.model.isPortal() && this.getAcl().get('portalPermission') === 'yes' ||
                 this.model.id === this.getUser().id
             ) {

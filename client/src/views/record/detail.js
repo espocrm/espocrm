@@ -1387,7 +1387,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
                 'views/modals/followers-list';
 
-            var selectDisabled = !this.getUser().isAdmin() && this.getAcl().get('portalPermission') === 'no';
+            var selectDisabled =
+                !this.getUser().isAdmin() &&
+                this.getAcl().get('followerManagementPermission') === 'no' &&
+                this.getAcl().get('portalPermission') === 'no';
 
             var options = {
                 model: this.model,
