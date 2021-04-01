@@ -30,7 +30,11 @@
 namespace Espo\Services;
 
 use Espo\ORM\Entity;
-use Espo\Core\Entities\Person;
+
+use Espo\Core\{
+    Entities\Person,
+    Acl\GlobalRestricton,
+};
 
 use Espo\Core\Exceptions\NotFound;
 
@@ -38,6 +42,7 @@ use Espo\Core\Di;
 
 use DateTime;
 use DateTimezone;
+use StdClass;
 
 class EmailTemplate extends Record implements
 
@@ -55,28 +60,13 @@ class EmailTemplate extends Record implements
     use Di\HtmlizerFactorySetter;
     use Di\FieldUtilSetter;
 
-    protected function getFileStorageManager()
-    {
-        return $this->fileStorageManager;
-    }
+    public function parseTemplate(
+        Entity $emailTemplate,
+        array $params = [],
+        $copyAttachments = false,
+        $skipAcl = false
+    ) : array {
 
-    protected function getDateTime()
-    {
-        return $this->dateTime;
-    }
-
-    protected function getLanguage()
-    {
-        return $this->language;
-    }
-
-    protected function getNumber()
-    {
-        return $this->number;
-    }
-
-    public function parseTemplate(Entity $emailTemplate, array $params = [], $copyAttachments = false, $skipAcl = false)
-    {
         $entityHash = [];
 
         if (!empty($params['entityHash']) && is_array($params['entityHash'])) {
@@ -105,6 +95,7 @@ class EmailTemplate extends Record implements
                 if ($entity instanceof Person) {
                     $entityHash['Person'] = $entity;
                 }
+
                 if (empty($entityHash[$entity->getEntityType()])) {
                     $entityHash[$entity->getEntityType()] = $entity;
                 }
@@ -122,6 +113,7 @@ class EmailTemplate extends Record implements
 
         if (!empty($params['parent'])) {
             $parent = $params['parent'];
+
             $entityHash[$parent->getEntityType()] = $parent;
             $entityHash['Parent'] = $parent;
 
@@ -145,7 +137,7 @@ class EmailTemplate extends Record implements
 
         $htmlizer = null;
 
-        if ($parent && !$this->getConfig()->get('emailTemplateHtmlizerDisabled')) {
+        if ($parent && !$this->config->get('emailTemplateHtmlizerDisabled')) {
             $handlebarsInSubject = strpos($subject, '{{') !== false && strpos($subject, '}}') !== false;
             $handlebarsInBody = strpos($body, '{{') !== false && strpos($body, '}}') !== false;
 
@@ -165,6 +157,7 @@ class EmailTemplate extends Record implements
         foreach ($entityHash as $type => $entity) {
             $subject = $this->parseText($type, $entity, $subject, false, null, $skipAcl);
         }
+
         foreach ($entityHash as $type => $entity) {
             $body = $this->parseText($type, $entity, $body, false, null, $skipAcl);
         }
@@ -192,7 +185,7 @@ class EmailTemplate extends Record implements
                     $clone->set('sourceId', $attachment->getSourceId());
                     $clone->set('storage', $attachment->get('storage'));
 
-                    if (!$this->getFileStorageManager()->exists($attachment)) {
+                    if (!$this->fileStorageManager->exists($attachment)) {
                         continue;
                     }
 
@@ -224,23 +217,45 @@ class EmailTemplate extends Record implements
         return $this->parseTemplate($emailTemplate, $params, $copyAttachments);
     }
 
-    protected function parseText($type, Entity $entity, $text, $skipLinks = false, $prefixLink = null, $skipAcl = false)
-    {
+    protected function parseText(
+        string $type,
+        Entity $entity,
+        string $text,
+        bool $skipLinks = false,
+        ?string $prefixLink = null,
+        bool $skipAcl = false
+    ) : string {
+
         $attributeList = array_keys($entity->getAttributes());
 
         if ($skipAcl) {
             $forbiddenAttributeList = [];
             $forbiddenLinkList = [];
-        } else {
-            $forbiddenAttributeList = $this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
+        }
+        else {
+            $forbiddenAttributeList = $this->acl
+                ->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
 
             $forbiddenAttributeList = array_merge(
                 $forbiddenAttributeList,
-                $this->getAcl()->getScopeRestrictedAttributeList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin'])
+                $this->acl
+                    ->getScopeRestrictedAttributeList(
+                        $entity->getEntityType(),
+                        [
+                            GlobalRestricton::TYPE_FORBIDDEN,
+                            GlobalRestricton::TYPE_INTERNAL,
+                            GlobalRestricton::TYPE_ONLY_ADMIN,
+                        ]
+                    )
             );
 
-            $forbiddenLinkList = $this->getAcl()->getScopeRestrictedLinkList(
-                $entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']
+            $forbiddenLinkList = $this->acl->getScopeRestrictedLinkList(
+                $entity->getEntityType(),
+                [
+                    GlobalRestricton::TYPE_FORBIDDEN,
+                    GlobalRestricton::TYPE_INTERNAL,
+                    GlobalRestricton::TYPE_ONLY_ADMIN,
+                ]
             );
         }
 
@@ -295,8 +310,8 @@ class EmailTemplate extends Record implements
                         continue;
                     }
 
-                    if ($this->getAcl()) {
-                        if (!$this->getAcl()->check($relatedEntity, 'read')) {
+                    if ($this->acl) {
+                        if (!$this->acl->check($relatedEntity, 'read')) {
                             continue;
                         }
                     }
@@ -308,10 +323,10 @@ class EmailTemplate extends Record implements
 
         $replaceData = [];
 
-        $replaceData['today'] = $this->getDateTime()->getTodayString();
-        $replaceData['now'] = $this->getDateTime()->getNowString();
+        $replaceData['today'] = $this->dateTime->getTodayString();
+        $replaceData['now'] = $this->dateTime->getNowString();
 
-        $timeZone = $this->getConfig()->get('timeZone');
+        $timeZone = $this->config->get('timeZone');
 
         $now = new DateTime('now', new DateTimezone($timeZone));
 
@@ -328,59 +343,85 @@ class EmailTemplate extends Record implements
     {
         $value = $entity->get($attribute);
 
-        $fieldType = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'type']);
+        $fieldType = $this->getMetadata()
+            ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'type']);
 
         $attributeType = $entity->getAttributeType($attribute);
 
         if ($fieldType === 'enum') {
-            $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
-        } else if ($fieldType === 'array' || $fieldType === 'multiEnum' || $fieldType === 'checklist') {
+            if ($value === null) {
+                return '';
+            }
+
+            return (string) $this->language->translateOption($value, $attribute, $entity->getEntityType());
+        }
+
+        if ($fieldType === 'array' || $fieldType === 'multiEnum' || $fieldType === 'checklist') {
             $valueList = [];
 
-            if (is_array($value)) {
-                foreach ($value as $v) {
-                    $valueList[] = $this->getLanguage()->translateOption($v, $attribute, $entity->getEntityType());
-                }
+            if (!is_array($value)) {
+                return '';
             }
 
-            $value = implode(', ', $valueList);
-            $value = $this->getLanguage()->translateOption($value, $attribute, $entity->getEntityType());
-        } else {
-            if ($attributeType == 'date') {
-                if ($value) {
-                    $value = $this->getDateTime()->convertSystemDate($value);
-                }
-            } else if ($attributeType == 'datetime') {
-                if ($value) {
-                    $value = $this->getDateTime()->convertSystemDateTime($value);
-                }
-            } else if ($attributeType == 'text') {
-                if (!is_string($value)) {
-                    $value = '';
-                }
-
-                $value = nl2br($value);
-            } else if ($attributeType == 'float') {
-                if (is_float($value)) {
-                    $decimalPlaces = 2;
-
-                    if ($fieldType === 'currency') {
-                        $decimalPlaces = $this->getConfig()->get('currencyDecimalPlaces');
-                    }
-
-                    $value = $this->getNumber()->format($value, $decimalPlaces);
-                }
-            } else if ($attributeType == 'int') {
-                if (is_int($value)) {
-                    $value = $this->getNumber()->format($value);
-                }
+            foreach ($value as $v) {
+                $valueList[] = $this->language->translateOption($v, $attribute, $entity->getEntityType());
             }
+
+            return implode(', ', $valueList);
+        }
+
+        if ($attributeType === 'date') {
+            if (!$value) {
+                return '';
+            }
+
+            return $this->dateTime->convertSystemDate($value);
+        }
+
+        if ($attributeType === 'datetime') {
+            if (!$value) {
+                return '';
+            }
+
+            return $this->dateTime->convertSystemDateTime($value);
+        }
+
+        if ($attributeType === 'text') {
+            if (!is_string($value)) {
+                return '';
+            }
+
+            return nl2br($value);
+        }
+
+        if ($attributeType === 'float') {
+            if (!is_float($value)) {
+                return '';
+            }
+
+            $decimalPlaces = 2;
+
+            if ($fieldType === 'currency') {
+                $decimalPlaces = $this->config->get('currencyDecimalPlaces');
+            }
+
+            return $this->number->format($value, $decimalPlaces);
+        }
+
+        if ($attributeType === 'int') {
+            if (!is_int($value)) {
+                return '';
+            }
+
+            return $this->number->format($value);
         }
 
         if (!is_string($value) && is_scalar($value) || is_callable([$value, '__toString'])) {
-            $value = strval($value);
-        } else if ($value === null) {
-            $value = '';
+            return strval($value);
+        }
+
+        if ($value === null) {
+            return '';
         }
 
         if (!is_string($value)) {
@@ -390,7 +431,7 @@ class EmailTemplate extends Record implements
         return $value;
     }
 
-    public function getInsertFieldData(array $params)
+    public function getInsertFieldData(array $params) : StdClass
     {
         $to = $params['to'] ?? null;
         $parentId = $params['parentId'] ?? null;
@@ -405,7 +446,7 @@ class EmailTemplate extends Record implements
         if ($parentId && $parentType) {
             $e = $this->getEntityManager()->getEntity($parentType, $parentId);
 
-            if ($e && $this->getAcl()->check($e)) {
+            if ($e && $this->acl->check($e)) {
                 $dataList[] = [
                     'type' => 'parent',
                     'entity' => $e,
@@ -414,10 +455,11 @@ class EmailTemplate extends Record implements
         }
 
         if ($to) {
-            $e = $this->getEntityManager()->getRepository('EmailAddress')->getEntityByAddress($to, null,
-                ['Contact', 'Lead', 'Account']
-            );
-            if ($e && $e->getEntityType() !== 'User' && $this->getAcl()->check($e)) {
+            $e = $this->getEntityManager()
+                ->getRepository('EmailAddress')
+                ->getEntityByAddress($to, null, ['Contact', 'Lead', 'Account']);
+
+            if ($e && $e->getEntityType() !== 'User' && $this->acl->check($e)) {
                 $dataList[] = [
                     'type' => 'to',
                     'entity' => $e,
