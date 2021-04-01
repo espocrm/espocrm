@@ -79,4 +79,3 @@ class MassEmail extends Base
         return parent::checkInTeam($user, $entity);
     }
 }
-

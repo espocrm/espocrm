@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\AclPortal;
 
 use Espo\Entities\User as EntityUser;
+
 use Espo\ORM\Entity;
 
 use Espo\Core\AclPortal\Acl;
@@ -42,7 +43,9 @@ class KnowledgeBaseArticle extends Acl
             return false;
         }
 
-        if ($entity->get('status') !== 'Published') return false;
+        if ($entity->get('status') !== 'Published') {
+            return false;
+        }
 
         $portalIdList = $entity->getLinkMultipleIdList('portals');
 

@@ -39,11 +39,13 @@ class Contact extends Acl
     public function checkIsOwnContact(User $user, Entity $entity)
     {
         $contactId = $user->get('contactId');
+
         if ($contactId) {
             if ($entity->id === $contactId) {
                 return true;
             }
         }
+
         return false;
     }
 }

@@ -58,4 +58,3 @@ class Meeting extends Base
         return false;
     }
 }
-

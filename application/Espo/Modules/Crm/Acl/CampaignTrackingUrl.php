@@ -75,4 +75,3 @@ class CampaignTrackingUrl extends Base
         return false;
     }
 }
-

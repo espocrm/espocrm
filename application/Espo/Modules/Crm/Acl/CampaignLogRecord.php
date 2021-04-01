@@ -76,4 +76,3 @@ class CampaignLogRecord extends Base
         return false;
     }
 }
-

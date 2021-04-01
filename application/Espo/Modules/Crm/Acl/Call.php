@@ -33,4 +33,3 @@ class Call extends Meeting
 {
 
 }
-

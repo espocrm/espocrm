@@ -39,11 +39,13 @@ class Account extends Acl
     public function checkInAccount(User $user, Entity $entity)
     {
         $accountIdList = $user->getLinkMultipleIdList('accounts');
+
         if (count($accountIdList)) {
             if (in_array($entity->id, $accountIdList)) {
                 return true;
             }
         }
+
         return false;
     }
 }
