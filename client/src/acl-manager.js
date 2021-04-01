@@ -182,28 +182,47 @@ define('acl-manager', ['acl'], function (Acl) {
         },
 
         checkPermission: function (permission, user) {
-            var result = false;
-
             if (this.getUser().isAdmin()) {
-                result = true;
-            } else {
-                if (this.get(permission) === 'no') {
-                    if (user.id == this.getUser().id) {
+                return true;
+            }
+
+            var level = this.get(permission);
+
+            if (level === 'no') {
+                if (user.id === this.getUser().id) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (level === 'team') {
+                if (!user.has('teamsIds')) {
+                    return false;
+                }
+
+                var result = false;
+
+                var teamsIds = user.get('teamsIds') || [];
+
+                teamsIds.forEach(function (id) {
+                    if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
                         result = true;
                     }
-                } else if (this.get(permission) === 'team') {
-                    if (user.has('teamsIds')) {
-                        user.get('teamsIds').forEach(function (id) {
-                            if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
-                                result = true;
-                            }
-                        }, this);
-                    }
-                } else {
-                    result = true;
-                }
+                }, this);
+
+                return result;
             }
-            return result;
+
+            if (level === 'all') {
+                return true;
+            }
+
+            if (level === 'yes') {
+                return true;
+            }
+
+            return false;
         },
 
         getScopeForbiddenFieldList: function (scope, action, thresholdLevel) {
