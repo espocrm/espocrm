@@ -108,8 +108,12 @@ class Attachment extends Record
         unset($data->relatedId);
         unset($data->relatedType);
 
-        if (empty($data->file)) {
-            return;
+        if (!property_exists($data, 'file')) {
+            throw new BadRequest("No file contents.");
+        }
+
+        if (!is_string($data->file)) {
+            throw new BadRequest("Non-string file contents.");
         }
 
         $arr = explode(',', $data->file);
