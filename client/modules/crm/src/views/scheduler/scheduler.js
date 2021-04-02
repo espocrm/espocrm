@@ -55,6 +55,8 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
             this.usersField = this.options.usersField || usersFieldDefault;
 
+            this.eventAssignedUserIsAttendeeDisabled = this.getConfig().get('eventAssignedUserIsAttendeeDisabled');
+
             this.userIdList = [];
 
             this.Vis = Vis;
@@ -65,7 +67,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     m.hasChanged(this.startField) ||
                     m.hasChanged(this.endField) ||
                     m.hasChanged(this.usersField + 'Ids') ||
-                    m.hasChanged(this.assignedUserField + 'Id');
+                    (!this.eventAssignedUserIsAttendeeDisabled && m.hasChanged(this.assignedUserField + 'Id'));
                 if (!isChanged) return;
 
                 if (!m.hasChanged(this.assignedUserField + 'Id') && !m.hasChanged(this.usersField + 'Ids')) {
@@ -410,7 +412,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             var assignedUserId = this.model.get(this.assignedUserField + 'Id');
 
             var names = this.model.get(this.usersField + 'Names') || {};
-            if (assignedUserId) {
+            if (!this.eventAssignedUserIsAttendeeDisabled && assignedUserId) {
                 if (!~userIdList.indexOf(assignedUserId)) userIdList.unshift(assignedUserId);
                 names[assignedUserId] = this.model.get(this.assignedUserField + 'Name');
             }
@@ -437,7 +439,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             }
             var avatarHtml = this.getAvatarHtml(id);
             if (avatarHtml) avatarHtml += ' ';
-            var html = avatarHtml + '<span data-id="'+id+'" class="group-title">' + name + '</span>';
+            var html = avatarHtml + '<span data-id="' + id + '" class="group-title">' + name + '</span>';
 
             return html;
         },
@@ -454,8 +456,8 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 t = Date.now();
             }
 
-            return '<img class="avatar avatar-link" width="14"'+
-                ' src="'+this.getBasePath()+'?entryPoint=avatar&size=small&id=' + id + '&t='+t+'">';
+            return '<img class="avatar avatar-link" width="14"' +
+                ' src="' + this.getBasePath() + '?entryPoint=avatar&size=small&id=' + id + '&t=' + t + '">';
         },
 
         getFormatObject: function () {
@@ -494,9 +496,9 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         hexToRgb: function (hex) {
             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
             } : null;
         },
 
