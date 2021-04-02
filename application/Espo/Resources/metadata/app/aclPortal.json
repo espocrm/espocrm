@@ -78,9 +78,6 @@
             "Meeting": {
                 "reminders": false
             },
-            "Attachment": {
-                "parent": false
-            },
             "Note": {
                 "isInternal": false,
                 "isGlobal": false

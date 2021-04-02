@@ -88,9 +88,25 @@ class Attachment extends Record
         }
     }
 
+    public function filterUpdateInput(StdClass $data): void
+    {
+        parent::filterUpdateInput($data);
+
+        unset($data->parentId);
+        unset($data->parentType);
+
+        unset($data->relatedId);
+        unset($data->relatedType);
+    }
+
     public function filterCreateInput(StdClass $data) : void
     {
         parent::filterCreateInput($data);
+
+        unset($data->parentId);
+
+        unset($data->relatedId);
+        unset($data->relatedType);
 
         if (empty($data->file)) {
             return;

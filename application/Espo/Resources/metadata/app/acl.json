@@ -61,9 +61,6 @@
         "fieldLevel": {
         },
         "scopeFieldLevel": {
-            "Attachment": {
-                "parent": false
-            },
             "EmailFolder": {
                 "assignedUser": {
                     "read": "yes",
