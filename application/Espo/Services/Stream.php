@@ -1146,12 +1146,6 @@ class Stream
 
         $builder->where($where);
 
-        $countBuilder = clone $builder;
-
-        $builder
-            ->limit($params['offset'], $params['maxSize'])
-            ->order('number', 'DESC');
-
         if (!empty($params['after'])) {
             $where['createdAt>'] = $params['after'];
 
@@ -1159,6 +1153,12 @@ class Stream
                 'createdAt>' => $params['after'],
             ]);
         }
+
+        $countBuilder = clone $builder;
+
+        $builder
+            ->limit($params['offset'], $params['maxSize'])
+            ->order('number', 'DESC');
 
         $collection = $this->entityManager
             ->getRepository('Note')
