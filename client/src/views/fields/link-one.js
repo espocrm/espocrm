@@ -36,7 +36,7 @@ define('views/fields/link-one', 'views/fields/link', function (Dep) {
             var type = this.$el.find('select.search-type').val();
             var value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
-            if (type == 'isOneOf') {
+            if (type === 'isOneOf') {
                 var data = {
                     type: 'linkedWith',
                     field: this.name,
@@ -47,12 +47,14 @@ define('views/fields/link-one', 'views/fields/link', function (Dep) {
                         oneOfNameHash: this.searchData.oneOfNameHash,
                     },
                 };
+
                 return data;
 
-            } else if (type == 'is' || !type) {
+            } else if (type === 'is' || !type) {
                 if (!value) {
                     return false;
                 }
+
                 var data = {
                     type: 'linkedWith',
                     field: this.name,
@@ -62,9 +64,10 @@ define('views/fields/link-one', 'views/fields/link', function (Dep) {
                         nameValue: this.$el.find('[data-name="' + this.nameName + '"]').val(),
                     },
                 };
-                return data;
 
-            } else if (type === 'isEmpty') {
+                return data;
+            }
+            else if (type === 'isEmpty') {
                 var data = {
                     type: 'isNotLinked',
                     data: {
@@ -73,13 +76,15 @@ define('views/fields/link-one', 'views/fields/link', function (Dep) {
                 };
                 return data;
 
-            } else if (type === 'isNotEmpty') {
+            }
+            else if (type === 'isNotEmpty') {
                 var data = {
                     type: 'isLinked',
                     data: {
                         type: type,
                     },
                 };
+
                 return data;
             }
         },

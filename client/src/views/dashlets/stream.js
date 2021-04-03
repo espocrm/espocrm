@@ -59,6 +59,7 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
                         view.render();
                     });
                 }.bind(this));
+
                 collection.fetch();
 
             }, this);
@@ -69,14 +70,14 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
                 name: 'viewList',
                 html: this.translate('View'),
                 iconHtml: '<span class="fas fa-align-justify"></span>',
-                url: '#Stream'
+                url: '#Stream',
             });
 
             if (!this.getUser().isPortal()) {
                 this.actionList.unshift({
                     name: 'create',
                     html: this.translate('Create Post', 'labels'),
-                    iconHtml: '<span class="fas fa-plus"></span>'
+                    iconHtml: '<span class="fas fa-plus"></span>',
                 });
             }
         },
@@ -84,6 +85,7 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
         actionCreate: function () {
             this.createView('dialog', 'views/stream/modals/create-post', {}, function (view) {
                 view.render();
+
                 this.listenToOnce(view, 'after:save', function () {
                     view.close();
                     this.actionRefresh();
@@ -93,7 +95,7 @@ define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
 
         actionViewList: function () {
             this.getRouter().navigate('#Stream', {trigger: true});
-        }
+        },
 
     });
 });

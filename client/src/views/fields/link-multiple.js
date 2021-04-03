@@ -58,6 +58,8 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['anyOf', 'isEmpty', 'isNotEmpty', 'noneOf'],
 
+        selectFilterList: null,
+
         data: function () {
             var ids = this.model.get(this.idsName);
 
@@ -66,7 +68,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 idValuesString: ids ? ids.join(',') : '',
                 nameHash: this.model.get(this.nameHashName),
                 foreignScope: this.foreignScope,
-                valueIsSet: this.model.has(this.idsName)
+                valueIsSet: this.model.has(this.idsName),
             }, Dep.prototype.data.call(this));
         },
 
@@ -80,13 +82,20 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             return this.selectPrimaryFilterName;
         },
 
+        getSelectFilterList: function () {
+            return this.selectFilterList;
+        },
+
         getCreateAttributes: function () {},
 
         setup: function () {
             this.nameHashName = this.name + 'Names';
             this.idsName = this.name + 'Ids';
 
-            this.foreignScope = this.options.foreignScope || this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
+            this.foreignScope = this.options.foreignScope ||
+                this.foreignScope ||
+                this.model.getFieldParam(this.name, 'entity') ||
+                this.model.getLinkParam(this.name, 'entity');
 
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
@@ -94,13 +103,15 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             var self = this;
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 var nameHash = this.getSearchParamsData().nameHash || this.searchParams.nameHash || {};
                 var idList = this.getSearchParamsData().idList || this.searchParams.value || [];
                 this.nameHash = Espo.Utils.clone(nameHash);
                 this.ids = Espo.Utils.clone(idList);
-            } else {
-                this.copyValuesFromModel();            }
+            }
+            else {
+                this.copyValuesFromModel();
+            }
 
             this.listenTo(this.model, 'change:' + this.idsName, function () {
                 this.copyValuesFromModel();
@@ -110,30 +121,36 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             this.iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
 
-            if (this.mode != 'list') {
+            if (this.mode !== 'list') {
                 this.addActionHandler('selectLink', function () {
                     self.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select')  || this.selectRecordsView;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                        this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode != 'search',
+                        createButton: !this.createDisabled && this.mode !== 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
+                        filterList: this.getSelectFilterList(),
                         multiple: true,
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                        forceSelectAllAttributes: this.forceSelectAllAttributes
+                        forceSelectAllAttributes: this.forceSelectAllAttributes,
                     }, function (dialog) {
                         dialog.render();
+
                         self.notify(false);
+
                         this.listenToOnce(dialog, 'select', function (models) {
                             this.clearView('dialog');
+
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
+
                             models.forEach(function (model) {
                                 self.addLink(model.id, model.get('name'));
                             });
@@ -143,6 +160,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 this.events['click a[data-action="clearLink"]'] = function (e) {
                     var id = $(e.currentTarget).attr('data-id');
+
                     this.deleteLink(id);
                 };
             }
@@ -150,13 +168,15 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         copyValuesFromModel: function () {
             this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
+
             this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
         },
 
         handleSearchType: function (type) {
             if (~['anyOf', 'noneOf'].indexOf(type)) {
                 this.$el.find('div.link-group-container').removeClass('hidden');
-            } else {
+            }
+            else {
                 this.$el.find('div.link-group-container').addClass('hidden');
             }
         },
@@ -165,6 +185,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             this.events = _.extend({
                 'change select.search-type': function (e) {
                     var type = $(e.currentTarget).val();
+
                     this.handleSearchType(type);
                 },
             }, this.events || {});
@@ -179,27 +200,35 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         getAutocompleteUrl: function () {
             var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
+
             if (!this.forceSelectAllAttributes) {
                 var select = ['id', 'name'];
+
                 if (this.mandatorySelectAttributeList) {
+
                     select = select.concat(this.mandatorySelectAttributeList);
                 }
+
                 url += '&select=' + select.join(',')
             }
+
             var boolList = this.getSelectBoolFilterList();
-            var where = [];
+
             if (boolList) {
                 url += '&' + $.param({'boolFilterList': boolList});
             }
+
             var primary = this.getSelectPrimaryFilterName();
+
             if (primary) {
                 url += '&' + $.param({'primaryFilter': primary});
             }
+
             return url;
         },
 
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
+            if (this.mode === 'edit' || this.mode === 'search') {
                 this.$element = this.$el.find('input.main-element');
 
                 var $element = this.$element;
@@ -223,7 +252,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         transformResult: function (response) {
                             var response = JSON.parse(response);
+
                             var list = [];
+
                             response.list.forEach(function(item) {
                                 list.push({
                                     id: item.id,
@@ -238,9 +269,11 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         }.bind(this),
                         onSelect: function (s) {
                             this.addLink(s.id, s.name);
+
                             this.$element.val('');
                         }.bind(this)
                     });
+
                     this.$element.attr('autocomplete', 'espo-' + this.name);
 
                     this.once('render', function () {
@@ -258,7 +291,7 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
                 this.renderLinks();
 
-                if (this.mode == 'edit') {
+                if (this.mode === 'edit') {
                     if (this.sortable) {
                         this.$el.find('.link-container').sortable({
                             stop: function () {
@@ -269,8 +302,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     }
                 }
 
-                if (this.mode == 'search') {
+                if (this.mode === 'search') {
                     var type = this.$el.find('select.search-type').val();
+
                     this.handleSearchType(type);
 
                     this.$el.find('select.search-type').on('change', function () {
@@ -307,13 +341,16 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         addLink: function (id, name) {
             if (!~this.ids.indexOf(id)) {
                 this.ids.push(id);
+
                 this.nameHash[id] = name;
+
                 this.addLinkHtml(id, name);
                 this.afterAddLink(id);
 
                 this.trigger('add-link', id);
                 this.trigger('add-link:' + id);
             }
+
             this.trigger('change');
         },
 
@@ -329,9 +366,14 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
             name = name || id;
 
             var $container = this.$el.find('.link-container');
+
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
+
             $el.html(this.getHelper().escapeString(name || id) + '&nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>');
+
+            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id +
+                '" data-action="clearLink"><span class="fas fa-times"></a>');
+
             $container.append($el);
 
             return $el;
@@ -343,25 +385,33 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         getDetailLinkHtml: function (id) {
             var name = this.nameHash[id] || id;
+
             if (!name && id) {
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
             var iconHtml = '';
-            if (this.mode == 'detail') {
+
+            if (this.mode === 'detail') {
                 iconHtml = this.getIconHtml(id);
             }
-            return '<a href="#' + this.foreignScope + '/view/' + id + '">' + iconHtml + this.getHelper().escapeString(name) + '</a>';
+
+            return '<a href="#' + this.foreignScope + '/view/' + id + '">' +
+                iconHtml + this.getHelper().escapeString(name) + '</a>';
         },
 
         getValueForDisplay: function () {
-            if (this.mode == 'detail' || this.mode == 'list') {
+            if (this.mode === 'detail' || this.mode === 'list') {
                 var names = [];
+
                 this.ids.forEach(function (id) {
                     names.push(this.getDetailLinkHtml(id));
                 }, this);
+
                 if (names.length) {
-                    return '<div class="link-multiple-item">' + names.join('</div><div class="link-multiple-item">') + '</div>';
+                    return '<div class="link-multiple-item">' +
+                        names.join('</div><div class="link-multiple-item">') + '</div>';
                 }
+
                 return;
             }
         },
@@ -369,9 +419,12 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 var idList = this.model.get(this.idsName) || [];
-                if (idList.length == 0) {
+
+                if (idList.length === 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg);
+
                     return true;
                 }
             }
@@ -379,7 +432,9 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         fetch: function () {
             var data = {};
+
             data[this.idsName] = this.ids;
+
             data[this.nameHashName] = this.nameHash;
 
             return data;
@@ -387,9 +442,14 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
         fetchFromDom: function () {
             this.ids = [];
+
             this.$el.find('.link-container').children().each(function(i, li) {
                 var id = $(li).attr('data-id');
-                if (!id) return;
+
+                if (!id) {
+                    return;
+                }
+
                 this.ids.push(id);
             }.bind(this));
         },
@@ -408,13 +468,14 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         nameHash: this.nameHash,
                     },
                 };
+
                 if (!idList.length) {
                     data.value = null;
                 }
-                return data;
-            } else if (type === 'noneOf') {
-                var values = this.ids || [];
 
+                return data;
+            }
+            else if (type === 'noneOf') {
                 var data = {
                     type: 'notLinkedWith',
                     value: this.ids || [],
@@ -423,29 +484,36 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                         nameHash: this.nameHash,
                     },
                 };
+
                 return data;
-            } else if (type === 'isEmpty') {
+            }
+            else if (type === 'isEmpty') {
                 var data = {
                     type: 'isNotLinked',
                     data: {
                         type: type,
                     },
                 };
+
                 return data;
-            } else if (type === 'isNotEmpty') {
+            }
+            else if (type === 'isNotEmpty') {
                 var data = {
                     type: 'isLinked',
                     data: {
                         type: type,
                     },
                 };
+
                 return data;
             }
         },
 
         getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type || 'anyOf';
-        }
+            return this.getSearchParamsData().type ||
+                this.searchParams.typeFront ||
+                this.searchParams.type || 'anyOf';
+        },
 
     });
 });

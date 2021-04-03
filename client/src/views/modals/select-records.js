@@ -68,6 +68,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             this.filters = this.options.filters || {};
             this.boolFilterList = this.options.boolFilterList || [];
             this.primaryFilterName = this.options.primaryFilterName || null;
+            this.filterList = this.options.filterList || this.filterList || null;
 
             if ('multiple' in this.options) {
                 this.multiple = this.options.multiple;
@@ -82,7 +83,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             this.buttonList = [
                 {
                     name: 'cancel',
-                    label: 'Cancel'
+                    label: 'Cancel',
                 }
             ];
 
@@ -129,18 +130,22 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             }
 
             this.headerHtml = '';
+
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+
             this.headerHtml += this.translate('Select') + ': ';
             this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
             this.headerHtml = iconHtml + this.headerHtml;
 
             this.waitForView('list');
+
             if (this.searchPanel) {
                 this.waitForView('search');
             }
 
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
                 this.collection = collection;
 
                 if (this.defaultOrderBy) {
@@ -148,15 +153,19 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 }
 
                 this.loadSearch();
+
                 this.wait(true);
+
                 this.loadList();
             }, this);
-
         },
 
         loadSearch: function () {
-            var searchManager = this.searchManager = new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+            var searchManager = this.searchManager =
+                new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+
             searchManager.emptyOnReset = true;
+
             if (this.filters) {
                 searchManager.setAdvanced(this.filters);
             }
@@ -173,6 +182,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
 
                 searchManager.setBool(d);
             }
+
             var primaryFilterName = this.primaryFilterName ||
                 this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
 
@@ -216,6 +226,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             }, function (view) {
                 this.listenToOnce(view, 'select', function (model) {
                     this.trigger('select', model);
+
                     this.close();
                 }.bind(this));
 
@@ -223,10 +234,12 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     this.listenTo(view, 'check', function () {
                         if (view.checkedList.length) {
                             this.enableButton('select');
-                        } else {
+                        }
+                        else {
                             this.disableButton('select');
                         }
                     }, this);
+
                     this.listenTo(view, 'select-all-results', function () {
                         this.enableButton('select');
                     }, this);
@@ -236,14 +249,19 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     this.listenToOnce(view, 'after:build-rows', function () {
                         this.wait(false);
                     }, this);
+
                     this.collection.fetch();
-                } else {
+                }
+                else {
                     view.getSelectAttributeList(function (selectAttributeList) {
                         if (!~selectAttributeList.indexOf('name')) {
                             selectAttributeList.push('name');
                         }
 
-                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || [];
+                        var mandatorySelectAttributeList =
+                            this.options.mandatorySelectAttributeList ||
+                            this.mandatorySelectAttributeList || [];
+
                         mandatorySelectAttributeList.forEach(function (attribute) {
                             if (!~selectAttributeList.indexOf(attribute)) {
                                 selectAttributeList.push(attribute);
@@ -253,9 +271,11 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
+
                         this.listenToOnce(view, 'after:build-rows', function () {
                             this.wait(false);
                         }, this);
+
                         this.collection.fetch();
                     }.bind(this));
                 }
@@ -265,12 +285,14 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
         create: function () {
             if (this.options.triggerCreateEvent) {
                 this.trigger('create');
+
                 return;
             }
 
             var self = this;
 
             this.notify('Loading...');
+
             this.createView('quickCreate', 'views/modals/edit', {
                 scope: this.scope,
                 fullFormDisabled: true,
@@ -279,19 +301,22 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 view.once('after:render', function () {
                     self.notify(false);
                 });
+
                 view.render();
 
                 self.listenToOnce(view, 'leave', function () {
                     view.close();
                     self.close();
                 });
+
                 self.listenToOnce(view, 'after:save', function (model) {
                     view.close();
+
                     self.trigger('select', model);
+
                     setTimeout(function () {
                         self.close();
                     }, 10);
-
                 }.bind(this));
             });
         },

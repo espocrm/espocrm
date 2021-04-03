@@ -107,7 +107,9 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.interactiveMode = this.options.interactiveMode;
+
             return data;
         },
 
@@ -120,12 +122,15 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 this.events['focus textarea[data-name="post"]'] = function (e) {
                     this.enablePostingMode();
                 };
+
                 this.events['keypress textarea[data-name="post"]'] = function (e) {
-                    if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
+                    if ((e.keyCode === 10 || e.keyCode === 13) && e.ctrlKey) {
                         this.post();
-                    } else if (e.keyCode == 9) {
+                    }
+                    else if (e.keyCode === 9) {
                         $text = $(e.currentTarget);
-                        if ($text.val() == '') {
+
+                        if ($text.val() === '') {
                             this.disablePostingMode();
                         }
                     }
@@ -147,18 +152,24 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 optionList.push('users');
                 optionList.push('teams');
             }
+
             if (assignmentPermission === 'all') {
                 optionList.push('all');
             }
+
             if (portalPermission === 'yes') {
                 optionList.push('portals');
+
+                if (!~optionList.indexOf('users')) {
+                    optionList.push('users');
+                }
             }
 
             this.createField('targetType', 'views/fields/enum', {
                 options: optionList
             });
 
-            this.createField('users', 'views/fields/users', {});
+            this.createField('users', 'views/note/fields/users', {});
             this.createField('teams', 'views/fields/teams', {});
             this.createField('portals', 'views/fields/link-multiple', {});
             this.createField('post', 'views/note/fields/post', {
@@ -166,6 +177,7 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 rowsMin: 1,
                 rows: 25,
             });
+
             this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
 
             this.listenTo(this.model, 'change', function () {
@@ -177,8 +189,11 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
         disablePostingMode: function () {
             this.postingMode = false;
+
             this.$el.find('.post-control').addClass('hidden');
+
             this.setConfirmLeaveOut(false);
+
             $('body').off('click.stream-create-post');
 
             this.getFieldView('post').$element.prop('rows', 1);
@@ -186,10 +201,16 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
         enablePostingMode: function () {
             this.$el.find('.post-control').removeClass('hidden');
+
             if (!this.postingMode) {
                 $('body').off('click.stream-create-post');
+
                 $('body').on('click.stream-create-post', function (e) {
-                    if ($.contains(window.document.body, e.target) && !$.contains(this.$el.get(0), e.target) && !$(e.target).closest('.modal-dialog').length) {
+                    if (
+                        $.contains(window.document.body, e.target) &&
+                        !$.contains(this.$el.get(0), e.target) &&
+                        !$(e.target).closest('.modal-dialog').length
+                    ) {
                         if (this.getFieldView('post') && this.getFieldView('post').$element.val() == '') {
                             if (!(this.model.get('attachmentsIds') || []).length) {
                                 this.disablePostingMode();
@@ -206,12 +227,19 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
             this.$post = this.$el.find('button.post');
 
             var postView = this.getFieldView('post');
+
             if (postView) {
                 this.stopListening(postView, 'add-files');
+
                 this.listenTo(postView, 'add-files', function (files) {
                     this.enablePostingMode();
+
                     var attachmentsView = this.getFieldView('attachments');
-                    if (!attachmentsView) return;
+
+                    if (!attachmentsView) {
+                        return;
+                    }
+
                     attachmentsView.uploadFiles(files);
                 }, this);
             }
@@ -223,6 +251,7 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
             if (this.model.get('post') === '' && !(this.model.get('attachmentsIds') || []).length) {
                 notValid = true;
             }
+
             return notValid;
         },
 
@@ -232,6 +261,7 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
 
         beforeSave: function () {
             Espo.Ui.notify(this.translate('posting', 'messages'));
+
             this.$post.addClass('disabled');
         },
 
@@ -243,15 +273,16 @@ define('views/stream/record/edit', 'views/record/base', function (Dep) {
                 this.model.set('type', 'Post');
 
                 this.disablePostingMode();
+
                 this.$post.removeClass('disabled');
+
                 this.getFieldView('post').$element.prop('rows', 1);
             }
         },
 
         afterNotValid: function () {
             this.$post.removeClass('disabled');
-        }
+        },
 
     });
-
 });

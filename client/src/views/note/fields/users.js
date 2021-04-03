@@ -26,48 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/modals/create-post', 'views/modal', function (Dep) {
+define('views/note/fields/users', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
-        _template: '<div class="record">{{{record}}}</div>',
+        init: function () {
+            this.assignmentPermission = this.getAcl().get('assignmentPermission');
+            this.portalPermission = this.getAcl().get('portalPermission');
 
-        setup: function () {
-            this.headerHtml = this.translate('Create Post');
+            if (this.assignmentPermission === 'no' && this.portalPermission === 'no') {
+                this.readOnly = true;
+            }
 
-            this.buttonList = [
-                {
-                    name: 'post',
-                    label: 'Post',
-                    style: 'primary',
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    },
-                }
-            ];
-
-            this.wait(true);
-
-            this.getModelFactory().create('Note', function (model) {
-                this.createView('record', 'views/stream/record/edit', {
-                    model: model,
-                    el: this.options.el + ' .record',
-                }, function (view) {
-                    this.listenTo(view, 'after:save', function () {
-                        this.trigger('after:save');
-                    }, this);
-                }, this);
-
-                this.wait(false);
-            }, this);
+            Dep.prototype.init.call(this);
         },
 
-        actionPost: function () {
-            this.getView('record').save();
+        getSelectBoolFilterList: function () {
+            if (this.assignmentPermission === 'team') {
+                return ['onlyMyTeam'];
+            }
+
+            if (this.portalPermission === 'yes') {
+                return null;
+            }
+        },
+
+        getSelectPrimaryFilterName: function () {
+            if (this.portalPermission === 'yes' && this.assignmentPermission === 'no') {
+                return 'activePortal';
+            }
+
+            return 'active';
+        },
+
+        getSelectFilterList: function () {
+
+            if (this.portalPermission === 'yes') {
+                if (this.assignmentPermission === 'no') {
+                     return ['activePortal'];
+                }
+
+                return ['active', 'activePortal'];
+            }
+
+            return null;
         },
 
     });

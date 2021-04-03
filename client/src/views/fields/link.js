@@ -54,19 +54,27 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isNot', 'isOneOf', 'isNotOneOf'],
 
+        selectFilterList: null,
+
         data: function () {
-            var nameValue = this.model.has(this.nameName) ? this.model.get(this.nameName) : this.model.get(this.idName);
+            var nameValue = this.model.has(this.nameName) ?
+                this.model.get(this.nameName) :
+                this.model.get(this.idName);
+
             if (nameValue === null) {
                 nameValue = this.model.get(this.idName);
             }
+
             if (this.isReadMode() && !nameValue && this.model.get(this.idName)) {
                 nameValue = this.translate(this.foreignScope, 'scopeNames');
             }
 
             var iconHtml = null;
+
             if (this.mode === 'detail') {
                 iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
             }
+
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
@@ -88,6 +96,10 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
             return this.selectPrimaryFilterName;
         },
 
+        getSelectFilterList: function () {
+            return this.selectFilterList;
+        },
+
         getCreateAttributes: function () {},
 
         setup: function () {
@@ -95,51 +107,59 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
             this.idName = this.name + 'Id';
 
             this.foreignScope = this.options.foreignScope || this.foreignScope;
-            this.foreignScope = this.foreignScope || this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
+
+            this.foreignScope = this.foreignScope ||
+                this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
 
             if ('createDisabled' in this.options) {
                 this.createDisabled = this.options.createDisabled;
             }
-            var self = this;
 
-            if (this.mode != 'list') {
+            if (this.mode !== 'list') {
                 this.addActionHandler('selectLink', function () {
                     this.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                        this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode != 'search',
+                        createButton: !this.createDisabled && this.mode !== 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
                         createAttributes: (this.mode === 'edit') ? this.getCreateAttributes() : null,
                         mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                        forceSelectAllAttributes: this.forceSelectAllAttributes
+                        forceSelectAllAttributes: this.forceSelectAllAttributes,
+                        filterList: this.getSelectFilterList(),
                     }, function (view) {
                         view.render();
+
                         this.notify(false);
+
                         this.listenToOnce(view, 'select', function (model) {
                             this.clearView('dialog');
+
                             this.select(model);
                         }, this);
                     }, this);
                 });
+
                 this.addActionHandler('clearLink', function () {
                     this.clearLink();
                 });
             }
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 this.addActionHandler('selectLinkOneOf', function () {
                     this.notify('Loading...');
 
-                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') || this.selectRecordsView;
+                    var viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+                        this.selectRecordsView;
 
                     this.createView('dialog', viewName, {
                         scope: this.foreignScope,
-                        createButton: !this.createDisabled && this.mode != 'search',
+                        createButton: !this.createDisabled && this.mode !== 'search',
                         filters: this.getSelectFilters(),
                         boolFilterList: this.getSelectBoolFilterList(),
                         primaryFilterName: this.getSelectPrimaryFilterName(),
@@ -147,11 +167,14 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                     }, function (view) {
                         view.render();
                         this.notify(false);
+
                         this.listenToOnce(view, 'select', function (models) {
                             this.clearView('dialog');
+
                             if (Object.prototype.toString.call(models) !== '[object Array]') {
                                 models = [models];
                             }
+
                             models.forEach(function (model) {
                                 this.addLinkOneOf(model.id, model.get('name'));
                             }, this);
@@ -161,6 +184,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 this.events['click a[data-action="clearLinkOneOf"]'] = function (e) {
                     var id = $(e.currentTarget).data('id').toString();
+
                     this.deleteLinkOneOf(id);
                 };
             }
@@ -169,10 +193,12 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
         select: function (model) {
             this.$elementName.val(model.get('name') || model.id);
             this.$elementId.val(model.get('id'));
+
             if (this.mode === 'search') {
                 this.searchData.idValue = model.get('id');
                 this.searchData.nameValue = model.get('name') || model.id;
             }
+
             this.trigger('change');
         },
 
@@ -183,12 +209,18 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         setupSearch: function () {
-            this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList || this.searchParams.oneOfIdList || [];
-            this.searchData.oneOfNameHash = this.getSearchParamsData().oneOfNameHash || this.searchParams.oneOfNameHash || {};
+            this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList ||
+                this.searchParams.oneOfIdList || [];
+
+            this.searchData.oneOfNameHash = this.getSearchParamsData().oneOfNameHash ||
+                this.searchParams.oneOfNameHash || {};
 
             if (~['is', 'isNot', 'equals'].indexOf(this.getSearchType())) {
-                this.searchData.idValue = this.getSearchParamsData().idValue || this.searchParams.idValue || this.searchParams.value;
-                this.searchData.nameValue = this.getSearchParamsData().nameValue || this.searchParams.nameValue || this.searchParams.valueName;
+                this.searchData.idValue = this.getSearchParamsData().idValue ||
+                    this.searchParams.idValue || this.searchParams.value;
+
+                this.searchData.nameValue = this.getSearchParamsData().nameValue |
+                    this.searchParams.nameValue || this.searchParams.valueName;
             }
 
             this.events = _.extend({
@@ -450,8 +482,10 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         type: type
                     }
                 };
+
                 return data;
-            } else if (type == 'isNotEmpty') {
+            }
+            else if (type == 'isNotEmpty') {
                 var data = {
                     type: 'isNotNull',
                     attribute: this.idName,
@@ -459,8 +493,10 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         type: type
                     }
                 };
+
                 return data;
-            } else if (type == 'isOneOf') {
+            }
+            else if (type == 'isOneOf') {
                 var data = {
                     type: 'in',
                     attribute: this.idName,
@@ -471,8 +507,10 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         oneOfNameHash: this.searchData.oneOfNameHash
                     }
                 };
+
                 return data;
-            } else if (type == 'isNotOneOf') {
+            }
+            else if (type == 'isNotOneOf') {
                 var data = {
                     type: 'or',
                     value: [
@@ -492,6 +530,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         oneOfNameHash: this.searchData.oneOfNameHash
                     }
                 };
+
                 return data;
             } else if (type == 'isNotOneOfAndIsNotEmpty') {
                 var data = {
@@ -504,12 +543,16 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         oneOfNameHash: this.searchData.oneOfNameHash
                     }
                 };
+
                 return data;
-            }  else if (type == 'isNot') {
+            }
+            else if (type == 'isNot') {
                 if (!value) {
                     return false;
                 }
+
                 var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+
                 var data = {
                     type: 'or',
                     value: [
@@ -534,7 +577,9 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 if (!value) {
                     return false;
                 }
+
                 var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+
                 var data = {
                     type: 'notEquals',
                     attribute: this.idName,
@@ -545,12 +590,16 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         nameValue: nameValue
                     }
                 };
+
                 return data;
-            } else {
+            }
+            else {
                 if (!value) {
                     return false;
                 }
+
                 var nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+
                 var data = {
                     type: 'equals',
                     attribute: this.idName,
@@ -561,13 +610,14 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         nameValue: nameValue
                     }
                 };
+
                 return data;
             }
         },
 
         getSearchType: function () {
             return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
-        }
+        },
 
     });
 });
