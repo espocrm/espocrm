@@ -390,7 +390,7 @@ class Note extends Record
 
         $ownerUserIdAttribute = $this->getAclManager()
             ->getImplementation($entityType)
-            ->getOwnerUserIdAttribute($entity);
+            ->getOwnerUserIdAttribute();
 
         $usersAttributeIsChanged = false;
         $teamsAttributeIsChanged = false;

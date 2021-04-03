@@ -37,7 +37,7 @@ interface EntityAcl
 {
     public function checkEntity(User $user, Entity $entity, ScopeData $data, string $action = Table::ACTION_READ): bool;
 
-    public function getOwnerUserIdAttribute(Entity $entity): ?string;
+    public function getOwnerUserIdAttribute(): ?string;
 
     public function getReadLevel(User $user, ScopeData $data) : string;
 }

@@ -1225,7 +1225,7 @@ class Stream
 
         $ownerUserIdAttribute = $this->aclManager
             ->getImplementation($entity->getEntityType())
-            ->getOwnerUserIdAttribute($entity);
+            ->getOwnerUserIdAttribute();
 
         if ($ownerUserIdAttribute && $entity->get($ownerUserIdAttribute)) {
             if ($entity->getAttributeParam($ownerUserIdAttribute, 'isLinkMultipleIdList')) {
