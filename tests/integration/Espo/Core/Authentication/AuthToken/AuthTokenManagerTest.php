@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\Espo\Core\Formula;
+namespace tests\integration\Espo\Core\\Authentication\AuthToken;
 
 use Espo\Core\Authentication\AuthToken\AuthTokenData;
 
