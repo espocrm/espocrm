@@ -88,12 +88,32 @@ class Attachment extends Record
         }
     }
 
+    public function filterUpdateInput(StdClass $data): void
+    {
+        parent::filterUpdateInput($data);
+
+        unset($data->parentId);
+        unset($data->parentType);
+
+        unset($data->relatedId);
+        unset($data->relatedType);
+    }
+
     public function filterCreateInput(StdClass $data) : void
     {
         parent::filterCreateInput($data);
 
-        if (empty($data->file)) {
-            return;
+        unset($data->parentId);
+
+        unset($data->relatedId);
+        unset($data->relatedType);
+
+        if (!property_exists($data, 'file')) {
+            throw new BadRequest("No file contents.");
+        }
+
+        if (!is_string($data->file)) {
+            throw new BadRequest("Non-string file contents.");
         }
 
         $arr = explode(',', $data->file);
