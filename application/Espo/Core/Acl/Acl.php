@@ -99,11 +99,6 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         return $data->get($action);
     }
 
-    public function getReadLevel(User $user, ScopeData $data) : string
-    {
-        return $data->getRead();
-    }
-
     protected function checkScopeInternal(
         User $user,
         ScopeData $data,
