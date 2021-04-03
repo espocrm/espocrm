@@ -49,12 +49,12 @@ class RDBTransactionManager
         $this->transactionManager = $transactionManager;
     }
 
-    public function isStarted() : bool
+    public function isStarted(): bool
     {
         return $this->level > 0;
     }
 
-    public function start()
+    public function start(): void
     {
         if ($this->isStarted()) {
             throw new RuntimeException("Can't start a transaction more than once.");
@@ -65,7 +65,7 @@ class RDBTransactionManager
         $this->level = $this->transactionManager->getLevel();
     }
 
-    public function commit()
+    public function commit(): void
     {
         if (!$this->isStarted()) {
             throw new RuntimeException("Can't commit not started transaction.");
@@ -78,7 +78,7 @@ class RDBTransactionManager
         $this->level = 0;
     }
 
-    public function rollback()
+    public function rollback(): void
     {
         if (!$this->isStarted()) {
             throw new RuntimeException("Can't rollback not started transaction.");

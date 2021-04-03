@@ -42,7 +42,7 @@ class Delete implements Query
     /**
      * Get an entity type.
      */
-    public function getFrom() : string
+    public function getFrom(): string
     {
         return $this->params['from'];
     }

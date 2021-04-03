@@ -144,11 +144,6 @@ class Database extends RDBRepository
         }
     }
 
-    public function remove(Entity $entity, array $options = [])
-    {
-        return parent::remove($entity, $options);
-    }
-
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
@@ -229,7 +224,7 @@ class Database extends RDBRepository
         }
     }
 
-    public function save(Entity $entity, array $options = [])
+    public function save(Entity $entity, array $options = []): void
     {
         $nowString = date('Y-m-d H:i:s', time());
         $restoreData = [];
@@ -285,9 +280,7 @@ class Database extends RDBRepository
 
         $this->restoreData = $restoreData;
 
-        $result = parent::save($entity, $options);
-
-        return $result;
+        parent::save($entity, $options);
     }
 
     protected function processFileFieldsSave(Entity $entity)

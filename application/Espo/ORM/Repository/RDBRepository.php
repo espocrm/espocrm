@@ -41,6 +41,7 @@ use Espo\ORM\{
 
 use StdClass;
 use RuntimeException;
+use PDO;
 
 class RDBRepository extends Repository
 {
@@ -67,7 +68,7 @@ class RDBRepository extends Repository
         $this->transactionManager = new RDBTransactionManager($entityManager->getTransactionManager());
     }
 
-    protected function getMapper() : Mapper
+    protected function getMapper(): Mapper
     {
         return $this->entityManager->getMapper();
     }
@@ -75,7 +76,7 @@ class RDBRepository extends Repository
     /**
      * Get a new entity.
      */
-    public function getNew() : ?Entity
+    public function getNew(): ?Entity
     {
         $entity = $this->entityFactory->create($this->entityType);
 
@@ -91,7 +92,7 @@ class RDBRepository extends Repository
     /**
      * Fetch an entity by ID.
      */
-    public function getById(string $id) : ?Entity
+    public function getById(string $id): ?Entity
     {
         $select = $this->entityManager->getQueryBuilder()
             ->select()
@@ -104,7 +105,7 @@ class RDBRepository extends Repository
         return $this->getMapper()->selectOne($select);
     }
 
-    public function get(?string $id = null) : ?Entity
+    public function get(?string $id = null): ?Entity
     {
         if (is_null($id)) {
             return $this->getNew();
@@ -113,14 +114,14 @@ class RDBRepository extends Repository
         return $this->getById($id);
     }
 
-    protected function processCheckEntity(Entity $entity)
+    protected function processCheckEntity(Entity $entity): void
     {
         if ($entity->getEntityType() !== $this->entityType) {
             throw new RuntimeException("An entity type doesn't match the repository.");
         }
     }
 
-    public function save(Entity $entity, array $options = [])
+    public function save(Entity $entity, array $options = []): void
     {
         $this->processCheckEntity($entity);
 
@@ -160,15 +161,15 @@ class RDBRepository extends Repository
     /**
      * Restore a record flagged as deleted.
      */
-    public function restoreDeleted(string $id)
+    public function restoreDeleted(string $id): void
     {
-        return $this->getMapper()->restoreDeleted($this->entityType, $id);
+        $this->getMapper()->restoreDeleted($this->entityType, $id);
     }
 
     /**
      * Get an access point for a specific relation of a record.
      */
-    public function getRelation(Entity $entity, string $relationName) : RDBRelation
+    public function getRelation(Entity $entity, string $relationName): RDBRelation
     {
         return new RDBRelation($this->entityManager, $entity, $relationName, $this->hookMediator);
     }
@@ -176,7 +177,7 @@ class RDBRepository extends Repository
     /**
      * Remove a record (mark as deleted).
      */
-    public function remove(Entity $entity, array $options = [])
+    public function remove(Entity $entity, array $options = []): void
     {
         $this->processCheckEntity($entity);
 
@@ -190,7 +191,7 @@ class RDBRepository extends Repository
     /**
      * @deprecated Use QueryBuilder instead.
      */
-    public function deleteFromDb(string $id, bool $onlyDeleted = false)
+    public function deleteFromDb(string $id, bool $onlyDeleted = false): void
     {
         $this->getMapper()->deleteFromDb($this->entityType, $id, $onlyDeleted);
     }
@@ -200,7 +201,7 @@ class RDBRepository extends Repository
      *
      * @param $params @deprecated Omit it.
      */
-    public function find(?array $params = []) : Collection
+    public function find(?array $params = []): Collection
     {
         return $this->createSelectBuilder()->find($params);
     }
@@ -210,7 +211,7 @@ class RDBRepository extends Repository
      *
      * @param $params @deprecated Omit it.
      */
-    public function findOne(?array $params = []) : ?Entity
+    public function findOne(?array $params = []): ?Entity
     {
         $collection = $this->limit(0, 1)->find($params);
 
@@ -224,7 +225,7 @@ class RDBRepository extends Repository
     /**
      * Find records by a SQL query.
      */
-    public function findBySql(string $sql) : SthCollection
+    public function findBySql(string $sql): SthCollection
     {
         return $this->getMapper()->selectBySql($this->entityType, $sql);
     }
@@ -283,7 +284,7 @@ class RDBRepository extends Repository
     /**
      * @deprecated
      */
-    public function countRelated(Entity $entity, string $relationName, ?array $params = null) : int
+    public function countRelated(Entity $entity, string $relationName, ?array $params = null): int
     {
         $params = $params ?? [];
 
@@ -319,8 +320,11 @@ class RDBRepository extends Repository
     }
 
     protected function applyRelationAdditionalColumns(
-        Entity $entity, string $relationName, array $columns, Select $select
-    ) : Select {
+        Entity $entity,
+        string $relationName,
+        array $columns,
+        Select $select
+    ): Select {
 
         if (empty($columns)) {
             return $select;
@@ -350,8 +354,12 @@ class RDBRepository extends Repository
     }
 
     protected function applyRelationAdditionalColumnsConditions(
-        Entity $entity, string $relationName, array $conditions, Select $select
-    ) : Select {
+        Entity $entity,
+        string $relationName,
+        array $conditions,
+        Select $select
+    ): Select {
+
         if (empty($conditions)) {
             return $select;
         }
@@ -373,7 +381,7 @@ class RDBRepository extends Repository
     /**
      * @deprecated
      */
-    public function isRelated(Entity $entity, string $relationName, $foreign) : bool
+    public function isRelated(Entity $entity, string $relationName, $foreign): bool
     {
         if (!$entity->id) {
             return false;
@@ -436,6 +444,7 @@ class RDBRepository extends Repository
         $this->beforeRelate($entity, $relationName, $foreign, $columnData, $options);
 
         $beforeMethodName = 'beforeRelate' . ucfirst($relationName);
+
         if (method_exists($this, $beforeMethodName)) {
             $this->$beforeMethodName($entity, $foreign, $columnData, $options);
         }
@@ -456,7 +465,8 @@ class RDBRepository extends Repository
 
             if ($foreign instanceof Entity) {
                 $result = $this->getMapper()->relate($entity, $relationName, $foreign, $data);
-            } else {
+            }
+            else {
                 $id = $foreign;
 
                 $result = $this->getMapper()->relateById($entity, $relationName, $id, $data);
@@ -610,7 +620,7 @@ class RDBRepository extends Repository
     /**
      * @param $params @deprecated Omit it.
      */
-    public function count(array $params = []) : int
+    public function count(array $params = []): int
     {
         return $this->createSelectBuilder()->count($params);
     }
@@ -648,7 +658,7 @@ class RDBRepository extends Repository
     /**
      * Clone an existing query for a further modification and usage by 'find' or 'count' methods.
      */
-    public function clone(Select $query) : RDBSelectBuilder
+    public function clone(Select $query): RDBSelectBuilder
     {
         if ($this->entityType !== $query->getFrom()) {
             throw new RuntimeException("Can't clone a query of a different entity type.");
@@ -664,7 +674,7 @@ class RDBRepository extends Repository
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::join()
      */
-    public function join($relationName, ?string $alias = null, ?array $conditions = null) : RDBSelectBuilder
+    public function join($relationName, ?string $alias = null, ?array $conditions = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->join($relationName, $alias, $conditions);
     }
@@ -674,7 +684,7 @@ class RDBRepository extends Repository
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::leftJoin()
      */
-    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : RDBSelectBuilder
+    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->leftJoin($relationName, $alias, $conditions);
     }
@@ -682,7 +692,7 @@ class RDBRepository extends Repository
     /**
      * Set DISTINCT parameter.
      */
-    public function distinct() : RDBSelectBuilder
+    public function distinct(): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->distinct();
     }
@@ -690,7 +700,7 @@ class RDBRepository extends Repository
     /**
      * Lock selected rows. To be used within a transaction.
      */
-    public function forUpdate() : RDBSelectBuilder
+    public function forUpdate(): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->forUpdate();
     }
@@ -700,7 +710,7 @@ class RDBRepository extends Repository
      *
      * @todo Remove.
      */
-    public function sth() : RDBSelectBuilder
+    public function sth(): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->sth();
     }
@@ -710,7 +720,7 @@ class RDBRepository extends Repository
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::where()
      */
-    public function where($param1 = [], $param2 = null) : RDBSelectBuilder
+    public function where($param1 = [], $param2 = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->where($param1, $param2);
     }
@@ -720,7 +730,7 @@ class RDBRepository extends Repository
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::having()
      */
-    public function having($param1 = [], $param2 = null) : RDBSelectBuilder
+    public function having($param1 = [], $param2 = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->having($param1, $param2);
     }
@@ -731,7 +741,7 @@ class RDBRepository extends Repository
      * @param string|array $attribute An attribute to order by or order definitions as an array.
      * @param bool|string $direction TRUE for DESC order.
      */
-    public function order($attribute = 'id', $direction = 'ASC') : RDBSelectBuilder
+    public function order($attribute = 'id', $direction = 'ASC'): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->order($attribute, $direction);
     }
@@ -739,7 +749,7 @@ class RDBRepository extends Repository
     /**
      * Apply OFFSET and LIMIT.
      */
-    public function limit(?int $offset = null, ?int $limit = null) : RDBSelectBuilder
+    public function limit(?int $offset = null, ?int $limit = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->limit($offset, $limit);
     }
@@ -751,7 +761,7 @@ class RDBRepository extends Repository
      *
      * @param array|string $select
      */
-    public function select($select = [], ?string $alias = null) : RDBSelectBuilder
+    public function select($select = [], ?string $alias = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->select($select, $alias);
     }
@@ -761,17 +771,20 @@ class RDBRepository extends Repository
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::groupBy()
      */
-    public function groupBy($groupBy) : RDBSelectBuilder
+    public function groupBy($groupBy): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->groupBy($groupBy);
     }
 
-    protected function getPDO()
+    /**
+     * @deprecated
+     */
+    protected function getPDO(): PDO
     {
         return $this->entityManager->getPDO();
     }
 
-    protected function createSelectBuilder() : RDBSelectBuilder
+    protected function createSelectBuilder(): RDBSelectBuilder
     {
         $builder = new RDBSelectBuilder($this->entityManager, $this->entityType);
 

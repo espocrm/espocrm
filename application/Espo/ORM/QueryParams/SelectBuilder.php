@@ -39,7 +39,7 @@ class SelectBuilder implements Builder
     /**
      * Build a SELECT query.
      */
-    public function build() : Select
+    public function build(): Select
     {
         return Select::fromRaw($this->params);
     }
@@ -47,7 +47,7 @@ class SelectBuilder implements Builder
     /**
      * Clone an existing query for a subsequent modifying and building.
      */
-    public function clone(Select $query) : self
+    public function clone(Select $query): self
     {
         $this->cloneInternal($query);
 
@@ -57,7 +57,7 @@ class SelectBuilder implements Builder
     /**
      * Set FROM. For what entity type to build a query.
      */
-    public function from(string $entityType, ?string $alias = null) : self
+    public function from(string $entityType, ?string $alias = null): self
     {
         if (isset($this->params['from'])) {
             throw new RuntimeException("Method 'from' can be called only once.");
@@ -79,7 +79,7 @@ class SelectBuilder implements Builder
     /**
      * Set FROM sub-query.
      */
-    public function fromQuery(Selecting $query, string $alias) : self
+    public function fromQuery(Selecting $query, string $alias): self
     {
         if (isset($this->params['from'])) {
             throw new RuntimeException("Method 'fromQuery' can be called only once.");
@@ -103,7 +103,7 @@ class SelectBuilder implements Builder
     /**
      * Set DISTINCT parameter.
      */
-    public function distinct() : self
+    public function distinct(): self
     {
         $this->params['distinct'] = true;
 
@@ -113,7 +113,7 @@ class SelectBuilder implements Builder
     /**
      * Apply OFFSET and LIMIT.
      */
-    public function limit(?int $offset = null, ?int $limit = null) : self
+    public function limit(?int $offset = null, ?int $limit = null): self
     {
         $this->params['offset'] = $offset;
         $this->params['limit'] = $limit;
@@ -133,7 +133,7 @@ class SelectBuilder implements Builder
      *
      * @param array|string $select
      */
-    public function select($select, ?string $alias = null) : self
+    public function select($select, ?string $alias = null): self
     {
         if (is_array($select)) {
             $this->params['select'] = $select;
@@ -167,7 +167,7 @@ class SelectBuilder implements Builder
      *
      * @param array|string $groupBy
      */
-    public function groupBy($groupBy) : self
+    public function groupBy($groupBy): self
     {
         if (is_array($groupBy)) {
             $this->params['groupBy'] = $groupBy;
@@ -189,7 +189,7 @@ class SelectBuilder implements Builder
     /**
      * Use index.
      */
-    public function useIndex(string $index) : self
+    public function useIndex(string $index): self
     {
         $this->params['useIndex'] = $this->params['useIndex'] ?? [];
 
@@ -208,7 +208,7 @@ class SelectBuilder implements Builder
      * @param array|string $keyOrClause
      * @param ?array|string $value
      */
-    public function having($keyOrClause = [], $value = null) : self
+    public function having($keyOrClause = [], $value = null): self
     {
         $this->applyWhereClause('havingClause', $keyOrClause, $value);
 
@@ -218,7 +218,7 @@ class SelectBuilder implements Builder
     /**
      * Lock selected rows in shared mode. To be used within a transaction.
      */
-    public function forShare() : self
+    public function forShare(): self
     {
         if (isset($this->params['forUpdate'])) {
             throw new RuntimeException("Can't use two lock modes togather.");
@@ -232,7 +232,7 @@ class SelectBuilder implements Builder
     /**
      * Lock selected rows. To be used within a transaction.
      */
-    public function forUpdate() : self
+    public function forUpdate(): self
     {
         if (isset($this->params['forShare'])) {
             throw new RuntimeException("Can't use two lock modes togather.");
@@ -246,7 +246,7 @@ class SelectBuilder implements Builder
     /**
      * @todo Remove?
      */
-    public function withDeleted() : self
+    public function withDeleted(): self
     {
         $this->params['withDeleted'] = true;
 

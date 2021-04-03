@@ -31,5 +31,5 @@ namespace Espo\ORM\Repository;
 
 interface RepositoryFactory
 {
-    public function create(string $name) : Repository;
+    public function create(string $name): Repository;
 }

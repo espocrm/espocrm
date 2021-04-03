@@ -41,7 +41,9 @@ use RuntimeException;
 class BaseLocker implements Locker
 {
     protected $pdo;
+
     protected $queryComposer;
+
     protected $transactionManager;
 
     protected $isLocked = false;
@@ -56,7 +58,7 @@ class BaseLocker implements Locker
     /**
      * {@inheritdoc}
      */
-    public function isLocked() : bool
+    public function isLocked(): bool
     {
         return $this->isLocked;
     }
@@ -64,7 +66,7 @@ class BaseLocker implements Locker
     /**
      * {@inheritdoc}
      */
-    public function lockExclusive(string $entityType)
+    public function lockExclusive(string $entityType): void
     {
         $this->isLocked = true;
 
@@ -83,7 +85,7 @@ class BaseLocker implements Locker
     /**
      * {@inheritdoc}
      */
-    public function lockShare(string $entityType)
+    public function lockShare(string $entityType): void
     {
         $this->isLocked = true;
 
@@ -102,7 +104,7 @@ class BaseLocker implements Locker
     /**
      * {@inheritdoc}
      */
-    public function commit()
+    public function commit(): void
     {
         if (!$this->isLocked) {
             throw new RuntimeException("Can't commit, it was not locked.");
@@ -116,7 +118,7 @@ class BaseLocker implements Locker
     /**
      * {@inheritdoc}
      */
-    public function rollback()
+    public function rollback(): void
     {
         if (!$this->isLocked) {
             throw new RuntimeException("Can't rollback, it was not locked.");

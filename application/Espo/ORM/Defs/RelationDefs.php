@@ -46,7 +46,7 @@ class RelationDefs
     {
     }
 
-    public static function fromRaw(array $raw, string $name) : self
+    public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
 
@@ -60,7 +60,7 @@ class RelationDefs
     /**
      * Get a name.
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -68,7 +68,7 @@ class RelationDefs
     /**
      * Get a type.
      */
-    public function getType() : string
+    public function getType(): string
     {
         return $this->data['type'];
     }
@@ -76,7 +76,7 @@ class RelationDefs
     /**
      * Whether is Many-to-Many.
      */
-    public function isManyToMany() : bool
+    public function isManyToMany(): bool
     {
         return $this->getType() === Entity::MANY_MANY;
     }
@@ -84,7 +84,7 @@ class RelationDefs
     /**
      * Whether is Has-Many (One-to-Many).
      */
-    public function isHasMany() : bool
+    public function isHasMany(): bool
     {
         return $this->getType() === Entity::HAS_MANY;
     }
@@ -92,7 +92,7 @@ class RelationDefs
     /**
      * Whether is Has-One (Many-to-One or One-to-One).
      */
-    public function isHasOne() : bool
+    public function isHasOne(): bool
     {
         return $this->getType() === Entity::HAS_ONE;
     }
@@ -100,7 +100,7 @@ class RelationDefs
     /**
      * Whether is Has-Children (Parent-to-Children).
      */
-    public function isHasChildren() : bool
+    public function isHasChildren(): bool
     {
         return $this->getType() === Entity::HAS_CHILDREN;
     }
@@ -108,7 +108,7 @@ class RelationDefs
     /**
      * Whether is Belongs-to (Many-to-One).
      */
-    public function isBelongsTo() : bool
+    public function isBelongsTo(): bool
     {
         return $this->getType() === Entity::BELONGS_TO;
     }
@@ -116,7 +116,7 @@ class RelationDefs
     /**
      * Whether is Belongs-to-Parent (Children-to-Parent).
      */
-    public function isBelongsToParent() : bool
+    public function isBelongsToParent(): bool
     {
         return $this->getType() === Entity::BELONGS_TO_PARENT;
     }
@@ -124,7 +124,7 @@ class RelationDefs
     /**
      * Whether has a foreign entity type is defined.
      */
-    public function hasForeignEntityType() : bool
+    public function hasForeignEntityType(): bool
     {
         return isset($this->data['entity']);
     }
@@ -133,7 +133,7 @@ class RelationDefs
      * Get a foreign entity type.
      * @throws RuntimeException
      */
-    public function getForeignEntityType() : string
+    public function getForeignEntityType(): string
     {
         if (!$this->hasForeignEntityType()) {
             throw new RuntimeException(
@@ -147,7 +147,7 @@ class RelationDefs
     /**
      * Whether has a foreign relation name.
      */
-    public function hasForeignRelationName() : bool
+    public function hasForeignRelationName(): bool
     {
         return isset($this->data['foreign']);
     }
@@ -156,7 +156,7 @@ class RelationDefs
      * Get a foreign relation name.
      * @throws RuntimeException
      */
-    public function getForeignRelationName() : string
+    public function getForeignRelationName(): string
     {
         if (!$this->hasForeignRelationName()) {
             throw new RuntimeException(
@@ -170,7 +170,7 @@ class RelationDefs
     /**
      * Whether a foreign key is defined.
      */
-    public function hasForeignKey() : bool
+    public function hasForeignKey(): bool
     {
         return isset($this->data['foreignKey']);
     }
@@ -179,7 +179,7 @@ class RelationDefs
      * Get a foreign key.
      * @throws RuntimeException
      */
-    public function getForeignKey() : string
+    public function getForeignKey(): string
     {
         if (!$this->hasForeignKey()) {
             throw new RuntimeException(
@@ -193,7 +193,7 @@ class RelationDefs
     /**
      * Whether a key is defined.
      */
-    public function hasKey() : bool
+    public function hasKey(): bool
     {
         return isset($this->data['key']);
     }
@@ -202,7 +202,7 @@ class RelationDefs
      * Get a key.
      * @throws RuntimeException
      */
-    public function getKey() : string
+    public function getKey(): string
     {
         if (!$this->hasKey()) {
             throw new RuntimeException(
@@ -216,7 +216,7 @@ class RelationDefs
     /**
      * Whether a mid key is defined. For Many-to-Many relationships only.
      */
-    public function hasMidKey() : bool
+    public function hasMidKey(): bool
     {
         return !is_null($this->data['midKeys'][0] ?? null);
     }
@@ -225,7 +225,7 @@ class RelationDefs
      * Get a mid key. For Many-to-Many relationships only.
      * @throws RuntimeException
      */
-    public function getMidKey() : string
+    public function getMidKey(): string
     {
         if (!$this->hasMidKey()) {
             throw new RuntimeException(
@@ -240,7 +240,7 @@ class RelationDefs
      * Whether a foreign mid key is defined. For Many-to-Many relationships only.
      * @throws RuntimeException
      */
-    public function hasForeignMidKey() : bool
+    public function hasForeignMidKey(): bool
     {
         return !is_null($this->data['midKeys'][1] ?? null);
     }
@@ -249,7 +249,7 @@ class RelationDefs
      * Get a foreign mid key. For Many-to-Many relationships only.
      * @throws RuntimeException
      */
-    public function getForeignMidKey() : string
+    public function getForeignMidKey(): string
     {
         if (!$this->hasForeignMidKey()) {
             throw new RuntimeException(
@@ -263,7 +263,7 @@ class RelationDefs
     /**
      * Whether a relationship name is defined.
      */
-    public function hasRelationshipName() : bool
+    public function hasRelationshipName(): bool
     {
         return isset($this->data['relationName']);
     }
@@ -272,7 +272,7 @@ class RelationDefs
      * Get a relationship name.
      * @throws RuntimeException
      */
-    public function getRelationshipName() : string
+    public function getRelationshipName(): string
     {
         if (!$this->hasRelationshipName()) {
             throw new RuntimeException(
@@ -286,7 +286,7 @@ class RelationDefs
     /**
      * Whether a parameter is set.
      */
-    public function hasParam(string $name) : bool
+    public function hasParam(string $name): bool
     {
         return array_key_exists($name, $this->data);
     }

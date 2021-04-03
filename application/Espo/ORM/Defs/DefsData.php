@@ -46,24 +46,24 @@ class DefsData
         $this->metadata = $metadata;
     }
 
-    public function clearCache() : void
+    public function clearCache(): void
     {
         $this->cache = [];
     }
 
-    public function getEntityTypeList() : array
+    public function getEntityTypeList(): array
     {
         return $this->metadata->getEntityTypeList();
     }
 
-    public function hasEntity(string $name) : bool
+    public function hasEntity(string $name): bool
     {
         $this->cacheEntity($name);
 
         return !is_null($this->cache[$name]);
     }
 
-    public function getEntity(string $name) : EntityDefs
+    public function getEntity(string $name): EntityDefs
     {
         $this->cacheEntity($name);
 
@@ -74,7 +74,7 @@ class DefsData
         return $this->cache[$name];
     }
 
-    private function cacheEntity(string $name) : void
+    private function cacheEntity(string $name): void
     {
         if (array_key_exists($name, $this->cache)) {
             return;
@@ -83,7 +83,7 @@ class DefsData
         $this->cache[$name] = $this->loadEntity($name);
     }
 
-    private function loadEntity(string $name) : ?EntityDefs
+    private function loadEntity(string $name): ?EntityDefs
     {
         $raw = $this->metadata->get($name) ?? null;
 

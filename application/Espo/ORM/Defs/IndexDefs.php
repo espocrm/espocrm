@@ -42,7 +42,7 @@ class IndexDefs
     {
     }
 
-    public static function fromRaw(array $raw, string $name) : self
+    public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
 
@@ -56,7 +56,7 @@ class IndexDefs
     /**
      * Get a name.
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -64,7 +64,7 @@ class IndexDefs
     /**
      * Get a key.
      */
-    public function getKey() : string
+    public function getKey(): string
     {
         return $this->data['key'];
     }
@@ -72,7 +72,7 @@ class IndexDefs
     /**
      * Whether is unique.
      */
-    public function isUnique() : bool
+    public function isUnique(): bool
     {
         $type = $this->data['type'] ?? null;
 
@@ -82,7 +82,7 @@ class IndexDefs
     /**
      * Get a column list.
      */
-    public function getColumnList() : array
+    public function getColumnList(): array
     {
         return $this->data['columns'] ?? [];
     }

@@ -55,7 +55,7 @@ class TransactionManager
     /**
      * Whether a transaction is started.
      */
-    public function isStarted() : bool
+    public function isStarted(): bool
     {
         return $this->level > 0;
     }
@@ -63,7 +63,7 @@ class TransactionManager
     /**
      * Get a current nesting level.
      */
-    public function getLevel() : int
+    public function getLevel(): int
     {
         return $this->level;
     }
@@ -94,7 +94,7 @@ class TransactionManager
     /**
      * Start a transaction.
      */
-    public function start()
+    public function start(): void
     {
         if ($this->level > 0) {
             $this->createSavepoint();
@@ -112,7 +112,7 @@ class TransactionManager
     /**
      * Commit a transaction.
      */
-    public function commit()
+    public function commit(): void
     {
         if ($this->level === 0) {
             throw new RuntimeException("Can't commit not started transaction.");
@@ -132,7 +132,7 @@ class TransactionManager
     /**
      * Rollback a transaction.
      */
-    public function rollback()
+    public function rollback(): void
     {
         if ($this->level === 0) {
             throw new RuntimeException("Can't rollback not started transaction.");
@@ -149,26 +149,26 @@ class TransactionManager
         $this->pdo->rollBack();
     }
 
-    protected function getCurrentSavepoint() : string
+    protected function getCurrentSavepoint(): string
     {
         return 'POINT_' . (string) $this->level;
     }
 
-    protected function createSavepoint()
+    protected function createSavepoint(): void
     {
         $sql = $this->queryComposer->composeCreateSavepoint($this->getCurrentSavepoint());
 
         $this->pdo->exec($sql);
     }
 
-    protected function releaseSavepoint()
+    protected function releaseSavepoint(): void
     {
         $sql = $this->queryComposer->composeReleaseSavepoint($this->getCurrentSavepoint());
 
         $this->pdo->exec($sql);
     }
 
-    protected function rollbackToSavepoint()
+    protected function rollbackToSavepoint(): void
     {
         $sql = $this->queryComposer->composeRollbackToSavepoint($this->getCurrentSavepoint());
 

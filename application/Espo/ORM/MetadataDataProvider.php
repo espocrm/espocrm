@@ -34,5 +34,5 @@ namespace Espo\ORM;
  */
 interface MetadataDataProvider
 {
-    public function get() : array;
+    public function get(): array;
 }

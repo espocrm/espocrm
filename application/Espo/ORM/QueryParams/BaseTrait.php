@@ -36,7 +36,7 @@ trait BaseTrait
     /**
      * Get parameters in RAW format.
      */
-    public function getRaw() : array
+    public function getRaw(): array
     {
         return $this->params;
     }
@@ -44,7 +44,7 @@ trait BaseTrait
     /**
      * Create from RAW params.
      */
-    public static function fromRaw(array $params) : self
+    public static function fromRaw(array $params): self
     {
         $obj = new self();
 

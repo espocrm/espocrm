@@ -79,7 +79,7 @@ class RDBSelectBuilder
         }
     }
 
-    protected function getMapper() : Mapper
+    protected function getMapper(): Mapper
     {
         return $this->entityManager->getMapper();
     }
@@ -87,7 +87,7 @@ class RDBSelectBuilder
     /**
      * @param $params @deprecated. Omit it.
      */
-    public function find(?array $params = null) : Collection
+    public function find(?array $params = null): Collection
     {
         $query = $this->getMergedParams($params);
 
@@ -99,7 +99,7 @@ class RDBSelectBuilder
     /**
      * @param $params @deprecated. Omit it.
      */
-    public function findOne(?array $params = null) : ?Entity
+    public function findOne(?array $params = null): ?Entity
     {
         $builder = $this;
 
@@ -122,7 +122,7 @@ class RDBSelectBuilder
      *
      * @param $params @deprecated. Omit it.
      */
-    public function count(?array $params = null) : int
+    public function count(?array $params = null): int
     {
         if ($params) { // @todo Remove.
             $query = $this->getMergedParams($params);
@@ -175,7 +175,7 @@ class RDBSelectBuilder
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::join()
      */
-    public function join($relationName, ?string $alias = null, ?array $conditions = null) : self
+    public function join($relationName, ?string $alias = null, ?array $conditions = null): self
     {
         $this->builder->join($relationName, $alias, $conditions);
 
@@ -187,7 +187,7 @@ class RDBSelectBuilder
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::leftJoin()
      */
-    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : self
+    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null): self
     {
         $this->builder->leftJoin($relationName, $alias, $conditions);
 
@@ -197,7 +197,7 @@ class RDBSelectBuilder
     /**
      * Set DISTINCT parameter.
      */
-    public function distinct() : self
+    public function distinct(): self
     {
         $this->builder->distinct();
 
@@ -207,7 +207,7 @@ class RDBSelectBuilder
     /**
      * Lock selected rows. To be used within a transaction.
      */
-    public function forUpdate() : self
+    public function forUpdate(): self
     {
         $this->builder->forUpdate();
 
@@ -219,7 +219,7 @@ class RDBSelectBuilder
      *
      * @todo Remove.
      */
-    public function sth() : self
+    public function sth(): self
     {
         $this->returnSthCollection = true;
 
@@ -231,7 +231,7 @@ class RDBSelectBuilder
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::where()
      */
-    public function where($keyOrClause = [], $value = null) : self
+    public function where($keyOrClause = [], $value = null): self
     {
         $this->builder->where($keyOrClause, $value);
 
@@ -243,7 +243,7 @@ class RDBSelectBuilder
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::having()
      */
-    public function having($keyOrClause = [], $value = null) : self
+    public function having($keyOrClause = [], $value = null): self
     {
         $this->builder->having($keyOrClause, $value);
 
@@ -256,7 +256,7 @@ class RDBSelectBuilder
      * @param string|int|array $orderBy An attribute to order by or order definitions as an array.
      * @param bool|string $direction TRUE for DESC order.
      */
-    public function order($orderBy = 'id', $direction = 'ASC') : self
+    public function order($orderBy = 'id', $direction = 'ASC'): self
     {
         $this->builder->order($orderBy, $direction);
 
@@ -266,7 +266,7 @@ class RDBSelectBuilder
     /**
      * Apply OFFSET and LIMIT.
      */
-    public function limit(?int $offset = null, ?int $limit = null) : self
+    public function limit(?int $offset = null, ?int $limit = null): self
     {
         $this->builder->limit($offset, $limit);
 
@@ -280,7 +280,7 @@ class RDBSelectBuilder
      *
      * @param array|string $select
      */
-    public function select($select, ?string $alias = null) : self
+    public function select($select, ?string $alias = null): self
     {
         $this->builder->select($select, $alias);
 
@@ -294,14 +294,14 @@ class RDBSelectBuilder
      *
      * @param string|array $groupBy
      */
-    public function groupBy($groupBy) : self
+    public function groupBy($groupBy): self
     {
         $this->builder->groupBy($groupBy);
 
         return $this;
     }
 
-    protected function handleReturnCollection(SthCollection $collection) : Collection
+    protected function handleReturnCollection(SthCollection $collection): Collection
     {
         if ($this->returnSthCollection) {
             return $collection;
@@ -314,7 +314,7 @@ class RDBSelectBuilder
      * For backward compatibility.
      * @todo Remove.
      */
-    protected function getMergedParams(?array $params = null) : Select
+    protected function getMergedParams(?array $params = null): Select
     {
         if (!$params || empty($params)) {
             return $this->builder->build();

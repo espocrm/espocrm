@@ -38,25 +38,25 @@ interface Locker
     /**
      * Whether any table has been locked.
      */
-    public function isLocked();
+    public function isLocked(): bool;
 
     /**
      * Locks a table in an exclusive mode. Starts a transaction on first call.
      */
-    public function lockExclusive(string $entityType);
+    public function lockExclusive(string $entityType): void;
 
     /**
      * Locks a table in a share mode. Starts a transaction on first call.
      */
-    public function lockShare(string $entityType);
+    public function lockShare(string $entityType): void;
 
     /**
      * Commits changes and unlocks tables.
      */
-    public function commit();
+    public function commit(): void;
 
     /**
      * Rollbacks changes and unlocks tables.
      */
-    public function rollback();
+    public function rollback(): void;
 }

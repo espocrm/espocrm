@@ -188,15 +188,18 @@ class Preferences extends Repository implements
         }
     }
 
-    public function save(Entity $entity, array $options = [])
+    public function save(Entity $entity, array $options = []): void
     {
-        if (!$entity->id) return;
+        if (!$entity->id) {
+            return;
+        }
 
         $this->data[$entity->id] = $entity->toArray();
 
         $fields = $fields = $this->metadata->get('entityDefs.Preferences.fields');
 
         $data = [];
+
         foreach ($this->data[$entity->id] as $field => $value) {
             if (empty($fields[$field]['notStorable'])) {
                 $data[$field] = $value;
@@ -224,11 +227,9 @@ class Preferences extends Repository implements
         if ($user && !$user->isPortal()) {
             $this->storeAutoFollowEntityTypeList($entity);
         }
-
-        return $entity;
     }
 
-    public function deleteFromDb(string $id)
+    public function deleteFromDb(string $id): void
     {
         $delete = $this->getEntityManager()->getQueryBuilder()
             ->delete()
@@ -241,9 +242,11 @@ class Preferences extends Repository implements
         $this->getEntityManager()->getQueryExecutor()->execute($delete);
     }
 
-    public function remove(Entity $entity, array $options = [])
+    public function remove(Entity $entity, array $options = []): void
     {
-        if (!$entity->id) return;
+        if (!$entity->id) {
+            return;
+        }
 
         $this->deleteFromDb($entity->id);
 

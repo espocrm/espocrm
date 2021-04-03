@@ -70,7 +70,7 @@ class Metadata
     /**
      * Update data from the data provider.
      */
-    public function updateData() : void
+    public function updateData(): void
     {
         $this->data = $this->dataProvider->get();
 
@@ -82,7 +82,7 @@ class Metadata
     /**
      * Get definitions.
      */
-    public function getDefs() : Defs
+    public function getDefs(): Defs
     {
         return $this->defs;
     }
@@ -108,7 +108,7 @@ class Metadata
     /**
      * Whether an entity type is available.
      */
-    public function has(string $entityType) : bool
+    public function has(string $entityType): bool
     {
         return array_key_exists($entityType, $this->data);
     }
@@ -118,7 +118,7 @@ class Metadata
      *
      * @return array<string>
      */
-    public function getEntityTypeList() : array
+    public function getEntityTypeList(): array
     {
         return array_keys($this->data);
     }

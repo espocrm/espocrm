@@ -33,7 +33,7 @@ use Espo\ORM\QueryParams\Parts\WhereClause;
 
 class AndGroup extends WhereClause
 {
-    public function getRaw() : array
+    public function getRaw(): array
     {
         return [
             'AND' => $this->getRawValue()

@@ -58,17 +58,17 @@ abstract class Repository
         $this->seed = $this->entityFactory->create($entityType);
     }
 
-    protected function getEntityFactory() : EntityFactory
+    protected function getEntityFactory(): EntityFactory
     {
         return $this->entityFactory;
     }
 
-    protected function getEntityManager() : EntityManager
+    protected function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
 
-    public function getEntityType() : string
+    public function getEntityType(): string
     {
         return $this->entityType;
     }
@@ -76,10 +76,10 @@ abstract class Repository
     /**
      * Get an entity. If $id is NULL, a new entity is returned.
      */
-    abstract public function get(?string $id = null) : ?Entity;
+    abstract public function get(?string $id = null): ?Entity;
 
     /**
      * Store an entity.
      */
-    abstract public function save(Entity $entity);
+    abstract public function save(Entity $entity): void;
 }

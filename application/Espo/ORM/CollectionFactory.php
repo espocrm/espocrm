@@ -45,22 +45,22 @@ class CollectionFactory
         $this->entityManager = $entityManager;
     }
 
-    public function create(?string $entityType = null, array $data = []) : EntityCollection
+    public function create(?string $entityType = null, array $data = []): EntityCollection
     {
         return new EntityCollection($data, $entityType, $this->entityManager->getEntityFactory());
     }
 
-    public function createFromSql(string $entityType, string $sql) : SthCollection
+    public function createFromSql(string $entityType, string $sql): SthCollection
     {
         return SthCollection::fromSql($entityType, $sql, $this->entityManager);
     }
 
-    public function createFromQuery(Select $query) : SthCollection
+    public function createFromQuery(Select $query): SthCollection
     {
         return SthCollection::fromQuery($query, $this->entityManager);
     }
 
-    public function createFromSthCollection(SthCollection $sthCollection) : EntityCollection
+    public function createFromSthCollection(SthCollection $sthCollection): EntityCollection
     {
         return EntityCollection::fromSthCollection($sthCollection);
     }

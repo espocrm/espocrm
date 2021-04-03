@@ -49,7 +49,7 @@ class EntityDefs
     {
     }
 
-    public static function fromRaw(array $raw, string $name) : self
+    public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
 
@@ -63,7 +63,7 @@ class EntityDefs
     /**
      * Get an entity name (type).
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -73,7 +73,7 @@ class EntityDefs
      *
      * @return array<string>
      */
-    public function getAttributeNameList() : array
+    public function getAttributeNameList(): array
     {
         return array_keys($this->data['attributes'] ?? $this->data['fields'] ?? []);
     }
@@ -83,7 +83,7 @@ class EntityDefs
      *
      * @return array<string>
      */
-    public function getRelationNameList() : array
+    public function getRelationNameList(): array
     {
         return array_keys($this->data['relations'] ?? []);
     }
@@ -93,7 +93,7 @@ class EntityDefs
      *
      * @return array<string>
      */
-    public function getIndexNameList() : array
+    public function getIndexNameList(): array
     {
         return array_keys($this->data['indexes'] ?? []);
     }
@@ -103,7 +103,7 @@ class EntityDefs
      *
      * @return array<string>
      */
-    public function getFieldNameList() : array
+    public function getFieldNameList(): array
     {
         return array_keys($this->data['vFields'] ?? []);
     }
@@ -113,7 +113,7 @@ class EntityDefs
      *
      * @return array<AttributeDefs>
      */
-    public function getAttributeList() : array
+    public function getAttributeList(): array
     {
         $list = [];
 
@@ -129,7 +129,7 @@ class EntityDefs
      *
      * @return array<RelationDefs>
      */
-    public function getRelationList() : array
+    public function getRelationList(): array
     {
         $list = [];
 
@@ -145,7 +145,7 @@ class EntityDefs
      *
      * @return array<IndexDefs>
      */
-    public function getIndexList() : array
+    public function getIndexList(): array
     {
         $list = [];
 
@@ -161,7 +161,7 @@ class EntityDefs
      *
      * @return array<FieldDefs>
      */
-    public function getFieldList() : array
+    public function getFieldList(): array
     {
         $list = [];
 
@@ -175,7 +175,7 @@ class EntityDefs
     /**
      * Whether has an attribute.
      */
-    public function hasAttribute(string $name) : bool
+    public function hasAttribute(string $name): bool
     {
         $this->cacheAttribute($name);
 
@@ -185,7 +185,7 @@ class EntityDefs
     /**
      * Whether has a relation.
      */
-    public function hasRelation(string $name) : bool
+    public function hasRelation(string $name): bool
     {
         $this->cacheRelation($name);
 
@@ -195,7 +195,7 @@ class EntityDefs
     /**
      * Whether has an index.
      */
-    public function hasIndex(string $name) : bool
+    public function hasIndex(string $name): bool
     {
         $this->cacheIndex($name);
 
@@ -205,7 +205,7 @@ class EntityDefs
     /**
      * Whether has a field.
      */
-    public function hasField(string $name) : bool
+    public function hasField(string $name): bool
     {
         $this->cacheField($name);
 
@@ -216,7 +216,7 @@ class EntityDefs
      * Get an attribute definitions.
      * @throws RuntimeException
      */
-    public function getAttribute(string $name) : AttributeDefs
+    public function getAttribute(string $name): AttributeDefs
     {
         $this->cacheAttribute($name);
 
@@ -231,7 +231,7 @@ class EntityDefs
      * Get a relation definitions.
      * @throws RuntimeException
      */
-    public function getRelation(string $name) : RelationDefs
+    public function getRelation(string $name): RelationDefs
     {
         $this->cacheRelation($name);
 
@@ -246,7 +246,7 @@ class EntityDefs
      * Get an index definitions.
      * @throws RuntimeException
      */
-    public function getIndex(string $name) : IndexDefs
+    public function getIndex(string $name): IndexDefs
     {
         $this->cacheIndex($name);
 
@@ -261,7 +261,7 @@ class EntityDefs
      * Get a field definitions.
      * @throws RuntimeException
      */
-    public function getField(string $name) : FieldDefs
+    public function getField(string $name): FieldDefs
     {
         $this->cacheField($name);
 
@@ -275,7 +275,7 @@ class EntityDefs
     /**
      * Whether a parameter is set.
      */
-    public function hasParam(string $name) : bool
+    public function hasParam(string $name): bool
     {
         return array_key_exists($name, $this->data);
     }
@@ -290,7 +290,7 @@ class EntityDefs
         return $this->data[$name] ?? null;
     }
 
-    private function cacheAttribute(string $name) : void
+    private function cacheAttribute(string $name): void
     {
         if (array_key_exists($name, $this->attributeCache)) {
             return;
@@ -299,7 +299,7 @@ class EntityDefs
         $this->attributeCache[$name] = $this->loadAttribute($name);
     }
 
-    private function loadAttribute(string $name) : ?AttributeDefs
+    private function loadAttribute(string $name): ?AttributeDefs
     {
         $raw = $this->data['attributes'][$name] ?? $this->data['fields'][$name] ?? null;
 
@@ -310,7 +310,7 @@ class EntityDefs
         return AttributeDefs::fromRaw($raw, $name);
     }
 
-    private function cacheRelation(string $name) : void
+    private function cacheRelation(string $name): void
     {
         if (array_key_exists($name, $this->relationCache)) {
             return;
@@ -319,7 +319,7 @@ class EntityDefs
         $this->relationCache[$name] = $this->loadRelation($name);
     }
 
-    private function loadRelation(string $name) : ?RelationDefs
+    private function loadRelation(string $name): ?RelationDefs
     {
         $raw = $this->data['relations'][$name] ?? null;
 
@@ -330,7 +330,7 @@ class EntityDefs
         return RelationDefs::fromRaw($raw, $name);
     }
 
-    private function cacheIndex(string $name) : void
+    private function cacheIndex(string $name): void
     {
         if (array_key_exists($name, $this->indexCache)) {
             return;
@@ -339,7 +339,7 @@ class EntityDefs
         $this->indexCache[$name] = $this->loadIndex($name);
     }
 
-    private function loadIndex(string $name) : ?IndexDefs
+    private function loadIndex(string $name): ?IndexDefs
     {
         $raw = $this->data['indexes'][$name] ?? null;
 
@@ -350,7 +350,7 @@ class EntityDefs
         return IndexDefs::fromRaw($raw, $name);
     }
 
-    private function cacheField(string $name) : void
+    private function cacheField(string $name): void
     {
         if (array_key_exists($name, $this->fieldCache)) {
             return;
@@ -359,7 +359,7 @@ class EntityDefs
         $this->fieldCache[$name] = $this->loadField($name);
     }
 
-    private function loadField(string $name) : ?FieldDefs
+    private function loadField(string $name): ?FieldDefs
     {
         $raw = $this->data['vFields'][$name] ?? /*$this->data['fields'][$name] ??*/ null;
 

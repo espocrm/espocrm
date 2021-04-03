@@ -42,7 +42,7 @@ trait BaseBuilderTrait
     {
     }
 
-    protected function isEmpty() : bool
+    protected function isEmpty(): bool
     {
         return empty($this->params);
     }

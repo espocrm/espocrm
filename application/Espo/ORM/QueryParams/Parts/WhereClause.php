@@ -37,7 +37,7 @@ class WhereClause implements WhereItem
     {
     }
 
-    public static function fromRaw(array $whereClause) : self
+    public static function fromRaw(array $whereClause): self
     {
         if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {
             $whereClause = $whereClause[0];
@@ -50,22 +50,22 @@ class WhereClause implements WhereItem
         return $object;
     }
 
-    public function getRaw() : array
+    public function getRaw(): array
     {
         return $this->rawValue;
     }
 
-    public function getRawValue() : array
+    public function getRawValue(): array
     {
         return $this->rawValue;
     }
 
-    public function getRawKey() : string
+    public function getRawKey(): string
     {
         return 'AND';
     }
 
-    public function add(WhereItem $item) : void
+    public function add(WhereItem $item): void
     {
         if ($item instanceof WhereClause) {
             $this->rawValue[] = $item->getRawValue();

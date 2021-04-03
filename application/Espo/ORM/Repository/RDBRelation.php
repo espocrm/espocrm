@@ -34,14 +34,11 @@ use Espo\ORM\{
     Entity,
     EntityManager,
     QueryParams\Select,
-    QueryParams\SelectBuilder,
     Mapper\Mapper,
+    Repository\RDBRelationSelectBuilder as Builder,
 };
 
 use RuntimeException;
-use BadMethodCallException;
-
-use StdClass;
 
 /**
  * An access point for a specific relation of a record.
@@ -66,13 +63,17 @@ class RDBRelation
 
     protected $noBuilder = false;
 
-    public function __construct(EntityManager $entityManager, Entity $entity, string $relationName, HookMediator $hookMediator)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        Entity $entity,
+        string $relationName,
+        HookMediator $hookMediator
+    ) {
         $this->entityManager = $entityManager;
         $this->entity = $entity;
         $this->hookMediator = $hookMediator;
 
-        if (!$entity->get('id')) {
+        if (!$entity->getId()) {
             throw new RuntimeException("Can't use an entity w/o ID.");
         }
 
@@ -93,19 +94,19 @@ class RDBRelation
         }
     }
 
-    protected function createBuilder(?Select $query = null) : RDBRelationSelectBuilder
+    protected function createBuilder(?Select $query = null): Builder
     {
         if ($this->noBuilder) {
             throw new RuntimeException("Can't use query builder for the '{$this->relationType}' relation type.");
         }
 
-        return new RDBRelationSelectBuilder($this->entityManager, $this->entity, $this->relationName, $query);
+        return new Builder($this->entityManager, $this->entity, $this->relationName, $query);
     }
 
     /**
      * Clone a query.
      */
-    public function clone(Select $query) : RDBRelationSelectBuilder
+    public function clone(Select $query): Builder
     {
         if ($this->noBuilder) {
             throw new RuntimeException("Can't use clone for the '{$this->relationType}' relation type.");
@@ -123,7 +124,7 @@ class RDBRelation
         return $this->relationType === Entity::BELONGS_TO_PARENT;
     }
 
-    protected function getMapper() : Mapper
+    protected function getMapper(): Mapper
     {
         return $this->entityManager->getMapper();
     }
@@ -131,7 +132,7 @@ class RDBRelation
     /**
      * Find related records.
      */
-    public function find() : Collection
+    public function find(): Collection
     {
         if ($this->isBelongsToParentType()) {
             $collection = $this->entityManager->getCollectionFactory()->create();
@@ -153,7 +154,7 @@ class RDBRelation
     /**
      * Find a first record.
      */
-    public function findOne() : ?Entity
+    public function findOne(): ?Entity
     {
         if ($this->isBelongsToParentType()) {
             return $this->getMapper()->selectRelated($this->entity, $this->relationName);
@@ -181,7 +182,7 @@ class RDBRelation
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::join()
      */
-    public function join(string $relationName, ?string $alias = null, ?array $conditions = null) : RDBRelationSelectBuilder
+    public function join(string $relationName, ?string $alias = null, ?array $conditions = null): Builder
     {
         return $this->createBuilder()->join($relationName, $alias, $conditions);
     }
@@ -191,7 +192,7 @@ class RDBRelation
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::leftJoin()
      */
-    public function leftJoin(string $relationName, ?string $alias = null, ?array $conditions = null) : RDBRelationSelectBuilder
+    public function leftJoin(string $relationName, ?string $alias = null, ?array $conditions = null): Builder
     {
         return $this->createBuilder()->leftJoin($relationName, $alias, $conditions);
     }
@@ -199,7 +200,7 @@ class RDBRelation
     /**
      * Set DISTINCT parameter.
      */
-    public function distinct() : RDBRelationSelectBuilder
+    public function distinct(): Builder
     {
         return $this->createBuilder()->distinct();
     }
@@ -207,7 +208,7 @@ class RDBRelation
     /**
      * Set to return STH collection. Recommended for fetching large number of records.
      */
-    public function sth() : RDBRelationSelectBuilder
+    public function sth(): Builder
     {
         return $this->createBuilder()->sth();
     }
@@ -220,7 +221,7 @@ class RDBRelation
      * @param array|string $keyOrClause
      * @param ?array|string $value
      */
-    public function where($keyOrClause = [], $value = null) : RDBRelationSelectBuilder
+    public function where($keyOrClause = [], $value = null): Builder
     {
         return $this->createBuilder()->where($keyOrClause, $value);
     }
@@ -233,9 +234,9 @@ class RDBRelation
      * @param array|string $keyOrClause
      * @param ?array|string $value
      */
-    public function having($keyOrClause = [], $value = null) : RDBRelationSelectBuilder
+    public function having($keyOrClause = [], $value = null): Builder
     {
-        return $this->createBuilder()->having($keyOrClause, $params2);
+        return $this->createBuilder()->having($keyOrClause, $value);
     }
 
     /**
@@ -246,7 +247,7 @@ class RDBRelation
      * @param string|int|array $orderBy
       * @param bool|string $direction
      */
-    public function order($orderBy, $direction = 'ASC') : RDBRelationSelectBuilder
+    public function order($orderBy, $direction = 'ASC'): Builder
     {
         return $this->createBuilder()->order($orderBy, $direction);
     }
@@ -254,7 +255,7 @@ class RDBRelation
     /**
      * Apply OFFSET and LIMIT.
      */
-    public function limit(?int $offset = null, ?int $limit = null) : RDBRelationSelectBuilder
+    public function limit(?int $offset = null, ?int $limit = null): Builder
     {
         return $this->createBuilder()->limit($offset, $limit);
     }
@@ -266,7 +267,7 @@ class RDBRelation
      *
      * @param array|string $select
      */
-    public function select($select, ?string $alias = null) : RDBRelationSelectBuilder
+    public function select($select, ?string $alias = null): Builder
     {
         return $this->createBuilder()->select($select, $alias);
     }
@@ -274,7 +275,7 @@ class RDBRelation
     /**
      * Specify GROUP BY.
      */
-    public function groupBy(array $groupBy) : RDBRelationSelectBuilder
+    public function groupBy(array $groupBy): Builder
     {
         return $this->createBuilder()->groupBy($groupBy);
     }
@@ -284,12 +285,12 @@ class RDBRelation
      *
      * @see Espo\ORM\Repository\RDBRelationSelectBuilder::columnsWhere()
      */
-    public function columnsWhere(array $where) : RDBRelationSelectBuilder
+    public function columnsWhere(array $where): Builder
     {
         return $this->createBuilder()->columnsWhere($where);
     }
 
-    protected function processCheckForeignEntity(Entity $entity)
+    protected function processCheckForeignEntity(Entity $entity): void
     {
         if ($this->foreignEntityType && $this->foreignEntityType !== $entity->getEntityType()) {
             throw new RuntimeException("Entity type doesn't match an entity type of the relation.");
@@ -300,7 +301,12 @@ class RDBRelation
         }
     }
 
-    public function isRelated(Entity $entity) : bool
+    /**
+     * Whether related with an entity.
+     *
+     * @throws RuntimeException
+     */
+    public function isRelated(Entity $entity): bool
     {
         if (!$entity->id) {
             throw new RuntimeException("Can't use an entity w/o ID.");
@@ -322,7 +328,7 @@ class RDBRelation
             ->findOne();
     }
 
-    protected function isRelatedBelongsToParent(Entity $entity) : bool
+    protected function isRelatedBelongsToParent(Entity $entity): bool
     {
         $fromEntity = $this->entity;
 
@@ -363,7 +369,7 @@ class RDBRelation
     /**
      * Relate with an entity by ID.
      */
-    public function relateById(string $id, ?array $columnData = null, array $options = [])
+    public function relateById(string $id, ?array $columnData = null, array $options = []): void
     {
         if ($this->isBelongsToParentType()) {
             throw new RuntimeException("Can't relate 'belongToParent'.");
@@ -382,7 +388,7 @@ class RDBRelation
     /**
      * Unrelate from an entity by ID.
      */
-    public function unrelateById(string $id, array $options = [])
+    public function unrelateById(string $id, array $options = []): void
     {
         if ($this->isBelongsToParentType()) {
             throw new RuntimeException("Can't unrelate 'belongToParent'.");
@@ -401,7 +407,7 @@ class RDBRelation
     /**
      * Update relationship columns by ID. For many-to-many relationships.
      */
-    public function updateColumnsById(string $id, array $columnData)
+    public function updateColumnsById(string $id, array $columnData): void
     {
         if ($this->isBelongsToParentType()) {
             throw new RuntimeException("Can't update columns by ID 'belongToParent'.");
@@ -420,7 +426,7 @@ class RDBRelation
     /**
      * Relate with an entity.
      */
-    public function relate(Entity $entity, ?array $columnData = null, array $options = [])
+    public function relate(Entity $entity, ?array $columnData = null, array $options = []): void
     {
         $this->processCheckForeignEntity($entity);
 
@@ -438,7 +444,7 @@ class RDBRelation
     /**
      * Unrelate from an entity.
      */
-    public function unrelate(Entity $entity, array $options = [])
+    public function unrelate(Entity $entity, array $options = []): void
     {
         $this->processCheckForeignEntity($entity);
 
@@ -453,7 +459,7 @@ class RDBRelation
         $this->afterUnrelate($entity, $options);
     }
 
-    public function massRelate(Select $query, array $options = [])
+    public function massRelate(Select $query, array $options = []): void
     {
         if ($this->isBelongsToParentType()) {
             throw new RuntimeException("Can't mass relate 'belongToParent'.");
@@ -473,7 +479,7 @@ class RDBRelation
     /**
      * Update relationship columns. For many-to-many relationships.
      */
-    public function updateColumns(Entity $entity, array $columnData)
+    public function updateColumns(Entity $entity, array $columnData): void
     {
         $this->processCheckForeignEntity($entity);
 
@@ -500,32 +506,32 @@ class RDBRelation
         return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $entity->id, $column);
     }
 
-    protected function beforeRelate(Entity $entity, ?array $columnData, array $options)
+    protected function beforeRelate(Entity $entity, ?array $columnData, array $options): void
     {
         $this->hookMediator->beforeRelate($this->entity, $this->relationName, $entity, $columnData, $options);
     }
 
-    protected function afterRelate(Entity $entity, ?array $columnData, array $options)
+    protected function afterRelate(Entity $entity, ?array $columnData, array $options): void
     {
         $this->hookMediator->afterRelate($this->entity, $this->relationName, $entity, $columnData, $options);
     }
 
-    protected function beforeUnrelate(Entity $entity, array $options)
+    protected function beforeUnrelate(Entity $entity, array $options): void
     {
         $this->hookMediator->beforeUnrelate($this->entity, $this->relationName, $entity, $options);
     }
 
-    protected function afterUnrelate(Entity $entity, array $options)
+    protected function afterUnrelate(Entity $entity, array $options): void
     {
         $this->hookMediator->afterUnrelate($this->entity, $this->relationName, $entity, $options);
     }
 
-    protected function beforeMassRelate(Select $query, array $options)
+    protected function beforeMassRelate(Select $query, array $options): void
     {
         $this->hookMediator->beforeMassRelate($this->entity, $this->relationName, $query, $options);
     }
 
-    protected function afterMassRelate(Select $query, array $options)
+    protected function afterMassRelate(Select $query, array $options): void
     {
         $this->hookMediator->afterMassRelate($this->entity, $this->relationName, $query, $options);
     }

@@ -46,8 +46,14 @@ class HookMediator extends EmptyHookMediator
         $this->hookManager = $hookManager;
     }
 
-    public function afterRelate(Entity $entity, string $relationName, Entity $foreignEntity, ?array $columnData, array $options)
-    {
+    public function afterRelate(
+        Entity $entity,
+        string $relationName,
+        Entity $foreignEntity,
+        ?array $columnData,
+        array $options
+    ): void {
+
         if (!empty($options['skipHooks'])) {
             return;
         }
@@ -63,7 +69,7 @@ class HookMediator extends EmptyHookMediator
             $entity->getEntityType(), 'afterRelate', $entity, $options, $hookData
         );
     }
-    public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options)
+    public function afterUnrelate(Entity $entity, string $relationName, Entity $foreignEntity, array $options): void
     {
         if (!empty($options['skipHooks'])) {
             return;
@@ -80,7 +86,7 @@ class HookMediator extends EmptyHookMediator
         );
     }
 
-    public function afterMassRelate(Entity $entity, string $relationName, Select $query, array $options)
+    public function afterMassRelate(Entity $entity, string $relationName, Select $query, array $options): void
     {
         if (!empty($options['skipHooks'])) {
             return;

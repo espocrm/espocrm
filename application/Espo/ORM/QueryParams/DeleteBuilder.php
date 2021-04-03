@@ -36,7 +36,7 @@ class DeleteBuilder implements Builder
     /**
      * Build a DELETE query.
      */
-    public function build() : Delete
+    public function build(): Delete
     {
         return Delete::fromRaw($this->params);
     }
@@ -44,7 +44,7 @@ class DeleteBuilder implements Builder
     /**
      * Clone an existing query for a subsequent modifying and building.
      */
-    public function clone(Delete $query) : self
+    public function clone(Delete $query): self
     {
         $this->cloneInternal($query);
 
@@ -54,7 +54,7 @@ class DeleteBuilder implements Builder
     /**
      * Set FROM parameter. For what entity type to build a query.
      */
-    public function from(string $entityType, ?string $alias = null) : self
+    public function from(string $entityType, ?string $alias = null): self
     {
         if (isset($this->params['from'])) {
             throw new RuntimeException("Method 'from' can be called only once.");
@@ -69,7 +69,7 @@ class DeleteBuilder implements Builder
     /**
      * Apply LIMIT.
      */
-    public function limit(?int $limit = null) : self
+    public function limit(?int $limit = null): self
     {
         $this->params['limit'] = $limit;
 

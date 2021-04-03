@@ -42,7 +42,7 @@ class FieldDefs
     {
     }
 
-    public static function fromRaw(array $raw, string $name) : self
+    public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
 
@@ -56,7 +56,7 @@ class FieldDefs
     /**
      * Get a name.
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -64,7 +64,7 @@ class FieldDefs
     /**
      * Get a type.
      */
-    public function getType() : string
+    public function getType(): string
     {
         return $this->data['type'];
     }
@@ -72,7 +72,7 @@ class FieldDefs
     /**
      * Whether is not-storable.
      */
-    public function isNotStorable() : bool
+    public function isNotStorable(): bool
     {
         return $this->data['notStorable'] ?? false;
     }

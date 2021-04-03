@@ -50,7 +50,7 @@ class QueryBuilder
     /**
      * Proceed with SELECT builder.
      */
-    public function select() : SelectBuilder
+    public function select(): SelectBuilder
     {
         return new SelectBuilder();
     }
@@ -58,7 +58,7 @@ class QueryBuilder
     /**
      * Proceed with UPDATE builder.
      */
-    public function update() : UpdateBuilder
+    public function update(): UpdateBuilder
     {
         return new UpdateBuilder();
     }
@@ -66,7 +66,7 @@ class QueryBuilder
     /**
      * Proceed with DELETE builder.
      */
-    public function delete() : DeleteBuilder
+    public function delete(): DeleteBuilder
     {
         return new DeleteBuilder();
     }
@@ -74,7 +74,7 @@ class QueryBuilder
     /**
      * Proceed with INSERT builder.
      */
-    public function insert() : InsertBuilder
+    public function insert(): InsertBuilder
     {
         return new InsertBuilder();
     }
@@ -82,7 +82,7 @@ class QueryBuilder
     /**
      * Proceed with UNION builder.
      */
-    public function union() : UnionBuilder
+    public function union(): UnionBuilder
     {
         return new UnionBuilder();
     }
@@ -90,7 +90,7 @@ class QueryBuilder
     /**
      * Clone an existing query and proceed modifying it.
      */
-    public function clone(Query $query) : Builder
+    public function clone(Query $query): Builder
     {
         $class = new ReflectionClass($query);
 

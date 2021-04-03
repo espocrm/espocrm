@@ -42,24 +42,24 @@ class OrGroup implements WhereItem
     {
     }
 
-    public function getRaw() : array
+    public function getRaw(): array
     {
         return [
             'OR' => $this->rawValue
         ];
     }
 
-    public function getRawValue() : array
+    public function getRawValue(): array
     {
         return $this->rawValue;
     }
 
-    public function getRawKey() : string
+    public function getRawKey(): string
     {
         return 'OR';
     }
 
-    public function add(WhereItem $item) : void
+    public function add(WhereItem $item): void
     {
         $key = $item->getRawKey();
         $value = $item->getRawValue();

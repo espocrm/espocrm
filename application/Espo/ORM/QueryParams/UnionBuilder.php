@@ -38,7 +38,7 @@ class UnionBuilder implements Builder
     /**
      * Build a UNION select query.
      */
-    public function build() : Union
+    public function build(): Union
     {
         return Union::fromRaw($this->params);
     }
@@ -46,7 +46,7 @@ class UnionBuilder implements Builder
     /**
      * Clone an existing query for a subsequent modifying and building.
      */
-    public function clone(Union $query) : self
+    public function clone(Union $query): self
     {
         $this->cloneInternal($query);
 
@@ -56,14 +56,14 @@ class UnionBuilder implements Builder
     /**
      * Use UNION ALL.
      */
-    public function all() : self
+    public function all(): self
     {
         $this->params['all'] = true;
 
         return $this;
     }
 
-    public function query(Select $query) : self
+    public function query(Select $query): self
     {
         $this->params['queries'] = $this->params['queries'] ?? [];
 
@@ -75,7 +75,7 @@ class UnionBuilder implements Builder
     /**
      * Apply OFFSET and LIMIT.
      */
-    public function limit(?int $offset = null, ?int $limit = null) : self
+    public function limit(?int $offset = null, ?int $limit = null): self
     {
         $this->params['offset'] = $offset;
         $this->params['limit'] = $limit;
@@ -89,7 +89,7 @@ class UnionBuilder implements Builder
      * @param int|string|array $orderBy A position in select (starting from 1) or select alias.
      * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
      */
-    public function order($orderBy, $direction = Select::ORDER_ASC) : self
+    public function order($orderBy, $direction = Select::ORDER_ASC): self
     {
         if (!$orderBy) {
             throw new InvalidArgumentException();

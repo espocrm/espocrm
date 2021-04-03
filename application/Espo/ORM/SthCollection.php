@@ -64,27 +64,27 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         $this->entityManager = $entityManager;
     }
 
-    protected function getQueryComposer() : QueryComposer
+    protected function getQueryComposer(): QueryComposer
     {
         return $this->entityManager->getQueryComposer();
     }
 
-    protected function getEntityFactory() : EntityFactory
+    protected function getEntityFactory(): EntityFactory
     {
         return $this->entityManager->getEntityFactory();
     }
 
-    protected function setSql(string $sql) : void
+    protected function setSql(string $sql): void
     {
         $this->sql = $sql;
     }
 
-    protected function getPDO() : PDO
+    protected function getPDO(): PDO
     {
         return $this->entityManager->getPDO();
     }
 
-    protected function executeQuery() : void
+    protected function executeQuery(): void
     {
         $sql = $this->getSql();
 
@@ -95,7 +95,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         $this->sth = $sth;
     }
 
-    protected function getSql() : string
+    protected function getSql(): string
     {
         if (!$this->sql) {
             $this->sql = $this->getQueryComposer()->compose($this->getQuery());
@@ -104,7 +104,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->sql;
     }
 
-    protected function getQuery() : SelectQuery
+    protected function getQuery(): SelectQuery
     {
         return $this->query;
     }
@@ -131,7 +131,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         })();
     }
 
-    protected function executeQueryIfNotExecuted() : void
+    protected function executeQueryIfNotExecuted(): void
     {
         if (!$this->sth) {
             $this->executeQuery();
@@ -145,7 +145,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->sth->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function count() : int
+    public function count(): int
     {
         $this->executeQueryIfNotExecuted();
 
@@ -159,14 +159,14 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return count($this->getValueMapList());
     }
 
-    protected function prepareEntity(Entity $entity) : void
+    protected function prepareEntity(Entity $entity): void
     {
     }
 
     /**
      * @deprecated
      */
-    public function toArray(bool $itemsAsObjects = false) : array
+    public function toArray(bool $itemsAsObjects = false): array
     {
         $arr = [];
 
@@ -184,7 +184,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $arr;
     }
 
-    public function getValueMapList() : array
+    public function getValueMapList(): array
     {
         return $this->toArray(true);
     }
@@ -193,7 +193,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     /**
      * Whether Is fetched from DB. SthCollection is always fetched.
      */
-    public function isFetched() : bool
+    public function isFetched(): bool
     {
         return true;
     }
@@ -201,12 +201,12 @@ class SthCollection implements Collection, IteratorAggregate, Countable
     /**
      * Get an entity type.
      */
-    public function getEntityType() : string
+    public function getEntityType(): string
     {
         return $this->entityType;
     }
 
-    public static function fromQuery(SelectQuery $query, EntityManager $entityManager) : self
+    public static function fromQuery(SelectQuery $query, EntityManager $entityManager): self
     {
         $obj = new self($entityManager);
 
@@ -216,7 +216,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $obj;
     }
 
-    public static function fromSql(string $entityType, string $sql, EntityManager $entityManager) : self
+    public static function fromSql(string $entityType, string $sql, EntityManager $entityManager): self
     {
         $obj = new self($entityManager);
 

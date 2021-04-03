@@ -45,12 +45,12 @@ class EventDispatcher
         ];
     }
 
-    public function subscribeToMetadataUpdate(callable $callback) : void
+    public function subscribeToMetadataUpdate(callable $callback): void
     {
         $this->data[self::METADATA_UPDATE][] = $callback;
     }
 
-    public function dispatchMetadataUpdate() : void
+    public function dispatchMetadataUpdate(): void
     {
         foreach ($this->data[self::METADATA_UPDATE] as $callback) {
             $callback();

@@ -59,12 +59,12 @@ interface Entity
     /**
      * Get an entity ID.
      */
-    public function getId() : ?string;
+    public function getId(): ?string;
 
     /**
      * Reset all attributes (empty an entity).
      */
-    public function reset() : void;
+    public function reset(): void;
 
     /**
      * Set an attribute or multiple attributes.
@@ -76,7 +76,7 @@ interface Entity
      * @param string|object|array $attribute
      * @param ?mixed $value
      */
-    public function set($attribute, $value = null) : void;
+    public function set($attribute, $value = null): void;
 
     /**
      * Get an attribute value.
@@ -88,15 +88,15 @@ interface Entity
     /**
      * Whether an attribute value is set.
      */
-    public function has(string $attribute) : bool;
+    public function has(string $attribute): bool;
 
     /**
      * Clear an attribute value.
      */
-    public function clear(string $attribute) : void;
+    public function clear(string $attribute): void;
 
     /**
      * Get an entity type.
      */
-    public function getEntityType() : string;
+    public function getEntityType(): string;
 }

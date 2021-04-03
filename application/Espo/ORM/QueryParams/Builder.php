@@ -39,5 +39,5 @@ interface Builder
      * Build a query instance.
      * @todo Uncomment when 7.4 is a min supported PHP version.
      */
-    //public function build() : Query;
+    //public function build(): Query;
 }

@@ -29,8 +29,6 @@
 
 namespace Espo\ORM\QueryParams;
 
-use InvalidArgumentException;
-
 class LockTableBuilder implements Builder
 {
     use BaseBuilderTrait;
@@ -38,7 +36,7 @@ class LockTableBuilder implements Builder
     /**
      * Build a LOCK TABLE query.
      */
-    public function build() : LockTable
+    public function build(): LockTable
     {
         return LockTable::fromRaw($this->params);
     }
@@ -46,7 +44,7 @@ class LockTableBuilder implements Builder
     /**
      * Clone an existing query for a subsequent modifying and building.
      */
-    public function clone(LockTable $query) : self
+    public function clone(LockTable $query): self
     {
         $this->cloneInternal($query);
 
@@ -56,7 +54,7 @@ class LockTableBuilder implements Builder
     /**
      * What entity type to lock.
      */
-    public function table(string $entityType) : self
+    public function table(string $entityType): self
     {
         $this->params['table'] = $entityType;
 
@@ -66,7 +64,7 @@ class LockTableBuilder implements Builder
     /**
      * In SHARE mode.
      */
-    public function inShareMode() : self
+    public function inShareMode(): self
     {
         $this->params['mode'] = LockTable::MODE_SHARE;
 
@@ -76,7 +74,7 @@ class LockTableBuilder implements Builder
     /**
      * In EXCLUSIVE mode.
      */
-    public function inExclusiveMode() : self
+    public function inExclusiveMode(): self
     {
         $this->params['mode'] = LockTable::MODE_EXCLUSIVE;
 

@@ -38,7 +38,7 @@ class InsertBuilder implements Builder
     /**
      * Build a INSERT query.
      */
-    public function build() : Insert
+    public function build(): Insert
     {
         return Insert::fromRaw($this->params);
     }
@@ -46,7 +46,7 @@ class InsertBuilder implements Builder
     /**
      * Clone an existing query for a subsequent modifying and building.
      */
-    public function clone(Insert $query) : self
+    public function clone(Insert $query): self
     {
         $this->cloneInternal($query);
     }
@@ -54,7 +54,7 @@ class InsertBuilder implements Builder
     /**
      * Into what entity type to insert.
      */
-    public function into(string $entityType) : self
+    public function into(string $entityType): self
     {
         $this->params['into'] = $entityType;
 
@@ -64,7 +64,7 @@ class InsertBuilder implements Builder
     /**
      * What columns to set with values. A list of columns.
      */
-    public function columns(array $columns) : self
+    public function columns(array $columns): self
     {
         $this->params['columns'] = $columns;
 
@@ -74,7 +74,7 @@ class InsertBuilder implements Builder
     /**
      * What values to insert. A key-value map or a list of key-value maps.
      */
-    public function values(array $values) : self
+    public function values(array $values): self
     {
         $this->params['values'] = $values;
 
@@ -84,7 +84,7 @@ class InsertBuilder implements Builder
     /**
      * Values to set on duplicate key. A key-value map.
      */
-    public function updateSet(array $updateSet) : self
+    public function updateSet(array $updateSet): self
     {
         $this->params['updateSet'] = $updateSet;
 
@@ -94,7 +94,7 @@ class InsertBuilder implements Builder
     /**
      * For a mass insert by a select sub-query.
      */
-    public function valuesQuery(Selecting $query) : self
+    public function valuesQuery(Selecting $query): self
     {
         $this->params['valuesQuery'] = $query;
 

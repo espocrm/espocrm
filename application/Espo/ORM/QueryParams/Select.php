@@ -47,7 +47,7 @@ class Select implements Query, Selecting
     /**
      * Get an entity type.
      */
-    public function getFrom() : ?string
+    public function getFrom(): ?string
     {
         return $this->params['from'] ?? null;
     }
@@ -55,7 +55,7 @@ class Select implements Query, Selecting
     /**
      * Get select items.
      */
-    public function getSelect() : array
+    public function getSelect(): array
     {
         return $this->params['select'] ?? [];
     }
@@ -63,7 +63,7 @@ class Select implements Query, Selecting
     /**
      * Get order.
      */
-    public function getOrder() : array
+    public function getOrder(): array
     {
         return $this->params['orderBy'] ?? [];
     }
@@ -71,7 +71,7 @@ class Select implements Query, Selecting
     /**
      * Whether is distinct.
      */
-    public function isDistinct() : bool
+    public function isDistinct(): bool
     {
         return $this->params['distinct'] ?? false;
     }
@@ -79,7 +79,7 @@ class Select implements Query, Selecting
     /**
      * Get group by.
      */
-    public function getGroupBy() : array
+    public function getGroupBy(): array
     {
         return $this->params['orderBy'] ?? [];
     }

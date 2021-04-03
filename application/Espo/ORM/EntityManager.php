@@ -187,27 +187,27 @@ class EntityManager
      * @todo Remove in v7.0.
      * @deprecated
      */
-    public function getQuery() : QueryComposer
+    public function getQuery(): QueryComposer
     {
         return $this->queryComposer;
     }
 
-    public function getQueryComposer() : QueryComposer
+    public function getQueryComposer(): QueryComposer
     {
         return $this->queryComposer;
     }
 
-    public function getTransactionManager() : TransactionManager
+    public function getTransactionManager(): TransactionManager
     {
         return $this->transactionManager;
     }
 
-    public function getLocker() : Locker
+    public function getLocker(): Locker
     {
         return $this->locker;
     }
 
-    protected function getMapperClassName(string $name) : string
+    protected function getMapperClassName(string $name): string
     {
         $classNameMap = $this->params['mapperClassNameMap'] ?? [];
 
@@ -225,7 +225,7 @@ class EntityManager
         return $className;
     }
 
-    protected function getRDBMapperClassName() : string
+    protected function getRDBMapperClassName(): string
     {
         $platform = $this->params['platform'];
 
@@ -241,7 +241,7 @@ class EntityManager
     /**
      * Get a Mapper.
      */
-    public function getMapper(?string $name = null) : Mapper
+    public function getMapper(?string $name = null): Mapper
     {
         $name = $name ?? $this->defaultMapperName;
 
@@ -333,7 +333,7 @@ class EntityManager
      * Get an entity. If $id is null, a new entity instance is created.
      * If an entity with a specified $id does not exist, then NULL is returned.
      */
-    public function getEntity(string $entityType, ?string $id = null) : ?Entity
+    public function getEntity(string $entityType, ?string $id = null): ?Entity
     {
         if (!$this->hasRepository($entityType)) {
             throw new RuntimeException("ORM: Repository '{$entityType}' does not exist.");
@@ -371,7 +371,7 @@ class EntityManager
      *
      * @param StdClass|array $data Entity attributes.
      */
-    public function createEntity(string $entityType, $data, array $options = []) : Entity
+    public function createEntity(string $entityType, $data, array $options = []): Entity
     {
         $entity = $this->getEntity($entityType);
         $entity->set($data);
@@ -384,7 +384,7 @@ class EntityManager
     /**
      * Fetch an entity (from a database).
      */
-    public function fetchEntity(string $entityType, string $id) : ?Entity
+    public function fetchEntity(string $entityType, string $id): ?Entity
     {
         if (empty($id)) {
             return null;
@@ -396,7 +396,7 @@ class EntityManager
     /**
      * Check whether a repository for a specific entity type exist.
      */
-    public function hasRepository(string $entityType) : bool
+    public function hasRepository(string $entityType): bool
     {
         return $this->getMetadata()->has($entityType);
     }
@@ -404,7 +404,7 @@ class EntityManager
     /**
      * Get a repository for a specific entity type.
      */
-    public function getRepository(string $entityType) : Repository
+    public function getRepository(string $entityType): Repository
     {
         if (!$this->hasRepository($entityType)) {
             throw new RuntimeException("Repository '{$entityType}' does not exist.");
@@ -420,7 +420,7 @@ class EntityManager
     /**
      * Get an RDB repository for a specific entity type.
      */
-    public function getRDBRepository(string $entityType) : RDBRepository
+    public function getRDBRepository(string $entityType): RDBRepository
     {
         $repository = $this->getRepository($entityType);
 
@@ -434,7 +434,7 @@ class EntityManager
     /**
      * Get metadata definitions.
      */
-    public function getDefs() : Defs
+    public function getDefs(): Defs
     {
         return $this->metadata->getDefs();
     }
@@ -442,7 +442,7 @@ class EntityManager
     /**
      * Get a query builder.
      */
-    public function getQueryBuilder() : QueryBuilder
+    public function getQueryBuilder(): QueryBuilder
     {
         return $this->queryBuilder;
     }
@@ -450,7 +450,7 @@ class EntityManager
     /**
      * Get metadata.
      */
-    public function getMetadata() : Metadata
+    public function getMetadata(): Metadata
     {
         return $this->metadata;
     }
@@ -458,7 +458,7 @@ class EntityManager
     /**
      * Get a PDO instance.
      */
-    public function getPDO() : PDO
+    public function getPDO(): PDO
     {
         if (empty($this->pdo)) {
             $this->initPDO();
@@ -470,17 +470,17 @@ class EntityManager
     /**
      * Create a collection. An entity type can be omitted.
      */
-    public function createCollection(?string $entityType = null, array $data = []) : EntityCollection
+    public function createCollection(?string $entityType = null, array $data = []): EntityCollection
     {
         return $this->collectionFactory->create($entityType, $data);
     }
 
-    public function getEntityFactory() : EntityFactory
+    public function getEntityFactory(): EntityFactory
     {
         return $this->entityFactory;
     }
 
-    public function getCollectionFactory() : CollectionFactory
+    public function getCollectionFactory(): CollectionFactory
     {
         return $this->collectionFactory;
     }
@@ -488,7 +488,7 @@ class EntityManager
     /**
      * Get a Query Executor.
      */
-    public function getQueryExecutor() : QueryExecutor
+    public function getQueryExecutor(): QueryExecutor
     {
         return $this->queryExecutor;
     }
@@ -496,7 +496,7 @@ class EntityManager
     /**
      * Get SQL Executor.
      */
-    public function getSqlExecutor() : SqlExecutor
+    public function getSqlExecutor(): SqlExecutor
     {
         return $this->sqlExecutor;
     }

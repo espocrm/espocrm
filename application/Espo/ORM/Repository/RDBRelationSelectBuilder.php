@@ -68,8 +68,12 @@ class RDBRelationSelectBuilder
 
     protected $returnSthCollection = false;
 
-    public function __construct(EntityManager $entityManager, Entity $entity, string $relationName, ?Select $query = null)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        Entity $entity,
+        string $relationName,
+        ?Select $query = null
+    ) {
         $this->entityManager = $entityManager;
 
         $this->entity = $entity;
@@ -84,17 +88,18 @@ class RDBRelationSelectBuilder
 
         if ($query) {
             $this->builder = $this->createSelectBuilder()->clone($query);
-        } else {
+        }
+        else {
             $this->builder = $this->createSelectBuilder()->from($this->foreignEntityType);
         }
     }
 
-    protected function createSelectBuilder() : SelectBuilder
+    protected function createSelectBuilder(): SelectBuilder
     {
         return new SelectBuilder($this->entityManager->getQueryComposer());
     }
 
-    protected function getMapper() : Mapper
+    protected function getMapper(): Mapper
     {
         return $this->entityManager->getMapper();
     }
@@ -105,7 +110,7 @@ class RDBRelationSelectBuilder
      * Usage example:
      * `->columnsWhere(['column' => $value])`
      */
-    public function columnsWhere(array $where) : self
+    public function columnsWhere(array $where): self
     {
         if ($this->relationType !== Entity::MANY_MANY) {
             throw new RuntimeException("Can't add columns where for not many-to-many relationship.");
@@ -118,7 +123,7 @@ class RDBRelationSelectBuilder
         return $this;
     }
 
-    protected function applyMiddleAliasToWhere(array $where) : array
+    protected function applyMiddleAliasToWhere(array $where): array
     {
         $transformedWhere = [];
 
@@ -156,7 +161,7 @@ class RDBRelationSelectBuilder
     /**
      * Find related records by a criteria.
      */
-    public function find() : Collection
+    public function find(): Collection
     {
         $query = $this->builder->build();
 
@@ -179,7 +184,7 @@ class RDBRelationSelectBuilder
     /**
      * Find a first related records by a criteria.
      */
-    public function findOne() : ?Entity
+    public function findOne(): ?Entity
     {
         $collection = $this->sth()->limit(0, 1)->find();
 
@@ -193,7 +198,7 @@ class RDBRelationSelectBuilder
     /**
      * Get a number of related records that meet criteria.
      */
-    public function count() : int
+    public function count(): int
     {
         $query = $this->builder->build();
 
@@ -206,7 +211,7 @@ class RDBRelationSelectBuilder
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::join()
      */
-    public function join($relationName, ?string $alias = null, ?array $conditions = null) : self
+    public function join($relationName, ?string $alias = null, ?array $conditions = null): self
     {
         $this->builder->join($relationName, $alias, $conditions);
 
@@ -218,7 +223,7 @@ class RDBRelationSelectBuilder
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::leftJoin()
      */
-    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : self
+    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null): self
     {
         $this->builder->leftJoin($relationName, $alias, $conditions);
 
@@ -228,7 +233,7 @@ class RDBRelationSelectBuilder
     /**
      * Set DISTINCT parameter.
      */
-    public function distinct() : self
+    public function distinct(): self
     {
         $this->builder->distinct();
 
@@ -238,7 +243,7 @@ class RDBRelationSelectBuilder
     /**
      * Return STH collection. Recommended for fetching large number of records.
      */
-    public function sth() : self
+    public function sth(): self
     {
         $this->returnSthCollection = true;
 
@@ -253,7 +258,7 @@ class RDBRelationSelectBuilder
      * @param array|string $keyOrClause
      * @param ?array|string $value
      */
-    public function where($keyOrClause = [], $value = null) : self
+    public function where($keyOrClause = [], $value = null): self
     {
         if ($this->isManyMany()) {
             if (is_string($keyOrClause)) {
@@ -274,9 +279,9 @@ class RDBRelationSelectBuilder
      *
      * @see Espo\ORM\QueryParams\SelectBuilder::having()
      */
-    public function having($keyOrClause = [], $value = null) : self
+    public function having($keyOrClause = [], $value = null): self
     {
-        $this->builder->having($keyOrClause, $params2);
+        $this->builder->having($keyOrClause, $value);
 
         return $this;
     }
@@ -289,7 +294,7 @@ class RDBRelationSelectBuilder
      * @param string|array|int $orderBy
      * @param bool|string $direction
      */
-    public function order($orderBy, $direction = 'ASC') : self
+    public function order($orderBy, $direction = 'ASC'): self
     {
         $this->builder->order($orderBy, $direction);
 
@@ -299,7 +304,7 @@ class RDBRelationSelectBuilder
     /**
      * Apply OFFSET and LIMIT.
      */
-    public function limit(?int $offset = null, ?int $limit = null) : self
+    public function limit(?int $offset = null, ?int $limit = null): self
     {
         $this->builder->limit($offset, $limit);
 
@@ -313,7 +318,7 @@ class RDBRelationSelectBuilder
      *
      * @param array|string $select
      */
-    public function select($select, ?string $alias = null) : self
+    public function select($select, ?string $alias = null): self
     {
         $this->builder->select($select, $alias);
 
@@ -323,14 +328,14 @@ class RDBRelationSelectBuilder
     /**
      * Specify GROUP BY.
      */
-    public function groupBy(array $groupBy) : self
+    public function groupBy(array $groupBy): self
     {
         $this->builder->groupBy($groupBy);
 
         return $this;
     }
 
-    protected function getMiddleTableAlias() : ?string
+    protected function getMiddleTableAlias(): ?string
     {
         if (!$this->isManyMany()) {
             return null;
@@ -349,7 +354,7 @@ class RDBRelationSelectBuilder
         return $this->middleTableAlias;
     }
 
-    protected function applyRelationAliasToWhereClauseKey(string $item) : string
+    protected function applyRelationAliasToWhereClauseKey(string $item): string
     {
         if (!$this->isManyMany()) {
             return $item;
@@ -360,7 +365,7 @@ class RDBRelationSelectBuilder
         return str_replace('@relation.', $alias . '.', $item);
     }
 
-    protected function applyRelationAliasToWhereClause(array $where) : array
+    protected function applyRelationAliasToWhereClause(array $where): array
     {
         if (!$this->isManyMany()) {
             return $where;
@@ -392,12 +397,12 @@ class RDBRelationSelectBuilder
         return $transformedWhere;
     }
 
-    protected function isManyMany() : bool
+    protected function isManyMany(): bool
     {
         return $this->relationType === Entity::MANY_MANY;
     }
 
-    protected function handleReturnCollection(SthCollection $collection) : Collection
+    protected function handleReturnCollection(SthCollection $collection): Collection
     {
         if ($this->returnSthCollection) {
             return $collection;

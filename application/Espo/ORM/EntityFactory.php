@@ -36,15 +36,15 @@ interface EntityFactory
     /**
      * Create an entity.
      */
-    public function create(string $name) : Entity;
+    public function create(string $name): Entity;
 
     /**
      * For internal use.
      */
-    public function setEntityManager(EntityManager $entityManager) : void;
+    public function setEntityManager(EntityManager $entityManager): void;
 
     /**
      * For internal use.
      */
-    public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory) : void;
+    public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory): void;
 }

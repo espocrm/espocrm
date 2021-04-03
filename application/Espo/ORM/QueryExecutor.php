@@ -54,7 +54,7 @@ class QueryExecutor
     /**
      * Execute a query.
      */
-    public function execute(Query $query) : PDOStatement
+    public function execute(Query $query): PDOStatement
     {
         $sql = $this->queryComposer->compose($query);
 

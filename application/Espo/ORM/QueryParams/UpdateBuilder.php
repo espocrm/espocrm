@@ -38,7 +38,7 @@ class UpdateBuilder implements Builder
     /**
      * Build a UPDATE query.
      */
-    public function build() : Update
+    public function build(): Update
     {
         return Update::fromRaw($this->params);
     }
@@ -46,7 +46,7 @@ class UpdateBuilder implements Builder
     /**
      * Clone an existing query for a subsequent modifying and building.
      */
-    public function clone(Delete $query) : self
+    public function clone(Delete $query): self
     {
         $this->cloneInternal($query);
 
@@ -57,7 +57,7 @@ class UpdateBuilder implements Builder
     /**
      * For what entity type to build a query.
      */
-    public function in(string $entityType) : self
+    public function in(string $entityType): self
     {
         if (isset($this->params['from'])) {
             throw new RuntimeException("Method 'in' can be called only once.");
@@ -71,7 +71,7 @@ class UpdateBuilder implements Builder
     /**
      * Values to set. Column => Value map.
      */
-    public function set(array $set) : self
+    public function set(array $set): self
     {
         $this->params['set'] = $set;
 
@@ -81,7 +81,7 @@ class UpdateBuilder implements Builder
     /**
      * Apply LIMIT.
      */
-    public function limit(?int $limit = null) : self
+    public function limit(?int $limit = null): self
     {
         $this->params['limit'] = $limit;
 

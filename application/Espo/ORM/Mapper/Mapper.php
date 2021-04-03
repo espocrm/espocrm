@@ -40,35 +40,35 @@ interface Mapper
     /**
      * Get a first entity from DB.
      */
-    public function selectOne(Select $select) : ?Entity;
+    public function selectOne(Select $select): ?Entity;
 
     /**
      * Select entities from DB.
      */
-    public function select(Select $select) : Collection;
+    public function select(Select $select): Collection;
 
     /**
      * Get a number of records in DB.
      */
-    public function count(Select $select) : int;
+    public function count(Select $select): int;
 
     /**
      * Insert an entity into DB.
      */
-    public function insert(Entity $entity);
+    public function insert(Entity $entity): void;
 
     /**
      * Insert a collection into DB.
      */
-    public function massInsert(Collection $collection);
+    public function massInsert(Collection $collection): void;
 
     /**
      * Update an entity in DB.
      */
-    public function update(Entity $entity);
+    public function update(Entity $entity): void;
 
     /**
      * Mark an entity as deleted in DB.
      */
-    public function delete(Entity $entity);
+    public function delete(Entity $entity): void;
 }

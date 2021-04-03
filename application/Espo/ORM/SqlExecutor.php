@@ -53,7 +53,7 @@ class SqlExecutor
     /**
      * Execute a query.
      */
-    public function execute(string $sql, bool $rerunIfDeadlock = false) : PDOStatement
+    public function execute(string $sql, bool $rerunIfDeadlock = false): PDOStatement
     {
         if (!$rerunIfDeadlock) {
             return $this->executeSqlWithDeadlockHandling($sql, 1);
@@ -62,7 +62,7 @@ class SqlExecutor
         return $this->executeSqlWithDeadlockHandling($sql);
     }
 
-    protected function executeSqlWithDeadlockHandling(string $sql, ?int $counter = null) : PDOStatement
+    protected function executeSqlWithDeadlockHandling(string $sql, ?int $counter = null): PDOStatement
     {
         $counter = $counter ?? self::MAX_ATTEMPT_COUNT;
 
@@ -87,7 +87,7 @@ class SqlExecutor
         return $sth;
     }
 
-    protected function isExceptionIsDeadlock(Exception $e) : bool
+    protected function isExceptionIsDeadlock(Exception $e): bool
     {
         if (! $e instanceof PDOException) {
             return false;

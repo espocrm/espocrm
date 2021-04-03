@@ -186,7 +186,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return null;
     }
 
-    protected function buildEntityFromArray(array $dataArray) : ?Entity
+    protected function buildEntityFromArray(array $dataArray): ?Entity
     {
         if (!$this->entityFactory) {
             throw new RuntimeException("Can't build from array. EntityFactory was not passed to the constructor.");
@@ -210,7 +210,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * Get an entity type.
      */
-    public function getEntityType() : ?string
+    public function getEntityType(): ?string
     {
         return $this->entityType;
     }
@@ -245,7 +245,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * Whether a collection contains a specific item.
      */
-    public function contains($value) : bool
+    public function contains($value): bool
     {
         if ($this->indexOf($value) !== false) {
             return true;
@@ -297,7 +297,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * @deprecated Use `getValueMapList`.
      */
-    public function toArray(bool $itemsAsObjects = false) : array
+    public function toArray(bool $itemsAsObjects = false): array
     {
         $arr = [];
 
@@ -315,7 +315,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         return $arr;
     }
 
-    public function getValueMapList() : array
+    public function getValueMapList(): array
     {
         return $this->toArray(true);
     }
@@ -323,7 +323,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * Mark as fetched from DB.
      */
-    public function setAsFetched() : void
+    public function setAsFetched(): void
     {
         $this->isFetched = true;
     }
@@ -331,12 +331,12 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     /**
      * Is fetched from DB.
      */
-    public function isFetched() : bool
+    public function isFetched(): bool
     {
         return $this->isFetched;
     }
 
-    public static function fromSthCollection(SthCollection $sthCollection) : self
+    public static function fromSthCollection(SthCollection $sthCollection): self
     {
         $entityList = [];
 

@@ -43,7 +43,7 @@ trait SelectingBuilderTrait
      * @param array|string $keyOrClause A key or where clause.
      * @param ?array|string $value A value. If the first argument is an array, then should be omited.
      */
-    public function where($keyOrClause = [], $value = null) : self
+    public function where($keyOrClause = [], $value = null): self
     {
         $this->applyWhereClause('whereClause', $keyOrClause, $value);
 
@@ -93,7 +93,7 @@ trait SelectingBuilderTrait
      * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
      *                               If the first argument is an array then should be omitied.
      */
-    public function order($orderBy, $direction = Select::ORDER_ASC) : self
+    public function order($orderBy, $direction = Select::ORDER_ASC): self
     {
         if (is_array($orderBy)) {
             $this->params['orderBy'] = $orderBy;
@@ -118,7 +118,7 @@ trait SelectingBuilderTrait
      * @param string $relationName A relationName or table. A relationName is in camelCase, a table is in CamelCase.
      *
      */
-    public function join($relationName, ?string $alias = null, ?array $conditions = null) : self
+    public function join($relationName, ?string $alias = null, ?array $conditions = null): self
     {
         if (empty($this->params['joins'])) {
             $this->params['joins'] = [];
@@ -160,7 +160,7 @@ trait SelectingBuilderTrait
      *
      * @param string $relationName A relationName or table. A relationName is in camelCase, a table is in CamelCase.
      */
-    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null) : self
+    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null): self
     {
         if (empty($this->params['leftJoins'])) {
             $this->params['leftJoins'] = [];
@@ -200,7 +200,7 @@ trait SelectingBuilderTrait
     /**
      * Whether an alias is in left joins.
      */
-    public function hasLeftJoinAlias(string $alias) : bool
+    public function hasLeftJoinAlias(string $alias): bool
     {
         $leftJoins = $this->params['leftJoins'] ?? [];
 
@@ -222,7 +222,7 @@ trait SelectingBuilderTrait
     /**
      * Whether an alias is in joins.
      */
-    public function hasJoinAlias(string $alias) : bool
+    public function hasJoinAlias(string $alias): bool
     {
         $joins = $this->params['joins'] ?? [];
 

@@ -1159,7 +1159,7 @@ class BaseMapper implements Mapper
      *
      * @todo Set 'id' if auto-increment (as fetched).
      */
-    public function insert(Entity $entity)
+    public function insert(Entity $entity): void
     {
         $this->insertInternal($entity);
     }
@@ -1215,7 +1215,7 @@ class BaseMapper implements Mapper
     /**
      * {@inheritdoc}
      */
-    public function massInsert(Collection $collection)
+    public function massInsert(Collection $collection): void
     {
         if (!count($collection)) {
             return;
@@ -1302,7 +1302,7 @@ class BaseMapper implements Mapper
     /**
      * {@inheritdoc}
      */
-    public function update(Entity $entity)
+    public function update(Entity $entity): void
     {
         $valueMap = $this->getValueMapForUpdate($entity);
 
@@ -1369,7 +1369,7 @@ class BaseMapper implements Mapper
     /**
      * Unmark an entity as deleted in DB.
      */
-    public function restoreDeleted(string $entityType, string $id)
+    public function restoreDeleted(string $entityType, string $id): void
     {
         if (empty($entityType) || empty($id)) {
             throw new RuntimeException("Can't restore an empty entity type or ID.");
@@ -1393,11 +1393,11 @@ class BaseMapper implements Mapper
     /**
      * {@inheritdoc}
      */
-    public function delete(Entity $entity) : bool
+    public function delete(Entity $entity): void
     {
         $entity->set(static::ATTRIBUTE_DELETED, true);
 
-        return (booL) $this->update($entity);
+        $this->update($entity);
     }
 
     protected function toValueMap(Entity $entity, bool $onlyStorable = true) : array
