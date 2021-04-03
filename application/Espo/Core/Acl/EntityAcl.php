@@ -38,16 +38,16 @@ interface EntityAcl
     /**
      * Check access to an entity.
      */
-    public function checkEntity(User $user, Entity $entity, ScopeData $data, string $action = Table::ACTION_READ): bool;
+    public function checkEntity(User $user, Entity $entity, ScopeData $data, string $action): bool;
+
+    /**
+     * Get an access level for a specific action.
+     */
+    public function getLevel(User $user, ScopeData $data, string $action) : string;
 
     /**
      * Get an entity attribute that stores an ID (or IDs) of an owner-user.
      * NULL means no owner.
      */
     public function getOwnerUserIdAttribute(): ?string;
-
-    /**
-     * Get a 'read' access level.
-     */
-    public function getReadLevel(User $user, ScopeData $data) : string;
 }

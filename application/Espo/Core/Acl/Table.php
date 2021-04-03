@@ -131,7 +131,8 @@ class Table
 
         if ($this->isStrictModeForced) {
             $this->isStrictMode = true;
-        } else {
+        }
+        else {
             $this->isStrictMode = $config->get('aclStrictMode', true);
         }
 
@@ -169,11 +170,17 @@ class Table
         $this->cacheKey = 'acl/' . $this->user->id;
     }
 
+    /**
+     * Get a full map.
+     */
     public function getMap(): StdClass
     {
         return ObjectUtil::clone($this->data);
     }
 
+    /**
+     * Get scope data.
+     */
     public function getScopeData(string $scope): ScopeData
     {
         if (!isset($this->data->table->$scope)) {
@@ -189,6 +196,9 @@ class Table
         return ScopeData::fromRaw($data);
     }
 
+    /**
+     * Get a permission.
+     */
     public function get(string $permission): ?string
     {
         if ($permission === 'table') {
@@ -200,28 +210,6 @@ class Table
         }
 
         return self::LEVEL_NO;
-    }
-
-    public function getLevel(string $scope, string $action): string
-    {
-        if (isset($this->data->table->$scope)) {
-            if (isset($this->data->table->$scope->$action)) {
-                return $this->data->table->$scope->$action;
-            }
-        }
-
-        return self::LEVEL_NO;
-    }
-
-    public function getHighestLevel(string $scope, string $action): string
-    {
-        if (in_array($action, $this->booleanActionList)) {
-            return self::LEVEL_YES;
-        }
-
-        $level = $this->metadata->get(['scopes', $scope, $this->type . 'HighestLevel']);
-
-        return $level ?? self::LEVEL_ALL;
     }
 
     private function load()
@@ -261,7 +249,8 @@ class Table
             foreach ($this->getScopeList() as $scope) {
                 if ($this->metadata->get("scopes.{$scope}.{$this->type}") === 'boolean') {
                     $aclTable->$scope = true;
-                } else {
+                }
+                else {
                     if ($this->metadata->get("scopes.{$scope}.entity")) {
                         $aclTable->$scope = (object) [];
 
@@ -280,10 +269,8 @@ class Table
         }
 
         foreach ($aclTable as $scope => $data) {
-            if (is_string($data)) {
-                if (isset($aclTable->$data)) {
-                    $aclTable->$scope = $aclTable->$data;
-                }
+            if (is_string($data) && isset($aclTable->$data)) {
+                $aclTable->$scope = $aclTable->$data;
             }
         }
 
@@ -311,8 +298,8 @@ class Table
                         ->get('app.'.$this->type.'.mandatory.' . $permission);
                 }
             }
-
-        } else {
+        }
+        else {
             foreach ($this->valuePermissionList as $permission) {
                 if (isset($this->valuePermissionHighestLevels[$permission])) {
                     $this->data->$permission = $this->valuePermissionHighestLevels[$permission];
@@ -334,7 +321,7 @@ class Table
             ->getRelation($this->user, 'roles')
             ->find();
 
-        if (! $userRoleList instanceof Traversable) {
+        if (!$userRoleList instanceof Traversable) {
             throw new Error();
         }
 
@@ -366,7 +353,9 @@ class Table
     }
 
     public function getScopeForbiddenAttributeList(
-        string $scope, string $action = self::ACTION_READ, string $thresholdLevel = self::LEVEL_NO
+        string $scope,
+        string $action = self::ACTION_READ,
+        string $thresholdLevel = self::LEVEL_NO
     ): array {
 
         $key = $scope . '_'. $action . '_' . $thresholdLevel;
@@ -416,7 +405,9 @@ class Table
     }
 
     public function getScopeForbiddenFieldList(
-        string $scope, string $action = self::ACTION_READ, string $thresholdLevel = self::LEVEL_NO
+        string $scope,
+        string $action = self::ACTION_READ,
+        string $thresholdLevel = self::LEVEL_NO
     ): array {
 
         $key = $scope . '_'. $action . '_' . $thresholdLevel;

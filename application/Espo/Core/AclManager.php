@@ -148,11 +148,11 @@ class AclManager
      */
     public function getLevel(User $user, string $scope, string $action): string
     {
-        if ($user->isAdmin()) {
-            return $this->getTable($user)->getHighestLevel($scope, $action);
-        }
+        $data = $this->getTable($user)->getScopeData($scope);
 
-        return $this->getTable($user)->getLevel($scope, $action);
+        $impl = $this->getEntityImplementation($scope);
+
+        return $impl->getLevel($user, $data, $action);
     }
 
     /**
@@ -176,7 +176,7 @@ class AclManager
 
         $impl = $this->getEntityImplementation($scope);
 
-        return $impl->getReadLevel($user, $data) === Table::LEVEL_NO;
+        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_NO;
     }
 
     /**
@@ -188,7 +188,7 @@ class AclManager
 
         $impl = $this->getEntityImplementation($scope);
 
-        return $impl->getReadLevel($user, $data) === Table::LEVEL_TEAM;
+        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_TEAM;
     }
 
     /**
@@ -200,7 +200,7 @@ class AclManager
 
         $impl = $this->getEntityImplementation($scope);
 
-        return $impl->getReadLevel($user, $data) === Table::LEVEL_OWN;
+        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_OWN;
     }
 
     /**
@@ -212,7 +212,7 @@ class AclManager
 
         $impl = $this->getEntityImplementation($scope);
 
-        return $impl->getReadLevel($user, $data) === Table::LEVEL_ALL;
+        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_ALL;
     }
 
     /**

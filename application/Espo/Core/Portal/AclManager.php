@@ -126,7 +126,7 @@ class AclManager extends BaseAclManager
 
         $impl = $this->getEntityImplementation($scope);
 
-        return $impl->getReadLevel($user, $data) === Table::LEVEL_ACCOUNT;
+        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_ACCOUNT;
     }
 
     public function checkReadOnlyContact(User $user, string $scope): bool
@@ -135,7 +135,7 @@ class AclManager extends BaseAclManager
 
         $impl = $this->getEntityImplementation($scope);
 
-        return $impl->getReadLevel($user, $data) === Table::LEVEL_CONTACT;
+        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_CONTACT;
     }
 
     public function checkInAccount(User $user, Entity $entity): bool
