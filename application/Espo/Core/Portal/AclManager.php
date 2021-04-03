@@ -124,24 +124,28 @@ class AclManager extends BaseAclManager
     {
         $data = $this->getTable($user)->getScopeData($scope);
 
-        return $this->getImplementation($scope)->checkReadOnlyAccount($user, $data);
+        $impl = $this->getEntityImplementation($scope);
+
+        return $impl->getReadLevel($user, $data) === Table::LEVEL_ACCOUNT;
     }
 
     public function checkReadOnlyContact(User $user, string $scope): bool
     {
         $data = $this->getTable($user)->getScopeData($scope);
 
-        return $this->getImplementation($scope)->checkReadOnlyContact($user, $data);
+        $impl = $this->getEntityImplementation($scope);
+
+        return $impl->getReadLevel($user, $data) === Table::LEVEL_CONTACT;
     }
 
     public function checkInAccount(User $user, Entity $entity): bool
     {
-        return (bool) $this->getImplementation($entity->getEntityType())->checkInAccount($user, $entity);
+        return (bool) $this->getEntityImplementation($entity->getEntityType())->checkInAccount($user, $entity);
     }
 
     public function checkIsOwnContact(User $user, Entity $entity): bool
     {
-        return (bool) $this->getImplementation($entity->getEntityType())->checkIsOwnContact($user, $entity);
+        return (bool) $this->getEntityImplementation($entity->getEntityType())->checkIsOwnContact($user, $entity);
     }
 
     public function getMap(User $user): StdClass
@@ -174,20 +178,16 @@ class AclManager extends BaseAclManager
     public function checkReadOnlyTeam(User $user, string $scope): bool
     {
         if ($this->checkUserIsNotPortal($user)) {
-            $data = $this->getTable($user)->getScopeData($scope);
-
-            return $this->mainManager->checkReadOnlyTeam($user, $data);
+            return $this->mainManager->checkReadOnlyTeam($user, $scope);
         }
 
-        return parent::checkReadOnlyTeam($user, $scope);
+        return false;
     }
 
     public function checkReadNo(User $user, string $scope): bool
     {
         if ($this->checkUserIsNotPortal($user)) {
-            $data = $this->getTable($user)->getScopeData($scope);
-
-            return $this->mainManager->checkReadNo($user, $data);
+            return $this->mainManager->checkReadNo($user, $scope);
         }
 
         return parent::checkReadNo($user, $scope);
@@ -196,12 +196,19 @@ class AclManager extends BaseAclManager
     public function checkReadOnlyOwn(User $user, string $scope): bool
     {
         if ($this->checkUserIsNotPortal($user)) {
-            $data = $this->getTable($user)->getScopeData($scope);
-
-            return $this->mainManager->checkReadOnlyOwn($user, $data);
+            return $this->mainManager->checkReadOnlyOwn($user, $scope);
         }
 
         return parent::checkReadOnlyOwn($user, $scope);
+    }
+
+    public function checkReadAll(User $user, string $scope): bool
+    {
+        if ($this->checkUserIsNotPortal($user)) {
+            return $this->mainManager->checkReadAll($user, $scope);
+        }
+
+        return parent::checkReadAll($user, $scope);
     }
 
     public function check(User $user, $subject, ?string $action = null): bool

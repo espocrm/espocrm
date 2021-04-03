@@ -29,7 +29,9 @@
 
 namespace Espo\Core\AclPortal;
 
-interface PortalScopeAcl
+use Espo\Core\Acl\ScopeAcl;
+
+interface PortalScopeAcl extends ScopeAcl
 {
 
 }

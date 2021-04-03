@@ -92,7 +92,12 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         return $this->checkScopeInternal($user, $data, $action);
     }
 
-    public function checkReadOnlyTeam(User $user, ScopeData $data): bool
+    public function getReadLevel(User $user, ScopeData $data) : string
+    {
+        return $data->getRead();
+    }
+
+    /*public function checkReadOnlyTeam(User $user, ScopeData $data): bool
     {
         return $data->getRead() === Table::LEVEL_TEAM;
     }
@@ -106,6 +111,11 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
     {
         return $data->getRead() === Table::LEVEL_OWN;
     }
+
+    public function checkReadAll(User $user, ScopeData $data): bool
+    {
+        return $data->getRead() === Table::LEVEL_ALL;
+    }*/
 
     protected function checkScopeInternal(
         User $user,

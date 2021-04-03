@@ -133,16 +133,6 @@ trait Portal
         return false;
     }
 
-    public function checkReadOnlyAccount(User $user, ScopeData $data) : bool
-    {
-        return $data->getRead() === Table::LEVEL_ACCOUNT;
-    }
-
-    public function checkReadOnlyContact(User $user, ScopeData $data) : bool
-    {
-        return $data->getRead() === Table::LEVEL_CONTACT;
-    }
-
     /**
      * @return bool
      */

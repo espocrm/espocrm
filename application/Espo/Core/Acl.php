@@ -99,6 +99,14 @@ class Acl
     }
 
     /**
+     * Whether 'read' access is set to 'all' for a specific scope.
+     */
+    public function checkReadAll(string $scope): bool
+    {
+        return $this->aclManager->checkReadAll($this->user, $scope);
+    }
+
+    /**
      * Check a scope or entity. If $action is omitted, it will check whether a scope level is set to 'enabled'.
      */
     public function check($subject, ?string $action = null): bool

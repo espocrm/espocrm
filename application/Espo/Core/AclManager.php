@@ -110,6 +110,17 @@ class AclManager
         return $this->implementationHashMap[$scope];
     }
 
+    protected function getEntityImplementation(string $scope): EntityAcl
+    {
+        $impl = $this->getImplementation($scope);
+
+        if (!$impl instanceof EntityAcl) {
+            throw new RuntimeException("Acl must implement EntityAcl interface.");
+        }
+
+        return $impl;
+    }
+
     protected function getTable(User $user): Table
     {
         $key = $user->getId();
@@ -163,7 +174,9 @@ class AclManager
     {
         $data = $this->getTable($user)->getScopeData($scope);
 
-        return $this->getImplementation($scope)->checkReadNo($user, $data);
+        $impl = $this->getEntityImplementation($scope);
+
+        return $impl->getReadLevel($user, $data) === Table::LEVEL_NO;
     }
 
     /**
@@ -173,7 +186,9 @@ class AclManager
     {
         $data = $this->getTable($user)->getScopeData($scope);
 
-        return $this->getImplementation($scope)->checkReadOnlyTeam($user, $data);
+        $impl = $this->getEntityImplementation($scope);
+
+        return $impl->getReadLevel($user, $data) === Table::LEVEL_TEAM;
     }
 
     /**
@@ -183,7 +198,21 @@ class AclManager
     {
         $data = $this->getTable($user)->getScopeData($scope);
 
-        return $this->getImplementation($scope)->checkReadOnlyOwn($user, $data);
+        $impl = $this->getEntityImplementation($scope);
+
+        return $impl->getReadLevel($user, $data) === Table::LEVEL_OWN;
+    }
+
+    /**
+     * Whether 'read' access is set to 'all' for a specific scope.
+     */
+    public function checkReadAll(User $user, string $scope): bool
+    {
+        $data = $this->getTable($user)->getScopeData($scope);
+
+        $impl = $this->getEntityImplementation($scope);
+
+        return $impl->getReadLevel($user, $data) === Table::LEVEL_ALL;
     }
 
     /**
@@ -288,7 +317,7 @@ class AclManager
      */
     public function checkIsOwner(User $user, Entity $entity): bool
     {
-        return (bool) $this->getImplementation($entity->getEntityType())->checkIsOwner($user, $entity);
+        return (bool) $this->getEntityImplementation($entity->getEntityType())->checkIsOwner($user, $entity);
     }
 
     /**
@@ -296,7 +325,7 @@ class AclManager
      */
     public function checkInTeam(User $user, Entity $entity): bool
     {
-        return (bool) $this->getImplementation($entity->getEntityType())->checkInTeam($user, $entity);
+        return (bool) $this->getEntityImplementation($entity->getEntityType())->checkInTeam($user, $entity);
     }
 
     /**
