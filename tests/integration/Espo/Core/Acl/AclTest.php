@@ -33,9 +33,9 @@ use Espo\Core\{
     AclManager,
 };
 
-class AuthTokenManagerTest extends \tests\integration\Core\BaseTestCase
+class AclTest extends \tests\integration\Core\BaseTestCase
 {
-    public function testGetOwnerUserIdAttribute1()
+    public function testGetOwnerUserIdAttribute()
     {
         /* @var $aclManager AclManager */
         $aclManager = $this->getContainer()->get('aclManager');
