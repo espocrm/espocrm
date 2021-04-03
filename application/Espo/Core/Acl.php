@@ -188,6 +188,8 @@ class Acl
 
     /**
      * Get attributes forbidden for a user.
+     *
+     * @return array<string>
      */
     public function getScopeForbiddenAttributeList(
         string $scope,
@@ -201,6 +203,8 @@ class Acl
 
     /**
      * Get fields forbidden for a user.
+     *
+     * @return array<string>
      */
     public function getScopeForbiddenFieldList(
         string $scope,
@@ -214,6 +218,8 @@ class Acl
 
     /**
      * Get links forbidden for a user.
+     *
+     * @return array<string>
      */
     public function getScopeForbiddenLinkList(
         string $scope,

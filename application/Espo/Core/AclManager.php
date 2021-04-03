@@ -36,11 +36,12 @@ use Espo\Entities\User;
 use Espo\Core\{
     ORM\EntityManager,
     Acl\AclFactory,
-    Acl\ScopeAcl,
     Acl\GlobalRestrictonFactory,
     Acl\GlobalRestricton,
     Acl as UserAclWrapper,
     Acl\Table as Table,
+    Acl\ScopeAcl,
+    Acl\EntityAcl,
     Acl\EntityCreateAcl,
     Acl\EntityReadAcl,
     Acl\EntityEditAcl,
@@ -49,6 +50,7 @@ use Espo\Core\{
 };
 
 use StdClass;
+use RuntimeException;
 
 /**
  * Used to check access for a specific user.
@@ -229,6 +231,10 @@ class AclManager
             return $impl->$methodName($user, $entity, $data);
         }
 
+        if (!$impl instanceof EntityAcl) {
+            throw new RuntimeException("Acl must implement EntityAcl interface.");
+        }
+
         if (method_exists($impl, $methodName)) {
             // For backward compatibility.
             return $impl->$methodName($user, $entity, $data);
@@ -374,6 +380,8 @@ class AclManager
 
     /**
      * Get attributes forbidden for a user.
+     *
+     * @return array<string>
      */
     public function getScopeForbiddenAttributeList(
         User $user,
@@ -405,6 +413,8 @@ class AclManager
 
     /**
      * Get fields forbidden for a user.
+     *
+     * @return array<string>
      */
     public function getScopeForbiddenFieldList(
         User $user,
@@ -436,6 +446,8 @@ class AclManager
 
     /**
      * Get links forbidden for a user.
+     *
+     * @return array<string>
      */
     public function getScopeForbiddenLinkList(
         User $user,
