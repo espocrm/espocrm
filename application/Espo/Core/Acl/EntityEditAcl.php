@@ -35,5 +35,8 @@ use Espo\Entities\User;
 
 interface EntityEditAcl
 {
+    /**
+     * Check 'edit' access.
+     */
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool;
 }

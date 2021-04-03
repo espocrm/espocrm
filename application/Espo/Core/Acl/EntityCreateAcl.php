@@ -35,5 +35,8 @@ use Espo\Entities\User;
 
 interface EntityCreateAcl
 {
+    /**
+     * Check 'create' access.
+     */
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool;
 }

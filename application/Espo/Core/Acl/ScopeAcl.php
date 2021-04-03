@@ -33,5 +33,8 @@ use Espo\Entities\User;
 
 interface ScopeAcl
 {
+    /**
+     * Check access to a scope.
+     */
     public function checkScope(User $user, ScopeData $data, ?string $action = null): bool;
 }

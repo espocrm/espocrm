@@ -35,5 +35,8 @@ use Espo\Entities\User;
 
 interface EntityDeleteAcl
 {
+    /**
+     * Check 'delete' access.
+     */
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool;
 }

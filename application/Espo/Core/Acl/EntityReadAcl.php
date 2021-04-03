@@ -35,5 +35,8 @@ use Espo\Entities\User;
 
 interface EntityReadAcl
 {
+    /**
+     * Check 'read' access.
+     */
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool;
 }

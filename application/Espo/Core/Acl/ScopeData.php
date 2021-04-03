@@ -33,7 +33,7 @@ use StdClass;
 use InvalidArgumentException;
 
 /**
- * A scope data.
+ * Scope data.
  */
 class ScopeData
 {

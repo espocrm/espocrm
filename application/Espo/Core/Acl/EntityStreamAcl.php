@@ -35,5 +35,8 @@ use Espo\Entities\User;
 
 interface EntityStreamAcl
 {
+    /**
+     * Check 'stream' access.
+     */
     public function checkEntityStream(User $user, Entity $entity, ScopeData $data): bool;
 }
