@@ -117,7 +117,7 @@ class Stream
         $this->selectBuilderFactory = $selectBuilderFactory;
     }
 
-    protected function getNotificationService() : NotificationService
+    protected function getNotificationService(): NotificationService
     {
         if (!$this->notificationService) {
             $this->notificationService = $this->serviceFactory->create('Notification');
@@ -126,7 +126,7 @@ class Stream
         return $this->notificationService;
     }
 
-    protected function getStatusStyles() : array
+    protected function getStatusStyles(): array
     {
         if (empty($this->statusStyles)) {
             $this->statusStyles = $this->metadata->get('entityDefs.Note.statusStyles', []);
@@ -135,7 +135,7 @@ class Stream
         return $this->statusStyles;
     }
 
-    protected function getStatusFields() : array
+    protected function getStatusFields(): array
     {
         if (is_null($this->statusFields)) {
             $this->statusFields = [];
@@ -154,7 +154,7 @@ class Stream
         return $this->statusFields;
     }
 
-    public function afterRecordCreatedJob(StdClass $data) : void
+    public function afterRecordCreatedJob(StdClass $data): void
     {
         if (empty($data)) {
             return;
@@ -217,7 +217,7 @@ class Stream
         }
     }
 
-    public function checkIsFollowed(Entity $entity, ?string $userId = null) : bool
+    public function checkIsFollowed(Entity $entity, ?string $userId = null): bool
     {
         if (!$userId) {
             $userId = $this->user->id;
@@ -235,7 +235,7 @@ class Stream
         return $isFollowed;
     }
 
-    public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false) : void
+    public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false): void
     {
         if (!$this->metadata->get(['scopes', $entity->getEntityType(), 'stream'])) {
             return;
@@ -307,7 +307,7 @@ class Stream
         $this->entityManager->getMapper()->massInsert($collection);
     }
 
-    public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false) : bool
+    public function followEntity(Entity $entity, string $userId, bool $skipAclCheck = false): bool
     {
         if ($userId === 'system') {
             return false;
@@ -355,7 +355,7 @@ class Stream
         return true;
     }
 
-    public function unfollowEntity(Entity $entity, string $userId) : bool
+    public function unfollowEntity(Entity $entity, string $userId): bool
     {
         if (!$this->metadata->get('scopes.' . $entity->getEntityType() . '.stream')) {
             return false;
@@ -376,7 +376,7 @@ class Stream
         return true;
     }
 
-    public function unfollowAllUsersFromEntity(Entity $entity) : void
+    public function unfollowAllUsersFromEntity(Entity $entity): void
     {
         if (!$entity->getId()) {
             return;
@@ -394,7 +394,7 @@ class Stream
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    public function findUserStream(string $userId, array $params = []) : StdClass
+    public function findUserStream(string $userId, array $params = []): StdClass
     {
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
@@ -857,7 +857,7 @@ class Stream
         ];
     }
 
-    protected function getUserStreamWhereClause(array $params, User $user) : array
+    protected function getUserStreamWhereClause(array $params, User $user): array
     {
         $whereClause = [];
 
@@ -906,7 +906,7 @@ class Stream
         return $whereClause;
     }
 
-    protected function loadNoteAdditionalFields(Entity $e) : void
+    protected function loadNoteAdditionalFields(Entity $e): void
     {
         if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
             $e->loadAttachments();
@@ -938,7 +938,7 @@ class Stream
         }
     }
 
-    public function find(string $scope, ?string $id, array $params = []) : StdClass
+    public function find(string $scope, ?string $id, array $params = []): StdClass
     {
         if ($scope === 'User') {
             if (empty($id)) {
@@ -1193,7 +1193,7 @@ class Stream
         ];
     }
 
-    protected function loadAssignedUserName(Entity $entity) : void
+    protected function loadAssignedUserName(Entity $entity): void
     {
         $user = $this->entityManager
             ->getRepository('User')
@@ -1208,7 +1208,7 @@ class Stream
         }
     }
 
-    protected function processNoteTeamsUsers(Entity $note, Entity $entity) : void
+    protected function processNoteTeamsUsers(Entity $note, Entity $entity): void
     {
         $note->setAclIsProcessed();
 
@@ -1240,7 +1240,7 @@ class Stream
         }
     }
 
-    public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false) : void
+    public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false): void
     {
         $entityType = $entity->getEntityType();
 
@@ -1307,7 +1307,7 @@ class Stream
         $this->entityManager->saveEntity($note);
     }
 
-    public function noteEmailSent(Entity $entity, Entity $email) : void
+    public function noteEmailSent(Entity $entity, Entity $email): void
     {
         $entityType = $entity->getEntityType();
 
@@ -1365,7 +1365,7 @@ class Stream
         $this->entityManager->saveEntity($note);
     }
 
-    public function noteCreate(Entity $entity, array $options = []) : void
+    public function noteCreate(Entity $entity, array $options = []): void
     {
         $entityType = $entity->getEntityType();
 
@@ -1417,7 +1417,7 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    protected function getStatusStyle(string $entityType, string $field, $value) : string
+    protected function getStatusStyle(string $entityType, string $field, $value): string
     {
         $style = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'style', $value]);
 
@@ -1444,7 +1444,7 @@ class Stream
 
     public function noteCreateRelated(
         Entity $entity, string $parentType, string $parentId, array $options = []
-    ) : void {
+    ): void {
 
         $note = $this->entityManager->getEntity('Note');
 
@@ -1474,7 +1474,7 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    public function noteRelate(Entity $entity, string $parentType, string $parentId, array $options = []) : void
+    public function noteRelate(Entity $entity, string $parentType, string $parentId, array $options = []): void
     {
         $entityType = $entity->getEntityType();
 
@@ -1515,7 +1515,7 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    public function noteAssign(Entity $entity, array $options = []) : void
+    public function noteAssign(Entity $entity, array $options = []): void
     {
         $note = $this->entityManager->getEntity('Note');
 
@@ -1558,7 +1558,7 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    public function noteStatus(Entity $entity, $field, array $options = []) : void
+    public function noteStatus(Entity $entity, $field, array $options = []): void
     {
         $note = $this->entityManager->getEntity('Note');
 
@@ -1598,7 +1598,7 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    protected function getAuditedFieldsData(Entity $entity) : array
+    protected function getAuditedFieldsData(Entity $entity): array
     {
         $entityType = $entity->getEntityType();
 
@@ -1637,7 +1637,7 @@ class Stream
         return $this->auditedFieldsCache[$entityType];
     }
 
-    public function handleAudited($entity, array $options = []) : void
+    public function handleAudited($entity, array $options = []): void
     {
         $auditedFields = $this->getAuditedFieldsData($entity);
 
@@ -1712,7 +1712,7 @@ class Stream
         $this->entityManager->saveEntity($note, $o);
     }
 
-    public function getEntityFolowerIdList(Entity $entity) : array
+    public function getEntityFolowerIdList(Entity $entity): array
     {
         $userList = $this->entityManager
             ->getRepository('User')
@@ -1734,7 +1734,7 @@ class Stream
         return $idList;
     }
 
-    public function findEntityFollowers(Entity $entity, $params) : RecordCollection
+    public function findEntityFollowers(Entity $entity, $params): RecordCollection
     {
         $builder = $this->selectBuilderFactory
             ->create()
@@ -1773,7 +1773,7 @@ class Stream
         return new RecordCollection($collection, $total);
     }
 
-    public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false) : array
+    public function getEntityFollowers(Entity $entity, $offset = 0, $limit = false): array
     {
         if (!$limit) {
             $limit = 200;
@@ -1815,7 +1815,7 @@ class Stream
         return $data;
     }
 
-    protected function getOnlyTeamEntityTypeList(User $user) : array
+    protected function getOnlyTeamEntityTypeList(User $user): array
     {
         if ($user->isPortal()) {
             return [];
@@ -1848,7 +1848,7 @@ class Stream
         return $list;
     }
 
-    protected function getOnlyOwnEntityTypeList(User $user) : array
+    protected function getOnlyOwnEntityTypeList(User $user): array
     {
         if ($user->isPortal()) {
             return [];
@@ -1881,7 +1881,7 @@ class Stream
         return $list;
     }
 
-    protected function getUserAclManager(User $user) : ?AclManager
+    protected function getUserAclManager(User $user): ?AclManager
     {
         $aclManager = $this->aclManager;
 
@@ -1901,7 +1901,7 @@ class Stream
         return $aclManager;
     }
 
-    protected function getNotAllEntityTypeList(User $user) : array
+    protected function getNotAllEntityTypeList(User $user): array
     {
         if (!$user->isPortal()) {
             return [];
@@ -1936,7 +1936,7 @@ class Stream
         return $list;
     }
 
-    protected function getIgnoreScopeList(User $user) : array
+    protected function getIgnoreScopeList(User $user): array
     {
         $ignoreScopeList = [];
 
@@ -1967,7 +1967,7 @@ class Stream
         return $ignoreScopeList;
     }
 
-    public function controlFollowersJob(StdClass $data) : void
+    public function controlFollowersJob(StdClass $data): void
     {
         if (empty($data)) {
             return;
@@ -2011,7 +2011,7 @@ class Stream
         }
     }
 
-    public function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false) : Collection
+    public function getSubscriberList(string $parentType, string $parentId, bool $isInternal = false): Collection
     {
         if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
             return $this->entityManager->getCollectionFactory()->create('User', []);
