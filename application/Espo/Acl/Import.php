@@ -33,30 +33,34 @@ use Espo\Entities\User as EntityUser;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\Acl,
+    Acl\ScopeData,
+    Acl\EntityReadAcl,
+};
 
-class Import extends Acl
+class Import extends Acl implements EntityReadAcl
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        if ($user->id === $entity->get('createdById')) {
+        if ($user->getId() === $entity->get('createdById')) {
             return true;
         }
 
         return false;
     }
 
-    public function checkEntityDelete(EntityUser $user, Entity $entity, $data)
+    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        if ($user->id === $entity->get('createdById')) {
+        if ($user->getId() === $entity->get('createdById')) {
             return true;
         }
 

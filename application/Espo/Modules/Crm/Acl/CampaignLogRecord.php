@@ -33,9 +33,9 @@ use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Base;
+use Espo\Core\Acl\Acl;
 
-class CampaignLogRecord extends Base
+class CampaignLogRecord extends Acl
 {
     public function checkIsOwner(User $user, Entity $entity)
     {

@@ -27,51 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Acl;
-
-use Espo\Entities\User;
+namespace Espo\Core\Acl;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Entities\User;
 
-class CampaignTrackingUrl extends Acl
+interface EntityCreateAcl
 {
-    public function checkIsOwner(User $user, Entity $entity)
-    {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
-
-            if (!$campaignId) {
-                return false;
-            }
-
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-
-            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkIsOwner($user, $campaign)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function checkInTeam(User $user, Entity $entity)
-    {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
-
-            if (!$campaignId) {
-                return false;
-            }
-
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-
-            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkInTeam($user, $campaign)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool;
 }

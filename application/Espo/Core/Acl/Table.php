@@ -39,6 +39,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\FieldUtil,
     Utils\DataCache,
+    Utils\ObjectUtil,
 };
 
 use StdClass;
@@ -170,22 +171,22 @@ class Table
 
     public function getMap() : StdClass
     {
-        return $this->data;
+        return ObjectUtil::clone($this->data);
     }
 
-    public function getScopeData(string $scope)
+    public function getScopeData(string $scope) : ScopeData
     {
-        if (isset($this->data->table->$scope)) {
-            $data = $this->data->table->$scope;
-
-            if (is_string($data)) {
-                return $this->getScopeData($data);
-            }
-
-            return $data;
+        if (!isset($this->data->table->$scope)) {
+            return ScopeData::fromRaw(false);
         }
 
-        return null;
+        $data = $this->data->table->$scope;
+
+        if (is_string($data)) {
+            return $this->getScopeData($data);
+        }
+
+        return ScopeData::fromRaw($data);
     }
 
     public function get(string $permission) : ?string

@@ -39,7 +39,7 @@ class Notification extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
-        if ($user->id === $entity->get('userId')) {
+        if ($user->getId() === $entity->get('userId')) {
             return true;
         }
 

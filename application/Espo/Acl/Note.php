@@ -33,12 +33,17 @@ use Espo\Entities\User as EntityUser;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\Acl,
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\EntityEditAcl,
+};
 
 use Exception;
 use DateTime;
 
-class Note extends Acl
+class Note extends Acl implements EntityEditAcl
 {
     protected $deleteThresholdPeriod = '1 month';
 
@@ -53,7 +58,7 @@ class Note extends Acl
         return false;
     }
 
-    public function checkEntityCreate(EntityUser $user, Entity $entity, $data)
+    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if (!$entity->get('parentId') || !$entity->get('parentType')) {
             return true;
@@ -68,13 +73,13 @@ class Note extends Acl
         return false;
     }
 
-    public function checkEntityEdit(EntityUser $user, Entity $entity, $data)
+    public function checkEntityEdit(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        if (!$this->checkEntity($user, $entity, $data, 'edit')) {
+        if (!$this->checkEntity($user, $entity, $data, Table::ACTION_EDIT)) {
             return false;
         }
 
@@ -107,13 +112,13 @@ class Note extends Acl
         return true;
     }
 
-    public function checkEntityDelete(EntityUser $user, Entity $entity, $data)
+    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        if (!$this->checkEntity($user, $entity, $data, 'delete')) {
+        if (!$this->checkEntity($user, $entity, $data, Table::ACTION_DELETE)) {
             return false;
         }
 

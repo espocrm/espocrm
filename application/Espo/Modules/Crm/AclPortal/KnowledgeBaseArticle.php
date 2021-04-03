@@ -33,13 +33,18 @@ use Espo\Entities\User as EntityUser;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\AclPortal\Acl;
+use Espo\Core\{
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\EntityReadAcl,
+    AclPortal\Acl as Acl,
+};
 
-class KnowledgeBaseArticle extends Acl
+class KnowledgeBaseArticle extends Acl implements EntityReadAcl
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
-        if (!$this->checkEntity($user, $entity, $data, 'read')) {
+        if (!$this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {
             return false;
         }
 

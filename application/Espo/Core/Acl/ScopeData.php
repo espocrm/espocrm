@@ -50,7 +50,7 @@ class ScopeData
     /**
      * Get a raw value.
      *
-     * @return StdClass|boo
+     * @return StdClass|bool
      */
     public function getRaw()
     {
@@ -61,11 +61,17 @@ class ScopeData
         return $this->raw;
     }
 
+    /**
+     * Is of boolean type.
+     */
     public function isBoolean() : bool
     {
         return $this->isBoolean;
     }
 
+    /**
+     * Is true.
+     */
     public function isTrue() : bool
     {
         if (!$this->isBoolean) {
@@ -75,6 +81,9 @@ class ScopeData
         return $this->raw === true;
     }
 
+    /**
+     * Is false.
+     */
     public function isFalse() : bool
     {
         if (!$this->isBoolean) {
@@ -84,31 +93,63 @@ class ScopeData
         return $this->raw === false;
     }
 
+    /**
+     * Has any level other than 'no'.
+     */
+    public function hasNotNo() : bool
+    {
+        foreach ($this->actionData as $level) {
+            if ($level !== Table::LEVEL_NO) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get a level for an action.
+     */
     public function get(string $action) : string
     {
         return $this->actionData[$action] ?? Table::LEVEL_NO;
     }
 
+    /**
+     * Get a 'read' level.
+     */
     public function getRead() : string
     {
         return $this->get(Table::ACTION_READ);
     }
 
+    /**
+     * Get a 'stream' level.
+     */
     public function getStream() : string
     {
         return $this->get(Table::ACTION_STREAM);
     }
 
+    /**
+     * Get a 'create' level.
+     */
     public function getCreate() : string
     {
         return $this->get(Table::ACTION_CREATE);
     }
 
+    /**
+     * Get an 'edit' level.
+     */
     public function getEdit() : string
     {
         return $this->get(Table::ACTION_EDIT);
     }
 
+    /**
+     * Get a 'delete' level.
+     */
     public function getDelete() : string
     {
         return $this->get(Table::ACTION_DELETE);

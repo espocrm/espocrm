@@ -29,13 +29,17 @@
 
 namespace Espo\AclPortal;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
+use Espo\Entities\User as UserEntity;
 
-class User extends \Espo\Core\AclPortal\Base
+use Espo\Core\{
+    AclPortal\Acl as Acl,
+};
+
+class User extends Acl
 {
-    public function checkIsOwner(\Espo\Entities\User $user, Entity $entity)
+    public function checkIsOwner(UserEntity $user, Entity $entity)
     {
-        return $user->id === $entity->id;
+        return $user->getId() === $entity->getId();
     }
 }
-

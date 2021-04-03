@@ -53,7 +53,7 @@ class Acl
         $this->user = $user;
     }
 
-    public function getMap() : StdClass
+    public function getMap(): StdClass
     {
         return $this->aclManager->getMap($this->user);
     }
@@ -61,7 +61,7 @@ class Acl
     /**
      * Get an access level for a specific scope and action.
      */
-    public function getLevel(string $scope, string $action) : string
+    public function getLevel(string $scope, string $action): string
     {
         return $this->aclManager->getLevel($this->user, $scope, $action);
     }
@@ -69,7 +69,7 @@ class Acl
     /**
      * Get a permission. E.g. 'assignment' permission.
      */
-    public function get(string $permission) : ?string
+    public function get(string $permission): ?string
     {
         return $this->aclManager->get($this->user, $permission);
     }
@@ -77,7 +77,7 @@ class Acl
     /**
      * Whether there's no 'read' access for a specific scope.
      */
-    public function checkReadNo(string $scope) : bool
+    public function checkReadNo(string $scope): bool
     {
         return $this->aclManager->checkReadNo($this->user, $scope);
     }
@@ -85,7 +85,7 @@ class Acl
     /**
      * Whether 'read' access is set to 'team' for a specific scope.
      */
-    public function checkReadOnlyTeam(string $scope) : bool
+    public function checkReadOnlyTeam(string $scope): bool
     {
         return $this->aclManager->checkReadOnlyTeam($this->user, $scope);
     }
@@ -93,7 +93,7 @@ class Acl
     /**
      * Whether 'read' access is set to 'own' for a specific scope.
      */
-    public function checkReadOnlyOwn(string $scope) : bool
+    public function checkReadOnlyOwn(string $scope): bool
     {
         return $this->aclManager->checkReadOnlyOwn($this->user, $scope);
     }
@@ -101,7 +101,7 @@ class Acl
     /**
      * Check a scope or entity. If $action is omitted, it will check whether a scope level is set to 'enabled'.
      */
-    public function check($subject, ?string $action = null) : bool
+    public function check($subject, ?string $action = null): bool
     {
         return $this->aclManager->check($this->user, $subject, $action);
     }
@@ -109,23 +109,63 @@ class Acl
     /**
      * Check access to scope. If $action is omitted, it will check whether a scope level is set to 'enabled'.
      */
-    public function checkScope(string $scope, ?string $action = null) : bool
+    public function checkScope(string $scope, ?string $action = null): bool
     {
         return $this->aclManager->checkScope($this->user, $scope, $action);
     }
 
     /**
-     * Check access to a specific entity (record).
+     * Check access to a specific entity.
      */
-    public function checkEntity(Entity $entity, string $action = Table::ACTION_READ) : bool
+    public function checkEntity(Entity $entity, string $action = Table::ACTION_READ): bool
     {
         return $this->aclManager->checkEntity($this->user, $entity, $action);
     }
 
     /**
+     * Check 'read' access to a specific entity.
+     */
+    public function checkEntityRead(Entity $entity): bool
+    {
+        return $this->checkEntity($entity, Table::ACTION_READ);
+    }
+
+    /**
+     * Check 'create' access to a specific entity.
+     */
+    public function checkEntityCreate(Entity $entity): bool
+    {
+        return $this->checkEntity($entity, Table::ACTION_CREATE);
+    }
+
+    /**
+     * Check 'edit' access to a specific entity.
+     */
+    public function checkEntityEdit(Entity $entity): bool
+    {
+        return $this->checkEntity($entity, Table::ACTION_EDIT);
+    }
+
+    /**
+     * Check 'delete' access to a specific entity.
+     */
+    public function checkEntityDelete(Entity $entity): bool
+    {
+        return $this->checkEntity($entity, Table::ACTION_DELETE);
+    }
+
+    /**
+     * Check 'stream' access to a specific entity.
+     */
+    public function checkEntityStream(Entity $entity): bool
+    {
+        return $this->checkEntity($entity, Table::ACTION_STREAM);
+    }
+
+    /**
      * @deprecated
      */
-    public function checkUser(string $permission, User $entity) : bool
+    public function checkUser(string $permission, User $entity): bool
     {
         return $this->aclManager->checkUser($this->user, $permission, $entity);
     }
@@ -133,7 +173,7 @@ class Acl
     /**
      * Whether a user is owned of an entity (record). Usually 'assignedUser' field is used for checking.
      */
-    public function checkIsOwner(Entity $entity) : bool
+    public function checkIsOwner(Entity $entity): bool
     {
         return $this->aclManager->checkIsOwner($this->user, $entity);
     }
@@ -141,7 +181,7 @@ class Acl
     /**
      * Whether a user team list overlaps with teams set in an entity.
      */
-    public function checkInTeam(Entity $entity) : bool
+    public function checkInTeam(Entity $entity): bool
     {
         return $this->aclManager->checkInTeam($this->user, $entity);
     }
@@ -150,8 +190,10 @@ class Acl
      * Get attributes forbidden for a user.
      */
     public function getScopeForbiddenAttributeList(
-        string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
-    ) : array {
+        string $scope,
+        string $action = Table::ACTION_READ,
+        string $thresholdLevel = Table::LEVEL_NO
+    ): array {
 
         return $this->aclManager
             ->getScopeForbiddenAttributeList($this->user, $scope, $action, $thresholdLevel);
@@ -161,8 +203,10 @@ class Acl
      * Get fields forbidden for a user.
      */
     public function getScopeForbiddenFieldList(
-        string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
-    ) : array {
+        string $scope,
+        string $action = Table::ACTION_READ,
+        string $thresholdLevel = Table::LEVEL_NO
+    ): array {
 
         return $this->aclManager
             ->getScopeForbiddenFieldList($this->user, $scope, $action, $thresholdLevel);
@@ -172,8 +216,10 @@ class Acl
      * Get links forbidden for a user.
      */
     public function getScopeForbiddenLinkList(
-        string $scope, string $action = Table::ACTION_READ, string $thresholdLevel = Table::LEVEL_NO
-    ) : array {
+        string $scope,
+        string $action = Table::ACTION_READ,
+        string $thresholdLevel = Table::LEVEL_NO
+    ): array {
 
         return $this->aclManager->getScopeForbiddenLinkList($this->user, $scope, $action, $thresholdLevel);
     }
@@ -183,7 +229,7 @@ class Acl
      *
      * @param User|string $target User entity or user ID.
      */
-    public function checkUserPermission($target, string $permissionType = 'user') : bool
+    public function checkUserPermission($target, string $permissionType = 'user'): bool
     {
         return $this->aclManager->checkUserPermission($this->user, $target, $permissionType);
     }
@@ -193,22 +239,22 @@ class Acl
      *
      * @param User|string $target User entity or user ID.
      */
-    public function checkAssignmentPermission($target) : bool
+    public function checkAssignmentPermission($target): bool
     {
         return $this->aclManager->checkAssignmentPermission($this->user, $target);
     }
 
-    public function getScopeRestrictedFieldList(string $scope, $type) : array
+    public function getScopeRestrictedFieldList(string $scope, $type): array
     {
         return $this->aclManager->getScopeRestrictedFieldList($scope, $type);
     }
 
-    public function getScopeRestrictedAttributeList(string $scope, $type) : array
+    public function getScopeRestrictedAttributeList(string $scope, $type): array
     {
         return $this->aclManager->getScopeRestrictedAttributeList($scope, $type);
     }
 
-    public function getScopeRestrictedLinkList(string $scope, $type) : array
+    public function getScopeRestrictedLinkList(string $scope, $type): array
     {
         return $this->aclManager->getScopeRestrictedLinkList($scope, $type);
     }

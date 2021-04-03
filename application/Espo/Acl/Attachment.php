@@ -29,15 +29,23 @@
 
 namespace Espo\Acl;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\{
+    User as EntityUser,
+    Note,
+};
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\Acl,
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\EntityReadAcl,
+};
 
-class Attachment extends Acl
+class Attachment extends Acl implements EntityReadAcl
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
@@ -62,12 +70,8 @@ class Attachment extends Acl
             $parent = $this->entityManager->getEntity($entity->get('relatedType'), $entity->get('relatedId'));
         }
 
-        if (!$hasParent) {
-            return true;
-        }
-
-        if (!$parent) {
-            if ($this->checkEntity($user, $entity, $data, 'read')) {
+        if (!$parent || !$hasParent) {
+            if ($this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {
                 return true;
             }
 
@@ -75,31 +79,67 @@ class Attachment extends Acl
         }
 
         if ($parent->getEntityType() === 'Note') {
-            if (!$parent->get('parentId') || !$parent->get('parentType')) {
-                return true;
-            }
+            $result = $this->checkEntityReadNoteParent($user, $parent);
 
-            $parentOfParent = $this->entityManager
-                ->getEntity($parent->get('parentType'), $parent->get('parentId'));
-
-            if ($parentOfParent && $this->aclManager->checkEntity($user, $parentOfParent)) {
-                return true;
+            if ($result !== null) {
+                return $result;
             }
         }
         else if ($this->aclManager->checkEntity($user, $parent)) {
             return true;
         }
 
-        if ($this->checkEntity($user, $entity, $data, 'read')) {
+        if ($this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {
             return true;
         }
 
         return false;
     }
 
+    protected function checkEntityReadNoteParent(EntityUser $user, Note $note): ?bool
+    {
+        if ($note->getTargetType() === Note::TARGET_TEAMS) {
+            $intersect = array_intersect(
+                $note->getLinkMultipleIdList('teams'),
+                $user->getLinkMultipleIdList('teams')
+            );
+
+            if (count($intersect)) {
+                return true;
+            }
+
+            return null;
+        }
+
+        if ($note->getTargetType() === Note::TARGET_USERS) {
+            $isRelated = $this->entityManager
+                ->getRDBRepository('Note')
+                ->getRelation($note, 'users')
+                ->isRelated($user);
+
+            if ($isRelated) {
+                return true;
+            }
+
+            return null;
+        }
+
+        if (!$note->getParentId() || !$note->getParentType()) {
+            return null;
+        }
+
+        $parent = $this->entityManager->getEntity($note->getParentType(), $note->getParentId());
+
+        if ($parent && $this->aclManager->checkEntity($user, $parent)) {
+            return true;
+        }
+
+        return null;
+    }
+
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
-        if ($user->getId() === $entity->get('createdById')) {
+        if ($user->getId() === $entity->get(self::ATTR_CREATED_BY_ID)) {
             return true;
         }
 

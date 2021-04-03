@@ -31,9 +31,6 @@ namespace Espo\Core\Acl;
 
 use Espo\Core\Interfaces\Injectable;
 
-use Espo\Entities\User;
-use Espo\ORM\Entity;
-
 use Espo\Core\{
     ORM\EntityManager,
     AclManager,
@@ -49,10 +46,15 @@ class Base extends Acl implements Injectable
 
     protected $injections = [];
 
-    public function __construct(string $scope, EntityManager $entityManager, AclManager $aclManager, Config $config)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        AclManager $aclManager,
+        Config $config,
+        ?string $scope = null
+    ) {
         $this->scope = $scope;
-        parent::__construct($scope, $entityManager, $aclManager, $config);
+
+        parent::__construct($entityManager, $aclManager, $config, $scope);
 
         $this->init();
     }
@@ -61,7 +63,6 @@ class Base extends Acl implements Injectable
     {
         $this->injections[$name] = $object;
     }
-
 
     protected function init()
     {

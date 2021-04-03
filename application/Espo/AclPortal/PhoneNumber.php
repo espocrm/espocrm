@@ -29,14 +29,19 @@
 
 namespace Espo\AclPortal;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class PhoneNumber extends \Espo\Core\AclPortal\Base
+use Espo\Core\{
+    Acl\Table,
+    AclPortal\Acl as Acl,
+};
+
+class PhoneNumber extends Acl
 {
     public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity) : bool
     {
-        $id = $entity->id;
+        $id = $entity->getId();
 
         $isFobidden = false;
 
@@ -46,7 +51,7 @@ class PhoneNumber extends \Espo\Core\AclPortal\Base
             $entityWithSameNumberList = $repository->getEntityListByPhoneNumberId($id, $excludeEntity);
 
             foreach ($entityWithSameNumberList as $e) {
-                if (!$this->getAclManager()->check($user, $e, 'edit')) {
+                if (!$this->getAclManager()->check($user, $e, Table::ACTION_EDIT)) {
                     $isFobidden = true;
 
                     break;

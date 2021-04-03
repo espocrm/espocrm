@@ -27,51 +27,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Acl;
+namespace Espo\Core\AclPortal;
 
-use Espo\Entities\User;
+use Espo\Core\{
+    Utils\ClassFinder,
+    InjectableFactory,
+};
 
-use Espo\ORM\Entity;
-
-use Espo\Core\Acl\Acl;
-
-class CampaignTrackingUrl extends Acl
+class AclFactory
 {
-    public function checkIsOwner(User $user, Entity $entity)
+    protected $baseClassName = Acl::class;
+
+    private $classFinder;
+
+    private $injectableFactory;
+
+    public function __construct(ClassFinder $classFinder, InjectableFactory $injectableFactory)
     {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
-
-            if (!$campaignId) {
-                return false;
-            }
-
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-
-            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkIsOwner($user, $campaign)) {
-                return true;
-            }
-        }
-
-        return false;
+        $this->classFinder = $classFinder;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function checkInTeam(User $user, Entity $entity)
+    public function create(string $scope) : PortalScopeAcl
     {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
+        $className = $this->classFinder->find('AclPortal', $scope);
 
-            if (!$campaignId) {
-                return false;
-            }
-
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-
-            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkInTeam($user, $campaign)) {
-                return true;
-            }
+        if (!$className) {
+            $className = $this->baseClassName;
         }
 
-        return false;
+        return $this->injectableFactory->createWith($className, [
+            'scope' => $scope, // todo remove ?
+        ]);
     }
 }

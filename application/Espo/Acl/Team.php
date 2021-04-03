@@ -41,6 +41,6 @@ class Team extends Acl
     {
         $userTeamIdList = $user->getLinkMultipleIdList('teams');
 
-        return in_array($entity->id, $userTeamIdList);
+        return in_array($entity->getId(), $userTeamIdList);
     }
 }

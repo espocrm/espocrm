@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Api;
+namespace tests\unit\Espo\Core\Acl;
 
 use Espo\Core\{
     Acl\ScopeData,
@@ -105,6 +105,8 @@ class ScopeDataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($raw, $data->getRaw());
 
         $this->assertNotSame($raw, $data->getRaw());
+
+        $this->assertTrue($data->hasNotNo());
     }
 
     public function testRecordEmpty()
@@ -114,5 +116,23 @@ class ScopeDataTest extends \PHPUnit\Framework\TestCase
         $data = ScopeData::fromRaw($raw);
 
         $this->assertEquals(Table::LEVEL_NO, $data->getDelete());
+
+        $this->assertFalse($data->hasNotNo());
+    }
+
+    public function testRecordOnlyNo()
+    {
+        $raw = (object) [
+            Table::ACTION_CREATE => Table::LEVEL_NO,
+            Table::ACTION_READ => Table::LEVEL_NO,
+            Table::ACTION_EDIT => Table::LEVEL_NO,
+            Table::ACTION_DELETE => Table::LEVEL_NO,
+        ];
+
+        $data = ScopeData::fromRaw($raw);
+
+        $this->assertEquals(Table::LEVEL_NO, $data->getDelete());
+
+        $this->assertFalse($data->hasNotNo());
     }
 }

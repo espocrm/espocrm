@@ -43,99 +43,83 @@ use Espo\Core\{
 /**
  * An implementation for access checking for entities. Can be overridden in `Acl` namespace.
  */
-class Acl implements ScopeAcl, EntityAcl
+class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
 {
+    protected const ATTR_CREATED_BY_ID = 'createdById';
+
+    protected const ATTR_ASSIGNED_USER_ID = 'assignedUserId';
+
+    protected const ATTR_ASSIGNED_USERS_IDS = 'assignedUsersIds';
+
+    protected const ATTR_ASSIGNED_TEAMS_IDS = 'teamsIds';
+
+    protected const FIELD_TEAMS = 'teams';
+
+    protected const FIELD_ASSIGNED_USERS = 'assignedUsers';
+
     protected $scope;
 
     protected $ownerUserIdAttribute = null;
 
     protected $allowDeleteCreatedThresholdPeriod = '24 hours';
 
-    protected $entityManager;
+    protected $checkIsOwnerentityManager;
 
     protected $aclManager;
 
     protected $config;
 
-    public function __construct(string $scope, EntityManager $entityManager, AclManager $aclManager, Config $config)
-    {
-        $this->scope = $scope;
-
+    public function __construct(
+        EntityManager $entityManager,
+        AclManager $aclManager,
+        Config $config,
+        string $scope = null
+    ) {
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
         $this->config = $config;
+
+        $this->scope = $scope;
     }
 
-    protected function getConfig()
+    public function checkEntity(User $user, Entity $entity, ScopeData $data, string $action = Table::ACTION_READ): bool
     {
-        return $this->config;
+        return $this->checkScopeInternal($user, $data, $action, $entity);
     }
 
-    protected function getEntityManager()
+    public function checkScope(User $user, ScopeData $data, ?string $action = null) : bool
     {
-        return $this->entityManager;
+        return $this->checkScopeInternal($user, $data, $action);
     }
 
-    protected function getAclManager()
+    public function checkReadOnlyTeam(User $user, ScopeData $data) : bool
     {
-        return $this->aclManager;
+        return $data->getRead() === Table::LEVEL_TEAM;
     }
 
-    public function checkReadOnlyTeam(User $user, $data)
+    public function checkReadNo(User $user, ScopeData $data) : bool
     {
-        if (empty($data) || !is_object($data) || !isset($data->read)) {
+        return $data->getRead() === Table::LEVEL_NO;
+    }
+
+    public function checkReadOnlyOwn(User $user, ScopeData $data) : bool
+    {
+        return $data->getRead() === Table::LEVEL_OWN;
+    }
+
+    protected function checkScopeInternal(
+        User $user,
+        ScopeData $data,
+        ?string $action = null,
+        ?Entity $entity = null,
+        array $entityAccessData = []
+    ) : bool {
+
+        if ($data->isFalse()) {
             return false;
         }
 
-        return $data->read === Table::LEVEL_TEAM;
-    }
-
-    public function checkReadNo(User $user, $data)
-    {
-        if (empty($data) || !is_object($data) || !isset($data->read)) {
-            return false;
-        }
-
-        return $data->read === Table::LEVEL_NO;
-    }
-
-    public function checkReadOnlyOwn(User $user, $data)
-    {
-        if (empty($data) || !is_object($data) || !isset($data->read)) {
-            return false;
-        }
-
-        return $data->read === Table::LEVEL_OWN;
-    }
-
-    public function checkEntity(User $user, Entity $entity, $data, $action)
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        return $this->checkScope($user, $data, $action, $entity);
-    }
-
-    public function checkScope(User $user, $data, $action = null, Entity $entity = null, $entityAccessData = [])
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        if (is_null($data)) {
-            return false;
-        }
-
-        if ($data === false) {
-            return false;
-        }
-
-        if ($data === true) {
-            return true;
-        }
-
-        if (is_string($data)) {
+        if ($data->isTrue()) {
             return true;
         }
 
@@ -152,20 +136,20 @@ class Acl implements ScopeAcl, EntityAcl
         }
 
         if (is_null($action)) {
-            return true;
-        }
+            if ($data->hasNotNo()) {
+                return true;
+            }
 
-        if (!isset($data->$action)) {
             return false;
         }
 
-        $value = $data->$action;
+        $value = $data->get($action);
 
-        if ($value === Table::LEVEL_ALL || $value === Table::LEVEL_YES || $value === true) {
+        if ($value === Table::LEVEL_ALL || $value === Table::LEVEL_YES) {
             return true;
         }
 
-        if (!$value || $value === Table::LEVEL_NO) {
+        if ($value === Table::LEVEL_NO) {
             return false;
         }
 
@@ -197,25 +181,30 @@ class Acl implements ScopeAcl, EntityAcl
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function checkIsOwner(User $user, Entity $entity)
     {
-        if ($entity->hasAttribute('assignedUserId')) {
-            if ($entity->has('assignedUserId')) {
-                if ($user->id === $entity->get('assignedUserId')) {
-                    return true;
-                }
+        if ($entity->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
+            if (
+                $entity->has(self::ATTR_ASSIGNED_USER_ID) &&
+                $user->getId() === $entity->get(self::ATTR_ASSIGNED_USER_ID)
+            ) {
+                return true;
             }
         }
-        else if ($entity->hasAttribute('createdById')) {
-            if ($entity->has('createdById')) {
-                if ($user->id === $entity->get('createdById')) {
-                    return true;
-                }
+        else if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
+            if (
+                $entity->has(self::ATTR_CREATED_BY_ID) &&
+                $user->getId() === $entity->get(self::ATTR_CREATED_BY_ID)
+            ) {
+                return true;
             }
         }
 
-        if ($entity->hasLinkMultipleField('assignedUsers')) {
-            if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
+        if ($entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
+            if ($entity->hasLinkMultipleId(self::FIELD_ASSIGNED_USERS, $user->getId())) {
                 return true;
             }
         }
@@ -223,15 +212,18 @@ class Acl implements ScopeAcl, EntityAcl
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function checkInTeam(User $user, Entity $entity)
     {
-        $userTeamIdList = $user->getLinkMultipleIdList('teams');
+        $userTeamIdList = $user->getLinkMultipleIdList(self::FIELD_TEAMS);
 
-        if (!$entity->hasRelation('teams') || !$entity->hasAttribute('teamsIds')) {
+        if (!$entity->hasRelation(self::FIELD_TEAMS) || !$entity->hasAttribute(self::ATTR_ASSIGNED_TEAMS_IDS)) {
             return false;
         }
 
-        $entityTeamIdList = $entity->getLinkMultipleIdList('teams');
+        $entityTeamIdList = $entity->getLinkMultipleIdList(self::FIELD_TEAMS);
 
         if (empty($entityTeamIdList)) {
             return false;
@@ -246,7 +238,7 @@ class Acl implements ScopeAcl, EntityAcl
         return false;
     }
 
-    public function checkEntityDelete(User $user, Entity $entity, $data)
+    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data) : bool
     {
         if ($user->isAdmin()) {
             return true;
@@ -256,32 +248,28 @@ class Acl implements ScopeAcl, EntityAcl
             return true;
         }
 
-        if (!is_object($data)) {
-            return false;
-        }
-
-        if ($data->edit === Table::LEVEL_NO && $data->create === Table::LEVEL_NO) {
+        if ($data->getEdit() === Table::LEVEL_NO && $data->getCreate() === Table::LEVEL_NO) {
             return false;
         }
 
         if (
             !$this->config->get('aclAllowDeleteCreated') ||
-            !$entity->has('createdById') ||
-            !$entity->get('createdById') !== $user->getId()
+            !$entity->has(self::ATTR_CREATED_BY_ID) ||
+            !$entity->get(self::ATTR_CREATED_BY_ID) !== $user->getId()
         ) {
             return false;
         }
 
         $isDeletedAllowed = false;
 
-        if (!$entity->has('assignedUserId')) {
+        if (!$entity->has(self::ATTR_ASSIGNED_USER_ID)) {
             $isDeletedAllowed = true;
         }
         else {
-            if (!$entity->get('assignedUserId')) {
+            if (!$entity->get(self::ATTR_ASSIGNED_USER_ID)) {
                 $isDeletedAllowed = true;
             }
-            else if ($entity->get('assignedUserId') === $entity->get('createdById')) {
+            else if ($entity->get(self::ATTR_ASSIGNED_USER_ID) === $entity->get(self::ATTR_CREATED_BY_ID)) {
                 $isDeletedAllowed = true;
             }
         }
@@ -308,22 +296,48 @@ class Acl implements ScopeAcl, EntityAcl
         return true;
     }
 
-    public function getOwnerUserIdAttribute(Entity $entity)
+    public function getOwnerUserIdAttribute(Entity $entity) : ?string
     {
         if ($this->ownerUserIdAttribute) {
             return $this->ownerUserIdAttribute;
         }
 
-        if ($entity->hasLinkMultipleField('assignedUsers')) {
-            return 'assignedUsersIds';
+        if ($entity->hasLinkMultipleField(self::FIELD_ASSIGNED_USERS)) {
+            return self::ATTR_ASSIGNED_USERS_IDS;
         }
 
-        if ($entity->hasAttribute('assignedUserId')) {
-            return 'assignedUserId';
+        if ($entity->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
+            return self::ATTR_ASSIGNED_USER_ID;
         }
 
-        if ($entity->hasAttribute('createdById')) {
-            return 'createdById';
+        if ($entity->hasAttribute(self::ATTR_CREATED_BY_ID)) {
+            return self::ATTR_CREATED_BY_ID;
         }
+
+        return null;
+    }
+
+    /**
+     * @deprecated Use `$this->config`.
+     */
+    protected function getConfig() : Config
+    {
+        return $this->config;
+    }
+
+    /**
+     * @deprecated Use `$this->entityManager`.
+     */
+    protected function getEntityManager() : EntityManager
+    {
+        return $this->entityManager;
+    }
+
+    /**
+     * @deprecated Use `$this->aclManager`.
+     */
+    protected function getAclManager() : AclManager
+    {
+        return $this->aclManager;
     }
 }

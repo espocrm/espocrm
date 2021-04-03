@@ -33,27 +33,34 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User as EntityUser;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\Acl,
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\EntityCreateAcl,
+    Acl\EntityReadAcl,
+    Acl\EntityEditAcl,
+};
 
-class User extends Acl
+class User extends Acl implements EntityCreateAcl, EntityReadAcl, EntityEditAcl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
-        return $user->id === $entity->id;
+        return $user->getId() === $entity->getId();
     }
 
-    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if (!$user->isAdmin() && $entity->isPortal()) {
-            if ($this->getAclManager()->get($user, 'portalPermission') === 'yes') {
+            if ($this->getAclManager()->get($user, 'portal') === Table::LEVEL_YES) {
                 return true;
             }
         }
 
-        return $this->checkEntity($user, $entity, $data, 'read');
+        return $this->checkEntity($user, $entity, $data, Table::ACTION_READ);
     }
 
-    public function checkEntityCreate(EntityUser $user, Entity $entity, $data)
+    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if (!$user->isAdmin()) {
             return false;
@@ -63,12 +70,12 @@ class User extends Acl
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, 'create');
+        return $this->checkEntity($user, $entity, $data, Table::ACTION_CREATE);
     }
 
-    public function checkEntityDelete(EntityUser $user, Entity $entity, $data)
+    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
-        if ($entity->id === 'system') {
+        if ($entity->getId() === 'system') {
             return false;
         }
 
@@ -87,7 +94,7 @@ class User extends Acl
         return parent::checkEntityDelete($user, $entity, $data);
     }
 
-    public function checkEntityEdit(EntityUser $user, Entity $entity, $data)
+    public function checkEntityEdit(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->id === 'system') {
             return false;
@@ -97,7 +104,7 @@ class User extends Acl
         }
 
         if (!$user->isAdmin()) {
-            if ($user->id !== $entity->id) {
+            if ($user->getId() !== $entity->getId()) {
                 return false;
             }
         }
@@ -106,6 +113,6 @@ class User extends Acl
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, 'edit');
+        return $this->checkEntity($user, $entity, $data, Table::ACTION_EDIT);
     }
 }

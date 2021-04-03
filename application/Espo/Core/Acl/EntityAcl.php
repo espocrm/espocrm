@@ -29,11 +29,13 @@
 
 namespace Espo\Core\Acl;
 
+use Espo\ORM\Entity;
 
-/**
- * @todo Add methods.
- */
+use Espo\Entities\User;
+
 interface EntityAcl
 {
+    public function checkEntity(User $user, Entity $entity, ScopeData $data, string $action = Table::ACTION_READ): bool;
 
+    public function getOwnerUserIdAttribute(Entity $entity): ?string;
 }

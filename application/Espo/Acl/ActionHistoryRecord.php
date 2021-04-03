@@ -39,6 +39,6 @@ class ActionHistoryRecord extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
-        return $entity->get('userId') === $user->id;
+        return $entity->get('userId') === $user->getId();
     }
 }

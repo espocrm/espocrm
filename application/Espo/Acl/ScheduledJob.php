@@ -33,43 +33,50 @@ use Espo\Entities\User as EntityUser;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\Acl,
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\EntityCreateAcl,
+    Acl\EntityReadAcl,
+    Acl\EntityEditAcl,
+};
 
-class ScheduledJob extends Acl
+class ScheduledJob extends Acl implements EntityCreateAcl, EntityReadAcl, EntityEditAcl
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('isInternal')) {
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, 'read');
+        return $this->checkEntity($user, $entity, $data, Table::ACTION_READ);
     }
 
-    public function checkEntityEdit(EntityUser $user, Entity $entity, $data)
+    public function checkEntityEdit(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('isInternal')) {
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, 'edit');
+        return $this->checkEntity($user, $entity, $data, Table::ACTION_EDIT);
     }
 
-    public function checkEntityDelete(EntityUser $user, Entity $entity, $data)
+    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('isInternal')) {
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, 'delete');
+        return $this->checkEntity($user, $entity, $data, Table::ACTION_DELETE);
     }
 
-    public function checkEntityCreate(EntityUser $user, Entity $entity, $data)
+    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('isInternal')) {
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, 'create');
+        return $this->checkEntity($user, $entity, $data, Table::ACTION_CREATE);
     }
 }

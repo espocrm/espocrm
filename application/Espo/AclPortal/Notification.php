@@ -29,17 +29,21 @@
 
 namespace Espo\AclPortal;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class Notification extends \Espo\Core\AclPortal\Base
+use Espo\Core\{
+    AclPortal\Acl as Acl,
+};
+
+class Notification extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
-        if ($user->id === $entity->get('userId')) {
+        if ($user->getId() === $entity->get('userId')) {
             return true;
         }
+
         return false;
     }
 }
-

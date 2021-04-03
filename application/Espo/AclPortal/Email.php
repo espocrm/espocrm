@@ -29,43 +29,54 @@
 
 namespace Espo\AclPortal;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
 
-class Email extends \Espo\Core\AclPortal\Base
+use Espo\ORM\Entity;
+
+use Espo\Core\{
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\EntityReadAcl,
+    AclPortal\Acl as Acl,
+};
+
+class Email extends Acl implements EntityReadAcl
 {
     protected $ownerUserIdAttribute = 'usersIds';
 
-    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
-        if ($this->checkEntity($user, $entity, $data, 'read')) {
+        if ($this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {
             return true;
         }
 
-        if ($data === false) {
+        if ($data->isFalse()) {
             return false;
         }
-        if (is_object($data)) {
-            if ($data->read === false || $data->read === 'no') {
-                return false;
-            }
+
+        if ($data->getRead() === Table::LEVEL_NO) {
+            return false;
         }
 
         if (!$entity->has('usersIds')) {
             $entity->loadLinkMultipleField('users');
         }
+
         $userIdList = $entity->get('usersIds');
-        if (is_array($userIdList) && in_array($user->id, $userIdList)) {
+
+        if (is_array($userIdList) && in_array($user->getId(), $userIdList)) {
             return true;
         }
+
         return false;
     }
 
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
-        if ($user->id === $entity->get('createdById')) {
+        if ($user->getId() === $entity->get('createdById')) {
             return true;
         }
+
         return false;
     }
 }

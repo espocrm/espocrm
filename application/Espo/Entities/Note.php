@@ -29,42 +29,99 @@
 
 namespace Espo\Entities;
 
-class Note extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Note extends Entity
 {
+    public const TARGET_SELF = 'self';
+
+    public const TARGET_ALL = 'all';
+
+    public const TARGET_TEAMS = 'teams';
+
+    public const TARGET_USERS = 'users';
+
+    public const TARGET_PORTALS = 'portals';
+
+    public const TYPE_POST = 'Post';
+
     private $aclIsProcessed = false;
 
-    public function setAclIsProcessed()
+    public function isPost(): bool
+    {
+        return $this->getType() === self::TYPE_POST;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->get('type');
+    }
+
+    public function getTargetType(): ?string
+    {
+        return $this->get('targetType');
+    }
+
+    public function getParentType(): ?string
+    {
+        return $this->get('parentType');
+    }
+
+    public function getParentId(): ?string
+    {
+        return $this->get('parentId');
+    }
+
+    public function isInternal(): bool
+    {
+        return (bool) $this->get('isInternal');
+    }
+
+    public function setAclIsProcessed(): void
     {
         $this->aclIsProcessed = true;
     }
 
-    public function isAclProcessed()
+    public function isAclProcessed(): bool
     {
-        return $this->aclIsProcessed;
+        return (bool) $this->aclIsProcessed;
     }
 
     public function loadAttachments()
     {
         $data = $this->get('data');
+
         if (!empty($data) && !empty($data->attachmentsIds) && is_array($data->attachmentsIds)) {
             $attachmentsIds = $data->attachmentsIds;
-            $collection = $this->entityManager->getRepository('Attachment')->select(['id', 'name', 'type'])->order('createdAt')->where([
-                'id' => $attachmentsIds
-            ])->find();
-        } else {
+
+            $collection = $this->entityManager
+                ->getRepository('Attachment')
+                ->select(['id', 'name', 'type'])
+                ->order('createdAt')
+                ->where([
+                    'id' => $attachmentsIds
+                ])
+                ->find();
+        }
+        else {
             $this->loadLinkMultipleField('attachments');
+
             return;
         }
 
-        $ids = array();
-        $names = new \stdClass();
-        $types = new \stdClass();
+        $ids = [];
+
+        $names = (object) [];
+        $types = (object) [];
+
         foreach ($collection as $e) {
             $id = $e->id;
             $ids[] = $id;
+
             $names->$id = $e->get('name');
             $types->$id = $e->get('type');
         }
+
         $this->set('attachmentsIds', $ids);
         $this->set('attachmentsNames', $names);
         $this->set('attachmentsTypes', $types);
@@ -73,21 +130,26 @@ class Note extends \Espo\Core\ORM\Entity
     public function addNotifiedUserId($userId)
     {
         $userIdList = $this->get('notifiedUserIdList');
+
         if (!is_array($userIdList)) {
             $userIdList = [];
         }
+
         if (!in_array($userId, $userIdList)) {
             $userIdList[] = $userId;
         }
+
         $this->set('notifiedUserIdList', $userIdList);
     }
 
     public function isUserIdNotified($userId)
     {
         $userIdList = $this->get('notifiedUserIdList');
+
         if (!is_array($userIdList)) {
             $userIdList = [];
         }
+
         return in_array($userId, $userIdList);
     }
 }

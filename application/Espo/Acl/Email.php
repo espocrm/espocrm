@@ -33,23 +33,28 @@ use Espo\Entities\User as EntityUser;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\Acl,
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\EntityReadAcl,
+};
 
-class Email extends Acl
+class Email extends Acl implements EntityReadAcl
 {
     protected $ownerUserIdAttribute = 'usersIds';
 
-    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($this->checkEntity($user, $entity, $data, 'read')) {
             return true;
         }
 
-        if (!$data) {
+        if (!$data->isFalse()) {
             return false;
         }
 
-        if ($data->read === false || $data->read === 'no') {
+        if ($data->getRead() === Table::LEVEL_NO) {
             return false;
         }
 
@@ -83,13 +88,13 @@ class Email extends Acl
         return false;
     }
 
-    public function checkEntityDelete(EntityUser $user, Entity $entity, $data)
+    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        if (!$data) {
+        if (!$data->isFalse()) {
             return false;
         }
 
@@ -114,11 +119,11 @@ class Email extends Acl
             return false;
         }
 
-        if ($this->checkEntity($user, $entity, $data, 'delete')) {
+        if ($this->checkEntity($user, $entity, $data, Table::ACTION_DELETE)) {
             return true;
         }
 
-        if ($data->edit === 'no' && $data->create === 'no') {
+        if ($data->getEdit() === Table::LEVEL_NO && $data->getCreate() === Table::LEVEL_NO) {
             return false;
         }
 

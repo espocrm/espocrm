@@ -29,22 +29,32 @@
 
 namespace Espo\AclPortal;
 
-use \Espo\Entities\User as EntityUser;
-use \Espo\ORM\Entity;
+use Espo\Entities\User as EntityUser;
+use Espo\ORM\Entity;
 
-class Note extends \Espo\Core\AclPortal\Base
+use Espo\Core\{
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\EntityCreateAcl,
+    AclPortal\Acl as Acl,
+};
+
+class Note extends Acl implements EntityCreateAcl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
         if ($entity->get('type') === 'Post' && $user->id === $entity->get('createdById')) {
             return true;
         }
+
         return false;
     }
 
-    public function checkEntityCreate(EntityUser $user, Entity $entity, $data)
+    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
-        if ($entity->get('type') !== 'Post') return false;
+        if ($entity->get('type') !== 'Post') {
+            return false;
+        }
 
         if ($entity->get('type') === 'Post' && $entity->get('targetType')) {
             return false;
@@ -55,8 +65,9 @@ class Note extends \Espo\Core\AclPortal\Base
         }
 
         $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+
         if ($parent) {
-            if ($this->getAclManager()->checkEntity($user, $parent, 'stream')) {
+            if ($this->getAclManager()->checkEntity($user, $parent, Table::ACTION_STREAM)) {
                 return true;
             }
         }

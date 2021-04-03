@@ -30,10 +30,19 @@
 namespace Espo\Services;
 
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Core\{
+    Acl\Table as AclTable,
+};
+
+use Espo\Entities\Note as NoteEntity;
+
 use Espo\ORM\Entity;
+
+use DateTime;
+use Exception;
+use StdClass;
 
 class Note extends Record
 {
@@ -42,6 +51,7 @@ class Note extends Record
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
+
         $entity->loadAttachments();
     }
 
@@ -49,74 +59,120 @@ class Note extends Record
     {
         parent::afterCreateEntity($entity, $data);
 
-        if ($entity->get('type') === 'Post' && $entity->get('parentType') && $entity->get('parentType')) {
-            $preferences = $this->getEntityManager()->getEntity('Preferences', $this->getUser()->id);
-            if ($preferences && $preferences->get('followEntityOnStreamPost')) {
-                if ($this->getMetadata()->get(['scopes', $entity->get('parentType'), 'stream'])) {
-                    $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
-                    if ($parent && !$this->getUser()->isSystem() && !$this->getUser()->isApi()) {
-                        $this->getServiceFactory()->create('Stream')->followEntity($parent, $this->getUser()->id);
-                    }
-                }
-            }
-        }
+        $this->processFollowAfterCreate($entity);
     }
 
+    protected function processFollowAfterCreate(NoteEntity $entity): void
+    {
+        $parentType = $entity->get('parentType');
+        $parentId = $entity->get('parentId');
+
+        if ($entity->get('type') !== NoteEntity::TYPE_POST || !$parentType || !$parentId) {
+            return;
+        }
+
+        if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
+            return;
+        }
+
+        $preferences = $this->entityManager->getEntity('Preferences', $this->user->getId());
+
+        if (!$preferences) {
+            return;
+        }
+
+        if (!$preferences->get('followEntityOnStreamPost')) {
+            return;
+        }
+
+        $parent = $this->entityManager->getEntity($parentType, $parentId);
+
+        if (!$parent || $this->user->isSystem() || $this->user->isApi()) {
+            return;
+        }
+
+        $this->getStreamService()->followEntity($parent, $this->user->getId());
+    }
+
+    /**
+     * @param NoteEntity $entity
+     * @param StdClass $data
+     */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        if (!empty($data->parentType) && !empty($data->parentId)) {
-            $entity = $this->getEntityManager()->getEntity($data->parentType, $data->parentId);
-            if ($entity) {
-                if (!$this->getAcl()->check($entity, 'read')) {
-                    throw new Forbidden();
-                }
+        $parentType = $data->parentType ?? null;
+        $parentId = $data->parentId ?? null;
+
+        if ($parentType && $parentId) {
+            $entity = $this->entityManager->getEntity($data->parentType, $data->parentId);
+
+            if ($entity && !$this->acl->check($entity, AclTable::ACTION_READ)) {
+                throw new Forbidden();
             }
         }
 
         parent::beforeCreateEntity($entity, $data);
 
-        if ($entity->get('type') === 'Post') {
+        if ($entity->isPost()) {
             $this->handlePostText($entity);
         }
 
-        $targetType = $entity->get('targetType');
+        $targetType = $entity->getTargetType();
 
         $entity->clear('isGlobal');
 
         switch ($targetType) {
-            case 'all':
+            case NoteEntity::TARGET_ALL:
+
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
                 $entity->clear('portalsIds');
                 $entity->set('isGlobal', true);
+
                 break;
-            case 'self':
+
+            case NoteEntity::TARGET_SELF:
+
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
                 $entity->clear('portalsIds');
-                $entity->set('usersIds', [$this->getUser()->id]);
+                $entity->set('usersIds', [$this->user->id]);
                 $entity->set('isForSelf', true);
+
                 break;
-            case 'users':
+
+            case NoteEntity::TARGET_USERS:
+
                 $entity->clear('teamsIds');
                 $entity->clear('portalsIds');
+
                 break;
-            case 'teams':
+
+            case NoteEntity::TARGET_TEAMS:
+
                 $entity->clear('usersIds');
                 $entity->clear('portalsIds');
+
                 break;
-            case 'portals':
+
+            case NoteEntity::TARGET_PORTALS:
+
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
+
                 break;
         }
     }
 
+    /**
+     * @param NoteEntity $entity
+     * @param StdClass $data
+     */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
         parent::beforeUpdateEntity($entity, $data);
 
-        if ($entity->get('type') === 'Post') {
+        if ($entity->isPost()) {
             $this->handlePostText($entity);
         }
 
@@ -130,11 +186,16 @@ class Note extends Record
     protected function handlePostText(Entity $entity)
     {
         $post = $entity->get('post');
-        if (empty($post)) return;
+
+        if (empty($post)) {
+            return;
+        }
 
         $siteUrl = $this->getConfig()->getSiteUrl();
 
-        $regexp = '/' . preg_quote($siteUrl, '/') . '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9]*)/';
+        $regexp = '/' . preg_quote($siteUrl, '/') .
+            '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9]*)/';
+
         $post = preg_replace($regexp, '[\2/\3](#\2/view/\3)', $post);
 
         $entity->set('post', $post);
@@ -142,73 +203,141 @@ class Note extends Record
 
     public function processAssignmentCheck(Entity $entity)
     {
-        if ($entity->isNew()) {
-            $targetType = $entity->get('targetType');
+        if (!$entity->isNew()) {
+            return;
+        }
 
-            if ($targetType) {
-                $assignmentPermission = $this->getAcl()->get('assignmentPermission');
-                if ($assignmentPermission === false || $assignmentPermission === 'no') {
-                    if ($targetType !== 'self') {
-                        throw new Forbidden('Not permitted to post to anybody except self.');
-                    }
-                }
+        $targetType = $entity->getTargetType();
 
-                if ($targetType === 'teams') {
-                    $teamIdList = $entity->get('teamsIds');
-                    if (empty($teamIdList) || !is_array($teamIdList)) {
-                        throw new BadRequest();
-                    }
-                }
-                if ($targetType === 'users') {
-                    $userIdList = $entity->get('usersIds');
-                    if (empty($userIdList) || !is_array($userIdList)) {
-                        throw new BadRequest();
-                    }
-                }
-                if ($targetType === 'portals') {
-                    $portalIdList = $entity->get('portalsIds');
-                    if (empty($portalIdList) || !is_array($portalIdList)) {
-                        throw new BadRequest();
-                    }
-                    if ($this->getAcl()->get('portalPermission') !== 'yes') {
-                        throw new Forbidden('Not permitted to post to portal users.');
-                    }
-                }
+        if (!$targetType) {
+            return;
+        }
 
-                if ($assignmentPermission === 'team') {
-                    if ($targetType === 'all') {
-                        throw new Forbidden('Not permitted to post to all.');
-                    }
+        $userTeamIdList = $this->user->getTeamIdList();
 
-                    $userTeamIdList = $this->getUser()->getTeamIdList();
+        $userIdList = $entity->getLinkMultipleIdList('users');
+        $portalIdList = $entity->getLinkMultipleIdList('portals');
+        $teamIdList = $entity->getLinkMultipleIdList('teams');
 
-                    if ($targetType === 'teams') {
-                        if (empty($userTeamIdList)) {
-                            throw new Forbidden('Not permitted to post to foreign teams.');
-                        }
-                        foreach ($teamIdList as $teamId) {
-                            if (!in_array($teamId, $userTeamIdList)) {
-                                throw new Forbidden('Not permitted to post to foreign teams.');
-                            }
-                        }
-                    } else if ($targetType === 'users') {
-                        if (empty($userTeamIdList)) {
-                            throw new Forbidden('Not permitted to post to users from foreign teams.');
-                        }
+        $targetUserList = null;
 
-                        foreach ($userIdList as $userId) {
-                            if ($userId === $this->getUser()->id) {
-                                continue;
-                            }
-                            if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($userId, $userTeamIdList)) {
-                                throw new Forbidden('Not permitted to post to users from foreign teams.');
-                            }
-                        }
-                    }
+        if ($targetType === NoteEntity::TARGET_USERS) {
+            $targetUserList = $this->entityManager
+                ->getRDBRepository('User')
+                ->select(['id', 'type'])
+                ->where([
+                    'id' => $userIdList,
+                ])
+                ->find();
+        }
+
+        $hasPortalTargetUser = false;
+        $allTargetUsersArePortal = true;
+
+        foreach ($targetUserList as $user) {
+            if (!$user->isPortal()) {
+                $allTargetUsersArePortal = false;
+            }
+
+            if ($user->isPortal()) {
+                $hasPortalTargetUser = true;
+            }
+        }
+
+        $assignmentPermission = $this->acl->get('assignment');
+
+        if ($assignmentPermission === AclTable::LEVEL_NO) {
+            if (
+                $targetType !== NoteEntity::TARGET_SELF &&
+                $targetType !== NoteEntity::TARGET_PORTALS &&
+                !(
+                    $targetType === NoteEntity::TARGET_USERS &&
+                    count($userIdList) === 1 &&
+                    $userIdList[0] === $this->user->getId()
+                ) &&
+                !(
+                    $targetType === NoteEntity::TARGET_USERS && $allTargetUsersArePortal
+                )
+            ) {
+                throw new Forbidden('Not permitted to post to anybody except self.');
+            }
+        }
+
+        if ($targetType === NoteEntity::TARGET_TEAMS) {
+            if (empty($teamIdList)) {
+                throw new BadRequest("No team IDS.");
+            }
+        }
+
+        if ($targetType === NoteEntity::TARGET_USERS) {
+            if (empty($userIdList)) {
+                throw new BadRequest("No user IDs.");
+            }
+        }
+
+        if ($targetType === NoteEntity::TARGET_PORTALS) {
+            if (empty($portalIdList)) {
+                throw new BadRequest("No portal IDs.");
+            }
+
+            if ($this->acl->get('portal') !== AclTable::LEVEL_YES) {
+                throw new Forbidden('Not permitted to post to portal users.');
+            }
+        }
+
+        if ($targetType === NoteEntity::TARGET_USERS && $this->acl->get('portal') !== AclTable::LEVEL_YES) {
+            if ($hasPortalTargetUser) {
+                throw new Forbidden('Not permitted to post to portal users.');
+            }
+        }
+
+        if ($assignmentPermission === AclTable::LEVEL_TEAM) {
+            if ($targetType === NoteEntity::TARGET_ALL) {
+                throw new Forbidden('Not permitted to post to all.');
+            }
+        }
+
+        if (
+            $assignmentPermission === AclTable::LEVEL_TEAM &&
+            $targetType === NoteEntity::TARGET_TEAMS
+        ) {
+            if (empty($userTeamIdList)) {
+                throw new Forbidden('Not permitted to post to foreign teams.');
+            }
+
+            foreach ($teamIdList as $teamId) {
+                if (!in_array($teamId, $userTeamIdList)) {
+                    throw new Forbidden("Not permitted to post to foreign teams.");
                 }
             }
         }
-        return true;
+
+        if (
+            $assignmentPermission === AclTable::LEVEL_TEAM &&
+            $targetType === NoteEntity::TARGET_USERS
+        ) {
+            if (empty($userTeamIdList)) {
+                throw new Forbidden('Not permitted to post to users from foreign teams.');
+            }
+
+            foreach ($targetUserList as $user) {
+                if ($user->getId() === $this->user->getId()) {
+                    continue;
+                }
+
+                if ($user->isPortal()) {
+                    continue;
+                }
+
+                $inTeam = $this->entityManager
+                        ->getRepository('User')
+                        ->checkBelongsToAnyOfTeams($user->getId(), $userTeamIdList);
+
+                if (!$inTeam) {
+                    throw new Forbidden('Not permitted to post to users from foreign teams.');
+                }
+            }
+        }
     }
 
     public function link(string $id, string $link, string $foreignId) : void
@@ -229,29 +358,39 @@ class Note extends Record
         parent::unlink($id, $link, $foreignId);
     }
 
-    public function processNoteAclJob($data)
+    public function processNoteAclJob(StdClass $data): void
     {
         $targetType = $data->targetType;
         $targetId = $data->targetId;
 
-        if ($targetType && $targetId && $this->getEntityManager()->hasRepository($targetType)) {
-            $entity = $this->getEntityManager()->getEntity($targetType, $targetId);
+        if ($targetType && $targetId && $this->entityManager->hasRepository($targetType)) {
+            $entity = $this->entityManager->getEntity($targetType, $targetId);
+
             if ($entity) {
                 $this->processNoteAcl($entity, true);
             }
         }
     }
 
-    public function processNoteAcl(Entity $entity, $forceProcessNoteNotifications = false)
+    public function processNoteAcl(Entity $entity, bool $forceProcessNoteNotifications = false): void
     {
         $entityType = $entity->getEntityType();
 
-        if (in_array($entityType, ['Note', 'User', 'Team', 'Role', 'Portal', 'PortalRole'])) return;
+        if (in_array($entityType, ['Note', 'User', 'Team', 'Role', 'Portal', 'PortalRole'])) {
+            return;
+        }
 
-        if (!$this->getMetadata()->get(['scopes', $entityType, 'acl'])) return;
-        if (!$this->getMetadata()->get(['scopes', $entityType, 'object'])) return;
+        if (!$this->getMetadata()->get(['scopes', $entityType, 'acl'])) {
+            return;
+        }
 
-        $ownerUserIdAttribute = $this->getAclManager()->getImplementation($entityType)->getOwnerUserIdAttribute($entity);
+        if (!$this->getMetadata()->get(['scopes', $entityType, 'object'])) {
+            return;
+        }
+
+        $ownerUserIdAttribute = $this->getAclManager()
+            ->getImplementation($entityType)
+            ->getOwnerUserIdAttribute($entity);
 
         $usersAttributeIsChanged = false;
         $teamsAttributeIsChanged = false;
@@ -264,12 +403,16 @@ class Note extends Record
             if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
                 if ($entity->getAttributeParam($ownerUserIdAttribute, 'isLinkMultipleIdList')) {
                     $userLink = $entity->getAttributeParam($ownerUserIdAttribute, 'relation');
+
                     $userIdList = $entity->getLinkMultipleIdList($userLink);
-                } else {
+                }
+                else {
                     $userId = $entity->get($ownerUserIdAttribute);
+
                     if ($userId) {
                         $userIdList = [$userId];
-                    } else {
+                    }
+                    else {
                         $userIdList = [];
                     }
                 }
@@ -280,62 +423,75 @@ class Note extends Record
             if ($entity->isAttributeChanged('teamsIds')) {
                 $teamsAttributeIsChanged = true;
             }
+
             if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
                 $teamIdList = $entity->getLinkMultipleIdList('teams');
             }
         }
 
         if ($usersAttributeIsChanged || $teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-            $noteList = $this->getEntityManager()->getRepository('Note')->where([
-                'OR' => [
-                    [
-                        'relatedId' => $entity->id,
-                        'relatedType' => $entityType
-                    ],
-                    [
-                        'parentId' => $entity->id,
-                        'parentType' => $entityType,
-                        'superParentId!=' => null,
-                        'relatedId' => null
+            $noteList = $this->entityManager
+                ->getRepository('Note')
+                ->where([
+                    'OR' => [
+                        [
+                            'relatedId' => $entity->id,
+                            'relatedType' => $entityType
+                        ],
+                        [
+                            'parentId' => $entity->id,
+                            'parentType' => $entityType,
+                            'superParentId!=' => null,
+                            'relatedId' => null,
+                        ]
                     ]
-                ]
-            ])->select([
-                'id',
-                'parentType',
-                'parentId',
-                'superParentType',
-                'superParentId',
-                'isInternal',
-                'relatedType',
-                'relatedId',
-                'createdAt'
-            ])->find();
+                ])
+                ->select([
+                    'id',
+                    'parentType',
+                    'parentId',
+                    'superParentType',
+                    'superParentId',
+                    'isInternal',
+                    'relatedType',
+                    'relatedId',
+                    'createdAt',
+                ])
+                ->find();
 
             $noteOptions = [];
+
             if (!empty($forceProcessNoteNotifications)) {
                 $noteOptions['forceProcessNotifications'] = true;
             }
 
             $period = '-' . $this->getConfig()->get('noteNotificationPeriod', $this->noteNotificationPeriod);
-            $threshold = new \DateTime();
+
+            $threshold = new DateTime();
+
             $threshold->modify($period);
 
             foreach ($noteList as $note) {
                 if (!$entity->isNew()) {
                     try {
-                        $createdAtDt = new \DateTime($note->get('createdAt'));
+                        $createdAtDt = new DateTime($note->get('createdAt'));
+
                         if ($createdAtDt->getTimestamp() < $threshold->getTimestamp()) {
                             continue;
                         }
-                    } catch (\Exception $e) {};
+                    }
+                    catch (Exception $e) {};
                 }
+
                 if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
                     $note->set('teamsIds', $teamIdList);
                 }
+
                 if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
                     $note->set('usersIds', $userIdList);
                 }
-                $this->getEntityManager()->saveEntity($note, $noteOptions);
+
+                $this->entityManager->saveEntity($note, $noteOptions);
             }
         }
     }
