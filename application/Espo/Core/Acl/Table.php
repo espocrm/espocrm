@@ -164,17 +164,17 @@ class Table
         }
     }
 
-    protected function initCacheKey() : void
+    protected function initCacheKey(): void
     {
         $this->cacheKey = 'acl/' . $this->user->id;
     }
 
-    public function getMap() : StdClass
+    public function getMap(): StdClass
     {
         return ObjectUtil::clone($this->data);
     }
 
-    public function getScopeData(string $scope) : ScopeData
+    public function getScopeData(string $scope): ScopeData
     {
         if (!isset($this->data->table->$scope)) {
             return ScopeData::fromRaw(false);
@@ -189,7 +189,7 @@ class Table
         return ScopeData::fromRaw($data);
     }
 
-    public function get(string $permission) : ?string
+    public function get(string $permission): ?string
     {
         if ($permission === 'table') {
             return null;
@@ -202,7 +202,7 @@ class Table
         return self::LEVEL_NO;
     }
 
-    public function getLevel(string $scope, string $action) : string
+    public function getLevel(string $scope, string $action): string
     {
         if (isset($this->data->table->$scope)) {
             if (isset($this->data->table->$scope->$action)) {
@@ -213,7 +213,7 @@ class Table
         return self::LEVEL_NO;
     }
 
-    public function getHighestLevel(string $scope, string $action) : string
+    public function getHighestLevel(string $scope, string $action): string
     {
         if (in_array($action, $this->booleanActionList)) {
             return self::LEVEL_YES;
@@ -367,7 +367,7 @@ class Table
 
     public function getScopeForbiddenAttributeList(
         string $scope, string $action = self::ACTION_READ, string $thresholdLevel = self::LEVEL_NO
-    ) : array {
+    ): array {
 
         $key = $scope . '_'. $action . '_' . $thresholdLevel;
 
@@ -417,7 +417,7 @@ class Table
 
     public function getScopeForbiddenFieldList(
         string $scope, string $action = self::ACTION_READ, string $thresholdLevel = self::LEVEL_NO
-    ) : array {
+    ): array {
 
         $key = $scope . '_'. $action . '_' . $thresholdLevel;
 
@@ -465,7 +465,7 @@ class Table
         return $fieldList;
     }
 
-    protected function fillFieldTableQuickAccess() : void
+    protected function fillFieldTableQuickAccess(): void
     {
         $fieldTable = $this->data->fieldTable;
 
@@ -511,7 +511,7 @@ class Table
         $this->data->fieldTableQuickAccess = $fieldTableQuickAccess;
     }
 
-    protected function applyDefault(&$table, &$fieldTable) : void
+    protected function applyDefault(&$table, &$fieldTable): void
     {
         if ($this->user->isAdmin()) {
             return;
@@ -630,7 +630,7 @@ class Table
         }
     }
 
-    protected function applyMandatory(&$table, &$fieldTable) : void
+    protected function applyMandatory(&$table, &$fieldTable): void
     {
         if ($this->user->isAdmin()) {
             return;
@@ -693,7 +693,7 @@ class Table
         }
     }
 
-    protected function applyDisabled(&$table, &$fieldTable) : void
+    protected function applyDisabled(&$table, &$fieldTable): void
     {
         if ($this->user->isAdmin()) {
             return;
@@ -708,7 +708,7 @@ class Table
         }
     }
 
-    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists) : void
+    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists): void
     {
         if ($this->user->isPortal()) {
             foreach ($this->getScopeList() as $scope) {
@@ -723,7 +723,7 @@ class Table
         }
     }
 
-    private function mergeValueList(array $list, string $defaultValue) : string
+    private function mergeValueList(array $list, string $defaultValue): string
     {
         $result = null;
 
@@ -748,7 +748,7 @@ class Table
         return $result;
     }
 
-    protected function getScopeWithAclList() : array
+    protected function getScopeWithAclList(): array
     {
         $scopeList = [];
 
@@ -765,7 +765,7 @@ class Table
         return $scopeList;
     }
 
-    protected function getScopeList() : array
+    protected function getScopeList(): array
     {
         $scopeList = [];
 
@@ -778,7 +778,7 @@ class Table
         return $scopeList;
     }
 
-    private function mergeTableList(array $tableList) : StdClass
+    private function mergeTableList(array $tableList): StdClass
     {
         $data = (object) [];
 
@@ -853,7 +853,7 @@ class Table
         return $data;
     }
 
-    private function mergeFieldTableList(array $tableList) : StdClass
+    private function mergeFieldTableList(array $tableList): StdClass
     {
         $data = (object) [];
 
@@ -916,7 +916,7 @@ class Table
         return $data;
     }
 
-    private function buildCache() : void
+    private function buildCache(): void
     {
         $this->dataCache->store($this->cacheKey, $this->data);
     }

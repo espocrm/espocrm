@@ -526,6 +526,12 @@ class AclManager
         return $acl;
     }
 
+    /**
+     * Get a restricted field list for a specific scope by a restriction type.
+     *
+     * @param string|array<string> $type
+     * @return array<string>
+     */
     public function getScopeRestrictedFieldList(string $scope, $type): array
     {
         if (is_array($type)) {
@@ -543,6 +549,12 @@ class AclManager
         return $this->globalRestricton->getScopeRestrictedFieldList($scope, $type);
     }
 
+    /**
+     * Get a restricted attribute list for a specific scope by a restriction type.
+     *
+     * @param string|array<string> $type
+     * @return array<string>
+     */
     public function getScopeRestrictedAttributeList(string $scope, $type): array
     {
         if (is_array($type)) {
@@ -560,6 +572,12 @@ class AclManager
         return $this->globalRestricton->getScopeRestrictedAttributeList($scope, $type);
     }
 
+    /**
+     * Get a restricted link list for a specific scope by a restriction type.
+     *
+     * @param string|array<string> $type
+     * @return array<string>
+     */
     public function getScopeRestrictedLinkList(string $scope, $type): array
     {
         if (is_array($type)) {

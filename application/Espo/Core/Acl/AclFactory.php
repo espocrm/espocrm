@@ -48,7 +48,7 @@ class AclFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create(string $scope) : ScopeAcl
+    public function create(string $scope): ScopeAcl
     {
         $className = $this->classFinder->find('Acl', $scope);
 

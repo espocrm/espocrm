@@ -181,7 +181,7 @@ class GlobalRestricton
         $this->data = $data;
     }
 
-    public function getScopeRestrictedFieldList(string $scope, string $type) : array
+    public function getScopeRestrictedFieldList(string $scope, string $type): array
     {
         if (!property_exists($this->data, $scope)) {
             return [];
@@ -197,7 +197,7 @@ class GlobalRestricton
         return $this->data->$scope->fields->$type;
     }
 
-    public function getScopeRestrictedAttributeList(string $scope, string $type) : array
+    public function getScopeRestrictedAttributeList(string $scope, string $type): array
     {
         if (!property_exists($this->data, $scope)) {
             return [];
@@ -214,7 +214,7 @@ class GlobalRestricton
         return $this->data->$scope->attributes->$type;
     }
 
-    public function getScopeRestrictedLinkList(string $scope, string $type) : array
+    public function getScopeRestrictedLinkList(string $scope, string $type): array
     {
         if (!property_exists($this->data, $scope)) {
             return [];

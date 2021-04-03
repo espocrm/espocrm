@@ -244,16 +244,34 @@ class Acl
         return $this->aclManager->checkAssignmentPermission($this->user, $target);
     }
 
+    /**
+     * Get a restricted field list for a specific scope by a restriction type.
+     *
+     * @param string|array<string> $type
+     * @return array<string>
+     */
     public function getScopeRestrictedFieldList(string $scope, $type): array
     {
         return $this->aclManager->getScopeRestrictedFieldList($scope, $type);
     }
 
+    /**
+     * Get a restricted attribute list for a specific scope by a restriction type.
+     *
+     * @param string|array<string> $type
+     * @return array<string>
+     */
     public function getScopeRestrictedAttributeList(string $scope, $type): array
     {
         return $this->aclManager->getScopeRestrictedAttributeList($scope, $type);
     }
 
+    /**
+     * Get a restricted link list for a specific scope by a restriction type.
+     *
+     * @param string|array<string> $type
+     * @return array<string>
+     */
     public function getScopeRestrictedLinkList(string $scope, $type): array
     {
         return $this->aclManager->getScopeRestrictedLinkList($scope, $type);

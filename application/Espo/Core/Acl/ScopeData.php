@@ -64,7 +64,7 @@ class ScopeData
     /**
      * Is of boolean type.
      */
-    public function isBoolean() : bool
+    public function isBoolean(): bool
     {
         return $this->isBoolean;
     }
@@ -72,7 +72,7 @@ class ScopeData
     /**
      * Is true.
      */
-    public function isTrue() : bool
+    public function isTrue(): bool
     {
         if (!$this->isBoolean) {
             return false;
@@ -84,7 +84,7 @@ class ScopeData
     /**
      * Is false.
      */
-    public function isFalse() : bool
+    public function isFalse(): bool
     {
         if (!$this->isBoolean) {
             return false;
@@ -96,7 +96,7 @@ class ScopeData
     /**
      * Has any level other than 'no'.
      */
-    public function hasNotNo() : bool
+    public function hasNotNo(): bool
     {
         foreach ($this->actionData as $level) {
             if ($level !== Table::LEVEL_NO) {
@@ -110,7 +110,7 @@ class ScopeData
     /**
      * Get a level for an action.
      */
-    public function get(string $action) : string
+    public function get(string $action): string
     {
         return $this->actionData[$action] ?? Table::LEVEL_NO;
     }
@@ -118,7 +118,7 @@ class ScopeData
     /**
      * Get a 'read' level.
      */
-    public function getRead() : string
+    public function getRead(): string
     {
         return $this->get(Table::ACTION_READ);
     }
@@ -126,7 +126,7 @@ class ScopeData
     /**
      * Get a 'stream' level.
      */
-    public function getStream() : string
+    public function getStream(): string
     {
         return $this->get(Table::ACTION_STREAM);
     }
@@ -134,7 +134,7 @@ class ScopeData
     /**
      * Get a 'create' level.
      */
-    public function getCreate() : string
+    public function getCreate(): string
     {
         return $this->get(Table::ACTION_CREATE);
     }
@@ -142,7 +142,7 @@ class ScopeData
     /**
      * Get an 'edit' level.
      */
-    public function getEdit() : string
+    public function getEdit(): string
     {
         return $this->get(Table::ACTION_EDIT);
     }
@@ -150,7 +150,7 @@ class ScopeData
     /**
      * Get a 'delete' level.
      */
-    public function getDelete() : string
+    public function getDelete(): string
     {
         return $this->get(Table::ACTION_DELETE);
     }
@@ -161,7 +161,7 @@ class ScopeData
      * @param StdClass|bool $raw
      * @return self
      */
-    public static function fromRaw($raw) : self
+    public static function fromRaw($raw): self
     {
         $obj = new self();
 

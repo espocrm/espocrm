@@ -46,7 +46,7 @@ class GlobalRestrictonFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create() : GlobalRestricton
+    public function create(): GlobalRestricton
     {
         return $this->injectableFactory->createWith(GlobalRestricton::class, [
             'useCache' => $this->config->get('useCache'),

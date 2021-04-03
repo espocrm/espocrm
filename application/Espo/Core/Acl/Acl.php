@@ -87,22 +87,22 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         return $this->checkScopeInternal($user, $data, $action, $entity);
     }
 
-    public function checkScope(User $user, ScopeData $data, ?string $action = null) : bool
+    public function checkScope(User $user, ScopeData $data, ?string $action = null): bool
     {
         return $this->checkScopeInternal($user, $data, $action);
     }
 
-    public function checkReadOnlyTeam(User $user, ScopeData $data) : bool
+    public function checkReadOnlyTeam(User $user, ScopeData $data): bool
     {
         return $data->getRead() === Table::LEVEL_TEAM;
     }
 
-    public function checkReadNo(User $user, ScopeData $data) : bool
+    public function checkReadNo(User $user, ScopeData $data): bool
     {
         return $data->getRead() === Table::LEVEL_NO;
     }
 
-    public function checkReadOnlyOwn(User $user, ScopeData $data) : bool
+    public function checkReadOnlyOwn(User $user, ScopeData $data): bool
     {
         return $data->getRead() === Table::LEVEL_OWN;
     }
@@ -113,7 +113,7 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         ?string $action = null,
         ?Entity $entity = null,
         array $entityAccessData = []
-    ) : bool {
+    ): bool {
 
         if ($data->isFalse()) {
             return false;
@@ -238,7 +238,7 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         return false;
     }
 
-    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data) : bool
+    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
@@ -296,7 +296,7 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         return true;
     }
 
-    public function getOwnerUserIdAttribute(Entity $entity) : ?string
+    public function getOwnerUserIdAttribute(Entity $entity): ?string
     {
         if ($this->ownerUserIdAttribute) {
             return $this->ownerUserIdAttribute;
@@ -320,7 +320,7 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
     /**
      * @deprecated Use `$this->config`.
      */
-    protected function getConfig() : Config
+    protected function getConfig(): Config
     {
         return $this->config;
     }
@@ -328,7 +328,7 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
     /**
      * @deprecated Use `$this->entityManager`.
      */
-    protected function getEntityManager() : EntityManager
+    protected function getEntityManager(): EntityManager
     {
         return $this->entityManager;
     }
@@ -336,7 +336,7 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
     /**
      * @deprecated Use `$this->aclManager`.
      */
-    protected function getAclManager() : AclManager
+    protected function getAclManager(): AclManager
     {
         return $this->aclManager;
     }
