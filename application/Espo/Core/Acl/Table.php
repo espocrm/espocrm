@@ -800,67 +800,75 @@ class Table
                     continue;
                 }
 
-            	$row = $table->$scope;
-
-                if ($row == false) {
-                    if (!isset($data->$scope)) {
-                        $data->$scope = false;
-                    }
-                }
-                else if ($row === true) {
-                    $data->$scope = true;
-                }
-                else {
-                    if (!isset($data->$scope)) {
-                        $data->$scope = (object) [];
-                    }
-                    if ($data->$scope === false) {
-                        $data->$scope = (object) [];
-                    }
-
-                    if (!is_object($row)) {
-                        continue;
-                    }
-
-                    $actionList = $this->metadata
-                        ->get(['scopes', $scope, $this->type . 'ActionList'], $this->actionList);
-
-                    foreach ($actionList as $i => $action) {
-                        if (isset($row->$action)) {
-                            $level = $row->$action;
-
-                            if (!isset($data->$scope->$action)) {
-                                $data->$scope->$action = $level;
-                            }
-                            else {
-                                if (
-                                    array_search($data->$scope->$action, $this->levelList) >
-                                    array_search($level, $this->levelList)
-                                ) {
-                                    $data->$scope->$action = $level;
-                                }
-                            }
-                        } else {
-                            if ($i > 0) {
-                                // TODO remove it
-                                $previousAction = $this->actionList[$i - 1];
-
-                                if (in_array($action, $this->booleanActionList)) {
-                                    $data->$scope->$action = self::LEVEL_YES;
-                                }
-                                else {
-                                    if ($action === self::ACTION_STREAM && isset($data->$scope->$previousAction)) {
-                                        $data->$scope->$action = $data->$scope->$previousAction;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                $this->mergeTableListItem($data, $scope, $table->$scope);
             }
         }
 
         return $data;
+    }
+
+    private function mergeTableListItem(StdClass $data, string $scope, $row): void
+    {
+        if ($row === false || $row === null) {
+            if (!isset($data->$scope)) {
+                $data->$scope = false;
+            }
+
+            return;
+        }
+
+        if ($row === true) {
+            $data->$scope = true;
+
+            return;
+        }
+
+        if (!isset($data->$scope)) {
+            $data->$scope = (object) [];
+        }
+
+        if ($data->$scope === false) {
+            $data->$scope = (object) [];
+        }
+
+        if (!is_object($row)) {
+            return;
+        }
+
+        $actionList = $this->metadata
+            ->get(['scopes', $scope, $this->type . 'ActionList'], $this->actionList);
+
+        foreach ($actionList as $i => $action) {
+            if (isset($row->$action)) {
+                $level = $row->$action;
+
+                if (!isset($data->$scope->$action)) {
+                    $data->$scope->$action = $level;
+                }
+                else if (
+                    array_search($data->$scope->$action, $this->levelList) >
+                    array_search($level, $this->levelList)
+                ) {
+                    $data->$scope->$action = $level;
+                }
+
+                continue;
+            }
+
+            if ($i === 0) {
+                continue;
+            }
+
+            // @todo Remove everything below.
+            $previousAction = $this->actionList[$i - 1];
+
+            if (in_array($action, $this->booleanActionList)) {
+                $data->$scope->$action = self::LEVEL_YES;
+            }
+            else if ($action === self::ACTION_STREAM && isset($data->$scope->$previousAction)) {
+                $data->$scope->$action = $data->$scope->$previousAction;
+            }
+        }
     }
 
     private function mergeFieldTableList(array $tableList): StdClass
