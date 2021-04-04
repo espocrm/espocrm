@@ -35,13 +35,20 @@ use Espo\Core\{
     ServiceFactory,
 };
 
+/**
+ * Notes having `related` or `superParent` are subjects to access control
+ * through `users` and `teams` fields.
+ *
+ * When users or teams of `related` or `parent` record are changed
+ * the note record will be changed too.
+ */
 class StreamNotesAcl
 {
-    protected $noteService = null;
+    private $streamService = null;
 
     public static $order = 10;
 
-    protected $serviceFactory;
+    private $serviceFactory;
 
     public function __construct(ServiceFactory $serviceFactory)
     {
@@ -66,12 +73,12 @@ class StreamNotesAcl
             return;
         }
 
-        if (!$this->noteService) {
-            $this->noteService = $this->serviceFactory->create('Note');
+        if (!$this->streamService) {
+            $this->streamService = $this->serviceFactory->create('Stream');
         }
 
         $forceProcessNoteNotifications = !empty($options['forceProcessNoteNotifications']);
 
-        $this->noteService->processNoteAcl($entity, $forceProcessNoteNotifications);
+        $this->streamService->processNoteAcl($entity, $forceProcessNoteNotifications);
     }
 }

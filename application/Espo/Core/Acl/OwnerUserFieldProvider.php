@@ -51,13 +51,17 @@ class OwnerUserFieldProvider
         $this->metadata = $metadata;
     }
 
+    /**
+     * Get an entity field that stores an owner-user (or multiple users).
+     * Must be link or linkMulitple field. NULL means no owner.
+     */
     public function get(string $entityType) : ?string
     {
         $value = $this->metadata->get(['entityAcl', $entityType, 'readOwnerUserField']);
 
         if ($value) {
             return $value;
-        }        
+        }
 
         $defs = $this->ormDefs->getEntity($entityType);
 

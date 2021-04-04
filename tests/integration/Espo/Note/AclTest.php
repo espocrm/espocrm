@@ -31,7 +31,6 @@ namespace tests\integration\Espo\Note;
 
 use Espo\{
     Services\Stream as StreamService,
-    Services\Note as NoteService,
     ORM\EntityManager,
 };
 
@@ -41,9 +40,6 @@ class AclTest extends \tests\integration\Core\BaseTestCase
     {
         /* @var $em EntityManager*/
         $em = $this->getContainer()->get('entityManager');
-
-        /* @var $noteService NoteService*/
-        $noteService = $this->getContainer()->get('serviceFactory')->create('Note');
 
         /* @var $streamService StreamService*/
         $streamService = $this->getContainer()->get('serviceFactory')->create('Stream');

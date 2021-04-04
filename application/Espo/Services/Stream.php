@@ -40,6 +40,7 @@ use Espo\ORM\{
 
 use Espo\{
     Entities\User,
+    Entities\Note as NoteEntity,
     Services\Notification as NotificationService,
 };
 
@@ -58,6 +59,7 @@ use Espo\Core\{
 };
 
 use StdClass;
+use DateTime;
 
 class Stream
 {
@@ -92,6 +94,8 @@ class Stream
     protected $fieldUtil;
 
     protected $selectBuilderFactory;
+
+    protected const NOTE_ACL_PERIOD = '1 hour';
 
     public function __construct(
         EntityManager $entityManager,
@@ -1210,6 +1214,13 @@ class Stream
         }
     }
 
+    /**
+     * Notes having `related` or `superParent` are subjects to access control
+     * through `users` and `teams` fields.
+     *
+     * When users or teams of `related` or `parent` record are changed
+     * the note record will be changed too.
+     */
     protected function processNoteTeamsUsers(Entity $note, Entity $entity): void
     {
         $note->setAclIsProcessed();
@@ -2077,5 +2088,191 @@ class Stream
             ->find();
 
         return $userList;
+    }
+
+    public function processNoteAclJob(StdClass $data): void
+    {
+        $targetType = $data->targetType;
+        $targetId = $data->targetId;
+
+        if ($targetType && $targetId && $this->entityManager->hasRepository($targetType)) {
+            $entity = $this->entityManager->getEntity($targetType, $targetId);
+
+            if ($entity) {
+                $this->processNoteAcl($entity, true);
+            }
+        }
+    }
+
+    /**
+     * Changes users and teams of notes related to an entity according users and teams of the entity.
+     *
+     * Notes having `related` or `superParent` are subjects to access control
+     * through `users` and `teams` fields.
+     *
+     * When users or teams of `related` or `parent` record are changed
+     * the note record will be changed too.
+     */
+    public function processNoteAcl(Entity $entity, bool $forceProcessNoteNotifications = false): void
+    {
+        $entityType = $entity->getEntityType();
+
+        if (in_array($entityType, ['Note', 'User', 'Team', 'Role', 'Portal', 'PortalRole'])) {
+            return;
+        }
+
+        if (!$this->metadata->get(['scopes', $entityType, 'acl'])) {
+            return;
+        }
+
+        if (!$this->metadata->get(['scopes', $entityType, 'object'])) {
+            return;
+        }
+
+        $usersAttributeIsChanged = false;
+        $teamsAttributeIsChanged = false;
+
+        $ownerUserField = $this->aclManager->getReadOwnerUserField($entityType);
+
+        /* @var $defs \Espo\ORM\Defs\EntityDefs */
+        $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
+
+        $userIdList = [];
+
+        if ($ownerUserField) {
+            if (!$defs->hasField($ownerUserField)) {
+                throw new Error("Non-existing read-owner user field.");
+            }
+
+            $fieldDefs = $defs->getField($ownerUserField);
+
+            if ($fieldDefs->getType() === 'linkMultiple') {
+                $ownerUserIdAttribute = $ownerUserField . 'Ids';
+            }
+            else if ($fieldDefs->getType() === 'link') {
+                $ownerUserIdAttribute = $ownerUserField . 'Id';
+            }
+            else {
+                throw new Error("Bad read-owner user field type.");
+            }
+
+            if ($entity->isAttributeChanged($ownerUserIdAttribute)) {
+                $usersAttributeIsChanged = true;
+            }
+
+            if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
+                if ($fieldDefs->getType() === 'linkMultiple') {
+                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
+                }
+                else {
+                    $userId = $entity->get($ownerUserIdAttribute);
+
+                    $userIdList = $userId ? [$userId] : [];
+                }
+            }
+        }
+
+        if ($entity->hasLinkMultipleField('teams')) {
+            if ($entity->isAttributeChanged('teamsIds')) {
+                $teamsAttributeIsChanged = true;
+            }
+
+            if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
+                $teamIdList = $entity->getLinkMultipleIdList('teams');
+            }
+        }
+
+        if (!$usersAttributeIsChanged && !$teamsAttributeIsChanged && !$forceProcessNoteNotifications) {
+            return;
+        }
+
+        $noteList = $this->entityManager
+            ->getRepository('Note')
+            ->where([
+                'OR' => [
+                    [
+                        'relatedId' => $entity->getId(),
+                        'relatedType' => $entityType,
+                    ],
+                    [
+                        'parentId' => $entity->getId(),
+                        'parentType' => $entityType,
+                        'superParentId!=' => null,
+                        'relatedId' => null,
+                    ]
+                ]
+            ])
+            ->select([
+                'id',
+                'parentType',
+                'parentId',
+                'superParentType',
+                'superParentId',
+                'isInternal',
+                'relatedType',
+                'relatedId',
+                'createdAt',
+            ])
+            ->find();
+
+        $noteOptions = [];
+
+        if (!empty($forceProcessNoteNotifications)) {
+            $noteOptions['forceProcessNotifications'] = true;
+        }
+
+        $period = '-' . $this->config->get('noteNotificationPeriod', self::NOTE_ACL_PERIOD);
+
+        $threshold = (new DateTime())->modify($period);
+
+        foreach ($noteList as $note) {
+            $this->processNoteAclItem($entity, $note, [
+                'teamsAttributeIsChanged' => $teamsAttributeIsChanged,
+                'usersAttributeIsChanged' => $usersAttributeIsChanged,
+                'forceProcessNoteNotifications' => $forceProcessNoteNotifications,
+                'teamIdList' => $teamIdList,
+                'userIdList' => $userIdList,
+                'threshold' => $threshold,
+            ]);
+        }
+    }
+
+    protected function processNoteAclItem(Entity $entity, NoteEntity $note, array $params): void
+    {
+        $teamsAttributeIsChanged = $params['teamsAttributeIsChanged'];
+        $usersAttributeIsChanged = $params['usersAttributeIsChanged'];
+        $forceProcessNoteNotifications = $params['forceProcessNoteNotifications'];
+
+        $teamIdList = $params['teamIdList'];
+        $userIdList = $params['userIdList'];
+
+        $threshold = $params['threshold'];
+
+        $noteOptions = [
+            'forceProcessNotifications' => $forceProcessNoteNotifications,
+        ];
+
+        if (!$entity->isNew() && $note->get('createdAt')) {
+            try {
+                $createdAtDt = new DateTime($note->get('createdAt'));
+            }
+            catch (Exception $e) {
+                return;
+            }
+
+            if ($createdAtDt->getTimestamp() < $threshold->getTimestamp()) {
+                return;
+            }
+        }
+
+        if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
+            $note->set('teamsIds', $teamIdList);
+        }
+
+        if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
+            $note->set('usersIds', $userIdList);
+        }
+
+        $this->entityManager->saveEntity($note, $noteOptions);
     }
 }
