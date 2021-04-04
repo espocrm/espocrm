@@ -49,6 +49,7 @@ use Espo\Core\{
     Acl\EntityDeleteAcl,
     Acl\EntityStreamAcl,
     Acl\LevelProvider,
+    Acl\Exceptions\NotImplemented,
 };
 
 use StdClass;
@@ -234,6 +235,8 @@ class AclManager
 
     /**
      * Check access to a specific entity.
+     *
+     * @throws NotImplemented If not implemented by Acl class.
      */
     public function checkEntity(User $user, Entity $entity, string $action = Table::ACTION_READ): bool
     {
@@ -256,7 +259,7 @@ class AclManager
         }
 
         if (!$impl instanceof EntityAcl) {
-            throw new RuntimeException("Acl must implement EntityAcl interface.");
+            throw new NotImplemented("Acl for '{$scope}' does not implement EntityAcl interface.");
         }
 
         if (method_exists($impl, $methodName)) {
@@ -269,6 +272,8 @@ class AclManager
 
     /**
      * Check 'read' access to a specific entity.
+     *
+     * @throws NotImplemented If not implemented by Acl class.
      */
     public function checkEntityRead(User $user, Entity $entity): bool
     {
@@ -277,6 +282,8 @@ class AclManager
 
     /**
      * Check 'create' access to a specific entity.
+     *
+     * @throws NotImplemented If not implemented by Acl class.
      */
     public function checkEntityCreate(User $user, Entity $entity): bool
     {
@@ -285,6 +292,8 @@ class AclManager
 
     /**
      * Check 'edit' access to a specific entity.
+     *
+     * @throws NotImplemented If not implemented by Acl class.
      */
     public function checkEntityEdit(User $user, Entity $entity): bool
     {
@@ -293,6 +302,8 @@ class AclManager
 
     /**
      * Check 'delete' access to a specific entity.
+     *
+     * @throws NotImplemented If not implemented by Acl class.
      */
     public function checkEntityDelete(User $user, Entity $entity): bool
     {
@@ -301,10 +312,12 @@ class AclManager
 
     /**
      * Check 'stream' access to a specific entity.
+     *
+     * @throws NotImplemented If not implemented by Acl class.
      */
     public function checkEntityStream(User $user, Entity $entity): bool
     {
-        return $this->checkEntity($entity, Table::ACTION_STREAM);
+        return $this->checkEntity($user, $entity, Table::ACTION_STREAM);
     }
 
     /**
@@ -325,12 +338,20 @@ class AclManager
 
     /**
      * Check access to scope. If $action is omitted, it will check whether a scope level is set to 'enabled'.
+     *
+     * @throws NotImplemented If not implemented by Acl class.
      */
     public function checkScope(User $user, string $scope, ?string $action = null): bool
     {
         $data = $this->getTable($user)->getScopeData($scope);
 
-        return $this->getImplementation($scope)->checkScope($user, $data, $action);
+        $impl = $this->getImplementation($scope);
+
+        if (!$impl instanceof ScopeAcl) {
+            throw new NotImplemented("Acl for '{$scope}' does not implement ScopeAcl interface.");
+        }
+
+        return $impl->checkScope($user, $data, $action);
     }
 
     /**
