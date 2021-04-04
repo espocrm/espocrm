@@ -242,7 +242,7 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         if (
             !$this->config->get('aclAllowDeleteCreated') ||
             !$entity->has(self::ATTR_CREATED_BY_ID) ||
-            !$entity->get(self::ATTR_CREATED_BY_ID) !== $user->getId()
+            $entity->get(self::ATTR_CREATED_BY_ID) !== $user->getId()
         ) {
             return false;
         }
