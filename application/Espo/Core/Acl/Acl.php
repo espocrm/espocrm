@@ -94,11 +94,6 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         return $this->checkScopeInternal($user, $data, $action);
     }
 
-    public function getLevel(User $user, ScopeData $data, string $action) : string
-    {
-        return $data->get($action);
-    }
-
     protected function checkScopeInternal(
         User $user,
         ScopeData $data,

@@ -29,14 +29,12 @@
 
 namespace Espo\Core\Acl;
 
-use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
-interface EntityAcl
+interface LevelProvider
 {
     /**
-     * Check access to an entity.
+     * Get an access level for a specific action.
      */
-    public function checkEntity(User $user, Entity $entity, ScopeData $data, string $action): bool;
+    public function getLevel(User $user, ScopeData $data, string $action) : string;
 }

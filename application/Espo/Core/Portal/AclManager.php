@@ -82,15 +82,6 @@ class AclManager extends BaseAclManager
         $this->globalRestricton = $globalRestrictonFactory->create();
     }
 
-    public function getImplementation(string $scope): ScopeAcl
-    {
-        if (!array_key_exists($scope, $this->implementationHashMap)) {
-            $this->implementationHashMap[$scope] = $this->aclFactory->create($scope);
-        }
-
-        return $this->implementationHashMap[$scope];
-    }
-
     public function setPortal(Portal $portal): void
     {
         $this->portal = $portal;
@@ -125,20 +116,12 @@ class AclManager extends BaseAclManager
 
     public function checkReadOnlyAccount(User $user, string $scope): bool
     {
-        $data = $this->getTable($user)->getScopeData($scope);
-
-        $impl = $this->getEntityImplementation($scope);
-
-        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_ACCOUNT;
+        return $this->getLevel($user, $scope, Table::ACTION_READ) === Table::LEVEL_ACCOUNT;
     }
 
     public function checkReadOnlyContact(User $user, string $scope): bool
     {
-        $data = $this->getTable($user)->getScopeData($scope);
-
-        $impl = $this->getEntityImplementation($scope);
-
-        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_CONTACT;
+        return $this->getLevel($user, $scope, Table::ACTION_READ)=== Table::LEVEL_CONTACT;
     }
 
     public function checkInAccount(User $user, Entity $entity): bool

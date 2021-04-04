@@ -48,6 +48,7 @@ use Espo\Core\{
     Acl\EntityEditAcl,
     Acl\EntityDeleteAcl,
     Acl\EntityStreamAcl,
+    Acl\LevelProvider,
 };
 
 use StdClass;
@@ -104,9 +105,10 @@ class AclManager
     /**
      * Get an ACL implementation for a scope.
      *
-     * @return ScopeAcl|EntityAcl
+     * @return ScopeAcl|EntityAcl|LevelProvider|
+     * EntityCreateAcl|EntityReadAcl|EntityEditAcl|EntityDeleteAcl|EntityStreamAcl
      */
-    public function getImplementation(string $scope): ScopeAcl
+    public function getImplementation(string $scope): object
     {
         if (!array_key_exists($scope, $this->implementationHashMap)) {
             $this->implementationHashMap[$scope] = $this->aclFactory->create($scope);
@@ -155,9 +157,13 @@ class AclManager
     {
         $data = $this->getTable($user)->getScopeData($scope);
 
-        $impl = $this->getEntityImplementation($scope);
+        $impl = $this->getImplementation($scope);
 
-        return $impl->getLevel($user, $data, $action);
+        if ($impl instanceof LevelProvider) {
+            return $impl->getLevel($user, $data, $action);
+        }
+
+        return $data->get($action);
     }
 
     /**
@@ -177,11 +183,7 @@ class AclManager
      */
     public function checkReadNo(User $user, string $scope): bool
     {
-        $data = $this->getTable($user)->getScopeData($scope);
-
-        $impl = $this->getEntityImplementation($scope);
-
-        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_NO;
+        return $this->getLevel($user, $scope, Table::ACTION_READ) === Table::LEVEL_NO;
     }
 
     /**
@@ -189,11 +191,7 @@ class AclManager
      */
     public function checkReadOnlyTeam(User $user, string $scope): bool
     {
-        $data = $this->getTable($user)->getScopeData($scope);
-
-        $impl = $this->getEntityImplementation($scope);
-
-        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_TEAM;
+        return $this->getLevel($user, $scope, Table::ACTION_READ) === Table::LEVEL_TEAM;
     }
 
     /**
@@ -201,11 +199,7 @@ class AclManager
      */
     public function checkReadOnlyOwn(User $user, string $scope): bool
     {
-        $data = $this->getTable($user)->getScopeData($scope);
-
-        $impl = $this->getEntityImplementation($scope);
-
-        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_OWN;
+        return $this->getLevel($user, $scope, Table::ACTION_READ) === Table::LEVEL_OWN;
     }
 
     /**
@@ -213,11 +207,7 @@ class AclManager
      */
     public function checkReadAll(User $user, string $scope): bool
     {
-        $data = $this->getTable($user)->getScopeData($scope);
-
-        $impl = $this->getEntityImplementation($scope);
-
-        return $impl->getLevel($user, $data, Table::ACTION_READ) === Table::LEVEL_ALL;
+        return $this->getLevel($user, $scope, Table::ACTION_READ) === Table::LEVEL_ALL;
     }
 
     /**
