@@ -47,13 +47,21 @@ class Mentions
     protected $notificationService = null;
 
     protected $entityManager;
+
     protected $serviceFactory;
+
     protected $user;
+
     protected $aclManager;
+
     protected $acl;
 
     public function __construct(
-        EntityManager $entityManager, ServiceFactory $serviceFactory, User $user, AclManager $aclManager, Acl $acl
+        EntityManager $entityManager,
+        ServiceFactory $serviceFactory,
+        User $user,
+        AclManager $aclManager,
+        Acl $acl
     ) {
         $this->entityManager = $entityManager;
         $this->serviceFactory = $serviceFactory;
@@ -69,8 +77,10 @@ class Mentions
         $mentionData = (object) [];
 
         $previousMentionList = [];
+
         if (!$entity->isNew()) {
             $data = $entity->get('data');
+
             if (!empty($data) && !empty($data->mentions)) {
                 $previousMentionList = array_keys(get_object_vars($data->mentions));
             }
@@ -82,29 +92,42 @@ class Mentions
 
         if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
             $parent = null;
+
             if ($entity->get('parentId') && $entity->get('parentType')) {
-                $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
+                $parent = $this->entityManager
+                    ->getEntity($entity->get('parentType'), $entity->get('parentId'));
             }
+
             foreach ($matches[0] as $item) {
                 $userName = substr($item, 1);
-                $user = $this->entityManager->getRepository('User')->where(['userName' => $userName])->findOne();
+
+                $user = $this->entityManager
+                    ->getRepository('User')
+                    ->where(['userName' => $userName])
+                    ->findOne();
+
                 if ($user) {
                     if (!$this->acl->checkUserPermission($user, 'assignment')) {
                         continue;
                     }
+
                     $m = [
                         'id' => $user->id,
                         'name' => $user->get('name'),
                         'userName' => $user->get('userName'),
                         '_scope' => $user->getEntityType(),
                     ];
+
                     $mentionData->$item = (object) $m;
                     $mentionCount++;
+
                     if (!in_array($item, $previousMentionList)) {
                         if ($user->id == $this->user->id) {
                             continue;
                         }
+
                         $this->notifyAboutMention($entity, $user, $parent);
+
                         $entity->addNotifiedUserId($user->id);
                     }
                 }
@@ -112,12 +135,15 @@ class Mentions
         }
 
         $data = $entity->get('data');
+
         if (empty($data)) {
             $data = (object) [];
         }
+
         if ($mentionCount) {
             $data->mentions = $mentionData;
-        } else {
+        }
+        else {
             unset($data->mentions);
         }
 
@@ -135,10 +161,16 @@ class Mentions
 
     protected function notifyAboutMention(Entity $entity, User $user, Entity $parent = null)
     {
-        if ($user->isPortal()) return;
-        if ($parent) {
-            if (!$this->aclManager->check($user, $parent, 'stream')) return;
+        if ($user->isPortal()) {
+            return;
         }
+
+        if ($parent) {
+            if (!$this->aclManager->check($user, $parent, 'stream')) {
+                return;
+            }
+        }
+
         $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
     }
 
@@ -147,6 +179,7 @@ class Mentions
         if (empty($this->notificationService)) {
             $this->notificationService = $this->serviceFactory->create('Notification');
         }
+
         return $this->notificationService;
     }
 }
