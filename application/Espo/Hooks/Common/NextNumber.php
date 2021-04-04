@@ -39,6 +39,7 @@ use Espo\Core\{
 class NextNumber
 {
     protected $metadata;
+
     protected $entityManager;
 
     public function __construct(Metadata $metadata, EntityManager $entityManager)
@@ -78,6 +79,7 @@ class NextNumber
                 if ($entity->isAttributeChanged($fieldName)) {
                     $entity->set($fieldName, $entity->getFetched($fieldName));
                 }
+
                 continue;
             }
 

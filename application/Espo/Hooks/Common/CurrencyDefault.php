@@ -41,6 +41,7 @@ class CurrencyDefault
     public static $order = 200;
 
     protected $config;
+
     protected $fieldUtil;
 
     public function __construct(Config $config, FieldUtil $fieldUtil)
@@ -57,17 +58,20 @@ class CurrencyDefault
 
         foreach ($fieldList as $field) {
             $currencyAttribute = $field . 'Currency';
+
             if ($entity->isNew()) {
                 if ($entity->get($field) && !$entity->get($currencyAttribute)) {
                     $entity->set($currencyAttribute, $defaultCurrency);
                 }
-            } else {
-                if (
-                    $entity->isAttributeChanged($field) && $entity->has($currencyAttribute) &&
-                    !$entity->get($currencyAttribute)
-                ) {
-                    $entity->set($currencyAttribute, $defaultCurrency);
-                }
+
+                continue;
+            }
+
+            if (
+                $entity->isAttributeChanged($field) && $entity->has($currencyAttribute) &&
+                !$entity->get($currencyAttribute)
+            ) {
+                $entity->set($currencyAttribute, $defaultCurrency);
             }
         }
     }

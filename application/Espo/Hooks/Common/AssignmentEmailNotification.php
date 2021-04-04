@@ -40,7 +40,9 @@ use Espo\Core\{
 class AssignmentEmailNotification
 {
     protected $config;
+
     protected $entityManager;
+
     protected $applicationState;
 
     public function __construct(Config $config, EntityManager $entityManager, ApplicationState $applicationState)
