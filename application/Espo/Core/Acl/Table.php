@@ -243,29 +243,12 @@ class Table
             $this->applyMandatory($aclTable, $fieldTable);
             $this->applyAdditional($aclTable, $fieldTable, $valuePermissionLists);
         }
-        else {
+
+        if ($this->user->isAdmin()) {
             $aclTable = (object) [];
-
-            foreach ($this->getScopeList() as $scope) {
-                if ($this->metadata->get("scopes.{$scope}.{$this->type}") === 'boolean') {
-                    $aclTable->$scope = true;
-                }
-                else {
-                    if ($this->metadata->get("scopes.{$scope}.entity")) {
-                        $aclTable->$scope = (object) [];
-
-                        foreach ($this->actionList as $action) {
-                            $aclTable->$scope->$action = 'all';
-
-                            if (in_array($action, $this->booleanActionList)) {
-                                $aclTable->$scope->$action = 'yes';
-                            }
-                        }
-                    }
-                }
-            }
-
             $fieldTable = (object) [];
+
+            $this->applyHighest($aclTable, $fieldTable);
         }
 
         foreach ($aclTable as $scope => $data) {
@@ -299,7 +282,8 @@ class Table
                 }
             }
         }
-        else {
+
+        if ($this->user->isAdmin()) {
             foreach ($this->valuePermissionList as $permission) {
                 if (isset($this->valuePermissionHighestLevels[$permission])) {
                     $this->data->$permission = $this->valuePermissionHighestLevels[$permission];
@@ -500,6 +484,41 @@ class Table
         }
 
         $this->data->fieldTableQuickAccess = $fieldTableQuickAccess;
+    }
+
+    protected function applyHighest(StdClass &$table, StdClass &$fieldTable): void
+    {
+        foreach ($this->getScopeList() as $scope) {
+            if ($this->metadata->get(['scopes', $scope, $this->type]) === 'boolean') {
+                $table->$scope = true;
+
+                continue;
+            }
+
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
+                continue;
+            }
+
+            $table->$scope = (object) [];
+
+            $actionList = $this->metadata->get(
+                ['scopes', $scope, $this->type . 'ActionList'],
+                $this->actionList
+            );
+
+            $highest = $this->metadata->get(
+                ['scopes', $scope, $this->type . 'HighestLevel'],
+                self::LEVEL_ALL
+            );
+
+            foreach ($actionList as $action) {
+                $table->$scope->$action = $highest;
+
+                if (in_array($action, $this->booleanActionList)) {
+                    $table->$scope->$action = 'yes';
+                }
+            }
+        }
     }
 
     protected function applyDefault(&$table, &$fieldTable): void
