@@ -96,7 +96,7 @@ class Email extends Acl implements EntityReadAcl
             return false;
         }
 
-        if ($data->delete === 'own') {
+        if ($data->getDelete() === Table::LEVEL_OWN) {
             if ($user->getId() === $entity->get('assignedUserId')) {
                 return true;
             }
