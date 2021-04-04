@@ -41,8 +41,8 @@ use Espo\Entities\Note as NoteEntity;
 use Espo\ORM\Entity;
 
 use DateTime;
-use Exception;
 use StdClass;
+use Exception;
 
 class Note extends Record
 {
@@ -104,9 +104,9 @@ class Note extends Record
         $parentId = $data->parentId ?? null;
 
         if ($parentType && $parentId) {
-            $entity = $this->entityManager->getEntity($data->parentType, $data->parentId);
+            $parent = $this->entityManager->getEntity($data->parentType, $data->parentId);
 
-            if ($entity && !$this->acl->check($entity, AclTable::ACTION_READ)) {
+            if ($parent && !$this->acl->check($parent, AclTable::ACTION_READ)) {
                 throw new Forbidden();
             }
         }
@@ -372,6 +372,9 @@ class Note extends Record
         }
     }
 
+    /**
+     * Changes users and teams of notes related to an entity according users and teams of the entity.
+     */
     public function processNoteAcl(Entity $entity, bool $forceProcessNoteNotifications = false): void
     {
         $entityType = $entity->getEntityType();
@@ -388,33 +391,45 @@ class Note extends Record
             return;
         }
 
-        $ownerUserIdAttribute = $this->getAclManager()
-            ->getImplementation($entityType)
-            ->getOwnerUserIdAttribute();
-
         $usersAttributeIsChanged = false;
         $teamsAttributeIsChanged = false;
 
-        if ($ownerUserIdAttribute) {
+        $ownerUserField = $this->getAclManager()->getReadOwnerUserField($entityType);
+
+        /* @var $defs \Espo\ORM\Defs\EntityDefs */
+        $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
+
+        $userIdList = [];
+
+        if ($ownerUserField) {
+            if (!$defs->hasField($ownerUserField)) {
+                throw new Error("Non-existing read-owner user field.");
+            }
+
+            $fieldDefs = $defs->getField($ownerUserField);
+
+            if ($fieldDefs->getType() === 'linkMultiple') {
+                $ownerUserIdAttribute = $ownerUserField . 'Ids';
+            }
+            else if ($fieldDefs->getType() === 'link') {
+                $ownerUserIdAttribute = $ownerUserField . 'Id';
+            }
+            else {
+                throw new Error("Bad read-owner user field type.");
+            }
+
             if ($entity->isAttributeChanged($ownerUserIdAttribute)) {
                 $usersAttributeIsChanged = true;
             }
 
             if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
-                if ($entity->getAttributeParam($ownerUserIdAttribute, 'isLinkMultipleIdList')) {
-                    $userLink = $entity->getAttributeParam($ownerUserIdAttribute, 'relation');
-
-                    $userIdList = $entity->getLinkMultipleIdList($userLink);
+                if ($fieldDefs->getType() === 'linkMultiple') {
+                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
                 }
                 else {
                     $userId = $entity->get($ownerUserIdAttribute);
 
-                    if ($userId) {
-                        $userIdList = [$userId];
-                    }
-                    else {
-                        $userIdList = [];
-                    }
+                    $userIdList = $userId ? [$userId] : [];
                 }
             }
         }
@@ -429,70 +444,98 @@ class Note extends Record
             }
         }
 
-        if ($usersAttributeIsChanged || $teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-            $noteList = $this->entityManager
-                ->getRepository('Note')
-                ->where([
-                    'OR' => [
-                        [
-                            'relatedId' => $entity->id,
-                            'relatedType' => $entityType
-                        ],
-                        [
-                            'parentId' => $entity->id,
-                            'parentType' => $entityType,
-                            'superParentId!=' => null,
-                            'relatedId' => null,
-                        ]
+        if (!$usersAttributeIsChanged && !$teamsAttributeIsChanged && !$forceProcessNoteNotifications) {
+            return;
+        }
+
+        $noteList = $this->entityManager
+            ->getRepository('Note')
+            ->where([
+                'OR' => [
+                    [
+                        'relatedId' => $entity->getId(),
+                        'relatedType' => $entityType,
+                    ],
+                    [
+                        'parentId' => $entity->getId(),
+                        'parentType' => $entityType,
+                        'superParentId!=' => null,
+                        'relatedId' => null,
                     ]
-                ])
-                ->select([
-                    'id',
-                    'parentType',
-                    'parentId',
-                    'superParentType',
-                    'superParentId',
-                    'isInternal',
-                    'relatedType',
-                    'relatedId',
-                    'createdAt',
-                ])
-                ->find();
+                ]
+            ])
+            ->select([
+                'id',
+                'parentType',
+                'parentId',
+                'superParentType',
+                'superParentId',
+                'isInternal',
+                'relatedType',
+                'relatedId',
+                'createdAt',
+            ])
+            ->find();
 
-            $noteOptions = [];
+        $noteOptions = [];
 
-            if (!empty($forceProcessNoteNotifications)) {
-                $noteOptions['forceProcessNotifications'] = true;
+        if (!empty($forceProcessNoteNotifications)) {
+            $noteOptions['forceProcessNotifications'] = true;
+        }
+
+        $period = '-' . $this->getConfig()->get('noteNotificationPeriod', $this->noteNotificationPeriod);
+
+        $threshold = (new DateTime())->modify($period);
+
+
+        foreach ($noteList as $note) {
+            $this->processNoteAclItem($entity, $note, [
+                'teamsAttributeIsChanged' => $teamsAttributeIsChanged,
+                'usersAttributeIsChanged' => $usersAttributeIsChanged,
+                'forceProcessNoteNotifications' => $forceProcessNoteNotifications,
+                'teamIdList' => $teamIdList,
+                'userIdList' => $userIdList,
+                'threshold' => $threshold,
+            ]);
+        }
+    }
+
+    protected function processNoteAclItem(Entity $entity, NoteEntity $note, array $params): void
+    {
+        $teamsAttributeIsChanged = $params['teamsAttributeIsChanged'];
+        $usersAttributeIsChanged = $params['usersAttributeIsChanged'];
+        $forceProcessNoteNotifications = $params['forceProcessNoteNotifications'];
+
+        $teamIdList = $params['teamIdList'];
+        $userIdList = $params['userIdList'];
+
+        $threshold = $params['threshold'];
+
+        $noteOptions = [
+            'forceProcessNotifications' => $forceProcessNoteNotifications,
+        ];
+
+        if (!$entity->isNew() && $note->get('createdAt')) {
+            try {
+                $createdAtDt = new DateTime($note->get('createdAt'));
+            }
+            catch (Exception $e) {
+                return;
             }
 
-            $period = '-' . $this->getConfig()->get('noteNotificationPeriod', $this->noteNotificationPeriod);
-
-            $threshold = new DateTime();
-
-            $threshold->modify($period);
-
-            foreach ($noteList as $note) {
-                if (!$entity->isNew()) {
-                    try {
-                        $createdAtDt = new DateTime($note->get('createdAt'));
-
-                        if ($createdAtDt->getTimestamp() < $threshold->getTimestamp()) {
-                            continue;
-                        }
-                    }
-                    catch (Exception $e) {};
-                }
-
-                if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-                    $note->set('teamsIds', $teamIdList);
-                }
-
-                if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
-                    $note->set('usersIds', $userIdList);
-                }
-
-                $this->entityManager->saveEntity($note, $noteOptions);
+            if ($createdAtDt->getTimestamp() < $threshold->getTimestamp()) {
+                return;
             }
         }
+
+        if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
+            $note->set('teamsIds', $teamIdList);
+        }
+
+        if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
+            $note->set('usersIds', $userIdList);
+        }
+
+        $this->entityManager->saveEntity($note, $noteOptions);
     }
 }

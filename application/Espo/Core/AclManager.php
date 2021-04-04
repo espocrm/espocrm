@@ -38,6 +38,7 @@ use Espo\Core\{
     Acl\AclFactory,
     Acl\GlobalRestrictonFactory,
     Acl\GlobalRestricton,
+    Acl\OwnerUserFieldProvider,
     Acl as UserAclWrapper,
     Acl\Table as Table,
     Acl\ScopeAcl,
@@ -83,15 +84,19 @@ class AclManager
 
     protected $globalRestricton;
 
+    protected $ownerUserFieldProvider;
+
     public function __construct(
         InjectableFactory $injectableFactory,
         EntityManager $entityManager,
         AclFactory $aclFactory,
-        GlobalRestrictonFactory $globalRestrictonFactory
+        GlobalRestrictonFactory $globalRestrictonFactory,
+        OwnerUserFieldProvider $ownerUserFieldProvider
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->entityManager = $entityManager;
         $this->aclFactory = $aclFactory;
+        $this->ownerUserFieldProvider = $ownerUserFieldProvider;
 
         $this->globalRestricton = $globalRestrictonFactory->create();
     }
@@ -634,5 +639,14 @@ class AclManager
         }
 
         return $this->globalRestricton->getScopeRestrictedLinkList($scope, $type);
+    }
+
+    /**
+     * Get an entity field that stores an owner-user (or multiple users).
+     * Must be link or linkMulitple field. NULL means no owner.
+     */
+    public function getReadOwnerUserField(string $entityType): ?string
+    {
+        return $this->ownerUserFieldProvider->get($entityType);
     }
 }

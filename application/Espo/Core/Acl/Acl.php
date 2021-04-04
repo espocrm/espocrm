@@ -288,38 +288,6 @@ class Acl implements ScopeAcl, EntityAcl, EntityDeleteAcl
         return true;
     }
 
-    public function getOwnerUserIdAttribute(): ?string
-    {
-        if ($this->ownerUserIdAttribute) {
-            return $this->ownerUserIdAttribute;
-        }
-
-        if (!$this->scope) {
-            return null;
-        }
-
-        $defs = $this->entityManager->getDefs()->getEntity($this->scope);
-
-        if (
-            $defs->hasField(self::FIELD_ASSIGNED_USERS) &&
-            $defs->getField(self::FIELD_ASSIGNED_USERS)->getType() === 'linkMultiple' &&
-            $defs->hasRelation(self::FIELD_ASSIGNED_USERS) &&
-            $defs->getRelation(self::FIELD_ASSIGNED_USERS)->getForeignEntityType() === 'User'
-        ) {
-            return self::ATTR_ASSIGNED_USERS_IDS;
-        }
-
-        if ($defs->hasAttribute(self::ATTR_ASSIGNED_USER_ID)) {
-            return self::ATTR_ASSIGNED_USER_ID;
-        }
-
-        if ($defs->hasAttribute(self::ATTR_CREATED_BY_ID)) {
-            return self::ATTR_CREATED_BY_ID;
-        }
-
-        return null;
-    }
-
     /**
      * @deprecated Use `$this->config`.
      */

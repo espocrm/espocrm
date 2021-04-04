@@ -179,6 +179,7 @@ class Stream
 
             if (!$user) {
                 unset($userIdList[$i]);
+
                 continue;
             }
 
@@ -223,7 +224,8 @@ class Stream
             $userId = $this->user->id;
         }
 
-        $isFollowed = (bool) $this->entityManager->getRepository('Subscription')
+        $isFollowed = (bool) $this->entityManager
+            ->getRepository('Subscription')
             ->select(['id'])
             ->where([
                 'userId' => $userId,
@@ -1223,21 +1225,49 @@ class Stream
             }
         }
 
-        $ownerUserIdAttribute = $this->aclManager
-            ->getImplementation($entity->getEntityType())
-            ->getOwnerUserIdAttribute();
+        $ownerUserField = $this->aclManager->getReadOwnerUserField($entity->getEntityType());
 
-        if ($ownerUserIdAttribute && $entity->get($ownerUserIdAttribute)) {
-            if ($entity->getAttributeParam($ownerUserIdAttribute, 'isLinkMultipleIdList')) {
-                $userIdList = $entity->get($ownerUserIdAttribute);
-            }
-            else {
-                $userId = $entity->get($ownerUserIdAttribute);
-                $userIdList = [$userId];
-            }
-
-            $note->set('usersIds', $userIdList);
+        if (!$ownerUserField) {
+            return;
         }
+
+        /* @var $defs \Espo\ORM\Defs\EntityDefs */
+        $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
+
+        if (!$defs->hasField($ownerUserField)) {
+            return;
+        }
+
+        $fieldDefs = $defs->getField($ownerUserField);
+
+        if ($fieldDefs->getType() === 'linkMultiple') {
+            $ownerUserIdAttribute = $ownerUserField . 'Ids';
+        }
+        else if ($fieldDefs->getType() === 'link') {
+            $ownerUserIdAttribute = $ownerUserField . 'Id';
+        }
+        else {
+            return;
+        }
+
+        if (!$entity->has($ownerUserIdAttribute)) {
+            return;
+        }
+
+        if ($fieldDefs->getType() === 'linkMultiple') {
+            $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
+        }
+        else {
+            $userId = $entity->get($ownerUserIdAttribute);
+
+            if (!$userId) {
+                return;
+            }
+
+            $userIdList = [$userId];
+        }
+
+        $note->set('usersIds', $userIdList);
     }
 
     public function noteEmailReceived(Entity $entity, Entity $email, $isInitial = false): void
@@ -1379,6 +1409,7 @@ class Stream
             $note->set('superParentId', $entity->get('accountId'));
             $note->set('superParentType', 'Account');
 
+            // only if has super parent
             $this->processNoteTeamsUsers($note, $entity);
         }
 
@@ -1527,6 +1558,7 @@ class Stream
             $note->set('superParentId', $entity->get('accountId'));
             $note->set('superParentType', 'Account');
 
+            // only if has super parent
             $this->processNoteTeamsUsers($note, $entity);
         }
 
@@ -1839,7 +1871,7 @@ class Stream
             }
 
             if (
-                $this->aclManager->getLevel($user, $scope, 'read') === 'team'
+                $this->aclManager->checkReadOnlyTeam($user, $scope)
             ) {
                 $list[] = $scope;
             }
@@ -1872,7 +1904,7 @@ class Stream
             }
 
             if (
-                $this->aclManager->getLevel($user, $scope, 'read') === 'own'
+                $this->aclManager->checkReadOnlyOwn($user, $scope)
             ) {
                 $list[] = $scope;
             }

@@ -35,24 +35,29 @@ use Espo\Core\{
 
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
-    public function testGetOwnerUserIdAttribute()
+    public function testGetReadOwnerUserField()
     {
         /* @var $aclManager AclManager */
         $aclManager = $this->getContainer()->get('aclManager');
 
         $this->assertEquals(
-            'assignedUserId',
-            $aclManager->getImplementation('Account')->getOwnerUserIdAttribute()
+            'assignedUser',
+            $aclManager->getReadOwnerUserField('Account')
         );
 
         $this->assertEquals(
-            'createdById',
-            $aclManager->getImplementation('Import')->getOwnerUserIdAttribute()
+            'createdBy',
+            $aclManager->getReadOwnerUserField('Import')
         );
 
         $this->assertEquals(
-            'usersIds',
-            $aclManager->getImplementation('Email')->getOwnerUserIdAttribute()
+            'users',
+            $aclManager->getReadOwnerUserField('Email')
+        );
+
+        $this->assertEquals(
+            'users',
+            $aclManager->getReadOwnerUserField('Meeting')
         );
     }
 }

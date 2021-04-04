@@ -42,6 +42,7 @@ use Espo\Core\{
     AclPortal\AclFactory as PortalAclFactory,
     Acl\ScopeAcl,
     Acl\GlobalRestrictonFactory,
+    Acl\OwnerUserFieldProvider,
     Acl\Table as TableBase,
     Portal\Acl as UserAclWrapper,
     AclManager as BaseAclManager,
@@ -69,11 +70,13 @@ class AclManager extends BaseAclManager
         EntityManager $entityManager,
         PortalAclFactory $aclFactory,
         GlobalRestrictonFactory $globalRestrictonFactory,
+        OwnerUserFieldProvider $ownerUserFieldProvider,
         BaseAclManager $mainManager
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->entityManager = $entityManager;
         $this->aclFactory = $aclFactory;
+        $this->ownerUserFieldProvider = $ownerUserFieldProvider;
         $this->mainManager = $mainManager;
 
         $this->globalRestricton = $globalRestrictonFactory->create();

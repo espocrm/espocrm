@@ -42,8 +42,6 @@ use Espo\Core\{
 
 class Email extends Acl implements EntityReadAcl
 {
-    protected $ownerUserIdAttribute = 'usersIds';
-
     public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if ($this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {

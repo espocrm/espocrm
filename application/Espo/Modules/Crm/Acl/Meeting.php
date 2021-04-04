@@ -42,8 +42,6 @@ use Espo\Core\{
 
 class Meeting extends Acl implements EntityReadAcl
 {
-    protected $ownerUserIdAttribute = 'usersIds';
-
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {

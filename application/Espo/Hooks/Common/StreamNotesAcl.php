@@ -50,11 +50,21 @@ class StreamNotesAcl
 
     public function afterSave(Entity $entity, array $options = [])
     {
-        if (!empty($options['noStream'])) return;
-        if (!empty($options['silent'])) return;
-        if (!empty($options['skipStreamNotesAcl'])) return;
+        if (!empty($options['noStream'])) {
+            return;
+        }
 
-        if ($entity->isNew()) return;
+        if (!empty($options['silent'])) {
+            return;
+        }
+
+        if (!empty($options['skipStreamNotesAcl'])) {
+            return;
+        }
+
+        if ($entity->isNew()) {
+            return;
+        }
 
         if (!$this->noteService) {
             $this->noteService = $this->serviceFactory->create('Note');

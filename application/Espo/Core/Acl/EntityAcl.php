@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
-interface EntityAcl
+interface EntityAcl extends ScopeAcl
 {
     /**
      * Check access to an entity.
@@ -44,10 +44,4 @@ interface EntityAcl
      * Get an access level for a specific action.
      */
     public function getLevel(User $user, ScopeData $data, string $action) : string;
-
-    /**
-     * Get an entity attribute that stores an ID (or IDs) of an owner-user.
-     * NULL means no owner.
-     */
-    public function getOwnerUserIdAttribute(): ?string;
 }

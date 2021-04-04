@@ -40,6 +40,8 @@ use Espo\Core\{
 
 use Espo\Entities\User;
 
+use StdClass;
+
 class Notifications
 {
     protected $notificationService = null;
@@ -49,9 +51,13 @@ class Notifications
     public static $order = 14;
 
     protected $metadata;
+
     protected $entityManager;
+
     protected $serviceFactory;
+
     protected $user;
+
     protected $internalAclManager;
 
     public function __construct(
@@ -72,12 +78,15 @@ class Notifications
     {
         $mentionedUserList = [];
         $data = $entity->get('data');
-        if (($data instanceof \StdClass) && ($data->mentions instanceof \StdClass)) {
+
+        if (($data instanceof StdClass) && ($data->mentions instanceof StdClass)) {
             $mentions = get_object_vars($data->mentions);
+
             foreach ($mentions as $d) {
                 $mentionedUserList[] = $d->id;
             }
         }
+
         return $mentionedUserList;
     }
 
@@ -100,16 +109,27 @@ class Notifications
         $notifyUserIdList = [];
 
         if ($parentType && $parentId) {
-			$userList =  $this->getSubscriberList($parentType, $parentId, $entity->get('isInternal'));
+            $userList =  $this->getSubscriberList($parentType, $parentId, $entity->get('isInternal'));
+
             $userIdMetList = [];
+
             foreach ($userList as $user) {
                 $userIdMetList[] = $user->id;
             }
+
             if ($superParentType && $superParentId) {
-                $additionalUserList = $this->getSubscriberList($superParentType, $superParentId, $entity->get('isInternal'));
+                $additionalUserList = $this
+                    ->getSubscriberList($superParentType, $superParentId, $entity->get('isInternal'));
+
                 foreach ($additionalUserList as $user) {
-                    if ($user->isPortal()) continue;
-                    if (in_array($user->id, $userIdMetList)) continue;
+                    if ($user->isPortal()) {
+                        continue;
+                    }
+
+                    if (in_array($user->id, $userIdMetList)) {
+                        continue;
+                    }
+
                     $userIdMetList[] = $user->id;
                     $userList[] = $user;
                 }
@@ -117,14 +137,17 @@ class Notifications
 
             if ($entity->get('relatedType')) {
                 $targetType = $entity->get('relatedType');
-            } else {
+            }
+            else {
                 $targetType = $parentType;
             }
 
             $skipAclCheck = false;
+
             if (!$entity->isAclProcessed()) {
                 $skipAclCheck = true;
-            } else {
+            }
+            else {
                 $teamIdList = $entity->getLinkMultipleIdList('teams');
                 $userIdList = $entity->getLinkMultipleIdList('users');
             }
@@ -132,19 +155,24 @@ class Notifications
             foreach ($userList as $user) {
                 if ($skipAclCheck) {
                     $notifyUserIdList[] = $user->id;
+
                     continue;
                 }
+
                 if ($user->isAdmin()) {
                     $notifyUserIdList[] = $user->id;
+
                     continue;
                 }
 
                 if ($user->isPortal()) {
                     if ($entity->get('relatedType')) {
                         continue;
-                    } else {
+                    }
+                    else {
                         $notifyUserIdList[] = $user->id;
                     }
+
                     continue;
                 }
 
@@ -152,26 +180,34 @@ class Notifications
 
                 if ($level === 'all') {
                     $notifyUserIdList[] = $user->id;
+
                     continue;
-                } else if ($level === 'team') {
+                }
+                else if ($level === 'team') {
                     if (in_array($user->id, $userIdList)) {
                         $notifyUserIdList[] = $user->id;
+
                         continue;
                     }
 
                     if (!empty($teamIdList)) {
                         $userTeamIdList = $user->getLinkMultipleIdList('teams');
+
                         foreach ($teamIdList as $teamId) {
                             if (in_array($teamId, $userTeamIdList)) {
                                 $notifyUserIdList[] = $user->id;
+
                                 break;
                             }
                         }
                     }
+
                     continue;
+
                 } else if ($level === 'own') {
                     if (in_array($user->id, $userIdList)) {
                         $notifyUserIdList[] = $user->id;
+
                         continue;
                     }
                 }
@@ -179,60 +215,104 @@ class Notifications
 
         } else {
             $targetType = $entity->get('targetType');
+
             if ($targetType === 'users') {
                 $targetUserIdList = $entity->get('usersIds');
+
                 if (is_array($targetUserIdList)) {
                     foreach ($targetUserIdList as $userId) {
-                        if ($userId === $this->user->id) continue;
-                        if (in_array($userId, $notifyUserIdList)) continue;
+                        if ($userId === $this->user->id) {
+                            continue;
+                        }
+
+                        if (in_array($userId, $notifyUserIdList)) {
+                            continue;
+                        }
+
                         $notifyUserIdList[] = $userId;
                     }
                 }
-            } else if ($targetType === 'teams') {
+            }
+            else if ($targetType === 'teams') {
                 $targetTeamIdList = $entity->get('teamsIds');
+
                 if (is_array($targetTeamIdList)) {
                     foreach ($targetTeamIdList as $teamId) {
                         $team = $this->entityManager->getEntity('Team', $teamId);
-                        if (!$team) continue;
-                        $targetUserList = $this->entityManager->getRepository('Team')->findRelated($team, 'users', array(
-                            'whereClause' => array(
-                                'isActive' => true
-                            )
-                        ));
+
+                        if (!$team) {
+                            continue;
+                        }
+
+                        $targetUserList = $this->entityManager
+                            ->getRDBRepository('Team')
+                            ->getRelation($team, 'users')
+                            ->where([
+                                'isActive' => true,
+                            ])
+                            ->find();
+
                         foreach ($targetUserList as $user) {
-                            if ($user->id === $this->user->id) continue;
-                            if (in_array($user->id, $notifyUserIdList)) continue;
+                            if ($user->id === $this->user->id) {
+                                continue;
+                            }
+
+                            if (in_array($user->id, $notifyUserIdList)) {
+                                continue;
+                            }
+
                             $notifyUserIdList[] = $user->id;
                         }
                     }
                 }
-            } else if ($targetType === 'portals') {
+            }
+            else if ($targetType === 'portals') {
                 $targetPortalIdList = $entity->get('portalsIds');
+
                 if (is_array($targetPortalIdList)) {
                     foreach ($targetPortalIdList as $portalId) {
                         $portal = $this->entityManager->getEntity('Portal', $portalId);
-                        if (!$portal) continue;
-                        $targetUserList = $this->entityManager->getRepository('Portal')->findRelated($portal, 'users', array(
-                            'whereClause' => array(
-                                'isActive' => true
-                            )
-                        ));
+
+                        if (!$portal) {
+                            continue;
+                        }
+
+                        $targetUserList = $this->entityManager
+                            ->getRDBRepository('Portal')
+                            ->getRelation($portal, 'users')
+                            ->where([
+                                'isActive' => true,
+                            ])
+                            ->find();
+
                         foreach ($targetUserList as $user) {
-                            if ($user->id === $this->user->id) continue;
-                            if (in_array($user->id, $notifyUserIdList)) continue;
+                            if ($user->id === $this->user->id) {
+                                continue;
+                            }
+
+                            if (in_array($user->id, $notifyUserIdList)) {
+                                continue;
+                            }
+
                             $notifyUserIdList[] = $user->id;
                         }
                     }
                 }
-            } else if ($targetType === 'all') {
-                $targetUserList = $this->entityManager->getRepository('User')->find([
-                    'whereClause' => [
+            }
+            else if ($targetType === 'all') {
+                $targetUserList = $this->entityManager
+                    ->getRepository('User')
+                    ->where([
                         'isActive' => true,
-                        'type' => ['regular', 'admin']
-                    ]
-                ]);
+                        'type' => ['regular', 'admin'],
+                    ])
+                    ->find();
+
                 foreach ($targetUserList as $user) {
-                    if ($user->id === $this->user->id) continue;
+                    if ($user->id === $this->user->id) {
+                        continue;
+                    }
+
                     $notifyUserIdList[] = $user->id;
                 }
             }
@@ -243,18 +323,25 @@ class Notifications
         foreach ($notifyUserIdList as $i => $userId) {
             if ($entity->isUserIdNotified($userId)) {
                 unset($notifyUserIdList[$i]);
+
                 continue;
             }
+
             if (!$entity->isNew()) {
                 if (
-                    $this->entityManager->getRepository('Notification')->select(['id'])->where([
-                        'type' => 'Note',
-                        'relatedType' => 'Note',
-                        'relatedId' => $entity->id,
-                        'userId' => $userId,
-                    ])->findOne()
+                    $this->entityManager
+                        ->getRepository('Notification')
+                        ->select(['id'])
+                        ->where([
+                            'type' => 'Note',
+                            'relatedType' => 'Note',
+                            'relatedId' => $entity->id,
+                            'userId' => $userId,
+                        ])
+                        ->findOne()
                 ) {
                     unset($notifyUserIdList[$i]);
+
                     continue;
                 }
             }
