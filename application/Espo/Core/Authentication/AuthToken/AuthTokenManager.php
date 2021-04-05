@@ -37,20 +37,20 @@ interface AuthTokenManager
     /**
      * Get an auth token. If does not exist then returns NULL.
      */
-    public function get(string $token) : ?AuthToken;
+    public function get(string $token): ?AuthToken;
 
     /**
      * Create an auth token and store it.
      */
-    public function create(AuthTokenData $authTokenData) : AuthToken;
+    public function create(AuthTokenData $authTokenData): AuthToken;
 
     /**
      * Make an auth token inactive (invalid).
      */
-    public function inactivate(AuthToken $authToken);
+    public function inactivate(AuthToken $authToken): void;
 
     /**
      * Update a last access date. An implementation can be omitted to avoid a writing operation.
      */
-    public function renew(AuthToken $authToken);
+    public function renew(AuthToken $authToken): void;
 }

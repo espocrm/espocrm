@@ -52,7 +52,7 @@ class EspoAuthTokenManager implements AuthTokenManager
         $this->repository = $entityManager->getRepository('AuthToken');
     }
 
-    public function get(string $token) : ?AuthToken
+    public function get(string $token): ?AuthToken
     {
         $authToken = $this->entityManager
             ->getRepository('AuthToken')
@@ -76,7 +76,7 @@ class EspoAuthTokenManager implements AuthTokenManager
         return $authToken;
     }
 
-    public function create(AuthTokenData $authTokenData) : AuthToken
+    public function create(AuthTokenData $authTokenData): AuthToken
     {
         $authToken = $this->repository->getNew();
 
@@ -100,7 +100,7 @@ class EspoAuthTokenManager implements AuthTokenManager
         return $authToken;
     }
 
-    public function inactivate(AuthToken $authToken)
+    public function inactivate(AuthToken $authToken): void
     {
         $this->validateNotChanged($authToken);
 
@@ -109,7 +109,7 @@ class EspoAuthTokenManager implements AuthTokenManager
         $this->repository->save($authToken);
     }
 
-    public function renew(AuthToken $authToken)
+    public function renew(AuthToken $authToken): void
     {
         $this->validateNotChanged($authToken);
 
@@ -122,7 +122,7 @@ class EspoAuthTokenManager implements AuthTokenManager
         $this->repository->save($authToken);
     }
 
-    protected function validate(AuthToken $authToken)
+    protected function validate(AuthToken $authToken): void
     {
         if (!$authToken->getToken()) {
             throw new RuntimeException("Empty token.");
@@ -133,7 +133,7 @@ class EspoAuthTokenManager implements AuthTokenManager
         }
     }
 
-    protected function validateNotChanged(AuthToken $authToken)
+    protected function validateNotChanged(AuthToken $authToken): void
     {
         if (
             $authToken->isAttributeChanged('token') ||
@@ -146,7 +146,7 @@ class EspoAuthTokenManager implements AuthTokenManager
         }
     }
 
-    protected function generateToken()
+    protected function generateToken(): string
     {
         $length = self::TOKEN_RANDOM_LENGTH;
 
@@ -161,5 +161,7 @@ class EspoAuthTokenManager implements AuthTokenManager
         if (function_exists('openssl_random_pseudo_bytes')) {
             return bin2hex(openssl_random_pseudo_bytes($length));
         }
+
+        throw new RuntimeException("Could not generate token.");
     }
 }

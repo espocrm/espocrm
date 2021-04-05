@@ -37,31 +37,31 @@ interface AuthToken
     /**
      * Get a token.
      */
-    public function getToken() : string;
+    public function getToken(): string;
 
     /**
      * Get a user ID.
      */
-    public function getUserId() : string;
+    public function getUserId(): string;
 
     /**
      * Get a portal ID. If a token belongs to a specific portal.
      */
-    public function getPortalId() : ?string;
+    public function getPortalId(): ?string;
 
     /**
      * Get a token secret. Secret is used as an additional security check.
      */
-    public function getSecret() : ?string;
+    public function getSecret(): ?string;
 
     /**
      * Whether a token is active.
      */
-    public function isActive() : bool;
+    public function isActive(): bool;
 
     /**
      * Get a password hash. If a password hash is not stored in token, then return NULL.
      * If you store auth tokens remotely it's reasonable to avoid hashes being sent.
      */
-    public function getHash() : ?string;
+    public function getHash(): ?string;
 }
