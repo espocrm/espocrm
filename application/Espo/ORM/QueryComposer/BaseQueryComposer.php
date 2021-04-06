@@ -2476,27 +2476,25 @@ abstract class BaseQueryComposer implements QueryComposer
                 return '0';
             }
 
-            if (!empty($value['entityType'])) {
-                $subQueryEntityType = $value['entityType'];
-            } else {
-                $subQueryEntityType = $entity->getEntityType();
-            }
-
             $subQuerySelectParams = [];
 
             if (!empty($value['selectParams'])) {
                 $subQuerySelectParams = $value['selectParams'];
-            } else {
+            }
+            else {
                 $subQuerySelectParams = $value;
             }
 
-            $subQueryEntityType = $subQuerySelectParams['from'] ?? $subQueryEntityType;
+            if (!isset($subQuerySelectParams['from']) && !isset($subQuerySelectParams['fromQuery'])) {
+                // 'entityType' is for backward compatibility.
+                $subQuerySelectParams['from'] = $value['entityType'] ?? $entity->getEntityType();
+            }
 
             if (!empty($value['withDeleted'])) {
                 $subQuerySelectParams['withDeleted'] = true;
             }
 
-            $subSql = $this->createSelectQuery($subQueryEntityType, $subQuerySelectParams);
+            $subSql = $this->createSelectQueryInternal($subQuerySelectParams);
 
             return $leftPart . " {$operator} ({$subSql})";
         }
