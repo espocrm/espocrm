@@ -35,6 +35,7 @@ use Espo\Core\{
 };
 
 use InvalidArgumentException;
+use RuntimeException;
 
 class ScopeDataTest extends \PHPUnit\Framework\TestCase
 {
@@ -134,5 +135,14 @@ class ScopeDataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Table::LEVEL_NO, $data->getDelete());
 
         $this->assertFalse($data->hasNotNo());
+    }
+
+    public function testAccessingProperty()
+    {
+        $this->expectException(RuntimeException::class);
+
+        $data = ScopeData::fromRaw(false);
+
+        $data->read;
     }
 }

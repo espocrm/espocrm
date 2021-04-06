@@ -31,6 +31,7 @@ namespace Espo\Core\Acl;
 
 use StdClass;
 use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Scope data.
@@ -45,6 +46,11 @@ class ScopeData
 
     private function __construct()
     {
+    }
+
+    public function __get(string $name)
+    {
+        throw new RuntimeException("Accessing ScopeData properties is not allowed.");
     }
 
     /**
