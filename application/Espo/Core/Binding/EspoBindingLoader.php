@@ -42,7 +42,7 @@ class EspoBindingLoader implements BindingLoader
         $this->moduleNameList = $module->getOrderedList();
     }
 
-    public function load() : BindingData
+    public function load(): BindingData
     {
         $data = new BindingData();
 
@@ -59,7 +59,7 @@ class EspoBindingLoader implements BindingLoader
         return $data;
     }
 
-    private function loadModule(Binder $binder, string $moduleName)
+    private function loadModule(Binder $binder, string $moduleName): void
     {
         $className = 'Espo\\Modules\\' . $moduleName . '\\Binding';
 
@@ -70,7 +70,7 @@ class EspoBindingLoader implements BindingLoader
         (new $className())->process($binder);
     }
 
-    private function loadCustom(Binder $binder)
+    private function loadCustom(Binder $binder): void
     {
         $className = 'Espo\\Custom\\Binding';
 

@@ -160,7 +160,7 @@ class ContainerBuilder
             )
         );
 
-        $bindingContainer = new BindingContainer($bindingLoader);
+        $bindingContainer = new BindingContainer($bindingLoader->load());
 
         return new $this->containerClassName(
             $this->containerConfigurationClassName, $this->loaderClassNames, $this->services, $bindingContainer

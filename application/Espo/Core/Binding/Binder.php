@@ -46,7 +46,7 @@ class Binder
      * @param $key An interface or interface with a parameter name (`Interface $name`).
      * @param $implementationClassName An implementation class name.
      */
-    public function bindImplementation(string $key, string $implementationClassName) : self
+    public function bindImplementation(string $key, string $implementationClassName): self
     {
         if (!$key || $key[0] === '$') {
             throw new LogicException("Can't binding a parameter name globally.");
@@ -66,7 +66,7 @@ class Binder
      * @param $key An interface or interface with a parameter name (`Interface $name`).
      * @param $serviceName A service name.
      */
-    public function bindService(string $key, string $serviceName) : self
+    public function bindService(string $key, string $serviceName): self
     {
         if (!$key || $key[0] === '$') {
             throw new LogicException("Can't binding a parameter name globally.");
@@ -86,7 +86,7 @@ class Binder
      * @param $key An interface or interface with a parameter name (`Interface $name`).
      * @param $callback A callback that will resolve a dependency.
      */
-    public function bindCallback(string $key, callable $callback) : self
+    public function bindCallback(string $key, callable $callback): self
     {
         if (!$key || $key[0] === '$') {
             throw new LogicException("Can't binding a parameter name globally.");
@@ -105,7 +105,7 @@ class Binder
      *
      * @param $className A context.
      */
-    public function for(string $className) : ContextualBinder
+    public function for(string $className): ContextualBinder
     {
         return new ContextualBinder($this->data, $className);
     }

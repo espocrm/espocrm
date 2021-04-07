@@ -52,12 +52,12 @@ class BindingData
         $this->context->$className->$key = $binding;
     }
 
-    public function addGlobal(string $key, Binding $binding)
+    public function addGlobal(string $key, Binding $binding): void
     {
         $this->global->$key = $binding;
     }
 
-    public function hasContext(string $className, string $key) : bool
+    public function hasContext(string $className, string $key): bool
     {
         if (!property_exists($this->context, $className)) {
             return false;
@@ -70,7 +70,7 @@ class BindingData
         return true;
     }
 
-    public function getContext(string $className, string $key) : Binding
+    public function getContext(string $className, string $key): Binding
     {
         if (!$this->hasContext($className, $key)) {
             throw new LogicException("No data.");
@@ -79,7 +79,7 @@ class BindingData
         return $this->context->$className->$key;
     }
 
-    public function hasGlobal(string $key) : bool
+    public function hasGlobal(string $key): bool
     {
         if (!property_exists($this->global, $key)) {
             return false;
@@ -88,7 +88,7 @@ class BindingData
         return true;
     }
 
-    public function getGlobal(string $key) : Binding
+    public function getGlobal(string $key): Binding
     {
         if (!$this->hasGlobal($key)) {
             throw new LogicException("No data.");
@@ -97,21 +97,21 @@ class BindingData
         return $this->global->$key;
     }
 
-    public function getGlobalKeyList() : array
+    public function getGlobalKeyList(): array
     {
         return array_keys(
             get_object_vars($this->global)
         );
     }
 
-    public function getContextList() : array
+    public function getContextList(): array
     {
         return array_keys(
             get_object_vars($this->context)
         );
     }
 
-    public function getContextKeyList(string $context) : array
+    public function getContextKeyList(string $context): array
     {
         return array_keys(
             get_object_vars($this->context->$context ?? (object) [])

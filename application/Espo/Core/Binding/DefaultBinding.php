@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Binding;
 
-class DefaultBinding
+class DefaultBinding implements BindingProcessor
 {
-    public function process(Binder $binder)
+    public function process(Binder $binder): void
     {
         $binder->bindService(
             'Espo\\Core\\InjectableFactory',

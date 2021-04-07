@@ -116,7 +116,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
     protected function createContainer()
     {
-        return new BindingContainer($this->loader);
+        return new BindingContainer($this->loader->load());
     }
 
     public function testHasTrue()
