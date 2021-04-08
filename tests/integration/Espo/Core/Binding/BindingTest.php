@@ -34,10 +34,6 @@ use Espo\Core\{
     Binding\BindingLoader,
     Binding\BindingData,
     Binding\Binding,
-    Binding\Binder,
-    Binding\BindingContainer,
-    InjectableFactory,
-    Container,
 };
 
 use tests\integration\testClasses\Binding\{
