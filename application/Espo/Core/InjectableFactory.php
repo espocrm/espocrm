@@ -77,15 +77,24 @@ class InjectableFactory
         return $this->createInternal($className, $with);
     }
 
-    private function createInternal(string $className, ?array $with = null): object
+    public function createWithBinding(string $className, BindingContainer $bindingContainer): object
     {
+        return $this->createInternal($className, null, $bindingContainer);
+    }
+
+    private function createInternal(
+        string $className,
+        ?array $with = null,
+        ?BindingContainer $bindingContainer = null
+    ): object {
+
         if (!class_exists($className)) {
             throw new Error("InjectableFactory: Class '{$className}' does not exist.");
         }
 
         $class = new ReflectionClass($className);
 
-        $injectionList = $this->getConstructorInjectionList($class, $with);
+        $injectionList = $this->getConstructorInjectionList($class, $with, $bindingContainer);
 
         $obj = $class->newInstanceArgs($injectionList);
 
@@ -101,8 +110,12 @@ class InjectableFactory
         return $obj;
     }
 
-    private function getConstructorInjectionList(ReflectionClass $class, ?array $with = null): array
-    {
+    private function getConstructorInjectionList(
+        ReflectionClass $class,
+        ?array $with = null,
+        ?BindingContainer $bindingContainer = null
+    ): array {
+
         $injectionList = [];
 
         $constructor = $class->getConstructor();
@@ -114,7 +127,7 @@ class InjectableFactory
         $params = $constructor->getParameters();
 
         foreach ($params as $param) {
-            $injectionList[] = $this->getMethodParamInjection($class, $param, $with);
+            $injectionList[] = $this->getMethodParamInjection($class, $param, $with, $bindingContainer);
         }
 
         return $injectionList;
@@ -123,8 +136,13 @@ class InjectableFactory
     /**
      * @return ?mixed
      */
-    private function getMethodParamInjection(?ReflectionClass $class, ReflectionParameter $param, ?array $with)
-    {
+    private function getMethodParamInjection(
+        ?ReflectionClass $class,
+        ReflectionParameter $param,
+        ?array $with,
+        ?BindingContainer $bindingContainer = null
+    ) {
+
         $name = $param->getName();
 
         if ($with && array_key_exists($name, $with)) {
@@ -149,6 +167,12 @@ class InjectableFactory
             }
         }
 
+        if ($bindingContainer && $bindingContainer->has($class, $param)) {
+            $binding = $bindingContainer->get($class, $param);
+
+            return $this->resolveBinding($binding);
+        }
+
         if ($this->bindingContainer && $this->bindingContainer->has($class, $param)) {
             $binding = $this->bindingContainer->get($class, $param);
 
@@ -171,7 +195,7 @@ class InjectableFactory
         }
 
         if ($dependencyClass) {
-            return $this->create($dependencyClass->getName());
+            return $this->createInternal($dependencyClass->getName(), null, $bindingContainer);
         }
 
         if (!$class) {
