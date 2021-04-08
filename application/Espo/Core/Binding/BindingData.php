@@ -43,7 +43,7 @@ class BindingData
         $this->context = (object) [];
     }
 
-    public function addContext(string $className, string $key, Binding $binding)
+    public function addContext(string $className, string $key, Binding $binding): void
     {
         if (!property_exists($this->context, $className)) {
             $this->context->$className = (object) [];
