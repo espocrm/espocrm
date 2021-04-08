@@ -61,7 +61,7 @@ class Binder
     }
 
     /**
-     * Bind an inteface to a specific service.
+     * Bind an interface to a specific service.
      *
      * @param $key An interface or interface with a parameter name (`Interface $name`).
      * @param $serviceName A service name.
@@ -81,7 +81,7 @@ class Binder
     }
 
     /**
-     * Bind an inteface or parameter name to a callback.
+     * Bind an interface or parameter name to a callback.
      *
      * @param $key An interface or interface with a parameter name (`Interface $name`).
      * @param $callback A callback that will resolve a dependency.
