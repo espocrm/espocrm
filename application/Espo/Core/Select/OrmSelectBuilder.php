@@ -39,7 +39,7 @@ use Espo\{
  */
 class OrmSelectBuilder extends QueryBuilder
 {
-    public function setRawParams(array $params) : void
+    public function setRawParams(array $params): void
     {
         $this->params = $params;
     }

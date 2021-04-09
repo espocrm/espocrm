@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\Email\AccessControlFilters;
 
 use Espo\Core\{
-    Select\Filters\AccessControl\Filter,
+    Select\AccessControl\Filter,
 };
 
 use Espo\{

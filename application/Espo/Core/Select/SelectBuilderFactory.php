@@ -45,7 +45,7 @@ class SelectBuilderFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create() : SelectBuilder
+    public function create(): SelectBuilder
     {
         return $this->injectableFactory->create(SelectBuilder::class);
     }

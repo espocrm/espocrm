@@ -39,68 +39,69 @@ class SearchParams
     private $rawParams;
 
     const ORDER_ASC = 'ASC';
+
     const ORDER_DESC = 'DESC';
 
     private function __construct()
     {
     }
 
-    public function getRaw() : array
+    public function getRaw(): array
     {
         return $this->rawParams;
     }
 
-    public function getSelect() : ?array
+    public function getSelect(): ?array
     {
         return $this->rawParams['select'] ?? null;
     }
 
-    public function getOrderBy() : ?string
+    public function getOrderBy(): ?string
     {
         return $this->rawParams['orderBy'] ?? null;
     }
 
-    public function getOrder() : ?string
+    public function getOrder(): ?string
     {
         return $this->rawParams['order'];
     }
 
-    public function getOffset() : ?int
+    public function getOffset(): ?int
     {
         return $this->rawParams['offset'] ?? null;
     }
 
-    public function getMaxSize() : ?int
+    public function getMaxSize(): ?int
     {
         return $this->rawParams['maxSize'] ?? null;
     }
 
-    public function getTextFilter() : ?string
+    public function getTextFilter(): ?string
     {
         return $this->rawParams['textFilter'] ?? null;
     }
 
-    public function getPrimaryFilter() : ?string
+    public function getPrimaryFilter(): ?string
     {
         return $this->rawParams['primaryFilter'] ?? null;
     }
 
-    public function getBoolFilterList() : array
+    public function getBoolFilterList(): array
     {
         return $this->rawParams['boolFilterList'] ?? [];
     }
 
-    public function getWhere() : ?array
+    public function getWhere(): ?array
     {
         return $this->rawParams['where'] ?? null;
     }
 
-    public function noFullTextSearch() : bool
+    public function noFullTextSearch(): bool
     {
         return $this->rawParams['noFullTextSearch'];
     }
 
-    public function getMaxTextAttributeLength() : ?int
+    public function getMaxTextAttributeLength(): ?int
     {
         return $this->rawParams['maxTextAttributeLength'];
     }
@@ -108,7 +109,7 @@ class SearchParams
     /**
      * Create an instance from a raw.
      */
-    public static function fromRaw(array $params) : self
+    public static function fromRaw(array $params): self
     {
         $object = new self();
 
@@ -217,7 +218,7 @@ class SearchParams
     /**
      * Merge two SelectParams instances.
      */
-    public static function merge(self $searchParams1, self $searchParams2) : self
+    public static function merge(self $searchParams1, self $searchParams2): self
     {
         $paramList = [
             'select',
@@ -268,7 +269,7 @@ class SearchParams
     /**
      * For compatibility with the legacy definition.
      */
-    private function adjustParams(array &$params) : void
+    private function adjustParams(array &$params): void
     {
         if (!$params['where']) {
             return;
