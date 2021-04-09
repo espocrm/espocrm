@@ -29,23 +29,22 @@
 
 namespace tests\unit\Espo\Core\Select\AccessControl;
 
-
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     Core\Select\Helpers\FieldHelper,
-    Core\Select\AccessControlFilters\No,
-    Core\Select\AccessControlFilters\OnlyOwn,
-    Core\Select\AccessControlFilters\OnlyTeam,
-    Core\Select\AccessControlFilters\PortalOnlyAccount,
-    Core\Select\AccessControlFilters\PortalOnlyContact,
-    Core\Select\AccessControlFilters\PortalOnlyOwn,
-    Core\Select\Filters\AccessControlFilter,
+    Core\Select\AccessControl\Filters\No,
+    Core\Select\AccessControl\Filters\OnlyOwn,
+    Core\Select\AccessControl\Filters\OnlyTeam,
+    Core\Select\AccessControl\Filters\PortalOnlyAccount,
+    Core\Select\AccessControl\Filters\PortalOnlyContact,
+    Core\Select\AccessControl\Filters\PortalOnlyOwn,
+    Core\Select\AccessControl\Filter as AccessControlFilter,
     Entities\User,
 };
 
 class FiltersTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
         $this->fieldHelper = $this->createMock(FieldHelper::class);

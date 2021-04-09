@@ -27,12 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Select\AccessControl;
+namespace tests\unit\Espo\Core\Select\Primary;
 
 use Espo\Core\{
-    Select\AccessControl\FilterFactory,
-    Select\AccessControl\Filters\OnlyOwn,
-    Select\Helpers\FieldHelper,
+    Select\Primary\FilterFactory as PrimaryFilterFactory,
+    Select\Primary\Filters\Followed,
     Utils\Metadata,
     InjectableFactory,
 };
@@ -43,14 +42,13 @@ use Espo\{
 
 class FilterFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
         $this->user = $this->createMock(User::class);
-        $this->fieldHelper = $this->createMock(FieldHelper::class);
 
-        $this->factory = new FilterFactory(
+        $this->factory = new PrimaryFilterFactory(
             $this->injectableFactory,
             $this->metadata
         );
@@ -58,52 +56,39 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testCreate1()
     {
-        $this->prepareFactoryTest(null, OnlyOwn::class, 'onlyOwn');
+        $this->prepareFactoryTest(null, Followed::class, 'followed');
     }
 
     public function testCreate2()
     {
-        $this->prepareFactoryTest('SomeClass', OnlyOwn::class, 'onlyOwn');
+        $this->prepareFactoryTest('SomeClass', Followed::class, 'followed');
     }
 
     protected function prepareFactoryTest(?string $className, string $defaultClassName, string $name)
     {
         $entityType = 'Test';
 
-        $object = $this->createMock($defaultClassName);
-
         $this->metadata
             ->expects($this->any())
             ->method('get')
             ->willReturnMap([
-                [['selectDefs', $entityType, 'accessControlFilterClassNameMap', $name], null, $className],
+                [['selectDefs', $entityType, 'primaryFilterClassNameMap', $name], null, $className],
             ]);
 
         $className = $className ?? $defaultClassName;
 
         $object = $this->createMock($defaultClassName);
 
+        $with = [
+            'entityType' => $entityType,
+            'user' => $this->user,
+        ];
+
         $this->injectableFactory
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('createWith')
-            ->willReturnMap([
-                [
-                    FieldHelper::class,
-                    [
-                        'entityType' => $entityType,
-                    ],
-                    $this->fieldHelper,
-                ],
-                [
-                    $className,
-                    [
-                        'entityType' => $entityType,
-                        'user' => $this->user,
-                        'fieldHelper' => $this->fieldHelper,
-                    ],
-                    $object,
-                ],
-            ]);
+            ->with($className, $with)
+            ->willReturn($object);
 
         $resultObject = $this->factory->create(
             $entityType,
@@ -118,11 +103,15 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->metadata
-            ->expects($this->any())
+            ->expects($this->once())
             ->method('get')
-            ->willReturnMap([
-                [['selectDefs', $entityType, 'accessControlFilterClassNameMap', 'badName'], null, null],
-            ]);
+            ->with([
+                'selectDefs',
+                $entityType,
+                'primaryFilterClassNameMap',
+                'badName',
+            ])
+            ->willReturn(null);
 
         $this->assertFalse(
             $this->factory->has($entityType, 'badName')

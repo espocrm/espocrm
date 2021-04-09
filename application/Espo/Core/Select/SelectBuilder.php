@@ -30,16 +30,16 @@
 namespace Espo\Core\Select;
 
 use Espo\Core\Select\{
-    Factory\ApplierFactory,
-    Appliers\WhereApplier,
-    Appliers\SelectApplier,
-    Appliers\OrderApplier,
-    Appliers\LimitApplier,
-    Appliers\AccessControlFilterApplier,
-    Appliers\PrimaryFilterApplier,
-    Appliers\BoolFilterListApplier,
-    Appliers\TextFilterApplier,
-    Appliers\AdditionalApplier,
+    Applier\Factory as ApplierFactory,
+    Applier\Appliers\Where as WhereApplier,
+    Applier\Appliers\Select as SelectApplier,
+    Applier\Appliers\Order as OrderApplier,
+    Applier\Appliers\Limit as LimitApplier,
+    Applier\Appliers\AccessControlFilter as AccessControlFilterApplier,
+    Applier\Appliers\PrimaryFilter as PrimaryFilterApplier,
+    Applier\Appliers\BoolFilterList as BoolFilterListApplier,
+    Applier\Appliers\TextFilter as TextFilterApplier,
+    Applier\Appliers\Additional as AdditionalApplier,
     Where\Params as WhereParams,
     Where\Item as WhereItem,
     Order\Params as OrderParams,
@@ -55,8 +55,8 @@ use Espo\{
 use LogicException;
 
 /**
- * Builds select queries for ORM.
- * Applies search parameters (passed from front-end), ACL restrictions, filters, etc.
+ * Builds select queries for ORM. Applies search parameters(passed from front-end),
+ * ACL restrictions, filters, etc.
  */
 class SelectBuilder
 {
@@ -98,7 +98,7 @@ class SelectBuilder
     /**
      * Specify an entity type to select from.
      */
-    public function from(string $entityType) : self
+    public function from(string $entityType): self
     {
         if ($this->sourceQuery) {
             throw new LogicException("Can't call 'from' after 'clone'.");
@@ -112,7 +112,7 @@ class SelectBuilder
     /**
      * Start building from an existing select query.
      */
-    public function clone(Query $query) : self
+    public function clone(Query $query): self
     {
         if ($this->entityType && $this->entityType !== $query->getFrom()) {
             throw new LogicException("Not matching entity type.");
@@ -128,7 +128,7 @@ class SelectBuilder
     /**
      * Build a result query.
      */
-    public function build() : Query
+    public function build(): Query
     {
         return $this->buildQueryBuilder()->build();
     }
@@ -136,7 +136,7 @@ class SelectBuilder
     /**
      * Build an ORM query builder. Used to continue building but by means of ORM.
      */
-    public function buildQueryBuilder() : QueryBuilder
+    public function buildQueryBuilder(): QueryBuilder
     {
         $this->queryBuilder = new OrmSelectBuilder();
 
@@ -185,7 +185,7 @@ class SelectBuilder
     /**
      * Switch a user for whom a select query will be built.
      */
-    public function forUser(User $user) : self
+    public function forUser(User $user): self
     {
         $this->user = $user;
 
@@ -197,7 +197,7 @@ class SelectBuilder
      *
      * Note: If there's no order set in the search parameters then a default order will be applied.
      */
-    public function withSearchParams(SearchParams $searchParams) : self
+    public function withSearchParams(SearchParams $searchParams): self
     {
         $this->searchParams = $searchParams;
 
@@ -223,7 +223,7 @@ class SelectBuilder
     /**
      * Apply maximum restrictions for a user.
      */
-    public function withStrictAccessControl() : self
+    public function withStrictAccessControl(): self
     {
         $this->withAccessControlFilter();
         $this->withWherePermissionCheck();
@@ -235,7 +235,7 @@ class SelectBuilder
     /**
      * Apply an access control filter.
      */
-    public function withAccessControlFilter() : self
+    public function withAccessControlFilter(): self
     {
         $this->applyAccessControlFilter = true;
 
@@ -245,7 +245,7 @@ class SelectBuilder
     /**
      * Apply a default order.
      */
-    public function withDefaultOrder() : self
+    public function withDefaultOrder(): self
     {
         $this->applyDefaultOrder = true;
 
@@ -255,7 +255,7 @@ class SelectBuilder
     /**
      * Check permissions to where items.
      */
-    public function withWherePermissionCheck() : self
+    public function withWherePermissionCheck(): self
     {
         $this->applyWherePermissionCheck = true;
 
@@ -265,7 +265,7 @@ class SelectBuilder
     /**
      * Forbid complex expression usage.
      */
-    public function withComplexExpressionsForbidden() : self
+    public function withComplexExpressionsForbidden(): self
     {
         $this->applyComplexExpressionsForbidden = true;
 
@@ -275,7 +275,7 @@ class SelectBuilder
     /**
      * Apply a text filter.
      */
-    public function withTextFilter(string $textFilter) : self
+    public function withTextFilter(string $textFilter): self
     {
         $this->textFilter = $textFilter;
 
@@ -285,7 +285,7 @@ class SelectBuilder
     /**
      * Apply a primary filter.
      */
-    public function withPrimaryFilter(string $primaryFilter) : self
+    public function withPrimaryFilter(string $primaryFilter): self
     {
         $this->primaryFilter = $primaryFilter;
 
@@ -295,7 +295,7 @@ class SelectBuilder
     /**
      * Apply a bool filter.
      */
-    public function withBoolFilter(string $boolFilter) : self
+    public function withBoolFilter(string $boolFilter): self
     {
         $this->boolFilterList[] = $boolFilter;
 
@@ -305,7 +305,7 @@ class SelectBuilder
     /**
      * Apply a list of bool filters.
      */
-    public function withBoolFilterList(array $boolFilterList) : self
+    public function withBoolFilterList(array $boolFilterList): self
     {
         $this->boolFilterList = array_merge($this->boolFilterList, $boolFilterList);
 
@@ -315,14 +315,14 @@ class SelectBuilder
     /**
      * Apply a Where Item.
      */
-    public function withWhere(WhereItem $whereItem) : self
+    public function withWhere(WhereItem $whereItem): self
     {
         $this->whereItemList[] = $whereItem;
 
         return $this;
     }
 
-    private function applyPrimaryFilter() : void
+    private function applyPrimaryFilter(): void
     {
         $this->createPrimaryFilterApplier()
             ->apply(
@@ -331,7 +331,7 @@ class SelectBuilder
             );
     }
 
-    private function applyBoolFilterList() : void
+    private function applyBoolFilterList(): void
     {
         $this->createBoolFilterListApplier()
             ->apply(
@@ -340,7 +340,7 @@ class SelectBuilder
             );
     }
 
-    private function applyTextFilter() : void
+    private function applyTextFilter(): void
     {
         $noFullTextSearch = false;
 
@@ -358,7 +358,7 @@ class SelectBuilder
             );
     }
 
-    private function applyAccessControlFilter() : void
+    private function applyAccessControlFilter(): void
     {
         $this->createAccessControlFilterApplier()
             ->apply(
@@ -366,7 +366,7 @@ class SelectBuilder
             );
     }
 
-    private function applyDefaultOrder() : void
+    private function applyDefaultOrder(): void
     {
         $order = null;
 
@@ -386,14 +386,14 @@ class SelectBuilder
             );
     }
 
-    private function applyWhereItemList() : void
+    private function applyWhereItemList(): void
     {
         foreach ($this->whereItemList as $whereItem) {
             $this->applyWhereItem($whereItem);
         }
     }
 
-    private function applyWhereItem(WhereItem $whereItem) : void
+    private function applyWhereItem(WhereItem $whereItem): void
     {
         $params = WhereParams::fromArray([
             'applyPermissionCheck' => $this->applyWherePermissionCheck,
@@ -408,7 +408,7 @@ class SelectBuilder
             );
     }
 
-    private function applyFromSearchParams() : void
+    private function applyFromSearchParams(): void
     {
         if (!$this->searchParams) {
             return;
@@ -462,7 +462,7 @@ class SelectBuilder
         }
     }
 
-    private function applyAdditional() : void
+    private function applyAdditional(): void
     {
         $searchParams = SearchParams::fromRaw([
             'boolFilterList' => $this->boolFilterList,
@@ -480,48 +480,84 @@ class SelectBuilder
         );
     }
 
-    private function createWhereApplier() : WhereApplier
+    private function createWhereApplier(): WhereApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::WHERE);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::WHERE
+        );
     }
 
-    private function createSelectApplier() : SelectApplier
+    private function createSelectApplier(): SelectApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::SELECT);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::SELECT
+        );
     }
 
-    private function createOrderApplier() : OrderApplier
+    private function createOrderApplier(): OrderApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::ORDER);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::ORDER
+        );
     }
 
-    private function createLimitApplier() : LimitApplier
+    private function createLimitApplier(): LimitApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::LIMIT);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::LIMIT
+        );
     }
 
-    private function createAccessControlFilterApplier() : AccessControlFilterApplier
+    private function createAccessControlFilterApplier(): AccessControlFilterApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::ACCESS_CONTROL_FILTER);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::ACCESS_CONTROL_FILTER
+        );
     }
 
-    private function createTextFilterApplier() : TextFilterApplier
+    private function createTextFilterApplier(): TextFilterApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::TEXT_FILTER);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::TEXT_FILTER
+        );
     }
 
-    private function createPrimaryFilterApplier() : PrimaryFilterApplier
+    private function createPrimaryFilterApplier(): PrimaryFilterApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::PRIMARY_FILTER);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::PRIMARY_FILTER
+        );
     }
 
-    private function createBoolFilterListApplier() : BoolFilterListApplier
+    private function createBoolFilterListApplier(): BoolFilterListApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::BOOL_FILTER_LIST);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::BOOL_FILTER_LIST
+        );
     }
 
-    private function createAdditionalApplier() : AdditionalApplier
+    private function createAdditionalApplier(): AdditionalApplier
     {
-        return $this->applierFactory->create($this->entityType, $this->user, ApplierFactory::ADDITIONAL);
+        return $this->applierFactory->create(
+            $this->entityType,
+            $this->user,
+            ApplierFactory::ADDITIONAL
+        );
     }
 }

@@ -27,36 +27,70 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Email\AccessControlFilters;
-
-use Espo\Core\{
-    Select\Filters\AccessControl\Filter,
-};
+namespace Espo\Core\Select\AccessControl\Filters;
 
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    Classes\Select\Email\Helpers\JoinHelper,
+    Core\Select\AccessControl\Filter,
+    Core\Select\Helpers\FieldHelper,
     Entities\User,
 };
 
-class OnlyOwn implements Filter
+class OnlyTeam implements Filter
 {
+    private $entityType;
+
     private $user;
 
-    private $joinHelper;
+    private $fieldHelper;
 
-    public function __construct(User $user, JoinHelper $joinHelper)
+    public function __construct(string $entityType, User $user, FieldHelper $fieldHelper)
     {
+        $this->entityType = $entityType;
         $this->user = $user;
-        $this->joinHelper = $joinHelper;
+        $this->fieldHelper = $fieldHelper;
     }
 
     public function apply(QueryBuilder $queryBuilder): void
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        if (!$this->fieldHelper->hasTeamsField()) {
+            $queryBuilder->where([
+                'id' => null,
+            ]);
+
+            return;
+        }
+
+        $queryBuilder->distinct();
+
+        $queryBuilder->leftJoin('teams', 'teamsAccess');
+
+        if ($this->fieldHelper->hasAssignedUsersField()) {
+            $queryBuilder->leftJoin('assignedUsers', 'assignedUsersAccess');
+
+            $queryBuilder->where([
+                'OR' => [
+                    'teamsAccess.id' => $this->user->getTeamIdList(),
+                    'assignedUsersAccess.id' => $this->user->id,
+                ]
+            ]);
+
+            return;
+        }
+
+        $orGroup = [
+            'teamsAccess.id' => $this->user->getTeamIdList(),
+        ];
+
+        if ($this->fieldHelper->hasAssignedUserField()) {
+            $orGroup['assignedUserId'] = $this->user->id;
+        }
+        else if ($this->fieldHelper->hasCreatedByField()) {
+            $orGroup['createdById'] = $this->user->id;
+        }
 
         $queryBuilder->where([
-            'emailUser.userId' => $this->user->id,
+            'OR' => $orGroup,
         ]);
     }
 }

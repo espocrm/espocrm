@@ -51,12 +51,12 @@ class FieldHelper
         $this->entityManager = $entityManager;
     }
 
-    private function getSeed() : Entity
+    private function getSeed(): Entity
     {
         return $this->seed ?? $this->entityManager->getEntity($this->entityType);
     }
 
-    public function hasAssignedUsersField() : bool
+    public function hasAssignedUsersField(): bool
     {
         if (
             $this->getSeed()->hasRelation('assignedUsers') &&
@@ -68,7 +68,7 @@ class FieldHelper
         return false;
     }
 
-    public function hasAssignedUserField() : bool
+    public function hasAssignedUserField(): bool
     {
         if ($this->getSeed()->hasAttribute('assignedUserId')) {
             return true;
@@ -77,7 +77,7 @@ class FieldHelper
         return false;
     }
 
-    public function hasCreatedByField() : bool
+    public function hasCreatedByField(): bool
     {
         if ($this->getSeed()->hasAttribute('createdById')) {
             return true;
@@ -86,7 +86,7 @@ class FieldHelper
         return false;
     }
 
-    public function hasTeamsField() : bool
+    public function hasTeamsField(): bool
     {
         if (
             $this->getSeed()->hasRelation('teams') &&
@@ -98,35 +98,35 @@ class FieldHelper
         return false;
     }
 
-    public function hasContactField() : bool
+    public function hasContactField(): bool
     {
         return
             $this->getSeed()->hasAttribute('contactId') &&
             $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact';
     }
 
-    public function hasContactsRelation() : bool
+    public function hasContactsRelation(): bool
     {
         return
             $this->getSeed()->hasRelation('contacts') &&
             $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact';
     }
 
-    public function hasParentField() : bool
+    public function hasParentField(): bool
     {
         return
             $this->getSeed()->hasAttribute('parentId') &&
             $this->getSeed()->hasRelation('parent');
     }
 
-    public function hasAccountField() : bool
+    public function hasAccountField(): bool
     {
         return
             $this->getSeed()->hasAttribute('accountId') &&
             $this->getSeed()->getRelationParam('account', 'entity') === 'Account';
     }
 
-    public function hasAccountsRelation() : bool
+    public function hasAccountsRelation(): bool
     {
         return
             $this->getSeed()->hasRelation('accounts') &&

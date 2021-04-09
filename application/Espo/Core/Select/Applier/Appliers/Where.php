@@ -27,36 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Email\AccessControlFilters;
+namespace Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\{
-    Select\Filters\AccessControl\Filter,
+    Select\Where\Params,
+    Select\Where\ConverterFactory,
+    Select\Where\CheckerFactory,
+    Select\Where\Item as WhereItem,
 };
 
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    Classes\Select\Email\Helpers\JoinHelper,
     Entities\User,
 };
 
-class OnlyOwn implements Filter
+class Where
 {
-    private $user;
+    protected $entityType;
 
-    private $joinHelper;
+    protected $user;
 
-    public function __construct(User $user, JoinHelper $joinHelper)
-    {
+    protected $converterFactory;
+
+    protected $checkerFactory;
+
+    public function __construct(
+        string $entityType,
+        User $user,
+        ConverterFactory $converterFactory,
+        CheckerFactory $checkerFactory
+    ) {
+        $this->entityType = $entityType;
         $this->user = $user;
-        $this->joinHelper = $joinHelper;
+        $this->converterFactory = $converterFactory;
+        $this->checkerFactory = $checkerFactory;
     }
 
-    public function apply(QueryBuilder $queryBuilder): void
+    public function apply(QueryBuilder $queryBuilder, WhereItem $whereItem, Params $params): void
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        $checker = $this->checkerFactory->create($this->entityType, $this->user);
 
-        $queryBuilder->where([
-            'emailUser.userId' => $this->user->id,
-        ]);
+        $checker->check($whereItem, $params);
+
+        $converter = $this->converterFactory->create($this->entityType, $this->user);
+
+        $whereClause = $converter->convert($queryBuilder, $whereItem);
+
+        $queryBuilder->where(
+            $whereClause->getRaw()
+        );
     }
 }

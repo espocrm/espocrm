@@ -27,36 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Email\AccessControlFilters;
-
-use Espo\Core\{
-    Select\Filters\AccessControl\Filter,
-};
+namespace Espo\Core\Select\Boolean\Filters;
 
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    Classes\Select\Email\Helpers\JoinHelper,
-    Entities\User,
+    ORM\QueryParams\Parts\WhereClause,
+    Core\Select\Boolean\Filter,
+    Enities\User,
 };
 
-class OnlyOwn implements Filter
+class Followed implements Filter
 {
-    private $user;
+    protected $entityType;
 
-    private $joinHelper;
+    protected $user;
 
-    public function __construct(User $user, JoinHelper $joinHelper)
+    public function __construct(string $entityType, User $user)
     {
+        $this->entityType = $entityType;
         $this->user = $user;
-        $this->joinHelper = $joinHelper;
     }
 
-    public function apply(QueryBuilder $queryBuilder): void
+    public function apply(QueryBuilder $queryBuilder): WhereClause
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        $alias = 'subscriptionFollowedBoolFilter';
 
-        $queryBuilder->where([
-            'emailUser.userId' => $this->user->id,
+        $queryBuilder->join(
+            'Subscription',
+            $alias,
+            [
+                $alias . '.entityType' => $this->entityType,
+                $alias . '.entityId=:' => 'id',
+                $alias . '.userId' => $this->user->id,
+            ]
+        );
+
+        return WhereClause::fromRaw([
+            $alias . '.id!=' => null,
         ]);
     }
 }

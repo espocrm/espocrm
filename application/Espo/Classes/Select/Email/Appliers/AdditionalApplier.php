@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\Email\Appliers;
 
 use Espo\Core\{
-    Select\Appliers\AdditionalApplier as AdditionalApplierBase,
+    Select\Applier\Appliers\Additional as AdditionalApplierBase,
 };
 
 use Espo\{
@@ -52,7 +52,7 @@ class AdditionalApplier extends AdditionalApplierBase
         $this->joinHelper = $joinHelper;
     }
 
-    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams) : void
+    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams): void
     {
         $folder = $this->retrieveFolder($searchParams);
 
@@ -71,7 +71,7 @@ class AdditionalApplier extends AdditionalApplierBase
         }
     }
 
-    protected function joinEmailUser(QueryBuilder $queryBuilder) : void
+    protected function joinEmailUser(QueryBuilder $queryBuilder): void
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
 
@@ -91,7 +91,7 @@ class AdditionalApplier extends AdditionalApplierBase
         }
     }
 
-    protected function retrieveFolder(SearchParams $searchParams) : ?string
+    protected function retrieveFolder(SearchParams $searchParams): ?string
     {
         foreach ($searchParams->getWhere() ?? [] as $item) {
             $itemType = $item['type'] ?? null;
@@ -105,7 +105,7 @@ class AdditionalApplier extends AdditionalApplierBase
         return null;
     }
 
-    protected function checkApplyDateSentIndex(QueryBuilder $queryBuilder, SearchParams $searchParams) : bool
+    protected function checkApplyDateSentIndex(QueryBuilder $queryBuilder, SearchParams $searchParams): bool
     {
         if ($searchParams->getTextFilter()) {
             return false;

@@ -27,11 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\AccessControl;
+namespace Espo\Core\Select\Boolean;
 
 use Espo\Core\{
     Exceptions\Error,
-    Select\Helpers\FieldHelper,
+    Select\Boolean\Filter,
     InjectableFactory,
     Utils\Metadata,
 };
@@ -57,17 +57,12 @@ class FilterFactory
         $className = $this->getClassName($entityType, $name);
 
         if (!$className) {
-            throw new Error("Access control filter '{$name}' for '{$entityType}' does not exist.");
+            throw new Error("Bool filter '{$name}' for '{$entityType}' does not exist.");
         }
-
-        $fieldHelper = $this->injectableFactory->createWith(FieldHelper::class, [
-            'entityType' => $entityType,
-        ]);
 
         return $this->injectableFactory->createWith($className, [
             'entityType' => $entityType,
             'user' => $user,
-            'fieldHelper' => $fieldHelper,
         ]);
     }
 
@@ -76,17 +71,17 @@ class FilterFactory
         return (bool) $this->getClassName($entityType, $name);
     }
 
-    private function getClassName(string $entityType, string $name): ?string
+    protected function getClassName(string $entityType, string $name): ?string
     {
         if (!$name) {
-            throw new Error("Empty access control filter name.");
+            throw new Error("Empty bool filter name.");
         }
 
         $className = $this->metadata->get(
             [
                 'selectDefs',
                 $entityType,
-                'accessControlFilterClassNameMap',
+                'boolFilterClassNameMap',
                 $name,
             ]
         );
@@ -98,9 +93,9 @@ class FilterFactory
         return $this->getDefaultClassName($name);
     }
 
-    private function getDefaultClassName(string $name): ?string
+    protected function getDefaultClassName(string $name): ?string
     {
-        $className = 'Espo\\Core\\Select\\AccessControl\\Filters\\' . ucfirst($name);
+        $className = 'Espo\\Core\\Select\\Boolean\\Filters\\' . ucfirst($name);
 
         if (!class_exists($className)) {
             return null;

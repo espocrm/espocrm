@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\Email\Appliers;
 
 use Espo\Core\{
-    Select\Appliers\TextFilterApplier as TextFilterApplierBase,
+    Select\Applier\Appliers\TextFilter as TextFilterApplierBase,
     Di\EntityManagerAware,
     Di\EntityManagerSetter,
 };
@@ -49,7 +49,7 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
 
     protected function modifyOrGroup(
         QueryBuilder $queryBuilder, string $filter, array &$orGroup, bool $hasFullTextSearch
-    )  : void {
+    ): void {
 
         if (strlen($filter) < self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
             return;
@@ -79,7 +79,7 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
         $orGroup['emailEmailAddress.emailAddressId'] = $emailAddressId;
     }
 
-    protected function leftJoinEmailAddress(QueryBuilder $queryBuilder) : void
+    protected function leftJoinEmailAddress(QueryBuilder $queryBuilder): void
     {
         if ($queryBuilder->hasLeftJoinAlias('emailEmailAddress')) {
             return;
@@ -97,7 +97,7 @@ class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAw
         );
     }
 
-    protected function getEmailAddressIdByValue(string $value) : ?string
+    protected function getEmailAddressIdByValue(string $value): ?string
     {
         $emailAddress = $this->entityManager
             ->getRepository('EmailAddress')

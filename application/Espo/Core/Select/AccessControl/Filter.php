@@ -27,36 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Email\AccessControlFilters;
+namespace Espo\Core\Select\AccessControl;
 
-use Espo\Core\{
-    Select\Filters\AccessControl\Filter,
-};
+use Espo\ORM\QueryParams\SelectBuilder as QueryBuilder;
 
-use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    Classes\Select\Email\Helpers\JoinHelper,
-    Entities\User,
-};
-
-class OnlyOwn implements Filter
+interface Filter
 {
-    private $user;
-
-    private $joinHelper;
-
-    public function __construct(User $user, JoinHelper $joinHelper)
-    {
-        $this->user = $user;
-        $this->joinHelper = $joinHelper;
-    }
-
-    public function apply(QueryBuilder $queryBuilder): void
-    {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
-
-        $queryBuilder->where([
-            'emailUser.userId' => $this->user->id,
-        ]);
-    }
+    public function apply(QueryBuilder $queryBuilder): void;
 }

@@ -30,12 +30,12 @@
 namespace Espo\Classes\Select\ActionHistoryRecord\AccessControlFilters;
 
 use Espo\{
-    Core\Select\Filters\AccessControlFilter,
+    Core\Select\Filters\AccessControl\Filter,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     Entities\User,
 };
 
-class OnlyOwn implements AccessControlFilter
+class OnlyOwn implements Filter
 {
     protected $user;
 
@@ -44,7 +44,7 @@ class OnlyOwn implements AccessControlFilter
         $this->user = $user;
     }
 
-    public function apply(QueryBuilder $queryBuilder) : void
+    public function apply(QueryBuilder $queryBuilder): void
     {
         $queryBuilder->where([
             'userId' => $this->user->id,

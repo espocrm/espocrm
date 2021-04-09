@@ -30,18 +30,18 @@
 namespace Espo\Classes\Select\Email\BoolFilters;
 
 use Espo\{
-    Core\Select\Filters\BoolFilter,
+    Core\Select\Boolean\Filter,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
     Classes\Select\Email\Helpers\JoinHelper,
     Entities\User,
 };
 
-class OnlyMy implements BoolFilter
+class OnlyMy implements Filter
 {
-    protected $user;
+    private $user;
 
-    protected $joinHelper;
+    private $joinHelper;
 
     public function __construct(User $user, JoinHelper $joinHelper)
     {
@@ -49,7 +49,7 @@ class OnlyMy implements BoolFilter
         $this->joinHelper = $joinHelper;
     }
 
-    public function apply(QueryBuilder $queryBuilder) : WhereClause
+    public function apply(QueryBuilder $queryBuilder): WhereClause
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
 

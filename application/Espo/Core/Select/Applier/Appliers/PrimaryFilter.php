@@ -27,36 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Email\AccessControlFilters;
+namespace Espo\Core\Select\Applier\Appliers;
 
 use Espo\Core\{
-    Select\Filters\AccessControl\Filter,
+    Exceptions\Error,
+    Select\SelectManager,
+    Select\Primary\FilterFactory,
 };
 
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    Classes\Select\Email\Helpers\JoinHelper,
     Entities\User,
 };
 
-class OnlyOwn implements Filter
+class PrimaryFilter
 {
-    private $user;
+    protected $entityType;
 
-    private $joinHelper;
+    protected $user;
 
-    public function __construct(User $user, JoinHelper $joinHelper)
-    {
+    protected $selectManager;
+
+    protected $primaryFilterFactory;
+
+    public function __construct(
+        string $entityType,
+        User $user,
+        FilterFactory $primaryFilterFactory,
+        SelectManager $selectManager
+    ) {
+        $this->entityType = $entityType;
         $this->user = $user;
-        $this->joinHelper = $joinHelper;
+        $this->primaryFilterFactory = $primaryFilterFactory;
+        $this->selectManager = $selectManager;
     }
 
-    public function apply(QueryBuilder $queryBuilder): void
+    public function apply(QueryBuilder $queryBuilder, string $filterName): void
     {
-        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
+        if ($this->primaryFilterFactory->has($this->entityType, $filterName)) {
+            $filter = $this->primaryFilterFactory->create($this->entityType, $this->user, $filterName);
 
-        $queryBuilder->where([
-            'emailUser.userId' => $this->user->id,
-        ]);
+            $filter->apply($queryBuilder);
+
+            return;
+        }
+
+        // For backward compatibility.
+        if ($this->selectManager->hasPrimaryFilter($filterName)) {
+            $this->selectManager->applyPrimaryFilterToQueryBuilder($queryBuilder, $filterName);
+
+            return;
+        }
+
+        throw new Error("No primary filter '{$filterName}' for '{$this->entityType}'.");
     }
 }
