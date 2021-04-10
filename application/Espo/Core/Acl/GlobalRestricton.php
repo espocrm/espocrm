@@ -34,12 +34,14 @@ use Espo\Core\{
     Utils\DataCache,
     Utils\FieldUtil,
     Utils\Log,
+    Utils\Config,
 };
 
 use StdClass;
 
 /**
- * Lists of restricted fields can be obtained from here. Restricted fields are specified in metadata > entityAcl.
+ * Lists of restricted fields can be obtained from here. Restricted fields
+ * are specified in metadata > entityAcl.
  */
 class GlobalRestricton
 {
@@ -82,7 +84,11 @@ class GlobalRestricton
     private $log;
 
     public function __construct(
-        Metadata $metadata, DataCache $dataCache, FieldUtil $fieldUtil, Log $log, bool $useCache = true
+        Metadata $metadata,
+        DataCache $dataCache,
+        FieldUtil $fieldUtil,
+        Log $log,
+        Config $config
     ) {
         $this->metadata = $metadata;
         $this->dataCache = $dataCache;
@@ -91,17 +97,17 @@ class GlobalRestricton
 
         $isFromCache = false;
 
-        if ($useCache) {
-            if ($this->dataCache->has($this->cacheKey)) {
-                $this->data = $this->dataCache->get($this->cacheKey);
+        $useCache = $config->get('useCache');
 
-                $isFromCache = true;
+        if ($useCache && $this->dataCache->has($this->cacheKey)) {
+            $this->data = $this->dataCache->get($this->cacheKey);
 
-                if (!$this->data instanceof StdClass) {
-                    $this->log->error("ACL GlobalRestricton: Bad data fetched from cache.");
+            $isFromCache = true;
 
-                    $this->data = null;
-                }
+            if (!$this->data instanceof StdClass) {
+                $this->log->error("ACL GlobalRestricton: Bad data fetched from cache.");
+
+                $this->data = null;
             }
         }
 
@@ -109,19 +115,17 @@ class GlobalRestricton
             $this->buildData();
         }
 
-        if ($useCache) {
-            if (!$isFromCache) {
-                $this->storeCacheFile();
-            }
+        if ($useCache && !$isFromCache) {
+            $this->storeCacheFile();
         }
     }
 
-    protected function storeCacheFile()
+    protected function storeCacheFile(): void
     {
         $this->dataCache->store($this->cacheKey, $this->data, true);
     }
 
-    protected function buildData()
+    protected function buildData(): void
     {
         $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
 
@@ -160,6 +164,7 @@ class GlobalRestricton
                 $scopeData->fields->$type = $resultFieldList;
                 $scopeData->attributes->$type = $resultAttributeList;
             }
+
             foreach ($this->linkTypeList as $type) {
                 $resultLinkList = [];
 

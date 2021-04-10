@@ -27,9 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\AclPortal;
-
-use Espo\Core\Exceptions\Error;
+namespace Espo\Core\Portal\Acl;
 
 use Espo\Entities\{
     User,
@@ -37,7 +35,7 @@ use Espo\Entities\{
 };
 
 use Espo\Core\{
-    Acl\Table as BaseTable,
+    Acl\DefaultTable as BaseTable,
     ORM\EntityManager,
     Utils\Config,
     Utils\Metadata,
@@ -45,7 +43,7 @@ use Espo\Core\{
     Utils\DataCache,
 };
 
-use Traversable;
+use RuntimeException;
 
 class Table extends BaseTable
 {
@@ -59,7 +57,14 @@ class Table extends BaseTable
 
     protected $defaultAclType = 'recordAllOwnNo';
 
-    protected $levelList = ['yes', 'all', 'account', 'contact', 'own', 'no'];
+    protected $levelList = [
+        self::LEVEL_YES,
+        self::LEVEL_ALL,
+        self::LEVEL_ACCOUNT.
+        self::LEVEL_CONTACT,
+        self::LEVEL_OWN,
+        self::LEVEL_NO,
+    ];
 
     protected $isStrictModeForced = true;
 
@@ -73,7 +78,7 @@ class Table extends BaseTable
         DataCache $dataCache
     ) {
         if (empty($portal)) {
-            throw new Error("No portal was passed to AclPortal\\Table constructor.");
+            throw new RuntimeException("No portal was passed to AclPortal\\Table constructor.");
         }
 
         $this->portal = $portal;
@@ -81,12 +86,12 @@ class Table extends BaseTable
         parent::__construct($entityManager, $user, $config, $metadata, $fieldUtil, $dataCache);
     }
 
-    protected function initCacheKey() : void
+    protected function initCacheKey(): void
     {
-        $this->cacheKey = 'aclPortal/' . $this->portal->id.'/' . $this->user->id;
+        $this->cacheKey = 'aclPortal/' . $this->portal->getId() . '/' . $this->user->getId();
     }
 
-    protected function getRoleList() : array
+    protected function getRoleList(): array
     {
         $roleList = [];
 
@@ -94,10 +99,6 @@ class Table extends BaseTable
             ->getRepository('User')
             ->getRelation($this->user, 'portalRoles')
             ->find();
-
-        if (! $userRoleList instanceof Traversable) {
-            throw new Error();
-        }
 
         foreach ($userRoleList as $role) {
             $roleList[] = $role;
@@ -108,10 +109,6 @@ class Table extends BaseTable
             ->getRelation($this->portal, 'portalRoles')
             ->find();
 
-        if (! $portalRoleList instanceof Traversable) {
-            throw new Error();
-        }
-
         foreach ($portalRoleList as $role) {
             $roleList[] = $role;
         }
@@ -119,18 +116,18 @@ class Table extends BaseTable
         return $roleList;
     }
 
-    protected function getScopeWithAclList() : array
+    protected function getScopeWithAclList(): array
     {
         $scopeList = [];
 
         $scopes = $this->metadata->get('scopes');
 
-        foreach ($scopes as $scope => $d) {
-            if (empty($d['acl'])) {
+        foreach ($scopes as $scope => $item) {
+            if (empty($item['acl'])) {
                 continue;
             }
 
-            if (empty($d['aclPortal'])) {
+            if (empty($item['aclPortal'])) {
                 continue;
             }
 
@@ -140,7 +137,7 @@ class Table extends BaseTable
         return $scopeList;
     }
 
-    protected function applyDefault(&$table, &$fieldTable) : void
+    protected function applyDefault(&$table, &$fieldTable): void
     {
         parent::applyDefault($table, $fieldTable);
 
@@ -151,7 +148,7 @@ class Table extends BaseTable
         }
     }
 
-    protected function applyDisabled(&$table, &$fieldTable) : void
+    protected function applyDisabled(&$table, &$fieldTable): void
     {
         foreach ($this->getScopeList() as $scope) {
             $d = $this->metadata->get('scopes.' . $scope);
@@ -164,7 +161,7 @@ class Table extends BaseTable
         }
     }
 
-    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists) : void
+    protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists): void
     {
     }
 }

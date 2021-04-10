@@ -27,16 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Portal\Acl;
 
-use Espo\ORM\Entity;
-
-use Espo\Entities\User;
-
-interface EntityReadAcl
+/**
+ * Scope checker data.
+ */
+class ScopeCheckerData
 {
-    /**
-     * Check 'read' access.
-     */
-    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool;
+    private $isOwnChecker;
+
+    private $inAccountChecker;
+
+    private $inContactChecker;
+
+    public function __construct(callable $isOwnChecker, callable $inAccountChecker, callable $inContactChecker)
+    {
+        $this->isOwnChecker = $isOwnChecker;
+        $this->inAccountChecker = $inAccountChecker;
+        $this->inContactChecker = $inContactChecker;
+    }
+
+    public function isOwn(): bool
+    {
+        return ($this->isOwnChecker)();
+    }
+
+    public function inAccount(): bool
+    {
+        return ($this->inAccountChecker)();
+    }
+
+    public function inContact(): bool
+    {
+        return ($this->inContactChecker)();
+    }
+
+    public static function createBuilder(): ScopeCheckerDataBuilder
+    {
+        return new ScopeCheckerDataBuilder();
+    }
 }

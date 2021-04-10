@@ -29,9 +29,10 @@
 
 namespace Espo\Core\AclPortal;
 
-use Espo\Core\Acl\Acl as BaseAcl;
-
-class Acl extends BaseAcl implements PortalScopeAcl
+/**
+ * @deprecated Use AccessChecker interfaces instead.
+ */
+class Acl extends Base
 {
-    use Portal;
+
 }

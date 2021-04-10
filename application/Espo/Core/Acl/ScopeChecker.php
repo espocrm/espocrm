@@ -29,14 +29,59 @@
 
 namespace Espo\Core\Acl;
 
-use Espo\ORM\Entity;
-
-use Espo\Entities\User;
-
-interface EntityAcl
+/**
+ * Checks scope access.
+ */
+class ScopeChecker
 {
-    /**
-     * Check access to an entity.
-     */
-    public function checkEntity(User $user, Entity $entity, ScopeData $data, string $action): bool;
+    public function __construct()
+    {
+    }
+
+    public function check(ScopeData $data, ?string $action = null, ?ScopeCheckerData $checkerData = null): bool
+    {
+        if ($data->isFalse()) {
+            return false;
+        }
+
+        if ($data->isTrue()) {
+            return true;
+        }
+
+        if ($action === null) {
+            if ($data->hasNotNo()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        $level = $data->get($action);
+
+        if ($level === Table::LEVEL_ALL || $level === Table::LEVEL_YES) {
+            return true;
+        }
+
+        if ($level === Table::LEVEL_NO) {
+            return false;
+        }
+
+        if (!$checkerData) {
+            return false;
+        }
+
+        if ($level === Table::LEVEL_OWN || $level === Table::LEVEL_TEAM) {
+            if ($checkerData->isOwn()) {
+                return true;
+            }
+        }
+
+        if ($level === Table::LEVEL_TEAM) {
+            if ($checkerData->inTeam()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

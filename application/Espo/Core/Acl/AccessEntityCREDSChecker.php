@@ -29,12 +29,13 @@
 
 namespace Espo\Core\Acl;
 
-use Espo\Entities\User;
+interface AccessEntityCREDSChecker extends
 
-interface LevelProvider
+    AccessEntityCreateChecker,
+    AccessEntityReadChecker,
+    AccessEntityEditChecker,
+    AccessEntityDeleteChecker,
+    AccessEntityStreamChecker
 {
-    /**
-     * Get an access level for a specific action.
-     */
-    public function getLevel(User $user, ScopeData $data, string $action) : string;
+
 }

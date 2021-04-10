@@ -37,6 +37,9 @@ use Espo\Core\{
     Acl\Table,
 };
 
+/**
+ * @todo Move to another class.
+ */
 class EmailAddress extends Acl
 {
     /**
@@ -53,7 +56,7 @@ class EmailAddress extends Acl
         $entityWithSameAddressList = $repository->getEntityListByAddressId($entity->getId(), $excludeEntity);
 
         foreach ($entityWithSameAddressList as $e) {
-            if ($this->getAclManager()->check($user, $e, Table::ACTION_EDIT)) {
+            if ($this->aclManager->check($user, $e, Table::ACTION_EDIT)) {
                 continue;
             }
 

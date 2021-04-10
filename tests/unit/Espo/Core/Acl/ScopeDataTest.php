@@ -39,7 +39,6 @@ use RuntimeException;
 
 class ScopeDataTest extends \PHPUnit\Framework\TestCase
 {
-
     protected function setUp() : void
     {
     }
@@ -52,8 +51,6 @@ class ScopeDataTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($data->isTrue());
         $this->assertFalse($data->isFalse());
 
-        $this->assertTrue($data->getRaw());
-
         $this->assertEquals(Table::LEVEL_NO, $data->getDelete());
     }
 
@@ -64,8 +61,6 @@ class ScopeDataTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($data->isBoolean());
         $this->assertTrue($data->isFalse());
         $this->assertFalse($data->isTrue());
-
-        $this->assertFalse($data->getRaw());
 
         $this->assertEquals(Table::LEVEL_NO, $data->getDelete());
     }
@@ -102,10 +97,6 @@ class ScopeDataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Table::LEVEL_ALL, $data->getRead());
         $this->assertEquals(Table::LEVEL_TEAM, $data->getEdit());
         $this->assertEquals(Table::LEVEL_NO, $data->getDelete());
-
-        $this->assertEquals($raw, $data->getRaw());
-
-        $this->assertNotSame($raw, $data->getRaw());
 
         $this->assertTrue($data->hasNotNo());
     }
@@ -144,5 +135,14 @@ class ScopeDataTest extends \PHPUnit\Framework\TestCase
         $data = ScopeData::fromRaw(false);
 
         $data->read;
+    }
+
+    public function testBadKey()
+    {
+        $this->expectException(RuntimeException::class);
+
+        ScopeData::fromRaw((object) [
+            Table::ACTION_CREATE => false,
+        ]);
     }
 }

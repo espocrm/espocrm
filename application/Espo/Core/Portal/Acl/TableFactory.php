@@ -27,16 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Portal\Acl;
 
-use Espo\ORM\Entity;
+use Espo\Entities\{
+    User,
+    Portal,
+};
 
-use Espo\Entities\User;
+use Espo\Core\{
+    InjectableFactory,
+};
 
-interface EntityEditAcl
+class TableFactory
 {
+    private $injectableFactory;
+
+    public function __construct(InjectableFactory $injectableFactory)
+    {
+        $this->injectableFactory = $injectableFactory;
+    }
+
     /**
-     * Check 'edit' access.
+     * Create a table.
      */
-    public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool;
+    public function create(User $user, Portal $portal): Table
+    {
+        return $this->injectableFactory->createWith(Table::class, [
+            'user' => $user,
+            'portal' => $portal,
+        ]);
+    }
 }

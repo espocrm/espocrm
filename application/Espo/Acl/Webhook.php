@@ -36,12 +36,9 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     Acl\Acl,
     Acl\ScopeData,
-    Acl\EntityCreateAcl,
-    Acl\EntityReadAcl,
-    Acl\EntityEditAcl,
 };
 
-class Webhook extends Acl implements EntityCreateAcl, EntityReadAcl, EntityEditAcl
+class Webhook extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {

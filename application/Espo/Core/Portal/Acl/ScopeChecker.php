@@ -27,37 +27,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Portal\Acl;
 
 use Espo\Core\{
-    Utils\ClassFinder,
-    InjectableFactory,
+    Acl\ScopeData,
+    Portal\Acl\Table,
 };
 
-class AclFactory
+/**
+ * Checks scope access.
+ */
+class ScopeChecker
 {
-    protected $baseClassName = Acl::class;
-
-    private $classFinder;
-
-    private $injectableFactory;
-
-    public function __construct(ClassFinder $classFinder, InjectableFactory $injectableFactory)
+    public function __construct()
     {
-        $this->classFinder = $classFinder;
-        $this->injectableFactory = $injectableFactory;
     }
 
-    public function create(string $scope): ScopeAcl
+    public function check(ScopeData $data, ?string $action = null, ?ScopeCheckerData $checkerData = null): bool
     {
-        $className = $this->classFinder->find('Acl', $scope);
-
-        if (!$className) {
-            $className = $this->baseClassName;
+        if ($data->isFalse()) {
+            return false;
         }
 
-        return $this->injectableFactory->createWith($className, [
-            'scope' => $scope, // todo remove ?
-        ]);
+        if ($data->isTrue()) {
+            return true;
+        }
+
+        if ($action === null) {
+            if ($data->hasNotNo()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        $level = $data->get($action);
+
+        if ($level === Table::LEVEL_ALL || $level === Table::LEVEL_YES) {
+            return true;
+        }
+
+        if ($level === Table::LEVEL_NO) {
+            return false;
+        }
+
+        if (!$checkerData) {
+            return false;
+        }
+
+        if ($level === Table::LEVEL_OWN || $level === Table::LEVEL_ACCOUNT || $level === Table::LEVEL_CONTACT) {
+            if ($checkerData->isOwn()) {
+                return true;
+            }
+        }
+
+        if ($level === Table::LEVEL_ACCOUNT || $level === Table::LEVEL_CONTACT) {
+            if ($checkerData->inContact()) {
+                return true;
+            }
+        }
+
+        if ($level === Table::LEVEL_ACCOUNT) {
+            if ($checkerData->inAccount()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

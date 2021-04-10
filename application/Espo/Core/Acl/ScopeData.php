@@ -54,20 +54,6 @@ class ScopeData
     }
 
     /**
-     * Get a raw value.
-     *
-     * @return StdClass|bool
-     */
-    public function getRaw()
-    {
-        if (!$this->isBoolean()) {
-            return clone $this->raw;
-        }
-
-        return $this->raw;
-    }
-
-    /**
      * Is of boolean type.
      */
     public function isBoolean(): bool
@@ -175,6 +161,12 @@ class ScopeData
             $obj->isBoolean = false;
 
             $obj->actionData = get_object_vars($raw);
+
+            foreach ($obj->actionData as $item) {
+                if (!is_string($item)) {
+                    throw new RuntimeException("Bad raw scope data.");
+                }
+            }
         }
         else if (is_bool($raw)) {
             $obj->isBoolean = true;

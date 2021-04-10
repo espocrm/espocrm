@@ -33,10 +33,10 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
-interface EntityCreateAcl
+interface AccessEntityEditChecker extends AccessEditChecker
 {
     /**
-     * Check 'create' access.
+     * Check 'edit' access for an entity.
      */
-    public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool;
+    public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool;
 }

@@ -38,6 +38,9 @@ use Espo\Core\{
     Acl\Table,
 };
 
+/**
+ * @todo Move to another class.
+ */
 class PhoneNumber extends Acl
 {
     /**
@@ -54,7 +57,7 @@ class PhoneNumber extends Acl
         $entityWithSameNumberList = $repository->getEntityListByPhoneNumberId($entity->getId(), $excludeEntity);
 
         foreach ($entityWithSameNumberList as $e) {
-            if ($this->getAclManager()->check($user, $e, Table::ACTION_EDIT)) {
+            if ($this->aclManager->check($user, $e, Table::ACTION_EDIT)) {
                 continue;
             }
 

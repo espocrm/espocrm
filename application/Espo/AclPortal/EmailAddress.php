@@ -37,6 +37,9 @@ use Espo\Core\{
     AclPortal\Acl as Acl,
 };
 
+/**
+ * @todo Move to another place.
+ */
 class EmailAddress extends Acl
 {
     public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity) : bool
@@ -45,13 +48,13 @@ class EmailAddress extends Acl
 
         $isFobidden = false;
 
-        $repository = $this->getEntityManager()->getRepository('EmailAddress');
+        $repository = $this->entityManager->getRepository('EmailAddress');
 
         if (!$user->isAdmin()) {
             $entityWithSameAddressList = $repository->getEntityListByAddressId($id, $excludeEntity);
 
             foreach ($entityWithSameAddressList as $e) {
-                if (!$this->getAclManager()->check($user, $e, Table::ACTION_EDIT)) {
+                if (!$this->aclManager->check($user, $e, Table::ACTION_EDIT)) {
                     $isFobidden = true;
 
                     break;

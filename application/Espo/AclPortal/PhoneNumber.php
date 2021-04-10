@@ -37,6 +37,9 @@ use Espo\Core\{
     AclPortal\Acl as Acl,
 };
 
+/**
+ * @todo Move to another place.
+ */
 class PhoneNumber extends Acl
 {
     public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity) : bool
@@ -45,13 +48,13 @@ class PhoneNumber extends Acl
 
         $isFobidden = false;
 
-        $repository = $this->getEntityManager()->getRepository('PhoneNumber');
+        $repository = $this->entityManager->getRepository('PhoneNumber');
 
         if (!$user->isAdmin()) {
             $entityWithSameNumberList = $repository->getEntityListByPhoneNumberId($id, $excludeEntity);
 
             foreach ($entityWithSameNumberList as $e) {
-                if (!$this->getAclManager()->check($user, $e, Table::ACTION_EDIT)) {
+                if (!$this->aclManager->check($user, $e, Table::ACTION_EDIT)) {
                     $isFobidden = true;
 
                     break;

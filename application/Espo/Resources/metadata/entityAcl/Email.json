@@ -8,6 +8,5 @@
         "users": {
             "onlyAdmin": true
         }
-    },
-    "readOwnerUserField": "users"
+    }
 }

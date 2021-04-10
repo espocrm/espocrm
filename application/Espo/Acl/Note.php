@@ -37,13 +37,12 @@ use Espo\Core\{
     Acl\Acl,
     Acl\ScopeData,
     Acl\Table,
-    Acl\EntityEditAcl,
 };
 
 use Exception;
 use DateTime;
 
-class Note extends Acl implements EntityEditAcl
+class Note extends Acl
 {
     protected $deleteThresholdPeriod = '1 month';
 
@@ -66,7 +65,7 @@ class Note extends Acl implements EntityEditAcl
 
         $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
 
-        if ($parent && $this->getAclManager()->checkEntity($user, $parent, 'stream')) {
+        if ($parent && $this->aclManager->checkEntity($user, $parent, 'stream')) {
             return true;
         }
 
@@ -133,7 +132,7 @@ class Note extends Acl implements EntityEditAcl
         }
 
         $deleteThresholdPeriod =
-            '-' . $this->getConfig()->get('noteDeleteThresholdPeriod', $this->deleteThresholdPeriod);
+            '-' . $this->config->get('noteDeleteThresholdPeriod', $this->deleteThresholdPeriod);
 
         $dt = new DateTime();
 

@@ -27,14 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Portal\Acl;
+
+use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
-interface ScopeAcl
+use Espo\Core\Acl\OwnershipChecker;
+
+interface OwnershipContactChecker extends OwnershipChecker
 {
     /**
-     * Check access to a scope.
+     * Check whether an entity belongs to a portal user contact.
      */
-    public function checkScope(User $user, ScopeData $data, ?string $action = null): bool;
+    public function checkContact(User $user, Entity $entity): bool;
 }

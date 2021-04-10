@@ -57,7 +57,7 @@ class OwnerUserFieldProvider
      */
     public function get(string $entityType) : ?string
     {
-        $value = $this->metadata->get(['entityAcl', $entityType, 'readOwnerUserField']);
+        $value = $this->metadata->get(['aclDefs', $entityType, 'readOwnerUserField']);
 
         if ($value) {
             return $value;

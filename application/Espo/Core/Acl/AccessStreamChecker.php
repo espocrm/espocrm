@@ -29,14 +29,12 @@
 
 namespace Espo\Core\Acl;
 
-use Espo\ORM\Entity;
-
 use Espo\Entities\User;
 
-interface EntityStreamAcl
+interface AccessStreamChecker extends AccessChecker
 {
     /**
      * Check 'stream' access.
      */
-    public function checkEntityStream(User $user, Entity $entity, ScopeData $data): bool;
+    public function checkStream(User $user, ScopeData $data): bool;
 }

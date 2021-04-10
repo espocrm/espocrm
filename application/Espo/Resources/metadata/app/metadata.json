@@ -22,6 +22,7 @@
         ["app", "actions", "__ANY__", "implementationClassName"],
         ["selectDefs"],
         ["recordDefs"],
+        ["aclDefs"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]
     ]
 }

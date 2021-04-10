@@ -27,11 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\AclPortal;
+namespace Espo\Core\Acl;
 
-use Espo\Core\Acl\ScopeAcl;
+use Espo\Entities\User;
 
-interface PortalScopeAcl extends ScopeAcl
+interface AccessDeleteChecker extends AccessChecker
 {
-
+    /**
+     * Check 'delete' access.
+     */
+    public function checkDelete(User $user, ScopeData $data): bool;
 }

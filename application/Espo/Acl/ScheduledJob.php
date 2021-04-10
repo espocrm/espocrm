@@ -37,12 +37,9 @@ use Espo\Core\{
     Acl\Acl,
     Acl\ScopeData,
     Acl\Table,
-    Acl\EntityCreateAcl,
-    Acl\EntityReadAcl,
-    Acl\EntityEditAcl,
 };
 
-class ScheduledJob extends Acl implements EntityCreateAcl, EntityReadAcl, EntityEditAcl
+class ScheduledJob extends Acl
 {
     public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {

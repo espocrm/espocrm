@@ -36,10 +36,9 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     Acl\Acl,
     Acl\ScopeData,
-    Acl\EntityReadAcl,
 };
 
-class Import extends Acl implements EntityReadAcl
+class Import extends Acl
 {
     public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {

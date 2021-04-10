@@ -35,11 +35,10 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     Acl\ScopeData,
     Acl\Table,
-    Acl\EntityCreateAcl,
     AclPortal\Acl as Acl,
 };
 
-class Note extends Acl implements EntityCreateAcl
+class Note extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
@@ -64,10 +63,10 @@ class Note extends Acl implements EntityCreateAcl
             return false;
         }
 
-        $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+        $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
 
         if ($parent) {
-            if ($this->getAclManager()->checkEntity($user, $parent, Table::ACTION_STREAM)) {
+            if ($this->aclManager->checkEntity($user, $parent, Table::ACTION_STREAM)) {
                 return true;
             }
         }

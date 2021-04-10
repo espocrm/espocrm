@@ -31,27 +31,62 @@ namespace Espo\Core\Portal;
 
 use Espo\ORM\Entity;
 
+use Espo\Entities\User;
+
 use Espo\Core\Acl as BaseAcl;
 
 class Acl extends BaseAcl
 {
+    public function __construct(AclManager $aclManager, User $user)
+    {
+        parent::__construct($aclManager, $user);
+    }
+
+    /**
+     * Whether 'read' access is set to 'account' for a specific scope.
+     */
     public function checkReadOnlyAccount(string $scope): bool
     {
         return $this->aclManager->checkReadOnlyAccount($this->user, $scope);
     }
 
+    /**
+     * Whether 'read' access is set to 'contact' for a specific scope.
+     */
     public function checkReadOnlyContact(string $scope): bool
     {
         return $this->aclManager->checkReadOnlyContact($this->user, $scope);
     }
 
-    public function checkInAccount(Entity $entity): bool
+    /**
+     * Check whether an entity belongs to a user account.
+     */
+    public function checkOwnershipAccount(Entity $entity): bool
     {
-        return $this->aclManager->checkInAccount($this->user, $entity);
+        return $this->aclManager->checkOwnershipAccount($this->user, $entity);
     }
 
+    /**
+     * Check whether an entity belongs to a user contact.
+     */
+    public function checkOwnershipContact(Entity $entity): bool
+    {
+        return $this->aclManager->checkOwnershipContact($this->user, $entity);
+    }
+
+    /**
+     * @deprecate
+     */
+    public function checkInAccount(Entity $entity): bool
+    {
+        return $this->checkOwnershipAccount($entity);
+    }
+
+    /**
+     * @deprecate
+     */
     public function checkIsOwnContact(Entity $entity): bool
     {
-        return $this->aclManager->checkIsOwnContact($this->user, $entity);
+        return $this->checkOwnershipContact($entity);
     }
 }

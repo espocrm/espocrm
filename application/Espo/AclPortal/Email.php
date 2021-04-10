@@ -36,11 +36,10 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     Acl\ScopeData,
     Acl\Table,
-    Acl\EntityReadAcl,
     AclPortal\Acl as Acl,
 };
 
-class Email extends Acl implements EntityReadAcl
+class Email extends Acl
 {
     public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {

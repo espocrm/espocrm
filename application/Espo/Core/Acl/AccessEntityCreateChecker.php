@@ -33,10 +33,10 @@ use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
-interface EntityDeleteAcl
+interface AccessEntityCreateChecker extends AccessCreateChecker
 {
     /**
-     * Check 'delete' access.
+     * Check 'create' access for an entity.
      */
-    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool;
+    public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool;
 }

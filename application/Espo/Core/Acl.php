@@ -31,6 +31,7 @@ namespace Espo\Core;
 
 use Espo\Core\{
     Acl\Table,
+    Acl\Exceptions\NotImplemented,
 };
 
 use Espo\ORM\Entity;
@@ -39,7 +40,7 @@ use Espo\Entities\User;
 use StdClass;
 
 /**
- * A wrapper for AclManager. To check access for a current user.
+ * A wrapper for `AclManager` for a current user. A central access point for access checking.
  */
 class Acl
 {
@@ -53,6 +54,9 @@ class Acl
         $this->user = $user;
     }
 
+    /**
+     * Get a full access data map.
+     */
     public function getMap(): StdClass
     {
         return $this->aclManager->getMap($this->user);
@@ -69,9 +73,9 @@ class Acl
     /**
      * Get a permission. E.g. 'assignment' permission.
      */
-    public function get(string $permission): ?string
+    public function getPermissionLevel(string $permission): string
     {
-        return $this->aclManager->get($this->user, $permission);
+        return $this->aclManager->getPermissionLevel($this->user, $permission);
     }
 
     /**
@@ -107,7 +111,10 @@ class Acl
     }
 
     /**
-     * Check a scope or entity. If $action is omitted, it will check whether a scope level is set to 'enabled'.
+     * Check a scope or entity. If $action is omitted, it will check
+     * whether a scope level is set to 'enabled'.
+     *
+     * @throws NotImplemented
      */
     public function check($subject, ?string $action = null): bool
     {
@@ -115,7 +122,10 @@ class Acl
     }
 
     /**
-     * Check access to scope. If $action is omitted, it will check whether a scope level is set to 'enabled'.
+     * Check access to scope. If $action is omitted, it will check
+     * whether a scope level is set to 'enabled'.
+     *
+     * @throws NotImplemented
      */
     public function checkScope(string $scope, ?string $action = null): bool
     {
@@ -171,32 +181,25 @@ class Acl
     }
 
     /**
-     * @deprecated
+     * Check whether a user is an owner of an entity.
      */
-    public function checkUser(string $permission, User $entity): bool
+    public function checkOwnershipOwn(Entity $entity): bool
     {
-        return $this->aclManager->checkUser($this->user, $permission, $entity);
+        return $this->aclManager->checkOwnershipOwn($this->user, $entity);
     }
 
     /**
-     * Whether a user is owned of an entity (record). Usually 'assignedUser' field is used for checking.
+     * Check whether an entity belongs to a user team.
      */
-    public function checkIsOwner(Entity $entity): bool
+    public function checkOwnershipTeam(Entity $entity): bool
     {
-        return $this->aclManager->checkIsOwner($this->user, $entity);
-    }
-
-    /**
-     * Whether a user team list overlaps with teams set in an entity.
-     */
-    public function checkInTeam(Entity $entity): bool
-    {
-        return $this->aclManager->checkInTeam($this->user, $entity);
+        return $this->aclManager->checkOwnershipTeam($this->user, $entity);
     }
 
     /**
      * Get attributes forbidden for a user.
      *
+     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.     *
      * @return array<string>
      */
     public function getScopeForbiddenAttributeList(
@@ -212,6 +215,7 @@ class Acl
     /**
      * Get fields forbidden for a user.
      *
+     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return array<string>
      */
     public function getScopeForbiddenFieldList(
@@ -227,6 +231,7 @@ class Acl
     /**
      * Get links forbidden for a user.
      *
+     * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
      * @return array<string>
      */
     public function getScopeForbiddenLinkList(
@@ -289,5 +294,37 @@ class Acl
     public function getScopeRestrictedLinkList(string $scope, $type): array
     {
         return $this->aclManager->getScopeRestrictedLinkList($scope, $type);
+    }
+
+    /**
+     * @deprecated Use `getPermissionLevel` instead.
+     */
+    public function get(string $permission): string
+    {
+        return $this->getPermissionLevel($permission);
+    }
+
+    /**
+     * @deprecated Use `checkOwnershipOwn` instead.
+     */
+    public function checkIsOwner(Entity $entity): bool
+    {
+        return $this->aclManager->checkIsOwner($this->user, $entity);
+    }
+
+    /**
+     * @deprecated Use `checkOwnershipTeam` instead.
+     */
+    public function checkInTeam(Entity $entity): bool
+    {
+        return $this->aclManager->checkInTeam($this->user, $entity);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function checkUser(string $permission, User $entity): bool
+    {
+        return $this->aclManager->checkUser($this->user, $permission, $entity);
     }
 }

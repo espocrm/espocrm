@@ -29,27 +29,76 @@
 
 namespace Espo\Core\Acl;
 
-use Espo\Core\{
-    Utils\Config,
-    InjectableFactory,
-};
-
-class GlobalRestrictonFactory
+/**
+ * Builds scope checker data.
+ */
+class ScopeCheckerDataBuilder
 {
-    private $config;
+    private $isOwnChecker;
 
-    private $injectableFactory;
+    private $inTeamChecker;
 
-    public function __construct(Config $config, InjectableFactory $injectableFactory)
+    public function __construct()
     {
-        $this->config = $config;
-        $this->injectableFactory = $injectableFactory;
+        $this->isOwnChecker = function (): bool {
+            return false;
+        };
+
+        $this->inTeamChecker = function (): bool {
+            return false;
+        };
     }
 
-    public function create(): GlobalRestricton
+    public function setIsOwn(bool $value): self
     {
-        return $this->injectableFactory->createWith(GlobalRestricton::class, [
-            'useCache' => $this->config->get('useCache'),
-        ]);
+        if ($value) {
+            $this->isOwnChecker = function (): bool {
+                return true;
+            };
+
+            return $this;
+        }
+
+        $this->isOwnChecker = function (): bool {
+            return false;
+        };
+
+        return $this;
+    }
+
+    public function setInTeam(bool $value): self
+    {
+        if ($value) {
+            $this->inTeamChecker = function (): bool {
+                return true;
+            };
+
+            return $this;
+        }
+
+        $this->inTeamChecker = function (): bool {
+            return false;
+        };
+
+        return $this;
+    }
+
+    public function setIsOwnChecker(callable $checker): self
+    {
+        $this->isOwnChecker = $checker;
+
+        return $this;
+    }
+
+    public function setInTeamChecker(callable $checker): self
+    {
+        $this->inTeamChecker = $checker;
+
+        return $this;
+    }
+
+    public function build(): ScopeCheckerData
+    {
+        return new ScopeCheckerData($this->isOwnChecker, $this->inTeamChecker);
     }
 }

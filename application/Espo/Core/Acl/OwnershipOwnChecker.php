@@ -27,37 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\AclPortal;
+namespace Espo\Core\Acl;
 
-use Espo\Core\{
-    Utils\ClassFinder,
-    InjectableFactory,
-};
+use Espo\ORM\Entity;
 
-class AclFactory
+use Espo\Entities\User;
+
+interface OwnershipOwnChecker extends OwnershipChecker
 {
-    protected $baseClassName = Acl::class;
-
-    private $classFinder;
-
-    private $injectableFactory;
-
-    public function __construct(ClassFinder $classFinder, InjectableFactory $injectableFactory)
-    {
-        $this->classFinder = $classFinder;
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    public function create(string $scope) : PortalScopeAcl
-    {
-        $className = $this->classFinder->find('AclPortal', $scope);
-
-        if (!$className) {
-            $className = $this->baseClassName;
-        }
-
-        return $this->injectableFactory->createWith($className, [
-            'scope' => $scope, // todo remove ?
-        ]);
-    }
+    /**
+     * Check whether a user is an owner of an entity.
+     */
+    public function checkOwn(User $user, Entity $entity): bool;
 }

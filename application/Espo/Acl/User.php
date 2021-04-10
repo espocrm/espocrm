@@ -37,12 +37,9 @@ use Espo\Core\{
     Acl\Acl,
     Acl\ScopeData,
     Acl\Table,
-    Acl\EntityCreateAcl,
-    Acl\EntityReadAcl,
-    Acl\EntityEditAcl,
 };
 
-class User extends Acl implements EntityCreateAcl, EntityReadAcl, EntityEditAcl
+class User extends Acl
 {
     public function checkIsOwner(EntityUser $user, Entity $entity)
     {
@@ -52,7 +49,7 @@ class User extends Acl implements EntityCreateAcl, EntityReadAcl, EntityEditAcl
     public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
     {
         if (!$user->isAdmin() && $entity->isPortal()) {
-            if ($this->getAclManager()->get($user, 'portal') === Table::LEVEL_YES) {
+            if ($this->aclManager->get($user, 'portal') === Table::LEVEL_YES) {
                 return true;
             }
         }
