@@ -202,7 +202,9 @@ class DefaultTable implements Table
      */
     public function getPermissionLevel(string $permission): string
     {
-        return $this->data->$permission ?? self::LEVEL_NO;
+        $key = $permission . 'Permission';
+
+        return $this->data->$key ?? self::LEVEL_NO;
     }
 
     private function load(): void

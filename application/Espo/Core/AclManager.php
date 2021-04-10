@@ -185,8 +185,8 @@ class AclManager
      */
     public function getPermissionLevel(User $user, string $permission): string
     {
-        if (substr($permission, -10) !== 'Permission') {
-            $permission .= 'Permission';
+        if (substr($permission, -10) === 'Permission') {
+            $permission = substr($permission, 0, -10);
         }
 
         return $this->getTable($user)->getPermissionLevel($permission);
