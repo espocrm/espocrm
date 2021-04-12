@@ -1813,6 +1813,12 @@ class Stream
             ->clone($query)
             ->count();
 
+        $userService = $this->serviceFactory->create('User');
+
+        foreach ($collection as $e) {
+            $userService->prepareEntityForOutput($e);
+        }
+
         return new RecordCollection($collection, $total);
     }
 
