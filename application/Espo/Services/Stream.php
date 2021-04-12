@@ -1626,6 +1626,12 @@ class Stream
         $collection = $this->entityManager->getRepository('User')->find($selectParams);
         $total = $this->entityManager->getRepository('User')->count($selectParams);
 
+        $userService = $this->serviceFactory->create('User');
+
+        foreach ($collection as $e) {
+            $userService->prepareEntityForOutput($e);
+        }
+
         return new RecordCollection($collection, $total);
     }
 
