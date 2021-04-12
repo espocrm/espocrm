@@ -54,6 +54,9 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 usersFieldDefault = 'assignedUsers';
             }
 
+            this.eventAssignedUserIsAttendeeDisabled =
+                this.getConfig().get('eventAssignedUserIsAttendeeDisabled') || false;
+
             this.usersField = this.options.usersField || usersFieldDefault;
 
             this.userIdList = [];
@@ -66,7 +69,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     m.hasChanged(this.startField) ||
                     m.hasChanged(this.endField) ||
                     m.hasChanged(this.usersField + 'Ids') ||
-                    m.hasChanged(this.assignedUserField + 'Id');
+                    !this.eventAssignedUserIsAttendeeDisabled && m.hasChanged(this.assignedUserField + 'Id');
 
                 if (!isChanged) {
                     return;
@@ -442,7 +445,8 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             var assignedUserId = this.model.get(this.assignedUserField + 'Id');
 
             var names = this.model.get(this.usersField + 'Names') || {};
-            if (assignedUserId) {
+
+            if (!this.eventAssignedUserIsAttendeeDisabled && assignedUserId) {
                 if (!~userIdList.indexOf(assignedUserId)) {
                     userIdList.unshift(assignedUserId);
                 }
