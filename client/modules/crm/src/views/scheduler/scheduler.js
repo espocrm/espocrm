@@ -49,6 +49,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.assignedUserField = this.options.assignedUserField || 'assignedUser';
 
             var usersFieldDefault = 'users';
+
             if (!this.model.hasLink('users') && this.model.hasLink('assignedUsers')) {
                 usersFieldDefault = 'assignedUsers';
             }
@@ -66,15 +67,23 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     m.hasChanged(this.endField) ||
                     m.hasChanged(this.usersField + 'Ids') ||
                     m.hasChanged(this.assignedUserField + 'Id');
-                if (!isChanged) return;
+
+                if (!isChanged) {
+                    return;
+                }
 
                 if (!m.hasChanged(this.assignedUserField + 'Id') && !m.hasChanged(this.usersField + 'Ids')) {
                     this.initDates(true);
 
                     if (!this.start || !this.end || !this.userIdList.length) {
-                        if (!this.timeline) return;
+                        if (!this.timeline) {
+                            return;
+                        }
+
                         this.showNoData();
+
                         this.trigger('no-data');
+
                         return;
                     }
 
@@ -93,8 +102,12 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                         this.reRender();
                     }
                 } else {
-                    if (this.isRemoved()) return;
+                    if (this.isRemoved()) {
+                        return;
+                    }
+
                     this.trigger('has-data');
+
                     this.reRender();
                 }
             }, this);
@@ -132,13 +145,17 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.initGroupsDataSet();
             this.initDates();
 
-            if (!$timeline.get(0)) return;
+            if (!$timeline.get(0)) {
+                return;
+            }
 
             $timeline.get(0).innerHTML = '';
 
             if (!this.start || !this.end || !this.userIdList.length) {
                 this.showNoData();
+
                 this.trigger('no-data');
+
                 return;
             }
 
@@ -151,15 +168,17 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.fetch(this.start, this.end, function (eventList) {
                 var itemsDataSet = new Vis.DataSet(eventList);
 
-                var timeline = this.timeline = new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
+                var timeline = this.timeline =new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                     dataAttributes: 'all',
                     start: this.start.toDate(),
                     end: this.end.toDate(),
                     moment: function (date) {
                         var m = moment(date);
+
                         if (date && date.noTimeZone) {
                             return m;
                         }
+
                         return m.tz(this.getDateTime().getTimeZone());
                     }.bind(this),
                     format: this.getFormatObject(),
@@ -195,6 +214,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     e.skipClick = true;
 
                     this.blockClick = true;
+
                     setTimeout(function () {this.blockClick = false}.bind(this), 100);
 
                     this.start = moment(e.start);
@@ -217,6 +237,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.addEvent(convertedEventList);
 
             var itemsDataSet = new this.Vis.DataSet(convertedEventList);
+
             this.timeline.setItems(itemsDataSet);
         },
 
@@ -242,13 +263,15 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                 endS = this.model.get(this.endField + 'Date');
             }
 
-            if (!startS || !endS) return;
+            if (!startS || !endS) {
+                return;
+            }
 
             if (this.model.get('isAllDay')) {
                 this.eventStart = moment.tz(startS, this.getDateTime().getTimeZone());
                 this.eventEnd = moment.tz(endS, this.getDateTime().getTimeZone());
                 this.eventEnd.add(1, 'day');
-            } else {
+            }else {
                 this.eventStart = moment.utc(startS).tz(this.getDateTime().getTimeZone());
                 this.eventEnd = moment.utc(endS).tz(this.getDateTime().getTimeZone());
             }
@@ -281,6 +304,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         runFetch: function () {
             this.fetch(this.start, this.end, function (eventList) {
                 var itemsDataSet = new this.Vis.DataSet(eventList);
+
                 this.timeline.setItems(itemsDataSet);
             }.bind(this));
         },
@@ -304,6 +328,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.ajaxGetRequest(url).then(function (data) {
                 this.fetchedStart = from.clone();
                 this.fetchedEnd = to.clone();
+
                 var eventList = [];
 
                 for (var userId in data) {
@@ -344,6 +369,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             };
 
             var color = this.getColorFromScopeName(this.model.entityType);
+
             if (color) {
                 o.style += '; border-color: ' + color;
                 var rgb = this.hexToRgb(color);
@@ -362,11 +388,17 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
         convertEventList: function (list) {
             var resultList = [];
+
             list.forEach(function (iten) {
                 var event = this.convertEvent(iten);
-                if (!event) return;
+
+                if (!event) {
+                    return;
+                }
+
                 resultList.push(event);
             }, this);
+
             return resultList;
         },
 
@@ -411,7 +443,10 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
             var names = this.model.get(this.usersField + 'Names') || {};
             if (assignedUserId) {
-                if (!~userIdList.indexOf(assignedUserId)) userIdList.unshift(assignedUserId);
+                if (!~userIdList.indexOf(assignedUserId)) {
+                    userIdList.unshift(assignedUserId);
+                }
+
                 names[assignedUserId] = this.model.get(this.assignedUserField + 'Name');
             }
 
@@ -435,8 +470,13 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             if (this.calendarType === 'single') {
                 return name;
             }
+
             var avatarHtml = this.getAvatarHtml(id);
-            if (avatarHtml) avatarHtml += ' ';
+
+            if (avatarHtml) {
+                avatarHtml += ' ';
+            }
+
             var html = avatarHtml + '<span data-id="'+id+'" class="group-title">' + name + '</span>';
 
             return html;
@@ -446,8 +486,11 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             if (this.getConfig().get('avatarsDisabled')) {
                 return '';
             }
+
             var t;
+
             var cache = this.getCache();
+
             if (cache) {
                 t = cache.get('app', 'timestamp');
             } else {
@@ -481,6 +524,7 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
                     year: ''
                 }
             };
+
             return format;
         },
 
@@ -493,10 +537,11 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
 
         hexToRgb: function (hex) {
             var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
             return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16),
             } : null;
         },
 
