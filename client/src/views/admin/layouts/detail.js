@@ -126,7 +126,7 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             promiseList.push(
                 new Promise(
                     function (resolve) {
-                        if (this.getMetadata().get(['clientDefs', scope, 'layoutDefaultSidePanelDisabled'])) resolve();
+                        if (this.getMetadata().get(['clientDefs', this.scope, 'layoutDefaultSidePanelDisabled'])) resolve();
 
                         this.getHelper().layoutManager.getOriginal(this.scope, 'defaultSidePanel', this.setId,
                             function (layoutLoaded) {
