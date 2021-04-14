@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\ActionHistoryRecord\AccessControlFilters;
 
 use Espo\{
-    Core\Select\Filters\AccessControl\Filter,
+    Core\Select\AccessControl\Filter,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     Entities\User,
 };
