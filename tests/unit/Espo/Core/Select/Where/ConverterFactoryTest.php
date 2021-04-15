@@ -34,8 +34,12 @@ use Espo\Core\{
     Select\Where\Converter,
     Select\Where\DateTimeItemTransformer,
     Select\Where\ItemGeneralConverter,
+    Select\Where\ItemConverter,
     Utils\Metadata,
     InjectableFactory,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -44,7 +48,7 @@ use Espo\{
 
 class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
@@ -88,32 +92,69 @@ class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $object = $this->createMock(Converter::class);
 
+        $bindingData1 = new BindingData();
+
+        $binder1 = new Binder($bindingData1);
+
+        $binder1
+            ->bindInstance(User::class, $this->user);
+
+        $binder1
+            ->for($className1)
+            ->bindValue('$entityType', $entityType);
+
+        $binder1
+            ->for(DateTimeItemTransformer::class)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer1 = new BindingContainer($bindingData1);
+
+        $bindingData2 = new BindingData();
+
+        $binder2 = new Binder($bindingData2);
+
+        $binder2
+            ->bindInstance(User::class, $this->user);
+
+        $binder2
+            ->for($className2)
+            ->bindValue('$entityType', $entityType)
+            ->bindInstance(DateTimeItemTransformer::class, $this->dateTimeItemTransformer);
+
+        $binder2
+            ->for(ItemGeneralConverter::class)
+            ->bindValue('$entityType', $entityType)
+            ->bindInstance(DateTimeItemTransformer::class, $this->dateTimeItemTransformer);
+
+        $bindingContainer2 = new BindingContainer($bindingData2);
+
+        $bindingData3 = new BindingData();
+
+        $binder3 = new Binder($bindingData3);
+
+        $binder3
+            ->bindInstance(User::class, $this->user)
+            ->for($className3)
+            ->bindValue('$entityType', $entityType)
+            ->bindInstance(ItemConverter::class, $this->itemConverter);
+
+        $bindingContainer = new BindingContainer($bindingData3);
+
         $this->injectableFactory
             ->expects($this->exactly(3))
-            ->method('createWith')
+            ->method('createWithBinding')
             ->withConsecutive(
                 [
                     $className1,
-                    [
-                        'entityType' => $entityType,
-                        'user' => $this->user,
-                    ]
+                    $bindingContainer1,
                 ],
                 [
                     $className2,
-                    [
-                        'entityType' => $entityType,
-                        'user' => $this->user,
-                        'dateTimeItemTransformer' => $this->dateTimeItemTransformer,
-                    ]
+                    $bindingContainer2,
                 ],
                 [
                     $className3,
-                    [
-                        'entityType' => $entityType,
-                        'user' => $this->user,
-                        'itemConverter' => $this->itemConverter,
-                    ]
+                    $bindingContainer,
                 ]
             )
             ->willReturnOnConsecutiveCalls(

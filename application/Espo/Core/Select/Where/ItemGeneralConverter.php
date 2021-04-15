@@ -48,7 +48,7 @@ use DateInterval;
 /**
  * Converts a where item to a where clause (for ORM).
  */
-class ItemGeneralConverter
+class ItemGeneralConverter implements ItemConverter
 {
     protected $entityType;
 
@@ -90,7 +90,7 @@ class ItemGeneralConverter
         $this->config = $config;
     }
 
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         $type = $item->getType();
         $value = $item->getValue();
@@ -187,8 +187,12 @@ class ItemGeneralConverter
     }
 
     protected function groupProcessAndOr(
-        QueryBuilder $queryBuilder, string $type, ?string $attribute, $value
-    ) : array {
+        QueryBuilder $queryBuilder,
+        string $type,
+        ?string $attribute,
+        $value
+    ): array {
+
         if (!is_array($value)) {
             throw new Error("Bad where item.");
         }
@@ -213,8 +217,12 @@ class ItemGeneralConverter
     }
 
     protected function groupProcessSubQuery(
-        QueryBuilder $queryBuilder, string $type, ?string $attribute, $value
-    ) : array {
+        QueryBuilder $queryBuilder,
+        string $type,
+        ?string $attribute,
+        $value
+    ): array {
+
         if (!is_array($value)) {
             throw new Error("Bad where item.");
         }
@@ -249,8 +257,12 @@ class ItemGeneralConverter
     }
 
     protected function groupProcessColumn(
-        QueryBuilder $queryBuilder, string $type, string $attribute, $value
-    ) : array {
+        QueryBuilder $queryBuilder,
+        string $type,
+        string $attribute,
+        $value
+    ): array {
+
         $link = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'link']);
 
         $column = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
@@ -309,8 +321,11 @@ class ItemGeneralConverter
     }
 
     protected function groupProcessArray(
-        QueryBuilder $queryBuilder, string $type, string $attribute, $value
-    ) : array {
+        QueryBuilder $queryBuilder,
+        string $type,
+        string $attribute,
+        $value
+    ): array {
 
         $arrayValueAlias = 'arrayFilter' . $this->randomStringGenerator->generate();
 
@@ -469,7 +484,7 @@ class ItemGeneralConverter
     /**
      * A complex expression w/o a value.
      */
-    protected function processExpression(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processExpression(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $key = $attribute;
 
@@ -482,111 +497,111 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processLike(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLike(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '*' => $value,
         ];
     }
 
-    protected function processNotLike(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processNotLike(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '!*' => $value,
         ];
     }
 
-    protected function processEquals(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processEquals(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '=' => $value,
         ];
     }
 
-    protected function processOn(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processOn(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return $this->processEquals($queryBuilder, $attribute, $value);
     }
 
-    protected function processNotEquals(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processNotEquals(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '!=' => $value,
         ];
     }
 
-    protected function processNotOn(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processNotOn(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return $this->processNotEquals($queryBuilder, $attribute, $value);
     }
 
-    protected function processStartsWith(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processStartsWith(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '*' => $value . '%',
         ];
     }
 
-    protected function processEndsWith(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processEndsWith(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '*' => '%' . $value,
         ];
     }
 
-    protected function processContains(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processContains(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '*' => '%' . $value . '%',
         ];
     }
 
-    protected function processNotContains(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processNotContains(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '!*' => '%' . $value . '%',
         ];
     }
 
-    protected function processGreaterThan(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processGreaterThan(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '>' => $value,
         ];
     }
 
-    protected function processAfter(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processAfter(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return $this->processGreaterThan($queryBuilder, $attribute, $value);
     }
 
-    protected function processLessThan(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLessThan(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '<' => $value,
         ];
     }
 
-    protected function processBefore(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processBefore(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return $this->processLessThan($queryBuilder, $attribute, $value);
     }
 
-    protected function processGreaterThanOrEquals(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processGreaterThanOrEquals(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '>=' => $value,
         ];
     }
 
-    protected function processLessThanOrEquals(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLessThanOrEquals(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '<=' => $value,
         ];
     }
 
-    protected function processIn(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processIn(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         if (!is_array($value)) {
             throw new Error("Bad where item 'in'.");
@@ -597,7 +612,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processNotIn(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processNotIn(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         if (!is_array($value)) {
             throw new Error("Bad where item 'notIn'.");
@@ -608,7 +623,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processBetween(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processBetween(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         if (!is_array($value) || count($value) < 2) {
             throw new Error("Bad where item 'between'.");
@@ -622,61 +637,61 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processIsNull(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processIsNull(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '=' => null,
         ];
     }
 
-    protected function processIsNotNull(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processIsNotNull(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '!=' => null,
         ];
     }
 
-    protected function processEver(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processEver(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return $this->processIsNotNull($queryBuilder, $attribute, $value);
     }
 
-    protected function processIsTrue(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processIsTrue(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '=' => true,
         ];
     }
 
-    protected function processIsFalse(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processIsFalse(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '=' => false,
         ];
     }
 
-    protected function processToday(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processToday(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '=' => date('Y-m-d'),
         ];
     }
 
-    protected function processPast(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processPast(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '<' => date('Y-m-d'),
         ];
     }
 
-    protected function processFuture(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processFuture(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             $attribute . '>' => date('Y-m-d'),
         ];
     }
 
-    protected function processLastSevenDays(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLastSevenDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt1 = new DateTime();
 
@@ -692,7 +707,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processLastXDays(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLastXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt1 = new DateTime();
 
@@ -710,7 +725,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processNextXDays(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processNextXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt1 = new DateTime();
 
@@ -728,7 +743,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processOlderThanXDays(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processOlderThanXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -741,7 +756,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processAfterXDays(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processAfterXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -754,7 +769,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processCurrentMonth(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processCurrentMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -766,7 +781,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processLastMonth(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLastMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -778,7 +793,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processNextMonth(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processNextMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -790,7 +805,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processCurrentQuarter(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processCurrentQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -806,7 +821,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processLastQuarter(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLastQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -829,7 +844,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processCurrentYear(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processCurrentYear(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -841,7 +856,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processLastYear(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLastYear(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dt = new DateTime();
 
@@ -853,7 +868,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processCurrentFiscalYear(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processCurrentFiscalYear(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dtToday = new DateTime();
         $dt = new DateTime();
@@ -874,7 +889,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processLastFiscalYear(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLastFiscalYear(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dtToday = new DateTime();
         $dt = new DateTime();
@@ -897,7 +912,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processCurrentFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processCurrentFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dtToday = new DateTime();
         $dt = new DateTime();
@@ -927,7 +942,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processLastFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLastFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $dtToday = new DateTime();
         $dt = new DateTime();
@@ -959,7 +974,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processIsNotLinked(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processIsNotLinked(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
             'id!=s' => [
@@ -970,7 +985,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processIsLinked(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processIsLinked(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;
 
@@ -985,7 +1000,7 @@ class ItemGeneralConverter
         ];
     }
 
-    protected function processLinkedWith(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processLinkedWith(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;
 
@@ -1047,7 +1062,7 @@ class ItemGeneralConverter
         throw new Error("Bad where item. Not supported relation type.");
     }
 
-    protected function processNotLinkedWith(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function processNotLinkedWith(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;
 

@@ -59,7 +59,7 @@ class Converter
     public function __construct(
         string $entityType,
         User $user,
-        ItemGeneralConverter $itemConverter,
+        ItemConverter $itemConverter,
         Scanner $scanner,
         RandomStringGenerator $randomStringGenerator,
         ORMDefs $ormDefs
@@ -72,7 +72,7 @@ class Converter
         $this->ormDefs = $ormDefs;
     }
 
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClause
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClause
     {
         $whereClause = [];
 
@@ -93,7 +93,7 @@ class Converter
         return WhereClause::fromRaw($whereClause);
     }
 
-    protected function itemToList(Item $item) : array
+    protected function itemToList(Item $item): array
     {
         if ($item->getType() !== 'and') {
             return [
@@ -110,7 +110,7 @@ class Converter
         return $list;
     }
 
-    protected function processItem(QueryBuilder $queryBuilder, Item $item) : ?array
+    protected function processItem(QueryBuilder $queryBuilder, Item $item): ?array
     {
         $type = $item->getType();
         $attribute = $item->getAttribute();
@@ -135,7 +135,7 @@ class Converter
         return $this->itemConverter->convert($queryBuilder, $item)->getRaw();
     }
 
-    protected function applyInCategory(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function applyInCategory(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;
 
@@ -196,7 +196,7 @@ class Converter
         throw new Error("Not supported link '{$link}' in where item.");
     }
 
-    protected function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value) : array
+    protected function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         $link = $attribute;
 

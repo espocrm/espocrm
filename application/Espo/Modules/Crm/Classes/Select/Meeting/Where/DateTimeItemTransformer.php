@@ -39,7 +39,7 @@ use Espo\Core\{
  */
 class DateTimeItemTransformer extends DateTimeItemTransformerOriginal
 {
-    public function transform(Item $item) : Item
+    public function transform(Item $item): Item
     {
         $type = $item->getType();
         $value = $item->getValue();

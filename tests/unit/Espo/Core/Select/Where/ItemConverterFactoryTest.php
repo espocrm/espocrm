@@ -33,6 +33,9 @@ use Espo\Core\{
     Select\Where\ItemConverterFactory,
     Utils\Metadata,
     InjectableFactory,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -45,7 +48,7 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
 {
     private $metadata;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
@@ -108,15 +111,25 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $object = $this->createMock($className);
 
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $this->user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
         $this->injectableFactory
             ->expects($this->once())
-            ->method('createWith')
+            ->method('createWithBinding')
             ->with(
                 $className,
-                [
-                    'entityType' => $entityType,
-                    'user' => $this->user,
-                ]
+                $bindingContainer
             )
             ->willReturn($object);
 
@@ -159,15 +172,25 @@ class ItemConverterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $object = $this->createMock($className);
 
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $this->user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
         $this->injectableFactory
             ->expects($this->once())
-            ->method('createWith')
+            ->method('createWithBinding')
             ->with(
                 $className,
-                [
-                    'entityType' => $entityType,
-                    'user' => $this->user,
-                ]
+                $bindingContainer
             )
             ->willReturn($object);
 

@@ -33,6 +33,9 @@ use Espo\Core\{
     Exceptions\Error,
     InjectableFactory,
     Utils\Metadata,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -56,7 +59,7 @@ class ItemConverterFactory
         return (bool) $this->getClassNameForType($type);
     }
 
-    public function createForType(string $type, string $entityType, User $user) : ItemConverter
+    public function createForType(string $type, string $entityType, User $user): ItemConverter
     {
         $className = $this->getClassNameForType($type);
 
@@ -64,25 +67,35 @@ class ItemConverterFactory
             throw new Error("Where item converter class name is not defined.");
         }
 
-        return $this->injectableFactory->createWith($className, [
-            'entityType' => $entityType,
-            'user' => $user,
-        ]);
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
-    protected function getClassNameForType(string $type) : ?string
+    protected function getClassNameForType(string $type): ?string
     {
         return $this->metadata->get([
             'app', 'select', 'whereItemConverterClassNameMap', $type
         ]);
     }
 
-    public function has(string $entityType, string $attribute, string $type) : bool
+    public function has(string $entityType, string $attribute, string $type): bool
     {
         return (bool) $this->getClassName($entityType, $attribute, $type);
     }
 
-    public function create(string $entityType, string $attribute, string $type, User $user) : ItemConverter
+    public function create(string $entityType, string $attribute, string $type, User $user): ItemConverter
     {
         $className = $this->getClassName($entityType, $attribute, $type);
 
@@ -90,13 +103,23 @@ class ItemConverterFactory
             throw new Error("Where item converter class name is not defined.");
         }
 
-        return $this->injectableFactory->createWith($className, [
-            'entityType' => $entityType,
-            'user' => $user,
-        ]);
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
-    protected function getClassName(string $entityType, string $attribute, string $type) : ?string
+    protected function getClassName(string $entityType, string $attribute, string $type): ?string
     {
         return $this->metadata->get([
             'selectDefs', $entityType, 'whereItemConverterClassNameMap', $attribute . '_' . $type

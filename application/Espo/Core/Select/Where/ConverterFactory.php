@@ -32,6 +32,9 @@ namespace Espo\Core\Select\Where;
 use Espo\Core\{
     Utils\Metadata,
     InjectableFactory,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -50,33 +53,86 @@ class ConverterFactory
         $this->metadata = $metadata;
     }
 
-    public function create(string $entityType, User $user) : Converter
+    public function create(string $entityType, User $user): Converter
     {
-        $dateTimeItemTransformerClassName = $this->getDateTimeItemTransformerClassName($entityType);
+        $dateTimeItemTransformer = $this->createDateTimeItemTranformer($entityType, $user);
 
-        $dateTimeItemTransformer = $this->injectableFactory->createWith($dateTimeItemTransformerClassName, [
-            'entityType' => $entityType,
-            'user' => $user,
-        ]);
+        $itemConverter = $this->createItemConverter($entityType, $user, $dateTimeItemTransformer);
 
-        $itemConverterClassName = $this->getItemConverterClassName($entityType);
+        $className = $this->getConverterClassName($entityType);
 
-        $itemConverter = $this->injectableFactory->createWith($itemConverterClassName, [
-            'entityType' => $entityType,
-            'user' => $user,
-            'dateTimeItemTransformer' => $dateTimeItemTransformer,
-        ]);
+        $bindingData = new BindingData();
 
-        $converterClassName = $this->getConverterClassName($entityType);
+        $binder = new Binder($bindingData);
 
-        return $this->injectableFactory->createWith($converterClassName, [
-            'entityType' => $entityType,
-            'user' => $user,
-            'itemConverter' => $itemConverter,
-        ]);
+        $binder
+            ->bindInstance(User::class, $user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType)
+            ->bindInstance(ItemConverter::class, $itemConverter);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
-    private function getConverterClassName(string $entityType) : string
+    private function createDateTimeItemTranformer(string $entityType, User $user): DateTimeItemTransformer
+    {
+        $className = $this->getDateTimeItemTransformerClassName($entityType);
+
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $binder
+            ->for(DateTimeItemTransformer::class)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+    }
+
+    private function createItemConverter(
+        string $entityType,
+        User $user,
+        DateTimeItemTransformer $dateTimeItemTransformer
+    ): ItemConverter {
+
+        $className = $this->getItemConverterClassName($entityType);
+
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType)
+            ->bindInstance(DateTimeItemTransformer::class, $dateTimeItemTransformer);
+
+        $binder
+            ->for(ItemGeneralConverter::class)
+            ->bindValue('$entityType', $entityType)
+            ->bindInstance(DateTimeItemTransformer::class, $dateTimeItemTransformer);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+    }
+
+    private function getConverterClassName(string $entityType): string
     {
         $className = $this->metadata->get(['selectDefs', $entityType, 'whereConverterClassName']);
 
@@ -87,7 +143,7 @@ class ConverterFactory
         return Converter::class;
     }
 
-    private function getItemConverterClassName(string $entityType) : string
+    private function getItemConverterClassName(string $entityType): string
     {
         $className = $this->metadata->get(['selectDefs', $entityType, 'whereItemConverterClassName']);
 
@@ -98,9 +154,10 @@ class ConverterFactory
         return ItemGeneralConverter::class;
     }
 
-    private function getDateTimeItemTransformerClassName(string $entityType) : string
+    private function getDateTimeItemTransformerClassName(string $entityType): string
     {
-        $className = $this->metadata->get(['selectDefs', $entityType, 'whereDateTimeItemTransformerClassName']);
+        $className = $this->metadata
+            ->get(['selectDefs', $entityType, 'whereDateTimeItemTransformerClassName']);
 
         if ($className) {
             return $className;
