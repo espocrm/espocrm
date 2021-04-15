@@ -134,7 +134,7 @@ class InjectableFactory
     }
 
     /**
-     * @return ?mixed
+     * @return mixed
      */
     private function getMethodParamInjection(
         ?ReflectionClass $class,
@@ -225,7 +225,7 @@ class InjectableFactory
     }
 
     /**
-     * @return ?mixed
+     * @return mixed
      */
     private function resolveBinding(Binding $binding)
     {

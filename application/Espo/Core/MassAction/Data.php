@@ -46,7 +46,7 @@ class Data
     }
 
     /**
-     * @return ?mixed
+     * @return mixed
      */
     public function get(string $name)
     {

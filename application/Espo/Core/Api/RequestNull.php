@@ -116,7 +116,7 @@ class RequestNull implements ApiRequest
     }
 
     /**
-     * @return ?mixed
+     * @return mixed
      */
     public function getServerParam(string $name)
     {

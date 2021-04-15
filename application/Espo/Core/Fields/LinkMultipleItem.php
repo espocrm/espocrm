@@ -73,7 +73,7 @@ class LinkMultipleItem
     /**
      * Get a column value.
      *
-     * @return ?mixed
+     * @return mixed
      */
     public function getColumnValue(string $column)
     {
@@ -113,7 +113,7 @@ class LinkMultipleItem
     /**
      * Clone with a column value.
      *
-     * @param ?mixed $value
+     * @param mixed $value
      */
     public function withColumnValue(string $column, $value) : self
     {

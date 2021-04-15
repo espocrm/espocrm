@@ -104,7 +104,7 @@ class AttributeDefs
     /*
      * Get a parameter value by a name.
      *
-     * @return ?mixed
+     * @return mixed
      */
     public function getParam(string $name)
     {

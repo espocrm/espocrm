@@ -74,14 +74,14 @@ interface Entity
      * * `set(array|object $valueMap)`
      *
      * @param string|object|array $attribute
-     * @param ?mixed $value
+     * @param mixed $value
      */
     public function set($attribute, $value = null): void;
 
     /**
      * Get an attribute value.
      *
-     * @retrun ?mixed
+     * @retrun mixed
      */
     public function get(string $attribute);
 

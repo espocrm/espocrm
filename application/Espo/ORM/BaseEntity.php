@@ -150,7 +150,7 @@ class BaseEntity implements Entity
      * * `set(array|object $valueMap)`
      *
      * @param string|object|array $attribute
-     * @param ?mixed $value
+     * @param mixed $value
      */
     public function set($attribute, $value = null): void
     {
@@ -213,7 +213,7 @@ class BaseEntity implements Entity
      *
      * @param $params @deprecated
      *
-     * @retrun ?mixed
+     * @retrun mixed
      */
     public function get(string $attribute, $params = [])
     {
@@ -449,7 +449,7 @@ class BaseEntity implements Entity
 
     /**
      * @param mixed $value
-     * @return ?mixed
+     * @return mixed
      */
     protected function prepareAttributeValue(string $attribute, $value)
     {
@@ -902,7 +902,7 @@ class BaseEntity implements Entity
     /**
      * Get a fetched value of a specific attribute.
      *
-     * @return ?mixed
+     * @return mixed
      */
     public function getFetched(string $attribute)
     {

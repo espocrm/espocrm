@@ -43,7 +43,7 @@ class RunnerParams
     /**
      * Get a parameter value.
      *
-     * @return ?mixed
+     * @return mixed
      */
     public function get(string $name)
     {
@@ -61,7 +61,7 @@ class RunnerParams
     /**
      * Clone with a parameter value.
      *
-     * @param ?mixed $value
+     * @param mixed $value
      */
     public function with(string $name, $value) : self
     {

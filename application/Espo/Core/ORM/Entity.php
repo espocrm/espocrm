@@ -265,7 +265,7 @@ class Entity extends BaseEntity
     }
 
     /**
-     * @return ?mixed
+     * @return mixed
      */
     public function getLinkMultipleName(string $field, string $id)
     {
@@ -304,7 +304,7 @@ class Entity extends BaseEntity
     }
 
     /**
-     * @return ?mixed
+     * @return mixed
      */
     public function getLinkMultipleColumn(string $field, string $column, string $id)
     {

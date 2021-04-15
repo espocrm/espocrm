@@ -64,7 +64,7 @@ class RequestWrapper implements ApiRequest
      * @todo Don't support NULL $name.
      * @deprecated For backward compatibility.
      *
-     * @return ?mixed
+     * @return mixed
      */
     public function get(?string $name = null)
     {
@@ -196,7 +196,7 @@ class RequestWrapper implements ApiRequest
     }
 
     /**
-     * @return ?mixed
+     * @return mixed
      */
     public function getServerParam(string $name)
     {
