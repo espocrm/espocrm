@@ -27,10 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\AclPortal;
+namespace tests\unit\Espo\Core\Portal\Acl;
 
 use Espo\Core\{
-    AclPortal\ScopeCheckerData,
+    Portal\Acl\ScopeCheckerData,
 };
 
 class ScopeCheckerDataTest extends \PHPUnit\Framework\TestCase
