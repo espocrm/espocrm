@@ -43,9 +43,14 @@ use ReflectionNamedType;
 
 class BindingContainerTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Binder
+     */
+    private $binder;
+
     protected function setUp() : void
     {
-        $this->loader = $this->getMockBuilder(BindingLoader::class)->disableOriginalConstructor()->getMock();
+        $this->loader = $this->createMock(BindingLoader::class);
 
         $this->data = new BindingData();
 
@@ -59,7 +64,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
     protected function createClassMock(string $className) : ReflectionClass
     {
-        $class = $this->getMockBuilder(ReflectionClass::class)->disableOriginalConstructor()->getMock();
+        $class = $this->createMock(ReflectionClass::class);
 
         $class
             ->expects($this->any())
@@ -71,11 +76,11 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
     protected function createParamMock(string $name, ?string $className = null) : ReflectionParameter
     {
-        $param = $this->getMockBuilder(ReflectionParameter::class)->disableOriginalConstructor()->getMock();
+        $param = $this->createMock(ReflectionParameter::class);
 
         $class = null;
 
-        $type = $this->getMockBuilder(ReflectionNamedType::class)->disableOriginalConstructor()->getMock();
+        $type = $this->createMock(ReflectionNamedType::class);
 
         if ($className) {
             $class = $this->createClassMock($className);
@@ -114,7 +119,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         return $param;
     }
 
-    protected function createContainer()
+    protected function createContainer(): BindingContainer
     {
         return new BindingContainer($this->loader->load());
     }
@@ -292,6 +297,44 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertIsCallable($binding->getValue());
     }
 
+    public function testBindInstance()
+    {
+        $className = 'Espo\\Core\\Application';
+
+        $instance = $this->createMock($className);
+
+        $this->binder->bindInstance($className, $instance);
+
+        $param = $this->createParamMock('test', $className);
+
+        $binding = $this->createContainer()->get(null, $param);
+
+        $this->assertEquals(Binding::VALUE, $binding->getType());
+
+        $this->assertSame($instance, $binding->getValue());
+    }
+
+    public function testContextBindInstance()
+    {
+        $className = 'Espo\\Core\\Application';
+
+        $instance = $this->createMock($className);
+
+        $this->binder
+            ->for('Espo\\Context')
+            ->bindInstance($className, $instance);
+
+        $param = $this->createParamMock('test', $className);
+
+        $class = $this->createClassMock('Espo\\Context');
+
+        $binding = $this->createContainer()->get($class, $param);
+
+        $this->assertEquals(Binding::VALUE, $binding->getType());
+
+        $this->assertSame($instance, $binding->getValue());
+    }
+
     public function testContextGetCallback()
     {
         $this->binder
@@ -373,7 +416,6 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Espo\\ImplTest', $binding->getValue());
     }
 
-
     public function testNoContextClassName()
     {
         $this->binder
@@ -439,7 +481,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
 
         $this->binder
             ->for('Espo\\Context')
-            ->bindValue('Espo\\SomeClass', $instance);
+            ->bindValue('Espo\\SomeClass $test', $instance);
 
         $class = $this->createClassMock('Espo\\Context');
 

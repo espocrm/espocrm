@@ -51,9 +51,7 @@ class ContextualBinder
      */
     public function bindImplementation(string $key, string $implementationClassName): self
     {
-        if (!$key || $key[0] === '$') {
-            throw new LogicException("Bad binding.");
-        }
+        $this->validateBindingKeyNoParameterName($key);
 
         $this->data->addContext(
             $this->className,
@@ -67,14 +65,12 @@ class ContextualBinder
     /**
      * Bind an interface to a specific service.
      *
-     * @param $key An interface, parameter name (`$name`) or interface with a parameter name (`Interface $name`).
+     * @param $key An interface or interface with a parameter name (`Interface $name`).
      * @param $serviceName A service name.
      */
     public function bindService(string $key, string $serviceName): self
     {
-        if (!$key || $key[0] === '$') {
-            throw new LogicException("Bad binding.");
-        }
+        $this->validateBindingKeyNoParameterName($key);
 
         $this->data->addContext(
             $this->className,
@@ -88,11 +84,13 @@ class ContextualBinder
     /**
      * Bind an interface or parameter name to a specific value.
      *
-     * @param $key An interface, parameter name (`$name`) or interface with a parameter name (`Interface $name`).
+     * @param $key Parameter name (`$name`) or interface with a parameter name (`Interface $name`).
      * @param $value A value of any type.
      */
     public function bindValue(string $key, $value): self
     {
+        $this->validateBindingKeyParameterName($key);
+
         $this->data->addContext(
             $this->className,
             $key,
@@ -103,13 +101,35 @@ class ContextualBinder
     }
 
     /**
+     * Bind an interface to a specific instance.
+     *
+     * @param $key An interface or interface with a parameter name (`Interface $name`).
+     * @param $instance An instance.
+     */
+    public function bindInstance(string $key, object $instance): self
+    {
+        $this->validateBindingKeyNoParameterName($key);
+
+        $this->data->addContext(
+            $this->className,
+            $key,
+            Binding::createFromValue($instance)
+        );
+
+        return $this;
+    }
+
+    /**
      * Bind an interface or parameter name to a callback.
      *
-     * @param $key An interface, parameter name (`$name`) or interface with a parameter name (`Interface $name`).
+     * @param $key An interface, parameter name (`$name`) or
+     * interface with a parameter name (`Interface $name`).
      * @param $callback A callback that will resolve a dependency.
      */
     public function bindCallback(string $key, callable $callback): self
     {
+        $this->validateBinding($key);
+
         $this->data->addContext(
             $this->className,
             $key,
@@ -117,5 +137,30 @@ class ContextualBinder
         );
 
         return $this;
+    }
+
+    private function validateBinding(string $key): void
+    {
+        if (!$key) {
+            throw new LogicException("Bad binding.");
+        }
+    }
+
+    private function validateBindingKeyNoParameterName(string $key): void
+    {
+        $this->validateBinding($key);
+
+        if ($key[0] === '$') {
+            throw new LogicException("Can't bind a parameter name w/o an interface.");
+        }
+    }
+
+    private function validateBindingKeyParameterName(string $key): void
+    {
+        $this->validateBinding($key);
+
+        if (strpos($key, '$') === false) {
+            throw new LogicException("Can't bind w/o a parameter name.");
+        }
     }
 }

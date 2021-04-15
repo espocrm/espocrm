@@ -48,9 +48,7 @@ class Binder
      */
     public function bindImplementation(string $key, string $implementationClassName): self
     {
-        if (!$key || $key[0] === '$') {
-            throw new LogicException("Can't binding a parameter name globally.");
-        }
+        $this->validateBindingKey($key);
 
         $this->data->addGlobal(
             $key,
@@ -68,9 +66,7 @@ class Binder
      */
     public function bindService(string $key, string $serviceName): self
     {
-        if (!$key || $key[0] === '$') {
-            throw new LogicException("Can't binding a parameter name globally.");
-        }
+        $this->validateBindingKey($key);
 
         $this->data->addGlobal(
             $key,
@@ -81,20 +77,36 @@ class Binder
     }
 
     /**
-     * Bind an interface or parameter name to a callback.
+     * Bind an interface to a callback.
      *
      * @param $key An interface or interface with a parameter name (`Interface $name`).
      * @param $callback A callback that will resolve a dependency.
      */
     public function bindCallback(string $key, callable $callback): self
     {
-        if (!$key || $key[0] === '$') {
-            throw new LogicException("Can't binding a parameter name globally.");
-        }
+        $this->validateBindingKey($key);
 
         $this->data->addGlobal(
             $key,
             Binding::createFromCallback($callback)
+        );
+
+        return $this;
+    }
+
+    /**
+     * Bind an interface to a specific instance.
+     *
+     * @param $key An interface or interface with a parameter name (`Interface $name`).
+     * @param $instance An instance.
+     */
+    public function bindInstance(string $key, object $instance): self
+    {
+        $this->validateBindingKey($key);
+
+        $this->data->addGlobal(
+            $key,
+            Binding::createFromValue($instance)
         );
 
         return $this;
@@ -108,5 +120,16 @@ class Binder
     public function for(string $className): ContextualBinder
     {
         return new ContextualBinder($this->data, $className);
+    }
+
+    private function validateBindingKey(string $key): void
+    {
+        if (!$key) {
+            throw new LogicException("Bad binding.");
+        }
+
+        if ($key[0] === '$') {
+            throw new LogicException("Can't binding a parameter name w/o an interface globally.");
+        }
     }
 }
