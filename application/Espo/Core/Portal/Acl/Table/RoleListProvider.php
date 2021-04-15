@@ -27,39 +27,67 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Portal\Acl\Table;
 
-use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-use Espo\Core\Di;
+use Espo\Entities\{
+    User,
+    Portal,
+    PortalRole,
+};
 
-class Role extends Record implements
+use Espo\Core\{
+    Acl\Table\RoleListProvider as RoleListProviderInterface,
+    Acl\Table\RoleEntityWrapper,
+    Acl\Table\Role,
+};
 
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class RoleListProvider implements RoleListProviderInterface
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    private $user;
 
-    protected $forceSelectAllAttributes = true;
+    private $portal;
 
-    public function afterCreateEntity(Entity $entity, $data)
+    private $entityManager;
+
+    public function __construct(User $user, Portal $portal, EntityManager $entityManager)
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
+        $this->user = $user;
+        $this->portal = $portal;
+        $this->entityManager = $entityManager;
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    /**
+     * @return array<Role>
+     */
+    public function get(): array
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
+        $roleList = [];
 
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
+        $userRoleList = $this->entityManager
+            ->getRepository('User')
+            ->getRelation($this->user, 'portalRoles')
+            ->find();
 
-        $this->dataManager->updateCacheTimestamp();
+        foreach ($userRoleList as $role) {
+            $roleList[] = $role;
+        }
+
+        $portalRoleList = $this->entityManager
+            ->getRepository('Portal')
+            ->getRelation($this->portal, 'portalRoles')
+            ->find();
+
+        foreach ($portalRoleList as $role) {
+            $roleList[] = $role;
+        }
+
+        return array_map(
+            function (PortalRole $role): RoleEntityWrapper {
+                return new RoleEntityWrapper($role);
+            },
+            $roleList
+        );
     }
 }

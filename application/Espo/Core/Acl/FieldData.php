@@ -27,39 +27,70 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Acl;
 
-use Espo\ORM\Entity;
+use StdClass;
+use RuntimeException;
 
-use Espo\Core\Di;
-
-class Role extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+/**
+ * Field data.
+ */
+class FieldData
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    private $raw;
 
-    protected $forceSelectAllAttributes = true;
+    private $actionData = [];
 
-    public function afterCreateEntity(Entity $entity, $data)
+    private function __construct()
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    public function __get(string $name)
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
+        throw new RuntimeException("Accessing ScopeData properties is not allowed.");
     }
 
-    protected function clearRolesCache()
+    /**
+     * Get a level for an action.
+     */
+    public function get(string $action): string
     {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
+        return $this->actionData[$action] ?? Table::LEVEL_NO;
+    }
 
-        $this->dataManager->updateCacheTimestamp();
+    /**
+     * Get a 'read' level.
+     */
+    public function getRead(): string
+    {
+        return $this->get(Table::ACTION_READ);
+    }
+
+    /**
+     * Get an 'edit' level.
+     */
+    public function getEdit(): string
+    {
+        return $this->get(Table::ACTION_EDIT);
+    }
+
+    /**
+     * Create from a raw table value.
+     */
+    public static function fromRaw(StdClass $raw): self
+    {
+        $obj = new self();
+
+        $obj->actionData = get_object_vars($raw);
+
+        foreach ($obj->actionData as $item) {
+            if (!is_string($item)) {
+                throw new RuntimeException("Bad raw scope data.");
+            }
+        }
+
+        $obj->raw = $raw;
+
+        return $obj;
     }
 }

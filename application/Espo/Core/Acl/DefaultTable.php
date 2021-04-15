@@ -29,16 +29,14 @@
 
 namespace Espo\Core\Acl;
 
-
 use Espo\Entities\User;
 
 use Espo\Core\{
-    ORM\EntityManager,
+    Acl\Table\RoleListProvider,
+    Acl\Table\CacheKeyProvider,
     Utils\Config,
     Utils\Metadata,
-    Utils\FieldUtil,
     Utils\DataCache,
-    Utils\ObjectUtil,
 };
 
 use StdClass;
@@ -50,17 +48,13 @@ use RuntimeException;
  */
 class DefaultTable implements Table
 {
-    protected const LEVEL_NOT_SET = 'not-set';
+    private const LEVEL_NOT_SET = 'not-set';
 
     protected $type = 'acl';
 
     protected $defaultAclType = 'recordAllTeamOwnNo';
 
-    private $data = null;
-
-    protected $cacheKey;
-
-    protected $actionList = [
+    private $actionList = [
         self::ACTION_READ,
         self::ACTION_STREAM,
         self::ACTION_EDIT,
@@ -68,7 +62,7 @@ class DefaultTable implements Table
         self::ACTION_CREATE,
     ];
 
-    protected $booleanActionList = [
+    private $booleanActionList = [
         self::ACTION_CREATE,
     ];
 
@@ -80,7 +74,7 @@ class DefaultTable implements Table
         self::LEVEL_NO,
     ];
 
-    protected $fieldActionList = [
+    private $fieldActionList = [
         self::ACTION_READ,
         self::ACTION_EDIT,
     ];
@@ -90,44 +84,36 @@ class DefaultTable implements Table
         self::LEVEL_NO,
     ];
 
-    protected $valuePermissionHighestLevels = [];
-
-    protected $valuePermissionList = [];
-
-    protected $forbiddenAttributesCache = [];
-
-    protected $forbiddenFieldsCache = [];
-
     protected $isStrictModeForced = false;
 
-    protected $isStrictMode = false;
+    private $isStrictMode = false;
 
-    protected $entityManager;
+    private $data = null;
+
+    private $cacheKey;
+
+    private $valuePermissionList = [];
+
+    private $roleListProvider;
 
     protected $user;
 
-    protected $config;
-
     protected $metadata;
 
-    protected $fieldUtil;
-
-    protected $dataCache;
-
     public function __construct(
-        EntityManager $entityManager,
+        RoleListProvider $roleListProvider,
+        CacheKeyProvider $cacheKeyProvider,
         User $user,
         Config $config,
         Metadata $metadata,
-        FieldUtil $fieldUtil,
         DataCache $dataCache
     ) {
-        $this->entityManager = $entityManager;
+        $this->roleListProvider = $roleListProvider;
 
         $this->data = (object) [
-            'table' => (object) [],
-            'fieldTable' => (object) [],
-            'fieldTableQuickAccess' => (object) [],
+            'scopes' => (object) [],
+            'fields' => (object) [],
+            'permissions' => (object) [],
         ];
 
         if ($this->isStrictModeForced) {
@@ -139,8 +125,6 @@ class DefaultTable implements Table
 
         $this->user = $user;
         $this->metadata = $metadata;
-        $this->fieldUtil = $fieldUtil;
-        $this->dataCache = $dataCache;
 
         if (!$this->user->isFetched()) {
             throw new RuntimeException('User must be fetched before ACL check.');
@@ -149,34 +133,18 @@ class DefaultTable implements Table
         $this->valuePermissionList = $this->metadata
             ->get(['app', $this->type, 'valuePermissionList'], []);
 
-        $this->valuePermissionHighestLevels = $this->metadata
-            ->get(['app', $this->type, 'valuePermissionHighestLevels'], []);
+        $this->cacheKey = $cacheKeyProvider->get();
 
-        $this->initCacheKey();
-
-        if ($config && $config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
-            $this->data = $this->dataCache->get($this->cacheKey);
+        if ($config->get('useCache') && $dataCache->has($this->cacheKey)) {
+            $this->data = $dataCache->get($this->cacheKey);
         }
         else {
             $this->load();
 
-            if ($config && $config->get('useCache')) {
-                $this->buildCache();
+            if ($config->get('useCache')) {
+                $dataCache->store($this->cacheKey, $this->data);
             }
         }
-    }
-
-    protected function initCacheKey(): void
-    {
-        $this->cacheKey = 'acl/' . $this->user->id;
-    }
-
-    /**
-     * Get a full map.
-     */
-    public function getMap(): StdClass
-    {
-        return ObjectUtil::clone($this->data);
     }
 
     /**
@@ -184,11 +152,11 @@ class DefaultTable implements Table
      */
     public function getScopeData(string $scope): ScopeData
     {
-        if (!isset($this->data->table->$scope)) {
+        if (!isset($this->data->scopes->$scope)) {
             return ScopeData::fromRaw(false);
         }
 
-        $data = $this->data->table->$scope;
+        $data = $this->data->scopes->$scope;
 
         if (is_string($data)) {
             return $this->getScopeData($data);
@@ -198,13 +166,31 @@ class DefaultTable implements Table
     }
 
     /**
+     * Get field data.
+     */
+    public function getFieldData(string $scope, string $field): FieldData
+    {
+        if (!isset($this->data->fields->$scope)) {
+            return FieldData::fromRaw((object) [
+                self::ACTION_READ => self::LEVEL_YES,
+                self::ACTION_EDIT => self::LEVEL_YES,
+            ]);
+        }
+
+        $data = $this->data->fields->$scope->$field ?? (object) [
+            self::ACTION_READ => self::LEVEL_YES,
+            self::ACTION_EDIT => self::LEVEL_YES,
+        ];
+
+        return FieldData::fromRaw($data);
+    }
+
+    /**
      * Get a permission level.
      */
     public function getPermissionLevel(string $permission): string
     {
-        $key = $permission . 'Permission';
-
-        return $this->data->$key ?? self::LEVEL_NO;
+        return $this->data->permissions->$permission ?? self::LEVEL_NO;
     }
 
     private function load(): void
@@ -219,14 +205,16 @@ class DefaultTable implements Table
         $fieldTableList = [];
 
         if (!$this->user->isAdmin()) {
-            $roleList = $this->getRoleList();
+            $roleList = $this->roleListProvider->get();
 
             foreach ($roleList as $role) {
-                $aclTableList[] = $role->get('data');
-                $fieldTableList[] = $role->get('fieldData');
+                $aclTableList[] = $role->getScopeTableData();
+                $fieldTableList[] = $role->getFieldTableData();
 
-                foreach ($this->valuePermissionList as $permission) {
-                    $valuePermissionLists->{$permission}[] = $role->get($permission);
+                foreach ($this->valuePermissionList as $permissionKey) {
+                    $permission = $this->normilizePermissionName($permissionKey);
+
+                    $valuePermissionLists->{$permissionKey}[] = $role->getPermissionLevel($permission);
                 }
             }
 
@@ -252,10 +240,8 @@ class DefaultTable implements Table
             }
         }
 
-        $this->data->table = $aclTable;
-        $this->data->fieldTable = $fieldTable;
-
-        $this->fillFieldTableQuickAccess();
+        $this->data->scopes = $aclTable;
+        $this->data->fields = $fieldTable;
 
         if (!$this->user->isAdmin()) {
             $permissionsDefaultsGroupName = 'permissionsDefaults';
@@ -264,221 +250,53 @@ class DefaultTable implements Table
                 $permissionsDefaultsGroupName = 'permissionsStrictDefaults';
             }
 
-            foreach ($this->valuePermissionList as $permission) {
-                $this->data->$permission = $this->mergeValueList(
-                    $valuePermissionLists->$permission,
-                    $this->metadata
-                        ->get(['app', $this->type, $permissionsDefaultsGroupName, $permission, self::LEVEL_YES])
+            foreach ($this->valuePermissionList as $permissionKey) {
+                $permission = $this->normilizePermissionName($permissionKey);
+
+                $defaultLevel = $this->metadata
+                    ->get(['app', $this->type, $permissionsDefaultsGroupName, $permissionKey]) ??
+                    ($this->isStrictMode ? self::LEVEL_NO : self::LEVEL_YES);
+
+                $this->data->permissions->$permission = $this->mergeValueList(
+                    $valuePermissionLists->$permissionKey,
+                    $defaultLevel
                 );
 
-                if ($this->metadata->get('app.'.$this->type.'.mandatory.' . $permission)) {
-                    $this->data->$permission = $this->metadata
-                        ->get('app.'.$this->type.'.mandatory.' . $permission);
+                $mandatoryLevel = $this->metadata->get(['app', $this->type, 'mandatory', $permissionKey]);
+
+                if ($mandatoryLevel !== null) {
+                    $this->data->permissions->$permission = $mandatoryLevel;
                 }
             }
         }
 
         if ($this->user->isAdmin()) {
-            foreach ($this->valuePermissionList as $permission) {
-                if (isset($this->valuePermissionHighestLevels[$permission])) {
-                    $this->data->$permission = $this->valuePermissionHighestLevels[$permission];
+            foreach ($this->valuePermissionList as $permissionKey) {
+                $permission = $this->normilizePermissionName($permissionKey);
+
+                $highestLevel = $this->metadata
+                    ->get(['app', $this->type, 'valuePermissionHighestLevels', $permissionKey]);
+
+                if ($highestLevel !== null) {
+                    $this->data->permissions->$permission = $highestLevel;
 
                     continue;
                 }
 
-                $this->data->$permission = self::LEVEL_ALL;
+                $this->data->permissions->$permission = self::LEVEL_ALL;
             }
         }
     }
 
-    protected function getRoleList(): array
+    private function normilizePermissionName(string $permissionKey): string
     {
-        $roleList = [];
+        $permission = $permissionKey;
 
-        $userRoleList = $this->entityManager
-            ->getRepository('User')
-            ->getRelation($this->user, 'roles')
-            ->find();
-
-        foreach ($userRoleList as $role) {
-            $roleList[] = $role;
+        if (substr($permissionKey, -10) === 'Permission') {
+            $permission = substr($permissionKey, 0, -10);
         }
 
-        $teamList = $this->entityManager
-            ->getRepository('User')
-            ->getRelation($this->user, 'teams')
-            ->find();
-
-        foreach ($teamList as $team) {
-            $teamRoleList = $this->entityManager
-                ->getRepository('Team')
-                ->getRelation($team, 'roles')
-                ->find();
-
-            foreach ($teamRoleList as $role) {
-                $roleList[] = $role;
-            }
-        }
-
-        return $roleList;
-    }
-
-    public function getScopeForbiddenAttributeList(
-        string $scope,
-        string $action = self::ACTION_READ,
-        string $thresholdLevel = self::LEVEL_NO
-    ): array {
-
-        if (!in_array($thresholdLevel, $this->fieldLevelList) || $thresholdLevel === self::LEVEL_YES) {
-            throw new RuntimeException("Bad threshold level.");
-        }
-
-        $key = $scope . '_'. $action . '_' . $thresholdLevel;
-
-        if (isset($this->forbiddenAttributesCache[$key])) {
-            return $this->forbiddenAttributesCache[$key];
-        }
-
-        $fieldTableQuickAccess = $this->data->fieldTableQuickAccess;
-
-        if (
-            !isset($fieldTableQuickAccess->$scope) || !isset($fieldTableQuickAccess->$scope->attributes) ||
-            !isset($fieldTableQuickAccess->$scope->attributes->$action)
-        ) {
-            $this->forbiddenAttributesCache[$key] = [];
-
-            return [];
-        }
-
-        $levelList = [];
-
-        foreach ($this->fieldLevelList as $level) {
-            if (array_search($level, $this->fieldLevelList) >= array_search($thresholdLevel, $this->fieldLevelList)) {
-                $levelList[] = $level;
-            }
-        }
-
-        $attributeList = [];
-
-        foreach ($levelList as $level) {
-            if (!isset($fieldTableQuickAccess->$scope->attributes->$action->$level)) {
-                continue;
-            }
-
-            foreach ($fieldTableQuickAccess->$scope->attributes->$action->$level as $attribute) {
-                if (in_array($attribute, $attributeList)) {
-                    continue;
-                }
-
-                $attributeList[] = $attribute;
-            }
-        }
-
-        $this->forbiddenAttributesCache[$key] = $attributeList;
-
-        return $attributeList;
-    }
-
-    public function getScopeForbiddenFieldList(
-        string $scope,
-        string $action = self::ACTION_READ,
-        string $thresholdLevel = self::LEVEL_NO
-    ): array {
-
-        if (!in_array($thresholdLevel, $this->fieldLevelList) || $thresholdLevel === self::LEVEL_YES) {
-            throw new RuntimeException("Bad threshold level.");
-        }
-
-        $key = $scope . '_'. $action . '_' . $thresholdLevel;
-
-        if (isset($this->forbiddenFieldsCache[$key])) {
-            return $this->forbiddenFieldsCache[$key];
-        }
-
-        $fieldTableQuickAccess = $this->data->fieldTableQuickAccess;
-
-        if (
-            !isset($fieldTableQuickAccess->$scope) || !isset($fieldTableQuickAccess->$scope->fields) ||
-            !isset($fieldTableQuickAccess->$scope->fields->$action)
-        ) {
-            $this->forbiddenFieldsCache[$key] = [];
-
-            return [];
-        }
-
-        $levelList = [];
-
-        foreach ($this->fieldLevelList as $level) {
-            if (array_search($level, $this->fieldLevelList) >= array_search($thresholdLevel, $this->fieldLevelList)) {
-                $levelList[] = $level;
-            }
-        }
-
-        $fieldList = [];
-
-        foreach ($levelList as $level) {
-            if (!isset($fieldTableQuickAccess->$scope->fields->$action->$level)) {
-                continue;
-            }
-
-            foreach ($fieldTableQuickAccess->$scope->fields->$action->$level as $field) {
-                if (in_array($field, $fieldList)) {
-                    continue;
-                }
-
-                $fieldList[] = $field;
-            }
-        }
-
-        $this->forbiddenFieldsCache[$key] = $fieldList;
-
-        return $fieldList;
-    }
-
-    protected function fillFieldTableQuickAccess(): void
-    {
-        $fieldTable = $this->data->fieldTable;
-
-        $fieldTableQuickAccess = (object) [];
-
-        foreach (get_object_vars($fieldTable) as $scope => $scopeData) {
-            $fieldTableQuickAccess->$scope = (object) [
-                'attributes' => (object) [],
-                'fields' => (object) []
-            ];
-
-            foreach ($this->fieldActionList as $action) {
-                $fieldTableQuickAccess->$scope->attributes->$action = (object) [];
-                $fieldTableQuickAccess->$scope->fields->$action = (object) [];
-
-                foreach ($this->fieldLevelList as $level) {
-                    $fieldTableQuickAccess->$scope->attributes->$action->$level = [];
-                    $fieldTableQuickAccess->$scope->fields->$action->$level = [];
-                }
-            }
-
-            foreach (get_object_vars($scopeData) as $field => $fieldData) {
-                $attributeList = $this->fieldUtil->getAttributeList($scope, $field);
-
-                foreach ($this->fieldActionList as $action) {
-                    if (!isset($fieldData->$action)) {
-                        continue;
-                    }
-
-                    foreach ($this->fieldLevelList as $level) {
-                        if ($fieldData->$action === $level) {
-                            $fieldTableQuickAccess->$scope->fields->$action->{$level}[] = $field;
-
-                            foreach ($attributeList as $attribute) {
-                                $fieldTableQuickAccess->$scope->attributes->$action->{$level}[] = $attribute;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $this->data->fieldTableQuickAccess = $fieldTableQuickAccess;
+        return $permission;
     }
 
     protected function applyHighest(StdClass &$table, StdClass &$fieldTable): void
@@ -544,21 +362,22 @@ class DefaultTable implements Table
             $table->$scope = $value;
         }
 
-        $defaultFieldData = $this->metadata->get(['app', $this->type, $defaultsGroupName, 'fieldLevel'], []);
+        $defaultFieldData = $this->metadata
+            ->get(['app', $this->type, $defaultsGroupName, 'fieldLevel']) ?? [];
 
         foreach ($this->getScopeList() as $scope) {
             if (isset($table->$scope) && $table->$scope === false) {
                 continue;
             }
 
-            if (!$this->metadata->get('scopes.' . $scope . '.entity')) {
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
                 continue;
             }
 
-            $fieldList = array_keys($this->metadata->get("entityDefs.{$scope}.fields", []));
+            $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
 
             $defaultScopeFieldData = $this->metadata
-                ->get('app.'.$this->type.'.'.$defaultsGroupName.'.scopeFieldLevel.' . $scope, []);
+                ->get(['app', $this->type, $defaultsGroupName, 'scopeFieldLevel', $scope]) ?? [];
 
             foreach (array_merge($defaultFieldData, $defaultScopeFieldData) as $field => $f) {
                 if (!in_array($field, $fieldList)) {
@@ -593,41 +412,43 @@ class DefaultTable implements Table
         }
 
         foreach ($this->getScopeWithAclList() as $scope) {
-            if (!isset($table->$scope)) {
-                $aclType = $this->metadata->get('scopes.' . $scope . '.' . $this->type);
+            if (isset($table->$scope)) {
+                continue;
+            }
 
-                if ($aclType === true) {
-                    $aclType = $this->defaultAclType;
-                }
+            $aclType = $this->metadata->get(['scopes', $scope, $this->type]);
 
-                if (!empty($aclType)) {
-                    $paramDefaultsName = 'scopeLevelTypesDefaults';
+            if ($aclType === true) {
+                $aclType = $this->defaultAclType;
+            }
 
-                    if ($this->isStrictMode) {
-                        $paramDefaultsName = 'scopeLevelTypesStrictDefaults';
-                    }
+            if (empty($aclType)) {
+                continue;
+            }
 
-                    $defaultValue = $this->metadata
-                        ->get(
-                            ['app', $this->type, $paramDefaultsName, $aclType],
-                            $this->metadata->get(['app', $this->type, $paramDefaultsName, 'record'])
-                        );
+            $paramDefaultsName = 'scopeLevelTypesDefaults';
 
-                    if (is_array($defaultValue)) {
-                        $defaultValue = (object) $defaultValue;
-                    }
+            if ($this->isStrictMode) {
+                $paramDefaultsName = 'scopeLevelTypesStrictDefaults';
+            }
 
-                    $table->$scope = $defaultValue;
+            $defaultValue =
+                $this->metadata->get(['app', $this->type, $paramDefaultsName, $aclType]) ??
+                $this->metadata->get(['app', $this->type, $paramDefaultsName, 'record']);
 
-                    if (is_object($table->$scope)) {
-                        $actionList = $this->metadata->get(['scopes', $scope, $this->type . 'ActionList']);
+            if (is_array($defaultValue)) {
+                $defaultValue = (object) $defaultValue;
+            }
 
-                        if ($actionList) {
-                            foreach (get_object_vars($table->$scope) as $action => $level) {
-                                if (!in_array($action, $actionList)) {
-                                    unset($table->$scope->$action);
-                                }
-                            }
+            $table->$scope = $defaultValue;
+
+            if (is_object($table->$scope)) {
+                $actionList = $this->metadata->get(['scopes', $scope, $this->type . 'ActionList']);
+
+                if ($actionList) {
+                    foreach (get_object_vars($table->$scope) as $action => $level) {
+                        if (!in_array($action, $actionList)) {
+                            unset($table->$scope->$action);
                         }
                     }
                 }
@@ -641,7 +462,7 @@ class DefaultTable implements Table
             return;
         }
 
-        $data = $this->metadata->get('app.'.$this->type.'.mandatory.scopeLevel', []);
+        $data = $this->metadata->get(['app', $this->type, 'mandatory', 'scopeLevel']) ?? [];
 
         foreach ($data as $scope => $item) {
             $value = $item;
@@ -653,23 +474,23 @@ class DefaultTable implements Table
             $table->$scope = $value;
         }
 
-        $mandatoryFieldData = $this->metadata->get('app.'.$this->type.'.mandatory.fieldLevel', []);
+        $mandatoryFieldData = $this->metadata->get(['app', $this->type, 'mandatory', 'fieldLevel']) ?? [];
 
         foreach ($this->getScopeList() as $scope) {
             if (isset($table->$scope) && $table->$scope === false) {
                 continue;
             }
 
-            if (!$this->metadata->get('scopes.' . $scope . '.entity')) {
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
                 continue;
             }
 
-            $fieldList = array_keys($this->metadata->get("entityDefs.{$scope}.fields", []));
+            $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
 
             $mandatoryScopeFieldData = $this->metadata
-                ->get('app.'.$this->type.'.mandatory.scopeFieldLevel.' . $scope, []);
+                ->get(['app', $this->type, 'mandatory', 'scopeFieldLevel', $scope]) ?? [];
 
-            foreach (array_merge($mandatoryFieldData, $mandatoryScopeFieldData) as $field => $f) {
+            foreach (array_merge($mandatoryFieldData, $mandatoryScopeFieldData) as $field => $item) {
                 if (!in_array($field, $fieldList)) {
                     continue;
                 }
@@ -683,12 +504,12 @@ class DefaultTable implements Table
                 foreach ($this->fieldActionList as $action) {
                     $level = self::LEVEL_NO;
 
-                    if ($f === true) {
+                    if ($item === true) {
                         $level = self::LEVEL_YES;
                     }
                     else {
-                        if (is_array($f) && isset($f[$action])) {
-                            $level = $f[$action];
+                        if (is_array($item) && isset($item[$action])) {
+                            $level = $item[$action];
                         }
                     }
 
@@ -705,7 +526,7 @@ class DefaultTable implements Table
         }
 
         foreach ($this->getScopeList() as $scope) {
-            if ($this->metadata->get('scopes.' . $scope . '.disabled')) {
+            if ($this->metadata->get(['scopes', $scope, 'disabled'])) {
                 $table->$scope = false;
 
                 unset($fieldTable->$scope);
@@ -713,6 +534,9 @@ class DefaultTable implements Table
         }
     }
 
+    /**
+     * @todo Revise usage of this method.
+     */
     protected function applyAdditional(&$table, &$fieldTable, &$valuePermissionLists): void
     {
         if ($this->user->isPortal()) {
@@ -836,7 +660,7 @@ class DefaultTable implements Table
         }
 
         $actionList = $this->metadata
-            ->get(['scopes', $scope, $this->type . 'ActionList'], $this->actionList);
+            ->get(['scopes', $scope, $this->type . 'ActionList']) ?? $this->actionList;
 
         foreach ($actionList as $i => $action) {
             if (isset($row->$action)) {
@@ -891,7 +715,7 @@ class DefaultTable implements Table
                     continue;
                 }
 
-                $fieldList = array_keys($this->metadata->get("entityDefs.{$scope}.fields", []));
+                $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
 
                 foreach (get_object_vars($table->$scope) as $field => $row) {
                     if (!is_object($row)) {
@@ -932,10 +756,5 @@ class DefaultTable implements Table
         }
 
         return $data;
-    }
-
-    private function buildCache(): void
-    {
-        $this->dataCache->store($this->cacheKey, $this->data);
     }
 }

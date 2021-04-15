@@ -27,39 +27,64 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Acl\Table;
 
-use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-use Espo\Core\Di;
+use Espo\Entities\{
+    User,
+    Role as RoleEntity,
+};
 
-class Role extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class DefaultRoleListProvider implements RoleListProvider
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    private $user;
 
-    protected $forceSelectAllAttributes = true;
+    private $entityManager;
 
-    public function afterCreateEntity(Entity $entity, $data)
+    public function __construct(User $user, EntityManager $entityManager)
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
+        $this->user = $user;
+        $this->entityManager = $entityManager;
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    /**
+     * @return array<Role>
+     */
+    public function get(): array
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
+        $roleList = [];
 
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
+        $userRoleList = $this->entityManager
+            ->getRepository('User')
+            ->getRelation($this->user, 'roles')
+            ->find();
 
-        $this->dataManager->updateCacheTimestamp();
+        foreach ($userRoleList as $role) {
+            $roleList[] = $role;
+        }
+
+        $teamList = $this->entityManager
+            ->getRepository('User')
+            ->getRelation($this->user, 'teams')
+            ->find();
+
+        foreach ($teamList as $team) {
+            $teamRoleList = $this->entityManager
+                ->getRepository('Team')
+                ->getRelation($team, 'roles')
+                ->find();
+
+            foreach ($teamRoleList as $role) {
+                $roleList[] = $role;
+            }
+        }
+
+        return array_map(
+            function (RoleEntity $role): RoleEntityWrapper {
+                return new RoleEntityWrapper($role);
+            },
+            $roleList
+        );
     }
 }

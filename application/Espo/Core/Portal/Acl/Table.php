@@ -29,21 +29,9 @@
 
 namespace Espo\Core\Portal\Acl;
 
-use Espo\Entities\{
-    User,
-    Portal,
-};
-
 use Espo\Core\{
     Acl\DefaultTable as BaseTable,
-    ORM\EntityManager,
-    Utils\Config,
-    Utils\Metadata,
-    Utils\FieldUtil,
-    Utils\DataCache,
 };
-
-use RuntimeException;
 
 class Table extends BaseTable
 {
@@ -52,8 +40,6 @@ class Table extends BaseTable
     public const LEVEL_CONTACT = 'contact';
 
     protected $type = 'aclPortal';
-
-    protected $portal;
 
     protected $defaultAclType = 'recordAllOwnNo';
 
@@ -67,54 +53,6 @@ class Table extends BaseTable
     ];
 
     protected $isStrictModeForced = true;
-
-    public function __construct(
-        EntityManager $entityManager,
-        User $user,
-        Portal $portal,
-        Config $config,
-        Metadata $metadata,
-        FieldUtil $fieldUtil,
-        DataCache $dataCache
-    ) {
-        if (empty($portal)) {
-            throw new RuntimeException("No portal was passed to AclPortal\\Table constructor.");
-        }
-
-        $this->portal = $portal;
-
-        parent::__construct($entityManager, $user, $config, $metadata, $fieldUtil, $dataCache);
-    }
-
-    protected function initCacheKey(): void
-    {
-        $this->cacheKey = 'aclPortal/' . $this->portal->getId() . '/' . $this->user->getId();
-    }
-
-    protected function getRoleList(): array
-    {
-        $roleList = [];
-
-        $userRoleList = $this->entityManager
-            ->getRepository('User')
-            ->getRelation($this->user, 'portalRoles')
-            ->find();
-
-        foreach ($userRoleList as $role) {
-            $roleList[] = $role;
-        }
-
-        $portalRoleList = $this->entityManager
-            ->getRepository('Portal')
-            ->getRelation($this->portal, 'portalRoles')
-            ->find();
-
-        foreach ($portalRoleList as $role) {
-            $roleList[] = $role;
-        }
-
-        return $roleList;
-    }
 
     protected function getScopeWithAclList(): array
     {
@@ -151,9 +89,9 @@ class Table extends BaseTable
     protected function applyDisabled(&$table, &$fieldTable): void
     {
         foreach ($this->getScopeList() as $scope) {
-            $d = $this->metadata->get('scopes.' . $scope);
+            $item = $this->metadata->get(['scopes', $scope]) ?? [];
 
-            if (!empty($d['disabled']) || !empty($d['portalDisabled'])) {
+            if (!empty($item['disabled']) || !empty($item['portalDisabled'])) {
                 $table->$scope = false;
 
                 unset($fieldTable->$scope);

@@ -54,7 +54,7 @@ class User extends \Espo\Core\Controllers\Record
             throw new NotFound();
         }
 
-        return $this->getAclManager()->getMap($user);
+        return $this->getAclManager()->getMapData($user);
     }
 
     public function postActionChangeOwnPassword($params, $data, $request)

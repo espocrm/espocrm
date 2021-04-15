@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Acl;
+namespace Espo\Core\Portal\Acl\Map;
 
 use Espo\Entities\{
     User,
@@ -36,16 +36,19 @@ use Espo\Entities\{
 
 use Espo\Core\{
     InjectableFactory,
-    Acl\Table\CacheKeyProvider,
-    Portal\Acl\Table\CacheKeyProvider as PortalCacheKeyProvider,
-    Acl\Table\RoleListProvider,
-    Portal\Acl\Table\RoleListProvider as PortalRoleListProvider,
+    Portal\Acl\Table as PortalTable,
+    Portal\Acl\Map\MetadataProvider as PortalMetadataProvider,
+    Portal\Acl\Map\CacheKeyProvider as PortalCacheKeyProvider,
+    Acl\Map\MetadataProvider,
+    Acl\Map\CacheKeyProvider,
+    Acl\Map\Map,
+    Acl\Table,
     Binding\BindingContainer,
     Binding\Binder,
     Binding\BindingData,
 };
 
-class TableFactory
+class MapFactory
 {
     private $injectableFactory;
 
@@ -54,17 +57,14 @@ class TableFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    /**
-     * Create a table.
-     */
-    public function create(User $user, Portal $portal): Table
+    public function create(User $user, PortalTable $table, Portal $portal): Map
     {
-        $bindingContainer = $this->createBindingContainer($user, $portal);
+        $bindingContainer = $this->createBindingContainer($user, $table, $portal);
 
-        return $this->injectableFactory->createWithBinding(Table::class, $bindingContainer);
+        return $this->injectableFactory->createWithBinding(Map::class, $bindingContainer);
     }
 
-    private function createBindingContainer(User $user, Portal $portal): BindingContainer
+    private function createBindingContainer(User $user, PortalTable $table, Portal $portal): BindingContainer
     {
         $bindingData = new BindingData();
 
@@ -78,12 +78,18 @@ class TableFactory
                 }
             )
             ->bindCallback(
+                Table::class,
+                function () use ($table): PortalTable {
+                    return $table;
+                }
+            )
+            ->bindCallback(
                 Portal::class,
                 function () use ($portal): Portal {
                     return $portal;
                 }
             )
-            ->bindImplementation(RoleListProvider::class, PortalRoleListProvider::class)
+            ->bindImplementation(MetadataProvider::class, PortalMetadataProvider::class)
             ->bindImplementation(CacheKeyProvider::class, PortalCacheKeyProvider::class);
 
         return new BindingContainer($bindingData);

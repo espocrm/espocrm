@@ -27,25 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Acl;
+namespace Espo\Core\Acl\Map;
 
-use Espo\Entities\{
-    User,
-    Portal,
-};
+use Espo\Entities\User;
 
 use Espo\Core\{
     InjectableFactory,
-    Acl\Table\CacheKeyProvider,
-    Portal\Acl\Table\CacheKeyProvider as PortalCacheKeyProvider,
-    Acl\Table\RoleListProvider,
-    Portal\Acl\Table\RoleListProvider as PortalRoleListProvider,
+    Acl\Table,
+    Acl\Map\Map,
     Binding\BindingContainer,
     Binding\Binder,
     Binding\BindingData,
 };
 
-class TableFactory
+class MapFactory
 {
     private $injectableFactory;
 
@@ -54,17 +49,14 @@ class TableFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    /**
-     * Create a table.
-     */
-    public function create(User $user, Portal $portal): Table
+    public function create(User $user, Table $table): Map
     {
-        $bindingContainer = $this->createBindingContainer($user, $portal);
+        $bindingContainer = $this->createBindingContainer($user, $table);
 
-        return $this->injectableFactory->createWithBinding(Table::class, $bindingContainer);
+        return $this->injectableFactory->createWithBinding(Map::class, $bindingContainer);
     }
 
-    private function createBindingContainer(User $user, Portal $portal): BindingContainer
+    private function createBindingContainer(User $user, Table $table): BindingContainer
     {
         $bindingData = new BindingData();
 
@@ -78,13 +70,12 @@ class TableFactory
                 }
             )
             ->bindCallback(
-                Portal::class,
-                function () use ($portal): Portal {
-                    return $portal;
+                Table::class,
+                function () use ($table): Table {
+                    return $table;
                 }
             )
-            ->bindImplementation(RoleListProvider::class, PortalRoleListProvider::class)
-            ->bindImplementation(CacheKeyProvider::class, PortalCacheKeyProvider::class);
+            ->bindImplementation(CacheKeyProvider::class, DefaultCacheKeyProvider::class);
 
         return new BindingContainer($bindingData);
     }

@@ -27,39 +27,60 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Acl\Map;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    Utils\Metadata,
+};
 
-use Espo\Core\Di;
-
-class Role extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class MetadataProvider
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    protected $type = 'acl';
 
-    protected $forceSelectAllAttributes = true;
+    private $metadata;
 
-    public function afterCreateEntity(Entity $entity, $data)
+    public function __construct(Metadata $metadata)
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
+        $this->metadata = $metadata;
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    /**
+     * @return array<string>
+     */
+    public function getScopeList(): array
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
+        return array_keys($this->metadata->get('scopes') ?? []);
     }
 
-    protected function clearRolesCache()
+    public function isScopeEntity(string $scope): bool
     {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
+        return (bool) $this->metadata->get(['scopes', $scope, 'entity']);
+    }
 
-        $this->dataManager->updateCacheTimestamp();
+    /**
+     * @return array<string>
+     */
+    public function getScopeFieldList(string $scope): array
+    {
+        return array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getPermissionList(): array
+    {
+        $itemList = $this->metadata->get(['app', $this->type, 'valuePermissionList']) ?? [];
+
+        return array_map(
+            function (string $item): string {
+                if (substr($item, -10) === 'Permission') {
+                    return substr($item, 0, -10);
+                }
+
+                return $item;
+            },
+            $itemList
+        );
     }
 }

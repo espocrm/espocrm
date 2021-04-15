@@ -27,39 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace tests\unit\Espo\Core\Acl;
 
-use Espo\ORM\Entity;
 
-use Espo\Core\Di;
+use Espo\Core\{
+    Acl\Map\MetadataProvider,
+    Utils\Metadata,
+};
 
-class Role extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class MetadataProviderTest extends \PHPUnit\Framework\TestCase
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    private $metadata;
 
-    protected $forceSelectAllAttributes = true;
-
-    public function afterCreateEntity(Entity $entity, $data)
+    protected function setUp(): void
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
+        $this->metadata = $this->createMock(Metadata::class);
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    public function testGetPermissionList(): void
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
+        $provider = new MetadataProvider($this->metadata);
 
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
+        $this->metadata
+            ->expects($this->once())
+            ->method('get')
+            ->with(['app', 'acl', 'valuePermissionList'])
+            ->willReturn(['assignmentPermission', 'portalPermission']);
 
-        $this->dataManager->updateCacheTimestamp();
+        $this->assertEquals(['assignment', 'portal'], $provider->getPermissionList());
     }
 }

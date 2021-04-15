@@ -37,6 +37,7 @@ use Espo\Core\{
     Acl\OwnerUserFieldProvider,
     Acl\TableFactory,
     Acl\GlobalRestricton,
+    Acl\Map\MapFactory,
     ORM\EntityManager,
 };
 
@@ -72,9 +73,11 @@ class AclManagerTest extends \PHPUnit\Framework\TestCase
     private $globalRestriction;
 
     /**
-     * @var USer
+     * @var User
      */
     private $user;
+
+    private $mapFactory;
 
     protected function setUp(): void
     {
@@ -84,12 +87,14 @@ class AclManagerTest extends \PHPUnit\Framework\TestCase
         $this->accessCheckerFactory = $this->createMock(AccessCheckerFactory::class);
         $this->ownershipCheckerFactory = $this->createMock(OwnershipCheckerFactory::class);
         $this->tableFactory = $this->createMock(TableFactory::class);
+        $this->mapFactory = $this->createMock(MapFactory::class);
         $this->globalRestriction = $this->createMock(GlobalRestricton::class);
 
         $this->aclManager = new AclManager(
             $this->accessCheckerFactory,
             $this->ownershipCheckerFactory,
             $this->tableFactory,
+            $this->mapFactory,
             $this->globalRestriction,
             $this->createMock(OwnerUserFieldProvider::class),
             $this->createMock(EntityManager::class)

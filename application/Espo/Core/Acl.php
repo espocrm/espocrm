@@ -57,9 +57,9 @@ class Acl
     /**
      * Get a full access data map.
      */
-    public function getMap(): StdClass
+    public function getMapData(): StdClass
     {
-        return $this->aclManager->getMap($this->user);
+        return $this->aclManager->getMapData($this->user);
     }
 
     /**

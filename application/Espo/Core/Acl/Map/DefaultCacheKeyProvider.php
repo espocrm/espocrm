@@ -27,39 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Acl\Map;
 
-use Espo\ORM\Entity;
+use Espo\Entities\User;
 
-use Espo\Core\Di;
-
-class Role extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class DefaultCacheKeyProvider implements CacheKeyProvider
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    private $user;
 
-    protected $forceSelectAllAttributes = true;
-
-    public function afterCreateEntity(Entity $entity, $data)
+    public function __construct(User $user)
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
+        $this->user = $user;
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    public function get(): string
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
-
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
-
-        $this->dataManager->updateCacheTimestamp();
+        return 'aclMap/' . $this->user->getId();
     }
 }

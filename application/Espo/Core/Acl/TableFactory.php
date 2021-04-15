@@ -33,6 +33,13 @@ use Espo\Entities\User;
 
 use Espo\Core\{
     InjectableFactory,
+    Acl\Table\CacheKeyProvider,
+    Acl\Table\DefaultCacheKeyProvider,
+    Acl\Table\RoleListProvider,
+    Acl\Table\DefaultRoleListProvider,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 class TableFactory
@@ -51,8 +58,27 @@ class TableFactory
      */
     public function create(User $user): Table
     {
-        return $this->injectableFactory->createWith(DefaultTable::class, [
-            'user' => $user,
-        ]);
+        $bindingContainer = $this->createBindingContainer($user);
+
+        return $this->injectableFactory->createWithBinding(DefaultTable::class, $bindingContainer);
+    }
+
+    private function createBindingContainer(User $user): BindingContainer
+    {
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindCallback(
+                User::class,
+                function () use ($user): User {
+                    return $user;
+                }
+            )
+            ->bindImplementation(RoleListProvider::class, DefaultRoleListProvider::class)
+            ->bindImplementation(CacheKeyProvider::class, DefaultCacheKeyProvider::class);
+
+        return new BindingContainer($bindingData);
     }
 }

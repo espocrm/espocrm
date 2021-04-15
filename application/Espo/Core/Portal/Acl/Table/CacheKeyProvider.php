@@ -27,39 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Portal\Acl\Table;
 
-use Espo\ORM\Entity;
+use Espo\Entities\{
+    User,
+    Portal,
+};
 
-use Espo\Core\Di;
+use Espo\Core\{
+    Acl\Table\CacheKeyProvider as CacheKeyProviderInterface,
+};
 
-class Role extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class CacheKeyProvider implements CacheKeyProviderInterface
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    private $user;
 
-    protected $forceSelectAllAttributes = true;
+    private $portal;
 
-    public function afterCreateEntity(Entity $entity, $data)
+    public function __construct(User $user, Portal $portal)
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
+        $this->user = $user;
+        $this->portal = $portal;
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    public function get(): string
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
-
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
-
-        $this->dataManager->updateCacheTimestamp();
+        return 'aclPortal/' . $this->portal->getId() . '/' . $this->user->getId();
     }
 }

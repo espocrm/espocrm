@@ -40,6 +40,8 @@ use Espo\Core\{
     Acl\OwnerUserFieldProvider,
     Acl\TableFactory,
     Acl\Table,
+    Acl\Map\Map,
+    Acl\Map\MapFactory,
     Acl\OwnershipCheckerFactory,
     Acl\OwnershipChecker,
     Acl\OwnershipOwnChecker,
@@ -73,6 +75,8 @@ class AclManager
 
     protected $tableHashMap = [];
 
+    protected $mapHashMap = [];
+
     protected $userAclClassName = Acl::class;
 
     protected const PERMISSION_ASSIGNMENT = 'assignment';
@@ -99,6 +103,8 @@ class AclManager
 
     protected $tableFactory;
 
+    protected $mapFactory;
+
     protected $globalRestricton;
 
     protected $ownerUserFieldProvider;
@@ -109,6 +115,7 @@ class AclManager
         AccessCheckerFactory $accessCheckerFactory,
         OwnershipCheckerFactory $ownershipCheckerFactory,
         TableFactory $tableFactory,
+        MapFactory $mapFactory,
         GlobalRestricton $globalRestricton,
         OwnerUserFieldProvider $ownerUserFieldProvider,
         EntityManager $entityManager
@@ -116,6 +123,7 @@ class AclManager
         $this->accessCheckerFactory = $accessCheckerFactory;
         $this->ownershipCheckerFactory = $ownershipCheckerFactory;
         $this->tableFactory = $tableFactory;
+        $this->mapFactory = $mapFactory;
         $this->globalRestricton = $globalRestricton;
         $this->ownerUserFieldProvider = $ownerUserFieldProvider;
         $this->entityManager = $entityManager;
@@ -160,12 +168,27 @@ class AclManager
         return $this->tableHashMap[$key];
     }
 
-    /**
-     * Get a full access data map.
-     */
-    public function getMap(User $user): StdClass
+    protected function getMap(User $user): Map
     {
-        return $this->getTable($user)->getMap();
+        $key = $user->getId();
+
+        if (!$key) {
+            $key = spl_object_hash($user);
+        }
+
+        if (!array_key_exists($key, $this->mapHashMap)) {
+            $this->mapHashMap[$key] = $this->mapFactory->create($user, $this->getTable($user));
+        }
+
+        return $this->mapHashMap[$key];
+    }
+
+    /**
+     * Get a full access data map (for front-end).
+     */
+    public function getMapData(User $user): StdClass
+    {
+        return $this->getMap($user)->getData();
     }
 
     /**
@@ -437,7 +460,7 @@ class AclManager
     ): array {
 
         $list = array_merge(
-            $this->getTable($user)->getScopeForbiddenAttributeList(
+            $this->getMap($user)->getScopeForbiddenAttributeList(
                 $scope,
                 $action,
                 $thresholdLevel
@@ -465,7 +488,7 @@ class AclManager
     ): array {
 
         $list = array_merge(
-            $this->getTable($user)->getScopeForbiddenFieldList(
+            $this->getMap($user)->getScopeForbiddenFieldList(
                 $scope,
                 $action,
                 $thresholdLevel

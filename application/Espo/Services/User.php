@@ -771,6 +771,7 @@ class User extends Record implements
     protected function clearRoleCache(string $id)
     {
         $this->fileManager->removeFile('data/cache/application/acl/' . $id . '.php');
+        $this->fileManager->removeFile('data/cache/application/aclMap/' . $id . '.php');
 
         $this->dataManager->updateCacheTimestamp();
     }
@@ -778,10 +779,10 @@ class User extends Record implements
     protected function clearPortalRolesCache()
     {
         $this->fileManager->removeInDir('data/cache/application/aclPortal');
+        $this->fileManager->removeInDir('data/cache/application/aclPortalMap');
 
         $this->dataManager->updateCacheTimestamp();
     }
-
 
     public function loadAdditionalFields(Entity $entity)
     {

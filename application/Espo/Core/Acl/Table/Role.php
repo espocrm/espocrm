@@ -27,39 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Acl\Table;
 
-use Espo\ORM\Entity;
+use StdClass;
 
-use Espo\Core\Di;
-
-class Role extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+interface Role
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    public function getScopeTableData(): StdClass;
 
-    protected $forceSelectAllAttributes = true;
+    public function getFieldTableData(): StdClass;
 
-    public function afterCreateEntity(Entity $entity, $data)
-    {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
-
-    public function afterUpdateEntity(Entity $entity, $data)
-    {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
-    }
-
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
-
-        $this->dataManager->updateCacheTimestamp();
-    }
+    public function getPermissionLevel(string $permission): ?string;
 }

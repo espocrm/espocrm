@@ -44,6 +44,7 @@ class Team extends Record implements
     public function afterUpdateEntity(Entity $entity, $data)
     {
         parent::afterUpdateEntity($entity, $data);
+
         if (property_exists($data, 'rolesIds')) {
             $this->clearRolesCache();
         }
@@ -52,6 +53,8 @@ class Team extends Record implements
     protected function clearRolesCache()
     {
         $this->fileManager->removeInDir('data/cache/application/acl');
+        $this->fileManager->removeInDir('data/cache/application/aclMap');
+
         $this->dataManager->updateCacheTimestamp();
     }
 
@@ -61,6 +64,8 @@ class Team extends Record implements
 
         if ($link === 'users') {
             $this->fileManager->removeFile('data/cache/application/acl/' . $foreignId . '.php');
+            $this->fileManager->removeFile('data/cache/application/aclMap/' . $foreignId . '.php');
+
             $this->dataManager->updateCacheTimestamp();
         }
     }
@@ -71,6 +76,8 @@ class Team extends Record implements
 
         if ($link === 'users') {
             $this->fileManager->removeFile('data/cache/application/acl/' . $foreignId . '.php');
+            $this->fileManager->removeFile('data/cache/application/aclMap/' . $foreignId . '.php');
+
             $this->dataManager->updateCacheTimestamp();
         }
     }

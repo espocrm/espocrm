@@ -47,9 +47,11 @@ use Espo\Core\{
     Portal\Acl\OwnershipContactChecker,
     Portal\Acl\TableFactory,
     Portal\Acl,
+    Portal\Acl\Map\MapFactory,
     Acl\GlobalRestricton,
     Acl\OwnerUserFieldProvider,
     Acl\Table as TableBase,
+    Acl\Map\Map,
     AclManager as InternalAclManager,
 };
 
@@ -68,6 +70,7 @@ class AclManager extends InternalAclManager
         AccessCheckerFactory $accessCheckerFactory,
         OwnershipCheckerFactory $ownershipCheckerFactory,
         TableFactory $tableFactory,
+        MapFactory $mapFactory,
         GlobalRestricton $globalRestricton,
         OwnerUserFieldProvider $ownerUserFieldProvider,
         EntityManager $entityManager,
@@ -76,6 +79,7 @@ class AclManager extends InternalAclManager
         $this->accessCheckerFactory = $accessCheckerFactory;
         $this->ownershipCheckerFactory = $ownershipCheckerFactory;
         $this->tableFactory = $tableFactory;
+        $this->mapFactory = $mapFactory;
         $this->globalRestricton = $globalRestricton;
         $this->ownerUserFieldProvider = $ownerUserFieldProvider;
         $this->entityManager = $entityManager;
@@ -111,13 +115,29 @@ class AclManager extends InternalAclManager
         return $this->tableHashMap[$key];
     }
 
-    public function getMap(User $user): StdClass
+    protected function getMap(User $user): Map
     {
-        if ($this->checkUserIsNotPortal($user)) {
-            return $this->internalAclManager->getMap($user);
+        $key = $user->getId();
+
+        if (!$key) {
+            $key = spl_object_hash($user);
         }
 
-        return parent::getMap($user);
+        if (!array_key_exists($key, $this->mapHashMap)) {
+            $this->mapHashMap[$key] = $this->mapFactory
+                ->create($user, $this->getTable($user), $this->getPortal());
+        }
+
+        return $this->mapHashMap[$key];
+    }
+
+    public function getMapData(User $user): StdClass
+    {
+        if ($this->checkUserIsNotPortal($user)) {
+            return $this->internalAclManager->getMapData($user);
+        }
+
+        return parent::getMapData($user);
     }
 
     public function getLevel(User $user, string $scope, string $action): string
@@ -285,7 +305,8 @@ class AclManager extends InternalAclManager
     ): array {
 
         if ($this->checkUserIsNotPortal($user)) {
-            return $this->internalAclManager->getScopeForbiddenAttributeList($user, $scope, $action, $thresholdLevel);
+            return $this->internalAclManager
+                ->getScopeForbiddenAttributeList($user, $scope, $action, $thresholdLevel);
         }
 
         return parent::getScopeForbiddenAttributeList($user, $scope, $action, $thresholdLevel);
@@ -299,7 +320,8 @@ class AclManager extends InternalAclManager
     ): array {
 
         if ($this->checkUserIsNotPortal($user)) {
-            return $this->internalAclManager->getScopeForbiddenFieldList($user, $scope, $action, $thresholdLevel);
+            return $this->internalAclManager
+                ->getScopeForbiddenFieldList($user, $scope, $action, $thresholdLevel);
         }
 
         return parent::getScopeForbiddenFieldList($user, $scope, $action, $thresholdLevel);

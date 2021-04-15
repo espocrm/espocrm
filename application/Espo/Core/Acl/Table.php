@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Acl;
 
-use StdClass;
-
 /**
- * Contains access levels for a user.
+ * Access levels for a user.
  */
 interface Table
 {
@@ -57,39 +55,17 @@ interface Table
     public const ACTION_CREATE = 'create';
 
     /**
-     * Get a full map.
-     */
-    public function getMap(): StdClass;
-
-    /**
      * Get scope data.
      */
     public function getScopeData(string $scope): ScopeData;
 
     /**
+     * Get field data.
+     */
+    public function getFieldData(string $scope, string $field): FieldData;
+
+    /**
      * Get a permission level.
      */
     public function getPermissionLevel(string $permission): string;
-
-    /**
-     * Get a list of forbidden attributes for a scope and action.
-     *
-     * @param $scope A scope.
-     * $param $action An action.
-     * @param $thresholdLevel An attribute will be treated as forbidden if the level is
-     * equal to or lower than the threshold.
-     * @return array<string>
-     */
-    public function getScopeForbiddenAttributeList(string $scope, string $action, string $thresholdLevel): array;
-
-    /**
-     * Get a list of forbidden fields for a scope and action.
-     *
-     * @param $scope A scope.
-     * $param $action An action.
-     * @param $thresholdLevel An attribute will be treated as forbidden if the level is
-     * equal to or lower than the threshold.
-     * @return array<string>
-     */
-    public function getScopeForbiddenFieldList(string $scope, string $action, string $thresholdLevel): array;
 }

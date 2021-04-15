@@ -27,39 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace tests\unit\Espo\Core\Acl;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    Acl\FieldData,
+    Acl\Table,
+};
 
-use Espo\Core\Di;
-
-class Role extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class FieldDataTest extends \PHPUnit\Framework\TestCase
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
-
-    protected $forceSelectAllAttributes = true;
-
-    public function afterCreateEntity(Entity $entity, $data)
+    protected function setUp() : void
     {
-        parent::afterCreateEntity($entity, $data);
-        $this->clearRolesCache();
     }
 
-    public function afterUpdateEntity(Entity $entity, $data)
+    public function testGet1(): void
     {
-        parent::afterUpdateEntity($entity, $data);
-        $this->clearRolesCache();
+        $raw = (object) [
+            Table::ACTION_EDIT => Table::LEVEL_YES,
+            Table::ACTION_READ => Table::LEVEL_NO,
+        ];
+
+        $data = FieldData::fromRaw($raw);
+
+        $this->assertEquals(Table::LEVEL_NO, $data->getRead());
+        $this->assertEquals(Table::LEVEL_YES, $data->getEdit());
     }
 
-    protected function clearRolesCache()
+    public function testGet2(): void
     {
-        $this->fileManager->removeInDir('data/cache/application/acl');
-        $this->fileManager->removeInDir('data/cache/application/aclMap');
+        $raw = (object) [
+            Table::ACTION_EDIT => Table::LEVEL_NO,
+            Table::ACTION_READ => Table::LEVEL_YES,
+        ];
 
-        $this->dataManager->updateCacheTimestamp();
+        $data = FieldData::fromRaw($raw);
+
+        $this->assertEquals(Table::LEVEL_YES, $data->getRead());
+        $this->assertEquals(Table::LEVEL_NO, $data->getEdit());
+    }
+
+    public function testGetEmpty(): void
+    {
+        $raw = (object) [
+        ];
+
+        $data = FieldData::fromRaw($raw);
+
+        $this->assertEquals(Table::LEVEL_NO, $data->getRead());
+        $this->assertEquals(Table::LEVEL_NO, $data->getEdit());
     }
 }

@@ -214,7 +214,7 @@ class App
 
     protected function getAclDataForFrontend()
     {
-        $data = $this->acl->getMap();
+        $data = $this->acl->getMapData();
 
         if (!$this->user->isAdmin()) {
             $data = unserialize(serialize($data));

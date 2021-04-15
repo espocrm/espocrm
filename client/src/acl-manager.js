@@ -96,13 +96,36 @@ define('acl-manager', ['acl'], function (Acl) {
             this.data.attributeTable = this.data.attributeTable || {};
         },
 
+        /**
+         * @deprecated Use `getPermissionLevel`.
+         * @returns string|null
+         */
         get: function (name) {
             return this.data[name] || null;
         },
 
+        /**
+         * @param string permission
+         * @returns string
+         */
+        getPermissionLevel: function (permission) {
+            var permissionKey = permission;
+
+            if (permission.substr(-10) !== 'Permission') {
+                permissionKey = permission + 'Permission';
+            }
+
+            return this.data[permissionKey] || 'no';
+        },
+
         getLevel: function (scope, action) {
-            if (!(scope in this.data.table)) return;
-            if (typeof this.data.table[scope] !== 'object' || !(action in this.data.table[scope])) return;
+            if (!(scope in this.data.table)) {
+                return;
+            }
+
+            if (typeof this.data.table[scope] !== 'object' || !(action in this.data.table[scope])) {
+                return;
+            }
 
             return this.data.table[scope][action];
         },
@@ -113,17 +136,21 @@ define('acl-manager', ['acl'], function (Acl) {
 
         checkScopeHasAcl: function (scope) {
             var data = (this.data.table || {})[scope];
+
             if (typeof data === 'undefined') {
                 return false;
             }
+
             return true;
         },
 
         checkScope: function (scope, action, precise) {
             var data = (this.data.table || {})[scope];
+
             if (typeof data === 'undefined') {
                 data = null;
             }
+
             return this.getImplementation(scope).checkScope(data, action, precise);
         },
 
@@ -143,6 +170,7 @@ define('acl-manager', ['acl'], function (Acl) {
             }
 
             var data = (this.data.table || {})[scope];
+
             if (typeof data === 'undefined') {
                 data = null;
             }
@@ -160,7 +188,8 @@ define('acl-manager', ['acl'], function (Acl) {
         check: function (subject, action, precise) {
             if (typeof subject === 'string') {
                 return this.checkScope(subject, action, precise);
-            } else {
+            }
+            else {
                 return this.checkModel(subject, action, precise);
             }
         },
@@ -230,6 +259,7 @@ define('acl-manager', ['acl'], function (Acl) {
             thresholdLevel = thresholdLevel || 'no';
 
             var key = scope + '_' + action + '_' + thresholdLevel;
+
             if (key in this.forbiddenFieldsCache) {
                 return this.forbiddenFieldsCache[key];
             }
@@ -242,10 +272,15 @@ define('acl-manager', ['acl'], function (Acl) {
             var actionData = fieldsData[action] || {};
 
             var fieldList = [];
+
             levelList.forEach(function (level) {
                 var list = actionData[level] || [];
+
                 list.forEach(function (field) {
-                    if (~fieldList.indexOf(field)) return;
+                    if (~fieldList.indexOf(field)) {
+                        return;
+                    }
+
                     fieldList.push(field);
                 }, this);
             }, this);
@@ -260,6 +295,7 @@ define('acl-manager', ['acl'], function (Acl) {
             thresholdLevel = thresholdLevel || 'no';
 
             var key = scope + '_' + action + '_' + thresholdLevel;
+
             if (key in this.forbiddenAttributesCache) {
                 return this.forbiddenAttributesCache[key];
             }
@@ -273,10 +309,15 @@ define('acl-manager', ['acl'], function (Acl) {
             var actionData = attributesData[action] || {};
 
             var attributeList = [];
+
             levelList.forEach(function (level) {
                 var list = actionData[level] || [];
+
                 list.forEach(function (attribute) {
-                    if (~attributeList.indexOf(attribute)) return;
+                    if (~attributeList.indexOf(attribute)) {
+                        return;
+                    }
+
                     attributeList.push(attribute);
                 }, this);
             }, this);
@@ -287,7 +328,10 @@ define('acl-manager', ['acl'], function (Acl) {
         },
 
         checkTeamAssignmentPermission: function (teamId) {
-            if (this.get('assignmentPermission') === 'all') return true;
+            if (this.get('assignmentPermission') === 'all') {
+                return true;
+            }
+
             return ~this.getUser().getLinkMultipleIdList('teams').indexOf(teamId);
         },
 
