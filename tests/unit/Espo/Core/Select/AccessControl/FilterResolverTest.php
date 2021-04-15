@@ -31,6 +31,7 @@ namespace tests\unit\Espo\Core\Select\AccessControl;
 
 use Espo\Core\{
     Select\AccessControl\DefaultFilterResolver,
+    Select\AccessControl\DefaultPortalFilterResolver,
     Acl,
     Portal\Acl as AclPortal,
 };
@@ -106,11 +107,11 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testResolveAdmin()
+    public function testResolveAll()
     {
         $this->assertEquals(
             null,
-            $this->initResolveTest(false, true, null)
+            $this->initResolveTest(false, true, 'checkReadAll')
         );
     }
 
@@ -122,21 +123,21 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
             $acl = $this->aclPortal;
         }
 
-        $this->resolver = new DefaultFilterResolver(
-            $this->entityType,
-            $this->user,
-            $acl
-        );
+        if (!$isPortal) {
+            $this->resolver = new DefaultFilterResolver(
+                $this->entityType,
+                $this->user,
+                $acl
+            );
+        }
 
-        $this->user
-            ->expects($this->any())
-            ->method('isAdmin')
-            ->willReturn($isAdmin);
-
-        $this->user
-            ->expects($this->any())
-            ->method('isPortal')
-            ->willReturn($isPortal);
+        if ($isPortal) {
+            $this->resolver = new DefaultPortalFilterResolver(
+                $this->entityType,
+                $this->user,
+                $acl
+            );
+        }
 
         if ($method) {
             $acl

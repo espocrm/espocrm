@@ -33,6 +33,10 @@ use Espo\Core\{
     InjectableFactory,
     Utils\Metadata,
     Select\SelectManagerFactory,
+    Select\SelectManager,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\Entities\User;
@@ -84,13 +88,23 @@ class Factory
             ]
         ) ?? $this->getDefaultClassName($type);
 
+        // SelectManager is used for backward compatibility.
         $selectManager = $this->selectManagerFactory->create($entityType, $user);
 
-        return $this->injectableFactory->createWith($className, [
-            'entityType' => $entityType,
-            'user' => $user,
-            'selectManager' => $selectManager, // to use for backward compatibility
-        ]);
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $user)
+            ->bindInstance(SelectManager::class, $selectManager)
+            ->for($className)
+            ->bindValue('$entityType', $entityType)
+            ->bindValue('$selectManager', $selectManager);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
     protected function getDefaultClassName(string $type): string

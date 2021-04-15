@@ -34,6 +34,9 @@ use Espo\Core\{
     Select\Helpers\FieldHelper,
     InjectableFactory,
     Utils\Metadata,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -60,15 +63,24 @@ class FilterFactory
             throw new Error("Access control filter '{$name}' for '{$entityType}' does not exist.");
         }
 
-        $fieldHelper = $this->injectableFactory->createWith(FieldHelper::class, [
-            'entityType' => $entityType,
-        ]);
+        $bindingData = new BindingData();
 
-        return $this->injectableFactory->createWith($className, [
-            'entityType' => $entityType,
-            'user' => $user,
-            'fieldHelper' => $fieldHelper,
-        ]);
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $binder
+            ->for(FieldHelper::class)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
     public function has(string $entityType, string $name): bool

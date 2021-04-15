@@ -44,6 +44,9 @@ use Espo\Core\{
     Select\Applier\Appliers\Additional as AdditionalApplier,
     Utils\Metadata,
     InjectableFactory,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -133,16 +136,23 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
 
         $applier = $this->createMock($defaultClassName);
 
-        $with = [
-            'entityType' => $entityType,
-            'user' => $this->user,
-            'selectManager' => $this->selectManager,
-        ];
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $this->user)
+            ->bindInstance(SelectManager::class, $this->selectManager)
+            ->for($applierClassName)
+            ->bindValue('$entityType', $entityType)
+            ->bindValue('$selectManager', $this->selectManager);
+
+        $bindingContainer = new BindingContainer($bindingData);
 
         $this->injectableFactory
             ->expects($this->once())
-            ->method('createWith')
-            ->with($applierClassName, $with)
+            ->method('createWithBinding')
+            ->with($applierClassName, $bindingContainer)
             ->willReturn($applier);
 
         $resultApplier = $this->factory->create(

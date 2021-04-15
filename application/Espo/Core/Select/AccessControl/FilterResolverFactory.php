@@ -32,7 +32,12 @@ namespace Espo\Core\Select\AccessControl;
 use Espo\Core\{
     InjectableFactory,
     AclManager,
+    Acl,
+    Portal\Acl as PortalAcl,
     Utils\Metadata,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -54,23 +59,46 @@ class FilterResolverFactory
         $this->aclManager = $aclManager;
     }
 
-    public function create(string $entityType, User $user) : FilterResolver
+    public function create(string $entityType, User $user): FilterResolver
     {
-        $className = $this->getClassName($entityType);
+        $className = !$user->isPortal() ?
+            $this->getClassName($entityType) :
+            $this->getPortalClassName($entityType);
 
         $acl = $this->aclManager->createUserAcl($user);
 
-        return $this->injectableFactory->createWith($className, [
-            'entityType' => $entityType,
-            'user' => $user,
-            'acl' => $acl,
-        ]);
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $user)
+            ->bindInstance(Acl::class, $acl);
+
+        if ($user->isPortal()) {
+            $binder->bindInstance(PortalAcl::class, $acl);
+        }
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
-    private function getClassName(string $entityType) : string
+    private function getClassName(string $entityType): string
     {
         return $this->metadata->get([
             'selectDefs', $entityType, 'accessControlFilterResolverClassName'
         ]) ?? DefaultFilterResolver::class;
+    }
+
+    private function getPortalClassName(string $entityType): string
+    {
+        return $this->metadata->get([
+            'selectDefs', $entityType, 'portalAccessControlFilterResolverClassName'
+        ]) ?? DefaultPortalFilterResolver::class;
     }
 }

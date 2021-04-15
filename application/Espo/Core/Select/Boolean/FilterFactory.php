@@ -34,6 +34,9 @@ use Espo\Core\{
     Select\Boolean\Filter,
     InjectableFactory,
     Utils\Metadata,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -60,10 +63,18 @@ class FilterFactory
             throw new Error("Bool filter '{$name}' for '{$entityType}' does not exist.");
         }
 
-        return $this->injectableFactory->createWith($className, [
-            'entityType' => $entityType,
-            'user' => $user,
-        ]);
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $user)
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
     }
 
     public function has(string $entityType, string $name): bool

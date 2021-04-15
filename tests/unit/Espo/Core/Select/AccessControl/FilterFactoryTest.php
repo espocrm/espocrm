@@ -35,6 +35,9 @@ use Espo\Core\{
     Select\Helpers\FieldHelper,
     Utils\Metadata,
     InjectableFactory,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -70,8 +73,6 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
     {
         $entityType = 'Test';
 
-        $object = $this->createMock($defaultClassName);
-
         $this->metadata
             ->expects($this->any())
             ->method('get')
@@ -83,27 +84,28 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $object = $this->createMock($defaultClassName);
 
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $this->user);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $binder
+            ->for(FieldHelper::class)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
         $this->injectableFactory
-            ->expects($this->exactly(2))
-            ->method('createWith')
-            ->willReturnMap([
-                [
-                    FieldHelper::class,
-                    [
-                        'entityType' => $entityType,
-                    ],
-                    $this->fieldHelper,
-                ],
-                [
-                    $className,
-                    [
-                        'entityType' => $entityType,
-                        'user' => $this->user,
-                        'fieldHelper' => $this->fieldHelper,
-                    ],
-                    $object,
-                ],
-            ]);
+            ->expects($this->exactly(1))
+            ->method('createWithBinding')
+            ->with($className, $bindingContainer)
+            ->willReturn($object);
 
         $resultObject = $this->factory->create(
             $entityType,

@@ -34,6 +34,9 @@ use Espo\Core\{
     Select\Primary\Filters\Followed,
     Utils\Metadata,
     InjectableFactory,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -79,15 +82,21 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
 
         $object = $this->createMock($defaultClassName);
 
-        $with = [
-            'entityType' => $entityType,
-            'user' => $this->user,
-        ];
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $this->user)
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
 
         $this->injectableFactory
             ->expects($this->once())
-            ->method('createWith')
-            ->with($className, $with)
+            ->method('createWithBinding')
+            ->with($className, $bindingContainer)
             ->willReturn($object);
 
         $resultObject = $this->factory->create(

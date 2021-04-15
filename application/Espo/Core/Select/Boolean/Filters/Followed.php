@@ -33,14 +33,14 @@ use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
     Core\Select\Boolean\Filter,
-    Enities\User,
+    Entities\User,
 };
 
 class Followed implements Filter
 {
-    protected $entityType;
+    private $entityType;
 
-    protected $user;
+    private $user;
 
     public function __construct(string $entityType, User $user)
     {

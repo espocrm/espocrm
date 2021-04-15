@@ -32,10 +32,16 @@ namespace tests\unit\Espo\Core\Select\AccessControl;
 use Espo\Core\{
     Select\AccessControl\FilterResolverFactory,
     Select\AccessControl\DefaultFilterResolver,
+    Select\AccessControl\DefaultPortalFilterResolver,
     Utils\Metadata,
     InjectableFactory,
     AclManager,
     Acl,
+    Portal\Acl as PortalAcl,
+    Portal\AclManager as PortalAclManager,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
 };
 
 use Espo\{
@@ -75,37 +81,72 @@ class FilterResolverFactoryTest extends \PHPUnit\Framework\TestCase
         $this->prepareFactoryTest('SomeClass');
     }
 
+    public function testCreatePortal()
+    {
+        $this->user
+            ->expects($this->any())
+            ->method('isPortal')
+            ->willReturn(true);
+
+        $this->aclManager = $this->createMock(PortalAclManager::class);
+
+        $this->aclManager
+            ->expects($this->any())
+            ->method('createUserAcl')
+            ->with($this->user)
+            ->willReturn($this->acl);
+
+        $this->prepareFactoryTest(null);
+    }
+
     protected function prepareFactoryTest(?string $className)
     {
         $entityType = 'Test';
 
-        $defaultClassName = DefaultFilterResolver::class;
-
-        $object = $this->createMock($defaultClassName);
+        if (!$this->user->isPortal()) {
+            $defaultClassName = DefaultFilterResolver::class;
+        }
+        else {
+            $defaultClassName = DefaultPortalFilterResolver::class;
+        }
 
         $this->metadata
             ->expects($this->once())
             ->method('get')
             ->with([
-                'selectDefs', $entityType, 'accessControlFilterResolverClassName'
+                'selectDefs', $entityType,
+                !$this->user->isPortal() ?
+                    'accessControlFilterResolverClassName':
+                    'portalAccessControlFilterResolverClassName'
             ])
             ->willReturn($className);
 
         $className = $className ?? $defaultClassName;
 
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindInstance(User::class, $this->user)
+            ->bindInstance(Acl::class, $this->acl);
+
+        if ($this->user->isPortal()) {
+            $binder->bindInstance(PortalAcl::class, $this->acl);
+        }
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType);
+
+        $bindingContainer = new BindingContainer($bindingData);
+
         $object = $this->createMock($defaultClassName);
 
         $this->injectableFactory
             ->expects($this->once())
-            ->method('createWith')
-            ->with(
-                $className,
-                [
-                    'entityType' => $entityType,
-                    'user' => $this->user,
-                    'acl' => $this->acl,
-                ]
-            )
+            ->method('createWithBinding')
+            ->with($className, $bindingContainer)
             ->willReturn($object);
 
         $resultObject = $this->factory->create($entityType, $this->user);

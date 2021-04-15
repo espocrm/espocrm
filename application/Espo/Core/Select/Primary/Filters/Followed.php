@@ -32,7 +32,7 @@ namespace Espo\Core\Select\Primary\Filters;
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     Core\Select\Primary\Filter,
-    Enities\User,
+    Entities\User,
 };
 
 class Followed implements Filter

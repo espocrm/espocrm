@@ -36,11 +36,11 @@ use Espo\{
 
 class DefaultFilterResolver implements FilterResolver
 {
-    protected $entityType;
+    private $entityType;
 
-    protected $user;
+    private $user;
 
-    protected $acl;
+    private $acl;
 
     public function __construct(string $entityType, User $user, Acl $acl)
     {
@@ -49,33 +49,8 @@ class DefaultFilterResolver implements FilterResolver
         $this->acl = $acl;
     }
 
-    public function resolve() : ?string
+    public function resolve(): ?string
     {
-        if ($this->user->isAdmin()) {
-            return null;
-        }
-
-        if ($this->user->isPortal()) {
-
-            if ($this->acl->checkReadOnlyOwn($this->entityType)) {
-                return 'portalOnlyOwn';
-            }
-
-            if ($this->acl->checkReadOnlyAccount($this->entityType)) {
-                return 'portalOnlyAccount';
-            }
-
-            if ($this->acl->checkReadOnlyContact($this->entityType)) {
-                return 'portalOnlyContact';
-            }
-
-            if ($this->acl->checkReadNo($this->entityType)) {
-                return 'no';
-            }
-
-            return null;
-        }
-
         if ($this->acl->checkReadOnlyOwn($this->entityType)) {
             return 'onlyOwn';
         }
@@ -88,6 +63,10 @@ class DefaultFilterResolver implements FilterResolver
             return 'no';
         }
 
-        return null;
+        if ($this->acl->checkReadAll($this->entityType)) {
+            return null;
+        }
+
+        return 'no';
     }
 }
