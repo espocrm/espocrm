@@ -167,8 +167,6 @@ class InboundEmail extends RecordService implements
             $this->parserClassName
         );
 
-        $maxSize = $this->getConfig()->get('emailMessageMaxSize');
-
         $teamId = $emailAccount->get('teamId');
 
         $userId = null;
@@ -331,13 +329,7 @@ class InboundEmail extends RecordService implements
                     }
                 }
 
-                $fetchOnlyHeader = false;
-
-                if ($maxSize) {
-                    if ($storage->getSize($id) > $maxSize * 1024 * 1024) {
-                        $fetchOnlyHeader = true;
-                    }
-                }
+                $fetchOnlyHeader = $this->checkFetchOnlyHeader($storage, $id);
 
                 $message = null;
                 $email = null;
@@ -1236,5 +1228,27 @@ class InboundEmail extends RecordService implements
         }
 
         return $this->notificator;
+    }
+
+    protected function checkFetchOnlyHeader(Imap $storage, string $id): bool
+    {
+        $maxSize = $this->getConfig()->get('emailMessageMaxSize');
+
+        if (!$maxSize) {
+            return false;
+        }
+
+        try {
+            $size = $storage->getSize($id);
+        }
+        catch (Throwable $e) {
+            return false;
+        }
+
+        if ($size > $maxSize * 1024 * 1024) {
+            return true;
+        }
+
+        return false;
     }
 }
