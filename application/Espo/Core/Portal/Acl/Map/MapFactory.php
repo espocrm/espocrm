@@ -71,24 +71,9 @@ class MapFactory
         $binder = new Binder($bindingData);
 
         $binder
-            ->bindCallback(
-                User::class,
-                function () use ($user): User {
-                    return $user;
-                }
-            )
-            ->bindCallback(
-                Table::class,
-                function () use ($table): PortalTable {
-                    return $table;
-                }
-            )
-            ->bindCallback(
-                Portal::class,
-                function () use ($portal): Portal {
-                    return $portal;
-                }
-            )
+            ->bindInstance(User::class, $user)
+            ->bindInstance(Table::class, $table)
+            ->bindInstance(Portal::class, $portal)
             ->bindImplementation(MetadataProvider::class, PortalMetadataProvider::class)
             ->bindImplementation(CacheKeyProvider::class, PortalCacheKeyProvider::class);
 

@@ -103,12 +103,7 @@ class AccessCheckerFactory
 
         $binder = new Binder($bindingData);
 
-        $binder->bindCallback(
-            PortalAclManager::class,
-            function () use ($aclManager): PortalAclManager {
-                return $aclManager;
-            }
-        );
+        $binder->bindInstance(PortalAclManager::class, $aclManager);
 
         return new BindingContainer($bindingData);
     }

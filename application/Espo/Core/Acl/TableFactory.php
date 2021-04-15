@@ -70,12 +70,7 @@ class TableFactory
         $binder = new Binder($bindingData);
 
         $binder
-            ->bindCallback(
-                User::class,
-                function () use ($user): User {
-                    return $user;
-                }
-            )
+            ->bindInstance(User::class, $user)
             ->bindImplementation(RoleListProvider::class, DefaultRoleListProvider::class)
             ->bindImplementation(CacheKeyProvider::class, DefaultCacheKeyProvider::class);
 

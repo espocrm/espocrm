@@ -63,18 +63,8 @@ class MapFactory
         $binder = new Binder($bindingData);
 
         $binder
-            ->bindCallback(
-                User::class,
-                function () use ($user): User {
-                    return $user;
-                }
-            )
-            ->bindCallback(
-                Table::class,
-                function () use ($table): Table {
-                    return $table;
-                }
-            )
+            ->bindInstance(User::class, $user)
+            ->bindInstance(Table::class, $table)
             ->bindImplementation(CacheKeyProvider::class, DefaultCacheKeyProvider::class);
 
         return new BindingContainer($bindingData);

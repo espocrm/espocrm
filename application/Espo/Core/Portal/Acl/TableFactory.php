@@ -71,18 +71,8 @@ class TableFactory
         $binder = new Binder($bindingData);
 
         $binder
-            ->bindCallback(
-                User::class,
-                function () use ($user): User {
-                    return $user;
-                }
-            )
-            ->bindCallback(
-                Portal::class,
-                function () use ($portal): Portal {
-                    return $portal;
-                }
-            )
+            ->bindInstance(User::class, $user)
+            ->bindInstance(Portal::class, $portal)
             ->bindImplementation(RoleListProvider::class, PortalRoleListProvider::class)
             ->bindImplementation(CacheKeyProvider::class, PortalCacheKeyProvider::class);
 
