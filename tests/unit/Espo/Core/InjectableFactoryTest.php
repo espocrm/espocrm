@@ -56,12 +56,7 @@ class InjectableFactoryTest extends \PHPUnit\Framework\TestCase
 
         $instance = $this->createMock(SomeInterface::class);
 
-        $binder->bindCallback(
-            SomeInterface::class,
-            function () use ($instance): SomeInterface {
-                return $instance;
-            }
-        );
+        $binder->bindInstance(SomeInterface::class, $instance);
 
         $obj = $injectableFactory->createWithBinding(SomeClass::class, new BindingContainer($bindingData));
 
