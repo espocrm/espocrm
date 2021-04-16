@@ -27,18 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Classes\Acl\Email;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\DefaultOwnershipChecker,
+    Acl\OwnershipOwnChecker,
+    Acl\OwnershipTeamChecker,
+};
 
-class ActionHistoryRecord extends Acl
+class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
-    public function checkIsOwner(EntityUser $user, Entity $entity)
+    private $defaultOwnershipChecker;
+
+    public function __construct(DefaultOwnershipChecker $defaultOwnershipChecker)
     {
-        return $entity->get('userId') === $user->getId();
+        $this->defaultOwnershipChecker = $defaultOwnershipChecker;
+    }
+
+    public function checkOwn(User $user, Entity $entity): bool
+    {
+        if ($user->getId() === $entity->get('assignedUserId')) {
+            return true;
+        }
+
+        if ($user->getId() === $entity->get('createdById')) {
+            return true;
+        }
+
+        if ($entity->hasLinkMultipleId('assignedUsers', $user->getId())) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function checkTeam(User $user, Entity $entity): bool
+    {
+        return $this->defaultOwnershipChecker->checkTeam($user, $entity);
     }
 }

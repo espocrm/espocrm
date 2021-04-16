@@ -27,27 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Classes\Acl\Email;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\Acl,
-    Acl\ScopeData,
     Acl\Table,
+    Acl\ScopeData,
+    Acl\DefaultAccessChecker,
+    Acl\AccessEntityCREDSChecker,
+    Acl\Traits\DefaultAccessCheckerDependency,
 };
 
-class Email extends Acl
+class AccessChecker implements AccessEntityCREDSChecker
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
+    use DefaultAccessCheckerDependency;
+
+    public function __construct(DefaultAccessChecker $defaultAccessChecker)
     {
-        if ($this->checkEntity($user, $entity, $data, 'read')) {
+        $this->defaultAccessChecker = $defaultAccessChecker;
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if ($this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
             return true;
         }
 
-        if (!$data->isFalse()) {
+        if ($data->isFalse()) {
             return false;
         }
 
@@ -61,37 +70,20 @@ class Email extends Acl
 
         $userIdList = $entity->get('usersIds');
 
-        if (is_array($userIdList) && in_array($user->id, $userIdList)) {
+        if (is_array($userIdList) && in_array($user->getId(), $userIdList)) {
             return true;
         }
 
         return false;
     }
 
-    public function checkIsOwner(EntityUser $user, Entity $entity)
-    {
-        if ($user->getId() === $entity->get('assignedUserId')) {
-            return true;
-        }
-
-        if ($user->getId() === $entity->get('createdById')) {
-            return true;
-        }
-
-        if ($entity->hasLinkMultipleId('assignedUsers', $user->id)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        if (!$data->isFalse()) {
+        if ($data->isFalse()) {
             return false;
         }
 
@@ -116,7 +108,7 @@ class Email extends Acl
             return false;
         }
 
-        if ($this->checkEntity($user, $entity, $data, Table::ACTION_DELETE)) {
+        if ($this->defaultAccessChecker->checkEntityDelete($user, $entity, $data)) {
             return true;
         }
 

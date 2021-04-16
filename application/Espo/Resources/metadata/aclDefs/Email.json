@@ -1,3 +1,5 @@
 {
+    "accessCheckerClassName": "Espo\\Classes\\Acl\\Email\\AccessChecker",
+    "ownershipCheckerClassName": "Espo\\Classes\\Acl\\Email\\OwnershipChecker",
     "readOwnerUserField": "users"
 }
