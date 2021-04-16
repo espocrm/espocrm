@@ -211,14 +211,14 @@ class InjectableFactory
         );
     }
 
-    private function getCallbackInjectionList(callable $callback, ?array $with = null): array
+    private function getCallbackInjectionList(callable $callback): array
     {
         $injectionList = [];
 
         $function = new ReflectionFunction($callback);
 
         foreach ($function->getParameters() as $param) {
-            $injectionList[] = $this->getMethodParamInjection(null, $param, $with);
+            $injectionList[] = $this->getMethodParamInjection(null, $param);
         }
 
         return $injectionList;
