@@ -42,7 +42,7 @@ use Espo\{
 
 class FilterResolverTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->acl = $this->createMock(Acl::class);
         $this->aclPortal = $this->createMock(AclPortal::class);
@@ -55,7 +55,7 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(
             'onlyOwn',
-            $this->initResolveTest(false, false, 'checkReadOnlyOwn')
+            $this->initResolveTest(false, 'checkReadOnlyOwn')
         );
     }
 
@@ -63,7 +63,7 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(
             'onlyTeam',
-            $this->initResolveTest(false, false, 'checkReadOnlyTeam')
+            $this->initResolveTest(false, 'checkReadOnlyTeam')
         );
     }
 
@@ -71,7 +71,7 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(
             'no',
-            $this->initResolveTest(false, false, 'checkReadNo')
+            $this->initResolveTest(false, 'checkReadNo')
         );
     }
 
@@ -79,7 +79,7 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(
             'portalOnlyOwn',
-            $this->initResolveTest(true, false, 'checkReadOnlyOwn')
+            $this->initResolveTest(true, 'checkReadOnlyOwn')
         );
     }
 
@@ -87,7 +87,7 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(
             'portalOnlyAccount',
-            $this->initResolveTest(true, false, 'checkReadOnlyAccount')
+            $this->initResolveTest(true, 'checkReadOnlyAccount')
         );
     }
 
@@ -95,7 +95,7 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(
             'portalOnlyContact',
-            $this->initResolveTest(true, false, 'checkReadOnlyContact')
+            $this->initResolveTest(true, 'checkReadOnlyContact')
         );
     }
 
@@ -103,19 +103,27 @@ class FilterResolverTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertEquals(
             'no',
-            $this->initResolveTest(true, false, 'checkReadNo')
+            $this->initResolveTest(true, 'checkReadNo')
         );
     }
 
     public function testResolveAll()
     {
         $this->assertEquals(
-            null,
-            $this->initResolveTest(false, true, 'checkReadAll')
+            'all',
+            $this->initResolveTest(false, 'checkReadAll')
         );
     }
 
-    protected function initResolveTest(bool $isPortal = false, bool $isAdmin = false, ?string $method) : ?string
+    public function testResolvePortalAll()
+    {
+        $this->assertEquals(
+            'portalAll',
+            $this->initResolveTest(true, 'checkReadAll')
+        );
+    }
+
+    protected function initResolveTest(bool $isPortal = false, ?string $method = null): ?string
     {
         $acl = $this->acl;
 

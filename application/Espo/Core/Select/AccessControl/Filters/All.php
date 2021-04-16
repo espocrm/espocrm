@@ -27,50 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\AccessControl;
+namespace Espo\Core\Select\AccessControl\Filters;
 
 use Espo\{
-    Core\Portal\Acl,
-    Entities\User,
+    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    Core\Select\AccessControl\Filter,
 };
 
-class DefaultPortalFilterResolver implements FilterResolver
+class All implements Filter
 {
-    private $entityType;
-
-    private $user;
-
-    private $acl;
-
-    public function __construct(string $entityType, User $user, Acl $acl)
+    public function apply(QueryBuilder $queryBuilder): void
     {
-        $this->entityType = $entityType;
-        $this->user = $user;
-        $this->acl = $acl;
-    }
 
-    public function resolve(): ?string
-    {
-        if ($this->acl->checkReadNo($this->entityType)) {
-            return 'no';
-        }
-
-        if ($this->acl->checkReadOnlyOwn($this->entityType)) {
-            return 'portalOnlyOwn';
-        }
-
-        if ($this->acl->checkReadOnlyAccount($this->entityType)) {
-            return 'portalOnlyAccount';
-        }
-
-        if ($this->acl->checkReadOnlyContact($this->entityType)) {
-            return 'portalOnlyContact';
-        }
-
-        if ($this->acl->checkReadAll($this->entityType)) {
-            return 'portalAll';
-        }
-
-        return 'no';
     }
 }

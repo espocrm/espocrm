@@ -85,9 +85,8 @@ class AccessControlFilter
             return;
         }
 
-        $accessControlFilterResolver = $this->accessControlFilterResolverFactory->create(
-            $this->entityType, $this->user
-        );
+        $accessControlFilterResolver = $this->accessControlFilterResolverFactory
+            ->create($this->entityType, $this->user);
 
         $filterName = $accessControlFilterResolver->resolve();
 
@@ -103,7 +102,8 @@ class AccessControlFilter
         }
 
         if ($this->accessControlFilterFactory->has($this->entityType, $filterName)) {
-            $filter = $this->accessControlFilterFactory->create($this->entityType, $this->user, $filterName);
+            $filter = $this->accessControlFilterFactory
+                ->create($this->entityType, $this->user, $filterName);
 
             $filter->apply($queryBuilder);
 

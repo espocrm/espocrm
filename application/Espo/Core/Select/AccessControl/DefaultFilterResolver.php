@@ -51,6 +51,10 @@ class DefaultFilterResolver implements FilterResolver
 
     public function resolve(): ?string
     {
+        if ($this->acl->checkReadNo($this->entityType)) {
+            return 'no';
+        }
+
         if ($this->acl->checkReadOnlyOwn($this->entityType)) {
             return 'onlyOwn';
         }
@@ -59,12 +63,8 @@ class DefaultFilterResolver implements FilterResolver
             return 'onlyTeam';
         }
 
-        if ($this->acl->checkReadNo($this->entityType)) {
-            return 'no';
-        }
-
         if ($this->acl->checkReadAll($this->entityType)) {
-            return null;
+            return 'all';
         }
 
         return 'no';
