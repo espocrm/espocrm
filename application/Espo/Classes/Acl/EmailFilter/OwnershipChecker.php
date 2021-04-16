@@ -27,17 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Classes\Acl\EmailFilter;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\OwnershipOwnChecker,
+    ORM\EntityManager,
+};
 
-class EmailFilter extends Acl
+class OwnershipChecker implements OwnershipOwnChecker
 {
-    public function checkIsOwner(EntityUser $user, Entity $entity)
+    private $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    public function checkOwn(User $user, Entity $entity): bool
     {
         if (!$entity->has('parentId') || !$entity->has('parentType')) {
             return false;
