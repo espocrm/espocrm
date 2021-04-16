@@ -27,19 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\integration\testClasses\Binding;
+namespace tests\unit\testClasses\Core\Binding;
 
-class SomeClass
+class SomeClass0
 {
-    private $someImplementation;
+    private $dep;
 
-    public function __construct(SomeInterface $someImplementation)
+    public function __construct(SomeInterface1 $dep)
     {
-        $this->someImplementation = $someImplementation;
-    }
-
-    public function get(): SomeInterface
-    {
-        return $this->someImplementation;
+        $this->dep = $dep;
     }
 }

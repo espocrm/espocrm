@@ -42,9 +42,17 @@ use tests\integration\testClasses\Binding\{
     SomeClass,
 };
 
+use tests\unit\testClasses\Core\Binding\{
+    SomeClass0,
+    SomeClass1,
+    SomeInterface1,
+    SomeClass2,
+    SomeInterface2,
+};
+
 class InjectableFactoryTest extends \PHPUnit\Framework\TestCase
 {
-    public function testCreateWithBinding(): void
+    public function testCreateWithBinding1(): void
     {
         $container = $this->createMock(Container::class);
 
@@ -63,5 +71,24 @@ class InjectableFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertNotNull($obj);
 
         $this->assertSame($instance, $obj->get());
+    }
+
+    public function testCreateWithBinding2(): void
+    {
+        $container = $this->createMock(Container::class);
+
+        $injectableFactory = new InjectableFactory($container);
+
+        $bindingData = new BindingData();
+
+        $binder = new Binder($bindingData);
+
+        $binder
+            ->bindImplementation(SomeInterface1::class, SomeClass1::class)
+            ->bindImplementation(SomeInterface2::class, SomeClass2::class);
+
+        $obj = $injectableFactory->createWithBinding(SomeClass0::class, new BindingContainer($bindingData));
+
+        $this->assertNotNull($obj);
     }
 }
