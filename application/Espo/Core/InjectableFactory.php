@@ -170,13 +170,13 @@ class InjectableFactory
         if ($bindingContainer && $bindingContainer->has($class, $param)) {
             $binding = $bindingContainer->get($class, $param);
 
-            return $this->resolveBinding($binding);
+            return $this->resolveBinding($binding, $bindingContainer);
         }
 
         if ($this->bindingContainer && $this->bindingContainer->has($class, $param)) {
             $binding = $this->bindingContainer->get($class, $param);
 
-            return $this->resolveBinding($binding);
+            return $this->resolveBinding($binding, $bindingContainer);
         }
 
         if (!$dependencyClass && $param->isDefaultValueAvailable()) {
@@ -227,7 +227,7 @@ class InjectableFactory
     /**
      * @return mixed
      */
-    private function resolveBinding(Binding $binding)
+    private function resolveBinding(Binding $binding, ?BindingContainer $bindingContainer)
     {
         $type = $binding->getType();
         $value = $binding->getValue();
@@ -237,7 +237,7 @@ class InjectableFactory
         }
 
         if ($type === Binding::IMPLEMENTATION_CLASS_NAME) {
-            return $this->create($value);
+            return $this->createInternal($value, null, $bindingContainer);
         }
 
         if ($type === Binding::VALUE) {
