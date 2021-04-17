@@ -27,25 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Classes\Acl\Webhook;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\Acl,
     Acl\ScopeData,
+    Acl\DefaultAccessChecker,
+    Acl\AccessEntityCREDChecker,
+    Acl\Traits\DefaultAccessCheckerDependency,
 };
 
-class Webhook extends Acl
+class AccessChecker implements AccessEntityCREDChecker
 {
-    public function checkIsOwner(EntityUser $user, Entity $entity)
+    use DefaultAccessCheckerDependency;
+
+    private $defaultAccessChecker;
+
+    public function __construct(DefaultAccessChecker $defaultAccessChecker)
     {
-        return $user->id === $entity->get('userId') && $user->isApi();
+        $this->defaultAccessChecker = $defaultAccessChecker;
     }
 
-    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
+    {
+        return $this->checkEntityInternal($user, $entity);
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
+    {
+        return $this->checkEntityInternal($user, $entity);
+    }
+
+    public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
+    {
+        return $this->checkEntityInternal($user, $entity);
+    }
+
+    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
+    {
+        return $this->checkEntityInternal($user, $entity);
+    }
+
+    private function checkEntityInternal(User $user, Entity $entity): bool
     {
         if ($user->isAdmin()) {
             return true;
@@ -55,58 +81,7 @@ class Webhook extends Acl
             return false;
         }
 
-        if ($user->isApi() && $user->id === $entity->get('userId')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        if ($data->isFalse()) {
-            return false;
-        }
-
-        if ($user->isApi() && $user->id === $entity->get('userId')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        if ($data->isFalse()) {
-            return false;
-        }
-
-        if ($user->isApi() && $user->id === $entity->get('userId')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function checkEntityEdit(EntityUser $user, Entity $entity, ScopeData $data): bool
-    {
-        if ($user->isAdmin()) {
-            return true;
-        }
-
-        if ($data->isFalse()) {
-            return false;
-        }
-
-        if ($user->isApi() && $user->id === $entity->get('userId')) {
+        if ($user->isApi() && $user->getId() === $entity->get('userId')) {
             return true;
         }
 

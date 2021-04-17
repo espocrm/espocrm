@@ -1,0 +1,4 @@
+{
+    "accessCheckerClassName": "Espo\\Classes\\Acl\\Webhook\\AccessChecker",
+    "ownershipCheckerClassName": "Espo\\Classes\\Acl\\Webhook\\OwnershipChecker"
+}

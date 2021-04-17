@@ -27,39 +27,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Classes\Acl\User;
+
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Entities\User as EntityUser;
-
 use Espo\Core\{
-    Acl\Acl,
-    Acl\ScopeData,
     Acl\Table,
+    Acl\ScopeData,
+    Acl\DefaultAccessChecker,
+    Acl\AccessEntityCREDSChecker,
+    Acl\Traits\DefaultAccessCheckerDependency,
+    AclManager,
 };
 
-class User extends Acl
+class AccessChecker implements AccessEntityCREDSChecker
 {
-    public function checkIsOwner(EntityUser $user, Entity $entity)
+    use DefaultAccessCheckerDependency;
+
+    private $defaultAccessChecker;
+
+    private $aclManager;
+
+    public function __construct(DefaultAccessChecker $defaultAccessChecker, AclManager $aclManager)
     {
-        return $user->getId() === $entity->getId();
+        $this->defaultAccessChecker = $defaultAccessChecker;
+        $this->aclManager = $aclManager;
     }
 
-    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
-        if (!$user->isAdmin() && $entity->isPortal()) {
-            if ($this->aclManager->get($user, 'portal') === Table::LEVEL_YES) {
+        if (!$user->isAdmin()) {
+            return false;
+        }
+
+        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
+            return false;
+        }
+
+        return $this->defaultAccessChecker->checkEntityCreate($user, $entity, $data);
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if ($entity->isPortal()) {
+            if ($this->aclManager->getPermissionLevel($user, 'portal') === Table::LEVEL_YES) {
                 return true;
             }
-        }
 
-        return $this->checkEntity($user, $entity, $data, Table::ACTION_READ);
-    }
-
-    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
-    {
-        if (!$user->isAdmin()) {
             return false;
         }
 
@@ -67,35 +83,11 @@ class User extends Acl
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, Table::ACTION_CREATE);
+        return $this->defaultAccessChecker->checkEntityRead($user, $entity, $data);
     }
 
-    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
-        if ($entity->getId() === 'system') {
-            return false;
-        }
-
-        if (!$user->isAdmin()) {
-            return false;
-        }
-
-        if ($entity->isSystem()) {
-            return false;
-        }
-
-        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
-            return false;
-        }
-
-        return parent::checkEntityDelete($user, $entity, $data);
-    }
-
-    public function checkEntityEdit(EntityUser $user, Entity $entity, ScopeData $data): bool
-    {
-        if ($entity->id === 'system') {
-            return false;
-        }
         if ($entity->isSystem()) {
             return false;
         }
@@ -110,6 +102,28 @@ class User extends Acl
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, Table::ACTION_EDIT);
+        return $this->defaultAccessChecker->checkEntityEdit($user, $entity, $data);
+    }
+
+    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if (!$user->isAdmin()) {
+            return false;
+        }
+
+        if ($entity->isSystem()) {
+            return false;
+        }
+
+        if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
+            return false;
+        }
+
+        return $this->defaultAccessChecker->checkEntityDelete($user, $entity, $data);
+    }
+
+    public function checkEntityStream(User $user, Entity $entity, ScopeData $data): bool
+    {
+        return $this->aclManager->checkUserPermission($user, $entity, 'user');
     }
 }
