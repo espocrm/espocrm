@@ -27,23 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\AclPortal;
+namespace Espo\Classes\AclPortal\User;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
+
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    AclPortal\Acl as Acl,
+    Acl\OwnershipOwnChecker,
 };
 
-class Notification extends Acl
+class OwnershipChecker implements OwnershipOwnChecker
 {
-    public function checkIsOwner(EntityUser $user, Entity $entity)
+    public function checkOwn(User $user, Entity $entity): bool
     {
-        if ($user->getId() === $entity->get('userId')) {
-            return true;
-        }
-
-        return false;
+        return $user->getId() === $entity->getId();
     }
 }

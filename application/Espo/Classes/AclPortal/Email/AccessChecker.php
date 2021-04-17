@@ -37,12 +37,12 @@ use Espo\Core\{
     Portal\AclManager,
     Acl\Table,
     Acl\ScopeData,
-    Acl\AccessEntityCREDChecker,
+    Acl\AccessEntityCREDSChecker,
     Portal\Acl\DefaultAccessChecker,
     Portal\Acl\Traits\DefaultAccessCheckerDependency,
 };
 
-class AccessChecker implements AccessEntityCREDChecker
+class AccessChecker implements AccessEntityCREDSChecker
 {
     use DefaultAccessCheckerDependency;
 

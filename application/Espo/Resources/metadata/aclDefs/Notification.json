@@ -1,3 +1,4 @@
 {
-    "ownershipCheckerClassName": "Espo\\Classes\\Acl\\Notification\\OwnershipChecker"
+    "ownershipCheckerClassName": "Espo\\Classes\\Acl\\Notification\\OwnershipChecker",
+    "portalOwnershipCheckerClassName": "Espo\\Classes\\AclPortal\\Notification\\OwnershipChecker"
 }
