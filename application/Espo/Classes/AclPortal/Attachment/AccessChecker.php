@@ -27,22 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\AclPortal;
+namespace Espo\Classes\AclPortal\Attachment;
 
-use Espo\Entities\User as EntityUser;
-use Espo\Entities\Note;
+use Espo\Entities\{
+    User,
+    Note,
+};
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
+    ORM\EntityManager,
+    Portal\AclManager,
     Acl\ScopeData,
-    Acl\Table,
-    AclPortal\Acl as Acl,
+    Acl\AccessEntityCREDChecker,
+    Portal\Acl\DefaultAccessChecker,
+    Portal\Acl\Traits\DefaultAccessCheckerDependency,
 };
 
-class Attachment extends Acl
+class AccessChecker implements AccessEntityCREDChecker
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
+    use DefaultAccessCheckerDependency;
+
+    private $defaultAccessChecker;
+
+    private $aclManager;
+
+    private $entityManager;
+
+    public function __construct(
+        DefaultAccessChecker $defaultAccessChecker,
+        AclManager $aclManager,
+        EntityManager $entityManager
+    ) {
+        $this->defaultAccessChecker = $defaultAccessChecker;
+        $this->aclManager = $aclManager;
+        $this->entityManager = $entityManager;
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('parentType') === 'Settings') {
             return true;
@@ -77,14 +100,14 @@ class Attachment extends Acl
             return true;
         }
 
-        if ($this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {
+        if ($this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
             return true;
         }
 
         return false;
     }
 
-    protected function checkEntityReadNoteParent(EntityUser $user, Note $note): ?bool
+    private function checkEntityReadNoteParent(User $user, Note $note): ?bool
     {
         if ($note->isInternal()) {
             return false;
@@ -127,14 +150,5 @@ class Attachment extends Acl
         }
 
         return null;
-    }
-
-    public function checkIsOwner(EntityUser $user, Entity $entity)
-    {
-        if ($user->getId() === $entity->get('createdById')) {
-            return true;
-        }
-
-        return false;
     }
 }

@@ -27,22 +27,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Acl\Note;
+namespace Espo\Classes\AclPortal\Email;
 
 use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\OwnershipOwnChecker,
+    Portal\AclManager,
+    Acl\Table,
+    Acl\ScopeData,
+    Acl\AccessEntityCREDChecker,
+    Portal\Acl\DefaultAccessChecker,
+    Portal\Acl\Traits\DefaultAccessCheckerDependency,
 };
 
-class OwnershipChecker implements OwnershipOwnChecker
+class AccessChecker implements AccessEntityCREDChecker
 {
-    public function checkOwn(User $user, Entity $entity): bool
-    {
+    use DefaultAccessCheckerDependency;
 
-        if ($entity->get('type') === 'Post' && $user->getId() === $entity->get('createdById')) {
+    private $defaultAccessChecker;
+
+    private $aclManager;
+
+    public function __construct(
+        DefaultAccessChecker $defaultAccessChecker,
+        AclManager $aclManager
+    ) {
+        $this->defaultAccessChecker = $defaultAccessChecker;
+        $this->aclManager = $aclManager;
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if ($this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
+            return true;
+        }
+
+        if ($data->isFalse()) {
+            return false;
+        }
+
+        if ($data->getRead() === Table::LEVEL_NO) {
+            return false;
+        }
+
+        $userIdList = $entity->getLinkMultipleIdLIst('users');
+
+        if (is_array($userIdList) && in_array($user->getId(), $userIdList)) {
             return true;
         }
 

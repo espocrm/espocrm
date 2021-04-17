@@ -27,54 +27,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\AclPortal;
+namespace Espo\Classes\AclPortal\Attachment;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\ScopeData,
-    Acl\Table,
-    AclPortal\Acl as Acl,
+    Acl\OwnershipOwnChecker,
 };
 
-class Email extends Acl
+class OwnershipChecker implements OwnershipOwnChecker
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
+    private const ATTR_CREATED_BY_ID = 'createdById';
+
+    public function checkOwn(User $user, Entity $entity): bool
     {
-        if ($this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {
-            return true;
-        }
-
-        if ($data->isFalse()) {
-            return false;
-        }
-
-        if ($data->getRead() === Table::LEVEL_NO) {
-            return false;
-        }
-
-        if (!$entity->has('usersIds')) {
-            $entity->loadLinkMultipleField('users');
-        }
-
-        $userIdList = $entity->get('usersIds');
-
-        if (is_array($userIdList) && in_array($user->getId(), $userIdList)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function checkIsOwner(EntityUser $user, Entity $entity)
-    {
-        if ($user->getId() === $entity->get('createdById')) {
+        if ($user->getId() === $entity->get(self::ATTR_CREATED_BY_ID)) {
             return true;
         }
 
         return false;
     }
 }
-

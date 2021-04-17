@@ -1,4 +1,6 @@
 {
     "accessCheckerClassName": "Espo\\Classes\\Acl\\Attachment\\AccessChecker",
-    "ownershipCheckerClassName": "Espo\\Classes\\Acl\\Attachment\\OwnershipChecker"
+    "ownershipCheckerClassName": "Espo\\Classes\\Acl\\Attachment\\OwnershipChecker",
+    "portalAccessCheckerClassName": "Espo\\Classes\\AclPortal\\Attachment\\AccessChecker",
+    "portalOwnershipCheckerClassName": "Espo\\Classes\\AclPortal\\Attachment\\OwnershipChecker"
 }

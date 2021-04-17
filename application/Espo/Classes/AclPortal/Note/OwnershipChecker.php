@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Acl\Note;
+namespace Espo\Classes\AclPortal\Note;
 
 use Espo\Entities\User;
 
@@ -41,7 +41,6 @@ class OwnershipChecker implements OwnershipOwnChecker
 {
     public function checkOwn(User $user, Entity $entity): bool
     {
-
         if ($entity->get('type') === 'Post' && $user->getId() === $entity->get('createdById')) {
             return true;
         }

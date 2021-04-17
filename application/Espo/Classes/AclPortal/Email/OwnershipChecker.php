@@ -27,48 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\AclPortal;
+namespace Espo\Classes\AclPortal\Email;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
+
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\ScopeData,
-    Acl\Table,
-    AclPortal\Acl as Acl,
+    Acl\OwnershipOwnChecker,
 };
 
-class Note extends Acl
+class OwnershipChecker implements OwnershipOwnChecker
 {
-    public function checkIsOwner(EntityUser $user, Entity $entity)
+    public function checkOwn(User $user, Entity $entity): bool
     {
-        if ($entity->get('type') === 'Post' && $user->id === $entity->get('createdById')) {
+        if ($user->getId() === $entity->get('createdById')) {
             return true;
-        }
-
-        return false;
-    }
-
-    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
-    {
-        if ($entity->get('type') !== 'Post') {
-            return false;
-        }
-
-        if ($entity->get('type') === 'Post' && $entity->get('targetType')) {
-            return false;
-        }
-
-        if (!$entity->get('parentId') || !$entity->get('parentType')) {
-            return false;
-        }
-
-        $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
-
-        if ($parent) {
-            if ($this->aclManager->checkEntity($user, $parent, Table::ACTION_STREAM)) {
-                return true;
-            }
         }
 
         return false;
