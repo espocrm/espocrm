@@ -27,53 +27,63 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Classes\Acl\ScheduledJob;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\Acl,
     Acl\ScopeData,
-    Acl\Table,
+    Acl\DefaultAccessChecker,
+    Acl\AccessEntityCREDChecker,
+    Acl\Traits\DefaultAccessCheckerDependency,
 };
 
-class ScheduledJob extends Acl
+class AccessChecker implements AccessEntityCREDChecker
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
-    {
-        if ($entity->get('isInternal')) {
-            return false;
-        }
+    use DefaultAccessCheckerDependency;
 
-        return $this->checkEntity($user, $entity, $data, Table::ACTION_READ);
+    private $defaultAccessChecker;
+
+    public function __construct(DefaultAccessChecker $defaultAccessChecker)
+    {
+        $this->defaultAccessChecker = $defaultAccessChecker;
     }
 
-    public function checkEntityEdit(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('isInternal')) {
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, Table::ACTION_EDIT);
+        return $this->defaultAccessChecker->checkEntityCreate($user, $entity, $data);
     }
 
-    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('isInternal')) {
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, Table::ACTION_DELETE);
+        return $this->defaultAccessChecker->checkEntityRead($user, $entity, $data);
     }
 
-    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($entity->get('isInternal')) {
             return false;
         }
 
-        return $this->checkEntity($user, $entity, $data, Table::ACTION_CREATE);
+        return $this->defaultAccessChecker->checkEntityEdit($user, $entity, $data);
+    }
+
+    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if ($entity->get('isInternal')) {
+            return false;
+        }
+
+        return $this->defaultAccessChecker->checkEntityDelete($user, $entity, $data);
     }
 }

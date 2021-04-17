@@ -1,0 +1,4 @@
+{
+    "accessCheckerClassName": "Espo\\Classes\\Acl\\Note\\AccessChecker",
+    "ownershipCheckerClassName": "Espo\\Classes\\Acl\\Note\\OwnershipChecker"
+}

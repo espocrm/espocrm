@@ -27,20 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Classes\Acl\Notification;
+
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Entities\User as UserEntity;
+use Espo\Core\{
+    Acl\OwnershipOwnChecker,
+};
 
-use Espo\Core\Acl\Acl;
-
-class Team extends Acl
+class OwnershipChecker implements OwnershipOwnChecker
 {
-    public function checkInTeam(UserEntity $user, Entity $entity)
+    public function checkOwn(User $user, Entity $entity): bool
     {
-        $userTeamIdList = $user->getLinkMultipleIdList('teams');
+        if ($user->getId() === $entity->get('userId')) {
+            return true;
+        }
 
-        return in_array($entity->getId(), $userTeamIdList);
+        return false;
     }
 }

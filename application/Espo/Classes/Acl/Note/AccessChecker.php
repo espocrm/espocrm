@@ -27,62 +27,82 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Classes\Acl\Note;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\Acl,
     Acl\ScopeData,
-    Acl\Table,
+    Acl\DefaultAccessChecker,
+    Acl\AccessEntityCREDChecker,
+    Acl\Traits\DefaultAccessCheckerDependency,
+    AclManager,
+    ORM\EntityManager,
+    Utils\Config,
 };
 
-use Exception;
 use DateTime;
+use Exception;
 
-class Note extends Acl
+class AccessChecker implements AccessEntityCREDChecker
 {
-    protected $deleteThresholdPeriod = '1 month';
+    use DefaultAccessCheckerDependency;
 
-    protected $editThresholdPeriod = '7 days';
+    private const EDIT_PERIOD = '7 days';
 
-    public function checkIsOwner(EntityUser $user, Entity $entity)
+    private const DELETE_PERIOD = '1 month';
+
+    private $defaultAccessChecker;
+
+    private $aclManager;
+
+    private $entityManager;
+
+    private $config;
+
+    public function __construct(
+        DefaultAccessChecker $defaultAccessChecker,
+        AclManager $aclManager,
+        EntityManager $entityManager,
+        Config $config
+    ) {
+        $this->defaultAccessChecker = $defaultAccessChecker;
+        $this->aclManager = $aclManager;
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+    }
+
+    public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
-        if ($entity->get('type') === 'Post' && $user->id === $entity->get('createdById')) {
+        $parentId = $entity->get('parentId');
+        $parentType = $entity->get('parentType');
+
+        if (!$parentId || !$parentType) {
+            return true;
+        }
+
+        $parent = $this->entityManager->getEntity($parentType, $parentId);
+
+        if ($parent && $this->aclManager->checkEntityStream($user, $parent)) {
             return true;
         }
 
         return false;
     }
 
-    public function checkEntityCreate(EntityUser $user, Entity $entity, ScopeData $data): bool
-    {
-        if (!$entity->get('parentId') || !$entity->get('parentType')) {
-            return true;
-        }
-
-        $parent = $this->entityManager->getEntity($entity->get('parentType'), $entity->get('parentId'));
-
-        if ($parent && $this->aclManager->checkEntity($user, $parent, 'stream')) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function checkEntityEdit(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        if (!$this->checkEntity($user, $entity, $data, Table::ACTION_EDIT)) {
+        if (!$this->defaultAccessChecker->checkEntityEdit($user, $entity, $data)) {
             return false;
         }
 
-        if (!$this->checkIsOwner($user, $entity)) {
+        if (!$this->aclManager->checkOwnershipOwn($user, $entity)) {
             return true;
         }
 
@@ -93,7 +113,7 @@ class Note extends Acl
         }
 
         $noteEditThresholdPeriod =
-            '-' .  $this->config->get('noteEditThresholdPeriod', $this->editThresholdPeriod);
+            '-' .  $this->config->get('noteEditThresholdPeriod', self::EDIT_PERIOD);
 
         $dt = new DateTime();
 
@@ -111,17 +131,17 @@ class Note extends Acl
         return true;
     }
 
-    public function checkEntityDelete(EntityUser $user, Entity $entity, ScopeData $data): bool
+    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
         }
 
-        if (!$this->checkEntity($user, $entity, $data, Table::ACTION_DELETE)) {
+        if (!$this->defaultAccessChecker->checkEntityDelete($user, $entity, $data)) {
             return false;
         }
 
-        if (!$this->checkIsOwner($user, $entity)) {
+        if (!$this->aclManager->checkOwnershipOwn($user, $entity)) {
             return true;
         }
 
@@ -132,7 +152,7 @@ class Note extends Acl
         }
 
         $deleteThresholdPeriod =
-            '-' . $this->config->get('noteDeleteThresholdPeriod', $this->deleteThresholdPeriod);
+            '-' . $this->config->get('noteDeleteThresholdPeriod', self::DELETE_PERIOD);
 
         $dt = new DateTime();
 
