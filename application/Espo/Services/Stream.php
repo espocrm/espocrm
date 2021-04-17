@@ -50,6 +50,7 @@ use Espo\Core\{
     Utils\Metadata,
     Acl,
     AclManager,
+    Acl\Exceptions\NotImplemented as AclNotImplemented,
     ServiceFactory,
     Portal\AclManagerContainer as PortalAclManagerContainer,
     Utils\FieldUtil,
@@ -187,7 +188,14 @@ class Stream
                 continue;
             }
 
-            if (!$this->aclManager->check($user, $entity, 'stream')) {
+            try {
+                $hasAccess = $this->aclManager->checkEntityStream($user, $entity);
+            }
+            catch (AclNotImplemented $e) {
+                $hasAccess = false;
+            }
+
+            if (!$hasAccess) {
                 unset($userIdList[$i]);
             }
         }
@@ -261,22 +269,32 @@ class Stream
 
         if (!$skipAclCheck) {
             foreach ($userIdList as $i => $userId) {
-                $user = $this->entityManager->getRepository('User')
+                $user = $this->entityManager
+                    ->getRepository('User')
                     ->select(['id', 'type', 'isActive'])
                     ->where([
                         'id' => $userId,
                         'isActive' => true,
-                    ])->findOne();
+                    ])
+                    ->findOne();
 
                 if (!$user) {
                     unset($userIdList[$i]);
                     continue;
                 }
 
-                if (!$this->aclManager->check($user, $entity, 'stream')) {
+                try {
+                    $hasAccess = $this->aclManager->checkEntityStream($user, $entity);
+                }
+                catch (AclNotImplemented $e) {
+                    $hasAccess = false;
+                }
+
+                if (!$hasAccess) {
                     unset($userIdList[$i]);
                 }
             }
+
             $userIdList = array_values($userIdList);
         }
 
@@ -2002,13 +2020,17 @@ class Stream
                 continue;
             }
 
-            if (
-                !$aclManager
-                ||
-                !$aclManager->checkScope($user, $scope, 'read')
-                ||
-                !$aclManager->checkScope($user, $scope, 'stream')
-            ) {
+            try {
+                $hasAccess =
+                    $aclManager &&
+                    $aclManager->checkScope($user, $scope, 'read') &&
+                    $aclManager->checkScope($user, $scope, 'stream');
+            }
+            catch (AclNotImplemented $e) {
+                $hasAccess = false;
+            }
+
+            if (!$hasAccess) {
                 $ignoreScopeList[] = $scope;
             }
         }
