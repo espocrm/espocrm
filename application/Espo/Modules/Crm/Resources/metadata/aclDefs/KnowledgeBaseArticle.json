@@ -1,0 +1,3 @@
+{
+    "portalAccessCheckerClassName": "Espo\\Modules\\Crm\\Classes\\AclPortal\\KnowledgeBaseArticle\\AccessChecker"
+}

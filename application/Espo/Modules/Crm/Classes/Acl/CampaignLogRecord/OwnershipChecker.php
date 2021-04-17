@@ -27,36 +27,62 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\AclPortal;
+namespace Espo\Modules\Crm\Classes\Acl\CampaignLogRecord;
 
-use Espo\Entities\User as EntityUser;
+use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\ScopeData,
-    Acl\Table,
-    AclPortal\Acl as Acl,
+    Acl\OwnershipOwnChecker,
+    Acl\OwnershipTeamChecker,
+    AclManager,
+    ORM\EntityManager,
 };
 
-class KnowledgeBaseArticle extends Acl
+class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
-    public function checkEntityRead(EntityUser $user, Entity $entity, ScopeData $data): bool
+    private $aclManager;
+
+    private $entityManager;
+
+    public function __construct(AclManager $aclManager, EntityManager $entityManager)
     {
-        if (!$this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {
+        $this->aclManager = $aclManager;
+        $this->entityManager = $entityManager;
+    }
+
+    public function checkOwn(User $user, Entity $entity): bool
+    {
+        $campaignId = $entity->get('campaignId');
+
+        if (!$campaignId) {
             return false;
         }
 
-        if ($entity->get('status') !== 'Published') {
+        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
+
+        if ($campaign && $this->aclManager->checkOwnershipOwn($user, $campaign)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function checkTeam(User $user, Entity $entity): bool
+    {
+        $campaignId = $entity->get('campaignId');
+
+        if (!$campaignId) {
             return false;
         }
 
-        $portalIdList = $entity->getLinkMultipleIdList('portals');
+        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
 
-        if ($user->get('portalId') && !in_array($user->get('portalId'), $portalIdList)) {
-            return false;
+        if ($campaign && $this->aclManager->checkOwnershipTeam($user, $campaign)) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 }

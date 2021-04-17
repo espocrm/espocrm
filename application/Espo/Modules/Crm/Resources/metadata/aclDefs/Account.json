@@ -1,0 +1,3 @@
+{
+    "portalOwnershipCheckerClassName": "Espo\\Modules\\Crm\\Classes\\AclPortal\\Account\\OwnershipChecker"
+}

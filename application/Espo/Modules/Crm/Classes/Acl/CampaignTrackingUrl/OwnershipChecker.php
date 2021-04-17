@@ -27,55 +27,62 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Acl;
+namespace Espo\Modules\Crm\Classes\Acl\CampaignTrackingUrl;
 
 use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\OwnershipOwnChecker,
+    Acl\OwnershipTeamChecker,
+    AclManager,
+    ORM\EntityManager,
+};
 
-class MassEmail extends Acl
+class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
-    public function checkIsOwner(User $user, Entity $entity)
+    private $aclManager;
+
+    private $entityManager;
+
+    public function __construct(AclManager $aclManager, EntityManager $entityManager)
     {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
-
-            if (!$campaignId) {
-                return false;
-            }
-
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-
-            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkIsOwner($user, $campaign)) {
-                return true;
-            }
-
-            return false;
-        }
-
-        return parent::checkIsOwner($user, $entity);
+        $this->aclManager = $aclManager;
+        $this->entityManager = $entityManager;
     }
 
-    public function checkInTeam(User $user, Entity $entity)
+    public function checkOwn(User $user, Entity $entity): bool
     {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
+        $campaignId = $entity->get('campaignId');
 
-            if (!$campaignId) {
-                return false;
-            }
-
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-
-            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkInTeam($user, $campaign)) {
-                return true;
-            }
-
+        if (!$campaignId) {
             return false;
         }
 
-        return parent::checkInTeam($user, $entity);
+        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
+
+        if ($campaign && $this->aclManager->checkOwnershipOwn($user, $campaign)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function checkTeam(User $user, Entity $entity): bool
+    {
+        $campaignId = $entity->get('campaignId');
+
+        if (!$campaignId) {
+            return false;
+        }
+
+        $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
+
+        if ($campaign && $this->aclManager->checkOwnershipTeam($user, $campaign)) {
+            return true;
+        }
+
+        return false;
     }
 }

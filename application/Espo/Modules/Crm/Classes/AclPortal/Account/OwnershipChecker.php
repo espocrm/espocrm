@@ -27,9 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Acl;
+namespace Espo\Modules\Crm\Classes\AclPortal\Account;
 
-class Call extends Meeting
+use Espo\Entities\User;
+
+use Espo\ORM\Entity;
+
+use Espo\Core\{
+    Portal\Acl\DefaultOwnershipChecker,
+    Portal\Acl\OwnershipAccountChecker,
+};
+
+class OwnershipChecker implements OwnershipAccountChecker
 {
+    private $defaultOwnershipChecker;
 
+    public function __construct(DefaultOwnershipChecker $defaultOwnershipChecker) {
+        $this->defaultOwnershipChecker = $defaultOwnershipChecker;
+    }
+
+    public function checkAccount(User $user, Entity $entity): bool
+    {
+        $accountIdList = $user->getLinkMultipleIdList('accounts');
+
+        if (in_array($entity->getId(), $accountIdList)) {
+            return true;
+        }
+
+        return false;
+    }
 }

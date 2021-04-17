@@ -27,32 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Acl;
+namespace Espo\Modules\Crm\Classes\AclPortal\Contact;
 
 use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\Acl,
-    Acl\ScopeData,
-    Acl\Table,
+    Portal\Acl\DefaultOwnershipChecker,
+    Portal\Acl\OwnershipAccountChecker,
+    Portal\Acl\OwnershipContactChecker,
 };
 
-class Meeting extends Acl
+class OwnershipChecker implements OwnershipAccountChecker, OwnershipContactChecker
 {
-    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
-    {
-        if ($this->checkEntity($user, $entity, $data, Table::ACTION_READ)) {
-            return true;
-        }
+    private $defaultOwnershipChecker;
 
-        if ($data->getRead() === Table::LEVEL_OWN || $data->getRead() === Table::LEVEL_TEAM) {
-            if ($entity->hasLinkMultipleId('users', $user->getId())) {
+    public function __construct(DefaultOwnershipChecker $defaultOwnershipChecker) {
+        $this->defaultOwnershipChecker = $defaultOwnershipChecker;
+    }
+
+    public function checkContact(User $user, Entity $entity): bool
+    {
+        $contactId = $user->get('contactId');
+
+        if ($contactId) {
+            if ($entity->getId() === $contactId) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public function checkAccount(User $user, Entity $entity): bool
+    {
+        return $this->defaultOwnershipChecker->checkAccount($user, $entity);
     }
 }

@@ -27,21 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\AclPortal;
+namespace Espo\Modules\Crm\Classes\Acl\Meeting;
 
 use Espo\Entities\User;
+
 use Espo\ORM\Entity;
 
-use Espo\Core\AclPortal\Acl;
+use Espo\Core\{
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\DefaultAccessChecker,
+    Acl\AccessEntityCREDSChecker,
+    Acl\Traits\DefaultAccessCheckerDependency,
+};
 
-class Contact extends Acl
+class AccessChecker implements AccessEntityCREDSChecker
 {
-    public function checkIsOwnContact(User $user, Entity $entity)
-    {
-        $contactId = $user->get('contactId');
+    use DefaultAccessCheckerDependency;
 
-        if ($contactId) {
-            if ($entity->id === $contactId) {
+    private $defaultAccessChecker;
+
+    public function __construct(DefaultAccessChecker $defaultAccessChecker)
+    {
+        $this->defaultAccessChecker = $defaultAccessChecker;
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if ($this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
+            return true;
+        }
+
+        if ($data->getRead() === Table::LEVEL_OWN || $data->getRead() === Table::LEVEL_TEAM) {
+            if ($entity->hasLinkMultipleId('users', $user->getId())) {
                 return true;
             }
         }

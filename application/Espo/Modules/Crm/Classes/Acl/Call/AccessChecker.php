@@ -27,47 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Acl;
+namespace Espo\Modules\Crm\Classes\Acl\Call;
 
 use Espo\Entities\User;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Acl\Acl;
+use Espo\Core\{
+    Acl\ScopeData,
+    Acl\Table,
+    Acl\DefaultAccessChecker,
+    Acl\AccessEntityCREDSChecker,
+    Acl\Traits\DefaultAccessCheckerDependency,
+};
 
-class CampaignTrackingUrl extends Acl
+class AccessChecker implements AccessEntityCREDSChecker
 {
-    public function checkIsOwner(User $user, Entity $entity)
+    use DefaultAccessCheckerDependency;
+
+    private $defaultAccessChecker;
+
+    public function __construct(DefaultAccessChecker $defaultAccessChecker)
     {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
-
-            if (!$campaignId) {
-                return false;
-            }
-
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-
-            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkIsOwner($user, $campaign)) {
-                return true;
-            }
-        }
-
-        return false;
+        $this->defaultAccessChecker = $defaultAccessChecker;
     }
 
-    public function checkInTeam(User $user, Entity $entity)
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
-        if ($entity->has('campaignId')) {
-            $campaignId = $entity->get('campaignId');
+        if ($this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
+            return true;
+        }
 
-            if (!$campaignId) {
-                return false;
-            }
-
-            $campaign = $this->entityManager->getEntity('Campaign', $campaignId);
-
-            if ($campaign && $this->aclManager->getImplementation('Campaign')->checkInTeam($user, $campaign)) {
+        if ($data->getRead() === Table::LEVEL_OWN || $data->getRead() === Table::LEVEL_TEAM) {
+            if ($entity->hasLinkMultipleId('users', $user->getId())) {
                 return true;
             }
         }

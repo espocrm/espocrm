@@ -27,25 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\AclPortal;
+namespace Espo\Modules\Crm\Classes\AclPortal\KnowledgeBaseArticle;
 
 use Espo\Entities\User;
+
 use Espo\ORM\Entity;
 
-use Espo\Core\AclPortal\Acl;
+use Espo\Core\{
+    Acl\ScopeData,
+    Acl\AccessEntityCREDChecker,
+    Portal\Acl\DefaultAccessChecker,
+    Portal\Acl\Traits\DefaultAccessCheckerDependency,
+};
 
-class Account extends Acl
+class AccessChecker implements AccessEntityCREDChecker
 {
-    public function checkInAccount(User $user, Entity $entity)
-    {
-        $accountIdList = $user->getLinkMultipleIdList('accounts');
+    use DefaultAccessCheckerDependency;
 
-        if (count($accountIdList)) {
-            if (in_array($entity->id, $accountIdList)) {
-                return true;
-            }
+    private $defaultAccessChecker;
+
+    public function __construct(DefaultAccessChecker $defaultAccessChecker)
+    {
+        $this->defaultAccessChecker = $defaultAccessChecker;
+    }
+
+    public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if (!$this->defaultAccessChecker->checkEntityRead($user, $entity, $data)) {
+            return false;
         }
 
-        return false;
+        if ($entity->get('status') !== 'Published') {
+            return false;
+        }
+
+        $portalIdList = $entity->getLinkMultipleIdList('portals');
+
+        $portalId = $user->get('portalId');
+
+        if (!$portalId) {
+            return false;
+        }
+
+        return in_array($portalId, $portalIdList);
     }
 }

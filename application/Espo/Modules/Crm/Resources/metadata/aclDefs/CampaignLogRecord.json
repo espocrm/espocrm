@@ -1,0 +1,3 @@
+{
+    "ownershipCheckerClassName": "Espo\\Modules\\Crm\\Classes\\Acl\\CampaignLogRecord\\OwnershipChecker"
+}
