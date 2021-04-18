@@ -44,12 +44,19 @@ use ReflectionClass;
 class ClassParser
 {
     private $fileManager;
+
     private $config;
+
     private $metadata;
+
     private $dataCache;
 
-    public function __construct(FileManager $fileManager, Config $config, Metadata $metadata, DataCache $dataCache)
-    {
+    public function __construct(
+        FileManager $fileManager,
+        Config $config,
+        Metadata $metadata,
+        DataCache $dataCache
+    ){
         $this->fileManager = $fileManager;
         $this->config = $config;
         $this->metadata = $metadata;
@@ -59,15 +66,20 @@ class ClassParser
     /**
      * Return paths to class files.
      *
-     * @param  string | array $paths in format [
+     * @param string | array $paths in format [
      *    'corePath' => '',
      *    'modulePath' => '',
      *    'customPath' => '',
      * ]
      * @param $allowedMethods If specified, classes w/o specified method will be ignored.
      */
-    public function getData($paths, ?string $cacheKey = null, ?array $allowedMethods = null, bool $subDirs = false) : array
-    {
+    public function getData(
+        $paths,
+        ?string $cacheKey = null,
+        ?array $allowedMethods = null,
+        bool $subDirs = false
+    ): array {
+
         $data = null;
 
         if (is_string($paths)) {
@@ -96,7 +108,10 @@ class ClassParser
             }
 
             if (isset($paths['customPath'])) {
-                $data = array_merge($data, $this->getClassNameHash($paths['customPath'], $allowedMethods, $subDirs));
+                $data = array_merge(
+                    $data,
+                    $this->getClassNameHash($paths['customPath'], $allowedMethods, $subDirs)
+                );
             }
 
             if ($cacheKey && $this->config->get('useCache')) {
@@ -127,12 +142,23 @@ class ClassParser
     }
 
     protected function fillHashFromFileList(
-        array $fileList, string $dir, ?array $allowedMethods, array &$data, string $category = ''
+        array $fileList,
+        string $dir,
+        ?array $allowedMethods,
+        array &$data,
+        string $category = ''
     ) {
+
         foreach ($fileList as $key => $file) {
             if (is_string($key)) {
                 if (is_array($file)) {
-                    $this->fillHashFromFileList($file, $dir . '/'. $key, $allowedMethods, $data, $category . $key . '\\');
+                    $this->fillHashFromFileList(
+                        $file,
+                        $dir . '/'. $key,
+                        $allowedMethods,
+                        $data,
+                        $category . $key . '\\'
+                    );
                 }
 
                 continue;

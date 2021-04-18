@@ -30,10 +30,10 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Mail\FiltersMatcher;
+
 use Espo\Entities\Email;
 use Espo\Entities\EmailFilter;
-
-use Espo\Core\Mail\FiltersMatcher;
 
 /**
  * Looks for any matching Email Filter for a given email and user.
@@ -61,16 +61,22 @@ class EmailFilterManager
         if (!$this->filtersMatcher) {
             $this->filtersMatcher = new FiltersMatcher();
         }
+
         return $this->filtersMatcher;
     }
 
-    public function getMatchingFilter(Email $email, string $userId) : ?EmailFilter
+    public function getMatchingFilter(Email $email, string $userId): ?EmailFilter
     {
         if (!array_key_exists($userId, $this->data)) {
-            $emailFilterList = $this->getEntityManager()->getRepository('EmailFilter')->where([
-                'parentId' => $userId,
-                'parentType' => 'User'
-            ])->order('LIST:action:Skip,Move to Folder')->find();
+            $emailFilterList = $this->getEntityManager()
+                ->getRepository('EmailFilter')
+                ->where([
+                    'parentId' => $userId,
+                    'parentType' => 'User'
+                ])
+                ->order('LIST:action:Skip,Move to Folder')
+                ->find();
+
             $this->data[$userId] = $emailFilterList;
         }
         foreach ($this->data[$userId] as $emailFilter) {
@@ -78,6 +84,7 @@ class EmailFilterManager
                 return $emailFilter;
             }
         }
+
         return null;
     }
 }

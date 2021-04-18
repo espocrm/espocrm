@@ -28,15 +28,19 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\File;
+
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
+
+use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\Metadata;
 
 class FileUnifier
 {
     private $fileManager;
     private $metadata;
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata = null)
+    public function __construct(Manager $fileManager, Metadata $metadata = null)
     {
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
@@ -53,10 +57,10 @@ class FileUnifier
     }
 
     /**
-     * Unite files content
+     * Unite files content,
      *
      * @param array $paths
-     * @param bool $isReturnModuleNames - If need to return data with module names
+     * @param bool $isReturnModuleNames If need to return data with module names.
      *
      * @return array
      */
@@ -66,16 +70,21 @@ class FileUnifier
 
         if (!empty($paths['modulePath'])) {
             $moduleDir = strstr($paths['modulePath'], '{*}', true);
-            $moduleList = isset($this->metadata) ? $this->getMetadata()->getModuleList() : $this->getFileManager()->getFileList($moduleDir, false, '', false);
+
+            $moduleList = isset($this->metadata) ?
+                $this->getMetadata()->getModuleList() :
+                $this->getFileManager()->getFileList($moduleDir, false, '', false);
 
             foreach ($moduleList as $moduleName) {
                 $moduleFilePath = str_replace('{*}', $moduleName, $paths['modulePath']);
 
                 if ($isReturnModuleNames) {
                     if (!isset($data[$moduleName])) {
-                        $data[$moduleName] = array();
+                        $data[$moduleName] = [];
                     }
+
                     $data[$moduleName] = Util::merge($data[$moduleName], $this->loadData($moduleFilePath));
+
                     continue;
                 }
 
@@ -91,19 +100,22 @@ class FileUnifier
     }
 
     /**
-     * Load data from a file
+     * Load data from a file.
      *
-     * @param  string $filePath
-     * @param  array  $returns
+     * @param string $filePath
+     * @param array $returns
      * @return array
      */
-    protected function loadData($filePath, $returns = array())
+    protected function loadData($filePath, $returns = [])
     {
         if (file_exists($filePath)) {
             $content = $this->getFileManager()->getContents($filePath);
+
             $data = Json::getArrayData($content);
+
             if (empty($data)) {
                 $GLOBALS['log']->warning('FileUnifier::unify() - Empty file or syntax error - ['.$filePath.']');
+
                 return $returns;
             }
 

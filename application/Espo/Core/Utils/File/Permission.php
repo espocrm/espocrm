@@ -37,9 +37,9 @@ class Permission
     private $fileManager;
 
     /**
-     * Last permission error
+     * Last permission error.
      *
-     * @var array | string
+     * @var array|string
      */
     protected $permissionError = null;
 
@@ -96,7 +96,7 @@ class Permission
     }
 
     /**
-     * Get default settings
+     * Get default settings.
      *
      * @return object
      */
@@ -133,7 +133,7 @@ class Permission
     }
 
     /**
-     * Set default permission
+     * Set default permission.
      *
      * @param string $path
      * @param bool $recurse
@@ -160,10 +160,10 @@ class Permission
     }
 
     /**
-     * Get current permissions
+     * Get current permissions.
      *
      * @param string $filename
-     * @return string | bool
+     * @return string|bool
      */
     public function getCurrentPermission($filePath)
     {
@@ -177,10 +177,10 @@ class Permission
     }
 
     /**
-     * Change permissions
+     * Change permissions.
      *
      * @param string $filename
-     * @param int | array $octal - ex. 0755, array(0644, 0755), array('file'=>0644, 'dir'=>0755)
+     * @param int|array $octal ex. 0755, array(0644, 0755), array('file'=>0644, 'dir'=>0755).
      * @param bool $recurse
      *
      * @return bool
@@ -194,10 +194,13 @@ class Permission
         //check the input format
         $permission= array();
         if (is_array($octal)) {
-            $count= 0;
-            $rule= array('file', 'dir');
+            $count = 0;
+
+            $rule = array('file', 'dir');
+
             foreach ($octal as $key => $val) {
                 $pKey= strval($key);
+
                 if (!in_array($pKey, $rule)) {
                     $pKey= $rule[$count];
                 }
@@ -205,6 +208,7 @@ class Permission
                 if (!empty($pKey)) {
                     $permission[$pKey]= $val;
                 }
+
                 $count++;
             }
         }
@@ -230,6 +234,7 @@ class Permission
             if (is_dir($path)) {
                 return $this->chmodReal($path, $permission['dir']);
             }
+
             return $this->chmodReal($path, $permission['file']);
         }
 
@@ -238,7 +243,7 @@ class Permission
     }
 
     /**
-     * Change permissions recursive
+     * Change permissions recursive.
      *
      * @param string $filename
      * @param int $fileOctal - ex. 0644
@@ -441,6 +446,7 @@ class Permission
         $defaultPermissions = $this->getDefaultPermissions();
 
         $owner = $defaultPermissions['user'];
+
         if (empty($owner) && $usePosix) {
             $owner = function_exists('posix_getuid') ? posix_getuid() : null;
         }
@@ -462,6 +468,7 @@ class Permission
         $defaultPermissions = $this->getDefaultPermissions();
 
         $group = $defaultPermissions['group'];
+
         if (empty($group) && $usePosix) {
             $group = function_exists('posix_getegid') ? posix_getegid() : null;
         }
@@ -474,23 +481,26 @@ class Permission
     }
 
     /**
-     * Set permission regarding defined in permissionMap
+     * Set permission regarding defined in permissionMap.
      *
      * @return  bool
      */
     public function setMapPermission()
     {
-        $this->permissionError = array();
-        $this->permissionErrorRules = array();
+        $this->permissionError = [];
+        $this->permissionErrorRules = [];
 
         $result = true;
 
         foreach ($this->getWritableMap() as $path => $options) {
-            if (!file_exists($path)) continue;
+            if (!file_exists($path)) {
+                continue;
+            }
 
             try {
                 $this->chmod($path, $this->writablePermissions, $options['recursive']);
-            } catch (\Throwable $e) {}
+            }
+            catch (\Throwable $e) {}
 
             /** check is writable */
             $res = is_writable($path);
@@ -500,7 +510,8 @@ class Permission
                     $name = uniqid();
                     $res &= $this->getFileManager()->putContents([$path, $name], 'test');
                     $res &= $this->getFileManager()->removeFile($name, $path);
-                } catch (\Throwable $e) {
+                }
+                catch (\Throwable $e) {
                     $res = false;
                 }
             }
@@ -516,7 +527,7 @@ class Permission
     }
 
     /**
-     * Get last permission error
+     * Get last permission error.
      *
      * @return array | string
      */
@@ -528,7 +539,7 @@ class Permission
     /**
      * Get last permission error rules
      *
-     * @return array | string
+     * @return array|string
      */
     public function getLastErrorRules()
     {
@@ -536,10 +547,12 @@ class Permission
     }
 
     /**
-     * Arrange permission file list
-     * e.g. array('application/Espo/Controllers/Email.php', 'application/Espo/Controllers/Import.php'), result is array('application/Espo/Controllers')
+     * Arrange permission file list.
      *
-     * @param  array $fileList
+     * e.g. array('application/Espo/Controllers/Email.php',
+     * 'application/Espo/Controllers/Import.php'), result is array('application/Espo/Controllers').
+     *
+     * @param array $fileList
      * @return array
      */
     public function arrangePermissionList($fileList)
@@ -551,6 +564,7 @@ class Permission
             $dirname = $pathInfo['dirname'];
 
             $currentPath = $fileName;
+
             if ($this->getSearchCount($dirname, $fileList) > 1) {
                 $currentPath = $dirname;
             }
@@ -564,10 +578,10 @@ class Permission
     }
 
     /**
-     * Get count of a search string in a array
+     * Get count of a search string in a array.
      *
-     * @param  string $search
-     * @param  array  $array
+     * @param string $search
+     * @param array $array
      * @return bool
      */
     protected function getSearchCount($search, array $array)
@@ -575,6 +589,7 @@ class Permission
         $search = $this->getPregQuote($search);
 
         $number = 0;
+
         foreach ($array as $value) {
             if (preg_match('/^'.$search.'/', $value)) {
                 $number++;
@@ -588,6 +603,7 @@ class Permission
     {
         foreach ($array as $value) {
             $value = $this->getPregQuote($value);
+
             if (preg_match('/^'.$value.'/', $item)) {
                 return true;
             }
@@ -600,5 +616,4 @@ class Permission
     {
         return preg_quote($string, '/-+=.');
     }
-
 }

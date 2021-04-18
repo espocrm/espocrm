@@ -85,8 +85,13 @@ class Manager
      *
      * @return array
      */
-    public function getFileList($path, $recursively = false, $filter = '', $onlyFileType = null, $isReturnSingleArray = false)
-    {
+    public function getFileList(
+        $path,
+        $recursively = false,
+        $filter = '',
+        $onlyFileType = null,
+        $isReturnSingleArray = false
+    ) {
         $path = $this->concatPaths($path);
 
         $result = [];

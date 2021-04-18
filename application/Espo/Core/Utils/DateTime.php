@@ -31,6 +31,10 @@ namespace Espo\Core\Utils;
 
 use Carbon\Carbon;
 
+use DateTimeZone;
+use Exception;
+use DateTime as DateTimeStd;
+
 /**
  * Util for a date-time formatting and convetion.
  * Available as 'dateTime' service.
@@ -75,154 +79,175 @@ class DateTime
     ) {
         $this->dateFormat = $dateFormat ?? 'YYYY-MM-DD';
         $this->timeFormat = $timeFormat ?? 'HH:mm';
-        $this->timezone = new \DateTimeZone($timeZone ?? 'UTC');
+        $this->timezone = new DateTimeZone($timeZone ?? 'UTC');
         $this->language = $language ?? 'en_US';
     }
 
-    public function getDateFormat() : string
+    public function getDateFormat(): string
     {
         return $this->dateFormat;
     }
 
-    public function getDateTimeFormat() : string
+    public function getDateTimeFormat(): string
     {
         return $this->dateFormat . ' ' . $this->timeFormat;
     }
 
-    public function getInternalDateTimeFormat() : string
+    public function getInternalDateTimeFormat(): string
     {
         return $this->internalDateTimeFormat;
     }
 
-    public function getInternalDateFormat() : string
+    public function getInternalDateFormat(): string
     {
         return $this->internalDateFormat;
     }
 
-    protected function getPhpDateFormat() : string
+    protected function getPhpDateFormat(): string
     {
         return $this->dateFormats[$this->dateFormat];
     }
 
-    protected function getPhpDateTimeFormat() : string
+    protected function getPhpDateTimeFormat(): string
     {
         return $this->dateFormats[$this->dateFormat] . ' ' . $this->timeFormats[$this->timeFormat];
     }
 
-    public function convertSystemDateToGlobal($string) : ?string
+    public function convertSystemDateToGlobal($string): ?string
     {
         return $this->convertSystemDate($string);
     }
 
-    public function convertSystemDateTimeToGlobal(string $string) : ?string
+    public function convertSystemDateTimeToGlobal(string $string): ?string
     {
         return $this->convertSystemDateTime($string);
     }
 
-    public function convertSystemDate(string $string, ?string $format = null, ?string $language = null) : ?string
+    public function convertSystemDate(string $string, ?string $format = null, ?string $language = null): ?string
     {
-        $dateTime = \DateTime::createFromFormat('Y-m-d', $string);
+        $dateTime = DateTimeStd::createFromFormat('Y-m-d', $string);
+
         if ($dateTime) {
             $carbon = Carbon::instance($dateTime);
+
             $carbon->locale($language ?? $this->language);
 
             return $carbon->isoFormat($format ?? $this->getDateFormat());
         }
+
         return null;
     }
 
     public function convertSystemDateTime(
-        string $string, ?string $timezone = null, ?string $format = null, ?string $language = null
-    ) : ?string {
+        string $string,
+        ?string $timezone = null,
+        ?string $format = null,
+        ?string $language = null
+    ): ?string {
+
         if (is_string($string) && strlen($string) === 16) {
             $string .= ':00';
         }
-        $dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $string);
+
+        $dateTime = DateTimeStd::createFromFormat('Y-m-d H:i:s', $string);
+
         if (empty($timezone)) {
             $tz = $this->timezone;
-        } else {
-            $tz = new \DateTimeZone($timezone);
+        }
+        else {
+            $tz = new DateTimeZone($timezone);
         }
 
         if ($dateTime) {
             $dateTime->setTimezone($tz);
+
             $carbon = Carbon::instance($dateTime);
+
             $carbon->locale($language ?? $this->language);
 
             return $carbon->isoFormat($format ?? $this->getDateTimeFormat());
         }
+
         return null;
     }
 
-    public function setTimezone(string $timezone)
+    public function setTimezone(string $timezone): void
     {
-        $this->timezone = new \DateTimeZone($timezone);
+        $this->timezone = new DateTimeZone($timezone);
     }
 
-    public function getInternalNowString() : string
+    public function getInternalNowString(): string
     {
         return date($this->getInternalDateTimeFormat());
     }
 
-    public function getInternalTodayString() : string
+    public function getInternalTodayString(): string
     {
         return date($this->getInternalDateFormat());
     }
 
-    public function getTodayString(?string $timezone = null, ?string $format = null) : string
+    public function getTodayString(?string $timezone = null, ?string $format = null): string
     {
         if ($timezone) {
-            $tz = new \DateTimeZone($timezone);
+            $tz = new DateTimeZone($timezone);
         } else {
             $tz = $this->timezone;
         }
 
-        $dateTime = new \DateTime();
+        $dateTime = new DateTimeStd();
+
         $dateTime->setTimezone($tz);
 
         $format = $format ?? $this->getDateFormat();
 
         $carbon = Carbon::instance($dateTime);
+
         $carbon->locale($this->language);
 
         return $carbon->isoFormat($format);
     }
 
-    public function getNowString(?string $timezone = null, ?string $format = null) : string
+    public function getNowString(?string $timezone = null, ?string $format = null): string
     {
         if ($timezone) {
-            $tz = new \DateTimeZone($timezone);
+            $tz = new DateTimeZone($timezone);
         } else {
             $tz = $this->timezone;
         }
 
-        $dateTime = new \DateTime();
+        $dateTime = new DateTimeStd();
+
         $dateTime->setTimezone($tz);
 
         $format = $format ?? $this->getDateTimeFormat();
 
         $carbon = Carbon::instance($dateTime);
+
         $carbon->locale($this->language);
 
         return $carbon->isoFormat($format);
     }
 
-    public static function isAfterThreshold($value, string $period) : bool
+    public static function isAfterThreshold($value, string $period): bool
     {
         if (is_string($value)) {
             try {
-                $dt = new \DateTime($value);
-            } catch (\Exception $e) {
+                $dt = new DateTimeStd($value);
+            }
+            catch (Exception $e) {
                 return false;
             }
-        } else if ($value instanceof \DateTime) {
+        }
+        else if ($value instanceof DateTimeStd) {
             $dt = clone $value;
-        } else {
+        }
+        else {
             return false;
         }
+
         $dt->modify($period);
 
-        $dtNow = new \DateTime();
+        $dtNow = new DateTimeStd();
 
         if ($dtNow->format('U') > $dt->format('U')) {
             return true;
@@ -231,7 +256,7 @@ class DateTime
         return false;
     }
 
-    public static function getSystemNowString() : string
+    public static function getSystemNowString(): string
     {
         return date(self::$systemDateTimeFormat);
     }
