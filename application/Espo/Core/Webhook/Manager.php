@@ -92,7 +92,7 @@ class Manager
         $this->dataCache->store($this->cacheKey, $this->data);
     }
 
-    private function buildData(): void
+    private function buildData(): array
     {
         $data = [];
 
