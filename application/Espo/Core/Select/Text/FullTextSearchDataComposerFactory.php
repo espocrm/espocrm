@@ -46,7 +46,7 @@ class FullTextSearchDataComposerFactory
         $this->metadata = $metadata;
     }
 
-    public function create(string $entityType) : FullTextSearchDataComposer
+    public function create(string $entityType): FullTextSearchDataComposer
     {
         $className = $this->getClassName($entityType);
 
@@ -55,7 +55,7 @@ class FullTextSearchDataComposerFactory
         ]);
     }
 
-    private function getClassName(string $entityType) : string
+    private function getClassName(string $entityType): string
     {
         return
             $this->metadata->get([

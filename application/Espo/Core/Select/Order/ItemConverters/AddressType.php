@@ -36,7 +36,7 @@ use Espo\Core\{
 
 class AddressType implements ItemConverter
 {
-    public function convert(Item $item) : array
+    public function convert(Item $item): array
     {
         $orderBy = $item->getOrderBy();
         $order = $item->getOrder();

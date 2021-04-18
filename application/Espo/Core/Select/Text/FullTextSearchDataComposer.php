@@ -53,7 +53,7 @@ class FullTextSearchDataComposer
         $this->metadataProvider = $metadataProvider;
     }
 
-    public function compose(string $filter, FullTextSearchDataComposerParams $params) : ?FullTextSearchData
+    public function compose(string $filter, FullTextSearchDataComposerParams $params): ?FullTextSearchData
     {
         if ($this->config->get('fullTextSearchDisabled')) {
             return null;
@@ -182,7 +182,7 @@ class FullTextSearchDataComposer
         ]);
     }
 
-    protected function getTextFilterFieldList() : array
+    protected function getTextFilterFieldList(): array
     {
         return $this->metadataProvider->getTextFilterFieldList($this->entityType) ?? ['name'];
     }

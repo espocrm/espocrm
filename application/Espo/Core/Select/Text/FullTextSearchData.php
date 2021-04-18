@@ -43,7 +43,7 @@ class FullTextSearchData
     {
     }
 
-    public static function fromArray(array $params) : self
+    public static function fromArray(array $params): self
     {
         $object = new self();
 
@@ -64,17 +64,17 @@ class FullTextSearchData
         return $object;
     }
 
-    public function getExpression() : string
+    public function getExpression(): string
     {
         return $this->expression;
     }
 
-    public function getFieldList() : array
+    public function getFieldList(): array
     {
         return $this->fieldList;
     }
 
-    public function getColumnList() : array
+    public function getColumnList(): array
     {
         return $this->columnList;
     }

@@ -59,7 +59,7 @@ class Scanner
         $this->entityManager = $entityManager;
     }
 
-    public function applyLeftJoins(QueryBuilder $queryBuilder, Item $item) : void
+    public function applyLeftJoins(QueryBuilder $queryBuilder, Item $item): void
     {
         $entityType = $queryBuilder->build()->getFrom();
 
@@ -70,7 +70,7 @@ class Scanner
         $this->applyLeftJoinsFromItem($queryBuilder, $item, $entityType);
     }
 
-    private function applyLeftJoinsFromItem(QueryBuilder $queryBuilder, Item $item, string $entityType) : void
+    private function applyLeftJoinsFromItem(QueryBuilder $queryBuilder, Item $item, string $entityType): void
     {
         $type = $item->getType();
         $value = $item->getValue();
@@ -101,7 +101,7 @@ class Scanner
 
     private function applyLeftJoinsFromAttribute(
         QueryBuilder $queryBuilder, string $attribute, string $entityType
-    ) : void {
+    ): void {
 
         if (strpos($attribute, ':') !== false) {
             $argumentList = QueryComposer::getAllAttributesFromComplexExpression($attribute);
@@ -142,7 +142,7 @@ class Scanner
         }
     }
 
-    private function getSeed(string $entityType) : Entity
+    private function getSeed(string $entityType): Entity
     {
         if (!isset($this->seedHash[$entityType])) {
             $this->seedHash[$entityType] = $this->entityManager->getEntity($entityType);

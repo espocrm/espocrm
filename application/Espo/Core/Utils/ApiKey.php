@@ -46,12 +46,12 @@ class ApiKey
         $this->configWriter = $configWriter;
     }
 
-    public static function hash(string $secretKey, string $string = '') : string
+    public static function hash(string $secretKey, string $string = ''): string
     {
         return hash_hmac('sha256', $string, $secretKey, true);
     }
 
-    public function getSecretKeyForUserId(string $id) : ?string
+    public function getSecretKeyForUserId(string $id): ?string
     {
         $apiSecretKeys = $this->config->get('apiSecretKeys');
 
@@ -70,7 +70,7 @@ class ApiKey
         return $apiSecretKeys->$id;
     }
 
-    public function storeSecretKeyForUserId(string $id, string $secretKey)
+    public function storeSecretKeyForUserId(string $id, string $secretKey): void
     {
         $apiSecretKeys = $this->config->get('apiSecretKeys');
 
@@ -85,7 +85,7 @@ class ApiKey
         $this->configWriter->save();
     }
 
-    public function removeSecretKeyForUserId(string $id)
+    public function removeSecretKeyForUserId(string $id): void
     {
         $apiSecretKeys = $this->config->get('apiSecretKeys');
 

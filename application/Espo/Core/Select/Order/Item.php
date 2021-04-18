@@ -43,7 +43,7 @@ class Item
     {
     }
 
-    public static function fromArray(array $params) : self
+    public static function fromArray(array $params): self
     {
         $object = new self();
 
@@ -71,12 +71,12 @@ class Item
         return $object;
     }
 
-    public function getOrderBy() : ?string
+    public function getOrderBy(): ?string
     {
         return $this->orderBy;
     }
 
-    public function getOrder() : ?string
+    public function getOrder(): ?string
     {
         return $this->order;
     }

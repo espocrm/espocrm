@@ -41,7 +41,7 @@ class FilterParams
     {
     }
 
-    public static function fromArray(array $params) : self
+    public static function fromArray(array $params): self
     {
         $object = new self();
 
@@ -57,12 +57,12 @@ class FilterParams
         return $object;
     }
 
-    public function noFullTextSearch() : bool
+    public function noFullTextSearch(): bool
     {
         return $this->noFullTextSearch;
     }
 
-    public function preferFullTextSearch() : bool
+    public function preferFullTextSearch(): bool
     {
         return $this->preferFullTextSearch;
     }

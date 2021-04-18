@@ -60,8 +60,11 @@ class ConfigWriter
 
     protected $helper;
 
-    public function __construct(Config $config, ConfigWriterFileManager $fileManager, ConfigWriterHelper $helper)
-    {
+    public function __construct(
+        Config $config,
+        ConfigWriterFileManager $fileManager,
+        ConfigWriterHelper $helper
+    ) {
         $this->config = $config;
         $this->fileManager = $fileManager;
         $this->helper = $helper;
@@ -70,7 +73,7 @@ class ConfigWriter
     /**
      * Set a parameter.
      */
-    public function set(string $name, $value)
+    public function set(string $name, $value): void
     {
         if (in_array($name, $this->associativeArrayAttributeList) && is_object($value)) {
             $value = (array) $value;
@@ -82,7 +85,7 @@ class ConfigWriter
     /**
      * Set multiple parameters.
      */
-    public function setMultiple(array $params)
+    public function setMultiple(array $params): void
     {
         foreach ($params as $name => $value) {
             $this->set($name, $value);
@@ -92,7 +95,7 @@ class ConfigWriter
     /**
      * Remove a parameter.
      */
-    public function remove(string $name)
+    public function remove(string $name): void
     {
         $this->removeParamList[] = $name;
     }
@@ -100,7 +103,7 @@ class ConfigWriter
     /**
      * Save config changes to the file.
      */
-    public function save()
+    public function save(): void
     {
         $changedData = $this->changedData;
 
@@ -170,12 +173,12 @@ class ConfigWriter
      *
      * @todo Remove? Saving re-writes the cache timestamp anyway.
      */
-    public function updateCacheTimestamp()
+    public function updateCacheTimestamp(): void
     {
         $this->set($this->cacheTimestampParam, $this->generateCacheTimestamp());
     }
 
-    protected function generateCacheTimestamp() : int
+    protected function generateCacheTimestamp(): int
     {
         return $this->helper->generateCacheTimestamp();
     }

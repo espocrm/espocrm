@@ -75,7 +75,7 @@ class Config
      *
      * @todo Move to ConfigData.
      */
-    public function getConfigPath() : string
+    public function getConfigPath(): string
     {
         return $this->configPath;
     }
@@ -109,7 +109,7 @@ class Config
     /**
      * Whether a parameter is set.
      */
-    public function has(string $name) : bool
+    public function has(string $name): bool
     {
         $keys = explode('.', $name);
 
@@ -170,7 +170,7 @@ class Config
     /**
      * @deprecated Since v6.2.0.
      */
-    public function remove(string $name) : bool
+    public function remove(string $name): bool
     {
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
@@ -259,7 +259,7 @@ class Config
      * @deprecated
      * @todo Move to `Espo\Core\Utils\Config\ConfigDefaults`.
      */
-    public function getDefaults() : array
+    public function getDefaults(): array
     {
         return $this->fileManager->getPhpContents($this->defaultConfigPath);
     }
@@ -288,7 +288,7 @@ class Config
     /**
      * Get all parameters.
      */
-    public function getAllData() : StdClass
+    public function getAllData(): StdClass
     {
         return (object) $this->loadConfig();
     }
@@ -333,7 +333,7 @@ class Config
      * @todo Remove.
      * @deprecated
      */
-    public function getAdminOnlyItemList() : array
+    public function getAdminOnlyItemList(): array
     {
         return $this->get('adminItems', []);
     }
@@ -342,7 +342,7 @@ class Config
      * @todo Remove.
      * @deprecated
      */
-    public function getSuperAdminOnlyItemList() : array
+    public function getSuperAdminOnlyItemList(): array
     {
         return $this->get('superAdminItems', []);
     }
@@ -351,7 +351,7 @@ class Config
      * @todo Remove.
      * @deprecated
      */
-    public function getSystemOnlyItemList() : array
+    public function getSystemOnlyItemList(): array
     {
         return $this->get('systemItems', []);
     }
@@ -360,7 +360,7 @@ class Config
      * @todo Remove.
      * @deprecated
      */
-    public function getSuperAdminOnlySystemItemList() : array
+    public function getSuperAdminOnlySystemItemList(): array
     {
         return $this->get('superAdminSystemItems', []);
     }
@@ -369,7 +369,7 @@ class Config
      * @todo Remove.
      * @deprecated
      */
-    public function getUserOnlyItemList() : array
+    public function getUserOnlyItemList(): array
     {
         return $this->get('userItems', []);
     }
@@ -378,7 +378,7 @@ class Config
      * @todo Move to another class `Espo\Core\Utils\Config\ApplicationConfigProvider`.
      * @deprecated
      */
-    public function getSiteUrl() : string
+    public function getSiteUrl(): string
     {
         return rtrim($this->get('siteUrl'), '/');
     }

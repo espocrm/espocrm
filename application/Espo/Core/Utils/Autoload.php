@@ -66,7 +66,7 @@ class Autoload
         $this->loader = $loader;
     }
 
-    protected function getData() : array
+    protected function getData(): array
     {
         if (!isset($this->data)) {
             $this->init();
@@ -92,7 +92,7 @@ class Autoload
         }
     }
 
-    protected function loadData() : array
+    protected function loadData(): array
     {
         $data = $this->loadDataFromFile($this->paths['corePath']);
 
@@ -107,7 +107,7 @@ class Autoload
         return $data;
     }
 
-    protected function loadDataFromFile(string $filePath) : array
+    protected function loadDataFromFile(string $filePath): array
     {
         if (!$this->fileManager->isFile($filePath)) {
             return [];
@@ -126,7 +126,7 @@ class Autoload
         return $this->normalizeData($arrayContent);
     }
 
-    protected function normalizeData(array $data) : array
+    protected function normalizeData(array $data): array
     {
         $normalizedData = [];
 

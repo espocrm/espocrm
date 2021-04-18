@@ -41,7 +41,7 @@ class Params
     {
     }
 
-    public static function fromArray(array $params) : self
+    public static function fromArray(array $params): self
     {
         $object = new self();
 
@@ -57,12 +57,12 @@ class Params
         return $object;
     }
 
-    public function applyPermissionCheck() : bool
+    public function applyPermissionCheck(): bool
     {
         return $this->applyPermissionCheck;
     }
 
-    public function forbidComplexExpressions() : bool
+    public function forbidComplexExpressions(): bool
     {
         return $this->forbidComplexExpressions;
     }

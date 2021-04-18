@@ -39,7 +39,7 @@ class FullTextSearchDataComposerParams
     {
     }
 
-    public static function fromArray(array $params) : self
+    public static function fromArray(array $params): self
     {
         $object = new self();
 
@@ -54,7 +54,7 @@ class FullTextSearchDataComposerParams
         return $object;
     }
 
-    public function isAuxiliaryUse() : bool
+    public function isAuxiliaryUse(): bool
     {
         return $this->isAuxiliaryUse;
     }

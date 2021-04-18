@@ -61,7 +61,7 @@ class ConfigWriterFileManager
         );
     }
 
-    public function isFile(string $filePath) : bool
+    public function isFile(string $filePath): bool
     {
         return $this->fileManager->isFile($filePath);
     }

@@ -47,28 +47,28 @@ class MetadataProvider
         $this->ormDefs = $ormDefs;
     }
 
-    public function getFullTextSearchOrderType(string $entityType) : ?string
+    public function getFullTextSearchOrderType(string $entityType): ?string
     {
         return $this->metadata->get([
             'entityDefs', $entityType, 'collection', 'fullTextSearchOrderType'
         ]);
     }
 
-    public function getTextFilterFieldList(string $entityType) : ?array
+    public function getTextFilterFieldList(string $entityType): ?array
     {
         return $this->metadata->get([
             'entityDefs', $entityType, 'collection', 'textFilterFields'
         ]);
     }
 
-    public function isFieldNotStorable(string $entityType, string $field) : bool
+    public function isFieldNotStorable(string $entityType, string $field): bool
     {
         return (bool) $this->metadata->get([
             'entityDefs', $entityType, 'fields', $field, 'notStorable'
         ]);
     }
 
-    public function isFullTextSearchSupportedForField(string $entityType, string $field) : bool
+    public function isFullTextSearchSupportedForField(string $entityType, string $field): bool
     {
         $fieldType = $this->metadata->get([
             'entityDefs', $entityType, 'fields', $field, 'type'
@@ -79,21 +79,21 @@ class MetadataProvider
         ]);
     }
 
-    public function hasFullTextSearch(string $entityType) : bool
+    public function hasFullTextSearch(string $entityType): bool
     {
         return (bool) $this->metadata->get([
             'entityDefs', $entityType, 'collection', 'fullTextSearch'
         ]);
     }
 
-    public function getFullTextSearchColumnList(string $entityType) : ?array
+    public function getFullTextSearchColumnList(string $entityType): ?array
     {
         return $this->ormDefs
             ->getEntity($entityType)
             ->getParam('fullTextSearchColumnList');
     }
 
-    public function getRelationType(string $entityType, string $link) : string
+    public function getRelationType(string $entityType, string $link): string
     {
         return $this->ormDefs
             ->getEntity($entityType)
@@ -101,7 +101,7 @@ class MetadataProvider
             ->getType();
     }
 
-    public function getAttributeType(string $entityType, string $attribute) : string
+    public function getAttributeType(string $entityType, string $attribute): string
     {
         return $this->ormDefs
             ->getEntity($entityType)
@@ -109,7 +109,7 @@ class MetadataProvider
             ->getType();
     }
 
-    public function getRelationEntityType(string $entityType, string $link) : ?string
+    public function getRelationEntityType(string $entityType, string $link): ?string
     {
         $relationDefs = $this->ormDefs
             ->getEntity($entityType)
@@ -122,7 +122,7 @@ class MetadataProvider
         return $relationDefs->getForeignEntityType();
     }
 
-    public function getAttributeRelationParam(string $entityType, string $attribute) : ?string
+    public function getAttributeRelationParam(string $entityType, string $attribute): ?string
     {
         return $this->ormDefs
             ->getEntity($entityType)

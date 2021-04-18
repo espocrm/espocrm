@@ -31,5 +31,5 @@ namespace Espo\Core\Select\Order;
 
 interface ItemConverter
 {
-    public function convert(Item $item) : array;
+    public function convert(Item $item): array;
 }

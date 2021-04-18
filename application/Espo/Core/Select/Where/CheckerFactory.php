@@ -47,7 +47,7 @@ class CheckerFactory
         $this->aclManager = $aclManager;
     }
 
-    public function create(string $entityType, User $user) : Checker
+    public function create(string $entityType, User $user): Checker
     {
         $acl = $this->aclManager->createUserAcl($user);
 

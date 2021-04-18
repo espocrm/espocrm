@@ -82,12 +82,12 @@ class Checker
         $this->acl = $acl;
     }
 
-    public function check(Item $item, Params $params) : void
+    public function check(Item $item, Params $params): void
     {
         $this->checkItem($item, $params);
     }
 
-    private function checkItem(Item $item, Params $params) : void
+    private function checkItem(Item $item, Params $params): void
     {
         $type = $item->getType();
         $attribute = $item->getAttribute();
@@ -130,7 +130,7 @@ class Checker
         }
     }
 
-    private function checkAttributeExistence(string $attribute, string $type) : void
+    private function checkAttributeExistence(string $attribute, string $type): void
     {
         if (strpos($attribute, '.') !== false) {
             // @todo Check existance of foreign attributes.
@@ -150,7 +150,7 @@ class Checker
         }
     }
 
-    private function checkAttributePermission(string $attribute, string $type) : void
+    private function checkAttributePermission(string $attribute, string $type): void
     {
         $entityType = $this->entityType;
 
@@ -211,7 +211,7 @@ class Checker
         }
     }
 
-    private function getSeed() : Entity
+    private function getSeed(): Entity
     {
         return $this->seed ?? $this->entityManager->getEntity($this->entityType);
     }

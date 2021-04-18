@@ -49,35 +49,35 @@ class MetadataProvider
         $this->entityManager = $entityManager;
     }
 
-    public function getDefaultOrderBy(string $entityType) : ?string
+    public function getDefaultOrderBy(string $entityType): ?string
     {
         return $this->metadata->get([
             'entityDefs', $entityType, 'collection', 'orderBy'
         ]) ?? null;
     }
 
-    public function getSelectAttributesDependancyMap(string $entityType) : ?array
+    public function getSelectAttributesDependancyMap(string $entityType): ?array
     {
         return $this->metadata->get([
             'selectDefs', $entityType, 'selectAttributesDependancyMap'
         ]) ?? null;
     }
 
-    public function getAclPortalAttributeList(string $entityType) : ?array
+    public function getAclPortalAttributeList(string $entityType): ?array
     {
         return $this->metadata->get([
             'selectDefs', $entityType, 'aclPortalAttributeList'
         ]) ?? null;
     }
 
-    public function getAclAttributeList(string $entityType) : ?array
+    public function getAclAttributeList(string $entityType): ?array
     {
         return $this->metadata->get([
             'selectDefs', $entityType, 'aclAttributeList'
         ]) ?? null;
     }
 
-    public function hasAttribute(string $entityType, string $attribute) : bool
+    public function hasAttribute(string $entityType, string $attribute): bool
     {
         return $this->entityManager
             ->getMetadata()
@@ -86,7 +86,7 @@ class MetadataProvider
             ->hasAttribute($attribute);
     }
 
-    public function isAttributeNotStorable(string $entityType, string $attribute) : bool
+    public function isAttributeNotStorable(string $entityType, string $attribute): bool
     {
         return $this->entityManager
             ->getMetadata()
@@ -96,7 +96,7 @@ class MetadataProvider
             ->isNotStorable();
     }
 
-    public function getAttributeType(string $entityType, string $attribute) : string
+    public function getAttributeType(string $entityType, string $attribute): string
     {
         return $this->entityManager
             ->getMetadata()

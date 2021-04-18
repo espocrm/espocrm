@@ -50,7 +50,7 @@ class EnumType implements ItemConverter
         $this->metadata = $metadata;
     }
 
-    public function convert(Item $item) : array
+    public function convert(Item $item): array
     {
         $orderBy = $item->getOrderBy();
         $order = $item->getOrder();

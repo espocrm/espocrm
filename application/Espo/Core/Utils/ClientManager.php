@@ -53,7 +53,10 @@ class ClientManager
     protected $basePath = '';
 
     public function __construct(
-        Config $config, ThemeManager $themeManager, Metadata $metadata, FileManager $fileManager
+        Config $config,
+        ThemeManager $themeManager,
+        Metadata $metadata,
+        FileManager $fileManager
     ) {
         $this->config = $config;
         $this->themeManager = $themeManager;
@@ -66,7 +69,7 @@ class ClientManager
         $this->basePath = $basePath;
     }
 
-    public function getBasePath() : string
+    public function getBasePath(): string
     {
         return $this->basePath;
     }
@@ -80,12 +83,12 @@ class ClientManager
         return $this->config->get('cacheTimestamp', 0);
     }
 
-    public function display(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []) : void
+    public function display(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): void
     {
         echo $this->render($runScript, $htmlFilePath, $vars);
     }
 
-    public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []) : string
+    public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): string
     {
         if (is_null($runScript)) {
             $runScript = $this->runScript;

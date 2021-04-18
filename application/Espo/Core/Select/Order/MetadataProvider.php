@@ -49,28 +49,28 @@ class MetadataProvider
         $this->entityManager = $entityManager;
     }
 
-    public function getFieldType(string $entityType, string $field) : ?string
+    public function getFieldType(string $entityType, string $field): ?string
     {
         return $this->metadata->get([
             'entityDefs', $entityType, 'fields', $field, 'type'
         ]) ?? null;
     }
 
-    public function getDefaultOrderBy(string $entityType) : ?string
+    public function getDefaultOrderBy(string $entityType): ?string
     {
         return $this->metadata->get([
             'entityDefs', $entityType, 'collection', 'orderBy'
         ]) ?? null;
     }
 
-    public function getDefaultOrder(string $entityType) : ?string
+    public function getDefaultOrder(string $entityType): ?string
     {
         return $this->metadata->get([
             'entityDefs', $entityType, 'collection', 'order'
         ]) ?? null;
     }
 
-    public function hasAttribute(string $entityType, string $attribute) : bool
+    public function hasAttribute(string $entityType, string $attribute): bool
     {
         return $this->entityManager
             ->getMetadata()
@@ -79,7 +79,7 @@ class MetadataProvider
             ->hasAttribute($attribute);
     }
 
-    public function isAttributeParamUniqueTrue(string $entityType, string $attribute) : bool
+    public function isAttributeParamUniqueTrue(string $entityType, string $attribute): bool
     {
         return (bool) $this->entityManager
             ->getMetadata()

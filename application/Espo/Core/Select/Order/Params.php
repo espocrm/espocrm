@@ -47,7 +47,7 @@ class Params
     {
     }
 
-    public static function fromArray(array $params) : self
+    public static function fromArray(array $params): self
     {
         $object = new self();
 
@@ -77,22 +77,22 @@ class Params
         return $object;
     }
 
-    public function forbidComplexExpressions() : bool
+    public function forbidComplexExpressions(): bool
     {
         return $this->forbidComplexExpressions;
     }
 
-    public function forceDefault() : bool
+    public function forceDefault(): bool
     {
         return $this->forceDefault;
     }
 
-    public function getOrderBy() : ?string
+    public function getOrderBy(): ?string
     {
         return $this->orderBy;
     }
 
-    public function getOrder() : ?string
+    public function getOrder(): ?string
     {
         return $this->order;
     }

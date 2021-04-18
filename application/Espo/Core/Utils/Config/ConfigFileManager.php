@@ -45,19 +45,19 @@ class ConfigFileManager
         $this->fileManager = new FileManager();
     }
 
-    public function setConfig(Config $config)
+    public function setConfig(Config $config): void
     {
         $this->fileManager = new FileManager(
             $config->get('defaultPermissions')
         );
     }
 
-    public function isFile(string $filePath) : bool
+    public function isFile(string $filePath): bool
     {
         return $this->fileManager->isFile($filePath);
     }
 
-    protected function putPhpContentsInternal(string $path, array $data, bool $useRenaming = false)
+    protected function putPhpContentsInternal(string $path, array $data, bool $useRenaming = false): void
     {
         $result = $this->fileManager->putPhpContents($path, $data, true, $useRenaming);
 
@@ -66,12 +66,12 @@ class ConfigFileManager
         }
     }
 
-    public function putPhpContents(string $path, array $data)
+    public function putPhpContents(string $path, array $data): void
     {
         $this->putPhpContentsInternal($path, $data, true);
     }
 
-    public function putPhpContentsNoRenaming(string $path, array $data)
+    public function putPhpContentsNoRenaming(string $path, array $data): void
     {
         $this->putPhpContentsInternal($path, $data, false);
     }

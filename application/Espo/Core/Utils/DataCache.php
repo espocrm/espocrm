@@ -51,7 +51,7 @@ class DataCache
     /**
      * Whether is cached.
      */
-    public function has(string $key) : bool
+    public function has(string $key): bool
     {
         $cacheFile = $this->getCacheFile($key);
 
@@ -87,7 +87,7 @@ class DataCache
      *
      * @param ?array|StdClass $data
      */
-    public function store(string $key, $data)
+    public function store(string $key, $data): void
     {
         if (! $this->checkDataIsValid($data)) {
             throw new InvalidArgumentException("Bad cache data type.");
@@ -111,7 +111,7 @@ class DataCache
         return ! $isInvalid;
     }
 
-    protected function getCacheFile(string $key) : string
+    protected function getCacheFile(string $key): string
     {
         if (
             $key === '' ||

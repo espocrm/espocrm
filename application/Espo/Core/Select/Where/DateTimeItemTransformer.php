@@ -53,7 +53,7 @@ class DateTimeItemTransformer
         $this->user = $user;
     }
 
-    public function transform(Item $item) : Item
+    public function transform(Item $item): Item
     {
         $format = 'Y-m-d H:i:s';
 

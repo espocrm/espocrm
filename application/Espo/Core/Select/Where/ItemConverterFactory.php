@@ -54,7 +54,7 @@ class ItemConverterFactory
         $this->metadata = $metadata;
     }
 
-    public function hasForType(string $type) : bool
+    public function hasForType(string $type): bool
     {
         return (bool) $this->getClassNameForType($type);
     }

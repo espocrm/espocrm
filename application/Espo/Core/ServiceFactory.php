@@ -55,7 +55,7 @@ class ServiceFactory
         return $this->classFinder->find('Services', $name);
     }
 
-    public function checkExists(string $name) : bool
+    public function checkExists(string $name): bool
     {
         $className = $this->getClassName($name);
 
@@ -66,7 +66,7 @@ class ServiceFactory
         return true;
     }
 
-    public function create(string $name) : object
+    public function create(string $name): object
     {
         $className = $this->getClassName($name);
         if (!$className) {

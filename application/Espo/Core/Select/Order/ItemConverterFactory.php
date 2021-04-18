@@ -47,12 +47,12 @@ class ItemConverterFactory
         $this->metadata = $metadata;
     }
 
-    public function has(string $entityType, string $field) : bool
+    public function has(string $entityType, string $field): bool
     {
         return (bool) $this->getClassName($entityType, $field);
     }
 
-    public function create(string $entityType, string $field) : ItemConverter
+    public function create(string $entityType, string $field): ItemConverter
     {
         $className = $this->getClassName($entityType, $field);
 
@@ -65,7 +65,7 @@ class ItemConverterFactory
         ]);
     }
 
-    private function getClassName(string $entityType, string $field) : ?string
+    private function getClassName(string $entityType, string $field): ?string
     {
         $className = $this->metadata->get([
             'selectDefs', $entityType, 'orderItemConverterClassNameMap', $field

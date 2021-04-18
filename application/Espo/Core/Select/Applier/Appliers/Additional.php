@@ -36,7 +36,7 @@ use Espo\{
 
 class Additional
 {
-    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams) : void
+    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams): void
     {
     }
 }

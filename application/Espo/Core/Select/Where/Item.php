@@ -56,7 +56,7 @@ class Item
     {
     }
 
-    public static function fromRaw(array $params) : self
+    public static function fromRaw(array $params): self
     {
         $object = new self();
 
@@ -88,7 +88,7 @@ class Item
         return $object;
     }
 
-    public static function fromRawAndGroup(array $paramList) : self
+    public static function fromRawAndGroup(array $paramList): self
     {
         return self::fromRaw([
             'type' => 'and',
@@ -96,7 +96,7 @@ class Item
         ]);
     }
 
-    public function getRaw() : array
+    public function getRaw(): array
     {
         $raw = [
             'type' => $this->type,
@@ -118,12 +118,12 @@ class Item
         return $raw;
     }
 
-    public function getType() : string
+    public function getType(): string
     {
         return $this->type;
     }
 
-    public function getAttribute() : ?string
+    public function getAttribute(): ?string
     {
         return $this->attribute;
     }
@@ -136,12 +136,12 @@ class Item
         return $this->value;
     }
 
-    public function isDateTime() : bool
+    public function isDateTime(): bool
     {
         return $this->dateTime;
     }
 
-    public function getTimeZone() : ?string
+    public function getTimeZone(): ?string
     {
         return $this->timeZone;
     }
