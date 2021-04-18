@@ -44,7 +44,7 @@ class UserFinder
         $this->entityManager = $entityManager;
     }
 
-    public function find(string $username, string $hash) : ?User
+    public function find(string $username, string $hash): ?User
     {
         $user = $this->entityManager
             ->getRepository('User')
@@ -58,7 +58,7 @@ class UserFinder
         return $user;
     }
 
-    public function findApiHmac(string $apiKey) : ?User
+    public function findApiHmac(string $apiKey): ?User
     {
         $user = $this->entityManager
             ->getRepository('User')
@@ -72,7 +72,7 @@ class UserFinder
         return $user;
     }
 
-    public function findApiApiKey(string $apiKey) : ?User
+    public function findApiApiKey(string $apiKey): ?User
     {
         $user = $this->entityManager
             ->getRepository('User')

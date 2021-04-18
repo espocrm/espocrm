@@ -38,10 +38,10 @@ interface CodeVerify
     /**
      * Generate data for a user.
      */
-    public function generateData(UserData $userData, StdClass $data, string $userName) : StdClass;
+    public function generateData(UserData $userData, StdClass $data, string $userName): StdClass;
 
     /**
      * Confirm code before storing.
      */
-    public function verify(UserData $userData, string $code) : bool;
+    public function verify(UserData $userData, string $code): bool;
 }

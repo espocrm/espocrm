@@ -40,12 +40,12 @@ class AuthenticationFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create() : Authentication
+    public function create(): Authentication
     {
         return $this->injectableFactory->create(Authentication::class);
     }
 
-    public function createWithAnyAccessAllowed() : Authentication
+    public function createWithAnyAccessAllowed(): Authentication
     {
         return $this->injectableFactory->createWith(Authentication::class, [
             'allowAnyAccess' => true,

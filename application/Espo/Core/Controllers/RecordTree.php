@@ -50,10 +50,16 @@ class RecordTree extends Record
         $maxDepth = $request->get('maxDepth');
         $onlyNotEmpty = $request->get('onlyNotEmpty');
 
-        $collection = $this->getRecordService()->getTree($parentId, [
-            'where' => $where,
-            'onlyNotEmpty' => $onlyNotEmpty
-        ], 0, $maxDepth);
+        $collection = $this->getRecordService()->getTree(
+            $parentId,
+            [
+                'where' => $where,
+                'onlyNotEmpty' => $onlyNotEmpty,
+            ],
+            0,
+            $maxDepth
+        );
+
         return (object) [
             'list' => $collection->toArray(),
             'path' => $this->getRecordService()->getTreeItemPath($parentId),

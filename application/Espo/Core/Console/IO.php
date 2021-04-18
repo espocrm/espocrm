@@ -40,7 +40,7 @@ class IO
     /**
      * Write a string to output.
      */
-    public function write(string $string) : void
+    public function write(string $string): void
     {
         fwrite(STDOUT, $string);
     }
@@ -48,7 +48,7 @@ class IO
     /**
      * Write a string followed by the current line terminator to output.
      */
-    public function writeLine(string $string) : void
+    public function writeLine(string $string): void
     {
         fwrite(STDOUT, $string . PHP_EOL);
     }
@@ -56,7 +56,7 @@ class IO
     /**
      * Read a line from input. A string is trimmed.
      */
-    public function readLine() : string
+    public function readLine(): string
     {
         $resource = fopen('php://stdin', 'r');
 

@@ -54,7 +54,7 @@ class UpgradeStep implements Command
         return $this->container;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $options = $params->getOptions();
 
@@ -84,7 +84,7 @@ class UpgradeStep implements Command
         echo "true";
     }
 
-    protected function runUpgradeStep($stepName, array $params) : bool
+    protected function runUpgradeStep($stepName, array $params): bool
     {
         $app = new Application();
 

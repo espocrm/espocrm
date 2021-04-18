@@ -42,7 +42,7 @@ class AuthBuilderFactory
         $this->log = $log;
     }
 
-    public function create() : AuthBuilder
+    public function create(): AuthBuilder
     {
         return new AuthBuilder($this->log);
     }

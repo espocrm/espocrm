@@ -108,7 +108,7 @@ class LDAP implements Login
         'portalRolesIds' => 'portalUserRolesIds',
     ];
 
-    public function login(LoginData $loginData, Request $request) : Result
+    public function login(LoginData $loginData, Request $request): Result
     {
         $username = $loginData->getUsername();
         $password = $loginData->getPassword();
@@ -396,7 +396,7 @@ class LDAP implements Login
     /**
      * Load fields for a user.
      */
-    private function loadFields(string $type) : array
+    private function loadFields(string $type): array
     {
         $options = $this->utils->getOptions();
 

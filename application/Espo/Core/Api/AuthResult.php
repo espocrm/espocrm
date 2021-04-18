@@ -38,7 +38,7 @@ class AuthResult
 
     private $isResolvedUseNoAuth = false;
 
-    public static function createResolved() : self
+    public static function createResolved(): self
     {
         $obj = new self();
 
@@ -47,7 +47,7 @@ class AuthResult
         return $obj;
     }
 
-    public static function createResolvedUseNoAuth() : self
+    public static function createResolvedUseNoAuth(): self
     {
         $obj = new self();
 
@@ -57,7 +57,7 @@ class AuthResult
         return $obj;
     }
 
-    public static function createNotResolved() : self
+    public static function createNotResolved(): self
     {
         return new self();
     }
@@ -65,7 +65,7 @@ class AuthResult
     /**
      * Logged in successfully.
      */
-    public function isResolved() : bool
+    public function isResolved(): bool
     {
         return $this->isResolved;
     }
@@ -73,7 +73,7 @@ class AuthResult
     /**
      * No need to log in.
      */
-    public function isResolvedUseNoAuth() : bool
+    public function isResolvedUseNoAuth(): bool
     {
         return $this->isResolvedUseNoAuth;
     }

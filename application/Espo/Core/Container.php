@@ -84,7 +84,7 @@ class Container implements ContainerInterface
      *
      * @throws RuntimeException If not gettable.
      */
-    public function get(string $name) : object
+    public function get(string $name): object
     {
         if (!$this->isSet($name)) {
             $this->load($name);
@@ -100,7 +100,7 @@ class Container implements ContainerInterface
     /**
      * Check whether a service can be obtained.
      */
-    public function has(string $name) : bool
+    public function has(string $name): bool
     {
         if ($this->isSet($name)) {
             return true;
@@ -131,12 +131,12 @@ class Container implements ContainerInterface
         return false;
     }
 
-    protected function isSet(string $name) : bool
+    protected function isSet(string $name): bool
     {
         return isset($this->data[$name]);
     }
 
-    private function initClass(string $name) : void
+    private function initClass(string $name): void
     {
         if ($this->isSet($name)) {
             $object = $this->get($name);
@@ -188,7 +188,7 @@ class Container implements ContainerInterface
      *
      * @throws RuntimeException If not gettable.
      */
-    public function getClass(string $name) : ReflectionClass
+    public function getClass(string $name): ReflectionClass
     {
         if (!$this->has($name)) {
             throw new RuntimeException("Service '{$name}' does not exist.");
@@ -206,7 +206,7 @@ class Container implements ContainerInterface
      *
      * @throws RuntimeException Is not settable or already set.
      */
-    public function set(string $name, object $object) : void
+    public function set(string $name, object $object): void
     {
         if (!$this->configuration->isSettable($name)) {
             throw new RuntimeException("Service '{$name}' is not settable.");
@@ -219,12 +219,12 @@ class Container implements ContainerInterface
         $this->setForced($name, $object);
     }
 
-    protected function setForced(string $name, object $object) : void
+    protected function setForced(string $name, object $object): void
     {
         $this->data[$name] = $object;
     }
 
-    private function getLoader(string $name) : ?Loader
+    private function getLoader(string $name): ?Loader
     {
         $loaderClassName = $this->getLoaderClassName($name);
 
@@ -235,12 +235,12 @@ class Container implements ContainerInterface
         return $this->injectableFactory->create($loaderClassName);
     }
 
-    private function getLoaderClassName(string $name) : ?string
+    private function getLoaderClassName(string $name): ?string
     {
         return $this->loaderClassNames[$name] ?? $this->configuration->getLoaderClassName($name);
     }
 
-    private function load(string $name) : void
+    private function load(string $name): void
     {
         $loadMethodName = 'load' . ucfirst($name);
 
@@ -283,12 +283,12 @@ class Container implements ContainerInterface
         $this->data[$name] = $this->injectableFactory->create($className);
     }
 
-    protected function loadContainer() : Container
+    protected function loadContainer(): Container
     {
         return $this;
     }
 
-    protected function loadInjectableFactory() : InjectableFactory
+    protected function loadInjectableFactory(): InjectableFactory
     {
         return new InjectableFactory($this, $this->bindingContainer);
     }

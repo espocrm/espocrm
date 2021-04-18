@@ -57,22 +57,22 @@ class ResultData
         $this->loggedUser = $loggedUser;
     }
 
-    public static function fromNothing() : self
+    public static function fromNothing(): self
     {
         return new self();
     }
 
-    public static function fromFailReason(string $failReason) : self
+    public static function fromFailReason(string $failReason): self
     {
         return new self(null, $failReason);
     }
 
-    public static function fromMessage(string $message) : self
+    public static function fromMessage(string $message): self
     {
         return new self($message);
     }
 
-    public static function fromArray(array $data) : self
+    public static function fromArray(array $data): self
     {
         return new self(
             $data['message'] ?? null,
@@ -83,32 +83,32 @@ class ResultData
         );
     }
 
-    public function getLoggedUser() : ?User
+    public function getLoggedUser(): ?User
     {
         return $this->loggedUser;
     }
 
-    public function getStatus() : string
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function getView() : ?string
+    public function getView(): ?string
     {
         return $this->view;
     }
 
-    public function getMessage() : ?string
+    public function getMessage(): ?string
     {
         return $this->message;
     }
 
-    public function getToken() : ?string
+    public function getToken(): ?string
     {
         return $this->token;
     }
 
-    public function getFailReason() : ?string
+    public function getFailReason(): ?string
     {
         return $this->failReason;
     }

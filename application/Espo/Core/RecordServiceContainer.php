@@ -59,7 +59,7 @@ class RecordServiceContainer
         $this->metadata = $metadata;
     }
 
-    public function get(string $entityType) : Record
+    public function get(string $entityType): Record
     {
         if (!array_key_exists($entityType, $this->data)) {
             $this->load($entityType);
@@ -68,7 +68,7 @@ class RecordServiceContainer
         return $this->data[$entityType];
     }
 
-    private function load(string $entityType) : void
+    private function load(string $entityType): void
     {
         if (!$this->metadata->get(['scopes', $entityType, 'entity'])) {
             throw new Error("Can't create record service {$entityType}, there's no such entity type.");

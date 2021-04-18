@@ -73,7 +73,7 @@ class Result
     /**
      * Create an instance for a successful login.
      */
-    public static function success(User $user) : self
+    public static function success(User $user): self
     {
         return new self(self::STATUS_SUCCESS, $user);
     }
@@ -81,7 +81,7 @@ class Result
     /**
      * Create an instance for a failed login.
      */
-    public static function fail(?string $reason = null) : self
+    public static function fail(?string $reason = null): self
     {
         $data = $reason ?
             ResultData::fromFailReason($reason) :
@@ -93,7 +93,7 @@ class Result
     /**
      * Create an instance for a login requiring a second step. E.g. for 2FA.
      */
-    public static function secondStepRequired(User $user, ResultData $data) : self
+    public static function secondStepRequired(User $user, ResultData $data): self
     {
         return new self(self::STATUS_SECOND_STEP_REQUIRED, $user, $data);
     }
@@ -101,7 +101,7 @@ class Result
     /**
      * Login is successful.
      */
-    public function isSuccess() : bool
+    public function isSuccess(): bool
     {
         return $this->status === self::STATUS_SUCCESS;
     }
@@ -109,7 +109,7 @@ class Result
     /**
      * Second step is required. E.g. for 2FA.
      */
-    public function isSecondStepRequired() : bool
+    public function isSecondStepRequired(): bool
     {
         return $this->status === self::STATUS_SECOND_STEP_REQUIRED;
     }
@@ -117,7 +117,7 @@ class Result
     /**
      * Login is failed.
      */
-    public function isFail() : bool
+    public function isFail(): bool
     {
         return $this->status === self::STATUS_FAIL;
     }
@@ -125,7 +125,7 @@ class Result
     /**
      * Get a user.
      */
-    public function getUser() : ?User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -134,7 +134,7 @@ class Result
      * Get a logged user. Considered that an admin user can log in as another user.
      * The logged user will be an admin user.
      */
-    public function getLoggedUser() : ?User
+    public function getLoggedUser(): ?User
     {
         return $this->loggedUser ?? $this->user;
     }
@@ -142,7 +142,7 @@ class Result
     /**
      * A status.
      */
-    public function getStatus() : string
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -150,7 +150,7 @@ class Result
     /**
      * A client view to redirect to for a second step.
      */
-    public function getView() : ?string
+    public function getView(): ?string
     {
         return $this->view;
     }
@@ -158,7 +158,7 @@ class Result
     /**
      * A message to show to end user for a second step.
      */
-    public function getMessage() : ?string
+    public function getMessage(): ?string
     {
         return $this->message;
     }
@@ -166,7 +166,7 @@ class Result
     /**
      * A token can be returned to a client to be used instead of password in a request for a second step.
      */
-    public function getToken() : ?string
+    public function getToken(): ?string
     {
         return $this->token;
     }
@@ -174,7 +174,7 @@ class Result
     /**
      * A fail reason.
      */
-    public function getFailReason() : ?string
+    public function getFailReason(): ?string
     {
         return $this->failReason;
     }

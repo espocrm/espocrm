@@ -51,7 +51,7 @@ class Command implements Runner
         $this->commandManager = $commandManager;
     }
 
-    public function run() : void
+    public function run(): void
     {
         try {
             $this->commandManager->run($_SERVER['argv']);

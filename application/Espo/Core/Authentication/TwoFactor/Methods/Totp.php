@@ -42,7 +42,7 @@ use Espo\Core\Authentication\{
 class Totp implements CodeVerify
 {
     protected $entityManager;
-    
+
     protected $totp;
 
     public function __construct(EntityManager $entityManager, TotpUtils $totp)
@@ -51,7 +51,7 @@ class Totp implements CodeVerify
         $this->totp = $totp;
     }
 
-    public function verifyCode(User $user, string $code) : bool
+    public function verifyCode(User $user, string $code): bool
     {
         $userData = $this->entityManager
             ->getRepository('UserData')
@@ -78,7 +78,7 @@ class Totp implements CodeVerify
         return $this->totp->verifyCode($secret, $code);
     }
 
-    public function getLoginData(User $user) : ResultData
+    public function getLoginData(User $user): ResultData
     {
         return ResultData::fromMessage('enterTotpCode');
     }

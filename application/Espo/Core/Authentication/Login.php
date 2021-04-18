@@ -44,5 +44,5 @@ interface Login
     /**
      * Check credentials.
      */
-    public function login(LoginData $loginData, Request $request) : Result;
+    public function login(LoginData $loginData, Request $request): Result;
 }

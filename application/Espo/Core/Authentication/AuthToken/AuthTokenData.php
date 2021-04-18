@@ -50,32 +50,32 @@ class AuthTokenData
     {
     }
 
-    public function getUserId() : string
+    public function getUserId(): string
     {
         return $this->userId;
     }
 
-    public function getPortalId() : ?string
+    public function getPortalId(): ?string
     {
         return $this->portalId;
     }
 
-    public function getHash() : ?string
+    public function getHash(): ?string
     {
         return $this->hash;
     }
 
-    public function getIpAddress() : ?string
+    public function getIpAddress(): ?string
     {
         return $this->ipAddress;
     }
 
-    public function toCreateSecret() : bool
+    public function toCreateSecret(): bool
     {
         return $this->createSecret;
     }
 
-    public static function create(array $data) : self
+    public static function create(array $data): self
     {
         $object = new self();
 

@@ -49,7 +49,7 @@ class SetPassword implements Command
         $this->passwordHash = $passwordHash;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $userName = $params->getArgument(0);
 

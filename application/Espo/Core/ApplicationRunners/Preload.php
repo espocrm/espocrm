@@ -45,7 +45,7 @@ class Preload implements Runner
 {
     use Cli;
 
-    public function run() : void
+    public function run(): void
     {
         $preload = new PreloadUtil();
 

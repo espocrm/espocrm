@@ -33,7 +33,7 @@ use StdClass;
 
 class Util
 {
-    public static function cloneObject(StdClass $source) : StdClass
+    public static function cloneObject(StdClass $source): StdClass
     {
         $cloned = (object) [];
 

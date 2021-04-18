@@ -70,7 +70,7 @@ class PortalClient implements Runner
         $this->params = $params ?? RunnerParams::fromNothing();
     }
 
-    public function run() : void
+    public function run(): void
     {
         $id = $this->params->get('id') ??
             Url::detectPortalId() ??
@@ -108,7 +108,7 @@ class PortalClient implements Runner
         $application->run(PortalPortalClient::class);
     }
 
-    private function processError(RequestWrapper $request, ResponseWrapper $response, Exception $exception) : void
+    private function processError(RequestWrapper $request, ResponseWrapper $response, Exception $exception): void
     {
         (new ApiErrorOutput($request))->process($response, $exception, true);
 

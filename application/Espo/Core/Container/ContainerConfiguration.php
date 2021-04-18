@@ -50,7 +50,7 @@ class ContainerConfiguration
         $this->metadata = $metadata;
     }
 
-    public function getLoaderClassName(string $name) : ?string
+    public function getLoaderClassName(string $name): ?string
     {
         $className = null;
 
@@ -85,17 +85,17 @@ class ContainerConfiguration
         return null;
     }
 
-    public function getServiceClassName(string $name) : ?string
+    public function getServiceClassName(string $name): ?string
     {
         return $this->metadata->get(['app', 'containerServices', $name, 'className']) ?? null;
     }
 
-    public function getServiceDependencyList(string $name) : ?array
+    public function getServiceDependencyList(string $name): ?array
     {
         return $this->metadata->get(['app', 'containerServices', $name, 'dependencyList']) ?? null;
     }
 
-    public function isSettable(string $name) : bool
+    public function isSettable(string $name): bool
     {
         return $this->metadata->get(['app', 'containerServices', $name, 'settable']) ?? false;
     }

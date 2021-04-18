@@ -97,7 +97,7 @@ class EntryPoint implements Runner
         $this->params = $params ?? RunnerParams::fromNothing();
     }
 
-    public function run() : void
+    public function run(): void
     {
         $requestWrapped = new RequestWrapper(
             ServerRequestCreatorFactory::create()->createServerRequestFromGlobals(),
@@ -142,7 +142,7 @@ class EntryPoint implements Runner
         ResponseWrapper $responseWrapped,
         bool $authRequired,
         bool $authNotStrict
-    ) : void {
+    ): void {
 
         try {
             $authentication = $authNotStrict ?
@@ -181,7 +181,7 @@ class EntryPoint implements Runner
         }
     }
 
-    private function detectPortalId(RequestWrapper $requestWrapped) : ?string
+    private function detectPortalId(RequestWrapper $requestWrapped): ?string
     {
         if ($requestWrapped->hasQueryParam('portalId')) {
             return $requestWrapped->getQueryParam('portalId');
@@ -202,7 +202,7 @@ class EntryPoint implements Runner
         return null;
     }
 
-    private function runThroughPortal(string $portalId, string $entryPoint) : void
+    private function runThroughPortal(string $portalId, string $entryPoint): void
     {
         $app = new PortalApplication($portalId);
 

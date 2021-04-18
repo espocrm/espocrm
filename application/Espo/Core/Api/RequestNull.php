@@ -42,7 +42,7 @@ use StdClass;
  */
 class RequestNull implements ApiRequest
 {
-    public function hasQueryParam(string $name) : bool
+    public function hasQueryParam(string $name): bool
     {
         return false;
     }
@@ -55,62 +55,62 @@ class RequestNull implements ApiRequest
         return null;
     }
 
-    public function getQueryParams() : array
+    public function getQueryParams(): array
     {
         return [];
     }
 
-    public function hasRouteParam(string $name) : bool
+    public function hasRouteParam(string $name): bool
     {
         return false;
     }
 
-    public function getRouteParam(string $name) : ?string
+    public function getRouteParam(string $name): ?string
     {
         return null;
     }
 
-    public function getRouteParams() : array
+    public function getRouteParams(): array
     {
         return [];
     }
 
-    public function getHeader(string $name) : ?string
+    public function getHeader(string $name): ?string
     {
         return null;
     }
 
-    public function hasHeader(string $name) : bool
+    public function hasHeader(string $name): bool
     {
         return false;
     }
 
-    public function getMethod() : string
+    public function getMethod(): string
     {
         return '';
     }
 
-    public function getUri() : UriInterface
+    public function getUri(): UriInterface
     {
         return (new UriFactory())->createUri();
     }
 
-    public function getResourcePath() : string
+    public function getResourcePath(): string
     {
         return '';
     }
 
-    public function getBodyContents() : ?string
+    public function getBodyContents(): ?string
     {
         return null;
     }
 
-    public function getParsedBody() : StdClass
+    public function getParsedBody(): StdClass
     {
         return (object) [];
     }
 
-    public function getCookieParam(string $name) : ?string
+    public function getCookieParam(string $name): ?string
     {
         return null;
     }

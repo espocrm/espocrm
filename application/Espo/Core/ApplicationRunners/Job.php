@@ -54,7 +54,7 @@ class Job implements Runner
         $this->params = $params;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $id = $this->params->get('id');
 

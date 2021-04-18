@@ -52,7 +52,7 @@ class RunJob implements Command
         $this->entityManager = $entityManager;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $options = $params->getOptions();
         $argumentList = $params->getArgumentList();

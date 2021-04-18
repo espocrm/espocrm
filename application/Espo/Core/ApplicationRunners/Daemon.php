@@ -53,7 +53,7 @@ class Daemon implements Runner
         $this->config = $config;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $maxProcessNumber = $this->config->get('daemonMaxProcessNumber');
         $interval = $this->config->get('daemonInterval');

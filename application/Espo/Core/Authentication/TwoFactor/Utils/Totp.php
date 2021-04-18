@@ -36,12 +36,14 @@ class Totp
     public function verifyCode(string $secret, string $code)
     {
         $impl = new TwoFactorAuth();
+
         return $impl->verifyCode($secret, $code);
     }
 
     public function createSecret()
     {
         $impl = new TwoFactorAuth();
+
         return $impl->createSecret();
     }
 }

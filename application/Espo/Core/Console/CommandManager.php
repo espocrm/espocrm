@@ -52,7 +52,7 @@ class CommandManager
         $this->metadata = $metadata;
     }
 
-    public function run(array $argv) : void
+    public function run(array $argv): void
     {
         $command = $this->getCommandNameFromArgv($argv);
 
@@ -73,9 +73,9 @@ class CommandManager
         $commandObj->run($params, $io);
     }
 
-    private function getCommandNameFromArgv(array $argv) : string
+    private function getCommandNameFromArgv(array $argv): string
     {
-        $command = isset($argv[1]) ? trim($argv[1]) : null;
+        $command = isset($argv[1]) ? trim($argv[1]): null;
 
         if (!$command) {
             throw new CommandNotSpecified("Command name is not specifed.");
@@ -84,14 +84,14 @@ class CommandManager
         return ucfirst(Util::hyphenToCamelCase($command));
     }
 
-    private function createCommand(string $command) : object
+    private function createCommand(string $command): object
     {
         $className = $this->getClassName($command);
 
         return $this->injectableFactory->create($className);
     }
 
-    private function getClassName(string $command) : string
+    private function getClassName(string $command): string
     {
         $className =
             $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'className']);
@@ -109,7 +109,7 @@ class CommandManager
         return $className;
     }
 
-    private function createParams(array $argv) : Params
+    private function createParams(array $argv): Params
     {
         $argumentList = [];
         $options = [];

@@ -49,7 +49,7 @@ class AuthTokenCheck implements Command
         $this->authTokenManager = $authTokenManager;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $token = $params->getArgument(0);
 

@@ -54,7 +54,7 @@ class Record extends Base
         return $this->getContainer()->get('entityManager');
     }
 
-    protected function getRecordService(?string $name = null) : object
+    protected function getRecordService(?string $name = null): object
     {
         $name = $name ?? $this->name;
 
@@ -242,13 +242,17 @@ class Record extends Base
         if (is_array($result)) {
             return [
                 'total' => $result['total'],
-                'list' => isset($result['collection']) ? $result['collection']->getValueMapList() : $result['list']
+                'list' => isset($result['collection']) ?
+                    $result['collection']->getValueMapList() :
+                    $result['list']
             ];
         }
 
         return (object) [
             'total' => $result->total,
-            'list' => isset($result->collection) ? $result->collection->getValueMapList() : $result->list
+            'list' => isset($result->collection) ?
+                $result->collection->getValueMapList() :
+                $result->list
         ];
     }
 

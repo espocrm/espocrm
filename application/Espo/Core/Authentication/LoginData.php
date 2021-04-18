@@ -51,37 +51,37 @@ class LoginData
         $this->authToken = $authToken;
     }
 
-    public function getUsername() : ?string
+    public function getUsername(): ?string
     {
         return $this->username;
     }
 
-    public function getPassword() : ?string
+    public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    public function getAuthToken() : ?AuthToken
+    public function getAuthToken(): ?AuthToken
     {
         return $this->authToken;
     }
 
-    public function hasUsername() : bool
+    public function hasUsername(): bool
     {
         return !is_null($this->username);
     }
 
-    public function hasPassword() : bool
+    public function hasPassword(): bool
     {
         return !is_null($this->password);
     }
 
-    public function hasAuthToken() : bool
+    public function hasAuthToken(): bool
     {
         return !is_null($this->authToken);
     }
 
-    public static function createBuilder() : LoginDataBuilder
+    public static function createBuilder(): LoginDataBuilder
     {
         return new LoginDataBuilder();
     }

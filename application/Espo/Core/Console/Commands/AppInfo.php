@@ -49,7 +49,7 @@ class AppInfo implements Command
         $this->fileManager = $fileManager;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $fileList = $this->fileManager->getFileList('application/Espo/Classes/AppInfo');
 
@@ -82,7 +82,7 @@ class AppInfo implements Command
         $io->writeLine("Not supported flag specified.");
     }
 
-    protected function processType(IO $io, string $type, Params $params) : void
+    protected function processType(IO $io, string $type, Params $params): void
     {
         $className = 'Espo\\Classes\\AppInfo\\' . ucfirst($type);
 

@@ -46,7 +46,7 @@ class LoginFactory
         $this->metadata = $metadata;
     }
 
-    public function create(string $method, bool $isPortal = false) : Login
+    public function create(string $method, bool $isPortal = false): Login
     {
         $className = $this->metadata->get(['authenticationMethods', $method, 'implementationClassName']);
 

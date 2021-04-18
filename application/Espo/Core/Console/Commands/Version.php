@@ -45,7 +45,7 @@ class Version implements Command
         $this->config = $config;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $version = $this->config->get('version');
 

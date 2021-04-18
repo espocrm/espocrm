@@ -41,28 +41,28 @@ class LoginDataBuilder
 
     private $authToken = null;
 
-    public function setUsername(?string $username) : self
+    public function setUsername(?string $username): self
     {
         $this->username = $username;
 
         return $this;
     }
 
-    public function setPassword(?string $password) : self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
         return $this;
     }
 
-    public function setAuthToken(?AuthToken $authToken) : self
+    public function setAuthToken(?AuthToken $authToken): self
     {
         $this->authToken = $authToken;
 
         return $this;
     }
 
-    public function build() : LoginData
+    public function build(): LoginData
     {
         return new LoginData($this->username, $this->password, $this->authToken);
     }

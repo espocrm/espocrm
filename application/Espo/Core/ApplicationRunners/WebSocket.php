@@ -48,7 +48,7 @@ class WebSocket implements Runner
         $this->serverStarter = $serverStarter;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $this->serverStarter->start();
     }

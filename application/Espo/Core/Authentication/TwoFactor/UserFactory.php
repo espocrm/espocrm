@@ -35,6 +35,7 @@ use Espo\Core\Utils\Metadata;
 class UserFactory
 {
     protected $injectableFactory;
+
     protected $config;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
@@ -43,7 +44,7 @@ class UserFactory
         $this->metadata = $metadata;
     }
 
-    public function create(string $method) : object
+    public function create(string $method): object
     {
         $className = $this->metadata->get([
             'app', 'auth2FAMethods', $method, 'implementationUserClassName'

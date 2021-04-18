@@ -156,7 +156,7 @@ class HookManager
         }
     }
 
-    protected function createHookByClassName(string $className) : object
+    protected function createHookByClassName(string $className): object
     {
         if (!class_exists($className)) {
             $GLOBALS['log']->error("Hook class '{$className}' does not exist.");
@@ -172,7 +172,7 @@ class HookManager
      *
      * @param $hookDirs - can be ['Espo/Hooks', 'Espo/Custom/Hooks', 'Espo/Modules/Crm/Hooks']
      */
-    protected function getHookData($hookDirs, array $hookData = []) : array
+    protected function getHookData($hookDirs, array $hookData = []): array
     {
         if (is_string($hookDirs)) {
             $hookDirs = (array) $hookDirs;
@@ -226,7 +226,7 @@ class HookManager
     /**
      * Sort hooks by the order param.
      */
-    protected function sortHooks(array $hooks) : array
+    protected function sortHooks(array $hooks): array
     {
         foreach ($hooks as $scopeName => &$scopeHooks) {
             foreach ($scopeHooks as $hookName => &$hookList) {
@@ -240,7 +240,7 @@ class HookManager
     /**
      * Get sorted hook list.
      */
-    protected function getHookList(string $scope, string $hookName) : array
+    protected function getHookList(string $scope, string $hookName): array
     {
         $key = $scope . '_' . $hookName;
 
@@ -271,7 +271,7 @@ class HookManager
     /**
      * Check if hook exists in the list.
      */
-    protected function hookExists(string $className, array $hookData) : bool
+    protected function hookExists(string $className, array $hookData): bool
     {
         $class = preg_replace('/^.*\\\(.*)$/', '$1', $className);
 

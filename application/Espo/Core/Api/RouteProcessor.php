@@ -43,8 +43,9 @@ use StdClass;
  */
 class RouteProcessor
 {
-    protected $config;
-    protected $controllerManager;
+    private $config;
+
+    private $controllerManager;
 
     public function __construct(Config $config, ControllerManager $controllerManager)
     {
@@ -52,7 +53,7 @@ class RouteProcessor
         $this->controllerManager = $controllerManager;
     }
 
-    public function process(string $route, Request $request, Response $response)
+    public function process(string $route, Request $request, Response $response): void
     {
         $response->setHeader('Content-Type', 'application/json');
 

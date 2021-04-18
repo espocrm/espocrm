@@ -73,7 +73,7 @@ class Upgrade implements Command
         $this->config = $config;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $options = $params->getOptions();
         $flagList = $params->getFlagList();
@@ -178,7 +178,7 @@ class Upgrade implements Command
      * --file="EspoCRM-upgrade.zip"
      * --step="beforeUpgradeScript"
      */
-    protected function normalizeParams(array $options, array $flagList, array $argumentList) : object
+    protected function normalizeParams(array $options, array $flagList, array $argumentList): object
     {
         $params = (object) [
             'localMode' => false,

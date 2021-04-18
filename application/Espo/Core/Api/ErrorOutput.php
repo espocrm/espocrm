@@ -155,7 +155,7 @@ class ErrorOutput
         }
     }
 
-    protected function doesExceptionHaveBody(Throwable $exception) : bool
+    protected function doesExceptionHaveBody(Throwable $exception): bool
     {
         if (
             ! $exception instanceof Error
@@ -174,7 +174,7 @@ class ErrorOutput
         return $exceptionBody !== null;
     }
 
-    protected function getCodeDescription(int $statusCode) : ?string
+    protected function getCodeDescription(int $statusCode): ?string
     {
         if (isset($this->errorDescriptions[$statusCode])) {
             return $this->errorDescriptions[$statusCode];
@@ -183,12 +183,12 @@ class ErrorOutput
         return null;
     }
 
-    protected function clearPasswords(string $string) : string
+    protected function clearPasswords(string $string): string
     {
         return preg_replace('/"(.*?password.*?)":".*?"/i', '"$1":"*****"', $string);
     }
 
-    protected static function generateErrorBody(string $header, string $text) : string
+    protected static function generateErrorBody(string $header, string $text): string
     {
         $body = "<h1>" . $header . "</h1>";
         $body .= $text;
@@ -196,7 +196,7 @@ class ErrorOutput
         return $body;
     }
 
-    protected function stripInvalidCharactersFromHeaderValue(string $value) : string
+    protected function stripInvalidCharactersFromHeaderValue(string $value): string
     {
         $pattern = "/[^ \t\x21-\x7E\x80-\xFF]/";
 

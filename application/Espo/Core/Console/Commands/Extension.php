@@ -48,7 +48,7 @@ class Extension implements Command
         $this->container = $container;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $options = $params->getOptions();
 

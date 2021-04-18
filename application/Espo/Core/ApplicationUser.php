@@ -59,7 +59,7 @@ class ApplicationUser
     /**
      * Setup the system user as a current user. The system user is used when no user is logged in.
      */
-    public function setupSystemUser() : void
+    public function setupSystemUser(): void
     {
         $user = $this->entityManagerProxy->getEntity('User', 'system');
 
@@ -76,7 +76,7 @@ class ApplicationUser
     /**
      * Set a current user.
      */
-    public function setUser(User $user) : void
+    public function setUser(User $user): void
     {
         $this->container->set('user', $user);
     }

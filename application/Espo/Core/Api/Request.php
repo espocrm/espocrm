@@ -41,7 +41,7 @@ interface Request
     /**
      * Whether a query parameter is set.
      */
-    public function hasQueryParam(string $name) : bool;
+    public function hasQueryParam(string $name): bool;
 
     /**
      * Get a query parameter.
@@ -53,62 +53,62 @@ interface Request
     /**
      * Get all query parameters.
      */
-    public function getQueryParams() : array;
+    public function getQueryParams(): array;
 
     /**
      * Whether a route parameter is set.
      */
-    public function hasRouteParam(string $name) : bool;
+    public function hasRouteParam(string $name): bool;
 
     /**
      * Get a route parameter.
      */
-    public function getRouteParam(string $name) : ?string;
+    public function getRouteParam(string $name): ?string;
 
     /**
      * Get all route parameters.
      */
-    public function getRouteParams() : array;
+    public function getRouteParams(): array;
 
     /**
      * Get a header value.
      */
-    public function getHeader(string $name) : ?string;
+    public function getHeader(string $name): ?string;
 
     /**
      * Whether a header is set.
      */
-    public function hasHeader(string $name) : bool;
+    public function hasHeader(string $name): bool;
 
     /**
      * Get a request method.
      */
-    public function getMethod() : string;
+    public function getMethod(): string;
 
     /**
      * Get Uri.
      */
-    public function getUri() : UriInterface;
+    public function getUri(): UriInterface;
 
     /**
      * Get a relative path of a request (w/o base path).
      */
-    public function getResourcePath() : string;
+    public function getResourcePath(): string;
 
     /**
      * Get body contents.
      */
-    public function getBodyContents() : ?string;
+    public function getBodyContents(): ?string;
 
     /**
      * Get a parsed body. If JSON array is passed, then will be converted to `{"list": ARRAY}`.
      */
-    public function getParsedBody() : StdClass;
+    public function getParsedBody(): StdClass;
 
     /**
      * Get a cookie param value.
      */
-    public function getCookieParam(string $name) : ?string;
+    public function getCookieParam(string $name): ?string;
 
     /**
      * Get a server param value.

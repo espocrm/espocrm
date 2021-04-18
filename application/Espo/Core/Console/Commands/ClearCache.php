@@ -45,7 +45,7 @@ class ClearCache implements Command
         $this->dataManager = $dataManager;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $this->dataManager->clearCache();
 

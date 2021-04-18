@@ -40,6 +40,7 @@ use Espo\Core\{
 class DatabasePopulator
 {
     private $config;
+
     private $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
@@ -76,7 +77,7 @@ class DatabasePopulator
         }
     }
 
-    protected function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates) : array
+    protected function exchangeRates(string $baseCurrency, string $defaultCurrency, array $currencyRates): array
     {
         $precision = 5;
         $defaultCurrencyRate = round(1 / $currencyRates[$defaultCurrency], $precision);

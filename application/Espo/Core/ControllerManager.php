@@ -44,8 +44,9 @@ use ReflectionClass;
  */
 class ControllerManager
 {
-    protected $injectableFactory;
-    protected $classFinder;
+    private $injectableFactory;
+
+    private $classFinder;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
@@ -53,8 +54,16 @@ class ControllerManager
         $this->classFinder = $classFinder;
     }
 
-    public function process(string $controllerName, string $actionName, Request $request, Response $response)
-    {
+    /**
+     * @return mixed
+     */
+    public function process(
+        string $controllerName,
+        string $actionName,
+        Request $request,
+        Response $response
+    ) {
+
         $controller = $this->createController($controllerName);
 
         $requestMethod = $request->getMethod();
@@ -114,7 +123,7 @@ class ControllerManager
         return $result;
     }
 
-    protected function useShortParamList(object $controller, string $methodName) : bool
+    protected function useShortParamList(object $controller, string $methodName): bool
     {
         $class = new ReflectionClass($controller);
 
@@ -144,7 +153,7 @@ class ControllerManager
         return false;
     }
 
-    protected function getControllerClassName(string $name) : string
+    protected function getControllerClassName(string $name): string
     {
         $className = $this->classFinder->find('Controllers', $name);
 
@@ -159,7 +168,7 @@ class ControllerManager
         return $className;
     }
 
-    protected function createController(string $name) : object
+    protected function createController(string $name): object
     {
         return $this->injectableFactory->createWith($this->getControllerClassName($name), [
             'name' => $name,

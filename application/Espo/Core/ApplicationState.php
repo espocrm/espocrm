@@ -49,7 +49,7 @@ class ApplicationState
     /**
      * Whether an application is initialized as a portal.
      */
-    public function isPortal() : bool
+    public function isPortal(): bool
     {
         return $this->container->has('portal');
     }
@@ -57,7 +57,7 @@ class ApplicationState
     /**
      * Get a portal ID (if an application is portal).
      */
-    public function getPortalId() : string
+    public function getPortalId(): string
     {
         if (!$this->isPortal()) {
             throw new Error("Can't get portal ID for non-portal application.");
@@ -69,7 +69,7 @@ class ApplicationState
     /**
      * Get a portal entity (if an application is portal).
      */
-    public function getPortal() : PortalEntity
+    public function getPortal(): PortalEntity
     {
         if (!$this->isPortal()) {
             throw new Error("Can't get portal for non-portal application.");
@@ -81,7 +81,7 @@ class ApplicationState
     /**
      * Whether any user is initialized. If not logged, it will also return TRUE, meaning the system used is used.
      */
-    public function hasUser() : bool
+    public function hasUser(): bool
     {
         return $this->container->has('user');
     }
@@ -89,7 +89,7 @@ class ApplicationState
     /**
      * Get a current logged user. If no auth is applied, then the system user will be returned.
      */
-    public function getUser() : UserEntity
+    public function getUser(): UserEntity
     {
         if (!$this->hasUser()) {
             throw new Error("User is not yet available.");
@@ -101,7 +101,7 @@ class ApplicationState
     /**
      * Get an ID of a current logged user. If no auth is applied, then the system user will be returned.
      */
-    public function getUserId() : string
+    public function getUserId(): string
     {
         return $this->getUser()->id;
     }
@@ -109,7 +109,7 @@ class ApplicationState
     /**
      * Whether a user is logged.
      */
-    public function isLogged() : bool
+    public function isLogged(): bool
     {
         if (!$this->container->has('user')) {
             return false;
@@ -125,7 +125,7 @@ class ApplicationState
     /**
      * Whether logged as an admin.
      */
-    public function isAdmin() : bool
+    public function isAdmin(): bool
     {
         if (!$this->isLogged()) {
             return false;
@@ -138,7 +138,7 @@ class ApplicationState
     /**
      * Whether logged as an API user.
      */
-    public function isApi() : bool
+    public function isApi(): bool
     {
         if (!$this->isLogged()) {
             return false;

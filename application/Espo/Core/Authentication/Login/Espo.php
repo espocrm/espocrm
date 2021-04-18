@@ -50,7 +50,7 @@ class Espo implements Login
         $this->passwordHash = $passwordHash;
     }
 
-    public function login(LoginData $loginData, Request $request) : Result
+    public function login(LoginData $loginData, Request $request): Result
     {
         $username = $loginData->getUsername();
         $password = $loginData->getPassword();

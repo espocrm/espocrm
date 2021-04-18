@@ -34,5 +34,5 @@ namespace Espo\Core\Console;
  */
 interface Command
 {
-    public function run(Params $params, IO $io) : void;
+    public function run(Params $params, IO $io): void;
 }

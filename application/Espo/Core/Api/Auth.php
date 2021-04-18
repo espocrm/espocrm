@@ -71,7 +71,7 @@ class Auth
         $this->isEntryPoint = $isEntryPoint;
     }
 
-    public function process(Request $request, Response $response) : AuthResult
+    public function process(Request $request, Response $response): AuthResult
     {
         $username = null;
         $password = null;
@@ -116,8 +116,12 @@ class Auth
     }
 
     protected function processAuthNotRequired(
-        string $username, ?string $password, Request $request, Response $response, ?string $authenticationMethod
-    ) : ?AuthResult {
+        string $username,
+        ?string $password,
+        Request $request,
+        Response $response,
+        ?string $authenticationMethod
+    ): ?AuthResult {
 
         try {
             $result = $this->authentication->login($username, $password, $request, $authenticationMethod);
@@ -136,8 +140,12 @@ class Auth
     }
 
     protected function processWithAuthData(
-        ?string $username, ?string $password, Request $request, Response $response, ?string $authenticationMethod
-    ) : AuthResult {
+        ?string $username,
+        ?string $password,
+        Request $request,
+        Response $response,
+        ?string $authenticationMethod
+    ): AuthResult {
 
         $showDialog = $this->isEntryPoint;
 
@@ -165,7 +173,7 @@ class Auth
         return AuthResult::createNotResolved();
     }
 
-    protected function decodeAuthorizationString(string $string) : array
+    protected function decodeAuthorizationString(string $string): array
     {
         $stringDecoded = base64_decode($string);
 
@@ -176,7 +184,7 @@ class Auth
         return explode(':', $stringDecoded, 2);
     }
 
-    protected function handleSecondStepRequired(Response $response, Result $result)
+    protected function handleSecondStepRequired(Response $response, Result $result): void
     {
         $response->setStatus(401);
         $response->setHeader('X-Status-Reason', 'second-step-required');
@@ -191,7 +199,7 @@ class Auth
         $response->writeBody(json_encode($bodyData));
     }
 
-    protected function handleException(Response $response, Exception $e)
+    protected function handleException(Response $response, Exception $e): void
     {
         if (
             $e instanceof BadRequest ||
@@ -216,7 +224,7 @@ class Auth
         $this->log->error("Auth: " . $e->getMessage());
     }
 
-    protected function handleUnauthorized(Response $response, bool $showDialog)
+    protected function handleUnauthorized(Response $response, bool $showDialog): void
     {
         if ($showDialog) {
             $response->setHeader('WWW-Authenticate', 'Basic realm=""');
@@ -225,7 +233,7 @@ class Auth
         $response->setStatus(401);
     }
 
-    protected function isXMLHttpRequest(Request $request)
+    protected function isXMLHttpRequest(Request $request): bool
     {
         if (strtolower($request->getHeader('X-Requested-With') ?? '') == 'xmlhttprequest') {
             return true;
@@ -234,7 +242,7 @@ class Auth
         return false;
     }
 
-    protected function obtainAuthenticationMethodFromRequest(Request $request) : ?string
+    protected function obtainAuthenticationMethodFromRequest(Request $request): ?string
     {
         if ($request->hasHeader('Espo-Authorization')) {
             return null;
@@ -254,7 +262,7 @@ class Auth
         return null;
     }
 
-    protected function obtainUsernamePasswordFromRequest(Request $request) : array
+    protected function obtainUsernamePasswordFromRequest(Request $request): array
     {
         if ($request->hasHeader('Espo-Authorization')) {
             list($username, $password) = $this->decodeAuthorizationString(

@@ -44,24 +44,24 @@ interface Container
      *
      * @throws RuntimeException If not gettable.
      */
-    public function get(string $name) : object;
+    public function get(string $name): object;
 
     /**
      * Check whether a service can be obtained.
      */
-    public function has(string $name) : bool;
+    public function has(string $name): bool;
 
     /**
      * Set a service object. Must be configured as settable.
      *
      * @throws RuntimeException Is not settable or already set.
      */
-    public function set(string $name, object $object) : void;
+    public function set(string $name, object $object): void;
 
     /**
      * Get a class of a service.
      *
      * @throws RuntimeException If not gettable.
      */
-    public function getClass(string $name) : ReflectionClass;
+    public function getClass(string $name): ReflectionClass;
 }

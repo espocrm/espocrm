@@ -41,6 +41,7 @@ use StdClass;
 class Totp implements CodeVerify
 {
     protected $entityManager;
+
     protected $totp;
 
     public function __construct(TotpUtils $totp, Config $config)
@@ -49,7 +50,7 @@ class Totp implements CodeVerify
         $this->config = $config;
     }
 
-    public function generateData(UserData $userData, StdClass $data, string $userName) : StdClass
+    public function generateData(UserData $userData, StdClass $data, string $userName): StdClass
     {
         $secret = $this->totp->createSecret();
 
@@ -61,7 +62,7 @@ class Totp implements CodeVerify
         ];
     }
 
-    public function verify(UserData $userData, string $code) : bool
+    public function verify(UserData $userData, string $code): bool
     {
         if (!$code) {
             return false;

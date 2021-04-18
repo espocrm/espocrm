@@ -53,7 +53,7 @@ class RunnerParams
     /**
      * Whether a parameter is set.
      */
-    public function has(string $name) : bool
+    public function has(string $name): bool
     {
         return array_key_exists($name, $this->data);
     }
@@ -63,7 +63,7 @@ class RunnerParams
      *
      * @param mixed $value
      */
-    public function with(string $name, $value) : self
+    public function with(string $name, $value): self
     {
         $obj = clone $this;
 
@@ -75,7 +75,7 @@ class RunnerParams
     /**
      * Create from an array.
      */
-    public static function fromArray(array $data) : self
+    public static function fromArray(array $data): self
     {
         $obj = new self();
 
@@ -87,7 +87,7 @@ class RunnerParams
     /**
      * Create an empty instance.
      */
-    public static function fromNothing() : self
+    public static function fromNothing(): self
     {
         return new self();
     }

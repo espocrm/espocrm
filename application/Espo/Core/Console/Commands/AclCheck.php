@@ -46,7 +46,7 @@ class AclCheck implements Command
         $this->container = $container;
     }
 
-    public function run(Params $params, IO $io) : void
+    public function run(Params $params, IO $io): void
     {
         $options = $params->getOptions();
 
@@ -112,7 +112,7 @@ class AclCheck implements Command
         }
     }
 
-    protected function check($user, $scope, $id, $action, $container) : bool
+    protected function check($user, $scope, $id, $action, $container): bool
     {
         $entityManager = $container->get('entityManager');
 

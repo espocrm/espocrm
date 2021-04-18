@@ -112,12 +112,12 @@ class Authentication
         $this->portal = $portal;
     }
 
-    protected function isPortal() : bool
+    protected function isPortal(): bool
     {
         return (bool) $this->portal || $this->applicationState->isPortal();
     }
 
-    protected function getPortal() : Portal
+    protected function getPortal(): Portal
     {
         if ($this->portal) {
             return $this->portal;
@@ -133,8 +133,11 @@ class Authentication
      * @throws ServiceUnavailable
      */
     public function login(
-        ?string $username, ?string $password, Request $request, ?string $authenticationMethod = null
-    ) : Result {
+        ?string $username,
+        ?string $password,
+        Request $request,
+        ?string $authenticationMethod = null
+    ): Result {
 
         if (
             $authenticationMethod &&
@@ -294,7 +297,7 @@ class Authentication
         return $result;
     }
 
-    private function processAuthTokenCheck(AuthToken $authToken) : bool
+    private function processAuthTokenCheck(AuthToken $authToken): bool
     {
         if ($this->allowAnyAccess && $authToken->getPortalId() && !$this->isPortal()) {
             $portal = $this->entityManager->getEntity('Portal', $authToken->getPortalId());
@@ -327,7 +330,7 @@ class Authentication
         return true;
     }
 
-    private function processUserCheck(User $user, ?AuthLogRecord $authLogRecord) : bool
+    private function processUserCheck(User $user, ?AuthLogRecord $authLogRecord): bool
     {
         if (!$user->isActive()) {
             $this->log->info(
@@ -379,7 +382,7 @@ class Authentication
         return true;
     }
 
-    private function processTwoFactor(Result $result, Request $request) : Result
+    private function processTwoFactor(Result $result, Request $request): Result
     {
         $loggedUser = $result->getLoggedUser();
 
@@ -404,7 +407,7 @@ class Authentication
         return Result::secondStepRequired($result->getUser(), $impl->getLoginData($loggedUser));
     }
 
-    private function getUser2FAMethod(User $user) : ?string
+    private function getUser2FAMethod(User $user): ?string
     {
         $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
 
@@ -429,7 +432,7 @@ class Authentication
         return $method;
     }
 
-    private function checkFailedAttemptsLimit(Request $request) : void
+    private function checkFailedAttemptsLimit(Request $request): void
     {
         $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
         $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
@@ -470,7 +473,7 @@ class Authentication
         }
     }
 
-    private function createAuthToken(User $user, Request $request) : AuthToken
+    private function createAuthToken(User $user, Request $request): AuthToken
     {
         $createSecret = $request->getHeader('Espo-Authorization-Create-Token-Secret') === 'true';
 
@@ -496,7 +499,10 @@ class Authentication
             $this->setSecretInCookie($authToken->getSecret());
         }
 
-        if ($this->configDataProvider->preventConcurrentAuthToken() && $authToken instanceof AuthTokenEntity) {
+        if (
+            $this->configDataProvider->preventConcurrentAuthToken() &&
+            $authToken instanceof AuthTokenEntity
+        ) {
             $concurrentAuthTokenList = $this->entityManager
                 ->getRepository('AuthToken')
                 ->select(['id'])
@@ -517,7 +523,7 @@ class Authentication
         return $authToken;
     }
 
-    public function destroyAuthToken(string $token, Request $request) : bool
+    public function destroyAuthToken(string $token, Request $request): bool
     {
         $authToken = $this->authTokenManager->get($token);
 
@@ -539,8 +545,11 @@ class Authentication
     }
 
     protected function createAuthLogRecord(
-        ?string $username, ?User $user, Request $request, ?string $authenticationMethod = null
-    ) : ?AuthLogRecord {
+        ?string $username,
+        ?User $user,
+        Request $request,
+        ?string $authenticationMethod = null
+    ): ?AuthLogRecord {
 
         if ($username === '**logout') {
             return null;
@@ -583,7 +592,7 @@ class Authentication
         return $authLogRecord;
     }
 
-    private function logDenied(?AuthLogRecord $authLogRecord, string $denialReason) : void
+    private function logDenied(?AuthLogRecord $authLogRecord, string $denialReason): void
     {
         if (!$authLogRecord) {
             return;
@@ -594,9 +603,9 @@ class Authentication
         $this->entityManager->saveEntity($authLogRecord);
     }
 
-    private function setSecretInCookie(?string $secret) : void
+    private function setSecretInCookie(?string $secret): void
     {
-        $time = $secret ? strtotime('+1000 days') : -1;
+        $time = $secret ? strtotime('+1000 days'): -1;
 
         setcookie('auth-token-secret', $secret, [
             'expires' => $time,

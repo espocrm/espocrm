@@ -59,7 +59,7 @@ class Params
     /**
      * @return array<string,string>
      */
-    public function getOptions() : array
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -67,7 +67,7 @@ class Params
     /**
      * @return array<string>
      */
-    public function getFlagList() : array
+    public function getFlagList(): array
     {
         return $this->flagList;
     }
@@ -75,7 +75,7 @@ class Params
     /**
      * @return array<string>
      */
-    public function getArgumentList() : array
+    public function getArgumentList(): array
     {
         return $this->argumentList;
     }
@@ -83,7 +83,7 @@ class Params
     /**
      * Has an option.
      */
-    public function hasOption(string $name) : bool
+    public function hasOption(string $name): bool
     {
         return array_key_exists($name, $this->options);
     }
@@ -91,7 +91,7 @@ class Params
     /**
      * Get an option.
      */
-    public function getOption(string $name) : ?string
+    public function getOption(string $name): ?string
     {
         return $this->options[$name] ?? null;
     }
@@ -99,7 +99,7 @@ class Params
     /**
      * Has a flag.
      */
-    public function hasFlag(string $name) : bool
+    public function hasFlag(string $name): bool
     {
         return in_array($name, $this->flagList);
     }
@@ -107,7 +107,7 @@ class Params
     /**
      * Get an argument by index.
      */
-    public function getArgument(int $index) : ?string
+    public function getArgument(int $index): ?string
     {
         return $this->argumentList[$index] ?? null;
     }

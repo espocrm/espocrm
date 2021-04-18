@@ -46,7 +46,7 @@ class ApiKey implements Login
         $this->userFinder = $userFinder;
     }
 
-    public function login(LoginData $loginData, Request $request) : Result
+    public function login(LoginData $loginData, Request $request): Result
     {
         $apiKey = $request->getHeader('X-Api-Key');
 

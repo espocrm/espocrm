@@ -53,7 +53,7 @@ class ConfigDataProvider
     /**
      * A period for max failed attempts checking.
      */
-    public function getFailedAttemptsPeriod() : string
+    public function getFailedAttemptsPeriod(): string
     {
         return $this->config->get('authFailedAttemptsPeriod', self::FAILED_ATTEMPTS_PERIOD);
     }
@@ -61,7 +61,7 @@ class ConfigDataProvider
     /**
      * Max failed log in attempts.
      */
-    public function getMaxFailedAttemptNumber() : int
+    public function getMaxFailedAttemptNumber(): int
     {
         return $this->config->get('authMaxFailedAttemptNumber', self::MAX_FAILED_ATTEMPT_NUMBER);
     }
@@ -69,7 +69,7 @@ class ConfigDataProvider
     /**
      * Auth token secret won't be created. Can be reasonable for a custom AuthTokenManager implementation.
      */
-    public function isAuthTokenSecretDisabled() : bool
+    public function isAuthTokenSecretDisabled(): bool
     {
         return (bool) $this->config->get('authTokenSecretDisabled');
     }
@@ -77,7 +77,7 @@ class ConfigDataProvider
     /**
      * A maintenance mode. Only admin can log in.
      */
-    public function isMaintenanceMode() : bool
+    public function isMaintenanceMode(): bool
     {
         return (bool) $this->config->get('maintenanceMode');
     }
@@ -85,7 +85,7 @@ class ConfigDataProvider
     /**
      * Whether 2FA is enabled.
      */
-    public function isTwoFactorEnabled() : bool
+    public function isTwoFactorEnabled(): bool
     {
         return (bool) $this->config->get('auth2FA');
     }
@@ -95,7 +95,7 @@ class ConfigDataProvider
      *
      * @return array<string>
      */
-    public function getTwoFactorMethodList() : array
+    public function getTwoFactorMethodList(): array
     {
         return $this->config->get('auth2FAMethodList') ?? [];
     }
@@ -103,7 +103,7 @@ class ConfigDataProvider
     /**
      * A user won't be able to have multiple active auth tokens simultaneously.
      */
-    public function preventConcurrentAuthToken() : bool
+    public function preventConcurrentAuthToken(): bool
     {
         return (bool) $this->config->get('authTokenPreventConcurrent');
     }
@@ -111,7 +111,7 @@ class ConfigDataProvider
     /**
      * A default authentication method.
      */
-    public function getDefaultAuthenticationMethod() : string
+    public function getDefaultAuthenticationMethod(): string
     {
         return $this->config->get('authenticationMethod', 'Espo');
     }
@@ -119,7 +119,7 @@ class ConfigDataProvider
     /**
      * Whether an authentication method can be defined by request itself (in a header).
      */
-    public function authenticationMethodIsApi(string $authenticationMethod) : bool
+    public function authenticationMethodIsApi(string $authenticationMethod): bool
     {
         return (bool) $this->metadata->get(['authenticationMethods', $authenticationMethod, 'api']);
     }

@@ -54,21 +54,21 @@ class ResponseWrapper implements ApiResponse
         $this->response = $this->response->withoutHeader('Authorization');
     }
 
-    public function setStatus(int $code, ?string $reason = null) : Response
+    public function setStatus(int $code, ?string $reason = null): Response
     {
         $this->response = $this->response->withStatus($code, $reason ?? '');
 
         return $this;
     }
 
-    public function setHeader(string $name, string $value) : Response
+    public function setHeader(string $name, string $value): Response
     {
         $this->response = $this->response->withHeader($name, $value);
 
         return $this;
     }
 
-    public function getHeader(string $name) : ?string
+    public function getHeader(string $name): ?string
     {
         if (!$this->response->hasHeader($name)) {
             return null;
@@ -77,24 +77,24 @@ class ResponseWrapper implements ApiResponse
         return $this->response->getHeaderLine($name);
     }
 
-    public function hasHeader(string $name) : bool
+    public function hasHeader(string $name): bool
     {
         return $this->response->hasHeader($name);
     }
 
-    public function getResponse() : Psr7Response
+    public function getResponse(): Psr7Response
     {
         return $this->response;
     }
 
-    public function writeBody(string $string) : Response
+    public function writeBody(string $string): Response
     {
         $this->response->getBody()->write($string);
 
         return $this;
     }
 
-    public function setBody(StreamInterface $body) : Response
+    public function setBody(StreamInterface $body): Response
     {
         $this->response = $this->response->withBody($body);
 

@@ -70,14 +70,14 @@ class ContainerBuilder
         'metadata' => MetadataLoader::class,
     ];
 
-    public function withBindingLoader(BindingLoader $bindingLoader) : self
+    public function withBindingLoader(BindingLoader $bindingLoader): self
     {
         $this->bindingLoader = $bindingLoader;
 
         return $this;
     }
 
-    public function withServices(array $services) : self
+    public function withServices(array $services): self
     {
         foreach ($services as $key => $value) {
             $this->services[$key] = $value;
@@ -86,7 +86,7 @@ class ContainerBuilder
         return $this;
     }
 
-    public function withLoaderClassNames(array $classNames) : self
+    public function withLoaderClassNames(array $classNames): self
     {
         foreach ($classNames as $key => $value) {
             $this->loaderClassNames[$key] = $value;
@@ -95,42 +95,42 @@ class ContainerBuilder
         return $this;
     }
 
-    public function withContainerClassName(string $containerClassName) : self
+    public function withContainerClassName(string $containerClassName): self
     {
         $this->containerClassName = $containerClassName;
 
         return $this;
     }
 
-    public function withContainerConfigurationClassName(string $containerConfigurationClassName) : self
+    public function withContainerConfigurationClassName(string $containerConfigurationClassName): self
     {
         $this->containerConfigurationClassName = $containerConfigurationClassName;
 
         return $this;
     }
 
-    public function withConfigClassName(string $configClassName) : self
+    public function withConfigClassName(string $configClassName): self
     {
         $this->configClassName = $configClassName;
 
         return $this;
     }
 
-    public function withFileManagerClassName(string $fileManagerClassName) : self
+    public function withFileManagerClassName(string $fileManagerClassName): self
     {
         $this->fileManagerClassName = $fileManagerClassName;
 
         return $this;
     }
 
-    public function withDataCacheClassName(string $dataCacheClassName) : self
+    public function withDataCacheClassName(string $dataCacheClassName): self
     {
         $this->dataCacheClassName = $dataCacheClassName;
 
         return $this;
     }
 
-    public function build() : Container
+    public function build(): Container
     {
         $config = $this->services['config'] ?? (
             new $this->configClassName(

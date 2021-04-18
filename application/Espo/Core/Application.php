@@ -61,7 +61,7 @@ class Application
         $this->initPreloads();
     }
 
-    protected function initContainer() : void
+    protected function initContainer(): void
     {
         $this->container = (new ContainerBuilder())->build();
     }
@@ -72,7 +72,7 @@ class Application
      * @param $className A runner class name.
      * @param $params Runner parameters. Will be passed to a runner's constructor.
      */
-    public function run(string $className, ?RunnerParams $params = null) : void
+    public function run(string $className, ?RunnerParams $params = null): void
     {
         if (!$className || !class_exists($className)) {
             $this->getLog()->error("Application runner '{$className}' does not exist.");
@@ -106,7 +106,7 @@ class Application
     /**
      * Whether an application is installed.
      */
-    public function isInstalled() : bool
+    public function isInstalled(): bool
     {
         $config = $this->getConfig();
 
@@ -120,42 +120,42 @@ class Application
     /**
      * Get a service container.
      */
-    public function getContainer() : Container
+    public function getContainer(): Container
     {
         return $this->container;
     }
 
-    protected function getInjectableFactory() : InjectableFactory
+    protected function getInjectableFactory(): InjectableFactory
     {
         return $this->container->get('injectableFactory');
     }
 
-    protected function getApplicationUser() : ApplicationUser
+    protected function getApplicationUser(): ApplicationUser
     {
         return $this->container->get('applicationUser');
     }
 
-    protected function getLog() : Log
+    protected function getLog(): Log
     {
         return $this->container->get('log');
     }
 
-    protected function getClientManager() : ClientManager
+    protected function getClientManager(): ClientManager
     {
         return $this->container->get('clientManager');
     }
 
-    protected function getMetadata() : Metadata
+    protected function getMetadata(): Metadata
     {
         return $this->container->get('metadata');
     }
 
-    protected function getConfig() : Config
+    protected function getConfig(): Config
     {
         return $this->container->get('config');
     }
 
-    protected function initAutoloads() : void
+    protected function initAutoloads(): void
     {
         $autoload = $this->getInjectableFactory()->create(Autoload::class);
 
@@ -165,7 +165,7 @@ class Application
     /**
      * Initialize services that has the 'preload' parameter.
      */
-    protected function initPreloads() : void
+    protected function initPreloads(): void
     {
         foreach ($this->getMetadata()->get(['app', 'containerServices']) ?? [] as $name => $defs) {
             if ($defs['preload'] ?? false) {
@@ -177,7 +177,7 @@ class Application
     /**
      * Set a base path of an index file related to the application directory. Used for a portal.
      */
-    public function setClientBasePath(string $basePath) : void
+    public function setClientBasePath(string $basePath): void
     {
         $this->getClientManager()->setBasePath($basePath);
     }
@@ -185,7 +185,7 @@ class Application
     /**
      * Setup the system user. The system user is used when no user is logged in.
      */
-    public function setupSystemUser() : void
+    public function setupSystemUser(): void
     {
         $this->getApplicationUser()->setupSystemUser();
     }

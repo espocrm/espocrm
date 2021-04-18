@@ -40,10 +40,10 @@ interface CodeVerify
     /**
     * Verify a code for a user.
     */
-    public function verifyCode(User $user, string $code) : bool;
+    public function verifyCode(User $user, string $code): bool;
 
     /**
      * Data to be sent to the front-end for showing a form for a second step.
      */
-    public function getLoginData(User $user) : ResultData;
+    public function getLoginData(User $user): ResultData;
 }

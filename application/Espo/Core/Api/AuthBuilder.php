@@ -53,28 +53,28 @@ class AuthBuilder
         $this->log = $log;
     }
 
-    public function setAuthentication(Authentication $authentication) : self
+    public function setAuthentication(Authentication $authentication): self
     {
         $this->authentication = $authentication;
 
         return $this;
     }
 
-    public function setAuthRequired(bool $authRequired) : self
+    public function setAuthRequired(bool $authRequired): self
     {
         $this->authRequired = $authRequired;
 
         return $this;
     }
 
-    public function forEntryPoint() : self
+    public function forEntryPoint(): self
     {
         $this->isEntryPoint = true;
 
         return $this;
     }
 
-    public function build() : Auth
+    public function build(): Auth
     {
         if (!$this->authentication) {
             throw new Error("Authentication is not set.");
