@@ -54,13 +54,13 @@ class Layout
         $this->metadata = $metadata;
     }
 
-    protected function sanitizeInput(string $name) : string
+    protected function sanitizeInput(string $name): string
     {
         return preg_replace("([\.]{2,})", '', $name);
     }
 
 
-    public function get(string $scope, string $name) : ?string
+    public function get(string $scope, string $name): ?string
     {
         $scope = $this->sanitizeInput($scope);
         $name = $this->sanitizeInput($name);
@@ -109,7 +109,7 @@ class Layout
         return $this->fileManager->getContents($filePath);
     }
 
-    public function getDirPath(string $entityType, bool $isCustom = false) : string
+    public function getDirPath(string $entityType, bool $isCustom = false): string
     {
         $path = $this->paths['customPath'];
 

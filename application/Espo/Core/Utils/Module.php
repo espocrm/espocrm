@@ -63,8 +63,11 @@ class Module
     private $fileManager;
     private $dataCache;
 
-    public function __construct(FileManager $fileManager, ?DataCache $dataCache = null, bool $useCache = false)
-    {
+    public function __construct(
+        FileManager $fileManager,
+        ?DataCache $dataCache = null,
+        bool $useCache = false
+    ) {
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
 
@@ -115,7 +118,7 @@ class Module
     /**
      * Get an ordered list of modules.
      */
-    public function getOrderedList() : array
+    public function getOrderedList(): array
     {
         $modules = $this->fileManager->getFileList($this->pathToModules, false, '', false);
 

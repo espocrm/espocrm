@@ -63,7 +63,7 @@ class OrmMetadataData
         $this->useCache = $this->config->get('useCache', false);
     }
 
-    protected function getConverter() : Converter
+    protected function getConverter(): Converter
     {
         if (!isset($this->converter)) {
             $this->converter = new Converter($this->metadata, $this->fileManager, $this->config);
@@ -72,7 +72,7 @@ class OrmMetadataData
         return $this->converter;
     }
 
-    public function getData(bool $reload = false) : array
+    public function getData(bool $reload = false): array
     {
         if (isset($this->data) && !$reload) {
             return $this->data;

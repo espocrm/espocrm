@@ -31,6 +31,11 @@ namespace Espo\Core\Utils\File;
 
 use Espo\Core\Utils;
 
+use Espo\Core\{
+    Utils\File\Manager as FileManager,
+    Utils\Metadata,
+};
+
 class Unifier
 {
     private $fileManager;
@@ -43,8 +48,11 @@ class Unifier
 
     protected $pathToDefaults = 'application/Espo/Core/defaults';
 
-    public function __construct(\Espo\Core\Utils\File\Manager $fileManager, \Espo\Core\Utils\Metadata $metadata = null, $useObjects = false)
-    {
+    public function __construct(
+        FileManager $fileManager,
+        Metadata $metadata = null,
+        bool $useObjects = false
+    ) {
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
         $this->useObjects = $useObjects;
@@ -61,11 +69,12 @@ class Unifier
     }
 
     /**
-     * Unite file content to the file
+     * Unite file content to the file.
      *
-     * @param  string  $name
-     * @param  array  $paths
-     * @param  boolean $recursively Note: only for first level of sub directory, other levels of sub directories will be ignored
+     * @param string $name
+     * @param array $paths
+     * @param boolean $recursively Note: only for first level of sub directory,
+     * other levels of sub directories will be ignored.
      *
      * @return array
      */
@@ -76,24 +85,39 @@ class Unifier
         if (!empty($paths['modulePath'])) {
             $customDir = strstr($paths['modulePath'], '{*}', true);
 
-            $moduleList = isset($this->metadata) ? $this->getMetadata()->getModuleList() : $this->getFileManager()->getFileList($customDir, false, '', false);
+            $moduleList = isset($this->metadata) ?
+                $this->getMetadata()->getModuleList() :
+                $this->getFileManager()->getFileList($customDir, false, '', false);
 
             foreach ($moduleList as $moduleName) {
                 $curPath = str_replace('{*}', $moduleName, $paths['modulePath']);
 
                 if ($this->useObjects) {
-                    $content = Utils\DataUtil::merge($content, $this->unifySingle($curPath, $name, $recursively, $moduleName));
+                    $content = Utils\DataUtil::merge(
+                        $content,
+                        $this->unifySingle($curPath, $name, $recursively, $moduleName)
+                        );
                 } else {
-                    $content = Utils\Util::merge($content, $this->unifySingle($curPath, $name, $recursively, $moduleName));
+                    $content = Utils\Util::merge(
+                        $content,
+                        $this->unifySingle($curPath, $name, $recursively, $moduleName)
+                    );
                 }
             }
         }
 
         if (!empty($paths['customPath'])) {
             if ($this->useObjects) {
-                $content = Utils\DataUtil::merge($content, $this->unifySingle($paths['customPath'], $name, $recursively));
-            } else {
-                $content = Utils\Util::merge($content, $this->unifySingle($paths['customPath'], $name, $recursively));
+                $content = Utils\DataUtil::merge(
+                    $content,
+                    $this->unifySingle($paths['customPath'], $name, $recursively)
+                );
+            }
+            else {
+                $content = Utils\Util::merge(
+                    $content,
+                    $this->unifySingle($paths['customPath'], $name, $recursively)
+                );
             }
         }
 
@@ -101,14 +125,15 @@ class Unifier
     }
 
     /**
-     * Unite file content to the file for one directory [NOW ONLY FOR METADATA, NEED TO CHECK FOR LAYOUTS AND OTHERS]
+     * Unite file content to the file for one directory.
      *
      * @param string $dirPath
-     * @param string $type - name of type array("metadata", "layouts"), ex. $this->name
-     * @param bool $recursively - Note: only for first level of sub directory, other levels of sub directories will be ignored
-     * @param string $moduleName - name of module if exists
+     * @param string $type Nname of type array("metadata", "layouts"), ex. $this->name.
+     * @param bool $recursively Note: only for first level of sub directory,
+     * other levels of sub directories will be ignored.
+     * @param string $moduleName Name of module if exists.
      *
-     * @return string - content of the files
+     * @return string Content of the files.
      */
     protected function unifySingle($dirPath, $type, $recursively = false, $moduleName = '')
     {
@@ -127,24 +152,38 @@ class Unifier
         $fileList = $this->getFileManager()->getFileList($dirPath, $recursively, '\.json$');
 
         $dirName = $this->getFileManager()->getDirName($dirPath, false);
+
         $defaultValues = $this->loadDefaultValues($dirName, $type);
 
         foreach ($fileList as $dirName => $fileName) {
             if (is_array($fileName)) { /*only first level of a sub directory*/
                 if ($this->useObjects) {
-                    $content->$dirName = $this->unifySingle(Utils\Util::concatPath($dirPath, $dirName), $type, false, $moduleName);
-                } else {
-                    $content[$dirName] = $this->unifySingle(Utils\Util::concatPath($dirPath, $dirName), $type, false, $moduleName);
+                    $content->$dirName = $this->unifySingle(
+                        Utils\Util::concatPath($dirPath, $dirName),
+                        $type,
+                        false,
+                        $moduleName
+                    );
+                }
+                else {
+                    $content[$dirName] = $this->unifySingle(
+                        Utils\Util::concatPath($dirPath, $dirName),
+                        $type,
+                        false,
+                        $moduleName
+                    );
                 }
 
             } else {
                 if ($fileName === $this->unsetFileName) {
                     $fileContent = $this->getFileManager()->getContents(array($dirPath, $fileName));
+
                     if ($this->useObjects) {
                         $unsets = Utils\Json::decode($fileContent);
                     } else {
                         $unsets = Utils\Json::getArrayData($fileContent);
                     }
+
                     continue;
                 }
 
@@ -155,7 +194,8 @@ class Unifier
 
                     if ($this->useObjects) {
                         $content->$name = $mergedValues;
-                    } else {
+                    }
+                    else {
                         $content[$name] = $mergedValues;
                     }
 
@@ -165,7 +205,8 @@ class Unifier
 
         if ($this->useObjects) {
             $content = Utils\DataUtil::unsetByKey($content, $unsets);
-        } else {
+        }
+        else {
             $content = Utils\Util::unsetInArray($content, $unsets);
         }
 
@@ -173,10 +214,11 @@ class Unifier
     }
 
     /**
-     * Helpful method for get content from files for unite Files
+     * Helpful method for get content from files for unite files.
      *
-     * @param string | array $paths
-     * @param string | array() $defaults - It can be a string like ["metadata","layouts"] OR an array with default values
+     * @param string|array $paths
+     * @param string|array $defaults It can be a string like
+     * ["metadata","layouts"] OR an array with default values.
      *
      * @return array
      */
@@ -192,10 +234,11 @@ class Unifier
 
         if (!isset($decoded)) {
             $GLOBALS['log']->emergency('Syntax error in '.Utils\Util::concatPath($paths));
+
             if ($this->useObjects) {
                 return (object) [];
             } else {
-                return array();
+                return [];
             }
         }
 
@@ -206,13 +249,14 @@ class Unifier
      * Load default values for selected type [metadata, layouts]
      *
      * @param string $name
-     * @param string $type - [metadata, layouts]
+     * @param string $type [metadata, layouts]
      *
      * @return array
      */
     protected function loadDefaultValues($name, $type = 'metadata')
     {
-        $defaultValue = $this->getFileManager()->getContents(array($this->pathToDefaults, $type, $name.'.json') );
+        $defaultValue = $this->getFileManager()->getContents([$this->pathToDefaults, $type, $name . '.json']);
+
         if ($defaultValue !== false) {
             if ($this->useObjects) {
                 return Utils\Json::decode($defaultValue);
@@ -220,13 +264,11 @@ class Unifier
                 return Utils\Json::decode($defaultValue, true);
             }
         }
+
         if ($this->useObjects) {
             return (object) [];
         } else {
-            return array();
+            return [];
         }
     }
-
 }
-
-?>

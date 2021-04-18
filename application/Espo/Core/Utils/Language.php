@@ -144,7 +144,7 @@ class Language
         $this->currentLanguage = $language;
     }
 
-    protected function getCacheKey(string $language = null) : string
+    protected function getCacheKey(string $language = null): string
     {
         $language = $language ?? $this->getLanguage();
 
@@ -236,7 +236,7 @@ class Language
     /**
      * Save changes.
      */
-    public function save() : bool
+    public function save(): bool
     {
         $language = $this->getLanguage();
 
@@ -309,9 +309,11 @@ class Language
         $this->changedData[$scope][$category][$name] = $value;
 
         $currentLanguage = $this->getLanguage();
+
         if (!isset($this->data[$currentLanguage])) {
             $this->init();
         }
+
         $this->data[$currentLanguage][$scope][$category][$name] = $value;
 
         $this->undelete($scope, $category, $name);
@@ -420,7 +422,8 @@ class Language
         foreach ($data as $key => &$subData) {
             if (is_array($subData)) {
                 $this->sanitizeData($subData);
-            } else {
+            }
+            else {
                 if (is_string($subData)) {
                     $subData = str_replace('<', '&lt;', $subData);
                     $subData = str_replace('>', '&gt;', $subData);
