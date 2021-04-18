@@ -48,7 +48,7 @@ class Submission
     /**
      * Submit to a web-socket server.
      */
-    public function submit(string $topic, ?string $userId = null, ?StdClass $data = null) : void
+    public function submit(string $topic, ?string $userId = null, ?StdClass $data = null): void
     {
         if (!$data) {
             $data = (object) [];

@@ -155,7 +155,7 @@ class Pusher implements WampServerInterface
         }
     }
 
-    protected function getCategoryData(string $topicId) : array
+    protected function getCategoryData(string $topicId): array
     {
         $arr = explode('.', $topicId);
 
@@ -174,7 +174,7 @@ class Pusher implements WampServerInterface
         return $data;
     }
 
-    protected function getParamsFromTopicId(string $topicId) : array
+    protected function getParamsFromTopicId(string $topicId): array
     {
         $arr = explode('.', $topicId);
 
@@ -196,7 +196,7 @@ class Pusher implements WampServerInterface
         return $params;
     }
 
-    protected function getAccessCheckCommandForTopic(ConnectionInterface $connection, $topic) : ?string
+    protected function getAccessCheckCommandForTopic(ConnectionInterface $connection, $topic): ?string
     {
         $topicId = $topic->getId();
 
@@ -381,7 +381,7 @@ class Pusher implements WampServerInterface
     {
     }
 
-    public function onMessageReceive(string $message) : void
+    public function onMessageReceive(string $message): void
     {
         $data = json_decode($message);
 
@@ -443,7 +443,7 @@ class Pusher implements WampServerInterface
         }
     }
 
-    protected function log(string $msg) : void
+    protected function log(string $msg): void
     {
         echo "[" . date('Y-m-d H:i:s') . "] " . $msg . "\n";
     }

@@ -39,5 +39,5 @@ interface Subscriber
     /**
      * Subscribe messages to Pusher::onMessageReceive method.
      */
-    public function subscribe(Pusher $pusher, LoopInterface $loop) : void;
+    public function subscribe(Pusher $pusher, LoopInterface $loop): void;
 }

@@ -48,10 +48,13 @@ class Manager
 
     private $data = null;
 
-    protected $config;
-    protected $dataCache;
-    protected $entityManager;
-    protected $fieldUtil;
+    private $config;
+
+    private $dataCache;
+
+    private $entityManager;
+
+    private $fieldUtil;
 
     public function __construct(
         Config $config,
@@ -67,7 +70,7 @@ class Manager
         $this->loadData();
     }
 
-    private function loadData()
+    private function loadData(): void
     {
         if ($this->config->get('useCache')) {
             if ($this->dataCache->has($this->cacheKey)) {
@@ -84,12 +87,12 @@ class Manager
         }
     }
 
-    private function storeDataToCache()
+    private function storeDataToCache(): void
     {
         $this->dataCache->store($this->cacheKey, $this->data);
     }
 
-    private function buildData()
+    private function buildData(): void
     {
         $data = [];
 
@@ -112,7 +115,7 @@ class Manager
     /**
      * Add an event. To cache the information that at least one webhook for this event exists.
      */
-    public function addEvent(string $event)
+    public function addEvent(string $event): void
     {
         $this->data[$event] = true;
 
@@ -124,7 +127,7 @@ class Manager
     /**
      * Remove an event. If no webhooks with this event left, then it will be removed from the cache.
      */
-    public function removeEvent(string $event)
+    public function removeEvent(string $event): void
     {
         $notExists = !$this->entityManager
             ->getRepository('Webhook')
@@ -144,12 +147,12 @@ class Manager
         }
     }
 
-    protected function eventExists(string $event) : bool
+    protected function eventExists(string $event): bool
     {
         return isset($this->data[$event]);
     }
 
-    protected function logDebugEvent(string $event, Entity $entity)
+    protected function logDebugEvent(string $event, Entity $entity): void
     {
         $GLOBALS['log']->debug("Webhook: {$event} on record {$entity->id}.");
     }
@@ -157,7 +160,7 @@ class Manager
     /**
      * Process 'create' event.
      */
-    public function processCreate(Entity $entity)
+    public function processCreate(Entity $entity): void
     {
         $event = $entity->getEntityType() . '.create';
 
@@ -178,7 +181,7 @@ class Manager
     /**
      * Process 'delete' event.
      */
-    public function processDelete(Entity $entity)
+    public function processDelete(Entity $entity): void
     {
         $event = $entity->getEntityType() . '.delete';
 
@@ -201,7 +204,7 @@ class Manager
     /**
      * Process 'update' event.
      */
-    public function processUpdate(Entity $entity)
+    public function processUpdate(Entity $entity): void
     {
         $event = $entity->getEntityType() . '.update';
 
@@ -230,6 +233,7 @@ class Manager
                 'targetId' => $entity->id,
                 'data' => $data,
             ]);
+
             $this->logDebugEvent($event, $entity);
         }
 
@@ -241,6 +245,7 @@ class Manager
             }
 
             $attributeList = $this->fieldUtil->getActualAttributeList($entity->getEntityType(), $field);
+
             $isChanged = false;
 
             foreach ($attributeList as $attribute) {
@@ -257,7 +262,9 @@ class Manager
 
             if ($isChanged) {
                 $itemData = (object) [];
+
                 $itemData->id = $entity->id;
+
                 $attributeList = $this->fieldUtil->getAttributeList($entity->getEntityType(), $field);
 
                 foreach ($attributeList as $attribute) {

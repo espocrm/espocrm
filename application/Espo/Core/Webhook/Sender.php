@@ -44,19 +44,21 @@ class Sender
 
     const TIMEOUT = 10;
 
-    protected $config;
+    private $config;
 
     public function __construct(Config $config)
     {
         $this->config = $config;
     }
 
-    public function send(Webhook $webhook, array $dataList) : int
+    public function send(Webhook $webhook, array $dataList): int
     {
         $payload = json_encode($dataList);
 
         $signature = null;
+
         $secretKey = $webhook->get('secretKey');
+
         if ($secretKey) {
             $signature = $this->buildSignature($webhook, $payload, $secretKey);
         }
@@ -65,13 +67,16 @@ class Sender
         $timeout = $this->config->get('webhookTimeout', self::TIMEOUT);
 
         $headerList = [];
+
         $headerList[] = 'Content-Type: application/json';
         $headerList[] = 'Content-Length: ' . strlen($payload);
+
         if ($signature) {
             $headerList[] = 'X-Signature: ' . $signature;
         }
 
         $handler = curl_init($webhook->get('url'));
+
         curl_setopt($handler, \CURLOPT_RETURNTRANSFER, true);
         curl_setopt($handler, \CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($handler, \CURLOPT_SSL_VERIFYPEER, true);
@@ -86,8 +91,13 @@ class Sender
 
         $code = curl_getinfo($handler, \CURLINFO_HTTP_CODE);
 
-        if (!is_numeric($code)) $code = 0;
-        if (!is_int($code)) $code = intval($code);
+        if (!is_numeric($code)) {
+            $code = 0;
+        }
+
+        if (!is_int($code)) {
+            $code = intval($code);
+        }
 
         if ($errorNumber = curl_errno($handler)) {
             if (in_array($errorNumber, [\CURLE_OPERATION_TIMEDOUT, \CURLE_OPERATION_TIMEOUTED])) {

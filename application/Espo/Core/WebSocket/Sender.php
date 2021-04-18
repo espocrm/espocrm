@@ -37,5 +37,5 @@ interface Sender
     /**
      * Send a message to a web-socket server.
      */
-    public function send(string $message) : void;
+    public function send(string $message): void;
 }

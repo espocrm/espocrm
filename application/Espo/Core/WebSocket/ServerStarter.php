@@ -90,7 +90,7 @@ class ServerStarter
     /**
      * Start a web-socket server.
      */
-    public function start() : void
+    public function start(): void
     {
         $loop = EventLoopFactory::create();
 
@@ -118,7 +118,7 @@ class ServerStarter
         $loop->run();
     }
 
-    protected function getSslParams() : array
+    protected function getSslParams(): array
     {
         $sslParams = [
             'local_cert' => $this->config->get('webSocketSslCertificateFile'),

@@ -38,12 +38,16 @@ use Espo\Entities\{
 use Espo\Core\{
     AclManager,
     Utils\Config,
-    Utils\DateTime,
+    Utils\DateTime as DateTimeUtil,
     ORM\EntityManager,
 };
 
+use Exception;
+use DateTime;
+
 /**
- * Groups ocurred events into portions and sends them. A portion contains multiple events of the same webhook.
+ * Groups ocurred events into portions and sends them. A portion contains
+ * multiple events of the same webhook.
  */
 class Queue
 {
@@ -57,20 +61,27 @@ class Queue
 
     const FAIL_ATTEMPT_PERIOD = '10 minutes';
 
-    protected $sender;
-    protected $config;
-    protected $entityManager;
-    protected $aclManager;
+    private $sender;
 
-    public function __construct(Sender $sender, Config $config, EntityManager $entityManager, AclManager $aclManager)
-    {
+    private $config;
+
+    private $entityManager;
+
+    private $aclManager;
+
+    public function __construct(
+        Sender $sender,
+        Config $config,
+        EntityManager $entityManager,
+        AclManager $aclManager
+    ) {
         $this->sender = $sender;
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
     }
 
-    public function process()
+    public function process(): void
     {
         $this->processEvents();
         $this->processSending();
@@ -80,25 +91,36 @@ class Queue
     {
         $portionSize = $this->config->get('webhookQueueEventPortionSize', self::EVENT_PORTION_SIZE);
 
-        $itemList = $this->entityManager->getRepository('WebhookEventQueueItem')->where([
-            'isProcessed' => false,
-        ])->order('number')->limit(0, $portionSize)->find();
+        $itemList = $this->entityManager
+            ->getRepository('WebhookEventQueueItem')
+            ->where([
+                'isProcessed' => false,
+            ])
+            ->order('number')
+            ->limit(0, $portionSize)
+            ->find();
 
         foreach ($itemList as $item) {
             $this->createQueueFromEvent($item);
+
             $item->set([
                 'isProcessed' => true,
             ]);
+
             $this->entityManager->saveEntity($item);
         }
     }
 
     protected function createQueueFromEvent(WebhookEventQueueItem $item)
     {
-        $webhookList = $this->entityManager->getRepository('Webhook')->where([
-            'event' => $item->get('event'),
-            'isActive' => true,
-        ])->order('createdAt')->find();
+        $webhookList = $this->entityManager
+            ->getRepository('Webhook')
+            ->where([
+                'event' => $item->get('event'),
+                'isActive' => true,
+            ])
+            ->order('createdAt')
+            ->find();
 
         foreach ($webhookList as $webhook) {
             $this->entityManager->createEntity('WebhookQueueItem', [
@@ -129,7 +151,7 @@ class Queue
                             'status' => 'Pending',
                             'OR' => [
                                 ['processAt' => null],
-                                ['processAt<=' => DateTime::getSystemNowString()],
+                                ['processAt<=' => DateTimeUtil::getSystemNowString()],
                             ],
                         ],
                         'groupBy' => ['webhookId'],
@@ -143,16 +165,22 @@ class Queue
         foreach ($groupedItemList as $group) {
             $webhookId = $group->get('webhookId');
 
-            $itemList = $this->entityManager->getRepository('WebhookQueueItem')->where([
-                'webhookId' => $webhookId,
-                'status' => 'Pending',
-                'OR' => [
-                    ['processAt' => null],
-                    ['processAt<=' => DateTime::getSystemNowString()],
-                ],
-            ])->order('number')->limit(0, $batchSize)->find();
+            $itemList = $this->entityManager
+                ->getRepository('WebhookQueueItem')
+                ->where([
+                    'webhookId' => $webhookId,
+                    'status' => 'Pending',
+                    'OR' => [
+                        ['processAt' => null],
+                        ['processAt<=' => DateTimeUtil::getSystemNowString()],
+                    ],
+                ])
+                ->order('number')
+                ->limit(0, $batchSize)
+                ->find();
 
             $webhook = $this->entityManager->getEntity('Webhook', $webhookId);
+
             if (!$webhook || !$webhook->get('isActive')) {
                 foreach ($itemList as $item) {
                     $this->deleteQueueItem($item);
@@ -160,43 +188,58 @@ class Queue
             }
 
             $forbiddenAttributeList = [];
+
             $user = null;
+
             if ($webhook->get('userId')) {
                 $user = $this->entityManager->getEntity('User', $webhook->get('userId'));
+
                 if (!$user) {
                     foreach ($itemList as $item) {
                         $this->deleteQueueItem($item);
                     }
+
                     continue;
-                } else {
-                    $forbiddenAttributeList = $this->aclManager->getScopeForbiddenAttributeList($user, $webhook->get('entityType'));
+                }
+                else {
+                    $forbiddenAttributeList = $this->aclManager
+                        ->getScopeForbiddenAttributeList($user, $webhook->get('entityType'));
                 }
             }
 
             $actualItemList = [];
 
             $dataList = [];
+
             foreach ($itemList as $item) {
                 $targetType = $item->get('targetType');
                 $target = null;
+
                 if ($this->entityManager->hasRepository($targetType)) {
-                    $target = $this->entityManager->getRepository($targetType)->where([
-                        'id' => $item->get('targetId')
-                    ])->findOne(['withDeleted' => true]);
+                    $target = $this->entityManager
+                        ->getRepository($targetType)
+                        ->where([
+                            'id' => $item->get('targetId')
+                        ])
+                        ->findOne(['withDeleted' => true]);
                 }
+
                 if (!$target) {
                     $this->deleteQueueItem($item);
+
                     continue;
                 }
 
                 if ($user) {
                     if (!$this->aclManager->check($user, $target)) {
                         $this->deleteQueueItem($item);
+
                         continue;
                     }
                 }
 
                 $data = $item->get('data') ?? (object) [];
+
                 $data = clone $data;
 
                 foreach ($forbiddenAttributeList as $attribute) {
@@ -204,9 +247,13 @@ class Queue
                 }
 
                 $actualItemList[] = $item;
+
                 $dataList[] = $data;
             }
-            if (empty($dataList)) continue;
+
+            if (empty($dataList)) {
+                continue;
+            }
 
             $this->send($webhook, $dataList, $actualItemList);
         }
@@ -216,21 +263,29 @@ class Queue
     {
         try {
             $code = $this->sender->send($webhook, $dataList);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $this->failQueueItemList($itemList, true);
-            $GLOBALS['log']->error("Webhook Queue: Webhook {$webhook->id} sending failed. Error: " . $e->getMessage());
+
+            $GLOBALS['log']->error(
+                "Webhook Queue: Webhook {$webhook->id} sending failed. Error: " . $e->getMessage()
+            );
             return;
         }
 
         if ($code >= 200 && $code < 400) {
             $this->succeedQueueItemList($itemList);
-        } else if ($code === 410) {
+        }
+        else if ($code === 410) {
             $this->dropWebhook($webhook);
-        } else if (in_array($code, [0, 401, 403, 404, 405, 408, 500, 503])) {
+        }
+        else if (in_array($code, [0, 401, 403, 404, 405, 408, 500, 503])) {
             $this->failQueueItemList($itemList);
-        } else if ($code >= 400 && $code < 500) {
+        }
+        else if ($code >= 400 && $code < 500) {
             $this->failQueueItemList($itemList, true);
-        } else {
+        }
+        else {
             $this->failQueueItemList($itemList, true);
         }
 
@@ -263,10 +318,14 @@ class Queue
 
     protected function dropWebhook(Webhook $webhook)
     {
-        $itemList = $this->entityManager->getRepository('WebhookQueueItem')->where([
-            'status' => 'Pending',
-            'webhookId' => $webhook->id,
-        ])->order('number')->find();
+        $itemList = $this->entityManager
+            ->getRepository('WebhookQueueItem')
+            ->where([
+                'status' => 'Pending',
+                'webhookId' => $webhook->id,
+            ])
+            ->order('number')
+            ->find();
 
         foreach ($itemList as $item) {
             $this->deleteQueueItem($item);
@@ -280,7 +339,7 @@ class Queue
         $item->set([
             'attempts' => $item->get('attempts') + 1,
             'status' => 'Success',
-            'processedAt' => DateTime::getSystemNowString(),
+            'processedAt' => DateTimeUtil::getSystemNowString(),
         ]);
 
         $this->entityManager->saveEntity($item);
@@ -289,17 +348,21 @@ class Queue
     protected function failQueueItem(WebhookQueueItem $item, bool $force = false)
     {
         $attempts = $item->get('attempts') + 1;
+
         $maxAttemptsNumber = $this->config->get('webhookMaxAttemptNumber', self::MAX_ATTEMPT_NUMBER);
         $period = $this->config->get('webhookFailAttemptPeriod', self::FAIL_ATTEMPT_PERIOD);
 
-        if ($force) $maxAttemptsNumber = 0;
+        if ($force) {
+            $maxAttemptsNumber = 0;
+        }
 
-        $dt = new \DateTime();
+        $dt = new DateTime();
+
         $dt->modify($period);
 
         $item->set([
             'attempts' => $attempts,
-            'processAt' => $dt->format(DateTime::$systemDateTimeFormat),
+            'processAt' => $dt->format(DateTimeUtil::$systemDateTimeFormat),
         ]);
 
         if ($attempts >= $maxAttemptsNumber) {

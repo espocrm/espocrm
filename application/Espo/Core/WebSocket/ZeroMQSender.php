@@ -43,7 +43,7 @@ class ZeroMQSender implements Sender
         $this->config = $config;
     }
 
-    public function send(string $message) : void
+    public function send(string $message): void
     {
         $dsn = $this->config->get('webSocketSubmissionDsn', 'tcp://localhost:5555');
 

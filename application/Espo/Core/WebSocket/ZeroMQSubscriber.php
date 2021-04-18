@@ -38,7 +38,7 @@ use ZMQ;
 
 class ZeroMQSubscriber implements Subscriber
 {
-    public function subscribe(Pusher $pusher, LoopInterface $loop) : void
+    public function subscribe(Pusher $pusher, LoopInterface $loop): void
     {
         $context = new ZMQContext($loop);
 
