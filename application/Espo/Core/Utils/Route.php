@@ -65,7 +65,7 @@ class Route
     /**
      * Get all routes.
      */
-    public function getFullList() : array
+    public function getFullList(): array
     {
         if (!isset($this->data)) {
             $this->init();
@@ -91,7 +91,7 @@ class Route
         }
     }
 
-    protected function unify() : array
+    protected function unify(): array
     {
         $data = $this->addDataFromFile([], $this->paths['customPath']);
 
@@ -114,7 +114,7 @@ class Route
         return $data;
     }
 
-    protected function addDataFromFile(array $currentData, string $routeFile) : array
+    protected function addDataFromFile(array $currentData, string $routeFile): array
     {
         if (!file_exists($routeFile)) {
             return $currentData;
@@ -133,7 +133,7 @@ class Route
         return $this->appendRoutesToData($currentData, $data);
     }
 
-    protected function appendRoutesToData(array $data, array $newData) : array
+    protected function appendRoutesToData(array $data, array $newData): array
     {
         foreach ($newData as $route) {
             $route['route'] = $this->adjustPath($route['route']);
@@ -157,7 +157,7 @@ class Route
     /**
      * Check and adjust the route path.
      */
-    protected function adjustPath(string $routePath) : string
+    protected function adjustPath(string $routePath): string
     {
         $routePath = trim($routePath);
 
@@ -171,7 +171,7 @@ class Route
         return $routePath;
     }
 
-    public static function detectBasePath() : string
+    public static function detectBasePath(): string
     {
         $scriptName = parse_url($_SERVER['SCRIPT_NAME'] , PHP_URL_PATH);
         $scriptDir = dirname($scriptName);
@@ -189,7 +189,7 @@ class Route
         return '';
     }
 
-    public static function detectEntryPointRoute() : string
+    public static function detectEntryPointRoute(): string
     {
         $basePath = self::detectBasePath();
 
@@ -206,7 +206,7 @@ class Route
         return '/';
     }
 
-    static protected function isRouteInList(array $newRoute, array $routeList) : bool
+    static protected function isRouteInList(array $newRoute, array $routeList): bool
     {
         foreach ($routeList as $route) {
             if (Util::isEquals($route, $newRoute)) {

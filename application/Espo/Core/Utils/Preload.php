@@ -63,7 +63,7 @@ class Preload
         }
     }
 
-    public function getCount() : int
+    public function getCount(): int
     {
         return $this->counter;
     }
@@ -90,7 +90,7 @@ class Preload
         $this->counter++;
     }
 
-    protected function isFileToBeIgnored(string $file) : bool
+    protected function isFileToBeIgnored(string $file): bool
     {
         $file = str_replace('\\', '/', $file);
 

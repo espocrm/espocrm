@@ -36,9 +36,7 @@ class PasswordHash
     private $config;
 
     /**
-     * Salt format of SHA-512
-     *
-     * @var string
+     * SHA-512 salt format.
      */
     private $saltFormat = '$6${0}$';
 
@@ -47,15 +45,10 @@ class PasswordHash
         $this->config = $config;
     }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
     /**
      * Hash a password.
      */
-    public function hash(string $password, bool $useMd5 = true) : string
+    public function hash(string $password, bool $useMd5 = true): string
     {
         $salt = $this->getSalt();
 
@@ -71,12 +64,11 @@ class PasswordHash
 
     /**
      * Get a salt from config and normalize it.
-     *
-     * @return string
      */
-    protected function getSalt()
+    protected function getSalt(): string
     {
-        $salt = $this->getConfig()->get('passwordSalt');
+        $salt = $this->config->get('passwordSalt');
+
         if (!isset($salt)) {
             throw new Error('Option "passwordSalt" does not exist in config.php');
         }
@@ -88,11 +80,8 @@ class PasswordHash
 
     /**
      * Convert salt in format in accordance to $saltFormat.
-     *
-     * @param  string $salt
-     * @return string
      */
-    protected function normalizeSalt($salt)
+    protected function normalizeSalt(string $salt): string
     {
         return str_replace("{0}", $salt, $this->saltFormat);
     }
@@ -100,7 +89,7 @@ class PasswordHash
     /**
      * Generate a new salt.
      */
-    public function generateSalt() : string
+    public function generateSalt(): string
     {
         return substr(md5(uniqid()), 0, 16);
     }

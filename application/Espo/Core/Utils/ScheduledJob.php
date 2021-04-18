@@ -74,7 +74,7 @@ class ScheduledJob
         $this->systemUtil = new System();
     }
 
-    public function getAvailableList() : array
+    public function getAvailableList(): array
     {
         $map = $this->classFinder->getMap('Jobs');
 
@@ -83,7 +83,7 @@ class ScheduledJob
         return $list;
     }
 
-    public function getSetupMessage() : array
+    public function getSetupMessage(): array
     {
         $language = $this->language;
 
@@ -115,7 +115,7 @@ class ScheduledJob
     /**
      * Check if crontab is configured properly.
      */
-    public function isCronConfigured() : bool
+    public function isCronConfigured(): bool
     {
         $r1From = new DateTime('-' . $this->checkingCronPeriod);
         $r1To = new DateTime('+' . $this->checkingCronPeriod);

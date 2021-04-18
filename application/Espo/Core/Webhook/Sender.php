@@ -110,7 +110,7 @@ class Sender
         return $code;
     }
 
-    protected function buildSignature(Webhook $webhook, string $payload, string $secretKey)
+    protected function buildSignature(Webhook $webhook, string $payload, string $secretKey): string
     {
         return base64_encode($webhook->id . ':' . hash_hmac('sha256', $payload, $secretKey, true));
     }

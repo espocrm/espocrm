@@ -46,12 +46,12 @@ class Util
         return static::$separator;
     }
 
-    public static function camelCaseToUnderscore(string $string) : string
+    public static function camelCaseToUnderscore(string $string): string
     {
         return static::toUnderScore($string);
     }
 
-    public static function hyphenToCamelCase(string $string) : string
+    public static function hyphenToCamelCase(string $string): string
     {
         return self::toCamelCase($string, '-');
     }
@@ -293,7 +293,7 @@ class Util
             $object = (array) $object;
         }
 
-        return is_array($object) ? array_map("static::objectToArray", $object) : $object;
+        return is_array($object) ? array_map("static::objectToArray", $object): $object;
     }
 
     /**
@@ -555,17 +555,17 @@ class Util
         return true;
     }
 
-    public static function generateId() : string
+    public static function generateId(): string
     {
         return uniqid() . substr(md5(rand()), 0, 4);
     }
 
-    public static function generateMoreEntropyId() : string
+    public static function generateMoreEntropyId(): string
     {
         return substr(md5(uniqid(rand(), true)), 0, 16) . substr(md5(rand()), 0, 4);
     }
 
-    public static function generateCryptId() : string
+    public static function generateCryptId(): string
     {
         if (!function_exists('random_bytes')) {
             return self::generateMoreEntropyId();
@@ -573,17 +573,17 @@ class Util
         return bin2hex(random_bytes(16));
     }
 
-    public static function generateApiKey() : string
+    public static function generateApiKey(): string
     {
         return self::generateCryptId();
     }
 
-    public static function generateSecretKey() : string
+    public static function generateSecretKey(): string
     {
         return self::generateCryptId();
     }
 
-    public static function generateKey() : string
+    public static function generateKey(): string
     {
         return md5(uniqid(rand(), true));
     }
@@ -680,7 +680,7 @@ class Util
      * @param mixed $v1
      * @param mixed $v2
      */
-    public static function areValuesEqual($v1, $v2, bool $isUnordered = false) : bool
+    public static function areValuesEqual($v1, $v2, bool $isUnordered = false): bool
     {
         if (is_array($v1) && is_array($v2)) {
             if ($isUnordered) {
