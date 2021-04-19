@@ -29,11 +29,15 @@
 
 namespace tests\integration\Espo\Webhook;
 
-use Espo\Core\ControllerManager;
+use Espo\Core\{
+    Api\ActionProcessor,
+    Api\Response,
+};
+
+use Espo\Core\Exceptions\Forbidden;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
-
     public function testRegularUserNoAccess()
     {
         $this->createUser(
@@ -44,7 +48,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             [
                 'data' => [
                     'Webhook' => true,
-                    'Account' => ['create'=> true, 'read' => 'own'],
+                    'Account' => ['create'=> 'yes', 'read' => 'own'],
                 ],
             ]
         );
@@ -53,13 +57,14 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
-        $request = $this->createRequest('POST', [], ['Content-Type' => 'application/json'], '{"event":"Account.create"}');
+        $request = $this
+            ->createRequest('POST', [], ['Content-Type' => 'application/json'], '{"event":"Account.create"}');
 
-        $result = $controllerManager->process('Webhook', 'create', $request, $this->createResponse());
+        $processor->process('Webhook', 'create', $request, $this->createResponse());
     }
 
     public function testApiUserNoAccess1()
@@ -92,11 +97,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
-        $result = $controllerManager->process('Webhook', 'create', $request, $this->createResponse());
+        $processor->process('Webhook', 'create', $request, $this->createResponse());
     }
 
     public function testApiUserNoAccess2()
@@ -130,11 +135,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
-        $result = $controllerManager->process('Webhook', 'create', $request, $this->createResponse());
+        $processor->process('Webhook', 'create', $request, $this->createResponse());
     }
 
     public function testApiUserHasAccess1()
@@ -149,7 +154,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             [
                 'data' => [
                     'Webhook' => true,
-                    'Account' => ['create' => true, 'read' => 'own'],
+                    'Account' => ['create' => 'yes', 'read' => 'own'],
                 ],
             ]
         );
@@ -168,10 +173,14 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
 
-        $result = $controllerManager->process('Webhook', 'create', $request, $this->createResponse());
+        $response = $this->createMock(Response::class);
 
-        $this->assertTrue(!empty($result));
+        $response
+            ->expects($this->once())
+            ->method('writeBody');
+
+        $processor->process('Webhook', 'create', $request, $response);
     }
 }

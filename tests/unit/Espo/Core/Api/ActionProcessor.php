@@ -27,28 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core;
+namespace tests\unit\Espo\Core\Api;
 
 use Espo\Core\{
     Utils\ClassFinder,
     InjectableFactory,
-    ControllerManager,
+    Api\ActionProcessor,
     Api\RequestWrapper,
     Api\ResponseWrapper,
 };
 
 use tests\unit\testClasses\Controllers\TestController;
 
-class ControllerManagerTest extends \PHPUnit\Framework\TestCase
+class ActionProcessor extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $this->classFinder = $this->getMockBuilder(ClassFinder::class)->disableOriginalConstructor()->getMock();
-        $this->injectableFactory = $this->getMockBuilder(InjectableFactory::class)->disableOriginalConstructor()->getMock();
-        $this->request = $this->getMockBuilder(RequestWrapper::class)->disableOriginalConstructor()->getMock();
-        $this->response = $this->getMockBuilder(ResponseWrapper::class)->disableOriginalConstructor()->getMock();
+        $this->classFinder = $this->createMock(ClassFinder::class);
+        $this->injectableFactory = $this->createMock(InjectableFactory::class);
+        $this->request = $this->createMock(RequestWrapper::class);
+        $this->response = $this->createMock(ResponseWrapper::class);
 
-        $this->controllerManager = new ControllerManager($this->injectableFactory, $this->classFinder);
+        $this->actionProcessor = new ActionProcessor($this->injectableFactory, $this->classFinder);
     }
 
     public function testAction1()
@@ -77,6 +77,6 @@ class ControllerManagerTest extends \PHPUnit\Framework\TestCase
             ->method('postActionHello')
             ->with($this->request, $this->response);
 
-        $this->controllerManager->process('Test', 'hello', $this->request, $this->response);
+        $this->actionProcessor->process('Test', 'hello', $this->request, $this->response);
     }
 }

@@ -29,21 +29,31 @@
 
 namespace tests\integration\Espo\User;
 
-use Espo\Core\ControllerManager;
+use Espo\Core\{
+    Api\ActionProcessor,
+    Api\Response,
+};
+
+use Espo\Core\Exceptions\Forbidden;
+
+use Exception;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
     protected $dataFile = 'User/Login.php';
 
     protected $userName = 'admin';
+
     protected $password = '1';
 
     private function setFieldsDefs($app, $entityType, $data)
     {
         $metadata = $app->getContainer()->get('metadata');
+
         $metadata->set('entityDefs', $entityType, [
             'fields' => $data
         ]);
+
         $metadata->save();
     }
 
@@ -79,7 +89,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
 
         $request = $this->createRequest(
             'POST',
@@ -88,7 +98,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             '{"name":"Test Account"}'
         );
 
-        $result = $controllerManager->process('Account', 'create', $request, $this->createResponse());
+        $processor->process('Account', 'create', $request, $this->createResponse());
     }
 
     public function testPortalUserAccess()
@@ -122,13 +132,13 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
 
         $data = json_decode('{"name":"Test Account"}');
 
         $request = $this->createRequest('POST', [], ['Content-Type' => 'application/json'], '{"name":"Test Account"}');
 
-        $result = $controllerManager->process('Account', 'create', $request, $this->createResponse());
+        $processor->process('Account', 'create', $request, $this->createResponse());
     }
 
     public function testUserAccessEditOwn1()
@@ -149,7 +159,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
 
         $params = [
             'id' => $user1->id,
@@ -160,13 +170,16 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'title' => 'Test'
         ];
 
-        $request = $this->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
+        $request = $this
+            ->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $result = $controllerManager->process(
-            'User', 'update', $request, $this->createResponse()
-        );
+        $response = $this->createMock(Response::class);
 
-        $this->assertTrue(is_object($result));
+        $response
+            ->expects($this->once())
+            ->method('writeBody');
+
+        $processor->process('User', 'update', $request, $response);
 
         $params = [
             'id' => $user2->id,
@@ -177,34 +190,38 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'title' => 'Test'
         ];
 
-        $request = $this->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
+        $request = $this
+            ->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $result = null;
+        $response = $this->createMock(Response::class);
+
+        $response
+            ->expects($this->never())
+            ->method('writeBody');
 
         try {
-            $result = $controllerManager->process(
-                'User', 'update', $request, $this->createResponse()
-            );
+            $processor->process('User', 'update', $request, $response);
         }
-        catch (\Exception $e) {};
-
-        $this->assertNull($result);
+        catch (Exception $e) {};
 
         $params = [
-            'id' => $user1->id
+            'id' => $user1->id,
         ];
 
         $data = (object) [
             'id' => $user1->id,
             'type' => 'admin',
-            'teamsIds' => ['id']
+            'teamsIds' => ['id'],
         ];
 
-        $request = $this->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
+        $request = $this
+            ->createRequest('PATCH', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $resultData = $controllerManager->process(
-            'User', 'update', $request, $this->createResponse()
-        );
+        $processor->process('User', 'update', $request, $this->createResponse());
+
+        $service = $app->getContainer()->get('serviceFactory')->create('User');
+
+        $resultData = $service->update($user1->getId(), $data);
 
         $this->assertTrue(!property_exists($resultData, 'type') || $resultData->type !== 'admin');
 
@@ -230,7 +247,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $app = $this->createApplication();
 
-        $controllerManager = $app->getContainer()->get('injectableFactory')->create(ControllerManager::class);
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
 
         $params = [
             'id' => $user1->id
@@ -238,21 +255,22 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $data = (object) [
             'id' => $user1->id,
-            'title' => 'Test'
+            'title' => 'Test',
         ];
 
-        $request = $this->createRequest('PUT', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
+        $request = $this
+            ->createRequest('PUT', [], ['Content-Type' => 'application/json'], json_encode($data), $params);
 
-        $result = null;
+        $response = $this->createMock(Response::class);
+
+        $response
+            ->expects($this->never())
+            ->method('writeBody');
 
         try {
-            $result = $controllerManager->process(
-                'User', 'update', $request, $this->createResponse()
-            );
+            $processor->process('User', 'update', $request, $response);
         }
-        catch (\Exception $e) {};
-
-        $this->assertNull($result);
+        catch (Exception $e) {};
     }
 
     protected function prepareTestUser()
@@ -538,7 +556,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $service->updateEntity('testMeetingId', (object) []);
     }
@@ -552,7 +570,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('User');
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $e = $service->find([
             'where' => [
