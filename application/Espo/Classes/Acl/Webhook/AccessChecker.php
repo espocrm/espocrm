@@ -53,25 +53,25 @@ class AccessChecker implements AccessEntityCREDChecker
 
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
-        return $this->checkEntityInternal($user, $entity);
+        return $this->checkEntityInternal($user, $entity, $data);
     }
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
-        return $this->checkEntityInternal($user, $entity);
+        return $this->checkEntityInternal($user, $entity, $data);
     }
 
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
-        return $this->checkEntityInternal($user, $entity);
+        return $this->checkEntityInternal($user, $entity, $data);
     }
 
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
-        return $this->checkEntityInternal($user, $entity);
+        return $this->checkEntityInternal($user, $entity, $data);
     }
 
-    private function checkEntityInternal(User $user, Entity $entity): bool
+    private function checkEntityInternal(User $user, Entity $entity, ScopeData $data): bool
     {
         if ($user->isAdmin()) {
             return true;
