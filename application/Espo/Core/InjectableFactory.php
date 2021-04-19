@@ -139,7 +139,7 @@ class InjectableFactory
     private function getMethodParamInjection(
         ?ReflectionClass $class,
         ReflectionParameter $param,
-        ?array $with,
+        ?array $with = null,
         ?BindingContainer $bindingContainer = null
     ) {
 
