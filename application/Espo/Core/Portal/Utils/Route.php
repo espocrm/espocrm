@@ -33,7 +33,7 @@ use Espo\Core\Utils\Route as BaseRoute;
 
 class Route extends BaseRoute
 {
-    public function getFullList() : array
+    public function getFullList(): array
     {
         $routeList = parent::getFullList();
 

@@ -578,8 +578,13 @@ class Htmlizer
      * @param $skipLinks Do not process related records.
      */
     public function render(
-        Entity $entity, string $template, ?string $cacheId = null, ?array $additionalData = null, bool $skipLinks = false
-    ) : string {
+        Entity $entity,
+        string $template,
+        ?string $cacheId = null,
+        ?array $additionalData = null,
+        bool $skipLinks = false
+    ): string {
+
         $template = str_replace('<tcpdf ', '', $template);
 
         $helpers = $this->getHelpers();

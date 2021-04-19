@@ -59,12 +59,16 @@ class Event extends Database implements
 
     protected function beforeSave(Entity $entity, array $options = [])
     {
-        if ($entity->isAttributeChanged('status') && in_array($entity->get('status'), $this->reminderSkippingStatusList)) {
+        if (
+            $entity->isAttributeChanged('status') &&
+            in_array($entity->get('status'), $this->reminderSkippingStatusList)
+        ) {
             $entity->set('reminders', []);
         }
 
         if ($entity->has('dateStartDate')) {
             $dateStartDate = $entity->get('dateStartDate');
+
             if (!empty($dateStartDate)) {
                 $dateStart = $dateStartDate . ' 00:00:00';
                 $dateStart = $this->convertDateTimeToDefaultTimezone($dateStart);
@@ -85,7 +89,8 @@ class Event extends Database implements
                     $dt = new \DateTime($dateEnd);
                     $dt->modify('+1 day');
                     $dateEnd = $dt->format('Y-m-d H:i:s');
-                } catch (\Exception $e) {}
+                }
+                catch (\Exception $e) {}
 
                 $entity->set('dateEnd', $dateEnd);
             } else {
@@ -237,7 +242,7 @@ class Event extends Database implements
         }
     }
 
-    public function getEntityReminderList(Entity $entity) : array
+    public function getEntityReminderList(Entity $entity): array
     {
         $reminderDataList = [];
 

@@ -66,7 +66,7 @@ class Config extends BaseConfig
         return parent::get($name, $default);
     }
 
-    public function has(string $name) : bool
+    public function has(string $name): bool
     {
         if (array_key_exists($name, $this->portalData)) {
             return true;
@@ -75,7 +75,7 @@ class Config extends BaseConfig
         return parent::has($name);
     }
 
-    public function getAllData() : StdClass
+    public function getAllData(): StdClass
     {
         $data = parent::getAllData();
 

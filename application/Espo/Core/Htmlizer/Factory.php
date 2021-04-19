@@ -35,6 +35,7 @@ use Espo\Core\Utils\DateTime;
 class Factory
 {
     protected $injectableFactory;
+
     protected $dateTime;
 
     public function __construct(InjectableFactory $injectableFactory, DateTime $dateTime) {
@@ -42,7 +43,7 @@ class Factory
         $this->dateTime = $dateTime;
     }
 
-    public function create(bool $skipAcl = false, ?string $timezone = null) : Htmlizer
+    public function create(bool $skipAcl = false, ?string $timezone = null): Htmlizer
     {
         $with = [];
         if ($skipAcl) {
@@ -58,7 +59,7 @@ class Factory
         return $this->injectableFactory->createWith(Htmlizer::class, $with);
     }
 
-    public function createNoAcl() : Htmlizer
+    public function createNoAcl(): Htmlizer
     {
         return $this->create(true);
     }

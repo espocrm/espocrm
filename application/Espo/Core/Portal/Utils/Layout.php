@@ -37,7 +37,7 @@ use Espo\Core\{
 
 class Layout extends LayoutBase
 {
-    public function get(string $scope, string $name) : ?string
+    public function get(string $scope, string $name): ?string
     {
         $originalScope = $scope;
         $originalName = $name;
