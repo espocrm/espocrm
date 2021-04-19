@@ -92,7 +92,7 @@ class ActionProcessor
         if (
             $this->useShortParamList($controller, $primaryActionMethodName)
         ) {
-            $result = $controller->$primaryActionMethodName($request, $response);
+            $result = $controller->$primaryActionMethodName($request, $response) ?? null;
 
             $this->handleResult($response, $result);
 
@@ -115,7 +115,7 @@ class ActionProcessor
             $controller->$beforeMethodName($params, $data, $request, $response);
         }
 
-        $result = $controller->$primaryActionMethodName($params, $data, $request, $response);
+        $result = $controller->$primaryActionMethodName($params, $data, $request, $response) ?? null;
 
         $afterMethodName = 'after' . $actionNameUcfirst;
 
