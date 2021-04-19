@@ -44,7 +44,7 @@ class DateAttributeExtractor implements AttributeExtractor
     /**
      * @param Date $value
      */
-    public function extract(object $value, string $field) : StdClass
+    public function extract(object $value, string $field): StdClass
     {
         if (!$value instanceof Date) {
             throw new InvalidArgumentException();
@@ -55,7 +55,7 @@ class DateAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field) : StdClass
+    public function extractFromNull(string $field): StdClass
     {
         return (object) [
             $field => null,

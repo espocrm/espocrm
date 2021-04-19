@@ -52,7 +52,7 @@ class Link
     /**
      * Get an ID.
      */
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
@@ -60,7 +60,7 @@ class Link
     /**
      * Get a name.
      */
-    public function getName() : ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -68,7 +68,7 @@ class Link
     /**
      * Clone with a name.
      */
-    public function withName(?string $name) : self
+    public function withName(?string $name): self
     {
         $obj = new self($this->id);
 
@@ -80,7 +80,7 @@ class Link
     /**
      * Create from an ID.
      */
-    public static function fromId(string $id) : self
+    public static function fromId(string $id): self
     {
         return new self($id);
     }

@@ -51,7 +51,7 @@ class Preferences implements Loader
         $this->applicationState = $applicationState;
     }
 
-    public function load() : PreferencesService
+    public function load(): PreferencesService
     {
         $id = 'system';
 

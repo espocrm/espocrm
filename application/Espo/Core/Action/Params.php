@@ -47,12 +47,12 @@ class Params
         }
     }
 
-    public function getEntityType() : string
+    public function getEntityType(): string
     {
         return $this->entityType;
     }
 
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }

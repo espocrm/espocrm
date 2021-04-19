@@ -41,7 +41,7 @@ use InvalidArgumentException;
  */
 class CurrencyAttributeExtractor implements AttributeExtractor
 {
-    public function extract(object $value, string $field) : StdClass
+    public function extract(object $value, string $field): StdClass
     {
         if (!$value instanceof Currency) {
             throw new InvalidArgumentException();
@@ -53,7 +53,7 @@ class CurrencyAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field) : StdClass
+    public function extractFromNull(string $field): StdClass
     {
         return (object) [
             $field => null,

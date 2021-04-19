@@ -40,7 +40,7 @@ class Container extends BaseContainer
 {
     protected $portalIsSet = false;
 
-    public function setPortal(PortalEntity $portal)
+    public function setPortal(PortalEntity $portal): void
     {
         if ($this->portalIsSet) {
             throw new Error("Can't set portal second time.");

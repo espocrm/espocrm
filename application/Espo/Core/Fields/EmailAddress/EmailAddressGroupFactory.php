@@ -61,7 +61,7 @@ class EmailAddressGroupFactory implements ValueFactory
         $this->entityManager = $entityManager;
     }
 
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
         $type = $this->metadata->get([
             'entityDefs', $entity->getEntityType(), 'fields', $field, 'type'
@@ -74,7 +74,7 @@ class EmailAddressGroupFactory implements ValueFactory
         return true;
     }
 
-    public function createFromEntity(Entity $entity, string $field) : EmailAddressGroup
+    public function createFromEntity(Entity $entity, string $field): EmailAddressGroup
     {
         if (!$this->isCreatableFromEntity($entity, $field)) {
             throw new RuntimeException();
@@ -131,7 +131,7 @@ class EmailAddressGroupFactory implements ValueFactory
         return $group;
     }
 
-    private function sanitizeDataList(array $dataList) : array
+    private function sanitizeDataList(array $dataList): array
     {
         $sanitizedDataList = [];
 

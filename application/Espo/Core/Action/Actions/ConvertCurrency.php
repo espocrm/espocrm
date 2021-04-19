@@ -80,7 +80,7 @@ class ConvertCurrency implements Action
         $this->currencyConverter = $currencyConverter;
     }
 
-    public function process(Params $params, Data $data) : void
+    public function process(Params $params, Data $data): void
     {
         $entityType = $params->getEntityType();
         $id = $params->getId();
@@ -150,7 +150,7 @@ class ConvertCurrency implements Action
         $this->entityManager->saveEntity($entity);
     }
 
-    protected function getRatesFromData(Data $data) : ?CurrencyRates
+    protected function getRatesFromData(Data $data): ?CurrencyRates
     {
         if ($data->get('rates') === null) {
             return null;
@@ -165,7 +165,7 @@ class ConvertCurrency implements Action
         return CurrencyRates::fromArray($ratesArray);
     }
 
-    protected function getFieldList(string $entityType, Data $data) : array
+    protected function getFieldList(string $entityType, Data $data): array
     {
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, 'edit');
 

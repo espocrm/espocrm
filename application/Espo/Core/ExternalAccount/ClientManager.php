@@ -40,11 +40,16 @@ use Espo\Core\{
     InjectableFactory,
 };
 
+use Espo\ORM\Entity;
+
 class ClientManager
 {
     protected $entityManager;
+
     protected $metadata;
+
     protected $config;
+
     protected $injectableFactory = null;
 
     protected $clientMap = [];
@@ -206,7 +211,7 @@ class ClientManager
         );
     }
 
-    protected function getClientRecord($client) : \Espo\ORM\Entity
+    protected function getClientRecord($client): Entity
     {
         $data = $this->clientMap[spl_object_hash($client)];
 
@@ -217,7 +222,7 @@ class ClientManager
         return $data['externalAccountEntity'];
     }
 
-    public function isClientLocked($client) : bool
+    public function isClientLocked($client): bool
     {
         $externalAccountEntity = $this->getClientRecord($client);
         $id = $externalAccountEntity->id;

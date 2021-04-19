@@ -31,5 +31,5 @@ namespace Espo\Core\MassAction;
 
 interface MassAction
 {
-    public function process(Params $params, Data $data) : Result;
+    public function process(Params $params, Data $data): Result;
 }

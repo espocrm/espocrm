@@ -31,5 +31,5 @@ namespace Espo\Core\Action;
 
 interface Action
 {
-    public function process(Params $params, Data $data) : void;
+    public function process(Params $params, Data $data): void;
 }

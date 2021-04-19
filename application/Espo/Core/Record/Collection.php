@@ -41,6 +41,7 @@ use StdClass;
 class Collection
 {
     protected $collection;
+
     protected $total;
 
     public function __construct(OrmCollection $collection, ?int $total = null)
@@ -52,7 +53,7 @@ class Collection
     /**
      * Get a total number of records in DB (that matches applied search parameters).
      */
-    public function getTotal() : ?int
+    public function getTotal(): ?int
     {
         return $this->total;
     }
@@ -60,7 +61,7 @@ class Collection
     /**
      * Get an ORM collection.
      */
-    public function getCollection() : OrmCollection
+    public function getCollection(): OrmCollection
     {
         return $this->collection;
     }
@@ -68,7 +69,7 @@ class Collection
     /**
      * Get an array of StdClass objects.
      */
-    public function getValueMapList() : array
+    public function getValueMapList(): array
     {
         if (!$this->collection->getEntityType()) {
             $list = [];

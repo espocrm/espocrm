@@ -38,12 +38,12 @@ use Espo\Core\Fields\Address;
 
 class AddressFactory implements ValueFactory
 {
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
         return true;
     }
 
-    public function createFromEntity(Entity $entity, string $field) : Address
+    public function createFromEntity(Entity $entity, string $field): Address
     {
         return (new AddressBuilder())
            ->setStreet($entity->get($field . 'Street'))

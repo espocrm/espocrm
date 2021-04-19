@@ -83,7 +83,7 @@ class PhoneNumberGroup
     /**
      * Get a primary phone number.
      */
-    public function getPrimary() : ?PhoneNumber
+    public function getPrimary(): ?PhoneNumber
     {
         if ($this->isEmpty()) {
             return null;
@@ -97,7 +97,7 @@ class PhoneNumberGroup
      *
      * @return array<PhoneNumber>
      */
-    public function getList() : array
+    public function getList(): array
     {
         return $this->list;
     }
@@ -105,7 +105,7 @@ class PhoneNumberGroup
     /**
      * Get a number of phone numbers.
      */
-    public function getCount() : int
+    public function getCount(): int
     {
         return count($this->list);
     }
@@ -115,7 +115,7 @@ class PhoneNumberGroup
      *
      * @return array<PhoneNumber>
      */
-    public function getSecondaryList() : array
+    public function getSecondaryList(): array
     {
         $list = [];
 
@@ -135,7 +135,7 @@ class PhoneNumberGroup
      *
      * @return array<string>
      */
-    public function getNumberList() : array
+    public function getNumberList(): array
     {
         $list = [];
 
@@ -149,7 +149,7 @@ class PhoneNumberGroup
     /**
      * Get a phone number by number represented as a string.
      */
-    public function getByNumber(string $number) : ?PhoneNumber
+    public function getByNumber(string $number): ?PhoneNumber
     {
         $index = $this->searchNumberInList($number);
 
@@ -163,7 +163,7 @@ class PhoneNumberGroup
     /**
      * Whether an number is in the list.
      */
-    public function hasNumber(string $number) : bool
+    public function hasNumber(string $number): bool
     {
         return in_array($number, $this->getNumberList());
     }
@@ -171,7 +171,7 @@ class PhoneNumberGroup
     /**
      * Clone with another primary phone number.
      */
-    public function withPrimary(PhoneNumber $phoneNumber) : self
+    public function withPrimary(PhoneNumber $phoneNumber): self
     {
         $list = $this->list;
 
@@ -193,7 +193,7 @@ class PhoneNumberGroup
      *
      * @param array<PhoneNumber> $list
      */
-    public function withAddedList(array $list) : self
+    public function withAddedList(array $list): self
     {
         $newList = $this->list;
 
@@ -215,7 +215,7 @@ class PhoneNumberGroup
     /**
      * Clone with an added phone number.
      */
-    public function withAdded(PhoneNumber $phoneNumber) : self
+    public function withAdded(PhoneNumber $phoneNumber): self
     {
         return $this->withAddedList([$phoneNumber]);
     }
@@ -223,7 +223,7 @@ class PhoneNumberGroup
     /**
      * Clone with removed phone number.
      */
-    public function withRemoved(PhoneNumber $phoneNumber) : self
+    public function withRemoved(PhoneNumber $phoneNumber): self
     {
         return $this->withRemovedByNumber($phoneNumber->getNumber());
     }
@@ -231,7 +231,7 @@ class PhoneNumberGroup
     /**
      * Clone with removed phone number passed by a number.
      */
-    public function withRemovedByNumber(string $number) : self
+    public function withRemovedByNumber(string $number): self
     {
         $newList = $this->list;
 
@@ -251,7 +251,7 @@ class PhoneNumberGroup
      *
      * @param array<PhoneNumber> $list
      */
-    public static function fromList(array $list) : self
+    public static function fromList(array $list): self
     {
         return new self($list);
     }
@@ -259,12 +259,12 @@ class PhoneNumberGroup
     /**
      * Create empty.
      */
-    public static function fromNothing() : self
+    public static function fromNothing(): self
     {
         return new self([]);
     }
 
-    private function searchNumberInList(string $number) : ?int
+    private function searchNumberInList(string $number): ?int
     {
         foreach ($this->getNumberList() as $i => $item) {
             if ($item === $number) {
@@ -275,7 +275,7 @@ class PhoneNumberGroup
         return null;
     }
 
-    private function validateList() : void
+    private function validateList(): void
     {
         $numberList = [];
 
@@ -291,8 +291,8 @@ class PhoneNumberGroup
             $numberList[] = strtolower($item->getNumber());
         }
     }
-    
-    private function isEmpty() : bool
+
+    private function isEmpty(): bool
     {
         return count($this->list) === 0;
     }

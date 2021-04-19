@@ -44,7 +44,7 @@ use Espo\Core\{
 class EntryPointManager
 {
     protected $injectableFactory;
-    
+
     protected $classFinder;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
@@ -53,7 +53,7 @@ class EntryPointManager
         $this->classFinder = $classFinder;
     }
 
-    public function checkAuthRequired(string $name) : bool
+    public function checkAuthRequired(string $name): bool
     {
         $className = $this->getClassName($name);
 
@@ -69,7 +69,7 @@ class EntryPointManager
         return $className::$authRequired ?? true;
     }
 
-    public function checkNotStrictAuth(string $name) : bool
+    public function checkNotStrictAuth(string $name): bool
     {
         $className = $this->getClassName($name);
 
@@ -93,7 +93,7 @@ class EntryPointManager
         $entryPoint->run($request, $response);
     }
 
-    protected function getClassName(string $name) : ?string
+    protected function getClassName(string $name): ?string
     {
         return $this->classFinder->find('EntryPoints', ucfirst($name));
     }

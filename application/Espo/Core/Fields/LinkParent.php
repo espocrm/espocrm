@@ -59,7 +59,7 @@ class LinkParent
     /**
      * Get an ID.
      */
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
@@ -67,7 +67,7 @@ class LinkParent
     /**
      * Get an entity type.
      */
-    public function getEntityType() : string
+    public function getEntityType(): string
     {
         return $this->entityType;
     }
@@ -75,7 +75,7 @@ class LinkParent
     /**
      * Get a name.
      */
-    public function getName() : ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -83,7 +83,7 @@ class LinkParent
     /**
      * Clone with a name.
      */
-    public function withName(?string $name) : self
+    public function withName(?string $name): self
     {
         $obj = new self($this->entityType, $this->id);
 
@@ -95,7 +95,7 @@ class LinkParent
     /**
      * Create from an entity type and ID.
      */
-    public static function fromEntityTypeAndId(string $entityType, string $id) : self
+    public static function fromEntityTypeAndId(string $entityType, string $id): self
     {
         return new self($entityType, $id);
     }

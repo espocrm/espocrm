@@ -52,7 +52,7 @@ class AclManagerContainer
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function get(Portal $portal) : AclManager
+    public function get(Portal $portal): AclManager
     {
         $id = $portal->id;
 

@@ -44,7 +44,7 @@ class LinkAttributeExtractor implements AttributeExtractor
     /**
      * @param Link $value
      */
-    public function extract(object $value, string $field) : StdClass
+    public function extract(object $value, string $field): StdClass
     {
         if (!$value instanceof Link) {
             throw new InvalidArgumentException();
@@ -56,7 +56,7 @@ class LinkAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field) : StdClass
+    public function extractFromNull(string $field): StdClass
     {
         return (object) [
             $field . 'Id' => null,

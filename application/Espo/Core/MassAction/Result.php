@@ -44,17 +44,17 @@ class Result
         $this->ids = $ids;
     }
 
-    public function hasIds() : bool
+    public function hasIds(): bool
     {
         return $this->ids !== null;
     }
 
-    public function hasCount() : bool
+    public function hasCount(): bool
     {
         return $this->count !== null;
     }
 
-    public function getIds() : array
+    public function getIds(): array
     {
         if (!$this->hasIds()) {
             throw new RuntimeException("No IDs.");
@@ -63,7 +63,7 @@ class Result
         return $this->ids;
     }
 
-    public function getCount() : int
+    public function getCount(): int
     {
         if (!$this->hasCount()) {
             throw new RuntimeException("No count.");
@@ -72,14 +72,14 @@ class Result
         return $this->count;
     }
 
-    public function withNoIds() : self
+    public function withNoIds(): self
     {
         return self::fromArray([
             'count' => $this->count,
         ]);
     }
 
-    public function getValueMap() : StdClass
+    public function getValueMap(): StdClass
     {
         $obj = (object) [];
 
@@ -94,7 +94,7 @@ class Result
         return $obj;
     }
 
-    public static function fromArray(array $data) : self
+    public static function fromArray(array $data): self
     {
         $obj = new self(
             $data['count'] ?? null,

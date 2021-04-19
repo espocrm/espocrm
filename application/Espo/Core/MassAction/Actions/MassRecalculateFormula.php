@@ -61,7 +61,7 @@ class MassRecalculateFormula implements MassAction
         $this->user = $user;
     }
 
-    public function process(Params $params, Data $data) : Result
+    public function process(Params $params, Data $data): Result
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();

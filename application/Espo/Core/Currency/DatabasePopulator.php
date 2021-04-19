@@ -49,7 +49,7 @@ class DatabasePopulator
         $this->entityManager = $entityManager;
     }
 
-    public function process()
+    public function process(): void
     {
         $defaultCurrency = $this->config->get('defaultCurrency');
 

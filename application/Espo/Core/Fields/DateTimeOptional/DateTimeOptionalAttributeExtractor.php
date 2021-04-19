@@ -44,7 +44,7 @@ class DateTimeOptionalAttributeExtractor implements AttributeExtractor
     /**
      * @param DateTimeOptional $value
      */
-    public function extract(object $value, string $field) : StdClass
+    public function extract(object $value, string $field): StdClass
     {
         if (!$value instanceof DateTimeOptional) {
             throw new InvalidArgumentException();
@@ -63,7 +63,7 @@ class DateTimeOptionalAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field) : StdClass
+    public function extractFromNull(string $field): StdClass
     {
         return (object) [
             $field => null,

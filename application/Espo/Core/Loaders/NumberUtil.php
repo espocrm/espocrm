@@ -44,7 +44,7 @@ class NumberUtil implements Loader
         $this->config = $config;
     }
 
-    public function load() : NumberUtilService
+    public function load(): NumberUtilService
     {
         return new NumberUtilService($this->config->get('decimalMark'), $this->config->get('thousandSeparator'));
     }

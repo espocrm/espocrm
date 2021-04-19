@@ -40,7 +40,7 @@ class Data
         $this->data = (object) [];
     }
 
-    public function getRaw() : StdClass
+    public function getRaw(): StdClass
     {
         return ObjectUtil::clone($this->data);
     }
@@ -53,12 +53,12 @@ class Data
         return $this->getRaw()->$name ?? null;
     }
 
-    public function has(string $name) : bool
+    public function has(string $name): bool
     {
         return property_exists($this->data, $name);
     }
 
-    public static function fromRaw(StdClass $data) : self
+    public static function fromRaw(StdClass $data): self
     {
         $obj = new self();
 

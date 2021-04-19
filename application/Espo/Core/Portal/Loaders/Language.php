@@ -73,7 +73,7 @@ class Language implements Loader
         $this->portal = $portal;
     }
 
-    public function load() : LanguageService
+    public function load(): LanguageService
     {
         $language = new LanguageService(
             LanguageService::detectLanguage($this->config, $this->preferences),

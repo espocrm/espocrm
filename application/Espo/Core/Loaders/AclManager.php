@@ -44,7 +44,7 @@ class AclManager implements Loader
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function load() : AclManagerService
+    public function load(): AclManagerService
     {
         return $this->injectableFactory->create(AclManagerService::class);
     }

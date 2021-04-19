@@ -47,7 +47,7 @@ class ActionFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create(string $action, ?string $entityType = null) : Action
+    public function create(string $action, ?string $entityType = null): Action
     {
         $className = $this->getClassName($action, $entityType);
 
@@ -58,7 +58,7 @@ class ActionFactory
         return $this->injectableFactory->create($className);
     }
 
-    public function createWith(string $action, ?string $entityType, array $with) : Action
+    public function createWith(string $action, ?string $entityType, array $with): Action
     {
         $className = $this->getClassName($action, $entityType);
 
@@ -69,7 +69,7 @@ class ActionFactory
         return $this->injectableFactory->createWith($className, $with);
     }
 
-    private function getClassName(string $action, ?string $entityType) : ?string
+    private function getClassName(string $action, ?string $entityType): ?string
     {
         if ($entityType) {
             $className = $this->getEntityTypeClassName($action, $entityType);
@@ -84,7 +84,7 @@ class ActionFactory
         );
     }
 
-    private function getEntityTypeClassName(string $action, string $entityType) : ?string
+    private function getEntityTypeClassName(string $action, string $entityType): ?string
     {
         return  $this->metadata->get(
             ['recordDefs', $entityType, 'actions', $action, 'implementationClassName']

@@ -53,7 +53,7 @@ class Currency
     /**
      * Get an amount.
      */
-    public function getAmount() : float
+    public function getAmount(): float
     {
         return $this->amount;
     }
@@ -61,7 +61,7 @@ class Currency
     /**
      * Get a currency code.
      */
-    public function getCode() : string
+    public function getCode(): string
     {
         return $this->code;
     }
@@ -69,7 +69,7 @@ class Currency
     /**
      * Add a currency value.
      */
-    public function add(self $value) : self
+    public function add(self $value): self
     {
         $amount = $this->getAmount();
 
@@ -85,7 +85,7 @@ class Currency
     /**
      * Subtract a currency value.
      */
-    public function subtract(self $value) : self
+    public function subtract(self $value): self
     {
         $amount = $this->getAmount();
 
@@ -101,7 +101,7 @@ class Currency
     /**
      * Multiply by a multiplier.
      */
-    public function multiply(float $multiplier) : self
+    public function multiply(float $multiplier): self
     {
         $amount = $this->getAmount();
 
@@ -113,7 +113,7 @@ class Currency
     /**
      * Divide by a divider.
      */
-    public function divide(float $divider) : self
+    public function divide(float $divider): self
     {
         $amount = $this->getAmount();
 
@@ -125,7 +125,7 @@ class Currency
     /**
      * Round with a precision.
      */
-    public function round(int $precision = 0) : self
+    public function round(int $precision = 0): self
     {
         $amount = round($this->getAmount(), $precision);
 
@@ -135,7 +135,7 @@ class Currency
     /**
      * Create from an amount and code.
      */
-    public static function fromAmountAndCode(float $amount, string $code) : self
+    public static function fromAmountAndCode(float $amount, string $code): self
     {
         return new self($amount, $code);
     }

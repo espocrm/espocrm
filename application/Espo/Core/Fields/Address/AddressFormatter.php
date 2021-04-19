@@ -36,5 +36,5 @@ use Espo\Core\Fields\Address;
  */
 interface AddressFormatter
 {
-    public function format(Address $address) : string;
+    public function format(Address $address): string;
 }

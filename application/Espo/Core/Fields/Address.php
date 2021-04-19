@@ -36,20 +36,20 @@ use Espo\Core\Fields\Address\AddressBuilder;
  */
 class Address
 {
-    protected $street = null;
+    private $street = null;
 
-    protected $city = null;
+    private $city = null;
 
-    protected $country = null;
+    private $country = null;
 
-    protected $state = null;
+    private $state = null;
 
-    protected $postalCode = null;
+    private $postalCode = null;
 
     /**
      * Whether has a street.
      */
-    public function hasStreet() : bool
+    public function hasStreet(): bool
     {
         return $this->street !== null;
     }
@@ -57,7 +57,7 @@ class Address
     /**
      * Whether has a city.
      */
-    public function hasCity() : bool
+    public function hasCity(): bool
     {
         return $this->city !== null;
     }
@@ -65,7 +65,7 @@ class Address
     /**
      * Whether has a country.
      */
-    public function hasCountry() : bool
+    public function hasCountry(): bool
     {
         return $this->country !== null;
     }
@@ -73,7 +73,7 @@ class Address
     /**
      * Whether has a state.
      */
-    public function hasState() : bool
+    public function hasState(): bool
     {
         return $this->state !== null;
     }
@@ -81,7 +81,7 @@ class Address
     /**
      * Whether has a postal code.
      */
-    public function hasPostalCode() : bool
+    public function hasPostalCode(): bool
     {
         return $this->postalCode !== null;
     }
@@ -89,7 +89,7 @@ class Address
     /**
      * Get a street.
      */
-    public function getStreet() : ?string
+    public function getStreet(): ?string
     {
         return $this->street;
     }
@@ -97,7 +97,7 @@ class Address
     /**
      * Get a city.
      */
-    public function getCity() : ?string
+    public function getCity(): ?string
     {
         return $this->city;
     }
@@ -105,7 +105,7 @@ class Address
     /**
      * Get a country.
      */
-    public function getCountry() : ?string
+    public function getCountry(): ?string
     {
         return $this->country;
     }
@@ -113,7 +113,7 @@ class Address
     /**
      * Get a state.
      */
-    public function getState() : ?string
+    public function getState(): ?string
     {
         return $this->state;
     }
@@ -121,7 +121,7 @@ class Address
     /**
      * Get a postal code.
      */
-    public function getPostalCode() : ?string
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }
@@ -129,7 +129,7 @@ class Address
     /**
      * Clone with a street.
      */
-    public function withStreet(?string $street) : self
+    public function withStreet(?string $street): self
     {
         $newAddress = self::createBuilder()
             ->clone($this)
@@ -142,7 +142,7 @@ class Address
     /**
      * Clone with a city.
      */
-    public function withCity(?string $city) : self
+    public function withCity(?string $city): self
     {
         $newAddress = self::createBuilder()
             ->clone($this)
@@ -155,7 +155,7 @@ class Address
     /**
      * Clone with a country.
      */
-    public function withCountry(?string $country) : self
+    public function withCountry(?string $country): self
     {
         $newAddress = self::createBuilder()
             ->clone($this)
@@ -168,7 +168,7 @@ class Address
     /**
      * Clone with a state.
      */
-    public function withState(?string $state) : self
+    public function withState(?string $state): self
     {
         $newAddress = self::createBuilder()
             ->clone($this)
@@ -181,7 +181,7 @@ class Address
     /**
      * Clone with a postal code.
      */
-    public function withPostalCode(?string $postalCode) : self
+    public function withPostalCode(?string $postalCode): self
     {
         $newAddress = self::createBuilder()
             ->clone($this)
@@ -194,7 +194,7 @@ class Address
     /**
      * Create a RAW data.
      */
-    public static function fromRaw(array $raw) : self
+    public static function fromRaw(array $raw): self
     {
         $obj = new self();
 
@@ -210,7 +210,7 @@ class Address
     /**
      * Create an empty address.
      */
-    public static function fromNothing() : self
+    public static function fromNothing(): self
     {
         return new self();
     }
@@ -218,7 +218,7 @@ class Address
     /**
      * Create a builder.
      */
-    public static function createBuilder() : AddressBuilder
+    public static function createBuilder(): AddressBuilder
     {
         return new AddressBuilder();
     }

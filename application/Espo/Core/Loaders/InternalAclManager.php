@@ -44,7 +44,7 @@ class InternalAclManager implements Loader
         $this->container = $container;
     }
 
-    public function load() : AclManagerService
+    public function load(): AclManagerService
     {
         return $this->container->get('aclManager');
     }

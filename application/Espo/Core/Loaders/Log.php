@@ -44,7 +44,7 @@ class Log implements Loader
         $this->logLoader = $logLoader;
     }
 
-    public function load() : LogService
+    public function load(): LogService
     {
         $log = $this->logLoader->load();
 

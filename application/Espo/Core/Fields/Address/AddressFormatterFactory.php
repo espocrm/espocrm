@@ -54,7 +54,7 @@ class AddressFormatterFactory
         $this->config = $config;
     }
 
-    public function create(int $format) : AddressFormatter
+    public function create(int $format): AddressFormatter
     {
         $className = $this->metadataProvider->getFormatterClassName($format);
 
@@ -65,7 +65,7 @@ class AddressFormatterFactory
         return $this->injectableFactory->create($className);
     }
 
-    public function createDefault() : AddressFormatter
+    public function createDefault(): AddressFormatter
     {
         $format = $this->config->get('addressFormat') ?? 1;
 

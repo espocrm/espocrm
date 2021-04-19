@@ -85,7 +85,7 @@ class MassConvertCurrency implements MassAction
         $this->currencyConverter = $currencyConverter;
     }
 
-    public function process(Params $params, Data $dataWrapped) : Result
+    public function process(Params $params, Data $dataWrapped): Result
     {
         $entityType = $params->getEntityType();
 
@@ -158,7 +158,10 @@ class MassConvertCurrency implements MassAction
     }
 
     protected function convertEntity(
-        Entity $entity, array $fieldList, string $targetCurrency, CurrencyRates $rates
+        Entity $entity,
+        array $fieldList,
+        string $targetCurrency,
+        CurrencyRates $rates
     ) {
         foreach ($fieldList as $field) {
             $amount = $entity->get($field);
@@ -183,7 +186,7 @@ class MassConvertCurrency implements MassAction
         $this->entityManager->saveEntity($entity);
     }
 
-    protected function getRatesFromData(Data $data) : ?CurrencyRates
+    protected function getRatesFromData(Data $data): ?CurrencyRates
     {
         if ($data->get('rates') === null) {
             return null;
@@ -198,7 +201,7 @@ class MassConvertCurrency implements MassAction
         return CurrencyRates::fromArray($ratesArray);
     }
 
-    protected function getFieldList(string $entityType, Data $data) : array
+    protected function getFieldList(string $entityType, Data $data): array
     {
         $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType, 'edit');
 

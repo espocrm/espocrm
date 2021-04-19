@@ -44,7 +44,7 @@ class ApplicationState implements Loader
         $this->container = $container;
     }
 
-    public function load() : ApplicationStateService
+    public function load(): ApplicationStateService
     {
         return new ApplicationStateService($this->container);
     }

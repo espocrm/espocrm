@@ -40,12 +40,12 @@ use RuntimeException;
 
 class CurrencyFactory implements ValueFactory
 {
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
         return $entity->has($field) && $entity->has($field . 'Currency');
     }
 
-    public function createFromEntity(Entity $entity, string $field) : Currency
+    public function createFromEntity(Entity $entity, string $field): Currency
     {
         if (!$this->isCreatableFromEntity($entity, $field)) {
             throw new RuntimeException();

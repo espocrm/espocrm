@@ -40,5 +40,5 @@ use Espo\Core\{
  */
 interface EntryPoint
 {
-    public function run(Request $request, Response $response) : void;
+    public function run(Request $request, Response $response): void;
 }

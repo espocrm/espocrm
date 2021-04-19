@@ -60,7 +60,7 @@ class EmailAddress
     /**
      * Get an address.
      */
-    public function getAddress() : string
+    public function getAddress(): string
     {
         return $this->address;
     }
@@ -68,7 +68,7 @@ class EmailAddress
     /**
      * Whether opted-out.
      */
-    public function isOptedOut() : bool
+    public function isOptedOut(): bool
     {
         return $this->isOptedOut;
     }
@@ -76,7 +76,7 @@ class EmailAddress
     /**
      * Whether invalid.
      */
-    public function isInvalid() : bool
+    public function isInvalid(): bool
     {
         return $this->isInvalid;
     }
@@ -84,7 +84,7 @@ class EmailAddress
     /**
      * Clone set invalid.
      */
-    public function invalid() : self
+    public function invalid(): self
     {
         $obj = $this->clone();
 
@@ -96,7 +96,7 @@ class EmailAddress
     /**
      * Clone set not invalid.
      */
-    public function notInvalid() : self
+    public function notInvalid(): self
     {
         $obj = $this->clone();
 
@@ -108,7 +108,7 @@ class EmailAddress
     /**
      * Clone set opted-out.
      */
-    public function optedOut() : self
+    public function optedOut(): self
     {
         $obj = $this->clone();
 
@@ -120,7 +120,7 @@ class EmailAddress
     /**
      * Clone set not opted-out.
      */
-    public function notOptedOut() : self
+    public function notOptedOut(): self
     {
         $obj = $this->clone();
 
@@ -132,12 +132,12 @@ class EmailAddress
     /**
      * Create from an address.
      */
-    public static function fromAddress(string $address) : self
+    public static function fromAddress(string $address): self
     {
         return new self($address);
     }
 
-    private function clone() : self
+    private function clone(): self
     {
         $obj = new self($this->address);
 

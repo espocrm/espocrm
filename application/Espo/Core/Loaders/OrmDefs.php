@@ -47,7 +47,7 @@ class OrmDefs implements Loader
         $this->entityManager = $entityManager;
     }
 
-    public function load() : Defs
+    public function load(): Defs
     {
         return $this->entityManager->getMetadata()->getDefs();
     }

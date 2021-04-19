@@ -42,12 +42,12 @@ class CurrencyRates
     {
     }
 
-    public function hasRate(string $currencyCode) : bool
+    public function hasRate(string $currencyCode): bool
     {
         return array_key_exists($currencyCode, $this->data);
     }
 
-    public function getRate(string $currencyCode) : float
+    public function getRate(string $currencyCode): float
     {
         if (!$this->hasRate($currencyCode)) {
             throw new RuntimeException("No currency rate for '{$currencyCode}'.");
@@ -56,7 +56,7 @@ class CurrencyRates
         return $this->data[$currencyCode];
     }
 
-    public static function fromArray(array $data) : self
+    public static function fromArray(array $data): self
     {
         $obj = new self();
 

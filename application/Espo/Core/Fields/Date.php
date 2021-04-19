@@ -78,7 +78,7 @@ class Date
     /**
      * Get a string value in `Y-m-d` format.
      */
-    public function getString() : string
+    public function getString(): string
     {
         return $this->value;
     }
@@ -86,7 +86,7 @@ class Date
     /**
      * Get DateTimeImmutable.
      */
-    public function getDateTime() : DateTimeImmutable
+    public function getDateTime(): DateTimeImmutable
     {
         return $this->dateTime;
     }
@@ -94,7 +94,7 @@ class Date
     /**
      * Get a timestamp.
      */
-    public function getTimestamp() : int
+    public function getTimestamp(): int
     {
         return $this->dateTime->getTimestamp();
     }
@@ -102,7 +102,7 @@ class Date
     /**
      * Get a year.
      */
-    public function getYear() : int
+    public function getYear(): int
     {
         return (int) $this->dateTime->format('Y');
     }
@@ -110,7 +110,7 @@ class Date
     /**
      * Get a month.
      */
-    public function getMonth() : int
+    public function getMonth(): int
     {
         return (int) $this->dateTime->format('n');
     }
@@ -118,7 +118,7 @@ class Date
     /**
      * Get a day (of month).
      */
-    public function getDay() : int
+    public function getDay(): int
     {
         return (int) $this->dateTime->format('j');
     }
@@ -126,7 +126,7 @@ class Date
     /**
      * Get a day of week. 0 (for Sunday) through 6 (for Saturday).
      */
-    public function getDayOfWeek() : int
+    public function getDayOfWeek(): int
     {
         return (int) $this->dateTime->format('w');
     }
@@ -134,7 +134,7 @@ class Date
     /**
      * Clones and modifies.
      */
-    public function modify(string $modifier) : self
+    public function modify(string $modifier): self
     {
         $dateTime = $this->dateTime->modify($modifier);
 
@@ -148,7 +148,7 @@ class Date
     /**
      * Clones and adds an interval.
      */
-    public function add(DateInterval $interval) : self
+    public function add(DateInterval $interval): self
     {
         $dateTime = $this->dateTime->add($interval);
 
@@ -158,7 +158,7 @@ class Date
     /**
      * Clones and subtracts an interval.
      */
-    public function subtract(DateInterval $interval) : self
+    public function subtract(DateInterval $interval): self
     {
         $dateTime = $this->dateTime->sub($interval);
 
@@ -168,7 +168,7 @@ class Date
     /**
      * Create from a string with a date in `Y-m-d` format.
      */
-    public static function fromString(string $value) : self
+    public static function fromString(string $value): self
     {
         return new self($value);
     }
@@ -176,7 +176,7 @@ class Date
     /**
      * Create from a DateTimeInterface.
      */
-    public static function fromDateTime(DateTimeInterface $dateTime) : self
+    public static function fromDateTime(DateTimeInterface $dateTime): self
     {
         $value = $dateTime->format(self::SYSTEM_FORMAT);
 

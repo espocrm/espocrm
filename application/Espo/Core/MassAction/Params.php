@@ -47,12 +47,12 @@ class Params
     {
     }
 
-    public function getEntityType() : string
+    public function getEntityType(): string
     {
         return $this->entityType;
     }
 
-    public function getIds() : array
+    public function getIds(): array
     {
         if (!$this->ids) {
             throw new RuntimeException("No IDs.");
@@ -61,7 +61,7 @@ class Params
         return $this->ids;
     }
 
-    public function getSearchParams() : SearchParams
+    public function getSearchParams(): SearchParams
     {
         if (!$this->searchParams) {
             throw new RuntimeException("No search params.");
@@ -70,12 +70,12 @@ class Params
         return $this->searchParams;
     }
 
-    public function hasIds() : bool
+    public function hasIds(): bool
     {
         return !is_null($this->ids);
     }
 
-    public static function fromIds(string $entityType, array $ids) : self
+    public static function fromIds(string $entityType, array $ids): self
     {
         return self::fromRaw([
             'entityType' => $entityType,
@@ -83,7 +83,7 @@ class Params
         ]);
     }
 
-    public static function fromSearchParams(string $entityType, SearchParams $searchParams) : self
+    public static function fromSearchParams(string $entityType, SearchParams $searchParams): self
     {
         $obj = new self();
 
@@ -94,7 +94,7 @@ class Params
         return $obj;
     }
 
-    public static function fromRaw(array $params, ?string $entityType = null) : self
+    public static function fromRaw(array $params, ?string $entityType = null): self
     {
         $obj = new self();
 

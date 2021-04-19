@@ -38,20 +38,20 @@ interface Crud
     /**
      * Create a record.
      */
-    public function create(StdClass $data) : Entity;
+    public function create(StdClass $data): Entity;
 
     /**
      * Read a record.
      */
-    public function read(string $id) : Entity;
+    public function read(string $id): Entity;
 
     /**
      * Update a record.
      */
-    public function update(string $id, StdClass $data) : Entity;
+    public function update(string $id, StdClass $data): Entity;
 
     /**
      * Delete a record.
      */
-    public function delete(string $id) : void;
+    public function delete(string $id): void;
 }

@@ -52,7 +52,7 @@ class Metadata implements Loader
         $this->config = $config;
     }
 
-    public function load() : MetadataService
+    public function load(): MetadataService
     {
         $useCache = $this->config->get('useCache') ?? false;
 

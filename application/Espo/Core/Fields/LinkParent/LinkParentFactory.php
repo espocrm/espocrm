@@ -40,12 +40,12 @@ use RuntimeException;
 
 class LinkParentFactory implements ValueFactory
 {
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
         return $entity->get($field . 'Id') !== null && $entity->get($field . 'Type') !== null;
     }
 
-    public function createFromEntity(Entity $entity, string $field) : LinkParent
+    public function createFromEntity(Entity $entity, string $field): LinkParent
     {
         if (!$this->isCreatableFromEntity($entity, $field)) {
             throw new RuntimeException();

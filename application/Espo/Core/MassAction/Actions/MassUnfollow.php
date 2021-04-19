@@ -71,7 +71,7 @@ class MassUnfollow implements MassAction
         $this->user = $user;
     }
 
-    public function process(Params $params, Data $data) : Result
+    public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 

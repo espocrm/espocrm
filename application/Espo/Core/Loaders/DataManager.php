@@ -44,7 +44,7 @@ class DataManager implements Loader
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function load() : DataManagerService
+    public function load(): DataManagerService
     {
         return $this->injectableFactory->create(DataManagerService::class);
     }

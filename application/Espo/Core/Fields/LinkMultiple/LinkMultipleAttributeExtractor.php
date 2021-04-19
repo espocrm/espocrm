@@ -44,7 +44,7 @@ class LinkMultipleAttributeExtractor implements AttributeExtractor
     /**
      * @param LinkMultiple $value
      */
-    public function extract(object $value, string $field) : StdClass
+    public function extract(object $value, string $field): StdClass
     {
         if (!$value instanceof LinkMultiple) {
             throw new InvalidArgumentException();
@@ -74,7 +74,7 @@ class LinkMultipleAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field) : StdClass
+    public function extractFromNull(string $field): StdClass
     {
         return (object) [
             $field . 'Ids' => [],

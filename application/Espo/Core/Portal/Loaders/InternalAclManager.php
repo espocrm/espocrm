@@ -44,7 +44,7 @@ class InternalAclManager implements Loader
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function load() : InternalAclManagerService
+    public function load(): InternalAclManagerService
     {
         return $this->injectableFactory->create(InternalAclManagerService::class);
     }

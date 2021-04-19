@@ -41,7 +41,7 @@ use InvalidArgumentException;
  */
 class AddressAttributeExtractor implements AttributeExtractor
 {
-    public function extract(object $value, string $field) : StdClass
+    public function extract(object $value, string $field): StdClass
     {
         if (!$value instanceof Address) {
             throw new InvalidArgumentException();
@@ -56,7 +56,7 @@ class AddressAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field) : StdClass
+    public function extractFromNull(string $field): StdClass
     {
         return (object) [
             $field . 'Street' => null,

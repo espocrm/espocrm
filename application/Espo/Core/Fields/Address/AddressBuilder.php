@@ -46,7 +46,7 @@ class AddressBuilder
 
     protected $postalCode;
 
-    public function clone(Address $address) : self
+    public function clone(Address $address): self
     {
         $this->setStreet($address->getStreet());
         $this->setCity($address->getCity());
@@ -57,42 +57,42 @@ class AddressBuilder
         return $this;
     }
 
-    public function setStreet(?string $street) : self
+    public function setStreet(?string $street): self
     {
         $this->street = $street;
 
         return $this;
     }
 
-    public function setCity(?string $city) : self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
 
         return $this;
     }
 
-    public function setCountry(?string $country) : self
+    public function setCountry(?string $country): self
     {
         $this->country = $country;
 
         return $this;
     }
 
-    public function setState(?string $state) : self
+    public function setState(?string $state): self
     {
         $this->state = $state;
 
         return $this;
     }
 
-    public function setPostalCode(?string $postalCode) : self
+    public function setPostalCode(?string $postalCode): self
     {
         $this->postalCode = $postalCode;
 
         return $this;
     }
 
-    public function build() : Address
+    public function build(): Address
     {
         return Address::fromRaw([
             'street' => $this->street,

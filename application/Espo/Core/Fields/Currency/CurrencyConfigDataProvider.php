@@ -45,7 +45,7 @@ class CurrencyConfigDataProvider
     /**
      * Get a system default currency.
      */
-    public function getDefaultCurrency() : string
+    public function getDefaultCurrency(): string
     {
         return $this->config->get('defaultCurrency');
     }
@@ -53,7 +53,7 @@ class CurrencyConfigDataProvider
     /**
      * Get a base currency, used for conversion.
      */
-    public function getBaseCurrency() : string
+    public function getBaseCurrency(): string
     {
         return $this->config->get('baseCurrency');
     }
@@ -63,7 +63,7 @@ class CurrencyConfigDataProvider
      *
      * @return array<string>
      */
-    public function getCurrencyList() : array
+    public function getCurrencyList(): array
     {
         return $this->config->get('currencyList') ?? [];
     }
@@ -71,7 +71,7 @@ class CurrencyConfigDataProvider
     /**
      * Whether a currency is available in the system.
      */
-    public function hasCurrency(string $currencyCode) : bool
+    public function hasCurrency(string $currencyCode): bool
     {
         return in_array($currencyCode, $this->getCurrencyList());
     }
@@ -79,7 +79,7 @@ class CurrencyConfigDataProvider
     /**
      * Get a rate of a specific currency related to the base currency.
      */
-    public function getCurrencyRate(string $currencyCode) : float
+    public function getCurrencyRate(string $currencyCode): float
     {
         $rates = $this->config->get('currencyRates') ?? [];
 
@@ -95,7 +95,7 @@ class CurrencyConfigDataProvider
     /**
      * Get rates.
      */
-    public function getCurrencyRates() : CurrencyRates
+    public function getCurrencyRates(): CurrencyRates
     {
         $rates = $this->config->get('currencyRates') ?? [];
 

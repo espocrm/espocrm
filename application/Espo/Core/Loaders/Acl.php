@@ -49,7 +49,7 @@ class Acl implements Loader
         $this->user = $user;
     }
 
-    public function load() : AclService
+    public function load(): AclService
     {
         return new AclService($this->aclManager, $this->user);
     }

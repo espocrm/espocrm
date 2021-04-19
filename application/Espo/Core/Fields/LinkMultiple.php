@@ -64,7 +64,7 @@ class LinkMultiple
     /**
      * Whether contains a specific ID.
      */
-    public function hasId(string $id) : bool
+    public function hasId(string $id): bool
     {
         return $this->searchIdInList($id) !== null;
     }
@@ -74,7 +74,7 @@ class LinkMultiple
      *
      * @return array<string>
      */
-    public function getIdList() : array
+    public function getIdList(): array
     {
         $idList = [];
 
@@ -90,7 +90,7 @@ class LinkMultiple
      *
      * @return array<LinkMultipleItem>
      */
-    public function getList() : array
+    public function getList(): array
     {
         return $this->list;
     }
@@ -98,7 +98,7 @@ class LinkMultiple
     /**
      * Get a number of items.
      */
-    public function getCount() : int
+    public function getCount(): int
     {
         return count($this->list);
     }
@@ -106,7 +106,7 @@ class LinkMultiple
     /**
      * Get item by ID.
      */
-    public function getById(string $id) : ?LinkMultipleItem
+    public function getById(string $id): ?LinkMultipleItem
     {
         foreach ($this->list as $item) {
             if ($item->getId() === $id) {
@@ -120,7 +120,7 @@ class LinkMultiple
     /**
      * Clone with an added item.
      */
-    public function withAdded(LinkMultipleItem $item) : self
+    public function withAdded(LinkMultipleItem $item): self
     {
         return $this->withAddedList([$item]);
     }
@@ -132,7 +132,7 @@ class LinkMultiple
      *
      * @throws RuntimeException
      */
-    public function withAddedList(array $list) : self
+    public function withAddedList(array $list): self
     {
         $newList = $this->list;
 
@@ -154,7 +154,7 @@ class LinkMultiple
     /**
      * Clone with removed item.
      */
-    public function withRemoved(LinkMultipleItem $item) : self
+    public function withRemoved(LinkMultipleItem $item): self
     {
         return $this->withRemovedById($item->getId());
     }
@@ -162,7 +162,7 @@ class LinkMultiple
     /**
      * Clone with removed item by ID.
      */
-    public function withRemovedById(string $id) : self
+    public function withRemovedById(string $id): self
     {
         $newList = $this->list;
 
@@ -184,7 +184,7 @@ class LinkMultiple
      *
      * @throws RuntimeException
      */
-    public static function fromList(array $list) : self
+    public static function fromList(array $list): self
     {
         return new self($list);
     }
@@ -192,12 +192,12 @@ class LinkMultiple
     /**
      * Create empty.
      */
-    public static function fromNothing() : self
+    public static function fromNothing(): self
     {
         return new self([]);
     }
 
-    private function validateList() : void
+    private function validateList(): void
     {
         $idList = [];
 
@@ -214,7 +214,7 @@ class LinkMultiple
         }
     }
 
-    private function searchIdInList(string $id) : ?int
+    private function searchIdInList(string $id): ?int
     {
         foreach ($this->getIdList() as $i => $item) {
             if ($item === $id) {

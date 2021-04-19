@@ -78,7 +78,7 @@ class DateTime
     /**
      * Get a string value in `Y-m-d H:i:s` format.
      */
-    public function getString() : string
+    public function getString(): string
     {
         return $this->value;
     }
@@ -86,7 +86,7 @@ class DateTime
     /**
      * Get DateTimeImmutable.
      */
-    public function getDateTime() : DateTimeImmutable
+    public function getDateTime(): DateTimeImmutable
     {
         return $this->dateTime;
     }
@@ -94,7 +94,7 @@ class DateTime
     /**
      * Get a timestamp.
      */
-    public function getTimestamp() : int
+    public function getTimestamp(): int
     {
         return $this->dateTime->getTimestamp();
     }
@@ -102,7 +102,7 @@ class DateTime
     /**
      * Get a year.
      */
-    public function getYear() : int
+    public function getYear(): int
     {
         return (int) $this->dateTime->format('Y');
     }
@@ -110,7 +110,7 @@ class DateTime
     /**
      * Get a month.
      */
-    public function getMonth() : int
+    public function getMonth(): int
     {
         return (int) $this->dateTime->format('n');
     }
@@ -118,7 +118,7 @@ class DateTime
     /**
      * Get a day (of month).
      */
-    public function getDay() : int
+    public function getDay(): int
     {
         return (int) $this->dateTime->format('j');
     }
@@ -126,7 +126,7 @@ class DateTime
     /**
      * Get a day of week. 0 (for Sunday) through 6 (for Saturday).
      */
-    public function getDayOfWeek() : int
+    public function getDayOfWeek(): int
     {
         return (int) $this->dateTime->format('w');
     }
@@ -134,7 +134,7 @@ class DateTime
     /**
      * Get a hour.
      */
-    public function getHour() : int
+    public function getHour(): int
     {
         return (int) $this->dateTime->format('G');
     }
@@ -142,7 +142,7 @@ class DateTime
     /**
      * Get a minute.
      */
-    public function getMinute() : int
+    public function getMinute(): int
     {
         return (int) $this->dateTime->format('i');
     }
@@ -150,7 +150,7 @@ class DateTime
     /**
      * Get a second.
      */
-    public function getSecond() : int
+    public function getSecond(): int
     {
         return (int) $this->dateTime->format('s');
     }
@@ -158,7 +158,7 @@ class DateTime
     /**
      * Get a timezone.
      */
-    public function getTimezone() : DateTimeZone
+    public function getTimezone(): DateTimeZone
     {
         return $this->dateTime->getTimezone();
     }
@@ -166,7 +166,7 @@ class DateTime
     /**
      * Clones and modifies.
      */
-    public function modify(string $modifier) : self
+    public function modify(string $modifier): self
     {
         $dateTime = $this->dateTime->modify($modifier);
 
@@ -180,7 +180,7 @@ class DateTime
     /**
      * Clones and adds an interval.
      */
-    public function add(DateInterval $interval) : self
+    public function add(DateInterval $interval): self
     {
         $dateTime = $this->dateTime->add($interval);
 
@@ -190,7 +190,7 @@ class DateTime
     /**
      * Clones and subtracts an interval.
      */
-    public function subtract(DateInterval $interval) : self
+    public function subtract(DateInterval $interval): self
     {
         $dateTime = $this->dateTime->sub($interval);
 
@@ -200,7 +200,7 @@ class DateTime
     /**
      * Clones and apply a timezone.
      */
-    public function withTimezone(DateTimeZone $timezone) : self
+    public function withTimezone(DateTimeZone $timezone): self
     {
         $dateTime = $this->dateTime->setTimezone($timezone);
 
@@ -210,7 +210,7 @@ class DateTime
     /**
      * Create from a string with a date-time in `Y-m-d H:i:s` format.
      */
-    public static function fromString(string $value) : self
+    public static function fromString(string $value): self
     {
         return new self($value);
     }
@@ -218,7 +218,7 @@ class DateTime
     /**
      * Create from a DateTimeInterface.
      */
-    public static function fromDateTime(DateTimeInterface $dateTime) : self
+    public static function fromDateTime(DateTimeInterface $dateTime): self
     {
         $value = $dateTime->format(self::SYSTEM_FORMAT);
 

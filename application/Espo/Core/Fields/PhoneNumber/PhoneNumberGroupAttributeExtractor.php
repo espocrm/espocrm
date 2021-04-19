@@ -45,13 +45,13 @@ class PhoneNumberGroupAttributeExtractor implements AttributeExtractor
     /**
      * @param PhoneNumberGroup $group
      */
-    public function extract(object $group, string $field) : StdClass
+    public function extract(object $group, string $field): StdClass
     {
         if (!$group instanceof PhoneNumberGroup) {
             throw new InvalidArgumentException();
         }
 
-        $primaryNumber = $group->getPrimary() ? $group->getPrimary()->getNumber() : null;
+        $primaryNumber = $group->getPrimary() ? $group->getPrimary()->getNumber(): null;
 
         $dataList = [];
 
@@ -71,7 +71,7 @@ class PhoneNumberGroupAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field) : StdClass
+    public function extractFromNull(string $field): StdClass
     {
         return (object) [
             $field => null,

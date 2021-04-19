@@ -65,32 +65,32 @@ class Person extends Entity
         $this->setInContainer('name', $name);
     }
 
-    public function getEmailAddressGroup() : EmailAddressGroup
+    public function getEmailAddressGroup(): EmailAddressGroup
     {
         return $this->getValueObject('emailAddress');
     }
 
-    public function getPhoneNumberGroup() : PhoneNumberGroup
+    public function getPhoneNumberGroup(): PhoneNumberGroup
     {
         return $this->getValueObject('phoneNumber');
     }
 
-    public function setEmailAddressGroup(EmailAddressGroup $group) : void
+    public function setEmailAddressGroup(EmailAddressGroup $group): void
     {
         $this->setValueObject('emailAddress', $group);
     }
 
-    public function setPhoneNumberGroup(PhoneNumberGroup $group) : void
+    public function setPhoneNumberGroup(PhoneNumberGroup $group): void
     {
         $this->setValueObject('phoneNumber', $group);
     }
 
-    public function getAddress() : Address
+    public function getAddress(): Address
     {
         return $this->getValueObject('address');
     }
 
-    public function setAddress(Address $address) : void
+    public function setAddress(Address $address): void
     {
         $this->setValueObject('address', $address);
     }

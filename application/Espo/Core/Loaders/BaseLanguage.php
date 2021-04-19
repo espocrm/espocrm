@@ -56,7 +56,7 @@ class BaseLanguage implements Loader
         $this->dataCache = $dataCache;
     }
 
-    public function load() : LanguageService
+    public function load(): LanguageService
     {
         return new LanguageService(
             'en_US',

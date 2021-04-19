@@ -58,7 +58,7 @@ class LinkMultipleFactory implements ValueFactory
         $this->entityManager = $entityManager;
     }
 
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
         $entityType = $entity->getEntityType();
 
@@ -71,7 +71,7 @@ class LinkMultipleFactory implements ValueFactory
         return $entityDefs->getField($field)->getType() === 'linkMultiple';
     }
 
-    public function createFromEntity(Entity $entity, string $field) : LinkMultiple
+    public function createFromEntity(Entity $entity, string $field): LinkMultiple
     {
         if (!$this->isCreatableFromEntity($entity, $field)) {
             throw new RuntimeException();
@@ -112,7 +112,7 @@ class LinkMultipleFactory implements ValueFactory
         return new LinkMultiple($itemList);
     }
 
-    private function loadLinkMultipleField(Entity $entity, $field) : void
+    private function loadLinkMultipleField(Entity $entity, $field): void
     {
         $columns = $this->ormDefs
             ->getEntity($entity->getEntityType())
@@ -122,7 +122,7 @@ class LinkMultipleFactory implements ValueFactory
         $entity->loadLinkMultipleField($field, $columns);
     }
 
-    private function loadColumnData(Entity $entity, string $field) : StdClass
+    private function loadColumnData(Entity $entity, string $field): StdClass
     {
         $columnData = (object) [];
 

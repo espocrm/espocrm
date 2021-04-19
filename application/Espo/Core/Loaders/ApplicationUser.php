@@ -44,7 +44,7 @@ class ApplicationUser implements Loader
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function load() : Service
+    public function load(): Service
     {
         return $this->injectableFactory->create(Service::class);
     }

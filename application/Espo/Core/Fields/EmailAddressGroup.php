@@ -83,7 +83,7 @@ class EmailAddressGroup
     /**
      * Get a primary email address.
      */
-    public function getPrimary() : ?EmailAddress
+    public function getPrimary(): ?EmailAddress
     {
         if ($this->isEmpty()) {
             return null;
@@ -97,7 +97,7 @@ class EmailAddressGroup
      *
      * @return array<EmailAddress>
      */
-    public function getList() : array
+    public function getList(): array
     {
         return $this->list;
     }
@@ -105,7 +105,7 @@ class EmailAddressGroup
     /**
      * Get a number of addresses.
      */
-    public function getCount() : int
+    public function getCount(): int
     {
         return count($this->list);
     }
@@ -115,7 +115,7 @@ class EmailAddressGroup
      *
      * @return array<EmailAddress>
      */
-    public function getSecondaryList() : array
+    public function getSecondaryList(): array
     {
         $list = [];
 
@@ -135,7 +135,7 @@ class EmailAddressGroup
      *
      * @return array<string>
      */
-    public function getAddressList() : array
+    public function getAddressList(): array
     {
         $list = [];
 
@@ -149,7 +149,7 @@ class EmailAddressGroup
     /**
      * Get an email address by address represented as a string.
      */
-    public function getByAddress(string $address) : ?EmailAddress
+    public function getByAddress(string $address): ?EmailAddress
     {
         $index = $this->searchAddressInList($address);
 
@@ -163,7 +163,7 @@ class EmailAddressGroup
     /**
      * Whether an address is in the list.
      */
-    public function hasAddress(string $address) : bool
+    public function hasAddress(string $address): bool
     {
         return in_array($address, $this->getAddressList());
     }
@@ -171,7 +171,7 @@ class EmailAddressGroup
     /**
      * Clone with another primary email address.
      */
-    public function withPrimary(EmailAddress $emailAddress) : self
+    public function withPrimary(EmailAddress $emailAddress): self
     {
         $list = $this->list;
 
@@ -193,7 +193,7 @@ class EmailAddressGroup
      *
      * @param array<EmailAddress> $list
      */
-    public function withAddedList(array $list) : self
+    public function withAddedList(array $list): self
     {
         $newList = $this->list;
 
@@ -215,7 +215,7 @@ class EmailAddressGroup
     /**
      * Clone with an added email address.
      */
-    public function withAdded(EmailAddress $emailAddress) : self
+    public function withAdded(EmailAddress $emailAddress): self
     {
         return $this->withAddedList([$emailAddress]);
     }
@@ -223,7 +223,7 @@ class EmailAddressGroup
     /**
      * Clone with removed email address.
      */
-    public function withRemoved(EmailAddress $emailAddress) : self
+    public function withRemoved(EmailAddress $emailAddress): self
     {
         return $this->withRemovedByAddress($emailAddress->getAddress());
     }
@@ -231,7 +231,7 @@ class EmailAddressGroup
     /**
      * Clone with removed email address passed by an address.
      */
-    public function withRemovedByAddress(string $address) : self
+    public function withRemovedByAddress(string $address): self
     {
         $newList = $this->list;
 
@@ -251,7 +251,7 @@ class EmailAddressGroup
      *
      * @param array<EmailAddress> $list
      */
-    public static function fromList(array $list) : self
+    public static function fromList(array $list): self
     {
         return new self($list);
     }
@@ -259,12 +259,12 @@ class EmailAddressGroup
     /**
      * Create empty.
      */
-    public static function fromNothing() : self
+    public static function fromNothing(): self
     {
         return new self([]);
     }
 
-    private function searchAddressInList(string $address) : ?int
+    private function searchAddressInList(string $address): ?int
     {
         foreach ($this->getAddressList() as $i => $item) {
             if ($item === $address) {
@@ -275,7 +275,7 @@ class EmailAddressGroup
         return null;
     }
 
-    private function validateList() : void
+    private function validateList(): void
     {
         $addressList = [];
 
@@ -292,7 +292,7 @@ class EmailAddressGroup
         }
     }
 
-    private function isEmpty() : bool
+    private function isEmpty(): bool
     {
         return count($this->list) === 0;
     }

@@ -57,7 +57,7 @@ class LinkMultipleItem
     /**
      * Get an ID.
      */
-    public function getId() : string
+    public function getId(): string
     {
         return $this->id;
     }
@@ -65,7 +65,7 @@ class LinkMultipleItem
     /**
      * Get a name.
      */
-    public function getName() : ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -83,7 +83,7 @@ class LinkMultipleItem
     /**
      * Wether a column value is set.
      */
-    public function hasColumnValue(string $column) : bool
+    public function hasColumnValue(string $column): bool
     {
         return array_key_exists($column, $this->columnData);
     }
@@ -93,7 +93,7 @@ class LinkMultipleItem
      *
      * @return array<string>
      */
-    public function getColumnList() : array
+    public function getColumnList(): array
     {
         return array_keys($this->columnData);
     }
@@ -101,7 +101,7 @@ class LinkMultipleItem
     /**
      * Clone with a name.
      */
-    public function withName(string $name) : self
+    public function withName(string $name): self
     {
         $obj = $this->clone();
 
@@ -115,7 +115,7 @@ class LinkMultipleItem
      *
      * @param mixed $value
      */
-    public function withColumnValue(string $column, $value) : self
+    public function withColumnValue(string $column, $value): self
     {
         $obj = $this->clone();
 
@@ -129,12 +129,12 @@ class LinkMultipleItem
      *
      * @throws RuntimeException
      */
-    public static function fromId(string $id) : self
+    public static function fromId(string $id): self
     {
         return new self($id);
     }
 
-    private function clone() : self
+    private function clone(): self
     {
         $obj = new self($this->id);
 

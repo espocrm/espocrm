@@ -38,7 +38,7 @@ trait BodyTrait
     /**
      * @todo Change return type to `static` once PHP 8.0 is a min supported version.
      */
-    public static function createWithBody(string $reason, string $body) : Exception
+    public static function createWithBody(string $reason, string $body): Exception
     {
         $exception = new static($reason);
 
@@ -47,7 +47,7 @@ trait BodyTrait
         return $exception;
     }
 
-    public function getBody() : ?string
+    public function getBody(): ?string
     {
         return $this->body;
     }

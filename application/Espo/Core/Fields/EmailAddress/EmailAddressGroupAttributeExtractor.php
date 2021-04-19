@@ -44,13 +44,13 @@ class EmailAddressGroupAttributeExtractor implements AttributeExtractor
     /**
      * @param EmailAddressGroup $group
      */
-    public function extract(object $group, string $field) : StdClass
+    public function extract(object $group, string $field): StdClass
     {
         if (!$group instanceof EmailAddressGroup) {
             throw new InvalidArgumentException();
         }
 
-        $primaryAddress = $group->getPrimary() ? $group->getPrimary()->getAddress() : null;
+        $primaryAddress = $group->getPrimary() ? $group->getPrimary()->getAddress(): null;
 
         $dataList = [];
 
@@ -70,7 +70,7 @@ class EmailAddressGroupAttributeExtractor implements AttributeExtractor
         ];
     }
 
-    public function extractFromNull(string $field) : StdClass
+    public function extractFromNull(string $field): StdClass
     {
         return (object) [
             $field => null,

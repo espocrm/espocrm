@@ -50,7 +50,7 @@ class Client implements Runner
         $this->applicationState = $applicationState;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $portalId = $this->applicationState->getPortal()->id;
 

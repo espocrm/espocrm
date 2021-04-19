@@ -46,7 +46,7 @@ class QueryBuilder
         $this->selectBuilderFactory = $selectBuilderFactory;
     }
 
-    public function build(Params $params) : Select
+    public function build(Params $params): Select
     {
         $builder = $this->selectBuilderFactory
             ->create()

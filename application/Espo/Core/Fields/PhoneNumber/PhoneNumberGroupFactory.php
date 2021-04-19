@@ -61,7 +61,7 @@ class PhoneNumberGroupFactory implements ValueFactory
         $this->entityManager = $entityManager;
     }
 
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
         $type = $this->metadata->get([
             'entityDefs', $entity->getEntityType(), 'fields', $field, 'type'
@@ -74,7 +74,7 @@ class PhoneNumberGroupFactory implements ValueFactory
         return true;
     }
 
-    public function createFromEntity(Entity $entity, string $field) : PhoneNumberGroup
+    public function createFromEntity(Entity $entity, string $field): PhoneNumberGroup
     {
         if (!$this->isCreatableFromEntity($entity, $field)) {
             throw new RuntimeException();
@@ -135,7 +135,7 @@ class PhoneNumberGroupFactory implements ValueFactory
         return $group;
     }
 
-    private function sanitizeDataList(array $dataList) : array
+    private function sanitizeDataList(array $dataList): array
     {
         $sanitizedDataList = [];
 

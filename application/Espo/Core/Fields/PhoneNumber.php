@@ -56,7 +56,7 @@ class PhoneNumber
     /**
      * Get a type.
      */
-    public function getType() : ?string
+    public function getType(): ?string
     {
         return $this->type;
     }
@@ -64,7 +64,7 @@ class PhoneNumber
     /**
      * Get a number.
      */
-    public function getNumber() : string
+    public function getNumber(): string
     {
         return $this->number;
     }
@@ -72,7 +72,7 @@ class PhoneNumber
     /**
      * Whether opted-out.
      */
-    public function isOptedOut() : bool
+    public function isOptedOut(): bool
     {
         return $this->isOptedOut;
     }
@@ -80,7 +80,7 @@ class PhoneNumber
     /**
      * Whether invalid.
      */
-    public function isInvalid() : bool
+    public function isInvalid(): bool
     {
         return $this->isInvalid;
     }
@@ -88,7 +88,7 @@ class PhoneNumber
     /**
      * Clone with a type.
      */
-    public function withType(string $type) : self
+    public function withType(string $type): self
     {
         $obj = $this->clone();
 
@@ -100,7 +100,7 @@ class PhoneNumber
     /**
      * Clone set invalid.
      */
-    public function invalid() : self
+    public function invalid(): self
     {
         $obj = $this->clone();
 
@@ -112,7 +112,7 @@ class PhoneNumber
     /**
      * Clone set not invalid.
      */
-    public function notInvalid() : self
+    public function notInvalid(): self
     {
         $obj = $this->clone();
 
@@ -124,7 +124,7 @@ class PhoneNumber
     /**
      * Clone set opted-out.
      */
-    public function optedOut() : self
+    public function optedOut(): self
     {
         $obj = $this->clone();
 
@@ -136,7 +136,7 @@ class PhoneNumber
     /**
      * Clone set not opted-out.
      */
-    public function notOptedOut() : self
+    public function notOptedOut(): self
     {
         $obj = $this->clone();
 
@@ -148,7 +148,7 @@ class PhoneNumber
     /**
      * Create from a number.
      */
-    public static function fromNumber(string $number) : self
+    public static function fromNumber(string $number): self
     {
         return new self($number);
     }
@@ -156,12 +156,12 @@ class PhoneNumber
     /**
      * Create from a number and type.
      */
-    public static function fromNumberAndType(string $number, string $type) : self
+    public static function fromNumberAndType(string $number, string $type): self
     {
         return self::fromNumber($number)->withType($type);
     }
 
-    private function clone() : self
+    private function clone(): self
     {
         $obj = new self($this->number);
 

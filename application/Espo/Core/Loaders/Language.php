@@ -53,7 +53,11 @@ class Language implements Loader
     protected $preferences;
 
     public function __construct(
-        FileManager $fileManager, Config $config, Metadata $metadata, DataCache $dataCache, Preferences $preferences
+        FileManager $fileManager,
+        Config $config,
+        Metadata $metadata,
+        DataCache $dataCache,
+        Preferences $preferences
     ) {
         $this->fileManager = $fileManager;
         $this->config = $config;
@@ -62,7 +66,7 @@ class Language implements Loader
         $this->preferences = $preferences;
     }
 
-    public function load() : LanguageService
+    public function load(): LanguageService
     {
         return new LanguageService(
             LanguageService::detectLanguage($this->config, $this->preferences),

@@ -44,7 +44,7 @@ class EntityManager implements Loader
         $this->entityManagerFactory = $entityManagerFactory;
     }
 
-    public function load() : EntityManagerService
+    public function load(): EntityManagerService
     {
         return $this->entityManagerFactory->create();
     }

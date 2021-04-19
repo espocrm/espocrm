@@ -72,7 +72,7 @@ class MassUpdate implements MassAction
         $this->fieldUtil = $fieldUtil;
     }
 
-    public function process(Params $params, Data $data) : Result
+    public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 
@@ -146,8 +146,11 @@ class MassUpdate implements MassAction
     }
 
     protected function prepareItemValueMap(
-        string $entityType, StdClass $valueMap, int $i, array $fieldToCopyList
-    ) : StdClass {
+        string $entityType,
+        StdClass $valueMap,
+        int $i,
+        array $fieldToCopyList
+    ): StdClass {
 
         $clonedValueMap = ObjectUtil::clone($valueMap);
 
@@ -178,7 +181,7 @@ class MassUpdate implements MassAction
         return $clonedValueMap;
     }
 
-    protected function copyFileField(string $field, StdClass $valueMap) : void
+    protected function copyFileField(string $field, StdClass $valueMap): void
     {
         $idAttribute = $field . 'Id';
 
@@ -203,7 +206,7 @@ class MassUpdate implements MassAction
         $valueMap->$idAttribute = $copiedAttachment->id;
     }
 
-    protected function copyAttachmentMultipleField(string $field, StdClass $valueMap) : void
+    protected function copyAttachmentMultipleField(string $field, StdClass $valueMap): void
     {
         $idsAttribute = $field . 'Ids';
 
@@ -232,7 +235,7 @@ class MassUpdate implements MassAction
         $valueMap->$idsAttribute = $copiedIds;
     }
 
-    protected function detectFieldToCopyList(string $entityType, StdClass $valueMap) : array
+    protected function detectFieldToCopyList(string $entityType, StdClass $valueMap): array
     {
         $resultFieldList = [];
 

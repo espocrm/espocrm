@@ -63,7 +63,7 @@ class MassDelete implements MassAction
         $this->entityManager = $entityManager;
     }
 
-    public function process(Params $params, Data $dataWrapped) : Result
+    public function process(Params $params, Data $dataWrapped): Result
     {
         $entityType = $params->getEntityType();
 

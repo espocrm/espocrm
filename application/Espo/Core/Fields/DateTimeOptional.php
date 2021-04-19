@@ -66,7 +66,7 @@ class DateTimeOptional
     /**
      * Create from a string with a date-time in `Y-m-d H:i:s` format or date in `Y-m-d`.
      */
-    public static function fromString(string $value) : self
+    public static function fromString(string $value): self
     {
         return new self($value);
     }
@@ -74,7 +74,7 @@ class DateTimeOptional
     /**
      * Create from a string with a date-time in `Y-m-d H:i:s` format.
      */
-    public static function fromDateTimeString(string $value) : self
+    public static function fromDateTimeString(string $value): self
     {
         if (!self::isStringDateTime($value)) {
             throw new RuntimeException("Bad value.");
@@ -86,7 +86,7 @@ class DateTimeOptional
     /**
      * Get a string value in `Y-m-d H:i:s` format.
      */
-    public function getString() : string
+    public function getString(): string
     {
         return $this->getActualValue()->getString();
     }
@@ -94,7 +94,7 @@ class DateTimeOptional
     /**
      * Get DateTimeImmutable.
      */
-    public function getDateTime() : DateTimeImmutable
+    public function getDateTime(): DateTimeImmutable
     {
         return $this->getActualValue()->getDateTime();
     }
@@ -102,7 +102,7 @@ class DateTimeOptional
     /**
      * Get a timestamp.
      */
-    public function getTimestamp() : int
+    public function getTimestamp(): int
     {
         return $this->getActualValue()->getDateTime()->getTimestamp();
     }
@@ -110,7 +110,7 @@ class DateTimeOptional
     /**
      * Get a year.
      */
-    public function getYear() : int
+    public function getYear(): int
     {
         return $this->getActualValue()->getYear();
     }
@@ -118,7 +118,7 @@ class DateTimeOptional
     /**
      * Get a month.
      */
-    public function getMonth() : int
+    public function getMonth(): int
     {
         return $this->getActualValue()->getMonth();
     }
@@ -126,7 +126,7 @@ class DateTimeOptional
     /**
      * Get a day (of month).
      */
-    public function getDay() : int
+    public function getDay(): int
     {
         return $this->getActualValue()->getDay();
     }
@@ -134,7 +134,7 @@ class DateTimeOptional
     /**
      * Get a day of week. 0 (for Sunday) through 6 (for Saturday).
      */
-    public function getDayOfWeek() : int
+    public function getDayOfWeek(): int
     {
         return $this->getActualValue()->getDayOfWeek();
     }
@@ -142,7 +142,7 @@ class DateTimeOptional
     /**
      * Get a hour.
      */
-    public function getHour() : int
+    public function getHour(): int
     {
         if ($this->isAllDay()) {
             return 0;
@@ -154,7 +154,7 @@ class DateTimeOptional
     /**
      * Get a minute.
      */
-    public function getMinute() : int
+    public function getMinute(): int
     {
         if ($this->isAllDay()) {
             return 0;
@@ -166,7 +166,7 @@ class DateTimeOptional
     /**
      * Get a second.
      */
-    public function getSecond() : int
+    public function getSecond(): int
     {
         if ($this->isAllDay()) {
             return 0;
@@ -178,7 +178,7 @@ class DateTimeOptional
     /**
      * Whether is all-day (no time part).
      */
-    public function isAllDay() : bool
+    public function isAllDay(): bool
     {
         return $this->dateValue !== null;
     }
@@ -186,7 +186,7 @@ class DateTimeOptional
     /**
      * Get a timezone.
      */
-    public function getTimezone() : DateTimeZone
+    public function getTimezone(): DateTimeZone
     {
         return $this->getDateTime()->getTimezone();
     }
@@ -194,7 +194,7 @@ class DateTimeOptional
     /**
      * @return Date|DateTime
      */
-    private function getActualValue() : object
+    private function getActualValue(): object
     {
         return $this->dateValue ?? $this->dateTimeValue;
     }
@@ -202,7 +202,7 @@ class DateTimeOptional
     /**
      * Clones and apply a timezone. Non-all-day value is created.
      */
-    public function withTimezone(DateTimeZone $timezone) : self
+    public function withTimezone(DateTimeZone $timezone): self
     {
         if ($this->isAllDay()) {
             $dateTime = $this->getActualValue()->getDateTime()->setTimezone($timezone);
@@ -218,7 +218,7 @@ class DateTimeOptional
     /**
      * Clones and modifies.
      */
-    public function modify(string $modifier) : self
+    public function modify(string $modifier): self
     {
         if ($this->isAllDay()) {
             return self::fromDateTimeAllDay(
@@ -234,7 +234,7 @@ class DateTimeOptional
     /**
      * Clones and adds an interval.
      */
-    public function add(DateInterval $interval) : self
+    public function add(DateInterval $interval): self
     {
         if ($this->isAllDay()) {
             return self::fromDateTimeAllDay(
@@ -250,7 +250,7 @@ class DateTimeOptional
     /**
      * Clones and subtracts an interval.
      */
-    public function subtract(DateInterval $interval) : self
+    public function subtract(DateInterval $interval): self
     {
         if ($this->isAllDay()) {
             return self::fromDateTimeAllDay(
@@ -266,7 +266,7 @@ class DateTimeOptional
     /**
      * Create from a string with a date in `Y-m-d` format.
      */
-    public static function fromDateString(string $value) : self
+    public static function fromDateString(string $value): self
     {
         if (self::isStringDateTime($value)) {
             throw new RuntimeException("Bad value.");
@@ -278,7 +278,7 @@ class DateTimeOptional
     /**
      * Create from a DateTimeInterface.
      */
-    public static function fromDateTime(DateTimeInterface $dateTime) : self
+    public static function fromDateTime(DateTimeInterface $dateTime): self
     {
         $value = $dateTime->format(self::SYSTEM_FORMAT);
 
@@ -297,14 +297,14 @@ class DateTimeOptional
     /**
      * Create all-day from a DateTimeInterface.
      */
-    public static function fromDateTimeAllDay(DateTimeInterface $dateTime) : self
+    public static function fromDateTimeAllDay(DateTimeInterface $dateTime): self
     {
         $value = $dateTime->format(self::SYSTEM_FORMAT_DATE);
 
         return new self($value);
     }
 
-    private static function isStringDateTime(string $value) : bool
+    private static function isStringDateTime(string $value): bool
     {
         if (strlen($value) > 10) {
             return true;
