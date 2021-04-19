@@ -42,7 +42,7 @@ class AttributeDefs
     {
     }
 
-    public static function fromRaw(array $raw, string $name) : self
+    public static function fromRaw(array $raw, string $name): self
     {
         $obj = new self();
 
@@ -56,7 +56,7 @@ class AttributeDefs
     /**
      * Get a name.
      */
-    public function getName() : string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -64,7 +64,7 @@ class AttributeDefs
     /**
      * Get a type.
      */
-    public function getType() : string
+    public function getType(): string
     {
         return $this->data['type'];
     }
@@ -72,7 +72,7 @@ class AttributeDefs
     /**
      * Get a length.
      */
-    public function getLength() : ?int
+    public function getLength(): ?int
     {
         return $this->data['len'] ?? null;
     }
@@ -80,7 +80,7 @@ class AttributeDefs
     /**
      * Whether is not-storable. Not-storable attributes are not stored in DB.
      */
-    public function isNotStorable() : bool
+    public function isNotStorable(): bool
     {
         return $this->data['notStorable'] ?? false;
     }
@@ -88,7 +88,7 @@ class AttributeDefs
     /**
      * Whether is auto-increment.
      */
-    public function isAutoincrement() : bool
+    public function isAutoincrement(): bool
     {
         return $this->data['autoincrement'] ?? false;
     }
@@ -96,7 +96,7 @@ class AttributeDefs
     /**
      * Whether a parameter is set.
      */
-    public function hasParam(string $name) : bool
+    public function hasParam(string $name): bool
     {
         return array_key_exists($name, $this->data);
     }

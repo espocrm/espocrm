@@ -58,7 +58,7 @@ class ValueAccessorFactory
         $this->subscribeToMetadataUpdate();
     }
 
-    public function create(Entity $entity) : ValueAccessor
+    public function create(Entity $entity): ValueAccessor
     {
         $generalValueFactory = $this->getGeneralValueFactory();
 
@@ -67,7 +67,7 @@ class ValueAccessorFactory
         return new ValueAccessor($entity, $generalValueFactory, $generalAttributeExtractor);
     }
 
-    private function getGeneralValueFactory() : GeneralValueFactory
+    private function getGeneralValueFactory(): GeneralValueFactory
     {
         if (!$this->generalValueFactory) {
             $this->generalValueFactory = new GeneralValueFactory(
@@ -78,7 +78,7 @@ class ValueAccessorFactory
         return $this->generalValueFactory;
     }
 
-    private function getGeneralAttributeExtractor() : GeneralAttributeExtractor
+    private function getGeneralAttributeExtractor(): GeneralAttributeExtractor
     {
         if (!$this->generalAttributeExtractor) {
             $this->generalAttributeExtractor = new GeneralAttributeExtractor(
@@ -89,7 +89,7 @@ class ValueAccessorFactory
         return $this->generalAttributeExtractor;
     }
 
-    private function subscribeToMetadataUpdate() : void
+    private function subscribeToMetadataUpdate(): void
     {
         $this->eventDispatcher->subscribeToMetadataUpdate(
             function () {

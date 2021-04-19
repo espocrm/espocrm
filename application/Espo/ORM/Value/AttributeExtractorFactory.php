@@ -36,5 +36,5 @@ interface AttributeExtractorFactory
      *
      * @return AttributeExtractor<T>
      */
-    public function create(string $entityType, string $field) : AttributeExtractor;
+    public function create(string $entityType, string $field): AttributeExtractor;
 }

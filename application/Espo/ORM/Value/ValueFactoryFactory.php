@@ -34,10 +34,10 @@ interface ValueFactoryFactory
     /**
      * Whether can create a factory.
      */
-    public function isCreatable(string $entityType, string $field) : bool;
+    public function isCreatable(string $entityType, string $field): bool;
 
     /**
      * Create ValueFactory.
      */
-    public function create(string $entityType, string $field) : ValueFactory;
+    public function create(string $entityType, string $field): ValueFactory;
 }

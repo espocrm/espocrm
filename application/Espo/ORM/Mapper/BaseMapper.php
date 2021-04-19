@@ -88,7 +88,7 @@ class BaseMapper implements Mapper
     /**
      * {@inheritdoc}
      */
-    public function selectOne(Select $select) : ?Entity
+    public function selectOne(Select $select): ?Entity
     {
         $entityType = $select->getFrom();
 
@@ -112,7 +112,7 @@ class BaseMapper implements Mapper
     /**
      * {@inheritdoc}
      */
-    public function count(Select $select) : int
+    public function count(Select $select): int
     {
         return (int) $this->aggregate($select, 'COUNT', 'id');
     }
@@ -159,7 +159,7 @@ class BaseMapper implements Mapper
      * {@inheritdoc}
      * @todo Change return type to SthCollection once PHP 7.4 is a min version.
      */
-    public function select(Select $select) : Collection
+    public function select(Select $select): Collection
     {
         $entityType = $select->getFrom();
 
@@ -171,12 +171,12 @@ class BaseMapper implements Mapper
     /**
      * Select entities from DB by a SQL query.
      */
-    public function selectBySql(string $entityType, string $sql) : SthCollection
+    public function selectBySql(string $entityType, string $sql): SthCollection
     {
         return $this->selectBySqlInternal($entityType, $sql);
     }
 
-    protected function selectBySqlInternal(string $entityType, string $sql) : SthCollection
+    protected function selectBySqlInternal(string $entityType, string $sql): SthCollection
     {
         return $this->collectionFactory->createFromSql($entityType, $sql);
     }
@@ -417,7 +417,7 @@ class BaseMapper implements Mapper
     /**
      * Get a number of related entities in DB.
      */
-    public function countRelated(Entity $entity, string $relationName, ?Select $select = null) : int
+    public function countRelated(Entity $entity, string $relationName, ?Select $select = null): int
     {
         return (int) $this->selectRelatedInternal($entity, $relationName, $select, true);
     }
@@ -425,7 +425,7 @@ class BaseMapper implements Mapper
     /**
      * Relate an entity with another entity.
      */
-    public function relate(Entity $entity, string $relationName, Entity $foreignEntity, ?array $columnData = null) : bool
+    public function relate(Entity $entity, string $relationName, Entity $foreignEntity, ?array $columnData = null): bool
     {
         return $this->addRelation($entity, $relationName, null, $foreignEntity, $columnData);
     }
@@ -433,7 +433,7 @@ class BaseMapper implements Mapper
     /**
      * Unrelate an entity from another entity.
      */
-    public function unrelate(Entity $entity, string $relationName, Entity $foreignEntity) : bool
+    public function unrelate(Entity $entity, string $relationName, Entity $foreignEntity): bool
     {
         return $this->removeRelation($entity, $relationName, null, false, $foreignEntity);
     }
@@ -441,7 +441,7 @@ class BaseMapper implements Mapper
     /**
      * Unrelate an entity from another entity by a given ID.
      */
-    public function relateById(Entity $entity, string $relationName, string $id, ?array $columnData = null) : bool
+    public function relateById(Entity $entity, string $relationName, string $id, ?array $columnData = null): bool
     {
         return $this->addRelation($entity, $relationName, $id, null, $columnData);
     }
@@ -449,7 +449,7 @@ class BaseMapper implements Mapper
     /**
      * Unrelate an entity from another entity by a given ID.
      */
-    public function unrelateById(Entity $entity, string $relationName, string $id) : bool
+    public function unrelateById(Entity $entity, string $relationName, string $id): bool
     {
         return $this->removeRelation($entity, $relationName, $id);
     }
@@ -457,7 +457,7 @@ class BaseMapper implements Mapper
     /**
      * Unrelate all related entities.
      */
-    public function unrelateAll(Entity $entity, string $relationName) : bool
+    public function unrelateAll(Entity $entity, string $relationName): bool
     {
         return $this->removeRelation($entity, $relationName, null, true);
     }
@@ -465,7 +465,7 @@ class BaseMapper implements Mapper
     /**
      * Update relationship columns.
      */
-    public function updateRelationColumns(Entity $entity, string $relationName, ?string $id = null, array $columnData) : bool
+    public function updateRelationColumns(Entity $entity, string $relationName, ?string $id = null, array $columnData): bool
     {
         if (empty($id) || empty($relationName)) {
             throw new RuntimeException("Can't update relation, empty ID or relation name.");
@@ -689,8 +689,12 @@ class BaseMapper implements Mapper
     }
 
     protected function addRelation(
-        Entity $entity, string $relationName, ?string $id = null, ?Entity $relEntity = null, ?array $data = null
-    ) : bool {
+        Entity $entity,
+        string $relationName,
+        ?string $id = null,
+        ?Entity $relEntity = null,
+        ?array $data = null
+    ): bool {
 
         $entityType = $entity->getEntityType();
 
@@ -983,8 +987,13 @@ class BaseMapper implements Mapper
     }
 
     protected function removeRelation(
-        Entity $entity, string $relationName, ?string $id = null, bool $all = false, ?Entity $relEntity = null
-    ) : bool {
+        Entity $entity,
+        string $relationName,
+        ?string $id = null,
+        bool $all = false,
+        ?Entity $relEntity = null
+    ): bool {
+
         if ($relEntity) {
             $id = $relEntity->id;
         }
@@ -1238,7 +1247,7 @@ class BaseMapper implements Mapper
         $this->executeSql($sql, true);
     }
 
-    protected function getInsertColumnList(Entity $entity) : array
+    protected function getInsertColumnList(Entity $entity): array
     {
         $columnList = [];
 
@@ -1251,7 +1260,7 @@ class BaseMapper implements Mapper
         return $columnList;
     }
 
-    protected function getInsertValueMap(Entity $entity) : array
+    protected function getInsertValueMap(Entity $entity): array
     {
         $map = [];
 
@@ -1274,7 +1283,7 @@ class BaseMapper implements Mapper
         return $list;
     }
 
-    protected function getValueMapForUpdate(Entity $entity) : array
+    protected function getValueMapForUpdate(Entity $entity): array
     {
         $valueMap = [];
 
@@ -1400,7 +1409,7 @@ class BaseMapper implements Mapper
         $this->update($entity);
     }
 
-    protected function toValueMap(Entity $entity, bool $onlyStorable = true) : array
+    protected function toValueMap(Entity $entity, bool $onlyStorable = true): array
     {
         $data = [];
 
@@ -1434,7 +1443,7 @@ class BaseMapper implements Mapper
         $entity->set($data);
     }
 
-    protected function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select) : array
+    protected function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select): array
     {
         $additionalSelect = $this->getManyManyAdditionalSelect($entity, $relationName);
 
@@ -1460,7 +1469,7 @@ class BaseMapper implements Mapper
         return $select;
     }
 
-    protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null) : array
+    protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
     {
         $defs = $entity->getRelations()[$relationName];
 
@@ -1500,7 +1509,7 @@ class BaseMapper implements Mapper
         return $join;
     }
 
-    protected function getManyManyAdditionalSelect(Entity $entity, string $relationName) : array
+    protected function getManyManyAdditionalSelect(Entity $entity, string $relationName): array
     {
         $foreign = $entity->getRelationParam($relationName, 'foreign');
         $foregnEntityType = $entity->getRelationParam($relationName, 'entity');

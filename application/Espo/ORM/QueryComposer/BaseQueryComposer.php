@@ -172,7 +172,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $this->helper = new Helper($metadata);
     }
 
-    protected function getSeed(?string $entityType) : Entity
+    protected function getSeed(?string $entityType): Entity
     {
         if (!$entityType) {
             return new BaseEntity('_Stub');
@@ -188,7 +188,7 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * {@inheritdoc}
      */
-    public function compose(Query $query) : string
+    public function compose(Query $query): string
     {
         if ($query instanceof SelectQuery) {
             return $this->composeSelect($query);
@@ -217,61 +217,61 @@ abstract class BaseQueryComposer implements QueryComposer
         throw new RuntimeException("ORM Query: Unknown query type passed.");
     }
 
-    public function composeCreateSavepoint(string $savepointName) : string
+    public function composeCreateSavepoint(string $savepointName): string
     {
         $savepointName = $this->sanitize($savepointName);
 
         return 'SAVEPOINT ' . $savepointName;
     }
 
-    public function composeReleaseSavepoint(string $savepointName) : string
+    public function composeReleaseSavepoint(string $savepointName): string
     {
         $savepointName = $this->sanitize($savepointName);
 
         return 'RELEASE SAVEPOINT ' . $savepointName;
     }
 
-    public function composeRollbackToSavepoint(string $savepointName) : string
+    public function composeRollbackToSavepoint(string $savepointName): string
     {
         $savepointName = $this->sanitize($savepointName);
 
         return 'ROLLBACK TO SAVEPOINT ' . $savepointName;
     }
 
-    protected function composeSelecting(SelectingQuery $queryParams) : string
+    protected function composeSelecting(SelectingQuery $queryParams): string
     {
         return $this->compose($queryParams);
     }
 
-    public function composeSelect(SelectQuery $queryParams) : string
+    public function composeSelect(SelectQuery $queryParams): string
     {
         $params = $queryParams->getRaw();
 
         return $this->createSelectQueryInternal($params);
     }
 
-    public function composeUpdate(UpdateQuery $queryParams) : string
+    public function composeUpdate(UpdateQuery $queryParams): string
     {
         $params = $queryParams->getRaw();
 
         return $this->createUpdateQuery($params);
     }
 
-    public function composeDelete(DeleteQuery $queryParams) : string
+    public function composeDelete(DeleteQuery $queryParams): string
     {
         $params = $queryParams->getRaw();
 
         return $this->createDeleteQuery($params);
     }
 
-    public function composeInsert(InsertQuery $queryParams) : string
+    public function composeInsert(InsertQuery $queryParams): string
     {
         $params = $queryParams->getRaw();
 
         return $this->createInsertQuery($params);
     }
 
-    public function composeUnion(UnionQuery $queryParams) : string
+    public function composeUnion(UnionQuery $queryParams): string
     {
         $params = $queryParams->getRaw();
 
@@ -282,7 +282,7 @@ abstract class BaseQueryComposer implements QueryComposer
      * @deprecated
      * @todo Remove in 6.5.
      */
-    public function createSelectQuery(string $entityType, ?array $params = null) : string
+    public function createSelectQuery(string $entityType, ?array $params = null): string
     {
         $params = $params ?? [];
 
@@ -291,7 +291,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $this->compose(SelectQuery::fromRaw($params));
     }
 
-    protected function createDeleteQuery(array $params = null) : string
+    protected function createDeleteQuery(array $params = null): string
     {
         $params = $this->normilizeParams(self::DELETE_METHOD, $params);
 
@@ -323,7 +323,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $sql;
     }
 
-    protected function createUpdateQuery(array $params = null) : string
+    protected function createUpdateQuery(array $params = null): string
     {
         $params = $this->normilizeParams(self::UPDATE_METHOD, $params);
 
@@ -351,7 +351,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $sql;
     }
 
-    protected function createInsertQuery(array $params) : string
+    protected function createInsertQuery(array $params): string
     {
         $params = $this->normilizeInsertParams($params);
 
@@ -399,7 +399,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return 'VALUES (' . $this->getInsertValuesItemPart($columns, $values) . ')';
     }
 
-    protected function createUnionQuery(array $params) : string
+    protected function createUnionQuery(array $params): string
     {
         $selectQueryList = $params['queries'] ?? [];
 
@@ -466,7 +466,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return implode(', ', $orderByParts);
     }
 
-    protected function normilizeInsertParams(array $params) : array
+    protected function normilizeInsertParams(array $params): array
     {
         $columns = $params['columns'] ?? null;
 
@@ -527,7 +527,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $params;
     }
 
-    protected function normilizeParams(string $method, ?array $params) : array
+    protected function normilizeParams(string $method, ?array $params): array
     {
         $params = $params ?? [];
 
@@ -564,7 +564,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $params;
     }
 
-    protected function createSelectQueryInternal(array $params = null) : string
+    protected function createSelectQueryInternal(array $params = null): string
     {
         $params = $this->normilizeParams(self::SELECT_METHOD, $params);
 
@@ -711,14 +711,14 @@ abstract class BaseQueryComposer implements QueryComposer
         return $sql;
     }
 
-    protected function wrapCountSql(string $sql) : string
+    protected function wrapCountSql(string $sql): string
     {
         return
             "SELECT COUNT(*) AS " . $this->quoteIdentifier('value') . " ".
             "FROM ({$sql}) AS " . $this->quoteIdentifier('countAlias');
     }
 
-    protected function createSelectQueryNoFrom(array $params) : string
+    protected function createSelectQueryNoFrom(array $params): string
     {
         $selectPart = $this->getSelectPart(null, $params);
 
@@ -730,7 +730,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $sql;
     }
 
-    protected function getIndexKeyList(string $entityType, array $params) : ?array
+    protected function getIndexKeyList(string $entityType, array $params): ?array
     {
         $indexKeyList = [];
 
@@ -754,7 +754,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $indexKeyList;
     }
 
-    protected function getJoinsPart(Entity $entity, array $params, bool $includeBelongsTo = false) : string
+    protected function getJoinsPart(Entity $entity, array $params, bool $includeBelongsTo = false): string
     {
         $joinsPart = '';
 
@@ -808,7 +808,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $joinsPart;
     }
 
-    protected function getGroupByPart(Entity $entity, array $params) : ?string
+    protected function getGroupByPart(Entity $entity, array $params): ?string
     {
         if (empty($params['groupBy'])) {
             return null;
@@ -823,7 +823,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return implode(', ', $list);
     }
 
-    protected function getAdditionalSelect(Entity $entity, array $params) : ?string
+    protected function getAdditionalSelect(Entity $entity, array $params): ?string
     {
         if (!empty($params['strictSelect'])) {
             return null;
@@ -869,7 +869,7 @@ abstract class BaseQueryComposer implements QueryComposer
         string $entityType,
         bool $distinct = false,
         ?array $argumentPartList = null
-    ) : string {
+    ): string {
 
         if (!in_array($function, Functions::$functionList)) {
             throw new RuntimeException("ORM Query: Not allowed function '{$function}'.");
@@ -1075,7 +1075,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return "CONVERT_TZ(". $argumentPartList[0]. ", '+00:00', " . $this->quote($offsetString) . ")";
     }
 
-    protected function convertMatchExpression(Entity $entity, string $expression, array $params) : string
+    protected function convertMatchExpression(Entity $entity, string $expression, array $params): string
     {
         $delimiterPosition = strpos($expression, ':');
 
@@ -1136,7 +1136,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function convertComplexExpression(
         ?Entity $entity, string $attribute, bool $distinct, array &$params
-    ) : string {
+    ): string {
         $function = null;
 
         if (!$entity) {
@@ -1190,14 +1190,14 @@ abstract class BaseQueryComposer implements QueryComposer
         return $part;
     }
 
-    public static function getAllAttributesFromComplexExpression(string $expression) : array
+    public static function getAllAttributesFromComplexExpression(string $expression): array
     {
         return Util::getAllAttributesFromComplexExpression($expression);
     }
 
     protected function getFunctionArgumentPart(
         Entity $entity, string $attribute, bool $distinct, array &$params
-    ) : string {
+    ): string {
 
         $argument = $attribute;
 
@@ -1275,7 +1275,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $part;
     }
 
-    protected function getFromAlias(?array $params = null, ?string $entityType = null) : string
+    protected function getFromAlias(?array $params = null, ?string $entityType = null): string
     {
         $params = $params ?? [];
 
@@ -1300,7 +1300,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function getAttributeOrderSql(
         Entity $entity, string $attribute, ?array &$params, string $order
-    ) : string {
+    ): string {
 
         $fieldDefs = $entity->getAttributes()[$attribute];
 
@@ -1369,7 +1369,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function getAttributeSql(
         Entity $entity, string $attribute, string $type, ?array &$params = null, ?string $alias = null
-    ) : string {
+    ): string {
 
         $fieldDefs = $entity->getAttributes()[$attribute];
 
@@ -1417,7 +1417,10 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function applyAttributeCustomParams(
-        array $defs, array &$params, string $attribute, ?string $alias = null
+        array $defs,
+        array &$params,
+        string $attribute,
+        ?string $alias = null
     ) {
         if (!empty($defs['leftJoins'])) {
             foreach ($defs['leftJoins'] as $j) {
@@ -1512,7 +1515,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
     }
 
-    protected function getOrderByAttributeList(array $params) : array
+    protected function getOrderByAttributeList(array $params): array
     {
         $value = $params['orderBy'] ?? null;
 
@@ -1556,7 +1559,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $list;
     }
 
-    protected function getNotIntersectingSelectItemList(array $itemList, array $newItemList) : array
+    protected function getNotIntersectingSelectItemList(array $itemList, array $newItemList): array
     {
         $list = [];
 
@@ -1564,7 +1567,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $isMet = false;
 
             foreach ($itemList as $item) {
-                $itemToCompare = is_array($item) ? ($item[0] ?? null) : $item;
+                $itemToCompare = is_array($item) ? ($item[0] ?? null): $item;
 
                 if ($itemToCompare === $newItem) {
                     $isMet = true;
@@ -1580,7 +1583,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $list;
     }
 
-    protected function getSelectPart(?Entity $entity, array &$params) : string
+    protected function getSelectPart(?Entity $entity, array &$params): string
     {
         $itemList = $params['select'] ?? [];
 
@@ -1660,7 +1663,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $selectPart;
     }
 
-    protected function getSelectPartItemPair(?Entity $entity, array &$params, $attribute) : ?array
+    protected function getSelectPartItemPair(?Entity $entity, array &$params, $attribute): ?array
     {
         $maxTextColumnsLength = $params['maxTextColumnsLength'] ?? null;
         $skipTextColumns = $params['skipTextColumns'] ?? false;
@@ -1774,7 +1777,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return [$fieldPath, $attribute];
     }
 
-    protected function getSelectDependeeAdditionalList(Entity $entity, array $itemList) : array
+    protected function getSelectDependeeAdditionalList(Entity $entity, array $itemList): array
     {
         $additionalList = [];
 
@@ -1803,8 +1806,11 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getBelongsToJoinItemPart(
-        Entity $entity, string $relationName, ?string $alias = null, ?array $params = null
-    ) : ?string {
+        Entity $entity,
+        string $relationName,
+        ?string $alias = null,
+        ?array $params = null
+    ): ?string {
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
@@ -1834,7 +1840,7 @@ abstract class BaseQueryComposer implements QueryComposer
             "{$alias}." . $this->toDb($foreignKey);
     }
 
-    protected function getSelectTailPart(array $params) : ?string
+    protected function getSelectTailPart(array $params): ?string
     {
         $forShare = $params['forShare'] ?? null;
         $forUpdate = $params['forUpdate'] ?? null;
@@ -1850,7 +1856,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return null;
     }
 
-    protected function getBelongsToJoinsPart(Entity $entity, ?array $select, array $skipList, array $params) : string
+    protected function getBelongsToJoinsPart(Entity $entity, ?array $select, array $skipList, array $params): string
     {
         $joinsArr = [];
 
@@ -1928,7 +1934,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return implode(' ', $joinsArr);
     }
 
-    protected static function isSelectAll(array $select) : bool
+    protected static function isSelectAll(array $select): bool
     {
         if (!count($select)) {
             return true;
@@ -1943,7 +1949,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $order = null,
         ?array &$params = null,
         bool $noCustom = false
-    ) : ?string {
+    ): ?string {
 
         if (is_null($orderBy)) {
             return null;
@@ -2023,12 +2029,12 @@ abstract class BaseQueryComposer implements QueryComposer
         return "{$fieldPath} " . $order;
     }
 
-    protected function getOrderPart(Entity $entity, $orderBy = null, $order = null, &$params = null) : ?string
+    protected function getOrderPart(Entity $entity, $orderBy = null, $order = null, &$params = null): ?string
     {
         return $this->getOrderExpressionPart($entity, $orderBy, $order, $params);
     }
 
-    protected function getAttributePathForOrderBy(Entity $entity, string $orderBy, array $params) : ?string
+    protected function getAttributePathForOrderBy(Entity $entity, string $orderBy, array $params): ?string
     {
         if (strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
             return $this->convertComplexExpression(
@@ -2043,8 +2049,12 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getAggregationSelectPart(
-        Entity $entity, string $aggregation, string $aggregationBy, bool $distinct, array $params
-    ) : ?string {
+        Entity $entity,
+        string $aggregation,
+        string $aggregationBy,
+        bool $distinct,
+        array $params
+    ): ?string {
 
         if (!isset($entity->getAttributes()[$aggregationBy])) {
             return null;
@@ -2065,7 +2075,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $selectPart;
     }
 
-    protected function quoteIdentifier(string $string) : string
+    protected function quoteIdentifier(string $string): string
     {
         return $this->identifierQuoteCharacter . $string . $this->identifierQuoteCharacter;
     }
@@ -2075,7 +2085,7 @@ abstract class BaseQueryComposer implements QueryComposer
      * @deprecated
      * @todo Make protected in 6.5.
      */
-    public function quote($value) : string
+    public function quote($value): string
     {
         if (is_null($value)) {
             return 'NULL';
@@ -2099,7 +2109,7 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * Converts field and entity names to a form required for database.
      */
-    protected function toDb(string $string) : string
+    protected function toDb(string $string): string
     {
         if (!array_key_exists($string, $this->attributeDbMapCache)) {
             $string[0] = strtolower($string[0]);
@@ -2109,12 +2119,12 @@ abstract class BaseQueryComposer implements QueryComposer
         return $this->attributeDbMapCache[$string];
     }
 
-    protected function toDbMatchConversion(array $matches) : string
+    protected function toDbMatchConversion(array $matches): string
     {
         return '_' . strtolower($matches[1]);
     }
 
-    protected function getAlias(Entity $entity, string $relationName) : ?string
+    protected function getAlias(Entity $entity, string $relationName): ?string
     {
         if (!isset($this->aliasesCache[$entity->getEntityType()])) {
             $this->aliasesCache[$entity->getEntityType()] = $this->getTableAliases($entity);
@@ -2127,7 +2137,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return null;
     }
 
-    protected function getTableAliases(Entity $entity) : array
+    protected function getTableAliases(Entity $entity): array
     {
         $aliases = [];
 
@@ -2157,7 +2167,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $aliases;
     }
 
-    protected function getAttributePath(Entity $entity, string $attribute, array &$params) : ?string
+    protected function getAttributePath(Entity $entity, string $attribute, array &$params): ?string
     {
         if (!isset($entity->getAttributes()[$attribute])) {
             return null;
@@ -2234,7 +2244,7 @@ abstract class BaseQueryComposer implements QueryComposer
         array &$params = [],
         int $level = 0,
         bool $noCustomWhere = false
-    ) : string {
+    ): string {
 
         $wherePartList = [];
 
@@ -2254,8 +2264,13 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getWherePartItem(
-        Entity $entity, $field, $value, array &$params, int $level, bool $noCustomWhere = false
-    ) : ?string {
+        Entity $entity,
+        $field,
+        $value,
+        array &$params,
+        int $level,
+        bool $noCustomWhere = false
+    ): ?string {
 
         if (is_int($field) && is_string($value)) {
             return $this->convertMatchExpression($entity, $value, $params);
@@ -2546,7 +2561,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $leftPart . " " . $operator . " " . $this->quote($value);
     }
 
-    protected function applyValueToCustomWhereClause(array $whereClause, $value) : array
+    protected function applyValueToCustomWhereClause(array $whereClause, $value): array
     {
         $modified = [];
 
@@ -2587,7 +2602,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $joinAlias;
     }
 
-    protected function stringifyValue($value) : string
+    protected function stringifyValue($value): string
     {
         if (is_array($value)) {
             $arr = [];
@@ -2610,7 +2625,7 @@ abstract class BaseQueryComposer implements QueryComposer
      * @todo Make protected in 6.5.
      * @deprecated
      */
-    public function sanitize(string $string) : string
+    public function sanitize(string $string): string
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
@@ -2620,7 +2635,7 @@ abstract class BaseQueryComposer implements QueryComposer
      * @todo Make protected in 6.5.
      * @deprecated
      */
-    public function sanitizeSelectAlias(string $string) : string
+    public function sanitizeSelectAlias(string $string): string
     {
         $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-\(\)]+/', '', $string);
 
@@ -2631,14 +2646,19 @@ abstract class BaseQueryComposer implements QueryComposer
         return $string;
     }
 
-    protected function sanitizeIndexName(string $string) : string
+    protected function sanitizeIndexName(string $string): string
     {
         return preg_replace('/[^A-Za-z0-9_]+/', '', $string);
     }
 
     protected function getJoinsTypePart(
-        Entity $entity, array $joins, bool $isLeft, $joinConditions, array $params
-    ) : string {
+        Entity $entity,
+        array $joins,
+        bool $isLeft,
+        $joinConditions,
+        array $params
+    ): string {
+
         $joinSqlList = [];
 
         foreach ($joins as $item) {
@@ -2798,7 +2818,7 @@ abstract class BaseQueryComposer implements QueryComposer
         array $conditions = [],
         ?string $alias = null,
         array $params = []
-    ) : string {
+    ): string {
 
         $prefix = ($isLeft) ? 'LEFT ' : '';
 
@@ -3005,7 +3025,8 @@ abstract class BaseQueryComposer implements QueryComposer
         ?string $having = null,
         ?array $indexKeyList = null,
         ?string $tailPart = null
-    ) : string {
+    ): string {
+
         $sql = "SELECT";
 
         if (!empty($distinct) && empty($groupBy)) {
@@ -3068,7 +3089,7 @@ abstract class BaseQueryComposer implements QueryComposer
         ?string $joins,
         ?string $order,
         ?int $limit
-    ) : string {
+    ): string {
 
         $sql = "DELETE ";
 
@@ -3109,7 +3130,7 @@ abstract class BaseQueryComposer implements QueryComposer
         ?string $joins,
         ?string $order,
         ?int $limit
-    ) : string {
+    ): string {
 
         $sql = "UPDATE " . $this->quoteIdentifier($table);
 
@@ -3134,8 +3155,13 @@ abstract class BaseQueryComposer implements QueryComposer
         return $sql;
     }
 
-    protected function composeInsertQuery(string $table, string $columns, string $values, ?string $update = null) : string
-    {
+    protected function composeInsertQuery(
+        string $table,
+        string $columns,
+        string $values,
+        ?string $update = null
+    ): string {
+
         $sql = "INSERT INTO " . $this->quoteIdentifier($table) . " ({$columns}) {$values}";
 
         if ($update) {
@@ -3145,7 +3171,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $sql;
     }
 
-    protected function getSetPart(Entity $entity, array $values, array $params) : string
+    protected function getSetPart(Entity $entity, array $values, array $params): string
     {
         if (!count($values)) {
             throw new RuntimeException("ORM Query: No SET values for update query.");
@@ -3185,7 +3211,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return implode(', ', $list);
     }
 
-    protected function getInsertColumnsPart(array $columnList) : string
+    protected function getInsertColumnsPart(array $columnList): string
     {
         $list = [];
 
@@ -3200,7 +3226,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return implode(', ', $list);
     }
 
-    protected function getInsertValuesItemPart(array $columnList, array $values) : string
+    protected function getInsertValuesItemPart(array $columnList, array $values): string
     {
         $list = [];
 
@@ -3211,7 +3237,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return implode(', ', $list);
     }
 
-    protected function getInsertUpdatePart(array $values) : string
+    protected function getInsertUpdatePart(array $values): string
     {
         $list = [];
 
@@ -3229,5 +3255,5 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * Add a LIMIT part to a SQL query.
      */
-    abstract protected function limit(string $sql, ?int $offset = null, ?int $limit = null) : string;
+    abstract protected function limit(string $sql, ?int $offset = null, ?int $limit = null): string;
 }

@@ -119,7 +119,7 @@ class RDBRelation
         return $this->createBuilder($query);
     }
 
-    protected function isBelongsToParentType() : bool
+    protected function isBelongsToParentType(): bool
     {
         return $this->relationType === Entity::BELONGS_TO_PARENT;
     }
@@ -172,7 +172,7 @@ class RDBRelation
     /**
      * Get a number of related records.
      */
-    public function count() : int
+    public function count(): int
     {
         return $this->createBuilder()->count();
     }
@@ -349,7 +349,7 @@ class RDBRelation
             $fromEntity->get($typeAttribute) === $entity->getEntityType();
     }
 
-    protected function isRelatedBelongsTo(Entity $entity) : bool
+    protected function isRelatedBelongsTo(Entity $entity): bool
     {
         $fromEntity = $this->entity;
 

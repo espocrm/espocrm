@@ -56,7 +56,7 @@ class ValueAccessor
     /**
      * Get a field value object.
      */
-    public function get(string $field) : ?object
+    public function get(string $field): ?object
     {
         if (!$this->isGettable($field)) {
             return null;
@@ -68,7 +68,7 @@ class ValueAccessor
     /**
      * Whether a field value object can be gotten.
      */
-    public function isGettable(string $field) : bool
+    public function isGettable(string $field): bool
     {
         return $this->valueFactory->isCreatableFromEntity($this->entity, $field);
     }
@@ -76,7 +76,7 @@ class ValueAccessor
     /**
      * Set a field value object.
      */
-    public function set(string $field, ?object $value) : void
+    public function set(string $field, ?object $value): void
     {
         $attributeValueMap = $this->extractor->extract($this->entity->getEntityType(), $field, $value);
 

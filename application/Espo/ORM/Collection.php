@@ -41,5 +41,5 @@ interface Collection/* extends Traversable*/
     /**
      * Get an array of StdClass objects.
      */
-    public function getValueMapList() : array;
+    public function getValueMapList(): array;
 }

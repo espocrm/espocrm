@@ -48,7 +48,7 @@ class GeneralAttributeExtractor
     /**
      * Extracts attributes from a value object.
      */
-    public function extract(string $entityType, string $field, ?object $value) : StdClass
+    public function extract(string $entityType, string $field, ?object $value): StdClass
     {
         $extractor = $this->getExtractor($entityType, $field);
 
@@ -59,7 +59,7 @@ class GeneralAttributeExtractor
         return $extractor->extract($value, $field);
     }
 
-    private function getExtractor(string $entityType, string $field) : AttributeExtractor
+    private function getExtractor(string $entityType, string $field): AttributeExtractor
     {
         $key = $entityType . '_' . $field;
 

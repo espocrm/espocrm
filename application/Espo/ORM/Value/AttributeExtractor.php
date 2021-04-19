@@ -41,7 +41,7 @@ interface AttributeExtractor
     /**
      * @param T $value
      */
-    public function extract(object $value, string $field) : StdClass;
+    public function extract(object $value, string $field): StdClass;
 
-    public function extractFromNull(string $field) : StdClass;
+    public function extractFromNull(string $field): StdClass;
 }

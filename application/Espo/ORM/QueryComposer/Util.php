@@ -31,7 +31,7 @@ namespace Espo\ORM\QueryComposer;
 
 class Util
 {
-    public static function isArgumentString(string $argument) : bool
+    public static function isArgumentString(string $argument): bool
     {
         return
             substr($argument, 0, 1) === '\'' && substr($argument, -1) === '\''
@@ -39,24 +39,26 @@ class Util
             substr($argument, 0, 1) === '"' && substr($argument, -1) === '"';
     }
 
-    public static function isArgumentNumeric(string $argument) : bool
+    public static function isArgumentNumeric(string $argument): bool
     {
         return is_numeric($argument);
     }
 
-    public static function isArgumentBoolOrNull(string $argument) : bool
+    public static function isArgumentBoolOrNull(string $argument): bool
     {
         return in_array(strtoupper($argument), ['NULL', 'TRUE', 'FALSE']);
     }
 
-    public static function getAllAttributesFromComplexExpression(string $expression) : array
+    public static function getAllAttributesFromComplexExpression(string $expression): array
     {
         return self::getAllAttributesFromComplexExpressionImplementation($expression);
     }
 
     protected static function getAllAttributesFromComplexExpressionImplementation(
-        string $expression, ?array &$list = null
-    ) : array {
+        string $expression,
+        ?array &$list = null
+    ): array {
+
         if (!$list) {
             $list = [];
         }
@@ -67,6 +69,7 @@ class Util
             $dilimeterPosition = strpos($expression, ':');
             $function = substr($expression, 0, $dilimeterPosition);
             $arguments = substr($expression, $dilimeterPosition + 1);
+
             if (substr($arguments, 0, 1) === '(' && substr($arguments, -1) === ')') {
                 $arguments = substr($arguments, 1, -1);
             }
@@ -90,7 +93,7 @@ class Util
         return $list;
     }
 
-    static public function parseArgumentListFromFunctionContent(string $functionContent) : array
+    static public function parseArgumentListFromFunctionContent(string $functionContent): array
     {
         $functionContent = trim($functionContent);
 
@@ -148,7 +151,11 @@ class Util
             } else {
                 $previousCommaIndex = 0;
             }
-            $argument = trim(substr($functionContent, $previousCommaIndex, $commaIndexList[$i] - $previousCommaIndex));
+
+            $argument = trim(
+                substr($functionContent, $previousCommaIndex, $commaIndexList[$i] - $previousCommaIndex)
+            );
+
             $argumentList[] = $argument;
         }
 

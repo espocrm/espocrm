@@ -49,7 +49,7 @@ class GeneralValueFactory
     /**
      * Whether a field value object can be created from an entity.
      */
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool
+    public function isCreatableFromEntity(Entity $entity, string $field): bool
     {
         $factory = $this->getValueFactory($entity->getEntityType(), $field);
 
@@ -63,7 +63,7 @@ class GeneralValueFactory
     /**
      * Create a field value object from an entity.
      */
-    public function createFromEntity(Entity $entity, string $field) : object
+    public function createFromEntity(Entity $entity, string $field): object
     {
         $factory = $this->getValueFactory($entity->getEntityType(), $field);
 
@@ -76,7 +76,7 @@ class GeneralValueFactory
         return $factory->createFromEntity($entity, $field);
     }
 
-    private function getValueFactory(string $entityType, string $field) : ?ValueFactory
+    private function getValueFactory(string $entityType, string $field): ?ValueFactory
     {
         $key = $entityType . '_' . $field;
 
@@ -87,7 +87,7 @@ class GeneralValueFactory
         return $this->factoryCache[$key];
     }
 
-    private function getValueFactoryNoCache(string $entityType, string $field) : ?ValueFactory
+    private function getValueFactoryNoCache(string $entityType, string $field): ?ValueFactory
     {
         if (!$this->valueFactoryFactory->isCreatable($entityType, $field)) {
             return null;

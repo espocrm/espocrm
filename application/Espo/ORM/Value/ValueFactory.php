@@ -36,7 +36,7 @@ interface ValueFactory
     /**
      * Whether a field value can be created from an entity.
      */
-    public function isCreatableFromEntity(Entity $entity, string $field) : bool;
+    public function isCreatableFromEntity(Entity $entity, string $field): bool;
 
     /**
      * Create a field value from an entity.

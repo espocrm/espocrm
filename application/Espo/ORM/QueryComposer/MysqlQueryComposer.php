@@ -35,7 +35,7 @@ use Espo\ORM\{
 
 class MysqlQueryComposer extends BaseQueryComposer
 {
-    public function composeLockTable(LockTableQuery $queryParams) : string
+    public function composeLockTable(LockTableQuery $queryParams): string
     {
         $params = $queryParams->getRaw();
 
@@ -63,12 +63,12 @@ class MysqlQueryComposer extends BaseQueryComposer
         return $sql;
     }
 
-    public function composeUnlockTables() : string
+    public function composeUnlockTables(): string
     {
         return "UNLOCK TABLES";
     }
 
-    protected function limit(string $sql, ?int $offset = null, ?int $limit = null) : string
+    protected function limit(string $sql, ?int $offset = null, ?int $limit = null): string
     {
         if (!is_null($offset) && !is_null($limit)) {
             $offset = intval($offset);
