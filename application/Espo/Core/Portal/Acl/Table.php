@@ -30,7 +30,7 @@
 namespace Espo\Core\Portal\Acl;
 
 use Espo\Core\{
-    Acl\DefaultTable as BaseTable,
+    Acl\Table\DefaultTable as BaseTable,
 };
 
 class Table extends BaseTable

@@ -34,7 +34,7 @@ use Espo\Entities\User;
 use Espo\Core\{
     InjectableFactory,
     Acl\Table,
-    Acl\DefaultTable,
+    Acl\Table\DefaultTable,
     Acl\Table\CacheKeyProvider,
     Acl\Table\DefaultCacheKeyProvider,
     Acl\Table\RoleListProvider,

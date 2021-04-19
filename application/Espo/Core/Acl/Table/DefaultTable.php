@@ -27,13 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Acl\Table;
 
 use Espo\Entities\User;
 
 use Espo\Core\{
+    Acl\Table,
     Acl\Table\RoleListProvider,
     Acl\Table\CacheKeyProvider,
+    Acl\ScopeData,
+    Acl\FieldData,
     Utils\Config,
     Utils\Metadata,
     Utils\DataCache,
