@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Acl;
+namespace Espo\Core\Portal\Acl\AccessChecker;
 
 /**
  * Builds scope checker data.

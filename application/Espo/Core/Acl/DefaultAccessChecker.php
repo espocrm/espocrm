@@ -35,6 +35,8 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     Acl\Table,
+    Acl\AccessChecker\ScopeCheckerData,
+    Acl\AccessChecker\ScopeChecker,
     AclManager,
     Utils\Config,
     Utils\DateTime as DateTimeUtil,

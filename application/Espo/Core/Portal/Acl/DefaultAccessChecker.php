@@ -36,6 +36,8 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     Utils\Config,
     Portal\AclManager as PortalAclManager,
+    Portal\Acl\AccessChecker\ScopeChecker,
+    Portal\Acl\AccessChecker\ScopeCheckerData,
     Acl\ScopeData,
     Acl\AccessEntityCreateChecker,
     Acl\AccessEntityReadChecker,

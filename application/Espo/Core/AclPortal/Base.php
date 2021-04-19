@@ -42,8 +42,8 @@ use Espo\Core\{
     Acl\AccessChecker,
     Acl\ScopeData,
     Portal\Acl\Table,
-    Portal\Acl\ScopeChecker,
-    Portal\Acl\ScopeCheckerData,
+    Portal\Acl\AccessChecker\ScopeChecker,
+    Portal\Acl\AccessChecker\ScopeCheckerData,
     Portal\Acl\DefaultAccessChecker,
 };
 

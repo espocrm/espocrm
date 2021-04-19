@@ -35,7 +35,7 @@ use Espo\Core\{
     Acl\AccessCheckerFactory,
     Acl\OwnershipCheckerFactory,
     Acl\OwnerUserFieldProvider,
-    Acl\TableFactory,
+    Acl\Table\TableFactory,
     Acl\GlobalRestricton,
     Acl\Map\MapFactory,
     ORM\EntityManager,

@@ -38,7 +38,7 @@ use Espo\Core\{
     Acl,
     Acl\GlobalRestricton,
     Acl\OwnerUserFieldProvider,
-    Acl\TableFactory,
+    Acl\Table\TableFactory,
     Acl\Table,
     Acl\Map\Map,
     Acl\Map\MapFactory,

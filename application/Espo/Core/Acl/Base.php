@@ -37,6 +37,8 @@ use Espo\Entities\User;
 
 use Espo\Core\{
     ORM\EntityManager,
+    Acl\AccessChecker\ScopeCheckerData,
+    Acl\AccessChecker\ScopeChecker,
     AclManager,
     Utils\Config,
 };

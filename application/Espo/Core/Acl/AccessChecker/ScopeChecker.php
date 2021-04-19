@@ -27,35 +27,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Acl\AccessChecker;
+
+use Espo\Core\{
+    Acl\ScopeData,
+    Acl\Table,
+};
 
 /**
- * Scope checker data.
+ * Checks scope access.
  */
-class ScopeCheckerData
+class ScopeChecker
 {
-    private $isOwnChecker;
-
-    private $inTeamChecker;
-
-    public function __construct(callable $isOwnChecker, callable $inTeamChecker)
+    public function __construct()
     {
-        $this->isOwnChecker = $isOwnChecker;
-        $this->inTeamChecker = $inTeamChecker;
     }
 
-    public function isOwn(): bool
+    public function check(ScopeData $data, ?string $action = null, ?ScopeCheckerData $checkerData = null): bool
     {
-        return ($this->isOwnChecker)();
-    }
+        if ($data->isFalse()) {
+            return false;
+        }
 
-    public function inTeam(): bool
-    {
-        return ($this->inTeamChecker)();
-    }
+        if ($data->isTrue()) {
+            return true;
+        }
 
-    public static function createBuilder(): ScopeCheckerDataBuilder
-    {
-        return new ScopeCheckerDataBuilder();
+        if ($action === null) {
+            if ($data->hasNotNo()) {
+                return true;
+            }
+
+            return false;
+        }
+
+        $level = $data->get($action);
+
+        if ($level === Table::LEVEL_ALL || $level === Table::LEVEL_YES) {
+            return true;
+        }
+
+        if ($level === Table::LEVEL_NO) {
+            return false;
+        }
+
+        if (!$checkerData) {
+            return false;
+        }
+
+        if ($level === Table::LEVEL_OWN || $level === Table::LEVEL_TEAM) {
+            if ($checkerData->isOwn()) {
+                return true;
+            }
+        }
+
+        if ($level === Table::LEVEL_TEAM) {
+            if ($checkerData->inTeam()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

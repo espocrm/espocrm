@@ -27,78 +27,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Portal\Acl\AccessChecker;
+
+use Espo\Core\{
+    Acl\ScopeData,
+    Portal\Acl\Table,
+};
 
 /**
- * Builds scope checker data.
+ * Checks scope access.
  */
-class ScopeCheckerDataBuilder
+class ScopeChecker
 {
-    private $isOwnChecker;
-
-    private $inTeamChecker;
-
     public function __construct()
     {
-        $this->isOwnChecker = function (): bool {
-            return false;
-        };
-
-        $this->inTeamChecker = function (): bool {
-            return false;
-        };
     }
 
-    public function setIsOwn(bool $value): self
+    public function check(ScopeData $data, ?string $action = null, ?ScopeCheckerData $checkerData = null): bool
     {
-        if ($value) {
-            $this->isOwnChecker = function (): bool {
-                return true;
-            };
-
-            return $this;
+        if ($data->isFalse()) {
+            return false;
         }
 
-        $this->isOwnChecker = function (): bool {
-            return false;
-        };
-
-        return $this;
-    }
-
-    public function setInTeam(bool $value): self
-    {
-        if ($value) {
-            $this->inTeamChecker = function (): bool {
-                return true;
-            };
-
-            return $this;
+        if ($data->isTrue()) {
+            return true;
         }
 
-        $this->inTeamChecker = function (): bool {
+        if ($action === null) {
+            if ($data->hasNotNo()) {
+                return true;
+            }
+
             return false;
-        };
+        }
 
-        return $this;
-    }
+        $level = $data->get($action);
 
-    public function setIsOwnChecker(callable $checker): self
-    {
-        $this->isOwnChecker = $checker;
+        if ($level === Table::LEVEL_ALL || $level === Table::LEVEL_YES) {
+            return true;
+        }
 
-        return $this;
-    }
+        if ($level === Table::LEVEL_NO) {
+            return false;
+        }
 
-    public function setInTeamChecker(callable $checker): self
-    {
-        $this->inTeamChecker = $checker;
+        if (!$checkerData) {
+            return false;
+        }
 
-        return $this;
-    }
+        if ($level === Table::LEVEL_OWN || $level === Table::LEVEL_ACCOUNT || $level === Table::LEVEL_CONTACT) {
+            if ($checkerData->isOwn()) {
+                return true;
+            }
+        }
 
-    public function build(): ScopeCheckerData
-    {
-        return new ScopeCheckerData($this->isOwnChecker, $this->inTeamChecker);
+        if ($level === Table::LEVEL_ACCOUNT || $level === Table::LEVEL_CONTACT) {
+            if ($checkerData->inContact()) {
+                return true;
+            }
+        }
+
+        if ($level === Table::LEVEL_ACCOUNT) {
+            if ($checkerData->inAccount()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

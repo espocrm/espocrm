@@ -27,53 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Acl\AccessChecker;
 
-use Espo\Entities\User;
-
-use Espo\Core\{
-    InjectableFactory,
-    Acl\Table\CacheKeyProvider,
-    Acl\Table\DefaultCacheKeyProvider,
-    Acl\Table\RoleListProvider,
-    Acl\Table\DefaultRoleListProvider,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
-
-class TableFactory
+/**
+ * Scope checker data.
+ */
+class ScopeCheckerData
 {
-    private $injectableFactory;
+    private $isOwnChecker;
 
-    public function __construct(InjectableFactory $injectableFactory)
+    private $inTeamChecker;
+
+    public function __construct(callable $isOwnChecker, callable $inTeamChecker)
     {
-        $this->injectableFactory = $injectableFactory;
+        $this->isOwnChecker = $isOwnChecker;
+        $this->inTeamChecker = $inTeamChecker;
     }
 
-    /**
-     * Create a table.
-     *
-     * @todo Use binding.
-     */
-    public function create(User $user): Table
+    public function isOwn(): bool
     {
-        $bindingContainer = $this->createBindingContainer($user);
-
-        return $this->injectableFactory->createWithBinding(DefaultTable::class, $bindingContainer);
+        return ($this->isOwnChecker)();
     }
 
-    private function createBindingContainer(User $user): BindingContainer
+    public function inTeam(): bool
     {
-        $bindingData = new BindingData();
+        return ($this->inTeamChecker)();
+    }
 
-        $binder = new Binder($bindingData);
-
-        $binder
-            ->bindInstance(User::class, $user)
-            ->bindImplementation(RoleListProvider::class, DefaultRoleListProvider::class)
-            ->bindImplementation(CacheKeyProvider::class, DefaultCacheKeyProvider::class);
-
-        return new BindingContainer($bindingData);
+    public static function createBuilder(): ScopeCheckerDataBuilder
+    {
+        return new ScopeCheckerDataBuilder();
     }
 }

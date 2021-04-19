@@ -40,12 +40,12 @@ use Espo\Entities\{
 };
 
 use Espo\Core\{
-    Portal\Acl\Table as Table,
+    Portal\Acl\Table,
+    Portal\Acl\Table\TableFactory,
     Portal\Acl\AccessCheckerFactory,
     Portal\Acl\OwnershipCheckerFactory,
     Portal\Acl\OwnershipAccountChecker,
     Portal\Acl\OwnershipContactChecker,
-    Portal\Acl\TableFactory,
     Portal\Acl,
     Portal\Acl\Map\MapFactory,
     Acl\GlobalRestricton,

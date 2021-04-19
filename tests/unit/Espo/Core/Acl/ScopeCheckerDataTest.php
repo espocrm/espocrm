@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Acl;
 
 use Espo\Core\{
-    Acl\ScopeCheckerData,
+    Acl\AccessChecker\ScopeCheckerData,
 };
 
 class ScopeCheckerDataTest extends \PHPUnit\Framework\TestCase

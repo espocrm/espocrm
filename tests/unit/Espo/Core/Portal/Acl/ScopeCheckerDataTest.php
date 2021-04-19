@@ -30,12 +30,13 @@
 namespace tests\unit\Espo\Core\Portal\Acl;
 
 use Espo\Core\{
-    Portal\Acl\ScopeCheckerData,
+    Portal\Acl\AccessChecker\ScopeCheckerData,
+
 };
 
 class ScopeCheckerDataTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
     }
 

@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Acl;
+namespace Espo\Core\Portal\Acl\Table;
 
 use Espo\Entities\{
     User,
@@ -37,6 +37,7 @@ use Espo\Entities\{
 use Espo\Core\{
     InjectableFactory,
     Acl\Table\CacheKeyProvider,
+    Portal\Acl\Table,
     Portal\Acl\Table\CacheKeyProvider as PortalCacheKeyProvider,
     Acl\Table\RoleListProvider,
     Portal\Acl\Table\RoleListProvider as PortalRoleListProvider,

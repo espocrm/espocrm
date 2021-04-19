@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\Acl;
 
 use Espo\Core\{
-    Acl\ScopeChecker,
-    Acl\ScopeCheckerData,
+    Acl\AccessChecker\ScopeChecker,
+    Acl\AccessChecker\ScopeCheckerData,
     Acl\ScopeData,
     Acl\Table,
 };

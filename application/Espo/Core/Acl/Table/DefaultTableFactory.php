@@ -27,43 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Acl;
+namespace Espo\Core\Acl\Table;
 
-/**
- * Scope checker data.
- */
-class ScopeCheckerData
+use Espo\Entities\User;
+
+use Espo\Core\{
+    InjectableFactory,
+    Acl\Table,
+    Acl\DefaultTable,
+    Acl\Table\CacheKeyProvider,
+    Acl\Table\DefaultCacheKeyProvider,
+    Acl\Table\RoleListProvider,
+    Acl\Table\DefaultRoleListProvider,
+    Binding\BindingContainer,
+    Binding\Binder,
+    Binding\BindingData,
+};
+
+class DefaultTableFactory implements TableFactory
 {
-    private $isOwnChecker;
+    private $injectableFactory;
 
-    private $inAccountChecker;
-
-    private $inContactChecker;
-
-    public function __construct(callable $isOwnChecker, callable $inAccountChecker, callable $inContactChecker)
+    public function __construct(InjectableFactory $injectableFactory)
     {
-        $this->isOwnChecker = $isOwnChecker;
-        $this->inAccountChecker = $inAccountChecker;
-        $this->inContactChecker = $inContactChecker;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function isOwn(): bool
+    /**
+     * Create a table.
+     */
+    public function create(User $user): Table
     {
-        return ($this->isOwnChecker)();
+        $bindingContainer = $this->createBindingContainer($user);
+
+        return $this->injectableFactory->createWithBinding(DefaultTable::class, $bindingContainer);
     }
 
-    public function inAccount(): bool
+    private function createBindingContainer(User $user): BindingContainer
     {
-        return ($this->inAccountChecker)();
-    }
+        $bindingData = new BindingData();
 
-    public function inContact(): bool
-    {
-        return ($this->inContactChecker)();
-    }
+        $binder = new Binder($bindingData);
 
-    public static function createBuilder(): ScopeCheckerDataBuilder
-    {
-        return new ScopeCheckerDataBuilder();
+        $binder
+            ->bindInstance(User::class, $user)
+            ->bindImplementation(RoleListProvider::class, DefaultRoleListProvider::class)
+            ->bindImplementation(CacheKeyProvider::class, DefaultCacheKeyProvider::class);
+
+        return new BindingContainer($bindingData);
     }
 }
