@@ -35,6 +35,7 @@ use Espo\Core\Utils\Util;
 use Espo\Core\Di;
 
 class Event extends Database implements
+
     Di\DateTimeAware,
     Di\ConfigAware
 {
@@ -180,7 +181,9 @@ class Event extends Database implements
                 $this->getEntityManager()->getQueryExecutor()->execute($query);
             }
 
-            if (empty($reminderList) || !is_array($reminderList)) return;
+            if (empty($reminderList) || !is_array($reminderList)) {
+                return;
+            }
 
             $entityType = $entity->getEntityType();
 
@@ -188,6 +191,7 @@ class Event extends Database implements
 
             if (!$dateValue) {
                 $e = $this->get($entity->id);
+
                 if ($e) {
                     $dateValue = $e->get($this->reminderDateAttribute);
                 }
@@ -202,18 +206,28 @@ class Event extends Database implements
                 }
             }
 
-            if (!$dateValue) return;
-            if (empty($userIdList)) return;
+            if (!$dateValue) {
+                return;
+            }
+
+            if (empty($userIdList)) {
+                return;
+            }
 
             $dateValueObj = new \DateTime($dateValue);
-            if (!$dateValueObj) return;
+
+            if (!$dateValueObj) {
+                return;
+            }
 
             foreach ($reminderList as $item) {
                 $remindAt = clone $dateValueObj;
                 $seconds = intval($item->seconds);
                 $type = $item->type;
 
-                if (!in_array($type , $reminderTypeList)) continue;
+                if (!in_array($type , $reminderTypeList)) {
+                    continue;
+                }
 
                 $remindAt->sub(new \DateInterval('PT' . $seconds . 'S'));
 
@@ -223,7 +237,16 @@ class Event extends Database implements
                     $query = $this->getEntityManager()->getQueryBuilder()
                         ->insert()
                         ->into('Reminder')
-                        ->columns(['id', 'entityId', 'entityType', 'type', 'userId', 'remindAt', 'startAt', 'seconds'])
+                        ->columns([
+                            'id',
+                            'entityId',
+                            'entityType',
+                            'type',
+                            'userId',
+                            'remindAt',
+                            'startAt',
+                            'seconds'
+                        ])
                         ->values([
                             'id' => $id,
                             'entityId' => $entity->id,
@@ -279,8 +302,10 @@ class Event extends Database implements
 
         if ($dt) {
             $utcTz = new \DateTimeZone('UTC');
+
             return $dt->setTimezone($utcTz)->format($this->getDateTime()->getInternalDateTimeFormat());
         }
+
         return null;
     }
 }

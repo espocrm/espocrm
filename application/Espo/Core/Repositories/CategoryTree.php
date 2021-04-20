@@ -33,18 +33,18 @@ use Espo\ORM\Entity;
 
 class CategoryTree extends Database
 {
-	protected function afterSave(Entity $entity, array $options = [])
-	{
-		parent::afterSave($entity, $options);
+    protected function afterSave(Entity $entity, array $options = [])
+    {
+        parent::afterSave($entity, $options);
 
-		$parentId = $entity->get('parentId');
+        $parentId = $entity->get('parentId');
 
         $em = $this->getEntityManager();
 
         $pathEntityType = $entity->getEntityType() . 'Path';
 
-		if ($entity->isNew()) {
-			if ($parentId) {
+        if ($entity->isNew()) {
+            if ($parentId) {
                 $subSelect1 = $em->getQueryBuilder()
                     ->select()
                     ->from($pathEntityType)
@@ -76,7 +76,7 @@ class CategoryTree extends Database
                 $em->getQueryExecutor()->execute($insert);
 
                 return;
-			}
+            }
 
             $insert = $em->getQueryBuilder()
                 ->insert()
@@ -91,9 +91,9 @@ class CategoryTree extends Database
             $em->getQueryExecutor()->execute($insert);
 
             return;
-		}
+        }
 
-		if (!$entity->isAttributeChanged('parentId')) {
+        if (!$entity->isAttributeChanged('parentId')) {
             return;
         }
 
@@ -123,7 +123,7 @@ class CategoryTree extends Database
 
         $em->getQueryExecutor()->execute($delete);
 
-		if (!empty($parentId)) {
+        if (!empty($parentId)) {
             $select = $em->getQueryBuilder()
                 ->select()
                 ->from($pathEntityType)
@@ -143,12 +143,12 @@ class CategoryTree extends Database
                 ->build();
 
             $em->getQueryExecutor()->execute($insert);
-		}
-	}
+        }
+    }
 
-	protected function afterRemove(Entity $entity, array $options = [])
-	{
-		parent::afterRemove($entity, $options);
+    protected function afterRemove(Entity $entity, array $options = [])
+    {
+        parent::afterRemove($entity, $options);
 
         $pathEntityType = $entity->getEntityType() . 'Path';
 
@@ -165,5 +165,5 @@ class CategoryTree extends Database
         $em->getQueryExecutor()->execute($delete);
 
         $em->getMapper()->deleteFromDb($entity->getEntityType(), $entity->id);
-	}
+    }
 }
