@@ -253,7 +253,10 @@ class Database extends RDBRepository
                     if (!empty($options['createdById'])) {
                         $entity->set('createdById', $options['createdById']);
                     }
-                    else if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
+                    else if (
+                        empty($options['skipCreatedBy']) &&
+                        (empty($options['import']) || !$entity->has('createdById'))
+                    ) {
                         if ($this->applicationState->hasUser()) {
                             $entity->set('createdById', $this->applicationState->getUser()->id);
                         }
