@@ -53,9 +53,9 @@ class SaveProcessor
         $this->phoneNumberSaveProcessor = $phoneNumberSaveProcessor;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, array $options): void
     {
-        $this->emailAddressSaveProcessor->process($entity);
-        $this->phoneNumberSaveProcessor->process($entity);
+        $this->emailAddressSaveProcessor->process($entity, $options);
+        $this->phoneNumberSaveProcessor->process($entity, $options);
     }
 }

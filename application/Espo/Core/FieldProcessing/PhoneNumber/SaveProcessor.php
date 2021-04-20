@@ -60,7 +60,7 @@ class SaveProcessor
         $this->metadata = $metadata;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, array $options): void
     {
         $entityType = $entity->getEntityType();
 

@@ -50,6 +50,6 @@ class FieldProcessing
             return;
         }
 
-        $this->saveProcessor->process($entity);
+        $this->saveProcessor->process($entity, $options);
     }
 }
