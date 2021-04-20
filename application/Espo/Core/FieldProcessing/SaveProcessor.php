@@ -38,7 +38,7 @@ use Espo\Core\{
 };
 
 /**
- * Processes saving specific fields.
+ * Processes saving special fields.
  */
 class SaveProcessor
 {
