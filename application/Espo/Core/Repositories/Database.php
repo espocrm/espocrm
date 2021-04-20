@@ -45,14 +45,23 @@ use Espo\Core\{
     Utils\Util,
     HookManager,
     ApplicationState,
+    Utils\DateTime as DateTimeUtil,
 };
 
 class Database extends RDBRepository
 {
     protected $hooksDisabled = false;
 
+    /**
+     * @deprecated
+     * @todo Remove all usage.
+     */
     protected $processFieldsAfterSaveDisabled = false;
 
+    /**
+     * @deprecated
+     * @todo Remove all usage.
+     */
     protected $processFieldsAfterRemoveDisabled = false;
 
     private $restoreData = null;
@@ -84,6 +93,9 @@ class Database extends RDBRepository
         parent::__construct($entityType, $entityManager, $entityFactory, $hookMediator);
     }
 
+    /**
+     * @deprecated Use `$this->metadata`.
+     */
     protected function getMetadata()
     {
         return $this->metadata;
@@ -96,6 +108,25 @@ class Database extends RDBRepository
     {
     }
 
+    public function save(Entity $entity, array $options = []): void
+    {
+        if (
+            $entity->isNew() &&
+            !$entity->has('id') &&
+            !$entity->getAttributeParam('id', 'autoincrement')
+        ) {
+            $entity->set('id', Util::generateId());
+        }
+
+        if (empty($options['skipAll'])) {
+            $this->processCreatedAndModifiedFieldsSave($entity, $options);
+        }
+
+        $this->restoreData = [];
+
+        parent::save($entity, $options);
+    }
+
     protected function beforeRemove(Entity $entity, array $options = [])
     {
         parent::beforeRemove($entity, $options);
@@ -104,7 +135,7 @@ class Database extends RDBRepository
             $this->hookManager->process($this->entityType, 'beforeRemove', $entity, $options);
         }
 
-        $nowString = date('Y-m-d H:i:s', time());
+        $nowString = DateTimeUtil::getSystemNowString();
 
         if ($entity->hasAttribute('modifiedAt')) {
             $entity->set('modifiedAt', $nowString);
@@ -120,10 +151,6 @@ class Database extends RDBRepository
     protected function afterRemove(Entity $entity, array $options = [])
     {
         parent::afterRemove($entity, $options);
-
-        if (!$this->processFieldsAfterRemoveDisabled) {
-
-        }
 
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->hookManager->process($this->entityType, 'afterRemove', $entity, $options);
@@ -230,68 +257,62 @@ class Database extends RDBRepository
         }
     }
 
-    public function save(Entity $entity, array $options = []): void
+    private function processCreatedAndModifiedFieldsSave(Entity $entity, array $options): void
     {
-        $nowString = date('Y-m-d H:i:s', time());
+        if ($entity->isNew()) {
+            $this->processCreatedAndModifiedFieldsSaveNew($entity, $options);
 
-        $restoreData = [];
+            return;
+        }
+
+        $nowString = DateTimeUtil::getSystemNowString();
+
+        if (!empty($options['silent']) || !empty($options['skipModifiedBy'])) {
+            return;
+        }
+
+        if ($entity->hasAttribute('modifiedAt')) {
+            $entity->set('modifiedAt', $nowString);
+        }
+
+        if ($entity->hasAttribute('modifiedById')) {
+            if (!empty($options['modifiedById'])) {
+                $entity->set('modifiedById', $options['modifiedById']);
+            }
+            else if ($this->applicationState->hasUser()) {
+                $entity->set('modifiedById', $this->applicationState->getUser()->getId());
+                $entity->set('modifiedByName', $this->applicationState->getUser()->get('name'));
+            }
+        }
+    }
+
+    private function processCreatedAndModifiedFieldsSaveNew(Entity $entity, array $options): void
+    {
+        $nowString = DateTimeUtil::getSystemNowString();
 
         if (
-            $entity->isNew() &&
-            !$entity->has('id') &&
-            !$entity->getAttributeParam('id', 'autoincrement')
+            $entity->hasAttribute('createdAt') &&
+            (empty($options['import']) || !$entity->has('createdAt'))
         ) {
-            $entity->set('id', Util::generateId());
+            $entity->set('createdAt', $nowString);
         }
 
-        if (empty($options['skipAll'])) {
-            if ($entity->isNew()) {
-                if ($entity->hasAttribute('createdAt')) {
-                    if (empty($options['import']) || !$entity->has('createdAt')) {
-                        $entity->set('createdAt', $nowString);
-                    }
-                }
-
-                if ($entity->hasAttribute('modifiedAt')) {
-                    $entity->set('modifiedAt', $nowString);
-                }
-
-                if ($entity->hasAttribute('createdById')) {
-                    if (!empty($options['createdById'])) {
-                        $entity->set('createdById', $options['createdById']);
-                    }
-                    else if (
-                        empty($options['skipCreatedBy']) &&
-                        (empty($options['import']) || !$entity->has('createdById'))
-                    ) {
-                        if ($this->applicationState->hasUser()) {
-                            $entity->set('createdById', $this->applicationState->getUser()->id);
-                        }
-                    }
-                }
-            }
-            else {
-                if (empty($options['silent']) && empty($options['skipModifiedBy'])) {
-                    if ($entity->hasAttribute('modifiedAt')) {
-                        $entity->set('modifiedAt', $nowString);
-                    }
-
-                    if ($entity->hasAttribute('modifiedById')) {
-                        if (!empty($options['modifiedById'])) {
-                            $entity->set('modifiedById', $options['modifiedById']);
-                        }
-                        else if ($this->applicationState->hasUser()) {
-                            $entity->set('modifiedById', $this->applicationState->getUser()->id);
-                            $entity->set('modifiedByName', $this->applicationState->getUser()->get('name'));
-                        }
-                    }
-                }
-            }
+        if ($entity->hasAttribute('modifiedAt')) {
+            $entity->set('modifiedAt', $nowString);
         }
 
-        $this->restoreData = $restoreData;
-
-        parent::save($entity, $options);
+        if ($entity->hasAttribute('createdById')) {
+            if (!empty($options['createdById'])) {
+                $entity->set('createdById', $options['createdById']);
+            }
+            else if (
+                empty($options['skipCreatedBy']) &&
+                (empty($options['import']) || !$entity->has('createdById')) &&
+                $this->applicationState->hasUser()
+            ) {
+                $entity->set('createdById', $this->applicationState->getUser()->getId());
+            }
+        }
     }
 
     protected function processFileFieldsSave(Entity $entity)
