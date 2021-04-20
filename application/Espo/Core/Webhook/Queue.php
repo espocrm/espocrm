@@ -46,7 +46,7 @@ use Exception;
 use DateTime;
 
 /**
- * Groups ocurred events into portions and sends them. A portion contains
+ * Groups occurred events into portions and sends them. A portion contains
  * multiple events of the same webhook.
  */
 class Queue
@@ -362,7 +362,7 @@ class Queue
 
         $item->set([
             'attempts' => $attempts,
-            'processAt' => $dt->format(DateTimeUtil::$systemDateTimeFormat),
+            'processAt' => $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT),
         ]);
 
         if ($attempts >= $maxAttemptsNumber) {

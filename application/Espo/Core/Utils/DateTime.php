@@ -36,11 +36,15 @@ use Exception;
 use DateTime as DateTimeStd;
 
 /**
- * Util for a date-time formatting and convetion.
+ * Util for a date-time formatting and conversion.
  * Available as 'dateTime' service.
  */
 class DateTime
 {
+    public const SYSTEM_DATE_TIME_FORMAT = 'Y-m-d H:i:s';
+
+    public const SYSTEM_DATE_FORMAT = 'Y-m-d';
+
     protected $dateFormat;
 
     protected $timeFormat;
@@ -49,13 +53,15 @@ class DateTime
 
     protected $langauge;
 
-    public static $systemDateTimeFormat = 'Y-m-d H:i:s';
+    /** @deprecated */
+    public static $systemDateTimeFormat = self::SYSTEM_DATE_TIME_FORMAT;
 
-    public static $systemDateFormat  = 'Y-m-d';
+    /** @deprecated */
+    public static $systemDateFormat = self::SYSTEM_DATE_FORMAT;
 
-    protected $internalDateTimeFormat = 'Y-m-d H:i:s';
+    protected $internalDateTimeFormat = self::SYSTEM_DATE_TIME_FORMAT;
 
-    protected $internalDateFormat = 'Y-m-d';
+    protected $internalDateFormat = self::SYSTEM_DATE_FORMAT;
 
     protected $dateFormats = [
         'MM/DD/YYYY' => 'm/d/Y',
@@ -258,6 +264,6 @@ class DateTime
 
     public static function getSystemNowString(): string
     {
-        return date(self::$systemDateTimeFormat);
+        return date(self::SYSTEM_DATE_TIME_FORMAT);
     }
 }

@@ -123,7 +123,7 @@ class ScheduledJob
         $r2From = new DateTime('-1 hour');
         $r2To = new DateTime();
 
-        $format = DateTimeUtil::$systemDateTimeFormat;
+        $format = DateTimeUtil::SYSTEM_DATE_TIME_FORMAT;
 
         $selectParams = [
             'select' => ['id'],
@@ -131,7 +131,7 @@ class ScheduledJob
             'whereClause' => [
                 'OR' => [
                     [
-                        ['executedAt>=' => $r2From->format($format)] ,
+                        ['executedAt>=' => $r2From->format($format)],
                         ['executedAt<=' => $r2To->format($format)],
                     ],
                     [
