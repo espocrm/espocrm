@@ -27,37 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Acl;
+namespace Espo\Core\FieldProcessing\EmailAddress;
 
-use Espo\Entities\User as EntityUser;
-
-use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\Acl,
-    Acl\Table,
+use Espo\Entities\{
+    User,
+    EmailAddress,
 };
 
-/**
- * @todo Move to another class.
- */
-class PhoneNumber extends Acl
+use Espo\Core\{
+    ORM\Entity,
+    ORM\EntityManager,
+    AclManager,
+};
+
+class AccessChecker
 {
-    /**
-     * To prevent editing a phone number of a record that a user does not have access to.
-     */
-    public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity) : bool
+    private $entityManager;
+
+    private $aclManager;
+
+    public function __construct(
+        EntityManager $entityManager,
+        AclManager $aclManager
+    ) {
+        $this->entityManager = $entityManager;
+        $this->aclManager = $aclManager;
+    }
+
+    public function checkEdit(User $user, EmailAddress $emailAddress, Entity $excludeEntity): bool
     {
-        if ($user->isAdmin()) {
-            return true;
-        }
+        $entityWithSameAddressList = $this->entityManager
+            ->getRepository('EmailAddress')
+            ->getEntityListByAddressId($emailAddress->getId(), $excludeEntity);
 
-        $repository = $this->entityManager->getRepository('PhoneNumber');
-
-        $entityWithSameNumberList = $repository->getEntityListByPhoneNumberId($entity->getId(), $excludeEntity);
-
-        foreach ($entityWithSameNumberList as $e) {
-            if ($this->aclManager->check($user, $e, Table::ACTION_EDIT)) {
+        foreach ($entityWithSameAddressList as $e) {
+            if ($this->aclManager->checkEntityEdit($user, $e)) {
                 continue;
             }
 
@@ -65,7 +69,7 @@ class PhoneNumber extends Acl
                 $e->getEntityType() === 'User' &&
                 $e->isPortal() &&
                 $excludeEntity->getEntityType() === 'Contact' &&
-                $e->get('contactId') === $excludeEntity->getId()
+                $e->get('contactId') === $excludeEntity->getEntityType()
             ) {
                 continue;
             }

@@ -27,41 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\AclPortal;
+namespace Espo\Core\FieldProcessing;
 
-use Espo\Entities\User as EntityUser;
-use Espo\ORM\Entity;
+use Espo\Core\ORM\Entity;
 
 use Espo\Core\{
-    Acl\Table,
-    AclPortal\Acl as Acl,
+    FieldProcessing\EmailAddress\SaveProcessor as EmailAddressSaveProcessor,
+    FieldProcessing\PhoneNumber\SaveProcessor as PhoneNumberSaveProcessor,
 };
 
 /**
- * @todo Move to another place.
+ * Processes saving specific fields.
  */
-class EmailAddress extends Acl
+class SaveProcessor
 {
-    public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity) : bool
+    private $emailAddressSaveProcessor;
+
+    private $phoneNumberSaveProcessor;
+
+    public function __construct(
+        EmailAddressSaveProcessor $emailAddressSaveProcessor,
+        PhoneNumberSaveProcessor $phoneNumberSaveProcessor
+    ) {
+        $this->emailAddressSaveProcessor = $emailAddressSaveProcessor;
+        $this->phoneNumberSaveProcessor = $phoneNumberSaveProcessor;
+    }
+
+    public function process(Entity $entity): void
     {
-        $id = $entity->getId();
-
-        $isFobidden = false;
-
-        $repository = $this->entityManager->getRepository('EmailAddress');
-
-        if (!$user->isAdmin()) {
-            $entityWithSameAddressList = $repository->getEntityListByAddressId($id, $excludeEntity);
-
-            foreach ($entityWithSameAddressList as $e) {
-                if (!$this->aclManager->check($user, $e, Table::ACTION_EDIT)) {
-                    $isFobidden = true;
-
-                    break;
-                }
-            }
-        }
-
-        return !$isFobidden;
+        $this->emailAddressSaveProcessor->process($entity);
+        $this->phoneNumberSaveProcessor->process($entity);
     }
 }

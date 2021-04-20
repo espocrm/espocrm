@@ -27,41 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\AclPortal;
+namespace Espo\Hooks\Common;
 
-use Espo\Entities\User as EntityUser;
 use Espo\ORM\Entity;
 
-use Espo\Core\{
-    Acl\Table,
-    AclPortal\Acl as Acl,
-};
+use Espo\Core\FieldProcessing\SaveProcessor;
 
-/**
- * @todo Move to another place.
- */
-class PhoneNumber extends Acl
+class FieldProcessing
 {
-    public function checkEditInEntity(EntityUser $user, Entity $entity, Entity $excludeEntity) : bool
+    public static $order = -11;
+
+    private $saveProcessor;
+
+    public function __construct(SaveProcessor $saveProcessor)
     {
-        $id = $entity->getId();
+        $this->saveProcessor = $saveProcessor;
+    }
 
-        $isFobidden = false;
-
-        $repository = $this->entityManager->getRepository('PhoneNumber');
-
-        if (!$user->isAdmin()) {
-            $entityWithSameNumberList = $repository->getEntityListByPhoneNumberId($id, $excludeEntity);
-
-            foreach ($entityWithSameNumberList as $e) {
-                if (!$this->aclManager->check($user, $e, Table::ACTION_EDIT)) {
-                    $isFobidden = true;
-
-                    break;
-                }
-            }
+    public function afterSave(Entity $entity, array $options = []): void
+    {
+        if (!empty($options['skipFieldProcessng'])) {
+            return;
         }
 
-        return !$isFobidden;
+        $this->saveProcessor->process($entity);
     }
 }

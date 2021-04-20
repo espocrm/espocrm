@@ -206,13 +206,13 @@ class Database extends RDBRepository
     {
         if (!empty($this->restoreData)) {
             $entity->set($this->restoreData);
+
             $this->restoreData = null;
         }
+
         parent::afterSave($entity, $options);
 
         if (!$this->processFieldsAfterSaveDisabled) {
-            $this->processEmailAddressSave($entity);
-            $this->processPhoneNumberSave($entity);
             $this->processSpecifiedRelationsSave($entity, $options);
             $this->processFileFieldsSave($entity);
             $this->processArrayFieldsSave($entity);
@@ -422,20 +422,6 @@ class Database extends RDBRepository
                     }
                 }
             }
-        }
-    }
-
-    protected function processEmailAddressSave(Entity $entity)
-    {
-        if ($entity->hasRelation('emailAddresses') && $entity->hasAttribute('emailAddress')) {
-            $this->getEntityManager()->getRepository('EmailAddress')->storeEntityEmailAddress($entity);
-        }
-    }
-
-    protected function processPhoneNumberSave(Entity $entity)
-    {
-        if ($entity->hasRelation('phoneNumbers') && $entity->hasAttribute('phoneNumber')) {
-            $this->getEntityManager()->getRepository('PhoneNumber')->storeEntityPhoneNumber($entity);
         }
     }
 

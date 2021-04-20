@@ -34,6 +34,8 @@ use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\{
     RecordServiceContainer,
+    FieldProcessing\EmailAddress\AccessChecker as EmailAddressAccessChecker,
+    FieldProcessing\PhoneNumber\AccessChecker as PhoneNumberAccessChecker,
 };
 
 use Espo\Core\Di;
@@ -58,9 +60,18 @@ class Erasor implements
 
     private $recordServiceContainer;
 
-    public function __construct(RecordServiceContainer $recordServiceContainer)
-    {
+    private $emailAddressAccessChecker;
+
+    private $phoneNumberAccessChecker;
+
+    public function __construct(
+        RecordServiceContainer $recordServiceContainer,
+        EmailAddressAccessChecker $emailAddressAccessChecker,
+        PhoneNumberAccessChecker $phoneNumberAccessChecker
+    ) {
         $this->recordServiceContainer = $recordServiceContainer;
+        $this->emailAddressAccessChecker = $emailAddressAccessChecker;
+        $this->phoneNumberAccessChecker = $phoneNumberAccessChecker;
     }
 
     public function erase(string $entityType, string $id, array $fieldList) : void
@@ -103,10 +114,8 @@ class Erasor implements
 
                 foreach ($emailAddressList as $emailAddress) {
                     if (
-                        $this
-                            ->aclManager
-                            ->getImplementation('EmailAddress')
-                            ->checkEditInEntity($this->user, $emailAddress, $entity)
+                        $this->emailAddressAccessChecker
+                            ->checkEdit($this->user, $emailAddress, $entity)
                     ) {
                         $emailAddress->set('name', 'ERASED:' . $emailAddress->id);
                         $emailAddress->set('optOut', true);
@@ -124,12 +133,11 @@ class Erasor implements
 
                 foreach ($phoneNumberList as $phoneNumber) {
                     if (
-                        $this
-                            ->aclManager
-                            ->getImplementation('PhoneNumber')
-                            ->checkEditInEntity($this->user, $phoneNumber, $entity)
+                        $this->phoneNumberAccessChecker
+                            ->checkEdit($this->user, $phoneNumber, $entity)
                     ) {
                         $phoneNumber->set('name', 'ERASED:' . $phoneNumber->id);
+
                         $this->entityManager->saveEntity($phoneNumber);
                     }
                 }
@@ -144,6 +152,7 @@ class Erasor implements
 
                 if ($attachmentId) {
                     $attachment = $this->entityManager->getEntity('Attachment', $attachmentId);
+
                     $this->entityManager->removeEntity($attachment);
                 }
 
