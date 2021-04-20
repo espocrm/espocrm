@@ -34,6 +34,7 @@ use Espo\Core\ORM\Entity;
 use Espo\Core\{
     FieldProcessing\EmailAddress\SaveProcessor as EmailAddressSaveProcessor,
     FieldProcessing\PhoneNumber\SaveProcessor as PhoneNumberSaveProcessor,
+    FieldProcessing\Relation\SaveProcessor as RelationSaveProcessor,
 };
 
 /**
@@ -45,17 +46,22 @@ class SaveProcessor
 
     private $phoneNumberSaveProcessor;
 
+    private $relationSaveProcessor;
+
     public function __construct(
         EmailAddressSaveProcessor $emailAddressSaveProcessor,
-        PhoneNumberSaveProcessor $phoneNumberSaveProcessor
+        PhoneNumberSaveProcessor $phoneNumberSaveProcessor,
+        RelationSaveProcessor $relationSaveProcessor
     ) {
         $this->emailAddressSaveProcessor = $emailAddressSaveProcessor;
         $this->phoneNumberSaveProcessor = $phoneNumberSaveProcessor;
+        $this->relationSaveProcessor = $relationSaveProcessor;
     }
 
     public function process(Entity $entity, array $options): void
     {
         $this->emailAddressSaveProcessor->process($entity, $options);
         $this->phoneNumberSaveProcessor->process($entity, $options);
+        $this->relationSaveProcessor->process($entity, $options);
     }
 }

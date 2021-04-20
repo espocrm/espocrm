@@ -139,7 +139,11 @@ class Database extends RDBRepository
             ];
 
             $this->hookManager->process(
-                $this->entityType, 'afterMassRelate', $entity, $options, $hookData
+                $this->entityType,
+                'afterMassRelate',
+                $entity,
+                $options,
+                $hookData
             );
         }
     }
@@ -151,11 +155,14 @@ class Database extends RDBRepository
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             if (is_string($foreign)) {
                 $foreignId = $foreign;
+
                 $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
                 if ($foreignEntityType) {
                     $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
-                    $foreign->id = $foreignId;
+
+                    $foreign->set('id', $foreignId);
+
                     $foreign->setAsFetched();
                 }
             }
@@ -213,7 +220,6 @@ class Database extends RDBRepository
         parent::afterSave($entity, $options);
 
         if (!$this->processFieldsAfterSaveDisabled) {
-            $this->processSpecifiedRelationsSave($entity, $options);
             $this->processFileFieldsSave($entity);
             $this->processArrayFieldsSave($entity);
             $this->processWysiwygFieldsSave($entity);
@@ -227,6 +233,7 @@ class Database extends RDBRepository
     public function save(Entity $entity, array $options = []): void
     {
         $nowString = date('Y-m-d H:i:s', time());
+
         $restoreData = [];
 
         if (
@@ -262,7 +269,8 @@ class Database extends RDBRepository
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 if (empty($options['silent']) && empty($options['skipModifiedBy'])) {
                     if ($entity->hasAttribute('modifiedAt')) {
                         $entity->set('modifiedAt', $nowString);
@@ -424,277 +432,6 @@ class Database extends RDBRepository
                         }
                     }
                 }
-            }
-        }
-    }
-
-    public function processLinkMultipleFieldSave(Entity $entity, string $link, array $options = [])
-    {
-        $name = $link;
-
-        $idListAttribute = $link . 'Ids';
-        $columnsAttribute = $link . 'Columns';
-
-        if ($this->getMetadata()->get("entityDefs." . $entity->getEntityType() . ".fields.{$name}.noSave")) {
-            return;
-        }
-
-        $skipCreate = false;
-        $skipRemove = false;
-        $skipUpdate = false;
-
-        if (!empty($options['skipLinkMultipleCreate'])) {
-            $skipCreate = true;
-        }
-
-        if (!empty($options['skipLinkMultipleRemove'])) {
-            $skipRemove = true;
-        }
-
-        if (!empty($options['skipLinkMultipleUpdate'])) {
-            $skipUpdate = true;
-        }
-
-        if ($entity->isNew()) {
-            $skipRemove = true;
-            $skipUpdate = true;
-        }
-
-        if ($entity->has($idListAttribute)) {
-            $specifiedIdList = $entity->get($idListAttribute);
-        }
-        else if ($entity->has($columnsAttribute)) {
-            $skipRemove = true;
-            $specifiedIdList = [];
-
-            foreach ($entity->get($columnsAttribute) as $id => $d) {
-                $specifiedIdList[] = $id;
-            }
-        } else {
-            return;
-        }
-
-        if (!is_array($specifiedIdList)) {
-            return;
-        }
-
-        $toRemoveIdList = [];
-        $existingIdList = [];
-        $toUpdateIdList = [];
-        $toCreateIdList = [];
-        $existingColumnsData = (object) [];
-
-        $columns = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields', $name, 'columns']);
-
-        if (!empty($columns)) {
-            $columnData = $entity->get($columnsAttribute);
-        }
-
-        if (!$skipRemove || !$skipUpdate) {
-            $foreignEntityList = $this->getRelation($entity, $name)->find();
-
-            if ($foreignEntityList) {
-                foreach ($foreignEntityList as $foreignEntity) {
-                    $existingIdList[] = $foreignEntity->id;
-
-                    if (!empty($columns)) {
-                        $data = (object) [];
-
-                        foreach ($columns as $columnName => $columnField) {
-                            $foreignId = $foreignEntity->id;
-                            $data->$columnName = $foreignEntity->get($columnField);
-                        }
-
-                        $existingColumnsData->$foreignId = $data;
-
-                        if (!$entity->isNew()) {
-                            $entity->setFetched($columnsAttribute, $existingColumnsData);
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!$entity->isNew()) {
-            if ($entity->has($idListAttribute) && !$entity->hasFetched($idListAttribute)) {
-                $entity->setFetched($idListAttribute, $existingIdList);
-            }
-
-            if ($entity->has($columnsAttribute) && !empty($columns)) {
-                $entity->setFetched($columnsAttribute, $existingColumnsData);
-            }
-        }
-
-        foreach ($existingIdList as $id) {
-            if (!in_array($id, $specifiedIdList)) {
-                if (!$skipRemove) {
-                    $toRemoveIdList[] = $id;
-                }
-            }
-            else {
-                if (!$skipUpdate && !empty($columns)) {
-                    foreach ($columns as $columnName => $columnField) {
-                        if (isset($columnData->$id) && is_object($columnData->$id)) {
-                            if (
-                                property_exists($columnData->$id, $columnName)
-                                &&
-                                (
-                                    !property_exists($existingColumnsData->$id, $columnName)
-                                    ||
-                                    $columnData->$id->$columnName !== $existingColumnsData->$id->$columnName
-                                )
-                            ) {
-                                $toUpdateIdList[] = $id;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!$skipCreate) {
-            foreach ($specifiedIdList as $id) {
-                if (!in_array($id, $existingIdList)) {
-                    $toCreateIdList[] = $id;
-                }
-            }
-        }
-
-        foreach ($toCreateIdList as $id) {
-            $data = null;
-
-            if (!empty($columns) && isset($columnData->$id)) {
-                $data = (array) $columnData->$id;
-            }
-
-            $this->getRelation($entity, $name)->relateById($id, $data);
-        }
-
-        foreach ($toRemoveIdList as $id) {
-            $this->getRelation($entity, $name)->unrelateById($id);
-        }
-
-        foreach ($toUpdateIdList as $id) {
-            $data = (array) $columnData->$id;
-
-            $this->getRelation($entity, $name)->updateColumnsById($id, (array) $data);
-        }
-    }
-
-    protected function processSpecifiedRelationsSave(Entity $entity, array $options = [])
-    {
-        $relationTypeList = [
-            $entity::HAS_MANY,
-            $entity::MANY_MANY,
-            $entity::HAS_CHILDREN,
-        ];
-
-        foreach ($entity->getRelationList() as $name) {
-
-            $type = $entity->getRelationType($name);
-
-            $foreignEntityType = $entity->getRelationParam($name, 'entity');
-            $foreignKey = $entity->getRelationParam($name, 'foreignKey');
-
-            if (in_array($type, $relationTypeList)) {
-                $idListAttribute = $name . 'Ids';
-                $columnsAttribute = $name . 'Columns';
-
-                if ($entity->has($idListAttribute) || $entity->has($columnsAttribute)) {
-                    $this->processLinkMultipleFieldSave($entity, $name, $options);
-                }
-
-                continue;
-            }
-
-            if ($type === $entity::HAS_ONE) {
-                if (!$foreignEntityType || !$foreignKey) {
-                    continue;
-                }
-
-                $noSave = $this->getMetadata()->get(
-                    ['entityDefs', $entity->getEntityType(), 'fields', $name, 'noSave']
-                );
-
-                if ($noSave) {
-                    continue;
-                }
-
-                $idAttribute = $name . 'Id';
-
-                if (!$entity->has($idAttribute)) {
-                    continue;
-                }
-
-                $where = [];
-
-                $where[$foreignKey] = $entity->id;
-
-                $previousForeignEntity = $this->getEntityManager()
-                    ->getRepository($foreignEntityType)
-                    ->select(['id'])
-                    ->where($where)
-                    ->findOne();
-
-                if ($previousForeignEntity) {
-                    if (!$entity->isNew()) {
-                        $entity->setFetched($idAttribute, $previousForeignEntity->id);
-                    }
-
-                    if (!$entity->get($idAttribute)) {
-                        $previousForeignEntity->set($foreignKey, null);
-
-                        $this->getEntityManager()->saveEntity($previousForeignEntity, ['skipAll' => true]);
-                    }
-                } else {
-                    if (!$entity->isNew()) {
-                        $entity->setFetched($idAttribute, null);
-                    }
-                }
-
-                if ($entity->get($idAttribute)) {
-                    $relateResult = $this->relate($entity, $name, $entity->get($idAttribute));
-
-                    if (!$relateResult) {
-                        $entity->set($idAttribute, null);
-                    }
-                }
-
-                continue;
-            }
-
-            if ($type === $entity::BELONGS_TO) {
-                if (!$entity->get($name . 'Id')) {
-                    continue;
-                }
-
-                if (!$entity->isAttributeChanged($name . 'Id')) {
-                    continue;
-                }
-
-                $foreignLink = $entity->getRelationParam($name, 'foreign');
-
-                if (
-                    $this->getMetadata()->get(
-                        ['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']
-                    ) === $entity::HAS_ONE
-                ) {
-                    $anotherEntity = $this
-                        ->select(['id'])
-                        ->where([
-                            $name . 'Id' => $entity->get($name . 'Id'),
-                            'id!=' => $entity->id,
-                        ])
-                        ->findOne();
-
-                    if ($anotherEntity) {
-                        $anotherEntity->set($name . 'Id', null);
-
-                        $this->getEntityManager()->saveEntity($anotherEntity, ['skipAll' => true]);
-                    }
-                }
-
-                continue;
             }
         }
     }
