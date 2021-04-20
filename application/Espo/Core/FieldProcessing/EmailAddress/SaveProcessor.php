@@ -417,7 +417,7 @@ class SaveProcessor
                         $emailAddressNew->set('optOut', (bool) $entity->get('emailAddressIsOptedOut'));
                     }
 
-                    $this->save($emailAddressNew);
+                    $this->entityManager->saveEntity($emailAddressNew);
 
                     $isNewEmailAddress = true;
                 }
