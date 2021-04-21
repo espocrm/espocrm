@@ -87,10 +87,6 @@ class DefaultTable implements Table
         self::LEVEL_NO,
     ];
 
-    protected $isStrictModeForced = false;
-
-    private $isStrictMode = false;
-
     private $data = null;
 
     private $cacheKey;
@@ -118,13 +114,6 @@ class DefaultTable implements Table
             'fields' => (object) [],
             'permissions' => (object) [],
         ];
-
-        if ($this->isStrictModeForced) {
-            $this->isStrictMode = true;
-        }
-        else {
-            $this->isStrictMode = $config->get('aclStrictMode', true);
-        }
 
         $this->user = $user;
         $this->metadata = $metadata;
@@ -248,18 +237,12 @@ class DefaultTable implements Table
         $this->data->fields = $fieldTable;
 
         if (!$this->user->isAdmin()) {
-            $permissionsDefaultsGroupName = 'permissionsDefaults';
-
-            if ($this->isStrictMode) {
-                $permissionsDefaultsGroupName = 'permissionsStrictDefaults';
-            }
-
             foreach ($this->valuePermissionList as $permissionKey) {
                 $permission = $this->normilizePermissionName($permissionKey);
 
                 $defaultLevel = $this->metadata
-                    ->get(['app', $this->type, $permissionsDefaultsGroupName, $permissionKey]) ??
-                    ($this->isStrictMode ? self::LEVEL_NO : self::LEVEL_YES);
+                    ->get(['app', $this->type, 'permissionsStrictDefaults', $permissionKey]) ??
+                    self::LEVEL_NO;
 
                 $this->data->permissions->$permission = $this->mergeValueList(
                     $valuePermissionLists->$permissionKey,
@@ -344,13 +327,7 @@ class DefaultTable implements Table
             return;
         }
 
-        $defaultsGroupName = 'default';
-
-        if ($this->isStrictMode) {
-            $defaultsGroupName = 'strictDefault';
-        }
-
-        $data = $this->metadata->get(['app', $this->type, $defaultsGroupName, 'scopeLevel'], []);
+        $data = $this->metadata->get(['app', $this->type, 'strictDefault', 'scopeLevel'], []);
 
         foreach ($data as $scope => $item) {
             if (isset($table->$scope)) {
@@ -367,7 +344,7 @@ class DefaultTable implements Table
         }
 
         $defaultFieldData = $this->metadata
-            ->get(['app', $this->type, $defaultsGroupName, 'fieldLevel']) ?? [];
+            ->get(['app', $this->type, 'strictDefault', 'fieldLevel']) ?? [];
 
         foreach ($this->getScopeList() as $scope) {
             if (isset($table->$scope) && $table->$scope === false) {
@@ -381,7 +358,7 @@ class DefaultTable implements Table
             $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
 
             $defaultScopeFieldData = $this->metadata
-                ->get(['app', $this->type, $defaultsGroupName, 'scopeFieldLevel', $scope]) ?? [];
+                ->get(['app', $this->type, 'strictDefault', 'scopeFieldLevel', $scope]) ?? [];
 
             foreach (array_merge($defaultFieldData, $defaultScopeFieldData) as $field => $f) {
                 if (!in_array($field, $fieldList)) {
@@ -430,15 +407,9 @@ class DefaultTable implements Table
                 continue;
             }
 
-            $paramDefaultsName = 'scopeLevelTypesDefaults';
-
-            if ($this->isStrictMode) {
-                $paramDefaultsName = 'scopeLevelTypesStrictDefaults';
-            }
-
             $defaultValue =
-                $this->metadata->get(['app', $this->type, $paramDefaultsName, $aclType]) ??
-                $this->metadata->get(['app', $this->type, $paramDefaultsName, 'record']);
+                $this->metadata->get(['app', $this->type, 'scopeLevelTypesStrictDefaults', $aclType]) ??
+                $this->metadata->get(['app', $this->type, 'scopeLevelTypesStrictDefaults', 'record']);
 
             if (is_array($defaultValue)) {
                 $defaultValue = (object) $defaultValue;

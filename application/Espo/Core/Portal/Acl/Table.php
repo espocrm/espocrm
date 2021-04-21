@@ -52,8 +52,6 @@ class Table extends BaseTable
         self::LEVEL_NO,
     ];
 
-    protected $isStrictModeForced = true;
-
     protected function getScopeWithAclList(): array
     {
         $scopeList = [];

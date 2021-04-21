@@ -98,7 +98,6 @@
         "historyEntityList": "History Entity List",
         "currencyFormat": "Currency Format",
         "currencyDecimalPlaces": "Currency Decimal Places",
-        "aclStrictMode": "ACL Strict Mode",
         "aclAllowDeleteCreated": "Allow to remove created records",
         "adminNotifications": "System notifications in administration panel",
         "adminNotificationsNewVersion": "Show notification when new EspoCRM version is available",

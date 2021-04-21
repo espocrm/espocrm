@@ -83,23 +83,6 @@
             }
         }
     },
-    "default": {
-        "scopeLevel": {
-            "User": {
-                "read": "all",
-                "edit": "no"
-            },
-            "Import": false,
-            "Webhook": false
-        },
-        "fieldLevel": {
-        },
-        "scopeFieldLevel": {
-            "User": {
-                "gender": false
-            }
-        }
-    },
     "strictDefault": {
         "scopeLevel": {
             "User": {
@@ -156,16 +139,6 @@
         "followerManagementPermission": "all",
         "dataPrivacyPermission": "yes"
     },
-    "permissionsDefaults": {
-        "assignmentPermission": "all",
-        "userPermission": "all",
-        "portalPermission": "no",
-        "groupEmailAccountPermission": "no",
-        "exportPermission": "yes",
-        "massUpdatePermission": "yes",
-        "followerManagementPermission": "no",
-        "dataPrivacyPermission": "no"
-    },
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
         "userPermission": "no",
@@ -175,16 +148,6 @@
         "massUpdatePermission": "no",
         "followerManagementPermission": "no",
         "dataPrivacyPermission": "no"
-    },
-    "scopeLevelTypesDefaults": {
-        "boolean": true,
-        "record": {
-            "read": "all",
-            "stream": "all",
-            "edit": "all",
-            "delete": "no",
-            "create": "yes"
-        }
     },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,

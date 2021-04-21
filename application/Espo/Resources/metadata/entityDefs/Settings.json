@@ -538,10 +538,6 @@
         "massEmailOpenTracking": {
             "type": "bool"
         },
-        "aclStrictMode": {
-            "type": "bool",
-            "tooltip": true
-        },
         "aclAllowDeleteCreated": {
             "type": "bool",
             "tooltip": true

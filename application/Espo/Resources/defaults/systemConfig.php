@@ -116,7 +116,6 @@ return [
         'webSocketSslAllowSelfSigned',
         'webSocketUseSecureServer',
         'webSocketPort',
-        'aclStrictMode',
         'actualDatabaseType',
         'actualDatabaseVersion',
     ],
@@ -286,5 +285,4 @@ return [
     'recommendedMariadbParams' => [],
     'ldapPortalUserLdapAuth' => false,
     'passwordGenerateLength' => 10,
-    'aclStrictMode' => true,
 ];
