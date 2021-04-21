@@ -50,21 +50,35 @@ use Throwable;
 class Cleanup implements Job
 {
     protected $cleanupJobPeriod = '10 days';
+
     protected $cleanupActionHistoryPeriod = '15 days';
+
     protected $cleanupAuthTokenPeriod = '1 month';
+
     protected $cleanupAuthLogPeriod = '2 months';
+
     protected $cleanupNotificationsPeriod = '2 months';
+
     protected $cleanupAttachmentsPeriod = '15 days';
+
     protected $cleanupAttachmentsFromPeriod = '3 months';
+
     protected $cleanupBackupPeriod = '2 month';
+
     protected $cleanupDeletedRecordsPeriod = '3 months';
 
     protected $config;
+
     protected $entityManager;
+
     protected $metedata;
+
     protected $fileManager;
+
     protected $injectableFactory;
+
     protected $selectBuilderFactory;
+
     protected $serviceFactory;
 
     public function __construct(
@@ -85,7 +99,7 @@ class Cleanup implements Job
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $this->cleanupJobs();
         $this->cleanupScheduledJobLog();
