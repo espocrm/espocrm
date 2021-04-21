@@ -105,7 +105,7 @@ class Processor
 
     protected $userIdPortalCacheMap = [];
 
-    public function process() : void
+    public function process(): void
     {
         $mentionEmailNotifications = $this->config->get('mentionEmailNotifications');
 
@@ -188,7 +188,7 @@ class Processor
         }
     }
 
-    protected function getNotificationQueryBuilderMentionInPost() : SelectBuilder
+    protected function getNotificationQueryBuilderMentionInPost(): SelectBuilder
     {
         return $this->entityManager
             ->getQueryBuilder()
@@ -199,7 +199,7 @@ class Processor
             ]);
     }
 
-    protected function getNotificationQueryBuilderNote() : SelectBuilder
+    protected function getNotificationQueryBuilderNote(): SelectBuilder
     {
         $noteNotificationTypeList = $this->config->get('streamEmailNotificationsTypeList', []);
 
@@ -251,7 +251,7 @@ class Processor
         return $builder;
     }
 
-    protected function processNotificationMentionInPost(Entity $notification) : void
+    protected function processNotificationMentionInPost(Entity $notification): void
     {
         if (!$notification->get('userId')) {
             return;
@@ -355,7 +355,7 @@ class Processor
         }
     }
 
-    protected function processNotificationNote(Entity $notification) : void
+    protected function processNotificationNote(Entity $notification): void
     {
         if ($notification->get('relatedType') !== 'Note') {
             return;
@@ -413,7 +413,7 @@ class Processor
         $this->$methodName($note, $user);
     }
 
-    protected function getEmailNotificationEntityHandler(string $entityType) : ?object
+    protected function getEmailNotificationEntityHandler(string $entityType): ?object
     {
         if (!array_key_exists($entityType, $this->emailNotificationEntityHandlerHash)) {
             $this->emailNotificationEntityHandlerHash[$entityType] = null;
@@ -432,7 +432,7 @@ class Processor
         return $this->emailNotificationEntityHandlerHash[$entityType];
     }
 
-    protected function processNotificationNotePost($note, $user) : void
+    protected function processNotificationNotePost($note, $user): void
     {
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
@@ -557,7 +557,7 @@ class Processor
         }
     }
 
-    protected function getSiteUrl(UserEntity $user) : string
+    protected function getSiteUrl(UserEntity $user): string
     {
         $portal = null;
 
@@ -602,7 +602,7 @@ class Processor
         return $this->config->getSiteUrl();
     }
 
-    protected function processNotificationNoteStatus($note, $user) : void
+    protected function processNotificationNoteStatus($note, $user): void
     {
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
@@ -683,7 +683,7 @@ class Processor
         }
     }
 
-    protected function processNotificationNoteEmailReceived($note, $user) : void
+    protected function processNotificationNoteEmailReceived($note, $user): void
     {
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
@@ -809,7 +809,7 @@ class Processor
         }
     }
 
-    protected function getHtmlizer() : Htmlizer
+    protected function getHtmlizer(): Htmlizer
     {
         if (!$this->htmlizer) {
             $this->htmlizer = $this->htmlizerFactory->create(true);

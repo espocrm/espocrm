@@ -115,7 +115,7 @@ class Import
     /**
      * Set a user. ACL restriction will be applied for that user.
      */
-    public function setUser(User $user) : self
+    public function setUser(User $user): self
     {
         $this->user = $user;
 
@@ -125,7 +125,7 @@ class Import
     /**
      * Set an entity type.
      */
-    public function setEntityType(string $entityType) : self
+    public function setEntityType(string $entityType): self
     {
         $this->entityType = $entityType;
 
@@ -135,7 +135,7 @@ class Import
     /**
      * Set an attachment ID. CSV attachment should be uploaded before import.
      */
-    public function setAttachmentId(string $attachmentId) : self
+    public function setAttachmentId(string $attachmentId): self
     {
         $this->attachmentId = $attachmentId;
 
@@ -145,7 +145,7 @@ class Import
     /**
      * Set an ID of import record. If an import record already exists.
      */
-    public function setId(string $id) : self
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -155,7 +155,7 @@ class Import
     /**
      * Set an attribute list to parse from CSV rows.
      */
-    public function setAttributeList(array $attributeList) : self
+    public function setAttributeList(array $attributeList): self
     {
         $this->attributeList = $attributeList;
 
@@ -185,7 +185,7 @@ class Import
      *    'startFromLastIndex' => (bool),
      * ]
      */
-    public function setParams(array $params) : self
+    public function setParams(array $params): self
     {
         $this->params = $params;
 
@@ -212,7 +212,7 @@ class Import
      *     countUpdated: (int),
      * ]
      */
-    public function run() : StdClass
+    public function run(): StdClass
     {
         $this->validate();
 
@@ -226,7 +226,8 @@ class Import
         $delimiter = str_replace('\t', "\t", $delimiter);
 
         if (!$this->user->isAdmin()) {
-            $forbiddenAttrbuteList = $this->aclManager->getScopeForbiddenAttributeList($this->user, $this->entityType, 'edit');
+            $forbiddenAttrbuteList =
+                $this->aclManager->getScopeForbiddenAttributeList($this->user, $this->entityType, 'edit');
 
             foreach ($attributeList as $i => $attribute) {
                 if (in_array($attribute, $forbiddenAttrbuteList)) {
@@ -403,7 +404,7 @@ class Import
         ];
     }
 
-    protected function importRow(array $attributeList, array $row) : ?StdClass
+    protected function importRow(array $attributeList, array $row): ?StdClass
     {
         $id = null;
         $action = 'create';
@@ -593,7 +594,8 @@ class Import
         $isPerson = false;
 
         if ($foreignEntityType) {
-            $isPerson = $this->metadata->get(['entityDefs', $foreignEntityType, 'fields', 'name', 'type']) === 'personName';
+            $isPerson = $this->metadata
+                ->get(['entityDefs', $foreignEntityType, 'fields', 'name', 'type']) === 'personName';
         }
 
         if ($attribute !== $relation . 'Name') {
@@ -754,7 +756,8 @@ class Import
             &&
             $entity->getAttributeParam('phoneNumber', 'fieldType') === 'phone'
         ) {
-            $typeList = $this->metadata->get(['entityDefs', $this->entityType, 'fields', 'phoneNumber', 'typeList']) ?? [];
+            $typeList = $this->metadata
+                ->get(['entityDefs', $this->entityType, 'fields', 'phoneNumber', 'typeList']) ?? [];
 
             foreach ($typeList as $type) {
                 $phoneFieldList[] = 'phoneNumber' . str_replace(' ', '_', ucfirst($type));
@@ -940,7 +943,7 @@ class Import
         return $value;
     }
 
-    protected function parsePersonName($value, string $format) : array
+    protected function parsePersonName($value, string $format): array
     {
         $firstName = null;
         $lastName = $value;
@@ -1034,8 +1037,12 @@ class Import
     }
 
     protected function readCsvString(
-        string &$string, string $separator = ';', string $enclosure = '"', string $linebreak = "\n"
-    ) : array {
+        string &$string,
+        string $separator = ';',
+        string $enclosure = '"',
+        string $linebreak = "\n"
+    ): array {
+
         $o = [];
 
         $cnt = strlen($string);

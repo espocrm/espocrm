@@ -40,82 +40,82 @@ class TemplateWrapper implements Template
         $this->template = $template;
     }
 
-    public function getFontFace() : ?string
+    public function getFontFace(): ?string
     {
         return $this->template->get('fontFace');
     }
 
-    public function getBottomMargin() : float
+    public function getBottomMargin(): float
     {
         return $this->template->get('bottomMargin') ?? 0.0;
     }
 
-    public function getTopMargin() : float
+    public function getTopMargin(): float
     {
         return $this->template->get('topMargin') ?? 0.0;
     }
 
-    public function getLeftMargin() : float
+    public function getLeftMargin(): float
     {
         return $this->template->get('leftMargin') ?? 0.0;
     }
 
-    public function getRightMargin() : float
+    public function getRightMargin(): float
     {
         return $this->template->get('rightMargin') ?? 0.0;
     }
 
-    public function hasFooter() : bool
+    public function hasFooter(): bool
     {
         return $this->template->get('printFooter') ?? false;
     }
 
-    public function getFooter() : string
+    public function getFooter(): string
     {
         return $this->template->get('footer') ?? '';
     }
 
-    public function getFooterPosition() : float
+    public function getFooterPosition(): float
     {
         return $this->template->get('footerPosition') ?? 0.0;
     }
 
-    public function hasHeader() : bool
+    public function hasHeader(): bool
     {
         return $this->template->get('printHeader') ?? false;
     }
 
-    public function getHeader() : string
+    public function getHeader(): string
     {
         return $this->template->get('header') ?? '';
     }
 
-    public function getHeaderPosition() : float
+    public function getHeaderPosition(): float
     {
         return $this->template->get('headerPosition') ?? 0.0;
     }
 
-    public function getBody() : string
+    public function getBody(): string
     {
         return $this->template->get('body') ?? '';
     }
 
-    public function getPageOrientation() : string
+    public function getPageOrientation(): string
     {
         return $this->template->get('pageOrientation') ?? 'Portrait';
     }
 
-    public function getPageFormat() : string
+    public function getPageFormat(): string
     {
         return $this->template->get('pageFormat') ?? 'A4';
     }
 
-    public function getPageWidth() : float
+    public function getPageWidth(): float
     {
         return $this->template->get('pageWidth') ?? 0.0;
     }
 
-    public function getPageHeight() : float
+    public function getPageHeight(): float
     {
         return $this->template->get('pageHeight') ?? 0.0;
     }

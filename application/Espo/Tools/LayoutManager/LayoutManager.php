@@ -58,7 +58,7 @@ class LayoutManager
     /**
      * Get layout in string format.
      */
-    public function get(string $scope, string $name) : ?string
+    public function get(string $scope, string $name): ?string
     {
         return $this->layout->get($scope, $name);
     }
@@ -152,7 +152,7 @@ class LayoutManager
         return $this->set($data, $scope, $name);
     }
 
-    protected function getDirPath(string $entityType, bool $isCustom = false) : string
+    protected function getDirPath(string $entityType, bool $isCustom = false): string
     {
         return $this->layout->getDirPath($entityType, $isCustom);
     }

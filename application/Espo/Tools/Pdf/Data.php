@@ -41,12 +41,12 @@ class Data
         $this->additionalTemplateData = $additionalTemplateData;
     }
 
-    public function getAdditionalTemplateData() : array
+    public function getAdditionalTemplateData(): array
     {
         return $this->additionalTemplateData;
     }
 
-    public static function createFromArray(array $data) : Data
+    public static function createFromArray(array $data): Data
     {
         $obj = new self();
 

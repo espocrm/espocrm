@@ -38,17 +38,17 @@ class ContentsString implements Contents
         $this->contents = $contents;
     }
 
-    public function getString() : string
+    public function getString(): string
     {
         return $this->contents;
     }
 
-    public function getLength() : int
+    public function getLength(): int
     {
         return strlen($this->contents);
     }
 
-    public static function createFromString(string $contents) : ContentsString
+    public static function createFromString(string $contents): ContentsString
     {
         $obj = new $obj($contents);
 

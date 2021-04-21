@@ -84,16 +84,19 @@ class NumberType implements Di\EntityManagerAware
         }
 
         $number->set('value', $defs['nextNumber']);
+
         $this->entityManager->saveEntity($number);
     }
 
     public function afterRemove($scope, $name, $defs, $options)
     {
-        $number = $this->entityManager->getRepository('NextNumber')
-        ->where([
-            'entityType' => $scope,
-            'fieldName' => $name
-        ])->findOne();
+        $number = $this->entityManager
+            ->getRepository('NextNumber')
+            ->where([
+                'entityType' => $scope,
+                'fieldName' => $name
+            ])
+            ->findOne();
 
         if (!$number) {
             return;

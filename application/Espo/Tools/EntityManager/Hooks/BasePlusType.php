@@ -45,7 +45,9 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
         $entityTypeList = array_unique($entityTypeList);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) continue;
+            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) {
+                continue;
+            }
 
             $list = $this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
             if (!in_array($name, $list)) {
@@ -73,13 +75,19 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
         $entityTypeList = array_unique($entityTypeList);
 
         foreach ($entityTypeList as $entityType) {
-            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) continue;
+            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'])) {
+                continue;
+            }
 
             $list = $this->metadata->get(['entityDefs', $entityType, 'fields', 'parent', 'entityList'], []);
+
             if (in_array($name, $list)) {
                 $key = array_search($name, $list);
+
                 unset($list[$key]);
+
                 $list = array_values($list);
+
                 $data = array(
                     'fields' => array(
                         'parent' => array(
@@ -87,6 +95,7 @@ class BasePlusType implements Di\ConfigAware, Di\MetadataAware
                         )
                     )
                 );
+
                 $this->metadata->set('entityDefs', $entityType, $data);
             }
         }

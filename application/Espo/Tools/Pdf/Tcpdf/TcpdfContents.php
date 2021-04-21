@@ -46,12 +46,12 @@ class TcpdfContents implements Contents
         $this->pdf = $pdf;
     }
 
-    public function getString() : string
+    public function getString(): string
     {
         return $this->pdf->output('', 'S');
     }
 
-    public function getLength() : int
+    public function getLength(): int
     {
         return strlen($this->getString());
     }

@@ -58,12 +58,19 @@ use Exception;
 class Xlsx
 {
     protected $config;
+
     protected $metadata;
+
     protected $language;
+
     protected $dateTime;
+
     protected $entityManager;
+
     protected $fileStorageManager;
+
     protected $fileManager;
+
     protected $addressFormatterFactory;
 
     public function __construct(

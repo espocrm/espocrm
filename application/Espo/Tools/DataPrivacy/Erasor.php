@@ -74,7 +74,7 @@ class Erasor implements
         $this->phoneNumberAccessChecker = $phoneNumberAccessChecker;
     }
 
-    public function erase(string $entityType, string $id, array $fieldList) : void
+    public function erase(string $entityType, string $id, array $fieldList): void
     {
         if ($this->acl->get('dataPrivacyPermission') === 'no') {
             throw new Forbidden();

@@ -50,7 +50,7 @@ class TcpdfEntityPrinter implements EntityPrinter
         $this->entityProcessor = $entityProcessor;
     }
 
-    public function print(Template $template, Entity $entity, Data $data) : Contents
+    public function print(Template $template, Entity $entity, Data $data): Contents
     {
         $pdf = new Tcpdf();
 

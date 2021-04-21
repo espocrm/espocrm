@@ -58,7 +58,7 @@ class EntityProcessor
         $this->htmlizerFactory = $htmlizerFactory;
     }
 
-    public function process(Tcpdf $pdf, Template $template, Entity $entity, Data $data)
+    public function process(Tcpdf $pdf, Template $template, Entity $entity, Data $data): void
     {
         $additionalData = $data->getAdditionalTemplateData();
 
@@ -128,7 +128,7 @@ class EntityProcessor
         $pdf->writeHTML($htmlBody, true, false, true, false, '');
     }
 
-    protected function render(Htmlizer $htmlizer, Entity $entity, string $template, array $additionalData) : string
+    protected function render(Htmlizer $htmlizer, Entity $entity, string $template, array $additionalData): string
     {
         $html = $htmlizer->render(
             $entity,
@@ -152,7 +152,7 @@ class EntityProcessor
         return $html;
     }
 
-    protected function composeBarcodeTag(array $data) : string
+    protected function composeBarcodeTag(array $data): string
     {
         $value = $data['value'] ?? null;
 

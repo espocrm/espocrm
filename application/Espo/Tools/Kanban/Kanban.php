@@ -72,49 +72,49 @@ class Kanban
         $this->entityManager = $entityManager;
     }
 
-    public function setRecordService(RecordService $recordService) : self
+    public function setRecordService(RecordService $recordService): self
     {
         $this->recordService = $recordService;
 
         return $this;
     }
 
-    public function setEntityType(string $entityType) : self
+    public function setEntityType(string $entityType): self
     {
         $this->entityType = $entityType;
 
         return $this;
     }
 
-    public function setSearchParams(array $searchParams) : self
+    public function setSearchParams(array $searchParams): self
     {
         $this->searchParams = $searchParams;
 
         return $this;
     }
 
-    public function setCountDisabled(bool $countDisabled) : self
+    public function setCountDisabled(bool $countDisabled): self
     {
         $this->countDisabled = $countDisabled;
 
         return $this;
     }
 
-    public function setOrderDisabled(bool $orderDisabled) : self
+    public function setOrderDisabled(bool $orderDisabled): self
     {
         $this->orderDisabled = $orderDisabled;
 
         return $this;
     }
 
-    public function setUserId(string $userId) : self
+    public function setUserId(string $userId): self
     {
         $this->userId = $userId;
 
         return $this;
     }
 
-    public function setMaxOrderNumber(int $maxOrderNumber) : self
+    public function setMaxOrderNumber(int $maxOrderNumber): self
     {
         $this->maxOrderNumber = $maxOrderNumber;
 
@@ -124,7 +124,7 @@ class Kanban
     /**
      * Get kanban record data.
      */
-    public function getResult() : Result
+    public function getResult(): Result
     {
         $params = $this->searchParams;
 
@@ -278,7 +278,7 @@ class Kanban
         return new Result($collection, $total, $additionalData);
     }
 
-    protected function getStatusField() : string
+    protected function getStatusField(): string
     {
         $statusField = $this->metadata->get(['scopes', $this->entityType, 'statusField']);
 
@@ -289,7 +289,7 @@ class Kanban
         return $statusField;
     }
 
-    protected function getStatusList() : array
+    protected function getStatusList(): array
     {
         $statusField = $this->getStatusField();
 
@@ -302,7 +302,7 @@ class Kanban
         return $statusList;
     }
 
-    protected function getStatusIgnoreList() : array
+    protected function getStatusIgnoreList(): array
     {
         return $this->metadata->get(['scopes', $this->entityType, 'kanbanStatusIgnoreList'], []);
     }

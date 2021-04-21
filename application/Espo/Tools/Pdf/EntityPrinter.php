@@ -35,5 +35,5 @@ use Espo\{
 
 interface EntityPrinter
 {
-    public function print(Template $template, Entity $entity, Data $data) : Contents;
+    public function print(Template $template, Entity $entity, Data $data): Contents;
 }

@@ -35,5 +35,5 @@ use Espo\{
 
 interface CollectionPrinter
 {
-    public function print(Template $template, Collection $collection, Data $data) : Contents;
+    public function print(Template $template, Collection $collection, Data $data): Contents;
 }

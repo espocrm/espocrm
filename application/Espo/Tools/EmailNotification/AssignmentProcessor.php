@@ -66,7 +66,7 @@ class AssignmentProcessor
     protected $config;
 
     protected $templateFileManager;
-    
+
     protected $metadata;
 
     public function __construct(
@@ -87,7 +87,7 @@ class AssignmentProcessor
         $this->language = $language;
     }
 
-    public function process(StdClass $data) : void
+    public function process(StdClass $data): void
     {
         $userId = $data->userId ?? null;
         $assignerUserId = $data->assignerUserId ?? null;
@@ -209,7 +209,7 @@ class AssignmentProcessor
         }
     }
 
-    protected function getHtmlizer() : Htmlizer
+    protected function getHtmlizer(): Htmlizer
     {
         if (!$this->htmlizer) {
             $this->htmlizer = $this->htmlizerFactory->create(true);
@@ -218,7 +218,7 @@ class AssignmentProcessor
         return $this->htmlizer;
     }
 
-    protected function loadParentNameFields(Entity $entity) : void
+    protected function loadParentNameFields(Entity $entity): void
     {
         $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
 

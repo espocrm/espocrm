@@ -42,8 +42,8 @@ use Espo\{
     Services\Record,
 };
 
-class Export
-    implements
+class Export implements
+
     Di\MetadataAware,
     Di\EntityManagerAware,
     Di\SelectBuilderFactoryAware,
@@ -66,35 +66,35 @@ class Export
 
     protected $params = [];
 
-    public function setRecordService(Record $recordService) : self
+    public function setRecordService(Record $recordService): self
     {
         $this->recordService = $recordService;
 
         return $this;
     }
 
-    public function setEntityType(string $entityType) : self
+    public function setEntityType(string $entityType): self
     {
         $this->entityType = $entityType;
 
         return $this;
     }
 
-    public function setAdditionalAttributeList(array $additionalAttributeList) : self
+    public function setAdditionalAttributeList(array $additionalAttributeList): self
     {
         $this->additionalAttributeList = $additionalAttributeList;
 
         return $this;
     }
 
-    public function setSkipAttributeList(array $skipAttributeList) : self
+    public function setSkipAttributeList(array $skipAttributeList): self
     {
         $this->skipAttributeList = $skipAttributeList;
 
         return $this;
     }
 
-    public function setParams(array $params) : self
+    public function setParams(array $params): self
     {
         $this->params = $params;
 
@@ -106,7 +106,7 @@ class Export
      *
      * @return An ID of a generated attachment.
      */
-    public function run() : string
+    public function run(): string
     {
         $params = $this->params;
 
@@ -379,7 +379,7 @@ class Export
         return $entity->get($attribute);
     }
 
-    private function getForeignAttributeType(Entity $entity, string $attribute) : ?string
+    private function getForeignAttributeType(Entity $entity, string $attribute): ?string
     {
         $defs = $this->entityManager->getDefs();
 
@@ -420,8 +420,10 @@ class Export
     }
 
     protected function checkAttributeIsAllowedForExport(
-        Entity $entity, string $attribute, bool $isExportAllFields = false
-    ) : bool {
+        Entity $entity,
+        string $attribute,
+        bool $isExportAllFields = false
+    ): bool {
 
         if (!$isExportAllFields) {
             return true;

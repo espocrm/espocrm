@@ -42,6 +42,7 @@ class Builder
     private $engine;
 
     private $metadata;
+
     private $injectableFactory;
 
     public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
@@ -50,21 +51,21 @@ class Builder
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function setTemplate(Template $template) : self
+    public function setTemplate(Template $template): self
     {
         $this->template = $template;
 
         return $this;
     }
 
-    public function setEngine(string $engine) : self
+    public function setEngine(string $engine): self
     {
         $this->engine = $engine;
 
         return $this;
     }
 
-    public function build() : PrinterController
+    public function build(): PrinterController
     {
         if (!$this->engine) {
             throw new Error('Engine is not set.');

@@ -46,27 +46,27 @@ class Orderer
         $this->metadata = $metadata;
     }
 
-    public function setEntityType(string $entityType) : OrdererProcessor
+    public function setEntityType(string $entityType): OrdererProcessor
     {
         return $this->createProcessor()->setEntityType($entityType);
     }
 
-    public function setGroup(string $group) : OrdererProcessor
+    public function setGroup(string $group): OrdererProcessor
     {
         return $this->createProcessor()->setGroup($group);
     }
 
-    public function setUserId(string $userId) : OrdererProcessor
+    public function setUserId(string $userId): OrdererProcessor
     {
         return $this->createProcessor()->setUserId($userId);
     }
 
-    public function setMaxNumber(int $maxNumber) : OrdererProcessor
+    public function setMaxNumber(int $maxNumber): OrdererProcessor
     {
         return $this->createProcessor()->setMaxNumber($maxNumber);
     }
 
-    public function createProcessor() : OrdererProcessor
+    public function createProcessor(): OrdererProcessor
     {
         return new OrdererProcessor(
             $this->entityManager,

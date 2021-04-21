@@ -50,17 +50,17 @@ class Result
         $this->data = $data;
     }
 
-    public function getCollection() : EntityCollection
+    public function getCollection(): EntityCollection
     {
         return $this->collection;
     }
 
-    public function getTotal() : int
+    public function getTotal(): int
     {
         return $this->total;
     }
 
-    public function getData() : StdClass
+    public function getData(): StdClass
     {
         return $this->data;
     }

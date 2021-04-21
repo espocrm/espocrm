@@ -103,7 +103,7 @@ class FieldManager
         return $this->container->get('fieldUtil');
     }
 
-    public function read(string $scope, string $name) : array
+    public function read(string $scope, string $name): array
     {
         $fieldDefs = $this->getFieldDefs($scope, $name);
 
@@ -707,7 +707,7 @@ class FieldManager
          return false;
     }
 
-    public function isChanged() : bool
+    public function isChanged(): bool
     {
         return (bool) $this->isChanged;
     }

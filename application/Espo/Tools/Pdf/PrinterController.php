@@ -45,6 +45,7 @@ class PrinterController
     protected $template;
 
     protected $metadata;
+
     protected $injectableFactory;
 
     public function __construct(
@@ -60,23 +61,24 @@ class PrinterController
         $this->engine = $engine;
     }
 
-    public function printEntity(Entity $entity, ?Data $data = null) : Contents
+    public function printEntity(Entity $entity, ?Data $data = null): Contents
     {
         $data = $data ?? new Data();
 
         return $this->createPrinter('entity')->print($this->template, $entity, $data);
     }
 
-    public function printCollection(Collection $collection, ?Data $data = null) : Contents
+    public function printCollection(Collection $collection, ?Data $data = null): Contents
     {
         $data = $data ?? new Data();
 
         return $this->createPrinter('collection')->print($this->template, $collection, $data);
     }
 
-    protected function createPrinter(string $type) : object
+    protected function createPrinter(string $type): object
     {
-        $className = $this->metadata->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', $type]) ?? null;
+        $className = $this->metadata
+            ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', $type]) ?? null;
 
         if (!$className) {
             throw new Error("Unknown PDF engine '{$this->engine}', type '{$type}'.");

@@ -59,14 +59,14 @@ class OrdererProcessor
         $this->metadata = $metadata;
     }
 
-    public function setEntityType(string $entityType) : self
+    public function setEntityType(string $entityType): self
     {
         $this->entityType = $entityType;
 
         return $this;
     }
 
-    public function setGroup(string $group) : self
+    public function setGroup(string $group): self
     {
         $group = mb_substr($group, 0, self::MAX_GROUP_LENGTH);
 
@@ -75,14 +75,14 @@ class OrdererProcessor
         return $this;
     }
 
-    public function setUserId(string $userId) : self
+    public function setUserId(string $userId): self
     {
         $this->userId = $userId;
 
         return $this;
     }
 
-    public function setMaxNumber(int $maxNumber) : self
+    public function setMaxNumber(int $maxNumber): self
     {
         $this->maxNumber = $maxNumber;
 

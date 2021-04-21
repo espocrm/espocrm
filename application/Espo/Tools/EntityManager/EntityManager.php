@@ -164,7 +164,7 @@ class EntityManager
         return $this->container->get('serviceFactory');
     }
 
-    protected function checkControllerExists(string $name) : bool
+    protected function checkControllerExists(string $name): bool
     {
         $controllerClassName = 'Espo\\Custom\\Controllers\\' . Util::normilizeClassName($name);
 

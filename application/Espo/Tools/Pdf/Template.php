@@ -31,35 +31,35 @@ namespace Espo\Tools\Pdf;
 
 interface Template
 {
-    public function getFontFace() : ?string;
+    public function getFontFace(): ?string;
 
-    public function getBottomMargin() : float;
+    public function getBottomMargin(): float;
 
-    public function getTopMargin() : float;
+    public function getTopMargin(): float;
 
-    public function getLeftMargin() : float;
+    public function getLeftMargin(): float;
 
-    public function getRightMargin() : float;
+    public function getRightMargin(): float;
 
-    public function hasFooter() : bool;
+    public function hasFooter(): bool;
 
-    public function getFooter() : string;
+    public function getFooter(): string;
 
-    public function getFooterPosition() : float;
+    public function getFooterPosition(): float;
 
-    public function hasHeader() : bool;
+    public function hasHeader(): bool;
 
-    public function getHeader() : string;
+    public function getHeader(): string;
 
-    public function getHeaderPosition() : float;
+    public function getHeaderPosition(): float;
 
-    public function getBody() : string;
+    public function getBody(): string;
 
-    public function getPageOrientation() : string;
+    public function getPageOrientation(): string;
 
-    public function getPageFormat() : string;
+    public function getPageFormat(): string;
 
-    public function getPageWidth() : float;
+    public function getPageWidth(): float;
 
-    public function getPageHeight() : float;
+    public function getPageHeight(): float;
 }

@@ -55,12 +55,19 @@ use DateTime;
 class LeadCapture
 {
     protected $entityManager;
+
     protected $fieldUtil;
+
     protected $defaultLanguage;
+
     protected $serviceFactory;
+
     protected $hookManager;
+
     protected $emailSender;
+
     protected $config;
+
     protected $dateTime;
 
     public function __construct(
@@ -354,7 +361,7 @@ class LeadCapture
         }
     }
 
-    public function confirmOptIn(string $id) : StdClass
+    public function confirmOptIn(string $id): StdClass
     {
         $uniqueId = $this->entityManager
             ->getRepository('UniqueId')
@@ -569,7 +576,7 @@ class LeadCapture
         $sender->send($email);
     }
 
-    protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, StdClass $data) : LeadEntity
+    protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, StdClass $data): LeadEntity
     {
         $lead = $this->entityManager->getEntity('Lead');
 
@@ -634,7 +641,7 @@ class LeadCapture
         return $lead;
     }
 
-    protected function findLeadDuplicates(LeadCaptureEntity $leadCapture, LeadEntity $lead) : array
+    protected function findLeadDuplicates(LeadCaptureEntity $leadCapture, LeadEntity $lead): array
     {
         $duplicate = null;
         $contact = null;
@@ -671,7 +678,7 @@ class LeadCapture
         ];
     }
 
-    protected function isTargetOptedIn(Entity $target, string $targetListId) : bool
+    protected function isTargetOptedIn(Entity $target, string $targetListId): bool
     {
         $isAlreadyOptedIn = $this->entityManager
             ->getRepository($target->getEntityType())

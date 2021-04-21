@@ -31,7 +31,7 @@ namespace Espo\Tools\Pdf;
 
 interface Contents
 {
-    public function getString() : string;
+    public function getString(): string;
 
-    public function getLength() : int;
+    public function getLength(): int;
 }

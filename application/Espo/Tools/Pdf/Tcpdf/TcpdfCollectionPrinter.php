@@ -51,7 +51,7 @@ class TcpdfCollectionPrinter implements CollectionPrinter
         $this->entityProcessor = $entityProcessor;
     }
 
-    public function print(Template $template, Collection $collection, Data $data) : Contents
+    public function print(Template $template, Collection $collection, Data $data): Contents
     {
         $pdf = new Tcpdf();
 
