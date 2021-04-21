@@ -43,11 +43,19 @@ class DashboardTemplate extends Record
                 'dashboardLayout' => $template->get('layout'),
                 'dashletsOptions' => $template->get('dashletsOptions'),
             ]);
-        } else {
+        }
+        else {
             $dashletsOptions = $preferences->get('dashletsOptions');
-            if (!$dashletsOptions) $dashletsOptions = (object) [];
+
+            if (!$dashletsOptions) {
+                $dashletsOptions = (object) [];
+            }
+
             $dashboardLayout = $preferences->get('dashboardLayout');
-            if (!$dashboardLayout) $dashboardLayout = [];
+
+            if (!$dashboardLayout) {
+                $dashboardLayout = [];
+            }
 
             foreach ($template->get('layout') as $item) {
                 $exists = false;
@@ -80,7 +88,10 @@ class DashboardTemplate extends Record
     public function deployToUsers(string $id, array $userIdList, bool $append = false)
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
-        if (!$template) throw new NotFound();
+
+        if (!$template) {
+            throw new NotFound();
+        }
 
         foreach ($userIdList as $userId) {
             $user = $this->getEntityManager()->fetchEntity('User', $userId);
@@ -93,8 +104,13 @@ class DashboardTemplate extends Record
 
         foreach ($userIdList as $userId) {
             $preferences = $this->getEntityManager()->fetchEntity('Preferences', $userId);
-            if (!$preferences) continue;
+
+            if (!$preferences) {
+                continue;
+            }
+
             $this->applyLayout($preferences, $template, $append);
+
             $this->getEntityManager()->saveEntity($preferences);
         }
 
@@ -104,19 +120,35 @@ class DashboardTemplate extends Record
     public function deployToTeam(string $id, string $teamId, bool $append = false)
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
-        if (!$template) throw new NotFound();
+
+        if (!$template) {
+            throw new NotFound();
+        }
 
         $team = $this->getEntityManager()->fetchEntity('Team', $teamId);
-        if (!$team) throw new NotFound();
 
-        $userList = $this->getEntityManager()->getRepository('User')->join('teams')->distinct()->where([
-            'teams.id' => $teamId,
-        ])->find();
+        if (!$team) {
+            throw new NotFound();
+        }
+
+        $userList = $this->getEntityManager()
+            ->getRepository('User')
+            ->join('teams')
+            ->distinct()
+            ->where([
+                'teams.id' => $teamId,
+            ])
+            ->find();
 
         foreach ($userList as $user) {
             $preferences = $this->getEntityManager()->fetchEntity('Preferences', $user->id);
-            if (!$preferences) continue;
+
+            if (!$preferences) {
+                continue;
+            }
+
             $this->applyLayout($preferences, $template, $append);
+
             $this->getEntityManager()->saveEntity($preferences);
         }
 

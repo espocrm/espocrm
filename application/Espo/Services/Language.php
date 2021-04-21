@@ -40,8 +40,11 @@ use Espo\Entities\User;
 class Language
 {
     protected $metadata;
+
     protected $acl;
+
     protected $user;
+
     protected $container;
 
     public function __construct(
@@ -71,9 +74,11 @@ class Language
     {
         if ($default) {
             $languageObj = $this->getDefaultLanguage();
-        } else {
+        }
+        else {
             $languageObj = $this->getLanguage();
         }
+
         $data = $languageObj->getAll();
 
         if ($this->user->isSystem()) {
@@ -85,9 +90,13 @@ class Language
             unset($data['Global']['options']);
 
             foreach ($data as $k => $item) {
-                if (in_array($k, ['Global', 'User', 'Campaign'])) continue;
+                if (in_array($k, ['Global', 'User', 'Campaign'])) {
+                    continue;
+                }
+
                 unset($data[$k]);
             }
+
             unset($data['User']['fields']);
             unset($data['User']['links']);
             unset($data['User']['options']);
@@ -101,24 +110,41 @@ class Language
             unset($data['Campaign']['options']);
             unset($data['Campaign']['tooltips']);
             unset($data['Campaign']['presetFilters']);
-        } else {
+        }
+        else {
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
 
             foreach ($scopeList as $scope) {
-                if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
-                if ($this->metadata->get(['entityAcl', $scope, 'languageAclDisabled'])) continue;
+                if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
+                    continue;
+                }
+
+                if ($this->metadata->get(['entityAcl', $scope, 'languageAclDisabled'])) {
+                    continue;
+                }
 
                 if (!$this->acl->check($scope)) {
                     unset($data[$scope]);
                     unset($data['Global']['scopeNames'][$scope]);
                     unset($data['Global']['scopeNamesPlural'][$scope]);
-                } else {
-                    if (in_array($scope, ['EmailAccount', 'InboundEmail'])) continue;
+                }
+                else {
+                    if (in_array($scope, ['EmailAccount', 'InboundEmail'])) {
+                        continue;
+                    }
 
                     foreach ($this->acl->getScopeForbiddenFieldList($scope) as $field) {
-                        if (isset($data[$scope]['fields'])) unset($data[$scope]['fields'][$field]);
-                        if (isset($data[$scope]['options'])) unset($data[$scope]['options'][$field]);
-                        if (isset($data[$scope]['links'])) unset($data[$scope]['links'][$field]);
+                        if (isset($data[$scope]['fields'])) {
+                            unset($data[$scope]['fields'][$field]);
+                        }
+
+                        if (isset($data[$scope]['options'])) {
+                            unset($data[$scope]['options'][$field]);
+                        }
+
+                        if (isset($data[$scope]['links'])) {
+                            unset($data[$scope]['links'][$field]);
+                        }
                     }
                 }
             }
@@ -139,7 +165,8 @@ class Language
                 ];
                 $data['Admin'] = [
                     'messages' => [
-                        'userHasNoEmailAddress' => $languageObj->translate('userHasNoEmailAddress', 'messages', 'Admin'),
+                        'userHasNoEmailAddress' => $languageObj
+                            ->translate('userHasNoEmailAddress', 'messages', 'Admin'),
                     ],
                 ];
 
@@ -148,16 +175,26 @@ class Language
 
                     $aclScope = $item['scope'] ?? null;;
                     $aclField = $item['field'] ?? null;
-                    if (!$aclScope) continue;
-                    if (!$this->acl->check($aclScope)) continue;
-                    if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) continue;
+
+                    if (!$aclScope) {
+                        continue;
+                    }
+                    if (!$this->acl->check($aclScope)) {
+                        continue;
+                    }
+
+                    if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) {
+                        continue;
+                    }
 
                     $pointer =& $data;
+
                     foreach ($targetArr as $i => $k) {
                         if ($i === count($targetArr) - 1) {
                             $pointer[$k] = $languageObj->get($targetArr);
                             break;
                         }
+
                         if (!isset($pointer[$k])) {
                             $pointer[$k] = [];
                         }

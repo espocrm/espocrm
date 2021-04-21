@@ -196,7 +196,7 @@ class EmailAddress extends Record
         }
     }
 
-    public function searchInAddressBook(string $query, int $limit, bool $onlyActual = false) : array
+    public function searchInAddressBook(string $query, int $limit, bool $onlyActual = false): array
     {
         $result = [];
 

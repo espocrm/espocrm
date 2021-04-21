@@ -57,16 +57,27 @@ use Throwable;
 class App
 {
     protected $config;
+
     protected $entityManager;
+
     protected $metadata;
+
     protected $acl;
+
     protected $aclManager;
+
     protected $dataManager;
+
     protected $selectBuilderFactory;
+
     protected $injectableFactory;
+
     protected $serviceFactory;
+
     protected $user;
+
     protected $preferences;
+
     protected $fieldUtil;
 
     public function __construct(
@@ -117,7 +128,8 @@ class App
         $settings = $this->serviceFactory->create('Settings')->getConfigData();
 
         if ($user->get('dashboardTemplateId')) {
-            $dashboardTemplate = $this->entityManager->getEntity('DashboardTemplate', $user->get('dashboardTemplateId'));
+            $dashboardTemplate = $this->entityManager
+                ->getEntity('DashboardTemplate', $user->get('dashboardTemplateId'));
 
             if ($dashboardTemplate) {
                 $settings->forcedDashletsOptions = $dashboardTemplate->get('dashletsOptions') ?? (object) [];
@@ -130,7 +142,9 @@ class App
         $auth2FARequired = false;
 
         if (
-            $user->isRegular() && $this->config->get('auth2FA') && $this->config->get('auth2FAForced') &&
+            $user->isRegular() &&
+            $this->config->get('auth2FA') &&
+            $this->config->get('auth2FAForced') &&
             !$user->get('auth2FA')
         ) {
             $auth2FARequired = true;
@@ -395,7 +409,10 @@ class App
             if ($this->metadata->get(['scopes', $scope, 'disabled'])) continue;
 
             $seed = $this->entityManager->getEntity($scope);
-            if (!$seed) continue;
+
+            if (!$seed) {
+                continue;
+            }
 
             $attributeList = [];
 
@@ -403,6 +420,7 @@ class App
                 if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
                 if (!$seed->getAttributeParam($attribute, 'storeArrayValues')) continue;
                 if ($seed->getAttributeParam($attribute, 'notStorable')) continue;
+
                 $attributeList[] = $attribute;
             }
             $select = ['id'];

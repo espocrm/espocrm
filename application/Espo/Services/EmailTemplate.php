@@ -65,7 +65,7 @@ class EmailTemplate extends Record implements
         array $params = [],
         $copyAttachments = false,
         $skipAcl = false
-    ) : array {
+    ): array {
 
         $entityHash = [];
 
@@ -224,7 +224,7 @@ class EmailTemplate extends Record implements
         bool $skipLinks = false,
         ?string $prefixLink = null,
         bool $skipAcl = false
-    ) : string {
+    ): string {
 
         $attributeList = array_keys($entity->getAttributes());
 
@@ -339,7 +339,7 @@ class EmailTemplate extends Record implements
         return $text;
     }
 
-    public function formatAttributeValue(Entity $entity, string $attribute) : ?string
+    public function formatAttributeValue(Entity $entity, string $attribute): ?string
     {
         $value = $entity->get($attribute);
 
@@ -440,7 +440,7 @@ class EmailTemplate extends Record implements
         return $value;
     }
 
-    public function getInsertFieldData(array $params) : StdClass
+    public function getInsertFieldData(array $params): StdClass
     {
         $to = $params['to'] ?? null;
         $parentId = $params['parentId'] ?? null;

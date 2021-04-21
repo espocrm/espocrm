@@ -67,7 +67,7 @@ class Integration
         }
     }
 
-    public function read(string $id) : Entity
+    public function read(string $id): Entity
     {
         $this->processAccessCheck();
 
@@ -80,7 +80,7 @@ class Integration
         return $entity;
     }
 
-    public function update(string $id, StdClass $data) : Entity
+    public function update(string $id, StdClass $data): Entity
     {
         $this->processAccessCheck();
 
@@ -99,7 +99,7 @@ class Integration
         if (!($integrationsConfigData instanceof StdClass)) {
             $integrationsConfigData = (object) [];
         }
-        
+
         $integrationName = $id;
 
         $integrationsConfigData->$integrationName = $entity->get('enabled');

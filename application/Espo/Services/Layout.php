@@ -47,11 +47,17 @@ use Espo\{
 class Layout
 {
     protected $acl;
+
     protected $layout;
+
     protected $layoutManager;
+
     protected $entityManager;
+
     protected $metadata;
+
     protected $dataManager;
+
     protected $user;
 
     public function __construct(
@@ -174,7 +180,8 @@ class Layout
                             $link = $item->name ?? null;
                         }
 
-                        $foreignEntityType = $this->metadata->get(['entityDefs', $scope, 'links', $link, 'entity']);
+                        $foreignEntityType = $this->metadata
+                            ->get(['entityDefs', $scope, 'links', $link, 'entity']);
 
                         if ($foreignEntityType) {
                             if (!$this->acl->check($foreignEntityType)) {

@@ -54,6 +54,7 @@ class GlobalSearch implements
     use Di\ConfigSetter;
 
     protected $fullTextSearchDataComposerFactory;
+
     protected $selectBuilderFactory;
 
     public function __construct(
@@ -145,8 +146,13 @@ class GlobalSearch implements
     }
 
     protected function getEntityTypeQuery(
-        string $entityType, int $i, string $filter, int $offset, int $maxSize, bool &$hasFullTextSearch
-    ) : ?Select {
+        string $entityType,
+        int $i,
+        string $filter,
+        int $offset,
+        int $maxSize,
+        bool &$hasFullTextSearch
+    ): ?Select {
 
         if (!$this->acl->checkScope($entityType, 'read')) {
             return null;

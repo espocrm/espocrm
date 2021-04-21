@@ -44,6 +44,7 @@ use Espo\Core\{
     Exceptions\BadRequest,
     Di,
     Select\Where\Item as WhereItem,
+    Mail\Sender,
 };
 
 use Exception;
@@ -106,7 +107,7 @@ class Email extends Record implements
         return $this->crypt;
     }
 
-    public function getUserSmtpParams(string $userId) : ?array
+    public function getUserSmtpParams(string $userId): ?array
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
         if (!$user) return null;
@@ -389,7 +390,7 @@ class Email extends Record implements
         }
     }
 
-    public function create(StdClass $data) : Entity
+    public function create(StdClass $data): Entity
     {
         $entity = parent::create($data);
 
@@ -403,7 +404,8 @@ class Email extends Record implements
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         if ($entity->get('status') == 'Sending') {
-            $messageId = \Espo\Core\Mail\Sender::generateMessageId($entity);
+            $messageId = Sender::generateMessageId($entity);
+
             $entity->set('messageId', '<' . $messageId . '>');
         }
     }
@@ -448,7 +450,7 @@ class Email extends Record implements
         $this->getEntityManager()->getRepository('Email')->loadReplyToField($entity);
     }
 
-    public function getEntity(?string $id = null) : ?Entity
+    public function getEntity(?string $id = null): ?Entity
     {
         $entity = parent::getEntity($id);
 
@@ -725,7 +727,7 @@ class Email extends Record implements
         return true;
     }
 
-    static public function parseFromName(?string $string) : string
+    static public function parseFromName(?string $string): string
     {
         $fromName = '';
 
@@ -738,7 +740,7 @@ class Email extends Record implements
         return $fromName;
     }
 
-    static public function parseFromAddress(?string $string) : string
+    static public function parseFromAddress(?string $string): string
     {
         $fromAddress = '';
 
@@ -1027,7 +1029,8 @@ class Email extends Record implements
         }
 
         if ($entity->get('status') == 'Sending') {
-            $messageId = \Espo\Core\Mail\Sender::generateMessageId($entity);
+            $messageId = Sender::generateMessageId($entity);
+
             $entity->set('messageId', '<' . $messageId . '>');
         }
     }
@@ -1087,12 +1090,12 @@ class Email extends Record implements
         return $data;
     }
 
-    public function isPermittedAssignedUser(Entity $entity) : bool
+    public function isPermittedAssignedUser(Entity $entity): bool
     {
         return true;
     }
 
-    public function isPermittedAssignedUsers(Entity $entity) : bool
+    public function isPermittedAssignedUsers(Entity $entity): bool
     {
         return true;
     }

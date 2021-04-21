@@ -56,13 +56,15 @@ class Notification extends \Espo\Services\Record implements
     public function notifyAboutMentionInPost(string $userId, string $noteId)
     {
         $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set(array(
+
+        $notification->set([
             'type' => 'MentionInPost',
-            'data' => array('noteId' => $noteId),
+            'data' => ['noteId' => $noteId],
             'userId' => $userId,
             'relatedId' => $noteId,
-            'relatedType' => 'Note'
-        ));
+            'relatedType' => 'Note',
+        ]);
+
         $this->getEntityManager()->saveEntity($notification);
     }
 
@@ -71,16 +73,21 @@ class Notification extends \Espo\Services\Record implements
         $data = ['noteId' => $note->id];
 
         $related = null;
+
         if ($note->get('relatedType') == 'Email') {
-            $related = $this->getEntityManager()->getRepository('Email')
-                ->select(['id', 'sentById', 'createdById'])->where(['id' => $note->get('relatedId')])->findOne();
+            $related = $this->getEntityManager()
+                ->getRepository('Email')
+                ->select(['id', 'sentById', 'createdById'])
+                ->where(['id' => $note->get('relatedId')])
+                ->findOne();
         }
 
         $now = date('Y-m-d H:i:s');
 
         $collection = $this->entityManager->createCollection();
 
-        $userList = $this->getEntityManager()->getRepository('User')
+        $userList = $this->getEntityManager()
+            ->getRepository('User')
             ->select(['id', 'type'])
             ->where([
                 'isActive' => true,
@@ -94,11 +101,20 @@ class Notification extends \Espo\Services\Record implements
                 continue;
             }
 
-            if ($note->get('createdById') === $user->id) continue;
-            if ($related && $related->getEntityType() == 'Email' && $related->get('sentById') == $user->id) continue;
-            if ($related && $related->get('createdById') == $user->id) continue;
+            if ($note->get('createdById') === $user->id) {
+                continue;
+            }
+
+            if ($related && $related->getEntityType() == 'Email' && $related->get('sentById') == $user->id) {
+                continue;
+            }
+
+            if ($related && $related->get('createdById') == $user->id) {
+                continue;
+            }
 
             $notification = $this->entityManager->getEntity('Notification');
+
             $notification->set([
                 'id' => Util::generateId(),
                 'data' => $data,
@@ -134,8 +150,10 @@ class Notification extends \Espo\Services\Record implements
                 if ($note->get('relatedType') === 'Email' && $note->get('parentType') === 'Case') {
                     return true;
                 }
+
                 return false;
             }
+
             return true;
         }
 
@@ -204,14 +222,17 @@ class Notification extends \Espo\Services\Record implements
         }
 
         $ignoreScopeList = $this->getIgnoreScopeList();
+
         if (!empty($ignoreScopeList)) {
             $where = [];
+
             $where[] = [
                 'OR' => [
                     'relatedParentType' => null,
                     'relatedParentType!=' => $ignoreScopeList
                 ]
             ];
+
             $whereClause[] = $where;
         }
 
@@ -232,26 +253,35 @@ class Notification extends \Espo\Services\Record implements
         $ids = [];
         foreach ($collection as $k => $entity) {
             $ids[] = $entity->id;
+
             $data = $entity->get('data');
+
             if (empty($data)) {
                 continue;
             }
+
             switch ($entity->get('type')) {
                 case 'Note':
                 case 'MentionInPost':
                     $note = $this->getEntityManager()->getEntity('Note', $data->noteId);
+
                     if ($note) {
                         if ($note->get('parentId') && $note->get('parentType')) {
-                            $parent = $this->getEntityManager()->getEntity($note->get('parentType'), $note->get('parentId'));
+                            $parent = $this->getEntityManager()
+                                ->getEntity($note->get('parentType'), $note->get('parentId'));
+
                             if ($parent) {
                                 $note->set('parentName', $parent->get('name'));
                             }
-                        } else {
+                        }
+                        else {
                             if (!$note->get('isGlobal')) {
                                 $targetType = $note->get('targetType');
+
                                 if (!$targetType || $targetType === 'users') {
                                     $note->loadLinkMultipleField('users');
                                 }
+
                                 if ($targetType !== 'users') {
                                     if (!$targetType || $targetType === 'teams') {
                                         $note->loadLinkMultipleField('teams');
@@ -261,25 +291,35 @@ class Notification extends \Espo\Services\Record implements
                                 }
                             }
                         }
+
                         if ($note->get('relatedId') && $note->get('relatedType')) {
-                            $related = $this->getEntityManager()->getEntity($note->get('relatedType'), $note->get('relatedId'));
+                            $related = $this->getEntityManager()
+                                ->getEntity($note->get('relatedType'), $note->get('relatedId'));
+
                             if ($related) {
                                 $note->set('relatedName', $related->get('name'));
                             }
                         }
+
                         $note->loadLinkMultipleField('attachments');
+
                         $entity->set('noteData', $note->toArray());
-                    } else {
+                    }
+                    else {
                         unset($collection[$k]);
+
                         $count--;
+
                         $this->getEntityManager()->removeEntity($entity);
                     }
+
                     break;
             }
         }
 
         if (!empty($ids)) {
-            $update = $this->entityManager->getQueryBuilder()
+            $update = $this->entityManager
+                ->getQueryBuilder()
                 ->update()
                 ->in('Notification')
                 ->set(['read' => true])
@@ -287,6 +327,7 @@ class Notification extends \Espo\Services\Record implements
                     'id' => $ids,
                 ])
                 ->build();
+
             $this->entityManager->getQueryExecutor()->execute($update);
         }
 
@@ -298,8 +339,14 @@ class Notification extends \Espo\Services\Record implements
         $ignoreScopeList = [];
         $scopes = $this->getMetadata()->get('scopes', []);
         foreach ($scopes as $scope => $d) {
-            if (empty($d['entity']) || !$d['entity']) continue;
-            if (empty($d['object']) || !$d['object']) continue;
+            if (empty($d['entity']) || !$d['entity']) {
+                continue;
+            }
+
+            if (empty($d['object']) || !$d['object']) {
+                continue;
+            }
+
             if (!$this->getAcl()->checkScope($scope)) {
                 $ignoreScopeList[] = $scope;
             }

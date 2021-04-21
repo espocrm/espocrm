@@ -94,7 +94,7 @@ class Settings
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function getConfigData() : StdClass
+    public function getConfigData(): StdClass
     {
         $data = $this->config->getAllData();
 
@@ -209,7 +209,7 @@ class Settings
         return $data;
     }
 
-    public function setConfigData(StdClass $data) : void
+    public function setConfigData(StdClass $data): void
     {
         $user = $this->applicationState->getUser();
 
@@ -266,12 +266,12 @@ class Settings
         }
     }
 
-    protected function populateDatabaseWithCurrencyRates() : void
+    protected function populateDatabaseWithCurrencyRates(): void
     {
         $this->injectableFactory->create(CurrencyDatabasePopulator::class)->process();
     }
 
-    protected function filterData(StdCLass $data) : void
+    protected function filterData(StdCLass $data): void
     {
         $user = $this->applicationState->getUser();
 
@@ -298,7 +298,7 @@ class Settings
         }
     }
 
-    public function getAdminOnlyItemList() : array
+    public function getAdminOnlyItemList(): array
     {
         $itemList = $this->config->getAdminOnlyItemList();
 
@@ -314,7 +314,7 @@ class Settings
         return $itemList;
     }
 
-    public function getUserOnlyItemList() : array
+    public function getUserOnlyItemList(): array
     {
         $itemList = $this->config->getUserOnlyItemList();
 
@@ -331,7 +331,7 @@ class Settings
         return $itemList;
     }
 
-    public function getSystemOnlyItemList() : array
+    public function getSystemOnlyItemList(): array
     {
         $itemList = $this->config->getSystemOnlyItemList();
 
@@ -348,7 +348,7 @@ class Settings
         return $itemList;
     }
 
-    public function getGlobalItemList() : array
+    public function getGlobalItemList(): array
     {
         $itemList = $this->config->get('globalItems', []);
 
@@ -365,7 +365,7 @@ class Settings
         return $itemList;
     }
 
-    protected function processValidation(Entity $entity, StdClass $data) : void
+    protected function processValidation(Entity $entity, StdClass $data): void
     {
         $this->fieldValidationManager->process($entity, $data);
     }

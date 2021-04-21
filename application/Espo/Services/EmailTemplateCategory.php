@@ -32,5 +32,4 @@ namespace Espo\Services;
 class EmailTemplateCategory extends \Espo\Services\RecordTree
 {
     protected $categoryField = 'category';
-
 }

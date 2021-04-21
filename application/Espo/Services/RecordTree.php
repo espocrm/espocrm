@@ -38,6 +38,8 @@ use Espo\Core\{
     Select\Where\Item as WhereItem,
 };
 
+use StdClass;
+
 class RecordTree extends Record
 {
     const MAX_DEPTH = 2;
@@ -117,7 +119,7 @@ class RecordTree extends Record
         }
     }
 
-    protected function checkItemIsEmpty(Entity $entity) : bool
+    protected function checkItemIsEmpty(Entity $entity): bool
     {
         if (!$this->categoryField) {
             return false;
@@ -189,16 +191,18 @@ class RecordTree extends Record
 
         if (!empty($data->parentId)) {
             $parent = $this->getEntityManager()->getEntity($this->getEntityType(), $data->parentId);
+
             if (!$parent) {
                 throw new Error("Tried to create tree item entity with not existing parent.");
             }
+
             if (!$this->getAcl()->check($parent, 'edit')) {
                 throw new Forbidden();
             }
         }
     }
 
-    public function update(string $id, \StdClass $data) : Entity
+    public function update(string $id, StdClass $data): Entity
     {
         if (!empty($data->parentId) && $data->parentId == $id) {
             throw new Forbidden();
@@ -207,7 +211,7 @@ class RecordTree extends Record
         return parent::update($id, $data);
     }
 
-    public function link(string $id, string $link, string $foreignId) : void
+    public function link(string $id, string $link, string $foreignId): void
     {
         if ($id == $foreignId ) {
             throw new Forbidden();
@@ -216,7 +220,7 @@ class RecordTree extends Record
         parent::link($id, $link, $foreignId);
     }
 
-    public function getLastChildrenIdList(?string $parentId = null) : array
+    public function getLastChildrenIdList(?string $parentId = null): array
     {
         $query = $this->selectBuilderFactory
             ->create()

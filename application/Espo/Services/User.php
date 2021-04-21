@@ -70,7 +70,7 @@ class User extends Record implements
 
     protected $allowedUserTypeList = ['regular', 'admin', 'portal', 'api'];
 
-    public function getEntity(?string $id = null) : Entity
+    public function getEntity(?string $id = null): Entity
     {
         if (isset($id) && $id == 'system') {
             throw new Forbidden();
@@ -137,7 +137,7 @@ class User extends Record implements
         return true;
     }
 
-    public function checkPasswordStrength(string $password) : bool
+    public function checkPasswordStrength(string $password): bool
     {
         $minLength = $this->getConfig()->get('passwordStrengthLength');
 
@@ -211,7 +211,7 @@ class User extends Record implements
         return true;
     }
 
-    public function changePasswordByRequest(string $requestId, string $password) : StdClass
+    public function changePasswordByRequest(string $requestId, string $password): StdClass
     {
         $recovery = $this->injectableFactory->create(Recovery::class);
 
@@ -271,7 +271,7 @@ class User extends Record implements
         }
     }
 
-    public function create(StdClass $data) : Entity
+    public function create(StdClass $data): Entity
     {
         $newPassword = null;
 
@@ -299,7 +299,7 @@ class User extends Record implements
         return $user;
     }
 
-    public function update(string $id, StdClass $data) : Entity
+    public function update(string $id, StdClass $data): Entity
     {
         if ($id == 'system') {
             throw new Forbidden();
@@ -354,14 +354,14 @@ class User extends Record implements
         }
     }
 
-    protected function getSecretKeyForUserId(string $id) : ?string
+    protected function getSecretKeyForUserId(string $id): ?string
     {
         $apiKeyUtil = $this->injectableFactory->create(ApiKeyUtil::class);
 
         return $apiKeyUtil->getSecretKeyForUserId($id);
     }
 
-    public function generateNewApiKeyForEntity(string $id) : Entity
+    public function generateNewApiKeyForEntity(string $id): Entity
     {
         $entity = $this->getEntity($id);
 
@@ -704,7 +704,7 @@ class User extends Record implements
         $sender->send($email);
     }
 
-    public function delete(string $id) : void
+    public function delete(string $id): void
     {
         if ($id == 'system') {
             throw new Forbidden();

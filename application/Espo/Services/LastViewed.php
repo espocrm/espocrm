@@ -42,8 +42,11 @@ use Espo\Entities\User;
 class LastViewed
 {
     protected $serviceFactory;
+
     protected $metadata;
+
     protected $entityManager;
+
     protected $user;
 
     public function __construct(
@@ -58,7 +61,7 @@ class LastViewed
         $this->user = $user;
     }
 
-    public function getList($params) : object
+    public function getList($params): object
     {
         $repository = $this->entityManager->getRepository('ActionHistoryRecord');
 
@@ -93,8 +96,10 @@ class LastViewed
 
         if ($maxSize && count($collection) > $maxSize) {
             $total = -1;
+
             unset($collection[count($collection) - 1]);
-        } else {
+        }
+        else {
             $total = -2;
         }
 

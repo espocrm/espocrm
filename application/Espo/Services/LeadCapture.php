@@ -117,7 +117,7 @@ class LeadCapture extends Record
         $entity->set('apiKey', $apiKey);
     }
 
-    public function generateNewApiKeyForEntity(string $id) : Entity
+    public function generateNewApiKeyForEntity(string $id): Entity
     {
         $entity = $this->getEntity($id);
 
@@ -136,12 +136,12 @@ class LeadCapture extends Record
         return $entity;
     }
 
-    public function generateApiKey() : string
+    public function generateApiKey(): string
     {
         return Util::generateApiKey();
     }
 
-    public function isApiKeyValid(string $apiKey) : bool
+    public function isApiKeyValid(string $apiKey): bool
     {
         $leadCapture = $this->getEntityManager()
             ->getRepository('LeadCapture')
@@ -157,7 +157,7 @@ class LeadCapture extends Record
         return false;
     }
 
-    protected function createTool() : Tool
+    protected function createTool(): Tool
     {
         return $this->injectableFactory->create(Tool::class);
     }
@@ -176,7 +176,7 @@ class LeadCapture extends Record
         $this->createTool()->sendOptInConfirmation($data->id);
     }
 
-    public function confirmOptIn(string $id) : StdClass
+    public function confirmOptIn(string $id): StdClass
     {
         return $this->createTool()->confirmOptIn($id);
     }

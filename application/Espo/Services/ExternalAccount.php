@@ -31,11 +31,16 @@ namespace Espo\Services;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\ExternalAccount\Clients\OAuth2Abstract;
+use Espo\Core\ExternalAccount\ClientManager;
+
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\Di;
+
+use Exception;
 
 class ExternalAccount extends Record implements Di\HookManagerAware
 {
@@ -48,15 +53,20 @@ class ExternalAccount extends Record implements Di\HookManagerAware
         if (!$integrationEntity) {
             throw new NotFound();
         }
+
         $d = $integrationEntity->toArray();
 
         if (!$integrationEntity->get('enabled')) {
             throw new Error("{$integration} is disabled.");
         }
 
-        $factory = new \Espo\Core\ExternalAccount\ClientManager(
-            $this->getEntityManager(), $this->getMetadata(), $this->getConfig(), $this->getInjection('injectableFactory')
+        $factory = new ClientManager(
+            $this->getEntityManager(),
+            $this->getMetadata(),
+            $this->getConfig(),
+            $this->getInjection('injectableFactory')
         );
+
         return $factory->create($integration, $id);
     }
 
@@ -68,12 +78,15 @@ class ExternalAccount extends Record implements Di\HookManagerAware
     public function ping(string $integration, string $userId)
     {
         $entity = $this->getExternalAccountEntity($integration, $userId);
+
         try {
             $client = $this->getClient($integration, $userId);
+
             if ($client) {
                 return $client->ping();
             }
-        } catch (\Exception $e) {}
+        }
+        catch (Exception $e) {}
 
         return false;
     }
@@ -81,39 +94,50 @@ class ExternalAccount extends Record implements Di\HookManagerAware
     public function authorizationCode(string $integration, string $userId, string $code)
     {
         $entity = $this->getExternalAccountEntity($integration, $userId);
+
         if (!$entity) {
             throw new NotFound();
         }
+
         $entity->set('enabled', true);
+
         $this->getEntityManager()->saveEntity($entity);
 
         $client = $this->getClient($integration, $userId);
-        if ($client instanceof \Espo\Core\ExternalAccount\Clients\OAuth2Abstract) {
+
+        if ($client instanceof OAuth2Abstract) {
             $result = $client->getAccessTokenFromAuthorizationCode($code);
+
             if (!empty($result) && !empty($result['accessToken'])) {
                 $entity->clear('accessToken');
                 $entity->clear('refreshToken');
                 $entity->clear('tokenType');
                 $entity->clear('expiresAt');
+
                 foreach ($result as $name => $value) {
                     $entity->set($name, $value);
                 }
+
                 $this->getEntityManager()->saveEntity($entity);
+
                 $this->hookManager->process('ExternalAccount', 'afterConnect', $entity, [
                     'integration' => $integration,
                     'userId' => $userId,
                     'code' => $code,
                 ]);
+
                 return true;
-            } else {
+            }
+            else {
                 throw new Error("Could not get access token for {$integration}.");
             }
-        } else {
+        }
+        else {
             throw new Error("Could not load client for {$integration}.");
         }
     }
 
-    public function read(string $id) : Entity
+    public function read(string $id): Entity
     {
         list($integration, $userId) = explode('__', $id);
 
@@ -123,12 +147,14 @@ class ExternalAccount extends Record implements Di\HookManagerAware
 
         $entity = $this->getEntityManager()->getEntity('ExternalAccount', $id);
 
-        if (!$entity) throw new NotFoundSilent("Record does not exist.");
+        if (!$entity) {
+            throw new NotFoundSilent("Record does not exist.");
+        }
 
         list($integration, $id) = explode('__', $entity->id);
 
-        $externalAccountSecretAttributeList = $this->getMetadata()->get(
-            ['integrations', $integration, 'externalAccountSecretAttributeList']) ?? [];
+        $externalAccountSecretAttributeList = $this->getMetadata()
+            ->get(['integrations', $integration, 'externalAccountSecretAttributeList']) ?? [];
 
         foreach ($externalAccountSecretAttributeList as $a) {
             $entity->clear($a);

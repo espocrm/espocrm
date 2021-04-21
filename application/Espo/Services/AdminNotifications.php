@@ -171,8 +171,10 @@ class AdminNotifications implements
     }
 
     protected function getLatestRelease(
-        ?string $url = null, array $requestData = [], string $urlPath = 'release/latest'
-    ) : ?array {
+        ?string $url = null,
+        array $requestData = [],
+        string $urlPath = 'release/latest'
+    ): ?array {
 
         if (!function_exists('curl_version')) {
             return null;

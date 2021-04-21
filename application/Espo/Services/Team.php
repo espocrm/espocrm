@@ -58,7 +58,7 @@ class Team extends Record implements
         $this->dataManager->updateCacheTimestamp();
     }
 
-    public function link(string $id, string $link, string $foreignId) : void
+    public function link(string $id, string $link, string $foreignId): void
     {
         parent::link($id, $link, $foreignId);
 
@@ -70,7 +70,7 @@ class Team extends Record implements
         }
     }
 
-    public function unlink(string $id, string $link, string $foreignId) : void
+    public function unlink(string $id, string $link, string $foreignId): void
     {
         parent::unlink($id, $link, $foreignId);
 

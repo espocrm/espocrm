@@ -952,7 +952,7 @@ class InboundEmail extends RecordService implements
         return;
     }
 
-    protected function processBouncedMessage($message) : bool
+    protected function processBouncedMessage($message): bool
     {
         $content = $message->getRawContent();
 
@@ -1030,7 +1030,7 @@ class InboundEmail extends RecordService implements
         return $this->campaignService;
     }
 
-    public function findAccountForSending(string $emailAddress) : ?InboundEmailEntity
+    public function findAccountForSending(string $emailAddress): ?InboundEmailEntity
     {
         $inboundEmail = $this->getEntityManager()
             ->getRepository('InboundEmail')
@@ -1162,7 +1162,7 @@ class InboundEmail extends RecordService implements
         $storage->appendMessage($message->toString(), $folder);
     }
 
-    public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount) : ?array
+    public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array
     {
         $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
@@ -1219,7 +1219,7 @@ class InboundEmail extends RecordService implements
         }
     }
 
-    private function getNotificator() : AssignmentNotificator
+    private function getNotificator(): AssignmentNotificator
     {
         if (!$this->notificator) {
             $factory = $this->injectableFactory->create(AssignmentNotificatorFactory::class);

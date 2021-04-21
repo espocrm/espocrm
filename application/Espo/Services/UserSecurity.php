@@ -52,10 +52,15 @@ use StdClass;
 class UserSecurity
 {
     protected $entityManager;
+
     protected $user;
+
     protected $metadata;
+
     protected $config;
+
     protected $authLoginFactory;
+
     protected $auth2FAUserFactory;
 
     public function __construct(
@@ -74,7 +79,7 @@ class UserSecurity
         $this->auth2FAUserFactory = $auth2FAUserFactory;
     }
 
-    public function read(string $id) : StdClass
+    public function read(string $id): StdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->id) {
             throw new Forbidden();
@@ -98,7 +103,7 @@ class UserSecurity
         ];
     }
 
-    public function generate2FAData(string $id, StdClass $data) : StdClass
+    public function generate2FAData(string $id, StdClass $data): StdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->id) {
             throw new Forbidden();
@@ -153,7 +158,7 @@ class UserSecurity
         return $generatedData;
     }
 
-    public function update(string $id, StdClass $data) : StdClass
+    public function update(string $id, StdClass $data): StdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->id) {
             throw new Forbidden();

@@ -57,7 +57,7 @@ class Attachment extends Record
         'image/webp',
     ];
 
-    public function upload($fileData) : Entity
+    public function upload($fileData): Entity
     {
         if (!$this->getAcl()->checkScope('Attachment', 'create')) {
             throw new Forbidden();
@@ -99,7 +99,7 @@ class Attachment extends Record
         unset($data->relatedType);
     }
 
-    public function filterCreateInput(StdClass $data) : void
+    public function filterCreateInput(StdClass $data): void
     {
         parent::filterCreateInput($data);
 
@@ -456,7 +456,7 @@ class Attachment extends Record
         ];
     }
 
-    public function getFileData(string $id) : StdClass
+    public function getFileData(string $id): StdClass
     {
         $attachment = $this->getEntity($id);
 

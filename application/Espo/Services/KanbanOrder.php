@@ -43,9 +43,13 @@ use Espo\{
 class KanbanOrder
 {
     protected $orderer;
+
     protected $acl;
+
     protected $user;
+
     protected $config;
+
     protected $serviceFactory;
 
     public function __construct(Orderer $orderer, Acl $acl, User $user, Config $config)

@@ -39,7 +39,9 @@ use Espo\Entities\User;
 class Metadata
 {
     protected $acl;
+
     protected $metadata;
+
     protected $user;
 
     public function __construct(Acl $acl, MetadataUtil $metadata, User $user) {
@@ -54,9 +56,16 @@ class Metadata
 
         if (!$this->user->isAdmin()) {
             $scopeList = array_keys($this->metadata->get(['scopes'], []));
+
             foreach ($scopeList as $scope) {
-                if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
-                if (in_array($scope, ['Reminder'])) continue;
+                if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
+                    continue;
+                }
+
+                if (in_array($scope, ['Reminder'])) {
+                    continue;
+                }
+
                 if (!$this->acl->check($scope)) {
                     unset($data->entityDefs->$scope);
                     unset($data->clientDefs->$scope);
@@ -66,6 +75,7 @@ class Metadata
             }
 
             $entityTypeList = array_keys(get_object_vars($data->entityDefs));
+
             foreach ($entityTypeList as $entityType) {
                 $linksDefs = $this->metadata->get(['entityDefs', $entityType, 'links'], []);
 
@@ -74,28 +84,35 @@ class Metadata
                 foreach ($linksDefs as $link => $defs) {
                     $type = $defs['type'] ?? null;
 
-                    $hasField = !!$this->metadata->get(['entityDefs', $entityType, 'fields', $link]);
+                    $hasField = (bool) $this->metadata->get(['entityDefs', $entityType, 'fields', $link]);
 
                     if ($type === 'belongsToParent') {
                         if ($hasField) {
-                            $parentEntityList = $this->metadata->get(['entityDefs', $entityType, 'fields', $link, 'entityList']);
+                            $parentEntityList = $this->metadata
+                                ->get(['entityDefs', $entityType, 'fields', $link, 'entityList']);
+
                             if (is_array($parentEntityList)) {
                                 foreach ($parentEntityList as $i => $e) {
                                     if (!$this->acl->check($e)) {
                                         unset($parentEntityList[$i]);
                                     }
                                 }
+
                                 $parentEntityList = array_values($parentEntityList);
+
                                 $data->entityDefs->$entityType->fields->$link->entityList = $parentEntityList;
                             }
                         }
+
                         continue;
                     }
 
                     $foreignEntityType = $defs['entity'] ?? null;
 
                     if ($foreignEntityType) {
-                        if ($this->acl->check($foreignEntityType)) continue;
+                        if ($this->acl->check($foreignEntityType)) {
+                            continue;
+                        }
 
                         if ($this->user->isPortal()) {
                             if ($foreignEntityType === 'Account' || $foreignEntityType === 'Contact') {
@@ -108,6 +125,7 @@ class Metadata
                         if (!in_array($link, $fobiddenFieldList)) {
                             continue;
                         }
+
                         unset($data->entityDefs->$entityType->fields->$link);
                     }
 
@@ -131,6 +149,7 @@ class Metadata
 
             foreach ($dashletList as $item) {
                 $aclScope = $this->metadata->get(['dashlets', $item, 'aclScope']);
+
                 if ($aclScope && !$this->acl->check($aclScope)) {
                     unset($data->dashlets->$item);
                 }
@@ -145,29 +164,45 @@ class Metadata
                 if (is_string($item)) {
                     $depArr = explode('.', $item);
                     $pointer = $data;
+
                     foreach ($depArr as $k) {
                         if (!isset($pointer->$k)) {
                             continue 2;
                         }
+
                         $pointer = $pointer->$k;
                     }
-                } else if (is_array($item)) {
-                    $aclScope = $item['scope'] ?? null;;
+                }
+                else if (is_array($item)) {
+                    $aclScope = $item['scope'] ?? null;
                     $aclField = $item['field'] ?? null;
-                    if (!$aclScope) continue;
-                    if (!$this->acl->check($aclScope)) continue;
-                    if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) continue;
+
+                    if (!$aclScope) {
+                        continue;
+                    }
+
+                    if (!$this->acl->check($aclScope)) {
+                        continue;
+                    }
+
+                    if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) {
+                        continue;
+                    }
                 }
 
                 $pointer = $data;
+
                 foreach ($targetArr as $i => $k) {
                     if ($i === count($targetArr) - 1) {
                         $pointer->$k = $this->metadata->get($targetArr);
+
                         break;
                     }
+
                     if (!isset($pointer->$k)) {
                         $pointer->$k = (object) [];
                     }
+
                     $pointer = $pointer->$k;
                 }
             }

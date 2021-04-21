@@ -227,12 +227,15 @@ class EmailAccount extends Record implements
         return $storage;
     }
 
-    public function create(StdClass $data) : Entity
+    public function create(StdClass $data): Entity
     {
         if (!$this->getUser()->isAdmin()) {
-            $count = $this->getEntityManager()->getRepository('EmailAccount')->where([
-                'assignedUserId' => $this->getUser()->id
-            ])->count();
+            $count = $this->getEntityManager()
+                ->getRepository('EmailAccount')
+                ->where([
+                    'assignedUserId' => $this->getUser()->id
+                ])
+                ->count();
 
             if ($count >= $this->getConfig()->get('maxEmailAccountCount', \PHP_INT_MAX)) {
                 throw new Forbidden();
@@ -610,7 +613,7 @@ class EmailAccount extends Record implements
         return $emailAccount;
     }
 
-    public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount) : ?array
+    public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount): ?array
     {
         $smtpParams = [];
 
@@ -662,7 +665,7 @@ class EmailAccount extends Record implements
         }
     }
 
-    private function getNotificator() : AssignmentNotificator
+    private function getNotificator(): AssignmentNotificator
     {
         if (!$this->notificator) {
             $factory = $this->injectableFactory->create(AssignmentNotificatorFactory::class);

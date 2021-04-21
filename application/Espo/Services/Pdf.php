@@ -68,13 +68,21 @@ class Pdf
     protected $removeMassFilePeriod = '1 hour';
 
     protected $config;
+
     protected $serviceFactory;
+
     protected $metadata;
+
     protected $entityManager;
+
     protected $acl;
+
     protected $defaultLanguage;
+
     protected $htmlizerFactory;
+
     protected $selectBuilderFactory;
+
     protected $builder;
 
     public function __construct(
@@ -100,8 +108,13 @@ class Pdf
     }
 
     public function generateMailMerge(
-        string $entityType, iterable $entityList, Entity $template, string $name, ?string $campaignId = null
-    ) : string {
+        string $entityType,
+        iterable $entityList,
+        Entity $template,
+        string $name,
+        ?string $campaignId = null
+    ): string {
+
         $collection = $this->entityManager->getCollectionFactory()->create($entityType);
 
         foreach ($entityList as $entity) {
@@ -110,7 +123,8 @@ class Pdf
 
         if ($this->serviceFactory->checkExists($entityType)) {
             $service = $this->serviceFactory->create($entityType);
-        } else {
+        }
+        else {
             $service = $this->serviceFactory->create('Record');
         }
 
@@ -149,8 +163,13 @@ class Pdf
         return $attachment->id;
     }
 
-    public function massGenerate(string $entityType, array $idList, string $templateId, bool $checkAcl = false) : string
-    {
+    public function massGenerate(
+        string $entityType,
+        array $idList,
+        string $templateId,
+        bool $checkAcl = false
+    ): string {
+
         if ($this->serviceFactory->checkExists($entityType)) {
             $service = $this->serviceFactory->create($entityType);
         } else {
@@ -265,8 +284,13 @@ class Pdf
         $this->entityManager->removeEntity($attachment);
     }
 
-    public function buildFromTemplate(Entity $entity, Entity $template, $displayInline = false, ?array $additionalData = null)
-    {
+    public function buildFromTemplate(
+        Entity $entity,
+        Entity $template,
+        bool $displayInline = false,
+        ?array $additionalData = null
+    ): ?string {
+
         $entityType = $entity->getEntityType();
 
         if ($this->serviceFactory->checkExists($entityType)) {
@@ -307,7 +331,7 @@ class Pdf
         if ($displayInline) {
             $this->displayInline($entity, $contents);
 
-            return;
+            return null;
         }
 
         return $contents->getString();

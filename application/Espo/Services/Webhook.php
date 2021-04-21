@@ -56,7 +56,7 @@ class Webhook extends Record implements
 
     protected $readOnlyAttributeList = ['secretKey'];
 
-    public function populateDefaults(Entity $entity, StdClass $data) : void
+    public function populateDefaults(Entity $entity, StdClass $data): void
     {
         parent::populateDefaults($entity, $data);
 
@@ -74,7 +74,7 @@ class Webhook extends Record implements
         unset($data->type);
     }
 
-    public function filterUpdateInput(StdClass $data) : void
+    public function filterUpdateInput(StdClass $data): void
     {
         if (!$this->getUser()->isAdmin()) {
             unset($data->event);

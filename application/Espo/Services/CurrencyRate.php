@@ -58,7 +58,7 @@ class CurrencyRate
         $this->acl = $acl;
     }
 
-    public function get() : StdClass
+    public function get(): StdClass
     {
         if (!$this->acl->check('Currency')) {
             throw new Forbidden();
@@ -73,7 +73,7 @@ class CurrencyRate
         );
     }
 
-    public function set(StdClass $rates) : StdClass
+    public function set(StdClass $rates): StdClass
     {
         if (!$this->acl->check('Currency')) {
             throw new Forbidden();

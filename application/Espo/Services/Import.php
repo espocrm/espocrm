@@ -72,7 +72,7 @@ class Import extends Record implements
         ]);
     }
 
-    public function findLinked(string $id, string $link, array $params) : RecordCollection
+    public function findLinked(string $id, string $link, array $params): RecordCollection
     {
         if (!in_array($link, ['imported', 'duplicates', 'updated'])) {
             return parent::findLinked($id, $link, $params);
@@ -111,7 +111,7 @@ class Import extends Record implements
         return new RecordCollection($collection, $total);
     }
 
-    public function uploadFile(string $contents) : string
+    public function uploadFile(string $contents): string
     {
         $attachment = $this->getEntityManager()->getEntity('Attachment');
 
@@ -125,7 +125,7 @@ class Import extends Record implements
         return $attachment->id;
     }
 
-    public function revert(string $id) : void
+    public function revert(string $id): void
     {
         $import = $this->entityManager->getEntity('Import', $id);
 
@@ -198,7 +198,7 @@ class Import extends Record implements
         $this->processActionHistoryRecord('delete', $import);
     }
 
-    public function removeDuplicates(string $id) : void
+    public function removeDuplicates(string $id): void
     {
         $import = $this->entityManager->getEntity('Import', $id);
 
@@ -250,12 +250,12 @@ class Import extends Record implements
         }
     }
 
-    protected function createImportTool() : ImportTool
+    protected function createImportTool(): ImportTool
     {
         return $this->injectableFactory->create(ImportTool::class);
     }
 
-    public function jobRunIdleImport(StdClass $data) : StdClass
+    public function jobRunIdleImport(StdClass $data): StdClass
     {
         if (
             empty($data->userId) ||
@@ -294,7 +294,7 @@ class Import extends Record implements
             ->run();
     }
 
-    public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false) : StdClass
+    public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false): StdClass
     {
         $import = $this->getEntityManager()->getEntity('Import', $id);
 
@@ -335,7 +335,7 @@ class Import extends Record implements
 
     public function import(
         string $entityType, array $attributeList, string $attachmentId, array $params = []
-    ) : StdClass {
+    ): StdClass {
 
         $result = $this->createImportTool()
             ->setEntityType($entityType)
@@ -357,7 +357,7 @@ class Import extends Record implements
         return $result;
     }
 
-    public function importFileWithParamsId(string $contents, string $importParamsId) : StdClass
+    public function importFileWithParamsId(string $contents, string $importParamsId): StdClass
     {
         if (!$contents) {
             throw new Error("File contents is empty.");
@@ -384,7 +384,7 @@ class Import extends Record implements
         return $this->import($entityType, $attributeList, $attachmentId, $params);
     }
 
-    public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId) : void
+    public function unmarkAsDuplicate(string $importId, string $entityType, string $entityId): void
     {
         $e = $this->getEntityManager()
             ->getRepository('ImportEntity')

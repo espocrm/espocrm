@@ -240,7 +240,7 @@ class Record implements Crud,
         }
     }
 
-    public function setEntityType(string $entityType) : void
+    public function setEntityType(string $entityType): void
     {
         if ($this->entityType && $this->entityType !== $entityType) {
             throw new RuntimeException("entityType is already set.");
@@ -263,7 +263,7 @@ class Record implements Crud,
         }
     }
 
-    protected function initAclParams() : void
+    protected function initAclParams(): void
     {
         $aclManager = $this->aclManager;
 
@@ -328,7 +328,7 @@ class Record implements Crud,
         }
     }
 
-    public function getEntityType() : string
+    public function getEntityType(): string
     {
         return $this->entityType;
     }
@@ -368,7 +368,7 @@ class Record implements Crud,
     /**
      * @deprecated Use `$this->user`.
      */
-    protected function getUser() : User
+    protected function getUser(): User
     {
         return $this->user;
     }
@@ -423,7 +423,7 @@ class Record implements Crud,
         return $this->entityManager;
     }
 
-    protected function getRepository() : Repository
+    protected function getRepository(): Repository
     {
         return $this->getEntityManager()->getRepository($this->entityType);
     }
@@ -436,7 +436,7 @@ class Record implements Crud,
         return $this->recordServiceContainer->get($name);
     }
 
-    public function processActionHistoryRecord(string $action, Entity $entity) : void
+    public function processActionHistoryRecord(string $action, Entity $entity): void
     {
         if ($this->actionHistoryDisabled) {
             return;
@@ -479,7 +479,7 @@ class Record implements Crud,
      * @throws Error
      * @throws NotFoundSilent If no read access.
      */
-    public function read(string $id) : Entity
+    public function read(string $id): Entity
     {
         if (empty($id)) {
             throw new Error("No ID passed.");
@@ -502,7 +502,7 @@ class Record implements Crud,
      *
      * @throws ForbiddenSilent If no read access.
      */
-    public function getEntity(?string $id = null) : ?Entity
+    public function getEntity(?string $id = null): ?Entity
     {
         if ($id === null) {
             return $this->getRepository()->getNew();
@@ -529,7 +529,7 @@ class Record implements Crud,
         return $entity;
     }
 
-    protected function getStreamService() : StreamService
+    protected function getStreamService(): StreamService
     {
         if (empty($this->streamService)) {
             $this->streamService = $this->serviceFactory->create('Stream');
@@ -538,7 +538,7 @@ class Record implements Crud,
         return $this->streamService;
     }
 
-    protected function loadIsFollowed(Entity $entity) : void
+    protected function loadIsFollowed(Entity $entity): void
     {
         if ($this->getStreamService()->checkIsFollowed($entity)) {
             $entity->set('isFollowed', true);
@@ -844,7 +844,7 @@ class Record implements Crud,
         }
     }
 
-    public function checkAssignment(Entity $entity) : bool
+    public function checkAssignment(Entity $entity): bool
     {
         if (!$this->isPermittedAssignedUser($entity)) {
             return false;
@@ -863,7 +863,7 @@ class Record implements Crud,
         return true;
     }
 
-    public function isPermittedAssignedUsers(Entity $entity) : bool
+    public function isPermittedAssignedUsers(Entity $entity): bool
     {
         if (!$entity->hasLinkMultipleField('assignedUsers')) {
             return true;
@@ -937,7 +937,7 @@ class Record implements Crud,
         return true;
     }
 
-    public function isPermittedAssignedUser(Entity $entity) : bool
+    public function isPermittedAssignedUser(Entity $entity): bool
     {
         if (!$entity->hasAttribute('assignedUserId')) {
             return true;
@@ -1001,7 +1001,7 @@ class Record implements Crud,
         return true;
     }
 
-    public function isPermittedTeams(Entity $entity) : bool
+    public function isPermittedTeams(Entity $entity): bool
     {
         $assignmentPermission = $this->getAcl()->get('assignmentPermission');
 
@@ -1120,7 +1120,7 @@ class Record implements Crud,
         }
     }
 
-    public function filterCreateInput(StdClass $data) : void
+    public function filterCreateInput(StdClass $data): void
     {
         unset($data->deleted);
         unset($data->id);
@@ -1137,7 +1137,7 @@ class Record implements Crud,
         $this->handleCreateInput($data);
     }
 
-    public function filterUpdateInput(StdClass $data) : void
+    public function filterUpdateInput(StdClass $data): void
     {
         unset($data->deleted);
         unset($data->id);
@@ -1192,7 +1192,7 @@ class Record implements Crud,
         throw ConflictSilent::createWithBody('duplicate', json_encode($list));
     }
 
-    public function populateDefaults(Entity $entity, StdClass $data) : void
+    public function populateDefaults(Entity $entity, StdClass $data): void
     {
         if (!$this->getUser()->isPortal()) {
             $forbiddenFieldList = null;
@@ -1254,7 +1254,7 @@ class Record implements Crud,
      *
      * @throws ForbiddenSilent If no create access.
      */
-    public function create(StdClass $data) : Entity
+    public function create(StdClass $data): Entity
     {
         if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
             throw new ForbiddenSilent("No create access.");
@@ -1303,7 +1303,7 @@ class Record implements Crud,
      * @throws NotFound If record not found.
      * @throws ForbiddenSilent If no access.
      */
-    public function update(string $id, StdClass $data) : Entity
+    public function update(string $id, StdClass $data): Entity
     {
         if (empty($id)) {
             throw new BadRequest("ID is empty.");
@@ -1380,7 +1380,7 @@ class Record implements Crud,
         return $this->delete($id);
     }
 
-    public function delete(string $id) : void
+    public function delete(string $id): void
     {
         if (empty($id)) {
             throw new BadRequest("ID is empty.");
@@ -1435,7 +1435,7 @@ class Record implements Crud,
      * @params $params Raw search parameters.
      * @return RecordCollection
      */
-    public function find(array $params) : RecordCollection
+    public function find(array $params): RecordCollection
     {
         $disableCount = false;
         if (
@@ -1509,7 +1509,7 @@ class Record implements Crud,
      *
      * @params $params Raw search parameters.
      */
-    public function getListKanban(array $params) : KanbanResult
+    public function getListKanban(array $params): KanbanResult
     {
         $disableCount = false;
 
@@ -1544,7 +1544,7 @@ class Record implements Crud,
         return $kanban->getResult();
     }
 
-    protected function getEntityEvenDeleted(string $id) : ?Entity
+    protected function getEntityEvenDeleted(string $id): ?Entity
     {
         $query = $this->entityManager->getQueryBuilder()
             ->select()
@@ -1564,7 +1564,7 @@ class Record implements Crud,
      * @throws NotFound If not found.
      * @throws Forbidden If no access.
      */
-    public function restoreDeleted(string $id) : void
+    public function restoreDeleted(string $id): void
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
@@ -1583,7 +1583,7 @@ class Record implements Crud,
         $this->getRepository()->restoreDeleted($entity->id);
     }
 
-    public function getMaxSelectTextAttributeLength() : ?int
+    public function getMaxSelectTextAttributeLength(): ?int
     {
         if ($this->maxSelectTextAttributeLengthDisabled) {
             return null;
@@ -1610,7 +1610,7 @@ class Record implements Crud,
      * @throws Forbidden If no access.
      * @throws Error
      */
-    public function findLinked(string $id, string $link, array $params) : RecordCollection
+    public function findLinked(string $id, string $link, array $params): RecordCollection
     {
         $entity = $this->getRepository()->get($id);
 
@@ -1775,7 +1775,7 @@ class Record implements Crud,
      * @throws NotFound
      * @throws Error
      */
-    public function link(string $id, string $link, string $foreignId) : void
+    public function link(string $id, string $link, string $foreignId): void
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
@@ -1862,7 +1862,7 @@ class Record implements Crud,
      * @throws NotFound
      * @throws Error
      */
-    public function unlink(string $id, string $link, string $foreignId) : void
+    public function unlink(string $id, string $link, string $foreignId): void
     {
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
@@ -1945,7 +1945,7 @@ class Record implements Crud,
         return $this->massLink($id, $link, $where, $selectData);
     }
 
-    public function linkFollowers(string $id, string $foreignId) : void
+    public function linkFollowers(string $id, string $foreignId): void
     {
         if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) {
             throw new NotFound();
@@ -1994,7 +1994,7 @@ class Record implements Crud,
         }
     }
 
-    public function unlinkFollowers(string $id, string $foreignId) : void
+    public function unlinkFollowers(string $id, string $foreignId): void
     {
         if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) {
             throw new NotFound();
@@ -2199,7 +2199,7 @@ class Record implements Crud,
         return null;
     }
 
-    public function checkIsDuplicate(Entity $entity) : bool
+    public function checkIsDuplicate(Entity $entity): bool
     {
         $where = $this->getDuplicateWhereClause($entity, (object) []);
 
@@ -2224,7 +2224,7 @@ class Record implements Crud,
     /**
      * Find duplicates for an entity.
      */
-    public function findDuplicates(Entity $entity, ?StdClass $data = null) : ?Collection
+    public function findDuplicates(Entity $entity, ?StdClass $data = null): ?Collection
     {
         if (!$data) {
             $data = (object) [];
@@ -2271,7 +2271,7 @@ class Record implements Crud,
      *
      * @return An attachment ID.
      */
-    public function exportCollection(array $params, Collection $collection) : string
+    public function exportCollection(array $params, Collection $collection): string
     {
         $params['collection'] = $collection;
 
@@ -2284,7 +2284,7 @@ class Record implements Crud,
      * @param Raw export parameters.
      * @return An attachment ID.
      */
-    public function export(array $params) : string
+    public function export(array $params): string
     {
         $export = $this->injectableFactory->create(ExportTool::class);
 
@@ -2330,7 +2330,7 @@ class Record implements Crud,
      * @throws NotFound
      * @throws Forbidden
      */
-    public function merge(string $id, array $sourceIdList, StdClass $attributes) : void
+    public function merge(string $id, array $sourceIdList, StdClass $attributes): void
     {
         if (empty($id)) {
             throw new Error("No ID passed.");
@@ -2547,7 +2547,7 @@ class Record implements Crud,
         return $this->getStreamService()->findEntityFollowers($entity, $params);
     }
 
-    public function getDuplicateAttributes(string $id) : StdClass
+    public function getDuplicateAttributes(string $id): StdClass
     {
         if (empty($id)) {
             throw new BadRequest("No ID passed.");
@@ -2744,7 +2744,7 @@ class Record implements Crud,
      *
      * @throws Forbidden
      */
-    public function massAction(string $action, array $params, StdClass $data) : MassActionResult
+    public function massAction(string $action, array $params, StdClass $data): MassActionResult
     {
         if (!$this->acl->checkScope($this->entityType)) {
             throw new Forbidden();
@@ -2774,7 +2774,7 @@ class Record implements Crud,
      * @throws Forbidden
      * @throws BadRequest
      */
-    public function action(string $action, string $id, StdClass $data) : Entity
+    public function action(string $action, string $id, StdClass $data): Entity
     {
         if (!$this->acl->checkScope($this->entityType)) {
             throw new Forbidden();

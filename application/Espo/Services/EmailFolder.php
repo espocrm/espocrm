@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -62,21 +63,34 @@ class EmailFolder extends Record
     public function moveUp(string $id)
     {
         $entity = $this->getEntityManager()->getEntity('EmailFolder', $id);
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
 
         $currentIndex = $entity->get('order');
 
-        if (!is_int($currentIndex)) throw new Error();
+        if (!is_int($currentIndex)) {
+            throw new Error();
+        }
 
-        $previousEntity = $this->getRepository()->where(array(
-            'order<' => $currentIndex,
-            'assignedUserId' => $entity->get('assignedUserId')
-        ))->order('order', true)->findOne();
+        $previousEntity = $this->getRepository()
+            ->where([
+                'order<' => $currentIndex,
+                'assignedUserId' => $entity->get('assignedUserId'),
+            ])
+            ->order('order', true)
+            ->findOne();
 
-        if (!$previousEntity) return;
+        if (!$previousEntity) {
+            return;
+        }
 
         $entity->set('order', $previousEntity->get('order'));
+
         $previousEntity->set('order', $currentIndex);
 
         $this->getEntityManager()->saveEntity($entity);
@@ -86,21 +100,34 @@ class EmailFolder extends Record
     public function moveDown(string $id)
     {
         $entity = $this->getEntityManager()->getEntity('EmailFolder', $id);
-        if (!$entity) throw new NotFound();
-        if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+        if (!$this->getAcl()->check($entity, 'edit')) {
+            throw new Forbidden();
+        }
 
         $currentIndex = $entity->get('order');
 
-        if (!is_int($currentIndex)) throw new Error();
+        if (!is_int($currentIndex)) {
+            throw new Error();
+        }
 
-        $nextEntity = $this->getRepository()->where(array(
-            'order>' => $currentIndex,
-            'assignedUserId' => $entity->get('assignedUserId')
-        ))->order('order', false)->findOne();
+        $nextEntity = $this->getRepository()
+            ->where([
+                'order>' => $currentIndex,
+                'assignedUserId' => $entity->get('assignedUserId'),
+            ])
+            ->order('order', false)
+            ->findOne();
 
-        if (!$nextEntity) return;
+        if (!$nextEntity) {
+            return;
+        }
 
         $entity->set('order', $nextEntity->get('order'));
+
         $nextEntity->set('order', $currentIndex);
 
         $this->getEntityManager()->saveEntity($entity);
@@ -111,19 +138,25 @@ class EmailFolder extends Record
     {
         $limit = $this->getConfig()->get('emailFolderMaxCount', 100);
 
-        $folderList = $this->getRepository()->where(array(
-            'assignedUserId' => $this->getUser()->id
-        ))->order('order')->limit(0, $limit)->find();
+        $folderList = $this->getRepository()
+            ->where([
+                'assignedUserId' => $this->getUser()->id
+            ])
+            ->order('order')
+            ->limit(0, $limit)
+            ->find();
 
-        $list = new \Espo\ORM\EntityCollection();
+        $list = new EntityCollection();
 
         foreach ($this->systemFolderList as $name) {
             $folder = $this->getEntityManager()->getEntity('EmailFolder');
+
             $folder->set('name', $this->getInjection('language')->translate($name, 'presetFilters', 'Email'));
+
             $folder->id = $name;
+
             $list[] = $folder;
         }
-
 
         foreach ($folderList as $folder) {
             $list[] = $folder;
@@ -131,15 +164,21 @@ class EmailFolder extends Record
 
         foreach ($this->systemFolderEndList as $name) {
             $folder = $this->getEntityManager()->getEntity('EmailFolder');
+
             $folder->set('name', $this->getInjection('language')->translate($name, 'presetFilters', 'Email'));
+
             $folder->id = $name;
+
             $list[] = $folder;
         }
 
         $finalList = [];
+
         foreach ($list as $item) {
             $attributes = $item->getValues();
+
             $attributes['childCollection'] = [];
+
             $finalList[] = $attributes;
         }
 
