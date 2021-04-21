@@ -104,9 +104,7 @@ class Attachment extends Record
         parent::filterCreateInput($data);
 
         unset($data->parentId);
-
         unset($data->relatedId);
-        unset($data->relatedType);
 
         if (!property_exists($data, 'file')) {
             throw new BadRequest("No file contents.");
@@ -134,6 +132,8 @@ class Attachment extends Record
 
         if (isset($data->parentType)) {
             $relatedEntityType = $data->parentType;
+
+            unset($data->relatedType);
         }
         else if (isset($data->relatedType)) {
             $relatedEntityType = $data->relatedType;
