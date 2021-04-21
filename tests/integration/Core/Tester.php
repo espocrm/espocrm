@@ -35,6 +35,9 @@ use Espo\Core\Application;
 use Espo\Core\Portal\Application as PortalApplication;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\ApplicationRunners\Rebuild;
+use Espo\Core\Utils\PasswordHash;
+
+use Espo\Entities\User;
 
 use Slim\Psr7\Factory\RequestFactory;
 
@@ -59,16 +62,12 @@ class Tester
     protected $params;
 
     /**
-     * Espo username which is used for authentication
-     *
-     * @var null
+     * Username used for authentication.
      */
     protected $userName = null;
 
     /**
-     * Espo user password which is used for authentication
-     *
-     * @var null
+     * Password used for authentication.
      */
     protected $password = null;
 
@@ -86,21 +85,29 @@ class Tester
     protected function normalizeParams(array $params)
     {
         $namespaceToRemove = 'tests\\integration\\Espo';
-        $classPath = preg_replace('/^'.preg_quote($namespaceToRemove).'\\\\(.+)Test$/', '${1}', $params['className']);
+
+        $classPath = preg_replace(
+            '/^' . preg_quote($namespaceToRemove) . '\\\\(.+)Test$/',
+            '${1}',
+            $params['className']
+        );
 
         $params['testDataPath'] = realpath($this->testDataPath);
 
         if (isset($params['dataFile'])) {
             $params['dataFile'] = realpath($this->testDataPath) . '/' . $params['dataFile'];
+
             if (!file_exists($params['dataFile'])) {
                 die('"dataFile" is not found, path: '.$params['dataFile'].'.');
             }
         } else {
-            $params['dataFile'] = realpath($this->testDataPath) . '/' . str_replace('\\', '/', $classPath) . '.php';
+            $params['dataFile'] = realpath($this->testDataPath) . '/' .
+                str_replace('\\', '/', $classPath) . '.php';
         }
 
         if (isset($params['pathToFiles'])) {
             $params['pathToFiles'] = realpath($this->testDataPath) . '/' . $params['pathToFiles'];
+
             if (!file_exists($params['pathToFiles'])) {
                 die('"pathToFiles" is not found, path: '.$params['pathToFiles'].'.');
             }
@@ -153,11 +160,18 @@ class Tester
         $configData[$optionName] = $data;
 
         $fileManager = new \Espo\Core\Utils\File\Manager();
+
         return $fileManager->putPhpContents($this->configPath, $configData);
     }
 
-    public function auth($userName, $password = null, $portalId = null, $authenticationMethod = null, $request = null)
-    {
+    public function auth(
+        $userName,
+        $password = null,
+        $portalId = null,
+        $authenticationMethod = null,
+        $request = null
+    ): void {
+
         $this->userName = $userName;
         $this->password = $password;
         $this->portalId = $portalId;
@@ -165,8 +179,12 @@ class Tester
         $this->request = $request;
     }
 
-    public function getApplication($reload = false, $clearCache = true, $portalId = null)
-    {
+    public function getApplication(
+        bool $reload = false,
+        bool $clearCache = true,
+        ?string $portalId = null
+    ): Application {
+
         $portalId = $portalId ?? $this->portalId ?? null;
 
         if (!isset($this->application) || $reload)  {
@@ -177,9 +195,11 @@ class Tester
 
             $this->application = !$portalId ? new Application() : new PortalApplication($portalId);
 
-            $auth = $this->application->getContainer()->get('injectableFactory')->createWith(Authentication::class, [
-                'allowAnyAccess' => false,
-            ]);
+            $auth = $this->application->getContainer()
+                ->get('injectableFactory')
+                ->createWith(Authentication::class, [
+                    'allowAnyAccess' => false,
+                ]);
 
             $request = $this->request ?? new RequestWrapper(
                 (new RequestFactory())->createRequest('POST', '')
@@ -187,8 +207,10 @@ class Tester
 
             if (isset($this->userName) || $this->authenticationMethod) {
                 $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
+
                 $result = $auth->login($this->userName, $this->password, $request, $this->authenticationMethod);
-            } else {
+            }
+            else {
                 $this->application->setupSystemUser();
             }
         }
@@ -235,6 +257,7 @@ class Tester
     protected function install()
     {
         $fileManager = new \Espo\Core\Utils\File\Manager();
+
         $configData = $this->getTestConfigData();
 
         $latestEspoDir = Utils::getLatestBuildedPath($this->buildedPath);
@@ -414,23 +437,19 @@ class Tester
     }
 
     /**
-     * Create a user with roles
+     * Create a user with roles.
      *
-     * @param  string|array $userData - If $userData is a string, then it's a userName with default password
-     * @param  array  $role
-     *
-     * @return \Espo\Entities\User
+     * @param string|array $userData If $userData is a string, then it's a userName with default password.
      */
-    public function createUser($userData, array $roleData = null, $isPortal = false)
+    public function createUser($userData, ?array $roleData = null, $isPortal = false): User
     {
         if (!is_array($userData)) {
-            $userData = array(
+            $userData = [
                 'userName' => $userData,
                 'lastName' => $userData,
-            );
+            ];
         }
 
-        //create a role
         if (!empty($roleData)) {
             if (!isset($roleData['name'])) {
                 $roleData['name'] = $userData['userName'] . 'Role';
@@ -440,14 +459,17 @@ class Tester
 
             if (isset($role)) {
                 $fieldName = $isPortal ? 'portalRolesIds' : 'rolesIds';
+
                 if (!isset($userData[$fieldName])) {
-                    $userData[$fieldName] = array();
+                    $userData[$fieldName] = [];
                 }
+
                 $userData[$fieldName][] = $role->id;
             }
         }
 
         $application = $this->getApplication();
+        
         $entityManager = $application->getContainer()->get('entityManager');
         $config = $application->getContainer()->get('config');
 
@@ -455,7 +477,8 @@ class Tester
             $userData['password'] = $this->defaultUserPassword;
         }
 
-        $passwordHash = new \Espo\Core\Utils\PasswordHash($config);
+        $passwordHash = new PasswordHash($config);
+
         $userData['password'] = $passwordHash->hash($userData['password']);
 
         if ($isPortal) {
@@ -463,7 +486,9 @@ class Tester
         }
 
         $user = $entityManager->getEntity('User');
+
         $user->set($userData);
+
         $entityManager->saveEntity($user);
 
         return $user;
@@ -504,6 +529,7 @@ class Tester
         }
 
         $result = shell_exec("echo test");
+
         if (empty($result)) {
             return false;
         }

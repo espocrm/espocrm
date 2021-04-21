@@ -29,8 +29,14 @@
 
 namespace tests\integration\Core;
 
-use Espo\Core\Api\RequestWrapper;
-use Espo\Core\Api\ResponseWrapper;
+use Espo\Core\{
+    Api\RequestWrapper,
+    Api\ResponseWrapper,
+    Application,
+    Container,
+};
+
+use Espo\Entities\User;
 
 use Slim\Psr7\Factory\RequestFactory;
 use Slim\Psr7\Factory\ResponseFactory;
@@ -38,35 +44,34 @@ use Slim\Psr7\Factory\StreamFactory;
 
 abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Tester
+     */
     protected $espoTester;
 
     private $espoApplication;
 
     /**
-     * Path to file with data
+     * Path to file with data.
      *
      * @var string|null
      */
     protected $dataFile = null;
 
     /**
-     * Path to files which needs to be copied
+     * Path to files which needs to be copied.
      *
      * @var string|null
      */
     protected $pathToFiles = null;
 
     /**
-     * Espo username which is used for authentication
-     *
-     * @var null
+     * Username used for authentication.
      */
     protected $userName = null;
 
     /**
-     * Espo user password which is used for authentication
-     *
-     * @var null
+     * Password used for authentication.
      */
     protected $password = null;
 
@@ -76,14 +81,19 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
     protected $authenticationMethod = null;
 
-    protected function createApplication($clearCache = true, $portalId = null)
+    protected function createApplication(bool $clearCache = true, ?string $portalId = null): Application
     {
         return $this->espoTester->getApplication(true, $clearCache, $portalId);
     }
 
     protected function auth(
-        $userName = null, $password = null, $portalId = null, $authenticationMethod = null, ?RequestWrapper $request = null
-    ) {
+        ?string $userName = null,
+        ?string $password = null,
+        ?string $portalId = null,
+        ?string $authenticationMethod = null,
+        ?RequestWrapper $request = null
+    ): void {
+
         $this->userName = $userName;
         $this->password = $password;
         $this->portalId = $portalId;
@@ -95,21 +105,17 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Get Espo Application
-     *
-     * @return \Espo\Core\Application
+     * Get Application.
      */
-    protected function getApplication()
+    protected function getApplication(): Application
     {
         return $this->espoApplication;
     }
 
     /**
-     * Get Espo container
-     *
-     * @return \Espo\Core\Container
+     * Get container.
      */
-    protected function getContainer()
+    protected function getContainer(): Container
     {
         return $this->getApplication()->getContainer();
     }
@@ -124,35 +130,38 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return $this->espoTester->sendRequest($method, $action, $data);
     }
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
-        $params = array(
+        $params = [
             'className' => get_class($this),
             'dataFile' => $this->dataFile,
             'pathToFiles' => $this->pathToFiles,
             'initData' => $this->initData,
-        );
+        ];
 
         $this->espoTester = new Tester($params);
 
         $this->beforeSetUp();
 
         $this->espoTester->initialize();
+
         $this->auth($this->userName, $this->password, null, $this->authenticationMethod);
 
         $this->beforeStartApplication();
+
         $this->espoApplication = $this->createApplication();
+
         $this->afterStartApplication();
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->espoTester->terminate();
         $this->espoTester = NULL;
         $this->espoApplication = NULL;
     }
 
-    protected function createUser($userData, array $role = null, $isPortal = false)
+    protected function createUser($userData, ?array $role = null, bool $isPortal = false): User
     {
         return $this->espoTester->createUser($userData, $role, $isPortal);
     }
@@ -173,9 +182,15 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     }
 
     protected function createRequest(
-        string $method, array $queryParams = [], array $headers = [], ?string $body = null, array $routeParams = []
-    ) : RequestWrapper {
-        $request = (new RequestFactory())->createRequest($method, 'http://localhost/?' . http_build_query($queryParams));
+        string $method,
+        array $queryParams = [],
+        array $headers = [],
+        ?string $body = null,
+        array $routeParams = []
+    ): RequestWrapper {
+
+        $request = (new RequestFactory())
+            ->createRequest($method, 'http://localhost/?' . http_build_query($queryParams));
 
         foreach ($headers as $name => $value) {
             $request = $request->withHeader($name, $value);
@@ -190,19 +205,19 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return new RequestWrapper($request, '', $routeParams);
     }
 
-    protected function createResponse()
+    protected function createResponse(): ResponseWrapper
     {
         return new ResponseWrapper(
             (new ResponseFactory())->createResponse()
         );
     }
 
-    protected function setData(array $data)
+    protected function setData(array $data): void
     {
         $this->espoTester->setData($data);
     }
 
-    protected function fullReset()
+    protected function fullReset(): void
     {
         $this->espoTester->setParam('fullReset', true);
     }
