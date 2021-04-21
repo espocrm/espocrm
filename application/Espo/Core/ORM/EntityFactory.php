@@ -56,12 +56,12 @@ class EntityFactory implements EntityFactoryInterface
         $this->classFinder = $classFinder;
     }
 
-    private function getClassName(string $name) : ?string
+    private function getClassName(string $name): ?string
     {
         return $this->classFinder->find('Entities', $name);
     }
 
-    public function setEntityManager(EntityManager $entityManager) : void
+    public function setEntityManager(EntityManager $entityManager): void
     {
         if ($this->entityManager) {
             throw new Error("EntityManager can be set only once.");
@@ -70,7 +70,7 @@ class EntityFactory implements EntityFactoryInterface
         $this->entityManager = $entityManager;
     }
 
-    public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory) : void
+    public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory): void
     {
         if ($this->valueAccessorFactory) {
             throw new Error("ValueAccessorFactory can be set only once.");
@@ -79,7 +79,7 @@ class EntityFactory implements EntityFactoryInterface
         $this->valueAccessorFactory = $valueAccessorFactory;
     }
 
-    public function create(string $name) : Entity
+    public function create(string $name): Entity
     {
         $className = $this->getClassName($name);
 

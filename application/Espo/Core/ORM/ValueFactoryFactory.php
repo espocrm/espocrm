@@ -57,12 +57,12 @@ class ValueFactoryFactory implements ValueFactoryFactoryInteface
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function isCreatable(string $entityType, string $field) : bool
+    public function isCreatable(string $entityType, string $field): bool
     {
         return $this->getClassName($entityType, $field) !== null;
     }
 
-    public function create(string $entityType, string $field) : ValueFactory
+    public function create(string $entityType, string $field): ValueFactory
     {
         $className = $this->getClassName($entityType, $field);
 
@@ -73,7 +73,7 @@ class ValueFactoryFactory implements ValueFactoryFactoryInteface
         return $this->injectableFactory->create($className);
     }
 
-    private function getClassName(string $entityType, string $field) : ?string
+    private function getClassName(string $entityType, string $field): ?string
     {
         $fieldDefs = $this->ormMetadata
             ->getDefs()

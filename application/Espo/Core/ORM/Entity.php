@@ -36,19 +36,19 @@ use StdClass;
 
 class Entity extends BaseEntity
 {
-    public function hasLinkMultipleField(string $field) : bool
+    public function hasLinkMultipleField(string $field): bool
     {
         return
             $this->hasRelation($field) &&
             $this->getAttributeParam($field . 'Ids', 'isLinkMultipleIdList');
     }
 
-    public function hasLinkField(string $field) : bool
+    public function hasLinkField(string $field): bool
     {
         return $this->hasAttribute($field . 'Id') && $this->hasRelation($field);
     }
 
-    public function hasLinkParentField(string $field) : bool
+    public function hasLinkParentField(string $field): bool
     {
         return
             $this->hasAttributeType($field . 'Type') == 'foreignType' &&
@@ -56,7 +56,7 @@ class Entity extends BaseEntity
             $this->hasRelation($field);
     }
 
-    public function loadParentNameField(string $field) : void
+    public function loadParentNameField(string $field): void
     {
         if (!$this->hasAttribute($field. 'Id') || !$this->hasAttribute($field . 'Type')) {
             throw new LogicException("There's no link-parent field '{$field}'.");
@@ -93,7 +93,7 @@ class Entity extends BaseEntity
         $this->set($field . 'Name', null);
     }
 
-    protected function getRelationOrderParams(string $link) : ?array
+    protected function getRelationOrderParams(string $link): ?array
     {
         $field = $link;
 
@@ -145,7 +145,7 @@ class Entity extends BaseEntity
         ];
     }
 
-    public function loadLinkMultipleField(string $field, $columns = null) : void
+    public function loadLinkMultipleField(string $field, $columns = null): void
     {
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Ids')) {
             return;
@@ -227,7 +227,7 @@ class Entity extends BaseEntity
         }
     }
 
-    public function loadLinkField(string $field) : void
+    public function loadLinkField(string $field): void
     {
         if (!$this->hasRelation($field) || !$this->hasAttribute($field . 'Id')) {
             throw new LogicException("There's no link field '{$field}'.");
@@ -284,7 +284,7 @@ class Entity extends BaseEntity
         return null;
     }
 
-    public function setLinkMultipleName(string $field, string $id, ?string $value) : void
+    public function setLinkMultipleName(string $field, string $id, ?string $value): void
     {
         $namesAttribute = $field . 'Names';
 
@@ -323,7 +323,7 @@ class Entity extends BaseEntity
         return null;
     }
 
-    public function setLinkMultipleColumn(string $field, string $column, string $id, $value) : void
+    public function setLinkMultipleColumn(string $field, string $column, string $id, $value): void
     {
         $columnsAttribute = $field . 'Columns';
 
@@ -350,14 +350,14 @@ class Entity extends BaseEntity
         $this->set($columnsAttribute, $object);
     }
 
-    public function setLinkMultipleIdList(string $field, array $idList) : void
+    public function setLinkMultipleIdList(string $field, array $idList): void
     {
         $idsAttribute = $field . 'Ids';
 
         $this->set($idsAttribute, $idList);
     }
 
-    public function addLinkMultipleId(string $field, string $id) : void
+    public function addLinkMultipleId(string $field, string $id): void
     {
         $idsAttribute = $field . 'Ids';
 
@@ -385,7 +385,7 @@ class Entity extends BaseEntity
         }
     }
 
-    public function removeLinkMultipleId(string $field, string $id) : void
+    public function removeLinkMultipleId(string $field, string $id): void
     {
         if ($this->hasLinkMultipleId($field, $id)) {
             $list = $this->getLinkMultipleIdList($field);
@@ -400,7 +400,7 @@ class Entity extends BaseEntity
         }
     }
 
-    public function getLinkMultipleIdList(string $field) : ?array
+    public function getLinkMultipleIdList(string $field): ?array
     {
         $idsAttribute = $field . 'Ids';
 
@@ -423,7 +423,7 @@ class Entity extends BaseEntity
         return $valueList;
     }
 
-    public function hasLinkMultipleId(string $field, string $id) : bool
+    public function hasLinkMultipleId(string $field, string $id): bool
     {
         $idsAttribute = $field . 'Ids';
 

@@ -61,7 +61,7 @@ class EntityManagerFactory
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function create() : EntityManager
+    public function create(): EntityManager
     {
         $entityFactory = $this->injectableFactory->create(EntityFactory::class);
 

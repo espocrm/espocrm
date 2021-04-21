@@ -47,7 +47,7 @@ class MetadataDataProvider implements MetadataDataProviderInterface
         $this->metadata = $metadata;
     }
 
-    public function get() : array
+    public function get(): array
     {
         $data = $this->ormMetadataData->getData();
 

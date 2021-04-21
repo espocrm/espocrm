@@ -45,23 +45,28 @@ class RepositoryFactory implements RepositoryFactoryInterface
     protected $defaultClassName = DatabaseRepository::class;
 
     protected $entityFactory;
+
     protected $injectableFactory;
+
     protected $classFinder;
 
-    public function __construct(EntityFactory $entityFactory, InjectableFactory $injectableFactory, ClassFinder $classFinder)
-    {
+    public function __construct(
+        EntityFactory $entityFactory,
+        InjectableFactory $injectableFactory,
+        ClassFinder $classFinder
+    ) {
         $this->entityFactory = $entityFactory;
 
         $this->injectableFactory = $injectableFactory;
         $this->classFinder = $classFinder;
     }
 
-    protected function getClassName(string $name) : ?string
+    protected function getClassName(string $name): ?string
     {
         return $this->classFinder->find('Repositories', $name);
     }
 
-    public function create(string $name) : Repository
+    public function create(string $name): Repository
     {
         $className = $this->getClassName($name);
 

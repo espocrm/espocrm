@@ -49,7 +49,7 @@ class EntityManagerProxy
         $this->container = $container;
     }
 
-    private function getEntityManager() : EntityManager
+    private function getEntityManager(): EntityManager
     {
         if (!$this->entityManager) {
             $this->entityManager = $this->container->get('entityManager');
@@ -58,7 +58,7 @@ class EntityManagerProxy
         return $this->entityManager;
     }
 
-    public function getEntity(string $entityType, ?string $id = null) : ?Entity
+    public function getEntity(string $entityType, ?string $id = null): ?Entity
     {
         return $this->getEntityManager()->getEntity($entityType, $id);
     }
@@ -68,7 +68,7 @@ class EntityManagerProxy
         return $this->getEntityManager()->saveEntity($entity, $options);
     }
 
-    public function getRepository(string $entityType) : Repository
+    public function getRepository(string $entityType): Repository
     {
         return $this->getEntityManager()->getRepository($entityType);
     }

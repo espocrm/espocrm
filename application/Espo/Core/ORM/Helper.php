@@ -42,7 +42,7 @@ class Helper
         $this->config = $config;
     }
 
-    public function formatPersonName(Entity $entity, string $field)
+    public function formatPersonName(Entity $entity, string $field): ?string
     {
         $format = $this->config->get('personNameFormat');
 
@@ -55,12 +55,15 @@ class Helper
                 if (!$first && !$last) {
                     return null;
                 }
+
                 if (!$first) {
                     return $last;
                 }
+
                 if (!$last) {
                     return $first;
                 }
+
                 return $last . ' ' . $first;
 
             case 'lastFirstMiddle':
@@ -70,9 +73,17 @@ class Helper
 
                 $arr = [];
 
-                if ($last) $arr[] = $last;
-                if ($first) $arr[] = $first;
-                if ($middle) $arr[] = $middle;
+                if ($last) {
+                    $arr[] = $last;
+                }
+
+                if ($first) {
+                    $arr[] = $first;
+                }
+
+                if ($middle) {
+                    $arr[] = $middle;
+                }
 
                 return implode(' ', $arr);
 
@@ -83,9 +94,17 @@ class Helper
 
                 $arr = [];
 
-                if ($first) $arr[] = $first;
-                if ($middle) $arr[] = $middle;
-                if ($last) $arr[] = $last;
+                if ($first) {
+                    $arr[] = $first;
+                }
+
+                if ($middle) {
+                    $arr[] = $middle;
+                }
+
+                if ($last) {
+                    $arr[] = $last;
+                }
 
                 return implode(' ', $arr);
 
@@ -93,12 +112,15 @@ class Helper
                 if (!$first && !$last) {
                     return null;
                 }
+
                 if (!$first) {
                     return $last;
                 }
+
                 if (!$last) {
                     return $first;
                 }
+
                 return $first . ' ' . $last;
         }
 

@@ -60,7 +60,7 @@ class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
     /**
      * @return AttributeExtractor<T>
      */
-    public function create(string $entityType, string $field) : AttributeExtractor
+    public function create(string $entityType, string $field): AttributeExtractor
     {
         $className = $this->getClassName($entityType, $field);
 
@@ -73,7 +73,7 @@ class AttributeExtractorFactory implements AttributeExtractorFactoryInterface
         return $this->injectableFactory->create($className);
     }
 
-    private function getClassName(string $entityType, string $field) : ?string
+    private function getClassName(string $entityType, string $field): ?string
     {
         $fieldDefs = $this->ormMetadata
             ->getDefs()
