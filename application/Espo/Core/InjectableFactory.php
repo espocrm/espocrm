@@ -69,14 +69,17 @@ class InjectableFactory
     }
 
     /**
-     * Create an instance by a class name. Allows passing specific constructor parameters
+     * Create an instance by a class name with specific constructor parameters
      * defined in an associative array. A key should match the parameter name.
      */
-    public function createWith(string $className, array $with = []): object
+    public function createWith(string $className, array $with): object
     {
         return $this->createInternal($className, $with);
     }
 
+    /**
+     * Create an instance by a class name with a specific binding.
+     */
     public function createWithBinding(string $className, BindingContainer $bindingContainer): object
     {
         return $this->createInternal($className, null, $bindingContainer);
