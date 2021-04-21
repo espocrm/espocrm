@@ -37,34 +37,39 @@ class Webhook extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {
             $this->fillSecretKey($entity);
         }
+
         parent::beforeSave($entity);
+
         $this->processSettingAdditionalFields($entity);
     }
 
-    protected function fillSecretKey(Entity $entity)
+    protected function fillSecretKey(Entity $entity): void
     {
         $secretKey = Util::generateSecretKey();
+
         $entity->set('secretKey', $secretKey);
     }
 
-    protected function processSettingAdditionalFields(Entity $entity)
+    protected function processSettingAdditionalFields(Entity $entity): void
     {
         $event = $entity->get('event');
-        if (!$event) return;
+        if (!$event) {
+            return;
+        }
 
         $arr = explode('.', $event);
-        if (count($arr) !== 2 && count($arr) !== 3) return;
+
+        if (count($arr) !== 2 && count($arr) !== 3) {
+            return;
+        }
 
         $arr = explode('.', $event);
+
         $entityType = $arr[0];
         $type = $arr[1];
 
@@ -73,14 +78,18 @@ class Webhook extends \Espo\Core\Repositories\Database
 
         $field = null;
 
-        if (!$entityType) return;
+        if (!$entityType) {
+            return;
+        }
 
         if ($type === 'fieldUpdate') {
             if (count($arr) == 3) {
                 $field = $arr[2];
             }
+
             $entity->set('field', $field);
-        } else {
+        }
+        else {
             $entity->set('field', null);
         }
     }

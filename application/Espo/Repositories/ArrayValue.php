@@ -40,11 +40,7 @@ class ArrayValue extends Database
 {
     protected $hooksDisabled = true;
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
-
-    public function storeEntityAttribute(Entity $entity, string $attribute, bool $populateMode = false)
+    public function storeEntityAttribute(Entity $entity, string $attribute, bool $populateMode = false): void
     {
         if (!$entity->getAttributeType($attribute) === Entity::JSON_ARRAY) {
             throw new Error("ArrayValue: Can't store non array attribute.");
@@ -130,7 +126,7 @@ class ArrayValue extends Database
         }
     }
 
-    public function deleteEntityAttribute(Entity $entity, string $attribute)
+    public function deleteEntityAttribute(Entity $entity, string $attribute): void
     {
         if (!$entity->id) {
             throw new Error("ArrayValue: Can't delete {$attribute} w/o id given.");

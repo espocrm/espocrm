@@ -45,9 +45,7 @@ class PhoneNumber extends Database implements
     use Di\ApplicationStateSetter;
     use Di\AclManagerSetter;
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
+    protected $hooksDisabled = true;
 
     const ERASED_PREFIX = 'ERASED:';
 

@@ -37,14 +37,12 @@ class UniqueId extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
-
-    public function getNew() : ?Entity
+    public function getNew(): ?Entity
     {
         $entity = parent::getNew();
+
         $entity->set('name', Util::generateMoreEntropyId());
+
         return $entity;
     }
 }

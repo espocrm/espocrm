@@ -37,10 +37,6 @@ class ScheduledJob extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
-
     protected function afterSave(Entity $entity, array $options = [])
     {
         parent::afterSave($entity, $options);

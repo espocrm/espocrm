@@ -42,9 +42,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
     use Di\ApplicationStateSetter;
     use Di\AclManagerSetter;
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
+    protected $hooksDisabled = true;
 
     public function getIdListFormAddressList(array $addressList = []): array
     {

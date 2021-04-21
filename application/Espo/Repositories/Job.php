@@ -40,10 +40,6 @@ class Job extends \Espo\Core\Repositories\Database implements
 
     protected $hooksDisabled = true;
 
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
-
     public function beforeSave(Entity $entity, array $options = [])
     {
         if (!$entity->has('executeTime') && $entity->isNew()) {
@@ -52,6 +48,7 @@ class Job extends \Espo\Core\Repositories\Database implements
 
         if (!$entity->has('attempts') && $entity->isNew()) {
             $attempts = $this->config->get('jobRerunAttemptNumber', 0);
+
             $entity->set('attempts', $attempts);
         }
     }

@@ -34,8 +34,4 @@ use Espo\ORM\Entity;
 class ActionHistoryRecord extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
-
-    protected $processFieldsAfterSaveDisabled = true;
-
-    protected $processFieldsAfterRemoveDisabled = true;
 }
