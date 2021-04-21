@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\File;
+namespace Espo\Core\FieldProcessing\MultiEnum;
 
 use Espo\Core\{
     ORM\Entity,
@@ -54,46 +54,17 @@ class SaveProcessor
 
     private function processItem(Entity $entity, string $name): void
     {
-        $attribute = $name . 'Id';
-
-        if (!$entity->get($attribute)) {
+        if (!$entity->has($name)) {
             return;
         }
 
-        if (!$entity->isAttributeChanged($attribute)) {
+        if (!$entity->isAttributeChanged($name)) {
             return;
         }
 
-        $attachment = $this->entityManager->getEntity('Attachment', $entity->get($attribute));
-
-        if (!$attachment) {
-            return;
-        }
-
-        $attachment->set([
-            'relatedId' => $entity->getId(),
-            'relatedType' => $entity->getEntityType(),
-        ]);
-
-        $this->entityManager->saveEntity($attachment);
-
-        if ($entity->isNew()) {
-            return;
-        }
-
-        $previousAttachmentId = $entity->getFetched($attribute);
-
-        if (!$previousAttachmentId) {
-            return;
-        }
-
-        $previousAttachment = $this->entityManager->getEntity('Attachment', $previousAttachmentId);
-
-        if (!$previousAttachment) {
-            return;
-        }
-
-        $this->entityManager->removeEntity($previousAttachment);
+        $this->entityManager
+            ->getRepository('ArrayValue')
+            ->storeEntityAttribute($entity, $name);
     }
 
     private function getFieldList(string $entityType): array
@@ -108,23 +79,18 @@ class SaveProcessor
 
         $list = [];
 
-        foreach ($entityDefs->getRelationNameList() as $name) {
-            $defs = $entityDefs->getRelation($name);
+        foreach ($entityDefs->getAttributeNameList() as $name) {
+            $defs = $entityDefs->getAttribute($name);
 
-            $type = $defs->getType();
-
-            if (!$defs->hasForeignEntityType()) {
+            if ($defs->getType() !== Entity::JSON_ARRAY) {
                 continue;
             }
 
-            $foreignEntityType = $defs->getForeignEntityType();
-
-            if ($type !== Entity::BELONGS_TO || $foreignEntityType !== 'Attachment') {
+            if (!$defs->getParam('storeArrayValues')) {
                 continue;
             }
 
-
-            if (!$entityDefs->hasAttribute($name . 'Id')) {
+            if ($defs->isNotStorable()) {
                 continue;
             }
 

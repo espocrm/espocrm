@@ -36,6 +36,7 @@ use Espo\Core\{
     FieldProcessing\PhoneNumber\SaveProcessor as PhoneNumberSaveProcessor,
     FieldProcessing\Relation\SaveProcessor as RelationSaveProcessor,
     FieldProcessing\File\SaveProcessor as FileSaveProcessor,
+    FieldProcessing\MultiEnum\SaveProcessor as MultiEnumSaveProcessor,
 };
 
 /**
@@ -51,16 +52,20 @@ class SaveProcessor
 
     private $fileSaveProcessor;
 
+    private $multiEnumSaveProcessor;
+
     public function __construct(
         EmailAddressSaveProcessor $emailAddressSaveProcessor,
         PhoneNumberSaveProcessor $phoneNumberSaveProcessor,
         RelationSaveProcessor $relationSaveProcessor,
-        FileSaveProcessor $fileSaveProcessor
+        FileSaveProcessor $fileSaveProcessor,
+        MultiEnumSaveProcessor $multiEnumSaveProcessor
     ) {
         $this->emailAddressSaveProcessor = $emailAddressSaveProcessor;
         $this->phoneNumberSaveProcessor = $phoneNumberSaveProcessor;
         $this->relationSaveProcessor = $relationSaveProcessor;
         $this->fileSaveProcessor = $fileSaveProcessor;
+        $this->multiEnumSaveProcessor = $multiEnumSaveProcessor;
     }
 
     public function process(Entity $entity, array $options): void
@@ -69,5 +74,6 @@ class SaveProcessor
         $this->phoneNumberSaveProcessor->process($entity, $options);
         $this->relationSaveProcessor->process($entity, $options);
         $this->fileSaveProcessor->process($entity, $options);
+        $this->multiEnumSaveProcessor->process($entity, $options);
     }
 }

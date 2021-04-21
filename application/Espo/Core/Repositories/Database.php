@@ -247,7 +247,6 @@ class Database extends RDBRepository
         parent::afterSave($entity, $options);
 
         if (!$this->processFieldsAfterSaveDisabled) {
-            $this->processArrayFieldsSave($entity);
             $this->processWysiwygFieldsSave($entity);
         }
 
@@ -311,37 +310,6 @@ class Database extends RDBRepository
             ) {
                 $entity->set('createdById', $this->applicationState->getUser()->getId());
             }
-        }
-    }
-
-    protected function processArrayFieldsSave(Entity $entity)
-    {
-        foreach ($entity->getAttributeList() as $attribute) {
-            $type = $entity->getAttributeType($attribute);
-
-            if ($type !== Entity::JSON_ARRAY) {
-                continue;
-            }
-
-            if (!$entity->has($attribute)) {
-                continue;
-            }
-
-            if (!$entity->isAttributeChanged($attribute)) {
-                continue;
-            }
-
-            if (!$entity->getAttributeParam($attribute, 'storeArrayValues')) {
-                continue;
-            }
-
-            if ($entity->getAttributeParam($attribute, 'notStorable')) {
-                continue;
-            }
-
-            $this->getEntityManager()
-                ->getRepository('ArrayValue')
-                ->storeEntityAttribute($entity, $attribute);
         }
     }
 
