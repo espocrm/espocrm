@@ -37,6 +37,7 @@ use Espo\Core\{
     FieldProcessing\Relation\SaveProcessor as RelationSaveProcessor,
     FieldProcessing\File\SaveProcessor as FileSaveProcessor,
     FieldProcessing\MultiEnum\SaveProcessor as MultiEnumSaveProcessor,
+    FieldProcessing\Wysiwyg\SaveProcessor as WysiwygSaveProcessor,
 };
 
 /**
@@ -54,18 +55,22 @@ class SaveProcessor
 
     private $multiEnumSaveProcessor;
 
+    private $wysiwygSaveProcessor;
+
     public function __construct(
         EmailAddressSaveProcessor $emailAddressSaveProcessor,
         PhoneNumberSaveProcessor $phoneNumberSaveProcessor,
         RelationSaveProcessor $relationSaveProcessor,
         FileSaveProcessor $fileSaveProcessor,
-        MultiEnumSaveProcessor $multiEnumSaveProcessor
+        MultiEnumSaveProcessor $multiEnumSaveProcessor,
+        WysiwygSaveProcessor $wysiwygSaveProcessor
     ) {
         $this->emailAddressSaveProcessor = $emailAddressSaveProcessor;
         $this->phoneNumberSaveProcessor = $phoneNumberSaveProcessor;
         $this->relationSaveProcessor = $relationSaveProcessor;
         $this->fileSaveProcessor = $fileSaveProcessor;
         $this->multiEnumSaveProcessor = $multiEnumSaveProcessor;
+        $this->wysiwygSaveProcessor = $wysiwygSaveProcessor;
     }
 
     public function process(Entity $entity, array $options): void
@@ -75,5 +80,6 @@ class SaveProcessor
         $this->relationSaveProcessor->process($entity, $options);
         $this->fileSaveProcessor->process($entity, $options);
         $this->multiEnumSaveProcessor->process($entity, $options);
+        $this->wysiwygSaveProcessor->process($entity, $options);
     }
 }

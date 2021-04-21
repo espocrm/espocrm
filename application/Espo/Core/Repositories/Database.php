@@ -159,48 +159,52 @@ class Database extends RDBRepository
 
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
-        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            $hookData = [
-                'relationName' => $relationName,
-                'relationParams' => $params,
-            ];
-
-            $this->hookManager->process(
-                $this->entityType,
-                'afterMassRelate',
-                $entity,
-                $options,
-                $hookData
-            );
+        if ($this->hooksDisabled || !empty($options['skipHooks'])) {
+            return;
         }
+
+        $hookData = [
+            'relationName' => $relationName,
+            'relationParams' => $params,
+        ];
+
+        $this->hookManager->process(
+            $this->entityType,
+            'afterMassRelate',
+            $entity,
+            $options,
+            $hookData
+        );
     }
 
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
 
-        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            if (is_string($foreign)) {
-                $foreignId = $foreign;
+        if ($this->hooksDisabled || !empty($options['skipHooks'])) {
+            return;
+        }
 
-                $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+        if (is_string($foreign)) {
+            $foreignId = $foreign;
 
-                if ($foreignEntityType) {
-                    $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
+            $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
-                    $foreign->set('id', $foreignId);
+            if ($foreignEntityType) {
+                $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
 
-                    $foreign->setAsFetched();
-                }
+                $foreign->set('id', $foreignId);
+
+                $foreign->setAsFetched();
+            }
+        }
+
+        if ($foreign instanceof Entity) {
+            if (is_object($data)) {
+                $data = (array) $data;
             }
 
-            if ($foreign instanceof Entity) {
-                if (is_object($data)) {
-                    $data = (array) $data;
-                }
-
-                $this->hookMediator->afterRelate($entity, $relationName, $foreign, $data, $options);
-            }
+            $this->hookMediator->afterRelate($entity, $relationName, $foreign, $data, $options);
         }
     }
 
@@ -208,22 +212,24 @@ class Database extends RDBRepository
     {
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
 
-        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            if (is_string($foreign)) {
-                $foreignId = $foreign;
+        if ($this->hooksDisabled || !empty($options['skipHooks'])) {
+            return;
+        }
 
-                $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+        if (is_string($foreign)) {
+            $foreignId = $foreign;
 
-                if ($foreignEntityType) {
-                    $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
-                    $foreign->id = $foreignId;
-                    $foreign->setAsFetched();
-                }
+            $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
+            if ($foreignEntityType) {
+                $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
+                $foreign->id = $foreignId;
+                $foreign->setAsFetched();
             }
+        }
 
-            if ($foreign instanceof Entity) {
-                $this->hookMediator->afterUnrelate($entity, $relationName, $foreign, $options);
-            }
+        if ($foreign instanceof Entity) {
+            $this->hookMediator->afterUnrelate($entity, $relationName, $foreign, $options);
         }
     }
 
@@ -245,10 +251,6 @@ class Database extends RDBRepository
         }
 
         parent::afterSave($entity, $options);
-
-        if (!$this->processFieldsAfterSaveDisabled) {
-            $this->processWysiwygFieldsSave($entity);
-        }
 
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
             $this->hookManager->process($this->entityType, 'afterSave', $entity, $options);
@@ -309,44 +311,6 @@ class Database extends RDBRepository
                 $this->applicationState->hasUser()
             ) {
                 $entity->set('createdById', $this->applicationState->getUser()->getId());
-            }
-        }
-    }
-
-    protected function processWysiwygFieldsSave(Entity $entity)
-    {
-        if (!$entity->isNew()) {
-            return;
-        }
-
-        $fieldsDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
-
-        foreach ($fieldsDefs as $field => $defs) {
-            if (!empty($defs['type']) && $defs['type'] === 'wysiwyg') {
-                $content = $entity->get($field);
-
-                if (!$content) {
-                    continue;
-                }
-
-                if (preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $content, $matches)) {
-                    if (!empty($matches[1]) && is_array($matches[1])) {
-                        foreach ($matches[1] as $id) {
-                            $attachment = $this->getEntityManager()->getEntity('Attachment', $id);
-
-                            if ($attachment) {
-                                if (!$attachment->get('relatedId') && !$attachment->get('sourceId')) {
-                                    $attachment->set([
-                                        'relatedId' => $entity->id,
-                                        'relatedType' => $entity->getEntityType()
-                                    ]);
-
-                                    $this->getEntityManager()->saveEntity($attachment);
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
     }
