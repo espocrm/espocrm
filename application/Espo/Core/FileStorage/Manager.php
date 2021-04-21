@@ -56,7 +56,7 @@ class Manager
     /**
      * Whether a file exists in a storage.
      */
-    public function exists(AttachmentEntity $attachment) : bool
+    public function exists(AttachmentEntity $attachment): bool
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -66,7 +66,7 @@ class Manager
     /**
      * Get a file size.
      */
-    public function getSize(AttachmentEntity $attachment) : int
+    public function getSize(AttachmentEntity $attachment): int
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -76,7 +76,7 @@ class Manager
     /**
      * Get file contents.
      */
-    public function getContents(AttachmentEntity $attachment) : string
+    public function getContents(AttachmentEntity $attachment): string
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -86,7 +86,7 @@ class Manager
     /**
      * Get a file contents stream.
      */
-    public function getStream(AttachmentEntity $attachment) : StreamInterface
+    public function getStream(AttachmentEntity $attachment): StreamInterface
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -96,7 +96,7 @@ class Manager
     /**
      * Store file contents represented as a stream.
      */
-    public function putStream(AttachmentEntity $attachment, StreamInterface $stream) : void
+    public function putStream(AttachmentEntity $attachment, StreamInterface $stream): void
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -106,7 +106,7 @@ class Manager
     /**
      * Store file contents.
      */
-    public function putContents(AttachmentEntity $attachment, string $contents) : void
+    public function putContents(AttachmentEntity $attachment, string $contents): void
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -118,7 +118,7 @@ class Manager
     /**
      * Remove a file.
      */
-    public function unlink(AttachmentEntity $attachment) : void
+    public function unlink(AttachmentEntity $attachment): void
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -128,7 +128,7 @@ class Manager
     /**
      * Whether an attachment storage is local.
      */
-    public function isLocal(AttachmentEntity $attachment) : bool
+    public function isLocal(AttachmentEntity $attachment): bool
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -138,7 +138,7 @@ class Manager
     /**
      * Get a local file path. If a file is not stored locally, a temporary file will be created.
      */
-    public function getLocalFilePath(AttachmentEntity $attachment) : string
+    public function getLocalFilePath(AttachmentEntity $attachment): string
     {
         $implementation = $this->getImplementation($attachment);
 
@@ -160,12 +160,12 @@ class Manager
         return $path;
     }
 
-    private static function wrapAttachmentEntity(AttachmentEntity $attachment) : AttachmentEntityWrapper
+    private static function wrapAttachmentEntity(AttachmentEntity $attachment): AttachmentEntityWrapper
     {
         return new AttachmentEntityWrapper($attachment);
     }
 
-    private function getImplementation(AttachmentEntity $attachment) : Storage
+    private function getImplementation(AttachmentEntity $attachment): Storage
     {
         $storage = $attachment->getStorage();
 

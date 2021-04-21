@@ -46,9 +46,11 @@ class Argument implements Evaluatable
     /**
      * Get an argument type (function name).
      */
-    public function getType() : ?string
+    public function getType(): ?string
     {
-        if (!is_object($this->data)) return null;
+        if (!is_object($this->data)) {
+            return null;
+        }
 
         return $this->data->type ?? null;
     }
@@ -56,7 +58,7 @@ class Argument implements Evaluatable
     /**
      * Get a nested argument list.
      */
-    public function getArgumentList() : ArgumentList
+    public function getArgumentList(): ArgumentList
     {
         if (!is_object($this->data)) {
             throw new Error("Can't get an argument list from a scalar value item.");
@@ -64,9 +66,11 @@ class Argument implements Evaluatable
 
         if (!property_exists($this->data, 'value')) {
             $argumentList = new ArgumentList([]);
-        } else if (is_array($this->data->value)) {
+        }
+        else if (is_array($this->data->value)) {
             $argumentList = new ArgumentList($this->data->value);
-        } else {
+        }
+        else {
             $argumentList = new ArgumentList([$this->data->value]);
         }
 
@@ -75,6 +79,8 @@ class Argument implements Evaluatable
 
     /**
      * Get RAW data.
+     *
+     * @return mixed
      */
     public function getData()
     {

@@ -29,10 +29,17 @@
 
 namespace Espo\Core\Formula;
 
+use BadMethodCallException;
+use OutOfBoundsException;
+use Iterator;
+use Countable;
+use ArrayAccess;
+use SeekableIterator;
+
 /**
  * A list of function arguments.
  */
-class ArgumentList implements Evaluatable, \Iterator, \Countable, \ArrayAccess, \SeekableIterator
+class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, SeekableIterator
 {
     protected $dataList;
 
@@ -46,25 +53,30 @@ class ArgumentList implements Evaluatable, \Iterator, \Countable, \ArrayAccess, 
     private function getLastValidKey()
     {
         $keys = array_keys($this->dataList);
+
         $i = end($keys);
+
         while ($i > 0) {
             if (array_key_exists($i, $this->dataList)) {
                 break;
             }
+
             $i--;
         }
+
         return $i;
     }
 
     public function rewind()
     {
         $this->position = 0;
+
         while (!$this->valid() && $this->position <= $this->getLastValidKey()) {
             $this->position ++;
         }
     }
 
-    protected function getArgumentByIndex(int $index) : Argument
+    private function getArgumentByIndex(int $index): Argument
     {
         return new Argument($this->dataList[$index]);
     }
@@ -110,12 +122,12 @@ class ArgumentList implements Evaluatable, \Iterator, \Countable, \ArrayAccess, 
 
     public function offsetSet($offset, $value)
     {
-        throw new \BadMethodCallException('Setting is not allowed.');
+        throw new BadMethodCallException('Setting is not allowed.');
     }
 
     public function offsetUnset($offset)
     {
-        throw new \BadMethodCallException('Unsetting is not allowed.');
+        throw new BadMethodCallException('Unsetting is not allowed.');
     }
 
     public function count() : int
@@ -126,8 +138,9 @@ class ArgumentList implements Evaluatable, \Iterator, \Countable, \ArrayAccess, 
     public function seek($offset)
     {
         $this->position = $offset;
+
         if (!$this->valid()) {
-            throw new \OutOfBoundsException("Invalid seek offset ($offset).");
+            throw new OutOfBoundsException("Invalid seek offset ($offset).");
         }
     }
 }

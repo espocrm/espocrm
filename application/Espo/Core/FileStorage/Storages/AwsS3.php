@@ -80,29 +80,29 @@ class AwsS3 implements Storage
         $this->filesystem = new Filesystem($adapter);
     }
 
-    public function unlink(Attachment $attachment) : void
+    public function unlink(Attachment $attachment): void
     {
         $this->filesystem->delete($attachment->getSourceId());
     }
 
-    public function exists(Attachment $attachment) : bool
+    public function exists(Attachment $attachment): bool
     {
         return $this->filesystem->fileExists($attachment->getSourceId());
     }
 
-    public function getSize(Attachment $attachment) : int
+    public function getSize(Attachment $attachment): int
     {
         return $this->filesystem->fileSize($attachment->getSourceId());
     }
 
-    public function getStream(Attachment $attachment) : StreamInterface
+    public function getStream(Attachment $attachment): StreamInterface
     {
         $resource = $this->filesystem->readStream($attachment->getSourceId());
 
         return new Stream($resource);
     }
 
-    public function putStream(Attachment $attachment, StreamInterface $stream) : void
+    public function putStream(Attachment $attachment, StreamInterface $stream): void
     {
         // League\Flysystem does not support StreamInterface.
         // Need to pass a resource.

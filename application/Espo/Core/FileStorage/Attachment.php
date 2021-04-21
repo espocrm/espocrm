@@ -34,5 +34,5 @@ interface Attachment
     /**
      * Get a source ID.
      */
-    public function getSourceId() : string;
+    public function getSourceId(): string;
 }

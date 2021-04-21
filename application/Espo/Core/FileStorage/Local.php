@@ -37,5 +37,5 @@ interface Local
     /**
      * Get a local file path.
      */
-    public function getLocalFilePath(Attachment $attachment) : string;
+    public function getLocalFilePath(Attachment $attachment): string;
 }

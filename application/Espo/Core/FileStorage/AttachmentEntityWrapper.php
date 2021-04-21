@@ -46,7 +46,7 @@ class AttachmentEntityWrapper implements Attachment
         $this->attachment = $attachment;
     }
 
-    public function getSourceId() : string
+    public function getSourceId(): string
     {
         return $this->attachment->getSourceId();
     }

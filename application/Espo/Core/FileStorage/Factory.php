@@ -48,7 +48,7 @@ class Factory
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create(string $name) : Storage
+    public function create(string $name): Storage
     {
         $className = $this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $name]);
 

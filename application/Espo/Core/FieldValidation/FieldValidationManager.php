@@ -65,11 +65,10 @@ class FieldValidationManager
      * @param Entity $entity An entity.
      * @param ?StdClass $data Raw request payload data.
      * @param ?Params $params Validation additional parameters.
-
      *
      * @throws BadRequest If data is not valid.
      */
-    public function process(Entity $entity, ?StdClass $data = null, ?Params $params = null) : void
+    public function process(Entity $entity, ?StdClass $data = null, ?Params $params = null): void
     {
         $dataIsSet = $data !== null;
 
@@ -105,7 +104,7 @@ class FieldValidationManager
     /**
      * Check a specific field for a specific validation type.
      */
-    public function check(Entity $entity, string $field, string $type, ?StdClass $data = null) : bool
+    public function check(Entity $entity, string $field, string $type, ?StdClass $data = null): bool
     {
         if (!$data) {
             $data = $data ?? (object) [];
@@ -139,7 +138,7 @@ class FieldValidationManager
         return true;
     }
 
-    private function processField(Entity $entity, string $field, Params $params, StdClass $data) : void
+    private function processField(Entity $entity, string $field, Params $params, StdClass $data): void
     {
         $entityType = $entity->getEntityType();
 
@@ -168,8 +167,12 @@ class FieldValidationManager
     }
 
     private function processFieldCheck(
-        string $entityType, string $type, Entity $entity, string $field, $validationValue
-    ) : bool {
+        string $entityType,
+        string $type,
+        Entity $entity,
+        string $field,
+        $validationValue
+    ): bool {
 
         $checker = $this->getFieldTypeChecker($entityType, $field);
 
@@ -187,8 +190,12 @@ class FieldValidationManager
     }
 
     private function processFieldRawCheck(
-        string $entityType, string $type, StdClass $data, string $field, $validationValue
-    ) : bool {
+        string $entityType,
+        string $type,
+        StdClass $data,
+        string $field,
+        $validationValue
+    ): bool {
 
         $checker = $this->getFieldTypeChecker($entityType, $field);
 
@@ -205,7 +212,7 @@ class FieldValidationManager
         return $checker->$methodName($data, $field, $validationValue);
     }
 
-    private function getFieldTypeChecker(string $entityType, string $field) : ?object
+    private function getFieldTypeChecker(string $entityType, string $field): ?object
     {
         $key = $entityType . '_' . $field;
 
@@ -216,7 +223,7 @@ class FieldValidationManager
         return $this->checkerCache[$key];
     }
 
-    private function loadFieldTypeChecker(string $entityType, string $field) : void
+    private function loadFieldTypeChecker(string $entityType, string $field): void
     {
         $key = $entityType . '_' . $field;
 
@@ -229,7 +236,7 @@ class FieldValidationManager
         $this->checkerCache[$key] = $this->factory->create($entityType, $field);
     }
 
-    private function isFieldSetInData(string $entityType, string $field, StdClass $data) : bool
+    private function isFieldSetInData(string $entityType, string $field, StdClass $data): bool
     {
         $attributeList = $this->fieldUtil->getActualAttributeList($entityType, $field);
 

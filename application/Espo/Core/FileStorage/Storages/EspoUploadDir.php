@@ -50,21 +50,21 @@ class EspoUploadDir implements Storage, Local
         $this->fileManager = $fileManager;
     }
 
-    public function unlink(Attachment $attachment) : void
+    public function unlink(Attachment $attachment): void
     {
         $this->fileManager->unlink(
             $this->getFilePath($attachment)
         );
     }
 
-    public function exists(Attachment $attachment) : bool
+    public function exists(Attachment $attachment): bool
     {
         $filePath = $this->getFilePath($attachment);
 
         return $this->fileManager->isFile($filePath);
     }
 
-    public function getSize(Attachment $attachment) : int
+    public function getSize(Attachment $attachment): int
     {
         $filePath = $this->getFilePath($attachment);
 
@@ -75,7 +75,7 @@ class EspoUploadDir implements Storage, Local
         return filesize($filePath);
     }
 
-    public function getStream(Attachment $attachment) : StreamInterface
+    public function getStream(Attachment $attachment): StreamInterface
     {
         $filePath = $this->getFilePath($attachment);
 
@@ -88,7 +88,7 @@ class EspoUploadDir implements Storage, Local
         return new Stream($resouce);
     }
 
-    public function putStream(Attachment $attachment, StreamInterface $stream) : void
+    public function putStream(Attachment $attachment, StreamInterface $stream): void
     {
         $filePath = $this->getFilePath($attachment);
 
@@ -101,7 +101,7 @@ class EspoUploadDir implements Storage, Local
         }
     }
 
-    public function getLocalFilePath(Attachment $attachment) : string
+    public function getLocalFilePath(Attachment $attachment): string
     {
         return $this->getFilePath($attachment);
     }

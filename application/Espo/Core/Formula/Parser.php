@@ -38,7 +38,7 @@ use StdClass;
  */
 class Parser
 {
-    protected $priorityList = [
+    private $priorityList = [
         ['='],
         ['||'],
         ['&&'],
@@ -47,7 +47,7 @@ class Parser
         ['*', '/', '%'],
     ];
 
-    protected $operatorMap = [
+    private $operatorMap = [
         '=' => 'assign',
         '||' => 'logical\\or',
         '&&' => 'logical\\and',
@@ -64,12 +64,12 @@ class Parser
         '<=' => 'comparison\\lessThanOrEquals',
     ];
 
-    public function parse(string $expression) : StdClass
+    public function parse(string $expression): StdClass
     {
         return $this->split($expression);
     }
 
-    protected function applyOperator(string $operator, string $firstPart, string $secondPart) : StdClass
+    private function applyOperator(string $operator, string $firstPart, string $secondPart): StdClass
     {
         if ($operator === '=') {
             if (strlen($firstPart)) {
@@ -97,6 +97,7 @@ class Parser
                     ]
                 ];
             }
+
             throw new SyntaxError("Bad operator usage.");
         }
 
@@ -111,9 +112,13 @@ class Parser
         ];
     }
 
-    protected function processStrings(
-        string &$string, string &$modifiedString, ?array &$splitterIndexList = null, bool $intoOneLine = false
-    ) {
+    private function processStrings(
+        string &$string,
+        string &$modifiedString,
+        ?array &$splitterIndexList = null,
+        bool $intoOneLine = false
+    ): bool {
+
         $isString = false;
         $isSingleQuote = false;
         $isComment = false;
@@ -153,12 +158,13 @@ class Parser
             if ($isString) {
                 if ($string[$i] === '(' || $string[$i] === ')') {
                     $modifiedString[$i] = '_';
-                } else if (!$isStringStart) {
+                }
+                else if (!$isStringStart) {
                     $modifiedString[$i] = ' ';
                 }
-            } else {
+            }
+            else {
                 if (!$isLineComment && !$isComment) {
-
                     if (!$isComment) {
                         if ($i && $string[$i] === '/' && $string[$i - 1] === '/') {
                             $isLineComment = true;
@@ -174,6 +180,7 @@ class Parser
                     if ($string[$i] === '(') {
                         $braceCounter++;
                     }
+
                     if ($string[$i] === ')') {
                         $braceCounter--;
                     }
@@ -184,6 +191,7 @@ class Parser
                                 $splitterIndexList[] = $i;
                             }
                         }
+
                         if ($intoOneLine) {
                             if ($string[$i] === "\r" || $string[$i] === "\n" || $string[$i] === "\t") {
                                 $string[$i] = ' ';
@@ -209,7 +217,7 @@ class Parser
         return $isString;
     }
 
-    protected function split(string $expression) : StdClass
+    private function split(string $expression): StdClass
     {
         $expression = trim($expression);
 
@@ -237,24 +245,34 @@ class Parser
             if ($modifiedExpression[$i] === '(') {
                 $braceCounter++;
             }
+
             if ($modifiedExpression[$i] === ')') {
                 $braceCounter--;
             }
+
             if ($braceCounter === 0 && $i < strlen($modifiedExpression) - 1) {
                 $hasExcessBraces = false;
             }
+
             if ($braceCounter === 0) {
                 $expressionOutOfBraceList[] = true;
             } else {
                 $expressionOutOfBraceList[] = false;
             }
         }
+
         if ($braceCounter !== 0) {
             throw new SyntaxError('Incorrect round brackets in expression ' . $expression . '.');
         }
 
-        if (strlen($expression) > 1 && $expression[0] === '(' && $expression[strlen($expression) - 1] === ')' && $hasExcessBraces) {
+        if (
+            strlen($expression) > 1 &&
+            $expression[0] === '(' &&
+            $expression[strlen($expression) - 1] === ')' &&
+            $hasExcessBraces
+        ) {
             $expression = substr($expression, 1, strlen($expression) - 2);
+
             return $this->split($expression);
         }
 
@@ -262,14 +280,25 @@ class Parser
             if ($expression[strlen($expression) - 1] !== ';') {
                 $splitterIndexList[] = strlen($expression);
             }
+
             $parsedPartList = [];
+
             for ($i = 0; $i < count($splitterIndexList); $i++) {
                 if ($i > 0) {
                     $previousSplitterIndex = $splitterIndexList[$i - 1] + 1;
-                } else {
+                }
+                else {
                     $previousSplitterIndex = 0;
                 }
-                $part = trim(substr($expression, $previousSplitterIndex, $splitterIndexList[$i] - $previousSplitterIndex));
+
+                $part = trim(
+                    substr(
+                        $expression,
+                        $previousSplitterIndex,
+                        $splitterIndexList[$i] - $previousSplitterIndex
+                    )
+                );
+
                 $parsedPartList[] = $this->parse($part);
             }
             return (object) [
@@ -281,44 +310,62 @@ class Parser
         $firstOperator = null;
         $minIndex = null;
 
-        if ($expression === '') return (object) [
-            'type' => 'value',
-            'value' => null,
-        ];
+        if ($expression === '') {
+            return (object) [
+                'type' => 'value',
+                'value' => null,
+            ];
+        }
 
         foreach ($this->priorityList as $operationList) {
             foreach ($operationList as $operator) {
                 $startFrom = 1;
+
                 while (true) {
                     $index = strpos($expression, $operator, $startFrom);
-                    if ($index === false) break;
-                    if ($expressionOutOfBraceList[$index]) break;
+
+                    if ($index === false) {
+                        break;
+                    }
+
+                    if ($expressionOutOfBraceList[$index]) {
+                        break;
+                    }
+
                     $startFrom = $index + 1;
                 }
                 if ($index !== false) {
                     $possibleRightOperator = null;
+
                     if (strlen($operator) === 1) {
                         if ($index < strlen($expression) - 1) {
                             $possibleRightOperator = trim($operator . $expression[$index + 1]);
                         }
                     }
+
                     if (
                         $possibleRightOperator &&
                         $possibleRightOperator != $operator &&
                         !empty($this->operatorMap[$possibleRightOperator])
-                    ) continue;
+                    ) {
+                        continue;
+                    }
 
                     $possibleLeftOperator = null;
+
                     if (strlen($operator) === 1) {
                         if ($index > 0) {
                             $possibleLeftOperator = trim($expression[$index - 1] . $operator);
                         }
                     }
+
                     if (
                         $possibleLeftOperator &&
                         $possibleLeftOperator != $operator &&
                         !empty($this->operatorMap[$possibleLeftOperator])
-                    ) continue;
+                    ) {
+                        continue;
+                    }
 
                     $firstPart = substr($expression, 0, $index);
                     $secondPart = substr($expression, $index + strlen($operator));
@@ -326,6 +373,7 @@ class Parser
                     $modifiedFirstPart = $modifiedSecondPart = '';
 
                     $isString = $this->processStrings($firstPart, $modifiedFirstPart);
+
                     $this->processStrings($secondPart, $modifiedSecondPart);
 
                     if (
@@ -337,14 +385,18 @@ class Parser
                     ) {
                         if ($minIndex === null) {
                             $minIndex = $index;
+
                             $firstOperator = $operator;
-                        } else if ($index < $minIndex) {
+                        }
+                        else if ($index < $minIndex) {
                             $minIndex = $index;
+
                             $firstOperator = $operator;
                         }
                     }
                 }
             }
+
             if ($firstOperator) {
                 break;
             }
@@ -358,7 +410,8 @@ class Parser
             $secondPart = trim($secondPart);
 
             return $this->applyOperator($firstOperator, $firstPart, $secondPart);
-        } else {
+        }
+        else {
             $expression = trim($expression);
 
             if ($expression[0] === '!') {
@@ -420,22 +473,25 @@ class Parser
             if ($expression === 'true') {
                 return (object) [
                     'type' => 'value',
-                    'value' => true
+                    'value' => true,
                 ];
-            } else if ($expression === 'false') {
+            }
+            else if ($expression === 'false') {
                 return (object) [
                     'type' => 'value',
-                    'value' => false
+                    'value' => false,
                 ];
-            } else if ($expression === 'null') {
+            }
+            else if ($expression === 'null') {
                 return (object) [
                     'type' => 'value',
-                    'value' => null
+                    'value' => null,
                 ];
             }
 
             if ($expression[strlen($expression) - 1] === ')') {
                 $firstOpeningBraceIndex = strpos($expression, '(');
+
                 if ($firstOpeningBraceIndex > 0) {
                     $functionName = trim(substr($expression, 0, $firstOpeningBraceIndex));
                     $functionContent = substr($expression, $firstOpeningBraceIndex + 1, -1);
@@ -443,13 +499,14 @@ class Parser
                     $argumentList = $this->parseArgumentListFromFunctionContent($functionContent);
 
                     $argumentSplitedList = [];
+
                     foreach ($argumentList as $argument) {
                         $argumentSplitedList[] = $this->split($argument);
                     }
 
                     return (object) [
                         'type' => $functionName,
-                        'value' => $argumentSplitedList
+                        'value' => $argumentSplitedList,
                     ];
                 }
             }
@@ -461,21 +518,28 @@ class Parser
         }
     }
 
-    protected function stripComments(string &$expression, string &$modifiedExpression)
+    private function stripComments(string &$expression, string &$modifiedExpression): void
     {
         $commentIndexStart = null;
 
         for ($i = 0; $i < strlen($modifiedExpression); $i++) {
             if (is_null($commentIndexStart)) {
-                if ($modifiedExpression[$i] === '/' && $i < strlen($modifiedExpression) - 1 && $modifiedExpression[$i + 1] === '/') {
+                if (
+                    $modifiedExpression[$i] === '/' &&
+                    $i < strlen($modifiedExpression) - 1 &&
+                    $modifiedExpression[$i + 1] === '/'
+                ) {
                     $commentIndexStart = $i;
                 }
-            } else {
+            }
+            else {
                 if ($modifiedExpression[$i] === "\n" || $i === strlen($modifiedExpression) - 1) {
                     for ($j = $commentIndexStart; $j <= $i; $j++) {
                         $modifiedExpression[$j] = ' ';
+
                         $expression[$j] = ' ';
                     }
+
                     $commentIndexStart = null;
                 }
             }
@@ -486,19 +550,22 @@ class Parser
                 if ($modifiedExpression[$i] === '/' && $modifiedExpression[$i + 1] === '*') {
                     $commentIndexStart = $i;
                 }
-            } else {
+            }
+            else {
                 if ($modifiedExpression[$i] === '*' && $modifiedExpression[$i + 1] === '/') {
                     for ($j = $commentIndexStart; $j <= $i + 1; $j++) {
                         $modifiedExpression[$j] = ' ';
+
                         $expression[$j] = ' ';
                     }
+
                     $commentIndexStart = null;
                 }
             }
         }
     }
 
-    protected function parseArgumentListFromFunctionContent(string $functionContent) : array
+    private function parseArgumentListFromFunctionContent(string $functionContent): array
     {
         $functionContent = trim($functionContent);
 
@@ -511,21 +578,25 @@ class Parser
 
         $commaIndexList = [];
         $braceCounter = 0;
+
         for ($i = 0; $i < strlen($functionContent); $i++) {
             if ($functionContent[$i] === "'" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = true;
-                } else {
+                }
+                else {
                     if ($isSingleQuote) {
                         $isString = false;
                     }
                 }
-            } else if ($functionContent[$i] === "\"" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+            }
+            else if ($functionContent[$i] === "\"" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = false;
-                } else {
+                }
+                else {
                     if (!$isSingleQuote) {
                         $isString = false;
                     }
@@ -535,7 +606,8 @@ class Parser
             if (!$isString) {
                 if ($functionContent[$i] === '(') {
                     $braceCounter++;
-                } else if ($functionContent[$i] === ')') {
+                }
+                else if ($functionContent[$i] === ')') {
                     $braceCounter--;
                 }
             }
@@ -548,13 +620,23 @@ class Parser
         $commaIndexList[] = strlen($functionContent);
 
         $argumentList = [];
+
         for ($i = 0; $i < count($commaIndexList); $i++) {
             if ($i > 0) {
                 $previousCommaIndex = $commaIndexList[$i - 1] + 1;
-            } else {
+            }
+            else {
                 $previousCommaIndex = 0;
             }
-            $argument = trim(substr($functionContent, $previousCommaIndex, $commaIndexList[$i] - $previousCommaIndex));
+
+            $argument = trim(
+                substr(
+                    $functionContent,
+                    $previousCommaIndex,
+                    $commaIndexList[$i] - $previousCommaIndex
+                )
+            );
+
             $argumentList[] = $argument;
         }
 

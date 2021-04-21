@@ -57,7 +57,12 @@ class Processor
         ?Entity $entity = null,
         ?StdClass $variables = null
     ) {
-        $this->functionFactory = new FunctionFactory($this, $injectableFactory, $attributeFetcher, $functionClassNameMap);
+        $this->functionFactory = new FunctionFactory(
+            $this,
+            $injectableFactory,
+            $attributeFetcher,
+            $functionClassNameMap
+        );
 
         $this->entity = $entity;
         $this->variables = $variables ?? (object) [];
@@ -88,12 +93,14 @@ class Processor
         return $function->process($item->getArgumentList());
     }
 
-    private function processList(ArgumentList $args) : array
+    private function processList(ArgumentList $args): array
     {
         $list = [];
+
         foreach ($args as $item) {
             $list[] = $this->process($item);
         }
+
         return $list;
     }
 }

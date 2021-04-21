@@ -44,7 +44,7 @@ class Params
      *
      * @return array<string>
      */
-    public function getSkipFieldList() : array
+    public function getSkipFieldList(): array
     {
         return $this->skipFieldList;
     }
@@ -54,7 +54,7 @@ class Params
      *
      * @return array<string>
      */
-    public function getTypeSkipFieldList(string $type) : array
+    public function getTypeSkipFieldList(string $type): array
     {
         return $this->typeSkipFieldListData[$type] ?? [];
     }
@@ -64,7 +64,7 @@ class Params
      *
      * @param array<string> $list
      */
-    public function withSkipFieldList(array $list) : self
+    public function withSkipFieldList(array $list): self
     {
         $obj = clone $this;
 
@@ -78,7 +78,7 @@ class Params
      *
      * @param array<string> $list
      */
-    public function withTypeSkipFieldList(string $type, array $list) : self
+    public function withTypeSkipFieldList(string $type, array $list): self
     {
         $obj = clone $this;
 
@@ -90,7 +90,7 @@ class Params
     /**
      * Create an empty instance.
      */
-    public static function fromNothing() : self
+    public static function fromNothing(): self
     {
         return new self();
     }

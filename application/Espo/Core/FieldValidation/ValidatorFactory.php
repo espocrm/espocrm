@@ -53,7 +53,7 @@ class ValidatorFactory
     /**
      * Whether can be created.
      */
-    public function isCreatable(string $entityType, string $field) : bool
+    public function isCreatable(string $entityType, string $field): bool
     {
         return (bool) $this->getClassName($entityType, $field);
     }
@@ -63,7 +63,7 @@ class ValidatorFactory
      *
      * @throws RuntimeException
      */
-    public function create(string $entityType, string $field) : object
+    public function create(string $entityType, string $field): object
     {
         $className = $this->getClassName($entityType, $field);
 
@@ -74,7 +74,7 @@ class ValidatorFactory
         return $this->injectableFactory->create($className);
     }
 
-    private function getClassName(string $entityType, string $field) : ?string
+    private function getClassName(string $entityType, string $field): ?string
     {
         $key = $entityType . '_' . $field;
 
@@ -85,7 +85,7 @@ class ValidatorFactory
         return $this->classNameCache[$key];
     }
 
-    private function getClassNameNoCache(string $entityType, string $field) : ?string
+    private function getClassNameNoCache(string $entityType, string $field): ?string
     {
         $className1 = $this->metadata
             ->get(['entityDefs', $entityType, 'fields', $field, 'validatorClassName']);

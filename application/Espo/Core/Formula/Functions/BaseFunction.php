@@ -59,12 +59,12 @@ abstract class BaseFunction
 
     protected $log;
 
-    protected function getVariables() : StdClass
+    protected function getVariables(): StdClass
     {
         return $this->variables;
     }
 
-    protected function getEntity() : Entity
+    protected function getEntity(): Entity
     {
         if (!$this->entity) {
             throw new NotPassedEntity('function: ' . $this->name);
@@ -74,7 +74,11 @@ abstract class BaseFunction
     }
 
     public function __construct(
-        string $name, Processor $processor, ?Entity $entity = null, ?StdClass $variables = null, ?Log $log = null
+        string $name,
+        Processor $processor,
+        ?Entity $entity = null,
+        ?StdClass $variables = null,
+        ?Log $log = null
     ) {
         $this->name = $name;
         $this->processor = $processor;
