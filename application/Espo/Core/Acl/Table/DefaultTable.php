@@ -235,6 +235,7 @@ class DefaultTable implements Table
             $fieldTable = (object) [];
 
             $this->applyHighest($aclTable, $fieldTable);
+            $this->applyAdminMandatory($aclTable, $fieldTable);
         }
 
         foreach ($aclTable as $scope => $data) {
@@ -459,13 +460,9 @@ class DefaultTable implements Table
         }
     }
 
-    protected function applyMandatory(&$table, &$fieldTable): void
+    protected function applyMandatoryInternal(StdClass $table, StdClass $fieldTable, string $type): void
     {
-        if ($this->user->isAdmin()) {
-            return;
-        }
-
-        $data = $this->metadata->get(['app', $this->type, 'mandatory', 'scopeLevel']) ?? [];
+        $data = $this->metadata->get(['app', $this->type, $type, 'scopeLevel']) ?? [];
 
         foreach ($data as $scope => $item) {
             $value = $item;
@@ -477,7 +474,7 @@ class DefaultTable implements Table
             $table->$scope = $value;
         }
 
-        $mandatoryFieldData = $this->metadata->get(['app', $this->type, 'mandatory', 'fieldLevel']) ?? [];
+        $mandatoryFieldData = $this->metadata->get(['app', $this->type, $type, 'fieldLevel']) ?? [];
 
         foreach ($this->getScopeList() as $scope) {
             if (isset($table->$scope) && $table->$scope === false) {
@@ -491,7 +488,7 @@ class DefaultTable implements Table
             $fieldList = array_keys($this->metadata->get(['entityDefs', $scope, 'fields']) ?? []);
 
             $mandatoryScopeFieldData = $this->metadata
-                ->get(['app', $this->type, 'mandatory', 'scopeFieldLevel', $scope]) ?? [];
+                ->get(['app', $this->type, $type, 'scopeFieldLevel', $scope]) ?? [];
 
             foreach (array_merge($mandatoryFieldData, $mandatoryScopeFieldData) as $field => $item) {
                 if (!in_array($field, $fieldList)) {
@@ -520,6 +517,16 @@ class DefaultTable implements Table
                 }
             }
         }
+    }
+
+    private function applyMandatory(StdClass $table, StdClass $fieldTable): void
+    {
+        $this->applyMandatoryInternal($table, $fieldTable, 'mandatory');
+    }
+
+    private function applyAdminMandatory(StdClass $table, StdClass $fieldTable): void
+    {
+        $this->applyMandatoryInternal($table, $fieldTable, 'adminMandatory');
     }
 
     protected function applyDisabled(&$table, &$fieldTable): void

@@ -120,6 +120,22 @@
             }
         }
     },
+    "adminMandatory": {
+        "scopeLevel": {
+            "User": {
+                "create": "yes",
+                "read": "all",
+                "edit": "all",
+                "delete": "all"
+            },
+            "Team": {
+                "create": "yes",
+                "read": "all",
+                "edit": "all",
+                "delete": "all"
+            }
+        }
+    },
     "valuePermissionList": [
         "assignmentPermission",
         "userPermission",
