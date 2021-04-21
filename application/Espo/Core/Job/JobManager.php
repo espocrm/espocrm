@@ -110,7 +110,7 @@ class JobManager
         }
     }
 
-    protected function getLastRunTime() : int
+    protected function getLastRunTime(): int
     {
         $lastRunData = $this->fileManager->getPhpContents($this->lastRunTimeFile);
 
@@ -124,7 +124,7 @@ class JobManager
         return (int) $lastRunTime;
     }
 
-    protected function updateLastRunTime() : void
+    protected function updateLastRunTime(): void
     {
         $data = [
             'time' => time(),
@@ -133,7 +133,7 @@ class JobManager
         $this->fileManager->putPhpContents($this->lastRunTimeFile, $data, false, true);
     }
 
-    protected function checkLastRunTime() : bool
+    protected function checkLastRunTime(): bool
     {
         $currentTime = time();
         $lastRunTime = $this->getLastRunTime();
@@ -151,7 +151,7 @@ class JobManager
      * Process jobs. Jobs will be created according scheduling. Then pending jobs will be processed.
      * This method supposed to be called on every Cron run or loop iteration of the Daemon.
      */
-    public function process() : void
+    public function process(): void
     {
         if (!$this->checkLastRunTime()) {
             $this->log->info('JobManager: Skip job processing. Too frequent execution.');
@@ -174,7 +174,7 @@ class JobManager
     /**
      * Process pending jobs from a specific queue. Jobs within a queue are processed one by one.
      */
-    public function processQueue(string $queue, int $limit) : void
+    public function processQueue(string $queue, int $limit): void
     {
         $params = QueueProcessorParams
             ::fromNothing()
@@ -188,7 +188,7 @@ class JobManager
         $processor->process();
     }
 
-    private function processMainQueue() : void
+    private function processMainQueue(): void
     {
         $limit = (int) $this->config->get('jobMaxPortion', 0);
 
@@ -205,7 +205,7 @@ class JobManager
     /**
      * Run a specific job by ID. A job status should be set to 'Ready'.
      */
-    public function runJobById(string $id) : void
+    public function runJobById(string $id): void
     {
         $this->jobRunner->runById($id);
     }
@@ -215,7 +215,7 @@ class JobManager
      *
      * @throws Throwable
      */
-    public function runJob(JobEntity $job) : void
+    public function runJob(JobEntity $job): void
     {
         $this->jobRunner->runThrowingException($job);
     }

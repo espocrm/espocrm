@@ -59,7 +59,7 @@ class QueueUtil
         $this->scheduleUtil = $scheduleUtil;
     }
 
-    public function isJobPending(string $id) : bool
+    public function isJobPending(string $id): bool
     {
         $job = $this->entityManager
             ->getRepository('Job')
@@ -77,7 +77,7 @@ class QueueUtil
         return $job->get('status') === JobManager::PENDING;
     }
 
-    public function getPendingJobList(?string $queue = null, int $limit = 0) : Collection
+    public function getPendingJobList(?string $queue = null, int $limit = 0): Collection
     {
         $builder = $this->entityManager
             ->getRDBRepository('Job')
@@ -109,7 +109,7 @@ class QueueUtil
 
     public function isScheduledJobRunning(
         string $scheduledJobId, ?string $targetId = null, ?string $targetType = null
-    ) : bool {
+    ): bool {
 
         $where = [
             'scheduledJobId' => $scheduledJobId,
@@ -128,7 +128,7 @@ class QueueUtil
             ->findOne();
     }
 
-    public function getRunningScheduledJobIdList() : array
+    public function getRunningScheduledJobIdList(): array
     {
         $list = [];
 
@@ -150,7 +150,7 @@ class QueueUtil
         return $list;
     }
 
-    public function hasScheduledJobOnMinute(string $scheduledJobId, string $time) : bool
+    public function hasScheduledJobOnMinute(string $scheduledJobId, string $time): bool
     {
         $dateObj = new DateTime($time);
 
@@ -168,7 +168,7 @@ class QueueUtil
         return (bool) $job;
     }
 
-    public function getPendingCountByScheduledJobId(string $scheduledJobId) : int
+    public function getPendingCountByScheduledJobId(string $scheduledJobId): int
     {
         $countPending = $this->entityManager
             ->getRDBRepository('Job')
@@ -181,7 +181,7 @@ class QueueUtil
         return $countPending;
     }
 
-    public function markJobsFailed() : void
+    public function markJobsFailed(): void
     {
         $this->markJobsFailedByNotExistingProcesses();
         $this->markJobsFailedReadyNotStarted();
@@ -189,7 +189,7 @@ class QueueUtil
         $this->markJobsFailedByPeriod();
     }
 
-    protected function markJobsFailedByNotExistingProcesses() : void
+    protected function markJobsFailedByNotExistingProcesses(): void
     {
         $timeThreshold = time() - $this->config->get(
             'jobPeriodForNotExistingProcess',
@@ -226,7 +226,7 @@ class QueueUtil
         $this->markJobListFailed($failedJobList);
     }
 
-    protected function markJobsFailedReadyNotStarted() : void
+    protected function markJobsFailedReadyNotStarted(): void
     {
         $timeThreshold = time() -
             $this->config->get('jobPeriodForReadyNotStarted', SELF::READY_NOT_STARTED_PERIOD);
@@ -253,7 +253,7 @@ class QueueUtil
         $this->markJobListFailed($failedJobList);
     }
 
-    protected function markJobsFailedByPeriod(bool $isForActiveProcesses = false) : void
+    protected function markJobsFailedByPeriod(bool $isForActiveProcesses = false): void
     {
         $period = 'jobPeriod';
 
@@ -297,7 +297,7 @@ class QueueUtil
         $this->markJobListFailed($failedJobList);
     }
 
-    protected function markJobListFailed(iterable $jobList) : void
+    protected function markJobListFailed(iterable $jobList): void
     {
         if (!count($jobList)) {
             return;
@@ -341,7 +341,7 @@ class QueueUtil
     /**
      * Remove pending duplicate jobs, no need to run twice the same job.
      */
-    public function removePendingJobDuplicates() : void
+    public function removePendingJobDuplicates(): void
     {
         $duplicateJobList = $this->entityManager
             ->getRepository('Job')
@@ -406,7 +406,7 @@ class QueueUtil
     /**
      * Handle job attempts. Change failed to pending if attempts left.
      */
-    public function updateFailedJobAttempts() : void
+    public function updateFailedJobAttempts(): void
     {
         $jobCollection = $this->entityManager
             ->getRDBRepository('Job')

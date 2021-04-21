@@ -44,7 +44,7 @@ class UserEnabledChecker
         $this->entityManager = $entityManager;
     }
 
-    public function checkAssignment(string $entityType, string $userId) : bool
+    public function checkAssignment(string $entityType, string $userId): bool
     {
         $key = $entityType . '_' . $userId;
 

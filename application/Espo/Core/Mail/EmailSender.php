@@ -75,7 +75,7 @@ class EmailSender
         $this->transportFactory = $transportFactory;
     }
 
-    private function createSender() : Sender
+    private function createSender(): Sender
     {
         return new Sender(
             $this->config,
@@ -90,7 +90,7 @@ class EmailSender
     /**
      * Create a builder.
      */
-    public function create() : Sender
+    public function create(): Sender
     {
         return $this->createSender();
     }
@@ -100,7 +100,7 @@ class EmailSender
      *
      * Available parameters: fromAddress, fromName, replyToAddress, replyToName.
      */
-    public function withParams(array $params = []) : Sender
+    public function withParams(array $params = []): Sender
     {
         return $this->createSender()->withParams($params);
     }
@@ -108,7 +108,7 @@ class EmailSender
     /**
      * With specific SMTP parameters.
      */
-    public function withSmtpParams(array $params = []) : Sender
+    public function withSmtpParams(array $params = []): Sender
     {
         return $this->createSender()->withSmtpParams($params);
     }
@@ -116,7 +116,7 @@ class EmailSender
     /**
      * With specific attachments.
      */
-    public function withAttachments(iterable $attachmentList) : Sender
+    public function withAttachments(iterable $attachmentList): Sender
     {
         return $this->createSender()->withAttachments($attachmentList);
     }
@@ -124,7 +124,7 @@ class EmailSender
     /**
      * With envelope options.
      */
-    public function withEnvelopeOptions(array $options) : Sender
+    public function withEnvelopeOptions(array $options): Sender
     {
         return $this->createSender()->withEnvelopeOptions($options);
     }
@@ -132,7 +132,7 @@ class EmailSender
     /**
      * Set a message instance.
      */
-    public function withMessage(Message $message) : Sender
+    public function withMessage(Message $message): Sender
     {
         return $this->createSender()->message($message);
     }
@@ -140,7 +140,7 @@ class EmailSender
     /**
      * Whether system STMP is configured.
      */
-    public function hasSystemSmtp() : bool
+    public function hasSystemSmtp(): bool
     {
         if ($this->config->get('smtpServer')) {
             return true;
@@ -153,7 +153,7 @@ class EmailSender
         return false;
     }
 
-    private function getSystemInboundEmail() : ?InboundEmail
+    private function getSystemInboundEmail(): ?InboundEmail
     {
         $address = $this->config->get('outboundEmailFromAddress');
 
@@ -173,7 +173,7 @@ class EmailSender
         return $this->systemInboundEmail;
     }
 
-    private function getInboundEmailService() : InboundEmailService
+    private function getInboundEmailService(): InboundEmailService
     {
         if (!$this->inboundEmailService) {
             $this->inboundEmailService = $this->serviceFactory->create('InboundEmail');
@@ -185,7 +185,7 @@ class EmailSender
     /**
      * Send an email.
      */
-    public function send(Email $email) : void
+    public function send(Email $email): void
     {
         $this->createSender()->send($email);
     }
@@ -193,7 +193,7 @@ class EmailSender
     /**
      * Generate a message ID.
      */
-    static public function generateMessageId(Email $email) : string
+    static public function generateMessageId(Email $email): string
     {
         return Sender::generateMessageId($email);
     }

@@ -119,7 +119,7 @@ class Sender
     /**
      * @deprecated
      */
-    public function resetParams() : self
+    public function resetParams(): self
     {
         $this->params = [];
         $this->envelope = null;
@@ -135,7 +135,7 @@ class Sender
      *
      * Available parameters: fromAddress, fromName, replyToAddress, replyToName.
      */
-    public function withParams(array $params) : self
+    public function withParams(array $params): self
     {
         $paramList = [
             'fromAddress',
@@ -158,7 +158,7 @@ class Sender
     /**
      * With specific SMTP parameters.
      */
-    public function withSmtpParams(array $params) : self
+    public function withSmtpParams(array $params): self
     {
         return $this->useSmtp($params);
     }
@@ -166,7 +166,7 @@ class Sender
     /**
      * With specific attachments.
      */
-    public function withAttachments(iterable $attachmentList) : self
+    public function withAttachments(iterable $attachmentList): self
     {
         $this->attachmentList = $attachmentList;
 
@@ -176,7 +176,7 @@ class Sender
     /**
      * With envelope options.
      */
-    public function withEnvelopeOptions(array $options) : self
+    public function withEnvelopeOptions(array $options): self
     {
         return $this->setEnvelopeOptions($options);
     }
@@ -184,7 +184,7 @@ class Sender
     /**
      * Set a message instance.
      */
-    public function withMessage(Message $message) : self
+    public function withMessage(Message $message): self
     {
         $this->message = $message;
 
@@ -194,7 +194,7 @@ class Sender
     /**
      * @deprecated
      */
-    public function setParams(array $params = []) : self
+    public function setParams(array $params = []): self
     {
         $this->params = array_merge($this->params, $params);
 
@@ -205,7 +205,7 @@ class Sender
     /**
      * @deprecated
      */
-    public function useSmtp(array $params = []) : self
+    public function useSmtp(array $params = []): self
     {
         $this->isGlobal = false;
 
@@ -217,7 +217,7 @@ class Sender
     /**
      * @deprecated
      */
-    public function useGlobal() : self
+    public function useGlobal(): self
     {
         $this->params = [];
 
@@ -226,7 +226,7 @@ class Sender
         return $this;
     }
 
-    private function applySmtp(array $params = []) : void
+    private function applySmtp(array $params = []): void
     {
         $this->params = $params;
 
@@ -297,7 +297,7 @@ class Sender
         }
     }
 
-    private function applyGlobal() : void
+    private function applyGlobal(): void
     {
         $config = $this->config;
 
@@ -331,7 +331,7 @@ class Sender
     /**
      * @deprecated
      */
-    public function hasSystemSmtp() : bool
+    public function hasSystemSmtp(): bool
     {
         if ($this->config->get('smtpServer')) {
             return true;
@@ -344,7 +344,7 @@ class Sender
         return false;
     }
 
-    private function getSystemInboundEmail() : ?InboundEmail
+    private function getSystemInboundEmail(): ?InboundEmail
     {
         $address = $this->config->get('outboundEmailFromAddress');
 
@@ -364,7 +364,7 @@ class Sender
         return $this->systemInboundEmail;
     }
 
-    private function getInboundEmailService() : ?InboundEmailService
+    private function getInboundEmailService(): ?InboundEmailService
     {
         if (!$this->serviceFactory) {
             return null;
@@ -385,8 +385,11 @@ class Sender
      * @param $attachmentList @deprecated
      */
     public function send(
-        Email $email, ?array $params = [], ?Message $message = null, iterable $attachmentList = []
-    ) : void {
+        Email $email,
+        ?array $params = [],
+        ?Message $message = null,
+        iterable $attachmentList = []
+    ): void {
 
         if ($this->isGlobal) {
             $this->applyGlobal();
@@ -649,7 +652,7 @@ class Sender
         $this->useGlobal();
     }
 
-    private function handleException(Exception $e) : void
+    private function handleException(Exception $e): void
     {
         if ($e instanceof ProtocolRuntimeException) {
             $message = "Email sending error.";
@@ -672,7 +675,7 @@ class Sender
         throw new Error($e->getMessage(), 500);
     }
 
-    static public function generateMessageId(Email $email) : string
+    static public function generateMessageId(Email $email): string
     {
         $rand = mt_rand(1000, 9999);
 
@@ -697,14 +700,14 @@ class Sender
     /**
      * @deprecated
      */
-    public function setEnvelopeOptions(array $options) : self
+    public function setEnvelopeOptions(array $options): self
     {
         $this->envelope = new Envelope($options);
 
         return $this;
     }
 
-    private function addAddresses(Email $email, Message $message) : void
+    private function addAddresses(Email $email, Message $message): void
     {
         $value = $email->get('to');
 

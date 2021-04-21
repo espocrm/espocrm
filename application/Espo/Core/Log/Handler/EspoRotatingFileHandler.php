@@ -46,7 +46,11 @@ class EspoRotatingFileHandler extends EspoFileHandler
     protected $maxFiles;
 
     public function __construct(
-        Config $config, string $filename, int $maxFiles = 0, $level = Logger::DEBUG, bool $bubble = true
+        Config $config,
+        string $filename,
+        int $maxFiles = 0,
+        $level = Logger::DEBUG,
+        bool $bubble = true
     ) {
         $this->filename = $filename;
         $this->maxFiles = (int) $maxFiles;

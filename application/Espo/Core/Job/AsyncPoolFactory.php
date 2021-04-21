@@ -42,12 +42,12 @@ class AsyncPoolFactory
         $this->config = $config;
     }
 
-    public function isSupported() : bool
+    public function isSupported(): bool
     {
         return Pool::isSupported();
     }
 
-    public function create() : Pool
+    public function create(): Pool
     {
         return Pool
             ::create()

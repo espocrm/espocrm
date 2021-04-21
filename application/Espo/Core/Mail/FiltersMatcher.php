@@ -31,25 +31,16 @@ namespace Espo\Core\Mail;
 
 use Espo\Entities\Email;
 
+use Traversable;
+
 class FiltersMatcher
 {
-    protected function matchTo(Email $email, $filter)
+    public function match(Email $email, $subject, bool $skipBody = false): bool
     {
-        if ($email->get('to')) {
-            $toArr = explode(';', $email->get('to'));
-            foreach ($toArr as $to) {
-                if ($this->matchString(strtolower($filter->get('to')), strtolower($to))) {
-                    return true;
-                }
-            }
-        }
-    }
-
-    public function match(Email $email, $subject, $skipBody = false)
-    {
-        if (is_array($subject) || $subject instanceof \Traversable) {
+        if (is_array($subject) || $subject instanceof Traversable) {
             $filterList = $subject;
-        } else {
+        }
+        else {
             $filterList = [$subject];
         }
 
@@ -58,7 +49,13 @@ class FiltersMatcher
 
             if ($filter->get('from')) {
                 $filterCount++;
-                if (!$this->matchString(strtolower($filter->get('from')), strtolower($email->get('from')))) {
+
+                if (
+                    !$this->matchString(
+                        strtolower($filter->get('from')),
+                        strtolower($email->get('from'))
+                    )
+                ) {
                     continue;
                 }
             }
@@ -72,17 +69,21 @@ class FiltersMatcher
 
             if ($filter->get('subject')) {
                 $filterCount++;
+
                 if (!$this->matchString($filter->get('subject'), $email->get('name'))) {
                     continue;
                 }
             }
 
             $wordList = $filter->get('bodyContains');
+
             if (!empty($wordList)) {
                 $filterCount++;
+
                 if ($skipBody) {
                     continue;
                 }
+
                 if (!$this->matchBody($email, $filter)) {
                     continue;
                 }
@@ -97,31 +98,53 @@ class FiltersMatcher
         return false;
     }
 
-    protected function matchBody(Email $email, $filter)
+    protected function matchTo(Email $email, $filter): bool
+    {
+        if ($email->get('to')) {
+            $toArr = explode(';', $email->get('to'));
+
+            foreach ($toArr as $to) {
+                if ($this->matchString(strtolower($filter->get('to')), strtolower($to))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected function matchBody(Email $email, $filter): bool
     {
         $phraseList = $filter->get('bodyContains');
         $body = $email->get('body');
         $bodyPlain = $email->get('bodyPlain');
+
         foreach ($phraseList as $phrase) {
             if (stripos($bodyPlain, $phrase) !== false) {
                 return true;
             }
+
             if (stripos($body, $phrase) !== false) {
                 return true;
             }
         }
+
+        return false;
     }
 
-    protected function matchString($pattern, $value)
+    protected function matchString($pattern, $value): bool
     {
         if ($pattern == $value) {
             return true;
         }
+
         $pattern = preg_quote($pattern, '#');
         $pattern = str_replace('\*', '.*', $pattern).'\z';
+
         if (preg_match('#^'.$pattern.'#', $value)) {
             return true;
         }
+
         return false;
     }
 }

@@ -59,14 +59,14 @@ class AssignmentNotificatorFactory
      *
      * @return AssignmentNotificator
      */
-    public function create(string $entityType) : object // AssignmentNotificator
+    public function create(string $entityType): object // AssignmentNotificator
     {
         $className = $this->getClassName($entityType);
 
         return $this->injectableFactory->create($className);
     }
 
-    private function getClassName(string $entityType) : string
+    private function getClassName(string $entityType): string
     {
         $className1 = $this->metadata->get(['recordDefs', $entityType, 'assignmentNotificatorClassName']);
 

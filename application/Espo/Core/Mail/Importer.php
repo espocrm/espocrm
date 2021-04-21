@@ -83,7 +83,7 @@ class Importer
         iterable $filterList = [],
         bool $fetchOnlyHeader = false,
         ?array $folderData = null
-    ) : ?Email {
+    ): ?Email {
 
         $parser = $message->getParser();
 

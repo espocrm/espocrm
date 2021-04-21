@@ -39,7 +39,7 @@ class QueueProcessorParams
 
     private $limit = 0;
 
-    public function withUseProcessPool(bool $useProcessPool) : self
+    public function withUseProcessPool(bool $useProcessPool): self
     {
         $obj = clone $this;
 
@@ -48,7 +48,7 @@ class QueueProcessorParams
         return $obj;
     }
 
-    public function withNoLock(bool $noLock) : self
+    public function withNoLock(bool $noLock): self
     {
         $obj = clone $this;
 
@@ -57,7 +57,7 @@ class QueueProcessorParams
         return $obj;
     }
 
-    public function withQueue(?string $queue) : self
+    public function withQueue(?string $queue): self
     {
         $obj = clone $this;
 
@@ -66,7 +66,7 @@ class QueueProcessorParams
         return $obj;
     }
 
-    public function withLimit(int $limit) : self
+    public function withLimit(int $limit): self
     {
         $obj = clone $this;
 
@@ -75,27 +75,27 @@ class QueueProcessorParams
         return $obj;
     }
 
-    public function useProcessPool() : bool
+    public function useProcessPool(): bool
     {
         return $this->useProcessPool;
     }
 
-    public function noLock() : bool
+    public function noLock(): bool
     {
         return $this->noLock;
     }
 
-    public function getQueue() : ?string
+    public function getQueue(): ?string
     {
         return $this->queue;
     }
 
-    public function getLimit() : int
+    public function getLimit(): int
     {
         return $this->limit;
     }
 
-    public static function fromNothing() : self
+    public static function fromNothing(): self
     {
         return new self();
     }

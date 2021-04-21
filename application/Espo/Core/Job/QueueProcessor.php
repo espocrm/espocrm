@@ -66,7 +66,7 @@ class QueueProcessor
         $this->entityManager = $entityManager;
     }
 
-    public function process() : void
+    public function process(): void
     {
         $pool = null;
 
@@ -88,7 +88,7 @@ class QueueProcessor
         }
     }
 
-    protected function processJob(JobEntity $job, ?AsyncPool $pool = null) : void
+    protected function processJob(JobEntity $job, ?AsyncPool $pool = null): void
     {
         $useProcessPool = $this->params->useProcessPool();
 

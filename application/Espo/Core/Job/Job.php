@@ -37,5 +37,5 @@ interface Job
     /**
      * Run a job.
      */
-    public function run() : void;
+    public function run(): void;
 }

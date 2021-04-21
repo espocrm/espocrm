@@ -58,6 +58,7 @@ class LogLoader
     const DEFAULT_LEVEL = 'WARNING';
 
     protected $config;
+
     protected $injectableFactory;
 
     public function __construct(Config $config, InjectableFactory $injectableFactory)
@@ -66,7 +67,7 @@ class LogLoader
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function load() : Log
+    public function load(): Log
     {
         $log = new Log('Espo');
 
@@ -97,7 +98,7 @@ class LogLoader
         return $log;
     }
 
-    protected function createDefaultHandler() : HandlerInterface
+    protected function createDefaultHandler(): HandlerInterface
     {
         $path = $this->config->get('logger.path') ?? self::PATH;
         $rotation = $this->config->get('logger.rotation') ?? true;

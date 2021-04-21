@@ -42,10 +42,10 @@ interface JobTargeted
     /**
      * Run a job for a specific target.
      */
-    public function run(string $targetType, string $targetId, StdClass $data) : void;
+    public function run(string $targetType, string $targetId, StdClass $data): void;
 
     /**
      * Create multiple job records for a scheduled job.
      */
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void;
+    public function prepare(ScheduledJob $scheduledJob, string $executeTime): void;
 }

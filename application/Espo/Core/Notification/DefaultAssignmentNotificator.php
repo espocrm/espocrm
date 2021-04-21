@@ -54,7 +54,7 @@ class DefaultAssignmentNotificator  implements AssignmentNotificator
         $this->userChecker = $userChecker;
     }
 
-    public function process(Entity $entity, array $options = []) : void
+    public function process(Entity $entity, array $options = []): void
     {
         if ($entity->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
@@ -88,7 +88,7 @@ class DefaultAssignmentNotificator  implements AssignmentNotificator
         $this->processForUser($entity, $assignedUserId);
     }
 
-    protected function processForUser(Entity $entity, string $assignedUserId) : void
+    protected function processForUser(Entity $entity, string $assignedUserId): void
     {
         if (!$this->userChecker->checkAssignment($entity->getEntityType(), $assignedUserId)) {
             return;

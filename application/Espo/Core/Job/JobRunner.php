@@ -70,7 +70,7 @@ class JobRunner
     /**
      * Run a job entity. Does not throw exceptions.
      */
-    public function run(JobEntity $job) : void
+    public function run(JobEntity $job): void
     {
         $this->runInternal($job, false);
     }
@@ -80,7 +80,7 @@ class JobRunner
      *
      * @throws Throwable
      */
-    public function runThrowingException(JobEntity $job) : void
+    public function runThrowingException(JobEntity $job): void
     {
         $this->runInternal($job, true);
     }
@@ -89,7 +89,7 @@ class JobRunner
      * Run a job by ID. A job must have status 'Ready'.
      * Used when running jobs in parallel processes.
      */
-    public function runById(string $id) : void
+    public function runById(string $id): void
     {
         if ($id === '') {
             throw new Error();
@@ -117,7 +117,7 @@ class JobRunner
         $this->run($job);
     }
 
-    private function runInternal(JobEntity $job, bool $throwException = false) : void
+    private function runInternal(JobEntity $job, bool $throwException = false): void
     {
         $isSuccess = true;
 
@@ -179,7 +179,7 @@ class JobRunner
         }
     }
 
-    protected function runJobByName(JobEntity $job) : void
+    protected function runJobByName(JobEntity $job): void
     {
         $jobName = $job->getJob();
 
@@ -198,7 +198,7 @@ class JobRunner
         $obj->run();
     }
 
-    protected function runScheduledJob(JobEntity $job) : void
+    protected function runScheduledJob(JobEntity $job): void
     {
         $jobName = $job->getScheduledJobJob();
 
@@ -223,7 +223,7 @@ class JobRunner
         $obj->run();
     }
 
-    protected function runService(JobEntity $job) : void
+    protected function runService(JobEntity $job): void
     {
         $serviceName = $job->getServiceName();
 

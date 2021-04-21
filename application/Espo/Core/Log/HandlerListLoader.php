@@ -48,7 +48,7 @@ class HandlerListLoader
         $this->defaultLoader = $defaultLoader;
     }
 
-    public function load(array $dataList, ?string $defaultLevel = null) : array
+    public function load(array $dataList, ?string $defaultLevel = null): array
     {
         $handlerList = [];
 
@@ -65,7 +65,7 @@ class HandlerListLoader
         return $handlerList;
     }
 
-    protected function loadHandler(array $data, ?string $defaultLevel = null) : ?HandlerInterface
+    protected function loadHandler(array $data, ?string $defaultLevel = null): ?HandlerInterface
     {
         $params = $data['params'] ?? [];
 

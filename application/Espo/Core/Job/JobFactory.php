@@ -53,7 +53,7 @@ class JobFactory
      * @return Job|JobTargeted
      * @throws Error
      */
-    public function create(string $name) : object
+    public function create(string $name): object
     {
         $className = $this->getClassName($name);
 
@@ -69,7 +69,7 @@ class JobFactory
      *
      * @throws Error
      */
-    public function isPreparable(string $name) : bool
+    public function isPreparable(string $name): bool
     {
         $className = $this->getClassName($name);
 
@@ -84,7 +84,7 @@ class JobFactory
         return false;
     }
 
-    private function getClassName(string $name) : ?string
+    private function getClassName(string $name): ?string
     {
         return $this->classFinder->find('Jobs', ucfirst($name));
     }

@@ -40,7 +40,7 @@ use RuntimeException;
 
 class DefaultHandlerLoader
 {
-    public function load(array $data, ?string $defaultLevel = null) : HandlerInterface
+    public function load(array $data, ?string $defaultLevel = null): HandlerInterface
     {
         $params = $data['params'] ?? [];
 
@@ -67,7 +67,7 @@ class DefaultHandlerLoader
         return $handler;
     }
 
-    protected function loadFormatter(array $data) : ?FormatterInterface
+    protected function loadFormatter(array $data): ?FormatterInterface
     {
         $formatterData = $data['formatter'] ?? null;
 
@@ -86,7 +86,7 @@ class DefaultHandlerLoader
         return $this->createInstance($className, $params);
     }
 
-    protected function createInstance(string $className, array $params) : object
+    protected function createInstance(string $className, array $params): object
     {
         $class = new ReflectionClass($className);
 

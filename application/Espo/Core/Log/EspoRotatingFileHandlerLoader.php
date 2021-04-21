@@ -48,7 +48,7 @@ class EspoRotatingFileHandlerLoader implements HandlerLoader
         $this->config = $config;
     }
 
-    public function load(array $params) : HandlerInterface
+    public function load(array $params): HandlerInterface
     {
         $filename = $params['filename'] ?? 'data/logs/espo.log';
         $level = $params['level'] ?? Logger::NOTICE;

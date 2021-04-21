@@ -42,7 +42,7 @@ class QueueProcessorFactory
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function create(QueueProcessorParams $params) : QueueProcessor
+    public function create(QueueProcessorParams $params): QueueProcessor
     {
         return $this->injectableFactory->createWith(QueueProcessor::class, [
             'params' => $params,

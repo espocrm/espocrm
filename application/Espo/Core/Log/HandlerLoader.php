@@ -35,5 +35,5 @@ use Monolog\{
 
 interface HandlerLoader
 {
-    public function load(array $params) : HandlerInterface;
+    public function load(array $params): HandlerInterface;
 }

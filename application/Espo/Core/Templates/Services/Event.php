@@ -46,6 +46,7 @@ class Event extends \Espo\Services\Record
     protected function loadRemindersField(Entity $entity)
     {
         $reminders = $this->getRepository()->getEntityReminderList($entity);
+
         $entity->set('reminders', $reminders);
     }
 }

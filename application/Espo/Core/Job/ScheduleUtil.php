@@ -46,7 +46,7 @@ class ScheduleUtil
     /**
      * Get active scheduled job list.
      */
-    public function getActiveScheduledJobList() : Collection
+    public function getActiveScheduledJobList(): Collection
     {
         return $this->entityManager
             ->getRepository('ScheduledJob')
@@ -71,7 +71,7 @@ class ScheduleUtil
         ?string $runTime = null,
         ?string $targetId = null,
         ?string $targetType = null
-    ) : void{
+    ): void {
 
         if (!isset($runTime)) {
             $runTime = date('Y-m-d H:i:s');

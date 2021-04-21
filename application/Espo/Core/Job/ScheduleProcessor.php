@@ -81,7 +81,7 @@ class ScheduleProcessor
         $this->jobFactory = $jobFactory;
     }
 
-    public function process() : void
+    public function process(): void
     {
         $activeScheduledJobList = $this->scheduleUtil->getActiveScheduledJobList();
 
@@ -102,7 +102,7 @@ class ScheduleProcessor
     private function createJobsFromScheduledJob(
         ScheduledJobEntity $scheduledJob,
         array $runningScheduledJobIdList
-    ) : void {
+    ): void {
 
         $scheduling = $scheduledJob->getScheduling();
 

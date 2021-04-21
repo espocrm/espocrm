@@ -35,7 +35,7 @@ use Laminas\{
 
 class SmtpTransportFactory
 {
-    public function create() : SmtpTransport
+    public function create(): SmtpTransport
     {
         return new SmtpTransport();
     }

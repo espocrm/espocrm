@@ -57,7 +57,9 @@ class Pusher implements WampServerInterface
     private $phpExecutablePath;
 
     public function __construct(
-        array $categoriesData = [], ?string $phpExecutablePath = null, bool $isDebugMode = false
+        array $categoriesData = [],
+        ?string $phpExecutablePath = null,
+        bool $isDebugMode = false
     ) {
         $this->categoryList = array_keys($categoriesData);
         $this->categoriesData = $categoriesData;

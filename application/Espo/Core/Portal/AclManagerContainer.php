@@ -48,7 +48,8 @@ class AclManagerContainer
 
     private $injectableFactory;
 
-    public function __construct(InjectableFactory $injectableFactory) {
+    public function __construct(InjectableFactory $injectableFactory)
+    {
         $this->injectableFactory = $injectableFactory;
     }
 

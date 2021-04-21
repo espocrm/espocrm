@@ -52,7 +52,11 @@ class Person extends \Espo\Services\Record
         if (
             ($entity->get('emailAddress') || $entity->get('emailAddressData'))
             &&
-            ($entity->isNew() || $entity->isAttributeChanged('emailAddress') || $entity->isAttributeChanged('emailAddressData'))
+            (
+                $entity->isNew() ||
+                $entity->isAttributeChanged('emailAddress') ||
+                $entity->isAttributeChanged('emailAddressData')
+            )
         ) {
             $list = [];
 
