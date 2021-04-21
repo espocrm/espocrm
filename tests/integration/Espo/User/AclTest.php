@@ -343,11 +343,6 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
     public function testUserAccessAclStrictCreateNo()
     {
-        $app = $this->createApplication();
-        $config = $app->getContainer()->get('config');
-        $config->set('aclStrictMode', true);
-        $config->save();
-
         $this->prepareTestUser();
 
         $this->auth('test');
@@ -362,11 +357,6 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
     public function testUserAccessAclStrictCreateYes()
     {
-        $app = $this->createApplication();
-        $config = $app->getContainer()->get('config');
-        $config->set('aclStrictMode', true);
-        $config->save();
-
         $this->prepareTestUser();
 
         $this->auth('test');
