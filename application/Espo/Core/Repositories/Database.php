@@ -247,7 +247,6 @@ class Database extends RDBRepository
         parent::afterSave($entity, $options);
 
         if (!$this->processFieldsAfterSaveDisabled) {
-            $this->processFileFieldsSave($entity);
             $this->processArrayFieldsSave($entity);
             $this->processWysiwygFieldsSave($entity);
         }
@@ -311,79 +310,6 @@ class Database extends RDBRepository
                 $this->applicationState->hasUser()
             ) {
                 $entity->set('createdById', $this->applicationState->getUser()->getId());
-            }
-        }
-    }
-
-    protected function processFileFieldsSave(Entity $entity)
-    {
-        $entityDefs = $this->entityManager
-            ->getDefs()
-            ->getEntity($entity->getEntityType());
-
-        foreach ($entity->getRelationList() as $name) {
-            $defs = $entityDefs->getRelation($name);
-
-            $type = $defs->getType();
-
-            if (!$defs->hasForeignEntityType()) {
-                continue;
-            }
-
-            $foreignEntityType = $defs->getForeignEntityType();
-
-            if (!($type === $entity::BELONGS_TO && $foreignEntityType === 'Attachment')) {
-                continue;
-            }
-
-            $attribute = $name . 'Id';
-
-            if (!$entity->hasAttribute($attribute)) {
-                continue;
-            }
-
-            if (!$entity->get($attribute)) {
-                continue;
-            }
-
-            if (!$entity->isAttributeChanged($attribute)) {
-                continue;
-            }
-
-            $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get($attribute));
-
-            if (!$attachment) {
-                continue;
-            }
-
-            $attachment->set([
-                'relatedId' => $entity->id,
-                'relatedType' => $entity->getEntityType(),
-            ]);
-
-            $this->getEntityManager()->saveEntity($attachment);
-        }
-
-        if ($entity->isNew()) {
-            return;
-        }
-
-        foreach ($this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) as $name => $defs) {
-            if (!empty($defs['type']) && in_array($defs['type'], ['file', 'image'])) {
-                $attribute = $name . 'Id';
-
-                if ($entity->isAttributeChanged($attribute)) {
-                    $previousAttachmentId = $entity->getFetched($attribute);
-
-                    if ($previousAttachmentId) {
-                        $attachment = $this->getEntityManager()
-                            ->getEntity('Attachment', $previousAttachmentId);
-
-                        if ($attachment) {
-                            $this->getEntityManager()->removeEntity($attachment);
-                        }
-                    }
-                }
             }
         }
     }
