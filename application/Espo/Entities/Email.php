@@ -136,12 +136,12 @@ class Email extends \Espo\Core\ORM\Entity
         }
     }
 
-    public function isManuallyArchived() : bool
+    public function isManuallyArchived(): bool
     {
         return $this->get('status') === 'Archived' && $this->get('createdById') !== 'system';
     }
 
-    public function addAttachment(Attachment $attachment) : void
+    public function addAttachment(Attachment $attachment): void
     {
         if (!$this->id) {
             return;
@@ -158,12 +158,12 @@ class Email extends \Espo\Core\ORM\Entity
         return $this->getBodyPlain();
     }
 
-    public function hasBodyPlain() : bool
+    public function hasBodyPlain(): bool
     {
         return $this->hasInContainer('bodyPlain') && $this->getFromContainer('bodyPlain');
     }
 
-    public function getBodyPlain() : ?string
+    public function getBodyPlain(): ?string
     {
         if ($this->getFromContainer('bodyPlain')) {
             return $this->getFromContainer('bodyPlain');
@@ -238,7 +238,7 @@ class Email extends \Espo\Core\ORM\Entity
         return $body;
     }
 
-    public function getInlineAttachments() : array
+    public function getInlineAttachments(): array
     {
         $idList = [];
 
@@ -277,7 +277,7 @@ class Email extends \Espo\Core\ORM\Entity
         return $attachmentList;
     }
 
-    public function getToList() : array
+    public function getToList(): array
     {
         $value = $this->get('to');
 
@@ -292,7 +292,7 @@ class Email extends \Espo\Core\ORM\Entity
         return [];
     }
 
-    public function getCcList() : array
+    public function getCcList(): array
     {
         $value = $this->get('cc');
 
@@ -307,7 +307,7 @@ class Email extends \Espo\Core\ORM\Entity
         return [];
     }
 
-    public function getBccList() : array
+    public function getBccList(): array
     {
         $value = $this->get('bcc');
 
@@ -337,7 +337,7 @@ class Email extends \Espo\Core\ORM\Entity
         return [];
     }
 
-    public function setDummyMessageId() : void
+    public function setDummyMessageId(): void
     {
         $this->set('messageId', 'dummy:' . Util::generateId());
     }

@@ -42,7 +42,7 @@ class SendEmailNotifications implements Job
         $this->processor = $processor;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $this->processor->process();
     }

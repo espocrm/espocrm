@@ -77,7 +77,7 @@ class Avatar extends Image implements Di\MetadataAware
         return $colorList[$index];
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $userId = $request->get('id');
 
@@ -132,7 +132,7 @@ class Avatar extends Image implements Di\MetadataAware
         $response->writeBody($imgContent);
     }
 
-    protected function renderBlank(Response $response) : void
+    protected function renderBlank(Response $response): void
     {
         ob_start();
 

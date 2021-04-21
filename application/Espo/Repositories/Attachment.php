@@ -75,7 +75,7 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    protected function processBeforeSaveNew(Entity $entity) : void
+    protected function processBeforeSaveNew(Entity $entity): void
     {
         if (!$entity->get('storage')) {
             $defaultStorage = $this->config->get('defaultFileStorage');
@@ -152,22 +152,22 @@ class Attachment extends \Espo\Core\Repositories\Database implements
         return $attachment;
     }
 
-    public function getContents(AttachmentEntity $entity) : string
+    public function getContents(AttachmentEntity $entity): string
     {
         return $this->fileStorageManager->getContents($entity);
     }
 
-    public function getStream(AttachmentEntity $entity) : StreamInterface
+    public function getStream(AttachmentEntity $entity): StreamInterface
     {
         return $this->fileStorageManager->getStream($entity);
     }
 
-    public function getSize(AttachmentEntity $entity) : int
+    public function getSize(AttachmentEntity $entity): int
     {
         return $this->fileStorageManager->getSize($entity);
     }
 
-    public function getFilePath(AttachmentEntity $entity) : string
+    public function getFilePath(AttachmentEntity $entity): string
     {
         return $this->fileStorageManager->getLocalFilePath($entity);
     }

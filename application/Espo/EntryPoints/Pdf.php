@@ -51,7 +51,7 @@ class Pdf implements EntryPoint
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $entityId = $request->getQueryParam('entityId');
         $entityType = $request->getQueryParam('entityType');

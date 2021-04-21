@@ -67,7 +67,7 @@ class Download implements EntryPoint
         $this->entityManager = $entityManager;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $id = $request->getQueryParam('id');
 

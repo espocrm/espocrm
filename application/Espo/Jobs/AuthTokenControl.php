@@ -49,7 +49,7 @@ class AuthTokenControl implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $authTokenLifetime = $this->config->get('authTokenLifetime');
         $authTokenMaxIdleTime = $this->config->get('authTokenMaxIdleTime');

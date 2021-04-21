@@ -59,7 +59,7 @@ class ChangePassword implements EntryPoint
         $this->entityManager = $entityManager;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $requestId = $request->getQueryParam('id');
 

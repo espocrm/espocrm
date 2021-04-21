@@ -33,47 +33,47 @@ use Espo\Core\Entities\Person;
 
 class User extends Person
 {
-    public function isActive() : bool
+    public function isActive(): bool
     {
         return (bool) $this->get('isActive');
     }
 
-    public function isAdmin() : bool
+    public function isAdmin(): bool
     {
         return $this->get('type') === 'admin' || $this->isSystem() || $this->isSuperAdmin();
     }
 
-    public function isPortal() : bool
+    public function isPortal(): bool
     {
         return $this->get('type') === 'portal';
     }
 
-    public function isPortalUser() : bool
+    public function isPortalUser(): bool
     {
         return $this->isPortal();
     }
 
-    public function isRegular() : bool
+    public function isRegular(): bool
     {
         return $this->get('type') === 'regular' || ($this->has('type') && !$this->get('type'));
     }
 
-    public function isApi() : bool
+    public function isApi(): bool
     {
         return $this->get('type') === 'api';
     }
 
-    public function isSystem() : bool
+    public function isSystem(): bool
     {
         return $this->get('type') === 'system';
     }
 
-    public function isSuperAdmin() : bool
+    public function isSuperAdmin(): bool
     {
         return $this->get('type') === 'super-admin';
     }
 
-    public function getTeamIdList() : array
+    public function getTeamIdList(): array
     {
         return $this->getLinkMultipleIdList('teams');
     }

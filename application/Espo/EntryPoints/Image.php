@@ -99,7 +99,7 @@ class Image implements EntryPoint
         $this->config = $config;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $id = $request->getQueryParam('id');
         $size = $request->getQueryParam('size') ?? null;
@@ -111,7 +111,7 @@ class Image implements EntryPoint
         $this->show($response, $id, $size, false);
     }
 
-    protected function show(Response $response, string $id, ?string $size, bool $disableAccessCheck = false) : void
+    protected function show(Response $response, string $id, ?string $size, bool $disableAccessCheck = false): void
     {
         $attachment = $this->entityManager->getEntity('Attachment', $id);
 
@@ -171,7 +171,7 @@ class Image implements EntryPoint
             ->setHeader('Content-Length', (string) $fileSize);
     }
 
-    protected function getThumbContents(Attachment $attachment, string $size) : string
+    protected function getThumbContents(Attachment $attachment, string $size): string
     {
         if (!array_key_exists($size, $this->imageSizes)) {
             throw new Error("Bad size.");

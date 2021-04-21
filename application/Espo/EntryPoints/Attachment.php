@@ -63,7 +63,7 @@ class Attachment implements EntryPoint
         $this->acl = $acl;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $id = $request->getQueryParam('id');
 

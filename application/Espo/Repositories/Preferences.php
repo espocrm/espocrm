@@ -57,7 +57,7 @@ class Preferences extends Repository implements
 
     protected $entityType = 'Preferences';
 
-    public function get(?string $id = null) : ?Entity
+    public function get(?string $id = null): ?Entity
     {
         if (!$id) {
             return $this->entityFactory->create('Preferences');
@@ -97,11 +97,13 @@ class Preferences extends Repository implements
 
         while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             $data = Json::decode($row['data']);
+
             break;
         }
 
         if ($data) {
             $this->data[$id] = get_object_vars($data);
+
             return;
         }
 
@@ -128,6 +130,7 @@ class Preferences extends Repository implements
                 $defaults[$field] = $d['default'];
             }
         }
+
         foreach ($this->defaultAttributeListFromSettings as $attr) {
             $defaults[$attr] = $this->config->get($attr);
         }
@@ -141,7 +144,8 @@ class Preferences extends Repository implements
 
         $autoFollowEntityTypeList = [];
 
-        $autofollowList = $this->entityManager->getRepository('Autofollow')
+        $autofollowList = $this->entityManager
+            ->getRepository('Autofollow')
             ->select(['entityType'])
             ->where([
                 'userId' => $id,

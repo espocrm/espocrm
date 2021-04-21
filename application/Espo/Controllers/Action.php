@@ -46,7 +46,7 @@ class Action
         $this->recordServiceContainer = $recordServiceContainer;
     }
 
-    public function postActionProcess(Request $request) : StdClass
+    public function postActionProcess(Request $request): StdClass
     {
         $body = $request->getParsedBody();
 

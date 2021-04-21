@@ -39,7 +39,7 @@ use Espo\Core\Repositories\Database;
 
 class Import extends Database
 {
-    public function findResultRecords(Entity $entity, string $relationName, Query $query) : Collection
+    public function findResultRecords(Entity $entity, string $relationName, Query $query): Collection
     {
         $entityType = $entity->get('entityType');
 
@@ -54,7 +54,7 @@ class Import extends Database
             ->find();
     }
 
-    protected function addImportEntityJoin(Entity $entity, string $link, Query $query) : Query
+    protected function addImportEntityJoin(Entity $entity, string $link, Query $query): Query
     {
         $entityType = $entity->get('entityType');
 
@@ -96,7 +96,7 @@ class Import extends Database
         return $builder->build();
     }
 
-    public function countResultRecords(Entity $entity, string $relationName, ?Query $query = null) : int
+    public function countResultRecords(Entity $entity, string $relationName, ?Query $query = null): int
     {
         $entityType = $entity->get('entityType');
 

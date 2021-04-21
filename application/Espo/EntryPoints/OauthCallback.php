@@ -40,7 +40,7 @@ class OauthCallback implements EntryPoint
 {
     use NoAuth;
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         echo "If this window is not closed automatically, it's probable that URL you use to access ".
             "EspoCRM doesn't match URL specified at Administration > Settings > Site URL.";

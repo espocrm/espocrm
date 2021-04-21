@@ -49,17 +49,20 @@ class Portal extends Database implements
 
         $siteUrl = $this->config->get('siteUrl');
         $siteUrl = rtrim($siteUrl , '/') . '/';
+
         $url = $siteUrl . 'portal/';
 
         if ($entity->id === $this->config->get('defaultPortalId')) {
             $entity->set('isDefault', true);
             $entity->setFetched('isDefault', true);
-        } else {
+        }
+        else {
             if ($entity->get('customId')) {
                 $url .= $entity->get('customId') . '/';
             } else {
                 $url .= $entity->id . '/';
             }
+
             $entity->set('isDefault', false);
             $entity->setFetched('isDefault', false);
         }

@@ -55,7 +55,7 @@ class CheckInboundEmails implements JobTargeted
         $this->entityManager = $entityManager;
     }
 
-    public function run(string $targetType, string $targetId, StdClass $data) : void
+    public function run(string $targetType, string $targetId, StdClass $data): void
     {
         if (!$targetId) {
             throw new Error();
@@ -80,7 +80,7 @@ class CheckInboundEmails implements JobTargeted
         }
     }
 
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime) : void
+    public function prepare(ScheduledJob $scheduledJob, string $executeTime): void
     {
         $collection = $this->entityManager
             ->getRepository('InboundEmail')

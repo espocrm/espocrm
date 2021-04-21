@@ -31,7 +31,7 @@ namespace Espo\Jobs;
 
 class CheckNewExtensionVersion extends CheckNewVersion
 {
-    public function run() : void
+    public function run(): void
     {
         if (
             !$this->config->get('adminNotifications') ||

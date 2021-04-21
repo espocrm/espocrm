@@ -33,17 +33,26 @@ use Espo\ORM\Entity;
 
 class UserData extends \Espo\Core\Repositories\Database
 {
-    public function getByUserId(string $userId) : ?Entity
+    public function getByUserId(string $userId): ?Entity
     {
-        $userData = $this->where(['userId' => $userId])->findOne();
+        $userData = $this
+            ->where(['userId' => $userId])
+            ->findOne();
 
-        if ($userData) return $userData;
+        if ($userData) {
+            return $userData;
+        }
 
-        $user = $this->getEntityManager()->getRepository('User')->getById($userId);
+        $user = $this->getEntityManager()
+            ->getRepository('User')
+            ->getById($userId);
 
-        if (!$user) return null;
+        if (!$user) {
+            return null;
+        }
 
         $userData = $this->getNew();
+
         $userData->set('userId', $userId);
 
         $this->save($userData, [

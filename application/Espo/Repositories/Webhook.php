@@ -58,6 +58,7 @@ class Webhook extends \Espo\Core\Repositories\Database
     protected function processSettingAdditionalFields(Entity $entity): void
     {
         $event = $entity->get('event');
+
         if (!$event) {
             return;
         }

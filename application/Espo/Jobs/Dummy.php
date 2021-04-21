@@ -35,7 +35,7 @@ use Espo\Core\{
 
 class Dummy implements Job
 {
-    public function run() : void
+    public function run(): void
     {
     }
 }

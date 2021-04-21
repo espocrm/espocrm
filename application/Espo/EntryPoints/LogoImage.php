@@ -47,7 +47,7 @@ class LogoImage extends Image implements Di\ConfigAware
 
     protected $allowedFieldList = ['companyLogo'];
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $id = $request->get('id');
         $size = $request->get('size') ?? null;

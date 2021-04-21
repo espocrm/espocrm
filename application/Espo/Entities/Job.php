@@ -38,7 +38,7 @@ class Job extends Entity
     /**
      * Get a status.
      */
-    public function getStatus() : string
+    public function getStatus(): string
     {
         return $this->get('status');
     }
@@ -46,7 +46,7 @@ class Job extends Entity
     /**
      * Get a job name.
      */
-    public function getJob() : ?string
+    public function getJob(): ?string
     {
         return $this->get('job');
     }
@@ -54,7 +54,7 @@ class Job extends Entity
     /**
      * Get a scheduled job name.
      */
-    public function getScheduledJobJob() : ?string
+    public function getScheduledJobJob(): ?string
     {
         return $this->get('scheduledJobJob');
     }
@@ -62,7 +62,7 @@ class Job extends Entity
     /**
      * Get a target type.
      */
-    public function getTargetType() : ?string
+    public function getTargetType(): ?string
     {
         return $this->get('targetType');
     }
@@ -70,7 +70,7 @@ class Job extends Entity
     /**
      * Get a target ID.
      */
-    public function getTargetId() : ?string
+    public function getTargetId(): ?string
     {
         return $this->get('targetId');
     }
@@ -78,7 +78,7 @@ class Job extends Entity
     /**
      * Get data.
      */
-    public function getData() : StdClass
+    public function getData(): StdClass
     {
         return $this->get('data') ?? (object) [];
     }
@@ -86,7 +86,7 @@ class Job extends Entity
     /**
      * Get a service name.
      */
-    public function getServiceName() : ?string
+    public function getServiceName(): ?string
     {
         return $this->get('serviceName');
     }
@@ -94,7 +94,7 @@ class Job extends Entity
     /**
      * Get a method name.
      */
-    public function getMethodName() : ?string
+    public function getMethodName(): ?string
     {
         return $this->get('methodName');
     }
@@ -102,7 +102,7 @@ class Job extends Entity
     /**
      * Get a scheduled job ID.
      */
-    public function getScheduledJobId() : ?string
+    public function getScheduledJobId(): ?string
     {
         return $this->get('scheduledJobId');
     }
@@ -110,7 +110,7 @@ class Job extends Entity
     /**
      * Get a started date-time.
      */
-    public function getStartedAt() : ?string
+    public function getStartedAt(): ?string
     {
         return $this->get('startedAt');
     }

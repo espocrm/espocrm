@@ -33,7 +33,7 @@ use Espo\Core\ORM\Entity;
 
 class Attachment extends Entity
 {
-    public function getSourceId() : ?string
+    public function getSourceId(): ?string
     {
         $sourceId = $this->get('sourceId');
 
@@ -44,7 +44,7 @@ class Attachment extends Entity
         return $sourceId;
     }
 
-    public function getStorage() : ?string
+    public function getStorage(): ?string
     {
         return $this->get('storage');
     }

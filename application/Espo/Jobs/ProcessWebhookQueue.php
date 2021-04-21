@@ -41,7 +41,9 @@ use Espo\Core\{
 class ProcessWebhookQueue implements Job
 {
     protected $config;
+
     protected $entityManager;
+
     protected $aclManager;
 
     public function __construct(Config $config, EntityManager $entityManager, AclManager $aclManager)
@@ -51,7 +53,7 @@ class ProcessWebhookQueue implements Job
         $this->aclManager = $aclManager;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $sender = new Sender($this->config);
 

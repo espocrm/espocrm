@@ -50,13 +50,14 @@ class CheckNewVersion implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run() : void
+    public function run(): void
     {
         if (!$this->config->get('adminNotifications') || !$this->config->get('adminNotificationsNewVersion')) {
             return;
         }
 
         $job = $this->entityManager->getEntity('Job');
+
         $job->set([
             'name' => 'Check for New Version (job)',
             'serviceName' => 'AdminNotifications',
