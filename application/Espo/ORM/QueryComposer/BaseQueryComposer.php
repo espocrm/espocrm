@@ -1132,7 +1132,10 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function convertComplexExpression(
-        ?Entity $entity, string $attribute, bool $distinct, array &$params
+        ?Entity $entity,
+        string $attribute,
+        bool $distinct,
+        array &$params
     ): string {
         $function = null;
 
@@ -1193,7 +1196,9 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getFunctionArgumentPart(
-        Entity $entity, string $attribute, bool $distinct, array &$params
+        Entity $entity,
+        string $attribute,
+        bool $distinct, array &$params
     ): string {
 
         $argument = $attribute;
@@ -1368,7 +1373,11 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getAttributeSql(
-        Entity $entity, string $attribute, string $type, ?array &$params = null, ?string $alias = null
+        Entity $entity,
+        string $attribute,
+        string $type,
+        ?array &$params = null,
+        ?string $alias = null
     ): string {
 
         $fieldDefs = $entity->getAttributes()[$attribute];
