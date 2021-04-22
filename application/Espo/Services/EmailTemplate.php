@@ -226,7 +226,7 @@ class EmailTemplate extends Record implements
         bool $skipAcl = false
     ): string {
 
-        $attributeList = array_keys($entity->getAttributes());
+        $attributeList = $entity->getAttributeList();
 
         if ($skipAcl) {
             $forbiddenAttributeList = [];

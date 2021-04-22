@@ -242,7 +242,7 @@ class Export implements
             $attributeList = [];
             $seed = $this->entityManager->getEntity($this->entityType);
 
-            foreach ($seed->getAttributes() as $attribute => $defs) {
+            foreach ($seed->getAttributeList() as $attribute) {
                 if (in_array($attribute, $attributeListToSkip)) {
                     continue;
                 }
@@ -341,8 +341,6 @@ class Export implements
             return $this->$methodName($entity);
         }
 
-        $defs = $entity->getAttributes();
-
         $type = $entity->getAttributeType($attribute);
 
         if ($type === Entity::FOREIGN) {
@@ -351,7 +349,7 @@ class Export implements
 
         switch ($type) {
             case Entity::JSON_OBJECT:
-                if (!empty($defs[$attribute]['isLinkMultipleNameMap'])) {
+                if ($entity->getAttributeParam($attribute, 'isLinkMultipleNameMap')) {
                     break;
                 }
 
@@ -360,7 +358,7 @@ class Export implements
                 return Json::encode($value, \JSON_UNESCAPED_UNICODE);
 
             case Entity::JSON_ARRAY:
-                if (!empty($defs[$attribute]['isLinkMultipleIdList'])) {
+                if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
                     break;
                 }
 
