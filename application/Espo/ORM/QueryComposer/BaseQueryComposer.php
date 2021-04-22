@@ -143,8 +143,11 @@ abstract class BaseQueryComposer implements QueryComposer
     ];
 
     const SELECT_METHOD = 'SELECT';
+
     const DELETE_METHOD = 'DELETE';
+
     const UPDATE_METHOD = 'UPDATE';
+
     const INSERT_METHOD = 'INSERT';
 
     protected $identifierQuoteCharacter = '`';
@@ -219,23 +222,17 @@ abstract class BaseQueryComposer implements QueryComposer
 
     public function composeCreateSavepoint(string $savepointName): string
     {
-        $savepointName = $this->sanitize($savepointName);
-
-        return 'SAVEPOINT ' . $savepointName;
+        return 'SAVEPOINT ' . $this->sanitize($savepointName);
     }
 
     public function composeReleaseSavepoint(string $savepointName): string
     {
-        $savepointName = $this->sanitize($savepointName);
-
-        return 'RELEASE SAVEPOINT ' . $savepointName;
+        return 'RELEASE SAVEPOINT ' . $this->sanitize($savepointName);
     }
 
     public function composeRollbackToSavepoint(string $savepointName): string
     {
-        $savepointName = $this->sanitize($savepointName);
-
-        return 'ROLLBACK TO SAVEPOINT ' . $savepointName;
+        return 'ROLLBACK TO SAVEPOINT ' . $this->sanitize($savepointName);
     }
 
     protected function composeSelecting(SelectingQuery $queryParams): string
@@ -1299,7 +1296,10 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getAttributeOrderSql(
-        Entity $entity, string $attribute, ?array &$params, string $order
+        Entity $entity,
+        string $attribute,
+        ?array &$params,
+        string $order
     ): string {
 
         $fieldDefs = $entity->getAttributes()[$attribute];
