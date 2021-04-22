@@ -210,11 +210,13 @@ class App
             if ($attribute === 'type') {
                 continue;
             }
+
             if ($isPortal) {
                 if (in_array($attribute, ['contactId', 'contactName', 'accountId', 'accountsIds'])) {
                     continue;
                 }
-            } else {
+            }
+            else {
                 if (in_array($attribute, ['teamsIds', 'defaultTeamId', 'defaultTeamName'])) {
                     continue;
                 }
@@ -298,12 +300,15 @@ class App
                         ->find();
 
                     foreach ($inboundEmailList as $inboundEmail) {
-                        if (!$inboundEmail->get('emailAddress')) continue;
+                        if (!$inboundEmail->get('emailAddress')) {
+                            continue;
+                        }
 
                         $emailAddressList[] = $inboundEmail->get('emailAddress');
                     }
                 }
-            } else if ($groupEmailAccountPermission === 'all') {
+            }
+            else if ($groupEmailAccountPermission === 'all') {
                 $inboundEmailList = $entityManager->getRepository('InboundEmail')
                     ->where([
                         'status' => 'Active',
@@ -313,7 +318,9 @@ class App
                     ->find();
 
                 foreach ($inboundEmailList as $inboundEmail) {
-                    if (!$inboundEmail->get('emailAddress')) continue;
+                    if (!$inboundEmail->get('emailAddress')) {
+                        continue;
+                    }
 
                     $emailAddressList[] = $inboundEmail->get('emailAddress');
                 }
@@ -385,6 +392,7 @@ class App
     public function jobPopulatePhoneNumberNumeric()
     {
         $numberList = $this->entityManager->getRepository('PhoneNumber')->find();
+
         foreach ($numberList as $number) {
             $this->entityManager->saveEntity($number);
         }
@@ -402,38 +410,57 @@ class App
             ->from('ArrayValue')
             ->build();
 
-        $this->entityManager->getQueryExecutor()->execute($query);
+        $this->entityManager
+            ->getQueryExecutor()
+            ->execute($query);
 
         foreach ($scopeList as $scope) {
-            if (!$this->metadata->get(['scopes', $scope, 'entity'])) continue;
-            if ($this->metadata->get(['scopes', $scope, 'disabled'])) continue;
+            if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
+                continue;
+            }
 
-            $seed = $this->entityManager->getEntity($scope);
-
-            if (!$seed) {
+            if ($this->metadata->get(['scopes', $scope, 'disabled'])) {
                 continue;
             }
 
             $attributeList = [];
 
-            foreach ($seed->getAttributes() as $attribute => $defs) {
-                if (!isset($defs['type']) || $defs['type'] !== Entity::JSON_ARRAY) continue;
-                if (!$seed->getAttributeParam($attribute, 'storeArrayValues')) continue;
-                if ($seed->getAttributeParam($attribute, 'notStorable')) continue;
+            $entityDefs = $this->entityManager
+                ->getDefs()
+                ->getEntity($scope);
+
+            foreach ($entityDefs->getAttributeList() as $attributeDefs) {
+                $attribute = $attributeDefs->getName();
+                $type = $attributeDefs->getType();
+
+                if (!isset($type) || $type !== Entity::JSON_ARRAY) {
+                    continue;
+                }
+
+                if (!$attributeDefs->getParam('storeArrayValues')) {
+                    continue;
+                }
+
+                if (!$attributeDefs->getParam('notStorable')) {
+                    continue;
+                }
 
                 $attributeList[] = $attribute;
             }
+
             $select = ['id'];
+
             $orGroup = [];
 
             foreach ($attributeList as $attribute) {
                 $select[] = $attribute;
+
                 $orGroup[$attribute . '!='] = null;
             }
 
             $repository = $this->entityManager->getRepository($scope);
 
-            if (! $repository instanceof RDBRepository) {
+            if (!$repository instanceof RDBRepository) {
                 continue;
             }
 
@@ -450,15 +477,20 @@ class App
                 ])
                 ->build();
 
-            $sth = $this->entityManager->getQueryExecutor()->execute($query);
+            $sth = $this->entityManager
+                ->getQueryExecutor()
+                ->execute($query);
 
             while ($dataRow = $sth->fetch()) {
                 $entity = $this->entityManager->getEntityFactory()->create($scope);
+
                 $entity->set($dataRow);
                 $entity->setAsFetched();
 
                 foreach ($attributeList as $attribute) {
-                    $this->entityManager->getRepository('ArrayValue')->storeEntityAttribute($entity, $attribute, true);
+                    $this->entityManager
+                        ->getRepository('ArrayValue')
+                        ->storeEntityAttribute($entity, $attribute, true);
                 }
             }
         }
@@ -488,7 +520,9 @@ class App
                     continue;
                 }
 
-                $phoneNumberEntity = $this->entityManager->getRepository('PhoneNumber')->getByNumber($phoneNumber);
+                $phoneNumberEntity = $this->entityManager
+                    ->getRepository('PhoneNumber')
+                    ->getByNumber($phoneNumber);
 
                 if (!$phoneNumberEntity) {
                     continue;
