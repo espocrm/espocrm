@@ -2152,30 +2152,33 @@ abstract class BaseQueryComposer implements QueryComposer
         return null;
     }
 
-    protected function getTableAliases(Entity $entity): array
+    protected function getTableAliases(BaseEntity $entity): array
     {
         $aliases = [];
 
         $occuranceHash = [];
 
-        foreach ($entity->getRelations() as $name => $r) {
-            if ($r['type'] == Entity::BELONGS_TO || $r['type'] == Entity::HAS_ONE) {
+        foreach ($entity->getRelationList() as $name) {
+            $type = $entity->getRelationType($name);
 
-                if (!array_key_exists($name, $aliases)) {
-                    if (array_key_exists($name, $occuranceHash)) {
-                        $occuranceHash[$name]++;
-                    } else {
-                        $occuranceHash[$name] = 0;
-                    }
-
-                    $suffix = '';
-
-                    if ($occuranceHash[$name] > 0) {
-                        $suffix .= '_' . $occuranceHash[$name];
-                    }
-
-                    $aliases[$name] = $name . $suffix;
+            if (
+                ($type === Entity::BELONGS_TO || $type === Entity::HAS_ONE) &&
+                !array_key_exists($name, $aliases)
+            ) {
+                if (array_key_exists($name, $occuranceHash)) {
+                    $occuranceHash[$name]++;
                 }
+                else {
+                    $occuranceHash[$name] = 0;
+                }
+
+                $suffix = '';
+
+                if ($occuranceHash[$name] > 0) {
+                    $suffix .= '_' . $occuranceHash[$name];
+                }
+
+                $aliases[$name] = $name . $suffix;
             }
         }
 
