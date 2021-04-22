@@ -60,7 +60,7 @@ use DateInterval;
 use ReflectionMethod;
 
 /**
- * @deprecated Use SelectBuilder instead.
+ * @deprecated Since v6.2.0. Use SelectBuilder instead.
  *
  * Used for generating and managing select parameters which subsequently will be feed to ORM.
  */
@@ -376,13 +376,16 @@ class SelectManager
 
         $seed = $this->getSeed();
 
-        if (!$seed->hasRelation($link)) return;
+        if (!$seed->hasRelation($link)) {
+            return;
+        }
 
         $relDefs = $this->getSeed()->getRelations();
 
         $relationType = $seed->getRelationType($link);
 
         $defs = $relDefs[$link];
+
         if ($relationType == 'manyMany') {
             $this->addLeftJoin([$link, $link . 'Filter'], $result);
             $midKeys = $seed->getRelationParam($link, 'midKeys');
@@ -425,13 +428,11 @@ class SelectManager
             $idsValue = $idsValue[0];
         }
 
-        $query = $this->getEntityManager()->getQueryComposer();
-
         $seed = $this->getSeed();
 
-        $relDefs = $seed->getRelations();
-
-        if (!$seed->hasRelation($link)) return;
+        if (!$seed->hasRelation($link)) {
+            return;
+        }
 
         $relationType = $seed->getRelationType($link);
 
@@ -462,8 +463,6 @@ class SelectManager
     public function applyInCategory(string $link, $value, array &$result)
     {
         $relDefs = $this->getSeed()->getRelations();
-
-        $query = $this->getEntityManager()->getQueryComposer();
 
         if (empty($relDefs[$link])) {
             throw new Error("Can't apply inCategory for link {$link}.");
@@ -707,12 +706,15 @@ class SelectManager
 
         if ($contactId) {
             if (
-                $this->getSeed()->hasAttribute('contactId') && $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
+                $this->getSeed()->hasAttribute('contactId') &&
+                $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
             ) {
                 $or['contactId'] = $contactId;
             }
+
             if (
-                $this->getSeed()->hasRelation('contacts') && $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
+                $this->getSeed()->hasRelation('contacts') &&
+                $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
             ) {
                 $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
                 $this->setDistinct(true, $result);
@@ -754,12 +756,14 @@ class SelectManager
 
         if (count($accountIdList)) {
             if (
-                $this->getSeed()->hasAttribute('accountId') && $this->getSeed()->getRelationParam('account', 'entity') === 'Account'
+                $this->getSeed()->hasAttribute('accountId') &&
+                $this->getSeed()->getRelationParam('account', 'entity') === 'Account'
             ) {
                 $or['accountId'] = $accountIdList;
             }
             if (
-                $this->getSeed()->hasRelation('accounts') && $this->getSeed()->getRelationParam('accounts', 'entity') === 'Account'
+                $this->getSeed()->hasRelation('accounts') &&
+                $this->getSeed()->getRelationParam('accounts', 'entity') === 'Account'
             ) {
                 $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
                 $this->setDistinct(true, $result);
@@ -781,12 +785,14 @@ class SelectManager
 
         if ($contactId) {
             if (
-                $this->getSeed()->hasAttribute('contactId') && $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
+                $this->getSeed()->hasAttribute('contactId') &&
+                $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
             ) {
                 $or['contactId'] = $contactId;
             }
             if (
-                $this->getSeed()->hasRelation('contacts') && $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
+                $this->getSeed()->hasRelation('contacts') &&
+                $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
             ) {
                 $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
                 $this->setDistinct(true, $result);
@@ -2451,13 +2457,12 @@ class SelectManager
 
     protected function textFilter($textFilter, array &$result, $noFullText = false)
     {
-        $fieldDefs = $this->getSeed()->getAttributes();
-
         $fieldList = $this->getTextFilterFieldList();
 
         $group = [];
 
-        $textFilterContainsMinLength = $this->getConfig()->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
+        $textFilterContainsMinLength = $this->getConfig()
+            ->get('textFilterContainsMinLength', self::MIN_LENGTH_FOR_CONTENT_SEARCH);
 
         $fullTextSearchData = null;
 
