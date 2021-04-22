@@ -31,6 +31,7 @@ namespace Espo\ORM\Mapper;
 
 use Espo\ORM\{
     Entity,
+    BaseEntity,
     Collection,
     SthCollection,
     EntityFactory,
@@ -61,10 +62,15 @@ class BaseMapper implements Mapper
     protected $aliasesCache = [];
 
     protected $pdo;
+
     protected $entityFactroy;
+
     protected $collectionFactory;
+
     protected $queryComposer;
+
     protected $metadata;
+
     protected $sqlExecutor;
 
     public function __construct(
@@ -220,7 +226,10 @@ class BaseMapper implements Mapper
     }
 
     protected function selectRelatedInternal(
-        Entity $entity, string $relationName, ?Select $select = null, bool $returnTotalCount = false
+        Entity $entity,
+        string $relationName,
+        ?Select $select = null,
+        bool $returnTotalCount = false
     ) {
         $params = [];
 
@@ -230,22 +239,22 @@ class BaseMapper implements Mapper
 
         $entityType = $entity->getEntityType();
 
-        $relDefs = $entity->getRelations()[$relationName];
+        $relType = $entity->getRelationType($relationName);
 
-        if (!$entity->getRelationType($relationName)) {
+        $relEntityType = $entity->getRelationParam($relationName, 'entity');
+
+        if (!$relType) {
             throw new LogicException(
-                "Missing 'type' in definition for relationship {$relationName} in {entityType} entity."
+                "Missing 'type' in definition for relationship '{$relationName}' in {entityType} entity."
             );
         }
 
-        if ($relDefs['type'] !== Entity::BELONGS_TO_PARENT) {
-            if (!isset($relDefs['entity'])) {
+        if ($relType !== Entity::BELONGS_TO_PARENT) {
+            if (!$relEntityType) {
                 throw new LogicException(
-                    "Missing 'entity' in definition for relationship {$relationName} in {entityType} entity."
+                    "Missing 'entity' in definition for relationship '{$relationName}' in {entityType} entity."
                 );
             }
-
-            $relEntityType = $entity->getRelationParam($relationName, 'entity');
 
             $relEntity = $this->entityFactory->create($relEntityType);
         }
@@ -259,8 +268,6 @@ class BaseMapper implements Mapper
             $params['whereClause'] = [];
         }
 
-        $relType = $relDefs['type'];
-
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         $key = $keySet['key'];
@@ -268,6 +275,7 @@ class BaseMapper implements Mapper
 
         switch ($relType) {
             case Entity::BELONGS_TO:
+
                 $params['whereClause'][$foreignKey] = $entity->get($key);
                 $params['offset'] = 0;
                 $params['limit'] = 1;
@@ -298,10 +306,12 @@ class BaseMapper implements Mapper
             case Entity::HAS_MANY:
             case Entity::HAS_CHILDREN:
             case Entity::HAS_ONE:
+
                 $params['whereClause'][$foreignKey] = $entity->get($key);
 
                 if ($relType == Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'];
+
                     $params['whereClause'][$foreignType] = $entity->getEntityType();
                 }
 
@@ -310,8 +320,10 @@ class BaseMapper implements Mapper
                     $params['limit'] = 1;
                 }
 
-                if (!empty($relDefs['conditions']) && is_array($relDefs['conditions'])) {
-                    $params['whereClause'][] = $relDefs['conditions'];
+                $relConditions = $entity->getRelationParam($relationName, 'conditions');
+
+                if ($relConditions) {
+                    $params['whereClause'][] = $relConditions;
                 }
 
                 $resultDataList = [];
@@ -352,7 +364,11 @@ class BaseMapper implements Mapper
 
                 $params['joins'][] = $this->getManyManyJoin($entity, $relationName);
 
-                $params['select'] = $this->getModifiedSelectForManyToMany($entity, $relationName, $params['select'] ?? []);
+                $params['select'] = $this->getModifiedSelectForManyToMany(
+                    $entity,
+                    $relationName,
+                    $params['select'] ?? []
+                );
 
                 $params['from'] = $relEntity->getEntityType();
 
@@ -410,7 +426,7 @@ class BaseMapper implements Mapper
         }
 
         throw new LogicException(
-            "Bad 'type' {$relType} in definition for relationship {$relationName} in {$entityType} entity."
+            "Bad type '{$relType}' in definition for relationship '{$relationName}' in '{$entityType}' entity."
         );
     }
 
@@ -465,8 +481,13 @@ class BaseMapper implements Mapper
     /**
      * Update relationship columns.
      */
-    public function updateRelationColumns(Entity $entity, string $relationName, ?string $id = null, array $columnData): bool
-    {
+    public function updateRelationColumns(
+        BaseEntity $entity,
+        string $relationName,
+        ?string $id = null,
+        array $columnData
+    ): bool {
+
         if (empty($id) || empty($relationName)) {
             throw new RuntimeException("Can't update relation, empty ID or relation name.");
         }
@@ -475,13 +496,13 @@ class BaseMapper implements Mapper
             return false;
         }
 
-        $relDefs = $entity->getRelations()[$relationName];
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
-        $relType = $relDefs['type'];
+        $relType =  $entity->getRelationType($relationName);
 
         switch ($relType) {
             case Entity::MANY_MANY:
+
                 $middleName = ucfirst($entity->getRelationParam($relationName, 'relationName'));
 
                 $nearKey = $keySet['nearKey'];
@@ -603,7 +624,7 @@ class BaseMapper implements Mapper
     /**
      * Mass relate.
      */
-    public function massRelate(Entity $entity, string $relationName, Select $select)
+    public function massRelate(BaseEntity $entity, string $relationName, Select $select): void
     {
         $params = $select->getRaw();
 
@@ -613,19 +634,16 @@ class BaseMapper implements Mapper
             throw new RuntimeException("Cant't mass relate on empty ID or relation name.");
         }
 
-        $relDefs = $entity->getRelations()[$relationName];
+        $relType = $entity->getRelationType($relationName);
 
-        if (!isset($relDefs['entity']) || !isset($relDefs['type'])) {
+        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
+        if (!$foreignEntityType || !$relType) {
             throw new LogicException(
-                "Not appropriate definition for relationship {$relationName} in " . $entity->getEntityType() . " entity."
+                "Not appropriate definition for relationship '{$relationName}' in '" .
+                $entity->getEntityType() . "' entity."
             );
         }
-
-        $relType = $relDefs['type'];
-
-        $foreignEntityType = $relDefs['entity'];
-
-        $relEntity = $this->entityFactory->create($foreignEntityType);
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
@@ -634,7 +652,7 @@ class BaseMapper implements Mapper
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $middleName = ucfirst($relDefs['relationName']);
+                $middleName = ucfirst($entity->getRelationParam($relationName, 'relationName'));
 
                 $columns = [];
                 $columns[] = $nearKey;
@@ -642,7 +660,7 @@ class BaseMapper implements Mapper
                 $valueList = [];
                 $valueList[] = $entity->id;
 
-                $conditions = $relDefs['conditions'] ?? [];
+                $conditions = $entity->getRelationParam($relationName, 'conditions') ?? [];
 
                 foreach ($conditions as $left => $value) {
                     $columns[] = $left;
@@ -689,7 +707,7 @@ class BaseMapper implements Mapper
     }
 
     protected function addRelation(
-        Entity $entity,
+        BaseEntity $entity,
         string $relationName,
         ?string $id = null,
         ?Entity $relEntity = null,
@@ -709,8 +727,6 @@ class BaseMapper implements Mapper
         if (!$entity->hasRelation($relationName)) {
             throw new RuntimeException("Relation '{$relationName}' does not exist in '{$entityType}'.");
         }
-
-        $relDefs = $entity->getRelations()[$relationName];
 
         $relType = $entity->getRelationType($relationName);
 
@@ -903,13 +919,14 @@ class BaseMapper implements Mapper
                     return false;
                 }
 
-                if (!isset($relDefs['relationName'])) {
+                if (!$entity->getRelationParam($relationName, 'relationName')) {
                     throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
                 }
 
-                $middleName = ucfirst($relDefs['relationName']);
+                $middleName = ucfirst($entity->getRelationParam($relationName, 'relationName'));
 
-                $conditions = $relDefs['conditions'] ?? [];
+                $conditions = $entity->getRelationParam($relationName, 'conditions') ?? [];
+
                 $data = $data ?? [];
 
                 $where = [
@@ -944,6 +961,7 @@ class BaseMapper implements Mapper
 
                     foreach ($data as $column => $value) {
                         $columns[] = $column;
+
                         $values[$column] = $value;
                         $update[$column] = $value;
                     }
@@ -987,7 +1005,7 @@ class BaseMapper implements Mapper
     }
 
     protected function removeRelation(
-        Entity $entity,
+        BaseEntity $entity,
         string $relationName,
         ?string $id = null,
         bool $all = false,
@@ -1007,8 +1025,6 @@ class BaseMapper implements Mapper
         if (!$entity->hasRelation($relationName)) {
             throw new RuntimeException("Relation '{$relationName}' does not exist in '{$entityType}'.");
         }
-
-        $relDefs = $entity->getRelations()[$relationName];
 
         $relType = $entity->getRelationType($relationName);
 
@@ -1125,13 +1141,13 @@ class BaseMapper implements Mapper
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                if (!isset($relDefs['relationName'])) {
+                if (!$entity->getRelationParam($relationName, 'relationName')) {
                     throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
                 }
 
-                $middleName = ucfirst($relDefs['relationName']);
+                $middleName = ucfirst($entity->getRelationParam($relationName, 'relationName'));
 
-                $conditions = $relDefs['conditions'] ?? [];
+                $conditions = $entity->getRelationParam($relationName, 'conditions') ?? [];
 
                 $where = [
                     $nearKey => $entity->id,
@@ -1409,30 +1425,34 @@ class BaseMapper implements Mapper
         $this->update($entity);
     }
 
-    protected function toValueMap(Entity $entity, bool $onlyStorable = true): array
+    protected function toValueMap(BaseEntity $entity, bool $onlyStorable = true): array
     {
         $data = [];
 
-        foreach ($entity->getAttributes() as $attribute => $defs) {
-            if ($entity->has($attribute)) {
-                if ($onlyStorable) {
-                    if (
-                        !empty($defs['notStorable'])
-                        ||
-                        !empty($defs['autoincrement'])
-                        ||
-                        isset($defs['source']) && $defs['source'] != 'db'
-                    ) {
-                        continue;
-                    }
-
-                    if ($defs['type'] == Entity::FOREIGN) {
-                        continue;
-                    }
-                }
-
-                $data[$attribute] = $entity->get($attribute);
+        foreach ($entity->getAttributeList() as $attribute) {
+            if (!$entity->has($attribute)) {
+                continue;
             }
+
+            if (
+                $onlyStorable &&
+                (
+                    $entity->getAttributeParam($attribute, 'notStorable') ||
+                    $entity->getAttributeParam($attribute, 'autoincrement') ||
+                    (
+                        $entity->getAttributeParam($attribute, 'source') &&
+                        $entity->getAttributeParam($attribute, 'source') !== 'db'
+                    )
+                )
+            ) {
+                continue;
+            }
+
+            if ($onlyStorable && $entity->getAttributeType($attribute) === Entity::FOREIGN) {
+                continue;
+            }
+
+            $data[$attribute] = $entity->get($attribute);
         }
 
         return $data;
@@ -1469,11 +1489,9 @@ class BaseMapper implements Mapper
         return $select;
     }
 
-    protected function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
+    protected function getManyManyJoin(BaseEntity $entity, string $relationName, ?array $conditions = null): array
     {
-        $defs = $entity->getRelations()[$relationName];
-
-        $middleName = $defs['relationName'] ?? null;
+        $middleName = $entity->getRelationParam($relationName, 'relationName');
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
@@ -1500,8 +1518,10 @@ class BaseMapper implements Mapper
 
         $conditions = $conditions ?? [];
 
-        if (!empty($defs['conditions']) && is_array($defs['conditions'])) {
-            $conditions = array_merge($conditions, $defs['conditions']);
+        $relationConditins = $entity->getRelationParam($relationName, 'conditions');
+
+        if ($relationConditins) {
+            $conditions = array_merge($conditions, $relationConditins);
         }
 
         $join[2] = array_merge($join[2], $conditions);
