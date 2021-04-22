@@ -2271,7 +2271,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getWherePartItem(
-        Entity $entity,
+        BaseEntity $entity,
         $field,
         $value,
         array &$params,
@@ -2366,8 +2366,6 @@ abstract class BaseQueryComposer implements QueryComposer
 
             $attributeType = $entity->getAttributeType($field) ?? null;
 
-            $fieldDefs = $entity->getAttributes()[$field];
-
             if (is_bool($value) && in_array($operator, ['=', '<>']) && $attributeType == Entity::BOOL) {
                 if ($value) {
                     if ($operator === '=') {
@@ -2384,14 +2382,16 @@ abstract class BaseQueryComposer implements QueryComposer
                         $operatorModified = '= TRUE';
                     }
                 }
-            } else if (is_array($value)) {
+            }
+            else if (is_array($value)) {
                 if ($operator == '=') {
                     $operatorModified = 'IN';
                 }
                 else if ($operator == '<>') {
                     $operatorModified = 'NOT IN';
                 }
-            } else if (is_null($value)) {
+            }
+            else if (is_null($value)) {
                 if ($operator == '=') {
                     $operatorModified = 'IS NULL';
                 }
@@ -2400,14 +2400,19 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
             }
 
-            if (!$noCustomWhere && !empty($fieldDefs['where']) && !empty($fieldDefs['where'][$operatorModified])) {
+            if (
+                !$noCustomWhere &&
+                $entity->getAttributeParam($field, 'where') &&
+                isset($entity->getAttributeParam($field, 'where')[$operatorModified])
+            ) {
                 $whereSqlPart = '';
                 $customWhereClause = null;
 
-                $whereDefs = $fieldDefs['where'][$operatorModified];
+                $whereDefs = $entity->getAttributeParam($field, 'where')[$operatorModified];
 
                 if (is_string($whereDefs)) {
                     $whereSqlPart = $whereDefs;
+
                     $whereDefs = [];
                 }
                 else if (!empty($whereDefs['sql'])) {
@@ -2423,12 +2428,15 @@ abstract class BaseQueryComposer implements QueryComposer
                 if (!empty($whereDefs['leftJoins'])) {
                     foreach ($whereDefs['leftJoins'] as $j) {
                         $jAlias = $this->obtainJoinAlias($j);
+
                         foreach ($params['leftJoins'] as $jE) {
                             $jEAlias = $this->obtainJoinAlias($jE);
+
                             if ($jEAlias === $jAlias) {
                                 continue 2;
                             }
                         }
+
                         $params['leftJoins'][] = $j;
                     }
                 }
@@ -2436,12 +2444,15 @@ abstract class BaseQueryComposer implements QueryComposer
                 if (!empty($whereDefs['joins'])) {
                     foreach ($whereDefs['joins'] as $j) {
                         $jAlias = $this->obtainJoinAlias($j);
+
                         foreach ($params['joins'] as $jE) {
                             $jEAlias = $this->obtainJoinAlias($jE);
+
                             if ($jEAlias === $jAlias) {
                                 continue 2;
                             }
                         }
+
                         $params['joins'][] = $j;
                     }
                 }
@@ -2455,34 +2466,39 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
 
                 if ($customWhereClause) {
-                    return "(" .$this->getWherePart($entity, $customWhereClause, 'AND', $params, $level, true) . ")";
+                    return
+                        "(" .
+                        $this->getWherePart($entity, $customWhereClause, 'AND', $params, $level, true) .
+                        ")";
                 }
 
                 return str_replace('{value}', $this->stringifyValue($value), $whereSqlPart);
             }
 
-            if ($fieldDefs['type'] == Entity::FOREIGN) {
-                if (isset($fieldDefs['relation'])) {
-                    $relationName = $fieldDefs['relation'];
+            if ($entity->getAttributeType($field) === Entity::FOREIGN) {
+                $relationName = $entity->getAttributeParam($field, 'relation');
+                $foreign = $entity->getAttributeParam($field, 'foreign');
 
-                    if ($entity->hasRelation($relationName)) {
-                        $alias = $this->getAlias($entity, $relationName);
+                if ($relationName && $entity->hasRelation($relationName)) {
+                    $alias = $this->getAlias($entity, $relationName);
 
-                        if ($alias) {
-                            if (!is_array($fieldDefs['foreign'])) {
-                                $leftPart = $this->convertComplexExpression(
-                                    $entity,
-                                    $alias . '.' . $fieldDefs['foreign'],
-                                    false,
-                                    $params
-                                );
-                            } else {
-                                $leftPart = $this->getAttributePath($entity, $field, $params);
-                            }
+                    if ($alias) {
+                        if (!is_array($foreign)) {
+                            $leftPart = $this->convertComplexExpression(
+                                $entity,
+                                $alias . '.' . $foreign,
+                                false,
+                                $params
+                            );
+                        }
+                        else {
+
+                            $leftPart = $this->getAttributePath($entity, $field, $params);
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
                 $leftPart = $fromAlias . '.' . $this->toDb($this->sanitize($field));

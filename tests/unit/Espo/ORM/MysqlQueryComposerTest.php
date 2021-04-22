@@ -1091,6 +1091,22 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(strpos($sql, 'LEFT JOIN `post`') !== false);
     }
 
+    public function testForeignInWhere()
+    {
+        $sql = $this->query->compose(Select::fromRaw([
+            'from' => 'Comment',
+            'select' => ['id'],
+            'whereClause' => [
+                'postName' => 'test',
+            ],
+            'withDeleted' => true,
+        ]));
+
+        $expectedSql =  "SELECT comment.id AS `id` FROM `comment` WHERE post.name = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testInArray()
     {
         $sql = $this->query->compose(Select::fromRaw([
