@@ -2064,14 +2064,14 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getAggregationSelectPart(
-        Entity $entity,
+        BaseEntity $entity,
         string $aggregation,
         string $aggregationBy,
         bool $distinct,
         array $params
     ): ?string {
 
-        if (!isset($entity->getAttributes()[$aggregationBy])) {
+        if (!$entity->hasAttribute($aggregationBy)) {
             return null;
         }
 
@@ -2841,7 +2841,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getJoinItemPart(
-        Entity $entity,
+        BaseEntity $entity,
         string $name,
         bool $isLeft = false,
         array $conditions = [],
@@ -2882,7 +2882,6 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $relationName = $name;
 
-        $relParams = $entity->getRelations()[$relationName];
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
 
         if (!$alias) {
@@ -2891,11 +2890,14 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $alias = $this->sanitize($alias);
 
-        if (!empty($relParams['conditions']) && is_array($relParams['conditions'])) {
-            $conditions = array_merge($conditions, $relParams['conditions']);
+        $relationConditions = $entity->getRelationParam($relationName, 'conditions');
+        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+
+        if ($relationConditions) {
+            $conditions = array_merge($conditions, $relationConditions);
         }
 
-        $type = $relParams['type'];
+        $type = $entity->getRelationType($relationName);
 
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
@@ -2906,10 +2908,17 @@ abstract class BaseQueryComposer implements QueryComposer
                 $nearKey = $keySet['nearKey'];
                 $distantKey = $keySet['distantKey'];
 
-                $relTable = $this->toDb($relParams['relationName']);
-                $midAlias = lcfirst($this->sanitize($relParams['relationName']));
+                $relTable = $this->toDb(
+                    $entity->getRelationParam($relationName, 'relationName')
+                );
 
-                $distantTable = $this->toDb($relParams['entity']);
+                $midAlias = lcfirst(
+                    $this->sanitize(
+                        $entity->getRelationParam($relationName, 'relationName')
+                    )
+                );
+
+                $distantTable = $this->toDb($foreignEntityType);
 
                 $midAlias = $alias . 'Middle';
 
@@ -2925,7 +2934,8 @@ abstract class BaseQueryComposer implements QueryComposer
 
                     foreach ($indexList as $indexName) {
                         $indexKey = $this->metadata->get(
-                            $entity->getEntityType(), ['relations', $relationName, 'indexes', $indexName, 'key']
+                            $entity->getEntityType(),
+                            ['relations', $relationName, 'indexes', $indexName, 'key']
                         );
 
                         if ($indexKey) {
@@ -2981,7 +2991,7 @@ abstract class BaseQueryComposer implements QueryComposer
             case Entity::HAS_MANY:
             case Entity::HAS_ONE:
                 $foreignKey = $keySet['foreignKey'];
-                $distantTable = $this->toDb($relParams['entity']);
+                $distantTable = $this->toDb($foreignEntityType);
 
                 $sql =
                     "{$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS " .
@@ -3007,7 +3017,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $foreignKey = $keySet['foreignKey'];
                 $foreignType = $keySet['foreignType'];
 
-                $distantTable = $this->toDb($relParams['entity']);
+                $distantTable = $this->toDb($foreignEntityType);
 
                 $sql =
                     "{$prefix}JOIN " . $this->quoteIdentifier($distantTable) . " AS ".
