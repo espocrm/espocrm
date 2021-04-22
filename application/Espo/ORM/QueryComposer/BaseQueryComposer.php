@@ -1196,7 +1196,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getFunctionArgumentPart(
-        Entity $entity,
+        BaseEntity $entity,
         string $attribute,
         bool $distinct, array &$params
     ): string {
@@ -1953,7 +1953,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getOrderExpressionPart(
-        Entity $entity,
+        BaseEntity $entity,
         $orderBy = null,
         $order = null,
         ?array &$params = null,
@@ -2021,11 +2021,11 @@ abstract class BaseQueryComposer implements QueryComposer
             return "{$orderBy} " . $order;
         }
 
-        if (!empty($entity->getAttributes()[$orderBy])) {
-            $fieldDefs = $entity->getAttributes()[$orderBy];
-        }
-
-        if (!$noCustom && !empty($fieldDefs) && !empty($fieldDefs['order'])) {
+        if (
+            !$noCustom &&
+            $entity->hasAttribute($orderBy) &&
+            $entity->getAttributeParam($orderBy, 'order')
+        ) {
             return $this->getAttributeOrderSql($entity, $orderBy, $params, $order);
         }
 
@@ -2176,39 +2176,35 @@ abstract class BaseQueryComposer implements QueryComposer
         return $aliases;
     }
 
-    protected function getAttributePath(Entity $entity, string $attribute, array &$params): ?string
+    protected function getAttributePath(BaseEntity $entity, string $attribute, array &$params): ?string
     {
-        if (!isset($entity->getAttributes()[$attribute])) {
+        if (!$entity->hasAttribute($attribute)) {
             return null;
         }
 
         $entityType = $entity->getEntityType();
 
-        $f = $entity->getAttributes()[$attribute];
+        $attributeType = $entity->getAttributeType($attribute);
 
-        $relationType = $f['type'];
-
-        if (isset($f['source'])) {
-            if ($f['source'] != 'db') {
+        if ($entity->getAttributeParam($attribute, 'source')) {
+            if ($entity->getAttributeParam($attribute, 'source') !== 'db') {
                 return null;
             }
         }
 
-        if (!empty($f['notStorable']) && $relationType !== 'foreign') {
+        if ($entity->getAttributeParam($attribute, 'notStorable') && $attributeType !== 'foreign') {
             return null;
         }
 
-        switch ($relationType) {
+        switch ($attributeType) {
             case 'foreign':
-                $relationName = $f['relation'] ?? null;
+                $relationName = $entity->getAttributeParam($attribute, 'relation');
 
                 if (!$relationName) {
                     return null;
                 }
 
-                $relationName = $f['relation'];
-
-                $foreign = $f['foreign'];
+                $foreign = $entity->getAttributeParam($attribute, 'foreign');
 
                 if (is_array($foreign)) {
                     $wsCount = 0;
@@ -2216,6 +2212,7 @@ abstract class BaseQueryComposer implements QueryComposer
                     foreach ($foreign as $i => $value) {
                         if ($value == ' ') {
                             $foreign[$i] = '\' \'';
+
                             $wsCount ++;
                         }
                         else {
@@ -2235,6 +2232,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 }
                 else {
                     $expression = $this->getAlias($entity, $relationName) . '.' . $foreign;
+
                     $path = $this->convertComplexExpression($entity, $expression, false, $params);
                 }
 
