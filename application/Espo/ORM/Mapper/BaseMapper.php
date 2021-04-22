@@ -1523,10 +1523,10 @@ class BaseMapper implements RDBMapper
 
         $conditions = $conditions ?? [];
 
-        $relationConditins = $entity->getRelationParam($relationName, 'conditions');
+        $relationConditions = $entity->getRelationParam($relationName, 'conditions');
 
-        if ($relationConditins) {
-            $conditions = array_merge($conditions, $relationConditins);
+        if ($relationConditions) {
+            $conditions = array_merge($conditions, $relationConditions);
         }
 
         $join[2] = array_merge($join[2], $conditions);
