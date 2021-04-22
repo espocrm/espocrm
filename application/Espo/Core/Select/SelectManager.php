@@ -44,9 +44,12 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
+use Espo\ORM\{
+    QueryComposer\BaseQueryComposer as QueryComposer,
+    QueryParams\Select as SelectQuery,
+    Entity,
+};
 
-use Espo\ORM\Entity;
 
 use Espo\Entities\User;
 
@@ -98,13 +101,22 @@ class SelectManager
     protected $fullTextSearchDataCacheHash = [];
 
     protected $entityManager;
+
     protected $user;
+
     protected $acl;
+
     protected $aclManager;
+
     protected $metadata;
+
     protected $config;
+
     protected $fieldUtil;
+
     protected $injectableFactory;
+
+    private $selectBuilderFactory;
 
     public function __construct(
         EntityManager $entityManager,
@@ -114,7 +126,8 @@ class SelectManager
         Metadata $metadata,
         Config $config,
         FieldUtil $fieldUtil,
-        InjectableFactory $injectableFactory
+        InjectableFactory $injectableFactory,
+        SelectBuilderFactory $selectBuilderFactory
     ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
@@ -124,6 +137,7 @@ class SelectManager
         $this->config = $config;
         $this->fieldUtil = $fieldUtil;
         $this->injectableFactory = $injectableFactory;
+        $this->selectBuilderFactory = $selectBuilderFactory;
     }
 
     protected function getEntityManager() : EntityManager
@@ -840,15 +854,19 @@ class SelectManager
     /**
      * Build select parameters for ORM from parameters in the frontend format.
      *
-     * @param $params Parameters in frontend format.
+     * @param $params Parameters in front-end format.
      * @param $withAcl To apply ACL.
      * @param $checkWherePermission To check passed filters, whether a user has an access to use these filters.
      * @param forbidComplexExpressions To forbid complex expression usage.
      * @return Parameters for ORM.
      */
     public function buildSelectParams(
-        array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false
+        array $params,
+        bool $withAcl = false,
+        bool $checkWherePermission = false,
+        bool $forbidComplexExpressions = false
     ) : array {
+
         return $this->getSelectParams($params, $withAcl, $checkWherePermission, $forbidComplexExpressions);
     }
 
@@ -856,94 +874,32 @@ class SelectManager
      * The same as buildSelectParams.
      */
     public function getSelectParams(
-        array $params, bool $withAcl = false, bool $checkWherePermission = false, bool $forbidComplexExpressions = false
+        array $params,
+        bool $withAcl = false,
+        bool $checkWherePermission = false,
+        bool $forbidComplexExpressions = false
     ) : array {
-        $result = [];
 
-        $this->prepareResult($result);
-
-        if (!empty($params['select'])) {
-            $result['select'] = $this->getSelectAttributeList($params);
-        }
-
-        if (!empty($params['orderBy'])) {
-            $isDesc = false;
-            if (isset($params['order'])) {
-                $isDesc = $params['order'] === 'desc';
-            }
-            $orderBy = $params['orderBy'];
-
-            if ($forbidComplexExpressions) {
-                if (!is_string($orderBy) || strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
-                    throw new Forbidden("Complex expressions are forbidden in orderBy.");
-                }
-            }
-
-            $this->order($orderBy, $isDesc, $result);
-        } else if (!empty($params['sortBy'])) {
-            if (isset($params['order'])) {
-                $isDesc = $params['order'] === 'desc';
-            } else if (isset($params['asc'])) {
-                $isDesc = $params['asc'] !== true;
-            }
-
-            $orderBy = $params['sortBy'];
-
-            if ($forbidComplexExpressions) {
-                if (!is_string($orderBy) || strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
-                    throw new Forbidden("Complex expressions are forbidden in orderBy.");
-                }
-            }
-
-            $this->order($orderBy, $isDesc, $result);
-        } else if (!empty($params['order'])) {
-            $orderBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
-            $isDesc = $params['order'] === 'desc';
-            $this->order($orderBy, $isDesc, $result);
-        }
-
-        if (!isset($params['offset'])) {
-            $params['offset'] = null;
-        }
-        if (!isset($params['maxSize'])) {
-            $params['maxSize'] = null;
-        }
-        $this->limit($params['offset'], $params['maxSize'], $result);
-
-        if (!empty($params['primaryFilter'])) {
-            $this->applyPrimaryFilter($params['primaryFilter'], $result);
-        }
-
-        if (!empty($params['boolFilterList']) && is_array($params['boolFilterList'])) {
-            $this->applyBoolFilterList($params['boolFilterList'], $result);
-        }
-
-        if (!empty($params['filterList']) && is_array($params['filterList'])) {
-            foreach ($params['filterList'] as $filterName) {
-                $this->applyFilter($filterName, $result);
-            }
-        }
-
-        if (!empty($params['where']) && is_array($params['where'])) {
-            if ($checkWherePermission) {
-                $this->checkWhere($params['where'], $checkWherePermission, $forbidComplexExpressions);
-            }
-            $this->where($params['where'], $result);
-        }
-
-        if (isset($params['textFilter']) && $params['textFilter'] !== '') {
-            $this->textFilter($params['textFilter'], $result);
-        }
-
-        $this->q($params, $result);
+        $builder = $this->selectBuilderFactory
+            ->create()
+            ->forUser($this->user)
+            ->from($this->entityType);
 
         if ($withAcl) {
-            $this->access($result);
+            $builder->withAccessControlFilter();
         }
 
-        $this->applyAdditional($params, $result);
+        if ($checkWherePermission) {
+            $builder->withWherePermissionCheck();
+        }
 
-        return $result;
+        if ($forbidComplexExpressions) {
+            $builder->withComplexExpressionsForbidden();
+        }
+
+        $builder->withSearchParams(SearchParams::fromRaw($params));
+
+        return $builder->build()->getRaw();
     }
 
     /**
@@ -1981,7 +1937,7 @@ class SelectManager
     }
 
     /**
-     * Fallback for backward compatibiltiy.
+     * Fallback for backward compatibility.
      */
     public function hasInheritedAccessMethod() : bool
     {
@@ -1991,7 +1947,7 @@ class SelectManager
     }
 
     /**
-     * Fallback for backward compatibiltiy.
+     * Fallback for backward compatibility.
      */
     public function applyAccessToQueryBuilder(OrmSelectBuilder $queryBuilder)
     {
@@ -2003,7 +1959,7 @@ class SelectManager
     }
 
     /**
-     * Fallback for backward compatibiltiy.
+     * Fallback for backward compatibility.
      */
     public function hasInheritedAccessFilterMethod(string $filterName) : bool
     {
@@ -2027,7 +1983,7 @@ class SelectManager
     }
 
     /**
-     * Fallback for backward compatibiltiy.
+     * Fallback for backward compatibility.
      */
     public function applyAccessFilterToQueryBuilder(OrmSelectBuilder $queryBuilder, string $filterName)
     {
@@ -2041,7 +1997,7 @@ class SelectManager
     }
 
     /**
-     * Fallback for backward compatibiltiy.
+     * Fallback for backward compatibility.
      */
     public function hasBoolFilter(string $filter) : bool
     {
@@ -2051,7 +2007,7 @@ class SelectManager
     }
 
     /**
-     * Fallback for backward compatibiltiy.
+     * Fallback for backward compatibility.
      */
     public function applyBoolFilterToQueryBuilder(OrmSelectBuilder $queryBuilder, string $filter) : array
     {
@@ -2071,7 +2027,7 @@ class SelectManager
     }
 
     /**
-     * Fallback for backward compatibiltiy.
+     * Fallback for backward compatibility.
      */
     public function hasPrimaryFilter(string $filter) : bool
     {
@@ -2093,7 +2049,7 @@ class SelectManager
     }
 
     /**
-     * Fallback for backward compatibiltiy.
+     * Fallback for backward compatibility.
      */
     public function applyPrimaryFilterToQueryBuilder(OrmSelectBuilder $queryBuilder, string $filter)
     {
@@ -2708,8 +2664,17 @@ class SelectManager
 
     public function applyAccess(array &$result)
     {
-        $this->prepareResult($result);
-        $this->access($result);
+        $result['from'] = $this->entityType;
+
+        $query = SelectQuery::fromRaw($result);
+
+        $result = $this->selectBuilderFactory
+            ->create()
+            ->clone($query)
+            ->forUser($this->user)
+            ->withAccessControlFilter()
+            ->build()
+            ->getRaw();
     }
 
     protected function boolFilters(array $params, array &$result)
