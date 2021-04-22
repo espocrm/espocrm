@@ -59,6 +59,8 @@ class BaseEntity implements Entity
      */
     public $fields = [];
 
+    private $attributes = [];
+
     /**
      * @todo Make private.
      * @deprecated
@@ -102,8 +104,10 @@ class BaseEntity implements Entity
         $this->entityManager = $entityManager;
         $this->valueAccessorFactory = $valueAccessorFactory;
 
-        $this->fields = $defs['attributes'] ?? $defs['fields'] ?? $this->fields;
+        $this->attributes = $defs['attributes'] ?? $defs['fields'] ?? $this->attributes;
         $this->relations = $defs['relations'] ?? $this->relations;
+
+        $this->fields = $this->attributes;
 
         if ($valueAccessorFactory) {
             $this->valueAccessor = $valueAccessorFactory->create($this);
@@ -633,9 +637,9 @@ class BaseEntity implements Entity
     /**
      * @deprecated
      */
-    public function hasField($fieldName)
+    public function hasField($name)
     {
-        return isset($this->fields[$fieldName]);
+        return $this->hasAttribute($name);
     }
 
     /**
@@ -643,7 +647,7 @@ class BaseEntity implements Entity
      */
     public function hasAttribute(string $name): bool
     {
-        return isset($this->fields[$name]);
+        return isset($this->attributes[$name]);
     }
 
     /**
@@ -718,7 +722,7 @@ class BaseEntity implements Entity
      */
     public function getFields()
     {
-        return $this->fields;
+        return $this->getAttributes();
     }
 
     /**
@@ -726,7 +730,7 @@ class BaseEntity implements Entity
      */
     public function getAttributes()
     {
-        return $this->fields;
+        return $this->attributes;
     }
 
     /**
@@ -742,11 +746,11 @@ class BaseEntity implements Entity
      */
     public function getAttributeType(string $attribute): ?string
     {
-        if (isset($this->fields[$attribute]) && isset($this->fields[$attribute]['type'])) {
-            return $this->fields[$attribute]['type'];
+        if (!isset($this->attributes[$attribute])) {
+            return null;
         }
 
-        return null;
+        return $this->attributes[$attribute]['type'] ?? null;
     }
 
     /**
@@ -754,35 +758,39 @@ class BaseEntity implements Entity
      */
     public function getRelationType(string $relation): ?string
     {
-        if (isset($this->relations[$relation]) && isset($this->relations[$relation]['type'])) {
-            return $this->relations[$relation]['type'];
+        if (!isset($this->relations[$relation])) {
+            return null;
         }
 
-        return null;
+        return $this->relations[$relation]['type'] ?? null;
     }
 
     /**
      * Get an attribute parameter.
+     *
+     * @return mixed
      */
     public function getAttributeParam(string $attribute, string $name)
     {
-        if (isset($this->fields[$attribute]) && isset($this->fields[$attribute][$name])) {
-            return $this->fields[$attribute][$name];
+        if (!isset($this->attributes[$attribute])) {
+            return null;
         }
 
-        return null;
+        return $this->attributes[$attribute][$name] ?? null;
     }
 
     /**
      * Get a relation parameter.
+     *
+     * @return mixed
      */
     public function getRelationParam(string $relation, string $name)
     {
-        if (isset($this->relations[$relation]) && isset($this->relations[$relation][$name])) {
-            return $this->relations[$relation][$name];
+        if (!isset($this->relations[$relation])) {
+            return null;
         }
 
-        return null;
+        return $this->relations[$relation][$name] ?? null;
     }
 
     /**
@@ -986,10 +994,12 @@ class BaseEntity implements Entity
      */
     public function populateDefaults(): void
     {
-        foreach ($this->fields as $attribute => $defs) {
-            if (array_key_exists('default', $defs)) {
-                $this->setInContainer($attribute, $defs['default']);
+        foreach ($this->attributes as $attribute => $defs) {
+            if (!array_key_exists('default', $defs)) {
+                continue;
             }
+
+            $this->setInContainer($attribute, $defs['default']);
         }
     }
 
