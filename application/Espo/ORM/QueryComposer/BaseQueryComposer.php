@@ -53,6 +53,7 @@ use LogicException;
  * Composes SQL queries.
  *
  * @todo Break into sub-classes. Put sub-classes into `\Parts` namespace.
+ * @todo Use entityDefs. Don't use methods of BaseEntity.
  */
 abstract class BaseQueryComposer implements QueryComposer
 {

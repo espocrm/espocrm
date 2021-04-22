@@ -52,6 +52,8 @@ use RuntimeException;
 
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
+ *
+ * @todo Use entityDefs. Don't use methods of BaseEntity.
  */
 class BaseMapper implements RDBMapper
 {
