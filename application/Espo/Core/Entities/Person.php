@@ -50,8 +50,8 @@ class Person extends Entity
         string $entityType,
         array $defs,
         EntityManager $entityManager,
-        ValueAccessorFactory $valueAccessorFactory,
-        Helper $helper
+        Helper $helper,
+        ?ValueAccessorFactory $valueAccessorFactory = null
     ) {
         parent::__construct($entityType, $defs, $entityManager, $valueAccessorFactory);
 

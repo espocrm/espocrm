@@ -178,7 +178,7 @@ abstract class BaseQueryComposer implements QueryComposer
     protected function getSeed(?string $entityType): Entity
     {
         if (!$entityType) {
-            return new BaseEntity('_Stub');
+            return new BaseEntity('_Stub', []);
         }
 
         if (empty($this->seedCache[$entityType])) {

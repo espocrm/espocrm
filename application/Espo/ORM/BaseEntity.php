@@ -93,7 +93,7 @@ class BaseEntity implements Entity
 
     public function __construct(
         string $entityType,
-        array $defs = [],
+        array $defs,
         ?EntityManager $entityManager = null,
         ?ValueAccessorFactory $valueAccessorFactory = null
     ) {
