@@ -1263,15 +1263,16 @@ abstract class BaseQueryComposer implements QueryComposer
                     }
                 }
             }
-        } else {
-            if (!empty($entity->getAttributes()[$attribute]['select'])) {
-                $part = $this->getAttributeSql($entity, $attribute, 'select', $params);
-            }
-            else {
-                if ($part !== '') {
-                    $part = $this->getFromAlias($params, $entityType) . '.' . $part;
-                }
-            }
+
+            return $part;
+        }
+
+        if ($entity->getAttributeParam($attribute, 'select')) {
+            return $this->getAttributeSql($entity, $attribute, 'select', $params);
+        }
+
+        if ($part !== '') {
+            $part = $this->getFromAlias($params, $entityType) . '.' . $part;
         }
 
         return $part;
@@ -1301,15 +1302,13 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     protected function getAttributeOrderSql(
-        Entity $entity,
+        BaseEntity $entity,
         string $attribute,
         ?array &$params,
         string $order
     ): string {
 
-        $fieldDefs = $entity->getAttributes()[$attribute];
-
-        $defs = $fieldDefs['order'];
+        $defs = $entity->getAttributeParam($attribute, 'order') ?? [];
 
         if (is_string($defs)) {
             $defs = [];
@@ -1319,9 +1318,10 @@ abstract class BaseQueryComposer implements QueryComposer
             $this->applyAttributeCustomParams($defs, $params, $attribute);
         }
 
-        if (is_string($fieldDefs['order'])) {
+        if (is_string($entity->getAttributeParam($attribute, 'order'))) {
             $defs = [];
-            $part = $fieldDefs['order'];
+
+            $part = $entity->getAttributeParam($attribute, 'order');
 
             $part = str_replace('{direction}', $order, $part);
 
@@ -1330,6 +1330,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!empty($defs['sql'])) {
             $part = $defs['sql'];
+
             $part = str_replace('{direction}', $order, $part);
 
             return $part;
@@ -1365,7 +1366,10 @@ abstract class BaseQueryComposer implements QueryComposer
             return $part;
         }
 
-        $part = $this->getFromAlias($params, $entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
+        $part = $this->getFromAlias(
+            $params,
+            $entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute)
+        );
 
         $part .= ' ' . $order;
 
@@ -1380,9 +1384,7 @@ abstract class BaseQueryComposer implements QueryComposer
         ?string $alias = null
     ): string {
 
-        $fieldDefs = $entity->getAttributes()[$attribute];
-
-        $defs = $fieldDefs[$type];
+        $defs = $entity->getAttributeParam($attribute, $type) ?? [];
 
         if (is_string($defs)) {
             $defs = [];
@@ -1392,8 +1394,8 @@ abstract class BaseQueryComposer implements QueryComposer
             $this->applyAttributeCustomParams($defs, $params, $attribute, $alias);
         }
 
-        if (is_string($fieldDefs[$type])) {
-            return $fieldDefs[$type];
+        if (is_string($entity->getAttributeParam($attribute, $type))) {
+            return $entity->getAttributeParam($attribute, $type);
         }
 
         if (!empty($defs['sql'])) {
@@ -1422,7 +1424,10 @@ abstract class BaseQueryComposer implements QueryComposer
             return $pair[0];
         }
 
-        return $this->getFromAlias($params, $entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
+        return $this->getFromAlias(
+            $params,
+            $entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute)
+        );
     }
 
     protected function applyAttributeCustomParams(
@@ -1430,7 +1435,8 @@ abstract class BaseQueryComposer implements QueryComposer
         array &$params,
         string $attribute,
         ?string $alias = null
-    ) {
+    ): void {
+
         if (!empty($defs['leftJoins'])) {
             foreach ($defs['leftJoins'] as $j) {
                 $jAlias = $this->obtainJoinAlias($j);
