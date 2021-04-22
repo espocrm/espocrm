@@ -31,7 +31,7 @@ namespace Espo\ORM\QueryParams;
 
 trait BaseTrait
 {
-    protected $params = [];
+    private $params = [];
 
     /**
      * Get parameters in RAW format.
@@ -55,7 +55,7 @@ trait BaseTrait
         return $obj;
     }
 
-    protected function validateRawParams(array $params)
+    private function validateRawParams(array $params): void
     {
     }
 }

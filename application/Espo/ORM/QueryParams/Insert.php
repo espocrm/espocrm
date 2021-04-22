@@ -38,7 +38,7 @@ class Insert implements Query
 {
     use BaseTrait;
 
-    protected function validateRawParams(array $params)
+    private function validateRawParams(array $params): void
     {
         $into = $params['into'] ?? null;
 
@@ -53,8 +53,6 @@ class Insert implements Query
         }
 
         $values = $params['values'] = $params['values'] ?? [];
-
-        $valuesSelectParams = $params['valuesSelectParams'] = $params['valuesSelectParams'] ?? null;
 
         if (!is_array($values)) {
             throw new RuntimeException("Bad 'values' parameter.");

@@ -47,7 +47,7 @@ class Delete implements Query
         return $this->params['from'];
     }
 
-    protected function validateRawParams(array $params)
+    private function validateRawParams(array $params): void
     {
         $this->validateRawParamsSelecting($params);
 

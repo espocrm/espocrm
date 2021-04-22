@@ -34,7 +34,7 @@ use Espo\{
 };
 
 /**
- * Need access to raw params for backward compatiblity.
+ * Need access to raw params for backward compatibility.
  * The legacy select manager operates with raw params.
  */
 class OrmSelectBuilder extends QueryBuilder

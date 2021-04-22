@@ -79,7 +79,7 @@ class SelectBuilder implements Builder
     /**
      * Set FROM sub-query.
      */
-    public function fromQuery(Selecting $query, string $alias): self
+    public function fromQuery(SelectingQuery $query, string $alias): self
     {
         if (isset($this->params['from'])) {
             throw new RuntimeException("Method 'fromQuery' can be called only once.");

@@ -94,7 +94,7 @@ class InsertBuilder implements Builder
     /**
      * For a mass insert by a select sub-query.
      */
-    public function valuesQuery(Selecting $query): self
+    public function valuesQuery(SelectingQuery $query): self
     {
         $this->params['valuesQuery'] = $query;
 

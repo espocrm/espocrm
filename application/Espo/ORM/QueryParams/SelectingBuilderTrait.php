@@ -41,7 +41,7 @@ trait SelectingBuilderTrait
      * * `where(string $key, string $value)`
      *
      * @param array|string $keyOrClause A key or where clause.
-     * @param ?array|string $value A value. If the first argument is an array, then should be omited.
+     * @param ?array|string $value A value. If the first argument is an array, then should be omitted.
      */
     public function where($keyOrClause = [], $value = null): self
     {
@@ -50,7 +50,7 @@ trait SelectingBuilderTrait
         return $this;
     }
 
-    protected function applyWhereClause(string $type, $keyOrClause, $value)
+    private function applyWhereClause(string $type, $keyOrClause, $value): void
     {
         $this->params[$type] = $this->params[$type] ?? [];
 
@@ -78,12 +78,12 @@ trait SelectingBuilderTrait
         if ($containsSameKeys) {
             $this->params[$type][] = $new;
 
-            return $this;
+            return;
         }
 
         $this->params[$type] = $new + $original;
 
-        return $this;
+        return;
     }
 
     /**
@@ -91,7 +91,7 @@ trait SelectingBuilderTrait
      *
      * @param string|int|array $orderBy An attribute to order by or order definitions as an array.
      * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
-     *                               If the first argument is an array then should be omitied.
+     *                               If the first argument is an array then should be omitted.
      */
     public function order($orderBy, $direction = Select::ORDER_ASC): self
     {

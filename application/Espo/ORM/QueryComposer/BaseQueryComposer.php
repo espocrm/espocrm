@@ -36,12 +36,12 @@ use Espo\ORM\{
     Metadata,
     Mapper\Helper,
     QueryParams\Query as Query,
+    QueryParams\SelectingQuery,
     QueryParams\Select as SelectQuery,
     QueryParams\Update as UpdateQuery,
     QueryParams\Insert as InsertQuery,
     QueryParams\Delete as DeleteQuery,
     QueryParams\Union as UnionQuery,
-    QueryParams\Selecting as SelectingQuery,
     QueryParams\LockTable as LockTableQuery,
 };
 

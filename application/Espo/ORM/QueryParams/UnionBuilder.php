@@ -99,11 +99,13 @@ class UnionBuilder implements Builder
             foreach ($orderBy as $item) {
                 if (count($item) == 2) {
                     $this->order($item[0], $item[1]);
+
                     continue;
                 }
 
                 if (count($item) == 1) {
                     $this->order($item[0]);
+
                     continue;
                 }
 

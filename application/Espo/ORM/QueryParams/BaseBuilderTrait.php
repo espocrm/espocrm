@@ -34,7 +34,7 @@ use RuntimeException;
 trait BaseBuilderTrait
 {
     /**
-     * Needs to be protected.
+     * Must be protected for compatibility reasons.
      */
     protected $params = [];
 
@@ -42,12 +42,12 @@ trait BaseBuilderTrait
     {
     }
 
-    protected function isEmpty(): bool
+    private function isEmpty(): bool
     {
         return empty($this->params);
     }
 
-    protected function cloneInternal(Query $query)
+    private function cloneInternal(Query $query): void
     {
         if (!$this->isEmpty()) {
             throw new RuntimeException("Clone can be called only on a new empty builder instance.");

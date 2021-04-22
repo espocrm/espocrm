@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\QueryParams;
 
-interface Selecting
+interface SelectingQuery extends Query
 {
 
 }

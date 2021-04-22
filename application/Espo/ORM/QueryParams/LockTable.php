@@ -39,9 +39,10 @@ class LockTable implements Query
     use BaseTrait;
 
     const MODE_SHARE = 'SHARE';
+
     const MODE_EXCLUSIVE = 'EXCLUSIVE';
 
-    protected function validateRawParams(array $params)
+    protected function validateRawParams(array $params): void
     {
         if (empty($params['table'])) {
             throw new RuntimeException("LockTable params: No table specified.");

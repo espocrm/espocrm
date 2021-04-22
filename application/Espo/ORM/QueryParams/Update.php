@@ -39,7 +39,7 @@ class Update implements Query
     use SelectingTrait;
     use BaseTrait;
 
-    protected function validateRawParams(array $params)
+    private function validateRawParams(array $params): void
     {
         $this->validateRawParamsSelecting($params);
 

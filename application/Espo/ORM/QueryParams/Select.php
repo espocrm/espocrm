@@ -36,12 +36,13 @@ use RuntimeException;
  *
  * @todo Add validation and normalization (from ORM\DB\BaseQuery).
  */
-class Select implements Query, Selecting
+class Select implements SelectingQuery
 {
     use SelectingTrait;
     use BaseTrait;
 
     const ORDER_ASC = 'ASC';
+
     const ORDER_DESC = 'DESC';
 
     /**
@@ -84,7 +85,7 @@ class Select implements Query, Selecting
         return $this->params['orderBy'] ?? [];
     }
 
-    protected function validateRawParams(array $params)
+    private function validateRawParams(array $params): void
     {
         $this->validateRawParamsSelecting($params);
 

@@ -31,7 +31,7 @@ namespace Espo\ORM\QueryParams;
 
 trait SelectingTrait
 {
-    protected static function validateRawParamsSelecting(array $params)
+    private static function validateRawParamsSelecting(array $params): void
     {
     }
 }

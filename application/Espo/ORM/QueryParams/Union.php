@@ -34,11 +34,11 @@ use RuntimeException;
 /**
  * Union parameters.
  */
-class Union implements Query, Selecting
+class Union implements SelectingQuery
 {
     use BaseTrait;
 
-    protected function validateRawParams(array $params)
+    private function validateRawParams(array $params): void
     {
         if (empty($params['queries'])) {
             throw new RuntimeException("Union params: No query were added.");
