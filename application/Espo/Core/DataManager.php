@@ -50,14 +50,21 @@ use Throwable;
  */
 class DataManager
 {
-    protected $config;
-    protected $configWriter;
-    protected $entityManager;
-    protected $fileManager;
-    protected $metadata;
-    protected $ormMetadataData;
-    protected $hookManager;
-    protected $schemaProxy;
+    private $config;
+
+    private $configWriter;
+
+    private $entityManager;
+
+    private $fileManager;
+
+    private $metadata;
+
+    private $ormMetadataData;
+
+    private $hookManager;
+
+    private $schemaProxy;
 
     private $cachePath = 'data/cache';
 
@@ -84,7 +91,7 @@ class DataManager
     /**
      * Rebuild the system with metadata, database and cache clearing.
      */
-    public function rebuild(?array $entityList = null)
+    public function rebuild(?array $entityList = null): void
     {
         $this->clearCache();
 
@@ -104,7 +111,7 @@ class DataManager
     /**
      * Clear a cache.
      */
-    public function clearCache()
+    public function clearCache(): void
     {
         $result = $this->fileManager->removeInDir($this->cachePath);
 
@@ -118,7 +125,7 @@ class DataManager
     /**
      * Rebuild database.
      */
-    public function rebuildDatabase(?array $entityList = null)
+    public function rebuildDatabase(?array $entityList = null): void
     {
         $schema = $this->schemaProxy;
 
@@ -164,7 +171,7 @@ class DataManager
     /**
      * Rebuild metadata.
      */
-    public function rebuildMetadata()
+    public function rebuildMetadata(): void
     {
         $metadata = $this->metadata;
 
@@ -184,7 +191,7 @@ class DataManager
     /**
      * Rebuild scheduled jobs. Create system jobs.
      */
-    public function rebuildScheduledJobs()
+    public function rebuildScheduledJobs(): void
     {
         $metadata = $this->metadata;
 
@@ -267,14 +274,14 @@ class DataManager
     /**
      * Update cache timestamp.
      */
-    public function updateCacheTimestamp()
+    public function updateCacheTimestamp(): void
     {
         $this->configWriter->updateCacheTimestamp();
 
         $this->configWriter->save();
     }
 
-    protected function populateConfigParameters()
+    protected function populateConfigParameters(): void
     {
         $this->setFullTextConfigParameters();
         $this->setCryptKeyConfigParameter();
@@ -282,7 +289,7 @@ class DataManager
         $this->configWriter->save();
     }
 
-    protected function setFullTextConfigParameters()
+    protected function setFullTextConfigParameters(): void
     {
         $platform = $this->config->get('database.platform') ?? null;
         $driver = $this->config->get('database.driver') ?? '';
@@ -310,7 +317,7 @@ class DataManager
         $this->configWriter->set('fullTextSearchMinLength', $fullTextSearchMinLength);
     }
 
-    protected function setCryptKeyConfigParameter()
+    protected function setCryptKeyConfigParameter(): void
     {
         if ($this->config->get('cryptKey')) {
             return;
@@ -321,12 +328,12 @@ class DataManager
         $this->configWriter->set('cryptKey', $cryptKey);
     }
 
-    protected function disableHooks()
+    protected function disableHooks(): void
     {
         $this->hookManager->disable();
     }
 
-    protected function enableHooks()
+    protected function enableHooks(): void
     {
         $this->hookManager->enable();
     }
