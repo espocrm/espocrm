@@ -44,18 +44,13 @@ abstract class Repository
 
     protected $entityManager;
 
-    protected $seed;
-
     protected $entityType;
 
     public function __construct(string $entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
         $this->entityType = $entityType;
-
         $this->entityFactory = $entityFactory;
         $this->entityManager = $entityManager;
-
-        $this->seed = $this->entityFactory->create($entityType);
     }
 
     protected function getEntityFactory(): EntityFactory

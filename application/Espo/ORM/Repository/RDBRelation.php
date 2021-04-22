@@ -34,7 +34,7 @@ use Espo\ORM\{
     Entity,
     EntityManager,
     QueryParams\Select,
-    Mapper\Mapper,
+    Mapper\RDBMapper,
     Repository\RDBRelationSelectBuilder as Builder,
 };
 
@@ -124,7 +124,7 @@ class RDBRelation
         return $this->relationType === Entity::BELONGS_TO_PARENT;
     }
 
-    protected function getMapper(): Mapper
+    protected function getMapper(): RDBMapper
     {
         return $this->entityManager->getMapper();
     }
@@ -245,7 +245,7 @@ class RDBRelation
      * @see Espo\ORM\QueryParams\SelectBuilder::order()
      *
      * @param string|int|array $orderBy
-      * @param bool|string $direction
+     * @param bool|string $direction
      */
     public function order($orderBy, $direction = 'ASC'): Builder
     {
@@ -380,6 +380,7 @@ class RDBRelation
         }
 
         $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
+
         $seed->set('id', $id);
 
         $this->relate($seed, $columnData, $options);
@@ -399,6 +400,7 @@ class RDBRelation
         }
 
         $seed = $this->entityManager->getEntityFactory()->create($this->foreignEntityType);
+
         $seed->set('id', $id);
 
         $this->unrelate($seed, $options);
@@ -450,11 +452,7 @@ class RDBRelation
 
         $this->beforeUnrelate($entity, $options);
 
-        $result = $this->getMapper()->unrelate($this->entity, $this->relationName, $entity);
-
-        if (!$result) {
-            return;
-        }
+        $this->getMapper()->unrelate($this->entity, $this->relationName, $entity);
 
         $this->afterUnrelate($entity, $options);
     }
@@ -487,7 +485,7 @@ class RDBRelation
             throw new RuntimeException("Can't update not many-to-many relation.");
         }
 
-        $this->getMapper()->updateRelationColumns($this->entity, $this->relationName, $entity->id, $columnData);
+        $this->getMapper()->updateRelationColumns($this->entity, $this->relationName, $entity->getId(), $columnData);
     }
 
     /**
@@ -503,7 +501,7 @@ class RDBRelation
             throw new RuntimeException("Can't get a column of not many-to-many relation.");
         }
 
-        return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $entity->id, $column);
+        return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $entity->getId(), $column);
     }
 
     protected function beforeRelate(Entity $entity, ?array $columnData, array $options): void

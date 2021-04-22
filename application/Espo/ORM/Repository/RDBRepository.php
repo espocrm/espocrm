@@ -35,7 +35,7 @@ use Espo\ORM\{
     Collection,
     SthCollection,
     Entity,
-    Mapper\Mapper,
+    Mapper\RDBMapper,
     QueryParams\Select,
 };
 
@@ -57,18 +57,14 @@ class RDBRepository extends Repository
         EntityFactory $entityFactory,
         ?HookMediator $hookMediator = null
     ) {
-        $this->entityType = $entityType;
-        $this->entityManager = $entityManager;
-        $this->entityFactory = $entityFactory;
-
-        $this->seed = $this->entityFactory->create($entityType);
+        parent::__construct($entityType, $entityManager, $entityFactory);
 
         $this->hookMediator = $hookMediator ?? (new EmptyHookMediator());
 
         $this->transactionManager = new RDBTransactionManager($entityManager->getTransactionManager());
     }
 
-    protected function getMapper(): Mapper
+    protected function getMapper(): RDBMapper
     {
         return $this->entityManager->getMapper();
     }
@@ -345,12 +341,10 @@ class RDBRepository extends Repository
             ];
         }
 
-        $select = $this->entityManager->getQueryBuilder()
+        return $this->entityManager->getQueryBuilder()
             ->clone($select)
             ->select($selectItemList)
             ->build();
-
-        return $select;
     }
 
     protected function applyRelationAdditionalColumnsConditions(
@@ -506,6 +500,7 @@ class RDBRepository extends Repository
         $this->beforeUnrelate($entity, $relationName, $foreign, $options);
 
         $beforeMethodName = 'beforeUnrelate' . ucfirst($relationName);
+
         if (method_exists($this, $beforeMethodName)) {
             $this->$beforeMethodName($entity, $foreign, $options);
         }
@@ -515,23 +510,25 @@ class RDBRepository extends Repository
         $methodName = 'unrelate' . ucfirst($relationName);
 
         if (method_exists($this, $methodName)) {
-            $result = $this->$methodName($entity, $foreign);
-        } else {
+            $this->$methodName($entity, $foreign);
+        }
+        else {
             if ($foreign instanceof Entity) {
-                $result = $this->getMapper()->unrelate($entity, $relationName, $foreign);
-            } else {
+                $this->getMapper()->unrelate($entity, $relationName, $foreign);
+            }
+            else {
                 $id = $foreign;
-                $result = $this->getMapper()->unrelateById($entity, $relationName, $id);
+
+                $this->getMapper()->unrelateById($entity, $relationName, $id);
             }
         }
 
-        if ($result) {
-            $this->afterUnrelate($entity, $relationName, $foreign, $options);
+        $this->afterUnrelate($entity, $relationName, $foreign, $options);
 
-            $afterMethodName = 'afterUnrelate' . ucfirst($relationName);
-            if (method_exists($this, $afterMethodName)) {
-                $this->$afterMethodName($entity, $foreign, $options);
-            }
+        $afterMethodName = 'afterUnrelate' . ucfirst($relationName);
+
+        if (method_exists($this, $afterMethodName)) {
+            $this->$afterMethodName($entity, $foreign, $options);
         }
 
         return $result;
@@ -596,7 +593,9 @@ class RDBRepository extends Repository
             throw new RuntimeException("Bad foreign value.");
         }
 
-        return $this->getMapper()->updateRelationColumns($entity, $relationName, $id, $columnData);
+        $this->getMapper()->updateRelationColumns($entity, $relationName, $id, $columnData);
+
+        return true;
     }
 
     /**

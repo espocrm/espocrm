@@ -53,7 +53,7 @@ use RuntimeException;
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
  */
-class BaseMapper implements Mapper
+class BaseMapper implements RDBMapper
 {
     const ATTRIBUTE_DELETED = 'deleted';
 
@@ -218,7 +218,7 @@ class BaseMapper implements Mapper
     /**
      * Select related entities from DB.
      *
-     * @return ?SthCollection|Entity
+     * @return Collection|Entity|null
      */
     public function selectRelated(Entity $entity, string $relationName, ?Select $select = null)
     {
@@ -441,17 +441,22 @@ class BaseMapper implements Mapper
     /**
      * Relate an entity with another entity.
      */
-    public function relate(Entity $entity, string $relationName, Entity $foreignEntity, ?array $columnData = null): bool
-    {
+    public function relate(
+        Entity $entity,
+        string $relationName,
+        Entity $foreignEntity,
+        ?array $columnData = null
+    ): bool {
+
         return $this->addRelation($entity, $relationName, null, $foreignEntity, $columnData);
     }
 
     /**
      * Unrelate an entity from another entity.
      */
-    public function unrelate(Entity $entity, string $relationName, Entity $foreignEntity): bool
+    public function unrelate(Entity $entity, string $relationName, Entity $foreignEntity): void
     {
-        return $this->removeRelation($entity, $relationName, null, false, $foreignEntity);
+        $this->removeRelation($entity, $relationName, null, false, $foreignEntity);
     }
 
     /**
@@ -465,35 +470,35 @@ class BaseMapper implements Mapper
     /**
      * Unrelate an entity from another entity by a given ID.
      */
-    public function unrelateById(Entity $entity, string $relationName, string $id): bool
+    public function unrelateById(Entity $entity, string $relationName, string $id): void
     {
-        return $this->removeRelation($entity, $relationName, $id);
+        $this->removeRelation($entity, $relationName, $id);
     }
 
     /**
      * Unrelate all related entities.
      */
-    public function unrelateAll(Entity $entity, string $relationName): bool
+    public function unrelateAll(Entity $entity, string $relationName): void
     {
-        return $this->removeRelation($entity, $relationName, null, true);
+        $this->removeRelation($entity, $relationName, null, true);
     }
 
     /**
      * Update relationship columns.
      */
     public function updateRelationColumns(
-        BaseEntity $entity,
+        Entity $entity,
         string $relationName,
-        ?string $id = null,
+        string $id,
         array $columnData
-    ): bool {
+    ): void {
 
         if (empty($id) || empty($relationName)) {
             throw new RuntimeException("Can't update relation, empty ID or relation name.");
         }
 
         if (empty($columnData)) {
-            return false;
+            return;
         }
 
         $keySet = $this->helper->getRelationKeys($entity, $relationName);
@@ -515,7 +520,7 @@ class BaseMapper implements Mapper
                 }
 
                 if (empty($update)) {
-                    return true;
+                    return;
                 }
 
                 $where = [
@@ -540,7 +545,7 @@ class BaseMapper implements Mapper
 
                 $this->executeSql($sql, true);
 
-                return true;
+                return;
         }
 
         throw new LogicException("Relation type '{$relType}' is not supported.");
@@ -624,7 +629,7 @@ class BaseMapper implements Mapper
     /**
      * Mass relate.
      */
-    public function massRelate(BaseEntity $entity, string $relationName, Select $select): void
+    public function massRelate(Entity $entity, string $relationName, Select $select): void
     {
         $params = $select->getRaw();
 
@@ -1010,7 +1015,7 @@ class BaseMapper implements Mapper
         ?string $id = null,
         bool $all = false,
         ?Entity $relEntity = null
-    ): bool {
+    ): void {
 
         if ($relEntity) {
             $id = $relEntity->id;
@@ -1098,7 +1103,7 @@ class BaseMapper implements Mapper
 
                 $this->executeSql($sql, true);
 
-                return true;
+                return;
 
             case Entity::HAS_ONE:
             case Entity::HAS_MANY:
@@ -1135,7 +1140,7 @@ class BaseMapper implements Mapper
 
                 $this->executeSql($sql, true);
 
-                return true;
+                return;
 
             case Entity::MANY_MANY:
                 $nearKey = $keySet['nearKey'];
@@ -1173,7 +1178,7 @@ class BaseMapper implements Mapper
 
                 $this->executeSql($sql, true);
 
-                return true;
+                return;
         }
 
         throw new LogicException("Relation type '{$relType}' is not supported for unrelating.");
