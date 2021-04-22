@@ -2028,6 +2028,21 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelectPair()
+    {
+        $sql = $this->query->compose(Select::fromRaw([
+            'from' => 'Comment',
+            'select' => [
+                ['id', 'alias']
+            ],
+            'withDeleted' => true,
+        ]));
+
+        $expectedSql =  "SELECT comment.id AS `alias` FROM `comment`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testUnion2()
     {
         $queryBuilder = new QueryBuilder();

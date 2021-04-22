@@ -1678,7 +1678,7 @@ abstract class BaseQueryComposer implements QueryComposer
         return $selectPart;
     }
 
-    protected function getSelectPartItemPair(?Entity $entity, array &$params, $attribute): ?array
+    protected function getSelectPartItemPair(?BaseEntity $entity, array &$params, $attribute): ?array
     {
         $maxTextColumnsLength = $params['maxTextColumnsLength'] ?? null;
         $skipTextColumns = $params['skipTextColumns'] ?? false;
@@ -1731,32 +1731,32 @@ abstract class BaseQueryComposer implements QueryComposer
             ];
         }
 
-        if (is_array($attribute) && count($attribute) == 2) {
+        if (is_array($attribute) && count($attribute) === 2) {
             $alias = $attribute[1];
 
-            if (!$entity->hasAttribute($attribute[0])) {
-                $part = $this->convertComplexExpression($entity, $attribute[0], $distinct, $params);
+            $attribute0 = $attribute[0];
+
+            if (!$entity->hasAttribute($attribute0)) {
+                $part = $this->convertComplexExpression($entity, $attribute0, $distinct, $params);
 
                 return [$part, $alias];
             }
 
-            $fieldDefs = $entity->getAttributes()[$attribute[0]];
-
-            if (!empty($fieldDefs['select'])) {
-                $part = $this->getAttributeSql($entity, $attribute[0], 'select', $params);
+            if ($entity->getAttributeParam($attribute0, 'select')) {
+                $part = $this->getAttributeSql($entity, $attribute0, 'select', $params);
 
                 return [$part, $alias];
             }
 
-            if (!empty($fieldDefs['noSelect'])) {
+            if ($entity->getAttributeParam($attribute0, 'noSelect')) {
                 return null;
             }
 
-            if (!empty($fieldDefs['notStorable'])) {
+            if ($entity->getAttributeParam($attribute0, 'notStorable')) {
                 return null;
             }
 
-            $part = $this->getAttributePath($entity, $attribute[0], $params);
+            $part = $this->getAttributePath($entity, $attribute0, $params);
 
             return [$part, $alias];
         }
