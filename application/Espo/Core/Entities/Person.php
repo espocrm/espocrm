@@ -31,18 +31,38 @@ namespace Espo\Core\Entities;
 
 use Espo\Core\{
     ORM\Entity,
+    ORM\Helper,
     Fields\EmailAddressGroup,
     Fields\PhoneNumberGroup,
     Fields\Address,
 };
 
+use Espo\ORM\{
+    EntityManager,
+    Value\ValueAccessorFactory,
+};
+
 class Person extends Entity
 {
+    private $helper;
+
+    public function __construct(
+        string $entityType,
+        array $defs,
+        EntityManager $entityManager,
+        ValueAccessorFactory $valueAccessorFactory,
+        Helper $helper
+    ) {
+        parent::__construct($entityType, $defs, $entityManager, $valueAccessorFactory);
+
+        $this->helper = $helper;
+    }
+
     protected function _setLastName($value)
     {
         $this->setInContainer('lastName', $value);
 
-        $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
+        $name = $this->helper->formatPersonName($this, 'name');
 
         $this->setInContainer('name', $name);
     }
@@ -51,7 +71,7 @@ class Person extends Entity
     {
         $this->setInContainer('firstName', $value);
 
-        $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
+        $name = $this->helper->formatPersonName($this, 'name');
 
         $this->setInContainer('name', $name);
     }
@@ -60,7 +80,7 @@ class Person extends Entity
     {
         $this->setInContainer('middleName', $value);
 
-        $name = $this->getEntityManager()->getHelper()->formatPersonName($this, 'name');
+        $name = $this->helper->formatPersonName($this, 'name');
 
         $this->setInContainer('name', $name);
     }

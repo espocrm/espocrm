@@ -31,41 +31,9 @@ namespace Espo\Core\ORM;
 
 use Espo\ORM\{
     EntityManager as BaseEntityManager,
-    Metadata,
-    Value\ValueFactoryFactory,
-    Value\AttributeExtractorFactory,
-    EventDispatcher,
 };
 
 class EntityManager extends BaseEntityManager
 {
-    private $helper;
 
-    public function __construct(
-        array $params,
-        Metadata $metadata,
-        RepositoryFactory $repositoryFactory,
-        EntityFactory $entityFactory,
-        ValueFactoryFactory $valueFactoryFactory,
-        AttributeExtractorFactory $attributeExtractorFactory,
-        EventDispatcher $eventDispatcher,
-        Helper $helper
-    ) {
-        parent::__construct(
-            $params,
-            $metadata,
-            $repositoryFactory,
-            $entityFactory,
-            $valueFactoryFactory,
-            $attributeExtractorFactory,
-            $eventDispatcher
-        );
-
-        $this->helper = $helper;
-    }
-
-    public function getHelper(): Helper
-    {
-        return $this->helper;
-    }
 }

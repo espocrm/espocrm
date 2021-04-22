@@ -36,7 +36,7 @@ interface EntityFactory
     /**
      * Create an entity.
      */
-    public function create(string $name): Entity;
+    public function create(string $entityType): Entity;
 
     /**
      * For internal use.

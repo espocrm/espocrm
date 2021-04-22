@@ -61,14 +61,14 @@ class RepositoryFactory implements RepositoryFactoryInterface
         $this->classFinder = $classFinder;
     }
 
-    protected function getClassName(string $name): ?string
+    protected function getClassName(string $entityType): ?string
     {
-        return $this->classFinder->find('Repositories', $name);
+        return $this->classFinder->find('Repositories', $entityType);
     }
 
-    public function create(string $name): Repository
+    public function create(string $entityType): Repository
     {
-        $className = $this->getClassName($name);
+        $className = $this->getClassName($entityType);
 
         if (!$className || !class_exists($className)) {
             $className = $this->defaultClassName;
@@ -76,7 +76,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
 
         return $this->injectableFactory->createWith($className, [
             'entityFactory' => $this->entityFactory,
-            'entityType' => $name,
+            'entityType' => $entityType,
         ]);
     }
 }

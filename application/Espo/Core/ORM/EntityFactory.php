@@ -33,7 +33,11 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
     Utils\ClassFinder,
+    InjectableFactory,
     ORM\Entity as BaseEntity,
+    Binding\BindingContainer,
+    Binding\BindingData,
+    Binding\Binder,
 };
 
 use Espo\ORM\{
@@ -47,18 +51,24 @@ class EntityFactory implements EntityFactoryInterface
 {
     private $classFinder;
 
+    private $helper;
+
+    private $injectableFactory;
+
     private $entityManager = null;
 
     private $valueAccessorFactory = null;
 
-    public function __construct(ClassFinder $classFinder)
+    public function __construct(ClassFinder $classFinder, Helper $helper, InjectableFactory $injectableFactory)
     {
         $this->classFinder = $classFinder;
+        $this->helper = $helper;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    private function getClassName(string $name): ?string
+    private function getClassName(string $entityType): ?string
     {
-        return $this->classFinder->find('Entities', $name);
+        return $this->classFinder->find('Entities', $entityType);
     }
 
     public function setEntityManager(EntityManager $entityManager): void
@@ -79,20 +89,39 @@ class EntityFactory implements EntityFactoryInterface
         $this->valueAccessorFactory = $valueAccessorFactory;
     }
 
-    public function create(string $name): Entity
+    public function create(string $entityType): Entity
     {
-        $className = $this->getClassName($name);
+        $className = $this->getClassName($entityType);
 
         if (!class_exists($className)) {
             $className = BaseEntity::class;
         }
 
-        $defs = $this->entityManager->getMetadata()->get($name);
+        $defs = $this->entityManager->getMetadata()->get($entityType);
 
         if (is_null($defs)) {
-            throw new Error("Entity '{$name}' is not defined in metadata.");
+            throw new Error("Entity '{$entityType}' is not defined in metadata.");
         }
 
-        return new $className($name, $defs, $this->entityManager, $this->valueAccessorFactory);
+        $bindingContainer = $this->getBindingContainer($className, $entityType, $defs);
+
+        return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+    }
+
+    private function getBindingContainer(string $className, string $entityType, array $defs): BindingContainer
+    {
+        $data = new BindingData();
+
+        $binder = new Binder($data);
+
+        $binder
+            ->for($className)
+            ->bindValue('$entityType', $entityType)
+            ->bindValue('$defs', $defs)
+            ->bindInstance(EntityManager::class, $this->entityManager)
+            ->bindInstance(ValueAccessorFactory::class, $this->valueAccessorFactory)
+            ->bindInstance(Helper::class, $this->helper);
+
+        return new BindingContainer($data);
     }
 }

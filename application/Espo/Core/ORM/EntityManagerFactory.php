@@ -69,8 +69,6 @@ class EntityManagerFactory
             'entityFactory' => $entityFactory,
         ]);
 
-        $helper = $this->injectableFactory->create(Helper::class);
-
         $config = $this->config;
 
         $params = [
@@ -115,7 +113,6 @@ class EntityManagerFactory
                 'valueFactoryFactory' => $valueFactoryFactory,
                 'attributeExtractorFactory' => $attributeExtractorFactory,
                 'eventDispatcher' => $this->eventDispatcher,
-                'helper' => $helper,
             ]
         );
 

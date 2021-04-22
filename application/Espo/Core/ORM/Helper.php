@@ -35,7 +35,7 @@ use Espo\ORM\Entity;
 
 class Helper
 {
-    protected $config;
+    private $config;
 
     public function __construct(Config $config)
     {
