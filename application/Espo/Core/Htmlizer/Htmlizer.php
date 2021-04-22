@@ -60,13 +60,21 @@ use const JSON_PRESERVE_ZERO_FRACTION;
 class Htmlizer
 {
     protected $fileManager;
+
     protected $dateTime;
+
     protected $config;
+
     protected $acl;
+
     protected $entityManager;
+
     protected $metadata;
+
     protected $language;
+
     protected $serviceFactory;
+
     protected $injectableFactory;
 
     public function __construct(
@@ -96,11 +104,15 @@ class Htmlizer
     protected function format($value)
     {
         if (is_float($value)) {
-            $value = $this->number->format($value, 2);
-        } else if (is_int($value)) {
-            $value = $this->number->format($value);
-        } else if (is_string($value)) {
-            $value = nl2br($value);
+            return $this->number->format($value, 2);
+        }
+
+        if (is_int($value)) {
+            return $this->number->format($value);
+        }
+
+        if (is_string($value)) {
+            return nl2br($value);
         }
 
         return $value;
@@ -108,25 +120,31 @@ class Htmlizer
 
     protected function getDataFromEntity(Entity $entity, $skipLinks = false, $level = 0, ?string $template = null)
     {
-        $data = $entity->toArray();
+        $entityType = $entity->getEntityType();
 
-        $attributeDefs = $entity->getAttributes();
-        $attributeList = array_keys($attributeDefs);
+        $data = get_object_vars($entity->getValueMap());
+
+        $attributeList = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType)
+            ->getAttributeNameList();
 
         $forbiddenAttributeList = [];
         $skipAttributeList = [];
         $forbiddenLinkList = [];
 
         if ($this->acl) {
-            $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList($entity->getEntityType(), 'read');
-
             $forbiddenAttributeList = array_merge(
-                $forbiddenAttributeList,
-                $this->acl->getScopeRestrictedAttributeList($entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin'])
+                $this->acl->getScopeForbiddenAttributeList($entityType, 'read'),
+                $this->acl->getScopeRestrictedAttributeList(
+                    $entityType,
+                    ['forbidden', 'internal', 'onlyAdmin']
+                )
             );
 
             $forbiddenLinkList = $this->acl->getScopeRestrictedLinkList(
-                $entity->getEntityType(), ['forbidden', 'internal', 'onlyAdmin']
+                $entity->getEntityType(),
+                ['forbidden', 'internal', 'onlyAdmin']
             );
         }
 
@@ -137,28 +155,26 @@ class Htmlizer
                 $collection = null;
 
                 if ($entity->hasLinkMultipleField($relation)) {
-                    $toLoad = true;
-
                     $collection = $this->entityManager
                         ->getRepository($entity->getEntityType())
                         ->getRelation($entity, $relation)
                         ->find();
-                } else {
-                    if (
-                        $template && $entity->getRelationType($relation, ['hasMany', 'manyMany', 'hasChildren']) &&
-                        mb_stripos($template, '{{#each '.$relation.'}}') !== false
-                    ) {
-                        $limit = 100;
-                        if ($this->config) {
-                            $limit = $this->config->get('htmlizerLinkLimit') ?? $limit;
-                        }
+                }
+                else if (
+                    $template && $entity->getRelationType($relation, ['hasMany', 'manyMany', 'hasChildren']) &&
+                    mb_stripos($template, '{{#each '.$relation.'}}') !== false
+                ) {
+                    $limit = 100;
 
-                        $collection = $this->entityManager
-                            ->getRepository($entity->getEntityType())
-                            ->getRelation($entity, $relation)
-                            ->limit(0, $limit)
-                            ->find();
+                    if ($this->config) {
+                        $limit = $this->config->get('htmlizerLinkLimit') ?? $limit;
                     }
+
+                    $collection = $this->entityManager
+                        ->getRepository($entity->getEntityType())
+                        ->getRelation($entity, $relation)
+                        ->limit(0, $limit)
+                        ->find();
                 }
 
                 if ($collection) {
@@ -169,12 +185,17 @@ class Htmlizer
 
         foreach ($data as $key => $value) {
             if ($value instanceof Collection) {
+
                 $skipAttributeList[] = $key;
+
                 $collection = $value;
+
                 $list = [];
+
                 foreach ($collection as $item) {
                     $list[] = $this->getDataFromEntity($item, $skipLinks, $level + 1);
                 }
+
                 $data[$key] = $list;
             }
         }
@@ -185,11 +206,13 @@ class Htmlizer
 
                 continue;
             }
+
             if (in_array($attribute, $skipAttributeList)) {
                 continue;
             }
 
             $type = $entity->getAttributeType($attribute);
+
             $fieldType = $entity->getAttributeParam($attribute, 'fieldType');
 
             if ($type == Entity::DATETIME) {
@@ -197,12 +220,14 @@ class Htmlizer
                     $data[$attribute . '_RAW'] = $data[$attribute];
                     $data[$attribute] = $this->dateTime->convertSystemDateTime($data[$attribute]);
                 }
-            } else if ($type == Entity::DATE) {
+            }
+            else if ($type == Entity::DATE) {
                 if (!empty($data[$attribute])) {
                     $data[$attribute . '_RAW'] = $data[$attribute];
                     $data[$attribute] = $this->dateTime->convertSystemDate($data[$attribute]);
                 }
-            } else if ($type == Entity::JSON_ARRAY) {
+            }
+            else if ($type == Entity::JSON_ARRAY) {
                 if (!empty($data[$attribute])) {
                     $list = $data[$attribute];
 
@@ -227,7 +252,8 @@ class Htmlizer
                     }
                     $data[$attribute] = $newList;
                 }
-            } else if ($type == Entity::JSON_OBJECT) {
+            }
+            else if ($type == Entity::JSON_OBJECT) {
                 if (!empty($data[$attribute])) {
                     $value = $data[$attribute];
 
@@ -237,11 +263,13 @@ class Htmlizer
 
                     foreach ($data[$attribute] as $k => $w) {
                         $keyRaw = $k . '_RAW';
+
                         $data[$attribute][$keyRaw] = $data[$attribute][$k];
                         $data[$attribute][$k] = $this->format($data[$attribute][$k]);
                     }
                 }
-            } else if ($type === Entity::PASSWORD) {
+            }
+            else if ($type === Entity::PASSWORD) {
                 unset($data[$attribute]);
             }
 
@@ -250,7 +278,8 @@ class Htmlizer
                     $currencyValue = $data[$attribute] ?? null;
 
                     if ($currencyValue) {
-                        $data[$attribute . 'Symbol'] = $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);
+                        $data[$attribute . 'Symbol'] =
+                            $this->metadata->get(['app', 'currency', 'symbolMap', $currencyValue]);
                     }
                 }
             }
@@ -277,7 +306,6 @@ class Htmlizer
         }
 
         if (!$skipLinks) {
-
             foreach ($entity->getRelationList() as $relation) {
                 if (in_array($relation, $forbiddenLinkList)) {
                     continue;
@@ -317,6 +345,7 @@ class Htmlizer
         $helpers = [
             'file' => function () {
                 $args = func_get_args();
+
                 $id = $args[0] ?? null;
 
                 if (!$id) {
@@ -330,16 +359,16 @@ class Htmlizer
             },
             'imageTag' => function () {
                 $args = func_get_args();
+
                 $context = $args[count($args) - 1];
 
                 $field = $context['hash']['field'] ?? null;
 
                 if ($field) {
                     $id = $context['_this'][$field . 'Id'] ?? null;
-                } else {
-                    if (count($args) > 1) {
-                        $id = $args[0];
-                    }
+                }
+                else if (count($args) > 1) {
+                    $id = $args[0];
                 }
 
                 if (!$id || !is_string($id)) {
@@ -365,6 +394,7 @@ class Htmlizer
             },
             'var' => function () {
                 $args = func_get_args();
+
                 $c = $args[1] ?? [];
                 $key = $args[0] ?? null;
 
@@ -438,44 +468,48 @@ class Htmlizer
 
                 if ($args[0] === $args[1]) {
                     return $context['fn']();
-                } else {
-                    return $context['inverse'] ? $context['inverse']() : '';
                 }
+
+                return $context['inverse'] ? $context['inverse']() : '';
             },
             'ifNotEqual' => function () {
                 $args = func_get_args();
+
                 $context = $args[count($args) - 1];
 
                 if ($args[0] !== $args[1]) {
                     return $context['fn']();
-                } else {
-                    return $context['inverse'] ? $context['inverse']() : '';
                 }
+
+                return $context['inverse'] ? $context['inverse']() : '';
             },
             'ifInArray' => function () {
                 $args = func_get_args();
+
                 $context = $args[count($args) - 1];
 
                 $array = $args[1] ?? [];
 
                 if (in_array($args[0], $array)) {
                     return $context['fn']();
-                } else {
-                    return $context['inverse'] ? $context['inverse']() : '';
                 }
+
+                return $context['inverse'] ? $context['inverse']() : '';
             },
             'ifMultipleOf' => function () {
                 $args = func_get_args();
+
                 $context = $args[count($args) - 1];
 
                 if ($args[0] % $args[1] === 0) {
                     return $context['fn']();
-                } else {
-                    return $context['inverse'] ? $context['inverse']() : '';
                 }
+
+                return $context['inverse'] ? $context['inverse']() : '';
             },
             'tableTag' => function () {
                 $args = func_get_args();
+
                 $context = $args[count($args) - 1];
 
                 $border = $context['hash']['border'] ?? '0.5pt';
@@ -490,12 +524,15 @@ class Htmlizer
                 }
 
                 return
-                    new LightnCandy\SafeString("<table border=\"{$border}\" cellpadding=\"{$cellpadding}\" {$attributesPart}>") .
+                    new LightnCandy\SafeString(
+                        "<table border=\"{$border}\" cellpadding=\"{$cellpadding}\" {$attributesPart}>"
+                    ) .
                     $context['fn']() .
                     new LightnCandy\SafeString("</table>");
             },
             'tdTag' => function () {
                 $args = func_get_args();
+
                 $context = $args[count($args) - 1];
 
                 $align = strtolower($context['hash']['align'] ?? 'left');
@@ -519,6 +556,7 @@ class Htmlizer
             },
             'trTag' => function () {
                 $args = func_get_args();
+
                 $context = $args[count($args) - 1];
 
                 return
@@ -528,6 +566,7 @@ class Htmlizer
             },
             'checkboxTag' => function () {
                 $args = func_get_args();
+
                 $context = $args[count($args) - 1];
 
                 if (count($args) < 2) {
@@ -553,7 +592,9 @@ class Htmlizer
                 $css = "font-family: zapfdingbats; color: {$color}";
 
                 if (in_array($option, $list)) {
-                    $html = '<input type="checkbox" checked="checked" name="1" readonly="true" value="1" style="'.$css.'">';
+                    $html =
+                        '<input type="checkbox" checked="checked" name="1" ' .
+                        'readonly="true" value="1" style="'.$css.'">';
                 } else {
                     $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: '.$css.'">';
                 }
@@ -564,6 +605,7 @@ class Htmlizer
 
         if ($this->metadata) {
             $additionalHelpers = $this->metadata->get(['app', 'templateHelpers']) ?? [];
+
             $helpers = array_merge($helpers, $additionalHelpers);
         }
 
@@ -628,16 +670,22 @@ class Htmlizer
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
 
         if ($this->entityManager) {
-            $html = preg_replace_callback('/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/', function ($matches) {
-                $id = $matches[1];
-                $attachment = $this->entityManager->getEntity('Attachment', $id);
+            $html = preg_replace_callback(
+                '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
+                function ($matches) {
+                    $id = $matches[1];
+                    $attachment = $this->entityManager->getEntity('Attachment', $id);
 
-                if ($attachment) {
-                    $filePath = $this->entityManager->getRepository('Attachment')->getFilePath($attachment);
+                    if ($attachment) {
+                        $filePath = $this->entityManager
+                            ->getRepository('Attachment')
+                            ->getFilePath($attachment);
 
-                    return $filePath;
-                }
-            }, $html);
+                        return $filePath;
+                    }
+                },
+                $html
+            );
         }
 
         return $html;
