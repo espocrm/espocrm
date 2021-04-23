@@ -56,13 +56,17 @@ class UnrelateType extends BaseFunction implements
             $this->throwError("Empty entityType.");
         }
 
-        if (!$id) return null;
+        if (!$id) {
+            return null;
+        }
 
         if (!$link) {
             $this->throwError("Empty link.");
         }
 
-        if (!$foreignId) return null;
+        if (!$foreignId) {
+            return null;
+        }
 
         $em = $this->entityManager;
 
@@ -71,12 +75,17 @@ class UnrelateType extends BaseFunction implements
         }
 
         $entity = $em->getEntity($entityType, $id);
-        if (!$entity) return null;
+
+        if (!$entity) {
+            return null;
+        }
 
         if (!$em->getRepository($entityType)->isRelated($entity, $link, $foreignId)) {
             return true;
         }
 
-        return $em->getRepository($entityType)->unrelate($entity, $link, $foreignId);
+        $em->getRepository($entityType)->unrelate($entity, $link, $foreignId);
+
+        return true;
     }
 }

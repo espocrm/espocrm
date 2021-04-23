@@ -29,6 +29,14 @@
 
 namespace tests\unit\Espo\Core\Htmlizer;
 
+use Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\Utils\NumberUtil;
+use Espo\Core\Utils\DateTime;
+
+use Espo\Core\ORM\Entity;
+
+use StdClass;
+
 class HtmlizerTest extends \PHPUnit\Framework\TestCase
 {
     protected $htmlizer;
@@ -41,46 +49,87 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
 
     protected $number;
 
-    protected function setUp() : void
+    private $entityAttributes = [
+        'id' => array(
+            'type' => Entity::ID,
+        ),
+        'name' => array(
+            'type' => Entity::VARCHAR,
+            'len' => 255,
+        ),
+        'date' => array(
+            'type' => Entity::DATE
+        ),
+        'dateTime' => array(
+            'type' => Entity::DATETIME
+        ),
+        'int' => array(
+            'type' => Entity::INT
+        ),
+        'float' => array(
+            'type' => Entity::FLOAT
+        ),
+        'list' => array(
+            'type' => Entity::JSON_ARRAY
+        ),
+        'object' => array(
+            'type' => Entity::JSON_OBJECT
+        ),
+        'deleted' => array(
+            'type' => Entity::BOOL,
+            'default' => 0,
+        )
+    ];
+
+    protected function setUp(): void
     {
         date_default_timezone_set('UTC');
 
         $this->entityManager =
-            $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+            $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $obj = new \StdClass();
 
-        $this->fileManager = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
-        $this->fileManager
-                    ->expects($this->any())
-                    ->method('putContents')
-                    ->will($this->returnCallback(function($fileName, $contents) use ($obj) {
-                        $obj->contents = $contents;
-                    }));
+        $this->fileManager = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->fileManager
-                    ->expects($this->any())
-                    ->method('getPhpContents')
-                    ->will($this->returnCallback(function($fileName) use ($obj) {
-                        $obj->contents = str_replace('<?php ', '', $obj->contents);
-                        $obj->contents = str_replace('?>', '', $obj->contents);
-                        $data = eval($obj->contents . ';');
-                        return $data;
-                    }));
+            ->expects($this->any())
+            ->method('putContents')
+            ->will($this->returnCallback(function($fileName, $contents) use ($obj) {
+                $obj->contents = $contents;
+            }));
+
+        $this->fileManager
+            ->expects($this->any())
+            ->method('getPhpContents')
+            ->will(
+                $this->returnCallback(function($fileName) use ($obj) {
+                    $obj->contents = str_replace('<?php ', '', $obj->contents);
+                    $obj->contents = str_replace('?>', '', $obj->contents);
+
+                    $data = eval($obj->contents . ';');
+
+                    return $data;
+                })
+            );
 
 
         $this->fileManager
                     ->expects($this->any())
                     ->method('unlink');
 
+        $this->dateTime = new DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kiev');
 
-        $this->dateTime = new \Espo\Core\Utils\DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kiev');
-        $this->number = new \Espo\Core\Utils\NumberUtil('.', ',');
+        $this->number = new NumberUtil('.', ',');
 
-        $this->htmlizer = new \Espo\Core\Htmlizer\Htmlizer($this->fileManager, $this->dateTime, $this->number);
+        $this->htmlizer = new Htmlizer($this->fileManager, $this->dateTime, $this->number);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         unset($this->htmlizer);
         unset($this->fileManager);
@@ -90,26 +139,33 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
 
     public function testRender()
     {
-        $entity = new \tests\unit\testData\Entities\Test('Test', [], $this->entityManager);
+        $entity = new Entity(
+            'Test',
+            [
+                'attributes' => $this->entityAttributes,
+            ],
+            $this->entityManager
+        );
+
         $entity->set('name', 'test');
         $entity->set('date', '2015-09-15');
         $entity->set('dateTime', '2015-09-15 10:00:00');
         $entity->set('int', 3);
         $entity->set('float', 3.5);
 
-        $item1 = new \StdClass();
+        $item1 = new StdClass();
         $item1->value = 1;
 
-        $item2 = new \StdClass();
+        $item2 = new StdClass();
         $item2->value = 2000.5;
 
         $list = [$item1, $item2];
+
         $entity->set('list', $list);
 
         $template = "{{name}} test {{date}} {{dateTime}} {{#each list}}{{value}} {{/each}}{{int}} {{float}}";
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('test test 09/15/2015 09/15/2015 01:00 PM 1 2,000.50 3 3.50', $html);
-
 
         $template = "{{float}}";
         $entity->set('float', 3);

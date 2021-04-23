@@ -54,8 +54,7 @@ use StdClass;
 use const JSON_PRESERVE_ZERO_FRACTION;
 
 /**
- * Generates an HTML for an entity.
- * Used by Print-to-PDF, system email notifications.
+ * Generates an HTML for an entity. Used by Print-to-PDF, system email notifications.
  */
 class Htmlizer
 {
@@ -118,16 +117,22 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(Entity $entity, $skipLinks = false, $level = 0, ?string $template = null)
-    {
+    protected function getDataFromEntity(
+        Entity $entity,
+        bool $skipLinks = false,
+        int $level = 0,
+        ?string $template = null
+    ): array {
+
         $entityType = $entity->getEntityType();
 
         $data = get_object_vars($entity->getValueMap());
 
-        $attributeList = $this->entityManager
-            ->getDefs()
-            ->getEntity($entityType)
-            ->getAttributeNameList();
+        //$data = $entity->toArray();
+
+        //print_r($data);
+
+        $attributeList = $entity->getAttributeList();
 
         $forbiddenAttributeList = [];
         $skipAttributeList = [];
@@ -161,7 +166,11 @@ class Htmlizer
                         ->find();
                 }
                 else if (
-                    $template && $entity->getRelationType($relation, ['hasMany', 'manyMany', 'hasChildren']) &&
+                    $template &&
+                    in_array(
+                        $entity->getRelationType($relation),
+                        ['hasMany', 'manyMany', 'hasChildren']
+                    ) &&
                     mb_stripos($template, '{{#each '.$relation.'}}') !== false
                 ) {
                     $limit = 100;
