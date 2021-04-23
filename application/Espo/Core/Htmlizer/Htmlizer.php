@@ -36,6 +36,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Language,
     Utils\Metadata,
+    Utils\Log,
     ServiceFactory,
     Acl,
     InjectableFactory,
@@ -74,6 +75,8 @@ class Htmlizer
 
     protected $serviceFactory;
 
+    private $log;
+
     protected $injectableFactory;
 
     public function __construct(
@@ -86,6 +89,7 @@ class Htmlizer
         ?Language $language = null,
         ?Config $config = null,
         ?ServiceFactory $serviceFactory = null,
+        ?Log $log = null,
         ?InjectableFactory $injectableFactory = null
     ) {
         $this->fileManager = $fileManager;
@@ -97,6 +101,7 @@ class Htmlizer
         $this->language = $language;
         $this->config = $config;
         $this->serviceFactory = $serviceFactory;
+        $this->log = $log;
         $this->injectableFactory = $injectableFactory;
     }
 
@@ -672,6 +677,7 @@ class Htmlizer
         $data['__entityManager'] = $this->entityManager;
         $data['__language'] = $this->language;
         $data['__serviceFactory'] = $this->serviceFactory;
+        $data['__log'] = $this->log;
         $data['__entityType'] = $entity->getEntityType();
 
         $html = $renderer($data);

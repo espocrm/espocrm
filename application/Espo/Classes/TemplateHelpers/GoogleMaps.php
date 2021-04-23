@@ -41,6 +41,7 @@ class GoogleMaps
         $em = $data['__entityManager'];
         $metadata = $data['__metadata'];
         $config = $data['__config'];
+        $log = $data['__log'];
 
         $entityType = $data['__entityType'];
 
@@ -55,7 +56,8 @@ class GoogleMaps
         }
 
         if ($field && $metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']) !== 'address') {
-            $GLOBALS['log']->warning("Template helper _googleMapsImage: Specified field is not of address type.");
+            $log->warning("Template helper _googleMapsImage: Specified field is not of address type.");
+
             return null;
         }
 
@@ -85,21 +87,25 @@ class GoogleMaps
         }
 
         $address = '';
+
         if ($street) {
             $address .= $street;
         }
+
         if ($city) {
             if ($address != '') {
                 $address .= ', ';
             }
             $address .= $city;
         }
+
         if ($state) {
             if ($address != '') {
                 $address .= ', ';
             }
             $address .= $state;
         }
+
         if ($postalCode) {
             if ($state || $city) {
                 $address .= ' ';
@@ -108,12 +114,15 @@ class GoogleMaps
                     $address .= ', ';
                 }
             }
+
             $address .= $postalCode;
         }
+
         if ($country) {
             if ($address != '') {
                 $address .= ', ';
             }
+
             $address .= $country;
         }
 
@@ -122,12 +131,14 @@ class GoogleMaps
         $apiKey = $config->get('googleMapsApiKey');
 
         if (!$apiKey) {
-            $GLOBALS['log']->error("Template helper _googleMapsImage: No Google Maps API key.");
+            $log->error("Template helper _googleMapsImage: No Google Maps API key.");
+
             return null;
         }
 
         if (!$address) {
-            $GLOBALS['log']->debug("Template helper _googleMapsImage: No address to display.");
+            $log->debug("Template helper _googleMapsImage: No address to display.");
+
             return null;
         }
 
@@ -142,6 +153,7 @@ class GoogleMaps
         if ($zoom) {
             $url .= '&zoom=' . $zoom;
         }
+
         if ($language) {
             $url .= '&language=' . $language;
         }
@@ -155,6 +167,7 @@ class GoogleMaps
         }
 
         $filePath = tempnam(sys_get_temp_dir(), 'google_maps_image');
+
         file_put_contents($filePath, $image);
 
         list($width, $height) = explode('x', $size);
