@@ -29,53 +29,33 @@
 
 namespace Espo\Core\Utils;
 
+use JsonException;
+
+use const JSON_THROW_ON_ERROR;
+
 class Json
 {
     /**
-     * JSON encode a string
+     * JSON encode.
      *
-     * @param string $value
-     * @param int $options Default 0
-     * @return string
+     * @param mixed $value
+     *
+     * @throws JsonException
      */
-    public static function encode($value, $options = 0)
+    public static function encode($value, int $options = 0): string
     {
-        $json = json_encode($value, $options);
-
-        $error = self::getLastError();
-        if ($json === null || !empty($error)) {
-            $GLOBALS['log']->error('Json::encode():' . $error . ' - ' . print_r($value, true));
-        }
-
-        return $json;
+        return json_encode($value, $options | JSON_THROW_ON_ERROR);
     }
 
     /**
-     * JSON decode a string (Fixed problem with "\")
+     * JSON decode a string.
      *
-     * @param string $json
-     * @param bool $assoc Default false
+     * @param bool $associative Objects will be converted to associative.
      * @return object|array
      */
-    public static function decode($json, $assoc = false)
+    public static function decode(string $json, bool $associative = false)
     {
-        if (is_null($json) || $json === false) {
-            return $json;
-        }
-
-        if (is_array($json)) {
-            $GLOBALS['log']->warning('Json::decode() - JSON cannot be decoded - '.$json);
-            return false;
-        }
-
-        $json = json_decode($json, $assoc);
-
-        $error = self::getLastError();
-        if ($error) {
-            $GLOBALS['log']->error('Json::decode():' . $error);
-        }
-
-        return $json;
+        return json_decode($json, $associative, 512, JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -84,42 +64,35 @@ class Json
      * @param string $json
      * @return bool
      */
-    public static function isJSON($json)
+    public static function isJson(string $json): bool
     {
-        if ($json === '[]' || $json === '{}') {
-            return true;
-        } else if (is_array($json)) {
+        try {
+            self::decode($json);
+        }
+        catch (JsonException $e) {
             return false;
         }
 
-        return static::decode($json) != null;
+        return true;
     }
 
     /**
-    * Get an array data (if JSON convert to array)
+    * Get an array data (if JSON convert to array).
     *
-    * @param mixed $data - can be JSON, array
+    * @param mixed $data.
     *
-    * @return array
+    * @return array|null
     */
-    public static function getArrayData($data, $returns = array())
+    public static function getArrayData($data, ?array $returns = []): ?array
     {
         if (is_array($data)) {
             return $data;
         }
-        else if (static::isJSON($data)) {
-            return static::decode($data, true);
+
+        if (self::isJson($data)) {
+            return self::decode($data, true);
         }
 
         return $returns;
-    }
-
-    protected static function getLastError()
-    {
-        $error = json_last_error();
-
-        if (!empty($error)) {
-            return json_last_error_msg();
-        }
     }
 }

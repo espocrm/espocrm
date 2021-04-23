@@ -31,9 +31,11 @@ namespace tests\unit\Espo\Core\Utils;
 
 use Espo\Core\Utils\Json;
 
+use JsonException;
+
 class JsonTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $GLOBALS['log'] = $this->getMockBuilder('\Espo\Core\Utils\Log')->disableOriginalConstructor()->getMock();
     }
@@ -43,18 +45,30 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->object = NULL;
     }
 
+    public function testDecodeBad1()
+    {
+        $value = '{';
+
+        $this->expectException(JsonException::class);
+
+        Json::decode($value);
+    }
+
     public function testEncode()
     {
-        $testVal= array('testOption'=>'Test');
+        $testVal = ['testOption' => 'Test'];
+
         $this->assertEquals(json_encode($testVal), Json::encode($testVal));
     }
 
     public function testDecode()
     {
-        $testVal= array('testOption'=>'Test');
-        $this->assertEquals($testVal, Json::decode(json_encode($testVal), true));
+        $value = ['testOption' => 'Test'];
 
-        $test= '{"folder":"data\/logs"}';
+        $this->assertEquals($value, Json::decode(json_encode($value), true));
+
+        $test = '{"folder":"data\/logs"}';
+
         $this->assertEquals('data/logs', Json::decode($test)->folder);
     }
 
@@ -76,9 +90,4 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse(Json::isJSON(false));
         $this->assertEquals('false', json_encode(false));
     }
-
-
-
 }
-
-?>

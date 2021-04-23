@@ -359,8 +359,8 @@ class Manager
     /**
      * Save JSON content to file.
      *
-     * @param string | array $path
-     * @param string $data
+     * @param string|array $path
+     * @param mixed $data
      * @param integer $flags
      * @param resource  $context
      *
@@ -368,11 +368,11 @@ class Manager
      */
     public function putContentsJson($path, $data)
     {
-        if (!Json::isJSON($data)) {
-            $data = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        }
+        $options = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 
-        return $this->putContents($path, $data, LOCK_EX);
+        $contents = Json::encode($data, $options);
+
+        return $this->putContents($path, $contents, LOCK_EX);
     }
 
     /**
@@ -381,8 +381,8 @@ class Manager
      * @param string | array $path
      * @param string $content JSON string
      * @param bool $isReturnJson
-     * @param string | array $removeOptions - List of unset keys from content
-     * @param bool $isPhp - Is merge php files
+     * @param string | array $removeOptions List of unset keys from content.
+     * @param bool $isPhp Is merge php files.
      *
      * @return bool | array
      */
