@@ -477,6 +477,8 @@ class EntityManager
         }
         $this->getMetadata()->set('clientDefs', $name, $clientDefsData);
 
+        $this->processMetadataCreateSelectDefs($templatePath, $name, $type);
+
         $this->getBaseLanguage()->set('Global', 'scopeNames', $name, $labelSingular);
         $this->getBaseLanguage()->set('Global', 'scopeNamesPlural', $name, $labelPlural);
 
@@ -491,6 +493,21 @@ class EntityManager
         $this->processHook('afterCreate', $type, $name, $params);
 
         return true;
+    }
+
+    private function processMetadataCreateSelectDefs(string $templatePath, string $name, string $type): void
+    {
+        $path = $templatePath . "/Metadata/{$type}/selectDefs.json";
+
+        if (!$this->getFileManager()->isFile($path)) {
+            return;
+        }
+
+        $contents = $this->getFileManager()->getContents($path);
+
+        $data = Json::decode($contents, true);
+
+        $this->getMetadata()->set('selectDefs', $name, $data);
     }
 
     public function update($name, $data)

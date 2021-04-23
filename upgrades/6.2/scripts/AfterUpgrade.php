@@ -27,13 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+use Espo\Core\Container;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Json;
+
 class AfterUpgrade
 {
-    public function run($container)
+    public function run(Container $container): void
     {
         $entityManager = $container->get('entityManager');
 
         $this->updateTemplates($entityManager);
+
+        $this->updateEventMetadata($container->get('metadata'), $container->get('fileManager'));
     }
 
     protected function updateTemplates($entityManager)
@@ -54,6 +61,36 @@ class AfterUpgrade
             $template->set('header', null);
 
             $entityManager->saveEntity($template);
+        }
+    }
+
+    private function updateEventMetadata(Metadata $metadata, FileManager $fileManager): void
+    {
+        $defs = $metadata->get(['scopes']);
+
+        $toSave = false;
+
+        $path = "application/Espo/Core/Templates/Metadata/Event/selectDefs.json";
+
+        $contents = $fileManager->getContents($path);
+
+        $data = Json::decode($contents, true);
+
+        foreach ($defs as $entityType => $item) {
+            $isCustom = $item['isCustom'] ?? false;
+            $type = $item['type'] ?? false;
+
+            if (!$isCustom || $type !== 'Event') {
+                continue;
+            }
+
+            $toSave = true;
+
+            $metadata->set('selectDefs', $entityType, $data);
+        }
+
+        if ($toSave) {
+            $metadata->save();
         }
     }
 }
