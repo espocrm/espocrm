@@ -32,89 +32,20 @@ namespace Espo\Hooks\Common;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Utils\Metadata,
-    ORM\EntityManager,
+    FieldProcessing\NextNumber\BeforeSaveProcessor as Processor,
 };
 
 class NextNumber
 {
-    protected $metadata;
+    protected $processor;
 
-    protected $entityManager;
-
-    public function __construct(Metadata $metadata, EntityManager $entityManager)
+    public function __construct(Processor $processor)
     {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
+        $this->processor = $processor;
     }
 
-    protected function composeNumberAttribute(Entity $nextNumber)
+    public function beforeSave(Entity $entity, array $options = []): void
     {
-        $entityType = $nextNumber->get('entityType');
-        $fieldName = $nextNumber->get('fieldName');
-        $value = $nextNumber->get('value');
-
-        $prefix = $this->metadata->get(['entityDefs', $entityType, 'fields', $fieldName, 'prefix'], '');
-        $padLength = $this->metadata->get(['entityDefs', $entityType, 'fields', $fieldName, 'padLength'], 0);
-
-        return $prefix . str_pad(strval($value), $padLength, '0', \STR_PAD_LEFT);
-    }
-
-    public function beforeSave(Entity $entity, array $options = [])
-    {
-        $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
-
-        foreach ($fieldDefs as $fieldName => $defs) {
-            if (isset($defs['type']) && $defs['type'] !== 'number') {
-                continue;
-            }
-
-            if (!empty($options['import'])) {
-                if ($entity->has($fieldName)) {
-                    continue;
-                }
-            }
-
-            if (!$entity->isNew()) {
-                if ($entity->isAttributeChanged($fieldName)) {
-                    $entity->set($fieldName, $entity->getFetched($fieldName));
-                }
-
-                continue;
-            }
-
-            $this->entityManager->getTransactionManager()->start();
-
-            $nextNumber = $this->entityManager
-                ->getRepository('NextNumber')
-                ->where([
-                    'fieldName' => $fieldName,
-                    'entityType' => $entity->getEntityType(),
-                ])
-                ->forUpdate()
-                ->findOne();
-
-            if (!$nextNumber) {
-                $nextNumber = $this->entityManager->getEntity('NextNumber');
-                $nextNumber->set('entityType', $entity->getEntityType());
-                $nextNumber->set('fieldName', $fieldName);
-            }
-
-            $entity->set($fieldName, $this->composeNumberAttribute($nextNumber));
-
-            $value = $nextNumber->get('value');
-
-            if (!$value) {
-                $value = 1;
-            }
-
-            $value++;
-
-            $nextNumber->set('value', $value);
-
-            $this->entityManager->saveEntity($nextNumber);
-
-            $this->entityManager->getTransactionManager()->commit();
-        }
+        $this->processor->process($entity, $options);
     }
 }
