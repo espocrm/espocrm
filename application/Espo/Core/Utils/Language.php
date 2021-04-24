@@ -72,7 +72,7 @@ class Language
     ];
 
     public function __construct(
-        ?string $language = null,
+        ?string $language,
         FileManager $fileManager,
         Metadata $metadata,
         DataCache $dataCache = null,
@@ -81,7 +81,8 @@ class Language
     ) {
         if ($language) {
             $this->currentLanguage = $language;
-        } else {
+        }
+        else {
             $this->currentLanguage = $this->defaultLanguage;
         }
 
@@ -97,16 +98,6 @@ class Language
         }
 
         $this->unifier = new FileUnifier($this->fileManager, $this->metadata);
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
     }
 
     protected function getUnifier()
@@ -247,17 +238,22 @@ class Language
 
         if (!empty($this->changedData)) {
             foreach ($this->changedData as $scope => $data) {
-                if (!empty($data)) {
-                    $result &= $this->getFileManager()->mergeContents([$path, $scope.'.json'], $data, true);
+                if (empty($data)) {
+                    continue;
                 }
+
+                $result &= $this->fileManager->mergeJsonContents($path . "/{$scope}.json", $data);
+
             }
         }
 
         if (!empty($this->deletedData)) {
             foreach ($this->deletedData as $scope => $unsetData) {
-                if (!empty($unsetData)) {
-                    $result &= $this->getFileManager()->unsetContents([$path, $scope.'.json'], $unsetData, true);
+                if (empty($unsetData)) {
+                    continue;
                 }
+
+                $result &= $this->fileManager->unsetJsonContents($path . "/{$scope}.json", $unsetData);
             }
         }
 
@@ -322,11 +318,11 @@ class Language
     /**
      * Remove a label.
      *
-     * @param  string $name
-     * @param  string $category
-     * @param  string $scope
+     * @param string $scope
+     * @param string $category
+     * @param string|array $name
      */
-    public function delete($scope, $category, $name)
+    public function delete(string $scope, string $category, $name): void
     {
         if (is_array($name)) {
             foreach ($name as $rowLabel) {

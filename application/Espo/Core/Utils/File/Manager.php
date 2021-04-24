@@ -376,64 +376,27 @@ class Manager
     }
 
     /**
-     * Merge file content and save it to a file.
-     *
-     * @param string | array $path
-     * @param string $content JSON string
-     * @param bool $isReturnJson
-     * @param string | array $removeOptions List of unset keys from content.
-     * @param bool $isPhp Is merge php files.
-     *
-     * @return bool | array
+     * Merge JSON file contents with existing and override the file.
      */
-    public function mergeContents($path, $content, $isReturnJson = false, $removeOptions = null, $isPhp = false)
+    public function mergeJsonContents(string $path, array $data): bool
     {
-        if ($isPhp) {
-            $fileContent = $this->getPhpContents($path);
-        }
-        else {
-            $fileContent = $this->getContents($path);
-        }
+        $currentContents = $this->getContents($path);
 
-        $fullPath = $this->concatPaths($path);
-
-        if (file_exists($fullPath) && ($fileContent === false || empty($fileContent))) {
-            throw new Error('FileManager: Failed to read file [' . $fullPath .'].');
+        if ($this->isFile($path) && $currentContents === false) {
+            throw new Error("FileManager: Failed to read file '{$path}'.");
         }
 
-        $savedDataArray = Json::decode($fileContent, true);
+        $currentData = $this->isFile($path) ?
+            Json::decode($currentContents, true):
+            [];
 
-        $newDataArray = Json::decode($content, true);
+        $mergedData = Util::merge($currentData, $data);
 
-        if (isset($removeOptions)) {
-            $savedDataArray = Util::unsetInArray($savedDataArray, $removeOptions);
-            $newDataArray = Util::unsetInArray($newDataArray, $removeOptions);
-        }
+        $jsonOptions = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 
-        $data = Util::merge($savedDataArray, $newDataArray);
+        $stringData = Json::encode($mergedData, $jsonOptions);
 
-        if ($isReturnJson) {
-            $data = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        }
-
-        if ($isPhp) {
-            return $this->putPhpContents($path, $data);
-        }
-
-        return $this->putContents($path, $data);
-    }
-
-    /**
-     * Merge PHP content and save it to a file.
-     *
-     * @param string | array $path
-     * @param string $content JSON string
-     * @param string | array $removeOptions - List of unset keys from content
-     * @return bool
-     */
-    public function mergePhpContents($path, $content, $removeOptions = null)
-    {
-        return $this->mergeContents($path, $content, false, $removeOptions, true);
+        return (bool) $this->putContents($path, $stringData);
     }
 
     /**
@@ -450,39 +413,33 @@ class Manager
     }
 
     /**
-     * Unset some element of content data.
-     *
-     * @param string | array $path
-     * @param array | string $unsets
-     * @return bool
+     * Unset specific items in a JSON file and override the file.
+     * Items are specified as an array of JSON paths.
      */
-    public function unsetContents($path, $unsets, $isJSON = true)
+    public function unsetJsonContents(string $path, array $unsets): bool
     {
-        $currentData = $this->getContents($path);
-
-        if (!isset($currentData) || !$currentData) {
+        if (!file_exists($path)) {
             return true;
         }
 
-        $currentDataArray = Json::decode($currentData, true);
+        $currentContents = $this->getContents($path);
 
-        $unsettedData = Util::unsetInArray($currentDataArray, $unsets, true);
-
-        if (is_null($unsettedData) || (is_array($unsettedData) && empty($unsettedData))) {
-            $fullPath = $this->concatPaths($path);
-
-            if (!file_exists($fullPath)) {
-                return true;
-            }
-
-            return $this->unlink($fullPath);
+        if (!isset($currentContents) || !$currentContents) {
+            return true;
         }
 
-        if ($isJSON) {
-            return $this->putContentsJson($path, $unsettedData);
+        $currentData = Json::decode($currentContents, true);
+
+        $unsettedData = Util::unsetInArray($currentData, $unsets, true);
+
+        if (
+            is_null($unsettedData) ||
+            (is_array($unsettedData) && empty($unsettedData))
+        ) {
+            return $this->unlink($path);
         }
 
-        return $this->putContents($path, $unsettedData);
+        return (bool) $this->putContentsJson($path, $unsettedData);
     }
 
 

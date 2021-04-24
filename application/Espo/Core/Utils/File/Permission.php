@@ -29,8 +29,11 @@
 
 namespace Espo\Core\Utils\File;
 
-use Espo\Core\Utils;
+use Espo\Core\Utils\Util;
+
 use Espo\Core\Exceptions\Error;
+
+use Throwable;
 
 class Permission
 {
@@ -89,12 +92,6 @@ class Permission
             }
         }
     }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
     /**
      * Get default settings.
      *
@@ -179,7 +176,7 @@ class Permission
     /**
      * Change permissions.
      *
-     * @param string $filename
+     * @param string $path
      * @param int|array $octal ex. 0755, array(0644, 0755), array('file'=>0644, 'dir'=>0755).
      * @param bool $recurse
      *
@@ -245,7 +242,7 @@ class Permission
     /**
      * Change permissions recursive.
      *
-     * @param string $filename
+     * @param string $path
      * @param int $fileOctal - ex. 0644
      * @param int $dirOctal - ex. 0755
      *
@@ -263,9 +260,10 @@ class Permission
 
         $result = $this->chmodReal($path, $dirOctal);
 
-        $allFiles = $this->getFileManager()->getFileList($path);
+        $allFiles = $this->fileManager->getFileList($path);
+
         foreach ($allFiles as $item) {
-            $result &= $this->chmodRecurse($path . Utils\Util::getSeparator() . $item, $fileOctal, $dirOctal);
+            $result &= $this->chmodRecurse($path . Util::getSeparator() . $item, $fileOctal, $dirOctal);
         }
 
         return (bool) $result;
@@ -319,9 +317,9 @@ class Permission
 
         $result = $this->chownReal($path, $user);
 
-        $allFiles = $this->getFileManager()->getFileList($path);
+        $allFiles = $this->fileManager->getFileList($path);
         foreach ($allFiles as $item) {
-            $result &= $this->chownRecurse($path . Utils\Util::getSeparator() . $item, $user);
+            $result &= $this->chownRecurse($path . Util::getSeparator() . $item, $user);
         }
 
         return (bool) $result;
@@ -376,9 +374,9 @@ class Permission
 
         $result = $this->chgrpReal($path, $group);
 
-        $allFiles = $this->getFileManager()->getFileList($path);
+        $allFiles = $this->fileManager->getFileList($path);
         foreach ($allFiles as $item) {
-            $result &= $this->chgrpRecurse($path . Utils\Util::getSeparator() . $item, $group);
+            $result &= $this->chgrpRecurse($path . Util::getSeparator() . $item, $group);
         }
 
         return (bool) $result;
@@ -500,7 +498,7 @@ class Permission
             try {
                 $this->chmod($path, $this->writablePermissions, $options['recursive']);
             }
-            catch (\Throwable $e) {}
+            catch (Throwable $e) {}
 
             /** check is writable */
             $res = is_writable($path);
@@ -508,10 +506,12 @@ class Permission
             if (is_dir($path)) {
                 try {
                     $name = uniqid();
-                    $res &= $this->getFileManager()->putContents([$path, $name], 'test');
-                    $res &= $this->getFileManager()->removeFile($name, $path);
+
+                    $res &= $this->fileManager->putContents($path . '/' . $name, 'test');
+
+                    $res &= $this->fileManager->removeFile($name, $path);
                 }
-                catch (\Throwable $e) {
+                catch (Throwable $e) {
                     $res = false;
                 }
             }

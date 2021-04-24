@@ -38,6 +38,8 @@ use Espo\Core\{
     Utils\DataCache,
 };
 
+use StdClass;
+
 class Metadata
 {
     protected $data = null;
@@ -45,8 +47,6 @@ class Metadata
     protected $objData = null;
 
     protected $useCache;
-
-    private $unifier;
 
     private $objUnifier;
 
@@ -75,6 +75,7 @@ class Metadata
     private $changedData = [];
 
     private $fileManager;
+
     private $dataCache;
 
     public function __construct(FileManager $fileManager, DataCache $dataCache, bool $useCache = false)
@@ -352,14 +353,15 @@ class Metadata
     /**
      * Get metadata definition in custom directory.
      *
-     * @param  string|array $key
-     * @param  mixed $default
+     * @param string|array $key
+     * @param mixed $default
      *
-     * @return object|mixed
+     * @return object
      */
     public function getCustom($key1, $key2, $default = null)
     {
-        $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
+        $filePath = $this->paths['customPath'] . "/{$key1}/{$key2}.json";
+
         $fileContent = $this->fileManager->getContents($filePath);
 
         if ($fileContent) {
@@ -373,43 +375,33 @@ class Metadata
      * Set and save metadata in custom directory.
      * The data is not merging with existing data. Use getCustom() to get existing data.
      *
-     * @param  string $key1
-     * @param  string $key2
-     * @param  array $data
-     *
-     * @return boolean
+     * @param string $key1
+     * @param string $key2
+     * @param array|object $data
      */
-    public function saveCustom($key1, $key2, $data)
+    public function saveCustom(string $key1, string $key2, $data): void
     {
         if (is_object($data)) {
             foreach ($data as $key => $item) {
-                if ($item == new \stdClass()) {
+                if ($item == new StdClass()) {
                     unset($data->$key);
                 }
             }
         }
 
-        $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
+        $filePath = $this->paths['customPath'] . "/{$key1}/{$key2}.json";
+
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-        $result = $this->fileManager->putContents($filePath, $changedData);
+        $this->fileManager->putContents($filePath, $changedData);
 
         $this->init(true);
-
-        return true;
     }
 
     /**
-    * Set Metadata data.
-    * Ex. $key1 = menu, $key2 = Account then will be created a file metadataFolder/menu/Account.json
-    *
-    * @param  string $key1
-    * @param  string $key2
-    * @param JSON string $data
-    *
-    * @return bool
-    */
-    public function set($key1, $key2, $data)
+     * Set Metadata data.
+     */
+    public function set(string $key1, string $key2, $data): void
     {
         if (is_array($data)) {
             foreach ($data as $key => $item) {
@@ -419,11 +411,11 @@ class Metadata
             }
         }
 
-        $newData = array(
-            $key1 => array(
+        $newData = [
+            $key1 => [
                 $key2 => $data,
-            ),
-        );
+            ],
+        ];
 
         $this->changedData = Util::merge($this->changedData, $newData);
         $this->data = Util::merge($this->getData(), $newData);
@@ -434,13 +426,11 @@ class Metadata
     /**
      * Unset some fields and other stuff in metadata.
      *
-     * @param  string $key1
-     * @param  string $key2
-     * @param  array | string $unsets Ex. 'fields.name'
+     * @param array|string $unsets Ex. `fields.name`.
      *
      * @return bool
      */
-    public function delete($key1, $key2, $unsets = null)
+    public function delete(string $key1, string $key2, $unsets = null)
     {
         if (!is_array($unsets)) {
             $unsets = (array) $unsets;
@@ -459,7 +449,9 @@ class Metadata
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 
                         $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList(
-                            $fieldName, $this->get($fieldPath, []), $fieldDefinitionList
+                            $fieldName,
+                            $this->get($fieldPath, []),
+                            $fieldDefinitionList
                         );
 
                         if (is_array($additionalFields)) {
@@ -524,7 +516,7 @@ class Metadata
      *
      * @return bool
      */
-    public function save()
+    public function save(): bool
     {
         $path = $this->paths['customPath'];
 
@@ -533,9 +525,13 @@ class Metadata
         if (!empty($this->changedData)) {
             foreach ($this->changedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $data) {
-                    if (!empty($data)) {
-                        $result &= $this->fileManager->mergeContents([$path, $key1, $key2.'.json'], $data, true);
+                    if (empty($data)) {
+                        continue;
                     }
+
+                    $filePath = $path . "/{$key1}/{$key2}.json";
+
+                    $result &= $this->fileManager->mergeJsonContents($filePath, $data);
                 }
             }
         }
@@ -543,25 +539,27 @@ class Metadata
         if (!empty($this->deletedData)) {
             foreach ($this->deletedData as $key1 => $keyData) {
                 foreach ($keyData as $key2 => $unsetData) {
-                    if (!empty($unsetData)) {
-                        $rowResult = $this->fileManager->unsetContents(
-                            [$path, $key1, $key2.'.json'], $unsetData, true
-                        );
-
-                        if ($rowResult == false) {
-                            $GLOBALS['log']->warning(
-                                'Metadata items ['.$key1.'.'.$key2.'] can be deleted for custom code only.'
-                            );
-                        }
-
-                        $result &= $rowResult;
+                    if (empty($unsetData)) {
+                        continue;
                     }
+
+                    $filePath = $path . "/{$key1}/{$key2}.json";
+
+                    $rowResult = $this->fileManager->unsetJsonContents($filePath, $unsetData);
+
+                    if (!$rowResult) {
+                        $GLOBALS['log']->warning(
+                            'Metadata items ['.$key1.'.'.$key2.'] can be deleted for custom code only.'
+                        );
+                    }
+
+                    $result &= $rowResult;
                 }
             }
         }
 
-        if ($result == false) {
-            throw new Error("Error saving metadata. See log file for details.");
+        if (!$result) {
+            throw new Error("Error while saving metadata. See log file for details.");
         }
 
         $this->clearChanges();

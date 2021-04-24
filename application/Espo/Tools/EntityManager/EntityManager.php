@@ -263,12 +263,12 @@ class EntityManager
         }
 
         if ($this->checkControllerExists($name)) {
-            throw new Conflict('Entity name \''.$name.'\' is not allowed.');
+            throw new Conflict('Entity name \''.$name.'\' is not allowed. Controller already exists.');
         }
 
         $serviceFactory = $this->getServiceFactory();
 
-        if ($serviceFactory && $serviceFactory->checKExists($name)) {
+        if ($serviceFactory && $serviceFactory->checkExists($name)) {
             throw new Conflict('Entity name \''.$name.'\' is not allowed.');
         }
 
@@ -486,6 +486,7 @@ class EntityManager
         $this->getBaseLanguage()->save();
 
         $layoutsPath = $templatePath . "/Layouts/{$type}";
+
         if ($this->getFileManager()->isDir($layoutsPath)) {
             $this->getFileManager()->copy($layoutsPath, 'custom/Espo/Custom/Resources/layouts/' . $name);
         }

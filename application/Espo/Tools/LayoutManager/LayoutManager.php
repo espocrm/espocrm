@@ -119,7 +119,9 @@ class LayoutManager
 
                 $data = Json::encode($layoutData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-                $result &= $this->fileManager->putContents([$layoutPath, $layoutName.'.json'], $data);
+                $path = $layoutPath . '/' . $layoutName . '.json';
+
+                $result &= $this->fileManager->putContents($path, $data);
             }
         }
 

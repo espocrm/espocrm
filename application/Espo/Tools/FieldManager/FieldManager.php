@@ -550,7 +550,9 @@ class FieldManager
             }
         }
 
-        return $this->getMetadata()->saveCustom('entityDefs', $scope, $customDefs);
+        $this->getMetadata()->saveCustom('entityDefs', $scope, $customDefs);
+
+        return true;
     }
 
     protected function getLinkDefs($scope, $name)

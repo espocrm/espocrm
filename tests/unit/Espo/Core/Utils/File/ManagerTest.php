@@ -186,10 +186,11 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $initData = '{"fields":{"someName":{"type":"varchar","maxLength":40},"someName2":{"type":"varchar","maxLength":36}}}';
         $this->object->putContents($testPath, $initData);
 
-        $unsets = 'fields.someName2';
-        $this->assertTrue($this->object->unsetContents($testPath, $unsets));
+        $unsets = ['fields.someName2'];
+        $this->assertTrue($this->object->unsetJsonContents($testPath, $unsets));
 
         $result = '{"fields":{"someName":{"type":"varchar","maxLength":40}}}';
+
         $this->assertJsonStringEqualsJsonFile($testPath, $result);
     }
 
