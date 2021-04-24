@@ -137,7 +137,7 @@ class Permission
      *
      * @return bool
      */
-    public function setDefaultPermissions($path, $recurse = false)
+    public function setDefaultPermissions(string $path, bool $recurse = false): bool
     {
         if (!file_exists($path)) {
             return false;
@@ -145,24 +145,25 @@ class Permission
 
         $permission = $this->getRequiredPermissions($path);
 
-        $result = $this->chmod($path, array($permission['file'], $permission['dir']), $recurse);
+        $result = $this->chmod($path, [$permission['file'], $permission['dir']], $recurse);
+
         if (!empty($permission['user'])) {
             $result &= $this->chown($path, $permission['user'], $recurse);
         }
+
         if (!empty($permission['group'])) {
             $result &= $this->chgrp($path, $permission['group'], $recurse);
         }
 
-        return $result;
+        return (bool) $result;
     }
 
     /**
      * Get current permissions.
      *
-     * @param string $filename
      * @return string|bool
      */
-    public function getCurrentPermission($filePath)
+    public function getCurrentPermission(string $filePath)
     {
         if (!file_exists($filePath)) {
             return false;

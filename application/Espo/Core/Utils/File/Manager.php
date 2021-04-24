@@ -50,13 +50,13 @@ class Manager
 
     protected $tmpDir = 'data/tmp';
 
-    const RENAME_RETRY_NUMBER = 10;
+    protected const RENAME_RETRY_NUMBER = 10;
 
-    const RENAME_RETRY_INTERVAL = 0.1;
+    protected const RENAME_RETRY_INTERVAL = 0.1;
 
-    const GET_SAFE_CONTENTS_RETRY_NUMBER = 10;
+    protected const GET_SAFE_CONTENTS_RETRY_NUMBER = 10;
 
-    const GET_SAFE_CONTENTS_RETRY_INTERVAL = 0.1;
+    protected const GET_SAFE_CONTENTS_RETRY_INTERVAL = 0.1;
 
     public function __construct(?array $defaultPermissions = null)
     {
@@ -71,7 +71,7 @@ class Manager
         $this->permission = new Permission($this, $params);
     }
 
-    public function getPermissionUtils()
+    public function getPermissionUtils(): Permission
     {
         return $this->permission;
     }
@@ -81,7 +81,7 @@ class Manager
      *
      * @param string $path A folder path.
      * @param bool|int $recursively Find files in sub-folders.
-     * @param string $filter Filter for files. Use regular expression, Ex. \.json$.
+     * @param string $filter Filter for files. Use regular expression, Example: `\.json$`.
      * @param bool|null $onlyFileType Filter for type of files/directories.
      * If TRUE - returns only file list, if FALSE - only directory list.
      * @param bool $returnSingleArray Return a single array.
@@ -148,12 +148,13 @@ class Manager
         return $result;
     }
 
-    protected function getSingleFileList(
+    private function getSingleFileList(
         array $fileList,
         $onlyFileType = null,
         $basePath = null,
         $parentDirName = ''
-    ) {
+    ): array {
+
         $singleFileList = [];
 
         foreach ($fileList as $dirName => $fileName) {
@@ -219,7 +220,6 @@ class Manager
     /**
      * Get data from a PHP file.
      *
-     *
      * @return mixed|false
      */
     public function getPhpContents(string $path)
@@ -237,7 +237,7 @@ class Manager
      * Get array or StdClass data from PHP file.
      * If a file is not yet written, it will wait until it's ready.
      *
-     * @return array|StdClass
+     * @return array|object
      */
     public function getPhpSafeContents(string $path)
     {
@@ -270,8 +270,6 @@ class Manager
      * Write contents to a file.
      *
      * @param mixed $data
-     *
-     * @return bool
      */
     public function putContents(string $path, $data, int $flags = 0, bool $useRenaming = false): bool
     {
@@ -296,7 +294,7 @@ class Manager
         return (bool) $result;
     }
 
-    protected function putContentsUseRenaming($path, $data)
+    private function putContentsUseRenaming(string $path, $data): bool
     {
         $tmpDir = $this->tmpDir;
 
@@ -309,6 +307,7 @@ class Manager
         }
 
         $tmpPath = tempnam($tmpDir, 'tmp');
+
         $tmpPath = $this->getRelativePath($tmpPath);
 
         if (!$tmpPath) {
@@ -324,6 +323,7 @@ class Manager
         }
 
         $h = fopen($tmpPath, 'w');
+
         fwrite($h, $data);
         fclose($h);
 
@@ -343,10 +343,10 @@ class Manager
             $this->removeFile($tmpPath);
         }
 
-        return $result;
+        return (bool) $result;
     }
 
-    protected function renameInLoop(string $source, string $destination): bool
+    private function renameInLoop(string $source, string $destination): bool
     {
         $counter = 0;
 
@@ -363,18 +363,18 @@ class Manager
 
             usleep(self::RENAME_RETRY_INTERVAL * 1000000);
 
-            $counter ++;
+            $counter++;
         }
 
         return false;
     }
 
     /**
-     * Save PHP content to file.
+     * Save PHP contents to a file.
      *
-     * @return bool
+     * @param mixed $data
      */
-    public function putPhpContents(string $path, $data, bool $withObjects = false, bool $useRenaming = false)
+    public function putPhpContents(string $path, $data, bool $withObjects = false, bool $useRenaming = false): bool
     {
         return $this->putContents($path, $this->wrapForDataExport($data, $withObjects), LOCK_EX, $useRenaming);
     }
@@ -455,7 +455,6 @@ class Manager
         return (bool) $this->putJsonContents($path, $unsettedData);
     }
 
-
     /**
      * @deprecated
      */
@@ -477,10 +476,8 @@ class Manager
     /**
      * Create a new dir.
      *
-     * @param string | array $path
-     * @param int $permission - ex. 0755
-     *
-     * @return bool
+     * @param string|array $path
+     * @param int $permission Example: `0755`.
      */
     public function mkdir(string $path, $permission = null): bool
     {
@@ -610,10 +607,8 @@ class Manager
 
     /**
      * Create a new file if not exists with all folders in the path.
-     *
-     * @param string $filePath
      */
-    public function checkCreateFile($filePath)
+    public function checkCreateFile(string $filePath): bool
     {
         $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($filePath);
 
@@ -652,17 +647,19 @@ class Manager
     }
 
     /**
-     * Remove file/files by given path.
+     * Remove a file or multiples files.
      *
-     * @param array $filePaths - File paths list.
-     * @return bool
+     * @param array|string $filePaths File paths or a single path.
      */
-    public function unlink($filePaths)
+    public function unlink($filePaths): bool
     {
         return $this->removeFile($filePaths);
     }
 
-    public function rmdir($dirPaths)
+    /**
+     * @deprecated Use removeDir.
+     */
+    public function rmdir($dirPaths): bool
     {
         if (!is_array($dirPaths)) {
             $dirPaths = (array) $dirPaths;
@@ -679,17 +676,21 @@ class Manager
         return (bool) $result;
     }
 
-    public function removeDir($dirPaths)
+    /**
+     * Remove a directory or multiple directories.
+     *
+     * @param array|string $dirPaths
+     */
+    public function removeDir($dirPaths): bool
     {
         return $this->rmdir($dirPaths);
     }
 
     /**
-     * Remove file/files by a path.
+     * Remove file or multiples files.
      *
-     * @param array $filePaths - File paths list.
-     * @param string $dirPath - directory path.
-     * @return bool
+     * @param array|string $filePaths File paths or a single path.
+     * @param string|null $dirPath A directory path.
      */
     public function removeFile($filePaths, $dirPath = null): bool
     {
@@ -803,14 +804,13 @@ class Manager
 
     /**
      * Remove empty parent directories if they are empty.
-     * @param string $path
-     * @return bool
      */
-    protected function removeEmptyDirs($path)
+    private function removeEmptyDirs(string $path): bool
     {
         $parentDirName = $this->getParentDirName($path);
 
         $res = true;
+
         if ($this->isDirEmpty($parentDirName)) {
             $res &= $this->rmdir($parentDirName);
             $res &= $this->removeEmptyDirs($parentDirName);
@@ -870,45 +870,41 @@ class Manager
     }
 
     /**
-     * Get a filename without the file extension.
+     * Get a filename without a file extension.
      *
      * @param string $fileName
-     * @param string $ext Extension, ex. `.json`.
-     *
-     * @return array
+     * @param string $extension Extension, example: `.json`.
      */
-    public function getFileName($fileName, $ext = '')
+    public function getFileName(string $fileName, string $extension = ''): string
     {
-        if (empty($ext)) {
-            $fileName= substr($fileName, 0, strrpos($fileName, '.', -1));
+        if (empty($extension)) {
+            $fileName = substr($fileName, 0, strrpos($fileName, '.', -1));
         }
         else {
-            if (substr($ext, 0, 1)!='.') {
-                $ext= '.'.$ext;
+            if (substr($extension, 0, 1) != '.') {
+                $extension = '.' . $extension;
             }
 
-            if (substr($fileName, -(strlen($ext)))==$ext) {
-                $fileName= substr($fileName, 0, -(strlen($ext)));
+            if (substr($fileName, -(strlen($extension))) == $extension) {
+                $fileName = substr($fileName, 0, -(strlen($extension)));
             }
         }
 
-        $exFileName = explode('/', Util::toFormat($fileName, '/'));
+        $array = explode('/', Util::toFormat($fileName, '/'));
 
-        return end($exFileName);
+        return end($array);
     }
 
     /**
      * Get a directory name from the path.
-     *
-     * @param string $path
-     * @param bool $isFullPath
-     *
-     * @return array
      */
-    public function getDirName($path, $isFullPath = true, $useIsDir = true)
+    public function getDirName(string $path, bool $isFullPath = true, bool $useIsDir = true): string
     {
         $dirName = preg_replace('/\/$/i', '', $path);
-        $dirName = ($useIsDir && is_dir($dirName)) ? $dirName : pathinfo($dirName, PATHINFO_DIRNAME);
+
+        $dirName = ($useIsDir && is_dir($dirName)) ?
+            $dirName :
+            pathinfo($dirName, PATHINFO_DIRNAME);
 
         if (!$isFullPath) {
             $pieces = explode('/', $dirName);
@@ -925,34 +921,33 @@ class Manager
      * @param boolean $isFullPath
      * @return string
      */
-    public function getParentDirName($path, $isFullPath = true)
+    public function getParentDirName(string $path, bool $isFullPath = true): string
     {
         return $this->getDirName($path, $isFullPath, false);
     }
 
     /**
-     * Return content of PHP file.
+     * Wrap data for export to PHP file.
      *
-     * @param array $content
-     *
-     * @return string | false
+     * @param array|object $data     *
+     * @return string|false
      */
-    public function wrapForDataExport($content, $withObjects = false)
+    public function wrapForDataExport($data, bool $withObjects = false)
     {
-        if (!isset($content)) {
+        if (!isset($data)) {
             return false;
         }
 
         if (!$withObjects) {
             return "<?php\n" .
-                "return " . var_export($content, true) . ";\n";
+                "return " . var_export($data, true) . ";\n";
         }
 
         return "<?php\n" .
-            "return " . $this->varExport($content) . ";\n";
+            "return " . $this->varExport($data) . ";\n";
     }
 
-    protected function varExport($variable, int $level = 0)
+    private function varExport($variable, int $level = 0)
     {
         $tab = '';
         $tabElement = '  ';
@@ -1016,7 +1011,7 @@ class Manager
      *
      * @return array
      */
-    public function getLastPermissionDeniedList()
+    public function getLastPermissionDeniedList(): array
     {
         return $this->permissionDeniedList;
     }
@@ -1043,10 +1038,10 @@ class Manager
 
     /**
      * Get exists path.
-     * Ex. If `/var/www/espocrm/custom/someFile.php` file doesn't exist,
+     * Example: If `/var/www/espocrm/custom/someFile.php` file doesn't exist,
      * result will be `/var/www/espocrm/custom`.
      */
-    protected function getExistsPath(string $path): string
+    private function getExistsPath(string $path): string
     {
         if (!file_exists($path)) {
             return $this->getExistsPath(pathinfo($path, PATHINFO_DIRNAME));
@@ -1055,7 +1050,11 @@ class Manager
         return $path;
     }
 
-    public function getRelativePath($path, $basePath = null, $dirSeparator = null): string
+    /**
+     * @deprecated
+     * @todo Make private.
+     */
+    public function getRelativePath(string $path, ?string $basePath = null, ?string $dirSeparator = null): string
     {
         if (!$basePath) {
             $basePath = getcwd();
@@ -1075,7 +1074,7 @@ class Manager
         return preg_replace('/^'. preg_quote($basePath, $dirSeparator) . '/', '', $path);
     }
 
-    protected function opcacheInvalidate(string $filepath, bool $force = false): void
+    private function opcacheInvalidate(string $filepath, bool $force = false): void
     {
         if (!function_exists('opcache_invalidate')) {
             return;
