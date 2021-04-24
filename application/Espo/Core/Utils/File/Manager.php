@@ -240,37 +240,33 @@ class Manager
     }
 
     /**
-     * Write data to a file.
+     * Write contents to a file.
      *
-     * @param string | array  $path
-     * @param mixed  $data
-     * @param integer $flags
+     * @param mixed $data
      *
      * @return bool
      */
-    public function putContents($path, $data, $flags = 0, bool $useRenaming = false)
+    public function putContents(string $path, $data, int $flags = 0, bool $useRenaming = false): bool
     {
-        $fullPath = $this->concatPaths($path); // @todo remove after changing the params
-
-        if ($this->checkCreateFile($fullPath) === false) {
-            throw new Error('Permission denied for '. $fullPath);
+        if ($this->checkCreateFile($path) === false) {
+            throw new Error('Permission denied for '. $path);
         }
 
         $result = false;
 
         if ($useRenaming) {
-            $result = $this->putContentsUseRenaming($fullPath, $data);
+            $result = $this->putContentsUseRenaming($path, $data);
         }
 
         if (!$result) {
-            $result = (file_put_contents($fullPath, $data, $flags) !== FALSE);
+            $result = (file_put_contents($path, $data, $flags) !== FALSE);
         }
 
         if ($result) {
-            $this->opcacheInvalidate($fullPath);
+            $this->opcacheInvalidate($path);
         }
 
-        return $result;
+        return (bool) $result;
     }
 
     protected function putContentsUseRenaming($path, $data)
@@ -372,7 +368,9 @@ class Manager
 
         $contents = Json::encode($data, $options);
 
-        return $this->putContents($path, $contents, LOCK_EX);
+        $fullPath = $this->concatPaths($path);
+
+        return $this->putContents($fullPath, $contents, LOCK_EX);
     }
 
     /**
@@ -409,7 +407,7 @@ class Manager
      */
     public function appendContents($path, $data)
     {
-        return $this->putContents($path, $data, FILE_APPEND | LOCK_EX);
+        return $this->putContents($this->concatPaths($path), $data, FILE_APPEND | LOCK_EX);
     }
 
     /**
@@ -520,18 +518,18 @@ class Manager
     }
 
     /**
-     * Copy files from one direcoty to another.
+     * Copy files from one direcory to another.
      * Ex. $sourcePath = 'data/uploads/extensions/file.json',
      * $destPath = 'data/uploads/backup', result will be data/uploads/backup/data/uploads/backup/file.json.
      *
      * @param string  $sourcePath
      * @param string  $destPath
      * @param boolean $recursively
-     * @param array $fileList - list of files that should be copied
-     * @param boolean $copyOnlyFiles - copy only files, instead of full path with directories,
+     * @param array $fileList List of files that should be copied.
+     * @param boolean $copyOnlyFiles Copy only files, instead of full path with directories,
      * Ex. $sourcePath = 'data/uploads/extensions/file.json',
-     * $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json'
-     * @return boolen
+     * $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json',
+     * @return bool
      */
     public function copy($sourcePath, $destPath, $recursively = false, array $fileList = null, $copyOnlyFiles = false)
     {

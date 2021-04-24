@@ -41,6 +41,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     protected $objects;
 
     protected $filesPath = 'tests/unit/testData/FileManager';
+
     protected $cachePath = 'tests/unit/testData/cache/FileManager';
 
     protected $reflection;
@@ -71,7 +72,11 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     public function testGetContents()
     {
         $result = file_get_contents($this->filesPath . '/getContent/test.json');
-        $this->assertEquals($result, $this->object->getContents( array($this->filesPath, 'getContent/test.json') ));
+
+        $this->assertEquals(
+            $result,
+            $this->object->getContents($this->filesPath . '/getContent/test.json')
+        );
     }
 
     public function testPutContents()
@@ -79,9 +84,16 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $testPath = $this->cachePath;
 
         $result= 'next value';
-        $this->assertTrue($this->object->putContents(array($testPath, 'setContent.json'), $result));
 
-        $this->assertEquals($result, $this->object->getContents( array($testPath, 'setContent.json')) );
+        $this->assertTrue(
+            $this->object->putContents($testPath . '/setContent.json', $result)
+        );
+
+        $this->assertEquals(
+            $result,
+            $this->object->getContents($testPath . '/setContent.json')
+        );
+
         @unlink($testPath . '/setContent.json');
     }
 
