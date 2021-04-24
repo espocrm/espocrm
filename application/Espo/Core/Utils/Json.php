@@ -48,10 +48,12 @@ class Json
     }
 
     /**
-     * JSON decode a string.
+     * JSON decode.
      *
      * @param bool $associative Objects will be converted to associative.
      * @return object|array
+     *
+     * @throws JsonException
      */
     public static function decode(string $json, bool $associative = false)
     {
