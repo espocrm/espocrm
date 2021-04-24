@@ -933,7 +933,7 @@ class Manager
     /**
      * Wrap data for export to PHP file.
      *
-     * @param array|object $data     *
+     * @param array|object $data
      * @return string|false
      */
     public function wrapForDataExport($data, bool $withObjects = false)
@@ -984,7 +984,8 @@ class Manager
     }
 
     /**
-     * Check if $paths are writable. Permission denied list are defined in getLastPermissionDeniedList().
+     * Check if $paths are writable. Permission denied list can be ontained
+     * with getLastPermissionDeniedList().
      */
     public function isWritableList(array $paths): bool
     {
@@ -1056,7 +1057,7 @@ class Manager
 
     /**
      * @deprecated
-     * @todo Make private.
+     * @todo Make private or move to `File\Util`.
      */
     public function getRelativePath(string $path, ?string $basePath = null, ?string $dirSeparator = null): string
     {
