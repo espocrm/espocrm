@@ -390,7 +390,8 @@ class Manager
     {
         if ($isPhp) {
             $fileContent = $this->getPhpContents($path);
-        } else {
+        }
+        else {
             $fileContent = $this->getContents($path);
         }
 
@@ -510,11 +511,10 @@ class Manager
      *
      * @param string | array $path
      * @param int $permission - ex. 0755
-     * @param bool $recursive
      *
      * @return bool
      */
-    public function mkdir($path, $permission = null, $recursive = false)
+    public function mkdir($path, $permission = null)
     {
         $fullPath = $this->concatPaths($path);
 
@@ -663,7 +663,9 @@ class Manager
             $dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
 
             if (!$this->mkdir($pathParts['dirname'], $dirPermission, true)) {
-                throw new Error('Permission denied: unable to create a folder on the server - ' . $pathParts['dirname']);
+                throw new Error(
+                    'Permission denied: unable to create a folder on the server ' . $pathParts['dirname']
+                );
             }
         }
 
@@ -907,8 +909,8 @@ class Manager
     /**
      * Get a filename without the file extension.
      *
-     * @param string $filename
-     * @param string $ext - extension, ex. '.json'.
+     * @param string $fileName
+     * @param string $ext Extension, ex. `.json`.
      *
      * @return array
      */
