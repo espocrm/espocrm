@@ -164,7 +164,7 @@ class Unifier
 
             } else {
                 if ($fileName === $this->unsetFileName) {
-                    $fileContent = $this->fileManager->getContents(array($dirPath, $fileName));
+                    $fileContent = $this->fileManager->getContents($dirPath . '/' . $fileName);
 
                     if ($this->useObjects) {
                         $unsets = Json::decode($fileContent);
@@ -176,7 +176,7 @@ class Unifier
                     continue;
                 }
 
-                $mergedValues = $this->unifyGetContents([$dirPath, $fileName]);
+                $mergedValues = $this->getContents($dirPath . '/' . $fileName);
 
                 if (!empty($mergedValues)) {
                     $name = $this->fileManager->getFileName($fileName, '.json');
@@ -204,9 +204,9 @@ class Unifier
     /**
      * Get content from files for unite files.
      */
-    protected function unifyGetContents(array $paths)
+    protected function getContents(string $path)
     {
-        $fileContent = $this->fileManager->getContents($paths);
+        $fileContent = $this->fileManager->getContents($path);
 
         return Json::decode($fileContent, !$this->useObjects);
     }

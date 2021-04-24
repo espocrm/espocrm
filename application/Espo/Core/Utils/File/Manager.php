@@ -38,6 +38,9 @@ use Espo\Core\{
 use Exception;
 use StdClass;
 use Throwable;
+use InvalidArgumentException;
+
+use const E_USER_DEPRECATED;
 
 class Manager
 {
@@ -171,17 +174,30 @@ class Manager
     }
 
     /**
-     * Reads entire file into a string.
+     * Get file contents.
      *
-     * @param string | array $path Ex. 'path.php' OR array('dir', 'path.php').
-     * @return mixed
+     * @param string
+     *
+     * @return string|false
      */
     public function getContents($path)
     {
-        $fullPath = $this->concatPaths($path);
+        if (is_array($path)) {
+            // For backward compatibility.
+            // @todo Remove support of arrays in v6.4.
+            trigger_error(
+                'Array parameter is deprecated for FileMaanger::getContents.',
+                E_USER_DEPRECATED
+            );
 
-        if (file_exists($fullPath)) {
-            return file_get_contents($fullPath);
+            $path = $this->concatPaths($path);
+        }
+        else if (!is_string($path)) {
+            throw new InvalidArgumentException();
+        }
+
+        if (file_exists($path)) {
+            return file_get_contents($path);
         }
 
         return false;
