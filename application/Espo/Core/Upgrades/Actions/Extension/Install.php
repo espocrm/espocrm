@@ -29,8 +29,9 @@
 
 namespace Espo\Core\Upgrades\Actions\Extension;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\ExtensionManager;
+
+use Espo\Core\Utils\Util;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
@@ -39,6 +40,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     protected function beforeRunAction()
     {
         $this->findExtension();
+
         if (!$this->isNew()) {
             $this->scriptParams['isUpgrade'] = true;
 
@@ -70,7 +72,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         /** copy scripts files */
         $packagePath = $this->getPackagePath();
 
-        return $this->copy(array($packagePath, self::SCRIPTS), array($backupPath, self::SCRIPTS), true);
+        $source = Util::concatPath($packagePath, self::SCRIPTS);
+        $destination = Util::concatPath($backupPath, self::SCRIPTS);
+
+        return $this->copy($source, $destination, true);
     }
 
     protected function isNew()

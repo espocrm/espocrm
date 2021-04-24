@@ -28,16 +28,15 @@
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Base;
+
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base
 {
     /**
-     * Main installation process
+     * Main installation process.
      *
-     * @param  string $processId Upgrade/Extension ID, gotten in upload stage
-     * @return bool
      */
     public function run($data)
     {
@@ -48,11 +47,13 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->stepInit($data);
 
         $this->stepCopyBefore($data);
+
         if ($this->getCopyFilesPath('before')) {
             $this->stepRebuild($data);
         }
 
         $this->stepBeforeInstallScript($data);
+
         if ($this->getScriptPath('before')) {
             $this->stepRebuild($data);
         }
@@ -61,6 +62,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->stepRebuild($data);
 
         $this->stepCopyAfter($data);
+
         if ($this->getCopyFilesPath('after')) {
             $this->stepRebuild($data);
         }
@@ -262,6 +264,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $deleteFileList = array_diff($copyFileList, $backupFileList);
 
         $res = $this->copy($backupFilePath, '', true);
+
         if (!empty($deleteFileList)) {
             $res &= $this->getFileManager()->remove($deleteFileList, null, true);
         }

@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Base;
+
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
@@ -80,7 +81,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
             if (!$this->systemRebuild()) {
-                $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild. Please see the log for more detail.');
+                $this->throwErrorAndRemovePackage(
+                    'Error occurred while EspoCRM rebuild. Please see the log for more detail.'
+                );
             }
         }
 
@@ -106,11 +109,13 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         $packagePath = $this->getPath('packagePath');
 
         $manifestPath = Util::concatPath($packagePath, $this->manifestName);
+
         if (!file_exists($manifestPath)) {
             $this->unzipArchive($packagePath);
         }
 
         $fileDirs = $this->getFileDirs($packagePath);
+
         foreach ($fileDirs as $filesPath) {
             if (file_exists($filesPath)) {
                 $res = $this->copy($filesPath, '', true);
@@ -119,6 +124,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $manifestJson = $this->getFileManager()->getContents($manifestPath);
         $manifest = Json::decode($manifestJson, true);
+
         if (!empty($manifest['delete'])) {
             $res &= $this->getFileManager()->remove($manifest['delete'], null, true);
         }
@@ -131,15 +137,17 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     protected function copyFiles($type = null, $dest = '')
     {
         $backupPath = $this->getPath('backupPath');
-        $res = $this->copy(array($backupPath, self::FILES), $dest, true);
+
+        $source = Util::concatPath($backupPath, self::FILES);
+
+        $res = $this->copy($source, $dest, true);
 
         return $res;
     }
 
     /**
-     * Get backup path
+     * Get backup path.
      *
-     * @param  string $processId
      * @return string
      */
     protected function getPackagePath($isPackage = false)
@@ -162,6 +170,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     public function throwErrorAndRemovePackage($errorMessage = '', $deletePackage = true, $systemRebuild = true)
     {
         $this->restoreFiles();
+
         parent::throwErrorAndRemovePackage($errorMessage, false, $systemRebuild);
     }
 

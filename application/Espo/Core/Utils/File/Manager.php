@@ -457,11 +457,9 @@ class Manager
 
 
     /**
-     * Concat paths.
-     * @param string | array  $paths Ex. array('pathPart1', 'pathPart2', 'pathPart3')
-     * @return string
+     * @deprecated
      */
-    protected function concatPaths($paths)
+    private function concatPaths($paths)
     {
         if (is_string($paths)) {
             return Util::fixPath($paths);
@@ -534,27 +532,25 @@ class Manager
 
     /**
      * Copy files from one directory to another.
-     * Ex. $sourcePath = 'data/uploads/extensions/file.json',
+     * Example: $sourcePath = 'data/uploads/extensions/file.json',
      * $destPath = 'data/uploads/backup', result will be data/uploads/backup/data/uploads/backup/file.json.
      *
      * @param string $sourcePath
      * @param string $destPath
      * @param bool $recursively
      * @param array $fileList List of files that should be copied.
-     * @param bool $copyOnlyFiles Copy only files, instead of full path with directories,
-     * Ex. $sourcePath = 'data/uploads/extensions/file.json',
-     * $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json',
+     * @param bool $copyOnlyFiles Copy only files, instead of full path with directories.
+     * Example:
+     * $sourcePath = 'data/uploads/extensions/file.json',
+     * $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json'.
      */
     public function copy(
-        $sourcePath,
-        $destPath,
+        string $sourcePath,
+        string $destPath,
         bool $recursively = false,
         array $fileList = null,
         bool $copyOnlyFiles = false
     ): bool {
-
-        $sourcePath = $this->concatPaths($sourcePath);
-        $destPath = $this->concatPaths($destPath);
 
         if (!isset($fileList)) {
             $fileList = is_file($sourcePath) ?
@@ -569,13 +565,14 @@ class Manager
                 $file = pathinfo($file, PATHINFO_BASENAME);
             }
 
-            $destFile = $this->concatPaths([$destPath, $file]);
+            $destFile = Util::concatPath($destPath, $file);
 
             $isFileExists = file_exists($destFile);
 
             if ($this->checkCreateFile($destFile) === false) {
                 $permissionDeniedList[] = $destFile;
-            } else if (!$isFileExists) {
+            }
+            else if (!$isFileExists) {
                 $this->removeFile($destFile);
             }
         }
@@ -593,8 +590,11 @@ class Manager
                 $file = pathinfo($file, PATHINFO_BASENAME);
             }
 
-            $sourceFile = is_file($sourcePath) ? $sourcePath : $this->concatPaths([$sourcePath, $file]);
-            $destFile = $this->concatPaths([$destPath, $file]);
+            $sourceFile = is_file($sourcePath) ?
+                $sourcePath :
+                Util::concatPath($sourcePath, $file);
+
+            $destFile = Util::concatPath($destPath, $file);
 
             if (file_exists($sourceFile) && is_file($sourceFile)) {
                 $res &= copy($sourceFile, $destFile);

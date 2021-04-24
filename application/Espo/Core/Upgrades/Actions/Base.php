@@ -560,7 +560,11 @@ abstract class Base
     }
 
     protected function copy(
-        $sourcePath, $destPath, $recursively = false, array $fileList = null, $copyOnlyFiles = false
+        $sourcePath,
+        $destPath,
+        $recursively = false,
+        array $fileList = null,
+        $copyOnlyFiles = false
     ) {
         try {
             $res = $this->getFileManager()->copy($sourcePath, $destPath, $recursively, $fileList, $copyOnlyFiles);
@@ -870,7 +874,10 @@ abstract class Base
         $fullFileList = array_merge($this->getDeleteFileList(), $this->getCopyFileList());
 
         $backupPath = $this->getPath('backupPath');
-        return $this->copy('', array($backupPath, self::FILES), false, $fullFileList);
+
+        $destination = Util::concatPath($backupPath, self::FILES);
+
+        return $this->copy('', $destination, false, $fullFileList);
     }
 
     protected function getHelper()
