@@ -408,7 +408,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         return array(
           array( 'application/Espo/Core/Application.php', 'application/Espo/Core/Application.php', ),
           array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
-          array( array('application', 'Espo/Core', 'NotRealApplication.php'), 'application/Espo/Core'),
+          array( 'application/Espo/Core/NotRealApplication.php', 'application/Espo/Core'),
           array( 'application/NoEspo/Core/Application.php', 'application'),
           array( 'notRealPath/Espo/Core/Application.php', '.'),
         );
@@ -419,7 +419,10 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetExistsPath($input, $result)
     {
-        $this->assertEquals(Util::fixPath($result), $this->reflection->invokeMethod('getExistsPath', array($input)) );
+        $this->assertEquals(
+            $result,
+            $this->reflection->invokeMethod('getExistsPath', [$input])
+        );
     }
 
     public function testCopyTestCase1()

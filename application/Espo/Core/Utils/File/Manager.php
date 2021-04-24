@@ -79,7 +79,7 @@ class Manager
     /**
      * Get a list of files in specified directory.
      *
-     * @param string $path string Folder path.
+     * @param string $path A folder path.
      * @param bool|int $recursively Find files in sub-folders.
      * @param string $filter Filter for files. Use regular expression, Ex. \.json$.
      * @param bool|null $onlyFileType Filter for type of files/directories.
@@ -719,7 +719,7 @@ class Manager
      */
     public function removeInDir(string $path, bool $removeWithDir = false): bool
     {
-        $fileList = $this->getFileList($this->concatPaths($path), false);
+        $fileList = $this->getFileList($path, false);
 
         $result = true;
 
@@ -1043,24 +1043,19 @@ class Manager
 
     /**
      * Get exists path.
-     * Ex. if check /var/www/espocrm/custom/someFile.php and this file doesn't exist,
-     * result will be /var/www/espocrm/custom
-     *
-     * @param  string | array $path
-     * @return string
+     * Ex. If `/var/www/espocrm/custom/someFile.php` file doesn't exist,
+     * result will be `/var/www/espocrm/custom`.
      */
-    protected function getExistsPath($path)
+    protected function getExistsPath(string $path): string
     {
-        $fullPath = $this->concatPaths($path);
-
-        if (!file_exists($fullPath)) {
-            $fullPath = $this->getExistsPath(pathinfo($fullPath, PATHINFO_DIRNAME));
+        if (!file_exists($path)) {
+            return $this->getExistsPath(pathinfo($path, PATHINFO_DIRNAME));
         }
 
-        return $fullPath;
+        return $path;
     }
 
-    public function getRelativePath($path, $basePath = null, $dirSeparator = null)
+    public function getRelativePath($path, $basePath = null, $dirSeparator = null): string
     {
         if (!$basePath) {
             $basePath = getcwd();
@@ -1080,7 +1075,7 @@ class Manager
         return preg_replace('/^'. preg_quote($basePath, $dirSeparator) . '/', '', $path);
     }
 
-    protected function opcacheInvalidate(string $filepath, bool $force = false)
+    protected function opcacheInvalidate(string $filepath, bool $force = false): void
     {
         if (!function_exists('opcache_invalidate')) {
             return;
