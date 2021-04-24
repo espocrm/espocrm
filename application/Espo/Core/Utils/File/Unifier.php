@@ -132,7 +132,6 @@ class Unifier
 
         if ($this->useObjects) {
             $content = (object) [];
-            $unsets = (object) [];
         }
 
         if (empty($dirPath) || !file_exists($dirPath)) {
@@ -166,12 +165,7 @@ class Unifier
                 if ($fileName === $this->unsetFileName) {
                     $fileContent = $this->fileManager->getContents($dirPath . '/' . $fileName);
 
-                    if ($this->useObjects) {
-                        $unsets = Json::decode($fileContent);
-                    }
-                    else {
-                        $unsets = Json::decode($fileContent, true);
-                    }
+                    $unsets = Json::decode($fileContent, true);
 
                     continue;
                 }

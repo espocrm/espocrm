@@ -44,7 +44,7 @@ class DataUtil
         if (is_string($unsetList)) {
             $unsetList = [$unsetList];
         }
-        else if (!is_array($unsetList) && !is_object($unsetList)) {
+        else if (!is_array($unsetList)) {
             throw new InvalidArgumentException();
         }
 
