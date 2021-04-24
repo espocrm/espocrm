@@ -31,40 +31,30 @@ namespace Espo\Core\Utils\File;
 
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Json;
-
 use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\Metadata;
 
 class FileUnifier
 {
     private $fileManager;
+
     private $metadata;
 
-    public function __construct(Manager $fileManager, Metadata $metadata = null)
+    public function __construct(Manager $fileManager, ?Metadata $metadata = null)
     {
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
     }
 
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
     /**
-     * Unite files content,
+     * Unite files content.
      *
      * @param array $paths
-     * @param bool $isReturnModuleNames If need to return data with module names.
+     * @param bool $returnModuleNames If need to return data with module names.
      *
      * @return array
      */
-    public function unify(array $paths, $isReturnModuleNames = false)
+    public function unify(array $paths, bool $returnModuleNames = false): array
     {
         $data = $this->loadData($paths['corePath']);
 
@@ -72,28 +62,37 @@ class FileUnifier
             $moduleDir = strstr($paths['modulePath'], '{*}', true);
 
             $moduleList = isset($this->metadata) ?
-                $this->getMetadata()->getModuleList() :
-                $this->getFileManager()->getFileList($moduleDir, false, '', false);
+                $this->metadata->getModuleList() :
+                $this->fileManager->getFileList($moduleDir, false, '', false);
 
             foreach ($moduleList as $moduleName) {
                 $moduleFilePath = str_replace('{*}', $moduleName, $paths['modulePath']);
 
-                if ($isReturnModuleNames) {
+                if ($returnModuleNames) {
                     if (!isset($data[$moduleName])) {
                         $data[$moduleName] = [];
                     }
 
-                    $data[$moduleName] = Util::merge($data[$moduleName], $this->loadData($moduleFilePath));
+                    $data[$moduleName] = Util::merge(
+                        $data[$moduleName],
+                        $this->loadData($moduleFilePath)
+                    );
 
                     continue;
                 }
 
-                $data = Util::merge($data, $this->loadData($moduleFilePath));
+                $data = Util::merge(
+                    $data,
+                    $this->loadData($moduleFilePath)
+                );
             }
         }
 
         if (!empty($paths['customPath'])) {
-            $data = Util::merge($data, $this->loadData($paths['customPath']));
+            $data = Util::merge(
+                $data,
+                $this->loadData($paths['customPath'])
+            );
         }
 
         return $data;
@@ -106,22 +105,14 @@ class FileUnifier
      * @param array $returns
      * @return array
      */
-    protected function loadData($filePath, $returns = [])
+    protected function loadData(string $filePath)
     {
-        if (file_exists($filePath)) {
-            $content = $this->getFileManager()->getContents($filePath);
-
-            $data = Json::getArrayData($content);
-
-            if (empty($data)) {
-                $GLOBALS['log']->warning('FileUnifier::unify() - Empty file or syntax error - ['.$filePath.']');
-
-                return $returns;
-            }
-
-            return $data;
+        if (!$this->fileManager->isFile($filePath)) {
+             return [];
         }
 
-        return $returns;
+        $content = $this->fileManager->getContents($filePath);
+
+        return Json::decode($content, true);
     }
 }
