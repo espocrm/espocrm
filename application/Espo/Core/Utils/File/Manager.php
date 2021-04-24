@@ -204,17 +204,15 @@ class Manager
     }
 
     /**
-     * Get data from PHP file.
+     * Get data from a PHP file.
      *
-     * @param string|array $path
-     * @return mixed|bool
+     *
+     * @return mixed|false
      */
-    public function getPhpContents($path)
+    public function getPhpContents(string $path)
     {
-        $fullPath = $this->concatPaths($path);
-
-        if (file_exists($fullPath) && strtolower(substr($fullPath, -4)) == '.php') {
-            $phpContents = include($fullPath);
+        if (file_exists($path) && strtolower(substr($path, -4)) == '.php') {
+            $phpContents = include($path);
 
             return $phpContents;
         }

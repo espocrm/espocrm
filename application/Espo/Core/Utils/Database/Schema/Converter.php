@@ -29,9 +29,6 @@
 
 namespace Espo\Core\Utils\Database\Schema;
 
-use Espo\ORM\Entity;
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Utils\{
     Util,
     Config,
@@ -56,39 +53,37 @@ class Converter
 
     private $metadata;
 
-    private $ormMeta = null;
-
-    protected $tablePaths = array(
+    protected $tablePaths = [
         'corePath' => 'application/Espo/Core/Utils/Database/Schema/tables',
         'modulePath' => 'application/Espo/Modules/{*}/Core/Utils/Database/Schema/tables',
         'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/tables',
-    );
+    ];
 
     protected $typeList;
 
     //pair ORM => doctrine
-    protected $allowedDbFieldParams = array(
+    protected $allowedDbFieldParams = [
         'len' => 'length',
         'default' => 'default',
         'notNull' => 'notnull',
         'autoincrement' => 'autoincrement',
-    );
+    ];
 
     //todo: same array in Converters\Orm
-    protected $idParams = array(
+    protected $idParams = [
         'dbType' => 'varchar',
         'len' => 24,
-    );
+    ];
 
     //todo: same array in Converters\Orm
-    protected $defaultLength = array(
+    protected $defaultLength = [
         'varchar' => 255,
         'int' => 11,
-    );
+    ];
 
-    protected $notStorableTypes = array(
+    protected $notStorableTypes = [
         'foreign'
-    );
+    ];
 
     protected $maxIndexLength;
 
@@ -152,7 +147,7 @@ class Converter
     }
 
     /**
-     * Schema convertation process
+     * Schema convertation process.
      *
      * @param  array  $ormMeta
      * @param  array|null $entityList
@@ -168,9 +163,14 @@ class Converter
 
         if (isset($ormMeta['unsetIgnore'])) {
             $protectedOrmMeta = array();
+
             foreach ($ormMeta['unsetIgnore'] as $protectedKey) {
-                $protectedOrmMeta = Util::merge( $protectedOrmMeta, Util::fillArrayKeys($protectedKey, Util::getValueByKey($ormMeta, $protectedKey)) );
+                $protectedOrmMeta = Util::merge(
+                    $protectedOrmMeta,
+                    Util::fillArrayKeys($protectedKey, Util::getValueByKey($ormMeta, $protectedKey))
+                );
             }
+
             unset($ormMeta['unsetIgnore']);
         }
 
@@ -188,7 +188,12 @@ class Converter
             $entityList = is_string($entityList) ? (array) $entityList : $entityList;
 
             $dependentEntities = $this->getDependentEntities($entityList, $ormMeta);
-            $GLOBALS['log']->debug('Rebuild Database for entities: ['.implode(', ', $entityList).'] with dependent entities: ['.implode(', ', $dependentEntities).']');
+
+            $GLOBALS['log']->debug(
+                'Rebuild Database for entities: ['.
+                implode(', ', $entityList).'] with dependent entities: ['.
+                implode(', ', $dependentEntities).']'
+            );
 
             $ormMeta = array_intersect_key($ormMeta, array_flip($dependentEntities));
         }
@@ -200,7 +205,10 @@ class Converter
         $tables = array();
         foreach ($ormMeta as $entityName => $entityParams) {
 
-            if ($entityParams['skipRebuild'] ?? false) continue;
+            if ($entityParams['skipRebuild'] ?? false) {
+                continue;
+
+            }
 
             $tableName = Util::toUnderScore($entityName);
 
@@ -224,7 +232,10 @@ class Converter
 
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
 
-                if ((isset($fieldParams['notStorable']) && $fieldParams['notStorable']) || in_array($fieldParams['type'], $this->notStorableTypes)) {
+                if (
+                    (isset($fieldParams['notStorable']) &&
+                    $fieldParams['notStorable']) || in_array($fieldParams['type'], $this->notStorableTypes)
+                ) {
                     continue;
                 }
 
@@ -236,12 +247,18 @@ class Converter
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
                 $fieldType = strtolower($fieldType); /** doctrine uses strtolower for all field types */
+
                 if (!in_array($fieldType, $this->typeList)) {
-                    $GLOBALS['log']->debug('Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.$entityName.':'.$fieldName);
+                    $GLOBALS['log']->debug(
+                        'Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.
+                        $entityName.':'.$fieldName
+                    );
+
                     continue;
                 }
 
                 $columnName = Util::toUnderScore($fieldName);
+
                 if (!$tables[$entityName]->hasColumn($columnName)) {
                     $tables[$entityName]->addColumn($columnName, $fieldType, $this->getDbFieldParams($fieldParams));
                 }
@@ -271,6 +288,7 @@ class Converter
                         if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
                             $tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
                         }
+
                         break;
                 }
             }
@@ -283,7 +301,7 @@ class Converter
     }
 
     /**
-     * Prepare a relation table for the manyMany relation
+     * Prepare a relation table for the manyMany relation.
      *
      * @param string $entityName
      * @param array $relationParams
@@ -294,6 +312,7 @@ class Converter
     protected function prepareManyMany($entityName, $relationParams, $tables)
     {
         $tableName = Util::toUnderScore($relationParams['relationName']);
+
         $GLOBALS['log']->debug('DBAL: prepareManyMany invoked for ' . $entityName, [
             'tableName' => $tableName, 'parameters' => $relationParams
         ]);
@@ -304,6 +323,7 @@ class Converter
         }
 
         $table = $this->getSchema()->createTable($tableName);
+
         $table->addColumn('id', 'int', $this->getDbFieldParams(array(
             'type' => 'id',
             'len' => $this->defaultLength['int'],
@@ -312,19 +332,24 @@ class Converter
 
         //add midKeys to a schema
         $uniqueIndex = array();
+
         if (empty($relationParams['midKeys'])) {
             $GLOBALS['log']->debug('REBUILD: midKeys are empty!', [
                 'scope' => $entityName, 'tableName' => $tableName,
                 'parameters' => $relationParams
             ]);
-        } else {
+        }
+        else {
             foreach($relationParams['midKeys'] as $index => $midKey) {
                 $columnName = Util::toUnderScore($midKey);
+
                 $table->addColumn($columnName, $this->idParams['dbType'], $this->getDbFieldParams(array(
                     'type' => 'foreignId',
                     'len' => $this->idParams['len'],
                 )));
+
                 $table->addIndex(array($columnName), SchemaUtils::generateIndexName($columnName));
+
                 $uniqueIndex[] = $columnName;
             }
         }
@@ -341,7 +366,11 @@ class Converter
                     ));
                 }
 
-                $table->addColumn(Util::toUnderScore($fieldName), $fieldParams['type'], $this->getDbFieldParams($fieldParams));
+                $table->addColumn(
+                    Util::toUnderScore($fieldName),
+                    $fieldParams['type'],
+                    $this->getDbFieldParams($fieldParams)
+                );
             }
         } //END: add additionalColumns
 
@@ -384,7 +413,9 @@ class Converter
     protected function addIndexes($table, array $indexes)
     {
         foreach($indexes as $indexName => $indexParams) {
-            $indexType = !empty($indexParams['type']) ? $indexParams['type'] : SchemaUtils::getIndexTypeByIndexDefs($indexParams);
+            $indexType = !empty($indexParams['type']) ?
+                $indexParams['type'] :
+                SchemaUtils::getIndexTypeByIndexDefs($indexParams);
 
             switch ($indexType) {
                 case 'index':
@@ -426,6 +457,7 @@ class Converter
                 if ($this->getMaxIndexLength() < 3072) {
                     $fieldParams['utf8mb3'] = true;
                 }
+
                 break;
 
             case 'array':
@@ -444,7 +476,11 @@ class Converter
                 break;
         }
 
-        if ($fieldParams['type'] != 'id' && isset($fieldParams['autoincrement']) && $fieldParams['autoincrement']) {
+        if (
+            $fieldParams['type'] != 'id' &&
+            isset($fieldParams['autoincrement']) &&
+            $fieldParams['autoincrement']
+        ) {
             $dbFieldParams['notnull'] = true;
             $dbFieldParams['unsigned'] = true;
         }
@@ -457,7 +493,9 @@ class Converter
 
         if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {
             $dbFieldParams['platformOptions'] = array(
-                'collation' => (isset($fieldParams['binary']) && $fieldParams['binary']) ? 'utf8_bin' : 'utf8_unicode_ci',
+                'collation' => (isset($fieldParams['binary']) && $fieldParams['binary']) ?
+                    'utf8_bin' :
+                'utf8_unicode_ci',
             );
         }
 
@@ -465,9 +503,10 @@ class Converter
     }
 
     /**
-     * Get custom table definition in "application/Espo/Core/Utils/Database/Schema/tables/" and in metadata 'additionalTables'
+     * Get custom table definition in
+     * "application/Espo/Core/Utils/Database/Schema/tables/" and in metadata 'additionalTables'.
      *
-     * @param  array  $ormMeta
+     * @param array $ormMeta
      *
      * @return array
      */
@@ -477,7 +516,10 @@ class Converter
 
         if (!empty($this->tablePaths['modulePath'])) {
             $moduleDir = strstr($this->tablePaths['modulePath'], '{*}', true);
-            $moduleList = isset($this->metadata) ? $this->getMetadata()->getModuleList() : $this->getFileManager()->getFileList($moduleDir, false, '', false);
+
+            $moduleList = isset($this->metadata) ?
+                $this->getMetadata()->getModuleList() :
+                $this->getFileManager()->getFileList($moduleDir, false, '', false);
 
             foreach ($moduleList as $moduleName) {
                 $modulePath = str_replace('{*}', $moduleName, $this->tablePaths['modulePath']);
@@ -499,7 +541,7 @@ class Converter
         return $customTables;
     }
 
-    protected function getDependentEntities($entityList, $ormMeta, $dependentEntities = array())
+    protected function getDependentEntities($entityList, $ormMeta, $dependentEntities = [])
     {
         if (is_string($entityList)) {
             $entityList = (array) $entityList;
@@ -517,8 +559,13 @@ class Converter
                 foreach ($ormMeta[$entityName]['relations'] as $relationName => $relationParams) {
                     if (isset($relationParams['entity'])) {
                         $relationEntity = $relationParams['entity'];
+
                         if (!in_array($relationEntity, $dependentEntities)) {
-                            $dependentEntities = $this->getDependentEntities($relationEntity, $ormMeta, $dependentEntities);
+                            $dependentEntities = $this->getDependentEntities(
+                                $relationEntity,
+                                $ormMeta,
+                                $dependentEntities
+                            );
                         }
                     }
                 }
@@ -531,7 +578,7 @@ class Converter
 
     protected function loadData($path)
     {
-        $tables = array();
+        $tables = [];
 
         if (!file_exists($path)) {
             return $tables;
@@ -540,7 +587,8 @@ class Converter
         $fileList = $this->getFileManager()->getFileList($path, false, '\.php$', true);
 
         foreach($fileList as $fileName) {
-            $fileData = $this->getFileManager()->getPhpContents( array($path, $fileName) );
+            $fileData = $this->getFileManager()->getPhpContents($path . '/' . $fileName);
+
             if (is_array($fileData)) {
                 $tables = Util::merge($tables, $fileData);
             }
