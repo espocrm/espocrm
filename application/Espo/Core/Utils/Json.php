@@ -51,7 +51,7 @@ class Json
      * JSON decode.
      *
      * @param bool $associative Objects will be converted to associative.
-     * @return object|array
+     * @return mixed
      *
      * @throws JsonException
      */
