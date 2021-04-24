@@ -225,8 +225,8 @@ class Util
     /**
      * Get a full path of the file.
      *
-     * @param string | array $folderPath - Folder path, Ex. myfolder
-     * @param string $filePath - File path, Ex. file.json
+     * @param string|array $folderPath
+     * @param string $filePath
      *
      * @return string
      */
@@ -234,15 +234,18 @@ class Util
     {
         if (is_array($folderPath)) {
             $fullPath = '';
+
             foreach ($folderPath as $path) {
                 $fullPath = static::concatPath($fullPath, $path);
             }
+
             return static::fixPath($fullPath);
         }
 
         if (empty($filePath)) {
             return static::fixPath($folderPath);
         }
+
         if (empty($folderPath)) {
             return static::fixPath($filePath);
         }

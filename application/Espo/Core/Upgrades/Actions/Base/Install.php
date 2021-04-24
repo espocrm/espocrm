@@ -226,7 +226,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->deletePackageFiles();
 
         if ($this->getManifestParam('skipBackup')) {
-            $this->getFileManager()->removeInDir([$this->getPath('backupPath'), self::FILES]);
+
+            $path = Util::concatPath($this->getPath('backupPath'), self::FILES);
+
+            $this->getFileManager()->removeInDir($path);
         }
 
         $GLOBALS['log']->info('Installation process ['. $this->getProcessId() .']: End "finalize" step.');
