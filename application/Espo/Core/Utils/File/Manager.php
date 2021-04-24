@@ -406,6 +406,10 @@ class Manager
             Json::decode($currentContents, true):
             [];
 
+        if (!is_array($currentData)) {
+            throw new Error("Neither an array nor object in '{$path}'.");
+        }
+
         $mergedData = Util::merge($currentData, $data);
 
         $jsonOptions = JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;

@@ -158,28 +158,42 @@ class Util
 
         if (is_array($currentArray) && !is_array($newArray)) {
             return $currentArray;
-        } else if (!is_array($currentArray) && is_array($newArray)) {
+        }
+        else if (!is_array($currentArray) && is_array($newArray)) {
             return $newArray;
-        } else if ((!is_array($currentArray) || empty($currentArray)) && (!is_array($newArray) || empty($newArray))) {
-            return array();
+        }
+        else if (
+            (!is_array($currentArray) || empty($currentArray)) &&
+            (!is_array($newArray) || empty($newArray))
+        ) {
+            return [];
         }
 
         foreach ($newArray as $newName => $newValue) {
-
-            if (is_array($newValue) && array_key_exists($newName, $currentArray) && is_array($currentArray[$newName])) {
+            if (
+                is_array($newValue) &&
+                array_key_exists($newName, $currentArray) &&
+                is_array($currentArray[$newName])
+            ) {
 
                 // check __APPEND__ identifier
                 $appendKey = array_search($mergeIdentifier, $newValue, true);
+
                 if ($appendKey !== false) {
                     unset($newValue[$appendKey]);
+
                     $newValue = array_merge($currentArray[$newName], $newValue);
-                } else if (!static::isSingleArray($newValue) || !static::isSingleArray($currentArray[$newName])) {
+                }
+                else if (
+                    !static::isSingleArray($newValue) ||
+                    !static::isSingleArray($currentArray[$newName])
+                ) {
                     $newValue = static::merge($currentArray[$newName], $newValue);
                 }
 
             }
 
-            //check if exists __APPEND__ identifier and remove its
+            // check if exists __APPEND__ identifier and remove its
             if (!isset($currentArray[$newName]) && is_array($newValue)) {
                 $newValue = static::unsetInArrayByValue($mergeIdentifier, $newValue);
             }
@@ -193,9 +207,9 @@ class Util
     /**
      * Unset a value in array recursively.
      *
-     * @param  string $needle
-     * @param  array  $haystack
-     * @param  bool   $reIndex
+     * @param string $needle
+     * @param array $haystack
+     * @param bool $reIndex
      * @return array
      */
     public static function unsetInArrayByValue($needle, array $haystack, $reIndex = true)
@@ -205,8 +219,8 @@ class Util
         foreach($haystack as $key => $value) {
             if (is_array($value)) {
                 $haystack[$key] = static::unsetInArrayByValue($needle, $value);
-            } else if ($needle === $value) {
-
+            }
+            else if ($needle === $value) {
                 unset($haystack[$key]);
 
                 if ($reIndex) {

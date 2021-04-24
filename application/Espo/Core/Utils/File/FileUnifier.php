@@ -105,7 +105,7 @@ class FileUnifier
      * @param array $returns
      * @return array
      */
-    protected function loadData(string $filePath)
+    protected function loadData(string $filePath): array
     {
         if (!$this->fileManager->isFile($filePath)) {
              return [];

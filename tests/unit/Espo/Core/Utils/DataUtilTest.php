@@ -60,15 +60,21 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
         }');
 
         $data1 = $data;
-        DataUtil::unsetByKey($data1, ['Test.fields.fieldVarchar']);
+
+        $data1 = DataUtil::unsetByKey($data1, ['Test.fields.fieldVarchar']);
+
         $this->assertEquals($expectedResultData, $data1);
 
         $data2 = $data;
-        DataUtil::unsetByKey($data2, 'Test.fields.fieldVarchar');
+
+        $data2 = DataUtil::unsetByKey($data2, 'Test.fields.fieldVarchar');
+
         $this->assertEquals($expectedResultData, $data2);
 
         $data3 = $data;
-        DataUtil::unsetByKey($data3, [['Test', 'fields', 'fieldVarchar']]);
+
+        $data3 = DataUtil::unsetByKey($data3, [['Test', 'fields', 'fieldVarchar']]);
+
         $this->assertEquals($expectedResultData, $data3);
     }
 
@@ -109,8 +115,17 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
             }
         }');
 
-        DataUtil::unsetByKey($data, [['Test', 'fields', 'fieldVarchar'], ['Test', 'fields', 'fieldText'], ['Test', 'indexes', 'test', 'name']], true);
-        $this->assertEquals($expectedResultData, $data);
+        $data1 = DataUtil::unsetByKey(
+            $data,
+            [
+                ['Test', 'fields', 'fieldVarchar'],
+                ['Test', 'fields', 'fieldText'],
+                ['Test', 'indexes', 'test', 'name'],
+            ],
+            true
+        );
+
+        $this->assertEquals($expectedResultData, $data1);
     }
 
     public function testUnsetByValue()
@@ -137,8 +152,9 @@ class DataUtilTest extends \PHPUnit\Framework\TestCase
             }
         }');
 
-        DataUtil::unsetByValue($data, '__APPEND__');
-        $this->assertEquals($expectedResultData, $data);
+        $data1 = DataUtil::unsetByValue($data, '__APPEND__');
+
+        $this->assertEquals($expectedResultData, $data1);
     }
 
     public function testMerge1()
