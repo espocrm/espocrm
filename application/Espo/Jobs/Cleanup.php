@@ -63,7 +63,7 @@ class Cleanup implements Job
 
     protected $config;
     protected $entityManager;
-    protected $metedata;
+    protected $metadata;
     protected $fileManager;
     protected $injectableFactory;
     protected $selectManagerFactory;
