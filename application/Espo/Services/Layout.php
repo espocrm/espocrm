@@ -78,6 +78,9 @@ class Layout
         $this->user = $user;
     }
 
+    /**
+     * @return array|object
+     */
     public function getOriginal(string $scope, string $name, ?string $setId = null)
     {
         $result = null;
@@ -91,8 +94,9 @@ class Layout
         }
 
         if (!$result) {
-            $result = $this->layout->get($scope, $name);
-            $result = json_decode($result);
+            $result = json_decode(
+                $this->layout->get($scope, $name)
+            );
         }
 
         if ($result === false) {
@@ -264,11 +268,7 @@ class Layout
 
         $layoutManager->set($data, $scope, $name);
 
-        $result = $layoutManager->save();
-
-        if ($result === false) {
-            throw new Error("Error while saving layout.");
-        }
+        $layoutManager->save();
 
         $this->dataManager->updateCacheTimestamp();
 

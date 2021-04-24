@@ -32,9 +32,12 @@ namespace Espo\Tools\LayoutManager;
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\Layout,
-    Utils\Util,
     Utils\Json,
+    Exceptions\Error,
 };
+
+use const JSON_PRETTY_PRINT;
+use const JSON_UNESCAPED_UNICODE;
 
 class LayoutManager
 {
@@ -50,11 +53,6 @@ class LayoutManager
         $this->layout = $layout;
     }
 
-    protected function sanitizeInput($name)
-    {
-        return preg_replace("([\.]{2,})", '', $name);
-    }
-
     /**
      * Get layout in string format.
      */
@@ -65,20 +63,22 @@ class LayoutManager
 
     /**
      * Set layout data.
+     *
+     * @param mixed $data
      */
-    public function set($data, string $scope, string $name)
+    public function set($data, string $scope, string $name): void
     {
         $scope = $this->sanitizeInput($scope);
         $name = $this->sanitizeInput($name);
 
         if (empty($scope) || empty($name)) {
-            return false;
+            throw new Error("Error while setting layout.");
         }
 
         $this->changedData[$scope][$name] = $data;
     }
 
-    public function resetToDefault(string $scope, string $name)
+    public function resetToDefault(string $scope, string $name): ?string
     {
         $scope = $this->sanitizeInput($scope);
         $name = $this->sanitizeInput($name);
@@ -98,62 +98,53 @@ class LayoutManager
 
     /**
      * Save changes.
+     *
+     * @throws Error
      */
-    public function save()
+    public function save(): void
     {
         $result = true;
 
-        if (!empty($this->changedData)) {
-            foreach ($this->changedData as $scope => $rowData) {
-                foreach ($rowData as $layoutName => $layoutData) {
-                    if (empty($scope) || empty($layoutName)) {
-                        continue;
-                    }
-                    $layoutPath = $this->getDirPath($scope, true);
-                    $data = Json::encode($layoutData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        if (empty($this->changedData)) {
+            return;
+        }
 
-                    $result &= $this->fileManager->putContents(array($layoutPath, $layoutName.'.json'), $data);
+        foreach ($this->changedData as $scope => $rowData) {
+            foreach ($rowData as $layoutName => $layoutData) {
+                if (empty($scope) || empty($layoutName)) {
+                    continue;
                 }
+
+                $layoutPath = $this->getDirPath($scope, true);
+
+                $data = Json::encode($layoutData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+                $result &= $this->fileManager->putContents([$layoutPath, $layoutName.'.json'], $data);
             }
         }
 
-        if ($result == true) {
-            $this->clearChanges();
+        if (!$result) {
+            throw new Error("Error while saving layout.");
         }
 
-        return (bool) $result;
+        $this->clearChanges();
     }
 
     /**
      * Clear unsaved changes.
      */
-    public function clearChanges()
+    public function clearChanges(): void
     {
         $this->changedData = [];
-    }
-
-    /**
-     * Merge layout data.
-     * Ex. $scope= Account, $name= detail then will be created a file layoutFolder/Account/detail.json
-     */
-    public function merge($data, string $scope, string $name)
-    {
-        $scope = $this->sanitizeInput($scope);
-        $name = $this->sanitizeInput($name);
-
-        $prevData = $this->get($scope, $name);
-
-        $prevDataArray = Json::getArrayData($prevData);
-        $dataArray = Json::getArrayData($data);
-
-        $data = Util::merge($prevDataArray, $dataArray);
-        $data = Json::encode($data);
-
-        return $this->set($data, $scope, $name);
     }
 
     protected function getDirPath(string $entityType, bool $isCustom = false): string
     {
         return $this->layout->getDirPath($entityType, $isCustom);
+    }
+
+    protected function sanitizeInput(string $name): string
+    {
+        return preg_replace("([\.]{2,})", '', $name);
     }
 }
