@@ -400,8 +400,9 @@ class Manager
             throw new Error('FileManager: Failed to read file [' . $fullPath .'].');
         }
 
-        $savedDataArray = Json::getArrayData($fileContent);
-        $newDataArray = Json::getArrayData($content);
+        $savedDataArray = Json::decode($fileContent, true);
+
+        $newDataArray = Json::decode($content, true);
 
         if (isset($removeOptions)) {
             $savedDataArray = Util::unsetInArray($savedDataArray, $removeOptions);
@@ -462,7 +463,7 @@ class Manager
             return true;
         }
 
-        $currentDataArray = Json::getArrayData($currentData);
+        $currentDataArray = Json::decode($currentData, true);
 
         $unsettedData = Util::unsetInArray($currentDataArray, $unsets, true);
 

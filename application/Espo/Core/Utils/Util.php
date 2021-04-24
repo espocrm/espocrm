@@ -35,7 +35,6 @@ class Util
 
     protected static $reservedWordList = ['Case'];
 
-
     /**
      * Get a folder separator.
      *
@@ -507,17 +506,18 @@ class Util
     }
 
     /**
-     * Check if two variables are equals.
+     * Check if two variables are equal.
      *
-     * @param  mixed  $var1
-     * @param  mixed  $var2
+     * @param mixed $var1
+     * @param mixed $var2
      * @return boolean
      */
-    public static function isEquals($var1, $var2)
+    public static function areEqual($var1, $var2): bool
     {
         if (is_array($var1)) {
             static::ksortRecursive($var1);
         }
+
         if (is_array($var2)) {
             static::ksortRecursive($var2);
         }

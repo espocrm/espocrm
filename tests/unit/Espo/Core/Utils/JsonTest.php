@@ -69,23 +69,4 @@ class JsonTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('data/logs', Json::decode($test)->folder);
     }
-
-    public function testIsJSON()
-    {
-        $this->assertTrue(Json::isJSON('{"database":{"driver":"pdo_mysql","host":"localhost"},"devMode":true}'));
-
-        $this->assertTrue(Json::isJSON('[]'));
-
-        $this->assertTrue(Json::isJSON('{}'));
-
-        $this->assertTrue(Json::isJSON('true'));
-
-        $this->assertFalse(Json::isJSON('some string'));
-
-        $this->assertTrue(Json::isJSON(true));
-        $this->assertEquals('true', json_encode(true));
-
-        $this->assertFalse(Json::isJSON(false));
-        $this->assertEquals('false', json_encode(false));
-    }
 }

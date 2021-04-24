@@ -170,7 +170,7 @@ class Unifier
                         $unsets = Json::decode($fileContent);
                     }
                     else {
-                        $unsets = Json::getArrayData($fileContent);
+                        $unsets = Json::decode($fileContent, true);
                     }
 
                     continue;

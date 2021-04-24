@@ -30,7 +30,6 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Config,
     Utils\Metadata,
     Utils\File\Manager as FileManager,
@@ -50,12 +49,19 @@ class Route
     ];
 
     private $config;
+
     private $metadata;
+
     private $fileManager;
+
     private $dataCache;
 
-    public function __construct(Config $config, Metadata $metadata, FileManager $fileManager, DataCache $dataCache)
-    {
+    public function __construct(
+        Config $config,
+        Metadata $metadata,
+        FileManager $fileManager,
+        DataCache $dataCache
+    ) {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
@@ -122,13 +128,7 @@ class Route
 
         $content = $this->fileManager->getContents($routeFile);
 
-        $data = Json::getArrayData($content);
-
-        if (empty($data)) {
-            $GLOBALS['log']->warning("Route: No data or syntax error in '{$routeFile}'.");
-
-            return $currentData;
-        }
+        $data = Json::decode($content, true);
 
         return $this->appendRoutesToData($currentData, $data);
     }
@@ -209,7 +209,7 @@ class Route
     static protected function isRouteInList(array $newRoute, array $routeList): bool
     {
         foreach ($routeList as $route) {
-            if (Util::isEquals($route, $newRoute)) {
+            if (Util::areEqual($route, $newRoute)) {
                 return true;
             }
         }

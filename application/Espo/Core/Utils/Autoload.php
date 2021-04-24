@@ -30,7 +30,6 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Autoload\Loader,
     Utils\DataCache,
     Utils\File\Manager as FileManager,
@@ -51,13 +50,21 @@ class Autoload
     ];
 
     protected $config;
+
     protected $metadata;
+
     protected $dataCache;
+
     protected $fileManager;
+
     protected $loader;
 
     public function __construct(
-        Config $config, Metadata $metadata, DataCache $dataCache, FileManager $fileManager, Loader $loader
+        Config $config,
+        Metadata $metadata,
+        DataCache $dataCache,
+        FileManager $fileManager,
+        Loader $loader
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
@@ -88,7 +95,7 @@ class Autoload
         $this->data = $this->loadData();
 
         if ($useCache) {
-            $result = $this->dataCache->store($this->cacheKey, $this->data);
+            $this->dataCache->store($this->cacheKey, $this->data);
         }
     }
 
@@ -115,13 +122,7 @@ class Autoload
 
         $content = $this->fileManager->getContents($filePath);
 
-        $arrayContent = Json::getArrayData($content);
-
-        if (empty($arrayContent)) {
-            $GLOBALS['log']->error("Autoload: Empty file or syntax error in '{$filePath}'.");
-
-            return [];
-        }
+        $arrayContent = Json::decode($content, true);
 
         return $this->normalizeData($arrayContent);
     }

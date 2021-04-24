@@ -57,42 +57,4 @@ class Json
     {
         return json_decode($json, $associative, 512, JSON_THROW_ON_ERROR);
     }
-
-    /**
-     * Check if the string is JSON
-     *
-     * @param string $json
-     * @return bool
-     */
-    public static function isJson(string $json): bool
-    {
-        try {
-            self::decode($json);
-        }
-        catch (JsonException $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-    * Get an array data (if JSON convert to array).
-    *
-    * @param mixed $data.
-    *
-    * @return array|null
-    */
-    public static function getArrayData($data, ?array $returns = []): ?array
-    {
-        if (is_array($data)) {
-            return $data;
-        }
-
-        if (self::isJson($data)) {
-            return self::decode($data, true);
-        }
-
-        return $returns;
-    }
 }
