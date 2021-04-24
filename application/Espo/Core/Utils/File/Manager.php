@@ -484,52 +484,52 @@ class Manager
      *
      * @return bool
      */
-    public function mkdir($path, $permission = null)
+    public function mkdir(string $path, $permission = null): bool
     {
-        $fullPath = $this->concatPaths($path);
-
-        if (file_exists($fullPath) && is_dir($fullPath)) {
+        if (file_exists($path) && is_dir($path)) {
             return true;
         }
 
-        $parentDirPath = dirname($fullPath);
+        $parentDirPath = dirname($path);
 
         if (!file_exists($parentDirPath)) {
             $this->mkdir($parentDirPath, $permission);
         }
 
-        $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($fullPath);
+        $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($path);
 
         if (!isset($permission)) {
             $permission = (string) $defaultPermissions['dir'];
+
             $permission = base_convert($permission, 8, 10);
         }
 
         try {
             $umask = umask(0);
-            $result = mkdir($fullPath, $permission);
+
+            $result = mkdir($path, $permission);
 
             if ($umask) {
                 umask($umask);
             }
 
             if (!empty($defaultPermissions['user'])) {
-                $this->getPermissionUtils()->chown($fullPath);
+                $this->getPermissionUtils()->chown($path);
             }
 
             if (!empty($defaultPermissions['group'])) {
-                $this->getPermissionUtils()->chgrp($fullPath);
+                $this->getPermissionUtils()->chgrp($path);
             }
         }
         catch (Exception $e) {
             if (isset($GLOBALS['log'])) {
                 $GLOBALS['log']->critical(
-                    'Permission denied: unable to create the folder on the server: ' . $fullPath
+                    "Permission denied: unable to create the folder on the server: {$path}."
                 );
             }
         }
 
-        return isset($result) ? $result : false;
+        return isset($result) ? (bool) $result : false;
     }
 
     /**
@@ -544,7 +544,6 @@ class Manager
      * @param bool $copyOnlyFiles Copy only files, instead of full path with directories,
      * Ex. $sourcePath = 'data/uploads/extensions/file.json',
      * $destPath = 'data/uploads/backup', result will be 'data/uploads/backup/file.json',
-     * @return bool
      */
     public function copy(
         $sourcePath,
