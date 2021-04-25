@@ -112,7 +112,7 @@ class Map
      * @param $action An action.
      * @param $thresholdLevel An attribute will be treated as forbidden if the level is
      * equal to or lower than the threshold.
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getScopeForbiddenAttributeList(
         string $scope,
@@ -184,7 +184,7 @@ class Map
      * @param $action An action.
      * @param $thresholdLevel An attribute will be treated as forbidden if the level is
      * equal to or lower than the threshold.
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getScopeForbiddenFieldList(
         string $scope,

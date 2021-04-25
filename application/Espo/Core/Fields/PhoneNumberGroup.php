@@ -38,7 +38,7 @@ use RuntimeException;
 class PhoneNumberGroup
 {
     /**
-     * @var array<PhoneNumber>
+     * @var array<int, PhoneNumber>
      */
     private $list = [];
 
@@ -48,7 +48,7 @@ class PhoneNumberGroup
     private $primary = null;
 
     /**
-     * @param array<PhoneNumber> $list
+     * @param array<int, PhoneNumber> $list
      *
      * @throws RuntimeException
      */
@@ -95,7 +95,7 @@ class PhoneNumberGroup
     /**
      * Get a list of all phone numbers.
      *
-     * @return array<PhoneNumber>
+     * @return array<int, PhoneNumber>
      */
     public function getList(): array
     {
@@ -113,7 +113,7 @@ class PhoneNumberGroup
     /**
      * Get a list of phone numbers w/o a primary.
      *
-     * @return array<PhoneNumber>
+     * @return array<int, PhoneNumber>
      */
     public function getSecondaryList(): array
     {
@@ -133,7 +133,7 @@ class PhoneNumberGroup
     /**
      * Get a list of phone numbers represented as strings.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getNumberList(): array
     {
@@ -191,7 +191,7 @@ class PhoneNumberGroup
     /**
      * Clone with an added phone number list.
      *
-     * @param array<PhoneNumber> $list
+     * @param array<int, PhoneNumber> $list
      */
     public function withAddedList(array $list): self
     {
@@ -249,7 +249,7 @@ class PhoneNumberGroup
     /**
      * Create from a phone number list. A first item will be set as primary.
      *
-     * @param array<PhoneNumber> $list
+     * @param array<int, PhoneNumber> $list
      */
     public static function fromList(array $list): self
     {

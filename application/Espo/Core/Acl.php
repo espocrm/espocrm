@@ -200,7 +200,7 @@ class Acl
      * Get attributes forbidden for a user.
      *
      * @param $thresholdLevel Should not be used. Stands for possible future enhancements.     *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getScopeForbiddenAttributeList(
         string $scope,
@@ -216,7 +216,7 @@ class Acl
      * Get fields forbidden for a user.
      *
      * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getScopeForbiddenFieldList(
         string $scope,
@@ -232,7 +232,7 @@ class Acl
      * Get links forbidden for a user.
      *
      * @param $thresholdLevel Should not be used. Stands for possible future enhancements.
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getScopeForbiddenLinkList(
         string $scope,
@@ -266,8 +266,8 @@ class Acl
     /**
      * Get a restricted field list for a specific scope by a restriction type.
      *
-     * @param string|array<string> $type
-     * @return array<string>
+     * @param string|array<int, string> $type
+     * @return array<int, string>
      */
     public function getScopeRestrictedFieldList(string $scope, $type): array
     {
@@ -277,8 +277,8 @@ class Acl
     /**
      * Get a restricted attribute list for a specific scope by a restriction type.
      *
-     * @param string|array<string> $type
-     * @return array<string>
+     * @param string|array<int, string> $type
+     * @return array<int, string>
      */
     public function getScopeRestrictedAttributeList(string $scope, $type): array
     {
@@ -288,8 +288,8 @@ class Acl
     /**
      * Get a restricted link list for a specific scope by a restriction type.
      *
-     * @param string|array<string> $type
-     * @return array<string>
+     * @param string|array<int, string> $type
+     * @return array<int, string>
      */
     public function getScopeRestrictedLinkList(string $scope, $type): array
     {

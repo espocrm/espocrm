@@ -38,7 +38,7 @@ use RuntimeException;
 class EmailAddressGroup
 {
     /**
-     * @var array<EmailAddress>
+     * @var array<int, EmailAddress>
      */
     private $list = [];
 
@@ -48,7 +48,7 @@ class EmailAddressGroup
     private $primary = null;
 
     /**
-     * @param array<EmailAddress> $list
+     * @param array<int, EmailAddress> $list
      *
      * @throws RuntimeException
      */
@@ -95,7 +95,7 @@ class EmailAddressGroup
     /**
      * Get a list of all email addresses.
      *
-     * @return array<EmailAddress>
+     * @return array<int, EmailAddress>
      */
     public function getList(): array
     {
@@ -113,7 +113,7 @@ class EmailAddressGroup
     /**
      * Get a list of email addresses w/o a primary.
      *
-     * @return array<EmailAddress>
+     * @return array<int, EmailAddress>
      */
     public function getSecondaryList(): array
     {
@@ -133,7 +133,7 @@ class EmailAddressGroup
     /**
      * Get a list of email addresses represented as strings.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getAddressList(): array
     {
@@ -191,7 +191,7 @@ class EmailAddressGroup
     /**
      * Clone with an added email address list.
      *
-     * @param array<EmailAddress> $list
+     * @param array<int, EmailAddress> $list
      */
     public function withAddedList(array $list): self
     {
@@ -249,7 +249,7 @@ class EmailAddressGroup
     /**
      * Create from an email address list. A first item will be set as primary.
      *
-     * @param array<EmailAddress> $list
+     * @param array<int, EmailAddress> $list
      */
     public static function fromList(array $list): self
     {

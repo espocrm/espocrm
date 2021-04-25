@@ -93,7 +93,7 @@ class ConfigDataProvider
     /**
      * Allowed methods of 2FA.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getTwoFactorMethodList(): array
     {

@@ -61,7 +61,7 @@ class CurrencyConfigDataProvider
     /**
      * Get a list of available currencies.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getCurrencyList(): array
     {

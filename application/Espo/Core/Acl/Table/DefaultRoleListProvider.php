@@ -49,7 +49,7 @@ class DefaultRoleListProvider implements RoleListProvider
     }
 
     /**
-     * @return array<Role>
+     * @return array<int, Role>
      */
     public function get(): array
     {

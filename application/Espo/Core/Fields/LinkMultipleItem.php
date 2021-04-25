@@ -91,7 +91,7 @@ class LinkMultipleItem
     /**
      * Get a list of set columns.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getColumnList(): array
     {

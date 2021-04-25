@@ -116,7 +116,7 @@ class Metadata
     /**
      * Get a list of entity types.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getEntityTypeList(): array
     {

@@ -71,7 +71,7 @@ class EntityDefs
     /**
      * Get an attribute name list.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getAttributeNameList(): array
     {
@@ -81,7 +81,7 @@ class EntityDefs
     /**
      * Get a relation name list.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getRelationNameList(): array
     {
@@ -91,7 +91,7 @@ class EntityDefs
     /**
      * Get an index name list.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getIndexNameList(): array
     {
@@ -101,7 +101,7 @@ class EntityDefs
     /**
      * Get a field name list.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getFieldNameList(): array
     {
@@ -111,7 +111,7 @@ class EntityDefs
     /**
      * Get an attribute definitions list.
      *
-     * @return array<AttributeDefs>
+     * @return array<int, AttributeDefs>
      */
     public function getAttributeList(): array
     {
@@ -127,7 +127,7 @@ class EntityDefs
     /**
      * Get a relation definitions list.
      *
-     * @return array<RelationDefs>
+     * @return array<int, RelationDefs>
      */
     public function getRelationList(): array
     {
@@ -143,7 +143,7 @@ class EntityDefs
     /**
      * Get an index definitions list.
      *
-     * @return array<IndexDefs>
+     * @return array<int, IndexDefs>
      */
     public function getIndexList(): array
     {
@@ -159,7 +159,7 @@ class EntityDefs
     /**
      * Get a field definitions list.
      *
-     * @return array<FieldDefs>
+     * @return array<int, FieldDefs>
      */
     public function getFieldList(): array
     {

@@ -39,7 +39,7 @@ class LinkMultiple
     private $list = [];
 
     /**
-     * @param array<LinkMultipleItem> $list
+     * @param array<int, LinkMultipleItem> $list
      *
      * @throws RuntimeException
      */
@@ -72,7 +72,7 @@ class LinkMultiple
     /**
      * Get a list of IDs.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getIdList(): array
     {
@@ -88,7 +88,7 @@ class LinkMultiple
     /**
      * Get a list of items.
      *
-     * @return array<LinkMultipleItem>
+     * @return array<int, LinkMultipleItem>
      */
     public function getList(): array
     {
@@ -128,7 +128,7 @@ class LinkMultiple
     /**
      * Clone with an added item list.
      * .
-     * @param array<LinkMultipleItem> $list
+     * @param array<int, LinkMultipleItem> $list
      *
      * @throws RuntimeException
      */
@@ -180,7 +180,7 @@ class LinkMultiple
     /**
      * Create from an item list.
      *
-     * @param array<LinkMultipleItem> $list
+     * @param array<int, LinkMultipleItem> $list
      *
      * @throws RuntimeException
      */

@@ -32,7 +32,7 @@ namespace Espo\Core\Acl\Table;
 interface RoleListProvider
 {
     /**
-     * @return array<Role>
+     * @return array<int, Role>
      */
     public function get(): array;
 }

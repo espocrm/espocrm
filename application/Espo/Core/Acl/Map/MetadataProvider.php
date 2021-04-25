@@ -45,7 +45,7 @@ class MetadataProvider
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getScopeList(): array
     {
@@ -58,7 +58,7 @@ class MetadataProvider
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getScopeFieldList(string $scope): array
     {
@@ -66,7 +66,7 @@ class MetadataProvider
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getPermissionList(): array
     {

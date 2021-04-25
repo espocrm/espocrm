@@ -46,7 +46,7 @@ class Defs
     /**
      * Get an entity type list.
      *
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getEntityTypeList(): array
     {
@@ -56,7 +56,7 @@ class Defs
     /**
      * Get an entity definitions list.
      *
-     * @return array<EntityDefs>
+     * @return array<int, EntityDefs>
      */
     public function getEntityList(): array
     {

@@ -59,7 +59,7 @@ class RoleListProvider implements RoleListProviderInterface
     }
 
     /**
-     * @return array<Role>
+     * @return array<int, Role>
      */
     public function get(): array
     {

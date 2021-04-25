@@ -40,12 +40,12 @@ class Params
     private $options;
 
     /**
-     * @var array<string>
+     * @var array<int, string>
      */
     private $flagList;
 
     /**
-     * @var array<string>
+     * @var array<int, string>
      */
     private $argumentList;
 
@@ -65,7 +65,7 @@ class Params
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getFlagList(): array
     {
@@ -73,7 +73,7 @@ class Params
     }
 
     /**
-     * @return array<string>
+     * @return array<int, string>
      */
     public function getArgumentList(): array
     {
