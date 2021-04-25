@@ -8,9 +8,6 @@
     "ormMetadataData": {
         "className": "Espo\\Core\\Utils\\Metadata\\OrmMetadataData"
     },
-    "classParser": {
-        "className": "Espo\\Core\\Utils\\File\\ClassParser"
-    },
     "classFinder": {
         "className": "Espo\\Core\\Utils\\ClassFinder"
     },

@@ -30,18 +30,16 @@
 namespace Espo\Core\Utils\File;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Util,
     Utils\File\Manager as FileManager,
     Utils\Config,
     Utils\Metadata,
     Utils\DataCache,
-
 };
 
 use ReflectionClass;
 
-class ClassParser
+class ClassMap
 {
     private $fileManager;
 
@@ -66,11 +64,13 @@ class ClassParser
     /**
      * Return paths to class files.
      *
-     * @param string | array $paths in format [
+     * @param string|array $paths in the format ```
+     * [
      *    'corePath' => '',
      *    'modulePath' => '',
      *    'customPath' => '',
      * ]
+     * ```
      * @param $allowedMethods If specified, classes w/o specified method will be ignored.
      */
     public function getData(
@@ -122,7 +122,7 @@ class ClassParser
         return $data;
     }
 
-    protected function getClassNameHash($dirs, ?array $allowedMethods = [], bool $subDirs = false)
+    private function getClassNameHash($dirs, ?array $allowedMethods = [], bool $subDirs = false): array
     {
         if (is_string($dirs)) {
             $dirs = (array) $dirs;
@@ -141,13 +141,13 @@ class ClassParser
         return $data;
     }
 
-    protected function fillHashFromFileList(
+    private function fillHashFromFileList(
         array $fileList,
         string $dir,
         ?array $allowedMethods,
         array &$data,
         string $category = ''
-    ) {
+    ): void {
 
         foreach ($fileList as $key => $file) {
             if (is_string($key)) {

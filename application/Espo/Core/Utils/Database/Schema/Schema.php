@@ -40,7 +40,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\File\Manager as FileManager,
     ORM\EntityManager,
-    Utils\File\ClassParser,
+    Utils\File\ClassMap,
     Utils\Metadata\OrmMetadataData,
     Utils\Util,
     Utils\Database\Helper,
@@ -53,10 +53,14 @@ use Throwable;
 class Schema
 {
     private $config;
+
     private $metadata;
+
     private $fileManager;
+
     private $entityManager;
-    private $classParser;
+
+    private $classMap;
 
     private $comparator;
 
@@ -93,14 +97,14 @@ class Schema
         Metadata $metadata,
         FileManager $fileManager,
         EntityManager $entityManager,
-        ClassParser $classParser,
+        ClassMap $classMap,
         OrmMetadataData $ormMetadataData
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->entityManager = $entityManager;
-        $this->classParser = $classParser;
+        $this->classMap = $classMap;
 
         $this->databaseHelper = new Helper($this->config);
 
@@ -143,11 +147,6 @@ class Schema
     protected function getConverter()
     {
         return $this->converter;
-    }
-
-    protected function getClassParser()
-    {
-        return $this->classParser;
     }
 
     public function getPlatform()
@@ -287,7 +286,7 @@ class Schema
     {
         $methods = ['beforeRebuild', 'afterRebuild'];
 
-        $rebuildActions = $this->getClassParser()->getData($this->rebuildActionsPath, null, $methods);
+        $rebuildActions = $this->classMap->getData($this->rebuildActionsPath, null, $methods);
 
         $classes = [];
 

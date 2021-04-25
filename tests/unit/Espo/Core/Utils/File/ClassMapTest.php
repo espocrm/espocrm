@@ -31,11 +31,11 @@ namespace tests\unit\Espo\Core\Utils\File;
 
 use tests\unit\ReflectionHelper;
 
-use Espo\Core\Utils\File\ClassParser;
+use Espo\Core\Utils\File\ClassMAp;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
 
-class ClassParserTest extends \PHPUnit\Framework\TestCase
+class ClassMapTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
@@ -52,8 +52,11 @@ class ClassParserTest extends \PHPUnit\Framework\TestCase
 
         $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
 
-        $this->object = new ClassParser(
-            $this->objects['fileManager'], $this->objects['config'], $this->objects['metadata'], $this->dataCache
+        $this->object = new ClassMap(
+            $this->objects['fileManager'],
+            $this->objects['config'],
+            $this->objects['metadata'],
+            $this->dataCache
         );
 
         $this->reflection = new ReflectionHelper($this->object);

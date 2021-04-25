@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Utils\File\ClassMap;
+
 /**
  * Finds classes of a specific category. Category examples: Services, Controllers.
  * First it checks ib the custom folder, then modules, then the internal folder.
@@ -36,19 +38,19 @@ namespace Espo\Core\Utils;
  */
 class ClassFinder
 {
-    protected $classParser;
+    private $classMap;
 
-    protected $pathsTemplate = [
+    private $pathsTemplate = [
         'corePath' => 'application/Espo/{category}',
         'modulePath' => 'application/Espo/Modules/{*}/{category}',
         'customPath' => 'custom/Espo/Custom/{category}',
     ];
 
-    protected $dataHash = [];
+    private $dataHashMap = [];
 
-    public function __construct(File\ClassParser $classParser)
+    public function __construct(ClassMap $classMap)
     {
-        $this->classParser = $classParser;
+        $this->classMap = $classMap;
     }
 
     /**
@@ -64,37 +66,39 @@ class ClassFinder
     }
 
     /**
-     * Get [name => class-name] map.
+     * Get a name => class name map.
+     *
+     * @return array<string, string>
      */
     public function getMap(string $category, bool $subDirs = false): array
     {
-        if (!array_key_exists($category, $this->dataHash)) {
+        if (!array_key_exists($category, $this->dataHashMap)) {
             $this->load($category, $subDirs);
         }
 
-        return $this->dataHash[$category] ?? [];
+        return $this->dataHashMap[$category] ?? [];
     }
 
-    protected function load(string $category, bool $subDirs = false)
+    private function load(string $category, bool $subDirs = false): void
     {
         $path = $this->buildPaths($category);
         $cacheFile = $this->buildCacheKey($category);
 
-        $this->dataHash[$category] = $this->classParser->getData($path, $cacheFile, null, $subDirs);
+        $this->dataHashMap[$category] = $this->classMap->getData($path, $cacheFile, null, $subDirs);
     }
 
-    protected function buildPaths(string $category): array
+    private function buildPaths(string $category): array
     {
         $paths = [];
 
         foreach ($this->pathsTemplate as $key => $value) {
-            $path[$key] = str_replace('{category}', $category, $value);
+            $paths[$key] = str_replace('{category}', $category, $value);
         }
 
-        return $path;
+        return $paths;
     }
 
-    protected function buildCacheKey(string $category): string
+    private function buildCacheKey(string $category): string
     {
         return 'classmap' . str_replace('/', '', $category);
     }
