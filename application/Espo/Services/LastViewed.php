@@ -62,31 +62,38 @@ class LastViewed
 
     public function getList($params): object
     {
-        $repository = $this->entityManager->getRepository('ActionHistoryRecord');
+        $repository = $this->entityManager->getRDBRepository('ActionHistoryRecord');
 
         $actionHistoryRecordService = $this->serviceFactory->create('ActionHistoryRecord');
 
         $scopes = $this->metadata->get('scopes');
 
-        $targetTypeList = array_filter(array_keys($scopes), function ($item) use ($scopes) {
-            return !empty($scopes[$item]['object']) || !empty($scopes[$item]['lastViewed']);
-        });
+        $targetTypeList = array_filter(
+            array_keys($scopes),
+            function ($item) use ($scopes) {
+                return !empty($scopes[$item]['object']) || !empty($scopes[$item]['lastViewed']);
+            }
+        );
 
         $offset = $params['offset'];
         $maxSize = $params['maxSize'];
 
-        $selectParams = [
-            'whereClause' => [
-                'userId' => $this->user->id,
+        $collection = $repository
+            ->where([
+                'userId' => $this->user->getId(),
                 'action' => 'read',
-                'targetType' => $targetTypeList
-            ],
-            'orderBy' => [[4, true]],
-            'select' => ['targetId', 'targetType', 'MAX:number', ['MAX:createdAt', 'createdAt']],
-            'groupBy' => ['targetId', 'targetType']
-        ];
-
-        $collection = $repository->limit($offset, $params['maxSize'] + 1)->find($selectParams);
+                'targetType' => $targetTypeList,
+            ])
+            ->order(4, 'DESC')
+            ->select([
+                'targetId',
+                'targetType',
+                'MAX:number',
+                ['MAX:createdAt', 'createdAt'],
+            ])
+            ->groupBy(['targetId', 'targetType'])
+            ->limit($offset, $params['maxSize'] + 1)
+            ->find();
 
         foreach ($collection as $entity) {
             $actionHistoryRecordService->loadAdditionalFieldsForList($entity);
