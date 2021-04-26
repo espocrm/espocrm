@@ -65,6 +65,7 @@ use Espo\Core\{
     Action\Data as ActionData,
     Action\ActionFactory,
     FieldValidation\Params as FieldValidationParams,
+    FieldProcessing\GeneralLoadProcessor,
 };
 
 use Espo\Tools\{
@@ -199,8 +200,6 @@ class Record implements Crud,
     protected $aclManager = null;
 
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
-
-    const FOLLOWERS_LIMIT = 4;
 
     const FIND_DUPLICATES_LIMIT = 10;
 
@@ -538,61 +537,6 @@ class Record implements Crud,
         return $this->streamService;
     }
 
-    protected function loadIsFollowed(Entity $entity): void
-    {
-        if ($this->getStreamService()->checkIsFollowed($entity)) {
-            $entity->set('isFollowed', true);
-        }
-        else {
-            $entity->set('isFollowed', false);
-        }
-    }
-
-    protected function loadFollowers(Entity $entity)
-    {
-        if ($this->getUser()->isPortal()) {
-            return;
-        }
-
-        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) {
-            return;
-        }
-
-        if (!$this->getAcl()->check($entity, 'stream')) {
-            return;
-        }
-
-        $data = $this->getStreamService()->getEntityFollowers($entity, 0, self::FOLLOWERS_LIMIT);
-
-        if ($data) {
-            $entity->set('followersIds', $data['idList']);
-            $entity->set('followersNames', $data['nameMap']);
-        }
-    }
-
-    protected function loadLinkMultipleFields(Entity $entity)
-    {
-        $fieldDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'fields']) ?? [];
-
-        foreach ($fieldDefs as $field => $defs) {
-            if (
-                isset($defs['type']) &&
-                in_array($defs['type'], ['linkMultiple', 'attachmentMultiple']) &&
-                empty($defs['noLoad']) &&
-                empty($defs['notStorable']) &&
-                $entity->hasRelation($field)
-            ) {
-                $columns = null;
-
-                if (!empty($defs['columns'])) {
-                    $columns = $defs['columns'];
-                }
-
-                $entity->loadLinkMultipleField($field, $columns);
-            }
-        }
-    }
-
     public function loadLinkMultipleFieldsForList(Entity $entity, $selectAttributeList)
     {
         foreach ($selectAttributeList as $attribute) {
@@ -612,43 +556,12 @@ class Record implements Crud,
         }
     }
 
-    protected function loadLinkFields(Entity $entity)
-    {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
-        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', []);
-
-        foreach ($fieldDefs as $field => $defs) {
-            if (isset($defs['type']) && $defs['type'] === 'link') {
-                if (!empty($defs['noLoad'])) {
-                    continue;
-                }
-
-                if (empty($linkDefs[$field])) {
-                    continue;
-                }
-
-                if (empty($linkDefs[$field]['type'])) {
-                    continue;
-                }
-
-                if ($linkDefs[$field]['type'] !== 'hasOne') {
-                    continue;
-                }
-
-                $entity->loadLinkField($field);
-            }
-        }
-    }
-
     protected function loadParentNameFields(Entity $entity)
     {
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
 
         foreach ($fieldDefs as $field => $defs) {
             if (isset($defs['type']) && $defs['type'] == 'linkParent') {
-                $parentId = $entity->get($field . 'Id');
-                $parentType = $entity->get($field . 'Type');
-
                 $entity->loadParentNameField($field);
             }
         }
@@ -746,13 +659,19 @@ class Record implements Crud,
         }
     }
 
+    private function createLoadProcessor(): GeneralLoadProcessor
+    {
+        return $this->injectableFactory->create(GeneralLoadProcessor::class);
+    }
+
     public function loadAdditionalFields(Entity $entity)
     {
-        $this->loadLinkFields($entity);
-        $this->loadLinkMultipleFields($entity);
-        $this->loadParentNameFields($entity);
-        $this->loadIsFollowed($entity);
-        $this->loadFollowers($entity);
+        $loadProcessor = $this->createLoadProcessor();
+
+        $loadProcessor->process($entity);
+
+        //$this->loadParentNameFields($entity);
+
         $this->loadEmailAddressField($entity);
         $this->loadPhoneNumberField($entity);
         $this->loadNotJoinedLinkFields($entity);

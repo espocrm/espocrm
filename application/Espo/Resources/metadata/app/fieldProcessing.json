@@ -1,0 +1,8 @@
+{
+    "loadProcessorClassNameList": [
+        "Espo\\Core\\FieldProcessing\\Link\\LoadProcessor",
+        "Espo\\Core\\FieldProcessing\\LinkMultiple\\LoadProcessor",
+        "Espo\\Core\\FieldProcessing\\LinkParent\\LoadProcessor",
+        "Espo\\Core\\FieldProcessing\\Misc\\StreamLoadProcessor"
+    ]
+}

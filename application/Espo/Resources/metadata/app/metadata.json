@@ -20,6 +20,7 @@
         ["app", "select"],
         ["app", "massActions", "__ANY__", "implementationClassName"],
         ["app", "actions", "__ANY__", "implementationClassName"],
+        ["app", "fieldProcessing"],
         ["selectDefs"],
         ["recordDefs"],
         ["aclDefs"],
