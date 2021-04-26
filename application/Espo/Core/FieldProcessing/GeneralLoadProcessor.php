@@ -45,6 +45,8 @@ class GeneralLoadProcessor
 
     private $metadata;
 
+    private $processorListMapCache = [];
+
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
         $this->injectableFactory = $injectableFactory;
@@ -53,7 +55,7 @@ class GeneralLoadProcessor
 
     public function process(Entity $entity): void
     {
-        foreach ($this->createProcessorList($entity->getEntityType()) as $processor) {
+        foreach ($this->getProcessorList($entity->getEntityType()) as $processor) {
             $processor->process($entity);
         }
     }
@@ -61,13 +63,19 @@ class GeneralLoadProcessor
     /**
      * @return LoadProcessor[]
      */
-    private function createProcessorList(string $entityType): array
+    private function getProcessorList(string $entityType): array
     {
+        if (array_key_exists($entityType, $this->processorListMapCache)) {
+            return $this->processorListMapCache[$entityType];
+        }
+
         $list = [];
 
         foreach ($this->getProcessorClassNameList($entityType) as $className) {
             $list[] = $this->createProcessor($className);
         }
+
+        $this->processorListMapCache[$entityType] = $list;
 
         return $list;
     }

@@ -27,10 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\Link;
+namespace Espo\Core\FieldProcessing\EmailAddress;
 
 use Espo\Core\{
     ORM\Entity,
+    ORM\EntityManager,
     FieldProcessing\LoadProcessor as LoadProcessorInterface,
 };
 
@@ -40,57 +41,31 @@ class LoadProcessor implements LoadProcessorInterface
 {
     private $ormDefs;
 
-    private $fieldListCacheMap = [];
+    private $entityManager;
 
-    public function __construct(OrmDefs $ormDefs)
+    public function __construct(OrmDefs $ormDefs, EntityManager $entityManager)
     {
         $this->ormDefs = $ormDefs;
+        $this->entityManager = $entityManager;
     }
 
     public function process(Entity $entity): void
     {
-        foreach ($this->getFieldList($entity->getEntityType()) as $field) {
-            $entity->loadLinkField($field);
-        }
-    }
+        $entityDefs = $this->ormDefs->getEntity($entity->getEntityType());
 
-    /**
-     * @return string[]
-     */
-    private function getFieldList(string $entityType): array
-    {
-        if (array_key_exists($entityType, $this->fieldListCacheMap)) {
-            return $this->fieldListCacheMap[$entityType];
+        if (!$entityDefs->hasField('emailAddress')) {
+            return;
         }
 
-        $list = [];
-
-        $entityDefs = $this->ormDefs->getEntity($entityType);
-
-        foreach ($entityDefs->getFieldList() as $fieldDefs) {
-            if ($fieldDefs->getType() !== 'link') {
-                continue;
-            }
-
-            if ($fieldDefs->getParam('noLoad')) {
-                continue;
-            }
-
-            $name = $fieldDefs->getName();
-
-            if (!$entityDefs->hasRelation($name)) {
-                continue;
-            }
-
-            if ($entityDefs->getRelation($name)->getType() !== Entity::HAS_ONE) {
-                continue;
-            }
-
-            $list[] = $name;
+        if ($entityDefs->getField('emailAddress')->getType() !== 'email') {
+            return;
         }
 
-        $this->fieldListCacheMap[$entityType] = $list;
+        $emailAddressData = $this->entityManager
+            ->getRepository('EmailAddress')
+            ->getEmailAddressData($entity);
 
-        return $list;
+        $entity->set('emailAddressData', $emailAddressData);
+        $entity->setFetched('emailAddressData', $emailAddressData);
     }
 }

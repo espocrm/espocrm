@@ -567,98 +567,6 @@ class Record implements Crud,
         }
     }
 
-    protected function loadNotJoinedLinkFields(Entity $entity)
-    {
-        $linkDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.links', []);
-
-        foreach ($linkDefs as $link => $defs) {
-            $type = $defs['type'] ?? null;
-
-            if ($type !== 'belongsTo') {
-                continue;
-            }
-
-            if (empty($defs['noJoin']) || empty($defs['entity'])) {
-                continue;
-            }
-
-            $nameAttribute = $link . 'Name';
-            $idAttribute = $link . 'Id';
-
-            if (!$entity->hasAttribute($nameAttribute) || $entity->hasAttribute($idAttribute)) {
-                continue;
-            }
-
-            $id = $entity->get($idAttribute);
-
-            if (!$id) {
-                $entity->set($nameAttribute, null);
-
-                continue;
-            }
-
-            $scope = $defs['entity'];
-
-            if (!$this->getEntityManager()->hasRepository($scope)) {
-                continue;
-            }
-
-            $foreignEntity = $this->getEntityManager()
-                ->getRepository($scope)
-                ->select(['id', 'name'])
-                ->where(['id' => $id])
-                ->findOne();
-
-            if ($foreignEntity) {
-                $entity->set($nameAttribute, $foreignEntity->get('name'));
-
-                continue;
-            }
-
-            $entity->set($nameAttribute, null);
-        }
-    }
-
-    protected function loadEmptyNameLinkFields(Entity $entity)
-    {
-        $linkDefs = $this->getMetadata()->get(['entityDefs', $entity->getEntityType(), 'links'], []);
-
-        foreach ($linkDefs as $link => $defs) {
-            if (!isset($defs['type'])) {
-                continue;
-            }
-
-            if ($defs['type'] !== 'belongsTo') {
-                continue;
-            }
-
-            $nameAttribute = $link . 'Name';
-            $idAttribute = $link . 'Id';
-
-            if ($entity->get($idAttribute) && !$entity->get($nameAttribute)) {
-                $id = $entity->get($idAttribute);
-
-                if (empty($defs['entity'])) {
-                    continue;
-                }
-
-                $scope = $defs['entity'];
-
-                if ($this->getEntityManager()->hasRepository($scope)) {
-                    $foreignEntity = $this->getEntityManager()
-                        ->getRepository($scope)
-                        ->select(['id', 'name'])
-                        ->where(['id' => $id])
-                        ->findOne();
-
-                    if ($foreignEntity) {
-                        $entity->set($nameAttribute, $foreignEntity->get('name'));
-                    }
-                }
-            }
-        }
-    }
-
     private function createLoadProcessor(): GeneralLoadProcessor
     {
         return $this->injectableFactory->create(GeneralLoadProcessor::class);
@@ -669,13 +577,6 @@ class Record implements Crud,
         $loadProcessor = $this->createLoadProcessor();
 
         $loadProcessor->process($entity);
-
-        //$this->loadParentNameFields($entity);
-
-        $this->loadEmailAddressField($entity);
-        $this->loadPhoneNumberField($entity);
-        $this->loadNotJoinedLinkFields($entity);
-        $this->loadEmptyNameLinkFields($entity);
     }
 
     public function loadAdditionalFieldsForList(Entity $entity)
@@ -685,38 +586,6 @@ class Record implements Crud,
 
     public function loadAdditionalFieldsForExport(Entity $entity)
     {
-    }
-
-    protected function loadEmailAddressField(Entity $entity)
-    {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
-
-        if (!empty($fieldDefs['emailAddress']) && $fieldDefs['emailAddress']['type'] == 'email') {
-            $dataAttributeName = 'emailAddressData';
-
-            $emailAddressData = $this->getEntityManager()
-                ->getRepository('EmailAddress')
-                ->getEmailAddressData($entity);
-
-            $entity->set($dataAttributeName, $emailAddressData);
-            $entity->setFetched($dataAttributeName, $emailAddressData);
-        }
-    }
-
-    protected function loadPhoneNumberField(Entity $entity)
-    {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
-
-        if (!empty($fieldDefs['phoneNumber']) && $fieldDefs['phoneNumber']['type'] == 'phone') {
-            $dataAttributeName = 'phoneNumberData';
-
-            $phoneNumberData = $this->getEntityManager()
-                ->getRepository('PhoneNumber')
-                ->getPhoneNumberData($entity);
-
-            $entity->set($dataAttributeName, $phoneNumberData);
-            $entity->setFetched($dataAttributeName, $phoneNumberData);
-        }
     }
 
     /**
