@@ -7,5 +7,8 @@
         "Espo\\Core\\FieldProcessing\\EmailAddress\\LoadProcessor",
         "Espo\\Core\\FieldProcessing\\PhoneNumber\\LoadProcessor",
         "Espo\\Core\\FieldProcessing\\Misc\\StreamLoadProcessor"
+    ],
+    "listLoadProcessorClassNameList": [
+        "Espo\\Core\\FieldProcessing\\LinkParent\\LoadProcessor"
     ]
 }

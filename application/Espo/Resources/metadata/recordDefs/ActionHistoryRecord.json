@@ -1,5 +1,8 @@
 {
     "loadProcessorClassNameList": [
         "Espo\\Core\\FieldProcessing\\LinkParent\\TargetLoadProcessor"
+    ],
+    "listLoadProcessorClassNameList": [
+        "Espo\\Core\\FieldProcessing\\LinkParent\\TargetLoadProcessor"
     ]
 }

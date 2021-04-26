@@ -66,6 +66,7 @@ use Espo\Core\{
     Action\ActionFactory,
     FieldValidation\Params as FieldValidationParams,
     FieldProcessing\GeneralLoadProcessor,
+    FieldProcessing\GeneralListLoadProcessor,
 };
 
 use Espo\Tools\{
@@ -198,6 +199,8 @@ class Record implements Crud,
     protected $user = null;
 
     protected $aclManager = null;
+
+    private $listLoadProcessor;
 
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
@@ -537,39 +540,39 @@ class Record implements Crud,
         return $this->streamService;
     }
 
-    public function loadLinkMultipleFieldsForList(Entity $entity, $selectAttributeList)
+    public function loadLinkMultipleFieldsForList(Entity $entity, array $selectAttributeList): void
     {
         foreach ($selectAttributeList as $attribute) {
-            if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
-                $field = $entity->getAttributeParam($attribute, 'relation');
-
-                if (!$field) {
-                    continue;
-                }
-
-                if ($entity->has($attribute)) {
-                    continue;
-                }
-
-                $entity->loadLinkMultipleField($field);
+            if (!$entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+                continue;
             }
-        }
-    }
 
-    protected function loadParentNameFields(Entity $entity)
-    {
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
+            $field = $entity->getAttributeParam($attribute, 'relation');
 
-        foreach ($fieldDefs as $field => $defs) {
-            if (isset($defs['type']) && $defs['type'] == 'linkParent') {
-                $entity->loadParentNameField($field);
+            if (!$field) {
+                continue;
             }
+
+            if ($entity->has($attribute)) {
+                continue;
+            }
+
+            $entity->loadLinkMultipleField($field);
         }
     }
 
     private function createLoadProcessor(): GeneralLoadProcessor
     {
         return $this->injectableFactory->create(GeneralLoadProcessor::class);
+    }
+
+    private function getListLoadProcessor(): GeneralListLoadProcessor
+    {
+        if (!$this->listLoadProcessor) {
+            $this->listLoadProcessor = $this->injectableFactory->create(GeneralListLoadProcessor::class);
+        }
+
+        return $this->listLoadProcessor;
     }
 
     public function loadAdditionalFields(Entity $entity)
@@ -581,7 +584,9 @@ class Record implements Crud,
 
     public function loadAdditionalFieldsForList(Entity $entity)
     {
-        $this->loadParentNameFields($entity);
+        $loadProcessor = $this->getListLoadProcessor();
+
+        $loadProcessor->process($entity);
     }
 
     public function loadAdditionalFieldsForExport(Entity $entity)

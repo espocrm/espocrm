@@ -34,7 +34,6 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\Util,
     ORM\EntityManager,
-    ORM\Entity,
 };
 
 use Espo\Entities\User;
@@ -89,8 +88,9 @@ class LastViewed
 
         $collection = $repository->limit($offset, $params['maxSize'] + 1)->find($selectParams);
 
-        foreach ($collection as $i => $entity) {
-            $actionHistoryRecordService->loadParentNameFields($entity);
+        foreach ($collection as $entity) {
+            $actionHistoryRecordService->loadAdditionalFieldsForList($entity);
+
             $entity->set('id', Util::generateId());
         }
 
@@ -105,7 +105,7 @@ class LastViewed
 
         return (object) [
             'total' => $total,
-            'collection' => $collection
+            'collection' => $collection,
         ];
     }
 }
