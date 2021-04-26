@@ -720,7 +720,11 @@ class Record implements Crud,
                         continue;
                     }
 
-                    if (!$this->getEntityManager()->getRepository('User')->checkBelongsToAnyOfTeams($userId, $teamIdList)) {
+                    if (
+                        !$this->getEntityManager()
+                            ->getRepository('User')
+                        ->checkBelongsToAnyOfTeams($userId, $teamIdList)
+                    ) {
                         return false;
                     }
                 }
@@ -875,10 +879,13 @@ class Record implements Crud,
         if (in_array($attribute, $this->notFilteringAttributeList)) {
             return $value;
         }
+
         $methodName = 'filterInputAttribute' . ucfirst($attribute);
+
         if (method_exists($this, $methodName)) {
             $value = $this->$methodName($value);
         }
+
         return $value;
     }
 
@@ -2611,7 +2618,10 @@ class Record implements Crud,
         $list = [];
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
-            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') {
+            if (
+                $this->getMetadata()
+                    ->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency'
+            ) {
                 continue;
             }
 
