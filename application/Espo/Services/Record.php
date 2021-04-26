@@ -2130,9 +2130,9 @@ class Record implements Crud,
      * @throws NotFound
      * @throws Forbidden
      */
-    public function merge(string $id, array $sourceIdList, StdClass $attributes): void
+    public function merge(string $id, array $sourceIdList, StdClass $data): void
     {
-        if (empty($id)) {
+        if (!$id) {
             throw new Error("No ID passed.");
         }
 
@@ -2148,9 +2148,10 @@ class Record implements Crud,
             throw new Forbidden("No edit access.");
         }
 
-        $this->filterUpdateInput($attributes);
+        $this->filterUpdateInput($data);
 
-        $entity->set($attributes);
+        $entity->set($data);
+
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden("Assignment permission failure.");
         }
@@ -2167,7 +2168,7 @@ class Record implements Crud,
             }
         }
 
-        $this->beforeMerge($entity, $sourceList, $attributes);
+        $this->beforeMerge($entity, $sourceList, $data);
 
         $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
 
@@ -2274,12 +2275,12 @@ class Record implements Crud,
                 $o->emailAddress = $emailAddress->get('name');
                 $o->primary = false;
 
-                if (empty($attributes->emailAddress)) {
+                if (empty($data->emailAddress)) {
                     if ($i === 0) {
                         $o->primary = true;
                     }
                 } else {
-                    $o->primary = $o->emailAddress === $attributes->emailAddress;
+                    $o->primary = $o->emailAddress === $data->emailAddress;
                 }
 
                 $o->optOut = $emailAddress->get('optOut');
@@ -2288,7 +2289,7 @@ class Record implements Crud,
                 $emailAddressData[] = $o;
             }
 
-            $attributes->emailAddressData = $emailAddressData;
+            $data->emailAddressData = $emailAddressData;
         }
 
         if ($hasPhoneNumber) {
@@ -2300,12 +2301,12 @@ class Record implements Crud,
                 $o->phoneNumber = $phoneNumber->get('name');
                 $o->primary = false;
 
-                if (empty($attributes->phoneNumber)) {
+                if (empty($data->phoneNumber)) {
                     if ($i === 0) {
                         $o->primary = true;
                     }
                 } else {
-                    $o->primary = $o->phoneNumber === $attributes->phoneNumber;
+                    $o->primary = $o->phoneNumber === $data->phoneNumber;
                 }
 
                 $o->type = $phoneNumber->get('type');
@@ -2313,22 +2314,23 @@ class Record implements Crud,
                 $phoneNumberData[] = $o;
             }
 
-            $attributes->phoneNumberData = $phoneNumberData;
+            $data->phoneNumberData = $phoneNumberData;
         }
 
-        $entity->set($attributes);
+        $entity->set($data);
+
         $repository->save($entity);
 
         $this->processActionHistoryRecord('update', $entity);
 
-        $this->afterMerge($entity, $sourceList, $attributes);
+        $this->afterMerge($entity, $sourceList, $data);
     }
 
-    protected function beforeMerge(Entity $entity, array $sourceList, $attributes)
+    protected function beforeMerge(Entity $entity, array $sourceList, $data)
     {
     }
 
-    protected function afterMerge(Entity $entity, array $sourceList, $attributes)
+    protected function afterMerge(Entity $entity, array $sourceList, $data)
     {
     }
 
@@ -2639,8 +2641,12 @@ class Record implements Crud,
      * @deprecated Use `Espo\Core\Fields\Currency\CurrencyConverter`.
      */
     public function getConvertCurrencyValues(
-        Entity $entity, string $targetCurrency, string $baseCurrency,
-        StdClass $rates, bool $allFields = false, ?array $fieldList = null
+        Entity $entity,
+        string $targetCurrency,
+        string $baseCurrency,
+        StdClass $rates,
+        bool $allFields = false,
+        ?array $fieldList = null
     ) {
         $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
 
