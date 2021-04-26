@@ -5,6 +5,7 @@
             "index": true
         },
         "targetType": {
+            "type": "varchar",
             "view": "views/action-history-record/fields/target-type",
             "translation": "Global.scopeNames"
         },
