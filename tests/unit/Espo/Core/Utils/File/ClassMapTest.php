@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Utils\File;
 
 use tests\unit\ReflectionHelper;
 
-use Espo\Core\Utils\File\ClassMAp;
+use Espo\Core\Utils\File\ClassMap;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
 
