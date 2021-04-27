@@ -70,11 +70,13 @@ class AfterUpgrade
 
         $toSave = false;
 
-        $path = "application/Espo/Core/Templates/Metadata/Event/selectDefs.json";
+        $path1 = "application/Espo/Core/Templates/Metadata/Event/selectDefs.json";
+        $contents1 = $fileManager->getContents($path1);
+        $data1 = Json::decode($contents1, true);
 
-        $contents = $fileManager->getContents($path);
-
-        $data = Json::decode($contents, true);
+        $path2 = "application/Espo/Core/Templates/Metadata/Event/recordDefs.json";
+        $contents2 = $fileManager->getContents($path2);
+        $data2 = Json::decode($contents2, true);
 
         foreach ($defs as $entityType => $item) {
             $isCustom = $item['isCustom'] ?? false;
@@ -86,7 +88,8 @@ class AfterUpgrade
 
             $toSave = true;
 
-            $metadata->set('selectDefs', $entityType, $data);
+            $metadata->set('selectDefs', $entityType, $data1);
+            $metadata->set('recordDefs', $entityType, $data2);
         }
 
         if ($toSave) {

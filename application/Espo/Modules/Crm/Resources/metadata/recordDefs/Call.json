@@ -1,0 +1,5 @@
+{
+    "readLoaderClassNameList": [
+        "Espo\\Core\\FieldProcessing\\Reminders\\Loader"
+    ]
+}

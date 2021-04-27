@@ -187,6 +187,9 @@ class Record implements Crud,
 
     protected $validateSkipFieldList = [];
 
+    /**
+     * @todo Move to metadata.
+     */
     protected $validateRequiredSkipFieldList = [];
 
     protected $findDuplicatesSelectAttributeList = ['id', 'name'];
