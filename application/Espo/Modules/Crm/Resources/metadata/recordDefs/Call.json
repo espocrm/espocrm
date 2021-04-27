@@ -1,5 +1,6 @@
 {
     "readLoaderClassNameList": [
-        "Espo\\Core\\FieldProcessing\\Reminder\\Loader"
+        "Espo\\Core\\FieldProcessing\\Reminder\\Loader",
+        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Call\\PhoneNumberMapLoader"
     ]
 }
