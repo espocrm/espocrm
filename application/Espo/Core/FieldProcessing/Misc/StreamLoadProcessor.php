@@ -32,6 +32,7 @@ namespace Espo\Core\FieldProcessing\Misc;
 use Espo\Core\{
     ORM\Entity,
     FieldProcessing\LoadProcessor as LoadProcessorInterface,
+    FieldProcessing\LoadProcessorParams,
     Utils\Metadata,
     Utils\Config,
     Acl,
@@ -69,7 +70,7 @@ class StreamLoadProcessor implements LoadProcessorInterface
         $this->config = $config;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, LoadProcessorParams $params): void
     {
         $this->processIsFollowed($entity);
         $this->processFollowers($entity);

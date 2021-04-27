@@ -43,6 +43,8 @@ use Espo\Core\{
     Select\SearchParams,
     Select\Where\Item as WhereItem,
     Select\Where\ConverterFactory as WhereConverterFactory,
+    FieldProcessing\ListLoadProcessor,
+    FieldProcessing\LoadProcessorParams,
     Di,
 };
 
@@ -81,11 +83,16 @@ class Activities implements
 
     const BUSY_RANGES_MAX_RANGE_DAYS = 10;
 
-    protected $whereConverterFactory;
+    private $whereConverterFactory;
 
-    public function __construct(WhereConverterFactory $whereConverterFactory)
-    {
+    private $listLoadProcessor;
+
+    public function __construct(
+        WhereConverterFactory $whereConverterFactory,
+        ListLoadProcessor $listLoadProcessor
+    ) {
         $this->whereConverterFactory = $whereConverterFactory;
+        $this->listLoadProcessor = $listLoadProcessor;
     }
 
     protected function getPDO()
@@ -741,7 +748,11 @@ class Activities implements
     }
 
     public function findActivitiyEntityType(
-        string $scope, string $id, string $entityType, bool $isHistory = false, array $params = []
+        string $scope,
+        string $id,
+        string $entityType,
+        bool $isHistory = false,
+        array $params = []
     ) : RecordCollection {
 
         if (!$this->getAcl()->checkScope($entityType)) {
@@ -790,11 +801,13 @@ class Activities implements
 
         $order = null;
 
+        $searchParams = SearchParams::fromRaw($params);
+
         foreach ($baseQueryList as $i => $itemQuery) {
             $itemBuilder = $this->selectBuilderFactory
                 ->create()
                 ->clone($itemQuery)
-                ->withSearchParams(SearchParams::fromRaw($params))
+                ->withSearchParams($searchParams)
                 ->withComplexExpressionsForbidden()
                 ->withWherePermissionCheck()
                 ->buildQueryBuilder();
@@ -843,12 +856,12 @@ class Activities implements
                     ->findBySql($sql)
             );
 
-        foreach ($collection as $e) {
-            $service->loadAdditionalFieldsForList($e);
+        $loadProcessorParams = LoadProcessorParams
+            ::fromNothing()
+            ->withSelect($searchParams->getSelect());
 
-            if (!empty($params['select'])) {
-                $service->loadLinkMultipleFieldsForList($e, $params['select']);
-            }
+        foreach ($collection as $e) {
+            $this->listLoadProcessor->process($e, $loadProcessorParams);
 
             $service->prepareEntityForOutput($e);
         }

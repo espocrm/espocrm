@@ -1,5 +1,5 @@
 {
-    "loadProcessorClassNameList": [
+    "readLoadProcessorClassNameList": [
         "Espo\\Core\\FieldProcessing\\Link\\HasOneLoadProcessor",
         "Espo\\Core\\FieldProcessing\\Link\\NotJoinedLoadProcessor",
         "Espo\\Core\\FieldProcessing\\LinkMultiple\\LoadProcessor",
@@ -9,6 +9,7 @@
         "Espo\\Core\\FieldProcessing\\Misc\\StreamLoadProcessor"
     ],
     "listLoadProcessorClassNameList": [
-        "Espo\\Core\\FieldProcessing\\LinkParent\\LoadProcessor"
+        "Espo\\Core\\FieldProcessing\\LinkParent\\LoadProcessor",
+        "Espo\\Core\\FieldProcessing\\LinkMultiple\\ListLoadProcessor"
     ]
 }

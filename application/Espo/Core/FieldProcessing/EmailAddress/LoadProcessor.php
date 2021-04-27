@@ -33,6 +33,7 @@ use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
     FieldProcessing\LoadProcessor as LoadProcessorInterface,
+    FieldProcessing\LoadProcessorParams,
 };
 
 use Espo\ORM\Defs\Defs as OrmDefs;
@@ -49,7 +50,7 @@ class LoadProcessor implements LoadProcessorInterface
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, LoadProcessorParams $params): void
     {
         $entityDefs = $this->ormDefs->getEntity($entity->getEntityType());
 

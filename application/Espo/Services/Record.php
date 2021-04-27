@@ -65,8 +65,9 @@ use Espo\Core\{
     Action\Data as ActionData,
     Action\ActionFactory,
     FieldValidation\Params as FieldValidationParams,
-    FieldProcessing\GeneralLoadProcessor,
-    FieldProcessing\GeneralListLoadProcessor,
+    FieldProcessing\ReadLoadProcessor,
+    FieldProcessing\ListLoadProcessor,
+    FieldProcessing\LoadProcessorParams,
 };
 
 use Espo\Tools\{
@@ -540,6 +541,9 @@ class Record implements Crud,
         return $this->streamService;
     }
 
+    /**
+     * @deprecated
+     */
     public function loadLinkMultipleFieldsForList(Entity $entity, array $selectAttributeList): void
     {
         foreach ($selectAttributeList as $attribute) {
@@ -561,15 +565,15 @@ class Record implements Crud,
         }
     }
 
-    private function createLoadProcessor(): GeneralLoadProcessor
+    private function createReadLoadProcessor(): ReadLoadProcessor
     {
-        return $this->injectableFactory->create(GeneralLoadProcessor::class);
+        return $this->injectableFactory->create(ReadLoadProcessor::class);
     }
 
-    private function getListLoadProcessor(): GeneralListLoadProcessor
+    private function getListLoadProcessor(): ListLoadProcessor
     {
         if (!$this->listLoadProcessor) {
-            $this->listLoadProcessor = $this->injectableFactory->create(GeneralListLoadProcessor::class);
+            $this->listLoadProcessor = $this->injectableFactory->create(ListLoadProcessor::class);
         }
 
         return $this->listLoadProcessor;
@@ -577,16 +581,30 @@ class Record implements Crud,
 
     public function loadAdditionalFields(Entity $entity)
     {
-        $loadProcessor = $this->createLoadProcessor();
+        $loadProcessor = $this->createReadLoadProcessor();
 
         $loadProcessor->process($entity);
     }
 
-    public function loadAdditionalFieldsForList(Entity $entity)
+    protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams): void
     {
+        $params = new LoadProcessorParams();
+
+        if ($searchParams && $searchParams->getSelect()) {
+            $params = $params->withSelect($searchParams->getSelect());
+        }
+
         $loadProcessor = $this->getListLoadProcessor();
 
-        $loadProcessor->process($entity);
+        $loadProcessor->process($entity, $params);
+    }
+
+    /**
+     * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     */
+    public function loadAdditionalFieldsForList(Entity $entity)
+    {
+        $this->loadListAdditionalFields($entity);
     }
 
     public function loadAdditionalFieldsForExport(Entity $entity)
@@ -1258,14 +1276,14 @@ class Record implements Crud,
 
         $this->handleListParams($params);
 
+        $searchParams = SearchParams::fromRaw($params);
+
         $selectBuilder = $this->selectBuilderFactory->create();
 
         $query = $selectBuilder
             ->from($this->entityType)
             ->withStrictAccessControl()
-            ->withSearchParams(
-                SearchParams::fromRaw($params)
-            )
+            ->withSearchParams($searchParams)
             ->build();
 
         $collection = $this->getRepository()
@@ -1273,11 +1291,7 @@ class Record implements Crud,
             ->find();
 
         foreach ($collection as $e) {
-            $this->loadAdditionalFieldsForList($e);
-
-            if (!empty($params['select'])) {
-                $this->loadLinkMultipleFieldsForList($e, $params['select']);
-            }
+            $this->loadListAdditionalFields($e, $searchParams);
 
             $this->prepareEntityForOutput($e);
         }
@@ -1496,13 +1510,13 @@ class Record implements Crud,
             }
         }
 
+        $searchParams = SearchParams::fromRaw($params);
+
         $selectBuilder = $this->selectBuilderFactory->create();
 
         $selectBuilder
             ->from($foreignEntityType)
-            ->withSearchParams(
-                SearchParams::fromRaw($params)
-            );
+            ->withSearchParams($searchParams);
 
         if (!$skipAcl) {
             $selectBuilder->withStrictAccessControl();
@@ -1521,11 +1535,7 @@ class Record implements Crud,
             ->find();
 
         foreach ($collection as $e) {
-            $recordService->loadAdditionalFieldsForList($e);
-
-            if (!empty($params['select'])) {
-                $this->loadLinkMultipleFieldsForList($e, $params['select']);
-            }
+            $this->loadListAdditionalFields($e, $searchParams);
 
             $recordService->prepareEntityForOutput($e);
         }

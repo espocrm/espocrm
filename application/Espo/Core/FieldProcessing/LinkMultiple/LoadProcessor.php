@@ -32,6 +32,7 @@ namespace Espo\Core\FieldProcessing\LinkMultiple;
 use Espo\Core\{
     ORM\Entity,
     FieldProcessing\LoadProcessor as LoadProcessorInterface,
+    FieldProcessing\LoadProcessorParams,
 };
 
 use Espo\ORM\Defs\Defs as OrmDefs;
@@ -47,7 +48,7 @@ class LoadProcessor implements LoadProcessorInterface
         $this->ormDefs = $ormDefs;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, LoadProcessorParams $params): void
     {
         $entityType = $entity->getEntityType();
 

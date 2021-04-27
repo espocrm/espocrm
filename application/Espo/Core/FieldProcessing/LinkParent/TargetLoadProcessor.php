@@ -33,6 +33,7 @@ use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
     FieldProcessing\LoadProcessor as LoadProcessorInterface,
+    FieldProcessing\LoadProcessorParams,
 };
 
 class TargetLoadProcessor implements LoadProcessorInterface
@@ -44,7 +45,7 @@ class TargetLoadProcessor implements LoadProcessorInterface
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, LoadProcessorParams $params): void
     {
         $targetType = $entity->get('targetType');
         $targetId = $entity->get('targetId');

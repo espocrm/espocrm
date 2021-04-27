@@ -34,11 +34,12 @@ use Espo\Core\{
     Utils\Metadata,
     Select\SelectBuilderFactory,
     Select\SearchParams,
+    FieldProcessing\ListLoadProcessor,
+    FieldProcessing\LoadProcessorParams,
 };
 
 use Espo\{
     Services\Record as RecordService,
-    ORM\QueryParams\Select as SelectQuery,
     ORM\EntityManager,
 };
 
@@ -58,18 +59,24 @@ class Kanban
 
     const MAX_GROUP_LENGTH = 100;
 
-    protected $metadata;
-    protected $selectBuilderFactory;
-    protected $entityManager;
+    private $metadata;
+
+    private $selectBuilderFactory;
+
+    private $entityManager;
+
+    private $listLoadProcessor;
 
     public function __construct(
         Metadata $metadata,
         SelectBuilderFactory $selectBuilderFactory,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        ListLoadProcessor $listLoadProcessor
     ) {
         $this->metadata = $metadata;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->entityManager = $entityManager;
+        $this->listLoadProcessor = $listLoadProcessor;
     }
 
     public function setRecordService(RecordService $recordService): self
@@ -146,14 +153,13 @@ class Kanban
            }
         }
 
-        $selectBuilder = $this->selectBuilderFactory->create();
+        $searchParams = SearchParams::fromRaw($params);
 
-        $query = $selectBuilder
+        $query = $this->selectBuilderFactory
+            ->create()
             ->from($this->entityType)
             ->withStrictAccessControl()
-            ->withSearchParams(
-                SearchParams::fromRaw($params)
-            )
+            ->withSearchParams($searchParams)
             ->build();
 
         $collection = $this->entityManager
@@ -239,12 +245,12 @@ class Kanban
                 }
             }
 
-            foreach ($collectionSub as $e) {
-                $this->recordService->loadAdditionalFieldsForList($e);
+            $loadProcessorParams = LoadProcessorParams
+                ::fromNothing()
+                ->withSelect($searchParams->getSelect());
 
-                if (!empty($params['select'])) {
-                    $this->recordService->loadLinkMultipleFieldsForList($e, $params['select']);
-                }
+            foreach ($collectionSub as $e) {
+                $this->listLoadProcessor->process($e, $loadProcessorParams);
 
                 $this->recordService->prepareEntityForOutput($e);
 

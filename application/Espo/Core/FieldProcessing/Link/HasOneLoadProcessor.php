@@ -32,6 +32,7 @@ namespace Espo\Core\FieldProcessing\Link;
 use Espo\Core\{
     ORM\Entity,
     FieldProcessing\LoadProcessor as LoadProcessorInterface,
+    FieldProcessing\LoadProcessorParams,
 };
 
 use Espo\ORM\Defs\Defs as OrmDefs;
@@ -47,7 +48,7 @@ class HasOneLoadProcessor implements LoadProcessorInterface
         $this->ormDefs = $ormDefs;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, LoadProcessorParams $params): void
     {
         foreach ($this->getFieldList($entity->getEntityType()) as $field) {
             if ($entity->get($field . 'Name')) {

@@ -33,6 +33,7 @@ use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
     FieldProcessing\LoadProcessor as LoadProcessorInterface,
+    FieldProcessing\LoadProcessorParams,
 };
 
 use Espo\ORM\Defs\Defs as OrmDefs;
@@ -51,7 +52,7 @@ class NotJoinedLoadProcessor implements LoadProcessorInterface
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, LoadProcessorParams $params): void
     {
         foreach ($this->getFieldList($entity->getEntityType()) as $field) {
             $this->processItem($entity, $field);

@@ -36,5 +36,5 @@ use Espo\Core\ORM\Entity;
  */
 interface LoadProcessor
 {
-    public function process(Entity $entity): void;
+    public function process(Entity $entity, LoadProcessorParams $params): void;
 }

@@ -37,9 +37,9 @@ use Espo\Core\{
 };
 
 /**
- * Processes loading special fields (before output).
+ * Processes loading special fields for list view (before output).
  */
-class GeneralLoadProcessor
+class ListLoadProcessor
 {
     private $injectableFactory;
 
@@ -53,10 +53,14 @@ class GeneralLoadProcessor
         $this->metadata = $metadata;
     }
 
-    public function process(Entity $entity): void
+    public function process(Entity $entity, ?LoadProcessorParams $params = null): void
     {
+        if (!$params) {
+            $params = new LoadProcessorParams();
+        }
+
         foreach ($this->getProcessorList($entity->getEntityType()) as $processor) {
-            $processor->process($entity);
+            $processor->process($entity, $params);
         }
     }
 
@@ -86,10 +90,10 @@ class GeneralLoadProcessor
     private function getProcessorClassNameList(string $entityType): array
     {
         $list = $this->metadata
-            ->get(['app', 'fieldProcessing', 'loadProcessorClassNameList']) ?? [];
+            ->get(['app', 'fieldProcessing', 'listLoadProcessorClassNameList']) ?? [];
 
         $additionalList = $this->metadata
-            ->get(['recordDefs', $entityType, 'loadProcessorClassNameList']) ?? [];
+            ->get(['recordDefs', $entityType, 'listLoadProcessorClassNameList']) ?? [];
 
         return array_merge($list, $additionalList);
     }

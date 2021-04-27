@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\LinkParent;
+namespace Espo\Core\FieldProcessing\LinkMultiple;
 
 use Espo\Core\{
     ORM\Entity,
@@ -37,7 +37,7 @@ use Espo\Core\{
 
 use Espo\ORM\Defs\Defs as OrmDefs;
 
-class LoadProcessor implements LoadProcessorInterface
+class ListLoadProcessor implements LoadProcessorInterface
 {
     private $ormDefs;
 
@@ -50,8 +50,28 @@ class LoadProcessor implements LoadProcessorInterface
 
     public function process(Entity $entity, LoadProcessorParams $params): void
     {
-        foreach ($this->getFieldList($entity->getEntityType()) as $field) {
-            $entity->loadParentNameField($field);
+        $entityType = $entity->getEntityType();
+
+        $select = $params->getSelect() ?? [];
+
+        if (count($select) === 0) {
+            return;
+        }
+
+        foreach ($this->getFieldList($entityType) as $field) {
+            if (
+                !in_array($field . 'Ids', $select) ||
+                !in_array($field . 'Names', $select)
+            ) {
+                continue;
+            }
+
+            $columns = $this->ormDefs
+                ->getEntity($entityType)
+                ->getField($field)
+                ->getParam('columns');
+
+            $entity->loadLinkMultipleField($field, $columns);
         }
     }
 
@@ -69,11 +89,26 @@ class LoadProcessor implements LoadProcessorInterface
         $entityDefs = $this->ormDefs->getEntity($entityType);
 
         foreach ($entityDefs->getFieldList() as $fieldDefs) {
-            if ($fieldDefs->getType() !== 'linkParent') {
+            if (
+                $fieldDefs->getType() !== 'linkMultiple' &&
+                $fieldDefs->getType() !== 'attachmentMultiple'
+            ) {
+                continue;
+            }
+
+            if ($fieldDefs->getParam('noLoad')) {
+                continue;
+            }
+
+            if ($fieldDefs->isNotStorable()) {
                 continue;
             }
 
             $name = $fieldDefs->getName();
+
+            if (!$entityDefs->hasRelation($name)) {
+                continue;
+            }
 
             $list[] = $name;
         }

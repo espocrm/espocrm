@@ -27,59 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\LinkParent;
+namespace Espo\Core\FieldProcessing;
 
-use Espo\Core\{
-    ORM\Entity,
-    FieldProcessing\LoadProcessor as LoadProcessorInterface,
-    FieldProcessing\LoadProcessorParams,
-};
-
-use Espo\ORM\Defs\Defs as OrmDefs;
-
-class LoadProcessor implements LoadProcessorInterface
+class LoadProcessorParams
 {
-    private $ormDefs;
+    private $select = null;
 
-    private $fieldListCacheMap = [];
-
-    public function __construct(OrmDefs $ormDefs)
+    public function __construct()
     {
-        $this->ormDefs = $ormDefs;
+
     }
 
-    public function process(Entity $entity, LoadProcessorParams $params): void
+    public function hasSelect(): bool
     {
-        foreach ($this->getFieldList($entity->getEntityType()) as $field) {
-            $entity->loadParentNameField($field);
-        }
+        return $this->select !== null;
     }
 
-    /**
-     * @return string[]
-     */
-    private function getFieldList(string $entityType): array
+    public function getSelect(): ?array
     {
-        if (array_key_exists($entityType, $this->fieldListCacheMap)) {
-            return $this->fieldListCacheMap[$entityType];
-        }
+        return $this->select;
+    }
 
-        $list = [];
+    public function withSelect(?array $select): self
+    {
+        $obj = clone $this;
 
-        $entityDefs = $this->ormDefs->getEntity($entityType);
+        $obj->select = $select;
 
-        foreach ($entityDefs->getFieldList() as $fieldDefs) {
-            if ($fieldDefs->getType() !== 'linkParent') {
-                continue;
-            }
+        return $obj;
+    }
 
-            $name = $fieldDefs->getName();
-
-            $list[] = $name;
-        }
-
-        $this->fieldListCacheMap[$entityType] = $list;
-
-        return $list;
+    public static function fromNothing(): self
+    {
+        return new self();
     }
 }
