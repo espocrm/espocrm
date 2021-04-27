@@ -45,7 +45,7 @@ class ReadLoadProcessor
 
     private $metadata;
 
-    private $processorListMapCache = [];
+    private $loaderListMapCache = [];
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -53,33 +53,33 @@ class ReadLoadProcessor
         $this->metadata = $metadata;
     }
 
-    public function process(Entity $entity, ?LoadProcessorParams $params = null): void
+    public function process(Entity $entity, ?LoaderParams $params = null): void
     {
         if (!$params) {
-            $params = new LoadProcessorParams();
+            $params = new LoaderParams();
         }
 
-        foreach ($this->getProcessorList($entity->getEntityType()) as $processor) {
+        foreach ($this->getLoaderList($entity->getEntityType()) as $processor) {
             $processor->process($entity, $params);
         }
     }
 
     /**
-     * @return LoadProcessor[]
+     * @return Loader[]
      */
-    private function getProcessorList(string $entityType): array
+    private function getLoaderList(string $entityType): array
     {
-        if (array_key_exists($entityType, $this->processorListMapCache)) {
-            return $this->processorListMapCache[$entityType];
+        if (array_key_exists($entityType, $this->loaderListMapCache)) {
+            return $this->loaderListMapCache[$entityType];
         }
 
         $list = [];
 
-        foreach ($this->getProcessorClassNameList($entityType) as $className) {
-            $list[] = $this->createProcessor($className);
+        foreach ($this->getLoaderClassNameList($entityType) as $className) {
+            $list[] = $this->createLoader($className);
         }
 
-        $this->processorListMapCache[$entityType] = $list;
+        $this->loaderListMapCache[$entityType] = $list;
 
         return $list;
     }
@@ -87,18 +87,18 @@ class ReadLoadProcessor
     /**
      * @return string[]
      */
-    private function getProcessorClassNameList(string $entityType): array
+    private function getLoaderClassNameList(string $entityType): array
     {
         $list = $this->metadata
-            ->get(['app', 'fieldProcessing', 'readLoadProcessorClassNameList']) ?? [];
+            ->get(['app', 'fieldProcessing', 'readLoaderClassNameList']) ?? [];
 
         $additionalList = $this->metadata
-            ->get(['recordDefs', $entityType, 'readLoadProcessorClassNameList']) ?? [];
+            ->get(['recordDefs', $entityType, 'readLoaderClassNameList']) ?? [];
 
         return array_merge($list, $additionalList);
     }
 
-    private function createProcessor(string $className): LoadProcessor
+    private function createLoader(string $className): Loader
     {
         return $this->injectableFactory->create($className);
     }

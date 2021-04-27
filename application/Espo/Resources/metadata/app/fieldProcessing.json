@@ -1,15 +1,15 @@
 {
-    "readLoadProcessorClassNameList": [
-        "Espo\\Core\\FieldProcessing\\Link\\HasOneLoadProcessor",
-        "Espo\\Core\\FieldProcessing\\Link\\NotJoinedLoadProcessor",
-        "Espo\\Core\\FieldProcessing\\LinkMultiple\\LoadProcessor",
-        "Espo\\Core\\FieldProcessing\\LinkParent\\LoadProcessor",
-        "Espo\\Core\\FieldProcessing\\EmailAddress\\LoadProcessor",
-        "Espo\\Core\\FieldProcessing\\PhoneNumber\\LoadProcessor",
-        "Espo\\Core\\FieldProcessing\\Misc\\StreamLoadProcessor"
+    "readLoaderClassNameList": [
+        "Espo\\Core\\FieldProcessing\\Link\\HasOneLoader",
+        "Espo\\Core\\FieldProcessing\\Link\\NotJoinedLoader",
+        "Espo\\Core\\FieldProcessing\\LinkMultiple\\Loader",
+        "Espo\\Core\\FieldProcessing\\LinkParent\\Loader",
+        "Espo\\Core\\FieldProcessing\\EmailAddress\\Loader",
+        "Espo\\Core\\FieldProcessing\\PhoneNumber\\Loader",
+        "Espo\\Core\\FieldProcessing\\Misc\\StreamLoader"
     ],
-    "listLoadProcessorClassNameList": [
-        "Espo\\Core\\FieldProcessing\\LinkParent\\LoadProcessor",
-        "Espo\\Core\\FieldProcessing\\LinkMultiple\\ListLoadProcessor"
+    "listLoaderClassNameList": [
+        "Espo\\Core\\FieldProcessing\\LinkParent\\Loader",
+        "Espo\\Core\\FieldProcessing\\LinkMultiple\\ListLoader"
     ]
 }

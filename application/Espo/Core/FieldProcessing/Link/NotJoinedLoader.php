@@ -31,32 +31,69 @@ namespace Espo\Core\FieldProcessing\Link;
 
 use Espo\Core\{
     ORM\Entity,
-    FieldProcessing\LoadProcessor as LoadProcessorInterface,
-    FieldProcessing\LoadProcessorParams,
+    ORM\EntityManager,
+    FieldProcessing\Loader as LoaderInterface,
+    FieldProcessing\LoaderParams,
 };
 
 use Espo\ORM\Defs\Defs as OrmDefs;
 
-class HasOneLoadProcessor implements LoadProcessorInterface
+class NotJoinedLoader implements LoaderInterface
 {
     private $ormDefs;
 
+    private $entityManager;
+
     private $fieldListCacheMap = [];
 
-    public function __construct(OrmDefs $ormDefs)
+    public function __construct(OrmDefs $ormDefs, EntityManager $entityManager)
     {
         $this->ormDefs = $ormDefs;
+        $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, LoadProcessorParams $params): void
+    public function process(Entity $entity, LoaderParams $params): void
     {
         foreach ($this->getFieldList($entity->getEntityType()) as $field) {
-            if ($entity->get($field . 'Name')) {
-                continue;
-            }
-
-            $entity->loadLinkField($field);
+            $this->processItem($entity, $field);
         }
+    }
+
+    private function processItem(Entity $entity, string $field): void
+    {
+        $nameAttribute = $field . 'Name';
+        $idAttribute = $field . 'Id';
+
+        $id = $entity->get($idAttribute);
+
+        if (!$id) {
+            $entity->set($nameAttribute, null);
+
+            return;
+        }
+
+        if ($entity->get($nameAttribute)) {
+            return;
+        }
+
+        $foreignEntityType = $this->ormDefs
+            ->getEntity($entity->getEntityType())
+            ->getRelation($field)
+            ->getForeignEntityType();
+
+        $foreignEntity = $this->entityManager
+            ->getRDBRepository($foreignEntityType)
+            ->select(['id', 'name'])
+            ->where(['id' => $id])
+            ->findOne();
+
+        if (!$foreignEntity) {
+            $entity->set($nameAttribute, null);
+
+            return;
+        }
+
+        $entity->set($nameAttribute, $foreignEntity->get('name'));
     }
 
     /**
@@ -72,22 +109,32 @@ class HasOneLoadProcessor implements LoadProcessorInterface
 
         $entityDefs = $this->ormDefs->getEntity($entityType);
 
-        foreach ($entityDefs->getFieldList() as $fieldDefs) {
-            if ($fieldDefs->getType() !== 'link') {
+        foreach ($entityDefs->getRelationList() as $relationDefs) {
+            if ($relationDefs->getType() !== Entity::BELONGS_TO) {
                 continue;
             }
 
-            if ($fieldDefs->getParam('noLoad')) {
+            if (!$relationDefs->getParam('noJoin')) {
                 continue;
             }
 
-            $name = $fieldDefs->getName();
-
-            if (!$entityDefs->hasRelation($name)) {
+            if (!$relationDefs->hasForeignEntityType()) {
                 continue;
             }
 
-            if ($entityDefs->getRelation($name)->getType() !== Entity::HAS_ONE) {
+            $foreignEntityType = $relationDefs->getForeignEntityType();
+
+            if (!$this->entityManager->hasRepository($foreignEntityType)) {
+                continue;
+            }
+
+            $name = $relationDefs->getName();
+
+            if (!$entityDefs->hasAttribute($name . 'Id')) {
+                continue;
+            }
+
+            if (!$entityDefs->hasAttribute($name . 'Name') ) {
                 continue;
             }
 

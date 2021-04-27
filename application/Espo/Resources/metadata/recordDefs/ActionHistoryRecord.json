@@ -1,8 +1,8 @@
 {
-    "readLoadProcessorClassNameList": [
-        "Espo\\Core\\FieldProcessing\\LinkParent\\TargetLoadProcessor"
+    "readLoaderClassNameList": [
+        "Espo\\Core\\FieldProcessing\\LinkParent\\TargetLoader"
     ],
-    "listLoadProcessorClassNameList": [
-        "Espo\\Core\\FieldProcessing\\LinkParent\\TargetLoadProcessor"
+    "listLoaderClassNameList": [
+        "Espo\\Core\\FieldProcessing\\LinkParent\\TargetLoader"
     ]
 }

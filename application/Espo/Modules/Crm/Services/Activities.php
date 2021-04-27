@@ -44,7 +44,7 @@ use Espo\Core\{
     Select\Where\Item as WhereItem,
     Select\Where\ConverterFactory as WhereConverterFactory,
     FieldProcessing\ListLoadProcessor,
-    FieldProcessing\LoadProcessorParams,
+    FieldProcessing\LoaderParams as FieldLoaderParams,
     Di,
 };
 
@@ -856,7 +856,7 @@ class Activities implements
                     ->findBySql($sql)
             );
 
-        $loadProcessorParams = LoadProcessorParams
+        $loadProcessorParams = FieldLoaderParams
             ::fromNothing()
             ->withSelect($searchParams->getSelect());
 

@@ -34,7 +34,7 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-class LinkMultipleSaveProcessor
+class LinkMultipleSaver
 {
     private $entityManager;
 

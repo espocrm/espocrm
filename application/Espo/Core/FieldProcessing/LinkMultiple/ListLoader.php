@@ -27,73 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\Link;
+namespace Espo\Core\FieldProcessing\LinkMultiple;
 
 use Espo\Core\{
     ORM\Entity,
-    ORM\EntityManager,
-    FieldProcessing\LoadProcessor as LoadProcessorInterface,
-    FieldProcessing\LoadProcessorParams,
+    FieldProcessing\Loader as LoaderInterface,
+    FieldProcessing\LoaderParams,
 };
 
 use Espo\ORM\Defs\Defs as OrmDefs;
 
-class NotJoinedLoadProcessor implements LoadProcessorInterface
+class ListLoader implements LoaderInterface
 {
     private $ormDefs;
 
-    private $entityManager;
-
     private $fieldListCacheMap = [];
 
-    public function __construct(OrmDefs $ormDefs, EntityManager $entityManager)
+    public function __construct(OrmDefs $ormDefs)
     {
         $this->ormDefs = $ormDefs;
-        $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, LoadProcessorParams $params): void
+    public function process(Entity $entity, LoaderParams $params): void
     {
-        foreach ($this->getFieldList($entity->getEntityType()) as $field) {
-            $this->processItem($entity, $field);
-        }
-    }
+        $entityType = $entity->getEntityType();
 
-    private function processItem(Entity $entity, string $field): void
-    {
-        $nameAttribute = $field . 'Name';
-        $idAttribute = $field . 'Id';
+        $select = $params->getSelect() ?? [];
 
-        $id = $entity->get($idAttribute);
-
-        if (!$id) {
-            $entity->set($nameAttribute, null);
-
+        if (count($select) === 0) {
             return;
         }
 
-        if ($entity->get($nameAttribute)) {
-            return;
+        foreach ($this->getFieldList($entityType) as $field) {
+            if (
+                !in_array($field . 'Ids', $select) ||
+                !in_array($field . 'Names', $select)
+            ) {
+                continue;
+            }
+
+            $columns = $this->ormDefs
+                ->getEntity($entityType)
+                ->getField($field)
+                ->getParam('columns');
+
+            $entity->loadLinkMultipleField($field, $columns);
         }
-
-        $foreignEntityType = $this->ormDefs
-            ->getEntity($entity->getEntityType())
-            ->getRelation($field)
-            ->getForeignEntityType();
-
-        $foreignEntity = $this->entityManager
-            ->getRDBRepository($foreignEntityType)
-            ->select(['id', 'name'])
-            ->where(['id' => $id])
-            ->findOne();
-
-        if (!$foreignEntity) {
-            $entity->set($nameAttribute, null);
-
-            return;
-        }
-
-        $entity->set($nameAttribute, $foreignEntity->get('name'));
     }
 
     /**
@@ -109,32 +88,25 @@ class NotJoinedLoadProcessor implements LoadProcessorInterface
 
         $entityDefs = $this->ormDefs->getEntity($entityType);
 
-        foreach ($entityDefs->getRelationList() as $relationDefs) {
-            if ($relationDefs->getType() !== Entity::BELONGS_TO) {
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
+            if (
+                $fieldDefs->getType() !== 'linkMultiple' &&
+                $fieldDefs->getType() !== 'attachmentMultiple'
+            ) {
                 continue;
             }
 
-            if (!$relationDefs->getParam('noJoin')) {
+            if ($fieldDefs->getParam('noLoad')) {
                 continue;
             }
 
-            if (!$relationDefs->hasForeignEntityType()) {
+            if ($fieldDefs->isNotStorable()) {
                 continue;
             }
 
-            $foreignEntityType = $relationDefs->getForeignEntityType();
+            $name = $fieldDefs->getName();
 
-            if (!$this->entityManager->hasRepository($foreignEntityType)) {
-                continue;
-            }
-
-            $name = $relationDefs->getName();
-
-            if (!$entityDefs->hasAttribute($name . 'Id')) {
-                continue;
-            }
-
-            if (!$entityDefs->hasAttribute($name . 'Name') ) {
+            if (!$entityDefs->hasRelation($name)) {
                 continue;
             }
 

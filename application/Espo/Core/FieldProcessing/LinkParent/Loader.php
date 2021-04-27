@@ -27,14 +27,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing;
+namespace Espo\Core\FieldProcessing\LinkParent;
 
-use Espo\Core\ORM\Entity;
+use Espo\Core\{
+    ORM\Entity,
+    FieldProcessing\Loader as LoaderInterface,
+    FieldProcessing\LoaderParams,
+};
 
-/**
- * Processes loading special fields before output.
- */
-interface LoadProcessor
+use Espo\ORM\Defs\Defs as OrmDefs;
+
+class Loader implements LoaderInterface
 {
-    public function process(Entity $entity, LoadProcessorParams $params): void;
+    private $ormDefs;
+
+    private $fieldListCacheMap = [];
+
+    public function __construct(OrmDefs $ormDefs)
+    {
+        $this->ormDefs = $ormDefs;
+    }
+
+    public function process(Entity $entity, LoaderParams $params): void
+    {
+        foreach ($this->getFieldList($entity->getEntityType()) as $field) {
+            $entity->loadParentNameField($field);
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFieldList(string $entityType): array
+    {
+        if (array_key_exists($entityType, $this->fieldListCacheMap)) {
+            return $this->fieldListCacheMap[$entityType];
+        }
+
+        $list = [];
+
+        $entityDefs = $this->ormDefs->getEntity($entityType);
+
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
+            if ($fieldDefs->getType() !== 'linkParent') {
+                continue;
+            }
+
+            $name = $fieldDefs->getName();
+
+            $list[] = $name;
+        }
+
+        $this->fieldListCacheMap[$entityType] = $list;
+
+        return $list;
+    }
 }

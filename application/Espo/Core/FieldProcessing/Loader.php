@@ -29,36 +29,12 @@
 
 namespace Espo\Core\FieldProcessing;
 
-class LoadProcessorParams
+use Espo\Core\ORM\Entity;
+
+/**
+ * Processes loading special fields before output.
+ */
+interface Loader
 {
-    private $select = null;
-
-    public function __construct()
-    {
-
-    }
-
-    public function hasSelect(): bool
-    {
-        return $this->select !== null;
-    }
-
-    public function getSelect(): ?array
-    {
-        return $this->select;
-    }
-
-    public function withSelect(?array $select): self
-    {
-        $obj = clone $this;
-
-        $obj->select = $select;
-
-        return $obj;
-    }
-
-    public static function fromNothing(): self
-    {
-        return new self();
-    }
+    public function process(Entity $entity, LoaderParams $params): void;
 }

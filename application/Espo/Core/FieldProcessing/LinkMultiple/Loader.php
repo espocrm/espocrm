@@ -27,77 +27,80 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\MultiEnum;
+namespace Espo\Core\FieldProcessing\LinkMultiple;
 
 use Espo\Core\{
     ORM\Entity,
-    ORM\EntityManager,
+    FieldProcessing\Loader as LoaderInterface,
+    FieldProcessing\LoaderParams,
 };
 
-class SaveProcessor
+use Espo\ORM\Defs\Defs as OrmDefs;
+
+class Loader implements LoaderInterface
 {
-    private $entityManager;
+    private $ormDefs;
 
-    private $fieldListMapCache = [];
+    private $fieldListCacheMap = [];
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(OrmDefs $ormDefs)
     {
-        $this->entityManager = $entityManager;
+        $this->ormDefs = $ormDefs;
     }
 
-    public function process(Entity $entity, array $options): void
+    public function process(Entity $entity, LoaderParams $params): void
     {
-        foreach ($this->getFieldList($entity->getEntityType()) as $name) {
-            $this->processItem($entity, $name);
+        $entityType = $entity->getEntityType();
+
+        foreach ($this->getFieldList($entityType) as $field) {
+            $columns = $this->ormDefs
+                ->getEntity($entityType)
+                ->getField($field)
+                ->getParam('columns');
+
+            $entity->loadLinkMultipleField($field, $columns);
         }
     }
 
-    private function processItem(Entity $entity, string $name): void
-    {
-        if (!$entity->has($name)) {
-            return;
-        }
-
-        if (!$entity->isAttributeChanged($name)) {
-            return;
-        }
-
-        $this->entityManager
-            ->getRepository('ArrayValue')
-            ->storeEntityAttribute($entity, $name);
-    }
-
+    /**
+     * @return string[]
+     */
     private function getFieldList(string $entityType): array
     {
-        if (array_key_exists($entityType, $this->fieldListMapCache)) {
-            return $this->fieldListMapCache[$entityType];
+        if (array_key_exists($entityType, $this->fieldListCacheMap)) {
+            return $this->fieldListCacheMap[$entityType];
         }
-
-        $entityDefs = $this->entityManager
-            ->getDefs()
-            ->getEntity($entityType);
 
         $list = [];
 
-        foreach ($entityDefs->getAttributeNameList() as $name) {
-            $defs = $entityDefs->getAttribute($name);
+        $entityDefs = $this->ormDefs->getEntity($entityType);
 
-            if ($defs->getType() !== Entity::JSON_ARRAY) {
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
+            if (
+                $fieldDefs->getType() !== 'linkMultiple' &&
+                $fieldDefs->getType() !== 'attachmentMultiple'
+            ) {
                 continue;
             }
 
-            if (!$defs->getParam('storeArrayValues')) {
+            if ($fieldDefs->getParam('noLoad')) {
                 continue;
             }
 
-            if ($defs->isNotStorable()) {
+            if ($fieldDefs->isNotStorable()) {
+                continue;
+            }
+
+            $name = $fieldDefs->getName();
+
+            if (!$entityDefs->hasRelation($name)) {
                 continue;
             }
 
             $list[] = $name;
         }
 
-        $this->fieldListMapCache[$entityType] = $list;
+        $this->fieldListCacheMap[$entityType] = $list;
 
         return $list;
     }

@@ -34,7 +34,7 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-class SaveProcessor
+class Saver
 {
     private $entityManager;
 

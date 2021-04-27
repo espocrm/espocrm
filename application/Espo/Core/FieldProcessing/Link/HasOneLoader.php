@@ -27,46 +27,75 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\PhoneNumber;
+namespace Espo\Core\FieldProcessing\Link;
 
 use Espo\Core\{
     ORM\Entity,
-    ORM\EntityManager,
-    FieldProcessing\LoadProcessor as LoadProcessorInterface,
-    FieldProcessing\LoadProcessorParams,
+    FieldProcessing\Loader as LoaderInterface,
+    FieldProcessing\LoaderParams,
 };
 
 use Espo\ORM\Defs\Defs as OrmDefs;
 
-class LoadProcessor implements LoadProcessorInterface
+class HasOneLoader implements LoaderInterface
 {
     private $ormDefs;
 
-    private $entityManager;
+    private $fieldListCacheMap = [];
 
-    public function __construct(OrmDefs $ormDefs, EntityManager $entityManager)
+    public function __construct(OrmDefs $ormDefs)
     {
         $this->ormDefs = $ormDefs;
-        $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, LoadProcessorParams $params): void
+    public function process(Entity $entity, LoaderParams $params): void
     {
-        $entityDefs = $this->ormDefs->getEntity($entity->getEntityType());
+        foreach ($this->getFieldList($entity->getEntityType()) as $field) {
+            if ($entity->get($field . 'Name')) {
+                continue;
+            }
 
-        if (!$entityDefs->hasField('phoneNumber')) {
-            return;
+            $entity->loadLinkField($field);
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFieldList(string $entityType): array
+    {
+        if (array_key_exists($entityType, $this->fieldListCacheMap)) {
+            return $this->fieldListCacheMap[$entityType];
         }
 
-        if ($entityDefs->getField('phoneNumber')->getType() !== 'phone') {
-            return;
+        $list = [];
+
+        $entityDefs = $this->ormDefs->getEntity($entityType);
+
+        foreach ($entityDefs->getFieldList() as $fieldDefs) {
+            if ($fieldDefs->getType() !== 'link') {
+                continue;
+            }
+
+            if ($fieldDefs->getParam('noLoad')) {
+                continue;
+            }
+
+            $name = $fieldDefs->getName();
+
+            if (!$entityDefs->hasRelation($name)) {
+                continue;
+            }
+
+            if ($entityDefs->getRelation($name)->getType() !== Entity::HAS_ONE) {
+                continue;
+            }
+
+            $list[] = $name;
         }
 
-        $phoneNumberData = $this->entityManager
-            ->getRepository('PhoneNumber')
-            ->getPhoneNumberData($entity);
+        $this->fieldListCacheMap[$entityType] = $list;
 
-        $entity->set('phoneNumberData', $phoneNumberData);
-        $entity->setFetched('phoneNumberData', $phoneNumberData);
+        return $list;
     }
 }

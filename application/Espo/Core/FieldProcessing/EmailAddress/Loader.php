@@ -32,13 +32,13 @@ namespace Espo\Core\FieldProcessing\EmailAddress;
 use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
-    FieldProcessing\LoadProcessor as LoadProcessorInterface,
-    FieldProcessing\LoadProcessorParams,
+    FieldProcessing\Loader as LoaderInterface,
+    FieldProcessing\LoaderParams,
 };
 
 use Espo\ORM\Defs\Defs as OrmDefs;
 
-class LoadProcessor implements LoadProcessorInterface
+class Loader implements LoaderInterface
 {
     private $ormDefs;
 
@@ -50,7 +50,7 @@ class LoadProcessor implements LoadProcessorInterface
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, LoadProcessorParams $params): void
+    public function process(Entity $entity, LoaderParams $params): void
     {
         $entityDefs = $this->ormDefs->getEntity($entity->getEntityType());
 

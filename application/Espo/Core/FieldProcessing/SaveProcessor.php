@@ -32,12 +32,12 @@ namespace Espo\Core\FieldProcessing;
 use Espo\Core\ORM\Entity;
 
 use Espo\Core\{
-    FieldProcessing\EmailAddress\SaveProcessor as EmailAddressSaveProcessor,
-    FieldProcessing\PhoneNumber\SaveProcessor as PhoneNumberSaveProcessor,
-    FieldProcessing\Relation\SaveProcessor as RelationSaveProcessor,
-    FieldProcessing\File\SaveProcessor as FileSaveProcessor,
-    FieldProcessing\MultiEnum\SaveProcessor as MultiEnumSaveProcessor,
-    FieldProcessing\Wysiwyg\SaveProcessor as WysiwygSaveProcessor,
+    FieldProcessing\EmailAddress\Saver as EmailAddressSaver,
+    FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver,
+    FieldProcessing\Relation\Saver as RelationSaver,
+    FieldProcessing\File\Saver as FileSaver,
+    FieldProcessing\MultiEnum\Saver as MultiEnumSaver,
+    FieldProcessing\Wysiwyg\Saver as WysiwygSaver,
 };
 
 /**
@@ -45,41 +45,41 @@ use Espo\Core\{
  */
 class SaveProcessor
 {
-    private $emailAddressSaveProcessor;
+    private $emailAddressSaver;
 
-    private $phoneNumberSaveProcessor;
+    private $phoneNumberSaver;
 
-    private $relationSaveProcessor;
+    private $relationSaver;
 
-    private $fileSaveProcessor;
+    private $fileSaver;
 
-    private $multiEnumSaveProcessor;
+    private $multiEnumSaver;
 
-    private $wysiwygSaveProcessor;
+    private $wysiwygSaver;
 
     public function __construct(
-        EmailAddressSaveProcessor $emailAddressSaveProcessor,
-        PhoneNumberSaveProcessor $phoneNumberSaveProcessor,
-        RelationSaveProcessor $relationSaveProcessor,
-        FileSaveProcessor $fileSaveProcessor,
-        MultiEnumSaveProcessor $multiEnumSaveProcessor,
-        WysiwygSaveProcessor $wysiwygSaveProcessor
+        EmailAddressSaver $emailAddressSaver,
+        PhoneNumberSaver $phoneNumberSaver,
+        RelationSaver $relationSaver,
+        FileSaver $fileSaver,
+        MultiEnumSaver $multiEnumSaver,
+        WysiwygSaver $wysiwygSaver
     ) {
-        $this->emailAddressSaveProcessor = $emailAddressSaveProcessor;
-        $this->phoneNumberSaveProcessor = $phoneNumberSaveProcessor;
-        $this->relationSaveProcessor = $relationSaveProcessor;
-        $this->fileSaveProcessor = $fileSaveProcessor;
-        $this->multiEnumSaveProcessor = $multiEnumSaveProcessor;
-        $this->wysiwygSaveProcessor = $wysiwygSaveProcessor;
+        $this->emailAddressSaver = $emailAddressSaver;
+        $this->phoneNumberSaver = $phoneNumberSaver;
+        $this->relationSaver = $relationSaver;
+        $this->fileSaver = $fileSaver;
+        $this->multiEnumSaver = $multiEnumSaver;
+        $this->wysiwygSaver = $wysiwygSaver;
     }
 
     public function process(Entity $entity, array $options): void
     {
-        $this->emailAddressSaveProcessor->process($entity, $options);
-        $this->phoneNumberSaveProcessor->process($entity, $options);
-        $this->relationSaveProcessor->process($entity, $options);
-        $this->fileSaveProcessor->process($entity, $options);
-        $this->multiEnumSaveProcessor->process($entity, $options);
-        $this->wysiwygSaveProcessor->process($entity, $options);
+        $this->emailAddressSaver->process($entity, $options);
+        $this->phoneNumberSaver->process($entity, $options);
+        $this->relationSaver->process($entity, $options);
+        $this->fileSaver->process($entity, $options);
+        $this->multiEnumSaver->process($entity, $options);
+        $this->wysiwygSaver->process($entity, $options);
     }
 }

@@ -31,8 +31,8 @@ namespace Espo\Core\FieldProcessing\Misc;
 
 use Espo\Core\{
     ORM\Entity,
-    FieldProcessing\LoadProcessor as LoadProcessorInterface,
-    FieldProcessing\LoadProcessorParams,
+    FieldProcessing\Loader as LoaderInterface,
+    FieldProcessing\LoaderParams,
     Utils\Metadata,
     Utils\Config,
     Acl,
@@ -42,7 +42,7 @@ use Espo\Entities\User;
 
 use Espo\Services\Stream as StreamService;
 
-class StreamLoadProcessor implements LoadProcessorInterface
+class StreamLoader implements LoaderInterface
 {
     private const FOLLOWERS_LIMIT = 5;
 
@@ -70,7 +70,7 @@ class StreamLoadProcessor implements LoadProcessorInterface
         $this->config = $config;
     }
 
-    public function process(Entity $entity, LoadProcessorParams $params): void
+    public function process(Entity $entity, LoaderParams $params): void
     {
         $this->processIsFollowed($entity);
         $this->processFollowers($entity);

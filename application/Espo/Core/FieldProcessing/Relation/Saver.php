@@ -34,11 +34,11 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-class SaveProcessor
+class Saver
 {
     private $entityManager;
 
-    private $linkMultipleSaveProcessor;
+    private $linkMultipleSaver;
 
     private $manyRelationListMapCache = [];
 
@@ -48,10 +48,10 @@ class SaveProcessor
 
     public function __construct(
         EntityManager $entityManager,
-        LinkMultipleSaveProcessor $linkMultipleSaveProcessor
+        LinkMultipleSaver $linkMultipleSaver
     ) {
         $this->entityManager = $entityManager;
-        $this->linkMultipleSaveProcessor = $linkMultipleSaveProcessor;
+        $this->linkMultipleSaver = $linkMultipleSaver;
     }
 
     public function process(Entity $entity, array $options): void
@@ -79,7 +79,7 @@ class SaveProcessor
             return;
         }
 
-        $this->linkMultipleSaveProcessor->process($entity, $name, $options);
+        $this->linkMultipleSaver->process($entity, $name, $options);
     }
 
     private function processHasOne(Entity $entity, array $options): void

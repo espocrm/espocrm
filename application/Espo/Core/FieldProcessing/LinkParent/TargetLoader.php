@@ -32,11 +32,11 @@ namespace Espo\Core\FieldProcessing\LinkParent;
 use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
-    FieldProcessing\LoadProcessor as LoadProcessorInterface,
-    FieldProcessing\LoadProcessorParams,
+    FieldProcessing\Loader as LoaderInterface,
+    FieldProcessing\LoaderParams,
 };
 
-class TargetLoadProcessor implements LoadProcessorInterface
+class TargetLoader implements LoaderInterface
 {
     private $entityManager;
 
@@ -45,7 +45,7 @@ class TargetLoadProcessor implements LoadProcessorInterface
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, LoadProcessorParams $params): void
+    public function process(Entity $entity, LoaderParams $params): void
     {
         $targetType = $entity->get('targetType');
         $targetId = $entity->get('targetId');

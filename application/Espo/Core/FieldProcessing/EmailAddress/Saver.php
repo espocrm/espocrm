@@ -37,7 +37,7 @@ use Espo\Core\{
     ApplicationState,
 };
 
-class SaveProcessor
+class Saver
 {
     private $entityManager;
 

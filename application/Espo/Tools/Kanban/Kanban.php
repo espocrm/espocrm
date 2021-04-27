@@ -35,7 +35,7 @@ use Espo\Core\{
     Select\SelectBuilderFactory,
     Select\SearchParams,
     FieldProcessing\ListLoadProcessor,
-    FieldProcessing\LoadProcessorParams,
+    FieldProcessing\LoaderParams as FieldLoaderParams,
 };
 
 use Espo\{
@@ -245,7 +245,7 @@ class Kanban
                 }
             }
 
-            $loadProcessorParams = LoadProcessorParams
+            $loadProcessorParams = FieldLoaderParams
                 ::fromNothing()
                 ->withSelect($searchParams->getSelect());
 

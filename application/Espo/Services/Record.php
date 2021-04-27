@@ -67,7 +67,7 @@ use Espo\Core\{
     FieldValidation\Params as FieldValidationParams,
     FieldProcessing\ReadLoadProcessor,
     FieldProcessing\ListLoadProcessor,
-    FieldProcessing\LoadProcessorParams,
+    FieldProcessing\LoaderParams as FieldLoaderParams,
 };
 
 use Espo\Tools\{
@@ -588,7 +588,7 @@ class Record implements Crud,
 
     protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams): void
     {
-        $params = new LoadProcessorParams();
+        $params = new FieldLoaderParams();
 
         if ($searchParams && $searchParams->getSelect()) {
             $params = $params->withSelect($searchParams->getSelect());

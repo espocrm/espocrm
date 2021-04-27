@@ -38,7 +38,7 @@ use Espo\Core\{
     Utils\Metadata,
 };
 
-class SaveProcessor
+class Saver
 {
     private $entityManager;
 

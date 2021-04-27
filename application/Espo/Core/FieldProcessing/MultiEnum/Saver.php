@@ -27,14 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\Wysiwyg;
+namespace Espo\Core\FieldProcessing\MultiEnum;
 
 use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
 };
 
-class SaveProcessor
+class Saver
 {
     private $entityManager;
 
@@ -47,10 +47,6 @@ class SaveProcessor
 
     public function process(Entity $entity, array $options): void
     {
-        if (!$entity->isNew()) {
-            //return;
-        }
-
         foreach ($this->getFieldList($entity->getEntityType()) as $name) {
             $this->processItem($entity, $name);
         }
@@ -66,42 +62,9 @@ class SaveProcessor
             return;
         }
 
-        $contents = $entity->get($name);
-
-        if (!$contents) {
-            return;
-        }
-
-        $matches = [];
-
-        $matchResult = preg_match_all("/\?entryPoint=attachment&amp;id=([^&=\"']+)/", $contents, $matches);
-
-        if (!$matchResult) {
-            return;
-        }
-
-        if (empty($matches[1]) || !is_array($matches[1])) {
-            return;
-        }
-
-        foreach ($matches[1] as $id) {
-            $attachment = $this->entityManager->getEntity('Attachment', $id);
-
-            if (!$attachment) {
-                continue;
-            }
-
-            if ($attachment->get('relatedId') || $attachment->get('sourceId')) {
-                continue;
-            }
-
-            $attachment->set([
-                'relatedId' => $entity->getId(),
-                'relatedType' => $entity->getEntityType(),
-            ]);
-
-            $this->entityManager->saveEntity($attachment);
-        }
+        $this->entityManager
+            ->getRepository('ArrayValue')
+            ->storeEntityAttribute($entity, $name);
     }
 
     private function getFieldList(string $entityType): array
@@ -116,10 +79,18 @@ class SaveProcessor
 
         $list = [];
 
-        foreach ($entityDefs->getFieldNameList() as $name) {
-            $defs = $entityDefs->getField($name);
+        foreach ($entityDefs->getAttributeNameList() as $name) {
+            $defs = $entityDefs->getAttribute($name);
 
-            if ($defs->getType() !== 'wysiwyg') {
+            if ($defs->getType() !== Entity::JSON_ARRAY) {
+                continue;
+            }
+
+            if (!$defs->getParam('storeArrayValues')) {
+                continue;
+            }
+
+            if ($defs->isNotStorable()) {
                 continue;
             }
 
