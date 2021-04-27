@@ -69,60 +69,29 @@ class TargetList extends \Espo\Services\Record implements
         'User' => 'users',
     ];
 
-    public function loadAdditionalFields(Entity $entity)
-    {
-        parent::loadAdditionalFields($entity);
-        $this->loadEntryCountField($entity);
-        $this->loadOptedOutCountField($entity);
-    }
-
-    public function loadAdditionalFieldsForList(Entity $entity)
-    {
-        parent::loadAdditionalFields($entity);
-        $this->loadEntryCountField($entity);
-    }
-
-    protected function loadEntryCountField(Entity $entity)
-    {
-        $count = 0;
-        foreach ($this->targetsLinkList as $link) {
-            $count += $this->getEntityManager()->getRepository('TargetList')->countRelated($entity, $link);
-        }
-        $entity->set('entryCount', $count);
-    }
-
-    protected function loadOptedOutCountField(Entity $entity)
-    {
-        $count = 0;
-
-        foreach ($this->targetsLinkList as $link) {
-            $foreignEntityType = $entity->getRelationParam($link, 'entity');
-
-            $count += $this->getEntityManager()->getRepository($foreignEntityType)
-                ->join('targetLists')
-                ->where([
-                    'targetListsMiddle.targetListId' => $entity->id,
-                    'targetListsMiddle.optedOut' => 1,
-                ])
-                ->count();
-        }
-
-        $entity->set('optedOutCount', $count);
-    }
-
     protected function afterCreateEntity(Entity $entity, $data)
     {
         if (property_exists($data, 'sourceCampaignId') && !empty($data->includingActionList)) {
             $excludingActionList = [];
+
             if (!empty($data->excludingActionList)) {
                 $excludingActionList = $data->excludingActionList;
             }
-            $this->populateFromCampaignLog($entity, $data->sourceCampaignId, $data->includingActionList, $excludingActionList);
+
+            $this->populateFromCampaignLog(
+                $entity,
+                $data->sourceCampaignId,
+                $data->includingActionList,
+                $excludingActionList
+            );
         }
     }
 
     protected function populateFromCampaignLog(
-        Entity $entity, string $sourceCampaignId, array $includingActionList, array $excludingActionList
+        Entity $entity,
+        string $sourceCampaignId,
+        array $includingActionList,
+        array $excludingActionList
     ) {
         if (empty($sourceCampaignId)) {
             throw new BadRequest();
@@ -226,10 +195,6 @@ class TargetList extends \Espo\Services\Record implements
             throw new Error();
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
-        $query = $this->getEntityManager()->getQueryComposer();
-        $sql = null;
-
         $linkEntityType = ucfirst(
             $entity->getRelationParam($link, 'relationName') ?? ''
         );
@@ -256,7 +221,7 @@ class TargetList extends \Espo\Services\Record implements
         return true;
     }
 
-    protected function getOptedOutSelectQueryForLink(string $targetListId, string $link) : Select
+    protected function getOptedOutSelectQueryForLink(string $targetListId, string $link): Select
     {
         $seed = $this->getRepository()->getNew();
 
@@ -299,7 +264,7 @@ class TargetList extends \Espo\Services\Record implements
             ->build();
     }
 
-    protected function findLinkedOptedOut(string $id, array $params) : RecordCollection
+    protected function findLinkedOptedOut(string $id, array $params): RecordCollection
     {
         $offset = $params['offset'] ?? 0;
         $maxSize = $params['maxSize'] ?? 0;
@@ -342,7 +307,7 @@ class TargetList extends \Espo\Services\Record implements
 
         $collection = $this->getEntityManager()->createCollection();
 
-        while ($row = $sth->fetch(\PDO::FETCH_ASSOC)) {
+        while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             $itemEntity = $this->getEntityManager()->getEntity($row['entityType']);
 
             $itemEntity->set($row);
@@ -381,9 +346,11 @@ class TargetList extends \Espo\Services\Record implements
 
         $link = $map[$targetType];
 
-        $result = $this->getEntityManager()->getRepository('TargetList')->relate($targetList, $link, $targetId, array(
-            'optedOut' => true
-        ));
+        $result = $this->getEntityManager()
+            ->getRepository('TargetList')
+            ->relate($targetList, $link, $targetId, [
+                'optedOut' => true,
+            ]);
 
         if (!$result) {
             return false;
@@ -424,11 +391,14 @@ class TargetList extends \Espo\Services\Record implements
         if (empty($map[$targetType])) {
             throw new Error();
         }
+
         $link = $map[$targetType];
 
-        $result = $this->getEntityManager()->getRepository('TargetList')->updateRelation($targetList, $link, $targetId, array(
-            'optedOut' => false
-        ));
+        $result = $this->getEntityManager()
+            ->getRepository('TargetList')
+            ->updateRelation($targetList, $link, $targetId, [
+                'optedOut' => false,
+            ]);
 
         if (!$result) {
             return false;
@@ -437,7 +407,7 @@ class TargetList extends \Espo\Services\Record implements
         $hookData = [
            'link' => $link,
            'targetId' => $targetId,
-           'targetType' => $targetType
+           'targetType' => $targetType,
         ];
 
         $this->hookManager->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
@@ -458,10 +428,11 @@ class TargetList extends \Espo\Services\Record implements
                     'optedOut' => false
                 )
             ));
+
             foreach ($linkedList as $linked) {
-                $repository->relate($entity, $link, $linked, array(
-                    'optedOut' => false
-                ));
+                $repository->relate($entity, $link, $linked, [
+                    'optedOut' => false,
+                ]);
             }
         }
     }

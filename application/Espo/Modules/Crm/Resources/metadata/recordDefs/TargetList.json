@@ -1,0 +1,10 @@
+{
+    "readLoaderClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\EntryCountLoader",
+        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\OptedOutCountLoader"
+    ],
+    "listLoaderClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\EntryCountLoader",
+        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\OptedOutCountLoader"
+    ]
+}

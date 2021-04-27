@@ -27,46 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Modules\Crm\Classes\FieldProcessing\TargetList;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    FieldProcessing\Loader,
+    FieldProcessing\LoaderParams,
+    ORM\Entity,
+    ORM\EntityManager,
+};
 
-use Espo\Core\Di;
-
-class Portal extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class EntryCountLoader implements Loader
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    private $targetsLinkList = ['contacts', 'leads', 'users', 'accounts'];
 
-    protected $getEntityBeforeUpdate = true;
+    private $entityManager;
 
-    protected $mandatorySelectAttributeList = [
-        'customUrl',
-        'customId',
-    ];
-
-    protected function afterUpdateEntity(Entity $entity, $data)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->loadUrlField($entity);
+        $this->entityManager = $entityManager;
+    }
 
-        if (property_exists($data, 'portalRolesIds')) {
-            $this->clearRolesCache();
+    public function process(Entity $entity, LoaderParams $params): void
+    {
+        if (
+            $params->hasSelect() &&
+            !in_array('entryCount', $params->getSelect())
+        ) {
+            return;
         }
-    }
 
-    protected function loadUrlField(Entity $entity)
-    {
-        $this->getRepository()->loadUrlField($entity);
-    }
+        $count = 0;
 
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/aclPortal');
-        $this->fileManager->removeInDir('data/cache/application/aclPortalMap');
+        foreach ($this->targetsLinkList as $link) {
+            $count += $this->entityManager
+                ->getRDBRepository('TargetList')
+                ->getRelation($entity, $link)
+                ->count();
+        }
 
-        $this->dataManager->updateCacheTimestamp();
+        $entity->set('entryCount', $count);
     }
 }

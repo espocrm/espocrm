@@ -34,6 +34,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\Util,
     ORM\EntityManager,
+    FieldProcessing\ListLoadProcessor,
 };
 
 use Espo\Entities\User;
@@ -48,23 +49,25 @@ class LastViewed
 
     protected $user;
 
+    private $listLoadProcessor;
+
     public function __construct(
         ServiceFactory $serviceFactory,
         Metadata $metadata,
         EntityManager $entityManager,
-        User $user
+        User $user,
+        ListLoadProcessor $listLoadProcessor
     ) {
         $this->serviceFactory = $serviceFactory;
         $this->metadata = $metadata;
         $this->entityManager = $entityManager;
         $this->user = $user;
+        $this->listLoadProcessor = $listLoadProcessor;
     }
 
     public function getList($params): object
     {
         $repository = $this->entityManager->getRDBRepository('ActionHistoryRecord');
-
-        $actionHistoryRecordService = $this->serviceFactory->create('ActionHistoryRecord');
 
         $scopes = $this->metadata->get('scopes');
 
@@ -96,7 +99,7 @@ class LastViewed
             ->find();
 
         foreach ($collection as $entity) {
-            $actionHistoryRecordService->loadAdditionalFieldsForList($entity);
+            $this->listLoadProcessor->process($entity);
 
             $entity->set('id', Util::generateId());
         }

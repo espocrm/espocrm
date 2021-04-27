@@ -27,46 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\FieldProcessing\Portal;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    FieldProcessing\Loader,
+    FieldProcessing\LoaderParams,
+    ORM\Entity,
+    ORM\EntityManager,
+};
 
-use Espo\Core\Di;
-
-class Portal extends Record implements
-
-    Di\FileManagerAware,
-    Di\DataManagerAware
+class UrlLoader implements Loader
 {
-    use Di\FileManagerSetter;
-    use Di\DataManagerSetter;
+    private $entityManager;
 
-    protected $getEntityBeforeUpdate = true;
-
-    protected $mandatorySelectAttributeList = [
-        'customUrl',
-        'customId',
-    ];
-
-    protected function afterUpdateEntity(Entity $entity, $data)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->loadUrlField($entity);
-
-        if (property_exists($data, 'portalRolesIds')) {
-            $this->clearRolesCache();
-        }
+        $this->entityManager = $entityManager;
     }
 
-    protected function loadUrlField(Entity $entity)
+    public function process(Entity $entity, LoaderParams $params): void
     {
-        $this->getRepository()->loadUrlField($entity);
-    }
-
-    protected function clearRolesCache()
-    {
-        $this->fileManager->removeInDir('data/cache/application/aclPortal');
-        $this->fileManager->removeInDir('data/cache/application/aclPortalMap');
-
-        $this->dataManager->updateCacheTimestamp();
+        $this->entityManager
+            ->getRepository('Portal')
+            ->loadUrlField($entity);
     }
 }

@@ -1,3 +1,6 @@
 {
-    "assignmentNotificatorClassName": "Espo\\Classes\\AssignmentNotificators\\Email"
+    "assignmentNotificatorClassName": "Espo\\Classes\\AssignmentNotificators\\Email",
+    "listLoaderClassNameList": [
+        "Espo\\Classes\\FieldProcessing\\Email\\StringDataLoader"
+    ]
 }

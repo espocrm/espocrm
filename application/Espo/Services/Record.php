@@ -586,7 +586,7 @@ class Record implements Crud,
         $loadProcessor->process($entity);
     }
 
-    protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams): void
+    private function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams): void
     {
         $params = new FieldLoaderParams();
 

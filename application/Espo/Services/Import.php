@@ -36,6 +36,7 @@ use Espo\Core\{
     Record\Collection as RecordCollection,
     Di,
     Select\SearchParams,
+    FieldProcessing\ListLoadProcessor,
 };
 
 use Espo\{
@@ -99,10 +100,12 @@ class Import extends Record implements
 
         $collection = $this->getRepository()->findResultRecords($entity, $link, $query);
 
+        $listLoadProcessor = $this->injectableFactory->create(ListLoadProcessor::class);
+
         $recordService = $this->recordServiceContainer->get($foreignEntityType);
 
         foreach ($collection as $e) {
-            $recordService->loadAdditionalFieldsForList($e);
+            $listLoadProcessor->process($e);
             $recordService->prepareEntityForOutput($e);
         }
 
