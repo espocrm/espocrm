@@ -1,0 +1,5 @@
+{
+    "readLoaderClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Campaign\\StatsLoader"
+    ]
+}
