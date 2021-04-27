@@ -1,5 +1,5 @@
 {
     "readLoaderClassNameList": [
-        "Espo\\Core\\FieldProcessing\\Reminders\\Loader"
+        "Espo\\Core\\FieldProcessing\\Reminder\\Loader"
     ]
 }

@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\Reminders;
+namespace Espo\Core\FieldProcessing\Reminder;
 
 use Espo\Core\{
     ORM\Entity,
@@ -36,6 +36,9 @@ use Espo\Core\{
     FieldProcessing\LoaderParams,
 };
 
+/**
+ * @internal This class should not be removed as it's used by custom entities.
+ */
 class Loader implements LoaderInterface
 {
     private $entityManager;
