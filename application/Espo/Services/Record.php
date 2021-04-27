@@ -1275,10 +1275,6 @@ class Record implements Crud,
         foreach ($collection as $e) {
             $this->loadAdditionalFieldsForList($e);
 
-            if (!empty($params['loadAdditionalFields'])) {
-                $this->loadAdditionalFields($e);
-            }
-
             if (!empty($params['select'])) {
                 $this->loadLinkMultipleFieldsForList($e, $params['select']);
             }
@@ -1526,10 +1522,6 @@ class Record implements Crud,
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
-
-            if (!empty($params['loadAdditionalFields'])) {
-                $recordService->loadAdditionalFields($e);
-            }
 
             if (!empty($params['select'])) {
                 $this->loadLinkMultipleFieldsForList($e, $params['select']);

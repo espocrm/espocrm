@@ -242,10 +242,6 @@ class Kanban
             foreach ($collectionSub as $e) {
                 $this->recordService->loadAdditionalFieldsForList($e);
 
-                if (!empty($params['loadAdditionalFields'])) {
-                    $this->recordService->loadAdditionalFields($e);
-                }
-
                 if (!empty($params['select'])) {
                     $this->recordService->loadLinkMultipleFieldsForList($e, $params['select']);
                 }

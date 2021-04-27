@@ -846,10 +846,6 @@ class Activities implements
         foreach ($collection as $e) {
             $service->loadAdditionalFieldsForList($e);
 
-            if (!empty($params['loadAdditionalFields'])) {
-                $service->loadAdditionalFields($e);
-            }
-
             if (!empty($params['select'])) {
                 $service->loadLinkMultipleFieldsForList($e, $params['select']);
             }
