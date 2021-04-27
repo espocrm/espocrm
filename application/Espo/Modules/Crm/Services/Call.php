@@ -36,6 +36,7 @@ class Call extends Meeting
     public function loadAdditionalFields(Entity $entity)
     {
         parent::loadAdditionalFields($entity);
+
         $this->loadPhoneNumbersMapField($entity);
     }
 
@@ -46,15 +47,23 @@ class Call extends Meeting
         $erasedPart = 'ERASED:';
 
         $contactIdList = $entity->getLinkMultipleIdList('contacts');
+
         if (count($contactIdList)) {
-            $contactList = $this->getEntityManager()->getRepository('Contact')->where([
-                'id' => $contactIdList
-            ])->select(['id', 'phoneNumber'])->find();
+            $contactList = $this->getEntityManager()
+                ->getRepository('Contact')
+                    ->where([
+                    'id' => $contactIdList
+                ])
+                ->select(['id', 'phoneNumber'])
+                ->find();
+
             foreach ($contactList as $contact) {
                 $phoneNumber = $contact->get('phoneNumber');
+
                 if ($phoneNumber) {
                     if (strpos($phoneNumber, $erasedPart) !== 0) {
                         $key = $contact->getEntityType() . '_' . $contact->id;
+
                         $map->$key = $phoneNumber;
                     }
                 }
@@ -62,15 +71,23 @@ class Call extends Meeting
         }
 
         $leadIdList = $entity->getLinkMultipleIdList('leads');
+
         if (count($leadIdList)) {
-            $leadList = $this->getEntityManager()->getRepository('Lead')->where([
-                'id' => $leadIdList
-            ])->select(['id', 'phoneNumber'])->find();
+            $leadList = $this->getEntityManager()
+                ->getRepository('Lead')
+                ->where([
+                    'id' => $leadIdList
+                ])
+                ->select(['id', 'phoneNumber'])
+                ->find();
+
             foreach ($leadList as $lead) {
                 $phoneNumber = $lead->get('phoneNumber');
+
                 if ($phoneNumber) {
                     if (strpos($phoneNumber, $erasedPart) !== 0) {
                         $key = $lead->getEntityType() . '_' . $lead->id;
+
                         $map->$key = $phoneNumber;
                     }
                 }
@@ -83,6 +100,7 @@ class Call extends Meeting
     protected function afterUpdateEntity(Entity $entity, $data)
     {
         parent::afterUpdateEntity($entity, $data);
+
         if (isset($data->contactsIds) || isset($data->leadsIds)) {
             $this->loadPhoneNumbersMapField($entity);
         }
