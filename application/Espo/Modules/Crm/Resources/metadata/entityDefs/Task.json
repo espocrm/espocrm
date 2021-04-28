@@ -64,7 +64,8 @@
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
-            "view": "crm:views/meeting/fields/reminders"
+            "view": "crm:views/meeting/fields/reminders",
+            "dateField": "dateEnd"
         },
         "description": {
             "type": "text"

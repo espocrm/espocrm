@@ -33,8 +33,6 @@ use Espo\ORM\Entity;
 
 class Task extends \Espo\Core\Repositories\Event
 {
-    protected $reminderDateAttribute = 'dateEnd';
-
     protected $reminderSkippingStatusList = ['Completed', 'Canceled'];
 
     protected $preserveDuration = false;
