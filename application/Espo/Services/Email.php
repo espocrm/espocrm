@@ -93,18 +93,6 @@ class Email extends Record implements
         'hasAttachment',
     ];
 
-    private $fromEmailAddressNameCache = [];
-
-    protected function getFileStorageManager()
-    {
-        return $this->fileStorageManager;
-    }
-
-    protected function getCrypt()
-    {
-        return $this->crypt;
-    }
-
     public function getUserSmtpParams(string $userId): ?array
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
@@ -129,7 +117,7 @@ class Email extends Record implements
 
         if ($smtpParams) {
             if (array_key_exists('password', $smtpParams)) {
-                $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
             }
         }
 
@@ -194,7 +182,7 @@ class Email extends Record implements
 
                     if ($smtpParams) {
                         if (array_key_exists('password', $smtpParams)) {
-                            $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
+                            $smtpParams['password'] = $this->crypt->decrypt($smtpParams['password']);
                         }
                     }
                 }
@@ -788,12 +776,12 @@ class Email extends Record implements
                     $attachment->set('parentId', $parentId);
                 }
 
-                if ($this->getFileStorageManager()->exists($source)) {
+                if ($this->fileStorageManager->exists($source)) {
                     $this->getEntityManager()->saveEntity($attachment);
 
-                    $contents = $this->getFileStorageManager()->getContents($source) ?? '';
+                    $contents = $this->fileStorageManager->getContents($source) ?? '';
 
-                    $this->getFileStorageManager()->putContents($attachment, $contents);
+                    $this->fileStorageManager->putContents($attachment, $contents);
 
                     $ids[] = $attachment->id;
 
