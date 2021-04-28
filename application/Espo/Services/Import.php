@@ -40,7 +40,6 @@ use Espo\Core\{
 };
 
 use Espo\{
-    ORM\Entity,
     Services\Record,
     Tools\Import\Import as ImportTool,
 };
@@ -57,21 +56,6 @@ class Import extends Record implements
     use Di\FileStorageManagerSetter;
 
     const REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS = 2;
-
-    public function loadAdditionalFields(Entity $entity)
-    {
-        parent::loadAdditionalFields($entity);
-
-        $importedCount = $this->getRepository()->countResultRecords($entity, 'imported');
-        $duplicateCount = $this->getRepository()->countResultRecords($entity, 'duplicates');
-        $updatedCount = $this->getRepository()->countResultRecords($entity, 'updated');
-
-        $entity->set([
-            'importedCount' => $importedCount,
-            'duplicateCount' => $duplicateCount,
-            'updatedCount' => $updatedCount,
-        ]);
-    }
 
     public function findLinked(string $id, string $link, array $params): RecordCollection
     {
@@ -337,7 +321,10 @@ class Import extends Record implements
     }
 
     public function import(
-        string $entityType, array $attributeList, string $attachmentId, array $params = []
+        string $entityType,
+        array $attributeList,
+        string $attachmentId,
+        array $params = []
     ): StdClass {
 
         $result = $this->createImportTool()

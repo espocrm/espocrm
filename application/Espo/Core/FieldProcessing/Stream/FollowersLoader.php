@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\FieldProcessing\Misc;
+namespace Espo\Core\FieldProcessing\Stream;
 
 use Espo\Core\{
     ORM\Entity,
@@ -42,7 +42,7 @@ use Espo\Entities\User;
 
 use Espo\Services\Stream as StreamService;
 
-class StreamLoader implements LoaderInterface
+class FollowersLoader implements LoaderInterface
 {
     private const FOLLOWERS_LIMIT = 5;
 

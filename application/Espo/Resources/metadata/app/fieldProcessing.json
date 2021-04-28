@@ -6,7 +6,7 @@
         "Espo\\Core\\FieldProcessing\\LinkParent\\Loader",
         "Espo\\Core\\FieldProcessing\\EmailAddress\\Loader",
         "Espo\\Core\\FieldProcessing\\PhoneNumber\\Loader",
-        "Espo\\Core\\FieldProcessing\\Misc\\StreamLoader"
+        "Espo\\Core\\FieldProcessing\\Stream\\FollowersLoader"
     ],
     "listLoaderClassNameList": [
         "Espo\\Core\\FieldProcessing\\LinkParent\\Loader",
