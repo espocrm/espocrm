@@ -446,31 +446,6 @@ class Email extends Record implements
         }
     }
 
-    public function loadFromField(Entity $entity)
-    {
-        $this->getEntityManager()->getRepository('Email')->loadFromField($entity);
-    }
-
-    public function loadToField(Entity $entity)
-    {
-        $this->getEntityManager()->getRepository('Email')->loadToField($entity);
-    }
-
-    public function loadCcField(Entity $entity)
-    {
-        $this->getEntityManager()->getRepository('Email')->loadCcField($entity);
-    }
-
-    public function loadBccField(Entity $entity)
-    {
-        $this->getEntityManager()->getRepository('Email')->loadBccField($entity);
-    }
-
-    public function loadReplyToField(Entity $entity)
-    {
-        $this->getEntityManager()->getRepository('Email')->loadReplyToField($entity);
-    }
-
     public function getEntity(?string $id = null): ?Entity
     {
         $entity = parent::getEntity($id);
@@ -480,21 +455,6 @@ class Email extends Record implements
         }
 
         return $entity;
-    }
-
-    public function loadAdditionalFields(Entity $entity)
-    {
-        parent::loadAdditionalFields($entity);
-
-        $this->loadFromField($entity);
-        $this->loadToField($entity);
-        $this->loadCcField($entity);
-        $this->loadBccField($entity);
-        $this->loadReplyToField($entity);
-
-        $this->loadNameHash($entity);
-
-        $this->loadUserColumnFields($entity);
     }
 
     public function markAsReadByIdList(array $idList, $userId = null)
@@ -785,37 +745,6 @@ class Email extends Record implements
         return $fromAddress;
     }
 
-    public function loadUserColumnFields(Entity $entity)
-    {
-        $emailUser = $this->entityManager->getRepository('EmailUser')
-            ->select(['isRead', 'isImportant', 'inTrash'])
-            ->where([
-                'deleted' => false,
-                'userId' => $this->getUser()->id,
-                'emailId' => $entity->id,
-            ])
-            ->findOne();
-
-        if (!$emailUser) {
-            $entity->set('isRead', null);
-            $entity->clear('isImportant');
-            $entity->clear('inTrash');
-
-            return;
-        }
-
-        $entity->set([
-            'isRead' => $emailUser->get('isRead'),
-            'isImportant' => $emailUser->get('isImportant'),
-            'inTrash' => $emailUser->get('inTrash'),
-        ]);
-    }
-
-    public function loadNameHash(Entity $entity, array $fieldList = ['from', 'to', 'cc', 'bcc', 'replyTo'])
-    {
-        $this->getEntityManager()->getRepository('Email')->loadNameHash($entity, $fieldList);
-    }
-
     public function copyAttachments(string $emailId, ?string $parentType, ?string $parentId)
     {
         return $this->getCopiedAttachments($emailId, $parentType, $parentId);
@@ -983,7 +912,10 @@ class Email extends Record implements
 
         if (!$skipFilter) {
             foreach ($entity->getAttributeList() as $attribute) {
-                if (in_array($attribute, $this->allowedForUpdateAttributeList)) continue;
+                if (in_array($attribute, $this->allowedForUpdateAttributeList)) {
+                    continue;
+                }
+
                 $entity->clear($attribute);
             }
         }
