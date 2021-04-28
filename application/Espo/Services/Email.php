@@ -61,8 +61,6 @@ class Email extends Record implements
     use Di\CryptSetter;
     use Di\FileStorageManagerSetter;
 
-    private $streamService = null;
-
     protected $getEntityBeforeUpdate = true;
 
     protected $allowedForUpdateAttributeList = [
