@@ -35,9 +35,11 @@ use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
     ApplicationState,
+    FieldProcessing\Saver as SaverInterface,
+    FieldProcessing\SaverParams,
 };
 
-class Saver
+class Saver implements SaverInterface
 {
     private $entityManager;
 
@@ -55,7 +57,7 @@ class Saver
         $this->accessChecker = $accessChecker;
     }
 
-    public function process(Entity $entity, array $options): void
+    public function process(Entity $entity, SaverParams $params): void
     {
         $entityType = $entity->getEntityType();
 

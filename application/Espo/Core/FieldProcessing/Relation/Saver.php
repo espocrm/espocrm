@@ -32,9 +32,11 @@ namespace Espo\Core\FieldProcessing\Relation;
 use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
+    FieldProcessing\Saver as SaverInterface,
+    FieldProcessing\SaverParams,
 };
 
-class Saver
+class Saver implements SaverInterface
 {
     private $entityManager;
 
@@ -54,8 +56,10 @@ class Saver
         $this->linkMultipleSaver = $linkMultipleSaver;
     }
 
-    public function process(Entity $entity, array $options): void
+    public function process(Entity $entity, SaverParams $params): void
     {
+        $options = $params->getRawOptions();
+
         $this->processMany($entity, $options);
         $this->processHasOne($entity, $options);
         $this->processBelongsToHasOne($entity, $options);

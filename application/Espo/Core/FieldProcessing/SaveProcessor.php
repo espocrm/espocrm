@@ -75,11 +75,13 @@ class SaveProcessor
 
     public function process(Entity $entity, array $options): void
     {
-        $this->emailAddressSaver->process($entity, $options);
-        $this->phoneNumberSaver->process($entity, $options);
-        $this->relationSaver->process($entity, $options);
-        $this->fileSaver->process($entity, $options);
-        $this->multiEnumSaver->process($entity, $options);
-        $this->wysiwygSaver->process($entity, $options);
+        $params = SaverParams::fromNothing()->withRawOptions($options);
+
+        $this->emailAddressSaver->process($entity, $params);
+        $this->phoneNumberSaver->process($entity, $params);
+        $this->relationSaver->process($entity, $params);
+        $this->fileSaver->process($entity, $params);
+        $this->multiEnumSaver->process($entity, $params);
+        $this->wysiwygSaver->process($entity, $params);
     }
 }

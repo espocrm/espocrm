@@ -32,9 +32,11 @@ namespace Espo\Core\FieldProcessing\MultiEnum;
 use Espo\Core\{
     ORM\Entity,
     ORM\EntityManager,
+    FieldProcessing\Saver as SaverInterface,
+    FieldProcessing\SaverParams,
 };
 
-class Saver
+class Saver implements SaverInterface
 {
     private $entityManager;
 
@@ -45,7 +47,7 @@ class Saver
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, array $options): void
+    public function process(Entity $entity, SaverParams $params): void
     {
         foreach ($this->getFieldList($entity->getEntityType()) as $name) {
             $this->processItem($entity, $name);
