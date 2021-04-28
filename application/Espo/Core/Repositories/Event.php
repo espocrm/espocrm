@@ -34,6 +34,11 @@ use Espo\Core\Utils\Util;
 
 use Espo\Core\Di;
 
+use DateTime;
+use DateTimeZone;
+use DateInterval;
+use Exception;
+
 class Event extends Database implements
 
     Di\DateTimeAware,
@@ -72,29 +77,34 @@ class Event extends Database implements
 
             if (!empty($dateStartDate)) {
                 $dateStart = $dateStartDate . ' 00:00:00';
+
                 $dateStart = $this->convertDateTimeToDefaultTimezone($dateStart);
 
                 $entity->set('dateStart', $dateStart);
-            } else {
+            }
+            else {
                 $entity->set('dateStartDate', null);
             }
         }
 
         if ($entity->has('dateEndDate')) {
             $dateEndDate = $entity->get('dateEndDate');
+
             if (!empty($dateEndDate)) {
                 $dateEnd = $dateEndDate . ' 00:00:00';
+
                 $dateEnd = $this->convertDateTimeToDefaultTimezone($dateEnd);
 
                 try {
-                    $dt = new \DateTime($dateEnd);
+                    $dt = new DateTime($dateEnd);
                     $dt->modify('+1 day');
                     $dateEnd = $dt->format('Y-m-d H:i:s');
                 }
-                catch (\Exception $e) {}
+                catch (Exception $e) {}
 
                 $entity->set('dateEnd', $dateEnd);
-            } else {
+            }
+            else {
                 $entity->set('dateEndDate', null);
             }
         }
@@ -109,14 +119,17 @@ class Event extends Database implements
             ) {
                 $dateEndPrevious = $entity->getFetched('dateEnd');
                 $dateStartPrevious = $entity->getFetched('dateStart');
+
                 if ($dateStartPrevious && $dateEndPrevious) {
-                    $dtStart = new \DateTime($dateStartPrevious);
-                    $dtEnd = new \DateTime($dateEndPrevious);
-                    $dt = new \DateTime($entity->get('dateStart'));
+                    $dtStart = new DateTime($dateStartPrevious);
+                    $dtEnd = new DateTime($dateEndPrevious);
+                    $dt = new DateTime($entity->get('dateStart'));
 
                     if ($dtStart && $dtEnd && $dt) {
                         $duration = ($dtEnd->getTimestamp() - $dtStart->getTimestamp());
+
                         $dt->modify('+' . $duration . ' seconds');
+
                         $dateEnd = $dt->format('Y-m-d H:i:s');
                         $entity->set('dateEnd', $dateEnd);
                     }
@@ -163,7 +176,8 @@ class Event extends Database implements
 
             if (!$entity->has('reminders')) {
                 $reminderList = $this->getEntityReminderList($entity);
-            } else {
+            }
+            else {
                 $reminderList = $entity->get('reminders');
             }
 
@@ -199,8 +213,10 @@ class Event extends Database implements
 
             if ($entity->hasLinkMultipleField('users')) {
                 $userIdList = $entity->getLinkMultipleIdList('users');
-            } else {
+            }
+            else {
                 $userIdList = [];
+
                 if ($entity->get('assignedUserId')) {
                     $userIdList[] = $entity->get('assignedUserId');
                 }
@@ -214,7 +230,7 @@ class Event extends Database implements
                 return;
             }
 
-            $dateValueObj = new \DateTime($dateValue);
+            $dateValueObj = new DateTime($dateValue);
 
             if (!$dateValueObj) {
                 return;
@@ -229,7 +245,7 @@ class Event extends Database implements
                     continue;
                 }
 
-                $remindAt->sub(new \DateInterval('PT' . $seconds . 'S'));
+                $remindAt->sub(new DateInterval('PT' . $seconds . 'S'));
 
                 foreach ($userIdList as $userId) {
                     $id = Util::generateId();
@@ -280,11 +296,10 @@ class Event extends Database implements
             ->find();
 
         foreach ($reminderCollection as $reminder) {
-            $o = (object) [
+            $reminderDataList[] = (object) [
                 'seconds' => $reminder->get('seconds'),
                 'type' => $reminder->get('type'),
             ];
-            $reminderDataList[] = $o;
         }
 
         return $reminderDataList;
@@ -294,14 +309,15 @@ class Event extends Database implements
     {
         $timeZone = $this->getConfig()->get('timeZone') ?? 'UTC';
 
-        $tz = new \DateTimeZone($timeZone);
+        $tz = new DateTimeZone($timeZone);
 
         try {
-            $dt = \DateTime::createFromFormat($this->getDateTime()->getInternalDateTimeFormat(), $string, $tz);
-        } catch (\Exception $e) {}
+            $dt = DateTime::createFromFormat($this->getDateTime()->getInternalDateTimeFormat(), $string, $tz);
+        }
+        catch (Exception $e) {}
 
         if ($dt) {
-            $utcTz = new \DateTimeZone('UTC');
+            $utcTz = new DateTimeZone('UTC');
 
             return $dt->setTimezone($utcTz)->format($this->getDateTime()->getInternalDateTimeFormat());
         }
