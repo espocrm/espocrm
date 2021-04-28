@@ -11,5 +11,13 @@
     "listLoaderClassNameList": [
         "Espo\\Core\\FieldProcessing\\LinkParent\\Loader",
         "Espo\\Core\\FieldProcessing\\LinkMultiple\\ListLoader"
+    ],
+    "saverClassNameList": [
+        "Espo\\Core\\FieldProcessing\\EmailAddress\\Saver",
+        "Espo\\Core\\FieldProcessing\\PhoneNumber\\Saver",
+        "Espo\\Core\\FieldProcessing\\Relation\\Saver",
+        "Espo\\Core\\FieldProcessing\\MultiEnum\\Saver",
+        "Espo\\Core\\FieldProcessing\\File\\Saver",
+        "Espo\\Core\\FieldProcessing\\Wysiwyg\\Saver"
     ]
 }

@@ -32,12 +32,8 @@ namespace Espo\Core\FieldProcessing;
 use Espo\Core\ORM\Entity;
 
 use Espo\Core\{
-    FieldProcessing\EmailAddress\Saver as EmailAddressSaver,
-    FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver,
-    FieldProcessing\Relation\Saver as RelationSaver,
-    FieldProcessing\File\Saver as FileSaver,
-    FieldProcessing\MultiEnum\Saver as MultiEnumSaver,
-    FieldProcessing\Wysiwyg\Saver as WysiwygSaver,
+    InjectableFactory,
+    Utils\Metadata,
 };
 
 /**
@@ -45,43 +41,63 @@ use Espo\Core\{
  */
 class SaveProcessor
 {
-    private $emailAddressSaver;
+    private $injectableFactory;
 
-    private $phoneNumberSaver;
+    private $metadata;
 
-    private $relationSaver;
+    private $saverListMapCache = [];
 
-    private $fileSaver;
-
-    private $multiEnumSaver;
-
-    private $wysiwygSaver;
-
-    public function __construct(
-        EmailAddressSaver $emailAddressSaver,
-        PhoneNumberSaver $phoneNumberSaver,
-        RelationSaver $relationSaver,
-        FileSaver $fileSaver,
-        MultiEnumSaver $multiEnumSaver,
-        WysiwygSaver $wysiwygSaver
-    ) {
-        $this->emailAddressSaver = $emailAddressSaver;
-        $this->phoneNumberSaver = $phoneNumberSaver;
-        $this->relationSaver = $relationSaver;
-        $this->fileSaver = $fileSaver;
-        $this->multiEnumSaver = $multiEnumSaver;
-        $this->wysiwygSaver = $wysiwygSaver;
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
+    {
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
     public function process(Entity $entity, array $options): void
     {
         $params = SaverParams::fromNothing()->withRawOptions($options);
 
-        $this->emailAddressSaver->process($entity, $params);
-        $this->phoneNumberSaver->process($entity, $params);
-        $this->relationSaver->process($entity, $params);
-        $this->fileSaver->process($entity, $params);
-        $this->multiEnumSaver->process($entity, $params);
-        $this->wysiwygSaver->process($entity, $params);
+        foreach ($this->getSaverList($entity->getEntityType()) as $processor) {
+            $processor->process($entity, $params);
+        }
+    }
+
+    /**
+     * @return Saver[]
+     */
+    private function getSaverList(string $entityType): array
+    {
+        if (array_key_exists($entityType, $this->saverListMapCache)) {
+            return $this->saverListMapCache[$entityType];
+        }
+
+        $list = [];
+
+        foreach ($this->getSaverClassNameList($entityType) as $className) {
+            $list[] = $this->createSaver($className);
+        }
+
+        $this->saverListMapCache[$entityType] = $list;
+
+        return $list;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getSaverClassNameList(string $entityType): array
+    {
+        $list = $this->metadata
+            ->get(['app', 'fieldProcessing', 'saverClassNameList']) ?? [];
+
+        $additionalList = $this->metadata
+            ->get(['recordDefs', $entityType, 'saverClassNameList']) ?? [];
+
+        return array_merge($list, $additionalList);
+    }
+
+    private function createSaver(string $className): Saver
+    {
+        return $this->injectableFactory->create($className);
     }
 }
