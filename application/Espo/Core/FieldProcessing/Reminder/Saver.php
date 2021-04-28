@@ -112,7 +112,7 @@ class Saver implements SaverInterface
             $this->entityManager->getQueryExecutor()->execute($query);
         }
 
-        if (empty($reminderList) || !is_array($reminderList)) {
+        if (empty($reminderList)) {
             return;
         }
 
@@ -129,7 +129,6 @@ class Saver implements SaverInterface
         if (!$dateValue) {
             return;
         }
-
 
         if ($entity->hasLinkMultipleField('users')) {
             $userIdList = $entity->getLinkMultipleIdList('users');
