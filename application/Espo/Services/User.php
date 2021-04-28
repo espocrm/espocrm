@@ -43,7 +43,6 @@ use Espo\Core\{
 use Espo\ORM\Entity;
 
 use StdClass;
-use DateTime;
 use Exception;
 
 class User extends Record implements
