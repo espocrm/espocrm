@@ -87,27 +87,26 @@ class Note extends Entity
         return (bool) $this->aclIsProcessed;
     }
 
-    public function loadAttachments()
+    public function loadAttachments(): void
     {
         $data = $this->get('data');
 
-        if (!empty($data) && !empty($data->attachmentsIds) && is_array($data->attachmentsIds)) {
-            $attachmentsIds = $data->attachmentsIds;
-
-            $collection = $this->entityManager
-                ->getRepository('Attachment')
-                ->select(['id', 'name', 'type'])
-                ->order('createdAt')
-                ->where([
-                    'id' => $attachmentsIds
-                ])
-                ->find();
-        }
-        else {
+        if (empty($data) || empty($data->attachmentsIds) || !is_array($data->attachmentsIds)) {
             $this->loadLinkMultipleField('attachments');
 
             return;
         }
+
+        $attachmentsIds = $data->attachmentsIds;
+
+        $collection = $this->entityManager
+            ->getRepository('Attachment')
+            ->select(['id', 'name', 'type'])
+            ->order('createdAt')
+            ->where([
+                'id' => $attachmentsIds
+            ])
+            ->find();
 
         $ids = [];
 
@@ -115,7 +114,8 @@ class Note extends Entity
         $types = (object) [];
 
         foreach ($collection as $e) {
-            $id = $e->id;
+            $id = $e->getId();
+
             $ids[] = $id;
 
             $names->$id = $e->get('name');

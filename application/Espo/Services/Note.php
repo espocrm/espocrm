@@ -44,13 +44,6 @@ use StdClass;
 
 class Note extends Record
 {
-    public function loadAdditionalFields(Entity $entity)
-    {
-        parent::loadAdditionalFields($entity);
-
-        $entity->loadAttachments();
-    }
-
     protected function afterCreateEntity(Entity $entity, $data)
     {
         parent::afterCreateEntity($entity, $data);

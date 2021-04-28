@@ -1,0 +1,5 @@
+{
+    "readLoaderClassNameList": [
+        "Espo\\Classes\\FieldProcessing\\Note\\AttachmentsLoader"
+    ]
+}

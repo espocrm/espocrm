@@ -6,5 +6,8 @@
         "delete": {
             "implementationClassName": "Espo\\Classes\\MassAction\\User\\MassDelete"
         }
-    }
+    },
+    "readLoaderClassNameList": [
+        "Espo\\Classes\\FieldProcessing\\User\\LastAccessLoader"
+    ]
 }
