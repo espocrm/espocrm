@@ -110,16 +110,25 @@ class Email extends Record implements
     public function getUserSmtpParams(string $userId): ?array
     {
         $user = $this->getEntityManager()->getEntity('User', $userId);
-        if (!$user) return null;
+
+        if (!$user) {
+            return null;
+        }
 
         $fromAddress = $user->get('emailAddress');
-        if ($fromAddress)
+
+        if ($fromAddress) {
             $fromAddress = strtolower($fromAddress);
+        }
 
         $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
-        if (!$preferences) return null;
+
+        if (!$preferences) {
+            return null;
+        }
 
         $smtpParams = $preferences->getSmtpParams();
+
         if ($smtpParams) {
             if (array_key_exists('password', $smtpParams)) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
@@ -128,6 +137,7 @@ class Email extends Record implements
 
         if (!$smtpParams && $fromAddress) {
             $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+
             $emailAccount = $emailAccountService->findAccountForUser($user, $fromAddress);
 
             if ($emailAccount && $emailAccount->get('useSmtp')) {
@@ -180,8 +190,10 @@ class Email extends Record implements
 
             if ($primaryUserAddress === $fromAddress) {
                 $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
+
                 if ($preferences) {
                     $smtpParams = $preferences->getSmtpParams();
+
                     if ($smtpParams) {
                         if (array_key_exists('password', $smtpParams)) {
                             $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);
@@ -191,6 +203,7 @@ class Email extends Record implements
             }
 
             $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+
             $emailAccount = $emailAccountService->findAccountForUser($user, $originalFromAddress);
 
             if (!$smtpParams) {
@@ -198,6 +211,7 @@ class Email extends Record implements
                     $smtpParams = $emailAccountService->getSmtpParamsFromAccount($emailAccount);
                 }
             }
+
             if ($smtpParams) {
                 $smtpParams['fromName'] = $user->get('name');
             }
@@ -257,12 +271,15 @@ class Email extends Record implements
         $parent = null;
 
         if ($entity->get('parentType') && $entity->get('parentId')) {
-            $parent = $this->getEntityManager()->getEntity($entity->get('parentType'), $entity->get('parentId'));
+            $parent = $this->getEntityManager()
+                ->getEntity($entity->get('parentType'), $entity->get('parentId'));
 
             if ($parent) {
                 if ($entity->get('parentType') == 'Case') {
                     if ($parent->get('inboundEmailId')) {
-                        $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $parent->get('inboundEmailId'));
+                        $inboundEmail = $this->getEntityManager()
+                            ->getEntity('InboundEmail', $parent->get('inboundEmailId'));
+
                         if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
                             $params['replyToAddress'] = $inboundEmail->get('replyToAddress');
                         }
@@ -340,17 +357,20 @@ class Email extends Record implements
     protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
     {
         $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($userId);
+
         if ($userData) {
             $smtpHandlers = $userData->get('smtpHandlers') ?? (object) [];
             if (is_object($smtpHandlers)) {
                 if (isset($smtpHandlers->$emailAddress)) {
                     $handlerClassName = $smtpHandlers->$emailAddress;
+
                     try {
                         $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
                     }
                     catch (Throwable $e) {
                         $GLOBALS['log']->error(
-                            "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " . $e->getMessage() . "."
+                            "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " .
+                            $e->getMessage() . "."
                         );
                     }
                     if (method_exists($handler, 'applyParams')) {
@@ -365,6 +385,7 @@ class Email extends Record implements
     public function validateEmailAddresses(Entities\Email $entity)
     {
         $from = $entity->get('from');
+
         if ($from) {
             if (!filter_var($from, \FILTER_VALIDATE_EMAIL)) {
                 throw new Error('From email address is not valid.');
@@ -481,6 +502,7 @@ class Email extends Record implements
         foreach ($idList as $id) {
             $this->markAsRead($id, $userId);
         }
+
         return true;
     }
 
@@ -489,6 +511,7 @@ class Email extends Record implements
         foreach ($idList as $id) {
             $this->markAsNotRead($id, $userId);
         }
+
         return true;
     }
 
@@ -497,6 +520,7 @@ class Email extends Record implements
         foreach ($idList as $id) {
             $this->markAsImportant($id, $userId);
         }
+
         return true;
     }
 
@@ -505,6 +529,7 @@ class Email extends Record implements
         foreach ($idList as $id) {
             $this->markAsNotImportant($id, $userId);
         }
+
         return true;
     }
 
@@ -513,6 +538,7 @@ class Email extends Record implements
         foreach ($idList as $id) {
             $this->moveToTrash($id, $userId);
         }
+
         return true;
     }
 
@@ -521,6 +547,7 @@ class Email extends Record implements
         foreach ($idList as $id) {
             $this->moveToFolder($id, $folderId, $userId);
         }
+
         return true;
     }
 
@@ -529,6 +556,7 @@ class Email extends Record implements
         foreach ($idList as $id) {
             $this->retrieveFromTrash($id, $userId);
         }
+
         return true;
     }
 
@@ -801,18 +829,23 @@ class Email extends Record implements
         if (empty($id)) {
             throw new BadRequest();
         }
+
         $email = $this->getEntityManager()->getEntity('Email', $id);
+
         if (!$email) {
             throw new NotFound();
         }
+
         if (!$this->getAcl()->checkEntity($email, 'read')) {
             throw new Forbidden();
         }
+
         $email->loadLinkMultipleField('attachments');
         $attachmentsIds = $email->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
             $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+
             if ($source) {
                 $attachment = $this->getEntityManager()->getEntity('Attachment');
                 $attachment->set('role', 'Attachment');
