@@ -63,8 +63,10 @@ class User extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        return $this->getService('User')
+        $this->getService('User')
             ->changePassword($this->getUser()->id, $data->password, true, $data->currentPassword);
+
+        return true;
     }
 
     public function postActionChangePasswordByRequest($params, $data, $request)

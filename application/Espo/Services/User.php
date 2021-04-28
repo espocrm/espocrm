@@ -89,8 +89,12 @@ class User extends Record implements
     }
 
     public function changePassword(
-        string $userId, string $password, bool $checkCurrentPassword = false, ?string $currentPassword = null
-    ) {
+        string $userId,
+        string $password,
+        bool $checkCurrentPassword = false,
+        ?string $currentPassword = null
+    ): void {
+
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
         if (!$user) {
@@ -132,8 +136,6 @@ class User extends Record implements
         $user->set('password', $this->hashPassword($password));
 
         $this->getEntityManager()->saveEntity($user);
-
-        return true;
     }
 
     public function checkPasswordStrength(string $password): bool
