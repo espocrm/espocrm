@@ -30,7 +30,6 @@
 namespace Espo\Tools\Pdf\Tcpdf;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\Config,
     Htmlizer\Htmlizer as Htmlizer,
     Htmlizer\Factory as HtmlizerFactory,
@@ -50,6 +49,7 @@ class EntityProcessor
     protected $fontSize = 12;
 
     protected $config;
+
     protected $htmlizerFactory;
 
     public function __construct(Config $config, HtmlizerFactory $htmlizerFactory)
