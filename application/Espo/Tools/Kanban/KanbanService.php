@@ -96,9 +96,7 @@ class KanbanService
 
     public function order(string $entityType, string $group, array $ids): void
     {
-        if (!$this->aclManager->check($this->user, $entityType, 'read')) {
-            throw new Forbidden();
-        }
+        $this->processAccessCheck($entityType);
 
         if ($this->user->isPortal()) {
             throw new Forbidden();
@@ -121,7 +119,11 @@ class KanbanService
 
     private function processAccessCheck($entityType): void
     {
-        if (!$this->aclManager->check($this->user, $entityType)) {
+        if (!$this->metadata->get(['scopes', $entityType, 'object'])) {
+            throw new Forbidden("Non-object entitis are not supported.");
+        }
+
+        if (!$this->aclManager->check($this->user, $entityType, 'read')) {
             throw new ForbiddenSilent();
         }
     }
