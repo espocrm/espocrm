@@ -31,6 +31,7 @@ namespace Espo\Core\MassAction;
 
 use Espo\Core\{
     Exceptions\NotFound,
+    Exceptions\Forbidden,
     Utils\Metadata,
     InjectableFactory,
 };
@@ -53,6 +54,10 @@ class MassActionFactory
 
         if (!$className) {
             throw new NotFound("Mass action '{$action}' not found.");
+        }
+
+        if ($this->isDisabled($action, $entityType)) {
+            throw new Forbidden("Mass action '{$action}' is disabled for '{$entityType}'.");
         }
 
         return $this->injectableFactory->create($className);
@@ -86,8 +91,14 @@ class MassActionFactory
 
     private function getEntityTypeClassName(string $action, string $entityType): ?string
     {
-        return  $this->metadata->get(
+        return $this->metadata->get(
             ['recordDefs', $entityType, 'massActions', $action, 'implementationClassName']
         );
+    }
+
+    private function isDisabled(string $action, string $entityType): bool
+    {
+        return $this->metadata
+            ->get(['recordDefs', $entityType, 'massActions', $action, 'disabled']) ?? false;
     }
 }

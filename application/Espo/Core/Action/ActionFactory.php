@@ -31,6 +31,7 @@ namespace Espo\Core\Action;
 
 use Espo\Core\{
     Exceptions\NotFound,
+    Exceptions\Forbidden,
     Utils\Metadata,
     InjectableFactory,
 };
@@ -53,6 +54,10 @@ class ActionFactory
 
         if (!$className) {
             throw new NotFound("Action '{$action}' not found.");
+        }
+
+        if ($this->isDisabled($action, $entityType)) {
+            throw new Forbidden("Action '{$action}' is disabled for '{$entityType}'.");
         }
 
         return $this->injectableFactory->create($className);
@@ -89,5 +94,11 @@ class ActionFactory
         return  $this->metadata->get(
             ['recordDefs', $entityType, 'actions', $action, 'implementationClassName']
         );
+    }
+
+    private function isDisabled(string $action, string $entityType): bool
+    {
+        return $this->metadata
+            ->get(['recordDefs', $entityType, 'actions', $action, 'disabled']) ?? false;
     }
 }
