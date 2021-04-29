@@ -52,9 +52,7 @@ class Webhook extends RecordBase
     {
         $result = parent::postActionCreate($request, $response);
 
-        if ($result) {
-            $response->setStatus(201);
-        }
+        $response->setStatus(201);
 
         return $result;
     }
