@@ -29,25 +29,29 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Controllers\Record,
+    Api\Request,
+};
 
-class EmailTemplate extends \Espo\Core\Controllers\Record
+use StdClass;
+
+class EmailTemplate extends Record
 {
-    public function actionParse($params, $data, $request)
+    public function actionParse(Request $request): StdClass
     {
-        $id = $request->get('id');
-        $emailAddress = $request->get('emailAddress');
+        $id = $request->getQueryParam('id');
 
-        if (empty($id)) {
-            throw new Error();
-        }
-
-        return $this->getRecordService()->parse($id, [
-            'emailAddress' => $request->get('emailAddress'),
-            'parentType' => $request->get('parentType'),
-            'parentId' => $request->get('parentId'),
-            'relatedType' => $request->get('relatedType'),
-            'relatedId' => $request->get('relatedId')
-        ], true);
+        return (object) $this->getRecordService()->parse(
+            $id,
+            [
+                'emailAddress' => $request->getQueryParam('emailAddress'),
+                'parentType' => $request->getQueryParam('parentType'),
+                'parentId' => $request->getQueryParam('parentId'),
+                'relatedType' => $request->getQueryParam('relatedType'),
+                'relatedId' => $request->getQueryParam('relatedId'),
+            ],
+            true
+        );
     }
 }

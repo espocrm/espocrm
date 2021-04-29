@@ -30,40 +30,36 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\UpgradeManager;
+
 use Espo\Core\Utils\AdminNotificationManager;
 use Espo\Core\Utils\SystemRequirements;
 
-class Admin extends \Espo\Core\Controllers\Base
+use Espo\Core\Controllers\Base;
+
+class Admin extends Base
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        return $this->user->isAdmin();
     }
 
-    public function postActionRebuild($params, $data, $request)
+    public function postActionRebuild(): bool
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
         $this->getContainer()->get('dataManager')->rebuild();
 
         return true;
     }
 
-    public function postActionClearCache($params)
+    public function postActionClearCache(): bool
     {
         $this->getContainer()->get('dataManager')->clearCache();
 
         return true;
     }
 
-    public function actionJobs()
+    public function getActionJobs()
     {
         $scheduledJob = $this->getContainer()->get('scheduledJob');
 
@@ -72,8 +68,8 @@ class Admin extends \Espo\Core\Controllers\Base
 
     public function postActionUploadUpgradePackage($params, $data)
     {
-        if ($this->getConfig()->get('restrictedMode')) {
-            if (!$this->getUser()->isSuperAdmin()) {
+        if ($this->config->get('restrictedMode')) {
+            if (!$this->user->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -89,33 +85,34 @@ class Admin extends \Espo\Core\Controllers\Base
         ];
     }
 
-    public function postActionRunUpgrade($params, $data)
+    public function postActionRunUpgrade($params, $data): bool
     {
-        if ($this->getConfig()->get('restrictedMode')) {
-            if (!$this->getUser()->isSuperAdmin()) {
+        if ($this->config->get('restrictedMode')) {
+            if (!$this->user->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
 
         $upgradeManager = new UpgradeManager($this->getContainer());
+
         $upgradeManager->install(get_object_vars($data));
 
         return true;
     }
 
-    public function actionCronMessage($params)
+    public function actionCronMessage()
     {
         return $this->getContainer()->get('scheduledJob')->getSetupMessage();
     }
 
-    public function actionAdminNotificationList($params)
+    public function actionAdminNotificationList()
     {
         $adminNotificationManager = new AdminNotificationManager($this->getContainer());
 
         return $adminNotificationManager->getNotificationList();
     }
 
-    public function actionSystemRequirementList($params)
+    public function actionSystemRequirementList()
     {
         $systemRequirementManager = new SystemRequirements($this->getContainer());
 

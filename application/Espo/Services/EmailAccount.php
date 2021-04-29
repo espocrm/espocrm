@@ -97,7 +97,7 @@ class EmailAccount extends Record implements
         }
     }
 
-    public function getFolders($params)
+    public function getFolders(array $params): array
     {
         $userId = $params['userId'] ?? null;
 
@@ -134,6 +134,7 @@ class EmailAccount extends Record implements
     {
         if (!empty($params['id'])) {
             $account = $this->getEntityManager()->getEntity('EmailAccount', $params['id']);
+
             if ($account) {
                 $params['imapHandler'] = $account->get('imapHandler');
             }
@@ -152,6 +153,7 @@ class EmailAccount extends Record implements
         if ($storage->getFolders()) {
             return true;
         }
+
         throw new Error();
     }
 

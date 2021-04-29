@@ -31,21 +31,21 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-class AuthToken extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+
+class AuthToken extends Record
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        return $this->user->isAdmin();
     }
 
-    public function beforeCreateLink()
+    public function beforeCreateLink(): void
     {
         throw new Forbidden();
     }
 
-    public function beforeRemoveLink()
+    public function beforeRemoveLink(): void
     {
         throw new Forbidden();
     }

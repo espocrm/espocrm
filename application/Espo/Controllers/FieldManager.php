@@ -37,7 +37,6 @@ use Espo\{
 use Espo\Core\{
     Exceptions\Error,
     Exceptions\Forbidden,
-    Exceptions\NotFound,
     Exceptions\BadRequest,
     Api\Request,
     DataManager,
@@ -46,7 +45,9 @@ use Espo\Core\{
 class FieldManager
 {
     protected $user;
+
     protected $dataManager;
+
     protected $fieldManagerTool;
 
     public function __construct(User $user, DataManager $dataManager, FieldManagerTool $fieldManagerTool)

@@ -31,13 +31,20 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Error;
 
-class Notification extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\RecordBase,
+    Api\Request,
+};
+
+use StdClass;
+
+class Notification extends RecordBase
 {
     public static $defaultAction = 'list';
 
-    public function getActionList($params, $data, $request, $response)
+    public function getActionList(Request $request): StdClass
     {
-        $userId = $this->getUser()->id;
+        $userId = $this->user->id;
 
         $offset = intval($request->get('offset'));
         $maxSize = intval($request->get('maxSize'));
@@ -61,41 +68,23 @@ class Notification extends \Espo\Core\Controllers\Record
         ];
     }
 
-    public function actionNotReadCount()
+    public function getActionNotReadCount(): int
     {
-        $userId = $this->getUser()->id;
+        $userId = $this->user->getId();
 
         return $this->getService('Notification')->getNotReadCount($userId);
     }
 
-    public function postActionMarkAllRead($params, $data, $request)
+    public function postActionMarkAllRead(Request $request): bool
     {
-        $userId = $this->getUser()->id;
+        $userId = $this->user->getId();
 
-        return $this->getService('Notification')->markAllRead($userId);
+        $this->getService('Notification')->markAllRead($userId);
+
+        return true;
     }
 
-    public function beforeExport()
-    {
-        throw new Error();
-    }
-
-    public function beforeMassUpdate()
-    {
-        throw new Error();
-    }
-
-    public function beforeCreateLink()
-    {
-        throw new Error();
-    }
-
-    public function beforeRemoveLink()
-    {
-        throw new Error();
-    }
-
-    public function beforeMerge()
+    public function beforeExport(): void
     {
         throw new Error();
     }

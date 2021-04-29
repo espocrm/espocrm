@@ -31,27 +31,32 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-class EmailAddress extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\RecordBase,
+    Api\Request,
+};
+
+class EmailAddress extends RecordBase
 {
-    public function actionSearchInAddressBook($params, $data, $request)
+    public function actionSearchInAddressBook(Request $request): array
     {
-        if (!$this->getAcl()->checkScope('Email')) {
+        if (!$this->acl->checkScope('Email')) {
             throw new Forbidden();
         }
 
-        if (!$this->getAcl()->checkScope('Email', 'create')) {
+        if (!$this->acl->checkScope('Email', 'create')) {
             throw new Forbidden();
         }
 
-        $q = $request->get('q');
+        $q = $request->getQueryParam('q');
 
-        $maxSize = intval($request->get('maxSize'));
+        $maxSize = intval($request->getQueryParam('maxSize'));
 
         if (empty($maxSize) || $maxSize > 50) {
-            $maxSize = $this->getConfig()->get('recordsPerPage', 20);
+            $maxSize = $this->config->get('recordsPerPage', 20);
         }
 
-        $onlyActual = $request->get('onlyActual') === 'true';
+        $onlyActual = $request->getQueryParam('onlyActual') === 'true';
 
         return $this->getRecordService()->searchInAddressBook($q, $maxSize, $onlyActual);
     }

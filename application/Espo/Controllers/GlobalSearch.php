@@ -29,23 +29,28 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\ServiceFactory;
+use Espo\Core\{
+    ServiceFactory,
+    Api\Request,
+};
+
+use StdClass;
 
 class GlobalSearch
 {
-    protected $serviceFactory;
+    private $serviceFactory;
 
     public function __construct(ServiceFactory $serviceFactory)
     {
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function actionSearch($params, $data, $request)
+    public function getActionSearch(Request $request): StdClass
     {
-        $query = $request->get('q');
+        $query = $request->getQueryParam('q');
 
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
+        $offset = intval($request->getQueryParam('offset'));
+        $maxSize = intval($request->getQueryParam('maxSize'));
 
         return $this->serviceFactory->create('GlobalSearch')->find($query, $offset, $maxSize);
     }

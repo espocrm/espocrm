@@ -299,7 +299,7 @@
         "method": "patch",
         "params": {
             "controller": ":controller",
-            "action": "patch",
+            "action": "update",
             "id": ":id"
         }
     },

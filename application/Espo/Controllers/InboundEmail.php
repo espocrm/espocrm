@@ -31,7 +31,12 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-class InboundEmail extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\Record,
+    Api\Request,
+};
+
+class InboundEmail extends Record
 {
     protected function checkControllerAccess()
     {
@@ -40,30 +45,45 @@ class InboundEmail extends \Espo\Core\Controllers\Record
         }
     }
 
-    public function postActionGetFolders($params, $data, $request)
+    protected function checkAccess(): bool
     {
-        return $this->getRecordService()->getFolders([
+        return $this->getUser()->isAdmin();
+    }
+
+    public function postActionGetFolders(Request $request): array
+    {
+        $data = $request->getParsedBody();
+
+        $params = [
             'host' => $data->host ?? null,
             'port' => $data->port ?? null,
             'security' =>  $data->security ?? null,
             'username' => $data->username ?? null,
             'password' => $data->password ?? null,
             'id' => $data->id ?? null,
-        ]);
+        ];
+
+        return $this->getRecordService()->getFolders($params);
     }
 
-    public function postActionTestConnection($params, $data, $request)
+    public function postActionTestConnection(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         if (is_null($data->password)) {
-            $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $data->id);
+            $inboundEmail = $this->entityManager->getEntity('InboundEmail', $data->id);
 
             if (!$inboundEmail || !$inboundEmail->id) {
                 throw new Error();
             }
 
-            $data->password = $this->getContainer()->get('crypt')->decrypt($inboundEmail->get('password'));
+            $data->password = $this->getContainer()
+                ->get('crypt')
+                ->decrypt($inboundEmail->get('password'));
         }
 
-        return $this->getRecordService()->testConnection(get_object_vars($data));
+        $this->getRecordService()->testConnection(get_object_vars($data));
+
+        return true;
     }
 }

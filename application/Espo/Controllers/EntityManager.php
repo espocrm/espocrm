@@ -72,11 +72,9 @@ class EntityManager
         $this->checkControllerAccess();
     }
 
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
+        return $this->user->isAdmin();
     }
 
     public function postActionCreateEntity(Request $request)

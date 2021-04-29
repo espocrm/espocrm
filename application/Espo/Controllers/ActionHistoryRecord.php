@@ -29,41 +29,17 @@
 
 namespace Espo\Controllers;
 
-use \Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Controllers\RecordBase;
 
-class ActionHistoryRecord extends \Espo\Core\Controllers\Record
+class ActionHistoryRecord extends RecordBase
 {
-    public function beforeUpdate()
+    public function beforeUpdate(): void
     {
         throw new Forbidden();
     }
 
-    public function beforeCreate()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeListLinked()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeMassUpdate()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeCreateLink()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeRemoveLink()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeMassConvertCurrency()
+    public function beforeCreate(): void
     {
         throw new Forbidden();
     }

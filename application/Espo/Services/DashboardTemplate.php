@@ -85,7 +85,7 @@ class DashboardTemplate extends Record
         }
     }
 
-    public function deployToUsers(string $id, array $userIdList, bool $append = false)
+    public function deployToUsers(string $id, array $userIdList, bool $append = false): void
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
 
@@ -95,6 +95,7 @@ class DashboardTemplate extends Record
 
         foreach ($userIdList as $userId) {
             $user = $this->getEntityManager()->fetchEntity('User', $userId);
+
             if ($user) {
                 if ($user->isPortal() || $user->isApi()) {
                     throw new Forbidden("Not allowed user type.");
@@ -113,11 +114,9 @@ class DashboardTemplate extends Record
 
             $this->getEntityManager()->saveEntity($preferences);
         }
-
-        return true;
     }
 
-    public function deployToTeam(string $id, string $teamId, bool $append = false)
+    public function deployToTeam(string $id, string $teamId, bool $append = false): void
     {
         $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
 
@@ -151,7 +150,5 @@ class DashboardTemplate extends Record
 
             $this->getEntityManager()->saveEntity($preferences);
         }
-
-        return true;
     }
 }

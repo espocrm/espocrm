@@ -29,31 +29,28 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\{
-    Forbidden,
-    BadRequest,
-};
-
 use Espo\Core\{
     ServiceFactory,
     Api\Request,
 };
 
+use StdClass;
+
 class CurrencyRate
 {
-    protected $serviceFactory;
+    private $serviceFactory;
 
     public function __construct(ServiceFactory $serviceFactory)
     {
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function getActionIndex(Request $request)
+    public function getActionIndex(): StdClass
     {
         return $this->serviceFactory->create('CurrencyRate')->get();
     }
 
-    public function putActionUpdate(Request $request)
+    public function putActionUpdate(Request $request): StdClass
     {
         $data = $request->getParsedBody();
 

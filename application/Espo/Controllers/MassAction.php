@@ -37,16 +37,19 @@ use Espo\Core\{
 
 use StdClass;
 
+/**
+ * Mass-Action framework.
+ */
 class MassAction
 {
-    protected $recordServiceContainer;
+    private $recordServiceContainer;
 
     public function __construct(RecordServiceContainer $recordServiceContainer)
     {
         $this->recordServiceContainer = $recordServiceContainer;
     }
 
-    public function postActionProcess(Request $request) : StdClass
+    public function postActionProcess(Request $request): StdClass
     {
         $body = $request->getParsedBody();
 
@@ -70,7 +73,7 @@ class MassAction
         return $result->getValueMap();
     }
 
-    protected function prepareMassActionParams(StdClass $data) : array
+    private function prepareMassActionParams(StdClass $data): array
     {
         $params = [];
 

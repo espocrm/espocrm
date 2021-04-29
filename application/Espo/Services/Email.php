@@ -731,12 +731,7 @@ class Email extends Record implements
         return $fromAddress;
     }
 
-    public function copyAttachments(string $emailId, ?string $parentType, ?string $parentId)
-    {
-        return $this->getCopiedAttachments($emailId, $parentType, $parentId);
-    }
-
-    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null)
+    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): StdClass
     {
         $ids = [];
         $names = (object) [];
@@ -756,6 +751,7 @@ class Email extends Record implements
         }
 
         $email->loadLinkMultipleField('attachments');
+
         $attachmentsIds = $email->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
@@ -790,7 +786,7 @@ class Email extends Record implements
             }
         }
 
-        return [
+        return (object) [
             'ids' => $ids,
             'names' => $names
         ];

@@ -29,51 +29,125 @@
 
 namespace Espo\Core\Controllers;
 
-use Espo\Core\Container;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Container,
+    Acl,
+    AclManager,
+    Utils\Config,
+    Utils\Metadata,
+    ServiceFactory,
+};
 
+use Espo\Entities\User;
+use Espo\Entities\Preferences;
+
+/**
+ * @deprecated
+ */
 abstract class Base
 {
     protected $name;
 
-    private $container;
-
     public static $defaultAction = 'index';
 
-    public function __construct(Container $container)
-    {
+    private $container;
+
+    protected $user;
+
+    protected $acl;
+
+    protected $aclManager;
+
+    protected $config;
+
+    protected $preferences;
+
+    protected $metadata;
+
+    protected $serviceFactory;
+
+    public function __construct(
+        Container $container,
+        User $user,
+        Acl $acl,
+        AclManager $aclManager,
+        Config $config,
+        Preferences $preferences,
+        Metadata $metadata,
+        ServiceFactory $serviceFactory
+    ) {
         $this->container = $container;
+        $this->user = $user;
+        $this->acl = $acl;
+        $this->aclManager = $aclManager;
+        $this->config = $config;
+        $this->preferences = $preferences;
+        $this->metadata = $metadata;
+        $this->serviceFactory = $serviceFactory;
 
         if (empty($this->name)) {
             $name = get_class($this);
+
+            $matches = null;
+
             if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
                 $name = $matches[1];
             }
+
             $this->name = $name;
         }
 
         $this->checkControllerAccess();
+
+        if (!$this->checkAccess()) {
+            throw new Forbidden("No access to '{$this->name}'.");
+        }
     }
 
-    protected function getName()
+    protected function getName(): string
     {
         return $this->name;
     }
 
+    protected function checkAccess(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @throws Forbidden
+     * @deprecated
+     */
     protected function checkControllerAccess()
     {
         return;
     }
 
+    protected function getService($name): object
+    {
+        return $this->serviceFactory->create($name);
+    }
+
+    /**
+     * @deprecated Use Aware interfaces to inject dependencies.
+     */
     protected function getContainer()
     {
         return $this->container;
     }
 
+    /**
+     * @deprecated
+     */
     protected function getUser()
     {
         return $this->container->get('user');
     }
 
+    /**
+     * @deprecated
+     */
     protected function getAcl()
     {
         return $this->container->get('acl');
@@ -84,28 +158,35 @@ abstract class Base
         return $this->container->get('aclManager');
     }
 
+    /**
+     * @deprecated
+     */
     protected function getConfig()
     {
         return $this->container->get('config');
     }
 
+    /**
+     * @deprecated
+     */
     protected function getPreferences()
     {
         return $this->container->get('preferences');
     }
 
+    /**
+     * @deprecated
+     */
     protected function getMetadata()
     {
         return $this->container->get('metadata');
     }
 
+    /**
+     * @deprecated
+     */
     protected function getServiceFactory()
     {
         return $this->container->get('serviceFactory');
-    }
-
-    protected function getService($name)
-    {
-        return $this->getServiceFactory()->create($name);
     }
 }

@@ -29,7 +29,10 @@
 
 namespace Espo\Services;
 
-use Espo\ORM\Entity;
+use Espo\ORM\{
+    Entity,
+    Collection,
+};
 
 use Espo\Core\{
     Exceptions\Error,
@@ -59,8 +62,26 @@ class RecordTree extends Record
         }
     }
 
-    public function getTree(string $parentId = null, array $params = [], int $level = 0, ?int $maxDepth = null)
-    {
+    public function getTree(
+        string $parentId = null,
+        array $params = [],
+        ?int $maxDepth = null
+    ): ?Collection {
+
+        if (!$this->acl->check($this->getEntityType(), 'read')) {
+            throw new Forbidden();
+        }
+
+        return $this->getTreeInternal($parentId, $params, $maxDepth, 0);
+    }
+
+    protected function getTreeInternal(
+        string $parentId = null,
+        array $params = [],
+        ?int $maxDepth = null,
+        int $level = 0
+    ): ?Collection {
+
         if (!$maxDepth) {
             $maxDepth = self::MAX_DEPTH;
         }
@@ -104,7 +125,7 @@ class RecordTree extends Record
         }
 
         foreach ($collection as $entity) {
-            $childList = $this->getTree($entity->id, $params, $level + 1, $maxDepth);
+            $childList = $this->getTreeInternal($entity->id, $params, $maxDepth, $level + 1);
 
             $entity->set('childList', $childList);
         }
@@ -114,7 +135,7 @@ class RecordTree extends Record
 
     protected function checkFilterOnlyNotEmpty()
     {
-        if (!$this->getAcl()->checkScope($this->subjectEntityType, 'create')) {
+        if (!$this->acl->checkScope($this->subjectEntityType, 'create')) {
             return true;
         }
     }
@@ -150,21 +171,31 @@ class RecordTree extends Record
         return true;
     }
 
-    public function getTreeItemPath($parentId = null)
+    public function getTreeItemPath(?string $parentId = null): array
     {
+        if (!$this->acl->check($this->getEntityType(), 'read')) {
+            throw new Forbidden();
+        }
+
         $arr = [];
+
         while (1) {
             if (empty($parentId)) {
                 break;
             }
+
             $parent = $this->getEntityManager()->getEntity($this->entityType, $parentId);
+
             if ($parent) {
                 $parentId = $parent->get('parentId');
+
                 array_unshift($arr, $parent->id);
-            } else {
+            }
+            else {
                 $parentId = null;
             }
         }
+
         return $arr;
     }
 
@@ -173,15 +204,18 @@ class RecordTree extends Record
         if (empty($this->seed)) {
             $this->seed = $this->getEntityManager()->getEntity($this->getEntityType());
         }
+
         return $this->seed;
     }
 
     protected function hasOrder()
     {
         $seed = $this->getSeed();
+
         if ($seed->hasAttribute('order')) {
             return true;
         }
+
         return false;
     }
 
@@ -222,6 +256,10 @@ class RecordTree extends Record
 
     public function getLastChildrenIdList(?string $parentId = null): array
     {
+        if (!$this->acl->check($this->getEntityType(), 'read')) {
+            throw new Forbidden();
+        }
+
         $query = $this->selectBuilderFactory
             ->create()
             ->from($this->entityType)

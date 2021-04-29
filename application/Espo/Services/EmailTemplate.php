@@ -206,7 +206,7 @@ class EmailTemplate extends Record implements
         ];
     }
 
-    public function parse(string $id, array $params = [], bool $copyAttachments = false)
+    public function parse(string $id, array $params = [], bool $copyAttachments = false): array
     {
         $emailTemplate = $this->getEntity($id);
 

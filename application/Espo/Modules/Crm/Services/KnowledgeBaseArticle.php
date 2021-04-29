@@ -38,6 +38,8 @@ use Espo\Core\{
     Select\SearchParams,
 };
 
+use StdClass;
+
 class KnowledgeBaseArticle extends \Espo\Services\Record implements
 
     Di\FileStorageManagerAware
@@ -59,26 +61,32 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
         return $this->fileStorageManager;
     }
 
-    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null)
+    public function getCopiedAttachments(string $id, ?string $parentType = null, ?string $parentId = null): StdClass
     {
         $ids = [];
-        $names = new \stdClass();
+        $names = (object) [];
 
         if (empty($id)) {
             throw new BadRequest();
         }
+
         $entity = $this->getEntityManager()->getEntity('KnowledgeBaseArticle', $id);
+
         if (!$entity) {
             throw new NotFound();
         }
+
         if (!$this->getAcl()->checkEntity($entity, 'read')) {
             throw new Forbidden();
         }
+
         $entity->loadLinkMultipleField('attachments');
+
         $attachmentsIds = $entity->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
             $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+
             if ($source) {
                 $attachment = $this->getEntityManager()->getEntity('Attachment');
                 $attachment->set('role', 'Attachment');
@@ -102,12 +110,13 @@ class KnowledgeBaseArticle extends \Espo\Services\Record implements
                     $this->getFileStorageManager()->putContents($attachment, $contents);
 
                     $ids[] = $attachment->id;
+
                     $names->{$attachment->id} = $attachment->get('name');
                 }
             }
         }
 
-        return [
+        return (object) [
             'ids' => $ids,
             'names' => $names,
         ];

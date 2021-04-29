@@ -60,7 +60,12 @@ class DataPrivacy
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->entityType) || empty($data->id) || empty($data->fieldList) || !is_array($data->fieldList)) {
+        if (
+            empty($data->entityType) ||
+            empty($data->id) ||
+            empty($data->fieldList) ||
+            !is_array($data->fieldList)
+        ) {
             throw new BadRequest();
         }
 

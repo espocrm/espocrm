@@ -32,11 +32,23 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 
-class EmailAccount extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\Record,
+    Api\Request,
+};
+
+class EmailAccount extends Record
 {
-    public function postActionGetFolders($params, $data)
+    protected function checkAccess(): bool
     {
-        return $this->getRecordService()->getFolders([
+        return $this->acl->check('EmailAccountScope');
+    }
+
+    public function postActionGetFolders(Request $request): array
+    {
+        $data = $request->getParsedBody();
+
+        $params = [
             'host' => $data->host ?? null,
             'port' => $data->port ?? null,
             'security' =>  $data->security ?? null,
@@ -45,31 +57,36 @@ class EmailAccount extends \Espo\Core\Controllers\Record
             'id' => $data->id ?? null,
             'emailAddress' => $data->emailAddress ?? null,
             'userId' => $data->userId ?? null,
-        ]);
+        ];
+
+        return $this->getRecordService()->getFolders($params);
     }
 
-    protected function checkControllerAccess()
+    public function postActionTestConnection(Request $request): bool
     {
-        if (!$this->getAcl()->check('EmailAccountScope')) {
-            throw new Forbidden();
-        }
-    }
+        $data = $request->getParsedBody();
 
-    public function postActionTestConnection($params, $data, $request)
-    {
         if (is_null($data->password)) {
-            $emailAccount = $this->getEntityManager()->getEntity('EmailAccount', $data->id);
+            $emailAccount = $this->entityManager->getEntity('EmailAccount', $data->id);
+
             if (!$emailAccount || !$emailAccount->id) {
                 throw new Error();
             }
 
-            if ($emailAccount->get('assignedUserId') != $this->getUser()->id && !$this->getUser()->isAdmin()) {
+            if (
+                $emailAccount->get('assignedUserId') != $this->user->id &&
+                !$this->user->isAdmin()
+            ) {
                 throw new Forbidden();
             }
 
-            $data->password = $this->getContainer()->get('crypt')->decrypt($emailAccount->get('password'));
+            $data->password = $this->getContainer()
+                ->get('crypt')
+                ->decrypt($emailAccount->get('password'));
         }
 
-        return $this->getRecordService()->testConnection(get_object_vars($data));
+        $this->getRecordService()->testConnection(get_object_vars($data));
+
+        return true;
     }
 }

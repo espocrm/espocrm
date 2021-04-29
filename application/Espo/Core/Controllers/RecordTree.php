@@ -29,20 +29,26 @@
 
 namespace Espo\Core\Controllers;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Utils\Util;
 
-class RecordTree extends Record
+use Espo\Core\{
+    Api\Request,
+};
+
+use StdClass;
+
+class RecordTree extends RecordBase
 {
     public static $defaultAction = 'list';
 
-    public function actionListTree($params, $data, $request)
+    /**
+     * Get a category tree.
+     */
+    public function getActionListTree(Request $request): StdClass
     {
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
+        if (method_exists($this, 'actionListTree')) {
+            // For backward compatibility.
+            return (object) $this->actionListTree($request->getRouteParams(), $request->getParsedBody(), $request);
         }
 
         $where = $request->get('where');
@@ -56,17 +62,16 @@ class RecordTree extends Record
                 'where' => $where,
                 'onlyNotEmpty' => $onlyNotEmpty,
             ],
-            0,
             $maxDepth
         );
 
         return (object) [
-            'list' => $collection->toArray(),
+            'list' => $collection->getValueMapList(),
             'path' => $this->getRecordService()->getTreeItemPath($parentId),
         ];
     }
 
-    public function getActionLastChildrenIdList($params, $data, $request)
+    public function getActionLastChildrenIdList($params, $data, $request): array
     {
         if (!$this->getAcl()->check($this->name, 'read')) {
             throw new Forbidden();

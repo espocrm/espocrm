@@ -46,8 +46,11 @@ use StdClass;
 class CurrencyRate
 {
     protected $config;
+
     protected $configWriter;
+
     protected $dataManager;
+
     protected $acl;
 
     public function __construct(Config $config, ConfigWriter $configWriter, DataManager $dataManager, Acl $acl)

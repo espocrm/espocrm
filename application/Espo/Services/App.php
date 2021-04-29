@@ -108,7 +108,7 @@ class App
         $this->fieldUtil = $fieldUtil;
     }
 
-    public function getUserData()
+    public function getUserData(): array
     {
         $preferencesData = $this->preferences->getValueMap();
 

@@ -34,23 +34,24 @@ use Espo\Core\{
     Exceptions\BadRequest,
     Api\Request,
     Api\Response,
+    Controllers\RecordBase,
 };
 
-use Espo\Core\Controllers\Record;
+use StdClass;
 
-class Attachment extends Record
+class Attachment extends RecordBase
 {
-    public function actionList($params, $data, $request)
+    public function beforeList(): void
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
-
-        return parent::actionList($params, $data, $request);
     }
 
-    public function postActionGetAttachmentFromImageUrl($params, $data)
+    public function postActionGetAttachmentFromImageUrl(Request $request): StdClass
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->url)) {
             throw new BadRequest();
         }
@@ -62,11 +63,14 @@ class Attachment extends Record
         return $this->getRecordService()->getAttachmentFromImageUrl($data)->getValueMap();
     }
 
-    public function postActionGetCopiedAttachment($params, $data)
+    public function postActionGetCopiedAttachment(Request $request): StdClass
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         if (empty($data->field)) {
             throw new BadRequest('postActionGetCopiedAttachment copy: No field specified');
         }
@@ -74,7 +78,7 @@ class Attachment extends Record
         return $this->getRecordService()->getCopiedAttachment($data)->getValueMap();
     }
 
-    public function getActionFile(Request $request, Response $response)
+    public function getActionFile(Request $request, Response $response): void
     {
         $id = $request->getRouteParam('id');
 

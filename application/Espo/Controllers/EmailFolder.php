@@ -31,10 +31,17 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 
-class EmailFolder extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\RecordBase,
+    Api\Request,
+};
+
+class EmailFolder extends RecordBase
 {
-    public function postActionMoveUp($params, $data, $request)
+    public function postActionMoveUp(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
@@ -44,8 +51,10 @@ class EmailFolder extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function postActionMoveDown($params, $data, $request)
+    public function postActionMoveDown(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
@@ -55,7 +64,7 @@ class EmailFolder extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function getActionListAll()
+    public function getActionListAll(): array
     {
         return $this->getRecordService()->listAll();
     }

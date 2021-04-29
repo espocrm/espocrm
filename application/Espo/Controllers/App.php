@@ -45,13 +45,15 @@ class App implements
     use Di\ServiceFactorySetter;
     use Di\InjectableFactorySetter;
 
-    public function actionUser()
+    public function getActionUser(): StdClass
     {
-        return $this->serviceFactory->create('App')->getUserData();
+        return (object) $this->serviceFactory->create('App')->getUserData();
     }
 
-    public function postActionDestroyAuthToken(array $params, StdClass $data, Request $request)
+    public function postActionDestroyAuthToken(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->token)) {
             throw new BadRequest();
         }

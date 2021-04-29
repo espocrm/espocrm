@@ -37,9 +37,12 @@ use Espo\Core\{
 
 use StdClass;
 
+/**
+ * Action framework.
+ */
 class Action
 {
-    protected $recordServiceContainer;
+    private $recordServiceContainer;
 
     public function __construct(RecordServiceContainer $recordServiceContainer)
     {

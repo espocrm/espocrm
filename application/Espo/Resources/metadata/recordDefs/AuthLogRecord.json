@@ -1,0 +1,10 @@
+{
+    "massActions": {
+        "update": {
+            "disabled": true
+        },
+        "recalculateFormula": {
+            "disabled": true
+        }
+    }
+}

@@ -31,44 +31,45 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\ExtensionManager;
+use Espo\Core\{
+    ExtensionManager,
+    Controllers\RecordBase,
+    Api\Request,
+};
 
-class Extension extends \Espo\Core\Controllers\Record
+use StdClass;
+
+class Extension extends RecordBase
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        return $this->user->isAdmin();
     }
 
-    public function actionUpload($params, $data, $request)
+    public function postActionUpload(Request $request): StdClass
     {
-        if (!$request->isPost()) {
-            throw new Forbidden();
-        }
+        $body = $request->getBodyContents();
 
         $manager = new ExtensionManager($this->getContainer());
 
-        $id = $manager->upload($data);
+        $id = $manager->upload($body);
+
         $manifest = $manager->getManifest();
 
-        return array(
+        return (object) [
             'id' => $id,
             'version' => $manifest['version'],
             'name' => $manifest['name'],
             'description' => $manifest['description'],
-        );
+        ];
     }
 
-    public function actionInstall($params, $data, $request)
+    public function postActionInstall(Request $request): bool
     {
-        if (!$request->isPost()) {
-            throw new Forbidden();
-        }
+        $data = $request->getParsedBody();
 
-        if ($this->getConfig()->get('restrictedMode')) {
-            if (!$this->getUser()->isSuperAdmin()) {
+        if ($this->config->get('restrictedMode')) {
+            if (!$this->user->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -80,14 +81,12 @@ class Extension extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function actionUninstall($params, $data, $request)
+    public function postActionUninstall(Request $request): bool
     {
-        if (!$request->isPost()) {
-            throw new Forbidden();
-        }
+        $data = $request->getParsedBody();
 
-        if ($this->getConfig()->get('restrictedMode')) {
-            if (!$this->getUser()->isSuperAdmin()) {
+        if ($this->config->get('restrictedMode')) {
+            if (!$this->user->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -100,14 +99,12 @@ class Extension extends \Espo\Core\Controllers\Record
     }
 
 
-    public function actionDelete($params, $data, $request)
+    public function deleteActionDelete(Request $request): bool
     {
-        if (!$request->isDelete()) {
-            throw BadRequest();
-        }
+        $params = $request->getRouteParams();
 
-        if ($this->getConfig()->get('restrictedMode')) {
-            if (!$this->getUser()->isSuperAdmin()) {
+        if ($this->config->get('restrictedMode')) {
+            if (!$this->user->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
@@ -119,42 +116,12 @@ class Extension extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function beforeCreate()
+    public function beforeCreate(): void
     {
         throw new Forbidden();
     }
 
-    public function beforeUpdate()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforePatch()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeListLinked()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeMassUpdate()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeMassDelete()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeCreateLink()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeRemoveLink()
+    public function beforeUpdate(): void
     {
         throw new Forbidden();
     }

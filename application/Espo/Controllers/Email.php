@@ -33,21 +33,36 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
-class Email extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\Record,
+    Api\Request,
+};
+
+use StdClass;
+
+class Email extends Record
 {
-    public function postActionGetCopiedAttachments($params, $data, $request)
+    public function postActionGetCopiedAttachments(Request $request): StdClass
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
+
         $id = $data->id;
 
         return $this->getRecordService()->getCopiedAttachments($id);
     }
 
-    public function postActionSendTestEmail($params, $data, $request)
+    /**
+     * @todo Move to service.
+     */
+    public function postActionSendTestEmail(Request $request)
     {
-        if (!$this->getAcl()->checkScope('Email')) {
+        $data = $request->getParsedBody();
+
+        if (!$this->acl->checkScope('Email')) {
             throw new Forbidden();
         }
 
@@ -64,7 +79,9 @@ class Email extends \Espo\Core\Controllers\Record
                 }
 
                 if (is_null($data->password)) {
-                    $data->password = $this->getContainer()->get('crypt')->decrypt($preferences->get('smtpPassword'));
+                    $data->password = $this->getContainer()
+                        ->get('crypt')
+                        ->decrypt($preferences->get('smtpPassword'));
                 }
             }
             else if ($data->type == 'emailAccount') {
@@ -73,7 +90,8 @@ class Email extends \Espo\Core\Controllers\Record
                 }
 
                 if (!empty($data->id)) {
-                    $emailAccount = $this->getEntityManager()->getEntity('EmailAccount', $data->id);
+                    $emailAccount = $this->getEntityManager()
+                        ->getEntity('EmailAccount', $data->id);
 
                     if (!$emailAccount) {
                         throw new NotFound();
@@ -85,7 +103,9 @@ class Email extends \Espo\Core\Controllers\Record
                         }
                     }
                     if (is_null($data->password)) {
-                        $data->password = $this->getContainer()->get('crypt')->decrypt($emailAccount->get('smtpPassword'));
+                        $data->password = $this->getContainer()
+                            ->get('crypt')
+                            ->decrypt($emailAccount->get('smtpPassword'));
                     }
                 }
             }

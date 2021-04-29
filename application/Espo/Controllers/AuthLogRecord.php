@@ -31,41 +31,31 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-class AuthLogRecord extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\Record;
+
+class AuthLogRecord extends Record
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        return $this->user->isAdmin();
     }
 
-    public function beforeUpdate()
+    public function beforeUpdate(): void
     {
         throw new Forbidden();
     }
 
-    public function beforeMassUpdate()
+    public function beforeCreate(): void
     {
         throw new Forbidden();
     }
 
-    public function beforeCreate()
+    public function beforeCreateLink(): void
     {
         throw new Forbidden();
     }
 
-    public function beforeCreateLink()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeRemoveLink()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeMassConvertCurrency()
+    public function beforeRemoveLink(): void
     {
         throw new Forbidden();
     }

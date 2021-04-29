@@ -30,161 +30,31 @@
 namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\{
-    Error,
     Forbidden,
-    NotFound,
     BadRequest,
 };
 
 use Espo\Core\{
-    Utils\ControllerUtil,
     Record\Collection as RecordCollection,
+    Api\Request,
 };
 
 use StdClass;
 
-class Record extends Base
+class Record extends RecordBase
 {
-    const MAX_SIZE_LIMIT = 200;
-
-    public static $defaultAction = 'list';
-
-    protected function getEntityManager()
+    /**
+     * Kanban data.
+     */
+    public function getActionListKanban(Request $request): StdClass
     {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    protected function getRecordService(?string $name = null): object
-    {
-        $name = $name ?? $this->name;
-
-        return $this->getContainer()->get('recordServiceContainer')->get($name);
-    }
-
-    public function actionRead($params, $data, $request)
-    {
-        $id = $params['id'];
-        $entity = $this->getRecordService()->read($id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        return $entity->getValueMap();
-    }
-
-    public function actionPatch($params, $data, $request)
-    {
-        return $this->actionUpdate($params, $data, $request);
-    }
-
-    public function actionCreate($params, $data, $request)
-    {
-        if (!is_object($data)) {
-            throw new BadRequest();
-        }
-
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'create')) {
-            throw new Forbidden("No create access for {$this->name}.");
-        }
-
-        $service = $this->getRecordService();
-
-        $entity = $service->create($data);
-
-        if ($entity) {
-            return $entity->getValueMap();
-        }
-
-        throw new Error();
-    }
-
-    public function actionUpdate($params, $data, $request)
-    {
-        if (!is_object($data)) {
-            throw new BadRequest();
-        }
-
-        if (!$request->isPut() && !$request->isPatch()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'edit')) {
-            throw new Forbidden("No edit access for {$this->name}.");
-        }
-
-        $id = $params['id'];
-
-        $entity = $this->getRecordService()->update($id, $data);
-
-        if ($entity) {
-            return $entity->getValueMap();
-        }
-
-        throw new Error();
-    }
-
-    public function actionList($params, $data, $request)
-    {
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden("No read access for {$this->name}.");
-        }
+        $data = $request->getParsedBody();
 
         $listParams = [];
 
         $this->fetchListParamsFromRequest($listParams, $request, $data);
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($listParams['maxSize'])) {
-            $listParams['maxSize'] = $maxSizeLimit;
-        }
-
-        if (!empty($listParams['maxSize']) && $listParams['maxSize'] > $maxSizeLimit) {
-            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
-        }
-
-        $result = $this->getRecordService()->find($listParams);
-
-        if ($result instanceof RecordCollection) {
-            return (object) [
-                'total' => $result->getTotal(),
-                'list' => $result->getValueMapList(),
-            ];
-        }
-
-        if (is_array($result)) {
-            return (object) [
-                'total' => $result['total'],
-                'list' => isset($result['collection']) ?
-                    $result['collection']->getValueMapList() :
-                    $result['list'],
-            ];
-        }
-
-        return (object) [
-            'total' => $result->total,
-            'list' => isset($result->collection) ?
-                $result->collection->getValueMapList() :
-                $result->list,
-        ];
-    }
-
-    public function getActionListKanban($params, $data, $request)
-    {
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden("No read access for {$this->name}.");
-        }
-
-        $listParams = [];
-
-        $this->fetchListParamsFromRequest($listParams, $request, $data);
-
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
 
         if (empty($listParams['maxSize'])) {
             $listParams['maxSize'] = $maxSizeLimit;
@@ -205,25 +75,26 @@ class Record extends Base
         ];
     }
 
-    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    /**
+     * List related records.
+     */
+    public function getActionListLinked(Request $request): StdClass
     {
-        ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
-    }
+        $id = $request->getRouteParam('id');
+        $link = $request->getRouteParam('link');
 
-    public function actionListLinked($params, $data, $request)
-    {
-        $id = $params['id'];
-        $link = $params['link'];
+        $data = $request->getParsedBody();
 
         $listParams = [];
 
         $this->fetchListParamsFromRequest($listParams, $request, $data);
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
 
         if (empty($listParams['maxSize'])) {
             $listParams['maxSize'] = $maxSizeLimit;
         }
+
         if (!empty($listParams['maxSize']) && $listParams['maxSize'] > $maxSizeLimit) {
             throw new Forbidden(
                 "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
@@ -256,85 +127,19 @@ class Record extends Base
         ];
     }
 
-    public function actionDelete($params, $data, $request)
+    /**
+     * Relate records.
+     */
+    public function postActionCreateLink(Request $request): bool
     {
-        if (!$request->isDelete()) {
+        $id = $request->getRouteParam('id');
+        $link = $request->getRouteParam('link');
+
+        $data = $request->getParsedBody();
+
+        if (!$id || !$link) {
             throw new BadRequest();
         }
-
-        $id = $params['id'];
-
-        $this->getRecordService()->delete($id);
-
-        return true;
-    }
-
-    public function actionExport($params, $data, $request)
-    {
-        if (!is_object($data)) {
-            throw new BadRequest();
-        }
-
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
-        if ($this->getConfig()->get('exportDisabled') && !$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if ($this->getAcl()->get('exportPermission') !== 'yes' && !$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        $ids = isset($data->ids) ? $data->ids : null;
-        $where = isset($data->where) ? json_decode(json_encode($data->where), true) : null;
-        $byWhere = isset($data->byWhere) ? $data->byWhere : false;
-        $selectData = isset($data->selectData) ? json_decode(json_encode($data->selectData), true) : null;
-
-        $actionParams = [];
-
-        if ($byWhere) {
-            $actionParams['selectData'] = $selectData;
-            $actionParams['where'] = $where;
-        }
-        else {
-            $actionParams['ids'] = $ids;
-        }
-
-        if (isset($data->attributeList)) {
-            $actionParams['attributeList'] = $data->attributeList;
-        }
-
-        if (isset($data->fieldList)) {
-            $actionParams['fieldList'] = $data->fieldList;
-        }
-
-        if (isset($data->format)) {
-            $actionParams['format'] = $data->format;
-        }
-
-        return [
-            'id' => $this->getRecordService()->export($actionParams),
-        ];
-    }
-
-    public function actionCreateLink($params, $data, $request)
-    {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
-
-        if (empty($params['id']) || empty($params['link'])) {
-            throw new BadRequest();
-        }
-
-        $id = $params['id'];
-        $link = $params['link'];
 
         if (!empty($data->massRelate)) {
             if (!is_array($data->where)) {
@@ -351,43 +156,41 @@ class Record extends Base
 
             return $this->getRecordService()->massLink($id, $link, $where, $selectData);
         }
-        else {
-            $foreignIdList = [];
 
-            if (isset($data->id)) {
-                $foreignIdList[] = $data->id;
-            }
+        $foreignIdList = [];
 
-            if (isset($data->ids) && is_array($data->ids)) {
-                foreach ($data->ids as $foreignId) {
-                    $foreignIdList[] = $foreignId;
-                }
-            }
-
-            $result = false;
-
-            foreach ($foreignIdList as $foreignId) {
-                $this->getRecordService()->link($id, $link, $foreignId);
-
-                $result = true;
-            }
-
-            return $result;
+        if (isset($data->id)) {
+            $foreignIdList[] = $data->id;
         }
 
-        throw new Error();
+        if (isset($data->ids) && is_array($data->ids)) {
+            foreach ($data->ids as $foreignId) {
+                $foreignIdList[] = $foreignId;
+            }
+        }
+
+        $result = false;
+
+        foreach ($foreignIdList as $foreignId) {
+            $this->getRecordService()->link($id, $link, $foreignId);
+
+            $result = true;
+        }
+
+        return $result;
     }
 
-    public function actionRemoveLink($params, $data, $request)
+    /**
+     * Unrelate records.
+     */
+    public function deleteActionRemoveLink(Request $request): bool
     {
-        if (!$request->isDelete()) {
-            throw new BadRequest();
-        }
+        $id = $request->getRouteParam('id');
+        $link = $request->getRouteParam('link');
 
-        $id = $params['id'];
-        $link = $params['link'];
+        $data = $request->getParsedBody();
 
-        if (empty($params['id']) || empty($params['link'])) {
+        if (!$id || !$link) {
             throw new BadRequest();
         }
 
@@ -414,41 +217,29 @@ class Record extends Base
         return $result;
     }
 
-    public function actionFollow($params, $data, $request)
+    /**
+     * Follow a record.
+     */
+    public function putActionFollow(Request $request): bool
     {
-        if (!$request->isPut()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'stream')) {
-            throw new Forbidden("No stream access for {$this->name}.");
-        }
-
-        $id = $params['id'];
+        $id = $request->getRouteParam('id');
 
         return $this->getRecordService()->follow($id);
     }
 
-    public function actionUnfollow($params, $data, $request)
+    /**
+     * Unfollow a record.
+     */
+    public function deleteActionUnfollow(Request $request): bool
     {
-        if (!$request->isDelete()) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden("No read access for {$this->name}.");
-        }
-
-        $id = $params['id'];
+        $id = $request->getRouteParam('id');
 
         return $this->getRecordService()->unfollow($id);
     }
 
-    public function actionMerge($params, $data, $request)
+    public function postActionMerge(Request $request): bool
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $data = $request->getParsedBody();
 
         if (
             empty($data->targetId) ||
@@ -463,78 +254,12 @@ class Record extends Base
         $sourceIds = $data->sourceIds;
         $attributes = $data->attributes;
 
-        if (!$this->getAcl()->check($this->name, 'edit')) {
+        if (!$this->acl->check($this->getEntityType(), 'edit')) {
             throw new Forbidden("No edit access for {$this->name}.");
         }
 
         $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
 
         return true;
-    }
-
-    public function postActionGetDuplicateAttributes($params, $data, $request)
-    {
-        if (empty($data->id)) {
-            throw new BadRequest();
-        }
-
-        if (!$this->getAcl()->check($this->name, 'create')) {
-            throw new Forbidden();
-        }
-        if (!$this->getAcl()->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
-        return $this->getRecordService()->getDuplicateAttributes($data->id);
-    }
-
-    public function postActionRestoreDeleted($params, $data, $request)
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        $id = $data->id ?? null;
-
-        if (!$id) {
-            throw new Forbidden();
-        }
-
-        $this->getRecordService()->restoreDeleted($id);
-
-        return true;
-    }
-
-    public function postActionConvertCurrency($params, $data, $request)
-    {
-        if (!$this->getAcl()->checkScope($this->name, 'edit')) {
-            throw new Forbidden();
-        }
-
-        $fieldList = $data->fieldList ?? null;
-
-        if (!empty($data->field)) {
-            if (!is_array($fieldList)) {
-                $fieldList = [];
-            }
-
-            $fieldList[] = $data->field;
-        }
-
-        if (empty($data->id)) {
-            throw new BadRequest();
-        }
-
-        if (empty($data->rates)) {
-            throw new BadRequest();
-        }
-
-        if (empty($data->targetCurrency)) {
-            throw new BadRequest();
-        }
-
-        return $this->getRecordService()->convertCurrency(
-            $data->id, $data->targetCurrency, $data->rates, $fieldList
-        );
     }
 }
