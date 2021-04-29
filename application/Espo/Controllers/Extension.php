@@ -35,6 +35,7 @@ use Espo\Core\{
     ExtensionManager,
     Controllers\RecordBase,
     Api\Request,
+    Api\Response,
 };
 
 use StdClass;
@@ -99,7 +100,7 @@ class Extension extends RecordBase
     }
 
 
-    public function deleteActionDelete(Request $request): bool
+    public function deleteActionDelete(Request $request, Response $response): bool
     {
         $params = $request->getRouteParams();
 

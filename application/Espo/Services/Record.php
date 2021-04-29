@@ -431,7 +431,7 @@ class Record implements Crud,
 
     protected function getRepository(): Repository
     {
-        return $this->getEntityManager()->getRepository($this->entityType);
+        return $this->entityManager->getRepository($this->entityType);
     }
 
     /**
@@ -452,13 +452,13 @@ class Record implements Crud,
             return;
         }
 
-        $historyRecord = $this->getEntityManager()->getEntity('ActionHistoryRecord');
+        $historyRecord = $this->entityManager->getEntity('ActionHistoryRecord');
 
         $historyRecord->set('action', $action);
-        $historyRecord->set('userId', $this->getUser()->id);
-        $historyRecord->set('authTokenId', $this->getUser()->get('authTokenId'));
-        $historyRecord->set('ipAddress', $this->getUser()->get('ipAddress'));
-        $historyRecord->set('authLogRecordId', $this->getUser()->get('authLogRecordId'));
+        $historyRecord->set('userId', $this->user->id);
+        $historyRecord->set('authTokenId', $this->user->get('authTokenId'));
+        $historyRecord->set('ipAddress', $this->user->get('ipAddress'));
+        $historyRecord->set('authLogRecordId', $this->user->get('authLogRecordId'));
 
         if ($entity) {
             $historyRecord->set([
@@ -467,7 +467,7 @@ class Record implements Crud,
             ]);
         }
 
-        $this->getEntityManager()->saveEntity($historyRecord);
+        $this->entityManager->saveEntity($historyRecord);
     }
 
     /**
@@ -487,6 +487,10 @@ class Record implements Crud,
      */
     public function read(string $id): Entity
     {
+        if (!$this->acl->check($this->entityType)) {
+            throw new ForbiddenSilent();
+        }
+
         if (empty($id)) {
             throw new Error("No ID passed.");
         }
@@ -516,7 +520,7 @@ class Record implements Crud,
 
         $entity = $this->getRepository()->getById($id);
 
-        if (!$entity && $this->getUser()->isAdmin()) {
+        if (!$entity && $this->user->isAdmin()) {
             $entity = $this->getEntityEvenDeleted($id);
         }
 
@@ -526,7 +530,7 @@ class Record implements Crud,
 
         $this->loadAdditionalFields($entity);
 
-        if (!$this->getAcl()->check($entity, 'read')) {
+        if (!$this->acl->check($entity, 'read')) {
             throw new ForbiddenSilent("No read access.");
         }
 
@@ -683,13 +687,13 @@ class Record implements Crud,
             return true;
         }
 
-        if ($this->getUser()->isPortal()) {
+        if ($this->user->isPortal()) {
             if (count($entity->getLinkMultipleIdList('assignedUsers')) === 0) {
                 return true;
             }
         }
 
-        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+        $assignmentPermission = $this->acl->get('assignmentPermission');
 
         if (
             $assignmentPermission === true ||
@@ -714,7 +718,7 @@ class Record implements Crud,
 
         if ($toProcess) {
             if (empty($userIdList)) {
-                if ($assignmentPermission == 'no' && !$this->getUser()->isApi()) {
+                if ($assignmentPermission == 'no' && !$this->user->isApi()) {
                     return false;
                 }
 
@@ -729,12 +733,12 @@ class Record implements Crud,
                         continue;
                     }
 
-                    if ($this->getUser()->id != $userId) {
+                    if ($this->user->id != $userId) {
                         return false;
                     }
                 }
             } else if ($assignmentPermission == 'team') {
-                $teamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+                $teamIdList = $this->user->getLinkMultipleIdList('teams');
 
                 foreach ($userIdList as $userId) {
                     if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
@@ -742,7 +746,7 @@ class Record implements Crud,
                     }
 
                     if (
-                        !$this->getEntityManager()
+                        !$this->entityManager
                             ->getRepository('User')
                         ->checkBelongsToAnyOfTeams($userId, $teamIdList)
                     ) {
@@ -763,13 +767,13 @@ class Record implements Crud,
 
         $assignedUserId = $entity->get('assignedUserId');
 
-        if ($this->getUser()->isPortal()) {
+        if ($this->user->isPortal()) {
             if (!$entity->isAttributeChanged('assignedUserId') && empty($assignedUserId)) {
                 return true;
             }
         }
 
-        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+        $assignmentPermission = $this->acl->get('assignmentPermission');
 
         if (
             $assignmentPermission === true ||
@@ -791,7 +795,7 @@ class Record implements Crud,
 
         if ($toProcess) {
             if (empty($assignedUserId)) {
-                if ($assignmentPermission == 'no' && !$this->getUser()->isApi()) {
+                if ($assignmentPermission == 'no' && !$this->user->isApi()) {
                     return false;
                 }
 
@@ -799,15 +803,15 @@ class Record implements Crud,
             }
 
             if ($assignmentPermission == 'no') {
-                if ($this->getUser()->id != $assignedUserId) {
+                if ($this->user->id != $assignedUserId) {
                     return false;
                 }
             }
             else if ($assignmentPermission == 'team') {
-                $teamIdList = $this->getUser()->get('teamsIds');
+                $teamIdList = $this->user->get('teamsIds');
 
                 if (
-                    !$this->getEntityManager()
+                    !$this->entityManager
                         ->getRepository('User')
                         ->checkBelongsToAnyOfTeams($assignedUserId, $teamIdList)
                 ) {
@@ -821,7 +825,7 @@ class Record implements Crud,
 
     public function isPermittedTeams(Entity $entity): bool
     {
-        $assignmentPermission = $this->getAcl()->get('assignmentPermission');
+        $assignmentPermission = $this->acl->get('assignmentPermission');
 
         if (
             empty($assignmentPermission) ||
@@ -861,7 +865,7 @@ class Record implements Crud,
         if (!$entity->isNew()) {
             $existingIdList = [];
 
-            $teamCollection = $this->getEntityManager()
+            $teamCollection = $this->entityManager
                 ->getRepository($entity->getEntityType())
                 ->getRelation($entity, 'teams')
                 ->select('id')
@@ -884,7 +888,7 @@ class Record implements Crud,
             return true;
         }
 
-        $userTeamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+        $userTeamIdList = $this->user->getLinkMultipleIdList('teams');
 
         foreach ($newIdList as $id) {
             if (!in_array($id, $userTeamIdList)) {
@@ -924,17 +928,17 @@ class Record implements Crud,
             $data->$key = $this->filterInputAttribute($key, $data->$key);
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             foreach ($this->onlyAdminAttributeList as $attribute) {
                 unset($data->$attribute);
             }
         }
 
-        foreach ($this->getAcl()->getScopeForbiddenAttributeList($this->entityType, 'edit') as $attribute) {
+        foreach ($this->acl->getScopeForbiddenAttributeList($this->entityType, 'edit') as $attribute) {
             unset($data->$attribute);
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             foreach ($this->nonAdminReadOnlyAttributeList as $attribute) {
                 unset($data->$attribute);
             }
@@ -1015,27 +1019,27 @@ class Record implements Crud,
 
     public function populateDefaults(Entity $entity, StdClass $data): void
     {
-        if (!$this->getUser()->isPortal()) {
+        if (!$this->user->isPortal()) {
             $forbiddenFieldList = null;
 
             if ($entity->hasAttribute('assignedUserId')) {
-                $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+                $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->entityType, 'edit');
 
                 if (in_array('assignedUser', $forbiddenFieldList)) {
-                    $entity->set('assignedUserId', $this->getUser()->id);
-                    $entity->set('assignedUserName', $this->getUser()->get('name'));
+                    $entity->set('assignedUserId', $this->user->id);
+                    $entity->set('assignedUserName', $this->user->get('name'));
                 }
             }
 
             if ($entity->hasLinkMultipleField('teams')) {
                 if (is_null($forbiddenFieldList)) {
-                    $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+                    $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->entityType, 'edit');
                 }
 
                 if (in_array('teams', $forbiddenFieldList)) {
-                    if ($this->getUser()->get('defaultTeamId')) {
+                    if ($this->user->get('defaultTeamId')) {
 
-                        $defaultTeamId = $this->getUser()->get('defaultTeamId');
+                        $defaultTeamId = $this->user->get('defaultTeamId');
                         $entity->addLinkMultipleId('teams', $defaultTeamId);
 
                         $teamsNames = $entity->get('teamsNames');
@@ -1044,7 +1048,7 @@ class Record implements Crud,
                             $teamsNames = (object) [];
                         }
 
-                        $teamsNames->$defaultTeamId = $this->getUser()->get('defaultTeamName');
+                        $teamsNames->$defaultTeamId = $this->user->get('defaultTeamName');
                         $entity->set('teamsNames', $teamsNames);
                     }
                 }
@@ -1077,8 +1081,8 @@ class Record implements Crud,
      */
     public function create(StdClass $data): Entity
     {
-        if (!$this->getAcl()->check($this->getEntityType(), 'create')) {
-            throw new ForbiddenSilent("No create access.");
+        if (!$this->acl->check($this->entityType)) {
+            throw new ForbiddenSilent();
         }
 
         $entity = $this->getRepository()->get();
@@ -1089,7 +1093,7 @@ class Record implements Crud,
 
         $this->populateDefaults($entity, $data);
 
-        if (!$this->getAcl()->check($entity, 'create')) {
+        if (!$this->acl->check($entity, 'create')) {
             throw new ForbiddenSilent("No create access.");
         }
 
@@ -1126,6 +1130,10 @@ class Record implements Crud,
      */
     public function update(string $id, StdClass $data): Entity
     {
+        if (!$this->acl->check($this->entityType)) {
+            throw new ForbiddenSilent();
+        }
+
         if (empty($id)) {
             throw new BadRequest("ID is empty.");
         }
@@ -1142,7 +1150,7 @@ class Record implements Crud,
             throw new NotFound("Record {$id} not found.");
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new ForbiddenSilent("No edit access.");
         }
 
@@ -1203,6 +1211,10 @@ class Record implements Crud,
 
     public function delete(string $id): void
     {
+        if (!$this->acl->check($this->entityType)) {
+            throw new ForbiddenSilent();
+        }
+
         if (empty($id)) {
             throw new BadRequest("ID is empty.");
         }
@@ -1213,7 +1225,7 @@ class Record implements Crud,
             throw new NotFound("Record {$id} not found.");
         }
 
-        if (!$this->getAcl()->check($entity, 'delete')) {
+        if (!$this->acl->check($entity, 'delete')) {
             throw new ForbiddenSilent("No delete access.");
         }
 
@@ -1258,11 +1270,16 @@ class Record implements Crud,
      */
     public function find(array $params): RecordCollection
     {
+        if (!$this->acl->check($this->entityType)) {
+            throw new ForbiddenSilent();
+        }
+
         $disableCount = false;
+
         if (
             $this->listCountQueryDisabled
             ||
-            $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'countDisabled'])
+            $this->metadata->get(['entityDefs', $this->entityType, 'collection', 'countDisabled'])
         ) {
             $disableCount = true;
         }
@@ -1317,46 +1334,6 @@ class Record implements Crud,
         return new RecordCollection($collection, $total);
     }
 
-    /**
-     * Get kanban data.
-     *
-     * @params $params Raw search parameters.
-     */
-    public function getListKanban(array $params): KanbanResult
-    {
-        $disableCount = false;
-
-        if (
-            $this->listCountQueryDisabled
-            ||
-            $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'countDisabled'])
-        ) {
-            $disableCount = true;
-        }
-
-        $orderDisabled = $this->metadata->get(['scopes', $this->entityType, 'kanbanOrderDisabled']) ?? false;
-
-        $this->handleListParams($params);
-
-        $kanban = $this->injectableFactory->create(KanbanTool::class);
-
-        $kanban
-            ->setEntityType($this->entityType)
-            ->setRecordService($this)
-            ->setSearchParams($params)
-            ->setCountDisabled($disableCount)
-            ->setOrderDisabled($orderDisabled)
-            ->setUserId($this->getUser()->id);
-
-        $maxOrderNumber = $this->getConfig()->get('kanbanMaxOrderNumber') ?? null;
-
-        if ($maxOrderNumber) {
-            $kanban->setMaxOrderNumber($maxOrderNumber);
-        }
-
-        return $kanban->getResult();
-    }
-
     protected function getEntityEvenDeleted(string $id): ?Entity
     {
         $query = $this->entityManager->getQueryBuilder()
@@ -1379,7 +1356,7 @@ class Record implements Crud,
      */
     public function restoreDeleted(string $id): void
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -1425,14 +1402,18 @@ class Record implements Crud,
      */
     public function findLinked(string $id, string $link, array $params): RecordCollection
     {
+        if (!$this->acl->check($this->entityType, 'edit')) {
+            throw new ForbiddenSilent("No read access.");
+        }
+
         $entity = $this->getRepository()->get($id);
 
         if (!$entity) {
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'read')) {
-            throw new Forbidden();
+        if (!$this->acl->check($entity, 'read')) {
+            throw new ForbiddenSilent();
         }
 
         if (empty($link)) {
@@ -1447,7 +1428,7 @@ class Record implements Crud,
             throw new Forbidden();
         }
 
-        if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
         }
 
@@ -1474,7 +1455,7 @@ class Record implements Crud,
         $skipAcl = $linkParams['skipAcl'] ?? false;
 
         if (!$skipAcl) {
-            if (!$this->getAcl()->check($foreignEntityType, 'read')) {
+            if (!$this->acl->check($foreignEntityType, 'read')) {
                 throw new Forbidden();
             }
         }
@@ -1582,6 +1563,10 @@ class Record implements Crud,
      */
     public function link(string $id, string $link, string $foreignId): void
     {
+        if (!$this->acl->check($this->entityType, 'read')) {
+            throw new Forbidden();
+        }
+
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
         }
@@ -1594,11 +1579,11 @@ class Record implements Crud,
             throw new Forbidden();
         }
 
-        if (!$this->getUser()->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
+        if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
             throw new Forbidden();
         }
 
-        if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
         }
 
@@ -1609,11 +1594,11 @@ class Record implements Crud,
         }
 
         if ($this->noEditAccessRequiredForLink) {
-            if (!$this->getAcl()->check($entity, 'read')) {
+            if (!$this->acl->check($entity, 'read')) {
                 throw new Forbidden();
             }
         } else {
-            if (!$this->getAcl()->check($entity, 'edit')) {
+            if (!$this->acl->check($entity, 'edit')) {
                 throw new Forbidden();
             }
         }
@@ -1632,7 +1617,7 @@ class Record implements Crud,
             throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
         }
 
-        $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $foreignId);
+        $foreignEntity = $this->entityManager->getEntity($foreignEntityType, $foreignId);
 
         if (!$foreignEntity) {
             throw new NotFound();
@@ -1644,7 +1629,7 @@ class Record implements Crud,
             $accessActionRequired = 'read';
         }
 
-        if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
+        if (!$this->acl->check($foreignEntity, $accessActionRequired)) {
             throw new Forbidden();
         }
 
@@ -1669,6 +1654,10 @@ class Record implements Crud,
      */
     public function unlink(string $id, string $link, string $foreignId): void
     {
+        if (!$this->acl->check($this->entityType, 'read')) {
+            throw new Forbidden();
+        }
+
         if (empty($id) || empty($link) || empty($foreignId)) {
             throw new BadRequest;
         }
@@ -1685,11 +1674,11 @@ class Record implements Crud,
             throw new Forbidden();
         }
 
-        if (!$this->getUser()->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
+        if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
             throw new Forbidden();
         }
 
-        if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
         }
 
@@ -1700,11 +1689,11 @@ class Record implements Crud,
         }
 
         if ($this->noEditAccessRequiredForLink) {
-            if (!$this->getAcl()->check($entity, 'read')) {
+            if (!$this->acl->check($entity, 'read')) {
                 throw new Forbidden();
             }
         } else {
-            if (!$this->getAcl()->check($entity, 'edit')) {
+            if (!$this->acl->check($entity, 'edit')) {
                 throw new Forbidden();
             }
         }
@@ -1723,7 +1712,7 @@ class Record implements Crud,
             throw new Error("Entity '{$this->entityType}' has not relation '{$link}'.");
         }
 
-        $foreignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $foreignId);
+        $foreignEntity = $this->entityManager->getEntity($foreignEntityType, $foreignId);
 
         if (!$foreignEntity) {
             throw new NotFound();
@@ -1735,7 +1724,7 @@ class Record implements Crud,
             $accessActionRequired = 'read';
         }
 
-        if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
+        if (!$this->acl->check($foreignEntity, $accessActionRequired)) {
             throw new Forbidden();
         }
 
@@ -1752,7 +1741,11 @@ class Record implements Crud,
 
     public function linkFollowers(string $id, string $foreignId): void
     {
-        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) {
+        if (!$this->acl->check($this->entityType)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->metadata->get(['scopes', $this->entityType, 'stream'])) {
             throw new NotFound();
         }
 
@@ -1768,26 +1761,26 @@ class Record implements Crud,
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new ForbiddenSilent("No 'edit' access.");
         }
 
-        if (!$this->getAcl()->check($entity, 'stream')) {
+        if (!$this->acl->check($entity, 'stream')) {
             throw new ForbiddenSilent("No 'stream' access.");
         }
 
-        if (!$user->isPortal() && !$this->getAcl()->check($user, 'read')) {
+        if (!$user->isPortal() && !$this->acl->check($user, 'read')) {
             throw new ForbiddenSilent("No 'read' access to user.");
         }
 
-        if ($user->isPortal() && $this->getAcl()->get('portal') !== 'yes') {
+        if ($user->isPortal() && $this->acl->get('portal') !== 'yes') {
             throw new ForbiddenSilent("No 'portal' permission.");
         }
 
         if (
             !$user->isPortal() &&
-            $this->getUser()->getId() !== $user->getId() &&
-            !$this->getAcl()->checkUserPermission($user, 'followerManagement')
+            $this->user->getId() !== $user->getId() &&
+            !$this->acl->checkUserPermission($user, 'followerManagement')
         ) {
             throw new Forbidden();
         }
@@ -1801,7 +1794,11 @@ class Record implements Crud,
 
     public function unlinkFollowers(string $id, string $foreignId): void
     {
-        if (!$this->getMetadata()->get(['scopes', $this->entityType, 'stream'])) {
+        if (!$this->acl->check($this->entityType)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->metadata->get(['scopes', $this->entityType, 'stream'])) {
             throw new NotFound();
         }
 
@@ -1817,26 +1814,26 @@ class Record implements Crud,
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new ForbiddenSilent("No 'edit' access.");
         }
 
-        if (!$this->getAcl()->check($entity, 'stream')) {
+        if (!$this->acl->check($entity, 'stream')) {
             throw new ForbiddenSilent("No 'stream' access.");
         }
 
-        if (!$user->isPortal() && !$this->getAcl()->check($user, 'read')) {
+        if (!$user->isPortal() && !$this->acl->check($user, 'read')) {
             throw new ForbiddenSilent("No 'read' access to user.");
         }
 
-        if ($user->isPortal() && $this->getAcl()->get('portal') !== 'yes') {
+        if ($user->isPortal() && $this->acl->get('portal') !== 'yes') {
             throw new ForbiddenSilent("No 'portal' permission.");
         }
 
         if (
             !$user->isPortal() &&
-            $this->getUser()->getId() !== $user->getId() &&
-            !$this->getAcl()->checkUserPermission($user, 'followerManagement')
+            $this->user->getId() !== $user->getId() &&
+            !$this->acl->checkUserPermission($user, 'followerManagement')
         ) {
             throw new Forbidden();
         }
@@ -1846,6 +1843,10 @@ class Record implements Crud,
 
     public function massLink(string $id, string $link, array $where, ?array $selectData = null)
     {
+        if (!$this->acl->check($this->entityType)) {
+            throw new Forbidden();
+        }
+
         if (empty($id) || empty($link)) {
             throw new BadRequest;
         }
@@ -1858,11 +1859,11 @@ class Record implements Crud,
             throw new Forbidden();
         }
 
-        if (!$this->getUser()->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
+        if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
             throw new Forbidden();
         }
 
-        if (!$this->getUser()->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
         }
 
@@ -1872,7 +1873,7 @@ class Record implements Crud,
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden();
         }
 
@@ -1893,7 +1894,7 @@ class Record implements Crud,
             $accessActionRequired = 'read';
         }
 
-        if (!$this->getAcl()->check($foreignEntityType, $accessActionRequired)) {
+        if (!$this->acl->check($foreignEntityType, $accessActionRequired)) {
             throw new Forbidden();
         }
 
@@ -1914,7 +1915,7 @@ class Record implements Crud,
             ->withSearchParams(SearchParams::fromRaw($params))
             ->build();
 
-        if ($this->getAcl()->getLevel($foreignEntityType, $accessActionRequired) === 'all') {
+        if ($this->acl->getLevel($foreignEntityType, $accessActionRequired) === 'all') {
             $this->getRepository()
                 ->getRelation($entity, $link)
                 ->massRelate($query);
@@ -1930,7 +1931,7 @@ class Record implements Crud,
             ->find();
 
         foreach ($foreignCollection as $foreignEntity) {
-            if (!$this->getAcl()->check($foreignEntity, $accessActionRequired)) {
+            if (!$this->acl->check($foreignEntity, $accessActionRequired)) {
                 continue;
             }
 
@@ -1959,18 +1960,22 @@ class Record implements Crud,
      */
     public function follow(string $id, ?string $userId = null)
     {
+        if (!$this->acl->check($this->entityType)) {
+            throw new Forbidden();
+        }
+
         $entity = $this->getRepository()->get($id);
 
         if (!$entity) {
             throw new NotFoundSilent();
         }
 
-        if (!$this->getAcl()->check($entity, 'stream')) {
+        if (!$this->acl->check($entity, 'stream')) {
             throw new Forbidden();
         }
 
         if (empty($userId)) {
-            $userId = $this->getUser()->id;
+            $userId = $this->user->id;
         }
 
         return $this->getStreamService()->followEntity($entity, $userId);
@@ -1993,7 +1998,7 @@ class Record implements Crud,
         }
 
         if (empty($userId)) {
-            $userId = $this->getUser()->id;
+            $userId = $this->user->id;
         }
 
         return $this->getStreamService()->unfollowEntity($entity, $userId);
@@ -2117,13 +2122,13 @@ class Record implements Crud,
             $entity->clear($attribute);
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             foreach ($this->onlyAdminAttributeList as $attribute) {
                 $entity->clear($attribute);
             }
         }
 
-        foreach ($this->getAcl()->getScopeForbiddenAttributeList($entity->getEntityType(), 'read') as $attribute) {
+        foreach ($this->acl->getScopeForbiddenAttributeList($entity->getEntityType(), 'read') as $attribute) {
             $entity->clear($attribute);
         }
     }
@@ -2143,13 +2148,13 @@ class Record implements Crud,
 
         $repository = $this->getRepository();
 
-        $entity = $this->getEntityManager()->getEntity($this->getEntityType(), $id);
+        $entity = $this->entityManager->getEntity($this->getEntityType(), $id);
 
         if (!$entity) {
             throw new NotFound("Record not found.");
         }
 
-        if (!$this->getAcl()->check($entity, 'edit')) {
+        if (!$this->acl->check($entity, 'edit')) {
             throw new Forbidden("No edit access.");
         }
 
@@ -2168,14 +2173,14 @@ class Record implements Crud,
 
             $sourceList[] = $source;
 
-            if (!$this->getAcl()->check($source, 'edit') || !$this->getAcl()->check($source, 'delete')) {
+            if (!$this->acl->check($source, 'edit') || !$this->acl->check($source, 'delete')) {
                 throw new Forbidden("No edit or delete access.");
             }
         }
 
         $this->beforeMerge($entity, $sourceList, $data);
 
-        $fieldDefs = $this->getMetadata()->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
+        $fieldDefs = $this->metadata->get('entityDefs.' . $entity->getEntityType() . '.fields', []);
 
         $hasPhoneNumber = false;
 
@@ -2208,7 +2213,7 @@ class Record implements Crud,
         }
 
         foreach ($sourceList as $source) {
-            $updateQuery = $this->getEntityManager()->getQueryBuilder()
+            $updateQuery = $this->entityManager->getQueryBuilder()
                 ->update()
                 ->in('Note')
                 ->set([
@@ -2223,7 +2228,7 @@ class Record implements Crud,
                 ])
                 ->build();
 
-            $this->getEntityManager()->getQueryExecutor()->execute($updateQuery);
+            $this->entityManager->getQueryExecutor()->execute($updateQuery);
 
             if ($hasPhoneNumber) {
                 $phoneNumberList = $repository->findRelated($source, 'phoneNumbers');
@@ -2243,7 +2248,7 @@ class Record implements Crud,
 
         $mergeLinkList = [];
 
-        $linksDefs = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'links']);
+        $linksDefs = $this->metadata->get(['entityDefs', $this->getEntityType(), 'links']);
 
         foreach ($linksDefs as $link => $d) {
             if (!empty($d['notMergeable'])) {
@@ -2266,7 +2271,7 @@ class Record implements Crud,
         }
 
         foreach ($sourceList as $source) {
-            $this->getEntityManager()->removeEntity($source);
+            $this->entityManager->removeEntity($source);
 
             $this->processActionHistoryRecord('delete', $source);
         }
@@ -2347,7 +2352,7 @@ class Record implements Crud,
             throw new NotFound();
         }
 
-        if (!$this->getAcl()->check($entity, 'read')) {
+        if (!$this->acl->check($entity, 'read')) {
             throw new Forbidden();
         }
 
@@ -2370,7 +2375,7 @@ class Record implements Crud,
 
         unset($attributes->id);
 
-        $fields = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields'], []);
+        $fields = $this->metadata->get(['entityDefs', $this->getEntityType(), 'fields'], []);
 
         $fieldManager = $this->fieldUtil;
 
@@ -2395,7 +2400,7 @@ class Record implements Crud,
                 $attachment = $entity->get($field);
 
                 if ($attachment) {
-                    $attachment = $this->getEntityManager()
+                    $attachment = $this->entityManager
                         ->getRepository('Attachment')
                         ->getCopiedAttachment($attachment);
 
@@ -2414,13 +2419,13 @@ class Record implements Crud,
                     $typeHash = (object) [];
 
                     foreach ($attachmentList as $attachment) {
-                        $attachment = $this->getEntityManager()
+                        $attachment = $this->entityManager
                             ->getRepository('Attachment')
                             ->getCopiedAttachment($attachment);
 
                         $attachment->set('field', $field);
 
-                        $this->getEntityManager()->saveEntity($attachment);
+                        $this->entityManager->saveEntity($attachment);
 
                         if ($attachment) {
                             $idList[] = $attachment->id;
@@ -2438,7 +2443,7 @@ class Record implements Crud,
                 $foreignEntityType = $entity->getRelationParam($field, 'entity');
 
                 if ($foreignEntityType && $foreignLink) {
-                    $foreignRelationType = $this->getMetadata()->get(
+                    $foreignRelationType = $this->metadata->get(
                         ['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']
                     );
 
@@ -2472,13 +2477,13 @@ class Record implements Crud,
             return;
         }
 
-        $duplicatingEntity = $this->getEntityManager()->getEntity($entity->getEntityType(), $duplicatingEntityId);
+        $duplicatingEntity = $this->entityManager->getEntity($entity->getEntityType(), $duplicatingEntityId);
 
         if (!$duplicatingEntity) {
             return;
         }
 
-        if (!$this->getAcl()->check($duplicatingEntity, 'read')) {
+        if (!$this->acl->check($duplicatingEntity, 'read')) {
             return;
         }
 
@@ -2620,13 +2625,13 @@ class Record implements Crud,
             return $this->convertCurrencyFieldList;
         }
 
-        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->entityType, 'edit');
 
         $list = [];
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
             if (
-                $this->getMetadata()
+                $this->metadata
                     ->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency'
             ) {
                 continue;

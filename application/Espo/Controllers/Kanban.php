@@ -27,61 +27,64 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Controllers;
 
 use Espo\Core\{
-    Exceptions\Forbidden,
-    Acl,
-    Utils\Config,
+    Api\Request,
+    Utils\ControllerUtil,
+    Exceptions\BadRequest,
 };
 
-use Espo\{
-    Entities\User,
-    Tools\Kanban\Orderer,
-};
+use Espo\Tools\Kanban\KanbanService;
 
-class KanbanOrder
+use StdClass;
+
+class Kanban
 {
-    protected $orderer;
+    private $service;
 
-    protected $acl;
-
-    protected $user;
-
-    protected $config;
-
-    protected $serviceFactory;
-
-    public function __construct(Orderer $orderer, Acl $acl, User $user, Config $config)
+    public function __construct(KanbanService $service)
     {
-        $this->orderer = $orderer;
-        $this->acl = $acl;
-        $this->user = $user;
-        $this->config = $config;
+        $this->service = $service;
     }
 
-    public function order(string $entityType, string $group, array $ids)
+    public function getActionGetData(Request $request): StdClass
     {
-        if (!$this->acl->check($entityType, 'read')) {
-            throw new Forbidden();
+        $entityType = $request->getRouteParam('entityType');
+
+        $searchParams = ControllerUtil::fetchSearchParamsFromRequest($request);
+
+        $result = $this->service->getData($entityType, $searchParams);
+
+        return (object) [
+            'total' => $result->getTotal(),
+            'list' => $result->getCollection()->getValueMapList(),
+            'additionalData' => $result->getData(),
+        ];
+    }
+
+    public function postActionStoreOrder(Request $request): bool
+    {
+        $data = $request->getParsedBody();
+
+        $entityType = $data->entityType;
+        $group = $data->group;
+        $ids = $data->ids;
+
+        if (empty($entityType) || !is_string($entityType)) {
+            throw new BadRequest();
         }
 
-        if ($this->user->isPortal()) {
-            throw new Forbidden();
+        if (empty($group) || !is_string($group)) {
+            throw new BadRequest();
         }
 
-        $processor = $this->orderer
-            ->createProcessor()
-            ->setEntityType($entityType)
-            ->setGroup($group)
-            ->setUserId($this->user->id);
-
-        $maxOrderNumber = $this->config->get('kanbanMaxOrderNumber') ?? null;
-
-        if ($maxOrderNumber) {
-            $processor->setMaxNumber($maxOrderNumber);
+        if (!is_array($ids)) {
+            throw new BadRequest();
         }
 
-        $processor->order($ids);
+        $this->service->order($entityType, $group, $ids);
+
+        return true;
     }
 }

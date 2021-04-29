@@ -68,7 +68,7 @@ class Email extends Record
 
         if (is_null($data->password)) {
             if ($data->type == 'preferences') {
-                if (!$this->getUser()->isAdmin() && $data->id !== $this->getUser()->id) {
+                if (!$this->user->isAdmin() && $data->id !== $this->user->id) {
                     throw new Forbidden();
                 }
 
@@ -85,7 +85,7 @@ class Email extends Record
                 }
             }
             else if ($data->type == 'emailAccount') {
-                if (!$this->getAcl()->checkScope('EmailAccount')) {
+                if (!$this->acl->checkScope('EmailAccount')) {
                     throw new Forbidden();
                 }
 
@@ -97,8 +97,8 @@ class Email extends Record
                         throw new NotFound();
                     }
 
-                    if (!$this->getUser()->isAdmin()) {
-                        if ($emailAccount->get('assignedUserId') !== $this->getUser()->id) {
+                    if (!$this->user->isAdmin()) {
+                        if ($emailAccount->get('assignedUserId') !== $this->user->id) {
                             throw new Forbidden();
                         }
                     }
@@ -110,7 +110,7 @@ class Email extends Record
                 }
             }
             else if ($data->type == 'inboundEmail') {
-                if (!$this->getUser()->isAdmin()) {
+                if (!$this->user->isAdmin()) {
                     throw new Forbidden();
                 }
 
@@ -129,7 +129,7 @@ class Email extends Record
                 }
             }
             else {
-                if (!$this->getUser()->isAdmin()) {
+                if (!$this->user->isAdmin()) {
                     throw new Forbidden();
                 }
 
@@ -142,8 +142,10 @@ class Email extends Record
         return $this->getRecordService()->sendTestEmail(get_object_vars($data));
     }
 
-    public function postActionMarkAsRead($params, $data, $request)
+    public function postActionMarkAsRead(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (!empty($data->ids)) {
             $idList = $data->ids;
         }
@@ -159,8 +161,10 @@ class Email extends Record
         return $this->getRecordService()->markAsReadByIdList($idList);
     }
 
-    public function postActionMarkAsNotRead($params, $data, $request)
+    public function postActionMarkAsNotRead(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (!empty($data->ids)) {
             $idList = $data->ids;
         }
@@ -176,13 +180,15 @@ class Email extends Record
         return $this->getRecordService()->markAsNotReadByIdList($idList);
     }
 
-    public function postActionMarkAllAsRead($params, $data, $request)
+    public function postActionMarkAllAsRead()
     {
         return $this->getRecordService()->markAllAsRead();
     }
 
-    public function postActionMarkAsImportant($params, $data, $request)
+    public function postActionMarkAsImportant(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (!empty($data->ids)) {
             $idList = $data->ids;
         }
@@ -198,8 +204,10 @@ class Email extends Record
         return $this->getRecordService()->markAsImportantByIdList($idList);
     }
 
-    public function postActionMarkAsNotImportant($params, $data, $request)
+    public function postActionMarkAsNotImportant(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (!empty($data->ids)) {
             $idList = $data->ids;
         }
@@ -215,8 +223,10 @@ class Email extends Record
         return $this->getRecordService()->markAsNotImportantByIdList($idList);
     }
 
-    public function postActionMoveToTrash($params, $data)
+    public function postActionMoveToTrash(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (!empty($data->ids)) {
             $idList = $data->ids;
         }
@@ -232,8 +242,10 @@ class Email extends Record
         return $this->getRecordService()->moveToTrashByIdList($idList);
     }
 
-    public function postActionRetrieveFromTrash($params, $data)
+    public function postActionRetrieveFromTrash(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (!empty($data->ids)) {
             $idList = $data->ids;
         }
@@ -249,16 +261,16 @@ class Email extends Record
         return $this->getRecordService()->retrieveFromTrashByIdList($idList);
     }
 
-    public function getActionGetFoldersNotReadCounts(&$params, $request, $data)
+    public function getActionGetFoldersNotReadCounts()
     {
         return $this->getRecordService()->getFoldersNotReadCounts();
     }
 
-    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    protected function fetchSearchParamsFromRequest(Request $request): array
     {
-        parent::fetchListParamsFromRequest($params, $request, $data);
+        $params = parent::fetchSearchParamsFromRequest($request);
 
-        $folderId = $request->get('folderId');
+        $folderId = $request->getQueryParam('folderId');
 
         if ($folderId) {
             $params['where'] = $params['where'] ?? [];
@@ -270,12 +282,16 @@ class Email extends Record
             ];
 
             // @todo Remove the line.
-            $params['folderId'] = $request->get('folderId');
+            $params['folderId'] = $request->getQueryParam('folderId');
         }
+
+        return $params;
     }
 
-    public function postActionMoveToFolder($params, $data)
+    public function postActionMoveToFolder(Request $request)
     {
+        $data = $request->getParsedBody();
+
         if (!empty($data->ids)) {
             $idList = $data->ids;
         }
@@ -295,16 +311,18 @@ class Email extends Record
         return $this->getRecordService()->moveToFolderByIdList($idList, $data->folderId);
     }
 
-    public function getActionGetInsertFieldData($params, $data, $request)
+    public function getActionGetInsertFieldData(Request $request)
     {
-        if (!$this->getAcl()->checkScope('Email', 'create')) {
+        if (!$this->acl->checkScope('Email', 'create')) {
             throw new Forbidden();
         }
 
-        return $this->getServiceFactory()->create('EmailTemplate')->getInsertFieldData([
-            'parentId' => $request->get('parentId'),
-            'parentType' => $request->get('parentType'),
-            'to' => $request->get('to'),
-        ]);
+        return $this->getServiceFactory()
+            ->create('EmailTemplate')
+            ->getInsertFieldData([
+                'parentId' => $request->getQueryParam('parentId'),
+                'parentType' => $request->getQueryParam('parentType'),
+                'to' => $request->getQueryParam('to'),
+            ]);
     }
 }

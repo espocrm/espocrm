@@ -152,11 +152,7 @@ class RecordBase extends Base implements
             return (object) $this->actionList($request->getRouteParams(), $request->getParsedBody(), $request);
         }
 
-        $data = $request->getParsedBody();
-
-        $listParams = [];
-
-        $this->fetchListParamsFromRequest($listParams, $request, $data);
+        $listParams = $this->fetchSearchParamsFromRequest($request);
 
         $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
 
@@ -213,9 +209,9 @@ class RecordBase extends Base implements
         return true;
     }
 
-    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    protected function fetchSearchParamsFromRequest(Request $request): array
     {
-        ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
+        return ControllerUtil::fetchSearchParamsFromRequest($request);
     }
 
     public function postActionExport(Request $request): StdClass

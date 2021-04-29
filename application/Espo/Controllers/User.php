@@ -167,11 +167,11 @@ class User extends Record
         }
     }
 
-    protected function fetchListParamsFromRequest(&$params, $request, $data)
+    protected function fetchSearchParamsFromRequest(Request $request): array
     {
-        parent::fetchListParamsFromRequest($params, $request, $data);
+        $params = parent::fetchSearchParamsFromRequest($request);
 
-        $userType = $request->get('userType');
+        $userType = $request->getQueryParam('userType');
 
         if ($userType) {
             $params['where'] = $params['where'] ?? [];
@@ -182,5 +182,7 @@ class User extends Record
                 'value' => $userType,
             ];
         }
+
+        return $params;
     }
 }

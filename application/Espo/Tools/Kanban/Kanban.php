@@ -36,15 +36,19 @@ use Espo\Core\{
     Select\SearchParams,
     FieldProcessing\ListLoadProcessor,
     FieldProcessing\LoaderParams as FieldLoaderParams,
+    RecordServiceContainer,
 };
 
 use Espo\{
-    Services\Record as RecordService,
     ORM\EntityManager,
 };
 
 class Kanban
 {
+    private const DEFAULT_MAX_ORDER_NUMBER = 50;
+
+    private const MAX_GROUP_LENGTH = 100;
+
     protected $entityType;
 
     protected $countDisabled = false;
@@ -55,9 +59,7 @@ class Kanban
 
     protected $userId = null;
 
-    protected $maxOrderNumber = 50;
-
-    const MAX_GROUP_LENGTH = 100;
+    protected $maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
 
     private $metadata;
 
@@ -67,23 +69,20 @@ class Kanban
 
     private $listLoadProcessor;
 
+    private $recordServiceContainer;
+
     public function __construct(
         Metadata $metadata,
         SelectBuilderFactory $selectBuilderFactory,
         EntityManager $entityManager,
-        ListLoadProcessor $listLoadProcessor
+        ListLoadProcessor $listLoadProcessor,
+        RecordServiceContainer $recordServiceContainer
     ) {
         $this->metadata = $metadata;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->entityManager = $entityManager;
         $this->listLoadProcessor = $listLoadProcessor;
-    }
-
-    public function setRecordService(RecordService $recordService): self
-    {
-        $this->recordService = $recordService;
-
-        return $this;
+        $this->recordServiceContainer = $recordServiceContainer;
     }
 
     public function setEntityType(string $entityType): self
@@ -121,8 +120,14 @@ class Kanban
         return $this;
     }
 
-    public function setMaxOrderNumber(int $maxOrderNumber): self
+    public function setMaxOrderNumber(?int $maxOrderNumber): self
     {
+        if ($maxOrderNumber === null) {
+            $this->maxOrderNumber = self::DEFAULT_MAX_ORDER_NUMBER;
+
+            return $this;
+        }
+
         $this->maxOrderNumber = $maxOrderNumber;
 
         return $this;
@@ -139,9 +144,7 @@ class Kanban
             throw new Error("Entity type is not specified.");
         }
 
-        if (!$this->recordService) {
-            throw new Error("Record service is not set.");
-        }
+        $recordService = $this->recordServiceContainer->get($this->entityType);
 
         $maxSize = 0;
 
@@ -240,7 +243,8 @@ class Kanban
                     $totalSub = -1;
 
                     unset($collectionSub[count($collectionSub) - 1]);
-                } else {
+                }
+                else {
                     $totalSub = -2;
                 }
             }
@@ -252,7 +256,7 @@ class Kanban
             foreach ($collectionSub as $e) {
                 $this->listLoadProcessor->process($e, $loadProcessorParams);
 
-                $this->recordService->prepareEntityForOutput($e);
+                $recordService->prepareEntityForOutput($e);
 
                 $collection[] = $e;
             }
@@ -272,7 +276,8 @@ class Kanban
                 $total = -1;
 
                 unset($collection[count($collection) - 1]);
-            } else {
+            }
+            else {
                 $total = -2;
             }
         }

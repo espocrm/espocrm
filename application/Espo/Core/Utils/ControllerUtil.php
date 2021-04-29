@@ -29,13 +29,17 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Api\Request;
+
 class ControllerUtil
 {
-    public static function fetchListParamsFromRequest(&$params, $request, $data)
+    public static function fetchSearchParamsFromRequest(Request $request): array
     {
-        $params['where'] = $request->get('where');
-        $params['maxSize'] = $request->get('maxSize');
-        $params['offset'] = $request->get('offset');
+        $params = [];
+
+        $params['where'] = $request->getQueryParam('where');
+        $params['maxSize'] = $request->getQueryParam('maxSize');
+        $params['offset'] = $request->getQueryParam('offset');
 
         if ($params['maxSize']) {
             $params['maxSize'] = intval($params['maxSize']);
@@ -45,42 +49,44 @@ class ControllerUtil
             $params['offset'] = intval($params['offset']);
         }
 
-        if ($request->get('orderBy')) {
-            $params['orderBy'] = $request->get('orderBy');
+        if ($request->getQueryParam('orderBy')) {
+            $params['orderBy'] = $request->getQueryParam('orderBy');
         }
-        else if ($request->get('sortBy')) {
-            $params['orderBy'] = $request->get('sortBy');
-        }
-
-        if ($request->get('order')) {
-            $params['order'] = $request->get('order');
-        }
-        else if ($request->get('asc')) {
-            $params['order'] = $request->get('asc') === 'true' ? 'asc' : 'desc';
+        else if ($request->getQueryParam('sortBy')) {
+            $params['orderBy'] = $request->getQueryParam('sortBy');
         }
 
-        if ($request->get('q')) {
-            $params['q'] = trim($request->get('q'));
+        if ($request->getQueryParam('order')) {
+            $params['order'] = $request->getQueryParam('order');
+        }
+        else if ($request->getQueryParam('asc')) {
+            $params['order'] = $request->getQueryParam('asc') === 'true' ? 'asc' : 'desc';
         }
 
-        if ($request->get('textFilter')) {
-            $params['textFilter'] = $request->get('textFilter');
+        if ($request->getQueryParam('q')) {
+            $params['q'] = trim($request->getQueryParam('q'));
         }
 
-        if ($request->get('primaryFilter')) {
-            $params['primaryFilter'] = $request->get('primaryFilter');
+        if ($request->getQueryParam('textFilter')) {
+            $params['textFilter'] = $request->getQueryParam('textFilter');
         }
 
-        if ($request->get('boolFilterList')) {
-            $params['boolFilterList'] = $request->get('boolFilterList');
+        if ($request->getQueryParam('primaryFilter')) {
+            $params['primaryFilter'] = $request->getQueryParam('primaryFilter');
         }
 
-        if ($request->get('filterList')) {
-            $params['filterList'] = $request->get('filterList');
+        if ($request->getQueryParam('boolFilterList')) {
+            $params['boolFilterList'] = $request->getQueryParam('boolFilterList');
         }
 
-        if ($request->get('select')) {
-            $params['select'] = explode(',', $request->get('select'));
+        if ($request->getQueryParam('filterList')) {
+            $params['filterList'] = $request->getQueryParam('filterList');
         }
+
+        if ($request->getQueryParam('select')) {
+            $params['select'] = explode(',', $request->getQueryParam('select'));
+        }
+
+        return $params;
     }
 }

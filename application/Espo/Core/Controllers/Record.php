@@ -44,38 +44,6 @@ use StdClass;
 class Record extends RecordBase
 {
     /**
-     * Kanban data.
-     */
-    public function getActionListKanban(Request $request): StdClass
-    {
-        $data = $request->getParsedBody();
-
-        $listParams = [];
-
-        $this->fetchListParamsFromRequest($listParams, $request, $data);
-
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($listParams['maxSize'])) {
-            $listParams['maxSize'] = $maxSizeLimit;
-        }
-
-        if (!empty($listParams['maxSize']) && $listParams['maxSize'] > $maxSizeLimit) {
-            throw new Forbidden(
-                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
-            );
-        }
-
-        $result = $this->getRecordService()->getListKanban($listParams);
-
-        return (object) [
-            'total' => $result->getTotal(),
-            'list' => $result->getCollection()->getValueMapList(),
-            'additionalData' => $result->getData(),
-        ];
-    }
-
-    /**
      * List related records.
      */
     public function getActionListLinked(Request $request): StdClass
@@ -83,11 +51,7 @@ class Record extends RecordBase
         $id = $request->getRouteParam('id');
         $link = $request->getRouteParam('link');
 
-        $data = $request->getParsedBody();
-
-        $listParams = [];
-
-        $this->fetchListParamsFromRequest($listParams, $request, $data);
+        $listParams = $this->fetchSearchParamsFromRequest($request);
 
         $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
 

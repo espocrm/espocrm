@@ -239,7 +239,8 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
         },
 
         setViewModeKanban: function () {
-            this.collection.url = this.scope + '/action/listKanban';
+            this.collection.url = 'Kanban/' + this.scope;
+
             this.collection.maxSize = this.getConfig().get('recordsPerPageSmall');
 
             this.collection.resetOrderToDefault();

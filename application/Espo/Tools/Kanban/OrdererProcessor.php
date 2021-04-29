@@ -39,19 +39,21 @@ use LogicException;
 
 class OrdererProcessor
 {
+    private const MAX_GROUP_LENGTH = 100;
+
+    private const DEFAULT_MAX_NUMBER = 50;
+
     private $entityType;
 
     private $group;
 
     private $userId = null;
 
-    private $maxNumber = 50;
+    private $maxNumber = self::DEFAULT_MAX_NUMBER;
 
     private $entityManager;
 
     private $metadata;
-
-    const MAX_GROUP_LENGTH = 100;
 
     public function __construct(EntityManager $entityManager, Metadata $metadata)
     {
@@ -68,9 +70,7 @@ class OrdererProcessor
 
     public function setGroup(string $group): self
     {
-        $group = mb_substr($group, 0, self::MAX_GROUP_LENGTH);
-
-        $this->group = $group;
+        $this->group = mb_substr($group, 0, self::MAX_GROUP_LENGTH);
 
         return $this;
     }
@@ -82,14 +82,20 @@ class OrdererProcessor
         return $this;
     }
 
-    public function setMaxNumber(int $maxNumber): self
+    public function setMaxNumber(?int $maxNumber): self
     {
+        if ($maxNumber === null) {
+            $this->maxNumber = self::DEFAULT_MAX_NUMBER;
+
+            return $this;
+        }
+
         $this->maxNumber = $maxNumber;
 
         return $this;
     }
 
-    public function order(array $ids)
+    public function order(array $ids): void
     {
         $this->validate();
 
@@ -103,7 +109,7 @@ class OrdererProcessor
             ->getTransactionManager()
             ->start();
 
-        $deleteQuery = $this->entityManager
+        $deleteQuery1 = $this->entityManager
             ->getQueryBuilder()
             ->delete()
             ->from('KanbanOrder')
@@ -114,7 +120,7 @@ class OrdererProcessor
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->execute($deleteQuery);
+        $this->entityManager->getQueryExecutor()->execute($deleteQuery1);
 
         $minOrder = null;
 
@@ -174,7 +180,7 @@ class OrdererProcessor
 
         $this->entityManager->getMapper()->massInsert($collection);
 
-        $deleteQuery = $this->entityManager
+        $deleteQuery2 = $this->entityManager
             ->getQueryBuilder()
             ->delete()
             ->from('KanbanOrder')
@@ -186,14 +192,14 @@ class OrdererProcessor
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->execute($deleteQuery);
+        $this->entityManager->getQueryExecutor()->execute($deleteQuery2);
 
         $this->entityManager
             ->getTransactionManager()
             ->commit();
     }
 
-    private function validate()
+    private function validate(): void
     {
         if (! $this->entityType) {
             throw new LogicException("No entity type.");
@@ -223,9 +229,10 @@ class OrdererProcessor
             throw new LogicException("Not status field.");
         }
 
-        $statusList = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']) ?? [];
+        $statusList = $this->metadata
+            ->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']) ?? [];
 
-        if (! in_array($this->group, $statusList)) {
+        if (!in_array($this->group, $statusList)) {
             throw new LogicException("Group is not available in status list.");
         }
     }

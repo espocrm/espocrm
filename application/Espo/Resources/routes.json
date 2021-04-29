@@ -253,6 +253,14 @@
         }
     },
     {
+        "route": "/Kanban/:entityType",
+        "method": "get",
+        "params": {
+            "controller": "Kanban",
+            "action": "getData"
+        }
+    },
+    {
         "route": "/Attachment/file/:id",
         "method": "get",
         "params": {

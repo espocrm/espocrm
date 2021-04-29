@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\{
     Controllers\RecordBase,
     Api\Request,
+    Api\Response,
 };
 
 use StdClass;
@@ -48,7 +49,7 @@ class ExternalAccount extends RecordBase
         return $this->acl->checkScope('ExternalAccount');
     }
 
-    public function getActionList(Request $request): StdClass
+    public function getActionList(Request $request, Response $response): StdClass
     {
         $integrations = $this->entityManager->getRepository('Integration')->find();
 
@@ -103,14 +104,14 @@ class ExternalAccount extends RecordBase
         return null;
     }
 
-    public function getActionRead(Request $request): StdClass
+    public function getActionRead(Request $request, Response $response): StdClass
     {
         $id = $request->getRouteParam('id');
 
         return $this->getRecordService()->read($id)->getValueMap();
     }
 
-    public function putActionUpdate(Request $request): StdClass
+    public function putActionUpdate(Request $request, Response $response): StdClass
     {
         $id = $request->getRouteParam('id');
 

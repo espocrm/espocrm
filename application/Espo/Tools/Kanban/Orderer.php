@@ -61,7 +61,7 @@ class Orderer
         return $this->createProcessor()->setUserId($userId);
     }
 
-    public function setMaxNumber(int $maxNumber): OrdererProcessor
+    public function setMaxNumber(?int $maxNumber): OrdererProcessor
     {
         return $this->createProcessor()->setMaxNumber($maxNumber);
     }

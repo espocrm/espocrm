@@ -32,22 +32,26 @@ namespace Espo\Modules\Crm\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\Utils\ControllerUtil;
+use Espo\Core\{
+    Api\Request,
+    Controllers\Base,
+    Utils\ControllerUtil,
+};
 
-class Activities extends \Espo\Core\Controllers\Base
+class Activities extends Base
 {
     protected $maxCalendarRange = 123;
 
     const MAX_SIZE_LIMIT = 200;
 
-    public function actionListCalendarEvents($params, $data, $request)
+    public function getActionListCalendarEvents(Request $request)
     {
-        if (!$this->getAcl()->check('Calendar')) {
+        if (!$this->acl->check('Calendar')) {
             throw new Forbidden();
         }
 
-        $from = $request->get('from');
-        $to = $request->get('to');
+        $from = $request->getQueryParam('from');
+        $to = $request->getQueryParam('to');
 
         if (empty($from) || empty($to)) {
             throw new BadRequest();
@@ -61,13 +65,13 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $scopeList = null;
 
-        if ($request->get('scopeList') !== null) {
-            $scopeList = explode(',', $request->get('scopeList'));
+        if ($request->getQueryParam('scopeList') !== null) {
+            $scopeList = explode(',', $request->getQueryParam('scopeList'));
         }
 
-        $userId = $request->get('userId');
-        $userIdList = $request->get('userIdList');
-        $teamIdList = $request->get('teamIdList');
+        $userId = $request->getQueryParam('userId');
+        $userIdList = $request->getQueryParam('userIdList');
+        $teamIdList = $request->getQueryParam('teamIdList');
 
         if ($teamIdList) {
             $teamIdList = explode(',', $teamIdList);
@@ -89,14 +93,14 @@ class Activities extends \Espo\Core\Controllers\Base
         return $service->getEventList($userId, $from, $to, $scopeList);
     }
 
-    public function getActionGetTimeline($params, $data, $request)
+    public function getActionGetTimeline(Request $request)
     {
-        if (!$this->getAcl()->check('Calendar')) {
+        if (!$this->acl->check('Calendar')) {
             throw new Forbidden();
         }
 
-        $from = $request->get('from');
-        $to = $request->get('to');
+        $from = $request->getQueryParam('from');
+        $to = $request->getQueryParam('to');
 
         if (empty($from) || empty($to)) {
             throw new BadRequest();
@@ -110,12 +114,12 @@ class Activities extends \Espo\Core\Controllers\Base
 
         $scopeList = null;
 
-        if ($request->get('scopeList') !== null) {
-            $scopeList = explode(',', $request->get('scopeList'));
+        if ($request->getQueryParam('scopeList') !== null) {
+            $scopeList = explode(',', $request->getQueryParam('scopeList'));
         }
 
-        $userId = $request->get('userId');
-        $userIdList = $request->get('userIdList');
+        $userId = $request->getQueryParam('userId');
+        $userIdList = $request->getQueryParam('userIdList');
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);
@@ -131,24 +135,24 @@ class Activities extends \Espo\Core\Controllers\Base
         return $service->getUsersTimeline($userIdList, $from, $to, $scopeList);
     }
 
-    public function actionListUpcoming($params, $data, $request)
+    public function getActionListUpcoming(Request $request)
     {
         $service = $this->getService('Activities');
 
-        $userId = $request->get('userId');
+        $userId = $request->getQueryParam('userId');
 
         if (!$userId) {
             $userId = $this->getUser()->id;
         }
 
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
+        $offset = intval($request->getQueryParam('offset'));
+        $maxSize = intval($request->getQueryParam('maxSize'));
 
-        $entityTypeList = $request->get('entityTypeList');
+        $entityTypeList = $request->getQueryParam('entityTypeList');
 
-        $futureDays = intval($request->get('futureDays'));
+        $futureDays = intval($request->getQueryParam('futureDays'));
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
 
         if (empty($maxSize)) {
             $maxSize = $maxSizeLimit;
@@ -169,18 +173,16 @@ class Activities extends \Espo\Core\Controllers\Base
         );
     }
 
-    public function actionPopupNotifications()
+    public function getActionPopupNotifications()
     {
-        $userId = $this->getUser()->id;
+        $userId = $this->user->id;
 
         return $this->getService('Activities')->getPopupNotifications($userId);
     }
 
-    public function actionRemovePopupNotification($params, $data, $request)
+    public function postActionRemovePopupNotification(Request $request)
     {
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $data = $request->getParsedBody();
 
         if (empty($data->id)) {
             throw new BadRequest();
@@ -191,9 +193,11 @@ class Activities extends \Espo\Core\Controllers\Base
         return $this->getService('Activities')->removeReminder($id);
     }
 
-    public function actionList($params, $data, $request)
+    public function getActionList(Request $request)
     {
-        if (!$this->getAcl()->check('Activities')) {
+        $params = $request->getRouteParams();
+
+        if (!$this->acl->check('Activities')) {
             throw new Forbidden();
         }
 
@@ -214,13 +218,13 @@ class Activities extends \Espo\Core\Controllers\Base
         $entityType = $params['scope'];
         $id = $params['id'];
 
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
-        $order = $request->get('order');
-        $orderBy = $request->get('orderBy');
-        $where = $request->get('where');
+        $offset = intval($request->getQueryParam('offset'));
+        $maxSize = intval($request->getQueryParam('maxSize'));
+        $order = $request->getQueryParam('order');
+        $orderBy = $request->getQueryParam('orderBy');
+        $where = $request->getQueryParam('where');
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
 
         if (empty($maxSize)) {
             $maxSize = $maxSizeLimit;
@@ -249,8 +253,10 @@ class Activities extends \Espo\Core\Controllers\Base
         ]);
     }
 
-    public function getActionEntityTypeList($params, $data, $request)
+    public function getActionEntityTypeList(Request $request)
     {
+        $params = $request->getRouteParams();
+
         if (empty($params['scope'])) {
             throw new BadRequest();
         }
@@ -282,23 +288,23 @@ class Activities extends \Espo\Core\Controllers\Base
             throw new BadRequest();
         }
 
-        $params = [];
+        $searchParams = ControllerUtil::fetchSearchParamsFromRequest($request);
 
-        ControllerUtil::fetchListParamsFromRequest($params, $request, $data);
+        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', 200);
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', 200);
-
-        if (empty($params['maxSize'])) {
-            $params['maxSize'] = $maxSizeLimit;
+        if (empty($searchParams['maxSize'])) {
+            $searchParams['maxSize'] = $maxSizeLimit;
         }
 
-        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
-            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+        if (!empty($searchParams['maxSize']) && $searchParams['maxSize'] > $maxSizeLimit) {
+            throw new Forbidden(
+                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
+            );
         }
 
         $service = $this->getService('Activities');
 
-        $result = $service->findActivitiyEntityType($scope, $id, $entityType, $isHistory, $params);
+        $result = $service->findActivitiyEntityType($scope, $id, $entityType, $isHistory, $searchParams);
 
         return (object) [
             'total' => $result->getTotal(),
@@ -306,20 +312,24 @@ class Activities extends \Espo\Core\Controllers\Base
         ];
     }
 
-    public function getActionBusyRanges($params, $data, $request)
+    public function getActionBusyRanges(Request $request)
     {
-        $from = $request->get('from');
-        $to = $request->get('to');
-        $userIdList = $request->get('userIdList');
+        $from = $request->getQueryParam('from');
+        $to = $request->getQueryParam('to');
+        $userIdListString = $request->getQueryParam('userIdList');
 
-        if (!$from || !$to || !$userIdList) {
+        if (!$from || !$to || !$userIdListString) {
             throw new BadRequest();
         }
 
-        $userIdList = explode(',', $userIdList);
+        $userIdList = explode(',', $userIdListString);
 
         return $this->getService('Activities')->getBusyRanges(
-            $userIdList, $from, $to, $request->get('entityType'), $request->get('entityId')
+            $userIdList,
+            $from,
+            $to,
+            $request->getQueryParam('entityType'),
+            $request->getQueryParam('entityId')
         );
     }
 }

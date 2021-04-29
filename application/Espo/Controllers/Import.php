@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
+    Api\Response,
 };
 
 use StdClass;
@@ -77,7 +78,7 @@ class Import extends Record
         return true;
     }
 
-    public function postActionCreate(Request $request): StdClass
+    public function postActionCreate(Request $request, Response $response): StdClass
     {
         $data = $request->getParsedBody();
 
