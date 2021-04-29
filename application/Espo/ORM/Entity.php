@@ -99,4 +99,61 @@ interface Entity
      * Get an entity type.
      */
     public function getEntityType(): string;
+
+    /**
+     * Get attribute list defined for an entity type.
+     */
+    public function getAttributeList(): array;
+
+    /**
+     * Get relation list defined for an entity type.
+     */
+    public function getRelationList(): array;
+
+    /**
+     * Whether an entity type has an attribute defined.
+     */
+    public function hasAttribute(string $attribute): bool;
+
+    /**
+     * Whether an entity type has a relation defined.
+     */
+    public function hasRelation(string $relation): bool;
+
+    /**
+     * Get an attribute type.
+     */
+    public function getAttributeType(string $attribute): ?string;
+
+    /**
+     * Get a relation type.
+     */
+    public function getRelationType(string $relation): ?string;
+
+    /**
+     * Whether an entity is new.
+     */
+    public function isNew(): bool;
+
+    /**
+     * Whether is fetched from DB.
+     */
+    public function isFetched(): bool;
+
+    /**
+     * Whether an attribute was changed (since syncing with DB).
+     */
+    public function isAttributeChanged(string $name): bool;
+
+    /**
+     * Get a fetched value of a specific attribute.
+     *
+     * @return mixed
+     */
+    public function getFetched(string $attribute);
+
+    /**
+     * Whether a fetched value is set for a specific attribute.
+     */
+    public function hasFetched(string $attribute): bool;
 }

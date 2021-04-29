@@ -645,17 +645,17 @@ class BaseEntity implements Entity
     /**
      * Whether an entity type has an attribute defined.
      */
-    public function hasAttribute(string $name): bool
+    public function hasAttribute(string $attibute): bool
     {
-        return isset($this->attributes[$name]);
+        return isset($this->attributes[$attibute]);
     }
 
     /**
      * Whether an entity type has a relation defined.
      */
-    public function hasRelation(string $name): bool
+    public function hasRelation(string $relation): bool
     {
-        return isset($this->relations[$name]);
+        return isset($this->relations[$relation]);
     }
 
     /**
@@ -848,6 +848,7 @@ class BaseEntity implements Entity
                         if (!self::areValuesEqual(self::JSON_OBJECT, $v1[$i], $v2[$i])) {
                             return false;
                         }
+
                         continue;
                     }
 
