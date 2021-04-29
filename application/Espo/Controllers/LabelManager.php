@@ -43,11 +43,11 @@ use Espo\{
 
 class LabelManager
 {
-    protected $user;
+    private $user;
 
-    protected $dataManager;
+    private $dataManager;
 
-    protected $labelManagerTool;
+    private $labelManagerTool;
 
     public function __construct(User $user, DataManager $dataManager, LabelManagerTool $labelManagerTool)
     {
@@ -55,11 +55,6 @@ class LabelManager
         $this->dataManager = $dataManager;
         $this->labelManagerTool = $labelManagerTool;
 
-        $this->checkControllerAccess();
-    }
-
-    protected function checkControllerAccess()
-    {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }

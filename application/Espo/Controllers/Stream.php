@@ -29,14 +29,17 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    ServiceFactory,
+    Utils\Config,
+    Api\Request,
+};
 
-use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Config;
+use StdClass;
 
 class Stream
 {
-    const MAX_SIZE_LIMIT = 200;
+    protected const MAX_SIZE_LIMIT = 200;
 
     public static $defaultAction = 'list';
 
@@ -50,8 +53,10 @@ class Stream
         $this->config = $config;
     }
 
-    public function actionList($params, $data, $request)
+    public function getActionList(Request $request): StdClass
     {
+        $params = $request->getRouteParams();
+
         $scope = $params['scope'];
         $id = isset($params['id']) ? $params['id'] : null;
 
@@ -69,7 +74,9 @@ class Stream
         }
 
         if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+            throw new Forbidden(
+                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
+            );
         }
 
         $result = $this->serviceFactory->create('Stream')->find($scope, $id, [
@@ -86,8 +93,10 @@ class Stream
         ];
     }
 
-    public function getActionListPosts($params, $data, $request)
+    public function getActionListPosts(Request $request): StdClass
     {
+        $params = $request->getRouteParams();
+
         $scope = $params['scope'];
         $id = isset($params['id']) ? $params['id'] : null;
 
@@ -103,7 +112,9 @@ class Stream
             $maxSize = $maxSizeLimit;
         }
         if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
+            throw new Forbidden(
+                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
+            );
         }
 
         $result = $this->serviceFactory->create('Stream')->find($scope, $id, [

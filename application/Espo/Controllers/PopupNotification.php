@@ -33,16 +33,18 @@ use Espo\Core\{
     ServiceFactory,
 };
 
+use StdClass;
+
 class PopupNotification
 {
-    protected $serviceFactory;
+    private $serviceFactory;
 
     public function __construct(ServiceFactory $serviceFactory)
     {
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function getActionGrouped()
+    public function getActionGrouped(): StdClass
     {
         return $this->serviceFactory
             ->create('PopupNotification')

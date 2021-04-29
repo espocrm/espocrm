@@ -31,46 +31,21 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-class Job extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\RecordBase;
+
+class Job extends RecordBase
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        return $this->getUser()->isAdmin();
     }
 
-    public function beforeCreate()
+    public function beforeCreate(): void
     {
         throw new Forbidden();
     }
 
-    public function beforeUpdate()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforePatch()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeListLinked()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeMassUpdate()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeCreateLink()
-    {
-        throw new Forbidden();
-    }
-
-    public function beforeRemoveLink()
+    public function beforeUpdate(): void
     {
         throw new Forbidden();
     }

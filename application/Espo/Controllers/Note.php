@@ -29,7 +29,9 @@
 
 namespace Espo\Controllers;
 
-class Note extends \Espo\Core\Controllers\Record
+use Espo\Core\Controllers\RecordBase;
+
+class Note extends RecordBase
 {
 
 }

@@ -203,13 +203,11 @@ class User extends Record implements
         return true;
     }
 
-    public function passwordChangeRequest(string $userName, string $emailAddress, ?string $url = null)
+    public function passwordChangeRequest(string $userName, string $emailAddress, ?string $url = null): void
     {
         $recovery = $this->injectableFactory->create(Recovery::class);
 
         $recovery->request($emailAddress, $userName, $url);
-
-        return true;
     }
 
     public function changePasswordByRequest(string $requestId, string $password): StdClass

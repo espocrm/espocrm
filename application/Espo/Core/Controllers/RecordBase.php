@@ -41,6 +41,7 @@ use Espo\Core\{
     Record\Collection as RecordCollection,
     RecordServiceContainer,
     Api\Request,
+    Api\Response,
     Record\Crud as CrudService,
     Di,
 };
@@ -82,7 +83,7 @@ class RecordBase extends Base implements
     /**
      * Read a record.
      */
-    public function getActionRead(Request $request): StdClass
+    public function getActionRead(Request $request, Response $response): StdClass
     {
         if (method_exists($this, 'actionRead')) {
             // For backward compatibility.
@@ -103,7 +104,7 @@ class RecordBase extends Base implements
     /**
      * Create a record.
      */
-    public function postActionCreate(Request $request): StdClass
+    public function postActionCreate(Request $request, Response $response): StdClass
     {
         if (method_exists($this, 'actionCreate')) {
             // For backward compatibility.
@@ -117,15 +118,15 @@ class RecordBase extends Base implements
         return $entity->getValueMap();
     }
 
-    public function patchActionUpdate(Request $request): StdClass
+    public function patchActionUpdate(Request $request, Response $response): StdClass
     {
-        return $this->putActionUpdate($request);
+        return $this->putActionUpdate($request, $response);
     }
 
     /**
      * Update a record.
      */
-    public function putActionUpdate(Request $request): StdClass
+    public function putActionUpdate(Request $request, Response $response): StdClass
     {
         if (method_exists($this, 'actionUpdate')) {
             // For backward compatibility.
@@ -144,7 +145,7 @@ class RecordBase extends Base implements
     /**
      * List records.
      */
-    public function getActionList(Request $request): StdClass
+    public function getActionList(Request $request, Response $response): StdClass
     {
         if (method_exists($this, 'actionList')) {
             // For backward compatibility.
@@ -198,7 +199,7 @@ class RecordBase extends Base implements
     /**
      * Delete a record.
      */
-    public function deleteActionDelete(Request $request): bool
+    public function deleteActionDelete(Request $request, Response $response): bool
     {
         if (method_exists($this, 'actionDelete')) {
             // For backward compatibility.

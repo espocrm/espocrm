@@ -29,7 +29,7 @@
 
 namespace Espo\Controllers;
 
-class PhoneNumber extends \Espo\Core\Controllers\Record
+class PhoneNumber extends \Espo\Core\Controllers\RecordBase
 {
 
 }

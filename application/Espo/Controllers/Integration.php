@@ -39,28 +39,25 @@ use Espo\{
     Entities\User,
 };
 
+use StdClass;
+
 class Integration
 {
-    protected $serviceFactory;
+    private $serviceFactory;
 
-    protected $user;
+    private $user;
 
     public function __construct(ServiceFactory $serviceFactory, User $user)
     {
         $this->serviceFactory = $serviceFactory;
         $this->user = $user;
 
-        $this->checkControllerAccess();
-    }
-
-    protected function checkControllerAccess()
-    {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
-    public function getActionRead(Request $request)
+    public function getActionRead(Request $request): StdClass
     {
         $entity = $this->serviceFactory
             ->create('Integration')
@@ -69,12 +66,7 @@ class Integration
         return $entity->getValueMap();
     }
 
-    public function putActionUpdate(Request $request)
-    {
-        return $this->patchActionPatch($request);
-    }
-
-    public function patchActionPatch(Request $request)
+    public function putActionUpdate(Request $request): StdClass
     {
         $entity = $this->serviceFactory
             ->create('Integration')

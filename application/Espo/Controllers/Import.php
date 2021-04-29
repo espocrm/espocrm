@@ -29,86 +29,46 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Utils as Utils;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-class Import extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\Record,
+    Api\Request,
+};
+
+use StdClass;
+
+class Import extends Record
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getAcl()->check('Import')) {
-            throw new Forbidden();
-        }
+        return $this->acl->check('Import');
     }
 
-    public function beforePatch()
+    public function postActionUploadFile(Request $request): StdClass
     {
-        throw new BadRequest();
-    }
-
-    public function beforeUpdate()
-    {
-        throw new BadRequest();
-    }
-
-    public function beforeMassUpdate()
-    {
-        throw new BadRequest();
-    }
-
-    public function beforeCreateLink()
-    {
-        throw new BadRequest();
-    }
-
-    public function beforeRemoveLink()
-    {
-        throw new BadRequest();
-    }
-
-    protected function getFileStorageManager()
-    {
-        return $this->getContainer()->get('fileStorageManager');
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    public function postActionUploadFile($params, $data)
-    {
-        $contents = $data;
+        $contents = $request->getBodyContents();
 
         $attachmentId = $this->getService('Import')->uploadFile($contents);
 
-        return ['attachmentId' => $attachmentId];
+        return (object) ['attachmentId' => $attachmentId];
     }
 
-    public function actionRevert($params, $data, $request)
+    public function postActionRevert(Request $request): bool
     {
-        if (empty($data->id)) {
-            throw new BadRequest();
-        }
-
-        if (!$request->isPost()) {
-            throw new BadRequest();
-        }
+        $data = $request->getParsedBody();
 
         $this->getService('Import')->revert($data->id);
 
         return true;
     }
 
-    public function actionRemoveDuplicates($params, $data, $request)
+    public function postActionRemoveDuplicates(Request $request): bool
     {
-        if (empty($data->id)) {
-            throw new BadRequest();
-        }
+        $data = $request->getParsedBody();
 
-        if (!$request->isPost()) {
+        if (empty($data->id)) {
             throw new BadRequest();
         }
 
@@ -117,11 +77,9 @@ class Import extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function actionCreate($params, $data, $request)
+    public function postActionCreate(Request $request): StdClass
     {
-        if (!$request->isPost() && !$request->isPut()) {
-            throw new BadRequest();
-        }
+        $data = $request->getParsedBody();
 
         if (!isset($data->delimiter)) {
             throw new BadRequest();
@@ -197,15 +155,22 @@ class Import extends \Espo\Core\Controllers\Record
 
         $attachmentId = $data->attachmentId;
 
-        if (!$this->getAcl()->check($data->entityType, 'edit')) {
+        if (!$this->acl->check($data->entityType, 'edit')) {
             throw new Forbidden();
         }
 
-        return $this->getService('Import')->import($data->entityType, $data->attributeList, $attachmentId, $importParams);
+        return $this->getService('Import')->import(
+            $data->entityType,
+            $data->attributeList,
+            $attachmentId,
+            $importParams
+        );
     }
 
-    public function postActionUnmarkAsDuplicate($params, $data)
+    public function postActionUnmarkAsDuplicate(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id) || empty($data->entityType) || empty($data->entityId)) {
             throw new BadRequest();
         }
@@ -213,5 +178,25 @@ class Import extends \Espo\Core\Controllers\Record
         $this->getService('Import')->unmarkAsDuplicate($data->id, $data->entityType, $data->entityId);
 
         return true;
+    }
+
+    public function beforePatch(): void
+    {
+        throw new BadRequest();
+    }
+
+    public function beforeUpdate(): void
+    {
+        throw new BadRequest();
+    }
+
+    public function beforeCreateLink(): void
+    {
+        throw new BadRequest();
+    }
+
+    public function beforeRemoveLink(): void
+    {
+        throw new BadRequest();
     }
 }

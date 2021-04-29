@@ -29,8 +29,6 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
@@ -38,13 +36,6 @@ use Espo\Core\{
 
 class InboundEmail extends Record
 {
-    protected function checkControllerAccess()
-    {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
-    }
-
     protected function checkAccess(): bool
     {
         return $this->getUser()->isAdmin();

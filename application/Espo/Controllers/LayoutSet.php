@@ -29,14 +29,12 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Controllers\Record;
 
-class LayoutSet extends \Espo\Core\Controllers\Record
+class LayoutSet extends Record
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        return $this->getUser()->isAdmin();
     }
 }

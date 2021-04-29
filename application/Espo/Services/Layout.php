@@ -31,8 +31,9 @@ namespace Espo\Services;
 
 use Espo\Core\{
     Exceptions\NotFound,
-    Exceptions\Error,
+    Exceptions\Forbidden,
     Acl,
+    Acl\Exceptions\NotImplemented,
     Utils\Layout as LayoutUtil,
     ORM\EntityManager,
     Utils\Metadata,
@@ -112,6 +113,13 @@ class Layout
 
     public function getForFrontend(string $scope, string $name)
     {
+        try {
+            if (!$this->acl->checkScope($scope)) {
+                throw new Forbidden();
+            }
+        }
+        catch (NotImplemented $e) {}
+
         $layoutSetId = null;
         $data = null;
 

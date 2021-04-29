@@ -37,14 +37,14 @@ use Espo\Core\{
 
 class KanbanOrder
 {
-    protected $serviceFactory;
+    private $serviceFactory;
 
     public function __construct(ServiceFactory $serviceFactory)
     {
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function postActionStore(Request $request)
+    public function postActionStore(Request $request): bool
     {
         $data = $request->getParsedBody();
 

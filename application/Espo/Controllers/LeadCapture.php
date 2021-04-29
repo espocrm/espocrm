@@ -33,10 +33,21 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 
-class LeadCapture extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\Record,
+    Api\Request,
+    Api\Response,
+};
+
+use StdClass;
+
+class LeadCapture extends Record
 {
-    public function postActionLeadCapture($params, $data, $request, $response)
+    public function postActionLeadCapture(Request $request, Response $response): bool
     {
+        $params = $request->getRouteParams();
+        $data = $request->getParsedBody();
+
         if (empty($params['apiKey'])) {
             throw new BadRequest('No API key provided.');
         }
@@ -45,7 +56,7 @@ class LeadCapture extends \Espo\Core\Controllers\Record
             throw new BadRequest('No payload provided.');
         }
 
-        $allowOrigin = $this->getConfig()->get('leadCaptureAllowOrigin', '*');
+        $allowOrigin = $this->config->get('leadCaptureAllowOrigin', '*');
 
         $response->setHeader('Access-Control-Allow-Origin', $allowOrigin);
 
@@ -54,8 +65,10 @@ class LeadCapture extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function optionsActionLeadCapture($params, $data, $request, $response)
+    public function optionsActionLeadCapture(Request $request, Response $response): bool
     {
+        $params = $request->getRouteParams();
+
         if (empty($params['apiKey'])) {
             throw new BadRequest('No API key provided.');
         }
@@ -73,21 +86,27 @@ class LeadCapture extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function postActionGenerateNewApiKey($params, $data, $request)
+    public function postActionGenerateNewApiKey(Request $request): StdClass
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
+        return $this->getRecordService()
+            ->generateNewApiKeyForEntity($data->id)
+            ->getValueMap();
     }
 
-    public function getActionSmtpAccountDataList()
+    public function getActionSmtpAccountDataList(): array
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();
         }
 
-        return $this->getServiceFactory()->create('LeadCapture')->getSmtpAccountDataList();
+        return $this->getServiceFactory()
+            ->create('LeadCapture')
+            ->getSmtpAccountDataList();
     }
 }

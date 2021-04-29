@@ -30,24 +30,27 @@
 namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Core\{
     Authentication\LDAP\Utils as LDAPUtils,
     Authentication\LDAP\Client as LDAPClient,
+    Controllers\Base,
+    Api\Request,
 };
 
-class Settings extends \Espo\Core\Controllers\Base
-{
-    protected function getConfigData()
-    {
-        $data = $this->getServiceFactory()->create('Settings')->getConfigData();
+use StdClass;
 
-        $data->jsLibs = $this->getMetadata()->get(['app', 'jsLibs']);
+class Settings extends Base
+{
+    protected function getConfigData(): StdClass
+    {
+        $data = $this->serviceFactory->create('Settings')->getConfigData();
+
+        $data->jsLibs = $this->metadata->get(['app', 'jsLibs']);
 
         unset($data->loginView);
 
-        $loginView = $this->getMetadata()->get(['clientDefs', 'App', 'loginView']);
+        $loginView = $this->metadata->get(['clientDefs', 'App', 'loginView']);
 
         if ($loginView) {
             $data->loginView = $loginView;
@@ -56,50 +59,47 @@ class Settings extends \Espo\Core\Controllers\Base
         return $data;
     }
 
-    public function actionRead($params, $data)
+    public function getActionRead(): StdClass
     {
         return $this->getConfigData();
     }
 
-    public function actionUpdate($params, $data, $request)
+    public function putActionUpdate(Request $request): StdClass
     {
-        return $this->actionPatch($params, $data, $request);
-    }
-
-    public function actionPatch($params, $data, $request)
-    {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
-        if (!$request->isPut() && !$request->isPatch()) {
-            throw new BadRequest();
-        }
+        $data = $request->getParsedBody();
 
-        $this->getServiceFactory()->create('Settings')->setConfigData($data);
+        $this->serviceFactory
+            ->create('Settings')
+            ->setConfigData($data);
 
         return $this->getConfigData();
     }
 
-    public function postActionTestLdapConnection($params, $data)
+    public function postActionTestLdapConnection(Request $request): bool
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
+
+        $data = $request->getParsedBody();
 
         if (!isset($data->password)) {
-            $data->password = $this->getConfig()->get('ldapPassword');
+            $data->password = $this->config->get('ldapPassword');
         }
-
-        $data = get_object_vars($data);
 
         $ldapUtils = new LDAPUtils();
 
-        $options = $ldapUtils->normalizeOptions($data);
+        $options = $ldapUtils->normalizeOptions(
+            get_object_vars($data)
+        );
 
         $ldapClient = new LDAPClient($options);
 
-        //an exception if no connection
+        // An exception thrown if no connection.
         $ldapClient->bind();
 
         return true;

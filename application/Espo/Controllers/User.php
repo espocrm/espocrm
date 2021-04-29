@@ -34,17 +34,24 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-class User extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Controllers\Record,
+    Api\Request,
+};
+
+use StdClass;
+
+class User extends Record
 {
-    public function actionAcl($params, $data, $request)
+    public function getActionAcl(Request $request): StdClass
     {
-        $userId = $request->get('id');
+        $userId = $request->getQueryParam('id');
 
         if (empty($userId)) {
             throw new Error();
         }
 
-        if (!$this->getUser()->isAdmin() && $this->getUser()->id != $userId) {
+        if (!$this->user->isAdmin() && $this->user->getId() != $userId) {
             throw new Forbidden();
         }
 
@@ -57,20 +64,32 @@ class User extends \Espo\Core\Controllers\Record
         return $this->getAclManager()->getMapData($user);
     }
 
-    public function postActionChangeOwnPassword($params, $data, $request)
+    public function postActionChangeOwnPassword(Request $request): bool
     {
-        if (!property_exists($data, 'password') || !property_exists($data, 'currentPassword')) {
+        $data = $request->getParsedBody();
+
+        if (
+            !property_exists($data, 'password') ||
+            !property_exists($data, 'currentPassword')
+        ) {
             throw new BadRequest();
         }
 
         $this->getService('User')
-            ->changePassword($this->getUser()->id, $data->password, true, $data->currentPassword);
+            ->changePassword(
+                $this->user->getId(),
+                $data->password,
+                true,
+                $data->currentPassword
+            );
 
         return true;
     }
 
-    public function postActionChangePasswordByRequest($params, $data, $request)
+    public function postActionChangePasswordByRequest(Request $request): StdClass
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->requestId) || empty($data->password)) {
             throw new BadRequest();
         }
@@ -78,8 +97,10 @@ class User extends \Espo\Core\Controllers\Record
         return $this->getService('User')->changePasswordByRequest($data->requestId, $data->password);
     }
 
-    public function postActionPasswordChangeRequest($params, $data, $request)
+    public function postActionPasswordChangeRequest(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->userName) || empty($data->emailAddress)) {
             throw new BadRequest();
         }
@@ -93,29 +114,37 @@ class User extends \Espo\Core\Controllers\Record
             $url = $data->url;
         }
 
-        return $this->getService('User')->passwordChangeRequest($userName, $emailAddress, $url);
+        $this->getService('User')->passwordChangeRequest($userName, $emailAddress, $url);
+
+        return true;
     }
 
-    public function postActionGenerateNewApiKey($params, $data, $request)
+    public function postActionGenerateNewApiKey(Request $request): StdClass
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
-        return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
+        return $this->getRecordService()
+            ->generateNewApiKeyForEntity($data->id)
+            ->getValueMap();
     }
 
-    public function postActionGenerateNewPassword($params, $data, $request)
+    public function postActionGenerateNewPassword(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         if (empty($data->id)) {
             throw new BadRequest();
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -124,16 +153,16 @@ class User extends \Espo\Core\Controllers\Record
         return true;
     }
 
-    public function beforeCreateLink()
+    public function beforeCreateLink(): void
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
-    public function beforeRemoveLink($params, $data, $request)
+    public function beforeRemoveLink(): void
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }

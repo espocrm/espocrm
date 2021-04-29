@@ -181,7 +181,7 @@ class LeadCapture extends Record
         return $this->createTool()->confirmOptIn($id);
     }
 
-    public function getSmtpAccountDataList()
+    public function getSmtpAccountDataList(): array
     {
         if (!$this->getUser()->isAdmin()) {
             throw new Forbidden();

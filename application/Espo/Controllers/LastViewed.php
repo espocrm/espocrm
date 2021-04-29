@@ -31,18 +31,25 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\Controllers\Record;
+use Espo\Core\{
+    Controllers\Base,
+    Api\Request,
+};
 
-class LastViewed extends \Espo\Core\Controllers\Base
+use StdClass;
+
+class LastViewed extends Base
 {
-    public function getActionIndex($params, $data, $request)
+    private const MAX_SIZE_LIMIT = 200;
+
+    public function getActionIndex(Request $request): StdClass
     {
         $params = [];
 
-        $params['offset'] = $request->get('offset', 0);
-        $params['maxSize'] = $request->get('maxSize');
+        $params['offset'] = $request->getQueryParam('offset', 0);
+        $params['maxSize'] = $request->getQueryParam('maxSize');
 
-        $maxSizeLimit = $this->getConfig()->get('recordListMaxSizeLimit', Record::MAX_SIZE_LIMIT);
+        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
 
         if (empty($params['maxSize'])) {
             $params['maxSize'] = $maxSizeLimit;

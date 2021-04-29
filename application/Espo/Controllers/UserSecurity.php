@@ -32,57 +32,70 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-class UserSecurity extends \Espo\Core\Controllers\Base
+use Espo\Core\{
+    Controllers\Base,
+    Api\Request,
+};
+
+use StdClass;
+
+class UserSecurity extends Base
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin() && !$this->getUser()->isRegular()) {
-            throw new Forbidden();
+        if (
+            !$this->user->isAdmin() &&
+            !$this->user->isRegular()
+        ) {
+            return false;
         }
+
+        return true;
     }
 
-    public function getActionRead($params, $data, $request)
+    public function getActionRead(Request $request): StdClass
     {
-        $id = $params['id'] ?? null;
+        $id = $request->getRouteParam('id');
 
         if (!$id) {
             throw new BadRequest();
         }
 
-        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) {
+        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
         return $this->getService('UserSecurity')->read($id);
     }
 
-    public function postActionGenerate2FAData($params, $data)
+    public function postActionGenerate2FAData(Request $request): StdClass
     {
-        $data = $data ?? (object) [];
+        $data = $request->getParsedBody();
 
-        $id = $data->id;
+        $id = $data->id ?? null;
 
         if (!$id) {
             throw new BadRequest();
         }
 
-        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) {
+        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
         return $this->getService('UserSecurity')->generate2FAData($id, $data);
     }
 
-    public function putActionUpdate($params, $data)
+    public function putActionUpdate(Request $request): StdClass
     {
-        $id = $params['id'] ?? null;
-        $data = $data ?? (object) [];
+        $id = $request->getRouteParam('id');
+
+        $data = $request->getParsedBody();
 
         if (!$id) {
             throw new BadRequest();
         }
 
-        if (!$this->getUser()->isAdmin() && $id !== $this->getUser()->id) {
+        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 

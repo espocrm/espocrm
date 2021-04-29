@@ -29,31 +29,39 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Utils as Utils;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-class Layout extends \Espo\Core\Controllers\Base
+use Espo\Core\{
+    Controllers\Base,
+    Api\Request,
+};
+
+class Layout extends Base
 {
-    public function getActionRead($params, $data)
+    public function getActionRead(Request $request)
     {
+        $params = $request->getRouteParams();
+
         $scope = $params['scope'] ?? null;
         $name = $params['name'] ?? null;
 
-        return $this->getServiceFactory()->create('Layout')->getForFrontend($scope, $name);
+        return $this->getServiceFactory()
+            ->create('Layout')
+            ->getForFrontend($scope, $name);
     }
 
-    public function putActionUpdate($params, $data, $request)
+    public function putActionUpdate(Request $request)
     {
+        $params = $request->getRouteParams();
+
         $data = json_decode($request->getBodyContents());
 
         if (is_object($data)) {
             $data = get_object_vars($data);
         }
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -61,12 +69,16 @@ class Layout extends \Espo\Core\Controllers\Base
         $name = $params['name'] ?? null;
         $setId = $params['setId'] ?? null;
 
-        return $this->getServiceFactory()->create('Layout')->update($scope, $name, $setId, $data);
+        return $this->getServiceFactory()
+            ->create('Layout')
+            ->update($scope, $name, $setId, $data);
     }
 
-    public function postActionResetToDefault($params, $data, $request)
+    public function postActionResetToDefault(Request $request)
     {
-        if (!$this->getUser()->isAdmin()) {
+        $data = $request->getParsedBody();
+
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
@@ -79,16 +91,18 @@ class Layout extends \Espo\Core\Controllers\Base
             ->resetToDefault($data->scope, $data->name, $data->setId ?? null);
     }
 
-    public function getActionGetOriginal($params, $data, $request)
+    public function getActionGetOriginal(Request $request)
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
         return $this->getServiceFactory()
             ->create('Layout')
             ->getOriginal(
-                $request->get('scope'), $request->get('name'), $request->get('setId')
+                $request->getQueryParam('scope'),
+                $request->getQueryParam('name'),
+                $request->getQueryParam('setId')
             );
     }
 }

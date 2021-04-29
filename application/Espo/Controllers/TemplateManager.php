@@ -36,13 +36,19 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Core\ApplicationState;
 
+use Espo\Core\{
+    Api\Request,
+};
+
+use StdClass;
+
 class TemplateManager
 {
-    protected $metadata;
+    private $metadata;
 
-    protected $templateFileManager;
+    private $templateFileManager;
 
-    protected $applicationState;
+    private $applicationState;
 
     public function __construct(
         Metadata $metadata,
@@ -58,18 +64,18 @@ class TemplateManager
         }
     }
 
-    public function getActionGetTemplate($params, $data, $request)
+    public function getActionGetTemplate(Request $request): StdClass
     {
-        $name = $request->get('name');
+        $name = $request->getQueryParam('name');
 
         if (empty($name)) {
             throw new BadRequest();
         }
 
-        $scope = $request->get('scope');
-        $module = null;
+        $scope = $request->getQueryParam('scope');
 
         $module = $this->metadata->get(['app', 'templates', $name, 'module']);
+
         $hasSubject = !$this->metadata->get(['app', 'templates', $name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;
@@ -85,8 +91,10 @@ class TemplateManager
         return $returnData;
     }
 
-    public function postActionSaveTemplate($params, $data)
+    public function postActionSaveTemplate(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         $scope = null;
 
         if (empty($data->name)) {
@@ -110,8 +118,10 @@ class TemplateManager
         return true;
     }
 
-    public function postActionResetTemplate($params, $data)
+    public function postActionResetTemplate(Request $request): StdClass
     {
+        $data = $request->getParsedBody();
+
         $scope = null;
 
         if (empty($data->name)) {
@@ -121,8 +131,6 @@ class TemplateManager
         if (!empty($data->scope)) {
             $scope = $data->scope;
         }
-
-        $module = null;
 
         $module = $this->metadata->get(['app', 'templates', $data->name, 'module']);
 

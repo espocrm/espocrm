@@ -29,22 +29,30 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\{
+    Controllers\RecordBase,
+    Api\Request,
+    Api\Response,
+};
 
-class Webhook extends \Espo\Core\Controllers\Record
+use StdClass;
+
+class Webhook extends RecordBase
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin() && !$this->getUser()->isApi()) {
-            throw new Forbidden();
+        if (!$this->user->isAdmin() && !$this->user->isApi()) {
+            return false;
         }
+
+        return true;
     }
 
-    public function actionCreate($params, $data, $request, $response = null)
+    public function postActionCreate(Request $request, Response $response): StdClass
     {
-        $result = parent::actionCreate($params, $data, $request, $response);
+        $result = parent::postActionCreate($request, $response);
 
-        if ($response) {
+        if ($result) {
             $response->setStatus(201);
         }
 

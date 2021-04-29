@@ -31,21 +31,30 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-class Metadata extends \Espo\Core\Controllers\Base
+use Espo\Core\{
+    Controllers\Base,
+    Api\Request,
+};
+
+use StdClass;
+
+class Metadata extends Base
 {
-    public function actionRead($params, $data)
+    public function getActionRead(): StdClass
     {
-        return $this->getServiceFactory()->create('Metadata')->getDataForFrontend();
+        return $this->getServiceFactory()
+            ->create('Metadata')
+            ->getDataForFrontend();
     }
 
-    public function getActionGet($params, $data, $request)
+    public function getActionGet(Request $request)
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
 
-        $key = $request->get('key');
+        $key = $request->getQueryParam('key');
 
-        return $this->getMetadata()->get($key, false);
+        return $this->metadata->get($key, false);
     }
 }

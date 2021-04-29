@@ -34,6 +34,7 @@ use Espo\ORM\Repository\Repository;
 use Espo\Core\Utils\Json;
 
 use PDO;
+use StdClass;
 
 use Espo\Core\Di;
 
@@ -259,7 +260,7 @@ class Preferences extends Repository implements
         }
     }
 
-    public function resetToDefaults(string $userId)
+    public function resetToDefaults(string $userId): ?StdClass
     {
         $this->deleteFromDb($userId);
 
@@ -267,8 +268,12 @@ class Preferences extends Repository implements
             unset($this->data[$userId]);
         }
 
-        if ($entity = $this->get($userId)) {
-            return $entity->toArray();
+        $entity = $this->get($userId);
+
+        if ($entity) {
+            return $entity->getValueMap();
         }
+
+        return null;
     }
 }

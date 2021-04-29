@@ -29,16 +29,17 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\{
+    Controllers\Record,
+    Acl\Table,
+};
 
-class Portal extends \Espo\Core\Controllers\Record
+class Portal extends Record
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        $portalPermission = $this->getAcl()->get('portalPermission');
+        $level = $this->acl->getPermissionLevel('portal');
 
-        if (!$portalPermission || $portalPermission === 'no') {
-            throw new Forbidden();
-        }
+        return $level === Table::LEVEL_YES;
     }
 }
