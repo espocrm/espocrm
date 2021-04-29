@@ -29,10 +29,11 @@
 
 namespace Espo\Modules\Crm\Classes\FieldProcessing\Call;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
     FieldProcessing\Loader,
     FieldProcessing\LoaderParams,
-    ORM\Entity,
     ORM\EntityManager,
 };
 

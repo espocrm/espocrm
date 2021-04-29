@@ -29,8 +29,9 @@
 
 namespace Espo\Core\FieldProcessing\LinkParent;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
-    ORM\Entity,
     ORM\EntityManager,
     FieldProcessing\Loader as LoaderInterface,
     FieldProcessing\LoaderParams,

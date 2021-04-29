@@ -29,10 +29,11 @@
 
 namespace Espo\Classes\FieldProcessing\Note;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
     FieldProcessing\Loader,
     FieldProcessing\LoaderParams,
-    ORM\Entity,
 };
 
 use Espo\Entities\Note;

@@ -31,8 +31,9 @@ namespace Espo\Core\FieldProcessing\EmailAddress;
 
 use Espo\Entities\EmailAddress;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
-    ORM\Entity,
     ORM\EntityManager,
     ApplicationState,
     FieldProcessing\Saver as SaverInterface,

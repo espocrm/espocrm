@@ -29,8 +29,9 @@
 
 namespace Espo\Core\FieldProcessing\Relation;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
-    ORM\Entity,
     ORM\EntityManager,
 };
 

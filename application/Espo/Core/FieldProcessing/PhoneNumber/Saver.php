@@ -31,8 +31,9 @@ namespace Espo\Core\FieldProcessing\PhoneNumber;
 
 use Espo\Entities\PhoneNumber;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
-    ORM\Entity,
     ORM\EntityManager,
     ApplicationState,
     Utils\Metadata,

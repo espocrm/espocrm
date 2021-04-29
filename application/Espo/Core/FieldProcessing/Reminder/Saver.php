@@ -29,8 +29,9 @@
 
 namespace Espo\Core\FieldProcessing\Reminder;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
-    ORM\Entity,
     ORM\EntityManager,
     FieldProcessing\Saver as SaverInterface,
     FieldProcessing\SaverParams,

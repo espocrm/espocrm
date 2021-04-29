@@ -29,10 +29,11 @@
 
 namespace Espo\Classes\FieldProcessing\Import;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
     FieldProcessing\Loader,
     FieldProcessing\LoaderParams,
-    ORM\Entity,
     ORM\EntityManager,
 };
 

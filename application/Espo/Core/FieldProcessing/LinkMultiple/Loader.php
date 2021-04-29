@@ -29,8 +29,9 @@
 
 namespace Espo\Core\FieldProcessing\LinkMultiple;
 
+use Espo\ORM\Entity;
+
 use Espo\Core\{
-    ORM\Entity,
     FieldProcessing\Loader as LoaderInterface,
     FieldProcessing\LoaderParams,
 };

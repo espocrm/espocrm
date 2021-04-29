@@ -29,7 +29,7 @@
 
 namespace Espo\Core\FieldProcessing;
 
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
 
 /**
  * Processes loading special fields before output.
