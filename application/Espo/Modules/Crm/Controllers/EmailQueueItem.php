@@ -29,14 +29,10 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-
 class EmailQueueItem extends \Espo\Core\Controllers\Record
 {
-    protected function checkControllerAccess()
+    protected function checkAccess(): bool
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        return $this->user->isAdmin();
     }
 }
