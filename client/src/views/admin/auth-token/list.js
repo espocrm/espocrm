@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/auth-token/list', 'views/list', function (Dep) {
+define('views/admin/auth-token/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
@@ -37,7 +37,9 @@ Espo.define('views/admin/auth-token/list', 'views/list', function (Dep) {
         },
 
         getHeader: function () {
-            return '<a href="#Admin">' + this.translate('Administration') + "</a> » " + this.getLanguage().translate('Auth Tokens', 'labels', 'Admin');
+            return '<a href="#Admin">' + this.translate('Administration') + '</a>' +
+                ' <span class="chevron-right"></span> ' +
+                this.getLanguage().translate('Auth Tokens', 'labels', 'Admin');
         },
 
         updatePageTitle: function () {
