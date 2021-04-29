@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/auth-token/record/list', 'views/record/list', function (Dep) {
+define('views/admin/auth-token/record/list', 'views/record/list', function (Dep) {
 
     return Dep.extend({
 
@@ -39,37 +39,49 @@ Espo.define('views/admin/auth-token/record/list', 'views/record/list', function 
         massActionSetInactive: function () {
             var ids = false;
             var allResultIsChecked = this.allResultIsChecked;
+
             if (!allResultIsChecked) {
                 ids = this.checkedList;
             }
+
             var attributes = {
                 isActive: false
             };
 
             var ids = false;
+
             var allResultIsChecked = this.allResultIsChecked;
+
             if (!allResultIsChecked) {
                 ids = this.checkedList;
             }
 
-            this.ajaxPutRequest(this.scope + '/action/massUpdate', {
-                attributes: attributes,
-                ids: ids || null,
-                where: (!ids || ids.length == 0) ? this.collection.getWhere() : null,
-                selectData: (!ids || ids.length == 0) ? this.collection.data : null,
-                byWhere: this.allResultIsChecked
+            Espo.Ajax.postRequest('MassAction', {
+                action: 'update',
+                entityType: this.entityType,
+                params: {
+                    ids: ids || null,
+                    where: (!ids || ids.length === 0) ? this.collection.getWhere() : null,
+                    selectData: (!ids || ids.length === 0) ? this.collection.data : null,
+                },
+                data: attributes,
             }).then(function () {
                 var result = result || {};
-                var count = result.count;
+
                 this.collection.fetch();
             }.bind(this));
         },
 
         actionSetInactive: function (data) {
-            if (!data.id) return;
+            if (!data.id) {
+                return;
+            };
+
             var model = this.collection.get(data.id);
 
-            if (!model) return;
+            if (!model) {
+                return;
+            }
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 

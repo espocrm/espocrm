@@ -29,7 +29,28 @@
 
 namespace Espo\Services;
 
+use StdClass;
+
 class AuthToken extends Record
 {
     protected $actionHistoryDisabled = true;
+
+    public function filterUpdateInput(StdClass $data): void
+    {
+        parent::filterUpdateInput($data);
+
+        $dataArray = get_object_vars($data);
+
+        foreach (array_keys($dataArray) as $attribute) {
+            if ($attribute !== 'isActive') {
+                unset($data->$attribute);
+
+                continue;
+            }
+        }
+
+        if ($data->isActive ?? false) {
+            unset($data->isActive);
+        }
+    }
 }

@@ -27,26 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Classes\Acl\AuthToken;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Entities\User;
 
-class AuthToken extends \Espo\Core\Controllers\Record
+use Espo\Core\{
+    Acl\ScopeData,
+    Acl\DefaultAccessChecker,
+    Acl\AccessEntityCREDChecker,
+    Acl\Traits\DefaultAccessCheckerDependency,
+};
+
+class AccessChecker implements AccessEntityCREDChecker
 {
-    protected function checkControllerAccess()
+    use DefaultAccessCheckerDependency;
+
+    private $defaultAccessChecker;
+
+    public function __construct(DefaultAccessChecker $defaultAccessChecker)
     {
-        if (!$this->getUser()->isAdmin()) {
-            throw new Forbidden();
-        }
+        $this->defaultAccessChecker = $defaultAccessChecker;
     }
 
-    public function beforeCreateLink()
+    public function checkCreate(User $user, ScopeData $data): bool
     {
-        throw new Forbidden();
-    }
-
-    public function beforeRemoveLink()
-    {
-        throw new Forbidden();
+        return false;
     }
 }
