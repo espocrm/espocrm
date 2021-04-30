@@ -29,183 +29,79 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\NotFound;
-
 use Espo\Core\{
-    Controllers\Base,
+    Exceptions\BadRequest,
     Api\Request,
-    Di,
 };
+
+use Espo\Services\Preferences as Service;
 
 use StdClass;
 
-class Preferences extends Base implements
-
-    Di\EntityManagerAware,
-    Di\CryptAware
+class Preferences
 {
-    use Di\EntityManagerSetter;
-    use Di\CryptSetter;
+    private $service;
 
-    protected $entityManager;
-
-    protected $crypt;
-
-    protected function handleUserAccess(string $userId): void
+    public function __construct(Service $service)
     {
-        if (!$this->user->isAdmin()) {
-            if ($this->user->getId() != $userId) {
-                throw new Forbidden();
-            }
-        }
-    }
-
-    public function deleteActionDelete(Request $request): StdClass
-    {
-        $params = $request->getRouteParams();
-
-        $userId = $params['id'];
-
-        if (empty($userId)) {
-            throw new BadRequest();
-        }
-
-        $this->handleUserAccess($userId);
-
-        $result = $this->entityManager
-            ->getRepository('Preferences')
-            ->resetToDefaults($userId);
-
-        if (!$result) {
-            throw new NotFound();
-        }
-
-        return $result;
-    }
-
-    public function putActionUpdate(Request $request): StdClass
-    {
-        $params = $request->getRouteParams();
-
-        $data = $request->getParsedBody();
-
-        $userId = $params['id'];
-
-        $this->handleUserAccess($userId);
-
-        if ($this->acl->getLevel('Preferences', 'edit') === 'no') {
-            throw new Forbidden();
-        }
-
-        foreach ($this->acl->getScopeForbiddenAttributeList('Preferences', 'edit') as $attribute) {
-            unset($data->$attribute);
-        }
-
-        if (property_exists($data, 'smtpPassword')) {
-            $data->smtpPassword = $this->crypt->encrypt($data->smtpPassword);
-        }
-
-        $user = $this->entityManager->getEntity('User', $userId);
-
-        $entity = $this->entityManager->getEntity('Preferences', $userId);
-
-        if ($entity && $user) {
-            $entity->set($data);
-
-            $this->entityManager->saveEntity($entity);
-
-            $entity->set('smtpEmailAddress', $user->get('emailAddress'));
-            $entity->set('name', $user->get('name'));
-
-            $entity->clear('smtpPassword');
-
-            return $entity->getValueMap();
-        }
-
-        throw new Error();
+        $this->service = $service;
     }
 
     public function getActionRead(Request $request): StdClass
     {
-        $params = $request->getRouteParams();
+        $userId = $request->getRouteParam('id');
 
-        $userId = $params['id'];
-
-        $this->handleUserAccess($userId);
-
-        $entity = $this->entityManager->getEntity('Preferences', $userId);
-        $user = $this->entityManager->getEntity('User', $userId);
-
-        if (!$entity || !$user) {
-            throw new NotFound();
+        if (!$userId) {
+            throw new BadRequest();
         }
 
-        $entity->set('smtpEmailAddress', $user->get('emailAddress'));
-        $entity->set('name', $user->get('name'));
-        $entity->set('isPortalUser', $user->isPortal());
+        return $this->service->read($userId)->getValueMap();
+    }
 
-        $entity->clear('smtpPassword');
+    public function deleteActionDelete(Request $request): StdClass
+    {
+        $userId = $request->getRouteParam('id');
 
-        foreach ($this->acl->getScopeForbiddenAttributeList('Preferences', 'read') as $attribute) {
-            $entity->clear($attribute);
+        if (!$userId) {
+            throw new BadRequest();
         }
 
-        return $entity->getValueMap();
+        $this->service->resetToDefaults($userId);
+
+        return $this->service
+            ->read($userId)
+            ->getValueMap();
+    }
+
+    public function putActionUpdate(Request $request): StdClass
+    {
+        $userId = $request->getRouteParam('id');
+
+        if (!$userId) {
+            throw new BadRequest();
+        }
+
+        $data = $request->getParsedBody();
+
+        if (!$userId) {
+            throw new BadRequest();
+        }
+
+        return $this->service
+            ->update($userId, $data)
+            ->getValueMap();
     }
 
     public function postActionResetDashboard(Request $request): StdClass
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id)) {
+        $userId = $data->id ?? null;
+
+        if (!$userId) {
             throw new BadRequest();
         }
 
-        $userId = $data->id;
-
-        $this->handleUserAccess($userId);
-
-        $user = $this->entityManager->getEntity('User', $userId);
-        $preferences = $this->entityManager->getEntity('Preferences', $userId);
-
-        if (!$user) {
-            throw new NotFound();
-        }
-
-        if (!$preferences) {
-            throw new NotFound();
-        }
-
-        if ($user->isPortal()) {
-            throw new Forbidden();
-        }
-
-        if ($this->acl->getLevel('Preferences', 'edit') === 'no') {
-            throw new Forbidden();
-        }
-
-        $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList('Preferences', 'edit');
-
-        if (in_array('dashboardLayout', $forbiddenAttributeList)) {
-            throw new Forbidden();
-        }
-
-        $dashboardLayout = $this->config->get('dashboardLayout');
-        $dashletsOptions = $this->config->get('dashletsOptions');
-
-        $preferences->set([
-            'dashboardLayout' => $dashboardLayout,
-            'dashletsOptions' => $dashletsOptions,
-        ]);
-
-        $this->entityManager->saveEntity($preferences);
-
-        return (object) [
-            'dashboardLayout' => $preferences->get('dashboardLayout'),
-            'dashletsOptions' => $preferences->get('dashletsOptions'),
-        ];
+        return $this->service->resetDashboard($userId);
     }
 }
