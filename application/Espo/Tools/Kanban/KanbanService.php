@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
     Exceptions\ForbiddenSilent,
+    Acl\Table,
 };
 
 use Espo\Entities\User;
@@ -123,7 +124,7 @@ class KanbanService
             throw new Forbidden("Non-object entitis are not supported.");
         }
 
-        if (!$this->aclManager->check($this->user, $entityType, 'read')) {
+        if (!$this->aclManager->check($this->user, $entityType, Table::ACTION_READ)) {
             throw new ForbiddenSilent();
         }
     }

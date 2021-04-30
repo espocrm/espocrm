@@ -116,6 +116,18 @@
                 "read": "all",
                 "edit": "all",
                 "delete": "all"
+            },
+            "Job": {
+                "create": "no",
+                "read": "all",
+                "edit": "no",
+                "delete": "all"
+            },
+            "Extension": {
+                "create": "no",
+                "read": "all",
+                "edit": "no",
+                "delete": "all"
             }
         }
     },

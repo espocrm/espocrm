@@ -407,7 +407,7 @@ class Record implements Crud,
      */
     public function read(string $id): Entity
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent();
         }
 
@@ -1010,7 +1010,7 @@ class Record implements Crud,
      */
     public function create(StdClass $data): Entity
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
             throw new ForbiddenSilent();
         }
 
@@ -1059,7 +1059,7 @@ class Record implements Crud,
      */
     public function update(string $id, StdClass $data): Entity
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent();
         }
 
@@ -1140,7 +1140,10 @@ class Record implements Crud,
 
     public function delete(string $id): void
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (
+            !$this->acl->check($this->entityType, AclTable::ACTION_DELETE) &&
+            !$this->acl->check($this->entityType, AclTable::ACTION_EDIT)
+        ) {
             throw new ForbiddenSilent();
         }
 
@@ -1199,7 +1202,7 @@ class Record implements Crud,
      */
     public function find(array $params): RecordCollection
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent();
         }
 
@@ -1331,7 +1334,7 @@ class Record implements Crud,
      */
     public function findLinked(string $id, string $link, array $params): RecordCollection
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent("No access.");
         }
 
@@ -1502,10 +1505,9 @@ class Record implements Crud,
             if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
                 throw new Forbidden();
             }
-        } else {
-            if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
-                throw new Forbidden();
-            }
+        }
+        else if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
+            throw new Forbidden();
         }
 
         $methodName = 'link' . ucfirst($link);
@@ -1627,7 +1629,7 @@ class Record implements Crud,
 
     public function linkFollowers(string $id, string $foreignId): void
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
 
@@ -1680,7 +1682,7 @@ class Record implements Crud,
 
     public function unlinkFollowers(string $id, string $foreignId): void
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
 
@@ -1729,7 +1731,7 @@ class Record implements Crud,
 
     public function massLink(string $id, string $link, array $where, ?array $selectData = null)
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
 
@@ -1881,7 +1883,7 @@ class Record implements Crud,
      */
     public function follow(string $id, ?string $userId = null)
     {
-        if (!$this->acl->check($this->entityType)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_STREAM)) {
             throw new Forbidden();
         }
 
@@ -2066,6 +2068,10 @@ class Record implements Crud,
      */
     public function merge(string $id, array $sourceIdList, StdClass $data): void
     {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
+            throw new Forbidden("No edit access.");
+        }
+
         if (!$id) {
             throw new Error("No ID passed.");
         }
