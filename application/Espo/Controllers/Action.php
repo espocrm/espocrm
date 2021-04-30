@@ -31,7 +31,7 @@ namespace Espo\Controllers;
 
 use Espo\Core\{
     Exceptions\BadRequest,
-    RecordServiceContainer,
+    Action\Service,
     Api\Request,
 };
 
@@ -42,11 +42,11 @@ use StdClass;
  */
 class Action
 {
-    private $recordServiceContainer;
+    private $service;
 
-    public function __construct(RecordServiceContainer $recordServiceContainer)
+    public function __construct(Service $service)
     {
-        $this->recordServiceContainer = $recordServiceContainer;
+        $this->service = $service;
     }
 
     public function postActionProcess(Request $request): StdClass
@@ -62,9 +62,7 @@ class Action
             throw new BadRequest();
         }
 
-        $service = $this->recordServiceContainer->get($entityType);
-
-        $entity = $service->action($action, $id, $data);
+        $entity = $this->service->process($entityType, $action, $id, $data);
 
         return $entity->getValueMap();
     }

@@ -29,34 +29,71 @@
 
 namespace Espo\Core\Action;
 
-use RuntimeException;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Exceptions\ForbiddenSilent,
+    Exceptions\BadRequest,
+    Exceptions\NotFound,
+    RecordServiceContainer,
+    Acl,
+};
 
-class Params
+use Espo\ORM\Entity;
+
+use StdClass;
+
+class Service
 {
-    private $entityType;
+    private $factory;
 
-    private $id;
+    private $acl;
+
+    private $recordServiceContainer;
+
+    public function __construct(
+        ActionFactory $factory,
+        Acl $acl,
+        RecordServiceContainer $recordServiceContainer
+    ) {
+        $this->factory = $factory;
+        $this->acl = $acl;
+        $this->recordServiceContainer = $recordServiceContainer;
+    }
 
     /**
-     * @throws RuntimeException
+     * Perform an action.
+     *
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
      */
-    public function __construct(string $entityType, string $id)
+    public function process(string $entityType, string $action, string $id, StdClass $data): Entity
     {
-        $this->entityType = $entityType;
-        $this->id = $id;
-
-        if (!$entityType || !$id) {
-            throw new RuntimeException();
+        if (!$this->acl->checkScope($entityType)) {
+            throw new ForbiddenSilent();
         }
-    }
 
-    public function getEntityType(): string
-    {
-        return $this->entityType;
-    }
+        if (!$action || !$id) {
+            throw new BadRequest();
+        }
 
-    public function getId(): string
-    {
-        return $this->id;
+        $actionParams = new Params($entityType, $id);
+
+        $actionProcessor = $this->factory->create($action, $entityType);
+
+        $actionProcessor->process(
+            $actionParams,
+            Data::fromRaw($data)
+        );
+
+        $service = $this->recordServiceContainer->get($entityType);
+
+        $entity = $service->read($id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        return $entity;
     }
 }

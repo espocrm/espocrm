@@ -94,6 +94,11 @@ class Params
         return $obj;
     }
 
+    /**
+     * Create from raw params.
+     *
+     * @throws RuntimeException
+     */
     public static function fromRaw(array $params, ?string $entityType = null): self
     {
         $obj = new self();

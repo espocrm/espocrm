@@ -31,7 +31,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\{
     Exceptions\BadRequest,
-    RecordServiceContainer,
+    MassAction\Service,
+    MassAction\Result,
     Api\Request,
 };
 
@@ -42,11 +43,11 @@ use StdClass;
  */
 class MassAction
 {
-    private $recordServiceContainer;
+    private $service;
 
-    public function __construct(RecordServiceContainer $recordServiceContainer)
+    public function __construct(Service $service)
     {
-        $this->recordServiceContainer = $recordServiceContainer;
+        $this->service = $service;
     }
 
     public function postActionProcess(Request $request): StdClass
@@ -62,21 +63,18 @@ class MassAction
             throw new BadRequest();
         }
 
-        $service = $this->recordServiceContainer->get($entityType);
-
-        $result = $service->massAction(
+        $result = $this->service->process(
+            $entityType,
             $action,
             $this->prepareMassActionParams($params),
             $data
         );
 
-        return $result->getValueMap();
+        return $this->convertResult($result);
     }
 
     private function prepareMassActionParams(StdClass $data): array
     {
-        $params = [];
-
         $where = $data->where ?? null;
         $searchParams = $data->searchParams ?? null;
         $ids = $data->ids ?? null;
@@ -91,14 +89,31 @@ class MassAction
             if (!is_null($searchParams)) {
                 $params['searchParams'] = json_decode(json_encode($searchParams), true);
             }
-        }
-        else if (!is_null($ids)) {
-            $params['ids'] = $ids;
-        }
-        else {
-            throw new BadRequest("Bad search params for mass action.");
+
+            return $params;
         }
 
-        return $params;
+        if (!is_null($ids)) {
+            return [
+                'ids' => $ids,
+            ];
+        }
+
+        throw new BadRequest("Bad search params for mass action.");
+    }
+
+    private function convertResult(Result $result): StdClass
+    {
+        $data = (object) [];
+
+        if ($result->hasCount()) {
+            $data->count = $result->getCount();
+        }
+
+        if ($result->hasIds()) {
+            $data->ids = $result->getIds();
+        }
+
+        return $data;
     }
 }

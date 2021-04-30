@@ -30,7 +30,6 @@
 namespace Espo\Core\MassAction;
 
 use RuntimeException;
-use StdClass;
 
 class Result
 {
@@ -77,21 +76,6 @@ class Result
         return self::fromArray([
             'count' => $this->count,
         ]);
-    }
-
-    public function getValueMap(): StdClass
-    {
-        $obj = (object) [];
-
-        if ($this->hasCount()) {
-            $obj->count = $this->count;
-        }
-
-        if ($this->hasIds()) {
-            $obj->ids = $this->ids;
-        }
-
-        return $obj;
     }
 
     public static function fromArray(array $data): self

@@ -58,13 +58,6 @@ use Espo\Core\{
     Select\SearchParams,
     Record\Crud,
     Record\Collection as RecordCollection,
-    MassAction\Params as MassActionParams,
-    MassAction\Result as MassActionResult,
-    MassAction\Data as MassActionData,
-    MassAction\MassActionFactory,
-    Action\Params as ActionParams,
-    Action\Data as ActionData,
-    Action\ActionFactory,
     FieldValidation\Params as FieldValidationParams,
     FieldProcessing\ReadLoadProcessor,
     FieldProcessing\ListLoadProcessor,
@@ -2483,71 +2476,6 @@ class Record implements Crud,
 
             $params['select'] = $itemList;
         }
-    }
-
-    /**
-     * Perform a mass action.
-     *
-     * @throws Forbidden
-     */
-    public function massAction(string $action, array $params, StdClass $data): MassActionResult
-    {
-        if (!$this->acl->checkScope($this->entityType)) {
-            throw new Forbidden();
-        }
-
-        $massActionFactory = $this->injectableFactory->create(MassActionFactory::class);
-
-        $massActionParams = MassActionParams::fromRaw($params, $this->entityType);
-
-        $massAction = $massActionFactory->create($action, $this->entityType);
-
-        $result = $massAction->process(
-            $massActionParams,
-            MassActionData::fromRaw($data)
-        );
-
-        if ($massActionParams->hasIds()) {
-            return $result;
-        }
-
-        return $result->withNoIds();
-    }
-
-    /**
-     * Perform an action.
-     *
-     * @throws Forbidden
-     * @throws BadRequest
-     */
-    public function action(string $action, string $id, StdClass $data): Entity
-    {
-        if (!$this->acl->checkScope($this->entityType)) {
-            throw new Forbidden();
-        }
-
-        if (!$action || !$id) {
-            throw new BadRequest();
-        }
-
-        $actionParams = new ActionParams($this->entityType, $id);
-
-        $actionFactory = $this->injectableFactory->create(ActionFactory::class);
-
-        $actionProcessor = $actionFactory->create($action, $this->entityType);
-
-        $actionProcessor->process(
-            $actionParams,
-            ActionData::fromRaw($data)
-        );
-
-        $entity = $this->getEntity($id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        return $entity;
     }
 
     /**

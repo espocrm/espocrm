@@ -27,36 +27,62 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Action;
+namespace Espo\Core\MassAction;
+
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Exceptions\ForbiddenSilent,
+    Exceptions\BadRequest,
+    Acl,
+};
 
 use RuntimeException;
+use StdClass;
 
-class Params
+class Service
 {
-    private $entityType;
+    private $factory;
 
-    private $id;
+    private $acl;
+
+    public function __construct(
+        MassActionFactory $factory,
+        Acl $acl
+    ) {
+        $this->factory = $factory;
+        $this->acl = $acl;
+    }
 
     /**
-     * @throws RuntimeException
+     * Perform a mass action.
+     *
+     * @throws Forbidden
+     * @throws BadRequest
      */
-    public function __construct(string $entityType, string $id)
+    public function process(string $entityType, string $action, array $params, StdClass $data): Result
     {
-        $this->entityType = $entityType;
-        $this->id = $id;
-
-        if (!$entityType || !$id) {
-            throw new RuntimeException();
+        if (!$this->acl->checkScope($entityType)) {
+            throw new ForbiddenSilent();
         }
-    }
 
-    public function getEntityType(): string
-    {
-        return $this->entityType;
-    }
+        try {
+            $massActionParams = Params::fromRaw($params, $entityType);
+        }
+        catch (RuntimeException $e) {
+            throw new BadReqest($e->getMessage());
+        }
 
-    public function getId(): string
-    {
-        return $this->id;
+        $massAction = $this->factory->create($action, $entityType);
+
+        $result = $massAction->process(
+            $massActionParams,
+            Data::fromRaw($data)
+        );
+
+        if ($massActionParams->hasIds()) {
+            return $result;
+        }
+
+        return $result->withNoIds();
     }
 }
