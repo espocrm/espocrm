@@ -193,11 +193,13 @@ class AclManager
 
     /**
      * Get an access level for a specific scope and action.
-     *
-     * @todo Use LevelProvider?
      */
     public function getLevel(User $user, string $scope, string $action): string
     {
+        if (!$this->checkScope($user, $scope)) {
+            return Table::LEVEL_NO;
+        }
+
         $data = $this->getTable($user)->getScopeData($scope);
 
         return $data->get($action);
@@ -280,6 +282,10 @@ class AclManager
     public function checkEntity(User $user, Entity $entity, string $action = Table::ACTION_READ): bool
     {
         $scope = $entity->getEntityType();
+
+        if (!$this->checkScope($user, $scope)) {
+            return false;
+        }
 
         $data = $this->getTable($user)->getScopeData($scope);
 
@@ -395,6 +401,10 @@ class AclManager
      */
     public function checkScope(User $user, string $scope, ?string $action = null): bool
     {
+        if ($action && !$this->checkScope($user, $scope)) {
+            return false;
+        }
+
         $data = $this->getTable($user)->getScopeData($scope);
 
         $checker = $this->getAccessChecker($scope);
