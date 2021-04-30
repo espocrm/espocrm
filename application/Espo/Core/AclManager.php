@@ -283,17 +283,13 @@ class AclManager
     {
         $scope = $entity->getEntityType();
 
-        if (!$this->checkScope($user, $scope)) {
+        if (!$this->checkScope($user, $scope, $action)) {
             return false;
         }
 
         $data = $this->getTable($user)->getScopeData($scope);
 
         $checker = $this->getAccessChecker($scope);
-
-        if (!$action) {
-            $action = Table::ACTION_READ;
-        }
 
         $methodName = 'checkEntity' . ucfirst($action);
 
