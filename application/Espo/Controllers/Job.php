@@ -37,7 +37,7 @@ class Job extends RecordBase
 {
     protected function checkAccess(): bool
     {
-        return $this->getUser()->isAdmin();
+        return $this->user->isAdmin();
     }
 
     public function beforeCreate(): void
