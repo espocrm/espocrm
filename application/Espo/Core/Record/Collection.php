@@ -40,9 +40,9 @@ use StdClass;
  */
 class Collection
 {
-    protected $collection;
+    private $collection;
 
-    protected $total;
+    private $total;
 
     public function __construct(OrmCollection $collection, ?int $total = null)
     {
@@ -67,17 +67,23 @@ class Collection
     }
 
     /**
-     * Get an array of StdClass objects.
+     * Get a value map list.
+     *
+     * @return StdClass[]
      */
     public function getValueMapList(): array
     {
         if (!$this->collection->getEntityType()) {
             $list = [];
+
             foreach ($this->collection as $e) {
                 $item = $e->getValueMap();
+
                 $item->_scope = $e->getEntityType();
+
                 $list[] = $item;
             }
+
             return $list;
         }
 
