@@ -33,6 +33,9 @@ use Espo\Core\Utils\Log;
 
 trait LogSetter
 {
+    /*
+     * @var Log
+     */
     protected $log;
 
     public function setLog(Log $log)

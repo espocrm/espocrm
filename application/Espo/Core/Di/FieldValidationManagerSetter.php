@@ -33,6 +33,9 @@ use Espo\Core\FieldValidation\FieldValidationManager;
 
 trait FieldValidationManagerSetter
 {
+    /*
+     * @var FieldValidationManager
+     */
     protected $fieldValidationManager;
 
     public function setFieldValidationManager(FieldValidationManager $fieldValidationManager)

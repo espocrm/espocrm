@@ -33,6 +33,9 @@ use Espo\Core\Utils\FieldUtil;
 
 trait FieldUtilSetter
 {
+    /*
+     * @var FieldUtil
+     */
     protected $fieldUtil;
 
     protected $fieldManagerUtil;

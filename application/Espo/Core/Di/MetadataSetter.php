@@ -33,6 +33,9 @@ use Espo\Core\Utils\Metadata;
 
 trait MetadataSetter
 {
+    /*
+     * @var Metadata
+     */
     protected $metadata;
 
     public function setMetadata(Metadata $metadata)

@@ -33,6 +33,9 @@ use Espo\Core\InjectableFactory;
 
 trait InjectableFactorySetter
 {
+    /*
+     * @var InjectableFactory
+     */
     protected $injectableFactory;
 
     public function setInjectableFactory(InjectableFactory $injectableFactory)

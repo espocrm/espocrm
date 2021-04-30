@@ -33,6 +33,9 @@ use Espo\Entities\User;
 
 trait UserSetter
 {
+    /*
+     * @var User
+     */
     protected $user;
 
     public function setUser(User $user)

@@ -33,6 +33,9 @@ use Espo\Core\Mail\EmailSender as EmailSender;
 
 trait EmailSenderSetter
 {
+    /*
+     * @var EmailSender
+     */
     protected $emailSender;
 
     public function setEmailSender(EmailSender $emailSender)

@@ -33,6 +33,9 @@ use Espo\Core\Utils\File\Manager as FileManager;
 
 trait FileManagerSetter
 {
+    /*
+     * @var FileManager
+     */
     protected $fileManager;
 
     public function setFileManager(FileManager $fileManager)

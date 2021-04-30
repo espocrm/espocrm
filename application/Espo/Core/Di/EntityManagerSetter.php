@@ -33,6 +33,9 @@ use Espo\Core\ORM\EntityManager;
 
 trait EntityManagerSetter
 {
+    /*
+     * @var EntityManager
+     */
     protected $entityManager;
 
     public function setEntityManager(EntityManager $entityManager)

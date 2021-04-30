@@ -33,6 +33,9 @@ use Espo\Core\AclManager;
 
 trait AclManagerSetter
 {
+    /*
+     * @var AclManager
+     */
     protected $aclManager;
 
     public function setAclManager(AclManager $aclManager)

@@ -33,6 +33,9 @@ use Espo\Core\RecordServiceContainer;
 
 trait RecordServiceContainerSetter
 {
+    /*
+     * @var RecordServiceContainer
+     */
     protected $recordServiceContainer;
 
     public function setRecordServiceContainer(RecordServiceContainer $recordServiceContainer)

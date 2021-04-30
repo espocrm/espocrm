@@ -33,6 +33,9 @@ use Espo\Core\Webhook\Manager;
 
 trait WebhookManagerSetter
 {
+    /*
+     * @var Manager
+     */
     protected $webhookManager;
 
     public function setWebhookManager(Manager $webhookManager)

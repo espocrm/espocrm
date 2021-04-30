@@ -33,7 +33,10 @@ use Espo\Core\ApplicationState;
 
 trait ApplicationStateSetter
 {
-    protected $aclManager;
+    /*
+     * @var ApplicationState
+     */
+    protected $applicationState;
 
     public function setApplicationState(ApplicationState $applicationState)
     {

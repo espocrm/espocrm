@@ -33,6 +33,9 @@ use Espo\Core\Utils\TemplateFileManager;
 
 trait TemplateFileManagerSetter
 {
+    /*
+     * @var TemplateFileManager
+     */
     protected $templateFileManager;
 
     public function setTemplateFileManager(TemplateFileManager $templateFileManager)

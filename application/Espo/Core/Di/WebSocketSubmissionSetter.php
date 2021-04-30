@@ -33,6 +33,9 @@ use Espo\Core\WebSocket\Submission;
 
 trait WebSocketSubmissionSetter
 {
+    /*
+     * @var Submission
+     */
     protected $webSocketSubmission;
 
     public function setWebSocketSubmission(Submission $webSocketSubmission)

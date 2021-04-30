@@ -33,6 +33,9 @@ use Espo\Core\Utils\Language;
 
 trait DefaultLanguageSetter
 {
+    /*
+     * @var Language
+     */
     protected $defaultLanguage;
 
     public function setDefaultLanguage(Language $defaultLanguage)

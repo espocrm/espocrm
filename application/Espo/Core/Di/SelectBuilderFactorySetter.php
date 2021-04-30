@@ -34,7 +34,7 @@ use Espo\Core\Select\SelectBuilderFactory;
 trait SelectBuilderFactorySetter
 {
     /*
-     * @var \Espo\Core\Select\SelectBuilderFactory
+     * @var SelectBuilderFactory
      */
     protected $selectBuilderFactory;
 

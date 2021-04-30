@@ -33,6 +33,9 @@ use Espo\Core\HookManager;
 
 trait HookManagerSetter
 {
+    /*
+     * @var HookManager
+     */
     protected $hookManager;
 
     public function setHookManager(HookManager $hookManager)

@@ -33,6 +33,9 @@ use Espo\Core\FileStorage\Manager as FileStorageManager;
 
 trait FileStorageManagerSetter
 {
+    /*
+     * @var FileStorageManager
+     */
     protected $fileStorageManager;
 
     public function setFileStorageManager(FileStorageManager $fileStorageManager)

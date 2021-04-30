@@ -33,6 +33,9 @@ use Espo\Core\Htmlizer\Factory as HtmlizerFactory;
 
 trait HtmlizerFactorySetter
 {
+    /*
+     * @var HtmlizerFactory
+     */
     protected $htmlizerFactory;
 
     public function setHtmlizerFactory(HtmlizerFactory $htmlizerFactory)
