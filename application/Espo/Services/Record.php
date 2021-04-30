@@ -1140,10 +1140,7 @@ class Record implements Crud,
 
     public function delete(string $id): void
     {
-        if (
-            !$this->acl->check($this->entityType, AclTable::ACTION_DELETE) &&
-            !$this->acl->check($this->entityType, AclTable::ACTION_EDIT)
-        ) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_DELETE)) {
             throw new ForbiddenSilent();
         }
 

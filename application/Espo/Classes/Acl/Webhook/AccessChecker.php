@@ -51,6 +51,23 @@ class AccessChecker implements AccessEntityCREDChecker
         $this->defaultAccessChecker = $defaultAccessChecker;
     }
 
+    public function check(User $user, ScopeData $data): bool
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        if (!$user->isApi()) {
+            return false;
+        }
+
+        if ($data->isFalse()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
     {
         return $this->checkEntityInternal($user, $entity, $data);

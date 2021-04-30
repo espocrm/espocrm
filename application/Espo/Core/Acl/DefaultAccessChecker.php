@@ -129,7 +129,19 @@ class DefaultAccessChecker implements
 
     public function checkDelete(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_DELETE);
+        if ($this->checkScope($user, $data, Table::ACTION_DELETE)) {
+            return true;
+        }
+
+        if ($data->getCreate() === Table::LEVEL_NO) {
+            return false;
+        }
+
+        if ($this->config->get('aclAllowDeleteCreated')) {
+            return true;
+        }
+
+        return false;
     }
 
     public function checkStream(User $user, ScopeData $data): bool
@@ -163,7 +175,7 @@ class DefaultAccessChecker implements
             return true;
         }
 
-        if ($data->getEdit() === Table::LEVEL_NO && $data->getCreate() === Table::LEVEL_NO) {
+        if ($data->getCreate() === Table::LEVEL_NO) {
             return false;
         }
 
