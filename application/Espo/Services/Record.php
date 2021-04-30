@@ -73,8 +73,6 @@ use Espo\Core\{
 
 use Espo\Tools\{
     Export\Export as ExportTool,
-    Kanban\Kanban as KanbanTool,
-    Kanban\Result as KanbanResult,
 };
 
 use Espo\Core\Di;
@@ -227,6 +225,8 @@ class Record implements Crud,
         if (!$this->entityType) {
             $name = get_class($this);
 
+            $matches = null;
+
             if (preg_match('@\\\\([\w]+)$@', $name, $matches)) {
                 $name = $matches[1];
             }
@@ -247,15 +247,6 @@ class Record implements Crud,
     {
     }
 
-    public function setAclManager(AclManager $aclManager)
-    {
-        $this->aclManager = $aclManager;
-
-        if ($this->entityType) {
-            $this->initAclParams();
-        }
-    }
-
     public function setEntityType(string $entityType): void
     {
         if ($this->entityType && $this->entityType !== $entityType) {
@@ -266,83 +257,9 @@ class Record implements Crud,
             return;
         }
 
-        $initAclParams = false;
-
-        if (!$this->entityType) {
-            $initAclParams = true;
-        }
-
         $this->entityType = $entityType;
-
-        if ($initAclParams) {
-            $this->initAclParams();
-        }
     }
 
-    protected function initAclParams(): void
-    {
-        $aclManager = $this->aclManager;
-
-        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'forbidden') as $item) {
-            if (!in_array($item, $this->forbiddenAttributeList)) {
-                $this->forbiddenAttributeList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'internal') as $item) {
-            if (!in_array($item, $this->internalAttributeList)) {
-                $this->internalAttributeList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'onlyAdmin') as $item) {
-            if (!in_array($item, $this->onlyAdminAttributeList)) {
-                $this->onlyAdminAttributeList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'readOnly') as $item) {
-            if (!in_array($item, $this->readOnlyAttributeList)) {
-                $this->readOnlyAttributeList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedAttributeList($this->entityType, 'nonAdminReadOnly') as $item) {
-            if (!in_array($item, $this->nonAdminReadOnlyAttributeList)) {
-                $this->nonAdminReadOnlyAttributeList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'forbidden') as $item) {
-            if (!in_array($item, $this->forbiddenLinkList)) {
-                $this->forbiddenLinkList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'internal') as $item) {
-            if (!in_array($item, $this->internalLinkList)) {
-                $this->internalLinkList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'onlyAdmin') as $item) {
-            if (!in_array($item, $this->onlyAdminLinkList)) {
-                $this->onlyAdminLinkList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'readOnly') as $item) {
-            if (!in_array($item, $this->readOnlyLinkList)) {
-                $this->readOnlyLinkList[] = $item;
-            }
-        }
-
-        foreach ($aclManager->getScopeRestrictedLinkList($this->entityType, 'nonAdminReadOnly') as $item) {
-            if (!in_array($item, $this->nonAdminReadOnlyLinkList)) {
-                $this->nonAdminReadOnlyLinkList[] = $item;
-            }
-        }
-    }
 
     public function getEntityType(): string
     {
@@ -1439,17 +1356,7 @@ class Record implements Crud,
             throw new Error("Empty link.");
         }
 
-        if (in_array($link, $this->forbiddenLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (in_array($link, $this->internalLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
-            throw new Forbidden();
-        }
+        $this->processForbiddenLinkReadCheck($link);
 
         $methodName = 'findLinked' . ucfirst($link);
 
@@ -1590,21 +1497,7 @@ class Record implements Crud,
             throw new BadRequest;
         }
 
-        if (in_array($link, $this->forbiddenLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (in_array($link, $this->readOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
-            throw new Forbidden();
-        }
+        $this->processForbiddenLinkEditCheck($link);
 
         $entity = $this->getRepository()->get($id);
 
@@ -1681,25 +1574,7 @@ class Record implements Crud,
             throw new BadRequest;
         }
 
-        if (in_array($link, $this->readOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (in_array($link, $this->internalLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (in_array($link, $this->forbiddenLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
-            throw new Forbidden();
-        }
+        $this->processForbiddenLinkEditCheck($link);
 
         $entity = $this->getRepository()->get($id);
 
@@ -1711,10 +1586,9 @@ class Record implements Crud,
             if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
                 throw new Forbidden();
             }
-        } else {
-            if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
-                throw new Forbidden();
-            }
+        }
+        else if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
+            throw new Forbidden();
         }
 
         $methodName = 'unlink' . ucfirst($link);
@@ -1870,21 +1744,7 @@ class Record implements Crud,
             throw new BadRequest;
         }
 
-        if (in_array($link, $this->forbiddenLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (in_array($link, $this->readOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
-            throw new Forbidden();
-        }
+        $this->processForbiddenLinkEditCheck($link);
 
         $entity = $this->getRepository()->get($id);
 
@@ -1967,6 +1827,54 @@ class Record implements Crud,
         }
 
         return false;
+    }
+
+    protected function processForbiddenLinkReadCheck(string $link): void
+    {
+        $forbiddenLinkList = $this->acl
+            ->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_READ);
+
+        if (in_array($link, $forbiddenLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (in_array($link, $this->forbiddenLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (in_array($link, $this->internalLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+            throw new Forbidden();
+        }
+    }
+
+    protected function processForbiddenLinkEditCheck(string $link): void
+    {
+        $forbiddenLinkList = $this->acl
+            ->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_EDIT);
+
+        if (in_array($link, $forbiddenLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (in_array($link, $this->forbiddenLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (in_array($link, $this->readOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
+            throw new Forbidden();
+        }
+
+        if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
+            throw new Forbidden();
+        }
     }
 
     /**
@@ -2148,7 +2056,10 @@ class Record implements Crud,
             }
         }
 
-        foreach ($this->acl->getScopeForbiddenAttributeList($entity->getEntityType(), 'read') as $attribute) {
+        $forbiddenAttributeList = $this->acl
+            ->getScopeForbiddenAttributeList($entity->getEntityType(), AclTable::ACTION_READ);
+
+        foreach ($forbiddenAttributeList as $attribute) {
             $entity->clear($attribute);
         }
     }
