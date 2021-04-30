@@ -37,7 +37,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\Config,
     FileStorage\Manager as FileStorageManager,
-    RecordServiceContainer,
+    Record\ServiceContainer as RecordServiceContainer,
 };
 
 use Espo\{

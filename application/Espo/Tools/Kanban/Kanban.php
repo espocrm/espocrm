@@ -36,7 +36,7 @@ use Espo\Core\{
     Select\SearchParams,
     FieldProcessing\ListLoadProcessor,
     FieldProcessing\LoaderParams as FieldLoaderParams,
-    RecordServiceContainer,
+    Record\ServiceContainer as RecordServiceContainer,
 };
 
 use Espo\{

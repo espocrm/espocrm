@@ -104,7 +104,7 @@ class DefaultBinding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\RecordServiceContainer',
+            'Espo\\Core\\Record\\ServiceContainer',
             'recordServiceContainer'
         );
 

@@ -39,7 +39,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\ControllerUtil,
     Record\Collection as RecordCollection,
-    RecordServiceContainer,
+    Record\ServiceContainer as RecordServiceContainer,
     Api\Request,
     Api\Response,
     Record\Crud as CrudService,

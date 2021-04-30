@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Di;
 
-use Espo\Core\RecordServiceContainer;
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 trait RecordServiceContainerSetter
 {

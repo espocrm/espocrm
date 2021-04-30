@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
 use Espo\Core\{
-    RecordServiceContainer,
+    Record\ServiceContainer as RecordServiceContainer,
     FieldProcessing\EmailAddress\AccessChecker as EmailAddressAccessChecker,
     FieldProcessing\PhoneNumber\AccessChecker as PhoneNumberAccessChecker,
 };

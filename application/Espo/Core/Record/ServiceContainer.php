@@ -27,12 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Record;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Metadata;
+use Espo\Core\{
+    Exceptions\Error,
+    ServiceFactory,
+    Utils\Metadata,
+};
 
 use Espo\Services\Record;
 
@@ -41,11 +42,11 @@ use Espo\Services\Record;
  * Usually there's no need to have multiple record service instances of the same entity type.
  * Use this container instead of serviceFactory to get record services.
  */
-class RecordServiceContainer
+class ServiceContainer
 {
     private $data = [];
 
-    protected $defaultTypeMap = [
+    private $defaultTypeMap = [
         'CategoryTree' => 'RecordTree',
     ];
 

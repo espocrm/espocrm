@@ -39,7 +39,7 @@
         "className": "Espo\\Core\\ServiceFactory"
     },
     "recordServiceContainer": {
-        "className": "Espo\\Core\\RecordServiceContainer"
+        "className": "Espo\\Core\\Record\\ServiceContainer"
     },
     "templateFileManager": {
         "className": "Espo\\Core\\Utils\\TemplateFileManager"

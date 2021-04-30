@@ -34,7 +34,7 @@ use Espo\Core\{
     Exceptions\ForbiddenSilent,
     Exceptions\BadRequest,
     Exceptions\NotFound,
-    RecordServiceContainer,
+    Record\ServiceContainer as RecordServiceContainer,
     Acl,
 };
 
