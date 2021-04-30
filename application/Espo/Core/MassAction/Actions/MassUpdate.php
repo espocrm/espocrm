@@ -36,7 +36,7 @@ use Espo\Core\{
     MassAction\Data,
     MassAction\MassAction,
     Acl,
-    RecordServiceContainer,
+    Record\ServiceContainer as RecordServiceContainer,
     ORM\EntityManager,
     Utils\FieldUtil,
     Utils\ObjectUtil,
