@@ -35,7 +35,9 @@ Espo.define('views/admin/auth-log-record/list', 'views/list', function (Dep) {
         },
 
         getHeader: function () {
-            return '<a href="#Admin">' + this.translate('Administration') + "</a> » " + this.getLanguage().translate('Auth Log', 'labels', 'Admin');
+            return '<a href="#Admin">' + this.translate('Administration') + '</a>' +
+            ' <span class="chevron-right"></span> ' +
+            this.getLanguage().translate('Auth Log', 'labels', 'Admin');
         },
 
         updatePageTitle: function () {
