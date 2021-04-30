@@ -105,7 +105,31 @@ class ActionFactory
             return true;
         }
 
+        if ($this->needsToBeAllowed($entityType)) {
+            if (!$this->isAllowed($action, $entityType)) {
+                return true;
+            }
+        }
+
         return $this->metadata
             ->get(['recordDefs', $entityType, 'actions', $action, 'disabled']) ?? false;
+    }
+
+    private function needsToBeAllowed(string $entityType): bool
+    {
+        $isObject = $this->metadata->get(['scopes', $entityType, 'object']) ?? false;
+
+        if (!$isObject) {
+            return true;
+        }
+
+        return $this->metadata
+            ->get(['recordDefs', $entityType, 'notAllowedActionsDisabled']) ?? false;
+    }
+
+    private function isAllowed(string $action, string $entityType): bool
+    {
+        return $this->metadata
+            ->get(['recordDefs', $entityType, 'actions', $action, 'allowed']) ?? false;
     }
 }

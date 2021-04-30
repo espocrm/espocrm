@@ -1,0 +1,15 @@
+{
+    "massActions": {
+        "delete": {
+            "allowed": true
+        },
+        "update": {
+            "allowed": true
+        }
+    },
+    "actions": {
+        "merge": {
+            "allowed": true
+        }
+    }
+}

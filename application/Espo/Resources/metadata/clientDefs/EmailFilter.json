@@ -4,6 +4,7 @@
         "edit": "views/email-filter/modals/edit"
     },
     "recordViews": {
+        "list": "views/email-filter/record/list",
         "detail": "views/email-filter/record/detail",
         "edit": "views/email-filter/record/edit",
         "editQuick": "views/email-filter/record/edit-small",

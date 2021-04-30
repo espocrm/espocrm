@@ -1,12 +1,15 @@
 {
-   "controller": "controllers/record",
-   "relationshipPanels": {
-      "users": {
-         "create": false,
-         "rowActionsView": "views/record/row-actions/relationship-unlink-only",
-         "layout": "listSmall",
-         "selectPrimaryFilterName": "activePortal"
-      }
-   },
-   "searchPanelDisabled": true
+    "controller": "controllers/record",
+    "recordViews": {
+        "list":"views/portal/record/list"
+    },
+    "relationshipPanels": {
+        "users": {
+            "create": false,
+            "rowActionsView": "views/record/row-actions/relationship-unlink-only",
+            "layout": "listSmall",
+            "selectPrimaryFilterName": "activePortal"
+        }
+    },
+    "searchPanelDisabled": true
 }

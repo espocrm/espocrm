@@ -2,7 +2,8 @@
     "controller": "controllers/record",
     "searchPanelDisabled": true,
     "recordViews": {
-        "detail": "views/lead-capture/record/detail"
+        "detail": "views/lead-capture/record/detail",
+        "list": "views/lead-capture/record/list"
     },
     "dynamicLogic": {
         "fields": {

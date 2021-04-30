@@ -1,5 +1,8 @@
 {
     "controller": "controllers/record",
+    "recordViews": {
+        "list": "views/webhook/record/list"
+    },
     "dynamicLogic": {
         "fields": {
             "event": {

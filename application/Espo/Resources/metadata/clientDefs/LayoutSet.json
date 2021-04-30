@@ -1,5 +1,8 @@
 {
     "controller": "controllers/layout-set",
+    "recordViews": {
+        "list": "views/layout-set/record/list"
+    },
     "searchPanelDisabled": true,
     "duplicateDisabled": true,
     "relationshipPanels": {

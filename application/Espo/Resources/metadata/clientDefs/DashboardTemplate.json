@@ -3,6 +3,9 @@
     "views": {
         "detail": "views/dashboard-template/detail"
     },
+    "recordViews": {
+        "list": "views/dashboard-template/record/list"
+    },
     "menu": {
         "detail": {
             "buttons": [
