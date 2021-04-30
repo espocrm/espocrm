@@ -98,6 +98,20 @@ class MassActionFactory
 
     private function isDisabled(string $action, string $entityType): bool
     {
+        $actionsDisabled = $this->metadata
+            ->get(['recordDefs', $entityType, 'actionsDisabled']) ?? false;
+
+        if ($actionsDisabled) {
+            return true;
+        }
+
+        $massActionsDisabled = $this->metadata
+            ->get(['recordDefs', $entityType, 'massActionsDisabled']) ?? false;
+
+        if ($massActionsDisabled) {
+            return true;
+        }
+
         return $this->metadata
             ->get(['recordDefs', $entityType, 'massActions', $action, 'disabled']) ?? false;
     }

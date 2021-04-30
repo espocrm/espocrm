@@ -98,6 +98,13 @@ class ActionFactory
 
     private function isDisabled(string $action, string $entityType): bool
     {
+        $actionsDisabled = $this->metadata
+            ->get(['recordDefs', $entityType, 'actionsDisabled']) ?? false;
+
+        if ($actionsDisabled) {
+            return true;
+        }
+
         return $this->metadata
             ->get(['recordDefs', $entityType, 'actions', $action, 'disabled']) ?? false;
     }

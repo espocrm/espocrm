@@ -121,7 +121,11 @@ class KanbanService
     private function processAccessCheck($entityType): void
     {
         if (!$this->metadata->get(['scopes', $entityType, 'object'])) {
-            throw new Forbidden("Non-object entitis are not supported.");
+            throw new Forbidden("Non-object entities are not supported.");
+        }
+
+        if ($this->metadata->get(['recordDefs', $entityType, 'kanbanDisabled'])) {
+            throw new Forbidden("Kanban is disabled for '{$entityType}'.");
         }
 
         if (!$this->aclManager->check($this->user, $entityType, Table::ACTION_READ)) {
