@@ -39,8 +39,10 @@ use Espo\Core\{
     Acl\AccessChecker\ScopeChecker,
     AclManager,
     Utils\Config,
-    Utils\DateTime as DateTimeUtil,
 };
+
+use DateTime;
+use Exception;
 
 /**
  * A default implementation for access checking.
@@ -211,15 +213,34 @@ class DefaultAccessChecker implements
             return true;
         }
 
-        $deleteThresholdPeriod = $this->config->get(
-            'aclAllowDeleteCreatedThresholdPeriod',
-            self::ALLOW_DELETE_OWN_CREATED_PERIOD
-        );
+        $deleteThresholdPeriod =
+            $this->config->get('aclAllowDeleteCreatedThresholdPeriod') ??
+            self::ALLOW_DELETE_OWN_CREATED_PERIOD;
 
-        if (DateTimeUtil::isAfterThreshold($createdAt, $deleteThresholdPeriod)) {
+        if (self::isDateTimeAfterPeriod($createdAt, $deleteThresholdPeriod)) {
             return false;
         }
 
         return true;
+    }
+
+    private static function isDateTimeAfterPeriod(string $value, string $period): bool
+    {
+        try {
+            $dt = new DateTime($value);
+        }
+        catch (Exception $e) {
+            return false;
+        }
+
+        $dt->modify($period);
+
+        $dtNow = new DateTime();
+
+        if ($dtNow->format('U') > $dt->format('U')) {
+            return true;
+        }
+
+        return false;
     }
 }
