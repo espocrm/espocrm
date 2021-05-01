@@ -8,10 +8,11 @@
                 },
                 {
                     "name": "parent"
-                },
+                }
+            ],
+            [
                 {
-                    "name": "description",
-                    "fullWidth": true
+                    "name": "description"
                 }
             ]
         ]
