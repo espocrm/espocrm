@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Acl;
+namespace Espo\Core\Portal\Acl\AccessChecker;
 
 use Espo\Core\{
     Utils\ClassFinder,
@@ -36,6 +36,7 @@ use Espo\Core\{
     Acl\Exceptions\NotImplemented,
     Acl\AccessChecker,
     Portal\AclManager as PortalAclManager,
+    Portal\Acl\DefaultAccessChecker,
     Binding\BindingContainer,
     Binding\Binder,
     Binding\BindingData,

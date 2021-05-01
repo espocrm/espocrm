@@ -27,12 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl;
+namespace Espo\Core\Acl\OwnershipChecker;
 
 use Espo\Core\{
     Utils\Metadata,
     InjectableFactory,
     Acl\Exceptions\NotImplemented,
+    Acl\DefaultOwnershipChecker,
+    Acl\OwnershipChecker,
     AclManager,
     Binding\BindingContainer,
     Binding\Binder,

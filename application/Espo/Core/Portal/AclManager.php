@@ -42,8 +42,8 @@ use Espo\Entities\{
 use Espo\Core\{
     Portal\Acl\Table,
     Portal\Acl\Table\TableFactory,
-    Portal\Acl\AccessCheckerFactory,
-    Portal\Acl\OwnershipCheckerFactory,
+    Portal\Acl\AccessChecker\AccessCheckerFactory,
+    Portal\Acl\OwnershipChecker\OwnershipCheckerFactory,
     Portal\Acl\OwnershipAccountChecker,
     Portal\Acl\OwnershipContactChecker,
     Portal\Acl,

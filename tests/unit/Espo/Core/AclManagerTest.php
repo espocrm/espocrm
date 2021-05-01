@@ -32,8 +32,8 @@ namespace tests\unit\Espo\Core;
 use Espo\Core\{
     AclManager,
     Acl\Table,
-    Acl\AccessCheckerFactory,
-    Acl\OwnershipCheckerFactory,
+    Acl\AccessChecker\AccessCheckerFactory,
+    Acl\OwnershipChecker\OwnershipCheckerFactory,
     Acl\OwnerUserFieldProvider,
     Acl\Table\TableFactory,
     Acl\GlobalRestricton,

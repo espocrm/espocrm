@@ -27,41 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Acl;
+namespace Espo\Core\Acl\AccessChecker;
 
 use Espo\Core\{
+    Utils\ClassFinder,
     Utils\Metadata,
     InjectableFactory,
     Acl\Exceptions\NotImplemented,
-    Acl\OwnershipChecker,
-    Portal\AclManager as PortalAclManager,
+    Acl\DefaultAccessChecker,
+    Acl\AccessChecker,
+    AclManager,
     Binding\BindingContainer,
     Binding\Binder,
     Binding\BindingData,
 };
 
-class OwnershipCheckerFactory
+class AccessCheckerFactory
 {
-    private $defaultClassName = DefaultOwnershipChecker::class;
+    private $defaultClassName = DefaultAccessChecker::class;
+
+    private $classFinder;
 
     private $metadata;
 
     private $injectableFactory;
 
     public function __construct(
+        ClassFinder $classFinder,
         Metadata $metadata,
         InjectableFactory $injectableFactory
     ) {
+        $this->classFinder = $classFinder;
         $this->metadata = $metadata;
         $this->injectableFactory = $injectableFactory;
     }
 
     /**
-     * Create an ownership checker.
+     * Create an access checker.
      *
      * @throws NotImplemented
      */
-    public function create(string $scope, PortalAclManager $aclManager): OwnershipChecker
+    public function create(string $scope, AclManager $aclManager): AccessChecker
     {
         $className = $this->getClassName($scope);
 
@@ -72,26 +78,33 @@ class OwnershipCheckerFactory
 
     private function getClassName(string $scope): string
     {
-        $className = $this->metadata->get(['aclDefs', $scope, 'portalOwnershipCheckerClassName']);
+        $className1 = $this->metadata->get(['aclDefs', $scope, 'accessCheckerClassName']);
 
-        if ($className) {
-            return $className;
+        if ($className1) {
+            return $className1;
         }
 
         if (!$this->metadata->get(['scopes', $scope])) {
             throw new NotImplemented();
         }
 
+        // For backward compatibility.
+        $className2 = $this->classFinder->find('Acl', $scope);
+
+        if ($className2) {
+            return $className2;
+        }
+
         return $this->defaultClassName;
     }
 
-    private function createBindingContainer(PortalAclManager $aclManager): BindingContainer
+    private function createBindingContainer(AclManager $aclManager): BindingContainer
     {
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
 
-        $binder->bindInstance(PortalAclManager::class, $aclManager);
+        $binder->bindInstance(AclManager::class, $aclManager);
 
         return new BindingContainer($bindingData);
     }
