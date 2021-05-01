@@ -37,6 +37,8 @@ use Espo\Core\{
     Utils\Json,
 };
 
+use JsonException;
+
 class Unifier
 {
     private $fileManager;
@@ -143,45 +145,46 @@ class Unifier
         $dirName = $this->fileManager->getDirName($dirPath, false);
 
         foreach ($fileList as $dirName => $fileName) {
-            if (is_array($fileName)) { /*only first level of a sub directory*/
+            if (is_array($fileName)) { /*only first level of a sub-directory*/
+
+                $itemValue = $this->unifySingle(
+                    Util::concatPath($dirPath, $dirName),
+                    $type,
+                    false,
+                    $moduleName
+                );
+
                 if ($this->useObjects) {
-                    $content->$dirName = $this->unifySingle(
-                        Util::concatPath($dirPath, $dirName),
-                        $type,
-                        false,
-                        $moduleName
-                    );
+                    $content->$dirName = $itemValue;
                 }
                 else {
-                    $content[$dirName] = $this->unifySingle(
-                        Util::concatPath($dirPath, $dirName),
-                        $type,
-                        false,
-                        $moduleName
-                    );
+                    $content[$dirName] = $itemValue;
                 }
 
-            } else {
-                if ($fileName === $this->unsetFileName) {
-                    $fileContent = $this->fileManager->getContents($dirPath . '/' . $fileName);
+                continue;
+            }
 
-                    $unsets = Json::decode($fileContent, true);
+            if ($fileName === $this->unsetFileName) {
+                $fileContent = $this->fileManager->getContents($dirPath . '/' . $fileName);
 
-                    continue;
-                }
+                $unsets = Json::decode($fileContent, true);
 
-                $mergedValues = $this->getContents($dirPath . '/' . $fileName);
+                continue;
+            }
 
-                if (!empty($mergedValues)) {
-                    $name = $this->fileManager->getFileName($fileName, '.json');
+            $itemValue = $this->getContents($dirPath . '/' . $fileName);
 
-                    if ($this->useObjects) {
-                        $content->$name = $mergedValues;
-                    }
-                    else {
-                        $content[$name] = $mergedValues;
-                    }
-                }
+            if (empty($itemValue)) {
+                continue;
+            }
+
+            $name = $this->fileManager->getFileName($fileName, '.json');
+
+            if ($this->useObjects) {
+                $content->$name = $itemValue;
+            }
+            else {
+                $content[$name] = $itemValue;
             }
         }
 
@@ -202,6 +205,13 @@ class Unifier
     {
         $fileContent = $this->fileManager->getContents($path);
 
-        return Json::decode($fileContent, !$this->useObjects);
+        try {
+            return Json::decode($fileContent, !$this->useObjects);
+        }
+        catch (JsonException $e) {
+            throw new JsonException(
+                "JSON syntax error in '{$path}'."
+            );
+        }
     }
 }
