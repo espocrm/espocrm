@@ -195,7 +195,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
         afterSave: function () {
             Dep.prototype.afterSave.call(this);
 
-            if (this.isNew && this.isSending && this.model.get('status') === 'Sent') {
+            if (/*this.isNew &&*/ this.isSending && this.model.get('status') === 'Sent') {
                 Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
             }
         },
