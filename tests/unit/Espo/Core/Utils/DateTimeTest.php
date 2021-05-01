@@ -33,6 +33,11 @@ use Espo\Core\Utils\DateTime;
 
 class DateTimeTest extends \PHPUnit\Framework\TestCase
 {
+    protected function setUp(): void
+    {
+        date_default_timezone_set('UTC');
+    }
+
     public function testConvertFormat(): void
     {
         $map = [
@@ -57,5 +62,44 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
         foreach ($map as $from => $to) {
             $this->assertEquals($to, DateTime::convertFormatToSystem($from));
         }
+    }
+
+    public function testConvertGetFormat(): void
+    {
+        $util = new DateTime('YYYY-MM-DD', 'HH:mm', 'Europe/Kiev');
+
+        $this->assertEquals('YYYY-MM-DD HH:mm', $util->getDateTimeFormat());
+
+        $this->assertEquals('YYYY-MM-DD', $util->getDateFormat());
+    }
+
+    public function testConvertSystemDateTime1(): void
+    {
+        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kiev');
+
+        $this->assertEquals(
+            '20-05-2021 13:00',
+            $util->convertSystemDateTime('2021-05-20 10:00')
+        );
+    }
+
+    public function testConvertSystemDateTime2(): void
+    {
+        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kiev');
+
+        $this->assertEquals(
+            '2021-05-20 10:00am',
+            $util->convertSystemDateTime('2021-05-20 10:00', 'UTC', 'YYYY-MM-DD hh:mma')
+        );
+    }
+
+    public function testConvertSystemDate1(): void
+    {
+        $util = new DateTime('DD-MM-YYYY', 'HH:mm', 'Europe/Kiev');
+
+        $this->assertEquals(
+            '20-05-2021',
+            $util->convertSystemDate('2021-05-20')
+        );
     }
 }
