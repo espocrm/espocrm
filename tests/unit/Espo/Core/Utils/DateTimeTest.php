@@ -27,46 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-$config = $installer->getConfig();
-$metadata = $installer->getMetadata();
+namespace tests\unit\Espo\Core\Utils;
 
-$fields = [
-    'dateFormat' => [
-        'default' => $config->get('dateFormat', ''),
-        'options' => $metadata->get(['app', 'dateTime', 'dateFormatList']) ?? [],
-    ],
-    'timeFormat' => [
-        'default'=> $config->get('timeFormat', ''),
-        'options' => $metadata->get(['app', 'dateTime', 'timeFormatList']) ?? [],
-    ],
-    'timeZone' => [
-        'default'=> $config->get('timeZone', 'UTC'),
-    ],
-    'weekStart' => [
-        'default'=> $config->get('weekStart', 0),
-    ],
-    'defaultCurrency' => [
-        'default' => $config->get('defaultCurrency', 'USD'),
-    ],
-    'thousandSeparator' => [
-        'default' => $config->get('thousandSeparator', ','),
-    ],
-    'decimalMark' => [
-        'default' => $config->get('decimalMark', '.'),
-    ],
-    'language' => [
-        'default' => (!empty($_SESSION['install']['user-lang'])) ?
-            $_SESSION['install']['user-lang'] :
-            $config->get('language', 'en_US'),
-    ],
-];
+use Espo\Core\Utils\DateTime;
 
-foreach ($fields as $fieldName => $field) {
-    if (isset($_SESSION['install'][$fieldName])) {
-        $fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
-    } else {
-        $fields[$fieldName]['value'] = isset($field['default']) ? $field['default'] : '';
+class DateTimeTest extends \PHPUnit\Framework\TestCase
+{
+    public function testConvertFormat(): void
+    {
+        $map = [
+            'YYYY-MM-DD' => 'Y-m-d',
+            'DD-MM-YYYY' => 'd-m-Y',
+            'MM-DD-YYYY' => 'm-d-Y',
+            'MM/DD/YYYY' => 'm/d/Y',
+            'DD/MM/YYYY' => 'd/m/Y',
+            'DD.MM.YYYY' => 'd.m.Y',
+            'DD. MM. YYYY' => 'd. m. Y',
+            'MM.DD.YYYY' => 'm.d.Y',
+            'YYYY.MM.DD' => 'Y.m.d',
+            'HH:mm' => 'H:i',
+            'HH:mm:ss' => 'H:i:s',
+            'hh:mm a' => 'h:i a',
+            'hh:mma' => 'h:ia',
+            'hh:mm A' => 'h:i A',
+            'hh:mmA' => 'h:iA',
+            'DD. MM. YYYY HH:mm' => 'd. m. Y H:i',
+        ];
+
+        foreach ($map as $from => $to) {
+            $this->assertEquals($to, DateTime::convertFormatToSystem($from));
+        }
     }
 }
-
-$smarty->assign('fields', $fields);

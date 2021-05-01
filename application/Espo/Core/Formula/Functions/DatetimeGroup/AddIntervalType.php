@@ -29,7 +29,10 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-use Espo\Core\Di;
+use Espo\Core\{
+    Di,
+    Utils\DateTime as DateTimeUtil,
+};
 
 use Espo\Core\Formula\{
     Functions\BaseFunction,
@@ -37,6 +40,7 @@ use Espo\Core\Formula\{
 };
 
 use DateTime;
+use Exception;
 
 abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
 {
@@ -80,17 +84,22 @@ abstract class AddIntervalType extends BaseFunction implements Di\DateTimeAware
 
         try {
             $dateTime = new DateTime($dateTimeString);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $this->log('bad date-time value passed', 'warning');
+
             return null;
         }
 
-        $dateTime->modify(($interval > 0 ? '+' : '') . strval($interval) . ' ' . $this->intervalTypeString);
+        $dateTime->modify(
+            ($interval > 0 ? '+' : '') . strval($interval) . ' ' . $this->intervalTypeString
+        );
 
         if ($isTime) {
-            return $dateTime->format($this->dateTime->getInternalDateTimeFormat());
-        } else {
-            return $dateTime->format($this->dateTime->getInternalDateFormat());
+            return $dateTime->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+        }
+        else {
+            return $dateTime->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
         }
     }
 }

@@ -31,7 +31,10 @@ namespace Espo\Core\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Di;
+use Espo\Core\{
+    Di,
+    Utils\DateTime as DateTimeUtil,
+};
 
 use DateTime;
 use DateTimeZone;
@@ -159,7 +162,7 @@ class Event extends Database implements
 
         try {
             $dt = DateTime::createFromFormat(
-                $this->getDateTime()->getInternalDateTimeFormat(),
+                DateTimeUtil::SYSTEM_DATE_TIME_FORMAT,
                 $string,
                 $tz
             );
@@ -171,7 +174,7 @@ class Event extends Database implements
 
             return $dt
                 ->setTimezone($utcTz)
-                ->format($this->getDateTime()->getInternalDateTimeFormat());
+                ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
         return null;

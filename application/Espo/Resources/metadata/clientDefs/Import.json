@@ -39,5 +39,28 @@
 	    ]
     },
     "searchPanelDisabled": true,
-    "iconClass": "fas fa-file-import"
+    "iconClass": "fas fa-file-import",
+    "dateFormatList": [
+        "YYYY-MM-DD",
+        "DD-MM-YYYY",
+        "MM-DD-YYYY",
+        "MM/DD/YYYY",
+        "DD/MM/YYYY",
+        "DD.MM.YYYY",
+        "MM.DD.YYYY",
+        "YYYY.MM.DD",
+        "DD. MM. YYYY"
+    ],
+    "timeFormatList": [
+        "HH:mm:ss",
+        "HH:mm",
+        "hh:mm a",
+        "hh:mma",
+        "hh:mm A",
+        "hh:mmA",
+        "hh:mm:ss a",
+        "hh:mm:ssa",
+        "hh:mm:ss A",
+        "hh:mm:ssA"
+    ]
 }

@@ -1,0 +1,16 @@
+{
+    "dateFormatList": [
+        "DD.MM.YYYY",
+        "MM/DD/YYYY",
+        "DD/MM/YYYY",
+        "YYYY-MM-DD",
+        "DD. MM. YYYY"
+    ],
+    "timeFormatList": [
+        "HH:mm",
+        "hh:mma",
+        "hh:mmA",
+        "hh:mm A",
+        "hh:mm a"
+    ]
+}

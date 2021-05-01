@@ -465,7 +465,7 @@ class Xlsx
                             $dt = new DateTime($value);
                             $dt->setTimezone(new DateTimeZone($timeZone));
 
-                            $value = $dt->format($this->dateTime->getInternalDateTimeFormat());
+                            $value = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
                         }
                         catch (Exception $e) {
                             $value = '';

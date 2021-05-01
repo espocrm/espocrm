@@ -151,36 +151,19 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 personNameFormatList.push('l f m');
             }
 
-            var dateFormatDataList = [
-                {key: "YYYY-MM-DD", label: '2020-12-27'},
-                {key: "DD-MM-YYYY", label: '27-12-2020'},
-                {key: "MM-DD-YYYY", label: '12-27-2020'},
-                {key: "MM/DD/YYYY", label: '12/27/2020'},
-                {key: "DD/MM/YYYY", label: '27/12/2020'},
-                {key: "DD.MM.YYYY", label: '27.12.2020'},
-                {key: "MM.DD.YYYY", label: '12.27.2020'},
-                {key: "YYYY.MM.DD", label: '2020.12.27'},
-            ];
-            var timeFormatDataList = [
-                {key: "HH:mm:ss", label: '23:00:00'},
-                {key: "HH:mm", label: '23:00'},
-                {key: "hh:mm a", label: '11:00 pm'},
-                {key: "hh:mma", label: '11:00pm'},
-                {key: "hh:mm A", label: '11:00 PM'},
-                {key: "hh:mmA", label: '11:00PM'},
-                {key: "hh:mm:ss a", label: '11:00:00 pm'},
-                {key: "hh:mm:ssa", label: '11:00:00pm'},
-                {key: "hh:mm:ss A", label: '11:00:00 PM'},
-                {key: "hh:mm:ssA", label: '11:00:00PM'},
-            ];
+            var dateFormatDataList = this.getDateFormatDataList();
+
+            var timeFormatDataList = this.getTimeFormatDataList();
 
             var dateFormatList = [];
+
             dateFormatDataList.forEach(function (item) {
                 dateFormatList.push(item.key);
             }, this);
 
             var timeFormatList = [];
             var timeFormatOptions = {};
+
             timeFormatDataList.forEach(function (item) {
                 timeFormatList.push(item.key);
                 timeFormatOptions[item.key] = item.label;
@@ -494,7 +477,8 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                     "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
 
                     // Quoted fields.
-                    "(?:"+strQualifier+"([^"+strQualifier+"]*(?:"+strQualifier+""+strQualifier+"[^"+strQualifier+"]*)*)"+strQualifier+"|" +
+                    "(?:"+strQualifier+"([^"+strQualifier+"]*(?:"+strQualifier+""+strQualifier+
+                        "[^"+strQualifier+"]*)*)"+strQualifier+"|" +
 
                     // Standard fields.
                     "([^"+strQualifier+"\\" + strDelimiter + "\\r\\n]*))"
@@ -574,6 +558,56 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
 
         showField: function (name) {
             this.$el.find('.field[data-name="'+name+'"]').parent().removeClass('hidden-cell');
+        },
+
+        convertFormatToLabel: function (format) {
+            var formatItemLabelMap = {
+                'YYYY': '2021',
+                'DD': '27',
+                'MM': '12',
+                'HH': '23',
+                'mm': '00',
+                'hh': '11',
+                'ss': '00',
+                'a': 'pm',
+                'A': 'PM',
+            };
+
+            var label = format;
+
+            for (let item in formatItemLabelMap) {
+                var value = formatItemLabelMap[item];
+
+                label = label.replaceAll(item, value);
+            }
+
+            return label;
+        },
+
+        getDateFormatDataList: function () {
+            var dateFormatList = this.getMetadata().get(['clientDefs', 'Import', 'dateFormatList']) || [];
+
+            return dateFormatList.map(
+                function (item) {
+                    return {
+                        key: item,
+                        label: this.convertFormatToLabel(item),
+                    };
+                }.bind(this)
+            );
+        },
+
+        getTimeFormatDataList: function () {
+            var timeFormatList = this.getMetadata().get(['clientDefs', 'Import', 'timeFormatList']) || [];
+
+            return timeFormatList.map(
+                function (item) {
+                    return {
+                        key: item,
+                        label: this.convertFormatToLabel(item),
+                    };
+                }.bind(this)
+            );
         },
 
     });

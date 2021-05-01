@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,19 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions\DatetimeGroup;
+define('views/settings/fields/time-format', 'views/fields/enum', function (Dep) {
 
-use Espo\Core\Utils\DateTime;
+    return Dep.extend({
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+        setupOptions: function () {
+            this.params.options = this.getMetadata().get(['app', 'dateTime', 'timeFormatList']) || [];
+        },
 
-class TodayType extends BaseFunction
-{
-    public function process(ArgumentList $args)
-    {
-        return DateTime::getSystemTodayString();
-    }
-}
+    });
+});

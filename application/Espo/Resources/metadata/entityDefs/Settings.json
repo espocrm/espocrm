@@ -28,13 +28,13 @@
         },
         "dateFormat": {
             "type": "enum",
-            "options": ["DD.MM.YYYY", "MM/DD/YYYY", "DD/MM/YYYY", "YYYY-MM-DD"],
-            "default": "DD.MM.YYYY"
+            "default": "DD.MM.YYYY",
+            "view": "views/settings/fields/date-format"
         },
         "timeFormat": {
             "type": "enum",
-            "options": ["HH:mm", "hh:mma", "hh:mmA", "hh:mm A", "hh:mm a"],
-            "default": "HH:mm"
+            "default": "HH:mm",
+            "view": "views/settings/fields/time-format"
         },
         "weekStart": {
             "type": "enumInt",

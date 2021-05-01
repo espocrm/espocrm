@@ -45,37 +45,13 @@ class DateTime
 
     public const SYSTEM_DATE_FORMAT = 'Y-m-d';
 
-    protected $dateFormat;
+    private $dateFormat;
 
-    protected $timeFormat;
+    private $timeFormat;
 
-    protected $timezone;
+    private $timezone;
 
-    protected $langauge;
-
-    /** @deprecated */
-    public static $systemDateTimeFormat = self::SYSTEM_DATE_TIME_FORMAT;
-
-    /** @deprecated */
-    public static $systemDateFormat = self::SYSTEM_DATE_FORMAT;
-
-    protected $internalDateTimeFormat = self::SYSTEM_DATE_TIME_FORMAT;
-
-    protected $internalDateFormat = self::SYSTEM_DATE_FORMAT;
-
-    protected $dateFormats = [
-        'MM/DD/YYYY' => 'm/d/Y',
-        'YYYY-MM-DD' => 'Y-m-d',
-        'DD.MM.YYYY' => 'd.m.Y',
-        'DD/MM/YYYY' => 'd/m/Y',
-    ];
-
-    protected $timeFormats = [
-        'HH:mm' => 'H:i',
-        'hh:mm A' => 'h:i A',
-        'hh:mm a' => 'h:ia',
-        'hh:mmA' => 'h:iA',
-    ];
+    private $language;
 
     public function __construct(
         ?string $dateFormat = 'YYYY-MM-DD',
@@ -89,48 +65,67 @@ class DateTime
         $this->language = $language ?? 'en_US';
     }
 
+    /**
+     * Get a default date format.
+     */
     public function getDateFormat(): string
     {
         return $this->dateFormat;
     }
 
+    /**
+     * Get a default date-time format.
+     */
     public function getDateTimeFormat(): string
     {
         return $this->dateFormat . ' ' . $this->timeFormat;
     }
 
+    /**
+     * @deprecated Use `SYSTEM_DATE_TIME_FORMAT constant`.
+     */
     public function getInternalDateTimeFormat(): string
     {
-        return $this->internalDateTimeFormat;
+        return self::SYSTEM_DATE_TIME_FORMAT;
     }
 
+    /**
+     * @deprecated Use `SYSTEM_DATE_FORMAT constant`.
+     */
     public function getInternalDateFormat(): string
     {
-        return $this->internalDateFormat;
+        return self::SYSTEM_DATE_FORMAT;
     }
 
-    protected function getPhpDateFormat(): string
-    {
-        return $this->dateFormats[$this->dateFormat];
-    }
-
-    protected function getPhpDateTimeFormat(): string
-    {
-        return $this->dateFormats[$this->dateFormat] . ' ' . $this->timeFormats[$this->timeFormat];
-    }
-
+    /**
+     * @deprecated Use `convertSystemDate`.
+     */
     public function convertSystemDateToGlobal($string): ?string
     {
         return $this->convertSystemDate($string);
     }
 
+    /**
+     * @deprecated Use `convertSystemDateTime`.
+     */
     public function convertSystemDateTimeToGlobal(string $string): ?string
     {
         return $this->convertSystemDateTime($string);
     }
 
-    public function convertSystemDate(string $string, ?string $format = null, ?string $language = null): ?string
-    {
+    /**
+     * Convert a system date.
+     *
+     * @param string $string A system date.
+     * @param string|null $format A target format. If not specified then the default format will be used.
+     * @param string|null $language A language. If not specified then the default language will be used.
+     */
+    public function convertSystemDate(
+        string $string,
+        ?string $format = null,
+        ?string $language = null
+    ): ?string {
+
         $dateTime = DateTimeStd::createFromFormat('Y-m-d', $string);
 
         if ($dateTime) {
@@ -144,6 +139,14 @@ class DateTime
         return null;
     }
 
+    /**
+     * Convert a system date-time.
+     *
+     * @param string $string A system date-time.
+     * @param string $timezone A target timezone. If not specified then the default timezone will be used.
+     * @param string|null $format A target format. If not specified then the default format will be used.
+     * @param string|null $language A language. If not specified then the default language will be used.
+     */
     public function convertSystemDateTime(
         string $string,
         ?string $timezone = null,
@@ -182,16 +185,6 @@ class DateTime
         $this->timezone = new DateTimeZone($timezone);
     }
 
-    public function getInternalNowString(): string
-    {
-        return date($this->getInternalDateTimeFormat());
-    }
-
-    public function getInternalTodayString(): string
-    {
-        return date($this->getInternalDateFormat());
-    }
-
     public function getTodayString(?string $timezone = null, ?string $format = null): string
     {
         if ($timezone) {
@@ -204,34 +197,26 @@ class DateTime
 
         $dateTime->setTimezone($tz);
 
-        $format = $format ?? $this->getDateFormat();
-
         $carbon = Carbon::instance($dateTime);
 
         $carbon->locale($this->language);
 
-        return $carbon->isoFormat($format);
+        return $carbon->isoFormat($format ?? $this->getDateFormat());
     }
 
     public function getNowString(?string $timezone = null, ?string $format = null): string
     {
-        if ($timezone) {
-            $tz = new DateTimeZone($timezone);
-        } else {
-            $tz = $this->timezone;
-        }
+        $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
 
         $dateTime = new DateTimeStd();
 
         $dateTime->setTimezone($tz);
 
-        $format = $format ?? $this->getDateTimeFormat();
-
         $carbon = Carbon::instance($dateTime);
 
         $carbon->locale($this->language);
 
-        return $carbon->isoFormat($format);
+        return $carbon->isoFormat($format ?? $this->getDateTimeFormat());
     }
 
     public static function isAfterThreshold($value, string $period): bool
@@ -265,5 +250,31 @@ class DateTime
     public static function getSystemNowString(): string
     {
         return date(self::SYSTEM_DATE_TIME_FORMAT);
+    }
+
+    public static function getSystemTodayString(): string
+    {
+        return date(self::SYSTEM_DATE_FORMAT);
+    }
+
+    public static function convertFormatToSystem(string $format): string
+    {
+        $map = [
+            'MM' => 'm',
+            'DD' => 'd',
+            'YYYY' => 'Y',
+            'HH' => 'H',
+            'mm' => 'i',
+            'hh' => 'h',
+            'A' => 'A',
+            'a' => 'a',
+            'ss' => 's',
+        ];
+
+        return str_replace(
+            array_keys($map),
+            array_values($map),
+            $format
+        );
     }
 }

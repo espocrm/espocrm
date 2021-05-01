@@ -38,6 +38,7 @@ use Espo\Core\{
     Utils\Config,
     FileStorage\Manager as FileStorageManager,
     Record\ServiceContainer as RecordServiceContainer,
+    Utils\DateTime as DateTimeUtil,
 };
 
 use Espo\{
@@ -52,26 +53,6 @@ use Exception;
 
 class Import
 {
-    protected $dateFormatsMap = [
-        'YYYY-MM-DD' => 'Y-m-d',
-        'DD-MM-YYYY' => 'd-m-Y',
-        'MM-DD-YYYY' => 'm-d-Y',
-        'MM/DD/YYYY' => 'm/d/Y',
-        'DD/MM/YYYY' => 'd/m/Y',
-        'DD.MM.YYYY' => 'd.m.Y',
-        'MM.DD.YYYY' => 'm.d.Y',
-        'YYYY.MM.DD' => 'Y.m.d',
-    ];
-
-    protected $timeFormatsMap = [
-        'HH:mm' => 'H:i',
-        'HH:mm:ss' => 'H:i:s',
-        'hh:mm a' => 'h:i a',
-        'hh:mma' => 'h:ia',
-        'hh:mm A' => 'h:iA',
-        'hh:mmA' => 'h:iA',
-    ];
-
     protected $attributeList = [];
 
     protected $params = [];
@@ -844,17 +825,13 @@ class Import
         $dateFormat = 'Y-m-d';
 
         if (!empty($params['dateFormat'])) {
-            if (!empty($this->dateFormatsMap[$params['dateFormat']])) {
-                $dateFormat = $this->dateFormatsMap[$params['dateFormat']];
-            }
+            $dateFormat = DateTimeUtil::convertFormatToSystem($params['dateFormat']);
         }
 
         $timeFormat = 'H:i';
 
         if (!empty($params['timeFormat'])) {
-            if (!empty($this->timeFormatsMap[$params['timeFormat']])) {
-                $timeFormat = $this->timeFormatsMap[$params['timeFormat']];
-            }
+            $timeFormat = DateTimeUtil::convertFormatToSystem($params['timeFormat']);
         }
 
         $type = $entity->getAttributeType($attribute);
@@ -871,10 +848,12 @@ class Import
 
             case Entity::DATETIME:
                 $timezone = new DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
+
                 $dt = DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
 
                 if ($dt) {
-                    $dt->setTimezone(new \DateTimeZone('UTC'));
+                    $dt->setTimezone(new DateTimeZone('UTC'));
+
                     return $dt->format('Y-m-d H:i:s');
                 }
 

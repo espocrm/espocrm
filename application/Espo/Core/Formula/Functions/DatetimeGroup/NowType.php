@@ -29,19 +29,17 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-use Espo\Core\Di;
+use Espo\Core\Utils\DateTime;
 
 use Espo\Core\Formula\{
     Functions\BaseFunction,
     ArgumentList,
 };
 
-class NowType extends BaseFunction implements Di\DateTimeAware
+class NowType extends BaseFunction
 {
-    use Di\DateTimeSetter;
-
     public function process(ArgumentList $args)
     {
-        return $this->dateTime->getInternalNowString();
+        return DateTime::getSystemNowString();
     }
 }
