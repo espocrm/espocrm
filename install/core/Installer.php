@@ -29,6 +29,7 @@
 
 use Espo\Core\{
     Application,
+    Container,
     Utils\Util,
     Utils\Config\ConfigFileManager,
     Utils\Config,
@@ -38,6 +39,10 @@ use Espo\Core\{
     Utils\Database\Helper as DatabaseHelper,
     Utils\PasswordHash,
     Utils\SystemRequirements,
+    Utils\Metadata,
+    Utils\File\Manager as FileManager,
+    Utils\Language,
+    ORM\EntityManager,
 };
 
 class Installer
@@ -97,7 +102,7 @@ class Installer
         $this->databaseHelper = new DatabaseHelper($this->getConfig());
     }
 
-    protected function initialize()
+    protected function initialize(): void
     {
         $fileManager = new ConfigFileManager();
 
@@ -129,22 +134,27 @@ class Installer
         }
     }
 
-    protected function getContainer()
+    protected function getContainer(): Container
     {
         return $this->app->getContainer();
     }
 
-    protected function getEntityManager()
+    protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
     }
 
-    public function getConfig()
+    public function getMetadata(): Metadata
+    {
+        return $this->app->getContainer()->get('metadata');
+    }
+
+    public function getConfig(): Config
     {
         return $this->app->getContainer()->get('config');
     }
 
-    public function createConfigWriter() : ConfigWriter
+    public function createConfigWriter(): ConfigWriter
     {
         return $this->app->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
     }
@@ -164,12 +174,12 @@ class Installer
         return $this->installerConfig;
     }
 
-    protected function getFileManager()
+    protected function getFileManager(): FileManager
     {
         return $this->app->getContainer()->get('fileManager');
     }
 
-    protected function getPasswordHash()
+    protected function getPasswordHash(): PasswordHash
     {
         if (!isset($this->passwordHash)) {
             $config = $this->getConfig();
@@ -181,7 +191,7 @@ class Installer
         return $this->passwordHash;
     }
 
-    public function getVersion()
+    public function getVersion(): ?string
     {
         return $this->getConfig()->get('version');
     }
@@ -197,7 +207,7 @@ class Installer
         return $this->isAuth;
     }
 
-    public function isInstalled()
+    public function isInstalled(): bool
     {
         $installerConfig = $this->getInstallerConfig();
 
@@ -208,7 +218,7 @@ class Installer
         return $this->app->isInstalled();
     }
 
-    protected function getLanguage()
+    protected function getLanguage(): Language
     {
         if (!isset($this->language)) {
             try {
@@ -226,9 +236,9 @@ class Installer
         return $this->language;
     }
 
-    public function getLanguageList($isTranslated = true)
+    public function getLanguageList($isTranslated = true): array
     {
-        $languageList = $this->app->getContainer()->get('metadata')->get(['app', 'language', 'list']);
+        $languageList = $this->getMetadata()->get(['app', 'language', 'list']);
 
         if ($isTranslated) {
             return $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
@@ -237,9 +247,9 @@ class Installer
         return $languageList;
     }
 
-    protected function getCurrencyList()
+    protected function getCurrencyList(): array
     {
-        return $this->app->getContainer()->get('metadata')->get('app.currency.list');
+        return $this->getMetadata()->get('app.currency.list');
     }
 
     public function getInstallerConfigData()
@@ -254,15 +264,13 @@ class Installer
          return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
     }
 
-    public function checkDatabaseConnection(array $params, $isCreateDatabase = false)
+    public function checkDatabaseConnection(array $params, bool $createDatabase = false)
     {
-        $databaseHelper = $this->getDatabaseHelper();
-
         try {
             $pdo = $this->getDatabaseHelper()->createPdoConnection($params);
         }
         catch (Exception $e) {
-            if ($isCreateDatabase && $e->getCode() == '1049') {
+            if ($createDatabase && $e->getCode() == '1049') {
                 $modParams = $params;
 
                 unset($modParams['dbname']);
@@ -299,10 +307,12 @@ class Installer
         $initData = include('install/core/afterInstall/config.php');
         $databaseDefaults = $this->app->getContainer()->get('config')->get('database');
 
+        $siteUrl = !empty($saveData['siteUrl']) ? $saveData['siteUrl'] : $this->getSystemHelper()->getBaseUrl();
+
         $data = [
             'database' => array_merge($databaseDefaults, $saveData['database']),
             'language' => $saveData['language'] ?? 'en_US',
-            'siteUrl' => !empty($saveData['siteUrl']) ? $saveData['siteUrl'] : $this->getSystemHelper()->getBaseUrl(),
+            'siteUrl' => $siteUrl,
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
             'hashSecretKey' => Util::generateSecretKey(),
@@ -328,9 +338,9 @@ class Installer
             $data['defaultPermissions']['group'] = $saveData['defaultPermissions']['group'];
         }
 
-        $data = array_merge($data, $initData);
-
-        $result = $this->saveConfig($data);
+        $result = $this->saveConfig(
+            array_merge($data, $initData)
+        );
 
         return $result;
     }
@@ -348,8 +358,6 @@ class Installer
 
     public function buildDatabase()
     {
-        $result = false;
-
         try {
             $this->app->getContainer()->get('dataManager')->rebuild();
 
@@ -364,22 +372,25 @@ class Installer
         return true;
     }
 
-    public function savePreferences($preferences)
+    public function savePreferences(array $rawPreferences)
     {
-        $preferences = $this->normalizeSettingParams($preferences);
+        $preferences = $this->normalizeSettingParams($rawPreferences);
 
         $currencyList = $this->getConfig()->get('currencyList', []);
 
-        if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
-            $preferences['currencyList'] = array($preferences['defaultCurrency']);
+        if (
+            isset($preferences['defaultCurrency']) &&
+            !in_array($preferences['defaultCurrency'], $currencyList)
+        ) {
+            $preferences['currencyList'] = [$preferences['defaultCurrency']];
             $preferences['baseCurrency'] = $preferences['defaultCurrency'];
         }
 
-        $res = $this->saveConfig($preferences);
+        $result = $this->saveConfig($preferences);
 
         $this->saveAdminPreferences($preferences);
 
-        return $res;
+        return $result;
     }
 
     protected function createRecords()
@@ -387,6 +398,7 @@ class Installer
         $records = include('install/core/afterInstall/records.php');
 
         $result = true;
+
         foreach ($records as $entityName => $recordList) {
             foreach ($recordList as $data) {
                 $result &= $this->createRecord($entityName, $data);
@@ -406,13 +418,17 @@ class Installer
                 $pdo = $this->getEntityManager()->getPDO();
 
                 $sql = "SELECT id FROM `".Util::toUnderScore($entityName)."` WHERE `id` = '".$data['id']."'";
+
                 $sth = $pdo->prepare($sql);
                 $sth->execute();
 
                 $deletedEntity = $sth->fetch(\PDO::FETCH_ASSOC);
 
                 if ($deletedEntity) {
-                    $sql = "UPDATE `".Util::toUnderScore($entityName)."` SET deleted = '0' WHERE `id` = '".$data['id']."'";
+                    $sql =
+                        "UPDATE `". Util::toUnderScore($entityName)."` SET deleted = '0' " .
+                        "WHERE `id` = '".$data['id']."'";
+
                     $pdo->prepare($sql)->execute();
 
                     $entity = $this->getEntityManager()->getEntity($entityName, $data['id']);
@@ -422,9 +438,12 @@ class Installer
 
         if (!isset($entity)) {
             if (isset($data['name'])) {
-                $entity = $this->getEntityManager()->getRepository($entityName)->where(array(
-                    'name' => $data['name'],
-                ))->findOne();
+                $entity = $this->getEntityManager()
+                    ->getRepository($entityName)
+                    ->where([
+                        'name' => $data['name'],
+                    ])
+                    ->findOne();
             }
 
             if (!isset($entity)) {
@@ -467,7 +486,7 @@ class Installer
 
     protected function saveAdminPreferences($preferences)
     {
-        $permittedSettingList = array(
+        $permittedSettingList = [
             'dateFormat',
             'timeFormat',
             'timeZone',
@@ -476,7 +495,7 @@ class Installer
             'thousandSeparator',
             'decimalMark',
             'language',
-        );
+        ];
 
         $data = array_intersect_key($preferences, array_flip($permittedSettingList));
 
@@ -535,7 +554,7 @@ class Installer
     {
         if (!$this->defaultSettings) {
 
-            $settingDefs = $this->app->getContainer()->get('metadata')->get('entityDefs.Settings.fields');
+            $settingDefs = $this->getMetadata()->get('entityDefs.Settings.fields');
 
             $defaults = [];
 
@@ -622,10 +641,12 @@ class Installer
     protected function translateSetting($name, array $settingDefs)
     {
         if (isset($settingDefs['options'])) {
-            $optionLabel = $this->getLanguage()->translate($name, 'options', 'Settings', $settingDefs['options']);
+            $optionLabel = $this->getLanguage()
+                ->translate($name, 'options', 'Settings', $settingDefs['options']);
 
             if ($optionLabel == $name) {
-                $optionLabel = $this->getLanguage()->translate($name, 'options', 'Global', $settingDefs['options']);
+                $optionLabel = $this->getLanguage()
+                    ->translate($name, 'options', 'Global', $settingDefs['options']);
             }
 
             if ($optionLabel == $name) {
