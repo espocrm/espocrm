@@ -180,11 +180,6 @@ class DateTime
         return null;
     }
 
-    public function setTimezone(string $timezone): void
-    {
-        $this->timezone = new DateTimeZone($timezone);
-    }
-
     public function getTodayString(?string $timezone = null, ?string $format = null): string
     {
         if ($timezone) {
