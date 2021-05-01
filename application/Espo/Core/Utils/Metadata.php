@@ -42,11 +42,11 @@ use StdClass;
 
 class Metadata
 {
-    protected $data = null;
+    private $data = null;
 
-    protected $objData = null;
+    private $objData = null;
 
-    protected $useCache;
+    private $useCache;
 
     private $objUnifier;
 
@@ -54,13 +54,13 @@ class Metadata
 
     private $metadataHelper;
 
-    protected $pathToModules = 'application/Espo/Modules';
+    private $pathToModules = 'application/Espo/Modules';
 
-    protected $cacheKey = 'metadata';
+    private $cacheKey = 'metadata';
 
-    protected $objCacheKey = 'objMetadata';
+    private $objCacheKey = 'objMetadata';
 
-    protected $paths = [
+    private $paths = [
         'corePath' => 'application/Espo/Resources/metadata',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/metadata',
         'customPath' => 'custom/Espo/Custom/Resources/metadata',
@@ -68,7 +68,7 @@ class Metadata
 
     private $moduleList = null;
 
-    protected $defaultModuleOrder = 10;
+    private $defaultModuleOrder = 10;
 
     private $deletedData = [];
 
@@ -88,7 +88,7 @@ class Metadata
         $this->module = new Module($this->fileManager, $dataCache, $useCache);
     }
 
-    protected function getObjUnifier()
+    private function getObjUnifier(): Unifier
     {
         if (!isset($this->objUnifier)) {
             $this->objUnifier = new Unifier($this->fileManager, $this, true);
@@ -97,7 +97,7 @@ class Metadata
         return $this->objUnifier;
     }
 
-    protected function getMetadataHelper()
+    private function getMetadataHelper(): Helper
     {
         if (!isset($this->metadataHelper)) {
             $this->metadataHelper = new Helper($this);
@@ -109,7 +109,7 @@ class Metadata
     /**
      * Init metadata.
      */
-    public function init(bool $reload = false)
+    public function init(bool $reload = false): void
     {
         if (!$this->useCache) {
             $reload = true;
@@ -137,7 +137,7 @@ class Metadata
      *
      * @return array
      */
-    protected function getData()
+    private function getData(): array
     {
         if (empty($this->data) || !is_array($this->data)) {
             $this->init();
@@ -147,12 +147,12 @@ class Metadata
     }
 
     /**
-    * Get Metadata.
+    * Get metadata by key.
     *
     * @param mixed string|array $key
     * @param mixed $default
     *
-    * @return array
+    * @return mixed
     */
     public function get($key = null, $default = null)
     {
@@ -162,14 +162,14 @@ class Metadata
     }
 
     /**
-    * Get All Metadata context.
+    * Get all metadata.
     *
     * @param $isJSON
     * @param bool $reload
     *
-    * @return json | array
+    * @return json|array
     */
-    public function getAll($isJSON = false, $reload = false)
+    public function getAll(bool $isJSON = false, bool $reload = false)
     {
         if ($reload) {
             $this->init($reload);
@@ -182,7 +182,7 @@ class Metadata
         return $this->data;
     }
 
-    protected function objInit($reload = false)
+    private function objInit(bool $reload = false): void
     {
         if (!$this->useCache) {
             $reload = true;
@@ -202,7 +202,7 @@ class Metadata
         }
     }
 
-    protected function getObjData($reload = false)
+    private function getObjData(bool $reload = false): object
     {
         if (!isset($this->objData) || $reload) {
             $this->objInit($reload);
@@ -212,12 +212,12 @@ class Metadata
     }
 
     /**
-    * Get Metadata with StdClass items.
+    * Get metadata with StdClass items.
     *
     * @param mixed string|array $key
     * @param mixed $default
     *
-    * @return object
+    * @return mixed
     */
     public function getObjects($key = null, $default = null)
     {
@@ -237,7 +237,7 @@ class Metadata
         return $objData;
     }
 
-    public function getAllForFrontend()
+    public function getAllForFrontend(): object
     {
         $data = $this->getAllObjects();
 
@@ -250,7 +250,7 @@ class Metadata
         return $data;
     }
 
-    private function removeDataByPath($row, &$data)
+    private function removeDataByPath($row, &$data): void
     {
         $p = &$data;
         $path = [&$p];
@@ -269,6 +269,7 @@ class Metadata
 
                 return;
             }
+
             if (!property_exists($p, $item)) {
                 break;
             }
@@ -289,14 +290,15 @@ class Metadata
                         break;
                     }
                 }
-            } else {
+            }
+            else {
                 $p = &$p->$item;
                 $path[] = &$p;
             }
         }
     }
 
-    protected function addAdditionalFieldsObj($data)
+    private function addAdditionalFieldsObj($data)
     {
         if (!isset($data->entityDefs)) {
             return $data;
@@ -311,13 +313,15 @@ class Metadata
 
                 if (isset($collectionItem->orderBy)) {
                     $collectionItem->sortBy = $collectionItem->orderBy;
-                } else if (isset($collectionItem->sortBy)) {
+                }
+                else if (isset($collectionItem->sortBy)) {
                     $collectionItem->orderBy = $collectionItem->sortBy;
                 }
 
                 if (isset($collectionItem->order)) {
                      $collectionItem->asc = $collectionItem->order === 'asc' ? true : false;
-                } else if (isset($collectionItem->asc)) {
+                }
+                else if (isset($collectionItem->asc)) {
                     $collectionItem->order = $collectionItem->asc === true ? 'asc' : 'desc';
                 }
             }
@@ -328,7 +332,8 @@ class Metadata
 
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
                 $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList(
-                    $field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList
+                    $field,
+                    Util::objectToArray($fieldDefsItem), $fieldDefinitionList
                 );
 
                 if (!$additionalFields) {
@@ -340,8 +345,10 @@ class Metadata
                         $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(
                             Util::arrayToObject($subFieldParams), $entityDefsItem->fields->$subFieldName
                         );
-                    } else {
-                        $data->entityDefs->$entityType->fields->$subFieldName = Util::arrayToObject($subFieldParams);
+                    }
+                    else {
+                        $data->entityDefs->$entityType->fields->$subFieldName =
+                            Util::arrayToObject($subFieldParams);
                     }
                 }
             }
@@ -426,11 +433,9 @@ class Metadata
     /**
      * Unset some fields and other stuff in metadata.
      *
-     * @param array|string $unsets Ex. `fields.name`.
-     *
-     * @return bool
+     * @param array|string $unsets Example: `fields.name`.
      */
-    public function delete(string $key1, string $key2, $unsets = null)
+    public function delete(string $key1, string $key2, $unsets = null): void
     {
         if (!is_array($unsets)) {
             $unsets = (array) $unsets;
@@ -487,7 +492,7 @@ class Metadata
         $this->data = Util::unsetInArray($this->getData(), $metadataUnsetData, true);
     }
 
-    protected function undelete($key1, $key2, $data)
+    private function undelete($key1, $key2, $data): void
     {
         if (isset($this->deletedData[$key1][$key2])) {
             foreach ($this->deletedData[$key1][$key2] as $unsetIndex => $unsetItem) {
@@ -501,9 +506,9 @@ class Metadata
     }
 
     /**
-     * Clear unsaved changes.
+     * Clear not saved changes.
      */
-    public function clearChanges()
+    public function clearChanges(): void
     {
         $this->changedData = [];
         $this->deletedData = [];
@@ -513,8 +518,6 @@ class Metadata
 
     /**
      * Save changes.
-     *
-     * @return bool
      */
     public function save(): bool
     {
@@ -567,10 +570,7 @@ class Metadata
         return (bool) $result;
     }
 
-    /**
-     * Load modules.
-     */
-    protected function loadModuleList()
+    private function loadModuleList(): void
     {
         $modules = $this->fileManager->getFileList($this->pathToModules, false, '', false);
 
@@ -580,25 +580,30 @@ class Metadata
             foreach ($modules as $moduleName) {
                 if (!empty($moduleName) && !isset($modulesToSort[$moduleName])) {
                     $modulesToSort[$moduleName] = $this->module->get(
-                        $moduleName . '.order', $this->defaultModuleOrder
+                        $moduleName . '.order',
+                        $this->defaultModuleOrder
                     );
                 }
             }
         }
 
         array_multisort(
-            array_values($modulesToSort), SORT_ASC, array_keys($modulesToSort), SORT_ASC, $modulesToSort
+            array_values($modulesToSort),
+            SORT_ASC,
+            array_keys($modulesToSort),
+            SORT_ASC,
+            $modulesToSort
         );
 
         $this->moduleList = array_keys($modulesToSort);
     }
 
     /**
-     * Get Module List.
+     * Get a module list.
      *
-     * @return array
+     * @return string[]
      */
-    public function getModuleList()
+    public function getModuleList(): array
     {
         if (!isset($this->moduleList)) {
             $this->loadModuleList();
@@ -608,23 +613,14 @@ class Metadata
     }
 
     /**
-     * Get module name if it's a custom module or empty string for core entity.
-     *
-     * @param string $scopeName
-     *
-     * @return string
+     * Get a module name a scope belongs to.
      */
-    public function getScopeModuleName(string $scopeName)
+    public function getScopeModuleName(string $scopeName): ?string
     {
-        return $this->get('scopes.' . $scopeName . '.module', false);
+        return $this->get(['scopes', $scopeName, 'module']);
     }
 
-    /**
-     * Clear metadata variables when reload metadata.
-     *
-     * @return void
-     */
-    protected function clearVars()
+    private function clearVars(): void
     {
         $this->data = null;
         $this->moduleList = null;

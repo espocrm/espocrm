@@ -30,7 +30,9 @@
 namespace tests\unit\Espo\Core\Utils;
 
 use tests\unit\ReflectionHelper;
+
 use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Layout;
 
 class LayoutTest extends \PHPUnit\Framework\TestCase
 {
@@ -44,11 +46,16 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['fileManager'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
-        $this->objects['metadata'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
-        $this->objects['user'] = $this->getMockBuilder('\\Espo\\Entities\\User')->disableOriginalConstructor()->getMock();
+        $this->fileManager = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')
+            ->disableOriginalConstructor()->getMock();
 
-        $this->object = new \Espo\Core\Utils\Layout($this->objects['fileManager'], $this->objects['metadata'], $this->objects['user']);
+        $this->metadata = $this->getMockBuilder('Espo\\Core\\Utils\\Metadata')
+            ->disableOriginalConstructor()->getMock();
+
+        $this->user = $this->getMockBuilder('Espo\\Entities\\User')
+            ->disableOriginalConstructor()->getMock();
+
+        $this->object = new Layout($this->fileManager, $this->metadata, $this->user);
 
         $this->reflection = new ReflectionHelper($this->object);
     }
@@ -60,10 +67,10 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
     function testGetLayoutPathCore()
     {
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(1))
             ->method('getScopeModuleName')
-            ->will($this->returnValue(false));
+            ->will($this->returnValue(null));
 
         $this->assertEquals(Util::fixPath('application/Espo/Resources/layouts/User'),
             $this->reflection->invokeMethod('getDirPath', ['User'])
@@ -74,10 +81,9 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-
     function testGetLayoutPathModule()
     {
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(1))
             ->method('getScopeModuleName')
             ->will($this->returnValue('Crm'));
@@ -94,14 +100,17 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
     function testGet()
     {
-        $result = '[{"label":"Overview","rows":[[{"name":"userName"},{"name":"isAdmin"}],[{"name":"name"},{"name":"title"}],[{"name":"defaultTeam"}],[{"name":"emailAddress"},{"name":"phone"}]]}]';
+        $result =
+            '[{"label":"Overview","rows":[[{"name":"userName"}," .' .
+            '"{"name":"isAdmin"}],[{"name":"name"},{"name":"title"}]," .' .
+            '"[{"name":"defaultTeam"}],[{"name":"emailAddress"},{"name":"phone"}]]}]';
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->exactly(1))
             ->method('getScopeModuleName')
-            ->will($this->returnValue(false));
+            ->will($this->returnValue(null));
 
-        $this->objects['fileManager']
+        $this->fileManager
             ->expects($this->exactly(1))
             ->method('getContents')
             ->will($this->returnValue($result));

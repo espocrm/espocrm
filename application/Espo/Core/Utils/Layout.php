@@ -118,16 +118,14 @@ class Layout
 
             $path = $this->paths['corePath'];
 
-            if ($moduleName !== false) {
+            if ($moduleName) {
                 $path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
             }
         }
 
-        $path = Util::concatPath(
+        return Util::concatPath(
             Util::fixPath($path),
             $entityType
         );
-
-        return $path;
     }
 }
