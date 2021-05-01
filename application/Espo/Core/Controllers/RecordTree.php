@@ -37,7 +37,7 @@ use Espo\Core\{
 
 use StdClass;
 
-class RecordTree extends RecordBase
+class RecordTree extends Record
 {
     public static $defaultAction = 'list';
 
