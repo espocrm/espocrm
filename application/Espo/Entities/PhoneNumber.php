@@ -31,7 +31,9 @@ namespace Espo\Entities;
 
 use Espo\Core\Exceptions\Error;
 
-class PhoneNumber extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class PhoneNumber extends Entity
 {
     protected function _setName($value)
     {
@@ -40,6 +42,26 @@ class PhoneNumber extends \Espo\Core\ORM\Entity
         }
 
         $this->setInContainer('name', $value);
+    }
+
+    public function getNumber(): string
+    {
+        return $this->get('name');
+    }
+
+    public function isOptedOut(): bool
+    {
+        return $this->get('optOut');
+    }
+
+    public function isInvalid(): bool
+    {
+        return $this->get('invalid');
+    }
+
+    public function getType(): ?string
+    {
+        return $this->get('type');
     }
 }
 

@@ -19,6 +19,7 @@
     },
     "links": {
         "contacts": "Contacts",
+        "contactsPrimary": "Contacts (primary)",
         "opportunities": "Opportunities",
         "cases": "Cases",
         "documents": "Documents",

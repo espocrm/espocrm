@@ -27,37 +27,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Core\Action\Actions;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Exceptions\BadRequest,
+    Action\Actions\Merge\Merger,
+    Action\Action,
+    Action\Params,
+    Action\Data,
+    Acl,
+    Acl\Table,
+};
 
-use Espo\Core\ORM\Entity;
-
-class EmailAddress extends Entity
+class Merge implements Action
 {
-    protected function _setName($value)
+    private $acl;
+
+    private $merger;
+
+    public function __construct(Acl $acl, Merger $merger)
     {
-        if (empty($value)) {
-            throw new Error("Not valid email address '{$value}'");
+        $this->acl = $acl;
+        $this->merger = $merger;
+    }
+
+    public function process(Params $params, Data $data): void
+    {
+        $entityType = $params->getEntityType();
+
+        if (!$this->acl->checkScope($entityType, Table::ACTION_EDIT)) {
+            throw new Forbidden();
         }
 
-        $this->setInContainer('name', $value);
+        $sourceIdList = $data->get('sourceIdList');
+        $attributes = $data->get('attributes');
 
-        $this->set('lower', strtolower($value));
-    }
+        if (!is_array($sourceIdList)) {
+            throw new BadRequest("No 'sourceIdList'.");
+        }
 
-    public function getAddress(): string
-    {
-        return $this->get('name');
-    }
+        if (!is_object($attributes)) {
+            throw new BadRequest("No 'attributes'.");
+        }
 
-    public function isOptedOut(): bool
-    {
-        return $this->get('optOut');
-    }
-
-    public function isInvalid(): bool
-    {
-        return $this->get('invalid');
+        $this->merger->process($params, $sourceIdList, $attributes);
     }
 }

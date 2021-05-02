@@ -200,30 +200,4 @@ class Record extends RecordBase
 
         return $this->getRecordService()->unfollow($id);
     }
-
-    public function postActionMerge(Request $request): bool
-    {
-        $data = $request->getParsedBody();
-
-        if (
-            empty($data->targetId) ||
-            empty($data->sourceIds) ||
-            !is_array($data->sourceIds) ||
-            !($data->attributes instanceof StdClass)
-        ) {
-            throw new BadRequest();
-        }
-
-        $targetId = $data->targetId;
-        $sourceIds = $data->sourceIds;
-        $attributes = $data->attributes;
-
-        if (!$this->acl->check($this->getEntityType(), 'edit')) {
-            throw new Forbidden("No edit access for {$this->name}.");
-        }
-
-        $this->getRecordService()->merge($targetId, $sourceIds, $attributes);
-
-        return true;
-    }
 }

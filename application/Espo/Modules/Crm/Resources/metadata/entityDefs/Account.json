@@ -243,6 +243,12 @@
                 "isInactive": "contactIsInactive"
             }
         },
+        "contactsPrimary": {
+            "type": "hasMany",
+            "entity": "Contact",
+            "foreign": "account",
+            "layoutRelationshipsDisabled": true
+        },
         "opportunities": {
             "type": "hasMany",
             "entity": "Opportunity",

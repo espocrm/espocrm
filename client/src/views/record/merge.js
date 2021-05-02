@@ -82,7 +82,7 @@ define('views/record/merge', 'view', function (Dep) {
                 var model;
 
                 this.models.forEach(function (m) {
-                    if (m.id == id) {
+                    if (m.id === id) {
                         model = m;
                     }
                 }.bind(this));
@@ -95,14 +95,14 @@ define('views/record/merge', 'view', function (Dep) {
                     var field = el.name;
                     var id = $(el).data('id');
 
-                    if (model.id != id) {
+                    if (model.id !== id) {
                         var fieldType = model.getFieldParam(field, 'type');
                         var fields = self.getFieldManager().getActualAttributeList(fieldType, field);
 
                         var modelFrom;
 
                         self.models.forEach(function (m) {
-                            if (m.id == id) {
+                            if (m.id === id) {
                                 modelFrom = m;
 
                                 return;
@@ -118,29 +118,39 @@ define('views/record/merge', 'view', function (Dep) {
 
                 self.notify('Merging...');
 
-                $.ajax({
-                    url: this.scope + '/action/merge',
-                    type: 'POST',
-                    data: JSON.stringify({
-                        attributes: attributes,
-                        targetId: model.id,
-                        sourceIds: this.models.filter(function (m) {
-                            if (m.id != model.id) {
+                var sourceIdList =
+                    this.models
+                        .filter(function (m) {
+                            if (m.id !== model.id) {
                                 return true;
                             }
-                        }).map(function (m) {
-                            return m.id;
                         })
+                        .map(function (m) {
+                            return m.id;
+                        });
+
+                Espo.Ajax
+                    .postRequest('Action', {
+                        entityType: this.scope,
+                        action: 'merge',
+                        id: model.id,
+                        data: {
+                            sourceIdList: sourceIdList,
+                            attributes: attributes,
+                        },
                     })
-                }).done(function () {
-                    this.notify('Merged', 'success');
+                    .then(function () {
+                        this.notify('Merged', 'success');
 
-                    this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
+                        this.getRouter().navigate(
+                            '#' + this.scope + '/view/' + model.id,
+                            {trigger: true}
+                        );
 
-                    if (this.collection) {
-                        this.collection.fetch();
-                    }
-                }.bind(this));
+                        if (this.collection) {
+                            this.collection.fetch();
+                        }
+                    }.bind(this));
             }
         },
 
