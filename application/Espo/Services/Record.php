@@ -2096,8 +2096,16 @@ class Record implements Crud,
 
     public function getDuplicateAttributes(string $id): StdClass
     {
-        if (empty($id)) {
-            throw new BadRequest("No ID passed.");
+        if (!$id) {
+            throw new BadRequest("No ID.");
+        }
+
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
+            throw new Forbidden("No 'create' access.");
+        }
+
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
+            throw new Forbidden("No 'read' access.");
         }
 
         $entity = $this->getEntity($id);

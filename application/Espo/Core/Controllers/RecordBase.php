@@ -219,7 +219,7 @@ class RecordBase extends Base implements
         $data = $request->getParsedBody();
 
         if ($this->config->get('exportDisabled') && !$this->user->isAdmin()) {
-            throw new Forbidden();
+            throw new Forbidden("Export is disabled.");
         }
 
         $ids = isset($data->ids) ?
@@ -269,14 +269,6 @@ class RecordBase extends Base implements
             throw new BadRequest();
         }
 
-        if (!$this->acl->check($this->name, 'create')) {
-            throw new Forbidden();
-        }
-
-        if (!$this->acl->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
         return $this->getRecordService()->getDuplicateAttributes($id);
     }
 
@@ -289,7 +281,7 @@ class RecordBase extends Base implements
         $id = $request->getParsedBody()->id ?? null;
 
         if (!$id) {
-            throw new Forbidden();
+            throw new BadRequest();
         }
 
         $this->getRecordService()->restoreDeleted($id);
