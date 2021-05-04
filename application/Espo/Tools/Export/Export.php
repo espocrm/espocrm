@@ -39,6 +39,7 @@ use Espo\Core\{
 
 use Espo\{
     ORM\Entity,
+    ORM\Collection,
     Services\Record,
 };
 
@@ -63,6 +64,8 @@ class Export implements
     protected $skipAttributeList = [];
 
     protected $recordService;
+
+    protected $collection = null;
 
     protected $params = [];
 
@@ -101,6 +104,13 @@ class Export implements
         return $this;
     }
 
+    public function setCollection(Collection $collection): self
+    {
+        $this->collection = $collection;
+
+        return $this;
+    }
+
     /**
      * Run export.
      *
@@ -116,7 +126,8 @@ class Export implements
 
         if (array_key_exists('format', $params)) {
             $format = $params['format'];
-        } else {
+        }
+        else {
             $format = 'csv';
         }
 
@@ -132,58 +143,9 @@ class Export implements
 
         $exportObj = $this->injectableFactory->create($className);
 
-        $collection = null;
-
         $exportAllFields = !array_key_exists('fieldList', $params);
 
-        if (array_key_exists('collection', $params)) {
-            $collection = $params['collection'];
-        }
-        else {
-            $selectBuilder = $this->selectBuilderFactory
-                ->create()
-                ->from($this->entityType)
-                ->withStrictAccessControl();
-
-            if (array_key_exists('ids', $params)) {
-                $ids = $params['ids'];
-
-                $queryBuilder = $selectBuilder
-                    ->withDefaultOrder()
-                    ->buildQueryBuilder()
-                    ->where([
-                        'id' => $ids,
-                    ]);
-            }
-            else if (array_key_exists('where', $params)) {
-                $where = $params['where'];
-
-                $searchParams = [];
-
-                $searchParams['where'] = $where;
-
-                if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                    foreach ($params['selectData'] as $k => $v) {
-                        $searchParams[$k] = $v;
-                    }
-                }
-
-                unset($searchParams['select']);
-
-                $queryBuilder = $selectBuilder
-                    ->withSearchParams(SearchParams::fromRaw($searchParams))
-                    ->buildQueryBuilder();
-            }
-            else {
-                throw new BadRequest("Bad export parameters.");
-            }
-
-            $collection = $this->entityManager
-                ->getRepository($this->entityType)
-                ->clone($queryBuilder->build())
-                ->sth()
-                ->find();
-        }
+        $collection = $this->getCollection();
 
         $attributeListToSkip = [
             'deleted',
@@ -209,9 +171,11 @@ class Export implements
                     continue;
                 }
 
-                if ($this->checkAttributeIsAllowedForExport($seed, $attribute)) {
-                    $attributeList[] = $attribute;
+                if (!$this->checkAttributeIsAllowedForExport($seed, $attribute)) {
+                    continue;
                 }
+
+                $attributeList[] = $attribute;
             }
         }
 
@@ -220,7 +184,8 @@ class Export implements
             $fieldList = array_keys($fieldDefs);
 
             array_unshift($fieldList, 'id');
-        } else {
+        }
+        else {
             $fieldList = $params['fieldList'];
         }
 
@@ -236,10 +201,9 @@ class Export implements
             $fieldList = $exportObj->filterFieldList($this->entityType, $fieldList, $exportAllFields);
         }
 
-        $fp = null;
-
         if (is_null($attributeList)) {
             $attributeList = [];
+
             $seed = $this->entityManager->getEntity($this->entityType);
 
             foreach ($seed->getAttributeList() as $attribute) {
@@ -247,9 +211,11 @@ class Export implements
                     continue;
                 }
 
-                if ($this->checkAttributeIsAllowedForExport($seed, $attribute, true)) {
-                    $attributeList[] = $attribute;
+                if (!$this->checkAttributeIsAllowedForExport($seed, $attribute, true)) {
+                    continue;
                 }
+
+                $attributeList[] = $attribute;
             }
 
             foreach ($this->additionalAttributeList as $attribute) {
@@ -330,7 +296,7 @@ class Export implements
 
         $this->entityManager->saveEntity($attachment);
 
-        return $attachment->id;
+        return $attachment->getId();
     }
 
     protected function getAttributeFromEntity(Entity $entity, string $attribute)
@@ -444,5 +410,58 @@ class Export implements
         }
 
         return true;
+    }
+
+    private function getCollection(): Collection
+    {
+        if ($this->collection) {
+            return $this->collection;
+        }
+
+        $params = $this->params;
+
+        $selectBuilder = $this->selectBuilderFactory
+            ->create()
+            ->from($this->entityType)
+            ->withStrictAccessControl();
+
+        if (array_key_exists('ids', $params)) {
+            $ids = $params['ids'];
+
+            $queryBuilder = $selectBuilder
+                ->withDefaultOrder()
+                ->buildQueryBuilder()
+                ->where([
+                    'id' => $ids,
+                ]);
+        }
+        else if (array_key_exists('where', $params)) {
+            $where = $params['where'];
+
+            $searchParams = [];
+
+            $searchParams['where'] = $where;
+
+            $selectData = $params['selectData'] ?? [];
+
+            foreach ($selectData as $k => $v) {
+                $searchParams[$k] = $v;
+            }
+
+            unset($searchParams['select']);
+
+            $queryBuilder = $selectBuilder
+                ->withSearchParams(SearchParams::fromRaw($searchParams))
+                ->buildQueryBuilder();
+        }
+        else {
+            throw new BadRequest("Bad export parameters.");
+        }
+
+        return $this->entityManager
+            ->getRepository($this->entityType)
+            ->clone($queryBuilder->build())
+            ->sth()
+            ->find();
     }
 }

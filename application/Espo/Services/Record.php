@@ -451,7 +451,7 @@ class Record implements Crud,
         $this->loadAdditionalFields($entity);
 
         if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent("No read access.");
+            throw new ForbiddenSilent("No 'read' access.");
         }
 
         $this->prepareEntityForOutput($entity);
@@ -2003,9 +2003,24 @@ class Record implements Crud,
      */
     public function exportCollection(array $params, Collection $collection): string
     {
-        $params['collection'] = $collection;
+        if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
+            throw new ForbiddenSilent("No 'export' permission.");
+        }
 
-        return $this->export($params);
+        if (!$this->acl->check($this->getEntityType(), AclTable::ACTION_READ)) {
+            throw new ForbiddenSilent("No 'read' access.");
+        }
+
+        $export = $this->injectableFactory->create(ExportTool::class);
+
+        return $export
+            ->setRecordService($this)
+            ->setParams($params)
+            ->setCollection($collection)
+            ->setEntityType($this->getEntityType())
+            ->setAdditionalAttributeList($this->exportAdditionalAttributeList)
+            ->setSkipAttributeList($this->exportSkipAttributeList)
+            ->run();
     }
 
     /**
@@ -2016,6 +2031,14 @@ class Record implements Crud,
      */
     public function export(array $params): string
     {
+        if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
+            throw new ForbiddenSilent("No 'export' permission.");
+        }
+
+        if (!$this->acl->check($this->getEntityType(), AclTable::ACTION_READ)) {
+            throw new ForbiddenSilent("No 'read' access.");
+        }
+
         $export = $this->injectableFactory->create(ExportTool::class);
 
         return $export

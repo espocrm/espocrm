@@ -222,14 +222,6 @@ class RecordBase extends Base implements
             throw new Forbidden();
         }
 
-        if ($this->acl->get('exportPermission') !== 'yes' && !$this->user->isAdmin()) {
-            throw new Forbidden();
-        }
-
-        if (!$this->acl->check($this->name, 'read')) {
-            throw new Forbidden();
-        }
-
         $ids = isset($data->ids) ?
             $data->ids : null;
 
