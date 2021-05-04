@@ -421,10 +421,17 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
         },
 
         addLinkOneOfHtml: function (id, name) {
+            id = Handlebars.Utils.escapeExpression(id);
+            name = this.getHelper().escapeString(name);
+
             var $container = this.$el.find('.link-one-of-container');
+
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
-            $el.html(this.getHelper().escapeString(name) + '&nbsp');
+
+            $el.html(name + '&nbsp');
+
             $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkOneOf"><span class="fas fa-times"></a>');
+
             $container.append($el);
 
             return $el;

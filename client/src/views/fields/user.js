@@ -167,6 +167,9 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
         },
 
         addLinkTeamsHtml: function (id, name) {
+            id = Handlebars.Utils.escapeExpression(id);
+            name = Handlebars.Utils.escapeExpression(name);
+
             var $container = this.$el.find('.link-teams-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
             $el.html(name + '&nbsp');

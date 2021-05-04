@@ -293,6 +293,8 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
         },
 
         getDownloadUrl: function (id) {
+            id = Handlebars.Utils.escapeExpression(id);
+
             var url = this.getBasePath() + '?entryPoint=download&id=' + id;
 
             if (this.getUser().get('portalId')) {
@@ -354,6 +356,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
         getEditPreview: function (name, type, id) {
             name = Handlebars.Utils.escapeExpression(name);
+            id = Handlebars.Utils.escapeExpression(id);
 
             var preview = name;
 
@@ -365,6 +368,8 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
         },
 
         addAttachmentBox: function (name, type, id, link) {
+            id = Handlebars.Utils.escapeExpression(id);
+
             var $attachments = this.$attachments;
 
             var removeLink = '<a href="javascript:" class="remove-attachment pull-right">'+
@@ -609,6 +614,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
         getDetailPreview: function (name, type, id) {
             name = Handlebars.Utils.escapeExpression(name);
+            id = Handlebars.Utils.escapeExpression(id);
 
             var preview = name;
 
@@ -648,6 +654,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
                         continue;
                     }
+
                     var line = '<div class="attachment-block">' +
                         '<span class="fas fa-paperclip text-soft small"></span> ' +
                         '<a href="' + this.getDownloadUrl(id) + '" target="_BLANK">' +
