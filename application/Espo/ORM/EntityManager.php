@@ -371,7 +371,7 @@ class EntityManager
      *
      * @param StdClass|array $data Entity attributes.
      */
-    public function createEntity(string $entityType, $data, array $options = []): Entity
+    public function createEntity(string $entityType, $data = [], array $options = []): Entity
     {
         $entity = $this->getEntity($entityType);
         $entity->set($data);
