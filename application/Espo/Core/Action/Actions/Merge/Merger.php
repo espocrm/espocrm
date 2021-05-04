@@ -250,7 +250,7 @@ class Merger
             ])
             ->where([
                 'type' => ['Post', 'EmailSent', 'EmailReceived'],
-                'parentId' => $sourceEntity->id,
+                'parentId' => $sourceEntity->getId(),
                 'parentType' => $sourceEntity->getEntityType(),
             ])
             ->build();
@@ -284,9 +284,18 @@ class Merger
 
         $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
 
+        $ignoreList = [
+            'emailAddresses',
+            'phoneNumbers',
+        ];
+
         foreach ($entityDefs->getRelationList() as $relationDefs) {
             $name = $relationDefs->getName();
             $type = $relationDefs->getType();
+
+            if (in_array($name, $ignoreList)) {
+                continue;
+            }
 
             $notMergeable = $this->metadata
                 ->get(['entityDefs', $entityType, 'links', $name, 'notMergeable']);
