@@ -79,6 +79,9 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
 
+            id = Handlebars.Utils.escapeExpression(id);
+            name = Handlebars.Utils.escapeExpression(name);
+
             var role = (this.columns[id] || {})[this.columnName] || '';
             var roleHtml = '';
 
@@ -107,7 +110,7 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
             if (this.mode == 'detail') {
                 iconHtml = this.getIconHtml(id);
             }
-            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().escapeString(name) + '</a> ' + roleHtml + '</div>';
+            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + name + '</a> ' + roleHtml + '</div>';
             return lineHtml;
         },
 
@@ -161,6 +164,8 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
         },
 
         getJQSelect: function (id, roleValue) {
+            id = Handlebars.Utils.escapeExpression(id);
+
             var $role = $('<select class="role form-control input-sm pull-right" data-id="'+id+'">');
             this.roleList.forEach(function (role) {
                 var selectedHtml = (role == roleValue) ? 'selected': '';
@@ -178,10 +183,13 @@ define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', fun
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
 
+            id = Handlebars.Utils.escapeExpression(id);
+            name = Handlebars.Utils.escapeExpression(name);
+
             var $container = this.$el.find('.link-container');
             var $el = $('<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">').addClass('link-' + id);
 
-            var nameHtml = '<div>' + this.getHelper().escapeString(name) + '&nbsp;' + '</div>';
+            var nameHtml = '<div>' + name + '&nbsp;' + '</div>';
 
             var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>';
 

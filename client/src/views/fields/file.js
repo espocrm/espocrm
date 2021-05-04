@@ -308,6 +308,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 }
             }
 
+            id = Handlebars.Utils.escapeExpression(id);
+
             var src = this.getBasePath() + '?entryPoint=image&size=' + previewSize + '&id=' + id;
 
             var img = '<img src="' + src + '" class="image-preview">';
@@ -328,6 +330,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
         getEditPreview: function (name, type, id) {
             name = Handlebars.Utils.escapeExpression(name);
+            id = Handlebars.Utils.escapeExpression(id);
+
             var preview = name;
 
             if (~this.previewTypeList.indexOf(type)) {
@@ -369,6 +373,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
         },
 
         getImageUrl: function (id, size) {
+            id = Handlebars.Utils.escapeExpression(id);
+
             var url = this.getBasePath() + '?entryPoint=image&id=' + id;
 
             if (size) {

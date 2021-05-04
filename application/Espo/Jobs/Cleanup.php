@@ -71,7 +71,7 @@ class Cleanup implements Job
 
     protected $entityManager;
 
-    protected $metedata;
+    protected $metadata;
 
     protected $fileManager;
 
