@@ -36,7 +36,7 @@ use InvalidArgumentException;
  */
 class SearchParams
 {
-    private $rawParams;
+    private $rawParams = [];
 
     const ORDER_ASC = 'ASC';
 
@@ -63,7 +63,7 @@ class SearchParams
 
     public function getOrder(): ?string
     {
-        return $this->rawParams['order'];
+        return $this->rawParams['order'] ?? null;
     }
 
     public function getOffset(): ?int
@@ -86,6 +86,10 @@ class SearchParams
         return $this->rawParams['primaryFilter'] ?? null;
     }
 
+    /**
+     *
+     * @return string[]
+     */
     public function getBoolFilterList(): array
     {
         return $this->rawParams['boolFilterList'] ?? [];
@@ -104,6 +108,123 @@ class SearchParams
     public function getMaxTextAttributeLength(): ?int
     {
         return $this->rawParams['maxTextAttributeLength'];
+    }
+
+    /**
+     * @param string[]|null $select
+     */
+    public function withSelect(?array $select): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['select'] = $select;
+
+        return $obj;
+    }
+
+    public function withOrderBy(?string $orderBy): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['orderBy'] = $orderBy;
+
+        return $obj;
+    }
+
+    public function withOrder(?string $order): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['order'] = $order;
+
+        if ($order !== self::ORDER_ASC && $order !== self::ORDER_DESC) {
+            throw new InvalidArgumentException("order value is bad.");
+        }
+
+        return $obj;
+    }
+
+    public function withOffset(?int $offset): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['offset'] = $offset;
+
+        return $obj;
+    }
+
+    public function withMaxSize(?int $maxSize): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['maxSize'] = $maxSize;
+
+        return $obj;
+    }
+
+    public function withTextFilter(?string $filter): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['textFilter'] = $filter;
+
+        return $obj;
+    }
+
+    public function withPrimaryFilter(?string $primaryFilter): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['primaryFilter'] = $primaryFilter;
+
+        return $obj;
+    }
+
+    /**
+     * @param string[] $boolFilterList
+     */
+    public function withBoolFilterList(array $boolFilterList): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['boolFilterList'] = $boolFilterList;
+
+        return $obj;
+    }
+
+    public function withWhere(?array $where): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['where'] = $where;
+
+        return $obj;
+    }
+
+    public function withNoFullTextSearch(bool $value = true): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['noFullTextSearch'] = $value;
+
+        return $obj;
+    }
+
+    public function withMaxTextAttributeLength(?int $value): self
+    {
+        $obj = clone $this;
+
+        $obj->rawParams['maxTextAttributeLength'] = $value;
+
+        return $obj;
+    }
+
+    /**
+     * Create an empty instance.
+     */
+    public static function fromNothing(): self
+    {
+        return new self();
     }
 
     /**

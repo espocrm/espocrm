@@ -37,9 +37,8 @@ use InvalidArgumentException;
 
 class SearchParamsTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
-
     }
 
     public function testFromRaw1()
@@ -294,5 +293,41 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         ];
 
         $this->assertEquals($expected, $actual);
+    }
+
+    public function testCloning(): void
+    {
+        $where = [
+            [
+                'type' => 'isTrue',
+                'attribute' => 't',
+            ],
+        ];
+
+        $params = SearchParams
+            ::fromNothing()
+            ->withBoolFilterList(['a'])
+            ->withMaxSize(10)
+            ->withOffset(0)
+            ->withMaxTextAttributeLength(100)
+            ->withNoFullTextSearch()
+            ->withOrder('DESC')
+            ->withOrderBy('name')
+            ->withPrimaryFilter('test')
+            ->withSelect(['name'])
+            ->withTextFilter('test*')
+            ->withWhere($where);
+
+        $this->assertEquals(['a'], $params->getBoolFilterList());
+        $this->assertEquals(10, $params->getMaxSize());
+        $this->assertEquals(0, $params->getOffset());
+        $this->assertEquals(100, $params->getMaxTextAttributeLength());
+        $this->assertEquals(true, $params->noFullTextSearch());
+        $this->assertEquals('DESC', $params->getOrder());
+        $this->assertEquals('name', $params->getOrderBy());
+        $this->assertEquals('test', $params->getPrimaryFilter());
+        $this->assertEquals(['name'], $params->getSelect());
+        $this->assertEquals('test*', $params->getTextFilter());
+        $this->assertEquals($where, $params->getWhere());
     }
 }
