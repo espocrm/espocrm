@@ -36,7 +36,6 @@ use Espo\Core\Exceptions\{
 };
 
 use Espo\Core\{
-    ORM\EntityManager,
     Record\Collection as RecordCollection,
     Record\ServiceContainer as RecordServiceContainer,
     Record\SearchParamsFetcher,
