@@ -34,7 +34,6 @@ use Espo\Core\{
     Utils\Config,
     Api\Request,
     Select\SearchParams,
-
 };
 
 class SearchParamsFetcher
