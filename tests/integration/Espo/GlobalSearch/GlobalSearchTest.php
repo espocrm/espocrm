@@ -88,6 +88,6 @@ class GlobalSearchTest extends \tests\integration\Core\BaseTestCase
 
         $result = $service->find('1', 0, 10);
 
-        $this->assertEquals(2, count($result['list']));
+        $this->assertEquals(2, count($result->list));
     }
 }
