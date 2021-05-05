@@ -150,6 +150,8 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                 this.searchData.teamIdList.splice(index, 1);
             }
             delete this.searchData.teamNameHash[id];
+
+            this.trigger('change');
         },
 
         addLinkTeams: function (id, name) {
@@ -159,6 +161,8 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                 this.searchData.teamIdList.push(id);
                 this.searchData.teamNameHash[id] = name;
                 this.addLinkTeamsHtml(id, name);
+
+                this.trigger('change');
             }
         },
 

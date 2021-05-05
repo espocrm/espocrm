@@ -438,6 +438,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.searchData.oneOfIdList.splice(index, 1);
             }
             delete this.searchData.oneOfNameHash[id];
+
+            this.trigger('change');
         },
 
         addLinkOneOf: function (id, name) {
@@ -445,6 +447,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 this.searchData.oneOfIdList.push(id);
                 this.searchData.oneOfNameHash[id] = name;
                 this.addLinkOneOfHtml(id, name);
+
+                this.trigger('change');
             }
         },
 
