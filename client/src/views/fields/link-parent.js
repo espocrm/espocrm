@@ -56,6 +56,8 @@ define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
         searchTypeList: ['is', 'isEmpty', 'isNotEmpty'],
 
+        initialSearchIsNotIdle: true,
+
         data: function () {
             var nameValue = this.model.get(this.nameName);
             if (!nameValue && this.model.get(this.idName) && this.model.get(this.typeName)) {
