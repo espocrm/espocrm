@@ -1250,14 +1250,13 @@ class Record implements Crud,
                 ->clone($query)
                 ->count();
         }
-        else {
-            if ($maxSize && count($collection) > $maxSize) {
-                $total = -1;
+        else if ($maxSize && count($collection) > $maxSize) {
+            $total = -1;
 
-                unset($collection[count($collection) - 1]);
-            } else {
-                $total = -2;
-            }
+            unset($collection[count($collection) - 1]);
+        }
+        else {
+            $total = -2;
         }
 
         return new RecordCollection($collection, $total);
@@ -1450,15 +1449,13 @@ class Record implements Crud,
                 ->clone($query)
                 ->count();
         }
-        else {
-            if ($maxSize && count($collection) > $maxSize) {
-                $total = -1;
+        else if ($maxSize && count($collection) > $maxSize) {
+            $total = -1;
 
-                unset($collection[count($collection) - 1]);
-            }
-            else {
-                $total = -2;
-            }
+            unset($collection[count($collection) - 1]);
+        }
+        else {
+            $total = -2;
         }
 
         return new RecordCollection($collection, $total);
