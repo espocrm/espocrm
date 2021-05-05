@@ -54,7 +54,7 @@ class SearchParamsFetcher
         );
     }
 
-    public function fetchRaw(Request $request): array
+    private function fetchRaw(Request $request): array
     {
         $params = [];
 

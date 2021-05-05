@@ -36,6 +36,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
+    Select\SearchParams,
 };
 
 use StdClass;
@@ -266,26 +267,25 @@ class Email extends Record
         return $this->getRecordService()->getFoldersNotReadCounts();
     }
 
-    protected function fetchSearchParamsFromRequest(Request $request): array
+    protected function fetchSearchParamsFromRequest(Request $request): SearchParams
     {
-        $params = parent::fetchSearchParamsFromRequest($request);
+        $searchParams = parent::fetchSearchParamsFromRequest($request);
 
         $folderId = $request->getQueryParam('folderId');
 
-        if ($folderId) {
-            $params['where'] = $params['where'] ?? [];
-
-            $params['where'][] = [
-                'type' => 'inFolder',
-                'attribute' => 'folderId',
-                'value' => $folderId,
-            ];
-
-            // @todo Remove the line.
-            $params['folderId'] = $request->getQueryParam('folderId');
+        if (!$folderId) {
+            return $searchParams;
         }
 
-        return $params;
+        $where = $searchParams->getWhere() ?? [];
+
+        $where[] = [
+            'type' => 'inFolder',
+            'attribute' => 'folderId',
+            'value' => $folderId,
+        ];
+
+        return $searchParams->withWhere($where);
     }
 
     public function postActionMoveToFolder(Request $request)
@@ -295,13 +295,11 @@ class Email extends Record
         if (!empty($data->ids)) {
             $idList = $data->ids;
         }
+        else if (!empty($data->id)) {
+            $idList = [$data->id];
+        }
         else {
-            if (!empty($data->id)) {
-                $idList = [$data->id];
-            }
-            else {
-                throw new BadRequest();
-            }
+            throw new BadRequest();
         }
 
         if (empty($data->folderId)) {

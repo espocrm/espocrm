@@ -46,6 +46,7 @@ use Espo\Core\{
     FieldProcessing\ListLoadProcessor,
     FieldProcessing\LoaderParams as FieldLoaderParams,
     Di,
+    Record\ServiceContainer as RecordServiceContainer,
 };
 
 use Espo\{
@@ -87,12 +88,16 @@ class Activities implements
 
     private $listLoadProcessor;
 
+    private $recordServiceContainer;
+
     public function __construct(
         WhereConverterFactory $whereConverterFactory,
-        ListLoadProcessor $listLoadProcessor
+        ListLoadProcessor $listLoadProcessor,
+        RecordServiceContainer $recordServiceContainer
     ) {
         $this->whereConverterFactory = $whereConverterFactory;
         $this->listLoadProcessor = $listLoadProcessor;
+        $this->recordServiceContainer = $recordServiceContainer;
     }
 
     protected function getPDO()
@@ -142,8 +147,10 @@ class Activities implements
     }
 
     protected function getActivitiesUserMeetingQuery(
-        Entity $entity, array $statusList = []/*, $isHistory = false*//*, $additinalSelectParams = null*/
+        Entity $entity,
+        array $statusList = []
     ) {
+
         $builder = $this->selectBuilderFactory
             ->create()
             ->from('Meeting')
@@ -754,8 +761,8 @@ class Activities implements
         string $scope,
         string $id,
         string $entityType,
-        bool $isHistory = false,
-        array $params = []
+        bool $isHistory,
+        SearchParams $searchParams
     ): RecordCollection {
 
         if (!$this->getAcl()->checkScope($entityType)) {
@@ -781,18 +788,16 @@ class Activities implements
             $statusList = $this->getMetadata()->get(['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']);
         }
 
-        $service = $this->getServiceFactory()->create($entityType);
-
-        if ($entityType === 'Email') {
-            if ($params['orderBy'] ?? null === 'dateStart') {
-                $params['orderBy'] = 'dateSent';
-            }
+        if ($entityType === 'Email' && $searchParams->getOrderBy() === 'dateStart') {
+            $searchParams = $searchParams->withOrderBy('dateSent');
         }
 
-        $service->handleListParams($params);
+        $service = $this->recordServiceContainer->get($entityType);
 
-        $offset = $params['offset'] ?? null;
-        $limit = $params['maxSize'] ?? null;
+        $preparedSearchParams = $service->prepareSearchParams($searchParams);
+
+        $offset = $searchParams->getOffset();
+        $limit = $searchParams->getMaxSize();
 
         $baseQueryList = $this->getActivitiesQuery($entity, $entityType, $statusList);
 
@@ -804,13 +809,11 @@ class Activities implements
 
         $order = null;
 
-        $searchParams = SearchParams::fromRaw($params);
-
         foreach ($baseQueryList as $i => $itemQuery) {
             $itemBuilder = $this->selectBuilderFactory
                 ->create()
                 ->clone($itemQuery)
-                ->withSearchParams($searchParams)
+                ->withSearchParams($preparedSearchParams)
                 ->withComplexExpressionsForbidden()
                 ->withWherePermissionCheck()
                 ->buildQueryBuilder();
@@ -1282,8 +1285,13 @@ class Activities implements
     }
 
     protected function getCalendarQuery(
-        string $scope, string $userId, string $from, string $to, bool $skipAcl = false
+        string $scope,
+        string $userId,
+        string $from,
+        string $to,
+        bool $skipAcl = false
     ): Select {
+
         if ($this->serviceFactory->checkExists($scope)) {
             $service = $this->serviceFactory->create($scope);
 

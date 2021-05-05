@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
+    Select\SearchParams,
 };
 
 use StdClass;
@@ -167,22 +168,24 @@ class User extends Record
         }
     }
 
-    protected function fetchSearchParamsFromRequest(Request $request): array
+    protected function fetchSearchParamsFromRequest(Request $request): SearchParams
     {
-        $params = parent::fetchSearchParamsFromRequest($request);
+        $searchParams = parent::fetchSearchParamsFromRequest($request);
 
         $userType = $request->getQueryParam('userType');
 
-        if ($userType) {
-            $params['where'] = $params['where'] ?? [];
-
-            $params['where'][] = [
-                'type' => 'isOfType',
-                'attribute' => 'id',
-                'value' => $userType,
-            ];
+        if (!$userType) {
+            return $searchParams;
         }
 
-        return $params;
+        $where = $searchParams->getWhere() ?? [];
+
+        $where[] = [
+            'type' => 'isOfType',
+            'attribute' => 'id',
+            'value' => $userType,
+        ];
+
+        return $searchParams->withWhere($where);
     }
 }

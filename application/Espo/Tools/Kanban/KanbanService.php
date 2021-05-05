@@ -36,6 +36,7 @@ use Espo\Core\{
     Utils\Metadata,
     Exceptions\ForbiddenSilent,
     Acl\Table,
+    Select\SearchParams,
 };
 
 use Espo\Entities\User;
@@ -70,7 +71,7 @@ class KanbanService
         $this->orderer = $orderer;
     }
 
-    public function getData(string $entityType, array $searchParams): Result
+    public function getData(string $entityType, SearchParams $searchParams): Result
     {
         $this->processAccessCheck($entityType);
 

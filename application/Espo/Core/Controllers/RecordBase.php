@@ -48,6 +48,7 @@ use Espo\Core\{
     Api\Request,
     Api\Response,
     Record\Crud as CrudService,
+    Select\SearchParams,
     Di,
 };
 
@@ -243,9 +244,9 @@ class RecordBase extends Base implements Di\EntityManagerAware
         return true;
     }
 
-    protected function fetchSearchParamsFromRequest(Request $request): array
+    protected function fetchSearchParamsFromRequest(Request $request): SearchParams
     {
-        return $this->searchParamsFetcher->fetchRaw($request);
+        return $this->searchParamsFetcher->fetch($request);
     }
 
     public function postActionExport(Request $request): StdClass

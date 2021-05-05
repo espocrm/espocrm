@@ -55,7 +55,10 @@ class Kanban
 
     protected $orderDisabled = false;
 
-    protected $searchParams = [];
+    /**
+     * @var SearchParams
+     */
+    protected $searchParams = null;
 
     protected $userId = null;
 
@@ -92,7 +95,7 @@ class Kanban
         return $this;
     }
 
-    public function setSearchParams(array $searchParams): self
+    public function setSearchParams(SearchParams $searchParams): self
     {
         $this->searchParams = $searchParams;
 
@@ -138,25 +141,23 @@ class Kanban
      */
     public function getResult(): Result
     {
-        $params = $this->searchParams;
-
         if (!$this->entityType) {
             throw new Error("Entity type is not specified.");
         }
 
-        $recordService = $this->recordServiceContainer->get($this->entityType);
-
-        $maxSize = 0;
-
-        if ($this->countDisabled) {
-           if (!empty($params['maxSize'])) {
-               $maxSize = $params['maxSize'];
-
-               $params['maxSize'] = $params['maxSize'] + 1;
-           }
+        if (!$this->searchParams) {
+            throw new Error("No search params.");
         }
 
-        $searchParams = SearchParams::fromRaw($params);
+        $searchParams = $this->searchParams;
+
+        $recordService = $this->recordServiceContainer->get($this->entityType);
+
+        $maxSize = $searchParams->getMaxSize();
+
+        if ($this->countDisabled && $maxSize) {
+            $searchParams = $searchParams->withMaxSize($maxSize + 1);
+        }
 
         $query = $this->selectBuilderFactory
             ->create()

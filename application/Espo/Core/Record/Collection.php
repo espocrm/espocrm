@@ -40,6 +40,10 @@ use StdClass;
  */
 class Collection
 {
+    public const TOTAL_HAS_MORE = -1;
+
+    public const TOTAL_HAS_NO_MORE = -2;
+
     private $collection;
 
     private $total;

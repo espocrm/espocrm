@@ -391,15 +391,6 @@ class Record implements Crud,
     }
 
     /**
-     * @deprecated Use `read` method.
-     * @todo Remove in 6.3.
-     */
-    public function readEntity($id)
-    {
-        return $this->read($id);
-    }
-
-    /**
      * Read a record by ID. Access control check is performed.
      *
      * @throws Error
@@ -1043,14 +1034,6 @@ class Record implements Crud,
     }
 
     /**
-     * @deprecated
-     */
-    public function updateEntity($id, $data)
-    {
-        return $this->update($id, $data);
-    }
-
-    /**
      * Update a record.
      *
      * @throws BadRequest
@@ -1130,14 +1113,6 @@ class Record implements Crud,
     {
     }
 
-    /**
-     * @deprecated
-     */
-    public function deleteEntity($id)
-    {
-        return $this->delete($id);
-    }
-
     public function delete(string $id): void
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_DELETE)) {
@@ -1184,65 +1159,45 @@ class Record implements Crud,
     }
 
     /**
-     * @deprecated
-     */
-    public function findEntities($params)
-    {
-        return $this->find($params);
-    }
-
-    /**
      * Find records.
      *
      * @params $params Raw search parameters.
      * @return RecordCollection
      */
-    public function find(array $params): RecordCollection
+    public function find(SearchParams $searchParams): RecordCollection
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent();
         }
 
-        $disableCount = false;
+        $disableCount =
+            $this->listCountQueryDisabled ||
+            $this->metadata->get(['entityDefs', $this->entityType, 'collection', 'countDisabled']);
 
-        if (
-            $this->listCountQueryDisabled
-            ||
-            $this->metadata->get(['entityDefs', $this->entityType, 'collection', 'countDisabled'])
-        ) {
-            $disableCount = true;
+        $maxSize = $searchParams->getMaxSize();
+
+        if ($disableCount && $maxSize) {
+            $searchParams = $searchParams->withMaxSize($maxSize + 1);
         }
 
-        $maxSize = 0;
-
-        if ($disableCount) {
-           if (!empty($params['maxSize'])) {
-               $maxSize = $params['maxSize'];
-
-               $params['maxSize'] = $params['maxSize'] + 1;
-           }
-        }
-
-        $this->handleListParams($params);
-
-        $searchParams = SearchParams::fromRaw($params);
+        $preparedSearchParams = $this->prepareSearchParams($searchParams);
 
         $selectBuilder = $this->selectBuilderFactory->create();
 
         $query = $selectBuilder
             ->from($this->entityType)
             ->withStrictAccessControl()
-            ->withSearchParams($searchParams)
+            ->withSearchParams($preparedSearchParams)
             ->build();
 
         $collection = $this->getRepository()
             ->clone($query)
             ->find();
 
-        foreach ($collection as $e) {
-            $this->loadListAdditionalFields($e, $searchParams);
+        foreach ($collection as $entity) {
+            $this->loadListAdditionalFields($entity, $preparedSearchParams);
 
-            $this->prepareEntityForOutput($e);
+            $this->prepareEntityForOutput($entity);
         }
 
         if (!$disableCount) {
@@ -1251,12 +1206,12 @@ class Record implements Crud,
                 ->count();
         }
         else if ($maxSize && count($collection) > $maxSize) {
-            $total = -1;
+            $total = RecordCollection::TOTAL_HAS_MORE;
 
             unset($collection[count($collection) - 1]);
         }
         else {
-            $total = -2;
+            $total = RecordCollection::TOTAL_HAS_NO_MORE;
         }
 
         return new RecordCollection($collection, $total);
@@ -1315,12 +1270,6 @@ class Record implements Crud,
             self::MAX_SELECT_TEXT_ATTRIBUTE_LENGTH;
     }
 
-    /** @deprecated */
-    public function findLinkedEntities($id, $link, $params)
-    {
-        return $this->findLinked($id, $link, $params);
-    }
-
     /**
      * Find linked records.
      *
@@ -1328,7 +1277,7 @@ class Record implements Crud,
      * @throws Forbidden If no access.
      * @throws Error
      */
-    public function findLinked(string $id, string $link, array $params): RecordCollection
+    public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent("No access.");
@@ -1344,7 +1293,7 @@ class Record implements Crud,
             throw new ForbiddenSilent();
         }
 
-        if (empty($link)) {
+        if (!$link) {
             throw new Error("Empty link.");
         }
 
@@ -1352,14 +1301,8 @@ class Record implements Crud,
 
         $methodName = 'findLinked' . ucfirst($link);
 
-        if ($link !== 'entities' && method_exists($this, $methodName)) {
-            return $this->$methodName($id, $params);
-        }
-
-        $methodName = 'findLinkedEntities' . ucfirst($link);
-
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $params);
+            return $this->$methodName($id, $searchParams);
         }
 
         $foreignEntityType = $this->entityManager
@@ -1380,45 +1323,28 @@ class Record implements Crud,
 
         $recordService = $this->recordServiceContainer->get($foreignEntityType);
 
-        $disableCount = false;
         $disableCountPropertyName = 'findLinked' . ucfirst($link) . 'CountQueryDisabled';
 
-        if (
-            !empty($this->$disableCountPropertyName)
-        ) {
-            $disableCount = true;
+        $disableCount =
+            property_exists($this, $disableCountPropertyName) &&
+            $this->$disableCountPropertyName;
+
+        $maxSize = $searchParams->getMaxSize();
+
+        if ($disableCount && $maxSize) {
+            $searchParams = $searchParams->withMaxSize($maxSize + 1);
         }
 
-        $maxSize = 0;
-
-        if ($disableCount) {
-            if (!empty($params['maxSize'])) {
-                $maxSize = $params['maxSize'];
-                $params['maxSize'] = $params['maxSize'] + 1;
-            }
-        }
-
-        $recordService->handleListParams($params);
-
-        if (isset($params['select'])) {
-            $mandatorySelectAttributeList = $this->linkMandatorySelectAttributeList[$link] ?? [];
-
-            foreach ($mandatorySelectAttributeList as $item) {
-                if (in_array($item, $params['select'])) {
-                    continue;
-                }
-
-                $params['select'][] = $item;
-            }
-        }
-
-        $searchParams = SearchParams::fromRaw($params);
+        $preparedSearchParams = $this->prepareLinkSearchParams(
+            $recordService->prepareSearchParams($searchParams),
+            $link
+        );
 
         $selectBuilder = $this->selectBuilderFactory->create();
 
         $selectBuilder
             ->from($foreignEntityType)
-            ->withSearchParams($searchParams);
+            ->withSearchParams($preparedSearchParams);
 
         if (!$skipAcl) {
             $selectBuilder->withStrictAccessControl();
@@ -1436,10 +1362,10 @@ class Record implements Crud,
             ->clone($query)
             ->find();
 
-        foreach ($collection as $e) {
-            $this->loadListAdditionalFields($e, $searchParams);
+        foreach ($collection as $itemEntity) {
+            $this->loadListAdditionalFields($itemEntity, $preparedSearchParams);
 
-            $recordService->prepareEntityForOutput($e);
+            $recordService->prepareEntityForOutput($itemEntity);
         }
 
         if (!$disableCount) {
@@ -1450,23 +1376,15 @@ class Record implements Crud,
                 ->count();
         }
         else if ($maxSize && count($collection) > $maxSize) {
-            $total = -1;
+            $total = RecordCollection::TOTAL_HAS_MORE;
 
             unset($collection[count($collection) - 1]);
         }
         else {
-            $total = -2;
+            $total = RecordCollection::TOTAL_HAS_NO_MORE;
         }
 
         return new RecordCollection($collection, $total);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function linkEntity($id, $link, $foreignId)
-    {
-        return $this->link($id, $link, $foreignId);
     }
 
     /**
@@ -1538,14 +1456,6 @@ class Record implements Crud,
     }
 
     /**
-     * @deprecated
-     */
-    public function unlinkEntity($id, $link, $foreignId)
-    {
-        return $this->unlink($id, $link, $foreignId);
-    }
-
-    /**
      * Unlink records.
      *
      * @throws BadRequest
@@ -1611,14 +1521,6 @@ class Record implements Crud,
         }
 
         $this->getRepository()->unrelate($entity, $link, $foreignEntity);
-    }
-
-    /**
-     * @deprecated
-     */
-    public function linkEntityMass($id, $link, $where, $selectData = null)
-    {
-        return $this->massLink($id, $link, $where, $selectData);
     }
 
     public function linkFollowers(string $id, string $foreignId): void
@@ -2248,47 +2150,59 @@ class Record implements Crud,
         return $this->fieldUtil->getFieldByTypeList($this->entityType, $type);
     }
 
-    /**
-     * Handle list parameters (passed from front-end).
-     */
-    public function handleListParams(array &$params)
+    public function prepareSearchParams(SearchParams $searchParams): SearchParams
     {
-        $this->handleListParamsSelect($params);
-
-        $params['maxTextAttributeLength'] = $this->getMaxSelectTextAttributeLength();
+        return $this
+            ->prepareSearchParamsSelect($searchParams)
+            ->withMaxTextAttributeLength(
+                $this->getMaxSelectTextAttributeLength()
+            );
     }
 
-    protected function handleListParamsSelect(array &$params)
+    protected function prepareSearchParamsSelect(SearchParams $searchParams): SearchParams
     {
         if ($this->forceSelectAllAttributes) {
-            unset($params['select']);
-
-            return;
+            return $searchParams->withSelect(null);
         }
 
         if ($this->selectAttributeList) {
-            $params['select'] = $this->selectAttributeList;
-
-            return;
+            return $searchParams->withSelect($this->selectAttributeList);
         }
 
-        if (
-            count($this->mandatorySelectAttributeList) &&
-            array_key_exists('select', $params) && is_array($params['select'])
-        ) {
+        if (count($this->mandatorySelectAttributeList) && $searchParams->getSelect() !== null) {
+            $select = array_unique(
+                array_merge(
+                    $searchParams->getSelect(),
+                    $this->mandatorySelectAttributeList
+                )
+            );
 
-            $itemList = $params['select'];
-
-            foreach ($this->mandatorySelectAttributeList as $attribute) {
-                if (in_array($attribute, $itemList)) {
-                    continue;
-                }
-
-                $itemList[] = $attribute;
-            }
-
-            $params['select'] = $itemList;
+            return $searchParams->withSelect($select);
         }
+
+        return $searchParams;
+    }
+
+    protected function prepareLinkSearchParams(SearchParams $searchParams, string $link): SearchParams
+    {
+        if ($searchParams->getSelect() === null) {
+            return $searchParams;
+        }
+
+        $mandatorySelectAttributeList = $this->linkMandatorySelectAttributeList[$link] ?? null;
+
+        if ($mandatorySelectAttributeList === null) {
+            return $searchParams;
+        }
+
+        $select = array_unique(
+            array_merge(
+                $searchParams->getSelect(),
+                $mandatorySelectAttributeList
+            )
+        );
+
+        return $searchParams->withSelect($select);
     }
 
     /**

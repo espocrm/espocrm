@@ -45,6 +45,8 @@ use Espo\Modules\Crm\Services\Activities as Service;
 
 use Espo\Entities\User;
 
+use StdClass;
+
 class Activities
 {
     private const MAX_CALENDAR_RANGE = 123;
@@ -260,7 +262,7 @@ class Activities
         ]);
     }
 
-    public function getActionEntityTypeList(Request $request)
+    public function getActionEntityTypeList(Request $request): StdClass
     {
         $params = $request->getRouteParams();
 
@@ -295,7 +297,7 @@ class Activities
             throw new BadRequest();
         }
 
-        $searchParams = $this->searchParamsFetcher->fetchRaw($request);
+        $searchParams = $this->searchParamsFetcher->fetch($request);
 
         $result = $this->service->findActivitiyEntityType($scope, $id, $entityType, $isHistory, $searchParams);
 

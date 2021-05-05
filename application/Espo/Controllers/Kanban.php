@@ -55,7 +55,7 @@ class Kanban
     {
         $entityType = $request->getRouteParam('entityType');
 
-        $searchParams = $this->searchParamsFetcher->fetchRaw($request);
+        $searchParams = $this->searchParamsFetcher->fetch($request);
 
         $result = $this->service->getData($entityType, $searchParams);
 
