@@ -368,7 +368,7 @@ class Record implements Crud,
             return;
         }
 
-        if ($this->getConfig()->get('actionHistoryDisabled')) {
+        if ($this->config->get('actionHistoryDisabled')) {
             return;
         }
 
@@ -535,7 +535,7 @@ class Record implements Crud,
     protected function getSelectManager($entityType = null)
     {
         if (!$entityType) {
-            $entityType = $this->getEntityType();
+            $entityType = $this->entityType;
         }
 
         return $this->getSelectManagerFactory()->create($entityType);
@@ -980,7 +980,7 @@ class Record implements Crud,
 
             if ($type === 'currency') {
                 if ($entity->get($field) && !$entity->get($field . 'Currency')) {
-                    $entity->set($field . 'Currency', $this->getConfig()->get('defaultCurrency'));
+                    $entity->set($field . 'Currency', $this->config->get('defaultCurrency'));
                 }
             }
         }
@@ -1265,7 +1265,7 @@ class Record implements Crud,
             return $this->maxSelectTextAttributeLength;
         }
 
-        return $this->getConfig()->get('maxSelectTextAttributeLengthForList') ??
+        return $this->config->get('maxSelectTextAttributeLengthForList') ??
             self::MAX_SELECT_TEXT_ATTRIBUTE_LENGTH;
     }
 
@@ -1905,7 +1905,7 @@ class Record implements Crud,
             throw new ForbiddenSilent("No 'export' permission.");
         }
 
-        if (!$this->acl->check($this->getEntityType(), AclTable::ACTION_READ)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent("No 'read' access.");
         }
 
@@ -1915,7 +1915,7 @@ class Record implements Crud,
             ->setRecordService($this)
             ->setParams($params)
             ->setCollection($collection)
-            ->setEntityType($this->getEntityType())
+            ->setEntityType($this->entityType)
             ->setAdditionalAttributeList($this->exportAdditionalAttributeList)
             ->setSkipAttributeList($this->exportSkipAttributeList)
             ->run();
@@ -1933,7 +1933,7 @@ class Record implements Crud,
             throw new ForbiddenSilent("No 'export' permission.");
         }
 
-        if (!$this->acl->check($this->getEntityType(), AclTable::ACTION_READ)) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent("No 'read' access.");
         }
 
@@ -1942,7 +1942,7 @@ class Record implements Crud,
         return $export
             ->setRecordService($this)
             ->setParams($params)
-            ->setEntityType($this->getEntityType())
+            ->setEntityType($this->entityType)
             ->setAdditionalAttributeList($this->exportAdditionalAttributeList)
             ->setSkipAttributeList($this->exportSkipAttributeList)
             ->run();
@@ -2016,7 +2016,7 @@ class Record implements Crud,
 
         unset($attributes->id);
 
-        $fields = $this->metadata->get(['entityDefs', $this->getEntityType(), 'fields'], []);
+        $fields = $this->metadata->get(['entityDefs', $this->entityType, 'fields'], []);
 
         $fieldManager = $this->fieldUtil;
 
