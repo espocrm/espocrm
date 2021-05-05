@@ -1160,9 +1160,6 @@ class Record implements Crud,
 
     /**
      * Find records.
-     *
-     * @params $params Raw search parameters.
-     * @return RecordCollection
      */
     public function find(SearchParams $searchParams): RecordCollection
     {
