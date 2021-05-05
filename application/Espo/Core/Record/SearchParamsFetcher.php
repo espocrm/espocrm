@@ -63,11 +63,11 @@ class SearchParamsFetcher
         $params['maxSize'] = $request->getQueryParam('maxSize');
         $params['offset'] = $request->getQueryParam('offset');
 
-        if ($params['maxSize']) {
+        if (array_key_exists('maxSize', $params)) {
             $params['maxSize'] = intval($params['maxSize']);
         }
 
-        if ($params['offset']) {
+        if (array_key_exists('offset', $params)) {
             $params['offset'] = intval($params['offset']);
         }
 

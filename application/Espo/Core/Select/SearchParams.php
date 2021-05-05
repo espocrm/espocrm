@@ -251,10 +251,11 @@ class SearchParams
 
         $maxTextAttributeLength = $params['maxTextAttributeLength'] ?? null;
 
-        if ($select && !is_array($select)) {
+        if ($select !== null && !is_array($select)) {
             throw new InvalidArgumentException("select should be array.");
         }
-        else if (is_array($select)) {
+
+        if (is_array($select)) {
             foreach ($select as $item) {
                 if (!is_string($item)) {
                     throw new InvalidArgumentException("select has non-string item.");
@@ -262,42 +263,41 @@ class SearchParams
             }
         }
 
-        if ($orderBy && !is_string($orderBy)) {
+        if ($orderBy !== null && !is_string($orderBy)) {
             throw new InvalidArgumentException("orderBy should be string.");
         }
 
-        if ($order && !is_string($order)) {
+        if ($order !== null && !is_string($order)) {
             throw new InvalidArgumentException("order should be string.");
         }
 
         if (!is_array($boolFilterList)) {
             throw new InvalidArgumentException("boolFilterList should be array.");
         }
-        else {
-            foreach ($boolFilterList as $item) {
-                if (!is_string($item)) {
-                    throw new InvalidArgumentException("boolFilterList has non-string item.");
-                }
+
+        foreach ($boolFilterList as $item) {
+            if (!is_string($item)) {
+                throw new InvalidArgumentException("boolFilterList has non-string item.");
             }
         }
 
-        if ($primaryFilter && !is_string($primaryFilter)) {
+        if ($primaryFilter !== null && !is_string($primaryFilter)) {
             throw new InvalidArgumentException("primaryFilter should be string.");
         }
 
-        if ($textFilter && !is_string($textFilter)) {
+        if ($textFilter !== null && !is_string($textFilter)) {
             throw new InvalidArgumentException("textFilter should be string.");
         }
 
-        if ($where && !is_array($where)) {
+        if ($where !== null && !is_array($where)) {
             throw new InvalidArgumentException("where should be array.");
         }
 
-        if ($offset && !is_int($offset)) {
+        if ($offset !== null && !is_int($offset)) {
             throw new InvalidArgumentException("offset should be int.");
         }
 
-        if ($maxSize && !is_int($maxSize)) {
+        if ($maxSize !== null && !is_int($maxSize)) {
             throw new InvalidArgumentException("maxSize should be int.");
         }
 
