@@ -37,38 +37,81 @@ use Espo\Core\Exceptions\{
 
 use Espo\Core\{
     ORM\EntityManager,
-    Utils\ControllerUtil,
     Record\Collection as RecordCollection,
     Record\ServiceContainer as RecordServiceContainer,
+    Record\SearchParamsFetcher,
+    Container,
+    Acl,
+    AclManager,
+    Utils\Config,
+    Utils\Metadata,
+    ServiceFactory,
     Api\Request,
     Api\Response,
     Record\Crud as CrudService,
     Di,
 };
 
+
+use Espo\Entities\{
+    User,
+    Preferences,
+};
+
 use StdClass;
 
-class RecordBase extends Base implements
-
-    Di\EntityManagerAware,
-    Di\RecordServiceContainerAware
+class RecordBase extends Base implements Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;
-    use Di\RecordServiceContainerSetter;
 
     protected const MAX_SIZE_LIMIT = 200;
 
     public static $defaultAction = 'list';
 
+    protected $recordServiceContainer;
+
+    protected $searchParamsFetcher;
+
+    protected $config;
+
+    protected $user;
+
+    protected $acl;
+
     /**
-     * @var EntityManager
+     * @deprecated
      */
     protected $entityManager;
 
-    /**
-     * @var RecordServiceContainer
-     */
-    protected $recordServiceContainer;
+    public function __construct(
+        SearchParamsFetcher $searchParamsFetcher,
+        RecordServiceContainer $recordServiceContainer,
+        Config $config,
+        User $user,
+        Acl $acl,
+        Container $container, // for backward compatibility
+        AclManager $aclManager, // for backward compatibility
+        Preferences $preferences, // for backward compatibility
+        Metadata $metadata, // for backward compatibility
+        ServiceFactory $serviceFactory // for backward compatibility
+    ) {
+        $this->searchParamsFetcher = $searchParamsFetcher;
+        $this->recordServiceContainer = $recordServiceContainer;
+        $this->config = $config;
+        $this->user = $user;
+        $this->acl = $acl;
+
+        parent::__construct(
+            $container,
+            $user,
+            $acl,
+            $aclManager,
+            $config,
+            $preferences,
+            $metadata,
+            $serviceFactory
+        );
+    }
 
     protected function getEntityType(): string
     {
@@ -152,21 +195,9 @@ class RecordBase extends Base implements
             return (object) $this->actionList($request->getRouteParams(), $request->getParsedBody(), $request);
         }
 
-        $listParams = $this->fetchSearchParamsFromRequest($request);
+        $searchParams = $this->fetchSearchParamsFromRequest($request);
 
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($listParams['maxSize'])) {
-            $listParams['maxSize'] = $maxSizeLimit;
-        }
-
-        if (!empty($listParams['maxSize']) && $listParams['maxSize'] > $maxSizeLimit) {
-            throw new Forbidden(
-                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
-            );
-        }
-
-        $result = $this->getRecordService()->find($listParams);
+        $result = $this->getRecordService()->find($searchParams);
 
         if ($result instanceof RecordCollection) {
             return (object) [
@@ -211,7 +242,7 @@ class RecordBase extends Base implements
 
     protected function fetchSearchParamsFromRequest(Request $request): array
     {
-        return ControllerUtil::fetchSearchParamsFromRequest($request);
+        return $this->searchParamsFetcher->fetchRaw($request);
     }
 
     public function postActionExport(Request $request): StdClass

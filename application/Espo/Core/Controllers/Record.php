@@ -51,21 +51,9 @@ class Record extends RecordBase
         $id = $request->getRouteParam('id');
         $link = $request->getRouteParam('link');
 
-        $listParams = $this->fetchSearchParamsFromRequest($request);
+        $searchParams = $this->fetchSearchParamsFromRequest($request);
 
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($listParams['maxSize'])) {
-            $listParams['maxSize'] = $maxSizeLimit;
-        }
-
-        if (!empty($listParams['maxSize']) && $listParams['maxSize'] > $maxSizeLimit) {
-            throw new Forbidden(
-                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
-            );
-        }
-
-        $result = $this->getRecordService()->findLinked($id, $link, $listParams);
+        $result = $this->getRecordService()->findLinked($id, $link, $searchParams);
 
         if ($result instanceof RecordCollection) {
             return (object) [

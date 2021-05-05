@@ -31,8 +31,8 @@ namespace Espo\Controllers;
 
 use Espo\Core\{
     Api\Request,
-    Utils\ControllerUtil,
     Exceptions\BadRequest,
+    Record\SearchParamsFetcher,
 };
 
 use Espo\Tools\Kanban\KanbanService;
@@ -43,16 +43,19 @@ class Kanban
 {
     private $service;
 
-    public function __construct(KanbanService $service)
+    private $searchParamsFetcher;
+
+    public function __construct(KanbanService $service, SearchParamsFetcher $searchParamsFetcher)
     {
         $this->service = $service;
+        $this->searchParamsFetcher = $searchParamsFetcher;
     }
 
     public function getActionGetData(Request $request): StdClass
     {
         $entityType = $request->getRouteParam('entityType');
 
-        $searchParams = ControllerUtil::fetchSearchParamsFromRequest($request);
+        $searchParams = $this->searchParamsFetcher->fetchRaw($request);
 
         $result = $this->service->getData($entityType, $searchParams);
 

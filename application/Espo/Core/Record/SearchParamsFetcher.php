@@ -27,13 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Core\Record;
 
-use Espo\Core\Api\Request;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Utils\Config,
+    Api\Request,
+    Select\SearchParams,
 
-class ControllerUtil
+};
+
+class SearchParamsFetcher
 {
-    public static function fetchSearchParamsFromRequest(Request $request): array
+    private const MAX_SIZE_LIMIT = 200;
+
+    private $config;
+
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
+    public function fetch(Request $request): SearchParams
+    {
+        return SearchParams::fromRaw(
+            $this->fetchRaw($request)
+        );
+    }
+
+    public function fetchRaw(Request $request): array
     {
         $params = [];
 
@@ -53,6 +75,7 @@ class ControllerUtil
             $params['orderBy'] = $request->getQueryParam('orderBy');
         }
         else if ($request->getQueryParam('sortBy')) {
+            // legacy
             $params['orderBy'] = $request->getQueryParam('sortBy');
         }
 
@@ -60,6 +83,7 @@ class ControllerUtil
             $params['order'] = $request->getQueryParam('order');
         }
         else if ($request->getQueryParam('asc')) {
+            // legacy
             $params['order'] = $request->getQueryParam('asc') === 'true' ? 'asc' : 'desc';
         }
 
@@ -87,6 +111,25 @@ class ControllerUtil
             $params['select'] = explode(',', $request->getQueryParam('select'));
         }
 
+        $this->handleMaxSize($params);
+
         return $params;
+    }
+
+    private function handleMaxSize(array &$params): void
+    {
+        $value = $params['maxSize'];
+
+        $limit = $this->config->get('recordListMaxSizeLimit') ?? self::MAX_SIZE_LIMIT;
+
+        if ($value === null) {
+            $params['maxSize'] = $limit;
+        }
+
+        if ($value > $limit) {
+            throw new Forbidden(
+                "Max size should not exceed " . $limit . ". Use offset and limit."
+            );
+        }
     }
 }

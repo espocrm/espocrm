@@ -29,20 +29,49 @@
 
 namespace Espo\Modules\Crm\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\{
+    Forbidden,
+    BadRequest,
+};
 
 use Espo\Core\{
     Api\Request,
-    Controllers\Base,
-    Utils\ControllerUtil,
+    Acl,
+    Utils\Config,
+    Record\SearchParamsFetcher,
 };
 
-class Activities extends Base
-{
-    protected $maxCalendarRange = 123;
+use Espo\Modules\Crm\Services\Activities as Service;
 
-    const MAX_SIZE_LIMIT = 200;
+use Espo\Entities\User;
+
+class Activities
+{
+    private const MAX_CALENDAR_RANGE = 123;
+
+    private $user;
+
+    private $acl;
+
+    private $config;
+
+    private $searchParamsFetcher;
+
+    private $service;
+
+    public function __construct(
+        User $user,
+        Acl $acl,
+        Config $config,
+        SearchParamsFetcher $searchParamsFetcher,
+        Service $service
+    ) {
+        $this->user = $user;
+        $this->acl = $acl;
+        $this->config = $config;
+        $this->searchParamsFetcher = $searchParamsFetcher;
+        $this->service = $service;
+    }
 
     public function getActionListCalendarEvents(Request $request)
     {
@@ -57,11 +86,9 @@ class Activities extends Base
             throw new BadRequest();
         }
 
-        if (strtotime($to) - strtotime($from) > $this->maxCalendarRange * 24 * 3600) {
+        if (strtotime($to) - strtotime($from) > self::MAX_CALENDAR_RANGE * 24 * 3600) {
             throw new Forbidden('Too long range.');
         }
-
-        $service = $this->getService('Activities');
 
         $scopeList = null;
 
@@ -76,21 +103,21 @@ class Activities extends Base
         if ($teamIdList) {
             $teamIdList = explode(',', $teamIdList);
 
-            return $userResultList = $service->getTeamsEventList($teamIdList, $from, $to, $scopeList);
+            return $userResultList = $this->service->getTeamsEventList($teamIdList, $from, $to, $scopeList);
         }
 
         if ($userIdList) {
             $userIdList = explode(',', $userIdList);
 
-            return $service->getUsersEventList($userIdList, $from, $to, $scopeList);
+            return $this->service->getUsersEventList($userIdList, $from, $to, $scopeList);
         }
         else {
             if (!$userId) {
-                $userId = $this->getUser()->id;
+                $userId = $this->user->getId();
             }
         }
 
-        return $service->getEventList($userId, $from, $to, $scopeList);
+        return $this->service->getEventList($userId, $from, $to, $scopeList);
     }
 
     public function getActionGetTimeline(Request $request)
@@ -106,11 +133,9 @@ class Activities extends Base
             throw new BadRequest();
         }
 
-        if (strtotime($to) - strtotime($from) > $this->maxCalendarRange * 24 * 3600) {
+        if (strtotime($to) - strtotime($from) > self::MAX_CALENDAR_RANGE * 24 * 3600) {
             throw new Forbidden('Too long range.');
         }
-
-        $service = $this->getService('Activities');
 
         $scopeList = null;
 
@@ -132,37 +157,27 @@ class Activities extends Base
             $userIdList[] = $userId;
         }
 
-        return $service->getUsersTimeline($userIdList, $from, $to, $scopeList);
+        return $this->service->getUsersTimeline($userIdList, $from, $to, $scopeList);
     }
 
     public function getActionListUpcoming(Request $request)
     {
-        $service = $this->getService('Activities');
-
         $userId = $request->getQueryParam('userId');
 
         if (!$userId) {
-            $userId = $this->getUser()->id;
+            $userId = $this->user->getId();
         }
 
-        $offset = intval($request->getQueryParam('offset'));
-        $maxSize = intval($request->getQueryParam('maxSize'));
+        $searchParams = $this->searchParamsFetcher->fetch($request);
+
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
 
         $entityTypeList = $request->getQueryParam('entityTypeList');
 
         $futureDays = intval($request->getQueryParam('futureDays'));
 
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
-        }
-
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
-        }
-
-        return $service->getUpcomingActivities(
+        return $this->service->getUpcomingActivities(
             $userId,
             [
                 'offset' => $offset,
@@ -173,14 +188,14 @@ class Activities extends Base
         );
     }
 
-    public function getActionPopupNotifications()
+    public function getActionPopupNotifications(): array
     {
-        $userId = $this->user->id;
+        $userId = $this->user->getId();
 
-        return $this->getService('Activities')->getPopupNotifications($userId);
+        return $this->service->getPopupNotifications($userId);
     }
 
-    public function postActionRemovePopupNotification(Request $request)
+    public function postActionRemovePopupNotification(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -190,7 +205,9 @@ class Activities extends Base
 
         $id = $data->id;
 
-        return $this->getService('Activities')->removeReminder($id);
+        $this->service->removeReminder($id);
+
+        return true;
     }
 
     public function getActionList(Request $request)
@@ -218,21 +235,13 @@ class Activities extends Base
         $entityType = $params['scope'];
         $id = $params['id'];
 
-        $offset = intval($request->getQueryParam('offset'));
-        $maxSize = intval($request->getQueryParam('maxSize'));
-        $order = $request->getQueryParam('order');
-        $orderBy = $request->getQueryParam('orderBy');
-        $where = $request->getQueryParam('where');
+        $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
-        }
-
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden("Max should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
-        }
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
+        $order = $searchParams->getOrder();
+        $orderBy = $searchParams->getOrderBy();
+        $where = $searchParams->getWhere();
 
         $scope = null;
 
@@ -240,11 +249,9 @@ class Activities extends Base
             $scope = $where[0];
         }
 
-        $service = $this->getService('Activities');
-
         $methodName = 'get' . ucfirst($name);
 
-        return $service->$methodName($entityType, $id, [
+        return $this->service->$methodName($entityType, $id, [
             'scope' => $scope,
             'offset' => $offset,
             'maxSize' => $maxSize,
@@ -288,23 +295,9 @@ class Activities extends Base
             throw new BadRequest();
         }
 
-        $searchParams = ControllerUtil::fetchSearchParamsFromRequest($request);
+        $searchParams = $this->searchParamsFetcher->fetchRaw($request);
 
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', 200);
-
-        if (empty($searchParams['maxSize'])) {
-            $searchParams['maxSize'] = $maxSizeLimit;
-        }
-
-        if (!empty($searchParams['maxSize']) && $searchParams['maxSize'] > $maxSizeLimit) {
-            throw new Forbidden(
-                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
-            );
-        }
-
-        $service = $this->getService('Activities');
-
-        $result = $service->findActivitiyEntityType($scope, $id, $entityType, $isHistory, $searchParams);
+        $result = $this->service->findActivitiyEntityType($scope, $id, $entityType, $isHistory, $searchParams);
 
         return (object) [
             'total' => $result->getTotal(),
@@ -324,7 +317,7 @@ class Activities extends Base
 
         $userIdList = explode(',', $userIdListString);
 
-        return $this->getService('Activities')->getBusyRanges(
+        return $this->service->getBusyRanges(
             $userIdList,
             $from,
             $to,

@@ -318,8 +318,11 @@ class Activities implements
     }
 
     protected function getActivitiesMeetingOrCallQuery(
-        Entity $entity, array $statusList, string $targetEntityType
+        Entity $entity,
+        array $statusList,
+        string $targetEntityType
     ) {
+
         $entityType = $entity->getEntityType();
         $id = $entity->id;
 
@@ -753,7 +756,7 @@ class Activities implements
         string $entityType,
         bool $isHistory = false,
         array $params = []
-    ) : RecordCollection {
+    ): RecordCollection {
 
         if (!$this->getAcl()->checkScope($entityType)) {
             throw new Forbidden();
@@ -975,7 +978,7 @@ class Activities implements
         return $result;
     }
 
-    protected function getCalendarMeetingQuery(string $userId, string $from, string $to, bool $skipAcl) : Select
+    protected function getCalendarMeetingQuery(string $userId, string $from, string $to, bool $skipAcl): Select
     {
         $builder = $this->selectBuilderFactory
             ->create()
@@ -1036,7 +1039,7 @@ class Activities implements
             ->build();
     }
 
-    protected function getCalendarCallQuery(string $userId, string $from, string $to, bool $skipAcl) : Select
+    protected function getCalendarCallQuery(string $userId, string $from, string $to, bool $skipAcl): Select
     {
         $builder = $this->selectBuilderFactory
             ->create()
@@ -1097,7 +1100,7 @@ class Activities implements
             ->build();
     }
 
-    protected function getCalendarTaskQuery(string $userId, string $from, string $to, bool $skipAcl) : Select
+    protected function getCalendarTaskQuery(string $userId, string $from, string $to, bool $skipAcl): Select
     {
         $builder = $this->selectBuilderFactory
             ->create()
@@ -1177,8 +1180,13 @@ class Activities implements
     }
 
     protected function getCalenderBaseQuery(
-        string $scope, string $userId, string $from, string $to, bool $skipAcl = false
-    ) : Select {
+        string $scope,
+        string $userId,
+        string $from,
+        string $to,
+        bool $skipAcl = false
+    ): Select {
+
         $builder = $this->selectBuilderFactory
             ->create()
             ->from($scope);
@@ -1275,7 +1283,7 @@ class Activities implements
 
     protected function getCalendarQuery(
         string $scope, string $userId, string $from, string $to, bool $skipAcl = false
-    ) : Select {
+    ): Select {
         if ($this->serviceFactory->checkExists($scope)) {
             $service = $this->serviceFactory->create($scope);
 
@@ -1723,7 +1731,7 @@ class Activities implements
         return $this->getEventList($userId, $from, $to, $scopeList, $skipAcl);
     }
 
-    public function removeReminder(string $id)
+    public function removeReminder(string $id): void
     {
         $builder = $this->getEntityManager()->getQueryBuilder()
             ->delete()
@@ -1741,11 +1749,9 @@ class Activities implements
         $deleteQuery = $builder->build();
 
         $this->getEntityManager()->getQueryExecutor()->execute($deleteQuery);
-
-        return true;
     }
 
-    public function getPopupNotifications(string $userId) : array
+    public function getPopupNotifications(string $userId): array
     {
         $dt = new DateTime();
 
@@ -1810,7 +1816,10 @@ class Activities implements
     }
 
     public function getUpcomingActivities(
-        string $userId, array $params = [], ?array $entityTypeList = null, ?int $futureDays = null
+        string $userId,
+        array $params = [],
+        ?array $entityTypeList = null,
+        ?int $futureDays = null
     ) {
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
@@ -1916,8 +1925,11 @@ class Activities implements
     }
 
     protected function getUpcomingActivitiesEntityTypeQuery(
-        string $entityType, array $params, UserEntity $user, int $futureDays
-    ) : Select {
+        string $entityType,
+        array $params,
+        UserEntity $user,
+        int $futureDays
+    ): Select {
 
         $beforeString = (new DateTime())
             ->modify('+' . $futureDays . ' days')
@@ -2053,7 +2065,7 @@ class Activities implements
         return $queryBuilder->build();
     }
 
-    protected function getUserTimeZone(UserEntity $user) : string
+    protected function getUserTimeZone(UserEntity $user): string
     {
         $preferences = $this->entityManager->getEntity('Preferences', $user->id);
 

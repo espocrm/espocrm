@@ -39,11 +39,13 @@ use Espo\Core\{
     ServiceFactory,
 };
 
-use Espo\Entities\User;
-use Espo\Entities\Preferences;
+use Espo\Entities\{
+    User,
+    Preferences,
+};
 
 /**
- * @deprecated
+ * @deprecated Don't extend.
  */
 abstract class Base
 {
@@ -51,22 +53,40 @@ abstract class Base
 
     public static $defaultAction = 'index';
 
+    /**
+     * @deprecated
+     */
     private $container;
 
     protected $user;
 
     protected $acl;
 
+    /**
+     * @deprecated
+     */
     protected $aclManager;
 
     protected $config;
 
+    /**
+     * @deprecated
+     */
     protected $preferences;
 
+    /**
+     * @deprecated
+     */
     protected $metadata;
 
+    /**
+     * @deprecated
+     */
     protected $serviceFactory;
 
+    /**
+     * @internal Most of dependencies are for backward compatibility.
+     */
     public function __construct(
         Container $container,
         User $user,
@@ -105,11 +125,17 @@ abstract class Base
         }
     }
 
+    /**
+     * @deprecated
+     */
     protected function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * Check access to controller.
+     */
     protected function checkAccess(): bool
     {
         return true;
@@ -124,6 +150,9 @@ abstract class Base
         return;
     }
 
+    /**
+     * @deprecated
+     */
     protected function getService($name): object
     {
         return $this->serviceFactory->create($name);
@@ -153,6 +182,9 @@ abstract class Base
         return $this->container->get('acl');
     }
 
+    /**
+     * @deprecated
+     */
     protected function getAclManager()
     {
         return $this->container->get('aclManager');
