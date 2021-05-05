@@ -38,9 +38,9 @@ class SearchParams
 {
     private $rawParams = [];
 
-    const ORDER_ASC = 'ASC';
+    public const ORDER_ASC = 'ASC';
 
-    const ORDER_DESC = 'DESC';
+    public const ORDER_DESC = 'DESC';
 
     private function __construct()
     {
