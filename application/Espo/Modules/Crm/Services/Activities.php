@@ -56,6 +56,7 @@ use Espo\{
 use PDO;
 use Exception;
 use DateTime;
+use DateInterval;
 
 class Activities implements
 
@@ -100,50 +101,15 @@ class Activities implements
         $this->recordServiceContainer = $recordServiceContainer;
     }
 
-    protected function getPDO()
-    {
-        return $this->getEntityManager()->getPDO();
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    protected function getUser()
-    {
-        return $this->user;
-    }
-
-    protected function getAcl()
-    {
-        return $this->acl;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getServiceFactory()
-    {
-        return $this->serviceFactory;
-    }
-
-    protected function isPerson($scope)
+    protected function isPerson(string $scope): bool
     {
         return in_array($scope, ['Contact', 'Lead', 'User']) ||
-            $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Person';
+            $this->metadata->get(['scopes', $scope, 'type']) === 'Person';
     }
 
-    protected function isCompany($scope)
+    protected function isCompany(string $scope): bool
     {
-        return in_array($scope, ['Account']) || $this->getMetadata()->get(['scopes', $scope, 'type']) === 'Company';
+        return in_array($scope, ['Account']) || $this->metadata->get(['scopes', $scope, 'type']) === 'Company';
     }
 
     protected function getActivitiesUserMeetingQuery(
@@ -276,7 +242,7 @@ class Activities implements
     protected function getActivitiesUserEmailQuery(Entity $entity, array $statusList = [])
     {
         if ($entity->isPortal() && $entity->get('contactId')) {
-            $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
+            $contact = $this->entityManager->getEntity('Contact', $entity->get('contactId'));
 
             if ($contact) {
                 return $this->getActivitiesEmailQuery($contact, $statusList);
@@ -746,12 +712,12 @@ class Activities implements
     protected function accessCheck($entity)
     {
         if ($entity->getEntityType() == 'User') {
-            if (!$this->getAcl()->checkUserPermission($entity, 'user')) {
+            if (!$this->acl->checkUserPermission($entity, 'user')) {
                 throw new Forbidden();
             }
         }
         else {
-            if (!$this->getAcl()->check($entity, 'read')) {
+            if (!$this->acl->check($entity, 'read')) {
                 throw new Forbidden();
             }
         }
@@ -765,11 +731,11 @@ class Activities implements
         SearchParams $searchParams
     ): RecordCollection {
 
-        if (!$this->getAcl()->checkScope($entityType)) {
+        if (!$this->acl->checkScope($entityType)) {
             throw new Forbidden();
         }
 
-        $entity = $this->getEntityManager()->getEntity($scope, $id);
+        $entity = $this->entityManager->getEntity($scope, $id);
 
         if (!$entity) {
             throw new NotFound();
@@ -777,15 +743,15 @@ class Activities implements
 
         $this->accessCheck($entity);
 
-        if (!$this->getMetadata()->get(['scopes', $entityType, 'activity'])) {
+        if (!$this->metadata->get(['scopes', $entityType, 'activity'])) {
             throw new Error("Entity '{$entityType}' is not an activity.");
         }
 
         if (!$isHistory) {
-            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+            $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
         }
         else {
-            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']);
+            $statusList = $this->metadata->get(['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']);
         }
 
         if ($entityType === 'Email' && $searchParams->getOrderBy() === 'dateStart') {
@@ -880,7 +846,7 @@ class Activities implements
 
         $sth = $this->entityManager->getQueryExecutor()->execute($countQuery);
 
-        $row = $sth->fetch(\PDO::FETCH_ASSOC);
+        $row = $sth->fetch(PDO::FETCH_ASSOC);
 
         $total = $row['count'];
 
@@ -889,7 +855,7 @@ class Activities implements
 
     public function getActivities(string $scope, string $id, array $params = [])
     {
-        $entity = $this->getEntityManager()->getEntity($scope, $id);
+        $entity = $this->entityManager->getEntity($scope, $id);
 
         if (!$entity) {
             throw new NotFound();
@@ -900,29 +866,29 @@ class Activities implements
         $fetchAll = empty($params['scope']);
 
         if (!$fetchAll) {
-            if (!$this->getMetadata()->get(['scopes', $params['scope'], 'activity'])) {
+            if (!$this->metadata->get(['scopes', $params['scope'], 'activity'])) {
                 throw new Error('Entity \'' . $params['scope'] . '\' is not an activity');
             }
         }
 
         $parts = [];
 
-        $entityTypeList = $this->getConfig()->get('activitiesEntityList', ['Meeting', 'Call']);
+        $entityTypeList = $this->config->get('activitiesEntityList', ['Meeting', 'Call']);
 
         foreach ($entityTypeList as $entityType) {
             if (!$fetchAll && $params['scope'] !== $entityType) {
                 continue;
             }
 
-            if (!$this->getAcl()->checkScope($entityType)) {
+            if (!$this->acl->checkScope($entityType)) {
                 continue;
             }
 
-            if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) {
+            if (!$this->metadata->get('scopes.' . $entityType . '.activity')) {
                 continue;
             }
 
-            $statusList = $this->getMetadata()->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
+            $statusList = $this->metadata->get(['scopes', $entityType, 'activityStatusList'], ['Planned']);
 
             $parts[$entityType] = $this->getActivitiesQuery($entity, $entityType, $statusList, false);
         }
@@ -932,7 +898,7 @@ class Activities implements
 
     public function getHistory(string $scope, string $id, array $params = [])
     {
-        $entity = $this->getEntityManager()->getEntity($scope, $id);
+        $entity = $this->entityManager->getEntity($scope, $id);
         if (!$entity) {
             throw new NotFound();
         }
@@ -942,28 +908,28 @@ class Activities implements
         $fetchAll = empty($params['scope']);
 
         if (!$fetchAll) {
-            if (!$this->getMetadata()->get(['scopes', $params['scope'], 'activity'])) {
+            if (!$this->metadata->get(['scopes', $params['scope'], 'activity'])) {
                 throw new Error('Entity \'' . $params['scope'] . '\' is not an activity');
             }
         }
 
         $parts = [];
-        $entityTypeList = $this->getConfig()->get('historyEntityList', ['Meeting', 'Call', 'Email']);
+        $entityTypeList = $this->config->get('historyEntityList', ['Meeting', 'Call', 'Email']);
 
         foreach ($entityTypeList as $entityType) {
             if (!$fetchAll && $params['scope'] !== $entityType) {
                 continue;
             }
 
-            if (!$this->getAcl()->checkScope($entityType)) {
+            if (!$this->acl->checkScope($entityType)) {
                 continue;
             }
 
-            if (!$this->getMetadata()->get('scopes.' . $entityType . '.activity')) {
+            if (!$this->metadata->get('scopes.' . $entityType . '.activity')) {
                 continue;
             }
 
-            $statusList = $this->getMetadata()->get(
+            $statusList = $this->metadata->get(
                 ['scopes', $entityType, 'historyStatusList'], ['Held', 'Not Held']
             );
 
@@ -1005,9 +971,9 @@ class Activities implements
             'createdAt',
         ];
 
-        $seed = $this->getEntityManager()->getEntity('Meeting');
+        $seed = $this->entityManager->getEntity('Meeting');
 
-        $additionalAttributeList = $this->getMetadata()->get(
+        $additionalAttributeList = $this->metadata->get(
             ['app', 'calendar', 'additionalAttributeList']
         ) ?? [];
 
@@ -1066,9 +1032,9 @@ class Activities implements
             'createdAt',
         ];
 
-        $seed = $this->getEntityManager()->getEntity('Call');
+        $seed = $this->entityManager->getEntity('Call');
 
-        $additionalAttributeList = $this->getMetadata()->get(
+        $additionalAttributeList = $this->metadata->get(
             ['app', 'calendar', 'additionalAttributeList']
         ) ?? [];
 
@@ -1127,9 +1093,9 @@ class Activities implements
             'createdAt',
         ];
 
-        $seed = $this->getEntityManager()->getEntity('Task');
+        $seed = $this->entityManager->getEntity('Task');
 
-        $additionalAttributeList = $this->getMetadata()->get(
+        $additionalAttributeList = $this->metadata->get(
             ['app', 'calendar', 'additionalAttributeList']
         ) ?? [];
 
@@ -1162,9 +1128,9 @@ class Activities implements
             ]);
 
         if (
-            $this->getMetadata()->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple'
+            $this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'type']) === 'linkMultiple'
             &&
-            !$this->getMetadata()->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'disabled'])
+            !$this->metadata->get(['entityDefs', 'Task', 'fields', 'assignedUsers', 'disabled'])
         ) {
             $queryBuilder
                 ->distinct()
@@ -1198,7 +1164,7 @@ class Activities implements
             $builder->withStrictAccessControl();
         }
 
-        $seed = $this->getEntityManager()->getEntity($scope);
+        $seed = $this->entityManager->getEntity($scope);
 
         $select = [
             ['VALUE:' . $scope, 'scope'],
@@ -1214,7 +1180,7 @@ class Activities implements
             'createdAt',
         ];
 
-        $additionalAttributeList = $this->getMetadata()->get(
+        $additionalAttributeList = $this->metadata->get(
             ['app', 'calendar', 'additionalAttributeList']
         ) ?? [];
 
@@ -1313,8 +1279,8 @@ class Activities implements
     {
         $serviceName = 'Activities' . $entity->getEntityType();
 
-        if ($this->getServiceFactory()->checkExists($serviceName)) {
-            $service = $this->getServiceFactory()->create($serviceName);
+        if ($this->serviceFactory->checkExists($serviceName)) {
+            $service = $this->serviceFactory->create($serviceName);
 
             $methodName = 'getActivities' . $scope . 'Query';
 
@@ -1334,7 +1300,7 @@ class Activities implements
 
     protected function getActivitiesBaseQuery(Entity $entity, string $scope, array $statusList)
     {
-        $seed = $this->getEntityManager()->getEntity($scope);
+        $seed = $this->entityManager->getEntity($scope);
 
         $builder = $this->selectBuilderFactory
             ->create()
@@ -1346,10 +1312,13 @@ class Activities implements
                 'name',
                 ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['VALUE:', 'dateStart']),
                 ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['VALUE:', 'dateEnd']),
-                ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
-                ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
+                ($seed->hasAttribute('dateStartDate') ?
+                    ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
+                ($seed->hasAttribute('dateEndDate') ?
+                    ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
                 ['VALUE:' . $scope, '_scope'],
-                ($seed->hasAttribute('assignedUserId') ? ['assignedUserId', 'assignedUserId'] : ['VALUE:', 'assignedUserId']),
+                ($seed->hasAttribute('assignedUserId') ?
+                    ['assignedUserId', 'assignedUserId'] : ['VALUE:', 'assignedUserId']),
                 ($seed->hasAttribute('assignedUserName') ? ['assignedUserName', 'assignedUserName'] :
                     ['VALUE:', 'assignedUserName']),
                 ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
@@ -1380,7 +1349,7 @@ class Activities implements
 
     public function getUsersTimeline($userIdList, $from, $to, $scopeList = null)
     {
-        $brScopeList = $this->getConfig()->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
+        $brScopeList = $this->config->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
 
         if ($scopeList) {
             foreach ($scopeList as $s) {
@@ -1391,6 +1360,7 @@ class Activities implements
         }
 
         $resultData = (object) [];
+
         foreach ($userIdList as $userId) {
             $userData = (object) [
                 'eventList' => [],
@@ -1403,10 +1373,12 @@ class Activities implements
                 $userData->busyRangeList = $this->getBusyRangeList(
                     $userId, $from, $to, $brScopeList, $userData->eventList
                 );
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 if ($e instanceof Forbidden) {
                     continue;
                 }
+
                 throw new Exception($e->getMessage(), $e->getCode(), $e);
             }
 
@@ -1420,10 +1392,10 @@ class Activities implements
         array $userIdList, string $from, string $to,
         ?string $entityType = null, ?string $ignoreId = null, ?array $scopeList = null)
     {
-        $scopeList = $this->getConfig()->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
+        $scopeList = $this->config->get('busyRangesEntityList') ?? ['Meeting', 'Call'];
 
         if ($entityType) {
-            if (!$this->getAcl()->check($entityType)) {
+            if (!$this->acl->check($entityType)) {
                 throw new Forbidden();
             }
 
@@ -1437,7 +1409,7 @@ class Activities implements
             $dtTo = new \DateTime($to);
             $diff = $dtTo->diff($dtFrom, true);
 
-            if ($diff->days > $this->getConfig()->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
+            if ($diff->days > $this->config->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
                 return [];
             }
         }
@@ -1472,6 +1444,7 @@ class Activities implements
 
             $resultData->$userId = $busyRangeList;
         }
+
         return $resultData;
     }
 
@@ -1498,6 +1471,7 @@ class Activities implements
 
             foreach ($userResultList as $item) {
                 $item['userId'] = $userId;
+
                 $resultList[] = $item;
             }
         }
@@ -1512,12 +1486,12 @@ class Activities implements
 
     public function getTeamsEventList($teamIdList, $from, $to, $scopeList = null)
     {
-        if ($this->getAcl()->get('userPermission') === 'no') {
+        if ($this->acl->get('userPermission') === 'no') {
             throw new Forbidden("User Permission not allowing to view calendars of other users.");
         }
 
-        if ($this->getAcl()->get('userPermission') === 'team') {
-            $userTeamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+        if ($this->acl->get('userPermission') === 'team') {
+            $userTeamIdList = $this->user->getLinkMultipleIdList('teams');
 
             foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $userTeamIdList)) {
@@ -1528,7 +1502,7 @@ class Activities implements
 
         $userIdList = [];
 
-        $userList = $this->getEntityManager()->getRepository('User')
+        $userList = $this->entityManager->getRepository('User')
             ->select(['id', 'name'])
             ->leftJoin('teams')
             ->where([
@@ -1554,11 +1528,13 @@ class Activities implements
                 foreach ($eventList as &$e) {
                     if ($e['scope'] == $event['scope'] && $e['id'] == $event['id']) {
                         $e['userIdList'][] = $userId;
+
                         continue 2;
                     }
                 }
 
                 $event['userIdList'] = [$userId];
+
                 $eventList[] = $event;
             }
         }
@@ -1589,7 +1565,7 @@ class Activities implements
             }
         }
 
-        $canceledStatusList = $this->getMetadata()->get('app.calendar.canceledStatusList') ?? [];
+        $canceledStatusList = $this->metadata->get('app.calendar.canceledStatusList') ?? [];
 
         foreach ($eventList as $i => $item) {
             $eventList[$i] = (object) $item;
@@ -1609,8 +1585,8 @@ class Activities implements
             }
 
             try {
-                $start = new \DateTime($event->dateStart);
-                $end = new \DateTime($event->dateEnd);
+                $start = new DateTime($event->dateStart);
+                $end = new DateTime($event->dateEnd);
 
                 foreach ($rangeList as &$range) {
                     if (
@@ -1622,6 +1598,7 @@ class Activities implements
                         $range->start = $start;
                         $range->dateEnd = $event->dateEnd;
                         $range->end = $end;
+
                         continue 2;
                     }
 
@@ -1632,24 +1609,27 @@ class Activities implements
                     ) {
                         $range->dateStart = $event->dateStart;
                         $range->start = $start;
+
                         if ($end->getTimestamp() > $range->end->getTimestamp()) {
                             $range->dateEnd = $event->dateEnd;
                             $range->end = $end;
                         }
+
                         continue 2;
                     }
 
                     if (
-                        $start->getTimestamp() < $range->end->getTimestamp()
-                        &&
+                        $start->getTimestamp() < $range->end->getTimestamp() &&
                         $end->getTimestamp() > $range->end->getTimestamp()
                     ) {
                         $range->dateEnd = $event->dateEnd;
                         $range->end = $end;
+
                         if ($start->getTimestamp() < $range->start->getTimestamp()) {
                             $range->dateStart = $event->dateStart;
                             $range->start = $start;
                         }
+
                         continue 2;
                     }
                 }
@@ -1676,7 +1656,7 @@ class Activities implements
 
     public function getEventList($userId, $from, $to, $scopeList = null, $skipAcl = false)
     {
-        $user = $this->getEntityManager()->getEntity('User', $userId);
+        $user = $this->entityManager->getEntity('User', $userId);
 
         if (!$user) {
             throw new NotFound();
@@ -1684,7 +1664,7 @@ class Activities implements
 
         $this->accessCheck($user);
 
-        $calendarEntityList = $this->getConfig()->get('calendarEntityList', []);
+        $calendarEntityList = $this->config->get('calendarEntityList', []);
 
         if (is_null($scopeList)) {
             $scopeList = $calendarEntityList;
@@ -1697,11 +1677,11 @@ class Activities implements
                 continue;
             }
 
-            if (!$this->getAcl()->checkScope($scope)) {
+            if (!$this->acl->checkScope($scope)) {
                 continue;
             }
 
-            if (!$this->getMetadata()->get(['scopes', $scope, 'calendar'])) {
+            if (!$this->metadata->get(['scopes', $scope, 'calendar'])) {
                 continue;
             }
 
@@ -1741,34 +1721,34 @@ class Activities implements
 
     public function removeReminder(string $id): void
     {
-        $builder = $this->getEntityManager()->getQueryBuilder()
+        $builder = $this->entityManager->getQueryBuilder()
             ->delete()
             ->from('Reminder')
             ->where([
                 'id' => $id,
             ]);
 
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->user->isAdmin()) {
             $builder->where([
-                'userId' => $this->getUser()->id,
+                'userId' => $this->user->id,
             ]);
         }
 
         $deleteQuery = $builder->build();
 
-        $this->getEntityManager()->getQueryExecutor()->execute($deleteQuery);
+        $this->entityManager->getQueryExecutor()->execute($deleteQuery);
     }
 
     public function getPopupNotifications(string $userId): array
     {
         $dt = new DateTime();
 
-        $pastHours = $this->getConfig()->get('reminderPastHours', self::REMINDER_PAST_HOURS);
+        $pastHours = $this->config->get('reminderPastHours', self::REMINDER_PAST_HOURS);
 
         $now = $dt->format('Y-m-d H:i:s');
-        $nowShifted = $dt->sub(new \DateInterval('PT'.strval($pastHours).'H'))->format('Y-m-d H:i:s');
+        $nowShifted = $dt->sub(new DateInterval('PT'.strval($pastHours).'H'))->format('Y-m-d H:i:s');
 
-        $reminderCollection = $this->getEntityManager()
+        $reminderCollection = $this->entityManager
             ->getRepository('Reminder')
             ->select(['id', 'entityType', 'entityId'])
             ->where([
@@ -1786,7 +1766,8 @@ class Activities implements
             $entityType = $reminder->get('entityType');
             $entityId = $reminder->get('entityId');
 
-            $entity = $this->getEntityManager()->getEntity($entityType, $entityId);
+            $entity = $this->entityManager->getEntity($entityType, $entityId);
+
             $data = null;
 
             if (!$entity) {
@@ -1796,8 +1777,10 @@ class Activities implements
             if ($entity->hasLinkMultipleField('users')) {
                 $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
                 $status = $entity->getLinkMultipleColumn('users', 'status', $userId);
+
                 if ($status === 'Declined') {
                     $this->removeReminder($reminderId);
+
                     continue;
                 }
             }
@@ -1829,16 +1812,17 @@ class Activities implements
         ?array $entityTypeList = null,
         ?int $futureDays = null
     ) {
-        $user = $this->getEntityManager()->getEntity('User', $userId);
+
+        $user = $this->entityManager->getEntity('User', $userId);
 
         $this->accessCheck($user);
 
         if (!$entityTypeList) {
-            $entityTypeList = $this->getConfig()->get('activitiesEntityList', []);
+            $entityTypeList = $this->config->get('activitiesEntityList', []);
         }
 
         if (is_null($futureDays)) {
-            $futureDays = $this->getConfig()->get(
+            $futureDays = $this->config->get(
                 'activitiesUpcomingFutureDays',
                 self::UPCOMING_ACTIVITIES_FUTURE_DAYS
             );
@@ -1848,29 +1832,25 @@ class Activities implements
 
         foreach ($entityTypeList as $entityType) {
             if (
-                !$this->getMetadata()->get(['scopes', $entityType, 'activity']) &&
+                !$this->metadata->get(['scopes', $entityType, 'activity']) &&
                 $entityType !== 'Task'
             ) {
                 continue;
             }
 
-            if (!$this->getAcl()->checkScope($entityType, 'read')) {
+            if (!$this->acl->checkScope($entityType, 'read')) {
                 continue;
             }
 
-            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateStart'])) {
+            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'dateStart'])) {
                 continue;
             }
 
-            if (!$this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) {
+            if (!$this->metadata->get(['entityDefs', $entityType, 'fields', 'dateEnd'])) {
                 continue;
             }
 
             $queryList[] = $this->getUpcomingActivitiesEntityTypeQuery($entityType, $params, $user, $futureDays);
-
-
-
-            //$queryList[] = Select::fromRaw($selectParams);
         }
 
         if (empty($queryList)) {
@@ -1918,7 +1898,7 @@ class Activities implements
         $entityDataList = [];
 
         foreach ($rows as $row) {
-            $entity = $this->getEntityManager()->getEntity($row['entityType'], $row['id']);
+            $entity = $this->entityManager->getEntity($row['entityType'], $row['id']);
 
             $entityData = $entity->toArray();
             $entityData['_scope'] = $entity->getEntityType();
