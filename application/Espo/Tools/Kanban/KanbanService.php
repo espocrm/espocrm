@@ -54,8 +54,6 @@ class KanbanService
 
     private $orderer;
 
-    private const MAX_SIZE_LIMIT = 200;
-
     public function __construct(
         User $user,
         AclManager $aclManager,
@@ -75,7 +73,6 @@ class KanbanService
     public function getData(string $entityType, array $searchParams): Result
     {
         $this->processAccessCheck($entityType);
-        $this->processSearchParamsCheck($searchParams);
 
         $disableCount = $this->metadata
             ->get(['entityDefs', $entityType, 'collection', 'countDisabled']) ?? false;
@@ -130,21 +127,6 @@ class KanbanService
 
         if (!$this->aclManager->check($this->user, $entityType, Table::ACTION_READ)) {
             throw new ForbiddenSilent();
-        }
-    }
-
-    private function processSearchParamsCheck(array $params): void
-    {
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($params['maxSize'])) {
-            $params['maxSize'] = $maxSizeLimit;
-        }
-
-        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
-            throw new Forbidden(
-                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
-            );
         }
     }
 }

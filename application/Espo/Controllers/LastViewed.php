@@ -29,37 +29,40 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\{
-    Controllers\Base,
     Api\Request,
+    Record\SearchParamsFetcher,
 };
+
+use Espo\Services\LastViewed as Service;
 
 use StdClass;
 
-class LastViewed extends Base
+class LastViewed
 {
-    private const MAX_SIZE_LIMIT = 200;
+    private $searchParamsFetcher;
+
+    private $service;
+
+    public function __construct(SearchParamsFetcher $searchParamsFetcher, Service $service)
+    {
+        $this->searchParamsFetcher = $searchParamsFetcher;
+        $this->service = $service;
+    }
 
     public function getActionIndex(Request $request): StdClass
     {
-        $params = [];
+        $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        $params['offset'] = $request->getQueryParam('offset', 0);
-        $params['maxSize'] = $request->getQueryParam('maxSize');
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
 
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
+        $params = [
+            'offset' => $offset,
+            'maxSize' => $maxSize,
+        ];
 
-        if (empty($params['maxSize'])) {
-            $params['maxSize'] = $maxSizeLimit;
-        }
-
-        if (!empty($params['maxSize']) && $params['maxSize'] > $maxSizeLimit) {
-            throw new Forbidden("Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit.");
-        }
-
-        $result = $this->getServiceFactory()->create('LastViewed')->getList($params);
+        $result = $this->service->getList($params);
 
         return (object) [
             'total' => $result->total,

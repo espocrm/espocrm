@@ -29,13 +29,6 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-
-use Espo\ORM\Entity;
-
-use Espo\Core\Utils\Json;
-
 use Espo\Core\Utils\Util;
 
 use Espo\Core\Record\Collection as RecordCollection;

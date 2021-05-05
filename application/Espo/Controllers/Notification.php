@@ -45,15 +45,14 @@ class Notification extends RecordBase
 
     public function getActionList(Request $request, Response $response): StdClass
     {
-        $userId = $this->user->id;
+        $userId = $this->user->getId();
 
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
+        $searchParams = $this->searchParamsFetcher->fetch($request);
+
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
+
         $after = $request->get('after');
-
-        if (empty($maxSize)) {
-            $maxSize = self::MAX_SIZE_LIMIT;
-        }
 
         $params = [
             'offset' => $offset,
@@ -61,7 +60,9 @@ class Notification extends RecordBase
             'after' => $after,
         ];
 
-        $recordCollection = $this->getService('Notification')->getList($userId, $params);
+        $recordCollection = $this->recordServiceContainer
+            ->get('Notification')
+            ->getList($userId, $params);
 
         return (object) [
             'total' => $recordCollection->getTotal(),
@@ -73,14 +74,14 @@ class Notification extends RecordBase
     {
         $userId = $this->user->getId();
 
-        return $this->getService('Notification')->getNotReadCount($userId);
+        return $this->recordServiceContainer->get('Notification')->getNotReadCount($userId);
     }
 
     public function postActionMarkAllRead(Request $request): bool
     {
         $userId = $this->user->getId();
 
-        $this->getService('Notification')->markAllRead($userId);
+        $this->recordServiceContainer->get('Notification')->markAllRead($userId);
 
         return true;
     }

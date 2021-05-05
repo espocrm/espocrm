@@ -30,27 +30,28 @@
 namespace Espo\Controllers;
 
 use Espo\Core\{
-    ServiceFactory,
-    Utils\Config,
     Api\Request,
+    Record\SearchParamsFetcher,
 };
+
+use Espo\Services\Stream as Service;
 
 use StdClass;
 
 class Stream
 {
-    protected const MAX_SIZE_LIMIT = 200;
-
     public static $defaultAction = 'list';
 
-    protected $serviceFactory;
+    private $service;
 
-    protected $config;
+    private $searchParamsFetcher;
 
-    public function __construct(ServiceFactory $serviceFactory, Config $config)
-    {
-        $this->serviceFactory = $serviceFactory;
-        $this->config = $config;
+    public function __construct(
+        Service $service,
+        SearchParamsFetcher $searchParamsFetcher
+    ) {
+        $this->service = $service;
+        $this->searchParamsFetcher = $searchParamsFetcher;
     }
 
     public function getActionList(Request $request): StdClass
@@ -60,26 +61,16 @@ class Stream
         $scope = $params['scope'];
         $id = isset($params['id']) ? $params['id'] : null;
 
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
+        $searchParams = $this->searchParamsFetcher->fetch($request);
+
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
 
         $after = $request->get('after');
         $filter = $request->get('filter');
         $skipOwn = $request->get('skipOwn') === 'true';
 
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
-        }
-
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden(
-                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
-            );
-        }
-
-        $result = $this->serviceFactory->create('Stream')->find($scope, $id, [
+        $result = $this->service->find($scope, $id, [
             'offset' => $offset,
             'maxSize' => $maxSize,
             'after' => $after,
@@ -100,24 +91,16 @@ class Stream
         $scope = $params['scope'];
         $id = isset($params['id']) ? $params['id'] : null;
 
-        $offset = intval($request->get('offset'));
-        $maxSize = intval($request->get('maxSize'));
+        $searchParams = $this->searchParamsFetcher->fetch($request);
+
+        $offset = $searchParams->getOffset();
+        $maxSize = $searchParams->getMaxSize();
+
         $after = $request->get('after');
 
         $where = $request->get('where');
 
-        $maxSizeLimit = $this->config->get('recordListMaxSizeLimit', self::MAX_SIZE_LIMIT);
-
-        if (empty($maxSize)) {
-            $maxSize = $maxSizeLimit;
-        }
-        if (!empty($maxSize) && $maxSize > $maxSizeLimit) {
-            throw new Forbidden(
-                "Max size should should not exceed " . $maxSizeLimit . ". Use offset and limit."
-            );
-        }
-
-        $result = $this->serviceFactory->create('Stream')->find($scope, $id, [
+        $result = $this->service->find($scope, $id, [
             'offset' => $offset,
             'maxSize' => $maxSize,
             'after' => $after,

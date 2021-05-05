@@ -63,13 +63,17 @@ class RecordBase extends Base implements Di\EntityManagerAware
 {
     use Di\EntityManagerSetter;
 
-    protected const MAX_SIZE_LIMIT = 200;
-
     public static $defaultAction = 'list';
 
-    protected $recordServiceContainer;
-
+    /**
+     * @var SearchParamsFetcher
+     */
     protected $searchParamsFetcher;
+
+    /**
+     * @var RecordServiceContainer
+     */
+    protected $recordServiceContainer;
 
     protected $config;
 

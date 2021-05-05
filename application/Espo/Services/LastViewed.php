@@ -65,7 +65,7 @@ class LastViewed
         $this->listLoadProcessor = $listLoadProcessor;
     }
 
-    public function getList($params): object
+    public function getList(array $params): object
     {
         $repository = $this->entityManager->getRDBRepository('ActionHistoryRecord');
 

@@ -30,7 +30,6 @@
 namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\{
-    Forbidden,
     BadRequest,
 };
 
