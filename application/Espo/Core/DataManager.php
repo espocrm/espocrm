@@ -40,6 +40,7 @@ use Espo\Core\{
     Utils\Metadata\OrmMetadataData,
     HookManager,
     Utils\Database\Schema\SchemaProxy,
+    Utils\Log,
 };
 
 use PDO;
@@ -66,6 +67,8 @@ class DataManager
 
     private $schemaProxy;
 
+    private $log;
+
     private $cachePath = 'data/cache';
 
     public function __construct(
@@ -76,7 +79,8 @@ class DataManager
         Metadata $metadata,
         OrmMetadataData $ormMetadataData,
         HookManager $hookManager,
-        SchemaProxy $schemaProxy
+        SchemaProxy $schemaProxy,
+        Log $log
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -86,6 +90,7 @@ class DataManager
         $this->ormMetadataData = $ormMetadataData;
         $this->hookManager = $hookManager;
         $this->schemaProxy = $schemaProxy;
+        $this->log = $log;
     }
 
     /**
@@ -135,8 +140,8 @@ class DataManager
         catch (Throwable $e) {
             $result = false;
 
-            $GLOBALS['log']->error(
-                "Fault to rebuild database schema. Details: ". $e->getMessage() .
+            $this->log->error(
+                "Failed to rebuild database schema. Details: ". $e->getMessage() .
                 " at " . $e->getFile() . ":" . $e->getLine()
             );
         }
