@@ -211,7 +211,7 @@ class Api implements Runner
         RequestWrapper $requestWrapped,
         ResponseWrapper $responseWrapped,
         string $route
-    )  : void {
+    ): void {
 
         $errorOutput = new ApiErrorOutput($requestWrapped, $route);
 
@@ -219,7 +219,7 @@ class Api implements Runner
             $errorOutput->process($responseWrapped, $exception);
         }
         catch (Throwable $exception) {
-            $GLOBALS['log']->error($exception->getMessage());
+            $this->log->error($exception->getMessage());
 
             $responseWrapped->setStatus(500);
         }

@@ -33,6 +33,7 @@ use Espo\Core\{
     Application\Runner,
     Job\JobManager,
     Utils\Config,
+    Utils\Log,
 };
 
 /**
@@ -47,16 +48,19 @@ class Cron implements Runner
 
     private $config;
 
-    public function __construct(JobManager $jobManager, Config $config)
+    private $log;
+
+    public function __construct(JobManager $jobManager, Config $config, Log $log)
     {
         $this->jobManager = $jobManager;
         $this->config = $config;
+        $this->log = $log;
     }
 
     public function run(): void
     {
         if ($this->config->get('cronDisabled')) {
-            $GLOBALS['log']->warning("Cron is not run because it's disabled with 'cronDisabled' param.");
+            $this->log->warning("Cron is not run because it's disabled with 'cronDisabled' param.");
 
             return;
         }

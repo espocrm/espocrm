@@ -32,6 +32,7 @@ namespace Espo\Core\ApplicationRunners;
 use Espo\Core\{
     Application\Runner,
     Utils\Config,
+    Utils\Log,
 };
 
 use Symfony\Component\Process\{
@@ -46,11 +47,14 @@ class Daemon implements Runner
 {
     use Cli;
 
-    protected $config;
+    private $config;
 
-    public function __construct(Config $config)
+    private $log;
+
+    public function __construct(Config $config, Log $log)
     {
         $this->config = $config;
+        $this->log = $log;
     }
 
     public function run(): void
@@ -66,7 +70,7 @@ class Daemon implements Runner
         }
 
         if (!$maxProcessNumber || !$interval) {
-            $GLOBALS['log']->error("Daemon config params are not set.");
+            $this->log->error("Daemon config params are not set.");
 
             return;
         }
