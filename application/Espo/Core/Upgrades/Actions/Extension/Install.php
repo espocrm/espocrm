@@ -33,6 +33,8 @@ use Espo\Core\ExtensionManager;
 
 use Espo\Core\Utils\Util;
 
+use Throwable;
+
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
     protected $extensionEntity = null;
@@ -169,8 +171,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
         try {
             $entityManager->saveEntity($extensionEntity);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error('Error saving Extension entity. The error occurred by existing Hook, more details: ' . $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine());
+        }
+        catch (Throwable $e) {
+            $this->getLog()
+                ->error(
+                    'Error saving Extension entity. The error occurred by existing Hook, more details: ' .
+                    $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine()
+                );
+
             $this->throwErrorAndRemovePackage('Error saving Extension entity. Check logs for details.', false);
         }
     }

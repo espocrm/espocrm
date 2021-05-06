@@ -40,6 +40,7 @@ use Espo\Core\{
     Utils\File\ZipArchive,
     Utils\Config\ConfigWriter,
     Utils\Database\Helper as DatabaseHelper,
+    Utils\Log,
 };
 
 use Composer\Semver\Semver;
@@ -148,6 +149,11 @@ abstract class Base
         }
 
         return $this->databaseHelper;
+    }
+
+    protected function getLog(): Log
+    {
+        return $this->getContainer()->get('log');
     }
 
     protected function getFileManager()
@@ -297,7 +303,7 @@ abstract class Base
                 $isInRange = Semver::satisfies($currentVersion, $version);
             }
             catch (Throwable $e) {
-                $GLOBALS['log']->error('SemVer: Version identification error: '.$e->getMessage().'.');
+                $this->getLog()->error('SemVer: Version identification error: '.$e->getMessage().'.');
             }
 
             if ($isInRange) {
@@ -798,7 +804,7 @@ abstract class Base
         catch (Throwable $e) {
 
             try {
-                $GLOBALS['log']->error('Database rebuild failure, details: '. $e->getMessage() .'.');
+                $this->getLog()->error('Database rebuild failure, details: '. $e->getMessage() .'.');
             }
             catch (Throwable $e) {}
         }

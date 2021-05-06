@@ -28,7 +28,10 @@
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Extension;
+
 use Espo\Core\Exceptions\Error;
+
+use Throwable;
 
 class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 {
@@ -44,6 +47,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
         if (!isset($this->extensionEntity)) {
             $processId = $this->getProcessId();
             $this->extensionEntity = $this->getEntityManager()->getEntity('Extension', $processId);
+
             if (!isset($this->extensionEntity)) {
                 throw new Error('Extension Entity not found.');
             }
@@ -60,8 +64,13 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 
         try {
             $this->getEntityManager()->saveEntity($extensionEntity);
-        } catch (\Throwable $e) {
-            $GLOBALS['log']->error('Error saving Extension entity. The error occurred by existing Hook, more details: ' . $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine());
+        }
+        catch (Throwable $e) {
+            $this->getLog()->error(
+                'Error saving Extension entity. The error occurred by existing Hook, more details: ' .
+                $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine()
+            );
+
             $this->throwErrorAndRemovePackage('Error saving Extension entity. Check logs for details.', false);
         }
     }

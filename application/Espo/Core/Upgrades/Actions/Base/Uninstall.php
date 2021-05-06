@@ -39,7 +39,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
     {
         $processId = $data['id'];
 
-        $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: start run.');
+        $this->getLog()->debug('Uninstallation process ['.$processId.']: start run.');
 
         if (empty($processId)) {
             throw new Error('Uninstallation package ID was not specified.');
@@ -99,7 +99,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         $this->finalize();
 
-        $GLOBALS['log']->debug('Uninstallation process ['.$processId.']: end run.');
+        $this->getLog()->debug('Uninstallation process ['.$processId.']: end run.');
 
         $this->clearCache();
     }

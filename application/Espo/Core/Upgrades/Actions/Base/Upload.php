@@ -35,14 +35,13 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
     /**
      * Upload an upgrade/extension package
      *
-     * @param  [type] $contents
      * @return string  ID of upgrade/extension process
      */
     public function run($data)
     {
         $processId = $this->createProcessId();
 
-        $GLOBALS['log']->debug('Installation process ['.$processId.']: start upload the package.');
+        $this->getLog()->debug('Installation process ['.$processId.']: start upload the package.');
 
         $this->initialize();
 
@@ -69,7 +68,7 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
 
         $this->finalize();
 
-        $GLOBALS['log']->debug('Installation process ['.$processId.']: end upload the package.');
+        $this->getLog()->debug('Installation process ['.$processId.']: end upload the package.');
 
         return $processId;
     }
