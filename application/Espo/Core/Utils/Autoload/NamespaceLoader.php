@@ -33,6 +33,7 @@ use Espo\Core\{
     Utils\Util,
     Utils\Config,
     Utils\DataCache,
+    Utils\Log,
 };
 
 use Composer\Autoload\ClassLoader;
@@ -41,35 +42,39 @@ use Exception;
 
 class NamespaceLoader
 {
-    protected $classLoader;
+    private $classLoader;
 
     private $namespaces;
 
-    protected $autoloadFilePath = 'vendor/autoload.php';
+    private $autoloadFilePath = 'vendor/autoload.php';
 
-    protected $namespacesPaths = [
+    private $namespacesPaths = [
         'psr-4' => 'vendor/composer/autoload_psr4.php',
         'psr-0' => 'vendor/composer/autoload_namespaces.php',
         'classmap' => 'vendor/composer/autoload_classmap.php',
     ];
 
-    protected $methodNameMap = [
+    private $methodNameMap = [
         'psr-4' => 'addPsr4',
         'psr-0' => 'add',
         'classmap' => 'addClassMap',
     ];
 
-    protected $vendorNamespaces;
+    private $vendorNamespaces;
 
-    protected $cacheKey = 'autoloadVendorNamespaces';
+    private $cacheKey = 'autoloadVendorNamespaces';
 
-    protected $config;
-    protected $dataCache;
+    private $config;
 
-    public function __construct(Config $config, DataCache $dataCache)
+    private $dataCache;
+
+    private $log;
+
+    public function __construct(Config $config, DataCache $dataCache, Log $log)
     {
         $this->config = $config;
         $this->dataCache = $dataCache;
+        $this->log = $log;
 
         $this->classLoader = new ClassLoader();
     }
@@ -155,7 +160,7 @@ class NamespaceLoader
             }
 
             if (!method_exists($classLoader, $methodName)) {
-                $GLOBALS['log']->warning('Autoload: ClassLoader method ['. $methodName .'] is not found.');
+                $this->log->warning('Autoload: ClassLoader method ['. $methodName .'] is not found.');
 
                 continue;
             }
@@ -174,7 +179,7 @@ class NamespaceLoader
                         $this->addNamespace($type, $prefix, $path);
                     }
                     catch (Exception $e) {
-                        $GLOBALS['log']->warning('Autoload: error adding the namespace ['. $prefix .']');
+                        $this->log->warning('Autoload: error adding the namespace ['. $prefix .']');
                     }
                 }
             }
@@ -224,7 +229,7 @@ class NamespaceLoader
 
         $parentDir = dirname($path);
 
-        if (!empty($parentDir) && $parentDir != '.') {
+        if (!empty($parentDir) && $parentDir !== '.') {
             return $this->findVendorPath($parentDir);
         }
     }

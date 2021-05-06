@@ -2074,24 +2074,21 @@ class SelectManager
         $this->prepareResult($result);
 
         $method = 'filter' . ucfirst($filter);
+
         if (method_exists($this, $method)) {
             $this->$method($result);
+
             return;
-        } else {
-            $className = $this->getMetadata()->get(
-                ['entityDefs', $this->entityType, 'collection', 'filters', $filter, 'className']);
-            if ($className) {
-                if (!class_exists($className)) {
-                    $GLOBALS['log']->error("Could find class for filter {$filter}.");
-                    return;
-                }
-                $impl = $this->getInjectableFactory()->create($className);
-                if (!$impl) {
-                    $GLOBALS['log']->error("Could not create filter {$filter} implementation.");
-                    return;
-                }
-                $impl->applyFilter($this->entityType, $filter, $result, $this);
-            }
+        }
+
+        $className = $this->getMetadata()
+            ->get(['entityDefs', $this->entityType, 'collection', 'filters', $filter, 'className']);
+
+        if ($className) {
+            $impl = $this->getInjectableFactory()->create($className);
+
+            $impl->applyFilter($this->entityType, $filter, $result, $this);
+
             return;
         }
 
