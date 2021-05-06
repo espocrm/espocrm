@@ -34,7 +34,7 @@ use Espo\Core\{
     ApplicationUser,
     Authentication\AuthenticationFactory,
     Api\AuthBuilderFactory,
-    Api\ErrorOutput as ApiErrorOutput,
+    Api\ErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
     Api\RouteProcessor,
@@ -70,6 +70,8 @@ class Api implements Runner
 
     private $authBuilderFactory;
 
+    private $errorOutput;
+
     private $log;
 
     public function __construct(
@@ -78,6 +80,7 @@ class Api implements Runner
         ApplicationUser $applicationUser,
         Route $routeUtil,
         AuthBuilderFactory $authBuilderFactory,
+        ErrorOutput $errorOutput,
         Log $log
     ) {
         $this->routeProcessor = $routeProcessor;
@@ -85,6 +88,7 @@ class Api implements Runner
         $this->applicationUser = $applicationUser;
         $this->routeUtil = $routeUtil;
         $this->authBuilderFactory = $authBuilderFactory;
+        $this->errorOutput = $errorOutput;
         $this->log = $log;
     }
 
@@ -174,8 +178,11 @@ class Api implements Runner
         ResponseWrapper $responseWrapped
     ): void {
 
+        $noAuth = $item['noAuth'] ?? false;
+        $route = $item['route'];
+
         try {
-            $authRequired = !($item['noAuth'] ?? false);
+            $authRequired = !$noAuth;
 
             $authentication = $this->authenticationFactory->create();
 
@@ -197,12 +204,12 @@ class Api implements Runner
 
             ob_start();
 
-            $this->routeProcessor->process($item['route'], $requestWrapped, $responseWrapped);
+            $this->routeProcessor->process($route, $requestWrapped, $responseWrapped);
 
             ob_clean();
         }
         catch (Exception $exception) {
-            $this->handleException($exception, $requestWrapped, $responseWrapped, $item['route']);
+            $this->handleException($exception, $requestWrapped, $responseWrapped, $route);
         }
     }
 
@@ -213,10 +220,8 @@ class Api implements Runner
         string $route
     ): void {
 
-        $errorOutput = new ApiErrorOutput($requestWrapped, $route);
-
         try {
-            $errorOutput->process($responseWrapped, $exception);
+            $this->errorOutput->process($requestWrapped, $responseWrapped, $exception, $route);
         }
         catch (Throwable $exception) {
             $this->log->error($exception->getMessage());

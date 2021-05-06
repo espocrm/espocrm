@@ -36,6 +36,7 @@ use Espo\Core\{
     Portal\Utils\Route,
     Api\AuthBuilderFactory,
     Api\RouteProcessor,
+    Api\ErrorOutput,
     Utils\Log,
 };
 
@@ -47,6 +48,7 @@ class Api extends ApiBase
         ApplicationUser $applicationUser,
         Route $routeUtil,
         AuthBuilderFactory $authBuilderFactory,
+        ErrorOutput $errorOutput,
         Log $log
     ) {
         parent::__construct(
@@ -55,6 +57,7 @@ class Api extends ApiBase
             $applicationUser,
             $routeUtil,
             $authBuilderFactory,
+            $errorOutput,
             $log
         );
     }

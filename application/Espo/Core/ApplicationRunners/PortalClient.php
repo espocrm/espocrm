@@ -38,7 +38,7 @@ use Espo\Core\{
     Portal\Application as PortalApplication,
     Portal\ApplicationRunners\Client as PortalPortalClient,
     Portal\Utils\Url,
-    Api\ErrorOutput as ApiErrorOutput,
+    Api\ErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
 };
@@ -62,10 +62,17 @@ class PortalClient implements Runner
 
     private $config;
 
-    public function __construct(ClientManager $clientManager, Config $config, ?RunnerParams $params = null)
-    {
+    private $errorOutput;
+
+    public function __construct(
+        ClientManager $clientManager,
+        Config $config,
+        ErrorOutput $errorOutput,
+        ?RunnerParams $params = null
+    ) {
         $this->clientManager = $clientManager;
         $this->config = $config;
+        $this->errorOutput = $errorOutput;
 
         $this->params = $params ?? RunnerParams::fromNothing();
     }
@@ -110,7 +117,7 @@ class PortalClient implements Runner
 
     private function processError(RequestWrapper $request, ResponseWrapper $response, Exception $exception): void
     {
-        (new ApiErrorOutput($request))->process($response, $exception, true);
+        $this->errorOutput->processWithBodyPrinting($request, $response, $exception);
 
         (new ResponseEmitter())->emit($response->getResponse());
     }

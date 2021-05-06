@@ -41,7 +41,7 @@ use Espo\Core\{
     Utils\ClientManager,
     Authentication\AuthenticationFactory,
     Api\AuthBuilderFactory,
-    Api\ErrorOutput as ApiErrorOutput,
+    Api\ErrorOutput,
     Api\RequestWrapper,
     Api\ResponseWrapper,
     Authentication\AuthToken\AuthTokenManager,
@@ -76,6 +76,8 @@ class EntryPoint implements Runner
 
     private $authBuilderFactory;
 
+    private $errorOutput;
+
     public function __construct(
         AuthenticationFactory $authenticationFactory,
         EntryPointManager $entryPointManager,
@@ -84,6 +86,7 @@ class EntryPoint implements Runner
         ApplicationUser $applicationUser,
         AuthTokenManager $authTokenManager,
         AuthBuilderFactory $authBuilderFactory,
+        ErrorOutput $errorOutput,
         ?RunnerParams $params = null
     ) {
         $this->authenticationFactory = $authenticationFactory;
@@ -93,6 +96,7 @@ class EntryPoint implements Runner
         $this->applicationUser = $applicationUser;
         $this->authTokenManager = $authTokenManager;
         $this->authBuilderFactory = $authBuilderFactory;
+        $this->errorOutput = $errorOutput;
 
         $this->params = $params ?? RunnerParams::fromNothing();
     }
@@ -176,8 +180,8 @@ class EntryPoint implements Runner
                 $responseWrapped->writeBody($contents);
             }
         }
-        catch (Exception $e) {
-            (new ApiErrorOutput($requestWrapped))->process($responseWrapped, $e, true);
+        catch (Exception $exception) {
+            $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
         }
     }
 
