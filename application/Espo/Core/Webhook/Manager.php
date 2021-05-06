@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\FieldUtil,
     ORM\EntityManager,
     ORM\Entity,
+    Utils\Log,
 };
 
 /**
@@ -56,16 +57,20 @@ class Manager
 
     private $fieldUtil;
 
+    private $log;
+
     public function __construct(
         Config $config,
         DataCache $dataCache,
         EntityManager $entityManager,
-        FieldUtil $fieldUtil
+        FieldUtil $fieldUtil,
+        Log $log
     ) {
         $this->config = $config;
         $this->dataCache = $dataCache;
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
+        $this->log = $log;
 
         $this->loadData();
     }
@@ -154,7 +159,7 @@ class Manager
 
     protected function logDebugEvent(string $event, Entity $entity): void
     {
-        $GLOBALS['log']->debug("Webhook: {$event} on record {$entity->id}.");
+        $this->log->debug("Webhook: {$event} on record {$entity->id}.");
     }
 
     /**

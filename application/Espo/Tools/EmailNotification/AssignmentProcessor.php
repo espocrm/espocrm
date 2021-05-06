@@ -44,6 +44,7 @@ use Espo\Core\{
     Utils\TemplateFileManager,
     Mail\EmailSender as EmailSender,
     Utils\Util,
+    Utils\Log,
 };
 
 use Exception;
@@ -69,6 +70,8 @@ class AssignmentProcessor
 
     protected $metadata;
 
+    protected $log;
+
     public function __construct(
         EntityManager $entityManager,
         HtmlizerFactory $htmlizerFactory,
@@ -76,7 +79,8 @@ class AssignmentProcessor
         Config $config,
         TemplateFileManager $templateFileManager,
         Metadata $metadata,
-        Language $language
+        Language $language,
+        Log $log
     ) {
         $this->entityManager = $entityManager;
         $this->htmlizerFactory = $htmlizerFactory;
@@ -85,6 +89,7 @@ class AssignmentProcessor
         $this->templateFileManager = $templateFileManager;
         $this->metadata = $metadata;
         $this->language = $language;
+        $this->log = $log;
     }
 
     public function process(StdClass $data): void
@@ -205,7 +210,7 @@ class AssignmentProcessor
             $this->emailSender->send($email);
         }
         catch (Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 

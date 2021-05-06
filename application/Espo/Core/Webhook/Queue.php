@@ -40,6 +40,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\DateTime as DateTimeUtil,
     ORM\EntityManager,
+    Utils\Log,
 };
 
 use Exception;
@@ -69,16 +70,20 @@ class Queue
 
     private $aclManager;
 
+    private $log;
+
     public function __construct(
         Sender $sender,
         Config $config,
         EntityManager $entityManager,
-        AclManager $aclManager
+        AclManager $aclManager,
+        Log $log
     ) {
         $this->sender = $sender;
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->aclManager = $aclManager;
+        $this->log = $log;
     }
 
     public function process(): void
@@ -267,7 +272,7 @@ class Queue
         catch (Exception $e) {
             $this->failQueueItemList($itemList, true);
 
-            $GLOBALS['log']->error(
+            $this->log->error(
                 "Webhook Queue: Webhook {$webhook->id} sending failed. Error: " . $e->getMessage()
             );
             return;
@@ -294,7 +299,7 @@ class Queue
 
     protected function logSending(Webhook $webhook, int $code)
     {
-        $GLOBALS['log']->debug("Webhook Queue: Webhook {$webhook->id} sent, response code: {$code}.");
+        $this->log->debug("Webhook Queue: Webhook {$webhook->id} sent, response code: {$code}.");
     }
 
     protected function failQueueItemList(array $itemList, bool $force = false)

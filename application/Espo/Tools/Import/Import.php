@@ -39,6 +39,7 @@ use Espo\Core\{
     FileStorage\Manager as FileStorageManager,
     Record\ServiceContainer as RecordServiceContainer,
     Utils\DateTime as DateTimeUtil,
+    Utils\Log,
 };
 
 use Espo\{
@@ -75,6 +76,8 @@ class Import
 
     protected $fileStorageManager;
 
+    protected $log;
+
     public function __construct(
         AclManager $aclManager,
         EntityManager $entityManager,
@@ -82,7 +85,8 @@ class Import
         Config $config,
         User $user,
         FileStorageManager $fileStorageManager,
-        RecordServiceContainer $recordServiceContainer
+        RecordServiceContainer $recordServiceContainer,
+        Log $log
     ) {
         $this->aclManager = $aclManager;
         $this->entityManager = $entityManager;
@@ -91,6 +95,7 @@ class Import
         $this->user = $user;
         $this->fileStorageManager = $fileStorageManager;
         $this->recordServiceContainer = $recordServiceContainer;
+        $this->log = $log;
     }
 
     /**
@@ -369,7 +374,7 @@ class Import
                 ]);
             }
         } catch (Exception $e) {
-            $GLOBALS['log']->error('Import Error: '. $e->getMessage());
+            $this->log->error('Import Error: '. $e->getMessage());
 
             $import->set('status', 'Failed');
         }
@@ -556,7 +561,7 @@ class Import
                 $result['isUpdated'] = true;
             }
         } catch (Exception $e) {
-            $GLOBALS['log']->error("Import: " . $e->getMessage());
+            $this->log->error("Import: " . $e->getMessage());
         }
 
         return (object) $result;

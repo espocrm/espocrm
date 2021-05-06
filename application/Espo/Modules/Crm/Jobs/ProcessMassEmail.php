@@ -32,6 +32,7 @@ namespace Espo\Modules\Crm\Jobs;
 use Espo\Core\{
     ORM\EntityManager,
     Job\Job,
+    Utils\Log,
 };
 
 use Espo\{
@@ -49,11 +50,14 @@ class ProcessMassEmail implements Job
 
     private $entityManager;
 
-    public function __construct(Processor $processor, Queue $queue, EntityManager $entityManager)
+    private $log;
+
+    public function __construct(Processor $processor, Queue $queue, EntityManager $entityManager, Log $log)
     {
         $this->processor = $processor;
         $this->queue = $queue;
         $this->entityManager = $entityManager;
+        $this->log = $log;
     }
 
     public function run() : void
@@ -71,7 +75,7 @@ class ProcessMassEmail implements Job
                 $this->queue->create($massEmail);
             }
             catch (Throwable $e) {
-                $GLOBALS['log']->error(
+                $this->log->error(
                     'Job ProcessMassEmail#createQueue ' . $massEmail->id . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()
                 );
@@ -90,7 +94,7 @@ class ProcessMassEmail implements Job
                 $this->processor->process($massEmail);
             }
             catch (Throwable $e) {
-                $GLOBALS['log']->error(
+                $this->log->error(
                     'Job ProcessMassEmail#processSending '. $massEmail->id . ': [' . $e->getCode() . '] ' .
                     $e->getMessage()
                 );

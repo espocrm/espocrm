@@ -47,6 +47,7 @@ use Espo\Core\{
     Utils\TemplateFileManager,
     Mail\EmailSender as EmailSender,
     Utils\Util,
+    Utils\Log,
 };
 
 use Michelf\Markdown;
@@ -79,6 +80,8 @@ class Processor
 
     protected $metadata;
 
+    protected $log;
+
     public function __construct(
         EntityManager $entityManager,
         HtmlizerFactory $htmlizerFactory,
@@ -88,7 +91,8 @@ class Processor
         InjectableFactory $injectableFactory,
         TemplateFileManager $templateFileManager,
         Metadata $metadata,
-        Language $language
+        Language $language,
+        Log $log
     ) {
         $this->entityManager = $entityManager;
         $this->htmlizerFactory = $htmlizerFactory;
@@ -99,6 +103,7 @@ class Processor
         $this->templateFileManager = $templateFileManager;
         $this->metadata = $metadata;
         $this->language = $language;
+        $this->log = $log;
     }
 
     protected $emailNotificationEntityHandlerHash = [];
@@ -351,7 +356,7 @@ class Processor
             $this->emailSender->send($email);
         }
         catch (Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 
@@ -553,7 +558,7 @@ class Processor
             $sender->send($email);
         }
         catch (Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 
@@ -679,7 +684,7 @@ class Processor
             $this->emailSender->send($email);
         }
         catch (Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 
@@ -805,7 +810,7 @@ class Processor
             $this->emailSender->send($email);
         }
         catch (Exception $e) {
-            $GLOBALS['log']->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 

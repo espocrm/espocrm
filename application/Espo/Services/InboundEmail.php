@@ -259,7 +259,7 @@ class InboundEmail extends RecordService implements
             try {
                 $storage->selectFolder($folder);
             } catch (Exception $e) {
-                $GLOBALS['log']->error(
+                $this->log->error(
                     'InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
                 );
 
@@ -346,7 +346,7 @@ class InboundEmail extends RecordService implements
                             try {
                                 $toSkip = $this->processBouncedMessage($message) || $toSkip;
                             } catch (Throwable $e) {
-                                $GLOBALS['log']->error(
+                                $this->log->error(
                                     'InboundEmail ' . $emailAccount->id .
                                     ' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage()
                                 );
@@ -379,7 +379,7 @@ class InboundEmail extends RecordService implements
                         }
                     }
                 } catch (Throwable $e) {
-                    $GLOBALS['log']->error(
+                    $this->log->error(
                         'InboundEmail '.$emailAccount->id.
                         ' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage()
                     );
@@ -413,7 +413,7 @@ class InboundEmail extends RecordService implements
                         }
                     }
                 } catch (Exception $e) {
-                    $GLOBALS['log']->error(
+                    $this->log->error(
                         'InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .$e->getMessage()
                     );
                 }
@@ -501,7 +501,7 @@ class InboundEmail extends RecordService implements
                 $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
             );
         } catch (Exception $e) {
-            $GLOBALS['log']->error(
+            $this->log->error(
                 'InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
             );
@@ -926,7 +926,7 @@ class InboundEmail extends RecordService implements
                 return true;
             }
         } catch (Exception $e) {
-            $GLOBALS['log']->error("Inbound Email: Auto-reply error: " . $e->getMessage());
+            $this->log->error("Inbound Email: Auto-reply error: " . $e->getMessage());
         }
     }
 
@@ -1121,7 +1121,7 @@ class InboundEmail extends RecordService implements
             try {
                 $handler = $this->injectableFactory->create($handlerClassName);
             } catch (Throwable $e) {
-                $GLOBALS['log']->error(
+                $this->log->error(
                     "InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage()
                 );
             }
@@ -1209,7 +1209,7 @@ class InboundEmail extends RecordService implements
         try {
             $handler = $this->injectableFactory->create($handlerClassName);
         } catch (Throwable $e) {
-            $GLOBALS['log']->error(
+            $this->log->error(
                 "InboundEmail: Could not create Smtp Handler for account {$emailAccount->id}. Error: " . $e->getMessage()
             );
         }

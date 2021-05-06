@@ -95,6 +95,7 @@ class Record implements Crud,
     Di\FieldValidationManagerAware,
     Di\RecordServiceContainerAware,
     Di\SelectBuilderFactoryAware,
+    Di\LogAware,
 
     /** for backward compatibility, to be removed */
     \Espo\Core\Interfaces\Injectable
@@ -113,6 +114,7 @@ class Record implements Crud,
     use Di\FieldValidationManagerSetter;
     use Di\RecordServiceContainerSetter;
     use Di\SelectBuilderFactorySetter;
+    use Di\LogSetter;
 
     /** for backward compatibility, to be removed */
     use \Espo\Core\Traits\Injectable;

@@ -34,6 +34,7 @@ use Espo\Core\{
     Utils\Config,
     WebSocket\Submission as WebSocketSubmission,
     Job\Job,
+    Utils\Log,
 };
 
 use Throwable;
@@ -49,11 +50,18 @@ class SubmitPopupReminders implements Job
 
     private $webSocketSubmission;
 
-    public function __construct(EntityManager $entityManager, Config $config, WebSocketSubmission $webSocketSubmission)
-    {
+    private $log;
+
+    public function __construct(
+        EntityManager $entityManager,
+        Config $config,
+        WebSocketSubmission $webSocketSubmission,
+        Log $log
+    ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->webSocketSubmission = $webSocketSubmission;
+        $this->log = $log;
     }
 
     public function run() : void
@@ -146,7 +154,7 @@ class SubmitPopupReminders implements Job
                     'list' => $list
                 ]);
             } catch (Throwable $e) {
-                $GLOBALS['log']->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
+                $this->log->error('Job SubmitPopupReminders: [' . $e->getCode() . '] ' .$e->getMessage());
             }
         }
     }

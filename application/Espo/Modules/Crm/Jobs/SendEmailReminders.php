@@ -34,6 +34,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\Config,
     Job\Job,
+    Utils\Log,
 };
 
 use Espo\Modules\Crm\Business\Reminder\EmailReminder;
@@ -52,11 +53,18 @@ class SendEmailReminders implements Job
 
     private $config;
 
-    public function __construct(InjectableFactory $injectableFactory, EntityManager $entityManager, Config $config)
-    {
+    private $log;
+
+    public function __construct(
+        InjectableFactory $injectableFactory,
+        EntityManager $entityManager,
+        Config $config,
+        Log $log
+    ) {
         $this->injectableFactory = $injectableFactory;
         $this->entityManager = $entityManager;
         $this->config = $config;
+        $this->log = $log;
     }
 
     public function run() : void
@@ -90,7 +98,7 @@ class SendEmailReminders implements Job
                 $emailReminder->send($entity);
             }
             catch (Throwable $e) {
-                $GLOBALS['log']->error(
+                $this->log->error(
                     "Email reminder '{$entity->id}': " . $e->getMessage()
                 );
             }

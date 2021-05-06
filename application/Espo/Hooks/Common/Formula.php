@@ -34,41 +34,55 @@ use Espo\ORM\Entity;
 use Espo\Core\{
     Utils\Metadata,
     Formula\Manager as FormulaManager,
+    Utils\Log,
 };
+
+use Exception;
 
 class Formula
 {
     public static $order = 11;
 
-    protected $metadata;
-    protected $formulaManager;
+    private $metadata;
 
-    public function __construct(Metadata $metadata, FormulaManager $formulaManager)
+    private $formulaManager;
+
+    private $log;
+
+    public function __construct(Metadata $metadata, FormulaManager $formulaManager, Log $log)
     {
         $this->metadata = $metadata;
         $this->formulaManager = $formulaManager;
+        $this->log = $log;
     }
 
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if (!empty($options['skipFormula'])) return;
+        if (!empty($options['skipFormula'])) {
+            return;
+        }
 
         $scriptList = $this->metadata->get(['formula', $entity->getEntityType(), 'beforeSaveScriptList'], []);
-        $variables = (object)[];
+
+        $variables = (object) [];
+
         foreach ($scriptList as $script) {
             try {
                 $this->formulaManager->run($script, $entity, $variables);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->error('Formula failed: ' . $e->getMessage());
+            }
+            catch (Exception $e) {
+                $this->log->error('Formula failed: ' . $e->getMessage());
             }
         }
 
         $customScript = $this->metadata->get(['formula', $entity->getEntityType(), 'beforeSaveCustomScript']);
+
         if ($customScript) {
             try {
                 $this->formulaManager->run($customScript, $entity, $variables);
-            } catch (\Exception $e) {
-                $GLOBALS['log']->error('Formula failed: ' . $e->getMessage());
+            }
+            catch (Exception $e) {
+                $this->log->error('Formula failed: ' . $e->getMessage());
             }
         }
     }

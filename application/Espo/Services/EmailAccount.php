@@ -173,7 +173,7 @@ class EmailAccount extends Record implements
             try {
                 $handler = $this->injectableFactory->create($handlerClassName);
             } catch (Throwable $e) {
-                $GLOBALS['log']->error(
+                $this->log->error(
                     "EmailAccount: Could not create Imap Handler. Error: " . $e->getMessage()
                 );
             }
@@ -199,7 +199,7 @@ class EmailAccount extends Record implements
                         try {
                             $handler = $this->injectableFactory->create($handlerClassName);
                         } catch (Throwable $e) {
-                            $GLOBALS['log']->error(
+                            $this->log->error(
                                 "EmailAccount: Could not create Imap Handler for {$emailAddress}. Error: " . $e->getMessage()
                             );
                         }
@@ -376,7 +376,7 @@ class EmailAccount extends Record implements
                 $storage->selectFolder($folder);
             }
             catch (Exception $e) {
-                $GLOBALS['log']->error(
+                $this->log->error(
                     'EmailAccount '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
                 );
                 continue;
@@ -484,7 +484,7 @@ class EmailAccount extends Record implements
                     }
 
                 } catch (Throwable $e) {
-                    $GLOBALS['log']->error(
+                    $this->log->error(
                         'EmailAccount '.$emailAccount->id.
                         ' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage()
                     );
@@ -577,7 +577,7 @@ class EmailAccount extends Record implements
                 $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
             );
         } catch (Exception $e) {
-            $GLOBALS['log']->error(
+            $this->log->error(
                 'EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
             );
@@ -656,7 +656,7 @@ class EmailAccount extends Record implements
             $handler = $this->injectableFactory->create($handlerClassName);
         }
         catch (Throwable $e) {
-            $GLOBALS['log']->error(
+            $this->log->error(
                 "EmailAccount: Could not create Smtp Handler for account {$emailAccount->id}. Error: " .
                 $e->getMessage()
             );

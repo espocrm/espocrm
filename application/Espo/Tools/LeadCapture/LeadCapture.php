@@ -41,6 +41,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\DateTime as DateTimeUtil,
     ServiceFactory,
+    Utils\Log,
 };
 
 use Espo\{
@@ -70,6 +71,8 @@ class LeadCapture
 
     protected $dateTime;
 
+    protected $log;
+
     public function __construct(
         EntityManager $entityManager,
         FieldUtil $fieldUtil,
@@ -78,7 +81,8 @@ class LeadCapture
         HookManager $hookManager,
         EmailSender $emailSender,
         Config $config,
-        DateTimeUtil $dateTime
+        DateTimeUtil $dateTime,
+        Log $log
     ) {
         $this->entityManager = $entityManager;
         $this->fieldUtil = $fieldUtil;
@@ -88,6 +92,7 @@ class LeadCapture
         $this->emailSender = $emailSender;
         $this->config = $config;
         $this->dateTime = $dateTime;
+        $this->log = $log;
     }
 
     public function capture(string $apiKey, StdClass $data)
@@ -143,7 +148,7 @@ class LeadCapture
                 $isAlreadyOptedIn = $this->isTargetOptedIn($target, $leadCapture->get('targetListId'));
 
                 if ($isAlreadyOptedIn) {
-                    $GLOBALS['log']->debug("LeadCapture: Already opted in. Skipped.");
+                    $this->log->debug("LeadCapture: Already opted in. Skipped.");
 
                     return;
                 }

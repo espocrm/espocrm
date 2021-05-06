@@ -551,8 +551,8 @@ class Metadata
                     $rowResult = $this->fileManager->unsetJsonContents($filePath, $unsetData);
 
                     if (!$rowResult) {
-                        $GLOBALS['log']->warning(
-                            'Metadata items ['.$key1.'.'.$key2.'] can be deleted for custom code only.'
+                        throw new Error(
+                            "Metadata items {$key1}.{$key2} can be deleted for custom code only."
                         );
                     }
 

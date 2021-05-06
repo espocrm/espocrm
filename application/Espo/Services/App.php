@@ -40,6 +40,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Language,
     Utils\FieldUtil,
+    Utils\Log,
 };
 
 use Espo\Entities\User;
@@ -80,6 +81,8 @@ class App
 
     protected $fieldUtil;
 
+    protected $log;
+
     public function __construct(
         Config $config,
         EntityManager $entityManager,
@@ -92,7 +95,8 @@ class App
         ServiceFactory $serviceFactory,
         User $user,
         Preferences $preferences,
-        FieldUtil $fieldUtil
+        FieldUtil $fieldUtil,
+        Log $log
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
@@ -106,6 +110,7 @@ class App
         $this->user = $user;
         $this->preferences = $preferences;
         $this->fieldUtil = $fieldUtil;
+        $this->log = $log;
     }
 
     public function getUserData(): array
@@ -169,7 +174,7 @@ class App
                 $itemParams = $this->injectableFactory->create($className)->get();
             }
             catch (Throwable $e) {
-                $GLOBALS['log']->error("appParam {$paramKey}: " . $e->getMessage());
+                $this->log->error("appParam {$paramKey}: " . $e->getMessage());
 
                 continue;
             }

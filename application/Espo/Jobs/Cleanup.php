@@ -38,6 +38,7 @@ use Espo\Core\{
     InjectableFactory,
     Select\SelectBuilderFactory,
     ServiceFactory,
+    Utils\Log,
 };
 
 use Espo\ORM\Entity;
@@ -81,6 +82,8 @@ class Cleanup implements Job
 
     protected $serviceFactory;
 
+    protected $log;
+
     public function __construct(
         Config $config,
         EntityManager $entityManager,
@@ -88,7 +91,8 @@ class Cleanup implements Job
         FileManager $fileManager,
         InjectableFactory $injectableFactory,
         SelectBuilderFactory $selectBuilderFactory,
-        ServiceFactory $serviceFactory
+        ServiceFactory $serviceFactory,
+        Log $log
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
@@ -97,6 +101,7 @@ class Cleanup implements Job
         $this->injectableFactory = $injectableFactory;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->serviceFactory = $serviceFactory;
+        $this->log = $log;
     }
 
     public function run(): void
@@ -130,7 +135,7 @@ class Cleanup implements Job
                 $injectableFactory->create($className)->process();
             }
             catch (Throwable $e) {
-                $GLOBALS['log']->error("Cleanup: {$name}: " . $e->getMessage());
+                $this->log->error("Cleanup: {$name}: " . $e->getMessage());
             }
         }
     }
@@ -589,7 +594,7 @@ class Cleanup implements Job
                 $this->entityManager->getQueryExecutor()->execute($delete);
             }
             catch (Exception $e) {
-                $GLOBALS['log']->error("Cleanup: " . $e->getMessage());
+                $this->log->error("Cleanup: " . $e->getMessage());
             }
         }
 
@@ -731,7 +736,7 @@ class Cleanup implements Job
                         $service->cleanup($entity->id);
                     }
                     catch (Throwable $e) {
-                        $GLOBALS['log']->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());
+                        $this->log->error("Cleanup job: Cleanup scope {$scope}: " . $e->getMessage());
                     }
                 }
 

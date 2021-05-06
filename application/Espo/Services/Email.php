@@ -289,7 +289,7 @@ class Email extends Record implements
 
             $this->getEntityManager()->saveEntity($entity, ['silent' => true]);
 
-            $GLOBALS['log']->error("Email sending:" . $e->getMessage() . "; " . $e->getCode());
+            $this->log->error("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 
             $errorData = [
                 'id' => $entity->id,
@@ -311,7 +311,7 @@ class Email extends Record implements
                         $inboundEmailService->storeSentMessage($inboundEmail, $message);
                     }
                     catch (Exception $e) {
-                        $GLOBALS['log']->error(
+                        $this->log->error(
                             "Email sending: Could not store sent email (Group Email Account {$inboundEmail->id}): " .
                             $e->getMessage() . "."
                         );
@@ -326,7 +326,7 @@ class Email extends Record implements
                         $emailAccountService->storeSentMessage($emailAccount, $message);
                     }
                     catch (Exception $e) {
-                        $GLOBALS['log']->error(
+                        $this->log->error(
                             "Email sending: Could not store sent email (Email Account {$emailAccount->id}): " .
                             $e->getMessage() . "."
                         );
@@ -354,7 +354,7 @@ class Email extends Record implements
                         $handler = $this->getInjection('injectableFactory')->create($handlerClassName);
                     }
                     catch (Throwable $e) {
-                        $GLOBALS['log']->error(
+                        $this->log->error(
                             "Email sending: Could not create Smtp Handler for {$emailAddress}. Error: " .
                             $e->getMessage() . "."
                         );
@@ -852,7 +852,7 @@ class Email extends Record implements
                 ->send($email);
         }
         catch (Exception $e) {
-            $GLOBALS['log']->warning("Email sending:" . $e->getMessage() . "; " . $e->getCode());
+            $this->log->warning("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 
             $errorData = [
                 'message' => $e->getMessage(),

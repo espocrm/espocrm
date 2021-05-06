@@ -40,6 +40,7 @@ use Espo\Core\{
     Mail\EmailSender,
     Mail\Sender,
     Mail\Mail\Header\XQueueItemId,
+    Utils\Log,
 };
 
 use Espo\{
@@ -74,18 +75,22 @@ class Processor
 
     private $emailTemplateService = null;
 
+    protected $log;
+
     public function __construct(
         Config $config,
         ServiceFactory $serviceFactory,
         EntityManager $entityManager,
         Language $defaultLanguage,
-        EmailSender $emailSender
+        EmailSender $emailSender,
+        Log $log
     ) {
         $this->config = $config;
         $this->serviceFactory = $serviceFactory;
         $this->entityManager = $entityManager;
         $this->defaultLanguage = $defaultLanguage;
         $this->emailSender = $emailSender;
+        $this->log = $log;
     }
 
     public function process(Entity $massEmail, bool $isTest = false) : void
@@ -484,7 +489,7 @@ class Processor
 
             $this->entityManager->saveEntity($queueItem);
 
-            $GLOBALS['log']->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error('MassEmail#sendQueueItem: [' . $e->getCode() . '] ' .$e->getMessage());
 
             return false;
         }
