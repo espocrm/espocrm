@@ -1983,7 +1983,7 @@ class Record implements Crud,
         }
     }
 
-    protected function findLinkedFollowers($id, $params)
+    protected function findLinkedFollowers(string $id, SearchParams $params): RecordCollection
     {
         $entity = $this->getRepository()->get($id);
 

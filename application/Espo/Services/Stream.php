@@ -1795,17 +1795,17 @@ class Stream
         return $idList;
     }
 
-    public function findEntityFollowers(Entity $entity, $params): RecordCollection
+    public function findEntityFollowers(Entity $entity, SearchParams $searchParams): RecordCollection
     {
         $builder = $this->selectBuilderFactory
             ->create()
             ->from('User')
-            ->withSearchParams(SearchParams::fromRaw($params))
+            ->withSearchParams($searchParams)
             ->withStrictAccessControl()
             ->buildQueryBuilder();
 
-        if (empty($params['orderBy'])) {
-            $builder->order('LIST:id:' . $this->user->id, 'DESC');
+        if (!$searchParams->getOrderBy()) {
+            $builder->order('LIST:id:' . $this->user->getId(), 'DESC');
             $builder->order('name');
         }
 
@@ -1814,7 +1814,7 @@ class Stream
             'subscription',
             [
                 'subscription.userId=:' => 'user.id',
-                'subscription.entityId' => $entity->id,
+                'subscription.entityId' => $entity->getId(),
                 'subscription.entityType' => $entity->getEntityType(),
             ]
         );
