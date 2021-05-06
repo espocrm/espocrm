@@ -146,7 +146,10 @@ class RequestWrapper implements ApiRequest
             return null;
         }
 
-        $contentType = $this->request->getHeader('Content-Type')[0];
+        $contentType = explode(
+            ';',
+            $this->request->getHeader('Content-Type')[0]
+        )[0];
 
         return strtolower($contentType);
     }

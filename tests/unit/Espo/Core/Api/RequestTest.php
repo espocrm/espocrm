@@ -34,6 +34,8 @@ use Psr\Http\Message\{
     StreamInterface,
 };
 
+use Slim\Psr7\Factory\RequestFactory;
+
 use Espo\Core\Api\RequestWrapper;
 
 class RequestTest extends \PHPUnit\Framework\TestCase
@@ -181,5 +183,37 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($parsed->key2, $anotherParsed->key2);
 
         $this->assertNotSame($parsed->key2->key21[2], $anotherParsed->key2->key21[2]);
+    }
+
+    public function testContentType1(): void
+    {
+        $request = (new RequestFactory())
+            ->createRequest('POST', 'http://localhost/?')
+            ->withHeader('Content-Type', 'application/json; charset=utf-8');
+
+        $requestWrapped = new RequestWrapper($request);
+
+        $this->assertEquals('application/json', $requestWrapped->getContentType());
+    }
+
+    public function testContentType2(): void
+    {
+        $request = (new RequestFactory())
+            ->createRequest('POST', 'http://localhost/?')
+            ->withHeader('Content-Type', 'application/json');
+
+        $requestWrapped = new RequestWrapper($request);
+
+        $this->assertEquals('application/json', $requestWrapped->getContentType());
+    }
+
+    public function testContentTypeEmpty(): void
+    {
+        $request = (new RequestFactory())
+            ->createRequest('POST', 'http://localhost/?');
+
+        $requestWrapped = new RequestWrapper($request);
+
+        $this->assertEquals(null, $requestWrapped->getContentType());
     }
 }
