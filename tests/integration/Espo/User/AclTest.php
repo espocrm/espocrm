@@ -32,6 +32,7 @@ namespace tests\integration\Espo\User;
 use Espo\Core\{
     Api\ActionProcessor,
     Api\Response,
+    Select\SearchParams,
 };
 
 use Espo\Core\Exceptions\Forbidden;
@@ -59,7 +60,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
     public function testUserAccess0()
     {
-        $this->expectException('Espo\\Core\\Exceptions\\Forbidden');
+        $this->expectException(Forbidden::class);
 
         $this->createUser('tester', array(
             'assignmentPermission' => 'team',
@@ -103,7 +104,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
     public function testPortalUserAccess()
     {
-        $this->expectException('Espo\\Core\\Exceptions\\Forbidden');
+        $this->expectException(Forbidden::class);
 
         $newUser = $this->createUser(array(
                 'userName' => 'tester',
@@ -475,6 +476,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'id' => 'testMeetingId',
             'teamsIds' => ['testOtherTeamId']
         ]);
+
         $entityManager->saveEntity($meeting);
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
@@ -498,6 +500,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'id' => 'testLeadId',
             'assignedUserId' => 'testUserId'
         ]);
+
         $entityManager->saveEntity($lead);
 
         $service = $app->getContainer()->get('serviceFactory')->create('Lead');
@@ -521,6 +524,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'id' => 'testMeetingId',
             'teamsIds' => ['testTeamId']
         ]);
+
         $entityManager->saveEntity($meeting);
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
@@ -539,7 +543,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $entityManager = $app->getContainer()->get('entityManager');
 
-        $meeting = $entityManager->createEntity('Meeting', [
+        $entityManager->createEntity('Meeting', [
             'id' => 'testMeetingId',
             'teamsIds' => ['testTeamId']
         ]);
@@ -556,19 +560,22 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->prepareTestUser();
 
         $this->auth('test');
+
         $app = $this->createApplication();
 
         $service = $app->getContainer()->get('serviceFactory')->create('User');
 
         $this->expectException(Forbidden::class);
 
-        $e = $service->find([
-            'where' => [
+        $searchParams = SearchParams
+            ::fromNothing()
+            ->withWhere([
                 [
                     'type' => 'isNull',
                     'attribute' => 'password',
                 ]
-            ]
-        ]);
+            ]);
+
+        $service->find($searchParams);
     }
 }

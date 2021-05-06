@@ -29,6 +29,10 @@
 
 namespace tests\integration\Espo\Portal;
 
+use Espo\Core\{
+    Select\SearchParams,
+};
+
 class AclTest extends \tests\integration\Core\BaseTestCase
 {
     public function testAccessContact()
@@ -83,8 +87,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->assertTrue($acl->check($case2, 'read'));
         $this->assertFalse($acl->check($case3, 'read'));
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Case');
-        $result = $service->find([]);
+        $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
+
+        $result = $service->find(SearchParams::fromNothing());
 
         $idList = [];
         foreach ($result->getCollection() as $e) {
@@ -154,8 +159,8 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->assertFalse($acl->check($case3, 'read'));
         $this->assertTrue($acl->check($case4, 'read'));
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Case');
-        $result = $service->find([]);
+        $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
+        $result = $service->find(SearchParams::fromNothing());
 
         $idList = [];
         foreach ($result->getCollection() as $e) {
@@ -231,10 +236,12 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->assertFalse($acl->check($case4, 'read'));
         $this->assertTrue($acl->check($case5, 'read'));
 
-        $service = $app->getContainer()->get('serviceFactory')->create('Case');
-        $result = $service->find([]);
+        $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
+
+        $result = $service->find(SearchParams::fromNothing());
 
         $idList = [];
+
         foreach ($result->getCollection() as $e) {
             $idList[] = $e->id;
         }
