@@ -498,37 +498,26 @@ class Manager
         $defaultPermissions = $this->getPermissionUtils()->getRequiredPermissions($path);
 
         if (!isset($permission)) {
-            $permission = (string) $defaultPermissions['dir'];
-
-            $permission = base_convert($permission, 8, 10);
+            $permission = base_convert((string) $defaultPermissions['dir'], 8, 10);
         }
 
-        try {
-            $umask = umask(0);
+        $umask = umask(0);
 
-            $result = mkdir($path, $permission);
+        $result = mkdir($path, $permission);
 
-            if ($umask) {
-                umask($umask);
-            }
-
-            if (!empty($defaultPermissions['user'])) {
-                $this->getPermissionUtils()->chown($path);
-            }
-
-            if (!empty($defaultPermissions['group'])) {
-                $this->getPermissionUtils()->chgrp($path);
-            }
-        }
-        catch (Exception $e) {
-            if (isset($GLOBALS['log'])) {
-                $GLOBALS['log']->critical(
-                    "Permission denied: unable to create the folder on the server: {$path}."
-                );
-            }
+        if ($umask) {
+            umask($umask);
         }
 
-        return isset($result) ? (bool) $result : false;
+        if (!empty($defaultPermissions['user'])) {
+            $this->getPermissionUtils()->chown($path);
+        }
+
+        if (!empty($defaultPermissions['group'])) {
+            $this->getPermissionUtils()->chgrp($path);
+        }
+
+        return (bool) $result;
     }
 
     /**
