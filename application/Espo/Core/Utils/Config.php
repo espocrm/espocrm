@@ -226,8 +226,6 @@ class Config
         }
 
         if (!is_array($data)) {
-            $GLOBALS['log']->error("Invalid config data while saving to '{$configPath}'.");
-
             throw new Error('Invalid config data while saving.');
         }
 

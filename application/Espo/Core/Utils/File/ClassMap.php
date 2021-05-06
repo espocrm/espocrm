@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
     Utils\DataCache,
+    Utils\Log,
 };
 
 use ReflectionClass;
@@ -49,16 +50,20 @@ class ClassMap
 
     private $dataCache;
 
+    private $log;
+
     public function __construct(
         FileManager $fileManager,
         Config $config,
         Metadata $metadata,
-        DataCache $dataCache
+        DataCache $dataCache,
+        Log $log
     ){
         $this->fileManager = $fileManager;
         $this->config = $config;
         $this->metadata = $metadata;
         $this->dataCache = $dataCache;
+        $this->log = $log;
     }
 
     /**
@@ -92,7 +97,7 @@ class ClassMap
             $data = $this->dataCache->get($cacheKey);
 
             if (!is_array($data)) {
-                $GLOBALS['log']->error("ClassParser: Non-array value stored in {$cacheKey}.");
+                $this->log->error("ClassParser: Non-array value stored in {$cacheKey}.");
             }
         }
 
