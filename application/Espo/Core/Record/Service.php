@@ -138,10 +138,6 @@ class Service implements Crud,
 
     protected $noEditAccessRequiredForLink = false;
 
-    protected $exportSkipAttributeList = [];
-
-    protected $exportAdditionalAttributeList = [];
-
     protected $checkForDuplicatesInUpdate = false;
 
     protected $actionHistoryDisabled = false;
@@ -1662,36 +1658,6 @@ class Service implements Crud,
     }
 
     /**
-     * Export a collection.
-     *
-     * @param $params Raw export parameters.
-     * @param $collection A collection.
-     *
-     * @return An attachment ID.
-     */
-    public function exportCollection(array $params, Collection $collection): string
-    {
-        if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
-            throw new ForbiddenSilent("No 'export' permission.");
-        }
-
-        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent("No 'read' access.");
-        }
-
-        $export = $this->injectableFactory->create(ExportTool::class);
-
-        return $export
-            ->setRecordService($this)
-            ->setParams($params)
-            ->setCollection($collection)
-            ->setEntityType($this->entityType)
-            ->setAdditionalAttributeList($this->exportAdditionalAttributeList)
-            ->setSkipAttributeList($this->exportSkipAttributeList)
-            ->run();
-    }
-
-    /**
      * Run an export.
      *
      * @param Raw export parameters.
@@ -1713,8 +1679,6 @@ class Service implements Crud,
             ->setRecordService($this)
             ->setParams($params)
             ->setEntityType($this->entityType)
-            ->setAdditionalAttributeList($this->exportAdditionalAttributeList)
-            ->setSkipAttributeList($this->exportSkipAttributeList)
             ->run();
     }
 

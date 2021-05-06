@@ -31,6 +31,7 @@ namespace Espo\Services;
 
 use Espo\ORM\{
     Entity,
+    Collection,
 };
 
 use Espo\{
@@ -38,12 +39,18 @@ use Espo\{
 };
 
 use Espo\Core\{
+    Exceptions\ForbiddenSilent,
     Acl,
+    Acl\Table as AclTable,
     Utils\Util,
     Record\Service as RecordService,
 };
 
 use Espo\Core\Di;
+
+use Espo\Tools\{
+    Export\Export as ExportTool,
+};
 
 class Record extends RecordService implements
 
@@ -237,6 +244,29 @@ class Record extends RecordService implements
     protected function getRecordService($name)
     {
         return $this->recordServiceContainer->get($name);
+    }
+
+    /**
+     * @deprecated
+     */
+    public function exportCollection(array $params, Collection $collection): string
+    {
+        if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
+            throw new ForbiddenSilent("No 'export' permission.");
+        }
+
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
+            throw new ForbiddenSilent("No 'read' access.");
+        }
+
+        $export = $this->injectableFactory->create(ExportTool::class);
+
+        return $export
+            ->setRecordService($this)
+            ->setParams($params)
+            ->setCollection($collection)
+            ->setEntityType($this->entityType)
+            ->run();
     }
 
     /**

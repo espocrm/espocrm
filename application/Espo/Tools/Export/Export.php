@@ -59,10 +59,6 @@ class Export implements
 
     protected $entityType;
 
-    protected $additionalAttributeList = [];
-
-    protected $skipAttributeList = [];
-
     protected $recordService;
 
     protected $collection = null;
@@ -79,20 +75,6 @@ class Export implements
     public function setEntityType(string $entityType): self
     {
         $this->entityType = $entityType;
-
-        return $this;
-    }
-
-    public function setAdditionalAttributeList(array $additionalAttributeList): self
-    {
-        $this->additionalAttributeList = $additionalAttributeList;
-
-        return $this;
-    }
-
-    public function setSkipAttributeList(array $skipAttributeList): self
-    {
-        $this->skipAttributeList = $skipAttributeList;
 
         return $this;
     }
@@ -150,10 +132,6 @@ class Export implements
         $attributeListToSkip = [
             'deleted',
         ];
-
-        foreach ($this->skipAttributeList as $attribute) {
-            $attributeListToSkip[] = $attribute;
-        }
 
         foreach ($this->acl->getScopeForbiddenAttributeList($this->entityType, 'read') as $attribute) {
             $attributeListToSkip[] = $attribute;
@@ -215,10 +193,6 @@ class Export implements
                     continue;
                 }
 
-                $attributeList[] = $attribute;
-            }
-
-            foreach ($this->additionalAttributeList as $attribute) {
                 $attributeList[] = $attribute;
             }
         }
