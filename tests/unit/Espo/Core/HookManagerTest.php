@@ -38,6 +38,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\File\Manager as FileManager,
     Utils\DataCache,
+    Utils\Log,
 };
 
 class HookManagerTest extends \PHPUnit\Framework\TestCase
@@ -70,7 +71,8 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
             $this->fileManager,
             $this->metadata,
             $this->config,
-            $this->dataCache
+            $this->dataCache,
+            $this->createMock(Log::class)
         );
 
         $this->reflection = new ReflectionHelper($this->object);

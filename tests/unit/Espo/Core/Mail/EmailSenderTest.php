@@ -35,7 +35,6 @@ use Laminas\{
 
 
 use Espo\Entities\{
-    Attachment,
     Email,
 };
 
@@ -45,6 +44,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\Config,
     ServiceFactory,
+    Utils\Log,
 };
 
 use Espo\Services\InboundEmail as InboundEmailService;
@@ -60,7 +60,9 @@ class EmailSenderTest extends \PHPUnit\Framework\TestCase
 
         $this->transport = $this->getMockBuilder(SmtpTransport::class)->disableOriginalConstructor()->getMock();
 
-        $emailSender = new EmailSender($config, $entityManager, $serviceFactory, $transportFactory);
+        $log = $this->createMock(Log::class);
+
+        $emailSender = new EmailSender($config, $entityManager, $serviceFactory, $transportFactory, $log);
 
         $transportFactory
             ->expects($this->any())
