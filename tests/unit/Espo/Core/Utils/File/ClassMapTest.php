@@ -34,6 +34,7 @@ use tests\unit\ReflectionHelper;
 use Espo\Core\Utils\File\ClassMap;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Log;
 
 class ClassMapTest extends \PHPUnit\Framework\TestCase
 {
@@ -45,18 +46,21 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->objects['fileManager'] = new FileManager();
+        $this->fileManager = new FileManager();
 
-        $this->objects['config'] = $this->getMockBuilder('Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-        $this->objects['metadata'] = $this->getMockBuilder('Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
+        $this->config = $this->getMockBuilder('Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
+        $this->metadata = $this->getMockBuilder('Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
 
         $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
 
+        $this->log = $this->createMock(Log::class);
+
         $this->object = new ClassMap(
-            $this->objects['fileManager'],
-            $this->objects['config'],
-            $this->objects['metadata'],
-            $this->dataCache
+            $this->fileManager,
+            $this->config,
+            $this->metadata,
+            $this->dataCache,
+            $this->log
         );
 
         $this->reflection = new ReflectionHelper($this->object);
@@ -88,7 +92,7 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
             'Download' => '\\tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
         ];
 
-        $this->objects['config']
+        $this->config
             ->expects($this->once())
             ->method('get')
             ->will($this->returnValue(true));
@@ -124,12 +128,12 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
             ->with('entryPoints')
             ->willReturn(true);
 
-        $this->objects['config']
+        $this->config
             ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
             ->will($this->returnValue(
@@ -163,12 +167,12 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
             ->with('entryPoints')
             ->willReturn(true);
 
-        $this->objects['config']
+        $this->config
             ->expects($this->exactly(2))
             ->method('get')
             ->will($this->returnValue(false));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->never())
             ->method('getModuleList')
             ->will($this->returnValue(
@@ -190,12 +194,12 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
 
     function testGetDataWithCacheFalse()
     {
-        $this->objects['config']
+        $this->config
             ->expects($this->never())
             ->method('get')
             ->will($this->returnValue(false));
 
-        $this->objects['metadata']
+        $this->metadata
             ->expects($this->never())
             ->method('getModuleList')
             ->will($this->returnValue(
