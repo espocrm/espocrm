@@ -29,8 +29,6 @@
 
 namespace Espo\Core;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     InjectableFactory,
     Utils\File\Manager as FileManager,
@@ -38,6 +36,7 @@ use Espo\Core\{
     Utils\Config,
     Utils\Util,
     Utils\DataCache,
+    Utils\Log,
 };
 
 /**
@@ -70,22 +69,42 @@ class HookManager
         'customPath' => 'custom/Espo/Custom/Hooks',
     ];
 
+    private $injectableFactory;
+
+    private $fileManager;
+
+    private $metadata;
+
+    private $config;
+
+    private $dataCache;
+
+    private $log;
+
     public function __construct(
         InjectableFactory $injectableFactory,
         FileManager $fileManager,
         Metadata $metadata,
         Config $config,
-        DataCache $dataCache
+        DataCache $dataCache,
+        Log $log
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
         $this->config = $config;
         $this->dataCache = $dataCache;
+        $this->log = $log;
     }
 
-    public function process(string $scope, string $hookName, $injection = null, array $options = [], array $hookData = [])
-    {
+    public function process(
+        string $scope,
+        string $hookName,
+        $injection = null,
+        array $options = [],
+        array $hookData = []
+    ): void {
+
         if ($this->isDisabled) {
             return;
         }
@@ -96,27 +115,25 @@ class HookManager
 
         $hookList = $this->getHookList($scope, $hookName);
 
-        if (!empty($hookList)) {
-            foreach ($hookList as $className) {
-                if (empty($this->hooks[$className])) {
-                    $this->hooks[$className] = $this->createHookByClassName($className);
+        if (empty($hookList)) {
+            return;
+        }
 
-                    if (empty($this->hooks[$className])) {
-                        continue;
-                    }
-                }
-
-                $hook = $this->hooks[$className];
-
-                $hook->$hookName($injection, $options, $hookData);
+        foreach ($hookList as $className) {
+            if (empty($this->hooks[$className])) {
+                $this->hooks[$className] = $this->createHookByClassName($className);
             }
+
+            $hook = $this->hooks[$className];
+
+            $hook->$hookName($injection, $options, $hookData);
         }
     }
 
     /**
      * Disable hook processing.
      */
-    public function disable()
+    public function disable(): void
     {
         $this->isDisabled = true;
     }
@@ -124,12 +141,12 @@ class HookManager
     /**
      * Enable hook processing.
      */
-    public function enable()
+    public function enable(): void
     {
         $this->isDisabled = false;
     }
 
-    protected function loadHooks()
+    protected function loadHooks(): void
     {
         if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
             $this->data = $this->dataCache->get($this->cacheKey);
@@ -159,7 +176,7 @@ class HookManager
     protected function createHookByClassName(string $className): object
     {
         if (!class_exists($className)) {
-            $GLOBALS['log']->error("Hook class '{$className}' does not exist.");
+            $this->log->error("Hook class '{$className}' does not exist.");
         }
 
         $obj = $this->injectableFactory->create($className);
@@ -284,7 +301,7 @@ class HookManager
         return false;
     }
 
-    protected function cmpHooks($a, $b)
+    protected function cmpHooks($a, $b): int
     {
         if ($a['order'] == $b['order']) {
             return 0;
