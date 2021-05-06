@@ -158,8 +158,9 @@ class GoogleMaps
             $url .= '&language=' . $language;
         }
 
-        $GLOBALS['log']->debug("Template helper _googleMapsImage: URL: {$url}.");
+        $log->debug("Template helper _googleMapsImage: URL: {$url}.");
 
+        // Need to use fully-qualified class name.
         $image = \Espo\Classes\TemplateHelpers\GoogleMaps::getImage($url);
 
         if (!$image) {
