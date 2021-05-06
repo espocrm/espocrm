@@ -46,6 +46,7 @@ use Espo\Core\{
     Utils\Database\Helper,
     Utils\Database\DBAL\Schema\Comparator,
     Utils\Database\Converter as DatabaseConverter,
+    Utils\Log,
 };
 
 use Throwable;
@@ -69,6 +70,8 @@ class Schema
     private $databaseHelper;
 
     protected $ormMetadataData;
+
+    private $log;
 
     protected $fieldTypePaths = [
         'application/Espo/Core/Utils/Database/DBAL/FieldTypes',
@@ -98,13 +101,15 @@ class Schema
         FileManager $fileManager,
         EntityManager $entityManager,
         ClassMap $classMap,
-        OrmMetadataData $ormMetadataData
+        OrmMetadataData $ormMetadataData,
+        Log $log
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->entityManager = $entityManager;
         $this->classMap = $classMap;
+        $this->log = $log;
 
         $this->databaseHelper = new Helper($this->config);
 
@@ -114,7 +119,13 @@ class Schema
 
         $this->converter = new DatabaseConverter($this->metadata, $this->fileManager, $this->config);
 
-        $this->schemaConverter = new Converter($this->metadata, $this->fileManager, $this, $this->config);
+        $this->schemaConverter = new Converter(
+            $this->metadata,
+            $this->fileManager,
+            $this,
+            $this->config,
+            $this->log
+        );
 
         $this->ormMetadataData = $ormMetadataData;
     }
@@ -212,7 +223,7 @@ class Schema
             $this->executeRebuildActions('beforeRebuild');
         }
         catch (Throwable $e) {
-            $GLOBALS['log']->alert('Rebuild database fault: '. $e);
+            $this->log->alert('Rebuild database fault: '. $e);
 
             return false;
         }
@@ -223,13 +234,13 @@ class Schema
         $connection = $this->getConnection();
 
         foreach ($queries as $sql) {
-            $GLOBALS['log']->info('SCHEMA, Execute Query: '.$sql);
+            $this->log->info('SCHEMA, Execute Query: '.$sql);
 
             try {
                 $result &= (bool) $connection->executeQuery($sql);
             }
             catch (Throwable $e) {
-                $GLOBALS['log']->alert('Rebuild database fault: '. $e);
+                $this->log->alert('Rebuild database fault: '. $e);
 
                 $result = false;
             }
@@ -239,7 +250,7 @@ class Schema
             $this->executeRebuildActions('afterRebuild');
         }
         catch (Throwable $e) {
-            $GLOBALS['log']->alert('Rebuild database fault: '. $e);
+            $this->log->alert('Rebuild database fault: '. $e);
 
             return false;
         }
@@ -291,7 +302,12 @@ class Schema
         $classes = [];
 
         foreach ($rebuildActions as $actionName => $actionClass) {
-            $rebuildActionClass = new $actionClass($this->metadata, $this->config, $this->entityManager);
+            $rebuildActionClass = new $actionClass(
+                $this->metadata,
+                $this->config,
+                $this->entityManager,
+                $this->log
+            );
 
             if (isset($currentSchema)) {
                 $rebuildActionClass->setCurrentSchema($currentSchema);

@@ -162,21 +162,13 @@ class Converter
     /**
      * Covert metadata > entityDefs to ORM metadata.
      */
-    public function process() : array
+    public function process(): array
     {
         $entityDefs = $this->getEntityDefs(true);
 
         $ormMetadata = [];
 
         foreach ($entityDefs as $entityType => $entityMetadata) {
-            if (empty($entityMetadata)) {
-                $GLOBALS['log']->critical(
-                    'Orm\Converter:process(), Entity:'.$entityType.' - metadata cannot be converted into ORM format'
-                );
-
-                continue;
-            }
-
             if ($entityMetadata['skipRebuild'] ?? false) {
                 $ormMetadata[$entityType]['skipRebuild'] = true;
             }
@@ -203,7 +195,7 @@ class Converter
         return $ormMetadata;
     }
 
-    protected function convertEntity(string $entityType, array $entityMetadata) : array
+    protected function convertEntity(string $entityType, array $entityMetadata): array
     {
         $ormMetadata = [];
 
@@ -253,7 +245,7 @@ class Converter
         return $ormMetadata;
     }
 
-    protected function afterFieldsProcess(array $ormMetadata) : array
+    protected function afterFieldsProcess(array $ormMetadata): array
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
             foreach ($entityParams['fields'] as $attribute => &$attributeParams) {
@@ -314,7 +306,7 @@ class Converter
         return $ormMetadata;
     }
 
-    protected function afterProcess(array $ormMetadata) : array
+    protected function afterProcess(array $ormMetadata): array
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
             foreach ($entityParams['fields'] as $attribute => &$attributeParams) {
@@ -333,7 +325,7 @@ class Converter
         return $ormMetadata;
     }
 
-    protected function obtainForeignType(array $data, string $entityType, string $attribute) : ?string
+    protected function obtainForeignType(array $data, string $entityType, string $attribute): ?string
     {
         $params = $data[$entityType]['fields'][$attribute] ?? [];
 
@@ -357,7 +349,7 @@ class Converter
         return $foreignParams['type'] ?? null;
     }
 
-    protected function convertFields(string $entityType, array &$entityMetadata) : array
+    protected function convertFields(string $entityType, array &$entityMetadata): array
     {
         // List of unmerged fields with default field definitions in $output.
         $unmergedFields = [
@@ -424,7 +416,7 @@ class Converter
     /**
      * Correct fields definitions based on Espo\Custom\Core\Utils\Database\Orm\Fields.
      */
-    protected function correctFields(string $entityType, array $ormMetadata) : array
+    protected function correctFields(string $entityType, array $ormMetadata): array
     {
         $entityDefs = $this->getEntityDefs();
 
@@ -549,7 +541,7 @@ class Converter
         return $fieldDefs;
     }
 
-    protected function convertLinks(string $entityType, array $entityMetadata, array $ormMetadata) : array
+    protected function convertLinks(string $entityType, array $entityMetadata, array $ormMetadata): array
     {
         if (!isset($entityMetadata['links'])) {
             return [];
@@ -604,41 +596,61 @@ class Converter
 
     protected function applyFullTextSearch(array &$ormMetadata, string $entityType)
     {
-        if (!$this->getDatabaseHelper()->doesTableSupportFulltext(Util::toUnderScore($entityType))) return;
-        if (!$this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) return;
+        if (!$this->getDatabaseHelper()->doesTableSupportFulltext(Util::toUnderScore($entityType))) {
+            return;
+        }
 
-        $fieldList = $this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'textFilterFields'], ['name']);
+        if (!$this->getMetadata()->get(['entityDefs', $entityType, 'collection', 'fullTextSearch'])) {
+            return;
+        }
+
+        $fieldList = $this->getMetadata()
+            ->get(['entityDefs', $entityType, 'collection', 'textFilterFields'], ['name']);
 
         $fullTextSearchColumnList = [];
 
         foreach ($fieldList as $field) {
             $defs = $this->getMetadata()->get(['entityDefs', $entityType, 'fields', $field], []);
-            if (empty($defs['type'])) continue;
+            if (empty($defs['type'])) {
+                continue;
+            }
+
             $fieldType = $defs['type'];
-            if (!empty($defs['notStorable'])) continue;
-            if (!$this->getMetadata()->get(['fields', $fieldType, 'fullTextSearch'])) continue;
+
+            if (!empty($defs['notStorable'])) {
+                continue;
+            }
+
+            if (!$this->getMetadata()->get(['fields', $fieldType, 'fullTextSearch'])) {
+                continue;
+            }
 
             $partList = $this->getMetadata()->get(['fields', $fieldType, 'fullTextSearchColumnList']);
+
             if ($partList) {
                 if ($this->getMetadata()->get(['fields', $fieldType, 'naming']) === 'prefix') {
                     foreach ($partList as $part) {
                         $fullTextSearchColumnList[] = $part . ucfirst($field);
                     }
-                } else {
+                }
+                else {
                     foreach ($partList as $part) {
                         $fullTextSearchColumnList[] = $field . ucfirst($part);
                     }
                 }
-            } else {
+            }
+            else {
                 $fullTextSearchColumnList[] = $field;
             }
         }
 
         if (!empty($fullTextSearchColumnList)) {
             $ormMetadata[$entityType]['fullTextSearchColumnList'] = $fullTextSearchColumnList;
+
             if (!array_key_exists('indexes', $ormMetadata[$entityType])) {
                 $ormMetadata[$entityType]['indexes'] = [];
             }
+
             $ormMetadata[$entityType]['indexes']['system_fullTextSearch'] = [
                 'columns' => $fullTextSearchColumnList,
                 'flags' => ['fulltext']
@@ -650,6 +662,7 @@ class Converter
     {
         if (isset($ormMetadata[$entityType]['fields'])) {
             $indexList = SchemaUtils::getEntityIndexListByFieldsDefs($ormMetadata[$entityType]['fields']);
+
             foreach ($indexList as $indexName => $indexParams) {
                 if (!isset($ormMetadata[$entityType]['indexes'][$indexName])) {
                     $ormMetadata[$entityType]['indexes'][$indexName] = $indexParams;
@@ -678,7 +691,7 @@ class Converter
         }
     }
 
-    protected function createAdditionalEntityTypes(string $entityType, array $defs) : array
+    protected function createAdditionalEntityTypes(string $entityType, array $defs): array
     {
         if (empty($defs['additionalTables'])) {
             return [];
@@ -689,7 +702,7 @@ class Converter
         return $additionalDefs;
     }
 
-    protected function createRelationsEntityDefs(string $entityType, array $defs) : array
+    protected function createRelationsEntityDefs(string $entityType, array $defs): array
     {
         $result = [];
 

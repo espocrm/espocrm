@@ -36,7 +36,6 @@ use Espo\Core\{
     Utils\Config,
     Utils\Database\Converter,
     Utils\DataCache,
-    Exceptions\Error,
 };
 
 class OrmMetadataData
@@ -48,16 +47,22 @@ class OrmMetadataData
     protected $useCache;
 
     protected $metadata;
+
     protected $fileManager;
+
     protected $dataCache;
+
     protected $config;
 
-    public function __construct(Metadata $metadata, FileManager $fileManager, DataCache $dataCache, Config $config)
-    {
+    public function __construct(
+        Metadata $metadata,
+        FileManager $fileManager,
+        DataCache $dataCache,
+        Config $config
+    ) {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
-
         $this->config = $config;
 
         $this->useCache = $this->config->get('useCache', false);

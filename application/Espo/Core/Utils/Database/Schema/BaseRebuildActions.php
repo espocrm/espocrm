@@ -28,24 +28,38 @@
  ************************************************************************/
 
 namespace Espo\Core\Utils\Database\Schema;
+
+use Espo\Core\{
+    Utils\Metadata,
+    Utils\Config,
+    ORM\EntityManager,
+    Utils\Log,
+};
+
 abstract class BaseRebuildActions
 {
-    private $metadata;
+    protected $metadata;
 
-    private $config;
+    protected $config;
 
-    private $entityManager;
+    protected $entityManager;
+
+    protected $log;
 
     protected $currentSchema = null;
 
     protected $metadataSchema = null;
 
-
-    public function __construct(\Espo\Core\Utils\Metadata $metadata, \Espo\Core\Utils\Config $config, \Espo\Core\ORM\EntityManager $entityManager)
-    {
+    public function __construct(
+        Metadata $metadata,
+        Config $config,
+        EntityManager $entityManager,
+        Log $log
+    ) {
         $this->metadata = $metadata;
         $this->config = $config;
         $this->entityManager = $entityManager;
+        $this->log = $log;
     }
 
     protected function getEntityManager()

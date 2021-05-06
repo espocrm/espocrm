@@ -34,6 +34,7 @@ use Espo\Core\Utils\{
     Config,
     Metadata,
     File\Manager as FileManager,
+    Log,
     Database\Schema\Schema,
     Database\Schema\Utils as SchemaUtils
 };
@@ -52,6 +53,10 @@ class Converter
     private $fileManager;
 
     private $metadata;
+
+    private $config;
+
+    private $log;
 
     protected $tablePaths = [
         'corePath' => 'application/Espo/Core/Utils/Database/Schema/tables',
@@ -91,12 +96,14 @@ class Converter
         Metadata $metadata,
         FileManager $fileManager,
         Schema $databaseSchema,
-        Config $config = null
+        Config $config,
+        Log $log
     ) {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->databaseSchema = $databaseSchema;
         $this->config = $config;
+        $this->log = $log;
 
         $this->typeList = array_keys(DbalType::getTypesMap());
     }
@@ -156,7 +163,7 @@ class Converter
      */
     public function process(array $ormMeta, $entityList = null)
     {
-        $GLOBALS['log']->debug('Schema\Converter - Start: building schema');
+        $this->log->debug('Schema\Converter - Start: building schema');
 
         //check if exist files in "Tables" directory and merge with ormMetadata
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
@@ -189,7 +196,7 @@ class Converter
 
             $dependentEntities = $this->getDependentEntities($entityList, $ormMeta);
 
-            $GLOBALS['log']->debug(
+            $this->log->debug(
                 'Rebuild Database for entities: ['.
                 implode(', ', $entityList).'] with dependent entities: ['.
                 implode(', ', $dependentEntities).']'
@@ -216,7 +223,7 @@ class Converter
                 if (!isset($tables[$entityName])) {
                     $tables[$entityName] = $schema->getTable($tableName);
                 }
-                $GLOBALS['log']->debug('DBAL: Table ['.$tableName.'] exists.');
+                $this->log->debug('DBAL: Table ['.$tableName.'] exists.');
                 continue;
             }
 
@@ -249,7 +256,7 @@ class Converter
                 $fieldType = strtolower($fieldType); /** doctrine uses strtolower for all field types */
 
                 if (!in_array($fieldType, $this->typeList)) {
-                    $GLOBALS['log']->debug(
+                    $this->log->debug(
                         'Converters\Schema::process(): Field type ['.$fieldType.'] does not exist '.
                         $entityName.':'.$fieldName
                     );
@@ -295,7 +302,7 @@ class Converter
         }
         //END: check and create columns/tables for relations
 
-        $GLOBALS['log']->debug('Schema\Converter - End: building schema');
+        $this->log->debug('Schema\Converter - End: building schema');
 
         return $schema;
     }
@@ -313,12 +320,12 @@ class Converter
     {
         $tableName = Util::toUnderScore($relationParams['relationName']);
 
-        $GLOBALS['log']->debug('DBAL: prepareManyMany invoked for ' . $entityName, [
+        $this->log->debug('DBAL: prepareManyMany invoked for ' . $entityName, [
             'tableName' => $tableName, 'parameters' => $relationParams
         ]);
 
         if ($this->getSchema()->hasTable($tableName)) {
-            $GLOBALS['log']->debug('DBAL: Table ['.$tableName.'] exists.');
+            $this->log->debug('DBAL: Table ['.$tableName.'] exists.');
             return $this->getSchema()->getTable($tableName);
         }
 
@@ -331,10 +338,10 @@ class Converter
         )));
 
         //add midKeys to a schema
-        $uniqueIndex = array();
+        $uniqueIndex = [];
 
         if (empty($relationParams['midKeys'])) {
-            $GLOBALS['log']->debug('REBUILD: midKeys are empty!', [
+            $this->log->debug('REBUILD: midKeys are empty!', [
                 'scope' => $entityName, 'tableName' => $tableName,
                 'parameters' => $relationParams
             ]);

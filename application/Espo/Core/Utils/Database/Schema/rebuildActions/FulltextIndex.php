@@ -29,19 +29,29 @@
 
 namespace Espo\Core\Utils\Database\Schema\rebuildActions;
 
-class FulltextIndex extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
+use Espo\Core\Utils\Database\Helper;
+use Espo\Core\Utils\Database\Schema\BaseRebuildActions;
+
+use Exception;
+
+class FulltextIndex extends BaseRebuildActions
 {
     public function beforeRebuild()
     {
         $currentSchema = $this->getCurrentSchema();
+
         $tables = $currentSchema->getTables();
 
-        if (empty($tables)) return;
+        if (empty($tables)) {
+            return;
+        }
 
-        $databaseHelper = new \Espo\Core\Utils\Database\Helper($this->getConfig());
+        $databaseHelper = new Helper($this->getConfig());
+
         $connection = $databaseHelper->getDbalConnection();
 
         $metadataSchema = $this->getMetadataSchema();
+
         $tables = $metadataSchema->getTables();
 
         foreach ($tables as $table) {
@@ -54,27 +64,32 @@ class FulltextIndex extends \Espo\Core\Utils\Database\Schema\BaseRebuildActions
                 }
 
                 $columns = $index->getColumns();
+
                 foreach ($columns as $columnName) {
 
                     $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE Field = '" . $columnName . "'";
 
                     try {
                         $row = $connection->fetchAssociative($query);
-                    } catch (\Exception $e) {
+                    }
+                    catch (Exception $e) {
                         continue;
                     }
 
                     switch (strtoupper($row['Type'])) {
                         case 'LONGTEXT':
-                            $alterQuery = "ALTER TABLE `". $tableName ."` MODIFY `". $columnName ."` MEDIUMTEXT COLLATE ". $row['Collation'] ."";
-                            $GLOBALS['log']->info('SCHEMA, Execute Query: ' . $alterQuery);
+                            $alterQuery =
+                                "ALTER TABLE `". $tableName ."` " .
+                                "MODIFY `". $columnName ."` MEDIUMTEXT COLLATE ". $row['Collation'] ."";
+
+                            $this->log->info('SCHEMA, Execute Query: ' . $alterQuery);
+
                             $connection->executeQuery($alterQuery);
+
                             break;
                     }
                 }
             }
         }
-
     }
 }
-
