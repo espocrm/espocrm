@@ -56,6 +56,7 @@ use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
     ServiceFactory,
+    Utils\Log,
 };
 
 use Exception;
@@ -85,6 +86,8 @@ class Sender
 
     private $inboundEmailService = null;
 
+    private $log;
+
     private $systemInboundEmailIsCached = false;
 
     private $envelope = null;
@@ -97,6 +100,7 @@ class Sender
         Config $config,
         EntityManager $entityManager,
         ServiceFactory $serviceFactory,
+        Log $log,
         SmtpTransportFactory $transportFactory,
         ?InboundEmailService $inboundEmailService = null,
         ?InboundEmail $systemInboundEmail = null
@@ -104,6 +108,8 @@ class Sender
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->serviceFactory = $serviceFactory;
+        $this->log = $log;
+
         $this->transportFactory = $transportFactory;
 
         $this->inboundEmailService = $inboundEmailService;
@@ -658,16 +664,14 @@ class Sender
             $message = "Email sending error.";
 
             if (
-                stripos($e->getMessage(), 'password') !== false
-                ||
-                stripos($e->getMessage(), 'credentials') !== false
-                ||
+                stripos($e->getMessage(), 'password') !== false ||
+                stripos($e->getMessage(), 'credentials') !== false ||
                 stripos($e->getMessage(), '5.7.8') !== false
             ) {
                 $message .= ' Invalid credentials.';
             }
 
-            $GLOBALS['log']->error("Email sending error. " . $e->getMessage());
+            $this->log->error("Email sending error: " . $e->getMessage());
 
             throw new Error($message, 500);
         }

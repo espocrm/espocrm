@@ -43,6 +43,7 @@ use Espo\Core\{
     Mail\EmailSender,
     Htmlizer\Factory as HtmlizerFactory,
     Utils\TemplateFileManager,
+    Utils\Log,
 };
 
 use DateTime;
@@ -63,18 +64,22 @@ class Recovery
 
     protected $templateFileManager;
 
+    private $log;
+
     public function __construct(
         EntityManager $entityManager,
         Config $config,
         EmailSender $emailSender,
         HtmlizerFactory $htmlizerFactory,
-        TemplateFileManager $templateFileManager
+        TemplateFileManager $templateFileManager,
+        Log $log
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
         $this->emailSender = $emailSender;
         $this->htmlizerFactory = $htmlizerFactory;
         $this->templateFileManager = $templateFileManager;
+        $this->log = $log;
     }
 
     public function getRequest(string $id): PasswordChangeRequest
@@ -343,7 +348,7 @@ class Recovery
         $noExposure = $config->get('passwordRecoveryNoExposure') ?? false;
 
         if ($msg) {
-            $GLOBALS['log']->warning($msg);
+            $this->log->warning($msg);
         }
 
         if (!$noExposure) {

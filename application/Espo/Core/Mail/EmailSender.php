@@ -41,6 +41,7 @@ use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
     ServiceFactory,
+    Utils\Log,
 };
 
 /**
@@ -63,16 +64,20 @@ class EmailSender
 
     private $transportFactory;
 
+    private $log;
+
     public function __construct(
         Config $config,
         EntityManager $entityManager,
         ServiceFactory $serviceFactory,
-        SmtpTransportFactory $transportFactory
+        SmtpTransportFactory $transportFactory,
+        Log $log
     ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->serviceFactory = $serviceFactory;
         $this->transportFactory = $transportFactory;
+        $this->log = $log;
     }
 
     private function createSender(): Sender
@@ -81,6 +86,7 @@ class EmailSender
             $this->config,
             $this->entityManager,
             $this->serviceFactory,
+            $this->log,
             $this->transportFactory,
             $this->getInboundEmailService(),
             $this->getSystemInboundEmail()
