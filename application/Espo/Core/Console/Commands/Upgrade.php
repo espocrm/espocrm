@@ -36,6 +36,7 @@ use Espo\Core\{
     Utils\Util,
     Utils\File\Manager as FileManager,
     Utils\Config,
+    Utils\Log,
     Console\Command,
     Console\Params,
     Console\IO,
@@ -67,10 +68,13 @@ class Upgrade implements Command
 
     private $config;
 
-    public function __construct(FileManager $fileManager, Config $config)
+    private $log;
+
+    public function __construct(FileManager $fileManager, Config $config, Log $log)
     {
         $this->fileManager = $fileManager;
         $this->config = $config;
+        $this->log = $log;
     }
 
     public function run(Params $params, IO $io): void
@@ -290,7 +294,7 @@ class Upgrade implements Command
 
     protected function runStepsInSingleProcess(string $upgradeId, array $stepList)
     {
-        $GLOBALS['log']->debug('Installation process ['.$upgradeId.']: Single process mode.');
+        $this->log->debug('Installation process ['.$upgradeId.']: Single process mode.');
 
         try {
             foreach ($stepList as $stepName) {
@@ -301,7 +305,7 @@ class Upgrade implements Command
             }
         } catch (Throwable $e) {
             try {
-                $GLOBALS['log']->error('Upgrade Error: ' . $e->getMessage());
+                $this->log->error('Upgrade Error: ' . $e->getMessage());
             }
             catch (Throwable $t) {}
 
@@ -324,7 +328,7 @@ class Upgrade implements Command
 
             if ($shellResult !== 'true') {
                 try {
-                    $GLOBALS['log']->error('Upgrade Error: ' . $shellResult);
+                    $this->log->error('Upgrade Error: ' . $shellResult);
                 }
                 catch (Throwable $t) {}
 
