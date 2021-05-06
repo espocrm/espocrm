@@ -35,8 +35,6 @@ use Espo\Core\{
     Utils\Metadata,
 };
 
-use Espo\Services\Record;
-
 /**
  * Container for record services. Lazy loading is used.
  * Usually there's no need to have multiple record service instances of the same entity type.
@@ -60,7 +58,7 @@ class ServiceContainer
         $this->metadata = $metadata;
     }
 
-    public function get(string $entityType): Record
+    public function get(string $entityType): Service
     {
         if (!array_key_exists($entityType, $this->data)) {
             $this->load($entityType);

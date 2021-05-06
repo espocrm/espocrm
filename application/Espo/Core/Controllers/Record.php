@@ -175,7 +175,9 @@ class Record extends RecordBase
     {
         $id = $request->getRouteParam('id');
 
-        return $this->getRecordService()->follow($id);
+        $this->getRecordService()->follow($id);
+
+        return true;
     }
 
     /**
@@ -185,6 +187,8 @@ class Record extends RecordBase
     {
         $id = $request->getRouteParam('id');
 
-        return $this->getRecordService()->unfollow($id);
+        $this->getRecordService()->unfollow($id);
+
+        return true;
     }
 }
