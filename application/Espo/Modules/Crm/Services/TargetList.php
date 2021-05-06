@@ -37,7 +37,10 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Core\{
+    Record\Collection as RecordCollection,
+    Select\SearchParams,
+};
 
 use PDO;
 
@@ -264,10 +267,10 @@ class TargetList extends \Espo\Services\Record implements
             ->build();
     }
 
-    protected function findLinkedOptedOut(string $id, array $params): RecordCollection
+    protected function findLinkedOptedOut(string $id, SearchParams $searchParams): RecordCollection
     {
-        $offset = $params['offset'] ?? 0;
-        $maxSize = $params['maxSize'] ?? 0;
+        $offset = $searchParams->getOffset() ?? 0;
+        $maxSize = $searchParams->getMaxSize() ?? 0;
 
         $em = $this->getEntityManager();
         $queryBuilder = $em->getQueryBuilder();
@@ -292,9 +295,9 @@ class TargetList extends \Espo\Services\Record implements
             ->select('COUNT:(c.id)', 'count')
             ->build();
 
-        $sth = $em->getQueryExecutor()->execute($countQuery);
-
-        $row = $sth->fetch(PDO::FETCH_ASSOC);
+        $row = $em->getQueryExecutor()
+            ->execute($countQuery)
+            ->fetch(PDO::FETCH_ASSOC);
 
         $totalCount = $row['count'];
 

@@ -57,10 +57,10 @@ class Import extends Record implements
 
     const REVERT_PERMANENTLY_REMOVE_PERIOD_DAYS = 2;
 
-    public function findLinked(string $id, string $link, array $params): RecordCollection
+    public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection
     {
         if (!in_array($link, ['imported', 'duplicates', 'updated'])) {
-            return parent::findLinked($id, $link, $params);
+            return parent::findLinked($id, $link, $searchParams);
         }
 
         $entity = $this->getRepository()->get($id);
@@ -79,7 +79,7 @@ class Import extends Record implements
             ->create()
             ->from($foreignEntityType)
             ->withStrictAccessControl()
-            ->withSearchParams(SearchParams::fromRaw($params))
+            ->withSearchParams($searchParams)
             ->build();
 
         $collection = $this->getRepository()->findResultRecords($entity, $link, $query);
