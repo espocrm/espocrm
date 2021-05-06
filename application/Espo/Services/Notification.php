@@ -31,7 +31,9 @@ namespace Espo\Services;
 
 use Espo\Core\Utils\Util;
 
-use Espo\Core\Record\Collection as RecordCollection;
+use Espo\Core\{
+    Record\Collection as RecordCollection,
+};
 
 use Espo\Entities\Note;
 use Espo\Entities\User;
@@ -48,7 +50,7 @@ class Notification extends \Espo\Services\Record implements
 
     public function notifyAboutMentionInPost(string $userId, string $noteId)
     {
-        $notification = $this->getEntityManager()->getEntity('Notification');
+        $notification = $this->entityManager->getEntity('Notification');
 
         $notification->set([
             'type' => 'MentionInPost',
@@ -58,7 +60,7 @@ class Notification extends \Espo\Services\Record implements
             'relatedType' => 'Note',
         ]);
 
-        $this->getEntityManager()->saveEntity($notification);
+        $this->entityManager->saveEntity($notification);
     }
 
     public function notifyAboutNote(array $userIdList, Note $note)
@@ -68,7 +70,7 @@ class Notification extends \Espo\Services\Record implements
         $related = null;
 
         if ($note->get('relatedType') == 'Email') {
-            $related = $this->getEntityManager()
+            $related = $this->entityManager
                 ->getRepository('Email')
                 ->select(['id', 'sentById', 'createdById'])
                 ->where(['id' => $note->get('relatedId')])
@@ -79,7 +81,7 @@ class Notification extends \Espo\Services\Record implements
 
         $collection = $this->entityManager->createCollection();
 
-        $userList = $this->getEntityManager()
+        $userList = $this->entityManager
             ->getRepository('User')
             ->select(['id', 'type'])
             ->where([
@@ -184,7 +186,7 @@ class Notification extends \Espo\Services\Record implements
             $whereClause[] = $where;
         }
 
-        return $this->getEntityManager()->getRepository('Notification')->where($whereClause)->count();
+        return $this->entityManager->getRepository('Notification')->where($whereClause)->count();
     }
 
     public function markAllRead(string $userId)
@@ -205,11 +207,15 @@ class Notification extends \Espo\Services\Record implements
 
     public function getList(string $userId, array $params = []) : RecordCollection
     {
-        $searchParams = [];
+        $queryBuilder = $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->from('Notification');
 
         $whereClause = [
-            'userId' => $userId
+            'userId' => $userId,
         ];
+
         if (!empty($params['after'])) {
             $whereClause['createdAt>'] = $params['after'];
         }
@@ -229,23 +235,31 @@ class Notification extends \Espo\Services\Record implements
             $whereClause[] = $where;
         }
 
-        $searchParams['whereClause'] = $whereClause;
+        $offset = $params['offset'] ?? null;
+        $maxSize = $params['maxSize'] ?? null;
 
-        if (array_key_exists('offset', $params)) {
-            $searchParams['offset'] = $params['offset'];
-        }
-        if (array_key_exists('maxSize', $params)) {
-            $searchParams['limit'] = $params['maxSize'];
-        }
-        $searchParams['orderBy'] = 'createdAt';
-        $searchParams['order'] = 'DESC';
+        $queryBuilder->limit($offset, $maxSize);
 
-        $collection = $this->getEntityManager()->getRepository('Notification')->find($searchParams);
-        $count = $this->getEntityManager()->getRepository('Notification')->count($searchParams);
+        $queryBuilder->order('createdAt', 'DESC');
+
+        $queryBuilder->where($whereClause);
+
+        $query = $queryBuilder->build();
+
+        $collection = $this->entityManager
+            ->getRDBRepository('Notification')
+            ->clone($query)
+            ->find();
+
+        $count = $this->entityManager
+            ->getRDBRepository('Notification')
+            ->clone($query)
+            ->count();
 
         $ids = [];
+
         foreach ($collection as $k => $entity) {
-            $ids[] = $entity->id;
+            $ids[] = $entity->getId();
 
             $data = $entity->get('data');
 
@@ -256,11 +270,11 @@ class Notification extends \Espo\Services\Record implements
             switch ($entity->get('type')) {
                 case 'Note':
                 case 'MentionInPost':
-                    $note = $this->getEntityManager()->getEntity('Note', $data->noteId);
+                    $note = $this->entityManager->getEntity('Note', $data->noteId);
 
                     if ($note) {
                         if ($note->get('parentId') && $note->get('parentType')) {
-                            $parent = $this->getEntityManager()
+                            $parent = $this->entityManager
                                 ->getEntity($note->get('parentType'), $note->get('parentId'));
 
                             if ($parent) {
@@ -286,7 +300,7 @@ class Notification extends \Espo\Services\Record implements
                         }
 
                         if ($note->get('relatedId') && $note->get('relatedType')) {
-                            $related = $this->getEntityManager()
+                            $related = $this->entityManager
                                 ->getEntity($note->get('relatedType'), $note->get('relatedId'));
 
                             if ($related) {
@@ -303,7 +317,7 @@ class Notification extends \Espo\Services\Record implements
 
                         $count--;
 
-                        $this->getEntityManager()->removeEntity($entity);
+                        $this->entityManager->removeEntity($entity);
                     }
 
                     break;
@@ -330,7 +344,9 @@ class Notification extends \Espo\Services\Record implements
     protected function getIgnoreScopeList() : array
     {
         $ignoreScopeList = [];
-        $scopes = $this->getMetadata()->get('scopes', []);
+
+        $scopes = $this->metadata->get('scopes', []);
+
         foreach ($scopes as $scope => $d) {
             if (empty($d['entity']) || !$d['entity']) {
                 continue;
@@ -340,10 +356,11 @@ class Notification extends \Espo\Services\Record implements
                 continue;
             }
 
-            if (!$this->getAcl()->checkScope($scope)) {
+            if (!$this->acl->checkScope($scope)) {
                 $ignoreScopeList[] = $scope;
             }
         }
+
         return $ignoreScopeList;
     }
 }

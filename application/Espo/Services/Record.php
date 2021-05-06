@@ -43,6 +43,7 @@ use Espo\ORM\{
     Entity,
     Repository\Repository,
     Collection,
+    EntityManager,
 };
 
 use Espo\{
@@ -204,6 +205,11 @@ class Record implements Crud,
      * @var AclManager
      */
     protected $aclManager = null;
+
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
 
     private $listLoadProcessor;
 
