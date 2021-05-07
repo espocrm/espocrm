@@ -577,6 +577,7 @@ body.minimized .list-buttons-container .sticked-bar {
 
 
 @media screen and (min-width: (@container-max-width + @navbar-width)) {
+    #content #main .nested-categories-container + .list-container > .list,
     #content #main > .list-container > .list {
         margin-left: 0;
         margin-right: 0;
@@ -603,7 +604,8 @@ body.minimized .list-buttons-container .sticked-bar {
 
 @media screen and (min-width: (@container-max-width + @navbar-minimized-width)) {
     body.minimized {
-        #content #main > .list-container > .list {
+        #content #main > .list-container > .list,
+        #content #main .nested-categories-container + .list-container > .list {
 
             margin-left: 0;
             margin-right: 0;
