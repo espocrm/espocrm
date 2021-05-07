@@ -37,9 +37,11 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
                 var $el = $(e.currentTarget);
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
+
                 if (typeof this[method] == 'function') {
                     var data = $el.data();
                     this[method](data, e);
+
                     e.preventDefault();
                 }
             },
@@ -51,8 +53,17 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
             if (!this.isLoading) {
                 data.list = this.getDataList();
             }
+
             data.scope = this.collection.name;
             data.isLoading = this.isLoading;
+            data.currentId = this.collection.currentCategoryId;
+
+            data.currentName = this.collection.currentCategoryName;
+
+            data.categoryData = this.collection.categoryData;
+
+            data.hasExpandedToggler = this.options.hasExpandedToggler;
+            data.showEditLink = this.options.showEditLink;
 
             return data;
         },

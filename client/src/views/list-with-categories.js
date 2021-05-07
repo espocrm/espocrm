@@ -59,9 +59,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
         data: function () {
             var data = {};
 
-            data.categoriesDisabled = this.categoriesDisabled;
-            data.isExpanded = this.isExpanded;
-            data.hasExpandedToggler = this.hasExpandedToggler;
+            data.hasTree = this.isExpanded && !this.categoriesDisabled;
 
             return data;
         },
@@ -73,6 +71,20 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 this.categoryScope = this.scope + 'Category';
             }
 
+            var isExpandedByDefault = this.getMetadata()
+                .get(['clientDefs', this.categoryScope, 'isExpandedByDefault']) || false;
+
+            if (isExpandedByDefault) {
+                this.isExpanded = true;
+            }
+
+            var isCollapsedByDefault = this.getMetadata()
+                .get(['clientDefs', this.categoryScope, 'isCollapsedByDefault']) || false;
+
+            if (this.isCollapsedByDefault) {
+                this.isExpanded = false;
+            }
+
             this.categoriesDisabled =
                 this.categoriesDisabled ||
                 this.getMetadata().get(['scopes', this.categoryScope, 'disabled']) ||
@@ -81,7 +93,8 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             if (this.categoriesDisabled) {
                 this.isExpanded = true;
                 this.hasExpandedToggler = false;
-            } else {
+            }
+            else {
                 if (!this.expandedTogglerDisabled) {
                     if (!this.getUser().isPortal()) {
                         if (this.hasIsExpandedStoredValue()) {
@@ -165,11 +178,12 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
             if (!this.hasView('list')) {
                 this.loadList();
-            } else {
+            }
+            else {
                 this.controlListVisibility();
             }
 
-            if (!this.categoriesDisabled && !this.hasView('categories')) {
+            if (!this.categoriesDisabled && this.isExpanded && !this.hasView('categories')) {
                 this.loadCategories();
             }
 
@@ -186,6 +200,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.applyCategoryToCollection();
 
             this.clearView('nestedCategories');
+
             if (this.hasView('categories')) {
                 this.getView('categories').isExpanded = true;
             }
@@ -213,13 +228,14 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.navigateToCurrentCategory();
 
             this.reRender();
+
             this.$listContainer.empty();
 
             this.collection.fetch();
         },
 
         actionOpenCategory: function (data) {
-            this.openCategory(data.id, data.name);
+            this.openCategory(data.id || null, data.name);
             this.selectCurrentCategory();
             this.navigateToCurrentCategory();
         },
@@ -228,10 +244,12 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             if (!this.isExpanded) {
                 if (this.currentCategoryId) {
                     this.getRouter().navigate('#' + this.scope + '/list/categoryId=' + this.currentCategoryId);
-                } else {
+                }
+                else {
                     this.getRouter().navigate('#' + this.scope);
                 }
-            } else {
+            }
+            else {
                 this.getRouter().navigate('#' + this.scope);
             }
 
@@ -260,23 +278,35 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.currentCategoryName = name || id;
 
             this.applyCategoryToNestedCategoriesCollection();
+
             this.applyCategoryToCollection();
 
             this.collection.abortLastFetch();
 
             if (this.nestedCategoriesCollection) {
                 this.nestedCategoriesCollection.abortLastFetch();
+
                 Espo.Ui.notify(this.translate('loading', 'messages'));
+
                 Promise.all([
-                    this.nestedCategoriesCollection.fetch().then(function () {
-                        this.controlNestedCategoriesVisibility();
-                    }.bind(this)),
+                    this.nestedCategoriesCollection
+                        .fetch()
+                        .then(
+                            function () {
+                                this.controlNestedCategoriesVisibility();
+                                this.updateHeader();
+
+                            }.bind(this)
+                        ),
+
                     this.collection.fetch({openCategory: true})
                 ]).then(function () {
                     Espo.Ui.notify(false);
+
                     this.controlListVisibility();
                 }.bind(this));
-            } else {
+            }
+            else {
                 this.collection.fetch().then(function () {
                     Espo.Ui.notify(false);
                 }.bind(this));
@@ -286,8 +316,10 @@ define('views/list-with-categories', 'views/list', function (Dep) {
         controlListVisibility: function () {
             if (this.isExpanded) {
                 this.$listContainer.removeClass('hidden');
+
                 return;
             }
+
             if (
                 !this.collection.models.length &&
                 this.nestedCategoriesCollection &&
@@ -295,17 +327,23 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 !this.hasTextFilter()
             ) {
                 this.$listContainer.addClass('hidden');
-            } else {
+            }
+            else {
                 this.$listContainer.removeClass('hidden');
             }
         },
 
         controlNestedCategoriesVisibility: function () {
-            if (this.nestedCategoriesCollection.models.length) {
-                this.$nestedCategoriesContainer.removeClass('hidden');
-            } else {
+            if (
+                !this.nestedCategoriesCollection.models.length &&
+                !this.currentCategoryId
+            ) {
                 this.$nestedCategoriesContainer.addClass('hidden');
+
+                return;
             }
+
+            this.$nestedCategoriesContainer.removeClass('hidden');
         },
 
         getTreeCollection: function (callback) {
@@ -359,6 +397,8 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                     this.controlListVisibility();
                     this.controlNestedCategoriesVisibility();
 
+                    this.updateHeader();
+
                     callback.call(this, collection);
                 }.bind(this));
             }, this);
@@ -369,6 +409,9 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 this.createView('nestedCategories', 'views/record/list-nested-categories', {
                     collection: collection,
                     el: this.options.el + ' .nested-categories-container',
+                    showEditLink: this.getAcl().check(this.categoryScope, 'edit'),
+                    isExpanded: this.isExpanded,
+                    hasExpandedToggler: this.hasExpandedToggler,
                 }, function (view) {
                     view.render();
                 });
@@ -450,27 +493,31 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                                 type: 'linkedWith',
                                 value: [this.currentCategoryId]
                             };
-                        } else {
+                        }
+                        else {
                             filter = {
                                 attribute: this.categoryField,
                                 type: 'isNotLinked'
                             };
                         }
-                    } else {
+                    }
+                    else {
                         if (this.currentCategoryId) {
                             filter = {
                                 attribute: this.categoryField + 'Id',
                                 type: 'equals',
                                 value: this.currentCategoryId
                             };
-                        } else {
+                        }
+                        else {
                             filter = {
                                 attribute: this.categoryField + 'Id',
                                 type: 'isNull'
                             };
                         }
                     }
-                } else {
+                }
+                else {
                     if (this.currentCategoryId) {
                         filter = {
                             attribute: this.categoryField,
@@ -487,7 +534,8 @@ define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         isCategoryMultiple: function () {
-            return this.getMetadata().get(['entityDefs', this.scope, 'fields', this.categoryField, 'type']) === 'linkMultiple';
+            return this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', this.categoryField, 'type']) === 'linkMultiple';
         },
 
         getCreateAttributes: function () {
@@ -496,6 +544,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             if (this.isCategoryMultiple()) {
                 if (this.currentCategoryId) {
                     var names = {};
+
                     names[this.currentCategoryId] = this.currentCategoryName;
 
                     var data = {};
@@ -508,7 +557,8 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
                     return data;
                 }
-            } else {
+            }
+            else {
                 var idAttribute = this.categoryField + 'Id';
                 var nameAttribute = this.categoryField + 'Name';
 
@@ -523,7 +573,57 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
         actionManageCategories: function () {
             this.clearView('categories');
+
             this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
+        },
+
+        getHeader: function () {
+            if (!this.nestedCategoriesCollection) {
+                return Dep.prototype.getHeader.call(this);
+            }
+
+            var path = this.nestedCategoriesCollection.path;
+
+            if (!path || path.length === 0) {
+                return Dep.prototype.getHeader.call(this);
+            }
+
+            var rootUrl = '#' + this.scope;
+
+            var list = [
+                '<a href="' + rootUrl + '" class="action">' +
+                    this.translate(this.scope, 'scopeNamesPlural') + '</a>',
+            ];
+
+            var currentId = this.nestedCategoriesCollection.categoryData.id;
+            var currentName = this.nestedCategoriesCollection.categoryData.name;
+
+            var upperId = this.nestedCategoriesCollection.categoryData.upperId;
+            var upperName = this.nestedCategoriesCollection.categoryData.upperName;
+
+            if (path.length > 2) {
+                list.push(
+                    '...'
+                );
+            }
+
+            if (upperId) {
+                var url = rootUrl + '/' + 'list/categoryId=' + this.escapeString(upperId);
+
+                list.push(
+                    '<a href="' + url +'">' + this.escapeString(upperName) + '</a>'
+                );
+            }
+
+            list.push(
+                this.escapeString(currentName)
+            );
+
+            return this.buildHeaderHtml(list);
+        },
+
+        updateHeader: function () {
+            this.getView('header').reRender();
         },
     });
 });

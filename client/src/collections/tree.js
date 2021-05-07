@@ -25,7 +25,8 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('collections/tree', 'collection', function (Dep) {
+
+define('collections/tree', 'collection', function (Dep) {
 
     return Dep.extend({
 
@@ -43,23 +44,33 @@ Espo.define('collections/tree', 'collection', function (Dep) {
             var list = Dep.prototype.parse.call(this, response);
 
             var seed = this.clone();
+
             seed.reset();
+
+            this.path = response.path;
+
+            this.categoryData = response.data || null;
 
             var f = function (l, depth) {
                 l.forEach(function (d) {
                     d.depth = depth;
+
                     var c = this.createSeed();
+
                     if (d.childList) {
                         if (d.childList.length) {
                             f(d.childList, depth + 1);
                             c.set(d.childList);
                             d.childCollection = c;
-                        } else {
+                        }
+                        else {
                             d.childCollection = c;
                         }
-                    } else if (d.childList === null) {
+                    }
+                    else if (d.childList === null) {
                         d.childCollection = null;
-                    } else {
+                    }
+                    else {
                         d.childCollection = c;
                     }
                 }, this);
@@ -72,6 +83,7 @@ Espo.define('collections/tree', 'collection', function (Dep) {
 
         fetch: function (options) {
             var options = options || {};
+
             options.data = options.data || {};
 
             if (this.parentId) {
@@ -80,7 +92,7 @@ Espo.define('collections/tree', 'collection', function (Dep) {
             options.data.maxDepth = this.maxDepth;
 
             return Dep.prototype.fetch.call(this, options);
-        }
+        },
 
     });
 

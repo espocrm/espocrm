@@ -1094,6 +1094,22 @@ section {
             }
         }
     }
+
+    .nested-categories-container + .list-container {
+        .list {
+            margin-right: -@container-padding;
+            margin-left: -@container-padding;
+
+            > table td:first-child,
+            > table th:first-child {
+                padding-left: @container-padding;
+            }
+            > table td:last-child,
+            > table th:last-child {
+                padding-right: @container-padding;
+            }
+        }
+    }
 }
 
 
@@ -2374,7 +2390,7 @@ table.table-admin-panel {
 .list-nested-categories {
     margin-bottom: @padding-base-horizontal;
     .category-item {
-        padding: @padding-base-horizontal;
+        padding: @padding-base-horizontal @padding-base-horizontal @padding-base-horizontal 0;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

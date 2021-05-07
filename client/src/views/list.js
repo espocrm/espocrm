@@ -131,8 +131,10 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             if (viewModeList) {
                 this.viewModeList = viewModeList;
-            } else {
+            }
+            else {
                 this.viewModeList = ['list'];
+
                 if (this.getMetadata().get(['clientDefs', this.scope, 'kanbanViewMode'])) {
                     if (!~this.viewModeList.indexOf('kanban')) {
                         this.viewModeList.push('kanban');
@@ -142,9 +144,12 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             if (this.viewModeList.length > 1) {
                 this.viewMode = null;
+
                 var modeKey = 'listViewMode' + this.scope;
                 if (this.getStorage().has('state', modeKey)) {
+
                     var storedViewMode = this.getStorage().get('state', modeKey);
+
                     if (storedViewMode) {
                         if (~this.viewModeList.indexOf(storedViewMode)) {
                             this.viewMode = storedViewMode;
@@ -162,7 +167,7 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 collection: this.collection,
                 el: '#main > .page-header',
                 scope: this.scope,
-                isXsSingleRow: true
+                isXsSingleRow: true,
             });
         },
 
@@ -170,19 +175,22 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             if (this.quickCreate) {
                 this.menu.buttons.unshift({
                     action: 'quickCreate',
-                    html: '<span class="fas fa-plus fa-sm"></span> ' + this.translate('Create ' +  this.scope, 'labels', this.scope),
+                    html: '<span class="fas fa-plus fa-sm"></span> ' +
+                        this.translate('Create ' +  this.scope, 'labels', this.scope),
                     style: 'default',
                     acl: 'create',
-                    aclScope: this.entityType || this.scope
+                    aclScope: this.entityType || this.scope,
                 });
-            } else {
+            }
+            else {
                 this.menu.buttons.unshift({
                     link: '#' + this.scope + '/create',
                     action: 'create',
-                    html: '<span class="fas fa-plus fa-sm"></span> ' + this.translate('Create ' +  this.scope,  'labels', this.scope),
+                    html: '<span class="fas fa-plus fa-sm"></span> ' +
+                        this.translate('Create ' +  this.scope,  'labels', this.scope),
                     style: 'default',
                     acl: 'create',
-                    aclScope: this.entityType || this.scope
+                    aclScope: this.entityType || this.scope,
                 });
             }
         },
@@ -224,6 +232,7 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
             if (toStore) {
                 var modeKey = 'listViewMode' + this.scope;
+
                 this.getStorage().set('state', modeKey, mode);
             }
 
@@ -232,8 +241,10 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             }
 
             var methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
+
             if (this[methodName]) {
                 this[methodName]();
+
                 return;
             }
         },
@@ -257,16 +268,27 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
         setupSearchManager: function () {
             var collection = this.collection;
 
-            var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime(), this.getSearchDefaultData());
+            var searchManager = new SearchManager(
+                collection,
+                'list',
+                this.getStorage(),
+                this.getDateTime(),
+                this.getSearchDefaultData()
+            );
+
             searchManager.scope = this.scope;
 
             searchManager.loadStored();
+
             collection.where = searchManager.getWhere();
+
             this.searchManager = searchManager;
         },
 
         setupSorting: function () {
-            if (!this.searchPanel) return;
+            if (!this.searchPanel) {
+                return;
+            }
 
             this.applyStoredSorting();
         },
@@ -274,9 +296,10 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
         applyStoredSorting: function () {
             var sortingParams = this.getStorage().get('listSorting', this.collection.entityType) || {};
 
-           if ('orderBy' in sortingParams) {
+            if ('orderBy' in sortingParams) {
                 this.collection.orderBy = sortingParams.orderBy;
             }
+
             if ('order' in sortingParams) {
                 this.collection.order = sortingParams.order;
             }
@@ -284,11 +307,14 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
         getRecordViewName: function () {
             if (this.viewMode === 'list') {
-                return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) || this.recordView;
+                return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
+                    this.recordView;
             }
 
             var propertyName = 'record' + Espo.Utils.upperCaseFirst(this.viewMode) + 'View';
-            return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', this.viewMode]) || this[propertyName];
+
+            return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', this.viewMode]) ||
+                this[propertyName];
         },
 
         afterRender: function () {
@@ -299,15 +325,19 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
         loadList: function () {
             var methodName = 'loadList' + Espo.Utils.upperCaseFirst(this.viewMode);
+
             if (this[methodName]) {
                 this[methodName]();
+
                 return;
             }
 
             if (this.collection.isFetched) {
                 this.createListRecordView(false);
-            } else {
+            }
+            else {
                 Espo.Ui.notify(this.translate('loading', 'messages'));
+
                 this.createListRecordView(true);
             }
         },
@@ -319,30 +349,38 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 collection: this.collection,
                 el: this.options.el + ' .list-container',
                 scope: this.scope,
-                skipBuildRows: true
+                skipBuildRows: true,
             };
+
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
             }, this);
+
             if (this.keepCurrentRootUrl) {
                 o.keepCurrentRootUrl = true;
             }
+
             this.prepareRecordViewOptions(o);
+
             var listViewName = this.getRecordViewName();
+
             this.createView('list', listViewName, o, function (view) {
                 if (!this.hasParentView()) {
                     view.undelegateEvents();
+
                     return;
                 }
 
                 this.listenToOnce(view, 'after:render', function () {
                     if (!this.hasParentView()) {
                         view.undelegateEvents();
+
                         this.clearView('list');
                     }
                 }, this);
 
                 view.notify(false);
+
                 if (this.searchPanel) {
                     this.listenTo(view, 'sort', function (obj) {
                         this.getStorage().set('listSorting', this.collection.name, obj);
@@ -354,9 +392,11 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
+
                         this.collection.fetch();
                     }.bind(this));
-                } else {
+                }
+                else {
                     view.render();
                 }
             });
@@ -382,11 +422,15 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             var attributes = this.getCreateAttributes() || {};
 
             this.notify('Loading...');
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') || 'views/modals/edit';
+
+            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+                'views/modals/edit';
+
             var options = {
                 scope: this.scope,
-                attributes: attributes
+                attributes: attributes,
             };
+
             if (this.keepCurrentRootUrl) {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
@@ -395,18 +439,22 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 controller: this.scope,
                 action: null,
                 options: {
-                    isReturn: true
-                }
+                    isReturn: true,
+                },
             };
+
             this.prepareCreateReturnDispatchParams(returnDispatchParams);
+
             _.extend(options, {
                 returnUrl: this.getRouter().getCurrentUrl(),
-                returnDispatchParams: returnDispatchParams
+                returnDispatchParams: returnDispatchParams,
             });
 
             this.createView('quickCreate', viewName, options, function (view) {
                 view.render();
+
                 view.notify(false);
+
                 this.listenToOnce(view, 'after:save', function () {
                     this.collection.fetch();
                 }, this);
@@ -422,6 +470,7 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             var options = {
                 attributes: attributes
             };
+
             if (this.keepCurrentRootUrl) {
                 options.rootUrl = this.getRouter().getCurrentUrl();
             }
@@ -433,7 +482,9 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                     isReturn: true
                 }
             };
+
             this.prepareCreateReturnDispatchParams(returnDispatchParams);
+
             _.extend(options, {
                 returnUrl: this.getRouter().getCurrentUrl(),
                 returnDispatchParams: returnDispatchParams
@@ -445,7 +496,7 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
 
         isActualForReuse: function () {
             return this.collection.isFetched;
-        }
+        },
 
     });
 });

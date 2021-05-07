@@ -39,6 +39,7 @@ use Espo\Core\{
     Exceptions\Forbidden,
     Select\SearchParams,
     Select\Where\Item as WhereItem,
+    Acl\Table as AclTable,
 };
 
 use StdClass;
@@ -171,9 +172,37 @@ class RecordTree extends Record
         return true;
     }
 
+    public function getCategoryData(?string $id): ?StdClass
+    {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
+            throw new Forbidden();
+        }
+
+        if ($id === null) {
+            return null;
+        }
+
+        $category = $this->entityManager->getEntity($this->entityType, $id);
+
+        if (!$category) {
+            throw new NotFound();
+        }
+
+        if (!$this->acl->check($category, AclTable::ACTION_READ)) {
+            throw new Forbidden();
+        }
+
+        return (object) [
+            'upperId' => $category->get('parentId'),
+            'upperName' => $category->get('parentName'),
+            'id' => $id,
+            'name' => $category->get('name'),
+        ];
+    }
+
     public function getTreeItemPath(?string $parentId = null): array
     {
-        if (!$this->acl->check($this->getEntityType(), 'read')) {
+        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new Forbidden();
         }
 

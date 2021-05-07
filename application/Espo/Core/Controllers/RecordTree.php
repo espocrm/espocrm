@@ -68,12 +68,13 @@ class RecordTree extends Record
         return (object) [
             'list' => $collection->getValueMapList(),
             'path' => $this->getRecordService()->getTreeItemPath($parentId),
+            'data' => $this->getRecordService()->getCategoryData($parentId),
         ];
     }
 
     public function getActionLastChildrenIdList($params, $data, $request): array
     {
-        if (!$this->getAcl()->check($this->name, 'read')) {
+        if (!$this->acl->check($this->name, 'read')) {
             throw new Forbidden();
         }
 

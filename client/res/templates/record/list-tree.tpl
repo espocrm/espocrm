@@ -26,7 +26,7 @@
                 <a href="javascript:" class="category-expanded-toggle-link action" data-action="collapse">{{translate 'Collapse'}}</a>
             </li>
             <li class="{{#if isExpanded}}hidden{{/if}}">
-                <a href="javascript:" class="category-expanded-toggle-link action" data-action="expand"">{{translate 'Expand'}}</a>
+                <a href="javascript:" class="category-expanded-toggle-link action" data-action="expand">{{translate 'Expand'}}</a>
             </li>
             {{/if}}
             {{#if showEditLink}}
