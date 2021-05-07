@@ -57,7 +57,7 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
             rows: [
                 [
                     {name: 'ico', view: 'crm:views/fields/ico'},
-                    {name: 'name', link: true}
+                    {name: 'name', link: true, view: 'views/event/fields/name-for-history'}
                 ],
                 [
                     {name: 'assignedUser'},
