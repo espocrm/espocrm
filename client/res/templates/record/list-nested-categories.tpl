@@ -84,8 +84,4 @@
         {{/if}}
     </div>
 </div>
-{{else}}
-<div class="list-nested-categories" style="height: 100px;">
-
-</div>
 {{/unless}}

@@ -235,8 +235,12 @@ define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         actionOpenCategory: function (data) {
+            this.hideListViewWhileNestedCategoriesLoaded();
+
             this.openCategory(data.id || null, data.name);
+
             this.selectCurrentCategory();
+
             this.navigateToCurrentCategory();
         },
 
@@ -624,6 +628,14 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
         updateHeader: function () {
             this.getView('header').reRender();
+        },
+
+        hideListViewWhileNestedCategoriesLoaded: function () {
+            this.$listContainer.addClass('hidden');
+
+            this.nestedCategoriesCollection.once('sync', function () {
+                this.$listContainer.removeClass('hidden');
+            }, this);
         },
     });
 });
