@@ -37,6 +37,7 @@ use Espo\Core\{
     Acl\Table,
     Record\ServiceContainer,
     Utils\Metadata,
+    FileStorage\Manager as FileStorageManager,
 };
 
 use Espo\{
@@ -63,13 +64,16 @@ class Export
 
     private $metadata;
 
+    private $fileStorageManager;
+
     public function __construct(
         ProcessorFactory $processorFactory,
         SelectBuilderFactory $selectBuilderFactor,
         ServiceContainer $serviceContainer,
         Acl $acl,
         EntityManager $entityManager,
-        Metadata $metadata
+        Metadata $metadata,
+        FileStorageManager $fileStorageManager
     ) {
         $this->processorFactory = $processorFactory;
         $this->selectBuilderFactory = $selectBuilderFactor;
@@ -77,6 +81,7 @@ class Export
         $this->acl = $acl;
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
+        $this->fileStorageManager = $fileStorageManager;
     }
 
     public function setParams(Params $params): self
@@ -189,7 +194,7 @@ class Export
             $processor->addAdditionalAttributes($entityType, $attributeList, $fieldList);
         }
 
-        $fp = fopen('php://temp', 'w');
+        $dataResource = fopen('php://temp', 'w');
 
         $recordService = $this->serviceContainer->get($entityType);
 
@@ -210,10 +215,10 @@ class Export
 
             $line = base64_encode(serialize($row)) . \PHP_EOL;
 
-            fwrite($fp, $line);
+            fwrite($dataResource, $line);
         }
 
-        rewind($fp);
+        rewind($dataResource);
 
         if (is_null($attributeList)) {
             $attributeList = [];
@@ -240,20 +245,22 @@ class Export
                 ->withName($params->getName())
                 ->withEntityType($params->getEntityType());
 
-        $processorData = new ProcessorData($fp);
+        $processorData = new ProcessorData($dataResource);
 
         $stream = $processor->process($processorParams, $processorData);
 
-        fclose($fp);
+        fclose($dataResource);
 
         $attachment = $this->entityManager->getEntity('Attachment');
 
         $attachment->set('name', $fileName);
         $attachment->set('role', 'Export File');
         $attachment->set('type', $mimeType);
-        $attachment->set('contents', $stream->getContents());
+        $attachment->set('size', $stream->getSize());
 
         $this->entityManager->saveEntity($attachment);
+
+        $this->fileStorageManager->putStream($attachment, $stream);
 
         return new Result($attachment->getId());
     }
