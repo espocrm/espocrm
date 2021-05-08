@@ -21,17 +21,31 @@
             <span class="fas fa-ellipsis-h"></span>
         </a>
         <ul class="dropdown-menu">
-            {{#if hasExpandedToggler}}
-            <li class="{{#unless isExpanded}}hidden{{/unless}}">
-                <a href="javascript:" class="category-expanded-toggle-link action" data-action="collapse">{{translate 'Collapse'}}</a>
-            </li>
-            <li class="{{#if isExpanded}}hidden{{/if}}">
-                <a href="javascript:" class="category-expanded-toggle-link action" data-action="expand">{{translate 'Expand'}}</a>
-            </li>
-            {{/if}}
             {{#if showEditLink}}
             <li>
-                <a href="#{{scope}}" class="action manage-categories-link" data-action="manageCategories">{{translate 'Manage Categories' scope=scope}}</a>
+                <a
+                    href="#{{scope}}"
+                    class="action manage-categories-link"
+                    data-action="manageCategories"
+                >{{translate 'Manage Categories' scope=scope}}</a>
+            </li>
+            <li class="divider"></li>
+            {{/if}}
+
+            {{#if hasExpandedToggler}}
+            <li class="{{#unless isExpanded}}hidden{{/unless}}">
+                <a
+                    href="javascript:"
+                    class="category-expanded-toggle-link action"
+                    data-action="collapse"
+                >{{translate 'Collapse'}}</a>
+            </li>
+            <li class="{{#if isExpanded}}hidden{{/if}}">
+                <a
+                    href="javascript:"
+                    class="category-expanded-toggle-link action"
+                    data-action="expand"
+                >{{translate 'Expand'}}</a>
             </li>
             {{/if}}
         </ul>

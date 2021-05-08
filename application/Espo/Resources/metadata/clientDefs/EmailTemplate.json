@@ -27,18 +27,6 @@
             }
         ]
     },
-    "menu": {
-        "list": {
-            "dropdown": [
-                {
-                    "label": "Manage Categories",
-                    "link": "#EmailTemplateCategory",
-                    "acl": "edit",
-                    "aclScope": "EmailTemplateCategory"
-                }
-            ]
-        }
-    },
     "boolFilterList": ["onlyMy"],
     "filterList": [
         "actual"

@@ -14,17 +14,5 @@
     "selectDefaultFilters": {
         "filter": "active"
     },
-    "menu": {
-        "list": {
-            "dropdown": [
-                {
-                    "label": "Manage Folders",
-                    "link": "#DocumentFolder",
-                    "acl": "edit",
-                    "aclScope": "DocumentFolder"
-                }
-            ]
-        }
-    },
     "iconClass": "far fa-file-alt"
 }

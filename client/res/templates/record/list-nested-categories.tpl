@@ -4,11 +4,22 @@
 
     <div class="clearfix">
         <div class="btn-group pull-right">
-            <a href="javascript:" class="small dropdown-toggle btn-link" data-toggle="dropdown">
+            <a href="javascript:" class="dropdown-toggle btn btn-text" data-toggle="dropdown">
                 <span class="fas fa-ellipsis-h"></span>
             </a>
 
             <ul class="dropdown-menu">
+                {{#if showEditLink}}
+                <li>
+                    <a
+                        href="#{{scope}}"
+                        class="action manage-categories-link"
+                        data-action="manageCategories"
+                    >{{translate 'Manage Categories' scope=scope}}</a>
+                </li>
+                <li class="divider"></li>
+                {{/if}}
+
                 {{#if hasExpandedToggler}}
                 <li class="{{#if isExpanded}}hidden{{/if}}">
                     <a
@@ -19,15 +30,6 @@
                 </li>
                 {{/if}}
 
-                {{#if showEditLink}}
-                <li>
-                    <a
-                        href="#{{scope}}"
-                        class="action manage-categories-link"
-                        data-action="manageCategories"
-                    >{{translate 'Manage Categories' scope=scope}}</a>
-                </li>
-                {{/if}}
             </ul>
         </div>
         {{#if currentId}}

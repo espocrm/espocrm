@@ -31,18 +31,6 @@
             "rowActionsView": "views/record/row-actions/relationship-view-and-unlink"
         }
     },
-    "menu": {
-        "list": {
-            "dropdown": [
-                {
-                    "label": "Manage Categories",
-                    "link": "#KnowledgeBaseCategory",
-                    "acl": "edit",
-                    "aclScope": "KnowledgeBaseCategory"
-                }
-            ]
-        }
-    },
     "additionalLayouts": {
         "detailPortal": {
             "type": "detail"
