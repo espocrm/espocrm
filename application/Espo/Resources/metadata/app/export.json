@@ -13,8 +13,8 @@
             "fileExtension": "xlsx"
         }
     },
-    "exportFormatClassNameMap": {
-        "csv": "Espo\\Tools\\Export\\Formats\\Csv",
-        "xlsx": "Espo\\Tools\\Export\\Formats\\Xlsx"
+    "processorClassNameMap": {
+        "csv": "Espo\\Tools\\Export\\Processors\\Csv",
+        "xlsx": "Espo\\Tools\\Export\\Processors\\Xlsx"
     }
 }

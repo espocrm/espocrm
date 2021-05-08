@@ -253,6 +253,14 @@
         }
     },
     {
+        "route": "/Export",
+        "method": "post",
+        "params": {
+            "controller": "Export",
+            "action": "process"
+        }
+    },
+    {
         "route": "/Kanban/:entityType",
         "method": "get",
         "params": {

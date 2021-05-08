@@ -539,18 +539,20 @@ define('views/record/list', 'view', function (Dep) {
 
         export: function (data, url, fieldList) {
             if (!data) {
-                data = {};
+                data = {
+                    entityType: this.entityType,
+                };
 
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
-                    data.selectData = this.collection.data || {};
-                    data.byWhere = true;
-                } else {
+                    data.searchData = this.collection.data || {};
+                }
+                else {
                     data.ids = this.checkedList;
                 }
             }
 
-            var url = url || this.entityType + '/action/export';
+            var url = url || 'Export';
 
             var o = {
                 scope: this.entityType
@@ -584,13 +586,16 @@ define('views/record/list', 'view', function (Dep) {
 
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                    Espo.Ajax.postRequest(url, data, {timeout: 0}).then(function (data) {
-                        Espo.Ui.notify(false);
+                    Espo.Ajax.postRequest(url, data, {timeout: 0})
+                        .then(
+                            function (data) {
+                                Espo.Ui.notify(false);
 
-                        if ('id' in data) {
-                            window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
-                        }
-                    }.bind(this));
+                                if ('id' in data) {
+                                    window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
+                                }
+                            }.bind(this)
+                        );
                 }, this);
             }, this);
         },

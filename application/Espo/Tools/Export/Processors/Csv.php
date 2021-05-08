@@ -27,24 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Formats;
+namespace Espo\Tools\Export\Processors;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\ORM\Entity;
+use Espo\ORM\Entity;
 
 use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
+    Utils\Json,
 };
 
 use Espo\Entities\Preferences;
 
-class Csv
+use Espo\Tools\Export\{
+    ProcessorParams,
+    ProcessorData,
+    Processor,
+};
+
+use Psr\Http\Message\StreamInterface;
+
+use GuzzleHttp\Psr7\Stream;
+
+class Csv implements Processor
 {
-    protected $config;
-    protected $preferences;
-    protected $metadata;
+    private $config;
+
+    private $preferences;
+
+    private $metadata;
 
     public function __construct(Config $config, Preferences $preferences, Metadata $metadata)
     {
@@ -53,68 +64,61 @@ class Csv
         $this->metadata = $metadata;
     }
 
-    public function loadAdditionalFields(Entity $entity, $fieldList)
+    public function process(ProcessorParams $params, ProcessorData $data): StreamInterface
+    {
+        $attributeList = $params->getAttributeList();
+
+        $delimiterRaw =
+            $this->preferences->get('exportDelimiter') ??
+            $this->config->get('exportDelimiter') ??
+            ',';
+
+        $delimiter = str_replace('\t', "\t", $delimiterRaw);
+
+        $fp = fopen('php://temp', 'w');
+
+        fputcsv($fp, $attributeList, $delimiter);
+
+        while (($row = $data->readRow()) !== null) {
+            $preparedRow = $this->prepareRow($row);
+
+            fputcsv($fp, $preparedRow, $delimiter);
+        }
+
+        rewind($fp);
+
+        return new Stream($fp);
+    }
+
+    protected function prepareRow(array $row): array
+    {
+        $preparedRow = [];
+
+        foreach ($row as $item) {
+            if (is_array($item) || is_object($item)) {
+                $item = Json::encode($item);
+            }
+
+            $preparedRow[] = $item;
+        }
+
+        return $preparedRow;
+    }
+
+    public function loadAdditionalFields(Entity $entity, array $fieldList): void
     {
         foreach ($fieldList as $field) {
-            $fieldType = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+            $fieldType = $this->metadata
+                ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
             if (
-                $fieldType === 'linkMultiple' || $fieldType === 'attachmentMultiple'
+                $fieldType === 'linkMultiple' ||
+                $fieldType === 'attachmentMultiple'
             ) {
                 if (!$entity->has($field . 'Ids')) {
                     $entity->loadLinkMultipleField($field);
                 }
             }
         }
-    }
-
-    public function process(string $entityType, array $params, ?array $dataList, $dataFp = null)
-    {
-        if (!is_array($params['attributeList'])) {
-            throw new Error();
-        }
-
-        $attributeList = $params['attributeList'];
-
-        $delimiter = $this->preferences->get('exportDelimiter');
-        if (empty($delimiter)) {
-            $delimiter = $this->config->get('exportDelimiter', ',');
-        }
-
-        $delimiter = str_replace('\t', "\t", $delimiter);
-
-        $fp = fopen('php://temp', 'w');
-        fputcsv($fp, $attributeList, $delimiter);
-
-        if ($dataFp) {
-            while (($line = fgets($dataFp)) !== false) {
-                $row = unserialize(base64_decode($line));
-                $preparedRow = $this->prepareRow($row);
-                fputcsv($fp, $preparedRow, $delimiter);
-            }
-        } else {
-            foreach ($dataList as $row) {
-                $preparedRow = $this->prepareRow($row);
-                fputcsv($fp, $preparedRow, $delimiter);
-            }
-        }
-
-        rewind($fp);
-        $csv = stream_get_contents($fp);
-        fclose($fp);
-
-        return $csv;
-    }
-
-    protected function prepareRow($row)
-    {
-        $preparedRow = [];
-        foreach ($row as $item) {
-            if (is_array($item) || is_object($item)) {
-                $item = \Espo\Core\Utils\Json::encode($item);
-            }
-            $preparedRow[] = $item;
-        }
-        return $preparedRow;
     }
 }

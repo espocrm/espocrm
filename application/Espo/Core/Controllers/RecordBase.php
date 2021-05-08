@@ -249,53 +249,6 @@ class RecordBase extends Base implements Di\EntityManagerAware
         return $this->searchParamsFetcher->fetch($request);
     }
 
-    public function postActionExport(Request $request): StdClass
-    {
-        $data = $request->getParsedBody();
-
-        if ($this->config->get('exportDisabled') && !$this->user->isAdmin()) {
-            throw new Forbidden("Export is disabled.");
-        }
-
-        $ids = isset($data->ids) ?
-            $data->ids : null;
-
-        $where = isset($data->where) ?
-            json_decode(json_encode($data->where), true) : null;
-
-        $byWhere = isset($data->byWhere) ?
-            $data->byWhere : false;
-
-        $selectData = isset($data->selectData) ?
-            json_decode(json_encode($data->selectData), true) : null;
-
-        $actionParams = [];
-
-        if ($byWhere) {
-            $actionParams['selectData'] = $selectData;
-            $actionParams['where'] = $where;
-        }
-        else {
-            $actionParams['ids'] = $ids;
-        }
-
-        if (isset($data->attributeList)) {
-            $actionParams['attributeList'] = $data->attributeList;
-        }
-
-        if (isset($data->fieldList)) {
-            $actionParams['fieldList'] = $data->fieldList;
-        }
-
-        if (isset($data->format)) {
-            $actionParams['format'] = $data->format;
-        }
-
-        return (object) [
-            'id' => $this->getRecordService()->export($actionParams),
-        ];
-    }
-
     public function postActionGetDuplicateAttributes(Request $request): StdClass
     {
         $id = $request->getParsedBody()->id ?? null;

@@ -50,6 +50,7 @@ use Espo\Core\Di;
 
 use Espo\Tools\{
     Export\Export as ExportTool,
+    Export\Params as ExportParams,
 };
 
 class Record extends RecordService implements
@@ -259,13 +260,13 @@ class Record extends RecordService implements
             throw new ForbiddenSilent("No 'read' access.");
         }
 
+        $params['entityType'] = $this->entityType;
+
         $export = $this->injectableFactory->create(ExportTool::class);
 
         return $export
-            ->setRecordService($this)
-            ->setParams($params)
+            ->setParams(ExportParams::fromRaw($params))
             ->setCollection($collection)
-            ->setEntityType($this->entityType)
             ->run();
     }
 

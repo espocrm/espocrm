@@ -27,10 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Export\Formats;
+namespace Espo\Tools\Export\Processors;
 
 use Espo\ORM\Entity;
-use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
     Utils\Config,
@@ -38,11 +37,20 @@ use Espo\Core\{
     Utils\Language,
     Utils\DateTime as DateTimeUtil,
     FileStorage\Manager as FileStorageManager,
-    Utils\File\Manager as FileManager,
     ORM\EntityManager,
     Fields\Address,
     Fields\Address\AddressFormatterFactory,
 };
+
+use Espo\Tools\Export\{
+    ProcessorParams,
+    ProcessorData,
+    Processor,
+};
+
+use Psr\Http\Message\StreamInterface;
+
+use GuzzleHttp\Psr7\Stream;
 
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -55,7 +63,10 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 
-class Xlsx
+/**
+ * @todo Refactor.
+ */
+class Xlsx implements Processor
 {
     protected $config;
 
@@ -69,8 +80,6 @@ class Xlsx
 
     protected $fileStorageManager;
 
-    protected $fileManager;
-
     protected $addressFormatterFactory;
 
     public function __construct(
@@ -80,7 +89,6 @@ class Xlsx
         DateTimeUtil $dateTime,
         EntityManager $entityManager,
         FileStorageManager $fileStorageManager,
-        FileManager $fileManager,
         AddressFormatterFactory $addressFormatterFactory
     ) {
         $this->config = $config;
@@ -89,135 +97,26 @@ class Xlsx
         $this->dateTime = $dateTime;
         $this->entityManager = $entityManager;
         $this->fileStorageManager = $fileStorageManager;
-        $this->fileManager = $fileManager;
         $this->addressFormatterFactory = $addressFormatterFactory;
     }
 
-    public function loadAdditionalFields(Entity $entity, $fieldList)
+    public function process(ProcessorParams $params, ProcessorData $data): StreamInterface
     {
-        foreach ($entity->getRelationList() as $link) {
-            if (in_array($link, $fieldList)) {
-                if ($entity->getRelationType($link) === 'belongsToParent') {
-                    if (!$entity->get($link . 'Name')) {
-                        $entity->loadParentNameField($link);
-                    }
-                } else if (
-                    (
-                        (
-                            $entity->getRelationType($link) === 'belongsTo'
-                            &&
-                            $entity->getRelationParam($link, 'noJoin')
-                        )
-                        ||
-                        $entity->getRelationType($link) === 'hasOne'
-                    )
-                    &&
-                    $entity->hasAttribute($link . 'Name')
-                ) {
-                    if (!$entity->get($link . 'Name') || !$entity->get($link . 'Id')) {
-                        $entity->loadLinkField($link);
-                    }
-                }
-            }
-        }
-        foreach ($fieldList as $field) {
-            $fieldType = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+        $entityType = $params->getEntityType();
 
-            if ($fieldType === 'linkMultiple' || $fieldType === 'attachmentMultiple') {
-                if (!$entity->has($field . 'Ids')) {
-                    $entity->loadLinkMultipleField($field);
-                }
-            }
-        }
-    }
-
-    public function filterFieldList($entityType, $fieldList, $exportAllFields)
-    {
-        if ($exportAllFields) {
-            foreach ($fieldList as $i => $field) {
-                $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-                if (in_array($type, ['linkMultiple', 'attachmentMultiple'])) {
-                    unset($fieldList[$i]);
-                }
-            }
-        }
-
-        return array_values($fieldList);
-    }
-
-    public function addAdditionalAttributes($entityType, &$attributeList, $fieldList)
-    {
-        $linkList = [];
-
-        if (!in_array('id', $attributeList)) {
-            $attributeList[] = 'id';
-        }
-
-        $linkDefs = $this->metadata->get(['entityDefs', $entityType, 'links']);
-
-        if (is_array($linkDefs)) {
-            foreach ($linkDefs as $link => $defs) {
-                if (empty($defs['type'])) {
-                    continue;
-                }
-
-                if ($defs['type'] === 'belongsToParent') {
-                    $linkList[] = $link;
-                }
-                else if ($defs['type'] === 'belongsTo' && !empty($defs['noJoin'])) {
-                    if ($this->metadata->get(['entityDefs', $entityType, 'fields', $link])) {
-                        $linkList[] = $link;
-                    }
-                }
-            }
-        }
-
-        foreach ($linkList as $item) {
-            if (in_array($item, $fieldList) && !in_array($item . 'Name', $attributeList)) {
-                $attributeList[] = $item . 'Name';
-            }
-        }
-
-        foreach ($fieldList as $field) {
-            $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
-
-            if ($type === 'currencyConverted') {
-                if (!in_array($field, $attributeList)) {
-                    $attributeList[] = $field;
-                }
-            }
-        }
-    }
-
-    public function process(string $entityType, array $params, ?array $dataList = null, $dataFp = null)
-    {
-        if (!is_array($params['fieldList'])) {
-            throw new Error();
-        }
+        $fieldList = $params->getFieldList();
 
         $phpExcel = new Spreadsheet();
 
         $sheet = $phpExcel->setActiveSheetIndex(0);
 
-        if (isset($params['exportName'])) {
-            $exportName = $params['exportName'];
-        }
-        else {
-            $exportName = $this->language->translate($entityType, 'scopeNamesPlural');
-        }
+        $sheetName = $this->getSheetNameFromParams($params);
 
-        $sheetName = mb_substr($exportName, 0, 30, 'utf-8');
-        $badCharList = ['*', ':', '/', '\\', '?', '[', ']'];
-
-        foreach ($badCharList as $badChar) {
-            $sheetName = str_replace($badCharList, ' ', $sheetName);
-        }
-
-        $sheetName = str_replace('\'', '', $sheetName);
+        $exportName =
+            $params->getName() ??
+            $this->language->translate($entityType, 'scopeNamesPlural');
 
         $sheet->setTitle($sheetName);
-
-        $fieldList = $params['fieldList'];
 
         $titleStyle = [
             'font' => [
@@ -247,6 +146,7 @@ class Xlsx
 
         $azRange = range('A', 'Z');
         $azRangeCopied = $azRange;
+
         foreach ($azRangeCopied as $i => $char1) {
             foreach ($azRangeCopied as $j => $char2) {
                 $azRange[] = $char1 . $char2;
@@ -276,9 +176,13 @@ class Xlsx
 
             if (strpos($name, '_') !== false) {
                 list($linkName, $foreignField) = explode('_', $name);
+
                 $foreignScope = $this->metadata->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+
                 if ($foreignScope) {
-                    $label = $this->language->translate($linkName, 'links', $entityType) . '.' . $this->language->translate($foreignField, 'fields', $foreignScope);
+                    $label =
+                        $this->language->translate($linkName, 'links', $entityType) . '.' .
+                        $this->language->translate($foreignField, 'fields', $foreignScope);
                 }
             }
             else {
@@ -316,28 +220,14 @@ class Xlsx
         $rowNumber++;
 
         $lineIndex = -1;
-        if ($dataList) {
-            $lineCount = count($dataList);
-        }
 
         while (true) {
             $lineIndex++;
 
-            if ($dataFp) {
-                $line = fgets($dataFp);
+            $row = $data->readRow();
 
-                if ($line === false) {
-                    break;
-                }
-
-                $row = unserialize(base64_decode($line));
-            }
-            else {
-                if ($lineIndex >= $lineCount) {
-                    break;
-                }
-
-                $row = $dataList[$lineIndex];
+            if ($row === null) {
+                break;
             }
 
             $i = 0;
@@ -348,7 +238,7 @@ class Xlsx
                 $defs = $this->metadata->get(['entityDefs', $entityType, 'fields', $name]);
 
                 if (!$defs) {
-                    $defs = array();
+                    $defs = [];
                     $defs['type'] = 'base';
                 }
 
@@ -359,43 +249,51 @@ class Xlsx
                 if (strpos($name, '_') !== false) {
                     list($linkName, $foreignField) = explode('_', $name);
 
-                    $foreignScope = $this->metadata->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                    $foreignScope = $this->metadata
+                        ->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
 
                     if ($foreignScope) {
-                        $type = $this->metadata->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
+                        $type = $this->metadata
+                            ->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
                     }
                 }
 
                 if ($type === 'foreign') {
-                    $linkName = $this->metadata->get(['entityDefs', $entityType, 'fields', $name, 'link']);
-                    $foreignField = $this->metadata->get(['entityDefs', $entityType, 'fields', $name, 'field']);
-                    $foreignScope = $this->metadata->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
+                    $linkName = $this->metadata
+                        ->get(['entityDefs', $entityType, 'fields', $name, 'link']);
+
+                    $foreignField = $this->metadata
+                        ->get(['entityDefs', $entityType, 'fields', $name, 'field']);
+
+                    $foreignScope = $this->metadata
+                        ->get(['entityDefs', $entityType, 'links', $linkName, 'entity']);
 
                     if ($foreignScope) {
-                        $type = $this->metadata->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
+                        $type = $this->metadata
+                            ->get(['entityDefs', $foreignScope, 'fields', $foreignField, 'type'], $type);
                     }
                 }
                 $typesCache[$name] = $type;
 
                 $link = null;
 
-                if ($type == 'link') {
+                if ($type === 'link') {
                     if (array_key_exists($name.'Name', $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
                     }
                 }
-                else if ($type == 'linkParent') {
+                else if ($type === 'linkParent') {
                     if (array_key_exists($name.'Name', $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
                     }
                 }
-                else if ($type == 'int') {
+                else if ($type === 'int') {
                     $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
                 }
-                else if ($type == 'float') {
+                else if ($type === 'float') {
                     $sheet->setCellValue("$col$rowNumber", $row[$name] ?: 0);
                 }
-                else if ($type == 'currency') {
+                else if ($type === 'currency') {
                     if (array_key_exists($name.'Currency', $row) && array_key_exists($name, $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
 
@@ -408,7 +306,7 @@ class Xlsx
                             );
                     }
                 }
-                else if ($type == 'currencyConverted') {
+                else if ($type === 'currencyConverted') {
                     if (array_key_exists($name, $row)) {
                         $currency = $this->config->get('defaultCurrency');
 
@@ -421,7 +319,7 @@ class Xlsx
                         $sheet->setCellValue("$col$rowNumber", $row[$name] ? $row[$name] : '');
                     }
                 }
-                else if ($type == 'personName') {
+                else if ($type === 'personName') {
                     if (!empty($row['name'])) {
                         $sheet->setCellValue("$col$rowNumber", $row['name']);
                     } else {
@@ -435,18 +333,21 @@ class Xlsx
                             }
                             $personName .= $row['lastName'];
                         }
-                        $sheet->setCellValue("$col$rowNumber", $personName);
+                        $sheet->setCellValue($col . $rowNumber, $personName);
                     }
                 }
-                else if ($type == 'date') {
+                else if ($type === 'date') {
                     if (isset($row[$name])) {
-                        $sheet->setCellValue("$col$rowNumber", SharedDate::PHPToExcel(strtotime($row[$name])));
+                        $sheet->setCellValue(
+                            $col . $rowNumber,
+                            SharedDate::PHPToExcel(strtotime($row[$name]))
+                        );
                     }
                 }
-                else if ($type == 'datetime' || $type == 'datetimeOptional') {
+                else if ($type === 'datetime' || $type === 'datetimeOptional') {
                     $value = null;
 
-                    if ($type == 'datetimeOptional') {
+                    if ($type === 'datetimeOptional') {
                         if (isset($row[$name . 'Date']) && $row[$name . 'Date']) {
                             $value = $row[$name . 'Date'];
                         }
@@ -463,6 +364,7 @@ class Xlsx
                             $timeZone = $this->config->get('timeZone');
 
                             $dt = new DateTime($value);
+
                             $dt->setTimezone(new DateTimeZone($timeZone));
 
                             $value = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
@@ -476,7 +378,7 @@ class Xlsx
                         $sheet->setCellValue("$col$rowNumber", SharedDate::PHPToExcel(strtotime($value)));
                     }
                 }
-                else if ($type == 'image') {
+                else if ($type === 'image') {
                     if (isset($row[$name . 'Id']) && $row[$name . 'Id']) {
                         $attachment = $this->entityManager->getEntity('Attachment', $row[$name . 'Id']);
 
@@ -495,12 +397,12 @@ class Xlsx
                     }
 
                 }
-                else if ($type == 'file') {
+                else if ($type === 'file') {
                     if (array_key_exists($name.'Name', $row)) {
                         $sheet->setCellValue("$col$rowNumber", $row[$name.'Name']);
                     }
                 }
-                else if ($type == 'enum') {
+                else if ($type === 'enum') {
                     if (array_key_exists($name, $row)) {
                         if ($linkName) {
                             $value = $this->language->translateOption($row[$name], $foreignField, $foreignScope);
@@ -512,7 +414,7 @@ class Xlsx
                         $sheet->setCellValue("$col$rowNumber", $value);
                     }
                 }
-                else if ($type == 'linkMultiple' || $type == 'attachmentMultiple') {
+                else if ($type === 'linkMultiple' || $type === 'attachmentMultiple') {
                     if (array_key_exists($name . 'Ids', $row) && array_key_exists($name . 'Names', $row)) {
                         $nameList = [];
 
@@ -529,7 +431,7 @@ class Xlsx
                         $sheet->setCellValue("$col$rowNumber", implode(', ', $nameList));
                     }
                 }
-                else if ($type == 'address') {
+                else if ($type === 'address') {
                     $address = Address::createBuilder()
                         ->setStreet($row[$name . 'Street'] ?? null)
                         ->setCity($row[$name . 'City'] ?? null)
@@ -579,7 +481,7 @@ class Xlsx
                         $sheet->setCellValue("$col$rowNumber", $value);
                     }
                 }
-                else if ($type == 'multiEnum' || $type == 'array') {
+                else if ($type === 'multiEnum' || $type === 'array') {
                     if (!empty($row[$name])) {
                         $array = json_decode($row[$name]);
 
@@ -621,17 +523,17 @@ class Xlsx
                     list($foreignLink, $foreignField) = explode('_', $name);
                 }
 
-                if ($name == 'name') {
+                if ($name === 'name') {
                     if (array_key_exists('id', $row)) {
                         $link = $this->config->getSiteUrl() . "/#".$entityType . "/view/" . $row['id'];
                     }
                 }
-                else if ($type == 'url') {
+                else if ($type === 'url') {
                     if (array_key_exists($name, $row) && filter_var($row[$name], FILTER_VALIDATE_URL)) {
                         $link = $row[$name];
                     }
                 }
-                else if ($type == 'link') {
+                else if ($type === 'link') {
                     if (array_key_exists($name.'Id', $row)) {
                         $foreignEntity = null;
 
@@ -651,27 +553,29 @@ class Xlsx
                         }
 
                         if ($foreignEntity) {
-                            $link = $this->config->getSiteUrl() . "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
+                            $link =
+                                $this->config->getSiteUrl() .
+                                "/#" . $foreignEntity. "/view/". $row[$name.'Id'];
                         }
                     }
                 }
-                else if ($type == 'file') {
+                else if ($type === 'file') {
                     if (array_key_exists($name.'Id', $row)) {
                         $link = $this->config->getSiteUrl() . "/?entryPoint=download&id=" . $row[$name.'Id'];
                     }
                 }
-                else if ($type == 'linkParent') {
+                else if ($type === 'linkParent') {
                     if (array_key_exists($name.'Id', $row) && array_key_exists($name.'Type', $row)) {
                         $link = $this->config->getSiteUrl() . "/#".$row[$name.'Type']."/view/". $row[$name.'Id'];
                     }
                 }
-                else if ($type == 'phone') {
+                else if ($type === 'phone') {
                     if (array_key_exists($name, $row)) {
                         $link = "tel:".$row[$name];
                     }
                 }
 
-                else if ($type == 'email' && array_key_exists($name, $row)) {
+                else if ($type === 'email' && array_key_exists($name, $row)) {
                     if (array_key_exists($name, $row)) {
                         $link = "mailto:".$row[$name];
                     }
@@ -753,28 +657,25 @@ class Xlsx
         ];
 
         foreach ($linkColList as $linkColumn) {
-            $sheet->getStyle($linkColumn.$startingRowNumber.':'.$linkColumn.$rowNumber)->applyFromArray($linkStyle);
+            $sheet
+                ->getStyle($linkColumn.$startingRowNumber . ':' . $linkColumn.$rowNumber)
+                ->applyFromArray($linkStyle);
         }
 
         $objWriter = IOFactory::createWriter($phpExcel, 'Xlsx');
 
-        if (!$this->fileManager->isDir('data/cache/')) {
-            $this->fileManager->mkdir('data/cache/');
-        }
+        $resource = fopen('php://temp', 'r+');
 
-        $tempFileName = 'data/cache/' . 'export_' . substr(md5(rand()), 0, 7);
+        $objWriter->save($resource);
 
-        $objWriter->save($tempFileName);
+        $stream = new Stream($resource);
 
-        $fp = fopen($tempFileName, 'r');
-        $xlsx = stream_get_contents($fp);
+        $stream->seek(0);
 
-        $this->fileManager->unlink($tempFileName);
-
-        return $xlsx;
+        return $stream;
     }
 
-    protected function getCurrencyFormatCode(string $currency) : string
+    protected function getCurrencyFormatCode(string $currency): string
     {
         $currencySymbol = $this->metadata->get(['app', 'currency', 'symbolMap', $currency], '');
 
@@ -785,5 +686,121 @@ class Xlsx
         }
 
         return '[$'.$currencySymbol.'-409]#,##0.00;-[$'.$currencySymbol.'-409]#,##0.00';
+    }
+
+    public function loadAdditionalFields(Entity $entity, array $fieldList): void
+    {
+        foreach ($entity->getRelationList() as $link) {
+            if (!in_array($link, $fieldList)) {
+                continue;
+            }
+
+            if ($entity->getRelationType($link) === 'belongsToParent') {
+                if (!$entity->get($link . 'Name')) {
+                    $entity->loadParentNameField($link);
+                }
+            }
+            else if (
+                (
+                    (
+                        $entity->getRelationType($link) === 'belongsTo' &&
+                        $entity->getRelationParam($link, 'noJoin')
+                    ) ||
+                    $entity->getRelationType($link) === 'hasOne'
+                ) &&
+                $entity->hasAttribute($link . 'Name')
+            ) {
+                if (!$entity->get($link . 'Name') || !$entity->get($link . 'Id')) {
+                    $entity->loadLinkField($link);
+                }
+            }
+        }
+
+        foreach ($fieldList as $field) {
+            $fieldType = $this->metadata
+                ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
+
+            if ($fieldType === 'linkMultiple' || $fieldType === 'attachmentMultiple') {
+                if (!$entity->has($field . 'Ids')) {
+                    $entity->loadLinkMultipleField($field);
+                }
+            }
+        }
+    }
+
+    public function filterFieldList(string $entityType, array $fieldList, bool $exportAllFields): array
+    {
+        if ($exportAllFields) {
+            foreach ($fieldList as $i => $field) {
+                $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+
+                if (in_array($type, ['linkMultiple', 'attachmentMultiple'])) {
+                    unset($fieldList[$i]);
+                }
+            }
+        }
+
+        return array_values($fieldList);
+    }
+
+    public function addAdditionalAttributes(string $entityType, array &$attributeList, array $fieldList): void
+    {
+        $linkList = [];
+
+        if (!in_array('id', $attributeList)) {
+            $attributeList[] = 'id';
+        }
+
+        $linkDefs = $this->metadata->get(['entityDefs', $entityType, 'links']);
+
+        if (is_array($linkDefs)) {
+            foreach ($linkDefs as $link => $defs) {
+                if (empty($defs['type'])) {
+                    continue;
+                }
+
+                if ($defs['type'] === 'belongsToParent') {
+                    $linkList[] = $link;
+                }
+                else if ($defs['type'] === 'belongsTo' && !empty($defs['noJoin'])) {
+                    if ($this->metadata->get(['entityDefs', $entityType, 'fields', $link])) {
+                        $linkList[] = $link;
+                    }
+                }
+            }
+        }
+
+        foreach ($linkList as $item) {
+            if (in_array($item, $fieldList) && !in_array($item . 'Name', $attributeList)) {
+                $attributeList[] = $item . 'Name';
+            }
+        }
+
+        foreach ($fieldList as $field) {
+            $type = $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+
+            if ($type === 'currencyConverted') {
+                if (!in_array($field, $attributeList)) {
+                    $attributeList[] = $field;
+                }
+            }
+        }
+    }
+
+    protected function getSheetNameFromParams(ProcessorParams $params): string
+    {
+        $exportName =
+            $params->getName() ??
+            $this->language->translate($params->getEntityType(), 'scopeNamesPlural');
+
+        $badCharList = ['*', ':', '/', '\\', '?', '[', ']'];
+
+        $sheetName = mb_substr($exportName, 0, 30, 'utf-8');
+
+        $sheetName = str_replace($badCharList, ' ', $sheetName);
+
+        $sheetName = str_replace('\'', '', $sheetName);
+
+        return $sheetName;
     }
 }

@@ -27,62 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Export;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\{
-    Controllers\RecordBase,
-    Api\Request,
-    Api\Response,
-};
-
-use StdClass;
-
-class Notification extends RecordBase
+class ProcessorData
 {
-    public static $defaultAction = 'list';
+    private $resource;
 
-    public function getActionList(Request $request, Response $response): StdClass
+    public function __construct($resource)
     {
-        $userId = $this->user->getId();
-
-        $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        $offset = $searchParams->getOffset();
-        $maxSize = $searchParams->getMaxSize();
-
-        $after = $request->get('after');
-
-        $params = [
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-        ];
-
-        $recordCollection = $this->recordServiceContainer
-            ->get('Notification')
-            ->getList($userId, $params);
-
-        return (object) [
-            'total' => $recordCollection->getTotal(),
-            'list' => $recordCollection->getValueMapList(),
-        ];
+        $this->resource = $resource;
     }
 
-    public function getActionNotReadCount(): int
+    public function readRow(): ?array
     {
-        $userId = $this->user->getId();
+        $line = fgets($this->resource);
 
-        return $this->recordServiceContainer->get('Notification')->getNotReadCount($userId);
-    }
+        if ($line === false) {
+            return null;
+        }
 
-    public function postActionMarkAllRead(Request $request): bool
-    {
-        $userId = $this->user->getId();
-
-        $this->recordServiceContainer->get('Notification')->markAllRead($userId);
-
-        return true;
+        return unserialize(base64_decode($line));
     }
 }

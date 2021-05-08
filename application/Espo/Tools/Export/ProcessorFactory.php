@@ -27,62 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
-
-use Espo\Core\Exceptions\Error;
+namespace Espo\Tools\Export;
 
 use Espo\Core\{
-    Controllers\RecordBase,
-    Api\Request,
-    Api\Response,
+    InjectableFactory,
+    Utils\Metadata,
 };
 
-use StdClass;
+use LogicException;
 
-class Notification extends RecordBase
+class ProcessorFactory
 {
-    public static $defaultAction = 'list';
+    private $injectableFactory;
 
-    public function getActionList(Request $request, Response $response): StdClass
+    private $metadata;
+
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        $userId = $this->user->getId();
-
-        $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        $offset = $searchParams->getOffset();
-        $maxSize = $searchParams->getMaxSize();
-
-        $after = $request->get('after');
-
-        $params = [
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-        ];
-
-        $recordCollection = $this->recordServiceContainer
-            ->get('Notification')
-            ->getList($userId, $params);
-
-        return (object) [
-            'total' => $recordCollection->getTotal(),
-            'list' => $recordCollection->getValueMapList(),
-        ];
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
-    public function getActionNotReadCount(): int
+    public function create(string $format): Processor
     {
-        $userId = $this->user->getId();
+        if (!in_array($format, $this->metadata->get(['app', 'export', 'formatList']))) {
+            throw new LogicException("Not supported export format '{$format}'.");
+        }
 
-        return $this->recordServiceContainer->get('Notification')->getNotReadCount($userId);
-    }
+        $className = $this->metadata->get(['app', 'export', 'processorClassNameMap', $format]);
 
-    public function postActionMarkAllRead(Request $request): bool
-    {
-        $userId = $this->user->getId();
+        if (!$className) {
+            throw new LogicException("No implementation for format '{$format}'.");
+        }
 
-        $this->recordServiceContainer->get('Notification')->markAllRead($userId);
-
-        return true;
+        return $this->injectableFactory->create($className);
     }
 }

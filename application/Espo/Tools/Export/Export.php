@@ -30,56 +30,56 @@
 namespace Espo\Tools\Export;
 
 use Espo\Core\{
-    Exceptions\BadRequest,
     Exceptions\Error,
     Utils\Json,
-    Di,
-    Select\SearchParams,
+    Select\SelectBuilderFactory,
+    Acl,
+    Acl\Table,
+    Record\ServiceContainer,
+    Utils\Metadata,
 };
 
 use Espo\{
     ORM\Entity,
     ORM\Collection,
-    Services\Record,
+    ORM\EntityManager,
 };
 
-class Export implements
-
-    Di\MetadataAware,
-    Di\EntityManagerAware,
-    Di\SelectBuilderFactoryAware,
-    Di\AclAware,
-    Di\InjectableFactoryAware
+class Export
 {
-    use Di\MetadataSetter;
-    use Di\EntityManagerSetter;
-    use Di\SelectBuilderFactorySetter;
-    use Di\AclSetter;
-    use Di\InjectableFactorySetter;
+    private $params;
 
-    protected $entityType;
+    private $collection = null;
 
-    protected $recordService;
+    private $processorFactory;
 
-    protected $collection = null;
+    private $selectBuilderFactory;
 
-    protected $params = [];
+    private $serviceContainer;
 
-    public function setRecordService(Record $recordService): self
-    {
-        $this->recordService = $recordService;
+    private $acl;
 
-        return $this;
+    private $entityManager;
+
+    private $metadata;
+
+    public function __construct(
+        ProcessorFactory $processorFactory,
+        SelectBuilderFactory $selectBuilderFactor,
+        ServiceContainer $serviceContainer,
+        Acl $acl,
+        EntityManager $entityManager,
+        Metadata $metadata
+    ) {
+        $this->processorFactory = $processorFactory;
+        $this->selectBuilderFactory = $selectBuilderFactor;
+        $this->serviceContainer = $serviceContainer;
+        $this->acl = $acl;
+        $this->entityManager = $entityManager;
+        $this->metadata = $metadata;
     }
 
-    public function setEntityType(string $entityType): self
-    {
-        $this->entityType = $entityType;
-
-        return $this;
-    }
-
-    public function setParams(array $params): self
+    public function setParams(Params $params): self
     {
         $this->params = $params;
 
@@ -95,56 +95,37 @@ class Export implements
 
     /**
      * Run export.
-     *
-     * @return An ID of a generated attachment.
      */
-    public function run(): string
+    public function run(): Result
     {
+        if (!$this->params) {
+            throw new Error("No params set.");
+        }
+
         $params = $this->params;
 
-        if (!$this->entityType) {
-            throw new Error("Entity type is not specified.");
-        }
+        $entityType = $params->getEntityType();
 
-        if (array_key_exists('format', $params)) {
-            $format = $params['format'];
-        }
-        else {
-            $format = 'csv';
-        }
+        $format = $params->getFormat() ?? 'csv';
 
-        if (!in_array($format, $this->metadata->get(['app', 'export', 'formatList']))) {
-            throw new Error('Not supported export format.');
-        }
+        $processor = $this->processorFactory->create($format);
 
-        $className = $this->metadata->get(['app', 'export', 'exportFormatClassNameMap', $format]);
+        $exportAllFields = $params->getFieldList() === null;
 
-        if (empty($className)) {
-            throw new Error();
-        }
+        $collection = $this->getCollection($params);
 
-        $exportObj = $this->injectableFactory->create($className);
+        $attributeListToSkip = $this->acl->getScopeForbiddenAttributeList($entityType, Table::ACTION_READ);
 
-        $exportAllFields = !array_key_exists('fieldList', $params);
-
-        $collection = $this->getCollection();
-
-        $attributeListToSkip = [
-            'deleted',
-        ];
-
-        foreach ($this->acl->getScopeForbiddenAttributeList($this->entityType, 'read') as $attribute) {
-            $attributeListToSkip[] = $attribute;
-        }
+        $attributeListToSkip[] = 'deleted';
 
         $attributeList = null;
 
-        if (array_key_exists('attributeList', $params)) {
+        if ($params->getAttributeList() !== null) {
             $attributeList = [];
 
-            $seed = $this->entityManager->getEntity($this->entityType);
+            $seed = $this->entityManager->getEntity($entityType);
 
-            foreach ($params['attributeList'] as $attribute) {
+            foreach ($params->getAttributeList() as $attribute) {
                 if (in_array($attribute, $attributeListToSkip)) {
                     continue;
                 }
@@ -157,34 +138,41 @@ class Export implements
             }
         }
 
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType);
+
         if ($exportAllFields) {
-            $fieldDefs = $this->metadata->get(['entityDefs', $this->entityType, 'fields'], []);
-            $fieldList = array_keys($fieldDefs);
+            $fieldList = $entityDefs->getFieldNameList();
 
             array_unshift($fieldList, 'id');
         }
         else {
-            $fieldList = $params['fieldList'];
+            $fieldList = $params->getFieldList();
         }
 
         foreach ($fieldList as $i => $field) {
-            if ($this->metadata->get(['entityDefs', $this->entityType, 'fields', $field, 'exportDisabled'])) {
+            if ($field === 'id') {
+                continue;
+            }
+
+            if ($entityDefs->getField($field)->getParam('exportDisabled')) {
                 unset($fieldList[$i]);
             }
         }
 
         $fieldList = array_values($fieldList);
 
-        if (method_exists($exportObj, 'filterFieldList')) {
-            $fieldList = $exportObj->filterFieldList($this->entityType, $fieldList, $exportAllFields);
+        if (method_exists($processor, 'filterFieldList')) {
+            $fieldList = $processor->filterFieldList($entityType, $fieldList, $exportAllFields);
         }
 
         if (is_null($attributeList)) {
             $attributeList = [];
 
-            $seed = $this->entityManager->getEntity($this->entityType);
+            $seed = $this->entityManager->getEntity($entityType);
 
-            foreach ($seed->getAttributeList() as $attribute) {
+            foreach ($entityDefs->getAttributeNameList() as $attribute) {
                 if (in_array($attribute, $attributeListToSkip)) {
                     continue;
                 }
@@ -197,19 +185,19 @@ class Export implements
             }
         }
 
-        if (method_exists($exportObj, 'addAdditionalAttributes')) {
-            $exportObj->addAdditionalAttributes($this->entityType, $attributeList, $fieldList);
+        if (method_exists($processor, 'addAdditionalAttributes')) {
+            $processor->addAdditionalAttributes($entityType, $attributeList, $fieldList);
         }
 
         $fp = fopen('php://temp', 'w');
 
-        foreach ($collection as $entity) {
-            if ($this->recordService) {
-                $this->recordService->loadAdditionalFieldsForExport($entity);
-            }
+        $recordService = $this->serviceContainer->get($entityType);
 
-            if (method_exists($exportObj, 'loadAdditionalFields')) {
-                $exportObj->loadAdditionalFields($entity, $fieldList);
+        foreach ($collection as $entity) {
+            $recordService->loadAdditionalFieldsForExport($entity);
+
+            if (method_exists($processor, 'loadAdditionalFields')) {
+                $processor->loadAdditionalFields($entity, $fieldList);
             }
 
             $row = [];
@@ -234,30 +222,27 @@ class Export implements
         $mimeType = $this->metadata->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
         $fileExtension = $this->metadata->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
 
-        $fileName = null;
+        $fileName = $params->getFileName();
 
-        if (!empty($params['fileName'])) {
-            $fileName = trim($params['fileName']);
+        if ($fileName !== null) {
+            $fileName = trim($fileName);
         }
 
-        if (!empty($fileName)) {
+        if ($fileName) {
             $fileName = $fileName . '.' . $fileExtension;
-        } else {
-            $fileName = "Export_{$this->entityType}." . $fileExtension;
+        }
+        else {
+            $fileName = "Export_{$entityType}." . $fileExtension;
         }
 
-        $exportParams = [
-            'attributeList' => $attributeList,
-            'fileName ' => $fileName
-        ];
+        $processorParams =
+            (new ProcessorParams($fileName, $attributeList, $fieldList))
+                ->withName($params->getName())
+                ->withEntityType($params->getEntityType());
 
-        $exportParams['fieldList'] = $fieldList;
+        $processorData = new ProcessorData($fp);
 
-        if (array_key_exists('exportName', $params)) {
-            $exportParams['exportName'] = $params['exportName'];
-        }
-
-        $contents = $exportObj->process($this->entityType, $exportParams, null, $fp);
+        $stream = $processor->process($processorParams, $processorData);
 
         fclose($fp);
 
@@ -266,11 +251,11 @@ class Export implements
         $attachment->set('name', $fileName);
         $attachment->set('role', 'Export File');
         $attachment->set('type', $mimeType);
-        $attachment->set('contents', $contents);
+        $attachment->set('contents', $stream->getContents());
 
         $this->entityManager->saveEntity($attachment);
 
-        return $attachment->getId();
+        return new Result($attachment->getId());
     }
 
     protected function getAttributeFromEntity(Entity $entity, string $attribute)
@@ -321,7 +306,7 @@ class Export implements
     {
         $defs = $this->entityManager->getDefs();
 
-        $entityDefs = $defs->getEntity($this->entityType);
+        $entityDefs = $defs->getEntity($entity->getEntityType());
 
         $relation = $entity->getAttributeParam($attribute, 'relation');
         $foreign = $entity->getAttributeParam($attribute, 'foreign');
@@ -386,55 +371,26 @@ class Export implements
         return true;
     }
 
-    private function getCollection(): Collection
+    private function getCollection(Params $params): Collection
     {
         if ($this->collection) {
             return $this->collection;
         }
 
-        $params = $this->params;
+        $entityType = $params->getEntityType();
 
-        $selectBuilder = $this->selectBuilderFactory
+        $searchParams = $params->getSearchParams();
+
+        $query = $this->selectBuilderFactory
             ->create()
-            ->from($this->entityType)
-            ->withStrictAccessControl();
-
-        if (array_key_exists('ids', $params)) {
-            $ids = $params['ids'];
-
-            $queryBuilder = $selectBuilder
-                ->withDefaultOrder()
-                ->buildQueryBuilder()
-                ->where([
-                    'id' => $ids,
-                ]);
-        }
-        else if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-
-            $searchParams = [];
-
-            $searchParams['where'] = $where;
-
-            $selectData = $params['selectData'] ?? [];
-
-            foreach ($selectData as $k => $v) {
-                $searchParams[$k] = $v;
-            }
-
-            unset($searchParams['select']);
-
-            $queryBuilder = $selectBuilder
-                ->withSearchParams(SearchParams::fromRaw($searchParams))
-                ->buildQueryBuilder();
-        }
-        else {
-            throw new BadRequest("Bad export parameters.");
-        }
+            ->from($entityType)
+            ->withSearchParams($searchParams)
+            ->withStrictAccessControl()
+            ->build();
 
         return $this->entityManager
-            ->getRepository($this->entityType)
-            ->clone($queryBuilder->build())
+            ->getRepository($entityType)
+            ->clone($query)
             ->sth()
             ->find();
     }

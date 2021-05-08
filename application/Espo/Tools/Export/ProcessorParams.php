@@ -27,62 +27,67 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Tools\Export;
 
-use Espo\Core\Exceptions\Error;
-
-use Espo\Core\{
-    Controllers\RecordBase,
-    Api\Request,
-    Api\Response,
-};
-
-use StdClass;
-
-class Notification extends RecordBase
+class ProcessorParams
 {
-    public static $defaultAction = 'list';
+    private $fileName;
 
-    public function getActionList(Request $request, Response $response): StdClass
+    private $attributeList;
+
+    private $fieldList;
+
+    private $name = null;
+
+    private $entityType = null;
+
+    public function __construct(string $fileName, array $attributeList, array $fieldList)
     {
-        $userId = $this->user->getId();
-
-        $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        $offset = $searchParams->getOffset();
-        $maxSize = $searchParams->getMaxSize();
-
-        $after = $request->get('after');
-
-        $params = [
-            'offset' => $offset,
-            'maxSize' => $maxSize,
-            'after' => $after,
-        ];
-
-        $recordCollection = $this->recordServiceContainer
-            ->get('Notification')
-            ->getList($userId, $params);
-
-        return (object) [
-            'total' => $recordCollection->getTotal(),
-            'list' => $recordCollection->getValueMapList(),
-        ];
+        $this->fileName = $fileName;
+        $this->attributeList = $attributeList;
+        $this->fieldList = $fieldList;
     }
 
-    public function getActionNotReadCount(): int
+    public function withEntityType(string $entityType): self
     {
-        $userId = $this->user->getId();
+        $obj = clone $this;
 
-        return $this->recordServiceContainer->get('Notification')->getNotReadCount($userId);
+        $obj->entityType = $entityType;
+
+        return $obj;
     }
 
-    public function postActionMarkAllRead(Request $request): bool
+    public function withName(?string $name): self
     {
-        $userId = $this->user->getId();
+        $obj = clone $this;
 
-        $this->recordServiceContainer->get('Notification')->markAllRead($userId);
+        $obj->name = $name;
 
-        return true;
+        return $obj;
+    }
+
+    public function getFileName(): string
+    {
+        return $this->fileName;
+    }
+
+    public function getAttributeList(): array
+    {
+        return $this->attributeList;
+    }
+
+    public function getFieldList(): array
+    {
+        return $this->fieldList;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getEntityType(): string
+    {
+        return $this->entityType;
     }
 }

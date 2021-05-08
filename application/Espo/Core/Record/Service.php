@@ -63,10 +63,6 @@ use Espo\Core\{
     FieldProcessing\LoaderParams as FieldLoaderParams,
 };
 
-use Espo\Tools\{
-    Export\Export as ExportTool,
-};
-
 use Espo\Core\Di;
 
 use StdClass;
@@ -1655,31 +1651,6 @@ class Service implements Crud,
         }
 
         return null;
-    }
-
-    /**
-     * Run an export.
-     *
-     * @param Raw export parameters.
-     * @return An attachment ID.
-     */
-    public function export(array $params): string
-    {
-        if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
-            throw new ForbiddenSilent("No 'export' permission.");
-        }
-
-        if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent("No 'read' access.");
-        }
-
-        $export = $this->injectableFactory->create(ExportTool::class);
-
-        return $export
-            ->setRecordService($this)
-            ->setParams($params)
-            ->setEntityType($this->entityType)
-            ->run();
     }
 
     /**
