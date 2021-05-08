@@ -642,10 +642,13 @@ define('views/record/list', 'view', function (Dep) {
 
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
-                    data.selectData = this.collection.data || {};
-                    data.byWhere = true;
-                } else {
-                    data.idList = idList;
+                    data.searchData =  this.collection.data || {};
+                    data.selectData = data.searchData; // for bc;
+                    data.byWhere = true; // for bc
+                }
+                else {
+                    data.idList = idList; // for bc
+                    data.ids = idList;
                 }
 
                 for (var i in this.checkedList) {
