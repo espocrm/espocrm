@@ -94,12 +94,12 @@ class AddressBuilder
 
     public function build(): Address
     {
-        return Address::fromRaw([
-            'street' => $this->street,
-            'city' => $this->city,
-            'country' => $this->country,
-            'state' => $this->state,
-            'postalCode' => $this->postalCode,
-        ]);
+        return new Address(
+            $this->country,
+            $this->state,
+            $this->city,
+            $this->street,
+            $this->postalCode
+        );
     }
 }

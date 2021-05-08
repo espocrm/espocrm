@@ -46,6 +46,20 @@ class Address
 
     private $postalCode = null;
 
+    public function __construct(
+        ?string $country = null,
+        ?string $state = null,
+        ?string $city = null,
+        ?string $street = null,
+        ?string $postalCode = null
+    ) {
+        $this->country = $country;
+        $this->state = $state;
+        $this->city = $city;
+        $this->street = $street;
+        $this->postalCode = $postalCode;
+    }
+
     /**
      * Whether has a street.
      */
@@ -189,22 +203,6 @@ class Address
             ->build();
 
         return $newAddress;
-    }
-
-    /**
-     * Create a RAW data.
-     */
-    public static function fromRaw(array $raw): self
-    {
-        $obj = new self();
-
-        $obj->street = $raw['street'] ?? null;
-        $obj->city = $raw['city'] ?? null;
-        $obj->country = $raw['country'] ?? null;
-        $obj->state = $raw['state'] ?? null;
-        $obj->postalCode = $raw['postalCode'] ?? null;
-
-        return $obj;
     }
 
     /**
