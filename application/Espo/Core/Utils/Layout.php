@@ -36,17 +36,17 @@ use Espo\Core\{
 
 class Layout
 {
-    protected $defaultPath = 'application/Espo/Resources/defaults/layouts';
+    private $defaultPath = 'application/Espo/Resources/defaults/layouts';
 
-    protected $paths = [
+    private $paths = [
         'corePath' => 'application/Espo/Resources/layouts',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',
         'customPath' => 'custom/Espo/Custom/Resources/layouts',
     ];
 
-    protected $fileManager;
+    private $fileManager;
 
-    protected $metadata;
+    private $metadata;
 
     public function __construct(FileManager $fileManager, Metadata $metadata)
     {
@@ -58,7 +58,6 @@ class Layout
     {
         return preg_replace("([\.]{2,})", '', $name);
     }
-
 
     public function get(string $scope, string $name): ?string
     {

@@ -29,30 +29,58 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\{
+    Utils\File\Manager as FileManager,
+    Exceptions\Error,
+};
+
 class TemplateFileManager
 {
-    protected $config;
+    private $config;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $fileManager;
+    private $fileManager;
 
-    public function __construct(Config $config, Metadata $metadata, File\Manager $fileManager)
+    public function __construct(Config $config, Metadata $metadata, FileManager $fileManager)
     {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
     }
 
-    public function getTemplate($type, $name, $entityType = null, $defaultModuleName = null)
-    {
+    /**
+     * @throws Error
+     */
+    public function getTemplate(
+        string $type,
+        string $name,
+        ?string $entityType = null,
+        ?string $defaultModuleName = null
+    ): string {
+
         $fileName = $this->getTemplateFileName($type, $name, $entityType, $defaultModuleName);
 
-        return file_get_contents($fileName);
+        if (!$this->fileManager->isFile($fileName)) {
+            throw new Error("Template file not found.");
+        }
+
+        $contents = file_get_contents($fileName);
+
+        if ($contents === false) {
+            throw new Error("Could not read template file.");
+        }
+
+        return $contents;
     }
 
-    public function saveTemplate($type, $name, $contents, $entityType = null)
-    {
+    public function saveTemplate(
+        string $type,
+        string $name,
+        string $contents,
+        ?string $entityType = null
+    ): void {
+
         $language = $this->config->get('language');
 
         if ($entityType) {
@@ -65,7 +93,7 @@ class TemplateFileManager
         $this->fileManager->putContents($fileName, $contents);
     }
 
-    public function resetTemplate($type, $name, $entityType = null)
+    public function resetTemplate(string $type, string $name, ?string $entityType = null): void
     {
         $language = $this->config->get('language');
 
@@ -79,8 +107,13 @@ class TemplateFileManager
         $this->fileManager->removeFile($fileName);
     }
 
-    protected function getTemplateFileName($type, $name, $entityType = null, $defaultModuleName = null)
-    {
+    private function getTemplateFileName(
+        string $type,
+        string $name,
+        ?string $entityType = null,
+        ?string $defaultModuleName = null
+    ): ?string {
+
         $language = $this->config->get('language');
 
         if ($entityType) {
@@ -88,7 +121,7 @@ class TemplateFileManager
 
             $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
 
-            if (file_exists($fileName)) {
+            if ($this->fileManager->isFile($fileName)) {
                 return $fileName;
             }
 
@@ -97,21 +130,21 @@ class TemplateFileManager
                     "application/Espo/Modules/{$moduleName}/Resources/" .
                     "templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
 
-                if (file_exists($fileName)) {
+                if ($this->fileManager->isFile($fileName)) {
                     return $fileName;
                 }
             }
 
             $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
 
-            if (file_exists($fileName)) {
+            if ($this->fileManager->isFile($fileName)) {
                 return $fileName;
             }
         }
 
         $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
 
-        if (file_exists($fileName)) {
+        if ($this->fileManager->isFile($fileName)) {
             return $fileName;
         }
 
@@ -124,7 +157,7 @@ class TemplateFileManager
             $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
         }
 
-        if (file_exists($fileName)) {
+        if ($this->fileManager->isFile($fileName)) {
             return $fileName;
         }
 
@@ -133,7 +166,7 @@ class TemplateFileManager
         if ($entityType) {
             $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
 
-            if (file_exists($fileName)) {
+            if ($this->fileManager->isFile($fileName)) {
                 return $fileName;
             }
 
@@ -142,21 +175,21 @@ class TemplateFileManager
                     "application/Espo/Modules/{$moduleName}/" .
                     "Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
 
-                if (file_exists($fileName)) {
+                if ($this->fileManager->isFile($fileName)) {
                     return $fileName;
                 }
             }
 
             $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
 
-            if (file_exists($fileName)) {
+            if ($this->fileManager->isFile($fileName)) {
                 return $fileName;
             }
         }
 
         $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
 
-        if (file_exists($fileName)) {
+        if ($this->fileManager->isFile($fileName)) {
             return $fileName;
         }
 

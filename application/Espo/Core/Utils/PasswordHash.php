@@ -57,13 +57,12 @@ class PasswordHash
         }
 
         $hash = crypt($password, $salt);
-        $hash = str_replace($salt, '', $hash);
 
-        return $hash;
+        return str_replace($salt, '', $hash);
     }
 
     /**
-     * Get a salt from config and normalize it.
+     * Get a salt from the config and normalize it.
      */
     protected function getSalt(): string
     {
@@ -73,9 +72,7 @@ class PasswordHash
             throw new Error('Option "passwordSalt" does not exist in config.php');
         }
 
-        $salt = $this->normalizeSalt($salt);
-
-        return $salt;
+        return $this->normalizeSalt($salt);
     }
 
     /**

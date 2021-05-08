@@ -30,11 +30,9 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\{
-    Exceptions\Error,
     Utils\File\Manager as FileManager,
     Utils\File\FileUnifier,
     Utils\DataCache,
-    Utils\Config,
 };
 
 /**
@@ -42,25 +40,26 @@ use Espo\Core\{
  */
 class Module
 {
-    const DEFAULT_ORDER = 10;
+    private const DEFAULT_ORDER = 10;
 
     private $useCache;
 
     private $unifier;
 
-    protected $data = null;
+    private $data = null;
 
-    protected $cacheKey = 'modules';
+    private $cacheKey = 'modules';
 
-    protected $pathToModules = 'application/Espo/Modules';
+    private $pathToModules = 'application/Espo/Modules';
 
-    protected $paths = [
+    private $paths = [
         'corePath' => 'application/Espo/Resources/module.json',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/module.json',
         'customPath' => 'custom/Espo/Custom/Resources/module.json',
     ];
 
     private $fileManager;
+
     private $dataCache;
 
     public function __construct(
@@ -68,6 +67,7 @@ class Module
         ?DataCache $dataCache = null,
         bool $useCache = false
     ) {
+
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
 
@@ -78,6 +78,8 @@ class Module
 
     /**
      * Get module parameters.
+     *
+     * @return mixed
      */
     public function get($key = '', $returns = null)
     {
@@ -95,12 +97,12 @@ class Module
     /**
      * Get parameters of all modules.
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->get();
     }
 
-    protected function init()
+    protected function init(): void
     {
         if ($this->useCache && $this->dataCache->has($this->cacheKey)) {
             $this->data = $this->dataCache->get($this->cacheKey);

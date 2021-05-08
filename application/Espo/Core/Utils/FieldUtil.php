@@ -40,7 +40,7 @@ class FieldUtil
         $this->metadata = $metadata;
     }
 
-    private function getAttributeListByType($entityType, $name, $type)
+    private function getAttributeListByType(string $entityType, string $name, string $type): array
     {
         $fieldType = $this->metadata->get('entityDefs.' . $entityType . '.fields.' . $name . '.type');
 
@@ -77,12 +77,14 @@ class FieldUtil
                         $fieldList[] = $f . ucfirst($name);
                     }
                 }
-            } else {
+            }
+            else {
                 foreach ($list as $f) {
                     $fieldList[] = $name . ucfirst($f);
                 }
             }
-        } else {
+        }
+        else {
             if ($type == 'actual') {
                 $fieldList[] = $name;
             }

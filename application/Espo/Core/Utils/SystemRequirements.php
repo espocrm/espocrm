@@ -29,49 +29,38 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\{
+    Utils\Config,
+    Utils\File\Manager as FileManager,
+    Utils\System,
+    Utils\Database\Helper as DatabaseHelper,
+};
+
+use PDO;
 
 class SystemRequirements
 {
-    private $container;
+    private $config;
+
+    private $fileManager;
 
     private $systemHelper;
 
     private $databaseHelper;
 
-    public function __construct(\Espo\Core\Container $container)
-    {
-        $this->container = $container;
-        $this->systemHelper = new \Espo\Core\Utils\System();
-        $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->getConfig());
+    public function __construct(
+        Config $config,
+        FileManager $fileManager,
+        System $systemHelper,
+        DatabaseHelper $databaseHelper
+    ) {
+        $this->config = $config;
+        $this->fileManager = $fileManager;
+        $this->systemHelper = $systemHelper;
+        $this->databaseHelper = $databaseHelper;
     }
 
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    protected function getFileManager()
-    {
-        return $this->getContainer()->get('fileManager');
-    }
-
-    protected function getSystemHelper()
-    {
-        return $this->systemHelper;
-    }
-
-    protected function getDatabaseHelper()
-    {
-        return $this->databaseHelper;
-    }
-
-    public function getAllRequiredList($requiredOnly = false)
+    public function getAllRequiredList(bool $requiredOnly = false): array
     {
         return [
             'php' => $this->getPhpRequiredList($requiredOnly),
@@ -80,30 +69,30 @@ class SystemRequirements
         ];
     }
 
-    public function getRequiredListByType($type, $requiredOnly = false, array $additionalData = null)
-    {
+    public function getRequiredListByType(
+        string $type,
+        bool $requiredOnly = false,
+        array $additionalData = null
+    ): array {
+
         switch ($type) {
             case 'php':
                 return $this->getPhpRequiredList($requiredOnly, $additionalData);
-                break;
 
             case 'database':
                 return $this->getDatabaseRequiredList($requiredOnly, $additionalData);
-                break;
 
             case 'permission':
                 return $this->getRequiredPermissionList($requiredOnly, $additionalData);
-                break;
         }
 
         return [];
     }
 
     /**
-     * Get required php params
-     * @return array
+     * Get required PHP params.
      */
-    protected function getPhpRequiredList($requiredOnly, array $additionalData = null)
+    protected function getPhpRequiredList(bool $requiredOnly, array $additionalData = null): array
     {
         $requiredList = [
             'requiredPhpVersion',
@@ -121,16 +110,16 @@ class SystemRequirements
     }
 
     /**
-     * Get required database params
-     * @return array
+     * Get required DB params.
      */
-    protected function getDatabaseRequiredList($requiredOnly, array $additionalData = null)
+    protected function getDatabaseRequiredList(bool $requiredOnly, array $additionalData = null): array
     {
         $databaseTypeName = 'Mysql';
 
-        $databaseHelper =  $this->getDatabaseHelper();
+        $databaseHelper =  $this->databaseHelper;
         $databaseParams = isset($additionalData['database']) ? $additionalData['database'] : null;
         $pdoConnection = $databaseHelper->createPdoConnection($databaseParams);
+
         if ($pdoConnection) {
             $databaseHelper->setPdoConnection($pdoConnection);
             $databaseType = $databaseHelper->getDatabaseType();
@@ -152,28 +141,39 @@ class SystemRequirements
     }
 
     /**
-     * Get permission requirements
-     * @return array
+     * Get permission requirements.
      */
-    protected function getRequiredPermissionList($requiredOnly, array $additionalData = null)
+    private function getRequiredPermissionList(bool $requiredOnly, array $additionalData = null): array
     {
-        return $this->getRequiredList('permissionRequirements', [
-            'permissionMap.writable',
-        ], $additionalData, [
-            'permissionMap.writable' => $this->getFileManager()->getPermissionUtils()->getWritableList(),
-        ]);
+        return $this->getRequiredList(
+            'permissionRequirements',
+            [
+                'permissionMap.writable',
+            ],
+            $additionalData, [
+                'permissionMap.writable' => $this->fileManager->getPermissionUtils()->getWritableList(),
+            ]
+        );
     }
 
-    protected function getRequiredList($type, $checkList, array $additionalData = null, array $predefinedData = [])
-    {
-        $config = $this->getConfig();
+    private function getRequiredList(
+        string $type,
+        array $checkList,
+        array $additionalData = null,
+        array $predefinedData = []
+    ): array {
 
         $list = [];
 
         foreach ($checkList as $itemName) {
             $methodName = 'check' . ucfirst($type);
+
             if (method_exists($this, $methodName)) {
-                $itemValue = isset($predefinedData[$itemName]) ? $predefinedData[$itemName] : $config->get($itemName);
+                $itemValue =
+                    isset($predefinedData[$itemName]) ?
+                    $predefinedData[$itemName] :
+                    $this->config->get($itemName);
+
                 $result = $this->$methodName($itemName, $itemValue, $additionalData);
                 $list = array_merge($list, $result);
             }
@@ -183,21 +183,19 @@ class SystemRequirements
     }
 
     /**
-     * Check php requirements
-     * @param  string $type
-     * @param  mixed $data
-     * @return array
+     * Check PHP requirements,
      */
-    protected function checkPhpRequirements($type, $data, array $additionalData = null)
+    private function checkPhpRequirements(string $type, $data, array $additionalData = null): array
     {
         $list = [];
 
         switch ($type) {
             case 'requiredPhpVersion':
-                $actualVersion = $this->getSystemHelper()->getPhpVersion();
+                $actualVersion = $this->systemHelper->getPhpVersion();
                 $requiredVersion = $data;
 
                 $acceptable = true;
+
                 if (version_compare($actualVersion, $requiredVersion) == -1) {
                     $acceptable = false;
                 }
@@ -208,12 +206,13 @@ class SystemRequirements
                     'required' => $requiredVersion,
                     'actual' => $actualVersion,
                 ];
+
                 break;
 
             case 'requiredPhpLibs':
             case 'recommendedPhpLibs':
                 foreach ($data as $name) {
-                    $acceptable = $this->getSystemHelper()->hasPhpLib($name);
+                    $acceptable = $this->systemHelper->hasPhpExtension($name);
 
                     $list[$name] = array(
                         'type' => 'lib',
@@ -226,17 +225,21 @@ class SystemRequirements
             case 'recommendedPhpParams':
                 foreach ($data as $name => $value) {
                     $requiredValue = $value;
-                    $actualValue = $this->getSystemHelper()->getPhpParam($name);
+                    $actualValue = $this->systemHelper->getPhpParam($name);
 
-                    $acceptable = ( isset($actualValue) && Util::convertToByte($actualValue) >= Util::convertToByte($requiredValue) ) ? true : false;
+                    $acceptable = (
+                        isset($actualValue) &&
+                        Util::convertToByte($actualValue) >= Util::convertToByte($requiredValue)
+                    ) ? true : false;
 
-                    $list[$name] = array(
+                    $list[$name] = [
                         'type' => 'param',
                         'acceptable' => $acceptable,
                         'required' => $requiredValue,
                         'actual' => $actualValue,
-                    );
+                    ];
                 }
+
                 break;
         }
 
@@ -244,19 +247,18 @@ class SystemRequirements
     }
 
     /**
-     * Check MySQL requirements
-     * @param  string $type
-     * @param  mixed $data
-     * @return array
+     * Check DB requirements.
      */
-    protected function checkDatabaseRequirements($type, $data, array $additionalData = null)
+    private function checkDatabaseRequirements(string $type, $data, array $additionalData = null): array
     {
         $list = [];
 
-        $databaseHelper = $this->getDatabaseHelper();
+        $databaseHelper = $this->databaseHelper;
 
         $databaseParams = isset($additionalData['database']) ? $additionalData['database'] : null;
+
         $pdo = $databaseHelper->createPdoConnection($databaseParams);
+
         if (!$pdo) {
             $type = 'connection';
         }
@@ -293,31 +295,35 @@ class SystemRequirements
                             if (Util::convertToByte($actualValue) >= Util::convertToByte($requiredValue)) {
                                 $acceptable = true;
                             }
+
                             break;
 
                         case 'string':
-                            if (strtoupper($actualValue) == strtoupper($requiredValue)) {
+                            if (strtoupper($actualValue) === strtoupper($requiredValue)) {
                                 $acceptable = true;
                             }
+
                             break;
                     }
 
-                    $list[$name] = array(
+                    $list[$name] = [
                         'type' => 'param',
                         'acceptable' => $acceptable,
                         'required' => $requiredValue,
                         'actual' => $actualValue,
-                    );
+                    ];
                 }
+
                 break;
 
             case 'connection':
                     if (!$databaseParams) {
-                        $databaseParams = $this->getConfig()->get('database');
+                        $databaseParams = $this->config->get('database');
                     }
 
                     $acceptable = true;
-                    if (!$pdo instanceof \PDO) {
+
+                    if (!$pdo instanceof PDO) {
                         $acceptable = false;
                     }
 
@@ -336,22 +342,23 @@ class SystemRequirements
                         'acceptable' => $acceptable,
                         'actual' => $databaseParams['user'],
                     ];
+
                     break;
         }
 
         return $list;
     }
 
-    protected function checkPermissionRequirements($type, $data, array $additionalData = null)
+    private function checkPermissionRequirements(string $type, $data, array $additionalData = null): array
     {
         $list = [];
 
-        $fileManager = $this->getFileManager();
+        $fileManager = $this->fileManager;
 
         switch ($type) {
             case 'permissionMap.writable':
                 foreach ($data as $item) {
-                    $fullPathItem = Util::concatPath($this->getSystemHelper()->getRootDir(), $item);
+                    $fullPathItem = Util::concatPath($this->systemHelper->getRootDir(), $item);
                     $list[$fullPathItem] = [
                         'type' => 'writable',
                         'acceptable' => $fileManager->isWritable($fullPathItem) ? true : false,
@@ -361,7 +368,7 @@ class SystemRequirements
 
             case 'permissionMap.readable':
                 foreach ($data as $item) {
-                    $fullPathItem = Util::concatPath($this->getSystemHelper()->getRootDir(), $item);
+                    $fullPathItem = Util::concatPath($this->systemHelper->getRootDir(), $item);
                     $list[$fullPathItem] = [
                         'type' => 'readable',
                         'acceptable' => $fileManager->isReadable($fullPathItem) ? true : false,

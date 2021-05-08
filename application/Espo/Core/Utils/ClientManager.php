@@ -50,7 +50,7 @@ class ClientManager
 
     protected $runScript = "app.start();";
 
-    protected $basePath = '';
+    private $basePath = '';
 
     public function __construct(
         Config $config,
@@ -64,7 +64,7 @@ class ClientManager
         $this->fileManager = $fileManager;
     }
 
-    public function setBasePath(string $basePath)
+    public function setBasePath(string $basePath): void
     {
         $this->basePath = $basePath;
     }
@@ -74,10 +74,10 @@ class ClientManager
         return $this->basePath;
     }
 
-    protected function getCacheTimestamp()
+    protected function getCacheTimestamp(): int
     {
         if (!$this->config->get('useCache')) {
-            return (string) time();
+            return time();
         }
 
         return $this->config->get('cacheTimestamp', 0);

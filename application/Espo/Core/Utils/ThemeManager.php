@@ -31,13 +31,13 @@ namespace Espo\Core\Utils;
 
 class ThemeManager
 {
-    protected $config;
+    private $config;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $defaultName = 'Espo';
+    private $defaultName = 'Espo';
 
-    private $defaultStylesheet = 'Espo';
+    private $defaultStylesheet = 'client/css/espo/espo.css';
 
     public function __construct(Config $config, Metadata $metadata)
     {
@@ -45,13 +45,13 @@ class ThemeManager
         $this->metadata = $metadata;
     }
 
-    public function getName()
+    public function getName(): string
     {
-        return $this->config->get('theme', $this->defaultName);
+        return $this->config->get('theme') ?? $this->defaultName;
     }
 
-    public function getStylesheet()
+    public function getStylesheet(): string
     {
-        return $this->metadata->get(['themes', $this->getName(), 'stylesheet'], 'client/css/espo/espo.css');
+        return $this->metadata->get(['themes', $this->getName(), 'stylesheet']) ?? $this->defaultStylesheet;
     }
 }

@@ -34,48 +34,52 @@ use Symfony\Component\Process\PhpExecutableFinder;
 class System
 {
     /**
-     * Get web server name
+     * Get a web server name.
      *
-     * @return string Ex. "microsoft-iis", "nginx", "apache"
+     * @return string E.g. `microsoft-iis`, `nginx`, `apache`.
      */
-    public function getServerType()
+    public function getServerType(): string
     {
         $serverSoft = $_SERVER['SERVER_SOFTWARE'];
 
         preg_match('/^(.*?)\//i', $serverSoft, $match);
+
         if (empty($match[1])) {
             preg_match('/^(.*)\/?/i', $serverSoft, $match);
         }
-        $serverName = strtolower( trim($match[1]) );
+
+        $serverName = strtolower(
+            trim($match[1])
+        );
 
         return $serverName;
     }
 
     /**
-     * Get Operating System of web server. Details http://en.wikipedia.org/wiki/Uname
+     * Get an OS. Details at http://en.wikipedia.org/wiki/Uname.
      *
-     * @return string  Ex. "windows", "mac", "linux"
+     * @return string E.g. `windows`, `mac`, `linux`.
      */
-    public function getOS()
+    public function getOS(): ?string
     {
-        $osList = array(
-            'windows' => array(
+        $osList = [
+            'windows' => [
                 'win',
                 'UWIN',
-            ),
-            'mac' => array(
+            ],
+            'mac' => [
                 'mac',
                 'darwin',
-            ),
-            'linux' => array(
+            ],
+            'linux' => [
                 'linux',
                 'cygwin',
                 'GNU',
                 'FreeBSD',
                 'OpenBSD',
                 'NetBSD',
-            ),
-        );
+            ],
+        ];
 
         $sysOS = strtolower(PHP_OS);
 
@@ -85,15 +89,13 @@ class System
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * Get root directory of EspoCRM
-     *
-     * @return string
+     * Get a root directory of EspoCRM.
      */
-    public function getRootDir()
+    public function getRootDir(): string
     {
         $bPath = realpath('bootstrap.php');
         $rootDir = dirname($bPath);
@@ -102,31 +104,27 @@ class System
     }
 
     /**
-     * Deprecated. Use getPhpBinary()
+     * Get a PHP binary.
      */
-    public function getPhpBin()
+    public function getPhpBinary(): ?string
     {
-        return $this->getPhpBinary();
+        $path = (new PhpExecutableFinder)->find();
+
+        if ($path === false) {
+            return null;
+        }
+
+        return $path;
     }
 
     /**
-     * Get PHP binary
-     *
-     * @return string
+     * Get PHP version (only digits and dots).
      */
-    public function getPhpBinary()
-    {
-        return (new PhpExecutableFinder)->find();
-    }
-
-    /**
-     * Get php version (only digits and dots)
-     *
-     * @return string
-     */
-    public static function getPhpVersion()
+    public static function getPhpVersion(): string
     {
         $version = phpversion();
+
+        $matches = null;
 
         if (preg_match('/^[0-9\.]+[0-9]/', $version, $matches)) {
             return $matches[0];
@@ -135,35 +133,60 @@ class System
         return $version;
     }
 
-    public function getPhpParam($name)
+    /**
+     * @return string|false
+     */
+    public function getPhpParam(string $name)
     {
         return ini_get($name);
     }
 
-    public function hasPhpLib($name)
+    /**
+     * Whether a PHP extension is loaded.
+     */
+    public function hasPhpExtension(string $name): bool
     {
         return extension_loaded($name);
     }
 
-    public static function getPid()
+    /**
+     * @deprecated Use `hasPhpExtension`.
+     */
+    public function hasPhpLib(string $name): bool
+    {
+        return extension_loaded($name);
+    }
+
+    /**
+     * Get a process PID.
+     */
+    public static function getPid(): ?int
     {
         if (function_exists('getmypid')) {
             return getmypid();
         }
+
+        return null;
     }
 
-    public static function isProcessActive($pid)
+    public static function isProcessActive(?int $pid): bool
     {
-        if (empty($pid)) return false;
+        if ($pid === null) {
+            return false;
+        }
 
-        if (!self::isPosixSupported()) return false;
+        if (!self::isPosixSupported()) {
+            return false;
+        }
 
-        if (posix_getsid($pid) === false) return false;
+        if (posix_getsid($pid) === false) {
+            return false;
+        }
 
         return true;
     }
 
-    public static function isPosixSupported()
+    public static function isPosixSupported(): bool
     {
         return function_exists('posix_getsid');
     }

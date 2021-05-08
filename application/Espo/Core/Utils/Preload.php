@@ -34,8 +34,6 @@ use RecursiveIteratorIterator;
 use RegexIterator;
 use RecursiveRegexIterator;
 
-use Throwable;
-
 /**
  * Scans all PHP files and loads them. Used for a preloading.
  *
@@ -56,7 +54,7 @@ class Preload
         'vendor/nikic/fast-route/test/',
     ];
 
-    public function process()
+    public function process(): void
     {
         foreach ($this->dirList as $dir) {
             $this->processForDir($dir);
@@ -68,7 +66,7 @@ class Preload
         return $this->counter;
     }
 
-    protected function processForDir(string $dir)
+    private function processForDir(string $dir): void
     {
         $directory = new RecursiveDirectoryIterator($dir);
         $fullTree = new RecursiveIteratorIterator($directory);
@@ -79,7 +77,7 @@ class Preload
         }
     }
 
-    protected function processFile(string $file)
+    private function processFile(string $file): void
     {
         if ($this->isFileToBeIgnored($file)) {
             return;
@@ -90,7 +88,7 @@ class Preload
         $this->counter++;
     }
 
-    protected function isFileToBeIgnored(string $file): bool
+    private function isFileToBeIgnored(string $file): bool
     {
         $file = str_replace('\\', '/', $file);
 

@@ -39,25 +39,25 @@ use Exception;
 
 class Autoload
 {
-    protected $data = null;
+    private $data = null;
 
-    protected $cacheKey = 'autoload';
+    private $cacheKey = 'autoload';
 
-    protected $paths = [
+    private $paths = [
         'corePath' => 'application/Espo/Resources/autoload.json',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/autoload.json',
         'customPath' => 'custom/Espo/Custom/Resources/autoload.json',
     ];
 
-    protected $config;
+    private $config;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $dataCache;
+    private $dataCache;
 
-    protected $fileManager;
+    private $fileManager;
 
-    protected $loader;
+    private $loader;
 
     public function __construct(
         Config $config,
@@ -73,7 +73,7 @@ class Autoload
         $this->loader = $loader;
     }
 
-    protected function getData(): array
+    private function getData(): array
     {
         if (!isset($this->data)) {
             $this->init();
@@ -82,7 +82,7 @@ class Autoload
         return $this->data;
     }
 
-    protected function init()
+    private function init(): void
     {
         $useCache = $this->config->get('useCache');
 
@@ -99,7 +99,7 @@ class Autoload
         }
     }
 
-    protected function loadData(): array
+    private function loadData(): array
     {
         $data = $this->loadDataFromFile($this->paths['corePath']);
 
@@ -109,12 +109,10 @@ class Autoload
             $data = array_merge_recursive($data, $this->loadDataFromFile($modulePath));
         }
 
-        $data = array_merge_recursive($data, $this->loadDataFromFile($this->paths['customPath']));
-
-        return $data;
+        return array_merge_recursive($data, $this->loadDataFromFile($this->paths['customPath']));
     }
 
-    protected function loadDataFromFile(string $filePath): array
+    private function loadDataFromFile(string $filePath): array
     {
         if (!$this->fileManager->isFile($filePath)) {
             return [];
@@ -127,7 +125,7 @@ class Autoload
         return $this->normalizeData($arrayContent);
     }
 
-    protected function normalizeData(array $data): array
+    private function normalizeData(array $data): array
     {
         $normalizedData = [];
 
@@ -152,7 +150,7 @@ class Autoload
         return $normalizedData;
     }
 
-    public function register()
+    public function register(): void
     {
         try {
             $data = $this->getData();

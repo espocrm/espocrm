@@ -29,41 +29,70 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\{
+    Container,
+    DataManager,
+    Utils\AdminNotificationManager,
+    Utils\SystemRequirements,
+    Utils\ScheduledJob,
+    UpgradeManager,
+    Exceptions\Forbidden,
+    Api\Request,
+};
 
-use Espo\Core\UpgradeManager;
+use Espo\Entities\User;
 
-use Espo\Core\Utils\AdminNotificationManager;
-use Espo\Core\Utils\SystemRequirements;
-
-use Espo\Core\Controllers\Base;
-
-class Admin extends Base
+class Admin
 {
-    protected function checkAccess(): bool
-    {
-        return $this->user->isAdmin();
+    private $container;
+
+    private $user;
+
+    private $adminNotificationManager;
+
+    private $systemRequirements;
+
+    private $scheduledJob;
+
+    private $dataManager;
+
+    public function __construct(
+        Container $container,
+        User $user,
+        AdminNotificationManager $adminNotificationManager,
+        SystemRequirements $systemRequirements,
+        ScheduledJob $scheduledJob,
+        DataManager $dataManager
+    ) {
+        $this->container = $container;
+        $this->user = $user;
+        $this->adminNotificationManager = $adminNotificationManager;
+        $this->systemRequirements = $systemRequirements;
+        $this->scheduledJob = $scheduledJob;
+        $this->dataManager = $dataManager;
+
+        if (!$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
     }
 
     public function postActionRebuild(): bool
     {
-        $this->getContainer()->get('dataManager')->rebuild();
+        $this->dataManager->rebuild();
 
         return true;
     }
 
     public function postActionClearCache(): bool
     {
-        $this->getContainer()->get('dataManager')->clearCache();
+        $this->dataManager->clearCache();
 
         return true;
     }
 
-    public function getActionJobs()
+    public function getActionJobs(): array
     {
-        $scheduledJob = $this->getContainer()->get('scheduledJob');
-
-        return $scheduledJob->getAvailableList();
+        return $this->scheduledJob->getAvailableList();
     }
 
     public function postActionUploadUpgradePackage($params, $data)
@@ -74,7 +103,7 @@ class Admin extends Base
             }
         }
 
-        $upgradeManager = new UpgradeManager($this->getContainer());
+        $upgradeManager = new UpgradeManager($this->container);
 
         $upgradeId = $upgradeManager->upload($data);
         $manifest = $upgradeManager->getManifest();
@@ -85,37 +114,35 @@ class Admin extends Base
         ];
     }
 
-    public function postActionRunUpgrade($params, $data): bool
+    public function postActionRunUpgrade(Request $request): bool
     {
+        $data = $request->getParsedBody();
+
         if ($this->config->get('restrictedMode')) {
             if (!$this->user->isSuperAdmin()) {
                 throw new Forbidden();
             }
         }
 
-        $upgradeManager = new UpgradeManager($this->getContainer());
+        $upgradeManager = new UpgradeManager($this->container);
 
         $upgradeManager->install(get_object_vars($data));
 
         return true;
     }
 
-    public function actionCronMessage()
+    public function actionCronMessage(): array
     {
-        return $this->getContainer()->get('scheduledJob')->getSetupMessage();
+        return $this->scheduledJob->getSetupMessage();
     }
 
-    public function actionAdminNotificationList()
+    public function actionAdminNotificationList(): array
     {
-        $adminNotificationManager = new AdminNotificationManager($this->getContainer());
-
-        return $adminNotificationManager->getNotificationList();
+        return $this->adminNotificationManager->getNotificationList();
     }
 
-    public function actionSystemRequirementList()
+    public function actionSystemRequirementList(): array
     {
-        $systemRequirementManager = new SystemRequirements($this->getContainer());
-
-        return $systemRequirementManager->getAllRequiredList();
+        return $this->systemRequirements->getAllRequiredList();
     }
 }

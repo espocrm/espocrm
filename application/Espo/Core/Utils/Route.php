@@ -38,11 +38,11 @@ use Espo\Core\{
 
 class Route
 {
-    protected $data = null;
+    private $data = null;
 
-    protected $cacheKey = 'routes';
+    private $cacheKey = 'routes';
 
-    protected $paths = [
+    private $paths = [
         'corePath' => 'application/Espo/Resources/routes.json',
         'modulePath' => 'application/Espo/Modules/{*}/Resources/routes.json',
         'customPath' => 'custom/Espo/Custom/Resources/routes.json',
@@ -80,7 +80,7 @@ class Route
         return $this->data;
     }
 
-    protected function init()
+    private function init(): void
     {
         $useCache = $this->config->get('useCache');
 
@@ -97,7 +97,7 @@ class Route
         }
     }
 
-    protected function unify(): array
+    private function unify(): array
     {
         $data = $this->addDataFromFile([], $this->paths['customPath']);
 
@@ -120,7 +120,7 @@ class Route
         return $data;
     }
 
-    protected function addDataFromFile(array $currentData, string $routeFile): array
+    private function addDataFromFile(array $currentData, string $routeFile): array
     {
         if (!file_exists($routeFile)) {
             return $currentData;
@@ -133,7 +133,7 @@ class Route
         return $this->appendRoutesToData($currentData, $data);
     }
 
-    protected function appendRoutesToData(array $data, array $newData): array
+    private function appendRoutesToData(array $data, array $newData): array
     {
         foreach ($newData as $route) {
             $route['route'] = $this->adjustPath($route['route']);
@@ -157,7 +157,7 @@ class Route
     /**
      * Check and adjust the route path.
      */
-    protected function adjustPath(string $routePath): string
+    private function adjustPath(string $routePath): string
     {
         $routePath = trim($routePath);
 
@@ -206,7 +206,7 @@ class Route
         return '/';
     }
 
-    static protected function isRouteInList(array $newRoute, array $routeList): bool
+    static private function isRouteInList(array $newRoute, array $routeList): bool
     {
         foreach ($routeList as $route) {
             if (Util::areEqual($route, $newRoute)) {

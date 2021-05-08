@@ -33,6 +33,9 @@ use StdClass;
 
 class ObjectUtil
 {
+    /**
+     * Deep clone.
+     */
     public static function clone(StdClass $source): StdClass
     {
         $cloned = (object) [];

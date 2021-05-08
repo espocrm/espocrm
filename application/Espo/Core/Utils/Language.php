@@ -100,17 +100,17 @@ class Language
         $this->unifier = new FileUnifier($this->fileManager, $this->metadata);
     }
 
-    protected function getUnifier()
+    public function getLanguage(): string
     {
-        return $this->unifier;
+        return $this->currentLanguage;
     }
 
-    public function getDefaultLanguage()
+    public function getDefaultLanguage(): string
     {
         return $this->defaultLanguage;
     }
 
-    public static function detectLanguage(Config $config, ?Preferences $preferences = null)
+    public static function detectLanguage(Config $config, ?Preferences $preferences = null): ?string
     {
         $language = null;
 
@@ -125,19 +125,15 @@ class Language
         return $language;
     }
 
-    public function getLanguage()
-    {
-        return $this->currentLanguage;
-    }
 
-    public function setLanguage($language)
+    public function setLanguage(string $language): void
     {
         $this->currentLanguage = $language;
     }
 
-    protected function getCacheKey(string $language = null): string
+    private function getCacheKey(string $language = null): string
     {
-        $language = $language ?? $this->getLanguage();
+        $language = $language ?? $this->currentLanguage;
 
         return 'languages/' . $language;
     }
@@ -145,17 +141,21 @@ class Language
     /**
      * Translate label/labels.
      *
-     * @param  string $label name of label
-     * @param  string $category
-     * @param  string $scope
-     * @param  array $requiredOptions List of required options.
-     *  Ex., $requiredOptions = array('en_US', 'de_DE')
-     *  "language" option has only array('en_US' => 'English (United States)',)
-     *  Result will be array('en_US' => 'English (United States)', 'de_DE' => 'de_DE',)
-     * @return string | array
+     * @param string|array $label name of label
+     * @param string $category
+     * @param string $scope
+     * @param array|null $requiredOptions List of required options.
+     *  Ex., $requiredOptions = ['en_US', 'de_DE']
+     *  "language" option has only ['en_US' => 'English (United States)']
+     *  Result will be ['en_US' => 'English (United States)', 'de_DE' => 'de_DE'].
+     * @return string|array
      */
-    public function translate($label, $category = 'labels', $scope = 'Global', $requiredOptions = null)
-    {
+    public function translate(
+        $label,
+        string $category = 'labels',
+        string $scope = 'Global',
+        ?array $requiredOptions = null
+    ) {
         if (is_array($label)) {
             $translated = [];
 
@@ -189,7 +189,7 @@ class Language
         return $translated;
     }
 
-    public function translateOption($value, $field, $scope = 'Global')
+    public function translateOption($value, string $field, string $scope = 'Global')
     {
         $options = $this->get($scope. '.options.' . $field);
 
@@ -213,13 +213,13 @@ class Language
         $data = $this->getData();
 
         if (!isset($data) || $data === false) {
-            throw new Error('Language: current language '.$this->getLanguage().' not found');
+            throw new Error('Language: current language '.$this->currentLanguage.' not found');
         }
 
         return Util::getValueByKey($data, $key, $returns);
     }
 
-    public function getAll()
+    public function getAll(): array
     {
         return $this->get();
     }
@@ -229,7 +229,7 @@ class Language
      */
     public function save(): bool
     {
-        $language = $this->getLanguage();
+        $language = $this->currentLanguage;
 
         $path = $this->paths['customPath'];
         $path = str_replace('{language}', $language, $path);
@@ -265,7 +265,7 @@ class Language
     /**
      * Clear unsaved changes.
      */
-    public function clearChanges()
+    public function clearChanges(): void
     {
         $this->changedData = [];
         $this->deletedData = [];
@@ -273,15 +273,15 @@ class Language
         $this->init(true);
     }
 
-    protected function getData()
+    private function getData(): ?array
     {
-        $currentLanguage = $this->getLanguage();
+        $currentLanguage = $this->currentLanguage;
 
         if (!isset($this->data[$currentLanguage])) {
             $this->init();
         }
 
-        return $this->data[$currentLanguage];
+        return $this->data[$currentLanguage] ?? null;
     }
 
     /**
@@ -289,10 +289,10 @@ class Language
      *
      * @param string $scope
      * @param string $category
-     * @param string | array $name
+     * @param string|array $name
      * @param mixed $value
      */
-    public function set($scope, $category, $name, $value)
+    public function set($scope, $category, $name, $value): void
     {
         if (is_array($name)) {
             foreach ($name as $rowLabel => $rowValue) {
@@ -304,7 +304,7 @@ class Language
 
         $this->changedData[$scope][$category][$name] = $value;
 
-        $currentLanguage = $this->getLanguage();
+        $currentLanguage = $this->currentLanguage;
 
         if (!isset($this->data[$currentLanguage])) {
             $this->init();
@@ -334,7 +334,7 @@ class Language
 
         $this->deletedData[$scope][$category][] = $name;
 
-        $currentLanguage = $this->getLanguage();
+        $currentLanguage = $this->currentLanguage;
 
         if (!isset($this->data[$currentLanguage])) {
             $this->init();
@@ -349,7 +349,7 @@ class Language
         }
     }
 
-    protected function undelete($scope, $category, $name)
+    private function undelete($scope, $category, $name): void
     {
         if (isset($this->deletedData[$scope][$category])) {
             foreach ($this->deletedData[$scope][$category] as $key => $labelName) {
@@ -360,70 +360,68 @@ class Language
         }
     }
 
-    protected function init(bool $reload = false)
+    private function init(bool $reload = false): void
     {
         $this->data[$this->currentLanguage] = $this->getLanguageData($this->currentLanguage, $reload);
     }
 
-    protected function getDefaultLanguageData(bool $reload = false)
+    private function getDefaultLanguageData(bool $reload = false): array
     {
         return $this->getLanguageData($this->defaultLanguage, $reload);
     }
 
-    protected function getLanguageData(string $language, bool $reload = false)
+    private function getLanguageData(string $language, bool $reload = false): array
     {
-        if ($reload || !isset($this->data[$language])) {
+        if (!$reload && isset($this->data[$language])) {
+            return $this->data[$language] ?? [];
+        }
 
-            $cacheKey = $this->getCacheKey($language);
+        $cacheKey = $this->getCacheKey($language);
 
-            if (!$this->useCache || !$this->dataCache->has($cacheKey) || $reload) {
+        if (!$this->useCache || !$this->dataCache->has($cacheKey) || $reload) {
+            $paths = $this->paths;
 
-                $paths = $this->paths;
-
-                foreach ($paths as $k => &$path) {
-                    $path = str_replace('{language}', $language, $path);
-                }
-
-                if ($this->noCustom) {
-                    unset($paths['customPath']);
-                }
-
-                $data = $this->getUnifier()->unify('i18n', $paths, true);
-
-                if (is_array($data)) {
-                    $this->sanitizeData($data);
-                }
-
-                if ($language != $this->defaultLanguage) {
-                    $data = Util::merge($this->getDefaultLanguageData($reload), $data);
-                }
-
-                $this->data[$language] = $data;
-
-                if ($this->useCache) {
-                    $this->dataCache->store($cacheKey, $data);
-                }
+            foreach ($paths as $k => &$path) {
+                $path = str_replace('{language}', $language, $path);
             }
+
+            if ($this->noCustom) {
+                unset($paths['customPath']);
+            }
+
+            $data = $this->unifier->unify('i18n', $paths, true);
+
+            if (is_array($data)) {
+                $this->sanitizeData($data);
+            }
+
+            if ($language != $this->defaultLanguage) {
+                $data = Util::merge($this->getDefaultLanguageData($reload), $data);
+            }
+
+            $this->data[$language] = $data;
 
             if ($this->useCache) {
-                $this->data[$language] = $this->dataCache->get($cacheKey);
+                $this->dataCache->store($cacheKey, $data);
             }
+        }
+
+        if ($this->useCache) {
+            $this->data[$language] = $this->dataCache->get($cacheKey);
         }
 
         return $this->data[$language] ?? [];
     }
 
-    protected function sanitizeData(array &$data)
+    private function sanitizeData(array &$data): void
     {
         foreach ($data as $key => &$subData) {
             if (is_array($subData)) {
                 $this->sanitizeData($subData);
             }
-            else {
-                if (is_string($subData)) {
-                    $subData = str_replace('<', '&lt;', $subData);
-                    $subData = str_replace('>', '&gt;', $subData);
-                }
+            else if (is_string($subData)) {
+                $subData = str_replace('<', '&lt;', $subData);
+                $subData = str_replace('>', '&gt;', $subData);
             }
         }
     }

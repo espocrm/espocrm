@@ -29,144 +29,153 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Utils\Util;
-
-use Espo\Core\Container;
+use Espo\Core\{
+    ORM\EntityManager,
+    Utils\Config,
+    Utils\Language,
+    Utils\ScheduledJob,
+    Utils\Util,
+};
 
 /**
  * Notifications on the admin panel.
  */
 class AdminNotificationManager
 {
-    private $container;
+    private $entityManager;
 
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
+    private $config;
+
+    private $language;
+
+    private $scheduledJob;
+
+    public function __construct(
+        EntityManager $entityManager,
+        Config $config,
+        Language $language,
+        ScheduledJob $scheduledJob
+    ) {
+        $this->entityManager = $entityManager;
+        $this->config = $config;
+        $this->language = $language;
+        $this->scheduledJob = $scheduledJob;
     }
 
-    protected function getContainer()
-    {
-        return $this->container;
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->getContainer()->get('entityManager');
-    }
-
-    protected function getConfig()
-    {
-        return $this->getContainer()->get('config');
-    }
-
-    protected function getLanguage()
-    {
-        return $this->getContainer()->get('language');
-    }
-
-    public function getNotificationList()
+    public function getNotificationList(): array
     {
         $notificationList = [];
 
-        if (!$this->getConfig()->get('adminNotifications')) {
+        if (!$this->config->get('adminNotifications')) {
             return [];
         }
 
-        if ($this->getConfig()->get('adminNotificationsCronIsNotConfigured')) {
+        if ($this->config->get('adminNotificationsCronIsNotConfigured')) {
             if (!$this->isCronConfigured()) {
                 $notificationList[] = [
                     'id' => 'cronIsNotConfigured',
                     'type' => 'cronIsNotConfigured',
-                    'message' => $this->getLanguage()->translate('cronIsNotConfigured', 'messages', 'Admin'),
+                    'message' => $this->language->translate('cronIsNotConfigured', 'messages', 'Admin'),
                 ];
             }
         }
 
-        if ($this->getConfig()->get('adminNotificationsNewVersion')) {
+        if ($this->config->get('adminNotificationsNewVersion')) {
             $instanceNeedingUpgrade = $this->getInstanceNeedingUpgrade();
+
             if (!empty($instanceNeedingUpgrade)) {
-                $message = $this->getLanguage()->translate('newVersionIsAvailable', 'messages', 'Admin');
+                $message = $this->language->translate('newVersionIsAvailable', 'messages', 'Admin');
+
                 $notificationList[] = [
                     'id' => 'newVersionIsAvailable',
                     'type' => 'newVersionIsAvailable',
-                    'message' => $this->prepareMessage($message, $instanceNeedingUpgrade)
+                    'message' => $this->prepareMessage($message, $instanceNeedingUpgrade),
                 ];
             }
         }
 
-        if ($this->getConfig()->get('adminNotificationsNewExtensionVersion')) {
-            $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade();
-            if (!empty($extensionsNeedingUpgrade)) {
-                foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {
-                    $label = 'new' . Util::toCamelCase($extensionName, ' ', true) .'VersionIsAvailable';
+        if ($this->config->get('adminNotificationsNewExtensionVersion')) {
+            $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade() ?? [];
 
-                    $message = $this->getLanguage()->get(['Admin', 'messages', $label]);
-                    if (!$message) {
-                        $message = $this->getLanguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
-                    }
+            foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {
+                $label = 'new' . Util::toCamelCase($extensionName, ' ', true) . 'VersionIsAvailable';
 
-                    $notificationList[] = [
-                        'id' => 'newExtensionVersionIsAvailable' . Util::toCamelCase($extensionName, ' ', true),
-                        'type' => 'newExtensionVersionIsAvailable',
-                        'message' => $this->prepareMessage($message, $extensionDetails)
-                    ];
+                $message = $this->language->get(['Admin', 'messages', $label]);
+
+                if (!$message) {
+                    $message = $this->language
+                        ->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
                 }
+
+                $notificationList[] = [
+                    'id' => 'newExtensionVersionIsAvailable' . Util::toCamelCase($extensionName, ' ', true),
+                    'type' => 'newExtensionVersionIsAvailable',
+                    'message' => $this->prepareMessage($message, $extensionDetails)
+                ];
             }
         }
 
         return $notificationList;
     }
 
-    protected function isCronConfigured()
+    private function isCronConfigured(): bool
     {
-        return $this->getContainer()->get('scheduledJob')->isCronConfigured();
+        return $this->scheduledJob->isCronConfigured();
     }
 
-    protected function getInstanceNeedingUpgrade()
+    private function getInstanceNeedingUpgrade(): ?array
     {
-        $config = $this->getConfig();
+        $latestVersion = $this->config->get('latestVersion');
 
-        $latestVersion = $config->get('latestVersion');
-        if (isset($latestVersion)) {
-            $currentVersion = $config->get('version');
-            if ($currentVersion === 'dev') return;
-            if (version_compare($latestVersion, $currentVersion, '>')) {
-                return array(
-                    'currentVersion' => $currentVersion,
-                    'latestVersion' => $latestVersion
-                );
-            }
+        if (!isset($latestVersion)) {
+            return null;
         }
+
+        $currentVersion = $this->config->get('version');
+
+        if ($currentVersion === 'dev') {
+            return null;
+        }
+
+        if (version_compare($latestVersion, $currentVersion, '>')) {
+            return [
+                'currentVersion' => $currentVersion,
+                'latestVersion' => $latestVersion,
+            ];
+        }
+
+        return null;
     }
 
-    protected function getExtensionsNeedingUpgrade()
+    private function getExtensionsNeedingUpgrade(): array
     {
-        $config = $this->getConfig();
-
         $extensions = [];
 
-        $latestExtensionVersions = $config->get('latestExtensionVersions');
-        if (!empty($latestExtensionVersions) && is_array($latestExtensionVersions)) {
-            foreach ($latestExtensionVersions as $extensionName => $extensionLatestVersion) {
-                $currentVersion = $this->getExtensionLatestInstalledVersion($extensionName);
-                if (isset($currentVersion) && version_compare($extensionLatestVersion, $currentVersion, '>')) {
-                    $extensions[$extensionName] = [
-                        'currentVersion' => $currentVersion,
-                        'latestVersion' => $extensionLatestVersion,
-                        'extensionName' => $extensionName,
-                    ];
-                }
+        $latestExtensionVersions = $this->config->get('latestExtensionVersions');
+
+        if (empty($latestExtensionVersions) || !is_array($latestExtensionVersions)) {
+            return [];
+        }
+
+        foreach ($latestExtensionVersions as $extensionName => $extensionLatestVersion) {
+            $currentVersion = $this->getExtensionLatestInstalledVersion($extensionName);
+
+            if (isset($currentVersion) && version_compare($extensionLatestVersion, $currentVersion, '>')) {
+                $extensions[$extensionName] = [
+                    'currentVersion' => $currentVersion,
+                    'latestVersion' => $extensionLatestVersion,
+                    'extensionName' => $extensionName,
+                ];
             }
         }
 
         return $extensions;
     }
 
-    protected function getExtensionLatestInstalledVersion($extensionName)
+    private function getExtensionLatestInstalledVersion(string $extensionName): ?string
     {
-        $extension = $this->getEntityManager()->getRepository('Extension')
+        $extension = $this->entityManager
+            ->getRDBRepository('Extension')
             ->select(['version'])
             ->where([
                 'name' => $extensionName,
@@ -182,29 +191,7 @@ class AdminNotificationManager
         return $extension->get('version');
     }
 
-    /**
-     * Create EspoCRM notification for a user
-     *
-     * @param  string $message
-     * @param  string $userId
-     *
-     * @return void
-     */
-    public function createNotification($message, $userId = '1')
-    {
-        $notification = $this->getEntityManager()->getEntity('Notification');
-        $notification->set([
-            'type' => 'message',
-            'data' => [
-                'userId' => $userId,
-            ],
-            'userId' => $userId,
-            'message' => $message
-        ]);
-        $this->getEntityManager()->saveEntity($notification);
-    }
-
-    protected function prepareMessage($message, array $data = [])
+    private function prepareMessage(string $message, array $data = []): string
     {
         foreach ($data as $name => $value) {
             $message = str_replace('{'.$name.'}', $value, $message);
