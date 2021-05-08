@@ -78,12 +78,13 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $this->configWriter = $this->createMock(ConfigWriter::class);
 
-        $GLOBALS['log'] = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
+        $this->log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
 
         $map = [
             ['config', $this->config],
             ['fileManager', $this->fileManager],
             ['injectableFactory', $this->injectableFactory],
+            ['log', $this->log],
         ];
 
         $this->injectableFactory
