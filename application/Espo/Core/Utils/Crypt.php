@@ -98,11 +98,11 @@ class Crypt
 
     public function decrypt(string $encryptedString): string
     {
-        $encryptedString = base64_decode($encryptedString);
+        $encryptedStringDecoded = base64_decode($encryptedString);
 
-        $string = substr($encryptedString, 0, strlen($encryptedString) - 16);
+        $string = substr($encryptedStringDecoded, 0, strlen($encryptedStringDecoded) - 16);
 
-        $iv = substr($encryptedString, -16);
+        $iv = substr($encryptedStringDecoded, -16);
 
         if (extension_loaded('openssl')) {
             return trim(
