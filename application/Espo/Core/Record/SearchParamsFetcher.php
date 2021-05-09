@@ -62,11 +62,19 @@ class SearchParamsFetcher
         $params['maxSize'] = $request->getQueryParam('maxSize');
         $params['offset'] = $request->getQueryParam('offset');
 
-        if (array_key_exists('maxSize', $params)) {
+        if ($params['maxSize'] === '') {
+            $params['maxSize'] = null;
+        }
+
+        if ($params['offset'] === '') {
+            $params['offset'] = null;
+        }
+
+        if ($params['maxSize'] !== null) {
             $params['maxSize'] = intval($params['maxSize']);
         }
 
-        if (array_key_exists('offset', $params)) {
+        if ($params['offset'] !== null) {
             $params['offset'] = intval($params['offset']);
         }
 
