@@ -25,12 +25,14 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('collections/note', 'collection', function (Dep) {
+
+define('collections/note', 'collection', function (Dep) {
 
     return Dep.extend({
 
         parse: function (response, params) {
             var total = this.total;
+
             var list = Dep.prototype.parse.call(this, response, params);
 
             if (params.data && params.data.after) {
@@ -45,6 +47,7 @@ Espo.define('collections/note', 'collection', function (Dep) {
 
         fetchNew: function (options) {
             var options = options || {};
+
             options.data = options.data || {};
 
             if (this.length) {
