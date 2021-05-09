@@ -26,7 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/record/panels/activities', ['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
+define(
+    'crm:views/record/panels/activities',
+    ['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -84,10 +86,14 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
             this.setupSorting();
 
             var actionList = [];
+
             this.actionList.forEach(function (o) {
                 if (o.aclScope) {
-                    if (this.getMetadata().get(['scopes', o.aclScope, 'disabled'])) return;
+                    if (this.getMetadata().get(['scopes', o.aclScope, 'disabled'])) {
+                        return;
+                    }
                 }
+
                 actionList.push(o);
             }, this);
 
@@ -104,25 +110,40 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
             this.seeds = {};
 
             this.wait(true);
+
             var i = 0;
+
             this.scopeList.forEach(function (scope) {
                 this.getModelFactory().getSeed(scope, function (seed) {
                     this.seeds[scope] = seed;
+
                     i++;
+
                     if (i == this.scopeList.length) {
                         this.wait(false);
                     }
                 }.bind(this));
             }.bind(this));
+
             if (this.scopeList.length == 0) {
                 this.wait(false);
             }
 
             this.filterList = [];
+
             this.scopeList.forEach(function (item) {
-                if (!this.getAcl().check(item)) return;
-                if (!this.getAcl().check(item, 'read')) return;
-                if (this.getMetadata().get(['scopes', item, 'disabled'])) return;
+                if (!this.getAcl().check(item)) {
+                    return;
+                }
+
+                if (!this.getAcl().check(item, 'read')) {
+                    return;
+                }
+
+                if (this.getMetadata().get(['scopes', item, 'disabled'])) {
+                    return;
+                }
+
                 this.filterList.push(item);
             }, this);
 
@@ -148,8 +169,9 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
             this.setFilter(this.filter);
 
             this.once('show', function () {
-                if (!this.isRendered() && !this.isBeingRendered())
-                this.collection.fetch();
+                if (!this.isRendered() && !this.isBeingRendered()) {
+                    this.collection.fetch();
+                }
             }, this);
         },
 
@@ -157,6 +179,7 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
             if (name === 'all') {
                 return this.translate(name, 'presetFilters');
             }
+
             return this.translate(name, 'scopeNamesPlural');
         },
 
@@ -166,24 +189,32 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
 
         setupActionList: function () {
             this.scopeList.forEach(function (scope) {
-                if (!this.getMetadata().get(['clientDefs', scope, 'activityDefs', this.name + 'Create'])) return;
+                if (!this.getMetadata().get(['clientDefs', scope, 'activityDefs', this.name + 'Create'])) {
+                    return;
+                }
 
-                if (!this.getAcl().checkScope(scope, 'create')) return;
+                if (!this.getAcl().checkScope(scope, 'create')) {
+                    return;
+                }
 
                 var o = {
                     action: 'createActivity',
                     html: this.translate((this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope, 'labels', scope),
                     data: {},
                     acl: 'create',
-                    aclScope: scope
+                    aclScope: scope,
                 };
 
                 var link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link'])
+
                 if (link) {
                     o.data.link = link;
 
                     this.entityTypeLinkMap[scope] = link;
-                    if (!this.model.hasLink(link)) return;
+
+                    if (!this.model.hasLink(link)) {
+                        return;
+                    }
 
                 } else {
                     o.data.scope = scope;
@@ -216,7 +247,11 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
                 if (i === 0 && this.actionList.length) {
                     this.actionList.push(false);
                 }
-                if (!this.getAcl().checkScope(scope, 'read')) return;
+
+                if (!this.getAcl().checkScope(scope, 'read')) {
+                    return;
+                }
+
                 var o = {
                     action: 'viewRelatedList',
                     html: this.translate('View List') + ' &middot; ' + this.translate(scope, 'scopeNamesPlural') + '',
@@ -224,8 +259,9 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
                         scope: scope
                     },
                     acl: 'read',
-                    aclScope: scope
+                    aclScope: scope,
                 };
+
                 this.actionList.push(o);
             }, this);
         },
@@ -233,6 +269,7 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
         setFilter: function (filter) {
             this.filter = filter;
             this.collection.where = null;
+
             if (filter && filter !== 'all') {
                 this.collection.where = [this.filter];
             }
@@ -260,7 +297,8 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
 
             if (!this.disabled) {
                 this.collection.fetch();
-            } else {
+            }
+            else {
                 this.once('show', function () {
                     this.collection.fetch();
                 }, this);
@@ -269,9 +307,11 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
 
         fetchHistory: function () {
             var parentView = this.getParentView();
+
             if (parentView) {
                 if (parentView.hasView('history')) {
                     var collection = parentView.getView('history').collection;
+
                     if (collection) {
                         collection.fetch();
                     }
@@ -281,6 +321,7 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
 
         fetchActivities: function () {
             var parentView = this.getParentView();
+
             if (parentView) {
                 if (parentView.hasView('activities')) {
                     var collection = parentView.getView('activities').collection;
@@ -305,14 +346,17 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
             if (this.model.name == 'User') {
                 if (this.model.isPortal()) {
                     attributes.usersIds = [this.model.id];
+
                     var usersIdsNames = {};
                     usersIdsNames[this.model.id] = this.model.get('name')
                     attributes.usersIdsNames = usersIdsNames;
-                } else {
+                }
+                else {
                     attributes.assignedUserId = this.model.id;
                     attributes.assignedUserName = this.model.get('name');
                 }
-            } else {
+            }
+            else {
                 if (this.model.name == 'Contact') {
                     if (this.model.get('accountId') && !this.getConfig().get('b2cMode')) {
                         attributes.parentType = 'Account',
@@ -328,15 +372,18 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
                             delete attributes.parentName;
                         }
                     }
-                } else if (this.model.name == 'Lead') {
+                }
+                else if (this.model.name == 'Lead') {
                     attributes.parentType = 'Lead',
                     attributes.parentId = this.model.id;
                     attributes.parentName = this.model.get('name');
                 }
+
                 if (this.model.name != 'Account' && this.model.has('contactsIds')) {
                     attributes.contactsIds = this.model.get('contactsIds');
                     attributes.contactsNames = this.model.get('contactsNames');
                 }
+
                 if (scope) {
                     if (!attributes.parentId) {
                         if (this.checkParentTypeAvailability(scope, this.model.name)) {
@@ -344,7 +391,8 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
                             attributes.parentId = this.model.id;
                             attributes.parentName = this.model.get('name');
                         }
-                    } else {
+                    }
+                    else {
                         if (attributes.parentType && !this.checkParentTypeAvailability(scope, attributes.parentType)) {
                             attributes.parentType = null;
                             attributes.parentId = null;
@@ -358,7 +406,9 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
         },
 
         checkParentTypeAvailability: function (scope, parentType) {
-            return ~(this.getMetadata().get(['entityDefs', scope, 'fields', 'parent', 'entityList']) || []).indexOf(parentType);
+            return ~(
+                this.getMetadata().get(['entityDefs', scope, 'fields', 'parent', 'entityList']) || []
+            ).indexOf(parentType);
         },
 
         actionCreateRelated: function (data) {
@@ -378,7 +428,8 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
             if (link) {
                 var scope = this.model.getLinkParam(link, 'entity');
                 var foreignLink = this.model.getLinkParam(link, 'foreign');
-            } else {
+            }
+            else {
                 scope = data.scope;
             }
 
@@ -395,10 +446,12 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
 
             this.notify('Loading...');
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+                'views/modals/edit';
 
             this.getCreateActivityAttributes(scope, data, function (attributes) {
                 o.attributes = attributes;
+
                 this.createView('quickCreate', viewName, o , function (view) {
                     view.render();
                     view.notify(false);
@@ -424,18 +477,21 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
                     attributes.parentType = 'Contact';
                     attributes.parentName = this.model.get('name');
                     attributes.parentId = this.model.id;
-                } else {
+                }
+                else {
                     if (this.model.get('accountId')) {
                         attributes.parentType = 'Account',
                         attributes.parentId = this.model.get('accountId');
                         attributes.parentName = this.model.get('accountName');
                     }
                 }
-            } else if (this.model.name == 'Lead') {
+            }
+            else if (this.model.name == 'Lead') {
                 attributes.parentType = 'Lead',
                 attributes.parentId = this.model.id
                 attributes.parentName = this.model.get('name');
             }
+
             if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
                 attributes.nameHash = {};
                 attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
@@ -448,7 +504,8 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
                         attributes.parentId = this.model.id;
                         attributes.parentName = this.model.get('name');
                     }
-                } else {
+                }
+                else {
                     if (attributes.parentType && !this.checkParentTypeAvailability(scope, attributes.parentType)) {
                         attributes.parentType = null;
                         attributes.parentId = null;
@@ -469,11 +526,14 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
             ) {
                 attributes.teamsIds = Espo.Utils.clone(this.model.get('teamsIds'));
                 attributes.teamsNames = Espo.Utils.clone(this.model.get('teamsNames') || {});
+
                 var defaultTeamId = this.getUser().get('defaultTeamId');
+
                 if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
                     attributes.teamsIds.push(defaultTeamId);
                     attributes.teamsNames[defaultTeamId] = this.getUser().get('defaultTeamName');
                 }
+
                 attributes.teamsIds = attributes.teamsIds.filter(function (teamId) {
                     return this.getAcl().checkTeamAssignmentPermission(teamId);
                 }, this);
@@ -519,10 +579,13 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
 
         actionSetHeld: function (data) {
             var id = data.id;
+
             if (!id) {
                 return;
             }
+
             var model = this.collection.get(id);
+
             model.save({
                 status: 'Held'
             }, {
@@ -536,10 +599,13 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
 
         actionSetNotHeld: function (data) {
             var id = data.id;
+
             if (!id) {
                 return;
             }
+
             var model = this.collection.get(id);
+
             model.save({
                 status: 'Not Held'
             }, {
@@ -552,7 +618,9 @@ define('crm:views/record/panels/activities', ['views/record/panels/relationship'
         },
 
         actionViewRelatedList: function (data) {
-            data.url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name + '/list/' + data.scope;
+            data.url = 'Activities/' + this.model.name + '/' +
+                this.model.id + '/' + this.name + '/list/' + data.scope;
+
             data.title = this.translate(this.defs.label) +
             ' @right ' + this.translate(data.scope, 'scopeNamesPlural');
 
