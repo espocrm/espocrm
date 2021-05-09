@@ -38,6 +38,7 @@ use Espo\Core\{
     Controllers\Record,
     Api\Request,
     Select\SearchParams,
+    Select\Where\Item as WhereItem,
 };
 
 use StdClass;
@@ -178,14 +179,12 @@ class User extends Record
             return $searchParams;
         }
 
-        $where = $searchParams->getWhere() ?? [];
-
-        $where[] = [
-            'type' => 'isOfType',
-            'attribute' => 'id',
-            'value' => $userType,
-        ];
-
-        return $searchParams->withWhere($where);
+        return $searchParams->withWhereAdded(
+            WhereItem::fromRaw([
+                'type' => 'isOfType',
+                'attribute' => 'id',
+                'value' => $userType,
+            ])
+        );
     }
 }

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Select;
 
+use Espo\Core\Select\Where\Item as WhereItem;
+
 use InvalidArgumentException;
 
 /**
@@ -95,9 +97,18 @@ class SearchParams
         return $this->rawParams['boolFilterList'] ?? [];
     }
 
-    public function getWhere(): ?array
+    public function getWhere(): ?WhereItem
     {
-        return $this->rawParams['where'] ?? null;
+        $raw = $this->rawParams['where'] ?? null;
+
+        if ($raw === null) {
+            return null;
+        }
+
+        return WhereItem::fromRaw([
+            'type' => 'and',
+            'value' => $raw,
+        ]);
     }
 
     public function noFullTextSearch(): bool
@@ -192,11 +203,30 @@ class SearchParams
         return $obj;
     }
 
-    public function withWhere(?array $where): self
+    public function withWhere(?WhereItem $where): self
     {
         $obj = clone $this;
 
-        $obj->rawParams['where'] = $where;
+        if ($where->getType() === WhereItem::TYPE_AND) {
+            $obj->rawParams['where'] = $where->getValue() ?? [];
+
+            return $obj;
+        }
+
+        $obj->rawParams['where'] = [$where->getRaw()];
+
+        return $obj;
+    }
+
+    public function withWhereAdded(WhereItem $whereItem): self
+    {
+        $obj = clone $this;
+
+        $rawWhere = $obj->rawParams['where'] ?? [];
+
+        $rawWhere[] = $whereItem->getRaw();
+
+        $obj->rawParams['where'] = $rawWhere;
 
         return $obj;
     }

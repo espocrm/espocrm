@@ -37,6 +37,7 @@ use Espo\Core\{
     Controllers\Record,
     Api\Request,
     Select\SearchParams,
+    Select\Where\Item as WhereItem,
 };
 
 use StdClass;
@@ -277,15 +278,13 @@ class Email extends Record
             return $searchParams;
         }
 
-        $where = $searchParams->getWhere() ?? [];
-
-        $where[] = [
-            'type' => 'inFolder',
-            'attribute' => 'folderId',
-            'value' => $folderId,
-        ];
-
-        return $searchParams->withWhere($where);
+        return $searchParams->withWhereAdded(
+            WhereItem::fromRaw([
+                'type' => 'inFolder',
+                'attribute' => 'folderId',
+                'value' => $folderId,
+            ])
+        );
     }
 
     public function postActionMoveToFolder(Request $request)

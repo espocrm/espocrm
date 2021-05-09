@@ -31,6 +31,7 @@ namespace tests\unit\Espo\Core\Select;
 
 use Espo\Core\{
     Select\SearchParams,
+    Select\Where\Item as WhereItem,
 };
 
 use InvalidArgumentException;
@@ -71,7 +72,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['test1', 'test2'], $params->getBoolFilterList());
         $this->assertEquals('test', $params->getTextFilter());
         $this->assertEquals('testPrimary', $params->getPrimaryFilter());
-        $this->assertEquals($raw['where'], $params->getWhere());
+        $this->assertEquals($raw['where'], $params->getWhere()->getRaw()['value']);
 
         $this->assertFalse($params->noFullTextSearch());
     }
@@ -297,11 +298,9 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testCloning(): void
     {
-        $where = [
-            [
-                'type' => 'isTrue',
-                'attribute' => 't',
-            ],
+        $rawWhere = [
+            'type' => 'isTrue',
+            'attribute' => 't',
         ];
 
         $params = SearchParams
@@ -316,7 +315,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
             ->withPrimaryFilter('test')
             ->withSelect(['name'])
             ->withTextFilter('test*')
-            ->withWhere($where);
+            ->withWhere(WhereItem::fromRaw($rawWhere));
 
         $this->assertEquals(['a'], $params->getBoolFilterList());
         $this->assertEquals(10, $params->getMaxSize());
@@ -328,6 +327,77 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test', $params->getPrimaryFilter());
         $this->assertEquals(['name'], $params->getSelect());
         $this->assertEquals('test*', $params->getTextFilter());
-        $this->assertEquals($where, $params->getWhere());
+        $this->assertEquals('isTrue', $params->getWhere()->getRaw()['value'][0]['type']);
+    }
+
+    public function testWithWhereAdded1(): void
+    {
+        $params = SearchParams
+            ::fromNothing()
+            ->withWhere(
+                WhereItem::fromRaw([
+                    'type' => 'isTrue',
+                    'attribute' => 'a1',
+                ])
+            )
+            ->withWhereAdded(
+                 WhereItem::fromRaw([
+                    'type' => 'isTrue',
+                    'attribute' => 'a2',
+                ])
+            );
+
+        $where = $params->getWhere();
+
+        $this->assertEquals(WhereItem::TYPE_AND, $where->getType());
+
+        $this->assertEquals(
+            [
+                'type' => WhereItem::TYPE_AND,
+                'value' => [
+                    [
+                        'type' => 'isTrue',
+                        'attribute' => 'a1',
+                        'value' => null,
+                    ],
+                    [
+                        'type' => 'isTrue',
+                        'attribute' => 'a2',
+                        'value' => null,
+                    ],
+                ],
+            ],
+            $where->getRaw()
+        );
+    }
+
+    public function testWithWhereAdded2(): void
+    {
+        $params = SearchParams
+            ::fromNothing()
+            ->withWhereAdded(
+                 WhereItem::fromRaw([
+                    'type' => 'isTrue',
+                    'attribute' => 'a2',
+                ])
+            );
+
+        $where = $params->getWhere();
+
+        $this->assertEquals(WhereItem::TYPE_AND, $where->getType());
+
+        $this->assertEquals(
+            [
+                'type' => WhereItem::TYPE_AND,
+                'value' => [
+                    [
+                        'type' => 'isTrue',
+                        'attribute' => 'a2',
+                        'value' => null,
+                    ],
+                ],
+            ],
+            $where->getRaw()
+        );
     }
 }

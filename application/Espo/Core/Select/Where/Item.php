@@ -30,9 +30,14 @@
 namespace Espo\Core\Select\Where;
 
 use InvalidArgumentException;
+use RuntimeException;
 
 class Item
 {
+    public const TYPE_AND = 'and';
+
+    public const TYPE_OR = 'or';
+
     private $type = null;
 
     private $attribute = null;
@@ -44,12 +49,17 @@ class Item
     private $timeZone = null;
 
     protected $noAttributeTypeList = [
-        'or',
-        'and',
-        'having',
+        self::TYPE_OR,
+        self::TYPE_AND,
         'not',
         'subQueryNotIn',
         'subQueryIn',
+        'having', // @todo Check usage. Maybe to be removed.
+    ];
+
+    protected $withNestedItemsTypeList = [
+        self::TYPE_OR,
+        self::TYPE_AND,
     ];
 
     private function __construct()
@@ -58,40 +68,51 @@ class Item
 
     public static function fromRaw(array $params): self
     {
-        $object = new self();
+        $obj = new self();
 
-        $object->type = $params['type'] ?? null;
-        $object->attribute = $params['attribute'] ?? $params['field'] ?? null;
-        $object->value = $params['value'] ?? null;
-        $object->dateTime = $params['dateTime'] ?? false;
-        $object->timeZone = $params['timeZone'] ?? null;
+        $obj->type = $params['type'] ?? null;
+        $obj->attribute = $params['attribute'] ?? $params['field'] ?? null;
+        $obj->value = $params['value'] ?? null;
+        $obj->dateTime = $params['dateTime'] ?? false;
+        $obj->timeZone = $params['timeZone'] ?? null;
 
         unset($params['field']);
 
-        foreach ($params as $key => $value) {
-            if (!property_exists($object, $key)) {
+        foreach (array_keys($params) as $key) {
+            if (!property_exists($obj, $key)) {
                 throw new InvalidArgumentException("Unknown parameter '{$key}'.");
             }
         }
 
-        if (!$object->type) {
+        if (!$obj->type) {
             throw new InvalidArgumentException("No 'type' in where item.");
         }
 
         if (
-            !$object->attribute &&
-            !in_array($object->type, $object->noAttributeTypeList)
+            !$obj->attribute &&
+            !in_array($obj->type, $obj->noAttributeTypeList)
         ) {
             throw new InvalidArgumentException("No 'attribute' in where item.");
         }
 
-        return $object;
+        if (in_array($obj->type, $obj->withNestedItemsTypeList)) {
+            $obj->value = $obj->value ?? [];
+
+            if (
+                !is_array($obj->value) ||
+                count($obj->value) && array_keys($obj->value) !== range(0, count($obj->value) - 1)
+            ) {
+                throw new InvalidArgumentException("Bad 'value'.");
+            }
+        }
+
+        return $obj;
     }
 
     public static function fromRawAndGroup(array $paramList): self
     {
         return self::fromRaw([
-            'type' => 'and',
+            'type' => self::TYPE_AND,
             'value' => $paramList,
         ]);
     }
@@ -134,6 +155,28 @@ class Item
     public function getValue()
     {
         return $this->value;
+    }
+
+    /**
+     * Get nested where items (for 'and', 'or' types).
+     *
+     * @return Item[]
+     *
+     * @throws RuntimeException If a type does not support nested items.
+     */
+    public function getItems(): array
+    {
+        if (!in_array($this->type, $this->withNestedItemsTypeList)) {
+            throw new RuntimeException("Nested items not supported for '{$this->type}' type.");
+        }
+
+        $list = [];
+
+        foreach ($this->value as $raw) {
+            $list[] = Item::fromRaw($raw);
+        }
+
+        return $list;
     }
 
     public function isDateTime(): bool

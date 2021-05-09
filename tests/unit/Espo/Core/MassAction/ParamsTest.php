@@ -102,7 +102,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('Test', $params->getEntityType());
 
-        $this->assertEquals($where, $searchParams->getWhere());
+        $this->assertEquals($where, $searchParams->getWhere()->getRaw()['value']);
 
         $this->assertEquals('testFilter', $searchParams->getPrimaryFilter());
 
@@ -131,7 +131,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
         $searchParams = $params->getSearchParams();
 
-        $this->assertEquals($where, $searchParams->getWhere());
+        $this->assertEquals($where, $searchParams->getWhere()->getRaw()['value']);
 
         $this->assertEquals('testFilter', $searchParams->getPrimaryFilter());
 

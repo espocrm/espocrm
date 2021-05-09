@@ -152,4 +152,25 @@ class ItemTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($raw, $result);
     }
+
+    public function testGetItems1()
+    {
+        $raw = [
+            'type' => 'and',
+            'value' => [
+                [
+                    'type' => 'or',
+                    'value' => [],
+                ],
+                [
+                    'type' => 'or',
+                    'value' => [],
+                ],
+            ],
+        ];
+
+        $item = Item::fromRaw($raw);
+
+        $this->assertEquals('or', $item->getItems()[0]->getType());
+    }
 }

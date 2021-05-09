@@ -93,12 +93,13 @@ class AdditionalApplier extends AdditionalApplierBase
 
     protected function retrieveFolder(SearchParams $searchParams): ?string
     {
-        foreach ($searchParams->getWhere() ?? [] as $item) {
-            $itemType = $item['type'] ?? null;
-            $itemValue = $item['value'] ?? null;
+        if (!$searchParams->getWhere()) {
+            return null;
+        }
 
-            if ($itemType === 'inFolder') {
-                return $itemValue;
+        foreach ($searchParams->getWhere()->getItems() as $item) {
+            if ($item->getType() === 'inFolder') {
+                return $item->getValue();
             }
         }
 
@@ -115,8 +116,8 @@ class AdditionalApplier extends AdditionalApplierBase
             return false;
         }
 
-        foreach ($searchParams->getWhere() ?? [] as $item) {
-            $itemAttribute = $item['attribute'] ?? null;
+        foreach ($searchParams->getWhere()->getItems() as $item) {
+            $itemAttribute = $item->getAttribute();
 
             if (
                 $itemAttribute &&

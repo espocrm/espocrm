@@ -243,13 +243,8 @@ class Activities
         $maxSize = $searchParams->getMaxSize();
         $order = $searchParams->getOrder();
         $orderBy = $searchParams->getOrderBy();
-        $where = $searchParams->getWhere();
 
-        $scope = null;
-
-        if (is_array($where) && !empty($where[0]) && $where[0] !== 'false') {
-            $scope = $where[0];
-        }
+        $scope = $request->getQueryParam('entityType') ?? null;
 
         $methodName = 'get' . ucfirst($name);
 

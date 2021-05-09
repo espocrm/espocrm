@@ -268,10 +268,11 @@ define(
 
         setFilter: function (filter) {
             this.filter = filter;
-            this.collection.where = null;
+
+            this.collection.data.entityType = null;
 
             if (filter && filter !== 'all') {
-                this.collection.where = [this.filter];
+                this.collection.data.entityType = this.filter;
             }
         },
 

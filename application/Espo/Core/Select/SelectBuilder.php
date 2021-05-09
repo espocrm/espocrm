@@ -453,12 +453,7 @@ class SelectBuilder
         }
 
         if ($this->searchParams->getWhere()) {
-            $whereItem = WhereItem::fromRaw([
-                'type' => 'and',
-                'value' => $this->searchParams->getWhere(),
-            ]);
-
-            $this->whereItemList[] = $whereItem;
+            $this->whereItemList[] = $this->searchParams->getWhere();
         }
     }
 

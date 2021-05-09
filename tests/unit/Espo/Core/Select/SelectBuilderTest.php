@@ -153,10 +153,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
                 $this->isInstanceOf(QueryBuilder::class)
             );
 
-        $whereItem = WhereItem::fromRaw([
-            'type' => 'and',
-            'value' => $searchParams->getWhere(),
-        ]);
+        $whereItem = $searchParams->getWhere();
 
         $whereParams = WhereParams::fromArray([
             'applyPermissionCheck' => true,

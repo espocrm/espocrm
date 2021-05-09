@@ -31,6 +31,7 @@ namespace Espo\Tools\Export;
 
 use Espo\Core\{
     Select\SearchParams,
+    Select\Where\Item as WhereItem,
 };
 
 use RuntimeException;
@@ -108,13 +109,13 @@ class Params
 
             $obj->searchParams = SearchParams
                 ::fromNothing()
-                ->withWhere([
-                    [
+                ->withWhere(
+                    WhereItem::fromRaw([
                         'type' => 'equals',
                         'attribute' => 'id',
                         'value' => $ids,
-                    ]
-                ]);
+                    ])
+                );
         }
 
         if ($searchParams) {
