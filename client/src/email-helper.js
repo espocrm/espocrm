@@ -206,12 +206,12 @@ define('email-helper', [], function () {
                 attributes['parentType'] = model.get('parentType');
             }
 
-            this.addForwardBodyAttrbutes(model, attributes);
+            this.addForwardBodyAttributes(model, attributes);
 
             return attributes;
         },
 
-        addForwardBodyAttrbutes: function (model, attributes) {
+        addForwardBodyAttributes: function (model, attributes) {
             var prepending = '';
 
             if (model.get('isHtml')) {

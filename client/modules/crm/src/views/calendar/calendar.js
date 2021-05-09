@@ -196,12 +196,12 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
         selectMode: function (mode) {
             if (~this.fullCalendarModeList.indexOf(mode) || mode.indexOf('view-') === 0) {
-                var previosMode = this.mode;
+                var previousMode = this.mode;
 
                 if (
                     mode.indexOf('view-') === 0
                     ||
-                    mode.indexOf('view-') !== 0 && previosMode.indexOf('view-') === 0
+                    mode.indexOf('view-') !== 0 && previousMode.indexOf('view-') === 0
                 ) {
                     this.trigger('change:mode', mode, true);
                     return;
@@ -470,7 +470,9 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             return this.getHelper().calculateContentContainerHeight(this.$el.find('.calendar'));
 
-            var smallScreenWidth = this.smallScreenWidth = this.smallScreenWidth || this.getThemeManager().getParam('screenWidthXs');
+            var smallScreenWidth = this.smallScreenWidth = this.smallScreenWidth ||
+                this.getThemeManager().getParam('screenWidthXs');
+
             var $window = $(window);
 
             if (this.$container && this.$container.length) {
@@ -481,10 +483,10 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
 
             var top = 0;
 
-            var colendarElement = this.$el.find('.calendar').get(0);
+            var calendarElement = this.$el.find('.calendar').get(0);
 
-            if (colendarElement) {
-                top = colendarElement.getBoundingClientRect().top;
+            if (calendarElement) {
+                top = calendarElement.getBoundingClientRect().top;
 
                 if ($window.width() < smallScreenWidth) {
                     var $navbarCollapse = $('#navbar .navbar-body');
@@ -500,8 +502,12 @@ define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (D
         },
 
         adjustSize: function () {
-            if (this.isRemoved()) return;
+            if (this.isRemoved()) {
+                return;
+            }
+
             var height = this.getCalculatedHeight();
+
             this.$calendar.fullCalendar('option', 'contentHeight', height);
         },
 

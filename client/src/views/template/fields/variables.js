@@ -216,7 +216,7 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                     attributeList.unshift('name');
                 }
 
-                var originalAttribueList = Espo.Utils.clone(attributeList);
+                var originalAttributeList = Espo.Utils.clone(attributeList);
 
                 this.addAdditionalPlaceholders(scope, attributeList, link, entityType);
 
@@ -225,7 +225,7 @@ define('views/template/fields/variables', 'views/fields/base', function (Dep) {
                 }.bind(this));
 
                 attributeList.forEach(function (item) {
-                    if (~originalAttribueList.indexOf(item)) {
+                    if (~originalAttributeList.indexOf(item)) {
                         this.attributeList.push(link + '.' + item);
                     } else {
                         this.attributeList.push(item);

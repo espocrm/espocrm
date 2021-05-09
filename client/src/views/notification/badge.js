@@ -58,8 +58,8 @@ define('views/notification/badge', 'view', function (Dep) {
                     clearTimeout(this.timeout);
                 }
 
-                for (var name in this.popoupTimeouts) {
-                    clearTimeout(this.popoupTimeouts[name]);
+                for (var name in this.popupTimeouts) {
+                    clearTimeout(this.popupTimeouts[name]);
                 }
             }, this);
 
@@ -68,7 +68,7 @@ define('views/notification/badge', 'view', function (Dep) {
             this.lastId = 0;
             this.shownNotificationIds = [];
             this.closedNotificationIds = [];
-            this.popoupTimeouts = {};
+            this.popupTimeouts = {};
 
             delete localStorage['messageBlockPlayNotificationSound'];
             delete localStorage['messageClosePopupNotificationId'];
@@ -90,7 +90,7 @@ define('views/notification/badge', 'view', function (Dep) {
                 }
 
                 if (e.key == 'messageNotificationRead') {
-                    if (!this.isBroadcustingNotificationRead && localStorage.getItem('messageNotificationRead')) {
+                    if (!this.isBroadcastingNotificationRead && localStorage.getItem('messageNotificationRead')) {
                         this.checkUpdates();
                     }
                 }
@@ -275,7 +275,7 @@ define('views/notification/badge', 'view', function (Dep) {
             }
 
             if (data.grouped && interval && !useWebSocket && isFirstCheck) {
-                this.popoupTimeouts[name] = setTimeout(
+                this.popupTimeouts[name] = setTimeout(
                     function () {
                         this.checkPopupNotifications(name, true);
                     }.bind(this),
@@ -326,7 +326,7 @@ define('views/notification/badge', 'view', function (Dep) {
                         return;
                     }
 
-                    this.popoupTimeouts[name] = setTimeout(function () {
+                    this.popupTimeouts[name] = setTimeout(function () {
                         this.checkPopupNotifications(name, true);
                     }.bind(this), interval * 1000);
                 }.bind(this)
@@ -400,12 +400,12 @@ define('views/notification/badge', 'view', function (Dep) {
                 return;
             }
 
-            this.isBroadcustingNotificationRead = true;
+            this.isBroadcastingNotificationRead = true;
 
             localStorage.setItem('messageNotificationRead', true);
 
             setTimeout(function () {
-                this.isBroadcustingNotificationRead = false;
+                this.isBroadcastingNotificationRead = false;
 
                 delete localStorage['messageNotificationRead'];
             }.bind(this), 500);

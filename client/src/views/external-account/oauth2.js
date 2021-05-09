@@ -277,7 +277,7 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
                     }).done(function (response) {
                         this.notify(false);
                         if (response === true) {
-                            this.setConneted();
+                            this.setConnected();
                         } else {
                             this.setNotConneted();
                         }
@@ -290,7 +290,7 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
             });
         },
 
-        setConneted: function () {
+        setConnected: function () {
             this.isConnected = true;
             this.$el.find('[data-action="connect"]').addClass('hidden');;
             this.$el.find('.connected-label').removeClass('hidden');

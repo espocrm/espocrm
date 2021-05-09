@@ -274,16 +274,16 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             $window.off('scroll.kanban-' + this.cid);
             $window.on('scroll.kanban-' + this.cid, function (e) {
-                cotrolSticking();
+                controlSticking();
             }.bind(this));
 
             $window.off('resize.kanban-' + this.cid);
             $window.on('resize.kanban-' + this.cid, function (e) {
-                cotrolSticking();
+                controlSticking();
             }.bind(this));
 
 
-            var cotrolSticking = function () {
+            var controlSticking = function () {
                 var width = $middle.width();
 
                 if ($(window.document).width() < screenWidthXs) {

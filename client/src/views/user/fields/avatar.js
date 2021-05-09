@@ -37,10 +37,10 @@ Espo.define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
             }, function (view) {
                 view.render();
 
-                var croped = false;
+                var cropped = false;
 
                 this.listenToOnce(view, 'crop', function (croppedContents, params) {
-                    croped = true;
+                    cropped = true;
                     setTimeout(function () {
                         params = params || {};
                         params.name = 'avatar.jpg';
@@ -50,7 +50,7 @@ Espo.define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
                     }.bind(this), 10);
                 });
                 this.listenToOnce(view, 'remove', function () {
-                    if (!croped) {
+                    if (!cropped) {
                         setTimeout(function () {
                             this.render();
                         }.bind(this), 10);

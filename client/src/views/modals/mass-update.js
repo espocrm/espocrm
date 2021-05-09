@@ -82,7 +82,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') +
                 ' <span class="chevron-right"></span> ' + this.translate('Mass Update');
 
-            var fobiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
+            var forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 
             this.wait(true);
 
@@ -95,7 +95,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
                     this.fieldList = [];
 
                     layout.forEach(function (field) {
-                        if (~fobiddenList.indexOf(field)) {
+                        if (~forbiddenList.indexOf(field)) {
                             return;
                         }
 

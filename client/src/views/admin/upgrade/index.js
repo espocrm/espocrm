@@ -95,7 +95,7 @@ define('views/admin/upgrade/index', 'view', function (Dep) {
                 }.bind(this)
             }).done(function (data) {
                 if (!data.id) {
-                    this.showError(this.translate('Error occured'));
+                    this.showError(this.translate('Error occurred'));
                     return;
                 }
                 this.notify(false);

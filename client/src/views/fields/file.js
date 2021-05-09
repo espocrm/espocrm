@@ -537,10 +537,12 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 preview = Handlebars.Utils.escapeExpression(preview);
             }
 
-            var $att = $('<div>').append(removeLink)
-                                 .append($('<span class="preview">' + preview + '</span>')
-                                 .css('width', 'cacl(100% - 30px)'))
-                                 .addClass('gray-box');
+            var $att = $('<div>')
+                .append(removeLink)
+                 .append(
+                    $('<span class="preview">' + preview + '</span>')
+                        .addClass('gray-box')
+                );
 
             var $container = $('<div>').append($att);
 

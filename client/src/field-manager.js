@@ -82,20 +82,23 @@
 
         getActualAttributeList: function (fieldType, fieldName) {
             var fieldNames = [];
+
             if (fieldType in this.defs) {
                 if ('actualFields' in this.defs[fieldType]) {
-                    var actualfFields = this.defs[fieldType].actualFields;
+                    var actualFields = this.defs[fieldType].actualFields;
 
                     var naming = 'suffix';
+
                     if ('naming' in this.defs[fieldType]) {
                         naming = this.defs[fieldType].naming;
                     }
+
                     if (naming == 'prefix') {
-                        actualfFields.forEach(function (f) {
+                        actualFields.forEach(function (f) {
                             fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
                         });
                     } else {
-                        actualfFields.forEach(function (f) {
+                        actualFields.forEach(function (f) {
                             fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
                         });
                     }
@@ -108,6 +111,7 @@
 
         getNotActualAttributeList: function (fieldType, fieldName) {
             var fieldNames = [];
+
             if (fieldType in this.defs) {
                 if ('notActualFields' in this.defs[fieldType]) {
                     var notActualFields = this.defs[fieldType].notActualFields;

@@ -260,14 +260,14 @@ define(
                 address = this.getHelper().escapeString(address);
             }
 
-            var conteiner = this.$el.find('.link-container');
+            var container = this.$el.find('.link-container');
             var html =
             '<div data-address="'+address+'" class="list-group-item">' +
                 '<a href="javascript:" class="pull-right" data-address="' + address + '" data-action="clearAddress"><span class="fas fa-times"></a>' +
                 '<span>'+ ((name) ? (name + ' <span class="text-muted">&#187;</span> ') : '') + '<span>'+address+'</span>'+'</span>' +
 
             '</div>';
-            conteiner.append(html);
+            container.append(html);
         },
 
         deleteAddress: function (address) {

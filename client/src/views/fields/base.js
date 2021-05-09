@@ -577,7 +577,7 @@ define('views/fields/base', 'view', function (Dep) {
                     self.notify('Saved', 'success');
                 },
                 error: function () {
-                    self.notify('Error occured', 'error');
+                    self.notify('Error occurred', 'error');
                     model.set(prev, {silent: true});
                     self.render()
                 },

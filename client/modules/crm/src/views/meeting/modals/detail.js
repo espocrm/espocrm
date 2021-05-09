@@ -58,10 +58,10 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
                 });
             }
 
-            this.initAcceptenceStatus();
+            this.initAcceptanceStatus();
             this.on('switch-model', function (model, previousModel) {
                 this.stopListening(previousModel, 'sync');
-                this.initAcceptenceStatus();
+                this.initAcceptanceStatus();
             }, this);
 
              this.on('after:save', function () {
@@ -92,7 +92,7 @@ define('crm:views/meeting/modals/detail', 'views/modals/detail', function (Dep) 
 
         },
 
-        initAcceptenceStatus: function () {
+        initAcceptanceStatus: function () {
             if (this.hasAcceptanceStatusButton()) {
                 this.showAcceptanceButton();
             } else {

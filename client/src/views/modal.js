@@ -50,7 +50,7 @@ define('views/modal', 'view', function (Dep) {
 
         dropdownItemList: [],
 
-        // TODO remove it as depricated
+        // TODO remove it as deprecated.
         buttons: [],
 
         width: false,
@@ -90,7 +90,7 @@ define('views/modal', 'view', function (Dep) {
             this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
             this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
 
-            // TODO remove it as depricated
+            // TODO remove it as deprecated
             this.buttons = Espo.Utils.cloneDeep(this.buttons);
 
             this.on('render', function () {
@@ -154,7 +154,7 @@ define('views/modal', 'view', function (Dep) {
         getDialogButtonList: function () {
             var buttonListExt = [];
 
-            // TODO remove it as depricated
+            // TODO remove it as deprecated
             this.buttons.forEach(function (item) {
                 var o = Espo.Utils.clone(item);
                 if (!('text' in o) && ('label' in o)) {

@@ -388,12 +388,12 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                     preview + '</a>';
             }
 
-            var $att = $('<div>').addClass('gray-box')
-                                 .append(removeLink)
-                                 .append(
-                                    $('<span class="preview">' + preview + '</span>')
-                                    .css('width', 'cacl(100% - 30px)')
-                                );
+            var $att = $('<div>')
+                .addClass('gray-box')
+                .append(removeLink)
+                .append(
+                    $('<span class="preview">' + preview + '</span>')
+                );
 
             var $container = $('<div>').append($att);
 

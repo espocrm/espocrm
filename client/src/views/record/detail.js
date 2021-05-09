@@ -848,7 +848,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.model.destroy({
                     wait: true,
                     error: function () {
-                        this.notify('Error occured!', 'error');
+                        this.notify('Error occurred', 'error');
                     }.bind(this),
                     success: function () {
                         if (collection) {
@@ -2063,7 +2063,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         /**
          * Called after save or cancel.
-         * By default redirects page. Can be orverriden in options.
+         * By default redirects page. Can be orverridden in options.
          * @param {String} after Name of action (save, cancel, etc.) after which #exit is invoked.
          */
         exit: function (after) {

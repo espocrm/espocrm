@@ -483,9 +483,13 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
         convertEventList: function (list) {
             var resultList = [];
-            list.forEach(function (iten) {
-                var event = this.convertEvent(iten);
-                if (!event) return;
+
+            list.forEach(function (item) {
+                var event = this.convertEvent(item);
+                if (!event) {
+                    return;
+                }
+
                 resultList.push(event);
             }, this);
             return resultList;
