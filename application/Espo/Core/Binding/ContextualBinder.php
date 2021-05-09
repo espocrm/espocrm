@@ -65,7 +65,7 @@ class ContextualBinder
     }
 
     /**
-     * Bind an inteface to a specific service.
+     * Bind an interface to a specific service.
      *
      * @param $key An interface, parameter name (`$name`) or interface with a parameter name (`Interface $name`).
      * @param $serviceName A service name.
@@ -86,7 +86,7 @@ class ContextualBinder
     }
 
     /**
-     * Bind an inteface or parameter name to a specific value.
+     * Bind an interface or parameter name to a specific value.
      *
      * @param $key An interface, parameter name (`$name`) or interface with a parameter name (`Interface $name`).
      * @param $value A value of any type.
@@ -103,7 +103,7 @@ class ContextualBinder
     }
 
     /**
-     * Bind an inteface or parameter name to a callback.
+     * Bind an interface or parameter name to a callback.
      *
      * @param $key An interface, parameter name (`$name`) or interface with a parameter name (`Interface $name`).
      * @param $callback A callback that will resolve a dependency.

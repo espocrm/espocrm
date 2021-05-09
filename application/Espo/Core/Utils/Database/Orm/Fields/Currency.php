@@ -35,7 +35,7 @@ class Currency extends Base
 {
     protected function load($fieldName, $entityType)
     {
-        $converedFieldName = $fieldName . 'Converted';
+        $convertedFieldName = $fieldName . 'Converted';
 
         $alias = $fieldName . 'CurrencyRate';
 

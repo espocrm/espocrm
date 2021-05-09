@@ -12,7 +12,7 @@
     },
     "links": {
         "layoutSet": {
-            "type": "belengsTo",
+            "type": "belongsTo",
             "entity": "LayoutSet",
             "foreign": "layoutRecords"
         }

@@ -38,7 +38,7 @@ class EmailAddress extends \Espo\Core\AclPortal\Base
     {
         $id = $entity->id;
 
-        $isFobidden = false;
+        $isForbidden = false;
 
         $repository = $this->getEntityManager()->getRepository('EmailAddress');
 
@@ -46,11 +46,11 @@ class EmailAddress extends \Espo\Core\AclPortal\Base
             $entityWithSameAddressList = $repository->getEntityListByAddressId($id, $excludeEntity);
             foreach ($entityWithSameAddressList as $e) {
                 if (!$this->getAclManager()->check($user, $e, 'edit')) {
-                    $isFobidden = true;
+                    $isForbidden = true;
                     break;
                 }
             }
         }
-        return !$isFobidden;
+        return !$isForbidden;
     }
 }

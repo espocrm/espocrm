@@ -94,7 +94,7 @@ class Auth
     }
 
     /**
-     * Logged in succesfully.
+     * Logged in successfully.
      */
     public function isResolved() : bool
     {

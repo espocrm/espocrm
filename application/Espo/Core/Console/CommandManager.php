@@ -38,7 +38,7 @@ use Espo\Core\{
 use Espo\Core\Exceptions\Error;
 
 /**
- * Processes console commands. A console command can be run in CLI by runnig `php command.php`.
+ * Processes console commands. A console command can be run in CLI by running `php command.php`.
  */
 class CommandManager
 {
@@ -56,7 +56,7 @@ class CommandManager
         $command = isset($argv[1]) ? trim($argv[1]) : null;
 
         if (!$command) {
-            $msg = "Command name is not specifed.";
+            $msg = "Command name is not specified.";
 
             echo $msg . "\n";
 

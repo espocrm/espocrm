@@ -39,7 +39,7 @@ use Espo\Core\{
 };
 
 /**
- * An implementation for access checking for entities. Can be overriden in `Acl` namespece.
+ * An implementation for access checking for entities. Can be overridden in `Acl` namespace.
  */
 class Acl implements ScopeAcl, EntityAcl
 {

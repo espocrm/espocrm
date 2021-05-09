@@ -38,7 +38,7 @@ class PhoneNumber extends \Espo\Core\AclPortal\Base
     {
         $id = $entity->id;
 
-        $isFobidden = false;
+        $isForbidden = false;
 
         $repository = $this->getEntityManager()->getRepository('PhoneNumber');
 
@@ -46,12 +46,12 @@ class PhoneNumber extends \Espo\Core\AclPortal\Base
             $entityWithSameNumberList = $repository->getEntityListByPhoneNumberId($id, $excludeEntity);
             foreach ($entityWithSameNumberList as $e) {
                 if (!$this->getAclManager()->check($user, $e, 'edit')) {
-                    $isFobidden = true;
+                    $isForbidden = true;
                     break;
                 }
             }
         }
 
-        return !$isFobidden;
+        return !$isForbidden;
     }
 }

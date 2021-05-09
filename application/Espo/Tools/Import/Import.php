@@ -222,10 +222,10 @@ class Import
         $delimiter = str_replace('\t', "\t", $delimiter);
 
         if (!$this->user->isAdmin()) {
-            $forbiddenAttrbuteList = $this->aclManager->getScopeForbiddenAttributeList($this->user, $this->entityType, 'edit');
+            $forbiddenAttributeList = $this->aclManager->getScopeForbiddenAttributeList($this->user, $this->entityType, 'edit');
 
             foreach ($attributeList as $i => $attribute) {
-                if (in_array($attribute, $forbiddenAttrbuteList)) {
+                if (in_array($attribute, $forbiddenAttributeList)) {
                     unset($attributeList[$i]);
                 }
             }

@@ -360,7 +360,7 @@ class User extends Record implements
         if ($user->isSystem()) throw new Forbidden();
 
         if (!$user->get('emailAddress')) {
-            throw new Forbidden("Generate new password: Can't process because user desn't have email address.");
+            throw new Forbidden("Generate new password: Can't process because user doesn't have email address.");
         }
 
         if (!$this->emailSender->hasSystemSmtp() && !$this->getConfig()->get('internalSmtpServer')) {
@@ -570,7 +570,7 @@ class User extends Record implements
         $sender = $this->emailSender->create();
 
         if (!$this->emailSender->hasSystemSmtp()) {
-            $sender->withStmpParams([
+            $sender->withSmtpParams([
                 'server' => $this->getConfig()->get('internalSmtpServer'),
                 'port' => $this->getConfig()->get('internalSmtpPort'),
                 'auth' => $this->getConfig()->get('internalSmtpAuth'),

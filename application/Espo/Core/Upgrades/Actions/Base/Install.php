@@ -222,7 +222,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base
         $this->afterRunAction();
         $this->finalize();
 
-        /* delete unziped files */
+        /* delete unzipped files */
         $this->deletePackageFiles();
 
         if ($this->getManifestParam('skipBackup')) {

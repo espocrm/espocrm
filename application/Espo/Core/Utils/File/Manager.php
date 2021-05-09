@@ -557,7 +557,7 @@ class Manager
     }
 
     /**
-     * Copy files from one direcoty to another.
+     * Copy files from one directory to another.
      * Ex. $sourcePath = 'data/uploads/extensions/file.json',
      * $destPath = 'data/uploads/backup', result will be data/uploads/backup/data/uploads/backup/file.json.
      *
@@ -856,7 +856,7 @@ class Manager
     }
 
     /**
-     * Check if $filename is file. If $filename doesn'ot exist, check by pathinfo.
+     * Check if $filename is file. If $filename doesn't exist, check by pathinfo.
      *
      * @param string $filename
      * @param string $basePath
@@ -1072,7 +1072,7 @@ class Manager
 
     /**
      * Get exists path.
-     * Ex. if check /var/www/espocrm/custom/someFile.php and this file doesn't extist,
+     * Ex. if check /var/www/espocrm/custom/someFile.php and this file doesn't exist,
      * result will be /var/www/espocrm/custom
      *
      * @param  string | array $path

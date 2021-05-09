@@ -91,7 +91,7 @@ abstract class BaseFunction
     public abstract function process(ArgumentList $args);
 
     /**
-     * Evaluates an argument or argunent list.
+     * Evaluates an argument or argument list.
      *
      * @param $item Argument or ArgumentList.
      * @return mixed A result of evaluation. An array if an argument list was passed.

@@ -686,7 +686,7 @@ abstract class Base
     }
 
     /**
-     * Unzip a package archieve
+     * Unzip a package archive
      *
      * @return void
      */
@@ -701,7 +701,7 @@ abstract class Base
 
         $res = $this->getZipUtil()->unzip($packageArchivePath, $packagePath);
         if ($res === false) {
-            $this->throwErrorAndRemovePackage('Unnable to unzip the file - '.$packagePath.'.', false, false);
+            $this->throwErrorAndRemovePackage('Unable to unzip the file - '.$packagePath.'.', false, false);
         }
     }
 

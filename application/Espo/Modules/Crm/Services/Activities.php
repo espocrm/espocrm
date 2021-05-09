@@ -125,7 +125,7 @@ class Activities implements
     }
 
     protected function getActivitiesUserMeetingQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+        Entity $entity, array $statusList = [], $isHistory = false, $additionalSelectParams = null
     ) {
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
 
@@ -174,7 +174,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $query = Select::fromRaw($selectParams);
 
@@ -182,7 +182,7 @@ class Activities implements
     }
 
     protected function getActivitiesUserCallQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+        Entity $entity, array $statusList = [], $isHistory = false, $additionalSelectParams = null
     ) {
         $selectManager = $this->getSelectManagerFactory()->create('Call');
 
@@ -231,7 +231,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $query = Select::fromRaw($selectParams);
 
@@ -239,12 +239,12 @@ class Activities implements
     }
 
     protected function getActivitiesUserEmailQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+        Entity $entity, array $statusList = [], $isHistory = false, $additionalSelectParams = null
     ) {
         if ($entity->isPortal() && $entity->get('contactId')) {
             $contact = $this->getEntityManager()->getEntity('Contact', $entity->get('contactId'));
             if ($contact) {
-                return $this->getActivitiesEmailQuery($contact, $statusList, $isHistory, $additinalSelectParams);
+                return $this->getActivitiesEmailQuery($contact, $statusList, $isHistory, $additionalSelectParams);
             }
         }
 
@@ -282,7 +282,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $query = Select::fromRaw($selectParams);
 
@@ -290,7 +290,7 @@ class Activities implements
     }
 
     protected function getActivitiesMeetingQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+        Entity $entity, array $statusList = [], $isHistory = false, $additionalSelectParams = null
     ) {
         $scope = $entity->getEntityType();
         $id = $entity->id;
@@ -298,7 +298,7 @@ class Activities implements
         $methodName = 'getActivities' . $scope . 'MeetingQuery';
 
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+            return $this->$methodName($entity, $statusList, $isHistory, $additionalSelectParams);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Meeting');
@@ -363,7 +363,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $query = Select::fromRaw($selectParams);
 
@@ -407,7 +407,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $query = Select::fromRaw($selectParams);
 
@@ -417,7 +417,7 @@ class Activities implements
     }
 
     protected function getActivitiesCallQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+        Entity $entity, array $statusList = [], $isHistory = false, $additionalSelectParams = null
     ) {
         $scope = $entity->getEntityType();
         $id = $entity->id;
@@ -425,7 +425,7 @@ class Activities implements
         $methodName = 'getActivities' .$scope . 'CallQuery';
 
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+            return $this->$methodName($entity, $statusList, $isHistory, $additionalSelectParams);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Call');
@@ -490,7 +490,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $query = Select::fromRaw($selectParams);
 
@@ -532,7 +532,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $query = Select::fromRaw($selectParams);
 
@@ -542,14 +542,14 @@ class Activities implements
     }
 
     protected function getActivitiesEmailQuery(
-        Entity $entity, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+        Entity $entity, array $statusList = [], $isHistory = false, $additionalSelectParams = null
     ) {
         $scope = $entity->getEntityType();
         $id = $entity->id;
 
         $methodName = 'getActivities' .$scope . 'EmailQuery';
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+            return $this->$methodName($entity, $statusList, $isHistory, $additionalSelectParams);
         }
 
         $selectManager = $this->getSelectManagerFactory()->create('Email');
@@ -616,7 +616,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $query = Select::fromRaw($selectParams);
 
@@ -651,7 +651,7 @@ class Activities implements
 
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $queryList[] = Select::fromRaw($selectParams);
 
@@ -688,7 +688,7 @@ class Activities implements
         $selectParams['whereClause']['eea.entityId'] = $id;
         $selectManager->applyAccess($selectParams);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         $queryList[] = Select::fromRaw($selectParams);
 
@@ -1311,7 +1311,7 @@ class Activities implements
     }
 
     protected function getActivitiesQuery(
-        Entity $entity, $scope, array $statusList = [], $isHistory = false, $additinalSelectParams = null
+        Entity $entity, $scope, array $statusList = [], $isHistory = false, $additionalSelectParams = null
     ) {
         $serviceName = 'Activities' . $entity->getEntityType();
         if ($this->getServiceFactory()->checkExists($serviceName)) {
@@ -1320,7 +1320,7 @@ class Activities implements
             $methodName = 'getActivities' . $scope . 'Query';
 
             if (method_exists($service, $methodName)) {
-                return $service->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+                return $service->$methodName($entity, $statusList, $isHistory, $additionalSelectParams);
             }
         }
 
@@ -1329,7 +1329,7 @@ class Activities implements
         if (method_exists($selectManager, 'getActivitiesSelectParams')) {
             $selectParams = $selectManager->getActivitiesSelectParams($entity, $statusList, $isHistory);
 
-            $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+            $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
             $selectParams['from'] = $scope;
 
@@ -1339,12 +1339,12 @@ class Activities implements
         $methodName = 'getActivities' . $scope . 'Query';
 
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($entity, $statusList, $isHistory, $additinalSelectParams);
+            return $this->$methodName($entity, $statusList, $isHistory, $additionalSelectParams);
         }
 
         $selectParams = $this->getActivitiesSelectParams($entity, $scope, $statusList, $isHistory);
 
-        $selectParams = $selectManager->mergeSelectParams($selectParams, $additinalSelectParams);
+        $selectParams = $selectManager->mergeSelectParams($selectParams, $additionalSelectParams);
 
         return Select::fromRaw($selectParams);
     }

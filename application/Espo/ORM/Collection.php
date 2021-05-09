@@ -34,7 +34,7 @@ use Traversable;
 /**
  * A collection of entities.
  *
- * @todo Extend from Traversable once the min suppoted PHP version is 7.4.
+ * @todo Extend from Traversable once the min supported PHP version is 7.4.
  */
 interface Collection/* extends Traversable*/
 {

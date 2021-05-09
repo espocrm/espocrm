@@ -43,7 +43,7 @@ trait SelectingBuilderTrait
      * * `where(string $key, string $value)`
      *
      * @param array|string $keyOrClause A key or where clause.
-     * @param ?array|string $value A value. If the first argument is an array, then should be omited.
+     * @param ?array|string $value A value. If the first argument is an array, then should be omitted.
      */
     public function where($keyOrClause = [], $value = null) : self
     {

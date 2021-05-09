@@ -2389,10 +2389,10 @@ class SelectManager
 
         $textFilterForFullTextSearch = $textFilter;
 
-        $skipWidlcards = false;
+        $skipWildcards = false;
 
         if (mb_strpos($textFilter, '*') !== false) {
-            $skipWidlcards = true;
+            $skipWildcards = true;
             $textFilter = str_replace('*', '%', $textFilter);
         } else {
             if (!$useFullTextSearch) {
@@ -2524,7 +2524,7 @@ class SelectManager
                 continue;
             }
 
-            if (!$skipWidlcards) {
+            if (!$skipWildcards) {
                 if (
                     mb_strlen($textFilter) >= $textFilterContainsMinLength
                     &&

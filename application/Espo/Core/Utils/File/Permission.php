@@ -218,7 +218,7 @@ class Permission
             return false;
         }
 
-        //conver to octal value
+        //convert to octal value
         foreach($permission as $key => $val) {
             if (is_string($val)) {
                 $permission[$key]= base_convert($val,8,10);

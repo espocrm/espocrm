@@ -152,7 +152,7 @@ class Converter
     }
 
     /**
-     * Schema convertation process
+     * Schema conversation process
      *
      * @param  array  $ormMeta
      * @param  array|null $entityList

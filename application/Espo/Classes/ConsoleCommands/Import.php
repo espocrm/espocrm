@@ -79,7 +79,7 @@ class Import implements Command
                 $countUpdated = $result->countUpdated;
             }
             catch (Throwable $e) {
-                $this->out("Error occured: ".$e->getMessage()."\n");
+                $this->out("Error occurred: ".$e->getMessage()."\n");
 
                 return;
             }
@@ -96,7 +96,7 @@ class Import implements Command
                 $service->revert($id);
             }
             catch (Throwable $e) {
-                $this->out("Error occured: " . $e->getMessage() . "\n");
+                $this->out("Error occurred: " . $e->getMessage() . "\n");
 
                 return;
             }
@@ -113,7 +113,7 @@ class Import implements Command
                 $result = $service->importById($id, true, $forceResume);
             }
             catch (Throwable $e) {
-                $this->out("Error occured: " . $e->getMessage() . "\n");
+                $this->out("Error occurred: " . $e->getMessage() . "\n");
 
                 return;
             }

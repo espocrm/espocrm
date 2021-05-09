@@ -171,7 +171,7 @@ class BaseMapper implements Mapper
     }
 
     /**
-     * Select enities from DB by a SQL query.
+     * Select entities from DB by a SQL query.
      */
     public function selectBySql(string $entityType, string $sql) : SthCollection
     {
@@ -410,7 +410,7 @@ class BaseMapper implements Mapper
     }
 
     /**
-     * Get a number of related enities in DB.
+     * Get a number of related entities in DB.
      */
     public function countRelated(Entity $entity, string $relationName, ?Select $select = null) : int
     {
@@ -605,7 +605,7 @@ class BaseMapper implements Mapper
         $id = $entity->id;
 
         if (empty($id) || empty($relationName)) {
-            throw new RuntimeException("Cant't mass relate on empty ID or relation name.");
+            throw new RuntimeException("Can't mass relate on empty ID or relation name.");
         }
 
         $relDefs = $entity->getRelations()[$relationName];
@@ -1486,15 +1486,15 @@ class BaseMapper implements Mapper
     protected function getManyManyAdditionalSelect(Entity $entity, string $relationName) : array
     {
         $foreign = $entity->getRelationParam($relationName, 'foreign');
-        $foregnEntityType = $entity->getRelationParam($relationName, 'entity');
+        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         $middleName = lcfirst($entity->getRelationParam($relationName, 'relationName'));
 
-        if (!$foreign || !$foregnEntityType) {
+        if (!$foreign || !$foreignEntityType) {
             return [];
         }
 
-        $foreignEntity = $this->entityFactory->create($foregnEntityType);
+        $foreignEntity = $this->entityFactory->create($foreignEntityType);
 
         $map = $foreignEntity->getRelationParam($foreign, 'columnAttributeMap') ?? [];
 

@@ -57,7 +57,7 @@ trait MySQLPlatform
                 continue;
             }
 
-            // Espo: handle remaned autoincrement column
+            // Espo: handle remained autoincrement column
             if ($column->getAutoincrement()) {
                 $oldColumnOptions = array_diff_key($column->toArray(), array_flip(['name', 'type', 'collation']));
                 $diff->removedColumns[$oldColumnName] = new Column($oldColumnName, $column->getType(), $oldColumnOptions);

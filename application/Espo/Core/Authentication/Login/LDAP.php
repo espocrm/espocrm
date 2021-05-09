@@ -288,7 +288,7 @@ class LDAP extends Espo
         foreach ($ldapFields as $espo => $ldap) {
             $ldap = strtolower($ldap);
             if (isset($userData[$ldap][0])) {
-                $GLOBALS['log']->debug('LDAP: Create a user wtih ['.$espo.'] = ['.$userData[$ldap][0].'].');
+                $GLOBALS['log']->debug('LDAP: Create a user with ['.$espo.'] = ['.$userData[$ldap][0].'].');
                 $data[$espo] = $userData[$ldap][0];
             }
         }
