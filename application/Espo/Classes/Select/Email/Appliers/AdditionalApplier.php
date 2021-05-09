@@ -116,7 +116,13 @@ class AdditionalApplier extends AdditionalApplierBase
             return false;
         }
 
-        foreach ($searchParams->getWhere()->getItems() as $item) {
+        $whereItemList = [];
+
+        if ($searchParams->getWhere()) {
+            $whereItemList = $searchParams->getWhere()->getItems();
+        }
+
+        foreach ($whereItemList as $item) {
             $itemAttribute = $item->getAttribute();
 
             if (
