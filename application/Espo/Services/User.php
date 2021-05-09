@@ -686,7 +686,7 @@ class User extends Record implements
         $sender = $this->emailSender->create();
 
         if (!$this->emailSender->hasSystemSmtp()) {
-            $sender->withStmpParams([
+            $sender->withSmtpParams([
                 'server' => $this->getConfig()->get('internalSmtpServer'),
                 'port' => $this->getConfig()->get('internalSmtpPort'),
                 'auth' => $this->getConfig()->get('internalSmtpAuth'),
