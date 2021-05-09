@@ -39,7 +39,7 @@ use Espo\Core\{
 use Throwable;
 
 /**
- * Processes an error output. If an exception occured, it will be passed to here.
+ * Processes an error output. If an exception occurred, it will be passed to here.
  */
 class ErrorOutput
 {
