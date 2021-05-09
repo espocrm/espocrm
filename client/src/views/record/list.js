@@ -229,17 +229,17 @@ define('views/record/list', 'view', function (Dep) {
 
             $scrollable.off('scroll.list-' + this.cid);
             $scrollable.on('scroll.list-' + this.cid, function (e) {
-                cotrolSticking();
+                controlSticking();
             }.bind(this));
 
             $window.off('resize.list-' + this.cid);
             $window.on('resize.list-' + this.cid, function (e) {
-                cotrolSticking();
+                controlSticking();
             }.bind(this));
 
             this.on('check', function () {
                 if (this.checkedList.length === 0 && !this.allResultIsChecked) return;
-                cotrolSticking();
+                controlSticking();
             }, this);
 
             this.once('remove', function () {
@@ -247,7 +247,7 @@ define('views/record/list', 'view', function (Dep) {
                 $window.off('resize.list-' + this.cid);
             });
 
-            var cotrolSticking = function () {
+            var controlSticking = function () {
                 if (this.checkedList.length === 0 && !this.allResultIsChecked) return;
 
                 var middleTop = getOffsetTop($middle.get(0));
@@ -329,7 +329,7 @@ define('views/record/list', 'view', function (Dep) {
         quickEditDisabled: false,
 
         /**
-         * @param {array} Columns layout. Will be convered in 'Bull' typed layout for a fields rendering.
+         * @param {array} Columns layout. Will be converted in 'Bull' typed layout for a fields rendering.
          *
          */
         listLayout: null,
@@ -1808,7 +1808,7 @@ define('views/record/list', 'view', function (Dep) {
                         this.removeRecordFromList(id);
                     }.bind(this),
                     error: function () {
-                        this.notify('Error occured', 'error');
+                        this.notify('Error occurred', 'error');
                         this.collection.push(model);
                     }.bind(this)
                 });

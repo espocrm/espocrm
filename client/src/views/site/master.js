@@ -88,7 +88,7 @@ define('views/site/master', 'view', function (Dep) {
             this.adjustContent();
 
             if (this.getConfig().get('maintenanceMode')) {
-                this.createView('dalog', 'views/modal', {
+                this.createView('dialog', 'views/modal', {
                     templateContent: '<div class="text-danger">{{complexText viewObject.options.message}}</div>',
                     headerText: this.translate('maintenanceMode', 'fields', 'Settings'),
                     backdrop: true,
@@ -103,7 +103,7 @@ define('views/site/master', 'view', function (Dep) {
                     view.render();
                 });
             } else if (this.getHelper().getAppParam('auth2FARequired')) {
-                this.createView('dalog', 'views/modals/auth2fa-required', {}, function (view) {
+                this.createView('dialog', 'views/modals/auth2fa-required', {}, function (view) {
                     view.render();
                 });
             }

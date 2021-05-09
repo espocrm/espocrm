@@ -58,15 +58,15 @@ Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model
 
             var attributeList = Espo.Utils.clone(this.options.attributeList || []);
 
-            var filteredAttribueList = [];
+            var filteredAttributeList = [];
             attributeList.forEach(function (item) {
                 if ((this.options.attributeDefs[item] || {}).readOnly) {
                     return;
                 }
-                filteredAttribueList.push(item);
+                filteredAttributeList.push(item);
             }, this);
 
-            attributeList = filteredAttribueList;
+            attributeList = filteredAttributeList;
 
             this.createView('edit', 'views/admin/layouts/record/edit-attributes', {
                 el: this.options.el + ' .edit-container',

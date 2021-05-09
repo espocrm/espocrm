@@ -27,7 +27,7 @@
  ************************************************************************/
 
 define('views/layout-set/fields/layout-list', [
-    'views/fields/multi-enum', 'views/admin/layouts/index'], function (Dep, LaouytsIndex) {
+    'views/fields/multi-enum', 'views/admin/layouts/index'], function (Dep, LayoutsIndex) {
 
     return Dep.extend({
 
@@ -55,7 +55,7 @@ define('views/layout-set/fields/layout-list', [
                 return this.translate(v1, 'scopeNames').localeCompare(this.translate(v2, 'scopeNames'));
             }.bind(this));
 
-            var dataList = LaouytsIndex.prototype.getLayoutScopeDataList.call(this);
+            var dataList = LayoutsIndex.prototype.getLayoutScopeDataList.call(this);
 
             dataList.forEach(function (item1) {
                 item1.typeList.forEach(function (type) {

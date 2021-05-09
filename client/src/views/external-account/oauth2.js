@@ -277,20 +277,20 @@ Espo.define('views/external-account/oauth2', ['view', 'model'], function (Dep, M
                     }).done(function (response) {
                         this.notify(false);
                         if (response === true) {
-                            this.setConneted();
+                            this.setConnected();
                         } else {
-                            this.setNotConneted();
+                            this.setNotConnected();
                         }
                         this.$el.find('[data-action="connect"]').removeClass('disabled');
                     }.bind(this));
 
                 } else {
-                    this.notify('Error occured', 'error');
+                    this.notify('Error occurred', 'error');
                 }
             });
         },
 
-        setConneted: function () {
+        setConnected: function () {
             this.isConnected = true;
             this.$el.find('[data-action="connect"]').addClass('hidden');;
             this.$el.find('.connected-label').removeClass('hidden');

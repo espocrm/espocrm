@@ -34,7 +34,7 @@ Espo.define('views/admin/label-manager/category', 'view', function (Dep) {
 
         data: function () {
             return {
-                categoryDataList: this.getCategotyDataList()
+                categoryDataList: this.getCategoryDataList()
             };
         },
 
@@ -48,7 +48,7 @@ Espo.define('views/admin/label-manager/category', 'view', function (Dep) {
             this.categoryData = this.options.categoryData;
         },
 
-        getCategotyDataList: function () {
+        getCategoryDataList: function () {
             var labelList = Object.keys(this.categoryData);
 
             labelList.sort(function (v1, v2) {

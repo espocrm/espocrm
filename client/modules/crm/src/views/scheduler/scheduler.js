@@ -392,8 +392,8 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
         convertEventList: function (list) {
             var resultList = [];
 
-            list.forEach(function (iten) {
-                var event = this.convertEvent(iten);
+            list.forEach(function (item) {
+                var event = this.convertEvent(item);
 
                 if (!event) {
                     return;

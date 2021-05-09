@@ -392,7 +392,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                                  .append(removeLink)
                                  .append(
                                     $('<span class="preview">' + preview + '</span>')
-                                    .css('width', 'cacl(100% - 30px)')
+                                    .css('width', 'calc(100% - 30px)')
                                 );
 
             var $container = $('<div>').append($att);

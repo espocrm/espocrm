@@ -163,7 +163,7 @@ define('views/main', 'view', function (Dep) {
             }.bind(this));
         },
 
-        addMenuItem: function (type, item, toBeginnig, doNotReRender) {
+        addMenuItem: function (type, item, toBeginning, doNotReRender) {
             if (item) {
                 item.name = item.name || item.action;
                 var name = item.name;
@@ -184,7 +184,7 @@ define('views/main', 'view', function (Dep) {
             }
 
             var method = 'push';
-            if (toBeginnig) {
+            if (toBeginning) {
                 method  = 'unshift';
             }
             this.menu[type][method](item);
