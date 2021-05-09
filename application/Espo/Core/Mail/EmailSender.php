@@ -144,7 +144,7 @@ class EmailSender
     }
 
     /**
-     * Whether system STMP is configured.
+     * Whether system SMTP is configured.
      */
     public function hasSystemSmtp(): bool
     {

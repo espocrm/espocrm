@@ -66,9 +66,9 @@ class Util
         $arguments = $expression;
 
         if (strpos($expression, ':')) {
-            $dilimeterPosition = strpos($expression, ':');
-            $function = substr($expression, 0, $dilimeterPosition);
-            $arguments = substr($expression, $dilimeterPosition + 1);
+            $delimiterPosition = strpos($expression, ':');
+            $function = substr($expression, 0, $delimiterPosition);
+            $arguments = substr($expression, $delimiterPosition + 1);
 
             if (substr($arguments, 0, 1) === '(' && substr($arguments, -1) === ')') {
                 $arguments = substr($arguments, 1, -1);

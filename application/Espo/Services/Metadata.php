@@ -79,7 +79,7 @@ class Metadata
             foreach ($entityTypeList as $entityType) {
                 $linksDefs = $this->metadata->get(['entityDefs', $entityType, 'links'], []);
 
-                $fobiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType);
+                $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType);
 
                 foreach ($linksDefs as $link => $defs) {
                     $type = $defs['type'] ?? null;
@@ -122,7 +122,7 @@ class Metadata
                     }
 
                     if ($hasField) {
-                        if (!in_array($link, $fobiddenFieldList)) {
+                        if (!in_array($link, $forbiddenFieldList)) {
                             continue;
                         }
 

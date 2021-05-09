@@ -498,15 +498,15 @@ class Parser
 
                     $argumentList = $this->parseArgumentListFromFunctionContent($functionContent);
 
-                    $argumentSplitedList = [];
+                    $argumentSplittedList = [];
 
                     foreach ($argumentList as $argument) {
-                        $argumentSplitedList[] = $this->split($argument);
+                        $argumentSplittedList[] = $this->split($argument);
                     }
 
                     return (object) [
                         'type' => $functionName,
-                        'value' => $argumentSplitedList,
+                        'value' => $argumentSplittedList,
                     ];
                 }
             }

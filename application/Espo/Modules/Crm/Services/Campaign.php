@@ -343,7 +343,7 @@ class Campaign extends \Espo\Services\Record implements
         if ($checkAcl) {
             $targetEntityType = $campaign->getRelationParam($link, 'entity');
             if (!$this->getAcl()->check($targetEntityType, 'read')) {
-                throw new Forbidden("Could not mail merge campaign because access to target enity type is forbidden.");
+                throw new Forbidden("Could not mail merge campaign because access to target entity type is forbidden.");
             }
         }
 

@@ -57,7 +57,7 @@ trait MySQLPlatform
                 continue;
             }
 
-            // Espo: handle remaned autoincrement column
+            // Espo: handle remained autoincrement column
             if ($column->getAutoincrement()) {
                 $oldColumnOptions = array_diff_key($column->toArray(), array_flip(['name', 'type', 'collation']));
                 $diff->removedColumns[$oldColumnName] = new Column($oldColumnName, $column->getType(), $oldColumnOptions);
@@ -73,8 +73,8 @@ trait MySQLPlatform
             $columnArray['comment'] = $this->getColumnComment($column);
 
             // Espo: do not rename the column
-            /*$queryParts[]           =  'CHANGE ' . $oldColumnName->getQuotedName($this) . ' '
-                    . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); */
+            /* $queryParts[] = 'CHANGE ' . $oldColumnName->getQuotedName($this) . ' '
+                   $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray); */
             $queryParts[]           =  'ADD '
                     . $this->getColumnDeclarationSQL($column->getQuotedName($this), $columnArray);
             // Espo: end

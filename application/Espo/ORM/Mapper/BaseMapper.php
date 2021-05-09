@@ -638,7 +638,7 @@ class BaseMapper implements RDBMapper
         $id = $entity->id;
 
         if (empty($id) || empty($relationName)) {
-            throw new RuntimeException("Cant't mass relate on empty ID or relation name.");
+            throw new RuntimeException("Can't mass relate on empty ID or relation name.");
         }
 
         $relType = $entity->getRelationType($relationName);
@@ -1539,15 +1539,15 @@ class BaseMapper implements RDBMapper
     protected function getManyManyAdditionalSelect(Entity $entity, string $relationName): array
     {
         $foreign = $entity->getRelationParam($relationName, 'foreign');
-        $foregnEntityType = $entity->getRelationParam($relationName, 'entity');
+        $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
         $middleName = lcfirst($entity->getRelationParam($relationName, 'relationName'));
 
-        if (!$foreign || !$foregnEntityType) {
+        if (!$foreign || !$foreignEntityType) {
             return [];
         }
 
-        $foreignEntity = $this->entityFactory->create($foregnEntityType);
+        $foreignEntity = $this->entityFactory->create($foreignEntityType);
 
         $map = $foreignEntity->getRelationParam($foreign, 'columnAttributeMap') ?? [];
 

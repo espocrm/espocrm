@@ -154,10 +154,10 @@ class Converter
     }
 
     /**
-     * Schema convertation process.
+     * Schema conversation process.
      *
-     * @param  array  $ormMeta
-     * @param  array|null $entityList
+     * @param array $ormMeta
+     * @param array|null $entityList
      *
      * @return \Doctrine\DBAL\Schema\Schema
      */

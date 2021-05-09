@@ -1147,14 +1147,14 @@ abstract class BaseQueryComposer implements QueryComposer
         $entityType = $entity->getEntityType();
 
         if (strpos($attribute, ':')) {
-            $dilimeterPosition = strpos($attribute, ':');
-            $function = substr($attribute, 0, $dilimeterPosition);
+            $delimiterPosition = strpos($attribute, ':');
+            $function = substr($attribute, 0, $delimiterPosition);
 
             if (in_array($function, Functions::$matchFunctionList)) {
                 return $this->convertMatchExpression($entity, $attribute, $params);
             }
 
-            $attribute = substr($attribute, $dilimeterPosition + 1);
+            $attribute = substr($attribute, $delimiterPosition + 1);
 
             if (substr($attribute, 0, 1) === '(' && substr($attribute, -1) === ')') {
                 $attribute = substr($attribute, 1, -1);
@@ -1341,14 +1341,14 @@ abstract class BaseQueryComposer implements QueryComposer
             $list = [];
 
             if (!is_array($defs['order'])) {
-                throw new LogicException("Bad custom order defenition.");
+                throw new LogicException("Bad custom order definition.");
             }
 
             $modifiedOrder = [];
 
             foreach ($defs['order'] as $item) {
                 if (!is_array($item) && !isset($item[0])) {
-                    throw new LogicException("Bad custom order defenition.");
+                    throw new LogicException("Bad custom order definition.");
                 }
 
                 $newItem = [
@@ -2157,7 +2157,7 @@ abstract class BaseQueryComposer implements QueryComposer
     {
         $aliases = [];
 
-        $occuranceHash = [];
+        $occurrenceHash = [];
 
         foreach ($entity->getRelationList() as $name) {
             $type = $entity->getRelationType($name);
@@ -2166,17 +2166,17 @@ abstract class BaseQueryComposer implements QueryComposer
                 ($type === Entity::BELONGS_TO || $type === Entity::HAS_ONE) &&
                 !array_key_exists($name, $aliases)
             ) {
-                if (array_key_exists($name, $occuranceHash)) {
-                    $occuranceHash[$name]++;
+                if (array_key_exists($name, $occurrenceHash)) {
+                    $occurrenceHash[$name]++;
                 }
                 else {
-                    $occuranceHash[$name] = 0;
+                    $occurrenceHash[$name] = 0;
                 }
 
                 $suffix = '';
 
-                if ($occuranceHash[$name] > 0) {
-                    $suffix .= '_' . $occuranceHash[$name];
+                if ($occurrenceHash[$name] > 0) {
+                    $suffix .= '_' . $occurrenceHash[$name];
                 }
 
                 $aliases[$name] = $name . $suffix;

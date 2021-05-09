@@ -66,7 +66,7 @@ class Preload implements Runner
 
     protected function processException(Throwable $e)
     {
-        echo "Error occured." . PHP_EOL;
+        echo "Error occurred." . PHP_EOL;
 
         $msg = $e->getMessage();
 

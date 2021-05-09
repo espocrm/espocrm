@@ -215,7 +215,7 @@ class LeadCapture
 
         $campaign = null;
 
-        $campaingService = $this->serviceFactory->create('Campaign');
+        $campaignService = $this->serviceFactory->create('Campaign');
 
         if ($leadCapture->get('campaignId')) {
             $campaign = $this->entityManager->getEntity('Campaign', $leadCapture->get('campaignId'));
@@ -266,7 +266,7 @@ class LeadCapture
                     $isAlreadyOptedIn = true;
 
                     if ($campaign) {
-                        $campaingService->logOptedIn($campaign->id, null, $contact);
+                        $campaignService->logOptedIn($campaign->id, null, $contact);
                     }
 
                     $targetList = $this->entityManager->getEntity('TargetList', $leadCapture->get('targetListId'));
@@ -322,7 +322,7 @@ class LeadCapture
 
             if (!$duplicate) {
                 if ($campaign) {
-                    $campaingService->logLeadCreated($campaign->id, $lead);
+                    $campaignService->logLeadCreated($campaign->id, $lead);
                 }
             }
         }
@@ -335,7 +335,7 @@ class LeadCapture
                 ]);
 
             if ($campaign) {
-                $campaingService->logOptedIn($campaign->id, null, $targetLead);
+                $campaignService->logOptedIn($campaign->id, null, $targetLead);
             }
 
             $targetList = $this->entityManager->getEntity('TargetList', $leadCapture->get('targetListId'));

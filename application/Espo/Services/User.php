@@ -421,7 +421,7 @@ class User extends Record implements
 
         if (!$user->get('emailAddress')) {
             throw new Forbidden(
-                "Generate new password: Can't process because user desn't have email address."
+                "Generate new password: Can't process because user doesn't have email address."
             );
         }
 

@@ -687,10 +687,10 @@ class FieldManager
             $metaLinkDefs = isset($metaLinkDefs) ? $metaLinkDefs : array();
             $linkDefs = isset($linkDefs) ? $linkDefs : array();
 
-            $normalizedLinkdDefs = Util::merge($metaLinkDefs, $linkDefs);
-            if (!empty($normalizedLinkdDefs)) {
+            $normalizedLinkedDefs = Util::merge($metaLinkDefs, $linkDefs);
+            if (!empty($normalizedLinkedDefs)) {
                 $defs->links = (object) array(
-                    $fieldName => (object) $normalizedLinkdDefs,
+                    $fieldName => (object) $normalizedLinkedDefs,
                 );
             }
         }

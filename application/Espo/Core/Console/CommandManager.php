@@ -78,7 +78,7 @@ class CommandManager
         $command = isset($argv[1]) ? trim($argv[1]): null;
 
         if (!$command) {
-            throw new CommandNotSpecified("Command name is not specifed.");
+            throw new CommandNotSpecified("Command name is not specified.");
         }
 
         return ucfirst(Util::hyphenToCamelCase($command));

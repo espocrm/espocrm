@@ -34,7 +34,6 @@ use Espo\ORM\Entity;
 use Espo\Core\Formula\{
     Processor,
     ArgumentList,
-    Argument,
     Evaluatable,
     Exceptions\TooFewArguments,
     Exceptions\BadArgumentType,

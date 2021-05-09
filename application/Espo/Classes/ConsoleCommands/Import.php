@@ -81,7 +81,7 @@ class Import implements Command
                 $countUpdated = $result->countUpdated;
             }
             catch (Throwable $e) {
-                $io->writeLine("Error occured: ". $e->getMessage() . "");
+                $io->writeLine("Error occurred: ". $e->getMessage() . "");
 
                 return;
             }
@@ -98,7 +98,7 @@ class Import implements Command
                 $service->revert($id);
             }
             catch (Throwable $e) {
-                $io->writeLine("Error occured: " . $e->getMessage() . "");
+                $io->writeLine("Error occurred: " . $e->getMessage() . "");
 
                 return;
             }
@@ -115,7 +115,7 @@ class Import implements Command
                 $result = $service->importById($id, true, $forceResume);
             }
             catch (Throwable $e) {
-                $io->writeLine("Error occured: " . $e->getMessage() . "");
+                $io->writeLine("Error occurred: " . $e->getMessage() . "");
 
                 return;
             }

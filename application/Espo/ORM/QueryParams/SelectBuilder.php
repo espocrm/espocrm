@@ -221,7 +221,7 @@ class SelectBuilder implements Builder
     public function forShare(): self
     {
         if (isset($this->params['forUpdate'])) {
-            throw new RuntimeException("Can't use two lock modes togather.");
+            throw new RuntimeException("Can't use two lock modes together.");
         }
 
         $this->params['forShare'] = true;
@@ -235,7 +235,7 @@ class SelectBuilder implements Builder
     public function forUpdate(): self
     {
         if (isset($this->params['forShare'])) {
-            throw new RuntimeException("Can't use two lock modes togather.");
+            throw new RuntimeException("Can't use two lock modes together.");
         }
 
         $this->params['forUpdate'] = true;

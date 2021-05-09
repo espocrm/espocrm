@@ -29,14 +29,10 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
-use Espo\Core\Utils\Util;
-
 class Currency extends Base
 {
     protected function load($fieldName, $entityType)
     {
-        $converedFieldName = $fieldName . 'Converted';
-
         $alias = $fieldName . 'CurrencyRate';
 
         $defs = [
@@ -62,9 +58,11 @@ class Currency extends Base
         $mulExpression = "MUL:({$fieldName}, {$alias}.rate)";
 
         $params = $this->getFieldParams($fieldName);
+
         if (!empty($params['notStorable'])) {
             $defs[$entityType]['fields'][$fieldName]['notStorable'] = true;
-        } else {
+        }
+        else {
             $defs[$entityType]['fields'][$fieldName . 'Converted'] = [
                 'type' => 'float',
                 'select' => [

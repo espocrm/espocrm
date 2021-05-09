@@ -148,14 +148,14 @@ class ClientManager
             $as = $item['as'] ?? '';
             $rel = $item['rel'] ?? '';
             $type = $item['type'] ?? '';
-            $additinalPlaceholder = '';
+            $additionalPlaceholder = '';
 
             if (!empty($item['crossorigin'])) {
-                $additinalPlaceholder .= ' crossorigin';
+                $additionalPlaceholder .= ' crossorigin';
             }
 
             $linksHtml .= "\n        " .
-                "<link rel=\"{$rel}\" href=\"{$href}\" as=\"{$as}\" as=\"{$type}\"{$additinalPlaceholder}>";
+                "<link rel=\"{$rel}\" href=\"{$href}\" as=\"{$as}\" as=\"{$type}\"{$additionalPlaceholder}>";
         }
 
         $favicon196Path = $this->metadata->get(['app', 'client', 'favicon196']) ??

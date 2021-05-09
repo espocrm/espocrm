@@ -158,17 +158,17 @@ class Upgrade implements Command
             return;
         }
 
-        $currentVerison = $this->getCurrentVersion();
+        $currentVersion = $this->getCurrentVersion();
 
-        fwrite(\STDOUT, "Upgrade is complete. Current version is {$currentVerison}.\n");
+        fwrite(\STDOUT, "Upgrade is complete. Current version is {$currentVersion}.\n");
 
-        if ($lastVersion && $lastVersion !== $currentVerison && $fromVersion !== $currentVerison) {
+        if ($lastVersion && $lastVersion !== $currentVersion && $fromVersion !== $currentVersion) {
             fwrite(\STDOUT, "Newer version is available. Run command again to upgrade.\n");
 
             return;
         }
 
-        if ($lastVersion && $lastVersion === $currentVerison) {
+        if ($lastVersion && $lastVersion === $currentVersion) {
             fwrite(\STDOUT, "You have the latest version.\n");
 
             return;

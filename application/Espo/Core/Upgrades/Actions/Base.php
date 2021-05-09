@@ -764,7 +764,7 @@ abstract class Base
 
         $res = $this->getZipUtil()->unzip($packageArchivePath, $packagePath);
         if ($res === false) {
-            $this->throwErrorAndRemovePackage('Unnable to unzip the file - '.$packagePath.'.', false, false);
+            $this->throwErrorAndRemovePackage('Unable to unzip the file - '.$packagePath.'.', false, false);
         }
     }
 
