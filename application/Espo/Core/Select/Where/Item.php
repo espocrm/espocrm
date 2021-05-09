@@ -164,7 +164,7 @@ class Item
      *
      * @throws RuntimeException If a type does not support nested items.
      */
-    public function getItems(): array
+    public function getItemList(): array
     {
         if (!in_array($this->type, $this->withNestedItemsTypeList)) {
             throw new RuntimeException("Nested items not supported for '{$this->type}' type.");

@@ -97,7 +97,7 @@ class AdditionalApplier extends AdditionalApplierBase
             return null;
         }
 
-        foreach ($searchParams->getWhere()->getItems() as $item) {
+        foreach ($searchParams->getWhere()->getItemList() as $item) {
             if ($item->getType() === 'inFolder') {
                 return $item->getValue();
             }
@@ -119,7 +119,7 @@ class AdditionalApplier extends AdditionalApplierBase
         $whereItemList = [];
 
         if ($searchParams->getWhere()) {
-            $whereItemList = $searchParams->getWhere()->getItems();
+            $whereItemList = $searchParams->getWhere()->getItemList();
         }
 
         foreach ($whereItemList as $item) {
