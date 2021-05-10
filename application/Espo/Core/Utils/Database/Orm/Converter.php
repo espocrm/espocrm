@@ -707,7 +707,9 @@ class Converter
         $result = [];
 
         foreach ($defs['relations'] as $relationParams) {
-            if ($relationParams['type'] !== 'manyMany') continue;
+            if ($relationParams['type'] !== 'manyMany') {
+                continue;
+            }
 
             $relationEntityType = ucfirst($relationParams['relationName']);
 
@@ -717,7 +719,7 @@ class Converter
                     'id' => [
                         'type' => 'id',
                         'autoincrement' => true,
-                        'dbType' => 'varchar',
+                        'dbType' => 'bigint', // ignored because of `skipRebuild`
                     ],
                     'deleted' => [
                         'type' => 'bool'

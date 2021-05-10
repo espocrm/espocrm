@@ -331,11 +331,13 @@ class Converter
 
         $table = $this->getSchema()->createTable($tableName);
 
-        $table->addColumn('id', 'int', $this->getDbFieldParams(array(
+        $columnOptions = $this->getDbFieldParams([
             'type' => 'id',
-            'len' => $this->defaultLength['int'],
+            'len' => 20,
             'autoincrement' => true,
-        )));
+        ]);
+
+        $table->addColumn('id', 'bigint', $columnOptions);
 
         //add midKeys to a schema
         $uniqueIndex = [];
