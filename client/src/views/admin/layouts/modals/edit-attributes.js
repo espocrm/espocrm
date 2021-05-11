@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -47,22 +46,31 @@ Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model
             ];
 
             var model = new Model();
+
             model.name = 'LayoutManager';
+
             model.set(this.options.attributes || {});
 
             if (this.options.languageCategory) {
-                this.header = this.translate(this.options.name, this.options.languageCategory || 'fields', this.options.scope);
-            } else {
+                this.header = this.translate(
+                    this.options.name,
+                    this.options.languageCategory || 'fields',
+                    this.options.scope
+                );
+            }
+            else {
                 this.header = false;
             }
 
             var attributeList = Espo.Utils.clone(this.options.attributeList || []);
 
             var filteredAttributeList = [];
+
             attributeList.forEach(function (item) {
                 if ((this.options.attributeDefs[item] || {}).readOnly) {
                     return;
                 }
+
                 filteredAttributeList.push(item);
             }, this);
 
@@ -72,15 +80,17 @@ Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model
                 el: this.options.el + ' .edit-container',
                 attributeList: attributeList,
                 attributeDefs: this.options.attributeDefs,
-                model: model
+                model: model,
             });
         },
 
         actionSave: function () {
             var editView = this.getView('edit');
+
             var attrs = editView.fetch();
 
             editView.model.set(attrs, {silent: true});
+
             if (editView.validate()) {
                 return;
             }
@@ -89,6 +99,7 @@ Espo.define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model
             attributes = editView.model.attributes;
 
             this.trigger('after:save', attributes);
+
             return true;
         },
     });

@@ -26,7 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/misc/layout-manager-grid.css'], function (Dep, styleCss) {
+define(
+    'views/admin/layouts/grid',
+    ['views/admin/layouts/base', 'res!client/css/misc/layout-manager-grid.css'],
+    function (Dep, styleCss) {
 
     return Dep.extend({
 
@@ -51,15 +54,15 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 disabledFields: this.disabledFields,
                 panels: this.panels,
                 columnCount: this.columnCount,
-                panelDataList: this.getPanelDataList()
+                panelDataList: this.getPanelDataList(),
             };
             return data;
         },
 
         emptyCellTemplate:
-                            '<li class="empty disabled cell">' +
-                            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
-                            '</li>',
+            '<li class="empty disabled cell">' +
+            '<a href="javascript:" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
+            '</li>',
 
         events: _.extend({
             'click #layout a[data-action="addPanel"]': function () {
@@ -73,12 +76,14 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                         $(li).appendTo($('#layout ul.disabled'));
                     }
                 });
+
                 $(e.target).closest('ul.panels > li').remove();
 
                 var number = $(e.currentTarget).data('number');
                 this.clearView('panels-' + number);
 
                 var index = -1;
+
                 this.panels.forEach(function (item, i) {
                     if (item.number === number) {
                         index = i;
@@ -107,7 +112,9 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                         $(li).appendTo($('#layout ul.disabled'));
                     }
                 });
+
                 $(e.target).closest('ul.rows > li').remove();
+
                 this.normilizeDisabledItemList();
 
                 this.setIsChanged();
@@ -142,7 +149,9 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 this.makeDraggable();
             },
             'click #layout a[data-action="minusCell"]': function (e) {
-                if (this.columnCount < 2) return;
+                if (this.columnCount < 2) {
+                    return;
+                }
 
                 var $li = $(e.currentTarget).closest('li');
                 var $ul = $li.parent();
@@ -163,6 +172,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 var $ul = $li.find('ul');
 
                 var $empty = $($('#empty-cell-tpl').html());
+
                 $ul.append($empty);
 
                 var cellCount = $ul.children().length;
@@ -185,9 +195,11 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 };
 
                 this.panelDataAttributeList.forEach(function (item) {
-                    if (item === 'panelName') return;
-                    attributes[item] = this.panelsData[id][item];
+                    if (item === 'panelName') {
+                        return;
+                    }
 
+                    attributes[item] = this.panelsData[id][item];
                 }, this);
 
                 var attributeList = this.panelDataAttributeList;
@@ -196,14 +208,19 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 this.createView('dialog', 'views/admin/layouts/modals/panel-attributes', {
                     attributeList: attributeList,
                     attributeDefs: attributeDefs,
-                    attributes: attributes
+                    attributes: attributes,
                 }, function (view) {
                     view.render();
+
                     this.listenTo(view, 'after:save', function (attributes) {
                         $label.text(attributes.panelName);
                         $label.attr('data-is-custom', 'true');
+
                         this.panelDataAttributeList.forEach(function (item) {
-                            if (item === 'panelName') return;
+                            if (item === 'panelName') {
+                                return;
+                            }
+
                             this.panelsData[id][item] = attributes[item];
                         }, this);
                         view.close();
@@ -241,12 +258,15 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 rows: [[]],
                 number: number
             };
+
             this.panels.push(data);
 
             this.panelsData[number.toString()] = {};
 
             var $li = $('<li class="panel-layout"></li>');
+
             $li.attr('data-number', number);
+
             this.$el.find('ul.panels').append($li);
 
             this.createPanelView(data, true, function (view) {
@@ -259,8 +279,11 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
 
             this.panels.forEach(function (item) {
                 var o = {};
+
                 o.viewKey = 'panel-' + item.number;
+
                 o.number = item.number;
+
                 panelDataList.push(o);
             }, this);
 
@@ -270,8 +293,10 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
         cancel: function () {
             this.loadLayout(function () {
                 var countLoaded = 0;
+
                 this.setupPanels(function () {
                     countLoaded ++;
+
                     if (countLoaded === this.panels.length) {
                         this.reRender();
                     }
@@ -286,8 +311,11 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
 
             this.panels.forEach(function (panel, i) {
                 panel.number = i;
+
                 this.lastPanelNumber ++;
+
                 this.createPanelView(panel, false, callback);
+
                 this.panelsData[i.toString()] = panel;
             }, this);
         },
@@ -296,6 +324,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
             data.label = data.label || '';
 
             data.isCustomLabel = false;
+
             if (data.customLabel) {
                 data.labelTranslated = data.customLabel;
                 data.isCustomLabel = true;
@@ -313,6 +342,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                         row.push(false);
                     }
                 }
+
                 for (var i in row) {
                     if (row[i] != false) {
                         row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
@@ -329,11 +359,17 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 template: 'admin/layouts/grid-panel',
                 data: function () {
                     var o = Espo.Utils.clone(data);
+
                     o.dataAttributeList = [];
+
                     this.panelDataAttributeList.forEach(function (item) {
-                        if (item === 'panelName') return;
+                        if (item === 'panelName') {
+                            return;
+                        }
+
                         o.dataAttributeList.push(item);
                     }, this);
+
                     return o;
                 }.bind(this)
             }, callback);
@@ -360,7 +396,9 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
             });
             $('#layout ul.rows').disableSelection();
 
-            $('#layout ul.cells > li').draggable({revert: 'invalid', revertDuration: 200, zIndex: 10}).css('cursor', 'pointer');
+            $('#layout ul.cells > li')
+                .draggable({revert: 'invalid', revertDuration: 200, zIndex: 10})
+                .css('cursor', 'pointer');
 
             $('#layout ul.cells > li').droppable().droppable('destroy');
 
@@ -414,6 +452,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
         fetch: function () {
             var layout = [];
             var self = this;
+
             $("#layout ul.panels > li").each(function (i, el) {
                 var $label = $(el).find('header label');
 
@@ -424,40 +463,53 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                 };
 
                 this.panelDataAttributeList.forEach(function (item) {
-                    if (item === 'panelName') return;
+                    if (item === 'panelName') {
+                        return;
+                    }
+
                     o[item] = this.panelsData[id][item];
                 }, this);
 
                 o.style = o.style || 'default';
 
                 var name = $(el).find('header').data('name');
+
                 if (name) {
                     o.name = name;
                 }
+
                 if ($label.attr('data-is-custom')) {
                     o.customLabel = $label.text();
                 } else {
                     o.label = $label.data('label');
                 }
+
                 $(el).find('ul.rows > li').each(function (i, li) {
                     var row = [];
+
                     $(li).find('ul.cells > li').each(function (i, li) {
                         var cell = false;
+
                         if (!$(li).hasClass('empty')) {
                             cell = {};
+
                             self.dataAttributeList.forEach(function (attr) {
                                 if (attr === 'customLabel') {
                                     if ($(li).get(0).hasAttribute('data-custom-label')) {
                                         cell[attr] = $(li).attr('data-custom-label');
                                     }
+
                                     return;
                                 }
+
                                 var value = $(li).data(Espo.Utils.toDom(attr)) || null;
+
                                 if (value) {
                                     cell[attr] = value;
                                 }
                             });
                         }
+
                         row.push(cell);
                     });
                     o.rows.push(row);
@@ -471,6 +523,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
 
         validate: function (layout) {
             var fieldCount = 0;
+
             layout.forEach(function (panel) {
                 panel.rows.forEach(function (row) {
                     row.forEach(function (cell) {
@@ -480,10 +533,12 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base', 'res!client/css/
                     });
                 });
             });
+
             if (fieldCount == 0) {
                 alert('Layout cannot be empty.');
                 return false;
             }
+
             return true;
         },
     });

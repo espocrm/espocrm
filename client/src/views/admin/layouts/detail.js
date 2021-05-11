@@ -30,29 +30,39 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'fullWidth', 'customLabel', 'noLabel'],
+        dataAttributeList: [
+            'name',
+            'fullWidth',
+            'customLabel',
+            'noLabel',
+        ],
 
-        panelDataAttributeList: ['panelName', 'style', 'dynamicLogicVisible', 'hidden'],
+        panelDataAttributeList: [
+            'panelName',
+            'style',
+            'dynamicLogicVisible',
+            'hidden',
+        ],
 
         dataAttributesDefs: {
             fullWidth: {
-                type: 'bool'
+                type: 'bool',
             },
             name: {
-                readOnly: true
+                readOnly: true,
             },
             label: {
                 type: 'varchar',
-                readOnly: true
+                readOnly: true,
             },
             customLabel: {
                 type: 'varchar',
-                readOnly: true
+                readOnly: true,
             },
             noLabel: {
                 type: 'bool',
-                readOnly: true
-            }
+                readOnly: true,
+            },
         },
 
         panelDataAttributesDefs: {
@@ -61,8 +71,13 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             },
             style: {
                 type: 'enum',
-                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
-                translation: 'LayoutManager.options.style'
+                options: [
+                    'default',
+                    'success',
+                    'danger',
+                    'warning'
+                ],
+                translation: 'LayoutManager.options.style',
             },
             dynamicLogicVisible: {
                 type: 'base',
@@ -99,11 +114,13 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             promiseList.push(
                 new Promise(function (resolve) {
                     this.getModelFactory().create(this.scope, function (m) {
-                        this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, function (layoutLoaded) {
-                            layout = layoutLoaded;
-                            model = m;
-                            resolve();
-                        });
+                        this.getHelper()
+                            .layoutManager
+                            .getOriginal(this.scope, this.type, this.setId, function (layoutLoaded) {
+                                layout = layoutLoaded;
+                                model = m;
+                                resolve();
+                            });
                     }.bind(this));
                 }.bind(this))
             );
@@ -126,7 +143,9 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             promiseList.push(
                 new Promise(
                     function (resolve) {
-                        if (this.getMetadata().get(['clientDefs', this.scope, 'layoutDefaultSidePanelDisabled'])) resolve();
+                        if (this.getMetadata().get(['clientDefs', this.scope, 'layoutDefaultSidePanelDisabled'])) {
+                            resolve();
+                        }
 
                         this.getHelper().layoutManager.getOriginal(this.scope, 'defaultSidePanel', this.setId,
                             function (layoutLoaded) {
@@ -136,10 +155,15 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
 
                                 layoutLoaded.forEach(function (item) {
                                     var field = item.name;
-                                    if (!field) return;
+
+                                    if (!field) {
+                                        return;
+                                    }
+
                                     if (field === ':assignedUser') {
                                         field = 'assignedUser';
                                     }
+
                                     if (!~this.defaultPanelFieldList.indexOf(field)) {
                                         this.defaultPanelFieldList.push(field);
                                     }
@@ -162,6 +186,7 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
 
         readDataFromLayout: function (model, layout) {
             var allFields = [];
+
             for (var field in model.defs.fields) {
                 if (this.isFieldEnabled(model, field)) {
                     allFields.push(field);
@@ -201,14 +226,22 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             }
 
             var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
-            if (layoutList && !~layoutList.indexOf(this.type)) return;
+
+            if (layoutList && !~layoutList.indexOf(this.type)) {
+                return;
+            }
 
             return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutDetailDisabled');
         },
 
         hasDefaultPanel: function () {
-            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) === false) return false;
-            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) return false;
+            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) === false) {
+                return false;
+            }
+
+            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) {
+                return false;
+            }
 
             if (this.sidePanelsLayout) {
                 for (var name in this.sidePanelsLayout) {
@@ -219,6 +252,6 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             }
 
             return true;
-        }
+        },
     });
 });
