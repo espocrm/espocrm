@@ -34,6 +34,7 @@ use Espo\Core\{
     Utils\Metadata,
     InjectableFactory,
     Acl\AssignmentChecker,
+    Acl\DefaultAssignmentChecker,
     Acl\Exceptions\NotImplemented,
 };
 

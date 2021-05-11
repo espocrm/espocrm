@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Acl\AssignmentChecker;
+namespace Espo\Core\Acl;
 
 use Espo\ORM\{
     Entity,

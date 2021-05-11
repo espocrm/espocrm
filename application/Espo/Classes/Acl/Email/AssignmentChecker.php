@@ -34,7 +34,7 @@ use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Acl\AssignmentChecker\DefaultAssignmentChecker,
+    Acl\DefaultAssignmentChecker,
 };
 
 class AssignmentChecker extends DefaultAssignmentChecker
