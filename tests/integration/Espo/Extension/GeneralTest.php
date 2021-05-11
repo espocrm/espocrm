@@ -29,11 +29,14 @@
 
 namespace tests\integration\Espo\Extension;
 
+use Espo\Core\Upgrades\ExtensionManager;
+
 class GeneralTest extends \tests\integration\Core\BaseTestCase
 {
     protected $dataFile = 'InitData.php';
 
     protected $userName = 'admin';
+
     protected $password = '1';
 
     protected $packagePath = 'Extension/General.zip';
@@ -48,7 +51,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $fileData = file_get_contents($this->normalizePath($this->packagePath));
         $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
 
-        $extensionManager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $extensionManager = new ExtensionManager($this->getContainer());
         $extensionId = $extensionManager->upload($fileData);
 
         $this->assertStringMatchesFormat('%x', $extensionId);
@@ -62,7 +65,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
     {
         $extensionId = $this->testUpload();
 
-        $extensionManager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $extensionManager = new ExtensionManager($this->getContainer());
         $extensionManager->install(array('id' => $extensionId));
 
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
@@ -85,7 +88,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
     {
         $extensionId = $this->testInstall();
 
-        $extensionManager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $extensionManager = new ExtensionManager($this->getContainer());
         $extensionManager->uninstall(array('id' => $extensionId));
 
         $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId); //directory
@@ -108,7 +111,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
     {
         $extensionId = $this->testUninstall();
 
-        $extensionManager = new \Espo\Core\ExtensionManager($this->getContainer());
+        $extensionManager = new ExtensionManager($this->getContainer());
         $extensionManager->delete(array('id' => $extensionId));
 
         $this->assertFileDoesNotExist('data/.backup/extensions/' . $extensionId); //directory

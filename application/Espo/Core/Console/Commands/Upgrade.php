@@ -32,7 +32,7 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\{
     Exceptions\Error,
     Application,
-    UpgradeManager,
+    Upgrades\UpgradeManager,
     Utils\Util,
     Utils\File\Manager as FileManager,
     Utils\Config,

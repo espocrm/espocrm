@@ -27,19 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') exit;
+if (substr(php_sapi_name(), 0, 3) !== 'cli') {
+    exit;
+}
 
 include "bootstrap.php";
 
 use Espo\Core\{
     Application,
     ApplicationRunners\Rebuild,
+    Upgrades\UpgradeManager,
 };
+
+use Exception;
 
 $arg = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : '';
 
 if ($arg == 'version' || $arg == '-v') {
-    $app = new \Espo\Core\Application();
+    $app = new Application();
+
     die("Current version is " . $app->getContainer()->get('config')->get('version') . ".\n");
 }
 
@@ -52,17 +58,19 @@ if (!file_exists($arg)) {
 }
 
 $pathInfo = pathinfo($arg);
+
 if (!isset($pathInfo['extension']) || $pathInfo['extension'] !== 'zip' || !is_file($arg)) {
     die("Unsupported package.\n");
 }
 
 $app = new Application();
+
 $app->setupSystemUser();
 
 $config = $app->getContainer()->get('config');
 $entityManager = $app->getContainer()->get('entityManager');
 
-$upgradeManager = new \Espo\Core\UpgradeManager($app->getContainer());
+$upgradeManager = new UpgradeManager($app->getContainer());
 
 echo "Current version is " . $config->get('version') . "\n";
 echo "Starting upgrade process...\n";
@@ -72,13 +80,16 @@ try {
     $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
 
     $upgradeId = $upgradeManager->upload($fileData);
+
     $upgradeManager->install(['id' => $upgradeId]);
-} catch (\Exception $e) {
+}
+catch (Exception $e) {
     die("Error: " . $e->getMessage() . "\n");
 }
 
 try {
     (new Application())->run(Rebuild::class);
-} catch (\Exception $e) {}
+}
+catch (Exception $e) {}
 
 echo "Upgrade is complete. Current version is " . $config->get('version') . ". \n";

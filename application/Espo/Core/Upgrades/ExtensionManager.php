@@ -27,25 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core;
+namespace Espo\Core\Upgrades;
 
-use Espo\Core\Exceptions\Error;
-
-class UpgradeManager extends Upgrades\Base
+class ExtensionManager extends Base
 {
-    protected $name = 'Upgrade';
+    protected $name = 'Extension';
 
     protected $params = [
-        'packagePath' => 'data/upload/upgrades',
-        'backupPath' => 'data/.backup/upgrades',
+        'packagePath' => 'data/upload/extensions',
+        'backupPath' => 'data/.backup/extensions',
+
         'scriptNames' => [
-            'before' => 'BeforeUpgrade',
-            'after' => 'AfterUpgrade',
+            'before' => 'BeforeInstall',
+            'after' => 'AfterInstall',
+            'beforeUninstall' => 'BeforeUninstall',
+            'afterUninstall' => 'AfterUninstall',
         ],
         'customDirNames' => [
-            'before' => 'beforeUpgradeFiles',
-            'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendorFiles',
+            'before' => 'beforeInstallFiles',
+            'after' => 'afterInstallFiles',
         ],
     ];
 }
