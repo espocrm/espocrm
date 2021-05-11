@@ -331,13 +331,13 @@ class Converter
 
         $table = $this->getSchema()->createTable($tableName);
 
-        $columnOptions = $this->getDbFieldParams([
+        $idColumnOptions = $this->getDbFieldParams([
             'type' => 'id',
             'len' => 20,
             'autoincrement' => true,
         ]);
 
-        $table->addColumn('id', 'bigint', $columnOptions);
+        $table->addColumn('id', 'bigint', $idColumnOptions);
 
         //add midKeys to a schema
         $uniqueIndex = [];
@@ -349,7 +349,7 @@ class Converter
             ]);
         }
         else {
-            foreach($relationParams['midKeys'] as $index => $midKey) {
+            foreach($relationParams['midKeys'] as $midKey) {
                 $columnName = Util::toUnderScore($midKey);
 
                 $table->addColumn($columnName, $this->idParams['dbType'], $this->getDbFieldParams(array(
