@@ -34,13 +34,14 @@ class CreateTest extends \tests\integration\Core\BaseTestCase
     protected $dataFile = 'Account/ChangeFields.php';
 
     protected $userName = 'admin';
+
     protected $password = '1';
 
     public function testCreate()
     {
         $service = $this->getContainer()->get('serviceFactory')->create('Account');
 
-        $entity = $service->createEntity((object) [
+        $entity = $service->create((object) [
             'name' => 'Test Account',
             'emailAddress' => 'test@tester.com',
             'phoneNumber' => '123-456-789',

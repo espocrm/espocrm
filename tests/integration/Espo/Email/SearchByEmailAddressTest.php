@@ -43,7 +43,7 @@ class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $emailService = $this->getApplication()->getContainer()->get('serviceFactory')->create('Email');
 
-        $result = $emailService->findEntities(array(
+        $result = $emailService->find(array(
             'where' => array(
                 array(
                     'type' => 'equals',
@@ -68,12 +68,12 @@ class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $emailService = $this->getApplication()->getContainer()->get('serviceFactory')->create('Email');
 
-        $result = $emailService->findEntities([
+        $result = $emailService->find([
             'textFilter' => 'name abc'
         ]);
         $this->assertEquals(1, count($result->getCollection()));
 
-        $result = $emailService->findEntities([
+        $result = $emailService->find([
             'textFilter' => 'Improvements to our Privacy Policy'
         ]);
         $this->assertEquals(1, count($result->getCollection()));

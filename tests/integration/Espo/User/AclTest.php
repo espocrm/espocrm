@@ -33,6 +33,7 @@ use Espo\Core\{
     Api\ActionProcessor,
     Api\Response,
     Select\SearchParams,
+    Select\Where\Item as WhereItem,
 };
 
 use Espo\Core\Exceptions\Forbidden;
@@ -322,11 +323,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->auth('test');
         $app = $this->createApplication();
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $service = $app->getContainer()->get('serviceFactory')->create('Account');
 
-        $e = $service->createEntity((object)['name' => 'Test']);
+        $service->create((object)['name' => 'Test']);
     }
 
     public function testUserAccessCreateNo2()
@@ -335,11 +336,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->auth('test');
         $app = $this->createApplication();
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $service = $app->getContainer()->get('serviceFactory')->create('Lead');
 
-        $e = $service->createEntity((object)['lastName' => 'Test']);
+        $service->create((object)['lastName' => 'Test']);
     }
 
     public function testUserAccessAclStrictCreateNo()
@@ -349,11 +350,11 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->auth('test');
         $app = $this->createApplication(true);
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $service = $app->getContainer()->get('serviceFactory')->create('Case');
 
-        $e = $service->createEntity((object)['name' => 'Test']);
+        $e = $service->create((object)['name' => 'Test']);
     }
 
     public function testUserAccessAclStrictCreateYes()
@@ -365,7 +366,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
-        $e = $service->createEntity((object) [
+        $e = $service->create((object) [
             'name' => 'Test',
             'assignedUserId' => 'testUserId',
             'dateStart' => '2019-01-01 00:00:00',
@@ -391,9 +392,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
-        $service->createEntity((object) [
+        $service->create((object) [
             'name' => 'Test',
             'dateStart' => '2019-01-01 00:00:00',
             'dateEnd' => '2019-01-01 00:01:00',
@@ -409,9 +410,9 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
-        $service->createEntity((object)[
+        $service->create((object)[
             'name' => 'Test',
             'assignedUserId' => 'testUserId',
             'teamsIds' => ['testOtherTeamId'],
@@ -429,7 +430,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
-        $e = $service->createEntity((object)[
+        $e = $service->create((object)[
             'name' => 'Test',
             'assignedUserId' => 'testUserId',
             'teamsIds' => ['testTeamId'],
@@ -457,7 +458,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Lead');
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $service->getEntity('testLeadId');
     }
@@ -481,7 +482,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
-        $this->expectException(\Espo\Core\Exceptions\Forbidden::class);
+        $this->expectException(Forbidden::class);
 
         $service->getEntity('testMeetingId');
     }
@@ -552,7 +553,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(Forbidden::class);
 
-        $service->updateEntity('testMeetingId', (object) []);
+        $service->update('testMeetingId', (object) []);
     }
 
     public function testUserAccessSearchByInternalField()
@@ -569,12 +570,12 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $searchParams = SearchParams
             ::fromNothing()
-            ->withWhere([
+            ->withWhere(WhereItem::fromRaw(
                 [
                     'type' => 'isNull',
                     'attribute' => 'password',
                 ]
-            ]);
+            ));
 
         $service->find($searchParams);
     }

@@ -53,7 +53,7 @@ class SearchTest extends \tests\integration\Core\BaseTestCase
             'sortBy' => 'name',
         );
 
-        $result = $service->findEntities($params);
+        $result = $service->find($params);
 
         $this->assertEquals(1, $result->getTotal());
 
