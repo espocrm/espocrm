@@ -215,6 +215,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
             var process = function () {
                 var $panel = this.$el.find('.panel[data-name="'+name+'"]');
+                var $btn = $panel.find('> .panel-heading .btn');
 
                 var style = $panel.attr('data-style');
 
@@ -223,8 +224,10 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                 }
 
                 $panel.removeClass('panel-default');
-
                 $panel.addClass('panel-' + style);
+
+                $btn.removeClass('btn-default');
+                $btn.addClass('btn-' + style);
             }.bind(this);
 
             if (this.isRendered()) {
@@ -243,6 +246,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
             var process = function () {
                 var $panel = this.$el.find('.panel[data-name="'+name+'"]');
+                var $btn = $panel.find('> .panel-heading .btn');
 
                 var style = $panel.attr('data-style');
 
@@ -251,8 +255,10 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                 }
 
                 $panel.removeClass('panel-' + style);
-
                 $panel.addClass('panel-default');
+
+                $btn.removeClass('btn-' + style);
+                $btn.addClass('btn-default');
             }.bind(this);
 
             if (this.isRendered()) {
