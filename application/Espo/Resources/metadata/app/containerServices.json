@@ -80,6 +80,9 @@
     "fieldValidationManager": {
         "className": "Espo\\Core\\FieldValidation\\FieldValidationManager"
     },
+    "assignmentCheckerManager": {
+        "className": "Espo\\Core\\Acl\\AssignmentChecker\\AssignmentCheckerManager"
+    },
     "hasher": {
         "className": "Espo\\Core\\Utils\\Hasher"
     },

@@ -963,14 +963,4 @@ class Email extends Record implements
 
         return $data;
     }
-
-    public function isPermittedAssignedUser(Entity $entity): bool
-    {
-        return true;
-    }
-
-    public function isPermittedAssignedUsers(Entity $entity): bool
-    {
-        return true;
-    }
 }
