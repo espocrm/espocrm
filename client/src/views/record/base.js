@@ -210,6 +210,62 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             }
         },
 
+        stylePanel: function (name) {
+            this.recordHelper.setPanelStateParam(name, 'styled', true);
+
+            var process = function () {
+                var $panel = this.$el.find('.panel[data-name="'+name+'"]');
+
+                var style = $panel.attr('data-style');
+
+                if (!style) {
+                    return;
+                }
+
+                $panel.removeClass('panel-default');
+
+                $panel.addClass('panel-' + style);
+            }.bind(this);
+
+            if (this.isRendered()) {
+                process();
+
+                return;
+            }
+
+            this.once('after:render', function () {
+                process();
+            }, this);
+        },
+
+        unstylePanel: function (name) {
+            this.recordHelper.setPanelStateParam(name, 'styled', false);
+
+            var process = function () {
+                var $panel = this.$el.find('.panel[data-name="'+name+'"]');
+
+                var style = $panel.attr('data-style');
+
+                if (!style) {
+                    return;
+                }
+
+                $panel.removeClass('panel-' + style);
+
+                $panel.addClass('panel-default');
+            }.bind(this);
+
+            if (this.isRendered()) {
+                process();
+
+                return;
+            }
+
+            this.once('after:render', function () {
+                process();
+            }, this);
+        },
+
         setConfirmLeaveOut: function (value) {
             this.getRouter().confirmLeaveOut = value;
         },
@@ -799,12 +855,15 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             if (this.recordHelper.getFieldStateParam(name, 'hidden')) {
                 o.disabled = true;
             }
+
             if (this.recordHelper.getFieldStateParam(name, 'readOnly')) {
                 o.readOnly = true;
             }
+
             if (this.recordHelper.getFieldStateParam(name, 'required') !== null) {
                 o.defs.params.required = this.recordHelper.getFieldStateParam(name, 'required');
             }
+
             if (this.recordHelper.hasFieldOptionList(name)) {
                 o.customOptionList = this.recordHelper.getFieldOptionList(name);
             }
@@ -818,7 +877,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             }
         },
 
-        exit: function (after) {}
+        exit: function (after) {},
 
     });
 

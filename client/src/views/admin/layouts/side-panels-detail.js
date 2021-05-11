@@ -30,23 +30,42 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
 
     return Dep.extend({
 
-        dataAttributeList: ['name', 'style', 'sticked', 'dynamicLogicVisible'],
+        dataAttributeList: [
+            'name',
+            'dynamicLogicVisible',
+            'style',
+            'dynamicLogicStyled',
+            'sticked',
+        ],
 
         dataAttributesDefs: {
-            style: {
-                type: 'enum',
-                options: ['default', 'success', 'danger', 'primary', 'info', 'warning'],
-                translation: 'LayoutManager.options.style'
-            },
             dynamicLogicVisible: {
                 type: 'base',
-                view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
+                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                tooltip: 'dynamicLogicVisible',
+            },
+            style: {
+                type: 'enum',
+                options: [
+                    'default',
+                    'success',
+                    'danger',
+                    'warning',
+                ],
+                translation: 'LayoutManager.options.style',
+                tooltip: 'panelStyle',
+            },
+            dynamicLogicStyled: {
+                type: 'base',
+                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                tooltip: 'dynamicLogicStyled',
             },
             sticked: {
-                type: 'bool'
+                type: 'bool',
+                tooltip: 'sticked',
             },
             name: {
-                readOnly: true
+                readOnly: true,
             },
         },
 
@@ -62,9 +81,12 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             Dep.prototype.setup.call(this);
 
             this.dataAttributesDefs = Espo.Utils.cloneDeep(this.dataAttributesDefs);
+
             this.dataAttributesDefs.dynamicLogicVisible.scope = this.scope;
+            this.dataAttributesDefs.dynamicLogicStyled.scope = this.scope;
 
             this.wait(true);
+
             this.loadLayout(function () {
                 this.wait(false);
             }.bind(this));
@@ -92,16 +114,23 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 !this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])
             ) {
                 panelListAll.push('default');
+
                 labels['default'] = 'Default';
             }
-            (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || []).forEach(function (item) {
-                if (!item.name) return;
-                panelListAll.push(item.name);
-                if (item.label) {
-                    labels[item.name] = item.label;
-                }
-                params[item.name] = item;
-            }, this);
+
+            (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || [])
+                .forEach(function (item) {
+                    if (!item.name) {
+                        return;
+                    }
+
+                    panelListAll.push(item.name);
+
+                    if (item.label) {
+                        labels[item.name] = item.label;
+                    }
+                    params[item.name] = item;
+                }, this);
 
             this.disabledFields = [];
 
@@ -121,6 +150,7 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             panelListAll.forEach(function (item, index) {
                 var disabled = false;
                 var itemData = layout[item] || {};
+
                 if (itemData.disabled) {
                     disabled = true;
                 }
@@ -132,6 +162,7 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                 }
 
                 var labelText;
+
                 if (labels[item]) {
                     labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
                 } else {
@@ -143,37 +174,49 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
                         name: item,
                         label: labelText,
                     };
+
                     if (o.name[0] === '_') {
                         o.notEditable = true;
+
                         if (o.name == '_delimiter_') {
                             o.label = '. . .';
                         }
                     }
                     this.disabledFields.push(o);
-                } else {
+                }
+                else {
                     var o = {
                         name: item,
                         label: labelText,
                     };
+
                     if (o.name[0] === '_') {
                         o.notEditable = true;
                         if (o.name == '_delimiter_') {
                             o.label = '. . .';
                         }
                     }
+
                     if (o.name in params) {
                         this.dataAttributeList.forEach(function (attribute) {
-                            if (attribute === 'name') return;
+                            if (attribute === 'name') {
+                                return;
+                            }
+
                             var itemParams = params[o.name] || {};
+
                             if (attribute in itemParams) {
                                 o[attribute] = itemParams[attribute];
                             }
                         }, this);
                     }
+
                     for (var i in itemData) {
                         o[i] = itemData[i];
                     }
+
                     o.index = ('index' in itemData) ? itemData.index : index;
+
                     this.rowLayout.push(o);
 
                     this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
@@ -189,6 +232,7 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             var layout = {};
             $("#layout ul.disabled > li").each(function (i, el) {
                 var name = $(el).attr('data-name');
+
                 layout[name] = {
                     disabled: true
                 };
@@ -197,13 +241,18 @@ define('views/admin/layouts/side-panels-detail', 'views/admin/layouts/rows', fun
             $("#layout ul.enabled > li").each(function (i, el) {
                 var $el = $(el);
                 var o = {};
+
                 var name = $el.attr('data-name');
 
                 var attributes = this.itemsData[name] || {};
+
                 attributes.name = name;
 
                 this.dataAttributeList.forEach(function (attribute) {
-                    if (attribute === 'name') return;
+                    if (attribute === 'name') {
+                        return;
+                    }
+
                     if (attribute in attributes) {
                         o[attribute] = attributes[attribute];
                     }

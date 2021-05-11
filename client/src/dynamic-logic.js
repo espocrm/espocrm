@@ -33,7 +33,7 @@ define('dynamic-logic', [], function () {
         this.recordView = recordView;
 
         this.fieldTypeList = ['visible', 'required', 'readOnly'];
-        this.panelTypeList = ['visible'];
+        this.panelTypeList = ['visible', 'styled'];
 
         this.optionsDirtyMap = {};
         this.originalOptions = {};
@@ -43,27 +43,43 @@ define('dynamic-logic', [], function () {
 
         process: function () {
             var fields = this.defs.fields || {};
+
             Object.keys(fields).forEach(function (field) {
                 var item = (fields[field] || {});
+
                 this.fieldTypeList.forEach(function (type) {
-                    if (!(type in item)) return;
-                    if (!item[type]) return;
+                    if (!(type in item)) {
+                        return;
+                    }
+
+                    if (!item[type]) {
+                        return;
+                    }
+
                     var typeItem = (item[type] || {});
+
                     var conditionGroup = typeItem.conditionGroup;
                     var conditionGroup = (item[type] || {}).conditionGroup;
-                    if (!typeItem.conditionGroup) return;
+
+                    if (!typeItem.conditionGroup) {
+                        return;
+                    }
+
                     var result = this.checkConditionGroup(typeItem.conditionGroup);
                     var methodName;
+
                     if (result) {
                         methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
                     } else {
                         methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
                     }
+
                     this[methodName](field);
                 }, this);
             }, this);
 
             var panels = this.defs.panels || {};
+
             Object.keys(panels).forEach(function (panel) {
                 this.panelTypeList.forEach(function (type) {
                     this.processPanel(panel, type);
@@ -71,14 +87,20 @@ define('dynamic-logic', [], function () {
             }, this);
 
             var options = this.defs.options || {};
+
             Object.keys(options).forEach(function (field) {
                 var itemList = options[field] || [];
+
                 var isMet = false;
+
                 for (var i in itemList) {
                     var item = itemList[i];
+
                     if (this.checkConditionGroup(item.conditionGroup)) {
                         this.setOptionList(field, item.optionList || []);
+
                         isMet = true;
+
                         break;
                     }
                 }
@@ -92,18 +114,29 @@ define('dynamic-logic', [], function () {
             var panels = this.defs.panels || {};
             var item = (panels[panel] || {});
 
-            if (!(type in item)) return;
+            if (!(type in item)) {
+                return;
+            }
+
             var typeItem = (item[type] || {});
+
             var conditionGroup = typeItem.conditionGroup;
             var conditionGroup = (item[type] || {}).conditionGroup;
-            if (!typeItem.conditionGroup) return;
+
+            if (!typeItem.conditionGroup) {
+                return;
+            }
+
             var result = this.checkConditionGroup(typeItem.conditionGroup);
+
             var methodName;
+
             if (result) {
                 methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
             } else {
                 methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
             }
+
             this[methodName](panel);
         },
 
@@ -116,17 +149,21 @@ define('dynamic-logic', [], function () {
             if (type === 'and') {
                 list =  data || [];
                 result = true;
+
                 for (var i in list) {
                     if (!this.checkCondition(list[i])) {
                         result = false;
+
                         break;
                     }
                 }
             } else if (type === 'or') {
                 list =  data || [];
+
                 for (var i in list) {
                     if (this.checkCondition(list[i])) {
                         result = true;
+
                         break;
                     }
                 }
@@ -135,6 +172,7 @@ define('dynamic-logic', [], function () {
                     result = !this.checkCondition(data);
                 }
             }
+
             return result;
         },
 
@@ -149,51 +187,84 @@ define('dynamic-logic', [], function () {
             var attribute = defs.attribute;
             var value = defs.value;
 
-            if (!attribute) return;
+            if (!attribute) {
+                return;
+            }
 
             var setValue = this.recordView.model.get(attribute);
 
             if (type === 'equals') {
-                if (!value) return;
+                if (!value) {
+                    return;
+                }
+
                 return setValue === value;
-            } else if (type === 'notEquals') {
-                if (!value) return;
+            }
+            else if (type === 'notEquals') {
+                if (!value) {
+                    return;
+                }
+
                 return setValue !== value;
-            } else if (type === 'isEmpty') {
+            }
+            else if (type === 'isEmpty') {
                 if (Array.isArray(setValue)) {
                     return !setValue.length;
                 }
+
                 return setValue === null || (setValue === '') || typeof setValue === 'undefined';
-            } else if (type === 'isNotEmpty') {
+            }
+            else if (type === 'isNotEmpty') {
                 if (Array.isArray(setValue)) {
                     return !!setValue.length;
                 }
+
                 return setValue !== null && (setValue !== '') && typeof setValue !== 'undefined';
-            } else if (type === 'isTrue') {
+            }
+            else if (type === 'isTrue') {
                 return !!setValue;
-            } else if (type === 'isFalse') {
+            }
+            else if (type === 'isFalse') {
                 return !setValue;
-            } else if (type === 'contains' || type === 'has') {
-                if (!setValue) return false;
+            }
+            else if (type === 'contains' || type === 'has') {
+                if (!setValue) {
+                    return false;
+                }
+
                 return !!~setValue.indexOf(value);
-            } else if (type === 'notContains' || type === 'notHas') {
-                if (!setValue) return true;
+            }
+            else if (type === 'notContains' || type === 'notHas') {
+                if (!setValue) {
+                    return true;
+                }
+
                 return !~setValue.indexOf(value);
-            } else if (type === 'greaterThan') {
+            }
+            else if (type === 'greaterThan') {
                 return setValue > value;
-            } else if (type === 'lessThan') {
+            }
+            else if (type === 'lessThan') {
                 return setValue < value;
-            } else if (type === 'greaterThanOrEquals') {
+            }
+            else if (type === 'greaterThanOrEquals') {
                 return setValue >= value;
-            } else if (type === 'lessThanOrEquals') {
+            }
+            else if (type === 'lessThanOrEquals') {
                 return setValue <= value;
-            } else if (type === 'in') {
+            }
+            else if (type === 'in') {
                 return ~value.indexOf(setValue);
-            } else if (type === 'notIn') {
+            }
+            else if (type === 'notIn') {
                 return !~value.indexOf(setValue);
-            } else if (type === 'isToday') {
+            }
+            else if (type === 'isToday') {
                 var dateTime = this.recordView.getDateTime();
-                if (!setValue) return;
+                if (!setValue) {
+                    return;
+                }
+
                 if (setValue) {
                     if (setValue.length > 10) {
                         return dateTime.toMoment(setValue).isSame(dateTime.getNowMoment(), 'day');
@@ -201,9 +272,14 @@ define('dynamic-logic', [], function () {
                         return dateTime.toMomentDate(setValue).isSame(dateTime.getNowMoment(), 'day');
                     }
                 }
-            } else if (type === 'inFuture') {
+            }
+            else if (type === 'inFuture') {
                 var dateTime = this.recordView.getDateTime();
-                if (!setValue) return;
+
+                if (!setValue) {
+                    return;
+                }
+
                 if (setValue) {
                     if (setValue.length > 10) {
                         return dateTime.toMoment(setValue).isAfter(dateTime.getNowMoment(), 'day');
@@ -213,7 +289,11 @@ define('dynamic-logic', [], function () {
                 }
             } else if (type === 'inPast') {
                 var dateTime = this.recordView.getDateTime();
-                if (!setValue) return;
+
+                if (!setValue) {
+                    return;
+                }
+
                 if (setValue) {
                     if (setValue.length > 10) {
                         return dateTime.toMoment(setValue).isBefore(dateTime.getNowMoment(), 'day');
@@ -222,6 +302,7 @@ define('dynamic-logic', [], function () {
                     }
                 }
             }
+
             return false;
         },
 
@@ -265,12 +346,30 @@ define('dynamic-logic', [], function () {
             this.recordView.hidePanel(panel, false, 'dynamicLogic');
         },
 
+        makePanelStyledTrue: function (panel) {
+            this.recordView.stylePanel(panel, 'dynamicLogic');
+        },
+
+        makePanelStyledFalse: function (panel) {
+            this.recordView.unstylePanel(panel, false, 'dynamicLogic');
+        },
+
         addPanelVisibleCondition: function (name, item) {
             this.defs.panels = this.defs.panels || {};
-            this.defs.panels[name] = {
-                visible: item
-            };
+            this.defs.panels[name] = this.defs.panels[name] || {};
+
+            this.defs.panels[name].visible = item;
+
             this.processPanel(name, 'visible');
+        },
+
+        addPanelStyledCondition: function (name, item) {
+            this.defs.panels = this.defs.panels || {};
+            this.defs.panels[name] = this.defs.panels[name] || {};
+
+            this.defs.panels[name].styled = item;
+
+            this.processPanel(name, 'styled');
         },
 
     });

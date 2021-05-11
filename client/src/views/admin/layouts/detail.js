@@ -39,8 +39,9 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
 
         panelDataAttributeList: [
             'panelName',
-            'style',
             'dynamicLogicVisible',
+            'style',
+            'dynamicLogicStyled',
             'hidden',
         ],
 
@@ -78,10 +79,16 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
                     'warning'
                 ],
                 translation: 'LayoutManager.options.style',
+                tooltip: 'panelStyle',
             },
             dynamicLogicVisible: {
                 type: 'base',
                 view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
+            },
+            dynamicLogicStyled: {
+                type: 'base',
+                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+                tooltip: 'dynamicLogicStyled',
             },
             hidden: {
                 type: 'bool',
@@ -95,7 +102,9 @@ define('views/admin/layouts/detail', 'views/admin/layouts/grid', function (Dep) 
             Dep.prototype.setup.call(this);
 
             this.panelDataAttributesDefs = Espo.Utils.cloneDeep(this.panelDataAttributesDefs);
+
             this.panelDataAttributesDefs.dynamicLogicVisible.scope = this.scope;
+            this.panelDataAttributesDefs.dynamicLogicStyled.scope = this.scope;
 
             this.wait(true);
             this.loadLayout(function () {

@@ -594,6 +594,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             else if (this.bottomView) {
                 this.once('after:render', function () {
                     var bottomView = this.getView('bottom');
+
                     if (bottomView && 'showPanel' in bottomView) {
                         bottomView.hidePanel(name);
                     }
@@ -1777,14 +1778,27 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 panel.style = simplifiedLayout[p].style || 'default';
                 panel.rows = [];
 
-                if (simplifiedLayout[p].dynamicLogicVisible) {
+                if (
+                    simplifiedLayout[p].dynamicLogicVisible ||
+                    simplifiedLayout[p].dynamicLogicStyled
+                ) {
                     if (!panel.name) {
                         panel.name = 'panel-' + p.toString();
                     }
+                }
 
+                if (simplifiedLayout[p].dynamicLogicVisible) {
                     if (this.dynamicLogic) {
                         this.dynamicLogic.addPanelVisibleCondition(
                             panel.name, simplifiedLayout[p].dynamicLogicVisible
+                        );
+                    }
+                }
+
+                if (simplifiedLayout[p].dynamicLogicStyled) {
+                    if (this.dynamicLogic) {
+                        this.dynamicLogic.addPanelStyledCondition(
+                            panel.name, simplifiedLayout[p].dynamicLogicStyled
                         );
                     }
                 }

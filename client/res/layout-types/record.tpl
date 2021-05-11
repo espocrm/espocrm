@@ -2,7 +2,11 @@
 
 <% _.each(layout, function (panel, columnNumber) { %>
     <% hasHiddenPanel = panel.hidden || hasHiddenPanel; %>
-    <div class="panel panel-<%= panel.style %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"<% if (panel.name) print(' data-name="'+panel.name+'"') %>>
+    <div
+        class="panel panel-<%= panel.style %><% if (panel.name) { %>{{#if hiddenPanels.<%= panel.name %>}} hidden{{/if}}<% } %>"
+        <% if (panel.name) print('data-name="'+panel.name+'"') %>
+        <% if (panel.style) print('data-style="'+panel.style+'"') %>
+    >
         <% if (panel.label) { %>
         <div class="panel-heading"><h4 class="panel-title"><%= panel.label %></h4></div>
         <% } %>
