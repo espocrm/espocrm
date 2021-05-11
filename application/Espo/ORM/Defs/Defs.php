@@ -46,7 +46,7 @@ class Defs
     /**
      * Get an entity type list.
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getEntityTypeList(): array
     {
@@ -56,7 +56,7 @@ class Defs
     /**
      * Get an entity definitions list.
      *
-     * @return array<int, EntityDefs>
+     * @return EntityDefs[]
      */
     public function getEntityList(): array
     {
@@ -72,20 +72,20 @@ class Defs
     /**
      * Whether has an entity.
      */
-    public function hasEntity(string $name): bool
+    public function hasEntity(string $entityType): bool
     {
-        return $this->data->hasEntity($name);
+        return $this->data->hasEntity($entityType);
     }
 
     /**
      * Get entity definitions.
      */
-    public function getEntity(string $name): EntityDefs
+    public function getEntity(string $entityType): EntityDefs
     {
-        if (!$this->hasEntity($name)) {
-            throw new RuntimeException("Entity type '{$name}' does not exist.");
+        if (!$this->hasEntity($entityType)) {
+            throw new RuntimeException("Entity type '{$entityType}' does not exist.");
         }
 
-        return $this->data->getEntity($name);
+        return $this->data->getEntity($entityType);
     }
 }
