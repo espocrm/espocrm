@@ -62,7 +62,9 @@ class EntityProcessor
     {
         $additionalData = $data->getAdditionalTemplateData();
 
-        $htmlizer = $this->htmlizerFactory->create();
+        $htmlizer = $data->applyAcl() ?
+            $this->htmlizerFactory->create() :
+            $this->htmlizerFactory->createNoAcl();
 
         $fontFace = $this->config->get('pdfFontFace', $this->fontFace);
 

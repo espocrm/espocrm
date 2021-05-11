@@ -36,18 +36,16 @@ use Espo\Core\Exceptions\{
 };
 
 use Espo\Core\{
-    ServiceFactory,
     Acl,
+    Acl\Table,
     Utils\Config,
     Utils\Metadata,
     Utils\Language,
     Utils\Util,
-    Htmlizer\Htmlizer,
-    Htmlizer\Factory as HtmlizerFactory,
     ORM\EntityManager,
     ORM\Entity,
-    Pdf\Tcpdf,
     Select\SelectBuilderFactory,
+    Record\ServiceContainer,
 };
 
 use Espo\{
@@ -57,60 +55,57 @@ use Espo\{
     Tools\Pdf\Data,
 };
 
-use Espo\ORM\{
-    QueryParams\Select,
-};
+use Espo\Entities\Template;
 
 use DateTime;
+use StdClass;
 
 class Pdf
 {
+    protected const DEFAULT_ENGINE = 'Tcpdf';
+
     protected $removeMassFilePeriod = '1 hour';
 
-    protected $config;
+    private $config;
 
-    protected $serviceFactory;
+    private $metadata;
 
-    protected $metadata;
+    private $entityManager;
 
-    protected $entityManager;
+    private $acl;
 
-    protected $acl;
+    private $defaultLanguage;
 
-    protected $defaultLanguage;
+    private $selectBuilderFactory;
 
-    protected $htmlizerFactory;
+    private $builder;
 
-    protected $selectBuilderFactory;
-
-    protected $builder;
+    private $serviceContanier;
 
     public function __construct(
         Config $config,
-        ServiceFactory $serviceFactory,
         Metadata $metadata,
         EntityManager $entityManager,
         Acl $acl,
         Language $defaultLanguage,
-        HtmlizerFactory $htmlizerFactory,
         SelectBuilderFactory $selectBuilderFactory,
-        Builder $builder
+        Builder $builder,
+        ServiceContainer $serviceContanier
     ) {
         $this->config = $config;
-        $this->serviceFactory = $serviceFactory;
         $this->metadata = $metadata;
         $this->entityManager = $entityManager;
         $this->acl = $acl;
         $this->defaultLanguage = $defaultLanguage;
-        $this->htmlizerFactory = $htmlizerFactory;
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->builder = $builder;
+        $this->serviceContanier = $serviceContanier;
     }
 
     public function generateMailMerge(
         string $entityType,
         iterable $entityList,
-        Entity $template,
+        Template $template,
         string $name,
         ?string $campaignId = null
     ): string {
@@ -121,12 +116,7 @@ class Pdf
             $collection[] = $entity;
         }
 
-        if ($this->serviceFactory->checkExists($entityType)) {
-            $service = $this->serviceFactory->create($entityType);
-        }
-        else {
-            $service = $this->serviceFactory->create('Record');
-        }
+        $service = $this->serviceContanier->get($entityType);
 
         foreach ($entityList as $entity) {
             $service->loadAdditionalFields($entity);
@@ -140,7 +130,7 @@ class Pdf
 
         $printer = $this->builder
             ->setTemplate($templateWrapper)
-            ->setEngine('Tcpdf')
+            ->setEngine(self::DEFAULT_ENGINE)
             ->build();
 
         $contents = $printer->printCollection($collection);
@@ -170,11 +160,7 @@ class Pdf
         bool $checkAcl = false
     ): string {
 
-        if ($this->serviceFactory->checkExists($entityType)) {
-            $service = $this->serviceFactory->create($entityType);
-        } else {
-            $service = $this->serviceFactory->create('Record');
-        }
+        $service = $this->serviceContanier->get($entityType);
 
         $maxCount = $this->config->get('massPrintPdfMaxCount');
 
@@ -224,7 +210,7 @@ class Pdf
 
         $templateWrapper = new TemplateWrapper($template);
 
-        $engine = $this->config->get('pdfEngine') ?? 'Tcpdf';
+        $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
 
         $printer = $this->builder
             ->setTemplate($templateWrapper)
@@ -265,7 +251,7 @@ class Pdf
         return $attachment->id;
     }
 
-    public function removeMassFileJob($data)
+    public function removeMassFileJob(StdClass $data): void
     {
         if (empty($data->id)) {
             return;
@@ -284,20 +270,38 @@ class Pdf
         $this->entityManager->removeEntity($attachment);
     }
 
+    /**
+     * Generate PDF. ACL check is processed if `$data` is null.
+     */
+    public function generate(Entity $entity, Template $template, ?Data $data = null): string
+    {
+        return $this->buildFromTemplateInternal($entity, $template, false, null, $data);
+    }
+
+    /**
+     * @deprecated
+     */
     public function buildFromTemplate(
         Entity $entity,
-        Entity $template,
+        Template $template,
         bool $displayInline = false,
         ?array $additionalData = null
     ): ?string {
 
+        return $this->buildFromTemplateInternal($entity, $template, $displayInline, $additionalData);
+    }
+
+    private function buildFromTemplateInternal(
+        Entity $entity,
+        Entity $template,
+        bool $displayInline = false,
+        ?array $additionalData = null,
+        ?Data $data = null
+    ): ?string {
+
         $entityType = $entity->getEntityType();
 
-        if ($this->serviceFactory->checkExists($entityType)) {
-            $service = $this->serviceFactory->create($entityType);
-        } else {
-            $service = $this->serviceFactory->create('Record');
-        }
+        $service = $this->serviceContanier->get($entityType);
 
         $service->loadAdditionalFields($entity);
 
@@ -309,17 +313,31 @@ class Pdf
             throw new Error("Not matching entity types.");
         }
 
-        if (!$this->acl->check($entity, 'read') || !$this->acl->check($template, 'read')) {
-            throw new Forbidden();
+        $applyAcl = true;
+
+        if ($data) {
+            $applyAcl = $data->applyAcl();
+        }
+
+        if ($applyAcl) {
+            if (
+                !$this->acl->check($entity, Table::ACTION_READ) ||
+                !$this->acl->check($template, Table::ACTION_READ)
+            ) {
+                throw new Forbidden();
+            }
         }
 
         $templateWrapper = new TemplateWrapper($template);
 
-        $data = Data::createFromArray([
-            'additionalTemplateData' => $additionalData,
-        ]);
+        if (!$data) {
+            $data = Data
+                ::fromNothing()
+                ->withAdditionalTemplateData($additionalData ?? [])
+                ->withAcl($applyAcl);
+        }
 
-        $engine = $this->config->get('pdfEngine') ?? 'Tcpdf';
+        $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
 
         $printer = $this->builder
             ->setTemplate($templateWrapper)
@@ -337,7 +355,10 @@ class Pdf
         return $contents->getString();
     }
 
-    protected function displayInline(Entity $entity, Contents $contents)
+    /**
+     * @deprecated
+     */
+    private function displayInline(Entity $entity, Contents $contents): void
     {
         $fileName = Util::sanitizeFileName(
             $entity->get('name') ?? 'unnamed'
@@ -357,10 +378,5 @@ class Pdf
         }
 
         echo $contents->getString();
-    }
-
-    protected function createHtmlizer()
-    {
-        return $this->htmlizerFactory->create();
     }
 }

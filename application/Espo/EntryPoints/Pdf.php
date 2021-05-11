@@ -34,21 +34,23 @@ use Espo\Core\{
     Exceptions\BadRequest,
     EntryPoint\EntryPoint,
     ORM\EntityManager,
-    ServiceFactory,
     Api\Request,
     Api\Response,
+    Utils\Util,
 };
+
+use Espo\Services\Pdf as Service;
 
 class Pdf implements EntryPoint
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $serviceFactory;
+    private $service;
 
-    public function __construct(EntityManager $entityManager, ServiceFactory $serviceFactory)
+    public function __construct(EntityManager $entityManager, Service $service)
     {
         $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
+        $this->service = $service;
     }
 
     public function run(Request $request, Response $response): void
@@ -68,8 +70,26 @@ class Pdf implements EntryPoint
             throw new NotFound();
         }
 
-        $this->serviceFactory->create('Pdf')->buildFromTemplate($entity, $template, true);
+        $contents = $this->service->generate($entity, $template);
 
-        exit;
+        $fileName = Util::sanitizeFileName(
+            $entity->get('name') ?? 'unnamed'
+        );
+
+        $fileName = $fileName . '.pdf';
+
+        $response
+            ->setHeader('Content-Type', 'application/pdf')
+            ->setHeader('Cache-Control', 'private, must-revalidate, post-check=0, pre-check=0, max-age=1')
+            ->setHeader('Pragma', 'public')
+            ->setHeader('Expires', 'Sat, 26 Jul 1997 05:00:00 GMT')
+            ->setHeader('Last-Modified', gmdate('D, d M Y H:i:s') . ' GMT')
+            ->setHeader('Content', 'inline; filename="' . basename($fileName) . '"');
+
+        if (!$request->getServerParam('HTTP_ACCEPT_ENCODING')) {
+            $response->setHeader('Content-Length', $contents->getLength());
+        }
+
+        $response->writeBody($contents);
     }
 }

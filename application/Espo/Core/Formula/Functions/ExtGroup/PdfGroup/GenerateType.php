@@ -32,11 +32,16 @@ namespace Espo\Core\Formula\Functions\ExtGroup\PdfGroup;
 use Espo\Core\Formula\{
     Functions\BaseFunction,
     ArgumentList,
+    Exceptions\Error,
 };
 
 use Espo\Core\Utils\Util;
 
+use Espo\Tools\Pdf\Data;
+
 use Espo\Core\Di;
+
+use Exception;
 
 class GenerateType extends BaseFunction implements
     Di\EntityManagerAware,
@@ -61,12 +66,15 @@ class GenerateType extends BaseFunction implements
         if (!$entityType || !is_string($entityType)) {
             $this->throwBadArgumentType(1, 'string');
         }
+
         if (!$id || !is_string($id)) {
             $this->throwBadArgumentType(2, 'string');
         }
+
         if (!$templateId || !is_string($templateId)) {
             $this->throwBadArgumentType(3, 'string');
         }
+
         if ($fileName && !is_string($fileName)) {
             $this->throwBadArgumentType(4, 'string');
         }
@@ -75,21 +83,25 @@ class GenerateType extends BaseFunction implements
 
         try {
             $entity = $em->getEntity($entityType, $id);
-        } catch (\Exception $e) {
+        }
+        catch (Exception $e) {
             $this->log("Message: " . $e->getMessage() . ".");
-            return null;
+
+            throw new Error();
         }
 
         if (!$entity) {
             $this->log("Record {$entityType} {$id} does not exist.");
-            return null;
+
+            throw new Error();
         }
 
         $template = $em->getEntity('Template', $templateId);
 
         if (!$template) {
             $this->log("Template {$templateId} does not exist.");
-            return null;
+
+            throw new Error();
         }
 
         if ($fileName) {
@@ -100,11 +112,17 @@ class GenerateType extends BaseFunction implements
             $fileName = Util::sanitizeFileName($entity->get('name')) . '.pdf';
         }
 
+        $data = Data::fromNothing()->withAcl(false);
+
         try {
-            $contents = $this->serviceFactory->create('Pdf')->buildFromTemplate($entity, $template);
-        } catch (\Exception $e) {
+            $contents = $this->serviceFactory
+                ->create('Pdf')
+                ->generate($entity, $template, $data);
+        }
+        catch (Exception $e) {
             $this->log("Error while generating. Message: " . $e->getMessage() . ".", 'error');
-            return null;
+
+            throw new Error();
         }
 
         $attachment = $em->createEntity('Attachment', [
@@ -116,6 +134,6 @@ class GenerateType extends BaseFunction implements
             'role' => 'Attachment',
         ]);
 
-        return $attachment->id;
+        return $attachment->getId();
     }
 }

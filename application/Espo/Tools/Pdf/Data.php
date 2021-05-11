@@ -36,9 +36,16 @@ class Data
 {
     private $additionalTemplateData = [];
 
+    private $applyAcl = false;
+
     public function setAdditionalTemplateData(array $additionalTemplateData)
     {
         $this->additionalTemplateData = $additionalTemplateData;
+    }
+
+    public function applyAcl(): bool
+    {
+        return $this->applyAcl;
     }
 
     public function getAdditionalTemplateData(): array
@@ -46,12 +53,26 @@ class Data
         return $this->additionalTemplateData;
     }
 
-    public static function createFromArray(array $data): Data
+    public function withAdditionalTemplateData(array $additionalTemplateData): self
     {
-        $obj = new self();
+        $obj = clone $this;
 
-        $obj->additionalTemplateData = $data['additionalTemplateData'] ?? [];
+        $obj->additionalTemplateData = $additionalTemplateData;
 
         return $obj;
+    }
+
+    public function withAcl(bool $applyAcl = true): self
+    {
+        $obj = clone $this;
+
+        $obj->applyAcl = $applyAcl;
+
+        return $obj;
+    }
+
+    public static function fromNothing(): self
+    {
+        return new self();
     }
 }

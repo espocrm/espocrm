@@ -34,11 +34,12 @@ use Espo\Core\Utils\DateTime;
 
 class Factory
 {
-    protected $injectableFactory;
+    private $injectableFactory;
 
-    protected $dateTime;
+    private $dateTime;
 
-    public function __construct(InjectableFactory $injectableFactory, DateTime $dateTime) {
+    public function __construct(InjectableFactory $injectableFactory, DateTime $dateTime)
+    {
         $this->injectableFactory = $injectableFactory;
         $this->dateTime = $dateTime;
     }
@@ -46,6 +47,7 @@ class Factory
     public function create(bool $skipAcl = false, ?string $timezone = null): Htmlizer
     {
         $with = [];
+
         if ($skipAcl) {
             $with['acl'] = null;
         }
@@ -53,6 +55,7 @@ class Factory
         if ($timezone) {
             $dateTime = clone($this->dateTime);
             $dateTime->setTimezone($timezone);
+
             $with['dateTime'] = $dateTime;
         }
 
