@@ -38,6 +38,8 @@ use Espo\Core\{
     Record\ServiceContainer,
     Utils\Metadata,
     FileStorage\Manager as FileStorageManager,
+    FieldProcessing\ListLoadProcessor,
+    FieldProcessing\LoaderParams,
 };
 
 use Espo\{
@@ -66,6 +68,8 @@ class Export
 
     private $fileStorageManager;
 
+    private $listLoadProcessor;
+
     public function __construct(
         ProcessorFactory $processorFactory,
         SelectBuilderFactory $selectBuilderFactor,
@@ -73,7 +77,8 @@ class Export
         Acl $acl,
         EntityManager $entityManager,
         Metadata $metadata,
-        FileStorageManager $fileStorageManager
+        FileStorageManager $fileStorageManager,
+        ListLoadProcessor $listLoadProcessor
     ) {
         $this->processorFactory = $processorFactory;
         $this->selectBuilderFactory = $selectBuilderFactor;
@@ -82,6 +87,7 @@ class Export
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
         $this->fileStorageManager = $fileStorageManager;
+        $this->listLoadProcessor = $listLoadProcessor;
     }
 
     public function setParams(Params $params): self
@@ -196,10 +202,18 @@ class Export
 
         $dataResource = fopen('php://temp', 'w');
 
+        $loaderParams = LoaderParams
+            ::fromNothing()
+            ->withSelect($attributeList);
+
         $recordService = $this->serviceContainer->get($entityType);
 
         foreach ($collection as $entity) {
-            $recordService->loadAdditionalFieldsForExport($entity);
+            $this->listLoadProcessor->process($entity, $loaderParams);
+
+            if (method_exists($recordService, 'loadAdditionalFieldsForExport')) {
+                $recordService->loadAdditionalFieldsForExport($entity);
+            }
 
             if (method_exists($processor, 'loadAdditionalFields')) {
                 $processor->loadAdditionalFields($entity, $fieldList);

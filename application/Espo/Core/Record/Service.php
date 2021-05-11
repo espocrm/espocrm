@@ -347,10 +347,6 @@ class Service implements Crud,
         $loadProcessor->process($entity, $params);
     }
 
-    public function loadAdditionalFieldsForExport(Entity $entity)
-    {
-    }
-
     /**
      * @return void
      * @throws BadRequest
