@@ -52,6 +52,8 @@ class Params
 
     private $searchParams = null;
 
+    private $applyAccessControl = true;
+
     public function __construct(string $entityType)
     {
         $this->entityType = $entityType;
@@ -188,6 +190,18 @@ class Params
         return $obj;
     }
 
+    public function withAccessControl(bool $applyAccessControl = true): self
+    {
+        $obj = clone $this;
+
+        $obj->applyAccessControl = $applyAccessControl;
+
+        return $obj;
+    }
+
+    /**
+     * Get search params.
+     */
     public function getSearchParams(): SearchParams
     {
         if (!$this->searchParams) {
@@ -197,33 +211,67 @@ class Params
         return $this->searchParams;
     }
 
+    /**
+     * Get a target entity type.
+     */
     public function getEntityType(): string
     {
         return $this->entityType;
     }
 
+    /**
+     * Get a filename for a result export file.
+     */
     public function getFileName(): ?string
     {
         return $this->fileName;
     }
 
+    /**
+     * Get a name.
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * Get a format.
+     */
     public function getFormat(): ?string
     {
         return $this->format;
     }
 
+    /**
+     * Get attributes to be exported.
+     */
     public function getAttributeList(): ?array
     {
         return $this->attributeList;
     }
 
+    /**
+     * Get fields to be exported.
+     */
     public function getFieldList(): ?array
     {
         return $this->fieldList;
+    }
+
+    /**
+     * Whether all fields should be exported.
+     */
+    public function allFields(): bool
+    {
+        return $this->fieldList === null && $this->attributeList === null;
+    }
+
+    /**
+     * Whether to apply access control.
+     */
+    public function applyAccessControl(): bool
+    {
+        return $this->applyAccessControl;
     }
 }

@@ -35,11 +35,13 @@ use Espo\Core\{
     Select\SelectBuilderFactory,
     Acl,
     Acl\Table,
+    Acl\GlobalRestricton,
     Record\ServiceContainer,
     Utils\Metadata,
     FileStorage\Manager as FileStorageManager,
     FieldProcessing\ListLoadProcessor,
     FieldProcessing\LoaderParams,
+    Utils\FieldUtil,
 };
 
 use Espo\{
@@ -48,10 +50,18 @@ use Espo\{
     ORM\EntityManager,
 };
 
+use RuntimeException;
+
 class Export
 {
+    /**
+     * @var Params
+     */
     private $params;
 
+    /**
+     * @var Collection
+     */
     private $collection = null;
 
     private $processorFactory;
@@ -70,6 +80,8 @@ class Export
 
     private $listLoadProcessor;
 
+    private $fieldUtil;
+
     public function __construct(
         ProcessorFactory $processorFactory,
         SelectBuilderFactory $selectBuilderFactor,
@@ -78,7 +90,8 @@ class Export
         EntityManager $entityManager,
         Metadata $metadata,
         FileStorageManager $fileStorageManager,
-        ListLoadProcessor $listLoadProcessor
+        ListLoadProcessor $listLoadProcessor,
+        FieldUtil $fieldUtil
     ) {
         $this->processorFactory = $processorFactory;
         $this->selectBuilderFactory = $selectBuilderFactor;
@@ -88,6 +101,7 @@ class Export
         $this->metadata = $metadata;
         $this->fileStorageManager = $fileStorageManager;
         $this->listLoadProcessor = $listLoadProcessor;
+        $this->fieldUtil = $fieldUtil;
     }
 
     public function setParams(Params $params): self
@@ -121,82 +135,13 @@ class Export
 
         $processor = $this->processorFactory->create($format);
 
-        $exportAllFields = $params->getFieldList() === null;
-
         $collection = $this->getCollection($params);
 
-        $attributeListToSkip = $this->acl->getScopeForbiddenAttributeList($entityType, Table::ACTION_READ);
+        $attributeList = $this->getAttributeList($params);
 
-        $attributeListToSkip[] = 'deleted';
+        $fieldList = $this->getFieldList($params, $processor);
 
-        $attributeList = null;
-
-        if ($params->getAttributeList() !== null) {
-            $attributeList = [];
-
-            $seed = $this->entityManager->getEntity($entityType);
-
-            foreach ($params->getAttributeList() as $attribute) {
-                if (in_array($attribute, $attributeListToSkip)) {
-                    continue;
-                }
-
-                if (!$this->checkAttributeIsAllowedForExport($seed, $attribute)) {
-                    continue;
-                }
-
-                $attributeList[] = $attribute;
-            }
-        }
-
-        $entityDefs = $this->entityManager
-            ->getDefs()
-            ->getEntity($entityType);
-
-        if ($exportAllFields) {
-            $fieldList = $entityDefs->getFieldNameList();
-
-            array_unshift($fieldList, 'id');
-        }
-        else {
-            $fieldList = $params->getFieldList();
-        }
-
-        foreach ($fieldList as $i => $field) {
-            if ($field === 'id') {
-                continue;
-            }
-
-            if ($entityDefs->getField($field)->getParam('exportDisabled')) {
-                unset($fieldList[$i]);
-            }
-        }
-
-        $fieldList = array_values($fieldList);
-
-        if (method_exists($processor, 'filterFieldList')) {
-            $fieldList = $processor->filterFieldList($entityType, $fieldList, $exportAllFields);
-        }
-
-        if (is_null($attributeList)) {
-            $attributeList = [];
-
-            $seed = $this->entityManager->getEntity($entityType);
-
-            foreach ($entityDefs->getAttributeNameList() as $attribute) {
-                if (in_array($attribute, $attributeListToSkip)) {
-                    continue;
-                }
-
-                if (!$this->checkAttributeIsAllowedForExport($seed, $attribute, true)) {
-                    continue;
-                }
-
-                $attributeList[] = $attribute;
-            }
-        }
-
-        if (method_exists($processor, 'addAdditionalAttributes')) {
+        if ($fieldList !== null && method_exists($processor, 'addAdditionalAttributes')) {
             $processor->addAdditionalAttributes($entityType, $attributeList, $fieldList);
         }
 
@@ -215,7 +160,7 @@ class Export
                 $recordService->loadAdditionalFieldsForExport($entity);
             }
 
-            if (method_exists($processor, 'loadAdditionalFields')) {
+            if (method_exists($processor, 'loadAdditionalFields') && $fieldList !== null) {
                 $processor->loadAdditionalFields($entity, $fieldList);
             }
 
@@ -233,10 +178,6 @@ class Export
         }
 
         rewind($dataResource);
-
-        if (is_null($attributeList)) {
-            $attributeList = [];
-        }
 
         $mimeType = $this->metadata->get(['app', 'export', 'formatDefs', $format, 'mimeType']);
         $fileExtension = $this->metadata->get(['app', 'export', 'formatDefs', $format, 'fileExtension']);
@@ -366,15 +307,15 @@ class Export
     protected function checkAttributeIsAllowedForExport(
         Entity $entity,
         string $attribute,
-        bool $isExportAllFields = false
+        bool $exportAllFields = false
     ): bool {
-
-        if (!$isExportAllFields) {
-            return true;
-        }
 
         if ($entity->getAttributeParam($attribute, 'notExportable')) {
             return false;
+        }
+
+        if (!$exportAllFields) {
+            return true;
         }
 
         if ($entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
@@ -402,17 +343,124 @@ class Export
 
         $searchParams = $params->getSearchParams();
 
-        $query = $this->selectBuilderFactory
+        $builder = $this->selectBuilderFactory
             ->create()
             ->from($entityType)
-            ->withSearchParams($searchParams)
-            ->withStrictAccessControl()
-            ->build();
+            ->withSearchParams($searchParams);
+
+        if ($params->applyAccessControl()) {
+            $builder->withStrictAccessControl();
+        }
+
+        $query = $builder->build();
 
         return $this->entityManager
             ->getRepository($entityType)
             ->clone($query)
             ->sth()
             ->find();
+    }
+
+    private function getAttributeList(Params $params): array
+    {
+        $list = [];
+
+        $entityType = $params->getEntityType();
+
+       $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType);
+
+        $attributeListToSkip = $params->applyAccessControl() ?
+            $this->acl->getScopeForbiddenAttributeList($entityType, Table::ACTION_READ) :
+            $this->acl->getScopeRestrictedAttributeList($entityType, [
+                GlobalRestricton::TYPE_FORBIDDEN,
+                GlobalRestricton::TYPE_INTERNAL,
+            ]);
+
+        $attributeListToSkip[] = 'deleted';
+
+        $seed = $this->entityManager->getEntity($entityType);
+
+        $initialAttributeList = $params->getAttributeList();
+
+        if ($params->getAttributeList() === null && $params->getFieldList() !== null) {
+            $initialAttributeList = $this->getAttributeListFromFieldList($params);
+        }
+
+        if ($params->getAttributeList() === null && $params->getFieldList() === null) {
+            $initialAttributeList = $entityDefs->getAttributeNameList();
+        }
+
+        foreach ($initialAttributeList as $attribute) {
+            if (in_array($attribute, $attributeListToSkip)) {
+                continue;
+            }
+
+            if (!$this->checkAttributeIsAllowedForExport($seed, $attribute, $params->allFields())) {
+                continue;
+            }
+
+            $list[] = $attribute;
+        }
+
+        return $list;
+    }
+
+    private function getAttributeListFromFieldList(Params $params): array
+    {
+        $entityType = $params->getEntityType();
+
+        $fieldList = $params->getFieldList();
+
+        if ($fieldList === null) {
+            throw new RuntimeException();
+        }
+
+        $attributeList = [];
+
+        foreach ($fieldList as $field) {
+            $attributeList = array_merge(
+                $attributeList,
+                $this->fieldUtil->getAttributeList($entityType, $field)
+            );
+        }
+
+        return $attributeList;
+    }
+
+    private function getFieldList(Params $params, Processor $processor): ?array
+    {
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($params->getEntityType());
+
+        $fieldList = $params->getFieldList();
+
+        if ($params->allFields()) {
+            $fieldList = $entityDefs->getFieldNameList();
+
+            array_unshift($fieldList, 'id');
+        }
+
+        if ($fieldList === null) {
+            return null;
+        }
+
+        foreach ($fieldList as $i => $field) {
+            if ($field === 'id') {
+                continue;
+            }
+
+            if ($entityDefs->getField($field)->getParam('exportDisabled')) {
+                unset($fieldList[$i]);
+            }
+        }
+
+        if (method_exists($processor, 'filterFieldList')) {
+            $fieldList = $processor->filterFieldList($params->getEntityType(), $fieldList, $params->allFields());
+        }
+
+        return array_values($fieldList);
     }
 }
