@@ -29,9 +29,6 @@
                 },
                 "leads": false
             },
-            "KnowledgeBaseArticle": {
-                "assignedUser": false
-            },
             "Case": {
                 "status": {
                     "read": "yes",
