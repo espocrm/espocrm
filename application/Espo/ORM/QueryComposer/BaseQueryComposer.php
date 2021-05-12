@@ -1583,7 +1583,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $isMet = false;
 
             foreach ($itemList as $item) {
-                $itemToCompare = is_array($item) ? ($item[0] ?? null): $item;
+                $itemToCompare = is_array($item) ? ($item[0] ?? null) : $item;
 
                 if ($itemToCompare === $newItem) {
                     $isMet = true;

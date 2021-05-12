@@ -309,7 +309,7 @@ class Util
             $object = (array) $object;
         }
 
-        return is_array($object) ? array_map("static::objectToArray", $object): $object;
+        return is_array($object) ? array_map("static::objectToArray", $object) : $object;
     }
 
     /**

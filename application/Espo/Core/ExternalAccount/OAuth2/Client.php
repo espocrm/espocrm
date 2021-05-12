@@ -260,7 +260,7 @@ class Client
         curl_close($ch);
 
         return [
-            'result' => (null !== $resultArray) ? $resultArray: $responceBody,
+            'result' => (null !== $resultArray) ? $resultArray : $responceBody,
             'code' => intval($httpCode),
             'contentType' => $contentType,
             'header' => $responceHeader,

@@ -73,7 +73,7 @@ class Helper
 
             case Entity::HAS_MANY:
             case Entity::HAS_ONE:
-                $key = $defs->hasKey() ? $defs->getKey(): 'id';
+                $key = $defs->hasKey() ? $defs->getKey() : 'id';
 
                 $foreign = $defs->hasForeignRelationName() ?
                     $defs->getForeignRelationName() :
@@ -97,7 +97,7 @@ class Helper
                 ];
 
             case Entity::HAS_CHILDREN:
-                $key = $defs->hasKey() ? $defs->getKey(): 'id';
+                $key = $defs->hasKey() ? $defs->getKey() : 'id';
 
                 $foreignKey = $defs->hasForeignKey() ?
                     $defs->getForeignKey() :

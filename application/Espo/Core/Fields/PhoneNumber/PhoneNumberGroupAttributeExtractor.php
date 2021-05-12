@@ -50,7 +50,7 @@ class PhoneNumberGroupAttributeExtractor implements AttributeExtractor
             throw new InvalidArgumentException();
         }
 
-        $primaryNumber = $group->getPrimary() ? $group->getPrimary()->getNumber(): null;
+        $primaryNumber = $group->getPrimary() ? $group->getPrimary()->getNumber() : null;
 
         $dataList = [];
 
