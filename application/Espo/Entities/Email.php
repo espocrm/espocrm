@@ -171,7 +171,7 @@ class Email extends \Espo\Core\ORM\Entity
 
         $body = $this->get('body') ?? '';
 
-        $breaks = ["<br />","<br>","<br/>","<br />","&lt;br /&gt;","&lt;br/&gt;","&lt;br&gt;"];
+        $breaks = ["<br />", "<br>", "<br/>", "<br />", "&lt;br /&gt;", "&lt;br/&gt;", "&lt;br&gt;"];
 
         $body = str_ireplace($breaks, "\r\n", $body);
         $body = strip_tags($body);
