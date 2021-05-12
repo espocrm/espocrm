@@ -36,7 +36,6 @@ use Espo\Core\Fields\PhoneNumberGroup;
 use StdClass;
 use InvalidArgumentException;
 
-
 /**
  * @implements AttributeExtractor<PhoneNumberGroup>
  */

@@ -10,6 +10,7 @@ use PDO;
 // Espo: requires for the issue https://github.com/doctrine/dbal/issues/4496
 use Espo\Core\Utils\Database\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Connection as MySQLDriverConnection;
+
 // End: espo
 
 final class Driver extends AbstractMySQLDriver
