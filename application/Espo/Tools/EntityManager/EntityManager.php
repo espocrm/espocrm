@@ -727,7 +727,7 @@ class EntityManager
         $languageList = $this->getConfig()->get('languageList', []);
 
         foreach ($languageList as $language) {
-            $filePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $normalizedName . '.json' ;
+            $filePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $normalizedName . '.json';
 
             if (!file_exists($filePath)) {
                 continue;
