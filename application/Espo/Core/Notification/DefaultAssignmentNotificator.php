@@ -37,7 +37,7 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-class DefaultAssignmentNotificator  implements AssignmentNotificator
+class DefaultAssignmentNotificator implements AssignmentNotificator
 {
     private $userIdEnabledMap = [];
 
