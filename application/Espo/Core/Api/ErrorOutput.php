@@ -97,13 +97,12 @@ class ErrorOutput
         $this->processInternal($request, $response, $exception, $route, true);
     }
 
-    public function processInternal(
+    private function processInternal(
         Request $request,
         Response $response,
         Throwable $exception,
         ?string $route = null,
         bool $toPrintBody = false
-
     ): void {
 
         $message = $exception->getMessage() ?? '';
