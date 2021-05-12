@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Jobs;
 
-use \Espo\Core\Container;
+use Espo\Core\Container;
 
 abstract class Base
 {

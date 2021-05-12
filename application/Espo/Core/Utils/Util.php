@@ -309,7 +309,7 @@ class Util
             $object = (array) $object;
         }
 
-        return is_array($object) ? array_map("static::objectToArray", $object): $object;
+        return is_array($object) ? array_map("static::objectToArray", $object) : $object;
     }
 
     /**
@@ -678,7 +678,7 @@ class Util
         $value = trim($value);
         $last = strtoupper(substr($value, -1));
 
-        switch ( $last )
+        switch ($last)
         {
             case 'G':
             $value = (int) $value * 1024;

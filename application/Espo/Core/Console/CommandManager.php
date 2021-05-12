@@ -75,7 +75,7 @@ class CommandManager
 
     private function getCommandNameFromArgv(array $argv): string
     {
-        $command = isset($argv[1]) ? trim($argv[1]): null;
+        $command = isset($argv[1]) ? trim($argv[1]) : null;
 
         if (!$command) {
             throw new CommandNotSpecified("Command name is not specified.");

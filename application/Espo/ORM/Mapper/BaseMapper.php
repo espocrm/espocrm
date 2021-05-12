@@ -851,7 +851,7 @@ class BaseMapper implements RDBMapper
                             static::ATTRIBUTE_DELETED => false,
                         ],
                         'set' => [
-                            $foreignKey => NULL,
+                            $foreignKey => null,
                         ],
                     ])
                 );

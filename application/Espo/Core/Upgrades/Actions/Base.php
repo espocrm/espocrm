@@ -322,7 +322,7 @@ abstract class Base
         $manifest = $this->getManifest();
 
         /** check package type */
-        $type = strtolower( $this->getParams('name') );
+        $type = strtolower($this->getParams('name'));
 
         $manifestType = isset($manifest['type']) ? strtolower($manifest['type']) : $this->defaultPackageType;
 
@@ -392,7 +392,7 @@ abstract class Base
             return;
         }
 
-        $beforeInstallScript = Util::concatPath( array($packagePath, self::SCRIPTS, $scriptName) ) . '.php';
+        $beforeInstallScript = Util::concatPath(array($packagePath, self::SCRIPTS, $scriptName)) . '.php';
 
         if (file_exists($beforeInstallScript)) {
             return $beforeInstallScript;

@@ -109,8 +109,8 @@ class Manager
                 $add = false;
 
                 if (is_dir($path . Util::getSeparator() . $value)) {
-                    if ($recursively || (is_int($recursively) && $recursively!=0) ) {
-                        $nextRecursively = is_int($recursively) ? ($recursively-1): $recursively;
+                    if ($recursively || (is_int($recursively) && $recursively!=0)) {
+                        $nextRecursively = is_int($recursively) ? ($recursively-1) : $recursively;
 
                         $result[$value] = $this->getFileList(
                             $path . Util::getSeparator() . $value,
@@ -284,7 +284,7 @@ class Manager
         }
 
         if (!$result) {
-            $result = (file_put_contents($path, $data, $flags) !== FALSE);
+            $result = (file_put_contents($path, $data, $flags) !== false);
         }
 
         if ($result) {
@@ -403,7 +403,7 @@ class Manager
         }
 
         $currentData = $this->isFile($path) ?
-            Json::decode($currentContents, true):
+            Json::decode($currentContents, true) :
             [];
 
         if (!is_array($currentData)) {
@@ -623,7 +623,7 @@ class Manager
 
         if (!file_exists($pathParts['dirname'])) {
             $dirPermission = $defaultPermissions['dir'];
-            $dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10): $dirPermission;
+            $dirPermission = is_string($dirPermission) ? base_convert($dirPermission,8,10) : $dirPermission;
 
             if (!$this->mkdir($pathParts['dirname'], $dirPermission, true)) {
                 throw new Error(

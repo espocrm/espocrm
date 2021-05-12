@@ -276,7 +276,7 @@ class RecordTree extends Record
 
     public function link(string $id, string $link, string $foreignId): void
     {
-        if ($id == $foreignId ) {
+        if ($id == $foreignId) {
             throw new Forbidden();
         }
 

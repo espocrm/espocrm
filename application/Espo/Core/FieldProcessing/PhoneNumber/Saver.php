@@ -458,7 +458,7 @@ class Saver implements SaverInterface
                 $update = $this->entityManager->getQueryBuilder()
                     ->update()
                     ->in('EntityPhoneNumber')
-                    ->set( ['primary' => true])
+                    ->set(['primary' => true])
                     ->where([
                         'entityId' => $entity->getId(),
                         'entityType' => $entity->getEntityType(),

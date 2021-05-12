@@ -167,7 +167,7 @@ class Utils
 
         $nameList = [];
         $nameList[] = strtoupper($prefix);
-        $nameList[] = strtoupper( Util::toUnderScore($name) );
+        $nameList[] = strtoupper(Util::toUnderScore($name));
 
         return substr(implode('_', $nameList), 0, $maxLength);
     }

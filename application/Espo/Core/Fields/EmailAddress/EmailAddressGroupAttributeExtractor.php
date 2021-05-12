@@ -50,7 +50,7 @@ class EmailAddressGroupAttributeExtractor implements AttributeExtractor
             throw new InvalidArgumentException();
         }
 
-        $primaryAddress = $group->getPrimary() ? $group->getPrimary()->getAddress(): null;
+        $primaryAddress = $group->getPrimary() ? $group->getPrimary()->getAddress() : null;
 
         $dataList = [];
 

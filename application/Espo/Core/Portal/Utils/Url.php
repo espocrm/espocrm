@@ -96,7 +96,7 @@ class Url
 
         $url = rtrim($a[0], '/');
 
-        return strpos($url, '/portal') !== false ;
+        return strpos($url, '/portal') !== false;
     }
 
     public static function detectIsInPortalWithId(): bool

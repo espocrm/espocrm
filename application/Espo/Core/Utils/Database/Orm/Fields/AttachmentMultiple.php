@@ -34,7 +34,7 @@ class AttachmentMultiple extends Base
     protected function load($fieldName, $entityType)
     {
         $data = array(
-            $entityType => array (
+            $entityType => array(
                 'fields' => array(
                     $fieldName.'Ids' => array(
                         'type' => 'jsonArray',

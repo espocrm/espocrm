@@ -47,13 +47,13 @@ class Avatar extends Image implements Di\MetadataAware
     protected $systemColor = '#a4b5bd';
 
     protected $colorList = [
-        [111,168,214],
-        [237,197,85],
-        [212,114,155],
+        [111, 168, 214],
+        [237, 197, 85],
+        [212, 114, 155],
         '#8093BD',
-        [124,196,164],
-        [138,124,194],
-        [222,102,102],
+        [124, 196, 164],
+        [138, 124, 194],
+        [222, 102, 102],
         '#ABE3A1',
         '#E8AF64',
     ];
