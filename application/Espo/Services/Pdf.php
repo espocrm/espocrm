@@ -373,7 +373,7 @@ class Pdf
         header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
         header('Content-Disposition: inline; filename="'.basename($fileName).'"');
 
-        if (!isset($_SERVER['HTTP_ACCEPT_ENCODING']) OR empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
+        if (!isset($_SERVER['HTTP_ACCEPT_ENCODING']) or empty($_SERVER['HTTP_ACCEPT_ENCODING'])) {
             header('Content-Length: '. $contents->getLength());
         }
 
