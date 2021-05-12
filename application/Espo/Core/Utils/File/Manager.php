@@ -284,7 +284,7 @@ class Manager
         }
 
         if (!$result) {
-            $result = (file_put_contents($path, $data, $flags) !== FALSE);
+            $result = (file_put_contents($path, $data, $flags) !== false);
         }
 
         if ($result) {
