@@ -121,7 +121,7 @@ class QueueUtil
             $where['targetType'] = $targetType;
         }
 
-        return (booL) $this->entityManager
+        return (bool) $this->entityManager
             ->getRepository('Job')
             ->select(['id'])
             ->where($where)
