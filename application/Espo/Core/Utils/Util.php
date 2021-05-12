@@ -678,7 +678,7 @@ class Util
         $value = trim($value);
         $last = strtoupper(substr($value, -1));
 
-        switch ( $last )
+        switch ($last)
         {
             case 'G':
             $value = (int) $value * 1024;

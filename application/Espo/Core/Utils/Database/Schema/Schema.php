@@ -191,7 +191,7 @@ class Schema
                 $filePath = Util::concatPath($path, $typeName . 'Type');
                 $class = Util::getClassName($filePath);
 
-                if (! Type::hasType($dbalTypeName) ) {
+                if (! Type::hasType($dbalTypeName)) {
                     Type::addType($dbalTypeName, $class);
                 } else {
                     Type::overrideType($dbalTypeName, $class);

@@ -421,7 +421,7 @@ class Parser
                 ];
             }
 
-            if ($expression[0] === '-' ) {
+            if ($expression[0] === '-') {
                 return (object) [
                     'type' => 'numeric\\subtraction',
                     'value' => [
@@ -431,7 +431,7 @@ class Parser
                 ];
             }
 
-            if ($expression[0] === '+' ) {
+            if ($expression[0] === '+') {
                 return (object) [
                     'type' => 'numeric\\summation',
                     'value' => [

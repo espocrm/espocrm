@@ -135,7 +135,7 @@ class NotJoinedLoader implements LoaderInterface
                 continue;
             }
 
-            if (!$entityDefs->hasAttribute($name . 'Name') ) {
+            if (!$entityDefs->hasAttribute($name . 'Name')) {
                 continue;
             }
 

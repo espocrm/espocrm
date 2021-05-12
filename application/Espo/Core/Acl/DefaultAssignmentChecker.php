@@ -78,7 +78,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return false;
         }
 
-        if ( $this->hasAssignedUsersField($entity->getEntityType())) {
+        if ($this->hasAssignedUsersField($entity->getEntityType())) {
             if (!$this->isPermittedAssignedUsers($user, $entity)) {
                 return false;
             }
