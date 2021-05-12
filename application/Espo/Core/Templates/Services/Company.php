@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Templates\Services;
 
-use \Espo\ORM\Entity;
+use Espo\ORM\Entity;
 
 class Company extends \Espo\Services\Record
 {
