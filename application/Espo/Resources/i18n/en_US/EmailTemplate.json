@@ -6,7 +6,6 @@
         "body": "Body",
         "subject": "Subject",
         "attachments": "Attachments",
-        "insertField": "Insert Field",
         "oneOff": "One-off",
         "category": "Category",
         "insertField": "Placeholders"

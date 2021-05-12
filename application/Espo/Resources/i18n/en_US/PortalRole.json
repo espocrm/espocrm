@@ -6,8 +6,6 @@
     "links": {
         "users": "Users"
     },
-    "tooltips": {
-    },
     "labels": {
         "Access": "Access",
         "Create PortalRole": "Create Portal Role",
