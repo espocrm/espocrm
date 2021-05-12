@@ -38,7 +38,7 @@ class EmailEmailAddress extends HasMany
         $foreignEntityName = $this->getForeignEntityName();
 
         $relation = array(
-            $entityName => array (
+            $entityName => array(
                 'relations' => array(
                     $linkName => array(
                         'midKeys' => array(
