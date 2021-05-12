@@ -706,8 +706,6 @@ class RDBRepository extends Repository
 
     /**
      * Set to return STH collection. Recommended fetching large number of records.
-     *
-     * @todo Remove.
      */
     public function sth(): RDBSelectBuilder
     {
