@@ -29,11 +29,14 @@
 
 namespace tests\integration\Espo\Account;
 
+use Espo\Core\Select\SearchParams;
+
 class SearchTest extends \tests\integration\Core\BaseTestCase
 {
     protected $dataFile = 'Account/ChangeFields.php';
 
     protected $userName = 'admin';
+
     protected $password = '1';
 
     public function testSearchByName()
@@ -53,11 +56,11 @@ class SearchTest extends \tests\integration\Core\BaseTestCase
             'sortBy' => 'name',
         );
 
-        $result = $service->find($params);
+        $result = $service->find(SearchParams::fromRaw($params));
 
         $this->assertEquals(1, $result->getTotal());
 
-        $this->assertInstanceOf('\\Espo\\ORM\\EntityCollection', $result->getCollection());
+        $this->assertInstanceOf('Espo\\ORM\\EntityCollection', $result->getCollection());
 
         $list = $result->getCollection()->toArray();
 
