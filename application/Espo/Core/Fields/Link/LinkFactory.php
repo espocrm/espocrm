@@ -55,7 +55,7 @@ class LinkFactory implements ValueFactory
         $name = $entity->get($field . 'Name');
 
         return Link
-            ::fromId($id)
+            ::create($id)
             ->withName($name);
     }
 }

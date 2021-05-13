@@ -112,7 +112,7 @@ class GenerateType extends BaseFunction implements
             $fileName = Util::sanitizeFileName($entity->get('name')) . '.pdf';
         }
 
-        $data = Data::fromNothing()->withAcl(false);
+        $data = Data::create()->withAcl(false);
 
         try {
             $contents = $this->serviceFactory

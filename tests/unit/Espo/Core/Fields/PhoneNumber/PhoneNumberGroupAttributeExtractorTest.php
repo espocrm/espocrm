@@ -40,9 +40,9 @@ class PhoneNumberGroupAttributeExtractorTest extends \PHPUnit\Framework\TestCase
     public function testExtract()
     {
         $group = PhoneNumberGroup
-            ::fromList([
-                PhoneNumber::fromNumber('+1')->withType('Test-1'),
-                PhoneNumber::fromNumber('+2')->withType('Test-2')->optedOut(),
+            ::create([
+                PhoneNumber::create('+1')->withType('Test-1'),
+                PhoneNumber::create('+2')->withType('Test-2')->optedOut(),
             ]);
 
         $valueMap = (new PhoneNumberGroupAttributeExtractor())->extract($group, 'phoneNumber');
@@ -74,7 +74,7 @@ class PhoneNumberGroupAttributeExtractorTest extends \PHPUnit\Framework\TestCase
     public function testEmpty()
     {
         $group = PhoneNumberGroup
-            ::fromList([]);
+            ::create([]);
 
         $valueMap = (new PhoneNumberGroupAttributeExtractor())->extract($group, 'phoneNumber');
 

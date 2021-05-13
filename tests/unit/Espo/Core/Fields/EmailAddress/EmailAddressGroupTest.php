@@ -40,7 +40,7 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
 {
     public function testEmpty()
     {
-        $group = EmailAddressGroup::fromNothing();
+        $group = EmailAddressGroup::create();
 
         $this->assertEquals(0, count($group->getAddressList()));
         $this->assertEquals(0, count($group->getSecondaryList()));
@@ -55,9 +55,9 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
         $this->expectException(RuntimeException::class);
 
         EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('one@test.com'),
-                EmailAddress::fromAddress('one@test.com'),
+            ::create([
+                EmailAddress::create('one@test.com'),
+                EmailAddress::create('one@test.com'),
             ]);
     }
 
@@ -66,18 +66,18 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
         $this->expectException(RuntimeException::class);
 
         EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('one@test.com'),
-                EmailAddress::fromAddress('ONE@test.com'),
+            ::create([
+                EmailAddress::create('one@test.com'),
+                EmailAddress::create('ONE@test.com'),
             ]);
     }
 
     public function testWithPrimary1()
     {
-        $primary = EmailAddress::fromAddress('primary@test.com')->invalid();
+        $primary = EmailAddress::create('primary@test.com')->invalid();
 
         $group = EmailAddressGroup
-            ::fromNothing()
+            ::create()
             ->withPrimary($primary);
 
         $this->assertEquals(1, count($group->getList()));
@@ -87,7 +87,7 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('primary@test.com', $group->getPrimary()->getAddress());
 
-        $primaryAnother = EmailAddress::fromAddress('primaryAnother@test.com');
+        $primaryAnother = EmailAddress::create('primaryAnother@test.com');
 
         $groupAnother = $group->withPrimary($primaryAnother);
 
@@ -106,15 +106,15 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
 
     public function testWithPrimary2()
     {
-        $address = EmailAddress::fromAddress('one@test.com')->invalid();
+        $address = EmailAddress::create('one@test.com')->invalid();
 
         $group = EmailAddressGroup
-            ::fromList([$address])
+            ::create([$address])
             ->withAdded(
-                EmailAddress::fromAddress('two@test.com')
+                EmailAddress::create('two@test.com')
             )
             ->withPrimary(
-                EmailAddress::fromAddress('two@test.com')
+                EmailAddress::create('two@test.com')
             );
 
         $this->assertEquals('two@test.com', $group->getPrimary()->getAddress());
@@ -124,12 +124,12 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
 
     public function testWithAdded1()
     {
-        $address = EmailAddress::fromAddress('one@test.com')->invalid();
+        $address = EmailAddress::create('one@test.com')->invalid();
 
         $group = EmailAddressGroup
-            ::fromList([$address])
+            ::create([$address])
             ->withAdded(
-                EmailAddress::fromAddress('two@test.com')
+                EmailAddress::create('two@test.com')
             );
 
         $this->assertEquals('one@test.com', $group->getPrimary()->getAddress());
@@ -142,10 +142,10 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
     public function testWithAddedList()
     {
         $group = EmailAddressGroup
-            ::fromNothing()
+            ::create()
             ->withAddedList([
-                EmailAddress::fromAddress('one@test.com'),
-                EmailAddress::fromAddress('two@test.com'),
+                EmailAddress::create('one@test.com'),
+                EmailAddress::create('two@test.com'),
             ]);
 
         $this->assertEquals('one@test.com', $group->getPrimary()->getAddress());
@@ -156,12 +156,12 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
     public function testWithRemoved1()
     {
         $group = EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('one@test.com'),
-                EmailAddress::fromAddress('two@test.com'),
-                EmailAddress::fromAddress('three@test.com'),
+            ::create([
+                EmailAddress::create('one@test.com'),
+                EmailAddress::create('two@test.com'),
+                EmailAddress::create('three@test.com'),
             ])
-            ->withRemoved(EmailAddress::fromAddress('two@test.com'));
+            ->withRemoved(EmailAddress::create('two@test.com'));
 
         $this->assertEquals('one@test.com', $group->getPrimary()->getAddress());
 
@@ -171,12 +171,12 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
     public function testWithRemoved2()
     {
         $group = EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('one@test.com'),
-                EmailAddress::fromAddress('two@test.com'),
-                EmailAddress::fromAddress('three@test.com'),
+            ::create([
+                EmailAddress::create('one@test.com'),
+                EmailAddress::create('two@test.com'),
+                EmailAddress::create('three@test.com'),
             ])
-            ->withRemoved(EmailAddress::fromAddress('one@test.com'));
+            ->withRemoved(EmailAddress::create('one@test.com'));
 
         $this->assertEquals('two@test.com', $group->getPrimary()->getAddress());
 
@@ -186,10 +186,10 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
     public function testWithRemoved3()
     {
         $group = EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('one@test.com'),
+            ::create([
+                EmailAddress::create('one@test.com'),
             ])
-            ->withRemoved(EmailAddress::fromAddress('one@test.com'));
+            ->withRemoved(EmailAddress::create('one@test.com'));
 
         $this->assertNull($group->getPrimary());
 
@@ -201,9 +201,9 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
     public function testHasAddress()
     {
         $group = EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('one@test.com'),
-                EmailAddress::fromAddress('two@test.com'),
+            ::create([
+                EmailAddress::create('one@test.com'),
+                EmailAddress::create('two@test.com'),
             ]);
 
         $this->assertTrue($group->hasAddress('one@test.com'));
@@ -215,10 +215,10 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
     public function testGetByAddress()
     {
         $group = EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('one@test.com'),
-                EmailAddress::fromAddress('two@test.com'),
-                EmailAddress::fromAddress('three@test.com'),
+            ::create([
+                EmailAddress::create('one@test.com'),
+                EmailAddress::create('two@test.com'),
+                EmailAddress::create('three@test.com'),
             ]);
 
         $this->assertEquals('one@test.com', $group->getByAddress('one@test.com')->getAddress());
@@ -229,10 +229,10 @@ class EmailAddressGroupTest extends \PHPUnit\Framework\TestCase
     public function testClone()
     {
         $group = EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('one@test.com'),
-                EmailAddress::fromAddress('two@test.com'),
-                EmailAddress::fromAddress('three@test.com'),
+            ::create([
+                EmailAddress::create('one@test.com'),
+                EmailAddress::create('two@test.com'),
+                EmailAddress::create('three@test.com'),
             ]);
 
         $cloned = clone $group;

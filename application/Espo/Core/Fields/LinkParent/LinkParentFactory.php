@@ -55,7 +55,7 @@ class LinkParentFactory implements ValueFactory
         $entityType = $entity->get($field . 'Type');
 
         return LinkParent
-            ::fromEntityTypeAndId($entityType, $id)
+            ::create($entityType, $id)
             ->withName($entity->get($field . 'Name'));
     }
 }

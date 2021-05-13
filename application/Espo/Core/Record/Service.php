@@ -354,7 +354,7 @@ class Service implements Crud,
     public function processValidation(Entity $entity, $data)
     {
         $params = FieldValidationParams
-            ::fromNothing()
+            ::create()
             ->withSkipFieldList($this->validateSkipFieldList)
             ->withTypeSkipFieldList('required', $this->validateRequiredSkipFieldList);
 

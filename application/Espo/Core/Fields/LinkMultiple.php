@@ -39,7 +39,7 @@ class LinkMultiple
     private $list = [];
 
     /**
-     * @param array<int, LinkMultipleItem> $list
+     * @param LinkMultipleItem[] $list
      *
      * @throws RuntimeException
      */
@@ -72,7 +72,7 @@ class LinkMultiple
     /**
      * Get a list of IDs.
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getIdList(): array
     {
@@ -88,7 +88,7 @@ class LinkMultiple
     /**
      * Get a list of items.
      *
-     * @return array<int, LinkMultipleItem>
+     * @return LinkMultipleItem[]
      */
     public function getList(): array
     {
@@ -128,7 +128,7 @@ class LinkMultiple
     /**
      * Clone with an added item list.
      * .
-     * @param array<int, LinkMultipleItem> $list
+     * @param LinkMultipleItem[] $list
      *
      * @throws RuntimeException
      */
@@ -148,7 +148,7 @@ class LinkMultiple
             $newList[] = $item;
         }
 
-        return self::fromList($newList);
+        return self::create($newList);
     }
 
     /**
@@ -174,27 +174,19 @@ class LinkMultiple
             $newList = array_values($newList);
         }
 
-        return self::fromList($newList);
+        return self::create($newList);
     }
 
     /**
-     * Create from an item list.
+     * Create with an optional item list.
      *
-     * @param array<int, LinkMultipleItem> $list
+     * @param LinkMultipleItem[] $list
      *
      * @throws RuntimeException
      */
-    public static function fromList(array $list): self
+    public static function create(array $list = []): self
     {
         return new self($list);
-    }
-
-    /**
-     * Create empty.
-     */
-    public static function fromNothing(): self
-    {
-        return new self([]);
     }
 
     private function validateList(): void

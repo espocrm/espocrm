@@ -332,7 +332,7 @@ class Pdf
 
         if (!$data) {
             $data = Data
-                ::fromNothing()
+                ::create()
                 ->withAdditionalTemplateData($additionalData ?? [])
                 ->withAcl($applyAcl);
         }

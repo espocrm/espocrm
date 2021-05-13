@@ -105,7 +105,7 @@ class EmailAddressGroupFactory implements ValueFactory
         }
 
         foreach ($dataList as $item) {
-            $emailAddress = EmailAddress::fromAddress($item->emailAddress);
+            $emailAddress = EmailAddress::create($item->emailAddress);
 
             if ($item->optOut) {
                 $emailAddress = $emailAddress->optedOut();
@@ -122,7 +122,7 @@ class EmailAddressGroupFactory implements ValueFactory
             $emailAddressList[] = $emailAddress;
         }
 
-        $group = EmailAddressGroup::fromList($emailAddressList);
+        $group = EmailAddressGroup::create($emailAddressList);
 
         if ($primaryEmailAddress) {
             $group = $group->withPrimary($primaryEmailAddress);

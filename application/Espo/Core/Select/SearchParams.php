@@ -252,7 +252,7 @@ class SearchParams
     /**
      * Create an empty instance.
      */
-    public static function fromNothing(): self
+    public static function create(): self
     {
         return new self();
     }

@@ -132,7 +132,7 @@ class EmailAddress
     /**
      * Create from an address.
      */
-    public static function fromAddress(string $address): self
+    public static function create(string $address): self
     {
         return new self($address);
     }

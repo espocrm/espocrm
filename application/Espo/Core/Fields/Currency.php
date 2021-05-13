@@ -135,7 +135,7 @@ class Currency
     /**
      * Create from an amount and code.
      */
-    public static function fromAmountAndCode(float $amount, string $code): self
+    public static function create(float $amount, string $code): self
     {
         return new self($amount, $code);
     }

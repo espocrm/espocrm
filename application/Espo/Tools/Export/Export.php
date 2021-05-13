@@ -148,7 +148,7 @@ class Export
         $dataResource = fopen('php://temp', 'w');
 
         $loaderParams = LoaderParams
-            ::fromNothing()
+            ::create()
             ->withSelect($attributeList);
 
         $recordService = $this->serviceContainer->get($entityType);

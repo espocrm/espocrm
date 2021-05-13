@@ -80,6 +80,6 @@ class Totp implements CodeVerify
 
     public function getLoginData(User $user): ResultData
     {
-        return ResultData::fromMessage('enterTotpCode');
+        return ResultData::createWithMessage('enterTotpCode');
     }
 }

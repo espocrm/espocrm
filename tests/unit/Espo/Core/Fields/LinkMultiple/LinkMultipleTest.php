@@ -40,7 +40,7 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
 {
     public function testEmpty()
     {
-        $value = LinkMultiple::fromNothing();
+        $value = LinkMultiple::create();
 
         $this->assertEquals(0, count($value->getIdList()));
         $this->assertEquals(0, count($value->getList()));
@@ -52,20 +52,20 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
         $this->expectException(RuntimeException::class);
 
         LinkMultiple
-            ::fromList([
-                LinkMultipleItem::fromId('1'),
-                LinkMultipleItem::fromId('1'),
+            ::create([
+                LinkMultipleItem::create('1'),
+                LinkMultipleItem::create('1'),
             ]);
     }
 
     public function testWithAdded1()
     {
-        $item = LinkMultipleItem::fromId('1')->withName('test-1');
+        $item = LinkMultipleItem::create('1')->withName('test-1');
 
         $group = LinkMultiple
-            ::fromList([$item])
+            ::create([$item])
             ->withAdded(
-                LinkMultipleItem::fromId('2')
+                LinkMultipleItem::create('2')
             );
 
         $this->assertEquals(2, $group->getCount());
@@ -79,10 +79,10 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
     public function testWithAddedList()
     {
         $group = LinkMultiple
-            ::fromNothing()
+            ::create()
             ->withAddedList([
-                LinkMultipleItem::fromId('1'),
-                LinkMultipleItem::fromId('2'),
+                LinkMultipleItem::create('1'),
+                LinkMultipleItem::create('2'),
             ]);
 
         $this->assertEquals(2, $group->getCount());
@@ -91,12 +91,12 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
     public function testWithRemoved1()
     {
         $group = LinkMultiple
-            ::fromList([
-                LinkMultipleItem::fromId('1'),
-                LinkMultipleItem::fromId('2'),
-                LinkMultipleItem::fromId('3'),
+            ::create([
+                LinkMultipleItem::create('1'),
+                LinkMultipleItem::create('2'),
+                LinkMultipleItem::create('3'),
             ])
-            ->withRemoved(LinkMultipleItem::fromId('1'));
+            ->withRemoved(LinkMultipleItem::create('1'));
 
         $this->assertEquals(2, $group->getCount());
     }
@@ -104,10 +104,10 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
     public function testGetById()
     {
         $group = LinkMultiple
-            ::fromList([
-                LinkMultipleItem::fromId('1'),
-                LinkMultipleItem::fromId('2'),
-                LinkMultipleItem::fromId('3'),
+            ::create([
+                LinkMultipleItem::create('1'),
+                LinkMultipleItem::create('2'),
+                LinkMultipleItem::create('3'),
             ]);
 
         $this->assertEquals('1', $group->getById('1')->getId());
@@ -118,10 +118,10 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
     public function testClone()
     {
         $group = LinkMultiple
-            ::fromList([
-                LinkMultipleItem::fromId('1'),
-                LinkMultipleItem::fromId('2'),
-                LinkMultipleItem::fromId('3'),
+            ::create([
+                LinkMultipleItem::create('1'),
+                LinkMultipleItem::create('2'),
+                LinkMultipleItem::create('3'),
             ]);
 
         $cloned = clone $group;
@@ -134,7 +134,7 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
     public function testItemColumn()
     {
         $item = LinkMultipleItem
-            ::fromId('1')
+            ::create('1')
             ->withColumnValue('key', 'value');
 
         $this->assertTrue($item->hasColumnValue('key'));

@@ -100,7 +100,7 @@ class LinkMultipleFactory implements ValueFactory
         }
 
         foreach ($idList as $id) {
-            $item = LinkMultipleItem::fromId($id);
+            $item = LinkMultipleItem::create($id);
 
             if ($columnData && property_exists($columnData, $id)) {
                 $item = $this->addColumnValues($item, $columnData->$id);

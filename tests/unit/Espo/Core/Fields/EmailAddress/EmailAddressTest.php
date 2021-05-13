@@ -41,19 +41,19 @@ class EmailAddressTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        EmailAddress::fromAddress('one');
+        EmailAddress::create('one');
     }
 
     public function testInvalidEmpty()
     {
         $this->expectException(RuntimeException::class);
 
-        EmailAddress::fromAddress('');
+        EmailAddress::create('');
     }
 
     public function testCloneInvalid()
     {
-        $address = EmailAddress::fromAddress('test@test.com')->invalid();
+        $address = EmailAddress::create('test@test.com')->invalid();
 
         $this->assertEquals('test@test.com', $address->getAddress());
 
@@ -63,7 +63,7 @@ class EmailAddressTest extends \PHPUnit\Framework\TestCase
 
     public function testCloneOptedOut()
     {
-        $address = EmailAddress::fromAddress('test@test.com')->optedOut();
+        $address = EmailAddress::create('test@test.com')->optedOut();
 
         $this->assertFalse($address->isInvalid());
         $this->assertTrue($address->isOptedOut());
@@ -71,7 +71,7 @@ class EmailAddressTest extends \PHPUnit\Framework\TestCase
 
     public function testCloneNotOptedOut()
     {
-        $address = EmailAddress::fromAddress('test@test.com')
+        $address = EmailAddress::create('test@test.com')
             ->optedOut()
             ->notOptedOut()
             ->invalid()

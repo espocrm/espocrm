@@ -177,7 +177,7 @@ class JobManager
     public function processQueue(string $queue, int $limit): void
     {
         $params = QueueProcessorParams
-            ::fromNothing()
+            ::create()
             ->withQueue($queue)
             ->withLimit($limit)
             ->withUseProcessPool(false)
@@ -193,7 +193,7 @@ class JobManager
         $limit = (int) $this->config->get('jobMaxPortion', 0);
 
         $params = QueueProcessorParams
-            ::fromNothing()
+            ::create()
             ->withUseProcessPool($this->useProcessPool)
             ->withLimit($limit);
 

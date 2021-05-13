@@ -208,7 +208,7 @@ class Address
     /**
      * Create an empty address.
      */
-    public static function fromNothing(): self
+    public static function create(): self
     {
         return new self();
     }

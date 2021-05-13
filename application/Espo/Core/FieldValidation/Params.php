@@ -42,7 +42,7 @@ class Params
     /**
      * A field list that will be skipped in validation.
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getSkipFieldList(): array
     {
@@ -52,7 +52,7 @@ class Params
     /**
      * A field list that will be skipped in validation for a specific validation type.
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getTypeSkipFieldList(string $type): array
     {
@@ -62,7 +62,7 @@ class Params
     /**
      * Clone with a specified field list that will be skipped in validation.
      *
-     * @param array<int, string> $list
+     * @param string[] $list
      */
     public function withSkipFieldList(array $list): self
     {
@@ -76,7 +76,7 @@ class Params
     /**
      * Clone with a specified field list that will be skipped in validation for a specific validation type.
      *
-     * @param array<int, string> $list
+     * @param string[] $list
      */
     public function withTypeSkipFieldList(string $type, array $list): self
     {
@@ -90,7 +90,7 @@ class Params
     /**
      * Create an empty instance.
      */
-    public static function fromNothing(): self
+    public static function create(): self
     {
         return new self();
     }

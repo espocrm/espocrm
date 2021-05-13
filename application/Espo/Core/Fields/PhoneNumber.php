@@ -146,9 +146,9 @@ class PhoneNumber
     }
 
     /**
-     * Create from a number.
+     * Create with a number.
      */
-    public static function fromNumber(string $number): self
+    public static function create(string $number): self
     {
         return new self($number);
     }
@@ -156,9 +156,9 @@ class PhoneNumber
     /**
      * Create from a number and type.
      */
-    public static function fromNumberAndType(string $number, string $type): self
+    public static function createWithType(string $number, string $type): self
     {
-        return self::fromNumber($number)->withType($type);
+        return self::create($number)->withType($type);
     }
 
     private function clone(): self

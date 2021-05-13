@@ -98,7 +98,7 @@ class ExportTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $searchParams = SearchParams
-            ::fromNothing()
+            ::create()
             ->withWhere(WhereItem::fromRaw([
                 'type' => 'equals',
                 'attribute' => 'assignedUserId',
@@ -106,7 +106,7 @@ class ExportTest extends \tests\integration\Core\BaseTestCase
             ]));
 
         $params = Params
-            ::fromEntityType('Task')
+            ::create('Task')
             ->withFieldList([
                 'name',
                 'assignedUser',
@@ -154,7 +154,7 @@ class ExportTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $params = Params
-            ::fromEntityType('Task')
+            ::create('Task')
             ->withAttributeList([
                 'id',
                 'name',
@@ -216,7 +216,7 @@ class ExportTest extends \tests\integration\Core\BaseTestCase
             ->find();
 
         $params = Params
-            ::fromEntityType('Task')
+            ::create('Task')
             ->withAttributeList([
                 'name',
                 'assignedUserId',

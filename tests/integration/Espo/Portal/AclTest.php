@@ -89,7 +89,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
 
-        $result = $service->find(SearchParams::fromNothing());
+        $result = $service->find(SearchParams::create());
 
         $idList = [];
         foreach ($result->getCollection() as $e) {
@@ -160,7 +160,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->assertTrue($acl->check($case4, 'read'));
 
         $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
-        $result = $service->find(SearchParams::fromNothing());
+        $result = $service->find(SearchParams::create());
 
         $idList = [];
         foreach ($result->getCollection() as $e) {
@@ -238,7 +238,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('recordServiceContainer')->get('Case');
 
-        $result = $service->find(SearchParams::fromNothing());
+        $result = $service->find(SearchParams::create());
 
         $idList = [];
 

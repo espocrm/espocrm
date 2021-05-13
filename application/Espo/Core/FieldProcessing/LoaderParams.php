@@ -62,7 +62,7 @@ class LoaderParams
         return $obj;
     }
 
-    public static function fromNothing(): self
+    public static function create(): self
     {
         return new self();
     }

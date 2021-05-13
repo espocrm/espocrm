@@ -139,14 +139,14 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $contact1 = $this->entityManager->getEntity('Contact');
 
         $emailAddressGroup1 = $contact1->getEmailAddressGroup()
-            ->withAdded(EmailAddress::fromAddress('c1a@test.com'))
-            ->withAdded(EmailAddress::fromAddress('c1b@test.com')->invalid());
+            ->withAdded(EmailAddress::create('c1a@test.com'))
+            ->withAdded(EmailAddress::create('c1b@test.com')->invalid());
 
         $contact1->setEmailAddressGroup($emailAddressGroup1);
 
         $phoneNumberGroup1 = $contact1->getPhoneNumberGroup()
-            ->withAdded(PhoneNumber::fromNumber('+1a'))
-            ->withAdded(PhoneNumber::fromNumber('+1b')->invalid());
+            ->withAdded(PhoneNumber::create('+1a'))
+            ->withAdded(PhoneNumber::create('+1b')->invalid());
 
         $contact1->setPhoneNumberGroup($phoneNumberGroup1);
 
@@ -158,14 +158,14 @@ class ActionTest extends \tests\integration\Core\BaseTestCase
         $contact2 =  $this->entityManager->getEntity('Contact');
 
         $emailAddressGroup2 = $contact1->getEmailAddressGroup()
-            ->withAdded(EmailAddress::fromAddress('c2a@test.com'))
-            ->withAdded(EmailAddress::fromAddress('c2b@test.com')->optedOut());
+            ->withAdded(EmailAddress::create('c2a@test.com'))
+            ->withAdded(EmailAddress::create('c2b@test.com')->optedOut());
 
         $contact2->setEmailAddressGroup($emailAddressGroup2);
 
         $phoneNumberGroup2 = $contact2->getPhoneNumberGroup()
-            ->withAdded(PhoneNumber::fromNumber('+2a'))
-            ->withAdded(PhoneNumber::fromNumber('+2b')->optedOut());
+            ->withAdded(PhoneNumber::create('+2a'))
+            ->withAdded(PhoneNumber::create('+2b')->optedOut());
 
         $contact2->setPhoneNumberGroup($phoneNumberGroup2);
 

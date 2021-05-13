@@ -38,7 +38,7 @@ use RuntimeException;
 class PhoneNumberGroup
 {
     /**
-     * @var array<int, PhoneNumber>
+     * @var PhoneNumber[]
      */
     private $list = [];
 
@@ -48,7 +48,7 @@ class PhoneNumberGroup
     private $primary = null;
 
     /**
-     * @param array<int, PhoneNumber> $list
+     * @param PhoneNumber[] $list
      *
      * @throws RuntimeException
      */
@@ -95,7 +95,7 @@ class PhoneNumberGroup
     /**
      * Get a list of all phone numbers.
      *
-     * @return array<int, PhoneNumber>
+     * @return PhoneNumber[]
      */
     public function getList(): array
     {
@@ -113,7 +113,7 @@ class PhoneNumberGroup
     /**
      * Get a list of phone numbers w/o a primary.
      *
-     * @return array<int, PhoneNumber>
+     * @return PhoneNumber[]
      */
     public function getSecondaryList(): array
     {
@@ -133,7 +133,7 @@ class PhoneNumberGroup
     /**
      * Get a list of phone numbers represented as strings.
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getNumberList(): array
     {
@@ -185,13 +185,13 @@ class PhoneNumberGroup
 
         $newList = array_merge([$phoneNumber], $list);
 
-        return self::fromList($newList);
+        return self::create($newList);
     }
 
     /**
      * Clone with an added phone number list.
      *
-     * @param array<int, PhoneNumber> $list
+     * @param PhoneNumber[] $list
      */
     public function withAddedList(array $list): self
     {
@@ -209,7 +209,7 @@ class PhoneNumberGroup
             $newList[] = $item;
         }
 
-        return self::fromList($newList);
+        return self::create($newList);
     }
 
     /**
@@ -243,25 +243,17 @@ class PhoneNumberGroup
             $newList = array_values($newList);
         }
 
-        return self::fromList($newList);
+        return self::create($newList);
     }
 
     /**
-     * Create from a phone number list. A first item will be set as primary.
+     * Create with an optional phone number list. A first item will be set as primary.
      *
-     * @param array<int, PhoneNumber> $list
+     * @param PhoneNumber[] $list
      */
-    public static function fromList(array $list): self
+    public static function create(array $list = []): self
     {
         return new self($list);
-    }
-
-    /**
-     * Create empty.
-     */
-    public static function fromNothing(): self
-    {
-        return new self([]);
     }
 
     private function searchNumberInList(string $number): ?int

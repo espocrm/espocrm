@@ -38,7 +38,7 @@ use RuntimeException;
 class EmailAddressGroup
 {
     /**
-     * @var array<int, EmailAddress>
+     * @var EmailAddress[]
      */
     private $list = [];
 
@@ -48,7 +48,7 @@ class EmailAddressGroup
     private $primary = null;
 
     /**
-     * @param array<int, EmailAddress> $list
+     * @param EmailAddress[] $list
      *
      * @throws RuntimeException
      */
@@ -95,7 +95,7 @@ class EmailAddressGroup
     /**
      * Get a list of all email addresses.
      *
-     * @return array<int, EmailAddress>
+     * @return EmailAddress[]
      */
     public function getList(): array
     {
@@ -113,7 +113,7 @@ class EmailAddressGroup
     /**
      * Get a list of email addresses w/o a primary.
      *
-     * @return array<int, EmailAddress>
+     * @return EmailAddress[]
      */
     public function getSecondaryList(): array
     {
@@ -133,7 +133,7 @@ class EmailAddressGroup
     /**
      * Get a list of email addresses represented as strings.
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getAddressList(): array
     {
@@ -185,13 +185,13 @@ class EmailAddressGroup
 
         $newList = array_merge([$emailAddress], $list);
 
-        return self::fromList($newList);
+        return self::create($newList);
     }
 
     /**
      * Clone with an added email address list.
      *
-     * @param array<int, EmailAddress> $list
+     * @param EmailAddress[] $list
      */
     public function withAddedList(array $list): self
     {
@@ -209,7 +209,7 @@ class EmailAddressGroup
             $newList[] = $item;
         }
 
-        return self::fromList($newList);
+        return self::create($newList);
     }
 
     /**
@@ -243,25 +243,17 @@ class EmailAddressGroup
             $newList = array_values($newList);
         }
 
-        return self::fromList($newList);
+        return self::create($newList);
     }
 
     /**
-     * Create from an email address list. A first item will be set as primary.
+     * Create with an optional email address list. A first item will be set as primary.
      *
-     * @param array<int, EmailAddress> $list
+     * @param EmailAddress[] $list
      */
-    public static function fromList(array $list): self
+    public static function create(array $list = []): self
     {
         return new self($list);
-    }
-
-    /**
-     * Create empty.
-     */
-    public static function fromNothing(): self
-    {
-        return new self([]);
     }
 
     private function searchAddressInList(string $address): ?int

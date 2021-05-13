@@ -56,13 +56,12 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertEquals('test@test.com', $group1->getPrimary()->getAddress());
 
-        $group2 = EmailAddressGroup
-            ::fromNothing()
+        $group2 = EmailAddressGroup::create()
             ->withAdded(
-                EmailAddress::fromAddress('test-a@test.com')->invalid()
+                EmailAddress::create('test-a@test.com')->invalid()
             )
             ->withAdded(
-                EmailAddress::fromAddress('test@test.com')->optedOut()
+                EmailAddress::create('test@test.com')->optedOut()
             );
 
         $contact->setValueObject('emailAddress', $group2);
@@ -82,10 +81,9 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertTrue($group3->getList()[1]->isOptedOut());
 
-        $group4 = EmailAddressGroup
-            ::fromNothing()
+        $group4 = EmailAddressGroup::create()
             ->withAdded(
-                EmailAddress::fromAddress('test-a@test.com')->invalid()
+                EmailAddress::create('test-a@test.com')->invalid()
             );
 
         $contact->setValueObject('emailAddress', $group4);

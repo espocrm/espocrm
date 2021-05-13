@@ -54,7 +54,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
         $entity = $entityManager->getEntity('Account');
 
         $address = Address
-            ::fromNothing()
+            ::create()
             ->withCity('Test')
             ->withCountry('United States');
 
@@ -212,10 +212,10 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entity = $entityManager->getEntity('Account');
 
-        $group = EmailAddressGroup::fromList([
-            EmailAddress::fromAddress('one@test.com'),
-            EmailAddress::fromAddress('two@test.com')->optedOut(),
-            EmailAddress::fromAddress('three@test.com')->invalid(),
+        $group = EmailAddressGroup::create([
+            EmailAddress::create('one@test.com'),
+            EmailAddress::create('two@test.com')->optedOut(),
+            EmailAddress::create('three@test.com')->invalid(),
         ]);
 
         $entity->setEmailAddressGroup($group);
@@ -239,10 +239,10 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entity = $entityManager->getEntity('Account');
 
-        $group = PhoneNumberGroup::fromList([
-            PhoneNumber::fromNumber('1')->withType('Office'),
-            PhoneNumber::fromNumber('2')->optedOut(),
-            PhoneNumber::fromNumber('3')->invalid(),
+        $group = PhoneNumberGroup::create([
+            PhoneNumber::create('1')->withType('Office'),
+            PhoneNumber::create('2')->optedOut(),
+            PhoneNumber::create('3')->invalid(),
         ]);
 
         $entity->setPhoneNumberGroup($group);
@@ -267,7 +267,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entity = $entityManager->getEntity('Account');
 
-        $entity->setValueObject('assignedUser', Link::fromId('1'));
+        $entity->setValueObject('assignedUser', Link::create('1'));
 
         $link = $entity->getValueObject('assignedUser');
 
@@ -284,7 +284,7 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entity = $entityManager->getEntity('Task');
 
-        $entity->setValueObject('parent', LinkParent::fromEntityTypeAndId('Account', 'test-id'));
+        $entity->setValueObject('parent', LinkParent::create('Account', 'test-id'));
 
         $link = $entity->getValueObject('parent');
 
@@ -305,9 +305,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entity = $entityManager->getEntity('Opportunity');
 
-        $link = LinkMultiple::fromList([
-            LinkMultipleItem::fromId($c1->id)->withColumnValue('role', 'Decision Maker'),
-            LinkMultipleItem::fromId($c2->id),
+        $link = LinkMultiple::create([
+            LinkMultipleItem::create($c1->id)->withColumnValue('role', 'Decision Maker'),
+            LinkMultipleItem::create($c2->id),
         ]);
 
         $entity->setValueObject('contacts', $link);
@@ -336,9 +336,9 @@ class ValueObjectTest extends \tests\integration\Core\BaseTestCase
 
         $entity = $entityManager->getEntity('Opportunity');
 
-        $link = LinkMultiple::fromList([
-            LinkMultipleItem::fromId($c1->id)->withColumnValue('role', 'Decision Maker'),
-            LinkMultipleItem::fromId($c2->id),
+        $link = LinkMultiple::create([
+            LinkMultipleItem::create($c1->id)->withColumnValue('role', 'Decision Maker'),
+            LinkMultipleItem::create($c2->id),
         ]);
 
         $entity->setValueObject('contacts', $link);

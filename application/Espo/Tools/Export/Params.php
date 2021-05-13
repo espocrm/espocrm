@@ -110,7 +110,7 @@ class Params
             }
 
             $obj->searchParams = SearchParams
-                ::fromNothing()
+                ::create()
                 ->withWhere(
                     WhereItem::fromRaw([
                         'type' => 'equals',
@@ -131,7 +131,7 @@ class Params
         return $obj;
     }
 
-    public static function fromEntityType(string $entityType): self
+    public static function create(string $entityType): self
     {
         return new self($entityType);
     }
@@ -205,7 +205,7 @@ class Params
     public function getSearchParams(): SearchParams
     {
         if (!$this->searchParams) {
-            return SearchParams::fromNothing();
+            return SearchParams::create();
         }
 
         return $this->searchParams;

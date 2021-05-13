@@ -95,7 +95,7 @@ class QueueProcessorParams
         return $this->limit;
     }
 
-    public static function fromNothing(): self
+    public static function create(): self
     {
         return new self();
     }

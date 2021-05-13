@@ -569,7 +569,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $this->expectException(Forbidden::class);
 
         $searchParams = SearchParams
-            ::fromNothing()
+            ::create()
             ->withWhere(WhereItem::fromRaw(
                 [
                     'type' => 'isNull',
