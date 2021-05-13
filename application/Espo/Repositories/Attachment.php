@@ -31,8 +31,6 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Utils\Util;
-
 use Espo\Entities\Attachment as AttachmentEntity;
 
 use Espo\Core\Di;
