@@ -29,29 +29,35 @@
 
 namespace tests\integration\Espo\Email;
 
+use Espo\Core\Select\SearchParams;
+
 class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
 {
-
     public function testSearchByEmailAddress()
     {
         $entityManager = $this->getContainer()->get('entityManager');
 
         $email = $entityManager->getEntity('Email');
+
         $email->set('from', 'test@test.com');
         $email->set('status', 'Archived');
+
         $entityManager->saveEntity($email);
 
         $emailService = $this->getApplication()->getContainer()->get('serviceFactory')->create('Email');
 
-        $result = $emailService->find(array(
-            'where' => array(
-                array(
-                    'type' => 'equals',
-                    'attribute' => 'emailAddress',
-                    'value' => 'test@test.com'
-                )
-            )
-        ));
+        $result = $emailService->find(
+            SearchParams::fromRaw([
+                'where' => [
+                    [
+                        'type' => 'equals',
+                        'attribute' => 'emailAddress',
+                        'value' => 'test@test.com'
+                    ]
+                ]
+            ])
+        );
+
         $this->assertEquals(1, count($result->getCollection()));
     }
 
@@ -60,22 +66,30 @@ class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
         $entityManager = $this->getContainer()->get('entityManager');
 
         $email = $entityManager->getEntity('Email');
+
         $email->set('from', 'test@test.com');
         $email->set('status', 'Archived');
         $email->set('name', 'Improvements to our Privacy Policy');
         $email->set('body', 'name abc test');
+
         $entityManager->saveEntity($email);
 
         $emailService = $this->getApplication()->getContainer()->get('serviceFactory')->create('Email');
 
-        $result = $emailService->find([
-            'textFilter' => 'name abc'
-        ]);
+        $result = $emailService->find(
+            SearchParams::fromRaw([
+                'textFilter' => 'name abc'
+            ])
+        );
+
         $this->assertEquals(1, count($result->getCollection()));
 
-        $result = $emailService->find([
-            'textFilter' => 'Improvements to our Privacy Policy'
-        ]);
+        $result = $emailService->find(
+             SearchParams::fromRaw([
+                'textFilter' => 'Improvements to our Privacy Policy'
+            ])
+        );
+
         $this->assertEquals(1, count($result->getCollection()));
     }
 }
