@@ -122,6 +122,8 @@ class SearchParams
     }
 
     /**
+     * Attributes to select. NULL means to select all attributes.
+     *
      * @param string[]|null $select
      */
     public function withSelect(?array $select): self

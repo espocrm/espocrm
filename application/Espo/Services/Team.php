@@ -31,6 +31,8 @@ namespace Espo\Services;
 
 use Espo\ORM\Entity;
 
+use Espo\Core\Select\SearchParams;
+
 use Espo\Core\Di;
 
 class Team extends Record implements
@@ -82,9 +84,9 @@ class Team extends Record implements
         }
     }
 
-    public function massLink(string $id, string $link, array $where, ?array $selectData = null)
+    public function massLink(string $id, string $link, SearchParams $searchParams): bool
     {
-        $result = parent::massLink($id, $link, $where, $selectData);
+        $result = parent::massLink($id, $link, $searchParams);
 
         if ($link === 'users') {
             $this->clearRolesCache();

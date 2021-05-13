@@ -47,7 +47,7 @@ use Espo\Core\{
     ServiceFactory,
     Api\Request,
     Api\Response,
-    Record\Crud as CrudService,
+    Record\Service as RecordService,
     Select\SearchParams,
     Di,
 };
@@ -122,7 +122,7 @@ class RecordBase extends Base implements Di\EntityManagerAware
         return $this->name;
     }
 
-    protected function getRecordService(?string $entityType = null): CrudService
+    protected function getRecordService(?string $entityType = null): RecordService
     {
         return $this->recordServiceContainer->get($entityType ?? $this->getEntityType());
     }

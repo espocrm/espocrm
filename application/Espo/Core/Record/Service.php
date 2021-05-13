@@ -1152,13 +1152,13 @@ class Service implements Crud,
         $this->getStreamService()->unfollowEntity($entity, $foreignId);
     }
 
-    public function massLink(string $id, string $link, array $where, ?array $selectData = null)
+    public function massLink(string $id, string $link, SearchParams $searchParams): bool
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
 
-        if (empty($id) || empty($link)) {
+        if (!$id || !$link) {
             throw new BadRequest;
         }
 
@@ -1177,7 +1177,7 @@ class Service implements Crud,
         $methodName = 'massLink' . ucfirst($link);
 
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $where, $selectData);
+            return $this->$methodName($id, $searchParams);
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
@@ -1196,21 +1196,10 @@ class Service implements Crud,
             throw new Forbidden();
         }
 
-        if (!is_array($where)) {
-            $where = [];
-        }
-        $params['where'] = $where;
-
-        if (is_array($selectData)) {
-            foreach ($selectData as $k => $v) {
-                $params[$k] = $v;
-            }
-        }
-
         $query = $this->selectBuilderFactory->create()
             ->from($foreignEntityType)
             ->withStrictAccessControl()
-            ->withSearchParams(SearchParams::fromRaw($params))
+            ->withSearchParams($searchParams->withSelect(null))
             ->build();
 
         if ($this->acl->getLevel($foreignEntityType, $accessActionRequired) === AclTable::LEVEL_ALL) {
