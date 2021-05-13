@@ -85,6 +85,8 @@ class AccessControlFilter
             return;
         }
 
+        $this->applyMandatoryFilter($queryBuilder);
+
         $accessControlFilterResolver = $this->accessControlFilterResolverFactory
             ->create($this->entityType, $this->user);
 
@@ -111,5 +113,13 @@ class AccessControlFilter
         }
 
         throw new Error("No access filter '{$filterName}' for '{$this->entityType}'.");
+    }
+
+    private function applyMandatoryFilter(QueryBuilder $queryBuilder): void
+    {
+        $filter = $this->accessControlFilterFactory
+            ->create($this->entityType, $this->user, 'mandatory');
+
+        $filter->apply($queryBuilder);
     }
 }
