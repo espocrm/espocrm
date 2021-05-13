@@ -42,6 +42,11 @@ use RuntimeException;
 
 class QueryBuilderTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var QueryBuilder
+     */
+    private $queryBuilder;
+
     protected function setUp() : void
     {
         $this->queryBuilder = new QueryBuilder();
@@ -77,13 +82,32 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        $select = $this->queryBuilder
+        $this->queryBuilder
             ->select()
             ->select(['col1'])
             ->join('test')
             ->build();
     }
 
+    public function testSelectFrom1()
+    {
+        $select = $this->queryBuilder
+            ->select(['col1', 'col2'])
+            ->from('Test')
+            ->build();
+
+        $this->assertEquals(['col1', 'col2'], $select->getSelect());
+    }
+
+    public function testSelectFrom2()
+    {
+        $select = $this->queryBuilder
+            ->select('col1', 'alias1')
+            ->from('Test')
+            ->build();
+
+        $this->assertEquals([['col1', 'alias1']], $select->getSelect());
+    }
     public function testInsert1()
     {
         $insert = $this->queryBuilder

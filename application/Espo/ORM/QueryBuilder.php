@@ -49,10 +49,25 @@ class QueryBuilder
 {
     /**
      * Proceed with SELECT builder.
+     *
+     * Usage options:
+     * * `select()`
+     * * `select([$item1, $item2, ...])`
+     * * `select(string $expression)`
+     * * `select(string $expression, string $alias)`
+     *
+     * @param array|string|null $select What attributes to select.
+     * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
-    public function select(): SelectBuilder
+    public function select($select = null, ?string $alias = null): SelectBuilder
     {
-        return new SelectBuilder();
+        $builder = new SelectBuilder();
+
+        if ($select === null) {
+            return $builder;
+        }
+
+        return $builder->select($select, $alias);
     }
 
     /**

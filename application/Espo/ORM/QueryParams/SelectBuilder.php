@@ -122,16 +122,17 @@ class SelectBuilder implements Builder
     }
 
     /**
-     * Specify SELECT. Columns and expressions to be selected. If not called, then all entity attributes will be selected.
-     * Passing an array will reset previously set items.
-     * Passing a string will append an item.
+     * Specify SELECT. Columns and expressions to be selected. If not called, then
+     * all entity attributes will be selected. Passing an array will reset
+     * previously set items. Passing a string will append an item.
      *
      * Usage options:
      * * `select([$item1, $item2, ...])`
      * * `select(string $expression)`
      * * `select(string $expression, string $alias)`
      *
-     * @param array|string $select
+     * @param array|string $select An array of attributes or one attribute.
+     * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
     public function select($select, ?string $alias = null): self
     {
