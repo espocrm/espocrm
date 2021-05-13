@@ -58,13 +58,15 @@ class Preferences extends Repository implements
 
     protected $entityType = 'Preferences';
 
-    public function get(?string $id = null): ?Entity
+    public function getNew(): Entity
     {
-        if (!$id) {
-            return $this->entityFactory->create('Preferences');
-        }
+        return $this->entityFactory->create('Preferences');
+    }
 
+    public function getById(string $id): ?Entity
+    {
         $entity = $this->entityFactory->create('Preferences');
+
         $entity->id = $id;
 
         if (!isset($this->data[$id])) {
@@ -78,6 +80,15 @@ class Preferences extends Repository implements
         $entity->setAsFetched();
 
         return $entity;
+    }
+
+    public function get(?string $id = null): ?Entity
+    {
+        if ($id === null) {
+            return $this->getNew();
+        }
+
+        return $this->getById($id);
     }
 
     protected function loadData(string $id)

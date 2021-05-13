@@ -37,7 +37,7 @@ class UniqueId extends \Espo\Core\Repositories\Database
 {
     protected $hooksDisabled = true;
 
-    public function getNew(): ?Entity
+    public function getNew(): Entity
     {
         $entity = parent::getNew();
 

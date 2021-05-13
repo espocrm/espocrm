@@ -331,7 +331,7 @@ class EntityManager
 
     /**
      * Get an entity. If $id is null, a new entity instance is created.
-     * If an entity with a specified $id does not exist, then NULL is returned.
+     * If an entity with a specified ID does not exist, then NULL is returned.
      */
     public function getEntity(string $entityType, ?string $id = null): ?Entity
     {
@@ -339,11 +339,31 @@ class EntityManager
             throw new RuntimeException("ORM: Repository '{$entityType}' does not exist.");
         }
 
-        return $this->getRepository($entityType)->get($id);
+        if ($id === null) {
+            return $this->getRepository($entityType)->getNew();
+        }
+
+        return $this->getRepository($entityType)->getById($id);
     }
 
     /**
-     * Store an entity (in database).
+     * Create a new entity instance (w/o storing to DB).
+     */
+    public function getNewEntity(string $entityType): Entity
+    {
+        return $this->getEntity($entityType);
+    }
+
+    /**
+     * Get an entity by ID. If an entity does not exist, NULL is returned.
+     */
+    public function getEntityById(string $entityType, string $id): ?Entity
+    {
+        return $this->getEntity($entityType, $id);
+    }
+
+    /**
+     * Store an entity.
      *
      * @return Deprecated. @todo To be changed to void in 6.3.
      */
@@ -367,7 +387,7 @@ class EntityManager
     }
 
     /**
-     * Create entity (store it in a database).
+     * Create entity (and store to database).
      *
      * @param StdClass|array $data Entity attributes.
      */
@@ -379,18 +399,6 @@ class EntityManager
         $this->saveEntity($entity, $options);
 
         return $entity;
-    }
-
-    /**
-     * Fetch an entity (from a database).
-     */
-    public function fetchEntity(string $entityType, string $id): ?Entity
-    {
-        if (empty($id)) {
-            return null;
-        }
-
-        return $this->getEntity($entityType, $id);
     }
 
     /**

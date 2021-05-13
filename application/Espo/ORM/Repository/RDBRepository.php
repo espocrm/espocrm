@@ -72,17 +72,13 @@ class RDBRepository extends Repository
     /**
      * Get a new entity.
      */
-    public function getNew(): ?Entity
+    public function getNew(): Entity
     {
         $entity = $this->entityFactory->create($this->entityType);
 
-        if ($entity) {
-            $entity->populateDefaults();
+        $entity->populateDefaults();
 
-            return $entity;
-        }
-
-        return null;
+        return $entity;
     }
 
     /**
@@ -90,7 +86,8 @@ class RDBRepository extends Repository
      */
     public function getById(string $id): ?Entity
     {
-        $select = $this->entityManager->getQueryBuilder()
+        $selectQuery = $this->entityManager
+            ->getQueryBuilder()
             ->select()
             ->from($this->entityType)
             ->where([
@@ -98,9 +95,12 @@ class RDBRepository extends Repository
             ])
             ->build();
 
-        return $this->getMapper()->selectOne($select);
+        return $this->getMapper()->selectOne($selectQuery);
     }
 
+    /**
+     * Get an entity. If ID is NULL, a new entity is returned.
+     */
     public function get(?string $id = null): ?Entity
     {
         if (is_null($id)) {

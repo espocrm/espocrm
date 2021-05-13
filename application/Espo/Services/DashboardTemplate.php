@@ -87,14 +87,14 @@ class DashboardTemplate extends Record
 
     public function deployToUsers(string $id, array $userIdList, bool $append = false): void
     {
-        $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
+        $template = $this->getEntityManager()->getEntity('DashboardTemplate', $id);
 
         if (!$template) {
             throw new NotFound();
         }
 
         foreach ($userIdList as $userId) {
-            $user = $this->getEntityManager()->fetchEntity('User', $userId);
+            $user = $this->getEntityManager()->getEntity('User', $userId);
 
             if ($user) {
                 if ($user->isPortal() || $user->isApi()) {
@@ -104,7 +104,7 @@ class DashboardTemplate extends Record
         }
 
         foreach ($userIdList as $userId) {
-            $preferences = $this->getEntityManager()->fetchEntity('Preferences', $userId);
+            $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
 
             if (!$preferences) {
                 continue;
@@ -118,13 +118,13 @@ class DashboardTemplate extends Record
 
     public function deployToTeam(string $id, string $teamId, bool $append = false): void
     {
-        $template = $this->getEntityManager()->fetchEntity('DashboardTemplate', $id);
+        $template = $this->getEntityManager()->getEntity('DashboardTemplate', $id);
 
         if (!$template) {
             throw new NotFound();
         }
 
-        $team = $this->getEntityManager()->fetchEntity('Team', $teamId);
+        $team = $this->getEntityManager()->getEntity('Team', $teamId);
 
         if (!$team) {
             throw new NotFound();
@@ -140,7 +140,7 @@ class DashboardTemplate extends Record
             ->find();
 
         foreach ($userList as $user) {
-            $preferences = $this->getEntityManager()->fetchEntity('Preferences', $user->id);
+            $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
 
             if (!$preferences) {
                 continue;

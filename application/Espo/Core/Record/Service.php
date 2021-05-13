@@ -41,7 +41,7 @@ use Espo\Core\Exceptions\{
 
 use Espo\ORM\{
     Entity,
-    Repository\Repository,
+    Repository\RDBRepository,
     Collection,
     EntityManager,
 };
@@ -211,9 +211,9 @@ class Service implements Crud,
         $this->entityType = $entityType;
     }
 
-    protected function getRepository(): Repository
+    protected function getRepository(): RDBRepository
     {
-        return $this->entityManager->getRepository($this->entityType);
+        return $this->entityManager->getRDBRepository($this->entityType);
     }
 
     public function processActionHistoryRecord(string $action, Entity $entity): void
@@ -273,16 +273,11 @@ class Service implements Crud,
 
     /**
      * Get an entity by ID. Access control check is performed.
-     * If ID is not specified then it will return an empty entity.
      *
      * @throws ForbiddenSilent If no read access.
      */
-    public function getEntity(?string $id = null): ?Entity
+    public function getEntity(string $id): ?Entity
     {
-        if ($id === null) {
-            return $this->getRepository()->getNew();
-        }
-
         $entity = $this->getRepository()->getById($id);
 
         if (!$entity && $this->user->isAdmin()) {
@@ -566,7 +561,7 @@ class Service implements Crud,
             throw new ForbiddenSilent();
         }
 
-        $entity = $this->getRepository()->get();
+        $entity = $this->getRepository()->getNew();
 
         $this->filterCreateInput($data);
 
@@ -607,17 +602,16 @@ class Service implements Crud,
             throw new ForbiddenSilent();
         }
 
-        if (empty($id)) {
+        if (!$id) {
             throw new BadRequest("ID is empty.");
         }
 
         $this->filterUpdateInput($data);
 
-        if ($this->getEntityBeforeUpdate) {
-            $entity = $this->getEntity($id);
-        } else {
-            $entity = $this->getRepository()->get($id);
-        }
+        $entity =
+            $this->getEntityBeforeUpdate ?
+            $this->getEntity($id) :
+            $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound("Record {$id} not found.");
@@ -663,11 +657,11 @@ class Service implements Crud,
             throw new ForbiddenSilent();
         }
 
-        if (empty($id)) {
+        if (!$id) {
             throw new BadRequest("ID is empty.");
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound("Record {$id} not found.");
@@ -810,7 +804,7 @@ class Service implements Crud,
             throw new ForbiddenSilent("No access.");
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -934,7 +928,7 @@ class Service implements Crud,
 
         $this->processForbiddenLinkEditCheck($link);
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1002,7 +996,7 @@ class Service implements Crud,
 
         $this->processForbiddenLinkEditCheck($link);
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1060,7 +1054,7 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1113,7 +1107,7 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1164,7 +1158,7 @@ class Service implements Crud,
 
         $this->processForbiddenLinkEditCheck($link);
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1299,7 +1293,7 @@ class Service implements Crud,
             throw new Forbidden();
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFoundSilent();
@@ -1326,7 +1320,7 @@ class Service implements Crud,
      */
     public function unfollow(string $id, ?string $userId = null): void
     {
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFoundSilent();
@@ -1439,7 +1433,7 @@ class Service implements Crud,
 
     protected function findLinkedFollowers(string $id, SearchParams $params): RecordCollection
     {
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
