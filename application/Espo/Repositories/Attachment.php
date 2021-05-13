@@ -83,8 +83,6 @@ class Attachment extends \Espo\Core\Repositories\Database implements
             $entity->set('storage', $defaultStorage);
         }
 
-        $entity->id = Util::generateId();
-
         $contents = $entity->get('contents');
 
         if (is_null($contents)) {
