@@ -104,17 +104,19 @@ class EmailSender
     /**
      * With parameters.
      *
-     * Available parameters: fromAddress, fromName, replyToAddress, replyToName.
+     * @param SenderParams|array $params
      */
-    public function withParams(array $params = []): Sender
+    public function withParams($params): Sender
     {
         return $this->createSender()->withParams($params);
     }
 
     /**
      * With specific SMTP parameters.
+     *
+     * @param SmtpParams|array $params
      */
-    public function withSmtpParams(array $params = []): Sender
+    public function withSmtpParams($params): Sender
     {
         return $this->createSender()->withSmtpParams($params);
     }
