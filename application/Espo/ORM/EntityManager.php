@@ -145,7 +145,7 @@ class EntityManager
         $this->initLocker();
     }
 
-    protected function initQueryComposer()
+    private function initQueryComposer()
     {
         $className = $this->params['queryComposerClassName'] ?? null;
 
@@ -162,7 +162,7 @@ class EntityManager
         $this->queryComposer = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
     }
 
-    protected function initLocker()
+    private function initLocker()
     {
         $className = $this->params['lockerClassName'] ?? null;
 
@@ -225,7 +225,7 @@ class EntityManager
         return $className;
     }
 
-    protected function getRDBMapperClassName(): string
+    private function getRDBMapperClassName(): string
     {
         $platform = $this->params['platform'];
 
@@ -261,7 +261,7 @@ class EntityManager
         return $this->mappers[$className];
     }
 
-    protected function initPDO()
+    private function initPDO()
     {
         $params = $this->params;
 
