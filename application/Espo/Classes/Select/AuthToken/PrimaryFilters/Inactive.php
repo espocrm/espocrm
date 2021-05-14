@@ -27,25 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\AuthToken\PrimaryFilters;
 
-class EmailAddress extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\QueryParams\SelectBuilder;
+
+class Inactive implements Filter
 {
-    protected function filterOrphan(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $this->addLeftJoin([
-            'EntityEmailAddress',
-            'entityEmailAddress',
-            [
-                'emailAddressId:' => 'id',
-                'deleted' => false,
-            ]
-        ], $result);
-
-        $result['whereClause'][] = [
-            'entityEmailAddress.id' => null,
-        ];
-
-        $this->setDistinct(true, $result);
+        $queryBuilder->where([
+            'isActive' => false,
+        ]);
     }
 }

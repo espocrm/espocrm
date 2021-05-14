@@ -27,43 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\AuthLogRecord\PrimaryFilters;
 
-class EmailFilter extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\QueryParams\SelectBuilder;
+
+class Accepted implements Filter
 {
-    protected function boolFilterOnlyMy(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $part = [];
-        $part[] = [
-            'parentType' => 'User',
-            'parentId' => $this->getUser()->id
-        ];
-
-        $idList = [];
-        $emailAccountList = $this->getEntityManager()->getRepository('EmailAccount')->where([
-            'assignedUserId' => $this->getUser()->id
-        ])->find();
-        foreach ($emailAccountList as $emailAccount) {
-            $idList[] = $emailAccount->id;
-        }
-
-        if (count($idList)) {
-            $part = [
-                'OR' => [
-                    $part,
-                    [
-                        'parentType' => 'EmailAccount',
-                        'parentId' => $idList
-                    ]
-                ]
-            ];
-        }
-
-        return $part;
-    }
-
-    protected function accessOnlyOwn(&$result)
-    {
-        $result['whereClause'][] = $this->boolFilterOnlyMy($result);
+        $queryBuilder->where([
+            'isDenied' => false,
+        ]);
     }
 }

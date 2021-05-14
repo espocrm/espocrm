@@ -27,22 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\AuthLogRecord\PrimaryFilters;
 
-class AuthLogRecord extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\QueryParams\SelectBuilder;
+
+class Denied implements Filter
 {
-    protected function filterDenied(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = array(
-            'isDenied' => true
-        );
-    }
-
-    protected function filterAccepted(&$result)
-    {
-        $result['whereClause'][] = array(
-            'isDenied' => false
-        );
+        $queryBuilder->where([
+            'isDenied' => true,
+        ]);
     }
 }
-

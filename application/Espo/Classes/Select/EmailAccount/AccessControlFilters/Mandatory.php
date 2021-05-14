@@ -27,25 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\EmailAccount\AccessControlFilters;
 
-class PhoneNumber extends \Espo\Core\Select\SelectManager
+use Espo\{
+    Core\Select\AccessControl\Filter,
+    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    Entities\User,
+};
+
+class Mandatory implements Filter
 {
-    protected function filterOrphan(&$result)
+    private $user;
+
+    public function __construct(User $user)
     {
-        $this->addLeftJoin([
-            'EntityPhoneNumber',
-            'entityPhoneNumber',
-            [
-                'phoneNumberId:' => 'id',
-                'deleted' => false,
-            ]
-        ], $result);
+        $this->user = $user;
+    }
 
-        $result['whereClause'][] = [
-            'entityPhoneNumber.id' => null,
-        ];
+    public function apply(QueryBuilder $queryBuilder): void
+    {
+        if ($this->user->isAdmin()) {
+            return;
+        }
 
-        $this->setDistinct(true, $result);
+        $queryBuilder->where([
+            'assignedUserId' => $this->user->getId(),
+        ]);
     }
 }

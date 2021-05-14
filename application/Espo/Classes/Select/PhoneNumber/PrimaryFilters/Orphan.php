@@ -27,42 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\PhoneNumber\PrimaryFilters;
 
-class Attachment extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\QueryParams\SelectBuilder;
+
+class Orphan implements Filter
 {
-    protected function filterOrphan(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = [
-            'role' => ['Attachment', 'Inline Attachment'],
-            [
-                'OR' => [
-                    [
-                        'parentId' => null,
-                        'parentType!=' => null,
-                        'relatedType=' => null,
-                    ],
-                    [
-                        'parentType' => null,
-                        'relatedId' => null,
-                        'relatedType!=' => null,
-                    ],
-                ],
-            ],
-            [
-                'OR' => [
-                    'relatedType!=' => 'Settings',
-                    'relatedType=' => null,
-                ],
-            ],
-            'attachmentChild.id' => null,
-        ];
+        $queryBuilder->where([
+            'entityPhoneNumber.id' => null,
+        ]);
 
-        $this->addLeftJoin(['Attachment', 'attachmentChild', [
-            'attachmentChild.sourceId:' => 'attachment.id',
-            'attachmentChild.deleted' => false
-        ]], $result);
+        $queryBuilder->leftJoin(
+            'EntityPhoneNumber',
+            'entityPhoneNumber',
+            [
+                'phoneNumberId:' => 'id',
+                'deleted' => false,
+            ]
+        );
 
-        $this->setDistinct(true, $result);
+        $queryBuilder->distinct();
     }
 }

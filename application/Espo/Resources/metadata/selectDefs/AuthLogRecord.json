@@ -1,0 +1,6 @@
+{
+    "primaryFilterClassNameMap": {
+        "denied": "Espo\\Classes\\Select\\AuthLogRecord\\PrimaryFilters\\Denied",
+        "accepted": "Espo\\Classes\\Select\\AuthLogRecord\\PrimaryFilters\\Accepted"
+    }
+}

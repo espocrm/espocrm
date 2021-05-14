@@ -27,21 +27,62 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\EmailFilter\AccessControlFilters;
 
-class AuthToken extends \Espo\Core\Select\SelectManager
+use Espo\{
+    Core\Select\AccessControl\Filter,
+    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\EntityManager,
+    Entities\User,
+};
+
+class OnlyOwn implements Filter
 {
-    protected function filterActive(&$result)
+    private $user;
+
+    private $entityManager;
+
+    public function __construct(User $user, EntityManager $entityManager)
     {
-        $result['whereClause'][] = array(
-            'isActive' => true
-        );
+        $this->user = $user;
+        $this->entityManager = $entityManager;
     }
 
-    protected function filterInactive(&$result)
+    public function apply(QueryBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = array(
-            'isActive' => false
-        );
+        $part = [];
+
+        $part[] = [
+            'parentType' => 'User',
+            'parentId' => $this->user->getId(),
+        ];
+
+        $idList = [];
+
+        $emailAccountList = $this->entityManager
+            ->getRDBRepository('EmailAccount')
+            ->select('id')
+            ->where([
+                'assignedUserId' => $this->user->getId(),
+            ])
+            ->find();
+
+        foreach ($emailAccountList as $emailAccount) {
+            $idList[] = $emailAccount->getId();
+        }
+
+        if (count($idList)) {
+            $part = [
+                'OR' => [
+                    $part,
+                    [
+                        'parentType' => 'EmailAccount',
+                        'parentId' => $idList,
+                    ],
+                ]
+            ];
+        }
+
+        $queryBuilder->where($part);
     }
 }

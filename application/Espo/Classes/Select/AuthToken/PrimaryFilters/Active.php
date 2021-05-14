@@ -27,16 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\AuthToken\PrimaryFilters;
 
-class EmailAccount extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\QueryParams\SelectBuilder;
+
+class Active implements Filter
 {
-    protected function access(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        if (!$this->user->isAdmin()) {
-        	$result['whereClause'][] = [
-        		'assignedUserId' => $this->user->id
-        	];
-        }
+        $queryBuilder->where([
+            'isActive' => true,
+        ]);
     }
 }
