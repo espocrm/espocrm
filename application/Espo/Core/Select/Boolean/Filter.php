@@ -31,10 +31,13 @@ namespace Espo\Core\Select\Boolean;
 
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\WhereClause,
+    ORM\QueryParams\Parts\Where\OrGroup,
 };
 
+/**
+ * Applies a bool filter. A where item should be added to OrGroup.
+ */
 interface Filter
 {
-    public function apply(QueryBuilder $queryBuilder): WhereClause;
+    public function apply(QueryBuilder $queryBuilder, OrGroup $orGroup): void;
 }

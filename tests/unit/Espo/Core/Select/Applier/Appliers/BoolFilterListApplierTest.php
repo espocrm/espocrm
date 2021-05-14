@@ -40,17 +40,19 @@ use Espo\Core\{
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
+    ORM\QueryParams\Parts\Where\OrGroup,
     Entities\User,
 };
 
 class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->boolFilterFactory = $this->createMock(BoolFilterFactory::class);
         $this->user = $this->createMock(User::class);
         $this->selectManager = $this->createMock(SelectManager::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
+        $this->orGroup = $this->createMock(OrGroup::class);
 
         $this->entityType = 'Test';
 
@@ -73,13 +75,7 @@ class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
 
         $this->queryBuilder
             ->expects($this->once())
-            ->method('where')
-            ->with([
-                'OR' => [
-                    ['test' => '1'],
-                    ['test' => '2'],
-                ],
-            ]);
+            ->method('where');
 
         $this->applier->apply($this->queryBuilder, $boolFilterList);
     }
@@ -94,12 +90,7 @@ class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
 
         $this->queryBuilder
             ->expects($this->once())
-            ->method('where')
-            ->with([
-                'OR' => [
-                    ['test' => '1'],
-                ],
-            ]);
+            ->method('where');
 
         $this->applier->apply($this->queryBuilder, $boolFilterList);
     }
@@ -161,8 +152,7 @@ class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
         $filter
             ->expects($this->any())
             ->method('apply')
-            ->with($this->queryBuilder)
-            ->willReturn($whereClause);
+            ->with($this->queryBuilder, $this->isInstanceOf(OrGroup::class));
 
         return $filter;
     }

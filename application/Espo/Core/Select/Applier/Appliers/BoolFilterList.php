@@ -69,9 +69,7 @@ class BoolFilterList
         $orGroup = new OrGroup();
 
         foreach ($boolFilterNameList as $filterName) {
-            $itemWhereClause = $this->applyBoolFilter($queryBuilder, $filterName);
-
-            $orGroup->add($itemWhereClause);
+            $this->applyBoolFilter($queryBuilder, $orGroup, $filterName);
         }
 
         $whereClause = new WhereClause();
@@ -83,21 +81,27 @@ class BoolFilterList
         );
     }
 
-    protected function applyBoolFilter(QueryBuilder $queryBuilder, string $filterName): WhereClause
+    protected function applyBoolFilter(QueryBuilder $queryBuilder, OrGroup $orGroup, string $filterName): void
     {
         if ($this->boolFilterFactory->has($this->entityType, $filterName)) {
             $filter = $this->boolFilterFactory->create($this->entityType, $this->user, $filterName);
 
-            return $filter->apply($queryBuilder);
+            $whereItem = $filter->apply($queryBuilder, $orGroup);
+
+            return;
         }
 
         // For backward compatibility.
         if ($this->selectManager->hasBoolFilter($filterName)) {
             $rawWhereClause = $this->selectManager->applyBoolFilterToQueryBuilder($queryBuilder, $filterName);
 
-            return WhereClause::fromRaw($rawWhereClause);
+            $whereItem = WhereClause::fromRaw($rawWhereClause);
+
+            $orGroup->add($whereItem);
+
+            return;
         }
 
-        throw new Error("No bool filter '{$filterName}' for '{this->entityType}'.");
+        throw new Error("No bool filter '{$filterName}' for '{$this->entityType}'.");
     }
 }
