@@ -37,7 +37,7 @@ use Espo\{
 
 class OnlyOwn implements Filter
 {
-    protected $user;
+    private $user;
 
     public function __construct(User $user)
     {
@@ -47,7 +47,7 @@ class OnlyOwn implements Filter
     public function apply(QueryBuilder $queryBuilder): void
     {
         $queryBuilder->where([
-            'userId' => $this->user->id,
+            'userId' => $this->user->getId(),
         ]);
     }
 }

@@ -27,19 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\ActionHistoryRecord\BoolFilters;
 
-class ActionHistoryRecord extends \Espo\Core\Select\SelectManager
+use Espo\{
+    Core\Select\Boolean\Filter,
+    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\QueryParams\Parts\WhereClause,
+    Entities\User,
+};
+
+class OnlyMy implements Filter
 {
-    protected function boolFilterOnlyMy(&$result)
+    private $user;
+
+    public function __construct(User $user)
     {
-        return ['userId' => $this->getUser()->id];
+        $this->user = $user;
     }
 
-    protected function accessOnlyOwn(&$result)
+    public function apply(QueryBuilder $queryBuilder): WhereClause
     {
-        $result['whereClause'][] = [
-            'userId' => $this->getUser()->id
-        ];
+        return WhereClause::fromRaw([
+            'userId' => $this->user->getId(),
+        ]);
     }
 }

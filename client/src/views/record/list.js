@@ -33,7 +33,7 @@ define('views/record/list', 'view', function (Dep) {
         template: 'record/list',
 
         /**
-         * @param {String} Type of the list. Can be 'list', 'listSmall'.
+         * Type of the list. Can be 'list', 'listSmall'.
          */
         type: 'list',
 
@@ -42,12 +42,12 @@ define('views/record/list', 'view', function (Dep) {
         presentationType: 'table',
 
         /**
-         * @param {Bool} If true checkboxes will be shown.
+         * If true checkboxes will be shown.
          */
         checkboxes: true,
 
         /**
-         * @param {Bool} If true clicking on the record link will trigger 'select' event with model passed.
+         * If true clicking on the record link will trigger 'select' event with model passed.
          */
         selectable: false,
 
@@ -55,6 +55,14 @@ define('views/record/list', 'view', function (Dep) {
 
         rowActionsDisabled: false,
 
+        /**
+         * Set automatically.
+         */
+        entityType: null,
+
+        /**
+         * Set automatically.
+         */
         scope: null,
 
         _internalLayoutType: 'list-row',
@@ -80,6 +88,21 @@ define('views/record/list', 'view', function (Dep) {
         minColumnWidth: 100,
 
         mandatorySelectAttributeList: null,
+
+        /**
+         * A layout name. If null, a value from `type` property will be used.
+         */
+        layoutName: null,
+
+        /**
+         * A scope name for layout loading. If null, an entity type of collection will be used.
+         */
+        layoutScope: null,
+
+        /**
+         * To disable field-level access check for a layout.
+         */
+        layoutAclDisabled: false,
 
         events: {
             'click a.link': function (e) {
@@ -441,6 +464,8 @@ define('views/record/list', 'view', function (Dep) {
             this.type = this.options.type || this.type;
 
             this.layoutName = this.options.layoutName || this.layoutName || this.type;
+            this.layoutScope = this.options.layoutScope || this.layoutScope;
+            this.layoutAclDisabled = this.options.layoutAclDisabled || this.layoutAclDisabled;
 
             this.headerDisabled = this.options.headerDisabled || this.headerDisabled;
 
@@ -1456,6 +1481,10 @@ define('views/record/list', 'view', function (Dep) {
                 this._cachedScopeForbiddenFieldList ||
                 this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
 
+            if (this.layoutAclDisabled) {
+                forbiddenFieldList = [];
+            }
+
             if (!forbiddenFieldList.length) {
                 this._cachedFilteredListLayout = listLayout;
 
@@ -1487,7 +1516,9 @@ define('views/record/list', 'view', function (Dep) {
 
             var layoutName = this.layoutName;
 
-            this._helper.layoutManager.get(this.collection.name, layoutName, function (listLayout) {
+            var layoutScope = this.layoutScope || this.collection.name;
+
+            this._helper.layoutManager.get(layoutScope, layoutName, function (listLayout) {
                 var filteredListLayout = this.filterListLayout(listLayout);
 
                 this.layoutLoadCallbackList.forEach(function (callbackItem) {
@@ -1778,17 +1809,20 @@ define('views/record/list', 'view', function (Dep) {
                     callback(null);
 
                     return;
-                } else {
+                }
+                else {
                     this.getInternalLayoutForModel(callback, model);
 
                     return;
                 }
             }
+
             if (this._internalLayout !== null) {
                 callback(this._internalLayout);
 
                 return;
             }
+
             if (this.listLayout !== null) {
                 this._internalLayout = this._convertLayout(this.listLayout);
 
@@ -1796,6 +1830,7 @@ define('views/record/list', 'view', function (Dep) {
 
                 return;
             }
+
             this._loadListLayout(function (listLayout) {
                 this.listLayout = listLayout;
                 this._internalLayout = this._convertLayout(listLayout);

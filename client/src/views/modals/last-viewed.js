@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
+define('views/modals/last-viewed', ['views/modal', 'search-manager'], function (Dep) {
 
     return Dep.extend({
 
@@ -50,7 +50,10 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
             Dep.prototype.setup.call(this);
 
             this.headerHtml = this.getLanguage().translate('LastViewed', 'scopeNamesPlural');
-            this.headerHtml = '<a href="#LastViewed" class="action" data-action="listView">' + this.headerHtml + '</a>';
+
+            this.headerHtml =
+                '<a href="#LastViewed" class="action" data-action="listView">' +
+                this.headerHtml + '</a>';
 
             this.waitForView('list');
 
@@ -68,12 +71,14 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
 
         actionListView: function () {
             this.getRouter().navigate('#LastViewed', {trigger: true});
+
             this.close();
         },
 
         loadList: function () {
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listLastViewed') ||
-                           'views/record/list';
+            var viewName =
+                this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listLastViewed') ||
+                'views/record/list';
 
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', viewName, {
@@ -83,11 +88,12 @@ Espo.define('views/modals/last-viewed', ['views/modal', 'search-manager'], funct
                     checkboxes: false,
                     massActionsDisabled: true,
                     rowActionsView: false,
-                    type: 'listLastViewed',
                     searchManager: this.searchManager,
                     checkAllResultDisabled: true,
                     buttonsDisabled: true,
-                    headerDisabled: true
+                    headerDisabled: true,
+                    layoutName: 'listForLastViewed',
+                    layoutAclDisabled: true,
                 });
             }, this);
         },
