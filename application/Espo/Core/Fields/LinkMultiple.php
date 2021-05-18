@@ -118,6 +118,14 @@ class LinkMultiple
     }
 
     /**
+     * Clone with an added ID.
+     */
+    public function withAddedId(string $id): self
+    {
+        return $this->withAdded(LinkMultipleItem::create($id));
+    }
+
+    /**
      * Clone with an added item.
      */
     public function withAdded(LinkMultipleItem $item): self

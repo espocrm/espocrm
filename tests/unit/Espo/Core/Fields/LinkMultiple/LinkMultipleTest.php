@@ -76,6 +76,22 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(null, $group->getList()[1]->getName());
     }
 
+    public function testWithAddedId()
+    {
+        $item = LinkMultipleItem::create('1')->withName('test-1');
+
+        $group = LinkMultiple
+            ::create([$item])
+            ->withAddedId('2');
+
+        $this->assertEquals(2, $group->getCount());
+
+        $this->assertEquals('1', $group->getList()[0]->getId());
+        $this->assertEquals('test-1', $group->getList()[0]->getName());
+
+        $this->assertEquals('2', $group->getList()[1]->getId());
+    }
+
     public function testWithAddedList()
     {
         $group = LinkMultiple
