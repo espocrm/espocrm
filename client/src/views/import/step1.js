@@ -578,7 +578,7 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             for (let item in formatItemLabelMap) {
                 var value = formatItemLabelMap[item];
 
-                label = label.replaceAll(item, value);
+                label = label.replace(item, new RegExp(value, 'g'));
             }
 
             return label;
