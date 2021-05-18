@@ -27,59 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Template\AccessControlFilters;
+namespace Espo\ORM;
 
-use Espo\ORM\{
-    QueryParams\SelectBuilder,
-    Defs,
-};
-
-use Espo\Core\{
-    Select\AccessControl\Filter,
-    AclManager,
-    Acl\Exceptions\NotImplemented,
-};
-
-use Espo\Entities\User;
-
-class Mandatory implements Filter
+/**
+ * Definitions.
+ */
+class Defs extends Defs\Defs
 {
-    private $user;
 
-    private $defs;
-
-    private $aclManager;
-
-    public function __construct(User $user, Defs $defs, AclManager $aclManager)
-    {
-        $this->user = $user;
-        $this->defs = $defs;
-        $this->aclManager = $aclManager;
-    }
-
-    public function apply(SelectBuilder $queryBuilder): void
-    {
-        if ($this->user->isAdmin()) {
-            return;
-        }
-
-        $forbiddenEntityTypeList = [];
-
-        foreach ($this->defs->getEntityTypeList() as $entityType) {
-            try {
-                if (!$this->aclManager->checkScope($this->user, $entityType)) {
-                    $forbiddenEntityTypeList[] = $entityType;
-                }
-            }
-            catch (NotImplemented $e) {}
-        }
-
-        if (empty($forbiddenEntityTypeList)) {
-            return;
-        }
-
-        $queryBuilder->where([
-            'entityType!=' => $forbiddenEntityTypeList,
-        ]);
-    }
 }

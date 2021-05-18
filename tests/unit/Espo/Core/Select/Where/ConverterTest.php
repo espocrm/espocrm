@@ -49,7 +49,7 @@ use Espo\{
     ORM\QueryParams\Parts\WhereClause,
     ORM\QueryBuilder as BaseQueryBuilder,
     ORM\QueryParams\Select,
-    ORM\Defs\Defs as ORMDefs,
+    ORM\Defs as ORMDefs,
     ORM\Defs\EntityDefs,
     Entities\User,
 };

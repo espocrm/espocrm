@@ -32,7 +32,7 @@ namespace Espo\Core\Acl;
 use Espo\ORM\{
     Entity,
     EntityManager,
-    Defs\Defs,
+    Defs,
 };
 
 use Espo\Entities\User;

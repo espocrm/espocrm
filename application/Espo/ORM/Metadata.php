@@ -31,7 +31,7 @@ namespace Espo\ORM;
 
 use Espo\ORM\{
     Defs\DefsData,
-    Defs\Defs,
+    Defs,
 };
 
 use InvalidArgumentException;
@@ -116,7 +116,7 @@ class Metadata
     /**
      * Get a list of entity types.
      *
-     * @return array<int, string>
+     * @return string[]
      */
     public function getEntityTypeList(): array
     {

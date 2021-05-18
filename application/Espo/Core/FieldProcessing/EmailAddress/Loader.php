@@ -37,7 +37,7 @@ use Espo\Core\{
     FieldProcessing\LoaderParams,
 };
 
-use Espo\ORM\Defs\Defs as OrmDefs;
+use Espo\ORM\Defs as OrmDefs;
 
 class Loader implements LoaderInterface
 {
