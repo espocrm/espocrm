@@ -36,7 +36,6 @@ use Espo\Core\Exceptions\{
 };
 
 use Espo\Core\{
-    Record\Collection as RecordCollection,
     Record\ServiceContainer as RecordServiceContainer,
     Record\SearchParamsFetcher,
     Container,
@@ -51,7 +50,6 @@ use Espo\Core\{
     Select\SearchParams,
     Di,
 };
-
 
 use Espo\Entities\{
     User,
@@ -201,29 +199,11 @@ class RecordBase extends Base implements Di\EntityManagerAware
 
         $searchParams = $this->fetchSearchParamsFromRequest($request);
 
-        $result = $this->getRecordService()->find($searchParams);
-
-        if ($result instanceof RecordCollection) {
-            return (object) [
-                'total' => $result->getTotal(),
-                'list' => $result->getValueMapList(),
-            ];
-        }
-
-        if (is_array($result)) {
-            return (object) [
-                'total' => $result['total'],
-                'list' => isset($result['collection']) ?
-                    $result['collection']->getValueMapList() :
-                    $result['list'],
-            ];
-        }
+        $recordCollection = $this->getRecordService()->find($searchParams);
 
         return (object) [
-            'total' => $result->total,
-            'list' => isset($result->collection) ?
-                $result->collection->getValueMapList() :
-                $result->list,
+            'total' => $recordCollection->getTotal(),
+            'list' => $recordCollection->getValueMapList(),
         ];
     }
 
