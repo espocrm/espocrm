@@ -27,14 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\ScheduledJob\AccessControlFilters;
 
-class EmailTemplate extends \Espo\Core\Select\SelectManager
+use Espo\ORM\QueryParams\SelectBuilder;
+
+use Espo\Core\Select\AccessControl\Filter;
+
+class Mandatory implements Filter
 {
-    protected function filterActual(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = [
-            'oneOff!=' => true
-        ];
+        $queryBuilder->where([
+            'isInternal' => false
+        ]);
     }
 }

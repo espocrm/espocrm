@@ -27,16 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\Import\AccessControlFilters;
 
-class ScheduledJob extends \Espo\Core\Select\SelectManager
+use Espo\ORM\QueryParams\SelectBuilder;
+
+use Espo\Core\Select\AccessControl\Filter;
+
+use Espo\Entities\User;
+
+class Mandatory implements Filter
 {
-    protected function access(&$result)
-    {
-        parent::access($result);
+    private $user;
 
-        $result['whereClause'] = [
-            'isInternal' => false
-        ];
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
+
+    public function apply(SelectBuilder $queryBuilder): void
+    {
+        if ($this->user->isAdmin()) {
+            return;
+        }
+
+        $queryBuilder->where([
+            'createdById' => $this->user->getId(),
+        ]);
     }
 }

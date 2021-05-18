@@ -1,0 +1,5 @@
+{
+    "accessControlFilterClassNameMap": {
+        "mandatory": "Espo\\Classes\\Select\\ScheduledJob\\AccessControlFilters\\Mandatory"
+    }
+}

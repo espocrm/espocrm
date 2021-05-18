@@ -27,14 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\EmailTemplate\PrimaryFilters;
 
-class EmailFolder extends \Espo\Core\Select\SelectManager
+use Espo\ORM\QueryParams\SelectBuilder;
+
+use Espo\Core\Select\Primary\Filter;
+
+class Actual implements Filter
 {
-    protected function access(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        if (!$this->getUser()->isAdmin()) {
-            $this->accessOnlyOwn($result);
-        }
+        $queryBuilder->where([
+            'oneOff!=' => true
+        ]);
     }
 }

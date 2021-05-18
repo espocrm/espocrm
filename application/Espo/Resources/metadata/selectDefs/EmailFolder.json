@@ -1,0 +1,5 @@
+{
+    "accessControlFilterClassNameMap": {
+        "mandatory": "Espo\\Classes\\Select\\EmailFolder\\AccessControlFilters\\Mandatory"
+    }
+}
