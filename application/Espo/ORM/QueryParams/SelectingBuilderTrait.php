@@ -51,7 +51,7 @@ trait SelectingBuilderTrait
      * @param WhereItem|array|string $clause A key or where clause.
      * @param array|string|null $value A value. Omitted if the first argument is not string.
      */
-    public function where($clause = [], $value = null): self
+    public function where($clause, $value = null): self
     {
         $this->applyWhereClause('whereClause', $clause, $value);
 

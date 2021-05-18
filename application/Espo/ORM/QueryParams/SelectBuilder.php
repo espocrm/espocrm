@@ -220,7 +220,7 @@ class SelectBuilder implements Builder
      * @param WhereItem|array|string $clause A key or where clause.
      * @param array|string|null $value A value. Omitted if the first argument is not string.
      */
-    public function having($clause = [], $value = null): self
+    public function having($clause, $value = null): self
     {
         $this->applyWhereClause('havingClause', $clause, $value);
 
