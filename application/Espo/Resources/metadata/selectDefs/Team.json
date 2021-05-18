@@ -1,0 +1,8 @@
+{
+    "boolFilterClassNameMap": {
+        "onlyMy": "Espo\\Classes\\Select\\Team\\BoolFilters\\OnlyMy"
+    },
+    "accessControlFilterClassNameMap": {
+        "onlyTeam": "Espo\\Classes\\Select\\Team\\AccessControlFilters\\OnlyTeam"
+    }
+}

@@ -27,30 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\Team\BoolFilters;
 
-class Template extends \Espo\Core\Select\SelectManager
+use Espo\Entities\User;
+
+use Espo\Core\Select\Boolean\Filter;
+
+use Espo\ORM\QueryParams\{
+    SelectBuilder,
+    Parts\Where\OrGroupBuilder,
+    Parts\Condition as Cond,
+};
+
+class OnlyMy implements Filter
 {
-    protected function access(&$result)
+    private $user;
+
+    public function __construct(User $user)
     {
-        parent::access($result);
+        $this->user = $user;
+    }
 
-        if (!$this->getUser()->isAdmin()) {
-            $forbiddenEntityTypeList = [];
-            $scopes = $this->getMetadata()->get('scopes', []);
-            foreach ($scopes as $scope => $item) {
-                $entity = $item['entity'] ?? null;
-                if (!$entity) continue;
+    public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
+    {
+        $queryBuilder
+            ->leftJoin('users', 'usersOnlyMyFilter')
+            ->distinct();
 
-                if (!$this->getAcl()->checkScope($scope)) {
-                    $forbiddenEntityTypeList[] = $scope;
-                }
-            }
-            if (!empty($forbiddenEntityTypeList)) {
-                $result['whereClause'][] = [
-                    'entityType!=' => $forbiddenEntityTypeList,
-                ];
-            }
-        }
+        $orGroupBuilder->add(
+            Cond::equal(
+                Cond::column('usersOnlyMyFilter.id'),
+                $this->user->getId()
+            )
+        );
     }
 }

@@ -85,7 +85,7 @@ class AccessCheckerFactory
         }
 
         if (!$this->metadata->get(['scopes', $scope])) {
-            throw new NotImplemented();
+            throw new NotImplemented("Access checker is not implemented for '{$scope}'.");
         }
 
         // For backward compatibility.

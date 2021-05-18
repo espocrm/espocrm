@@ -27,26 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\Team\AccessControlFilters;
 
-class Team extends \Espo\Core\Select\SelectManager
+use Espo\Entities\User;
+
+use Espo\Core\Select\AccessControl\Filter;
+
+use Espo\ORM\QueryParams\{
+    SelectBuilder,
+    Parts\Condition as Cond,
+};
+
+class OnlyTeam implements Filter
 {
-    protected function boolFilterOnlyMy(&$result)
-    {
-        $this->setDistinct(true, $result);
-        $this->addLeftJoin(['users', 'usersOnlyMyFilter'], $result);
+    private $user;
 
-        return [
-            'usersOnlyMyFilterMiddle.userId' => $this->getUser()->id
-        ];
+    public function __construct(User $user)
+    {
+        $this->user = $user;
     }
 
-    protected function accessOnlyTeam(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $this->setDistinct(true, $result);
-        $this->addLeftJoin(['users', 'usersOnlyMyAccess'], $result);
-        $result['whereClause'][] = [
-            'usersOnlyMyAccessMiddle.userId' => $this->getUser()->id
-        ];
+        $queryBuilder
+            ->leftJoin('users', 'usersOnlyMyAccess')
+            ->distinct()
+            ->where(
+                Cond::equal(
+                    Cond::column('usersOnlyMyAccess.id'),
+                    $this->user->getId()
+                )
+            );
     }
 }

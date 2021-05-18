@@ -27,22 +27,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\SelectManagers;
+namespace Espo\Classes\Select\Template\AccessControlFilters;
 
-class Webhook extends \Espo\Core\Select\SelectManager
+use Espo\ORM\{
+    QueryParams\SelectBuilder,
+    Defs\Defs,
+};
+
+use Espo\Core\{
+    Select\AccessControl\Filter,
+    AclManager,
+    Acl\Exceptions\NotImplemented,
+};
+
+use Espo\Entities\User;
+
+class Mandatory implements Filter
 {
-    protected function access(&$result)
+    private $user;
+
+    private $defs;
+
+    private $aclManager;
+
+    public function __construct(User $user, Defs $defs, AclManager $aclManager)
     {
-        if (!$this->getUser()->isAdmin() && !$this->getUser()->isApi()) {
-            $result['whereClause'][] = [
-                'id' => null
-            ];
+        $this->user = $user;
+        $this->defs = $defs;
+        $this->aclManager = $aclManager;
+    }
+
+    public function apply(SelectBuilder $queryBuilder): void
+    {
+        if ($this->user->isAdmin()) {
+            return;
         }
 
-        if ($this->getUser()->isApi()) {
-            $result['whereClause'][] = [
-                'userId' => $this->getUser()->id
-            ];
+        $forbiddenEntityTypeList = [];
+
+        foreach ($this->defs->getEntityTypeList() as $entityType) {
+            try {
+                if (!$this->aclManager->checkScope($this->user, $entityType)) {
+                    $forbiddenEntityTypeList[] = $entityType;
+                }
+            }
+            catch (NotImplemented $e) {}
         }
+
+        if (empty($forbiddenEntityTypeList)) {
+            return;
+        }
+
+        $queryBuilder->where([
+            'entityType!=' => $forbiddenEntityTypeList,
+        ]);
     }
 }
