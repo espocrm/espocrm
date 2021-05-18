@@ -115,6 +115,56 @@ class Expression implements WhereItem
     }
 
     /**
+     * 'COUNT' function.
+     *
+     * @param Expression $expression
+     */
+    public static function count(Expression $expression): self
+    {
+        return self::composeFunction('COUNT', $expression);
+    }
+
+    /**
+     * 'MIN' function.
+     *
+     * @param Expression $expression
+     */
+    public static function min(Expression $expression): self
+    {
+        return self::composeFunction('MIN', $expression);
+    }
+
+    /**
+     * 'MAX' function.
+     *
+     * @param Expression $expression
+     */
+    public static function max(Expression $expression): self
+    {
+        return self::composeFunction('MAX', $expression);
+    }
+
+    /**
+     * 'SUM' function.
+     *
+     * @param Expression $expression
+     */
+    public static function sum(Expression $expression): self
+    {
+        return self::composeFunction('SUM', $expression);
+    }
+
+    /**
+     * 'AVG' function.
+     *
+     * @param Expression $expression
+     */
+    public static function average(Expression $expression): self
+    {
+        return self::composeFunction('AVG', $expression);
+    }
+
+    /**
      * 'IF' function. Return $then if a condition is true, $else otherwise.
      *
      * @param Expression $condition
