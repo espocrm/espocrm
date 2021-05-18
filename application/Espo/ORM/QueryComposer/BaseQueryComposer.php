@@ -58,7 +58,7 @@ use LogicException;
 abstract class BaseQueryComposer implements QueryComposer
 {
     // @todo Remove.
-    protected static $paramList = [
+    protected const PARAM_LIST = [
         'select',
         'whereClause',
         'offset',
@@ -88,12 +88,12 @@ abstract class BaseQueryComposer implements QueryComposer
         'forShare',
     ];
 
-    protected static $sqlOperators = [
+    protected const SQL_OPERATORS = [
         'OR',
         'AND',
     ];
 
-    protected static $comparisonOperators = [
+    protected $comparisonOperators = [
         '!=s' => 'NOT IN',
         '=s' => 'IN',
         '!=' => '<>',
@@ -129,27 +129,19 @@ abstract class BaseQueryComposer implements QueryComposer
         'MOD' => '%',
     ];
 
-    protected $mathOperationFunctionList = [
-        'ADD',
-        'SUB',
-        'MUL',
-        'DIV',
-        'MOD',
-    ];
-
     protected $matchFunctionMap = [
         'MATCH_BOOLEAN' => 'IN BOOLEAN MODE',
         'MATCH_NATURAL_LANGUAGE' => 'IN NATURAL LANGUAGE MODE',
         'MATCH_QUERY_EXPANSION' => 'WITH QUERY EXPANSION',
     ];
 
-    const SELECT_METHOD = 'SELECT';
+    protected const SELECT_METHOD = 'SELECT';
 
-    const DELETE_METHOD = 'DELETE';
+    protected const DELETE_METHOD = 'DELETE';
 
-    const UPDATE_METHOD = 'UPDATE';
+    protected const UPDATE_METHOD = 'UPDATE';
 
-    const INSERT_METHOD = 'INSERT';
+    protected const INSERT_METHOD = 'INSERT';
 
     protected $identifierQuoteCharacter = '`';
 
@@ -529,7 +521,7 @@ abstract class BaseQueryComposer implements QueryComposer
     {
         $params = $params ?? [];
 
-        foreach (self::$paramList as $k) {
+        foreach (self::PARAM_LIST as $k) {
             $params[$k] = array_key_exists($k, $params) ? $params[$k] : null;
         }
 
@@ -869,7 +861,7 @@ abstract class BaseQueryComposer implements QueryComposer
         ?array $argumentPartList = null
     ): string {
 
-        if (!in_array($function, Functions::$functionList)) {
+        if (!in_array($function, Functions::FUNCTION_LIST)) {
             throw new RuntimeException("ORM Query: Not allowed function '{$function}'.");
         }
 
@@ -905,7 +897,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $this->getFunctionPartTZ($argumentPartList);
         }
 
-        if (in_array($function, Functions::$comparisonFunctionList)) {
+        if (in_array($function, Functions::COMPARISON_FUNCTION_LIST)) {
             if (count($argumentPartList) < 2) {
                 throw new RuntimeException("ORM Query: Not enough arguments for function '{$function}'.");
             }
@@ -915,7 +907,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $argumentPartList[0] . ' ' . $operator . ' ' . $argumentPartList[1];
         }
 
-        if (in_array($function, $this->mathOperationFunctionList)) {
+        if (in_array($function, Functions::MATH_OPERATION_FUNCTION_LIST)) {
             if (count($argumentPartList) < 2) {
                 throw new RuntimeException("ORM Query: Not enough arguments for function '{$function}'.");
             }
@@ -992,6 +984,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
             case 'MINUTE_NUMBER':
                 $function = 'MINUTE';
+                break;
+
+            case 'SECOND_NUMBER':
+                $function = 'SECOND';
                 break;
 
             case 'QUARTER_NUMBER':
@@ -1121,7 +1117,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $query = $this->quote($query);
 
-        if (!in_array($function, Functions::$matchFunctionList)) {
+        if (!in_array($function, Functions::MATCH_FUNCTION_LIST)) {
             throw new RuntimeException("ORM Query: Not allowed MATCH usage.");
         }
 
@@ -1150,7 +1146,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $delimiterPosition = strpos($attribute, ':');
             $function = substr($attribute, 0, $delimiterPosition);
 
-            if (in_array($function, Functions::$matchFunctionList)) {
+            if (in_array($function, Functions::MATCH_FUNCTION_LIST)) {
                 return $this->convertMatchExpression($entity, $attribute, $params);
             }
 
@@ -1167,7 +1163,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $argumentPartList = null;
 
-        if ($function && in_array($function, Functions::$multipleArgumentsFunctionList)) {
+        if ($function && in_array($function, Functions::MULTIPLE_ARGUMENT_FUNCTION_LIST)) {
             $arguments = $attribute;
 
             $argumentList = Util::parseArgumentListFromFunctionContent($arguments);
@@ -2282,53 +2278,36 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function getWherePartItem(
         BaseEntity $entity,
-        $field,
+        $leftKey,
         $value,
         array &$params,
         int $level,
         bool $noCustomWhere = false
     ): ?string {
 
-        if (is_int($field) && is_string($value)) {
+        if (is_int($leftKey) && is_string($value)) {
             return $this->convertMatchExpression($entity, $value, $params);
         }
 
-        $noCustomWhere = $noCustomWhere ?? $params['noCustomWhere'] ?? false;
+        $field = $leftKey;
 
         if (is_int($field)) {
             $field = 'AND';
         }
 
-        if ($field === 'NOT') {
-            if ($level > 1) {
-                return '0';
-            }
-
-            $field = 'id!=s';
-
-            $value = [
-                'selectParams' => [
-                    'select' => ['id'],
-                    'whereClause' => $value,
-                ],
-            ];
-
-            if (!empty($params['joins'])) {
-                $value['selectParams']['joins'] = $params['joins'];
-            }
-            if (!empty($params['leftJoins'])) {
-                $value['selectParams']['leftJoins'] = $params['leftJoins'];
-            }
-            if (!empty($params['customJoin'])) {
-                $value['selectParams']['customJoin'] = $params['customJoin'];
-            }
+        if ($leftKey === 'NOT') {
+            $field = 'AND';
         }
 
-        if (in_array($field, self::$sqlOperators)) {
+        if (in_array($field, self::SQL_OPERATORS)) {
             $internalPart = $this->getWherePart($entity, $value, $field, $params, $level + 1);
 
             if (!$internalPart && $internalPart !== '0') {
                 return null;
+            }
+
+            if ($leftKey === 'NOT') {
+                return "NOT (" . $internalPart . ")";
             }
 
             return "(" . $internalPart . ")";
@@ -2349,7 +2328,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!preg_match('/^[a-z0-9]+$/i', $field)) {
-            foreach (self::$comparisonOperators as $op => $opDb) {
+            foreach ($this->comparisonOperators as $op => $opDb) {
                 if (substr($field, -strlen($op)) === $op) {
                     $field = trim(substr($field, 0, -strlen($op)));
 
@@ -2361,7 +2340,7 @@ abstract class BaseQueryComposer implements QueryComposer
             }
         }
 
-        if (strpos($field, '.') !== false || strpos($field, ':') !== false) {
+        if (Util::isComplexExpression($field)) {
             $leftPart = $this->convertComplexExpression($entity, $field, false, $params);
 
             $isComplex = true;
@@ -2502,7 +2481,6 @@ abstract class BaseQueryComposer implements QueryComposer
                             );
                         }
                         else {
-
                             $leftPart = $this->getAttributePath($entity, $field, $params);
                         }
                     }
@@ -2772,7 +2750,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!preg_match('/^[a-z0-9]+$/i', $left)) {
-            foreach (self::$comparisonOperators as $op => $opDb) {
+            foreach ($this->comparisonOperators as $op => $opDb) {
                 if (substr($left, -strlen($op)) === $op) {
                     $left = trim(substr($left, 0, -strlen($op)));
                     $operator = $opDb;

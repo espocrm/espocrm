@@ -27,17 +27,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Boolean;
+namespace Espo\ORM\QueryParams\Parts\Where;
 
-use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\Where\OrGroupBuilder,
+use Espo\ORM\QueryParams\Parts\{
+    WhereItem,
 };
 
-/**
- * Applies a bool filter. A where item should be added to OrGroupBuilder.
- */
-interface Filter
+class Not implements WhereItem
 {
-    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void;
+    private $rawValue = [];
+
+    public function getRaw(): array
+    {
+        return ['NOT' => $this->getRawValue()];
+    }
+
+    public function getRawKey(): string
+    {
+        return 'NOT';
+    }
+
+    /**
+     * @return array
+     */
+    public function getRawValue()
+    {
+        return $this->rawValue;
+    }
+
+    public static function fromRaw(array $whereClause): self
+    {
+        if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {
+            $whereClause = $whereClause[0];
+        }
+
+        $obj = new self();
+
+        $obj->rawValue = $whereClause;
+
+        return $obj;
+    }
+
+    public static function create(WhereItem $item): self
+    {
+        return self::fromRaw($item->getRaw());
+    }
 }

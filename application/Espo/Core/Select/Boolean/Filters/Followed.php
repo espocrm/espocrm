@@ -32,7 +32,7 @@ namespace Espo\Core\Select\Boolean\Filters;
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
-    ORM\QueryParams\Parts\Where\OrGroup,
+    ORM\QueryParams\Parts\Where\OrGroupBuilder,
     Core\Select\Boolean\Filter,
     Entities\User,
 };
@@ -49,7 +49,7 @@ class Followed implements Filter
         $this->user = $user;
     }
 
-    public function apply(QueryBuilder $queryBuilder, OrGroup $orGroup): void
+    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
         $alias = 'subscriptionFollowedBoolFilter';
 
@@ -63,7 +63,7 @@ class Followed implements Filter
             ]
         );
 
-        $orGroup->add(
+        $orGroupBuilder->add(
             WhereClause::fromRaw([
                 $alias . '.id!=' => null,
             ])

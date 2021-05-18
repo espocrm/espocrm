@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\QueryParams;
 
+use Espo\ORM\QueryParams\Parts\Expression;
+
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -127,29 +129,33 @@ class SelectBuilder implements Builder
      * previously set items. Passing a string will append an item.
      *
      * Usage options:
-     * * `select([$item1, $item2, ...])`
-     * * `select(string $expression)`
-     * * `select(string $expression, string $alias)`
+     * * `select([$expr1, $expr2, ...])`
+     * * `select([[$expr1, $alias1], [$expr2, $alias2], ...])`
+     * * `select(string|Expression $expression)`
+     * * `select(string|Expression $expression, string $alias)`
      *
-     * @param array|string $select An array of attributes or one attribute.
+     * @param array|string|Expression $select An array of attributes or one attribute.
      * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
     public function select($select, ?string $alias = null): self
     {
         if (is_array($select)) {
-            $this->params['select'] = $select;
+            $this->params['select'] = $this->normilizeExpressionItemArray($select);
 
             return $this;
+        }
+
+        if ($select instanceof Expression) {
+            $select = $select->getValue();
         }
 
         if (is_string($select)) {
             $this->params['select'] = $this->params['select'] ?? [];
 
-            if ($alias) {
-                $this->params['select'][] = [$select, $alias];
-            } else {
-                $this->params['select'][] = $select;
-            }
+            $this->params['select'][] =
+                $alias ?
+                [$select, $alias] :
+                $select;
 
             return $this;
         }
@@ -163,17 +169,21 @@ class SelectBuilder implements Builder
      * Passing a string will append an item.
      *
      * Usage options:
-     * * `groupBy([$item1, $item2, ...])`
-     * * `groupBy(string $expression)`
+     * * `groupBy([$expr1, $expr2, ...])`
+     * * `groupBy(string|Expression $expression)`
      *
-     * @param array|string $groupBy
+     * @param string|Expression|array $groupBy
      */
     public function groupBy($groupBy): self
     {
         if (is_array($groupBy)) {
-            $this->params['groupBy'] = $groupBy;
+            $this->params['groupBy'] = $this->normilizeExpressionItemArray($groupBy);
 
             return $this;
+        }
+
+        if ($groupBy instanceof Expression) {
+            $groupBy = $groupBy->getValue();
         }
 
         if (is_string($groupBy)) {
@@ -202,16 +212,17 @@ class SelectBuilder implements Builder
     /**
      * Add a HAVING clause.
      *
-     * Two usage options:
-     * * `having(array $havingClause)`
+     * Usage options:
+     * * `having(WhereItem $clause)`
+     * * `having(array $clause)`
      * * `having(string $key, string $value)`
      *
-     * @param array|string $keyOrClause
-     * @param ?array|string $value
+     * @param WhereItem|array|string $clause A key or where clause.
+     * @param array|string|null $value A value. Omitted if the first argument is not string.
      */
-    public function having($keyOrClause = [], $value = null): self
+    public function having($clause = [], $value = null): self
     {
-        $this->applyWhereClause('havingClause', $keyOrClause, $value);
+        $this->applyWhereClause('havingClause', $clause, $value);
 
         return $this;
     }

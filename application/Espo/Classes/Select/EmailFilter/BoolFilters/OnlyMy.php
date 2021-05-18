@@ -33,7 +33,7 @@ use Espo\{
     Core\Select\Boolean\Filter,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
-    ORM\QueryParams\Parts\Where\OrGroup,
+    ORM\QueryParams\Parts\Where\OrGroupBuilder,
     ORM\EntityManager,
     Entities\User,
 };
@@ -50,7 +50,7 @@ class OnlyMy implements Filter
         $this->entityManager = $entityManager;
     }
 
-    public function apply(QueryBuilder $queryBuilder, OrGroup $orGroup): void
+    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
         $part = [];
 
@@ -85,6 +85,6 @@ class OnlyMy implements Filter
             ];
         }
 
-        $orGroup->add(WhereClause::fromRaw($part));
+        $orGroupBuilder->add(WhereClause::fromRaw($part));
     }
 }

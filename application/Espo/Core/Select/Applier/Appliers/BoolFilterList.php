@@ -37,7 +37,7 @@ use Espo\Core\{
 
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\Where\OrGroup,
+    ORM\QueryParams\Parts\Where\OrGroupBuilder,
     ORM\QueryParams\Parts\WhereClause,
     Entities\User,
 };
@@ -66,27 +66,27 @@ class BoolFilterList
 
     public function apply(QueryBuilder $queryBuilder, array $boolFilterNameList): void
     {
-        $orGroup = new OrGroup();
+        $orGroupBuilder = new OrGroupBuilder();
 
         foreach ($boolFilterNameList as $filterName) {
-            $this->applyBoolFilter($queryBuilder, $orGroup, $filterName);
+            $this->applyBoolFilter($queryBuilder, $orGroupBuilder, $filterName);
         }
 
-        $whereClause = new WhereClause();
-
-        $whereClause->add($orGroup);
-
         $queryBuilder->where(
-            $whereClause->getRaw()
+            $orGroupBuilder->build()
         );
     }
 
-    protected function applyBoolFilter(QueryBuilder $queryBuilder, OrGroup $orGroup, string $filterName): void
-    {
+    protected function applyBoolFilter(
+        QueryBuilder $queryBuilder,
+        OrGroupBuilder $orGroupBuilder,
+        string $filterName
+    ): void {
+
         if ($this->boolFilterFactory->has($this->entityType, $filterName)) {
             $filter = $this->boolFilterFactory->create($this->entityType, $this->user, $filterName);
 
-            $whereItem = $filter->apply($queryBuilder, $orGroup);
+            $whereItem = $filter->apply($queryBuilder, $orGroupBuilder);
 
             return;
         }
@@ -97,7 +97,7 @@ class BoolFilterList
 
             $whereItem = WhereClause::fromRaw($rawWhereClause);
 
-            $orGroup->add($whereItem);
+            $orGroupBuilder->add($whereItem);
 
             return;
         }

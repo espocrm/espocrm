@@ -33,6 +33,7 @@ use Espo\{
     Core\Exceptions\Error,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
+    ORM\QueryParams\Parts\WhereItem,
     ORM\Entity,
     ORM\Defs\Defs as ORMDefs,
     Entities\User,
@@ -72,7 +73,7 @@ class Converter
         $this->ormDefs = $ormDefs;
     }
 
-    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClause
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereItem
     {
         $whereClause = [];
 

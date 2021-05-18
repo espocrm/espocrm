@@ -30,14 +30,19 @@
 namespace tests\unit\Espo\ORM\QueryParams;
 
 use Espo\ORM\{
-    EntityManager,
-    QueryParams\Select,
     QueryParams\SelectBuilder,
+    QueryParams\Parts\Condition as Cond,
+    QueryParams\Parts\Expression as Expr,
 };
 
 class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    /**
+     * @var SelectBuilder
+     */
+    private $builder;
+
+    protected function setUp(): void
     {
         $this->builder = new SelectBuilder();
     }
@@ -84,6 +89,41 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([['test', 'hello']], $select->getSelect());
     }
 
+    public function testSelect4()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->select(Expr::create('test'), 'hello')
+            ->build();
+
+        $this->assertEquals([['test', 'hello']], $select->getSelect());
+    }
+
+    public function testSelect5()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->select('test')
+            ->select([Expr::create('id'), Expr::create('name')])
+            ->build();
+
+        $this->assertEquals(['id', 'name'], $select->getSelect());
+    }
+
+    public function testSelect6()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->select('test')
+            ->select([
+                [Expr::create('id'), 'id'],
+                [Expr::create('name'), 'name'],
+            ])
+            ->build();
+
+        $this->assertEquals([['id', 'id'], ['name', 'name']], $select->getSelect());
+    }
+
     public function testCloneNotSame()
     {
         $builder = new SelectBuilder();
@@ -125,7 +165,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['test' => null], $raw['whereClause']);
     }
 
-    public function testGroupBy()
+    public function testGroupBy1()
     {
         $select = $this->builder
             ->from('Test')
@@ -138,6 +178,84 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['test' => null], $raw['havingClause']);
 
         $this->assertEquals(['test'], $raw['groupBy']);
+    }
+
+    public function testGroupBy2()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->having(Cond::equal(Expr::column('test'), null))
+            ->groupBy(Expr::create('test'))
+            ->build();
+
+        $raw = $select->getRaw();
+
+        $this->assertEquals(['test=' => null], $raw['havingClause']);
+
+        $this->assertEquals(['test'], $raw['groupBy']);
+    }
+
+    public function testGroupBy3()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->having(Cond::equal(Expr::column('test'), null))
+            ->groupBy([Expr::create('test')])
+            ->build();
+
+        $raw = $select->getRaw();
+
+        $this->assertEquals(['test=' => null], $raw['havingClause']);
+
+        $this->assertEquals(['test'], $raw['groupBy']);
+    }
+
+    public function testOrder1()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->order(Expr::create('test'))
+            ->build();
+
+        $raw = $select->getRaw();
+
+        $this->assertEquals([['test', 'ASC']], $raw['orderBy']);
+    }
+
+    public function testOrder2()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->order(Expr::create('test'))
+            ->build();
+
+        $raw = $select->getRaw();
+
+        $this->assertEquals([['test', 'ASC']], $raw['orderBy']);
+    }
+
+    public function testOrder3()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->order([Expr::create('test')], 'DESC')
+            ->build();
+
+        $raw = $select->getRaw();
+
+        $this->assertEquals([['test', 'DESC']], $raw['orderBy']);
+    }
+
+    public function testOrder4()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->order([[Expr::create('test'), 'DESC']], 'ASC')
+            ->build();
+
+        $raw = $select->getRaw();
+
+        $this->assertEquals([['test', 'DESC']], $raw['orderBy']);
     }
 
     public function testClone()
@@ -263,5 +381,61 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->getRaw();
 
         $this->assertEquals(['link1', 'link2'], $params['joins']);
+    }
+
+    public function testWhereItemUsage1()
+    {
+        $query = $this->builder
+            ->from('Test')
+            ->where(
+                Cond::or(
+                    Cond::equal(Expr::column('test'), '1'),
+                    Cond::equal(Expr::column('test'), '2')
+                )
+            )
+            ->join(
+                'Table1',
+                'table1',
+                Cond::equal(Expr::column('table1.testId'), Expr::column('id'))
+            )
+            ->leftJoin(
+                'Table2',
+                'table2',
+                Cond::equal(Expr::column('table2.testId'), Expr::column('id'))
+            )
+            ->build();
+
+        $raw = $query->getRaw();
+
+        $expectedWhere = [
+            'OR' => [
+                ['test=' => '1'],
+                ['test=' => '2'],
+            ]
+        ];
+
+        $expectedJoins = [
+            [
+                'Table1',
+                'table1',
+                [
+                    'table1.testId=:' => 'id'
+                ]
+            ]
+        ];
+
+        $expectedLeftJoins = [
+            [
+                'Table2',
+                'table2',
+                [
+                    'table2.testId=:' => 'id'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expectedWhere, $raw['whereClause']);
+        $this->assertEquals($expectedJoins, $raw['joins']);
+        $this->assertEquals($expectedLeftJoins, $raw['leftJoins']);
     }
 }

@@ -31,6 +31,27 @@ namespace Espo\ORM\QueryComposer;
 
 class Util
 {
+    public static function isComplexExpression(string $string): bool
+    {
+        if (
+           self::isArgumentString($string) ||
+           self::isArgumentNumeric($string) ||
+           self::isArgumentBoolOrNull($string)
+        ) {
+            return true;
+        }
+
+        if (strpos($string, '.') !== false) {
+            return true;
+        }
+
+        if (strpos($string, ':') !== false) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static function isArgumentString(string $argument): bool
     {
         return
@@ -67,7 +88,6 @@ class Util
 
         if (strpos($expression, ':')) {
             $delimiterPosition = strpos($expression, ':');
-            $function = substr($expression, 0, $delimiterPosition);
             $arguments = substr($expression, $delimiterPosition + 1);
 
             if (substr($arguments, 0, 1) === '(' && substr($arguments, -1) === ')') {

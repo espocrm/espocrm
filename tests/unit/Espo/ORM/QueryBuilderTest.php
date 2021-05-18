@@ -198,7 +198,7 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        $update = $this->queryBuilder
+        $this->queryBuilder
             ->update()
             ->in('Test')
             ->where(['col1' => '1'])
@@ -234,9 +234,8 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        $union = $this->queryBuilder
+        $this->queryBuilder
             ->union()
             ->build();
-
-    }
+    }    
 }

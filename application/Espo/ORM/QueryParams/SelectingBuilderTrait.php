@@ -29,6 +29,13 @@
 
 namespace Espo\ORM\QueryParams;
 
+use Espo\ORM\QueryParams\{
+    Parts\WhereItem,
+    Parts\Expression,
+};
+
+use InvalidArgumentException;
+
 trait SelectingBuilderTrait
 {
     use BaseBuilderTrait;
@@ -36,36 +43,41 @@ trait SelectingBuilderTrait
     /**
      * Add a WHERE clause.
      *
-     * Two usage options:
-     * * `where(array $whereClause)`
+     * Usage options:
+     * * `where(WhereItem $clause)`
+     * * `where(array $clause)`
      * * `where(string $key, string $value)`
      *
-     * @param array|string $keyOrClause A key or where clause.
-     * @param ?array|string $value A value. If the first argument is an array, then should be omitted.
+     * @param WhereItem|array|string $clause A key or where clause.
+     * @param array|string|null $value A value. Omitted if the first argument is not string.
      */
-    public function where($keyOrClause = [], $value = null): self
+    public function where($clause = [], $value = null): self
     {
-        $this->applyWhereClause('whereClause', $keyOrClause, $value);
+        $this->applyWhereClause('whereClause', $clause, $value);
 
         return $this;
     }
 
-    private function applyWhereClause(string $type, $keyOrClause, $value): void
+    private function applyWhereClause(string $type, $clause, $value): void
     {
+        if ($clause instanceof WhereItem) {
+            $clause = $clause->getRaw();
+        }
+
         $this->params[$type] = $this->params[$type] ?? [];
 
         $original = $this->params[$type];
 
-        if (!is_string($keyOrClause) && !is_array($keyOrClause)) {
-            throw new InvalidArgumentException();
+        if (!is_string($clause) && !is_array($clause)) {
+            throw new InvalidArgumentException("Bad where clause.");
         }
 
-        if (is_array($keyOrClause)) {
-            $new = $keyOrClause;
+        if (is_array($clause)) {
+            $new = $clause;
         }
 
-        if (is_string($keyOrClause)) {
-            $new = [$keyOrClause => $value];
+        if (is_string($clause)) {
+            $new = [$clause => $value];
         }
 
         $containsSameKeys = (bool) count(
@@ -89,14 +101,21 @@ trait SelectingBuilderTrait
     /**
      * Apply ORDER.
      *
-     * @param string|int|array $orderBy An attribute to order by or order definitions as an array.
-     * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
-     *                               If the first argument is an array then should be omitted.
+     * Usage options:
+     * * `order(Expression|string $orderBy, string|bool $direction)
+     * * `order(int $positionInSelect, string|bool $direction)
+     * * `order([[$expr1, $direction1], [$expr2, $direction2], ...])
+     * * `order([$expr1, $expr2, ...], string|bool $direction)
+     *
+     * @param string|Expression|int|array $orderBy
+     *     An attribute to order by or an array or order items.
+     *     Passing an array will reset a previously set order.
+     * @param string|bool $direction 'ASC' or 'DESC'. TRUE for DESC order.
      */
     public function order($orderBy, $direction = Select::ORDER_ASC): self
     {
         if (is_array($orderBy)) {
-            $this->params['orderBy'] = $orderBy;
+            $this->params['orderBy'] = $this->normilizeOrderExpressionItemArray($orderBy, $direction);
 
             return $this;
         }
@@ -107,6 +126,10 @@ trait SelectingBuilderTrait
 
         $this->params['orderBy'] = $this->params['orderBy'] ?? [];
 
+        if ($orderBy instanceof Expression) {
+            $orderBy = $orderBy->getValue();
+        }
+
         $this->params['orderBy'][] = [$orderBy, $direction];
 
         return $this;
@@ -115,11 +138,21 @@ trait SelectingBuilderTrait
     /**
      * Add JOIN.
      *
-     * @param string $relationName A relationName or table. A relationName is in camelCase, a table is in CamelCase.
-     *
+     * @param string $relationName
+     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param string|null $alias An alias.
+     * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function join($relationName, ?string $alias = null, ?array $conditions = null): self
+    public function join($relationName, ?string $alias = null, $conditions = null): self
     {
+        if ($conditions !== null && !is_array($conditions) && !$conditions instanceof WhereItem) {
+            throw new InvalidArgumentException("Conditions must be WhereItem or array.");
+        }
+
+        if ($conditions instanceof WhereItem) {
+            $conditions = $conditions->getRaw();
+        }
+
         if (empty($this->params['joins'])) {
             $this->params['joins'] = [];
         }
@@ -158,10 +191,21 @@ trait SelectingBuilderTrait
     /**
      * Add LEFT JOIN.
      *
-     * @param string $relationName A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param string $relationName
+     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param string|null $alias An alias.
+     * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null): self
+    public function leftJoin($relationName, ?string $alias = null, $conditions = null): self
     {
+        if ($conditions !== null && !is_array($conditions) && !$conditions instanceof WhereItem) {
+            throw new InvalidArgumentException("Conditions must be WhereItem or array.");
+        }
+
+        if ($conditions instanceof WhereItem) {
+            $conditions = $conditions->getRaw();
+        }
+
         if (empty($this->params['leftJoins'])) {
             $this->params['leftJoins'] = [];
         }
@@ -239,5 +283,76 @@ trait SelectingBuilderTrait
         }
 
         return false;
+    }
+
+    private function normilizeExpressionItemArray(array $itemList): array
+    {
+        $resultList = [];
+
+        foreach ($itemList as $item) {
+            if ($item instanceof Expression) {
+                $resultList[] = $item->getValue();
+
+                continue;
+            }
+
+            if (!is_array($item) || !count($item) || !$item[0] instanceof Expression) {
+                $resultList[] = $item;
+
+                continue;
+            }
+
+            $newItem = [$item[0]->getValue()];
+
+            if (count($item) > 1) {
+                $newItem[] = $item[1];
+            }
+
+            $resultList[] = $newItem;
+
+            continue;
+        }
+
+        return $resultList;
+    }
+
+    private function normilizeOrderExpressionItemArray(array $itemList, $direction): array
+    {
+        $resultList = [];
+
+        foreach ($itemList as $item) {
+            if (is_string($item)) {
+                $resultList[] = [$item, $direction];
+
+                continue;
+            }
+
+            if ($item instanceof Expression) {
+                $resultList[] = [$item->getValue(), $direction];
+
+                continue;
+            }
+
+            if (!is_array($item) || !count($item) || !$item[0] instanceof Expression) {
+                $resultList[] = $item;
+
+                continue;
+            }
+
+            $newItem = [$item[0]->getValue()];
+
+            if (count($item) > 1) {
+                $newItem[] = $item[1];
+            }
+            else {
+                $newItem[] = $direction;
+            }
+
+            $resultList[] = $newItem;
+
+            continue;
+        }
+
+        return $resultList;
     }
 }

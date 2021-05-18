@@ -37,6 +37,7 @@ use Espo\ORM\{
     QueryParams\UnionBuilder,
     QueryParams\Query,
     QueryParams\Builder,
+    QueryParams\Parts\Expression,
 };
 
 use ReflectionClass;
@@ -48,15 +49,17 @@ use RuntimeException;
 class QueryBuilder
 {
     /**
-     * Proceed with SELECT builder.
+     * Specify SELECT. Columns and expressions to be selected. If not called, then
+     * all entity attributes will be selected. Passing an array will reset
+     * previously set items. Passing a string will append an item.
      *
      * Usage options:
-     * * `select()`
-     * * `select([$item1, $item2, ...])`
-     * * `select(string $expression)`
-     * * `select(string $expression, string $alias)`
+     * * `select([$expr1, $expr2, ...])`
+     * * `select([[$expr1, $alias1], [$expr2, $alias2], ...])`
+     * * `select(string|Expression $expression)`
+     * * `select(string|Expression $expression, string $alias)`
      *
-     * @param array|string|null $select What attributes to select.
+     * @param array|string|Expression $select An array of attributes or one attribute.
      * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
     public function select($select = null, ?string $alias = null): SelectBuilder

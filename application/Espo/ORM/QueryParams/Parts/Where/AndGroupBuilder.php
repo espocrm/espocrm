@@ -27,17 +27,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Boolean;
+namespace Espo\ORM\QueryParams\Parts\Where;
 
-use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\Where\OrGroupBuilder,
+use Espo\ORM\QueryParams\Parts\{
+    WhereItem,
 };
 
-/**
- * Applies a bool filter. A where item should be added to OrGroupBuilder.
- */
-interface Filter
+class AndGroupBuilder
 {
-    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void;
+    private $raw = [];
+
+    public function build(): AndGroup
+    {
+        return AndGroup::fromRaw($this->raw);
+    }
+
+    public function add(WhereItem $item): self
+    {
+        $key = $item->getRawKey();
+        $value = $item->getRawValue();
+
+        if ($item instanceof AndGroup) {
+            $this->raw = self::normilizeRaw($this->raw);
+
+            $this->raw[] = $item->getRawValue();
+
+            return $this;
+        }
+
+        if (count($this->raw) === 0) {
+            $this->raw[$key] = $value;
+
+            return $this;
+        }
+
+        $this->raw = self::normilizeRaw($this->raw);
+
+        $this->raw[] = [$key => $value];
+
+        return $this;
+    }
+
+    /**
+     * Merge with another AndGroup.
+     */
+    public function merge(AndGroup $andGroup): self
+    {
+        $this->raw = array_merge(
+            self::normilizeRaw($this->raw),
+            self::normilizeRaw($andGroup->getRawValue())
+        );
+
+        return $this;
+    }
+
+    private static function normilizeRaw(array $raw): array
+    {
+        if (count($raw) === 1 && array_keys($raw)[0] !== 0) {
+            return [$raw];
+        }
+
+        return $raw;
+    }
 }

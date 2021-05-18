@@ -100,7 +100,9 @@ class Scanner
     }
 
     private function applyLeftJoinsFromAttribute(
-        QueryBuilder $queryBuilder, string $attribute, string $entityType
+        QueryBuilder $queryBuilder,
+        string $attribute,
+        string $entityType
     ): void {
 
         if (strpos($attribute, ':') !== false) {

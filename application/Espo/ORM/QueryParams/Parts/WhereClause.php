@@ -29,63 +29,14 @@
 
 namespace Espo\ORM\QueryParams\Parts;
 
-class WhereClause implements WhereItem
+use Espo\ORM\QueryParams\{
+    Parts\Where\AndGroup,
+};
+
+class WhereClause extends AndGroup
 {
-    protected $rawValue = [];
-
-    public function __construct()
-    {
-    }
-
-    public static function fromRaw(array $whereClause): self
-    {
-        if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {
-            $whereClause = $whereClause[0];
-        }
-
-        $object = new self();
-
-        $object->rawValue = $whereClause;
-
-        return $object;
-    }
-
     public function getRaw(): array
     {
-        return $this->rawValue;
-    }
-
-    public function getRawValue(): array
-    {
-        return $this->rawValue;
-    }
-
-    public function getRawKey(): string
-    {
-        return 'AND';
-    }
-
-    public function add(WhereItem $item): void
-    {
-        if ($item instanceof WhereClause) {
-            $this->rawValue[] = $item->getRawValue();
-
-            return;
-        }
-
-        $key = $item->getRawKey();
-        $value = $item->getRawValue();
-
-        if (empty($this->rawValue)) {
-            $this->rawValue[$key] = $value;
-
-            return;
-        }
-
-        if (count($this->rawValue) === 1 && array_keys($this->rawValue)[0] !== 0) {
-            $this->rawValue = [$this->rawValue];
-        }
-
-        $this->rawValue[] = [$key => $value];
+        return $this->getRawValue();
     }
 }

@@ -33,7 +33,7 @@ use Espo\{
     Core\Select\Boolean\Filter,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
-    ORM\QueryParams\Parts\Where\OrGroup,
+    ORM\QueryParams\Parts\Where\OrGroupBuilder,
     Classes\Select\Email\Helpers\JoinHelper,
     Entities\User,
 };
@@ -50,7 +50,7 @@ class OnlyMy implements Filter
         $this->joinHelper = $joinHelper;
     }
 
-    public function apply(QueryBuilder $queryBuilder, OrGroup $orGroup): void
+    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
 
@@ -58,6 +58,6 @@ class OnlyMy implements Filter
             'emailUser.userId' => $this->user->getId(),
         ]);
 
-        $orGroup->add($item);
+        $orGroupBuilder->add($item);
     }
 }

@@ -37,6 +37,7 @@ use Espo\ORM\{
     Entity,
     Mapper\RDBMapper,
     QueryParams\Select,
+    QueryParams\Parts\WhereItem,
 };
 
 use StdClass;
@@ -195,7 +196,7 @@ class RDBRepository extends Repository
     /**
      * Find records.
      *
-     * @param $params @deprecated Omit it.
+     * @param $params @deprecated
      */
     public function find(?array $params = []): Collection
     {
@@ -205,7 +206,7 @@ class RDBRepository extends Repository
     /**
      * Find one record.
      *
-     * @param $params @deprecated Omit it.
+     * @param $params @deprecated
      */
     public function findOne(?array $params = []): ?Entity
     {
@@ -671,9 +672,12 @@ class RDBRepository extends Repository
     /**
      * Add JOIN.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::join()
+     * @param string $relationName
+     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param string|null $alias An alias.
+     * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function join($relationName, ?string $alias = null, ?array $conditions = null): RDBSelectBuilder
+    public function join($relationName, ?string $alias = null, $conditions = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->join($relationName, $alias, $conditions);
     }
@@ -681,9 +685,12 @@ class RDBRepository extends Repository
     /**
      * Add LEFT JOIN.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::leftJoin()
+     * @param string $relationName
+     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param string|null $alias An alias.
+     * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function leftJoin($relationName, ?string $alias = null, ?array $conditions = null): RDBSelectBuilder
+    public function leftJoin($relationName, ?string $alias = null, $conditions = null): RDBSelectBuilder
     {
         return $this->createSelectBuilder()->leftJoin($relationName, $alias, $conditions);
     }
@@ -715,32 +722,52 @@ class RDBRepository extends Repository
     /**
      * Add a WHERE clause.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::where()
+     * Usage options:
+     * * `where(WhereItem $clause)`
+     * * `where(array $clause)`
+     * * `where(string $key, string $value)`
+     *
+     * @param WhereItem|array|string $clause A key or where clause.
+     * @param array|string|null $value A value. Omitted if the first argument is not string.
      */
-    public function where($param1 = [], $param2 = null): RDBSelectBuilder
+    public function where($clause = [], $value = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->where($param1, $param2);
+        return $this->createSelectBuilder()->where($clause, $value);
     }
 
     /**
      * Add a HAVING clause.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::having()
+     * Usage options:
+     * * `having(WhereItem $clause)`
+     * * `having(array $clause)`
+     * * `having(string $key, string $value)`
+     *
+     * @param WhereItem|array|string $clause A key or where clause.
+     * @param array|string|null $value A value. Omitted if the first argument is not string.
      */
-    public function having($param1 = [], $param2 = null): RDBSelectBuilder
+    public function having($clause = [], $value = null): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->having($param1, $param2);
+        return $this->createSelectBuilder()->having($clause, $value);
     }
 
     /**
      * Apply ORDER.
      *
-     * @param string|array $attribute An attribute to order by or order definitions as an array.
-     * @param bool|string $direction TRUE for DESC order.
+     * Usage options:
+     * * `order(Expression|string $orderBy, string|bool $direction)
+     * * `order(int $positionInSelect, string|bool $direction)
+     * * `order([[$expr1, $direction1], [$expr2, $direction2], ...])
+     * * `order([$expr1, $expr2, ...], string|bool $direction)
+     *
+     * @param string|Expression|int|array $orderBy
+     *     An attribute to order by or an array or order items.
+     *     Passing an array will reset a previously set order.
+     * @param string|bool $direction 'ASC' or 'DESC'. TRUE for DESC order.
      */
-    public function order($attribute = 'id', $direction = 'ASC'): RDBSelectBuilder
+    public function order($orderBy = 'id', $direction = Select::ORDER_ASC): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->order($attribute, $direction);
+        return $this->createSelectBuilder()->order($orderBy, $direction);
     }
 
     /**
@@ -752,11 +779,18 @@ class RDBRepository extends Repository
     }
 
     /**
-     * Specify SELECT. Which attributes to select. All attributes are selected by default.
+     * Specify SELECT. Columns and expressions to be selected. If not called, then
+     * all entity attributes will be selected. Passing an array will reset
+     * previously set items. Passing a string will append an item.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::select()
+     * Usage options:
+     * * `select([$expr1, $expr2, ...])`
+     * * `select([[$expr1, $alias1], [$expr2, $alias2], ...])`
+     * * `select(string|Expression $expression)`
+     * * `select(string|Expression $expression, string $alias)`
      *
-     * @param array|string $select
+     * @param array|string|Expression $select An array of attributes or one attribute.
+     * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
     public function select($select = [], ?string $alias = null): RDBSelectBuilder
     {
@@ -765,8 +799,14 @@ class RDBRepository extends Repository
 
     /**
      * Specify GROUP BY.
+     * Passing an array will reset previously set items.
+     * Passing a string will append an item.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::groupBy()
+     * Usage options:
+     * * `groupBy([$expr1, $expr2, ...])`
+     * * `groupBy(string|Expression $expression)`
+     *
+     * @param string|Expression|array $groupBy
      */
     public function groupBy($groupBy): RDBSelectBuilder
     {
@@ -781,6 +821,9 @@ class RDBRepository extends Repository
         return $this->entityManager->getPDO();
     }
 
+    /**
+     * Create a select builder.
+     */
     protected function createSelectBuilder(): RDBSelectBuilder
     {
         $builder = new RDBSelectBuilder($this->entityManager, $this->entityType);

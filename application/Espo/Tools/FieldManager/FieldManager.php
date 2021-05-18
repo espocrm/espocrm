@@ -64,6 +64,14 @@ class FieldManager
         'true',
     ];
 
+    protected $forbiddenAnyCaseFieldNameList = [
+        'id',
+        'deleted',
+        'null',
+        'false',
+        'true',
+    ];
+
     const MAX_NAME_LENGTH = 100;
 
     public function __construct(Container $container)
@@ -137,6 +145,10 @@ class FieldManager
         }
 
         if (in_array($name, $this->forbiddenFieldNameList)) {
+            throw new Conflict("Field '{$name}' is not allowed.");
+        }
+
+        if (in_array(strtolower($name), $this->forbiddenAnyCaseFieldNameList)) {
             throw new Conflict("Field '{$name}' is not allowed.");
         }
 

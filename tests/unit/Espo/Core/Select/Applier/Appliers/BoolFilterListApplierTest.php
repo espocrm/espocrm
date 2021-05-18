@@ -40,7 +40,7 @@ use Espo\Core\{
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
     ORM\QueryParams\Parts\WhereClause,
-    ORM\QueryParams\Parts\Where\OrGroup,
+    ORM\QueryParams\Parts\Where\OrGroupBuilder,
     Entities\User,
 };
 
@@ -52,7 +52,7 @@ class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
         $this->user = $this->createMock(User::class);
         $this->selectManager = $this->createMock(SelectManager::class);
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
-        $this->orGroup = $this->createMock(OrGroup::class);
+        $this->orGroupBuilder = $this->createMock(OrGroupBuilder::class);
 
         $this->entityType = 'Test';
 
@@ -138,7 +138,7 @@ class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
             ->willReturnMap($createMap);
     }
 
-    protected function createFilterMock(array $rawWhereClause) : BoolFilter
+    protected function createFilterMock(array $rawWhereClause): BoolFilter
     {
         $filter = $this->createMock(BoolFilter::class);
 
@@ -152,7 +152,7 @@ class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
         $filter
             ->expects($this->any())
             ->method('apply')
-            ->with($this->queryBuilder, $this->isInstanceOf(OrGroup::class));
+            ->with($this->queryBuilder, $this->isInstanceOf(OrGroupBuilder::class));
 
         return $filter;
     }
