@@ -339,7 +339,7 @@ define(
                 scope: this.scope,
                 entityType: this.entityType,
                 hiddenPanels: this.recordHelper.getHiddenPanels(),
-                hiddenFields: this.recordHelper.getHiddenFields()
+                hiddenFields: this.recordHelper.getHiddenFields(),
             };
         },
 
@@ -347,6 +347,7 @@ define(
         handleDataBeforeRender: function (data) {
             this.getFieldList().forEach(function (field) {
                 var viewKey = field + 'Field';
+
                 data[field] = data[viewKey];
             }, this);
         },
@@ -388,7 +389,7 @@ define(
             this.attributes = this.model.getClonedAttributes();
 
             this.listenTo(this.model, 'change', function () {
-                if (this.mode == 'edit') {
+                if (this.mode === 'edit') {
                     this.setIsChanged();
                 }
             }, this);
@@ -416,6 +417,7 @@ define(
         resetModelChanges: function () {
             if (this.updatedAttributes) {
                 this.attributes = this.updatedAttributes;
+
                 this.updatedAttributes = null;
             }
 
@@ -496,21 +498,24 @@ define(
             var fields = this.getFields();
 
             for (var i in fields) {
-                if (fields[i].mode == 'edit') {
+                if (fields[i].mode === 'edit') {
                     if (!fields[i].disabled && !fields[i].readOnly) {
                         notValid = fields[i].validate() || notValid;
                     }
                 }
             };
+
             return notValid
         },
 
         afterSave: function () {
             if (this.isNew) {
                 this.notify('Created', 'success');
-            } else {
+            }
+            else {
                 this.notify('Saved', 'success');
             }
+
             this.setIsNotChanged();
         },
 
@@ -527,7 +532,9 @@ define(
 
         afterNotModified: function () {
             var msg = this.translate('notModified', 'messages');
+
             Espo.Ui.warning(msg, 'warning');
+
             this.setIsNotChanged();
         },
 
@@ -550,13 +557,16 @@ define(
             data = _.extend(Espo.Utils.cloneDeep(beforeSaveAttributes), data);
 
             var setAttributes = false;
+
             if (model.isNew()) {
                 setAttributes = data;
-            } else {
+            }
+            else {
                 for (var name in data) {
                     if (_.isEqual(initialAttributes[name], data[name])) {
                         continue;
                     }
+
                     (setAttributes || (setAttributes = {}))[name] = data[name];
                 }
             }
@@ -564,6 +574,7 @@ define(
             if (!setAttributes) {
                 this.trigger('cancel:save');
                 this.afterNotModified();
+
                 return true;
             }
 
@@ -582,6 +593,7 @@ define(
             this.beforeSave();
 
             this.trigger('before:save');
+
             model.trigger('before:save');
 
             model.save(setAttributes, {
