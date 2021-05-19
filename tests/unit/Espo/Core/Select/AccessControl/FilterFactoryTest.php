@@ -34,6 +34,8 @@ use Espo\Core\{
     Select\AccessControl\Filters\OnlyOwn,
     Select\Helpers\FieldHelper,
     Utils\Metadata,
+    AclManager,
+    Acl,
     InjectableFactory,
     Binding\BindingContainer,
     Binding\Binder,
@@ -52,10 +54,20 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
         $this->metadata = $this->createMock(Metadata::class);
         $this->user = $this->createMock(User::class);
         $this->fieldHelper = $this->createMock(FieldHelper::class);
+        $this->aclManager = $this->createMock(AclManager::class);
+
+        $this->acl = $this->createMock(Acl::class);
+
+        $this->aclManager
+            ->expects($this->any())
+            ->method('createUserAcl')
+            ->with($this->user)
+            ->willReturn($this->acl);
 
         $this->factory = new FilterFactory(
             $this->injectableFactory,
-            $this->metadata
+            $this->metadata,
+            $this->aclManager
         );
     }
 
@@ -89,7 +101,8 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
         $binder = new Binder($bindingData);
 
         $binder
-            ->bindInstance(User::class, $this->user);
+            ->bindInstance(User::class, $this->user)
+            ->bindInstance(Acl::class, $this->acl);
 
         $binder
             ->for($className)

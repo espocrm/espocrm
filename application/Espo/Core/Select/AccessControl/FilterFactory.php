@@ -34,6 +34,8 @@ use Espo\Core\{
     Select\Helpers\FieldHelper,
     InjectableFactory,
     Utils\Metadata,
+    AclManager,
+    Acl,
     Binding\BindingContainer,
     Binding\Binder,
     Binding\BindingData,
@@ -49,10 +51,13 @@ class FilterFactory
 
     private $metadata;
 
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
+    private $aclManager;
+
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata, AclManager $aclManager)
     {
         $this->injectableFactory = $injectableFactory;
         $this->metadata = $metadata;
+        $this->aclManager = $aclManager;
     }
 
     public function create(string $entityType, User $user, string $name): Filter
@@ -68,7 +73,8 @@ class FilterFactory
         $binder = new Binder($bindingData);
 
         $binder
-            ->bindInstance(User::class, $user);
+            ->bindInstance(User::class, $user)
+            ->bindInstance(Acl::class, $this->aclManager->createUserAcl($user));
 
         $binder
             ->for($className)
