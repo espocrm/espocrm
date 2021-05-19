@@ -26,14 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/user/detail', 'views/detail', function (Dep) {
+define('views/user/detail', 'views/detail', function (Dep) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            if (this.model.id == this.getUser().id || this.getUser().isAdmin()) {
+            if (this.model.id === this.getUser().id || this.getUser().isAdmin()) {
 
                 if (this.model.isRegular() || this.model.isAdmin() || this.model.isPortal()) {
                     this.addMenuItem('dropdown', {
@@ -46,17 +46,21 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                 }
 
                 if (this.model.isRegular() || this.model.isAdmin()) {
-                    if ((this.getAcl().check('EmailAccountScope') && this.model.id == this.getUser().id) || this.getUser().isAdmin()) {
+                    if (
+                        (this.getAcl().check('EmailAccountScope') && this.model.id === this.getUser().id) ||
+                        this.getUser().isAdmin()
+                    ) {
                         this.addMenuItem('dropdown', {
                             name: 'emailAccounts',
                             label: "Email Accounts",
                             style: 'default',
                             action: "emailAccounts",
-                            link: '#EmailAccount/list/userId=' + this.model.id + '&userName=' + encodeURIComponent(this.model.get('name'))
+                            link: '#EmailAccount/list/userId=' +
+                                this.model.id + '&userName=' + encodeURIComponent(this.model.get('name'))
                         });
                     }
 
-                    if (this.model.id == this.getUser().id && this.getAcl().checkScope('ExternalAccount')) {
+                    if (this.model.id === this.getUser().id && this.getAcl().checkScope('ExternalAccount')) {
                         this.menu.buttons.push({
                             name: 'externalAccounts',
                             label: 'External Accounts',
@@ -70,6 +74,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
 
             if (this.getAcl().checkScope('Calendar') && (this.model.isRegular() || this.model.isAdmin())) {
                 var showActivities = this.getAcl().checkUserPermission(this.model);
+
                 if (!showActivities) {
                     if (this.getAcl().get('userPermission') === 'team') {
                         if (!this.model.has('teamsIds')) {
@@ -81,11 +86,13 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                         }
                     }
                 }
+
                 this.menu.buttons.push({
                     name: 'calendar',
                     html: '<span class="far fa-calendar-alt"></span> ' + this.translate('Calendar', 'scopeNames'),
                     style: 'default',
-                    link: '#Calendar/show/userId=' + this.model.id + '&userName=' + encodeURIComponent(this.model.get('name')),
+                    link: '#Calendar/show/userId=' +
+                        this.model.id + '&userName=' + encodeURIComponent(this.model.get('name')),
                     hidden: !showActivities
                 });
             }
@@ -96,7 +103,12 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
         },
 
         actionEmailAccounts: function () {
-            this.getRouter().navigate('#EmailAccount/list/userId=' + this.model.id + '&userName=' + encodeURIComponent(this.model.get('name')), {trigger: true});
+            this.getRouter()
+                .navigate(
+                    '#EmailAccount/list/userId=' + this.model.id +
+                    '&userName=' + encodeURIComponent(this.model.get('name')),
+                    {trigger: true}
+                );
         },
 
         actionExternalAccounts: function () {
