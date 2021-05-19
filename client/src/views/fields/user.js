@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
+define('views/fields/user', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
@@ -36,32 +36,41 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
             Dep.prototype.setupSearch.call(this);
 
             this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
+
             this.searchTypeList.push('isFromTeams');
 
-            this.searchData.teamIdList = this.getSearchParamsData().teamIdList || this.searchParams.teamIdList || [];
-            this.searchData.teamNameHash = this.getSearchParamsData().teamNameHash || this.searchParams.teamNameHash || {};
+            this.searchData.teamIdList = this.getSearchParamsData().teamIdList ||
+                this.searchParams.teamIdList || [];
+
+            this.searchData.teamNameHash = this.getSearchParamsData().teamNameHash ||
+                this.searchParams.teamNameHash || {};
 
             this.events['click a[data-action="clearLinkTeams"]'] = function (e) {
                 var id = $(e.currentTarget).data('id').toString();
+
                 this.deleteLinkTeams(id);
             };
 
             this.addActionHandler('selectLinkTeams', function () {
                 this.notify('Loading...');
 
-                var viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') || 'views/modals/select-records';
+                var viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
+                    'views/modals/select-records';
 
                 this.createView('dialog', viewName, {
                     scope: 'Team',
                     createButton: false,
-                    multiple: true
+                    multiple: true,
                 }, function (view) {
                     view.render();
+
                     this.notify(false);
+
                     this.listenToOnce(view, 'select', function (models) {
                         if (Object.prototype.toString.call(models) !== '[object Array]') {
                             models = [models];
                         }
+
                         models.forEach(function (model) {
                             this.addLinkTeams(model.id, model.get('name'));
                         }, this);
@@ -71,6 +80,7 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
 
             this.events['click a[data-action="clearLinkTeams"]'] = function (e) {
                 var id = $(e.currentTarget).data('id').toString();
+
                 this.deleteLinkTeams(id);
             };
         },
@@ -80,7 +90,8 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
 
             if (type === 'isFromTeams') {
                 this.$el.find('div.teams-container').removeClass('hidden');
-            } else {
+            }
+            else {
                 this.$el.find('div.teams-container').addClass('hidden');
             }
         },
@@ -88,8 +99,9 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 var $elemeneTeams = this.$el.find('input.element-teams');
+
                 $elemeneTeams.autocomplete({
                     serviceUrl: function (q) {
                         return 'Team?orderBy=name&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
@@ -118,6 +130,7 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
                     }.bind(this),
                     onSelect: function (s) {
                         this.addLinkTeams(s.id, s.name);
+
                         $elemeneTeams.val('');
                     }.bind(this)
                 });
@@ -134,7 +147,7 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
 
                 var type = this.$el.find('select.search-type').val();
 
-                if (type == 'isFromTeams') {
+                if (type === 'isFromTeams') {
                     this.searchData.teamIdList.forEach(function (id) {
                         this.addLinkTeamsHtml(id, this.searchData.teamNameHash[id]);
                     }, this);
@@ -146,9 +159,11 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
             this.deleteLinkTeamsHtml(id);
 
             var index = this.searchData.teamIdList.indexOf(id);
+
             if (index > -1) {
                 this.searchData.teamIdList.splice(index, 1);
             }
+
             delete this.searchData.teamNameHash[id];
 
             this.trigger('change');
@@ -176,8 +191,14 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
 
             var $container = this.$el.find('.link-teams-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
+
             $el.html(name + '&nbsp');
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkTeams"><span class="fas fa-times"></a>');
+
+            $el.prepend(
+                '<a href="javascript:" class="pull-right" data-id="' + id + '" ' +
+                'data-action="clearLinkTeams"><span class="fas fa-times"></a>'
+            );
+
             $container.append($el);
 
             return $el;
@@ -186,7 +207,7 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
 
-            if (type == 'isFromTeams') {
+            if (type === 'isFromTeams') {
                 var data = {
                     type: 'isUserFromTeams',
                     field: this.name,
@@ -201,7 +222,6 @@ Espo.define('views/fields/user', 'views/fields/link', function (Dep) {
             }
 
             return Dep.prototype.fetchSearch.call(this);
-        }
-
+        },
     });
 });
