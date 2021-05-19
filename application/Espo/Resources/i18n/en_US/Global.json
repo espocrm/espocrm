@@ -259,7 +259,9 @@
         "View on Map": "View on Map",
         "Preview": "Preview",
         "Move Over": "Move Over",
-        "Up": "Up"
+        "Up": "Up",
+        "Save & Continue Editing": "Save & Continue Editing",
+        "Save & New": "Save & New"
     },
     "messages": {
         "pleaseWait": "Please wait...",

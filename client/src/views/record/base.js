@@ -51,6 +51,8 @@ define(
 
         mode: null,
 
+        lastSaveCancelReason: null,
+
         hideField: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
@@ -543,6 +545,8 @@ define(
         },
 
         save: function (callback, skipExit, errorCallback) {
+            this.lastSaveCancelReason = null;
+
             this.beforeBeforeSave();
 
             var data = this.fetch();
@@ -574,6 +578,8 @@ define(
             if (!setAttributes) {
                 this.afterNotModified();
 
+                this.lastSaveCancelReason = 'notModified';
+
                 this.trigger('cancel:save', {reason: 'notModified'});
 
                 return true;
@@ -585,6 +591,8 @@ define(
                 model.attributes = beforeSaveAttributes;
 
                 this.afterNotValid();
+
+                this.lastSaveCancelReason = 'invalid';
 
                 this.trigger('cancel:save', {reason: 'invalid'});
 
@@ -629,6 +637,8 @@ define(
                     this.afterSaveError();
 
                     this.setModelAttributes(beforeSaveAttributes);
+
+                    this.lastSaveCancelReason = 'error';
 
                     this.trigger('error:save');
                     this.trigger('cancel:save', {reason: 'error'});
