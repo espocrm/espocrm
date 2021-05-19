@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Laminas\Mail\Storage;
+use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
 
@@ -412,9 +413,11 @@ class InboundEmail extends RecordService implements
                             }
                         }
                     }
-                } catch (Exception $e) {
+                }
+                catch (Exception $e) {
                     $this->log->error(
-                        'InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .$e->getMessage()
+                        'InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .
+                        $e->getMessage()
                     );
                 }
 
@@ -674,13 +677,17 @@ class InboundEmail extends RecordService implements
         $copiedAttachmentIdList = [];
 
         foreach ($attachmentIdList as $attachmentId) {
-            $attachment = $this->getEntityManager()->getRepository('Attachment')->get($attachmentId);
+            $attachment = $this->getEntityManager()
+                ->getRepository('Attachment')
+                ->get($attachmentId);
 
             if (!$attachment) {
                 continue;
             }
 
-            $copiedAttachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+            $copiedAttachment = $this->getEntityManager()
+                ->getRepository('Attachment')
+                ->getCopiedAttachment($attachment);
 
             $copiedAttachmentIdList[] = $copiedAttachment->id;
         }
@@ -728,6 +735,7 @@ class InboundEmail extends RecordService implements
                     $case->set('assignedUserId', $userId);
                     $case->set('status', 'Assigned');
                 }
+
                 break;
 
             case 'Round-Robin':
@@ -738,6 +746,7 @@ class InboundEmail extends RecordService implements
                         $this->assignRoundRobin($case, $team, $targetUserPosition);
                     }
                 }
+
                 break;
 
             case 'Least-Busy':
@@ -769,8 +778,9 @@ class InboundEmail extends RecordService implements
             ->findOne();
 
         if ($contact) {
-            $case->set('contactId', $contact->id);
-        } else {
+            $case->set('contactId', $contact->getId());
+        }
+        else {
             if (!$case->get('accountId')) {
                 $lead = $this->getEntityManager()
                     ->getRepository('Lead')
@@ -781,7 +791,7 @@ class InboundEmail extends RecordService implements
                     ->findOne();
 
                 if ($lead) {
-                    $case->set('leadId', $lead->id);
+                    $case->set('leadId', $lead->getId());
                 }
             }
         }
@@ -789,16 +799,14 @@ class InboundEmail extends RecordService implements
         $this->getEntityManager()->saveEntity($case);
 
         $email->set('parentType', 'Case');
-        $email->set('parentId', $case->id);
+        $email->set('parentId', $case->getId());
 
         $this->getEntityManager()->saveEntity($email, [
             'skipLinkMultipleRemove' => true,
-            'skipLinkMultipleUpdate' => true
+            'skipLinkMultipleUpdate' => true,
         ]);
 
-        $case = $this->getEntityManager()->getEntity('Case', $case->id);
-
-        return $case;
+        return $this->getEntityManager()->getEntity('Case', $case->getId());
     }
 
     protected function autoReply($inboundEmail, $email, $case = null, $user = null)
@@ -813,7 +821,9 @@ class InboundEmail extends RecordService implements
 
         $threshold = $d->format('Y-m-d H:i:s');
 
-        $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($email->get('from'));
+        $emailAddress = $this->getEntityManager()
+            ->getRepository('EmailAddress')
+            ->getByAddress($email->get('from'));
 
         $sent = $this->getEntityManager()
             ->getRepository('Email')
@@ -828,6 +838,18 @@ class InboundEmail extends RecordService implements
         if ($sent) {
             return false;
         }
+
+        $message = new Message();
+
+        $messageId = $email->get('messageId');
+
+        if ($messageId) {
+            $message->getHeaders()->addHeaderLine('In-Reply-To', $messageId);
+        }
+
+        $message->getHeaders()->addHeaderLine('Auto-Submitted', 'auto-replied');
+        $message->getHeaders()->addHeaderLine('X-Auto-Response-Suppress', 'All');
+        $message->getHeaders()->addHeaderLine('Precedence', 'auto_reply');
 
         try {
             $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
@@ -862,7 +884,11 @@ class InboundEmail extends RecordService implements
 
                 $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
 
-                $replyData = $emailTemplateService->parse($replyEmailTemplateId, ['entityHash' => $entityHash], true);
+                $replyData = $emailTemplateService->parse(
+                    $replyEmailTemplateId,
+                    ['entityHash' => $entityHash],
+                    true
+                );
 
                 $subject = $replyData['subject'];
 
@@ -919,6 +945,7 @@ class InboundEmail extends RecordService implements
 
                 $sender
                     ->withParams($senderParams)
+                    ->withMessage($message)
                     ->send($reply);
 
                 $this->getEntityManager()->saveEntity($reply);
