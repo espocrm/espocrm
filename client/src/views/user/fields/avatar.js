@@ -67,7 +67,7 @@ define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
                 var id = this.model.get(this.idName);
                 var userId = this.model.id;
 
-                var t = Date.now();
+                var t = this.cacheTimestamp = this.cacheTimestamp || Date.now();
 
                 var imgHtml;
 
