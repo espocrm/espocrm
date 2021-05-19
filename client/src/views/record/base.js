@@ -26,7 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], function (Dep, ViewRecordHelper, DynamicLogic) {
+define(
+    'views/record/base',
+    ['view', 'view-record-helper', 'dynamic-logic'],
+    function (Dep, ViewRecordHelper, DynamicLogic) {
 
     return Dep.extend({
 
@@ -50,6 +53,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
         hideField: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
+
             if (locked) {
                 this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
             }
@@ -65,21 +69,25 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                     $field.addClass('hidden');
                     $label.addClass('hidden');
                     $cell.addClass('hidden-cell');
-                } else {
+                }
+                else {
                     this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
                     this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
                 }
             }.bind(this);
+
             if (this.isRendered()) {
                 processHtml();
-            } else {
+            }
+            else {
                 this.once('after:render', function () {
                     processHtml();
                 }, this);
             }
 
             var view = this.getFieldView(name);
+
             if (view) {
                 view.setDisabled(locked);
             }
@@ -89,6 +97,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
                 return;
             }
+
             this.recordHelper.setFieldStateParam(name, 'hidden', false);
 
             var processHtml = function () {
@@ -102,7 +111,8 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                     $field.removeClass('hidden');
                     $label.removeClass('hidden');
                     $cell.removeClass('hidden-cell');
-                } else {
+                }
+                else {
                     this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
                     this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
@@ -111,13 +121,15 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
             if (this.isRendered()) {
                 processHtml();
-            } else {
+            }
+            else {
                 this.once('after:render', function () {
                     processHtml();
                 }, this);
             }
 
             var view = this.getFieldView(name);
+
             if (view) {
                 if (!view.disabledLocked) {
                     view.setNotDisabled();
@@ -127,11 +139,13 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
         setFieldReadOnly: function (name, locked) {
             this.recordHelper.setFieldStateParam(name, 'readOnly', true);
+
             if (locked) {
                 this.recordHelper.setFieldStateParam(name, 'readOnlyLocked', true);
             }
 
             var view = this.getFieldView(name);
+
             if (view) {
                 view.setReadOnly(locked);
             }
@@ -141,11 +155,13 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             this.recordHelper.setFieldStateParam(name, 'readOnly', false);
 
             var view = this.getFieldView(name);
+
             if (view) {
                 if (view.readOnly) {
                     view.setNotReadOnly();
-                    if (this.mode == 'edit') {
-                        if (!view.readOnlyLocked && view.mode == 'detail') {
+
+                    if (this.mode === 'edit') {
+                        if (!view.readOnlyLocked && view.mode === 'detail') {
                             view.setMode('edit');
                             if (view.isRendered()) {
                                 view.reRender();
@@ -169,6 +185,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             this.recordHelper.setFieldStateParam(name, 'required', false);
 
             var view = this.getFieldView(name);
+
             if (view) {
                 view.setNotRequired();
             }
@@ -189,6 +206,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             this.recordHelper.clearFieldOptionList(name);
 
             var view = this.getFieldView(name);
+
             if (view) {
                 if ('resetOptionList' in view) {
                     view.resetOptionList();
@@ -198,6 +216,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
         showPanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
+
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
             }
@@ -205,6 +224,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
         hidePanel: function (name) {
             this.recordHelper.setPanelStateParam(name, 'hidden', true);
+
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
             }
@@ -278,12 +298,14 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
         getFieldViews: function () {
             var fields = {};
+
             this.fieldList.forEach(function (item) {
                 var view = this.getFieldView(item);
                 if (view) {
                     fields[item] = view;
                 }
             }, this);
+
             return fields;
         },
 
@@ -298,6 +320,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             if (!view) {
                 view = this.getView(name) || null;
             }
+
             return view;
         },
 
@@ -307,6 +330,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
         getFieldList: function () {
             var fieldViews = this.getFieldViews();
+
             return Object.keys(fieldViews);
         },
 
@@ -338,6 +362,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                 if (this.isChanged) {
                     this.resetModelChanges();
                 }
+
                 this.setIsNotChanged();
             }, this);
 
@@ -349,6 +374,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             this.fieldList = this.options.fieldList || this.fieldList || [];
 
             this.numId = Math.floor((Math.random() * 10000) + 1);
+
             this.id = Espo.Utils.toDom(this.entityType) + '-' + Espo.Utils.toDom(this.type) + '-' + this.numId;
 
             if (this.model.isNew()) {
@@ -394,6 +420,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             }
 
             var attributes = this.model.attributes;
+
             for (var attr in attributes) {
                 if (!(attr in this.attributes)) {
                     this.model.unset(attr);
@@ -437,16 +464,19 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                     this._handleDependencyAttribute(attr);
                 }, this);
             }, this);
+
             this._handleDependencyAttributes();
         },
 
         setupFieldLevelSecurity: function () {
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+
             forbiddenFieldList.forEach(function (field) {
                 this.hideField(field, true);
             }, this);
 
             var readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+
             readOnlyFieldList.forEach(function (field) {
                 this.setFieldReadOnly(field, true);
             }, this);
@@ -462,7 +492,9 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
         validate: function () {
             var notValid = false;
+
             var fields = this.getFields();
+
             for (var i in fields) {
                 if (fields[i].mode == 'edit') {
                     if (!fields[i].disabled && !fields[i].readOnly) {
@@ -539,8 +571,11 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
             if (this.validate()) {
                 model.attributes = beforeSaveAttributes;
+
                 this.trigger('cancel:save');
+
                 this.afterNotValid();
+
                 return;
             }
 
@@ -552,11 +587,15 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             model.save(setAttributes, {
                 success: function () {
                     this.afterSave();
+
                     var isNew = self.isNew;
+
                     if (self.isNew) {
                         self.isNew = false;
                     }
+
                     this.trigger('after:save');
+
                     model.trigger('after:save');
 
                     if (!callback) {
@@ -597,6 +636,7 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
             if (~[409, 500].indexOf(xhr.status)) {
                 var statusReason = xhr.getResponseHeader('X-Status-Reason');
+
                 if (statusReason) {
                     try {
                         var response = JSON.parse(statusReason);
@@ -609,8 +649,10 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
                         try {
                             var data = JSON.parse(xhr.responseText);
-                        } catch (e) {
+                        }
+                        catch (e) {
                             console.error('Could not parse error response body.');
+
                             return;
                         }
 
@@ -633,9 +675,11 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
         fetch: function () {
             var data = {};
             var fieldViews = this.getFieldViews();
+
             for (var i in fieldViews) {
                 var view = fieldViews[i];
-                if (view.mode == 'edit') {
+
+                if (view.mode === 'edit') {
                     if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
                         _.extend(data, view.fetch());
                     }
@@ -646,8 +690,12 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
 
         processFetch: function () {
             var data = this.fetch();
+
             this.model.set(data);
-            if (this.validate()) return;
+
+            if (this.validate()) {
+                return;
+            }
 
             return data;
         },
@@ -660,19 +708,32 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             if (!this.getUser().get('portalId')) {
                 if (this.model.hasField('assignedUser') || this.model.hasField('assignedUsers')) {
                     var assignedUserField = 'assignedUser';
+
                     if (this.model.hasField('assignedUsers')) {
                         assignedUserField = 'assignedUsers';
                     }
+
                     var fillAssignedUser = true;
                     if (this.getPreferences().get('doNotFillAssignedUserIfNotRequired')) {
                         fillAssignedUser = false;
+
                         if (this.model.getFieldParam(assignedUserField, 'required')) {
                             fillAssignedUser = true;
-                        } else if (this.getAcl().get('assignmentPermission') === 'no') {
+                        }
+                        else if (this.getAcl().get('assignmentPermission') === 'no') {
                             fillAssignedUser = true;
-                        } else if (this.getAcl().get('assignmentPermission') === 'team' && !this.getUser().get('defaultTeamId')) {
+                        }
+                        else if (
+                            this.getAcl().get('assignmentPermission') === 'team' &&
+                            !this.getUser().get('defaultTeamId')
+                        ) {
                             fillAssignedUser = true;
-                        } else if (~this.getAcl().getScopeForbiddenFieldList(this.model.name, 'edit').indexOf(assignedUserField)) {
+                        }
+                        else if (
+                            ~this.getAcl()
+                                .getScopeForbiddenFieldList(this.model.name, 'edit').indexOf(assignedUserField)
+                            ) {
+
                             fillAssignedUser = true;
                         }
                     }
@@ -680,14 +741,18 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                         if (assignedUserField === 'assignedUsers') {
                             defaultHash['assignedUsersIds'] = [this.getUser().id];
                             defaultHash['assignedUsersNames'] = {};
+
                             defaultHash['assignedUsersNames'][this.getUser().id] = this.getUser().get('name');
-                        } else {
+                        }
+                        else {
                             defaultHash['assignedUserId'] = this.getUser().id;
+
                             defaultHash['assignedUserName'] = this.getUser().get('name');
                         }
                     }
                 }
                 var defaultTeamId = this.getUser().get('defaultTeamId');
+
                 if (defaultTeamId) {
                     if (this.model.hasField('teams') && !this.model.getFieldParam('teams', 'default')) {
                         defaultHash['teamsIds'] = [defaultTeamId];
@@ -698,18 +763,25 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             }
 
             if (this.getUser().get('portalId')) {
-                if (this.model.hasField('account') && ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('account'))) {
+                if (
+                    this.model.hasField('account') &&
+                    ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('account'))
+                ) {
                     if (this.getUser().get('accountId')) {
                         defaultHash['accountId'] =  this.getUser().get('accountId');
                         defaultHash['accountName'] = this.getUser().get('accountName');
                     }
                 }
-                if (this.model.hasField('contact') && ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('contact'))) {
+                if (
+                    this.model.hasField('contact') &&
+                    ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('contact'))
+                ) {
                     if (this.getUser().get('contactId')) {
                         defaultHash['contactId'] = this.getUser().get('contactId');
                         defaultHash['contactName'] = this.getUser().get('contactName');
                     }
                 }
+
                 if (this.model.hasField('parent') && this.model.getLinkType('parent') === 'belongsToParent') {
                     if (!this.getConfig().get('b2cMode')) {
                         if (this.getUser().get('accountId')) {
@@ -719,7 +791,8 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                                 defaultHash['parentType'] = 'Account';
                             }
                         }
-                    } else {
+                    }
+                    else {
                         if (this.getUser().get('contactId')) {
                             if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Contact')) {
                                 defaultHash['contactId'] = this.getUser().get('contactId');
@@ -729,16 +802,20 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                         }
                     }
                 }
+
                 if (this.model.hasField('accounts') && this.model.getLinkType('accounts') === 'hasMany') {
                     if (this.getUser().get('accountsIds')) {
                         defaultHash['accountsIds'] = this.getUser().get('accountsIds');
                         defaultHash['accountsNames'] = this.getUser().get('accountsNames');
                     }
                 }
+
                 if (this.model.hasField('contacts') && this.model.getLinkType('contacts') === 'hasMany') {
                     if (this.getUser().get('contactId')) {
                         defaultHash['contactsIds'] = [this.getUser().get('contactId')];
+
                         var names = {};
+
                         names[this.getUser().get('contactId')] = this.getUser().get('contactName');
                         defaultHash['contactsNames'] = names;
                     }
@@ -783,8 +860,9 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
             var action = data.action;
 
             var methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
-            if (methodName in this && typeof this.methodName == 'function') {
+            if (methodName in this && typeof this.methodName === 'function') {
                 this.methodName(data);
+
                 return;
             }
 
@@ -796,37 +874,50 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                     panelList.forEach(function (item) {
                         this.hidePanel(item);
                     }, this);
+
                     fieldList.forEach(function (item) {
                         this.hideField(item);
                     }, this);
+
                     break;
+
                 case 'show':
                     panelList.forEach(function (item) {
                         this.showPanel(item);
                     }, this);
+
                     fieldList.forEach(function (item) {
                         this.showField(item);
                     }, this);
+
                     break;
+
                 case 'setRequired':
                     fieldList.forEach(function (field) {
                         this.setFieldRequired(field);
                     }, this);
+
                     break;
+
                 case 'setNotRequired':
                     fieldList.forEach(function (field) {
                         this.setFieldNotRequired(field);
                     }, this);
+
                     break;
+
                 case 'setReadOnly':
                     fieldList.forEach(function (field) {
                         this.setFieldReadOnly(field);
                     }, this);
+
                     break;
+
                 case 'setNotReadOnly':
                     fieldList.forEach(function (field) {
                         this.setFieldNotReadOnly(field);
                     }, this);
+
                     break;
             }
         },
@@ -838,9 +929,10 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
                 el: this.options.el + ' .field[data-name="' + name + '"]',
                 defs: {
                     name: name,
-                    params: params || {}
-                }
+                    params: params || {},
+                },
             };
+
             if (readOnly) {
                 o.readOnly = true;
             }
@@ -886,5 +978,4 @@ define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], fun
         exit: function (after) {},
 
     });
-
 });
