@@ -69,8 +69,6 @@ define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
 
                 var t = Date.now();
 
-                console.log(t);
-
                 var imgHtml;
 
                 if (this.mode === 'detail') {
