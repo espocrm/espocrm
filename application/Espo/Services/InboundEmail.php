@@ -79,6 +79,8 @@ class InboundEmail extends RecordService implements
 
     protected $parserClassName = MailMimeParser::class;
 
+    protected $emailAutoReplaySuppressPeriod = '3 hours';
+
     const PORTION_LIMIT = 20;
 
     protected function getCrypt()
@@ -805,7 +807,7 @@ class InboundEmail extends RecordService implements
 
         $d = new DateTime();
 
-        $d->modify('-3 hours');
+        $d->modify('-' . $this->config->get('emailAutoReplaySuppressPeriod', $this->emailAutoReplaySuppressPeriod));
 
         $threshold = $d->format('Y-m-d H:i:s');
 
