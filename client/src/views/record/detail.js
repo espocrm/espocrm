@@ -1356,9 +1356,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             if (indexOfRecord <= collection.length - 1) {
                 this.switchToModelByIndex(indexOfRecord);
-            } else {
-                var initialCount = collection.length;
-
+            }
+            else {
                 collection.fetch({
                     more: true,
                     remove: false,
