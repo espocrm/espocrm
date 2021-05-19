@@ -572,8 +572,9 @@ define(
             }
 
             if (!setAttributes) {
-                this.trigger('cancel:save');
                 this.afterNotModified();
+
+                this.trigger('cancel:save', {reason: 'notModified'});
 
                 return true;
             }
@@ -583,9 +584,9 @@ define(
             if (this.validate()) {
                 model.attributes = beforeSaveAttributes;
 
-                this.trigger('cancel:save');
-
                 this.afterNotValid();
+
+                this.trigger('cancel:save', {reason: 'invalid'});
 
                 return;
             }
@@ -630,7 +631,7 @@ define(
                     this.setModelAttributes(beforeSaveAttributes);
 
                     this.trigger('error:save');
-                    this.trigger('cancel:save');
+                    this.trigger('cancel:save', {reason: 'error'});
 
                     if (errorCallback) {
                         errorCallback.call(this, xhr);
