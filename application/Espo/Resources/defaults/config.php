@@ -134,6 +134,7 @@ return [
     'activitiesEntityList' => ['Meeting', 'Call'],
     'historyEntityList' => ['Meeting', 'Call', 'Email'],
     'busyRangesEntityList' => ['Meeting', 'Call'],
+    'emailAutoReplaySuppressPeriod' => '3 hours',
     'cleanupJobPeriod' => '1 month',
     'cleanupActionHistoryPeriod' => '15 days',
     'cleanupAuthTokenPeriod' => '1 month',

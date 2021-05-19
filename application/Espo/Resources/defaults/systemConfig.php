@@ -170,6 +170,7 @@ return [
         'ldapPortalUserRolesIds',
         'ldapPortalUserRolesNames',
         'cleanupJobPeriod',
+        'emailAutoReplaySuppressPeriod',
         'cleanupActionHistoryPeriod',
         'adminNotifications',
         'adminNotificationsNewVersion',
