@@ -33,7 +33,8 @@ use Laminas\Mail\Message;
 
 use Espo\{
     ORM\Entity,
-    Entities,
+    Entities\User,
+    Entities\Email as EmailEntity,
 };
 
 use Espo\Core\{
@@ -142,7 +143,7 @@ class Email extends Record implements
         return $smtpParams;
     }
 
-    public function sendEntity(Entities\Email $entity, ?Entities\User $user = null)
+    public function sendEntity(EmailEntity $entity, ?User $user = null)
     {
         $emailSender = $this->emailSender->create();
 
@@ -278,6 +279,12 @@ class Email extends Record implements
 
         $message = new Message();
 
+        $repliedMessageId = $this->getRepliedEmailMessageId($entity);
+
+        if ($repliedMessageId) {
+            $message->getHeaders()->addHeaderLine('In-Reply-To', $repliedMessageId);
+        }
+
         try {
             $emailSender
                 ->withParams($params)
@@ -301,36 +308,35 @@ class Email extends Record implements
 
         $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);
 
-        if ($message) {
-            if ($inboundEmail) {
-                $entity->addLinkMultipleId('inboundEmails', $inboundEmail->id);
+        if ($inboundEmail) {
+            $entity->addLinkMultipleId('inboundEmails', $inboundEmail->id);
 
-                if ($inboundEmail->get('storeSentEmails')) {
-                    try {
-                        $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
-                        $inboundEmailService->storeSentMessage($inboundEmail, $message);
-                    }
-                    catch (Exception $e) {
-                        $this->log->error(
-                            "Email sending: Could not store sent email (Group Email Account {$inboundEmail->id}): " .
-                            $e->getMessage() . "."
-                        );
-                    }
+            if ($inboundEmail->get('storeSentEmails')) {
+                try {
+                    $inboundEmailService = $this->getServiceFactory()->create('InboundEmail');
+                    $inboundEmailService->storeSentMessage($inboundEmail, $message);
                 }
-            } else if ($emailAccount) {
-                $entity->addLinkMultipleId('emailAccounts', $emailAccount->id);
+                catch (Exception $e) {
+                    $this->log->error(
+                        "Email sending: Could not store sent email (Group Email Account {$inboundEmail->id}): " .
+                        $e->getMessage() . "."
+                    );
+                }
+            }
+        }
+        else if ($emailAccount) {
+            $entity->addLinkMultipleId('emailAccounts', $emailAccount->id);
 
-                if ($emailAccount->get('storeSentEmails')) {
-                    try {
-                        $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
-                        $emailAccountService->storeSentMessage($emailAccount, $message);
-                    }
-                    catch (Exception $e) {
-                        $this->log->error(
-                            "Email sending: Could not store sent email (Email Account {$emailAccount->id}): " .
-                            $e->getMessage() . "."
-                        );
-                    }
+            if ($emailAccount->get('storeSentEmails')) {
+                try {
+                    $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+                    $emailAccountService->storeSentMessage($emailAccount, $message);
+                }
+                catch (Exception $e) {
+                    $this->log->error(
+                        "Email sending: Could not store sent email (Email Account {$emailAccount->id}): " .
+                        $e->getMessage() . "."
+                    );
                 }
             }
         }
@@ -346,6 +352,7 @@ class Email extends Record implements
 
         if ($userData) {
             $smtpHandlers = $userData->get('smtpHandlers') ?? (object) [];
+
             if (is_object($smtpHandlers)) {
                 if (isset($smtpHandlers->$emailAddress)) {
                     $handlerClassName = $smtpHandlers->$emailAddress;
@@ -359,8 +366,10 @@ class Email extends Record implements
                             $e->getMessage() . "."
                         );
                     }
+
                     if (method_exists($handler, 'applyParams')) {
                         $handler->applyParams($userId, $emailAddress, $params);
+
                         return;
                     }
                 }
@@ -368,7 +377,7 @@ class Email extends Record implements
         }
     }
 
-    public function validateEmailAddresses(Entities\Email $entity)
+    public function validateEmailAddresses(EmailEntity $entity): void
     {
         $from = $entity->get('from');
 
@@ -962,5 +971,26 @@ class Email extends Record implements
         }
 
         return $data;
+    }
+
+    private function getRepliedEmailMessageId(EmailEntity $email): ?string
+    {
+        if (!$email->get('repliedId')) {
+            return null;
+        }
+
+        $replied = $this->entityManager
+            ->getRDBRepository('Email')
+            ->select(['messageId'])
+            ->where([
+                'id' => $email->get('repliedId')
+            ])
+            ->findOne();
+
+        if (!$replied) {
+            return null;
+        }
+
+        return $replied->get('messageId');
     }
 }
