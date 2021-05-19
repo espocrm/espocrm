@@ -42,6 +42,8 @@ define('views/detail', 'views/main', function (Dep) {
 
         recordView: 'views/record/detail',
 
+        rootLinkDisabled: false,
+
         addUnfollowButtonToMenu: function () {
             this.removeMenuItem('follow', true);
 
@@ -196,9 +198,17 @@ define('views/detail', 'views/main', function (Dep) {
 
             var headerIconHtml = this.getHeaderIconHtml();
 
+            var rootHtml = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+
+            if (!this.rootLinkDisabled) {
+                rootHtml =
+                    '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' +
+                    rootHtml +
+                    '</a>';
+            }
+
             return this.buildHeaderHtml([
-                headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' +
-                    this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>',
+                headerIconHtml + rootHtml,
                 name
             ]);
         },

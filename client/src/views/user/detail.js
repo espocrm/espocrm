@@ -33,6 +33,10 @@ define('views/user/detail', 'views/detail', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            if (this.getUser().isPortal()) {
+                this.rootLinkDisabled = true;
+            }
+
             if (this.model.id === this.getUser().id || this.getUser().isAdmin()) {
 
                 if (this.model.isRegular() || this.model.isAdmin() || this.model.isPortal()) {
@@ -114,5 +118,6 @@ define('views/user/detail', 'views/detail', function (Dep) {
         actionExternalAccounts: function () {
             this.getRouter().navigate('#ExternalAccount', {trigger: true});
         },
+
     });
 });
