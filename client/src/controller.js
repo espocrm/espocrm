@@ -119,6 +119,7 @@ define('controller', [], function () {
             if (key in this.params) {
                 return this.params[key];
             }
+
             return null;
         },
 
@@ -149,9 +150,11 @@ define('controller', [], function () {
 
         clearStoredMainView: function (key) {
             var view = this.getStoredMainView(key);
+
             if (view) {
                 view.remove(true);
             }
+
             this.unset('storedMainView-' + key);
         },
 
@@ -160,7 +163,10 @@ define('controller', [], function () {
 
             this.listenTo(view, 'remove', function (o) {
                 o = o || {};
-                if (o.ignoreCleaning) return;
+
+                if (o.ignoreCleaning) {
+                    return;
+                }
 
                 this.stopListening(view, 'remove');
 
@@ -185,11 +191,14 @@ define('controller', [], function () {
         handleCheckAccess: function (action) {
             if (!this.checkAccess(action)) {
                 var msg;
+
                 if (action) {
                     msg = "Denied access to action '" + this.name + "#" + action + "'";
-                } else {
+                }
+                else {
                     msg = "Denied access to scope '" + this.name + "'";
                 }
+
                 throw new Espo.Exceptions.AccessDenied(msg);
             }
         },
@@ -198,6 +207,7 @@ define('controller', [], function () {
             this.handleAccessGlobal();
 
             action = action || this.defaultAction;
+
             var method = 'action' + Espo.Utils.upperCaseFirst(action);
 
             if (!(method in this)) {
@@ -210,7 +220,9 @@ define('controller', [], function () {
             if (preMethod in this) {
                 this[preMethod].call(this, options || {});
             }
+
             this[method].call(this, options || {});
+
             if (postMethod in this) {
                 this[postMethod].call(this, options || {});
             }
@@ -222,25 +234,34 @@ define('controller', [], function () {
          */
         master: function (callback) {
             var entire = this.get('entire');
+
             if (entire) {
                 entire.remove();
+
                 this.set('entire', null);
             }
+
             var master = this.get('master');
+
             if (!master) {
                 var masterView = this.masterView || 'views/site/master';
+
                 this.viewFactory.create(masterView, {el: 'body'}, function (master) {
                     this.set('master', master);
+
                     if (!this.get('masterRendered')) {
                         master.render(function () {
                             this.set('masterRendered', true);
+
                             callback.call(this, master);
                         }.bind(this));
                         return;
                     }
+
                     callback.call(this, master);
                 }.bind(this));
-            } else {
+            }
+            else {
                 callback.call(this, master);
             }
         },
@@ -253,60 +274,79 @@ define('controller', [], function () {
          */
         main: function (view, options, callback, useStored, storedKey) {
             var isCanceled = false;
+
             this.listenToOnce(this.baseController, 'action', function () {
                 isCanceled = true;
             }, this);
 
             var view = view || 'views/base';
-            var master = this.master(function (master) {
-                if (isCanceled) return;
+
+            this.master(function (master) {
+                if (isCanceled) {
+                    return;
+                }
 
                 master.showLoadingNotification();
+
                 options = options || {};
                 options.el = '#main';
 
                 var process = function (main) {
-                    if (isCanceled) return;
+                    if (isCanceled) {
+                        return;
+                    }
 
                     if (storedKey) {
                         this.storeMainView(storedKey, main);
                     }
+
                     main.once('render', function () {
                         main.updatePageTitle();
+
                         master.hideLoadingNotification();
                     });
 
                     main.listenToOnce(this.baseController, 'action', function () {
                         main.cancelRender();
+
                         isCanceled = true;
                     }, this);
 
                     if (master.currentViewKey) {
                         this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
+
                         if (this.hasStoredMainView(master.currentViewKey)) {
                             var mainView = master.getView('main');
+
                             if (mainView) {
                                 mainView.propagateEvent('remove', {ignoreCleaning: true});
                             }
+
                             master.unchainView('main');
                         }
                     }
+
                     master.currentViewKey = storedKey;
+
                     master.setView('main', main);
 
                     main.once('after:render', function () {
                         if (useStored && this.has('storedScrollTop-' + storedKey)) {
                             $(window).scrollTop(this.get('storedScrollTop-' + storedKey));
-                        } else {
+                        }
+                        else {
                             $(window).scrollTop(0);
                         }
                     }.bind(this));
 
-                    if (isCanceled) return;
+                    if (isCanceled) {
+                        return;
+                    }
 
                     if (callback) {
                         callback.call(this, main);
-                    } else {
+                    }
+                    else {
                         main.render();
                     }
                 }.bind(this);
@@ -316,6 +356,7 @@ define('controller', [], function () {
                         var main = this.getStoredMainView(storedKey);
 
                         var isActual = true;
+
                         if (main && typeof main.isActualForReuse === 'function') {
                             isActual = main.isActualForReuse();
                         }
@@ -326,21 +367,26 @@ define('controller', [], function () {
                             isActual
                         ) {
                             process(main);
+
                             if (main && typeof main.applyRoutingParams === 'function') {
                                 main.applyRoutingParams(options.params || {});
                             }
+
                             return;
-                        } else {
+                        }
+                        else {
                             this.clearStoredMainView(storedKey);
                         }
                     }
                 }
+
                 this.viewFactory.create(view, options, process);
             }.bind(this));
         },
 
         showLoadingNotification: function () {
             var master = this.get('master');
+
             if (master) {
                 master.showLoadingNotification();
             }
@@ -348,6 +394,7 @@ define('controller', [], function () {
 
         hideLoadingNotification: function () {
             var master = this.get('master');
+
             if (master) {
                 master.hideLoadingNotification();
             }
@@ -361,15 +408,20 @@ define('controller', [], function () {
          */
         entire: function (view, options, callback) {
             var master = this.get('master');
+
             if (master) {
                 master.remove();
             }
+
             this.set('master', null);
             this.set('masterRendered', false);
+
             options = options || {};
             options.el = 'body';
+
             this.viewFactory.create(view, options, function (view) {
                 this.set('entire', view);
+
                 callback(view);
             }.bind(this));
         }
