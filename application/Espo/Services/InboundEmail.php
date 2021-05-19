@@ -81,9 +81,11 @@ class InboundEmail extends RecordService implements
 
     protected $parserClassName = MailMimeParser::class;
 
-    protected $emailAutoReplySuppressPeriod = '3 hours';
+    private const DEFAULT_AUTOREPLY_SUPPRESS_PERIOD = '2 hours';
 
-    const PORTION_LIMIT = 20;
+    private const DEFAULT_AUTOREPLY_LIMIT = 5;
+
+    protected const PORTION_LIMIT = 20;
 
     protected function getCrypt()
     {
@@ -814,12 +816,16 @@ class InboundEmail extends RecordService implements
     protected function autoReply($inboundEmail, $email, $case = null, $user = null)
     {
         if (!$email->get('from')) {
-            return false;
+            return null;
         }
+
+        $limit = $this->config->get('emailAutoReplyLimit', self::DEFAULT_AUTOREPLY_LIMIT);
 
         $d = new DateTime();
 
-        $d->modify('-' . $this->config->get('emailAutoReplySuppressPeriod', $this->emailAutoReplySuppressPeriod));
+        $period = $this->config->get('emailAutoReplySuppressPeriod', self::DEFAULT_AUTOREPLY_SUPPRESS_PERIOD);
+
+        $d->modify('-' . $period);
 
         $threshold = $d->format('Y-m-d H:i:s');
 
@@ -827,18 +833,19 @@ class InboundEmail extends RecordService implements
             ->getRepository('EmailAddress')
             ->getByAddress($email->get('from'));
 
-        $sent = $this->getEntityManager()
-            ->getRepository('Email')
+        $sentCount = $this->getEntityManager()
+            ->getRDBRepository('Email')
             ->where([
-                'toEmailAddresses.id' => $emailAddress->id,
+                'toEmailAddresses.id' => $emailAddress->getId(),
                 'dateSent>' => $threshold,
                 'status' => 'Sent',
+                'createdById' => 'system',
             ])
             ->join('toEmailAddresses')
-            ->findOne();
+            ->count();
 
-        if ($sent) {
-            return false;
+        if ($sentCount >= $limit) {
+            return null;
         }
 
         $message = new Message();

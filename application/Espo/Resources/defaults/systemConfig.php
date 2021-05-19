@@ -182,6 +182,7 @@ return [
         'ldapPortalUserRolesNames',
         'cleanupJobPeriod',
         'emailAutoReplySuppressPeriod',
+        'emailAutoReplyLimit',
         'cleanupActionHistoryPeriod',
         'adminNotifications',
         'adminNotificationsNewVersion',
