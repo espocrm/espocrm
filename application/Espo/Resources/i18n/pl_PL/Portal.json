@@ -14,15 +14,20 @@
     "weekStart": "Pierwszy dzień tygodnia",
     "defaultCurrency": "Domyślna waluta",
     "customUrl": "Inny URL",
-    "customId": "Własny ID"
+    "customId": "Własny ID",
+    "layoutSet": "Zestaw układu"
   },
   "links": {
     "users": "Użytkownicy",
     "portalRoles": "Role",
-    "notes": "Notatki"
+    "notes": "Notatki",
+    "layoutSet": "Zestaw układu"
   },
   "labels": {
     "User Interface": "Interfejs użytkownika",
     "Settings": "Ustawienia"
+  },
+  "tooltips": {
+    "layoutSet": "Zapewnia możliwość posiadania układów różniących się od standardowych."
   }
 }

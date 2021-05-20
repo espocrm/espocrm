@@ -3,5 +3,12 @@
     "Primary": "Główny",
     "Opted Out": "Wypisany",
     "Invalid": "Błędny"
+  },
+  "fields": {
+    "optOut": "Zrezygnowano",
+    "invalid": "Nieważny"
+  },
+  "presetFilters": {
+    "orphan": "Sierota"
   }
 }

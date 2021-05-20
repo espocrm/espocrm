@@ -9,12 +9,14 @@
     "application": "Aplikacja",
     "queueItem": "Element kolejki",
     "stringData": "Dane tekstowe",
-    "stringAdditionalData": "Dodatkowe dane tekstowe"
+    "stringAdditionalData": "Dodatkowe dane tekstowe",
+    "isTest": "Czy Test"
   },
   "links": {
     "queueItem": "Element kolejki",
     "parent": "Rodzic",
-    "object": "Obiekt"
+    "object": "Obiekt",
+    "campaign": "Kampania"
   },
   "options": {
     "action": {
@@ -22,7 +24,8 @@
       "Opened": "Otwarty",
       "Opted Out": "Wypisany",
       "Bounced": "Odrzucone",
-      "Clicked": "Kliknięte"
+      "Clicked": "Kliknięte",
+      "Opted In": "Włączono"
     }
   },
   "labels": {
@@ -33,6 +36,7 @@
     "opened": "Otwarty",
     "optedOut": "Wypisany",
     "bounced": "Odrzucone",
-    "clicked": "Kliknięte"
+    "clicked": "Kliknięte",
+    "optedIn": "Włączono"
   }
 }

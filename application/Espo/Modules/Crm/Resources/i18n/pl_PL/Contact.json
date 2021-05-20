@@ -10,11 +10,17 @@
     "doNotCall": "Nie Dzwoń",
     "address": "Adres",
     "opportunityRole": "Rola szansy sprzedaży",
-    "description": "Opis ",
+    "description": "Opis",
     "campaign": "Kampania",
     "targetLists": "Listy docelowe",
     "targetList": "Lista docelowa",
-    "accountIsInactive": "Konto nieaktywne"
+    "originalLead": "Źródłowy lead",
+    "acceptanceStatus": "Status akceptacji",
+    "accountIsInactive": "Konto nieaktywne",
+    "acceptanceStatusMeetings": "Status akceptacji (Spotkania)",
+    "acceptanceStatusCalls": "Stan akceptacji (Połączenia)",
+    "title": "Tytuł konta",
+    "hasPortalUser": "Ma użytkowników portalu"
   },
   "links": {
     "opportunities": "Szanse sprzedaży",
@@ -24,7 +30,10 @@
     "campaign": "Kampania",
     "account": "Konto (podstawowe)",
     "accounts": "Klienci",
-    "documents": "Dokumenty"
+    "originalLead": "Źródłowy lead",
+    "documents": "Dokumenty",
+    "tasksPrimary": "Zadania (rozwinięte)",
+    "opportunitiesPrimary": "Okazje (podstawowe)"
   },
   "labels": {
     "Create Contact": "Utwórz Kontakt"
@@ -35,5 +44,8 @@
       "Evaluator": "Oceniający",
       "Influencer": "Wpływający"
     }
+  },
+  "presetFilters": {
+    "accountActive": "Aktywne"
   }
 }

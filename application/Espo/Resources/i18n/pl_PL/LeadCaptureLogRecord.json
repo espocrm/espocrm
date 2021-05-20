@@ -1,1 +1,13 @@
-{}
+{
+  "fields": {
+    "number": "Numer",
+    "target": "Cel",
+    "leadCapture": "Przechwycenie Leada",
+    "createdAt": "Wszedł o",
+    "isCreated": "Czy Lead został utworzony"
+  },
+  "links": {
+    "leadCapture": "Przechwycenie Leada",
+    "target": "Cel"
+  }
+}

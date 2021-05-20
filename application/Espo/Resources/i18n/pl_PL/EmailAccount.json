@@ -17,7 +17,9 @@
     "smtpSecurity": "Zabezpieczenia SMTP",
     "smtpUsername": "Nazwa użytkownika SMTP",
     "smtpPassword": "Hasło SMTP",
-    "useImap": "Pobierz wiadomości e-mail"
+    "useImap": "Pobierz wiadomości e-mail",
+    "smtpAuthMechanism": "Mechanizm autoryzacji SMTP",
+    "security": "Bezpieczeństwo"
   },
   "links": {
     "filters": "Filtry",
@@ -40,7 +42,9 @@
     "connectionIsOk": "Połączenie OK"
   },
   "tooltips": {
-    "monitoredFolders": "Możesz dodać folder 'Wysłane' aby synchronizować wysłaną pocztę z zewnętrznym klientem poczty.",
-    "storeSentEmails": "Wysłane wiadomości będą przechowywane na serwerze IMAP. Adres e-mail powinien być taki jak podany w wiadomości wychodzącej."
+    "monitoredFolders": "Wiele folderów należy oddzielić przecinkami.\n\nMożesz dodać folder 'Wysłane' aby synchronizować maile wysyłane z zewnętrznego klienta poczty.",
+    "storeSentEmails": "Wysłane wiadomości będą przechowywane na serwerze IMAP. Adres e-mail powinien być taki jak podany w wiadomości wychodzącej.",
+    "useSmtp": "Możliwość wysyłania maili.",
+    "emailAddress": "Rekord użytkownika (przypisanego użytkownika) powinien mieć ten sam adres e-mail, aby móc używać tego konta e-mail do wysyłania."
   }
 }

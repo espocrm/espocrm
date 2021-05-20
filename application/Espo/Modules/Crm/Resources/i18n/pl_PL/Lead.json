@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Converted To": "Przekształcony w ",
+    "Converted To": "Zamienione na",
     "Create Lead": "Utwórz potencjalny kontakt",
     "Convert": "Przekształć",
     "convert": "przekształć"
@@ -17,13 +17,19 @@
     "source": "Źródło",
     "opportunityAmount": "Wartość szansy sprzedaży",
     "opportunityAmountConverted": "Wartość szansy sprzedaży (konwertowana)",
-    "description": "Opis ",
+    "description": "Opis",
     "createdAccount": "Klient",
     "createdContact": "Kontakty",
     "createdOpportunity": "Szansa sprzedaży",
     "campaign": "Kampania",
     "targetLists": "Listy docelowe",
-    "targetList": "Lista docelowa"
+    "targetList": "Lista docelowa",
+    "industry": "Branża",
+    "acceptanceStatus": "Status akceptacji",
+    "opportunityAmountCurrency": "Waluta kwoty Okazji",
+    "acceptanceStatusMeetings": "Status akceptacji (Spotkania)",
+    "acceptanceStatusCalls": "Stan akceptacji (połączenia)",
+    "convertedAt": "Przekonwertowano na"
   },
   "links": {
     "targetLists": "Listy docelowe",

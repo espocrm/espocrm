@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "Create Webhook": "Utwórz webhook"
+  },
+  "fields": {
+    "event": "Wydarzenie",
+    "isActive": "Jest aktywne",
+    "user": "Użytkownik API",
+    "entityType": "Typ modułu",
+    "field": "Pole",
+    "secretKey": "Sekretny klucz"
+  },
+  "links": {
+    "user": "Użytkownik"
+  }
+}

@@ -36,5 +36,8 @@
     "type": {
       "Article": "Artykuł"
     }
+  },
+  "tooltips": {
+    "portals": "Artykuł będzie dostępny tylko w konkretnych portalach."
   }
 }

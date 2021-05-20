@@ -7,8 +7,10 @@
     "users": "Użytkownicy",
     "portals": "Portale",
     "type": "Typ",
+    "isGlobal": "Jest Globalny",
     "isInternal": "Prywatny (dla użytkowników wewnętrznych)",
     "related": "Powiązany",
+    "createdByGender": "Stworzony przez płeć",
     "number": "Numer"
   },
   "filters": {
@@ -29,6 +31,7 @@
     }
   },
   "links": {
+    "superParent": "Super Rodzic",
     "related": "Powiązane"
   }
 }

@@ -60,6 +60,9 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 miesięcy",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 miesięcy",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 rok"
+    },
+    "barcodeType": {
+      "QRcode": "Kod QR"
     }
   },
   "tooltips": {
@@ -68,11 +71,66 @@
     "default": "Wartość domyślna zostanie ustawiona po utworzeniu.",
     "min": "Minimalna akceptowalna wartość.",
     "max": "Maksymalna akceptowalna wartość.",
-    "maxLength": "Maksymalna akceptowalna długość pola testowego."
+    "seeMoreDisabled": "Jeśli nie jest zaznaczone, długie teksty zostaną skrócone.",
+    "lengthOfCut": "Jak długi może być tekst, zanim zostanie wycięty.",
+    "maxLength": "Maksymalna akceptowalna długość pola testowego.",
+    "before": "Wartość daty powinna być wcześniejsza niż wartość daty określonego pola.",
+    "after": "Wartość daty powinna być późniejsza niż wartość daty w określonym polu.",
+    "readOnly": "Wartość pola nie może być określona przez użytkownika. Ale można to obliczyć według formuły.",
+    "maxFileSize": "Jesli pusty lub 0 to bez limitu.",
+    "fileAccept": "Jakie typy plików akceptować. Istnieje możliwość dodania niestandardowych elementów.",
+    "barcodeLastChar": "Dla typu EAN-13."
   },
   "fieldParts": {
+    "address": {
+      "street": "Ulica",
+      "city": "Miasto",
+      "state": "Województwo",
+      "country": "Kraj",
+      "postalCode": "Kod pocztowy",
+      "map": "Mapa"
+    },
+    "personName": {
+      "salutation": "Pozdrowienie",
+      "first": "Imię",
+      "last": "Nazwisko",
+      "middle": "Środek"
+    },
     "currency": {
+      "converted": "(Przekonwertowane)",
       "currency": "(Waluta)"
+    },
+    "datetimeOptional": {
+      "date": "Data"
     }
+  },
+  "fieldInfo": {
+    "varchar": "Tekst jednowierszowy.",
+    "enum": "Pole wyboru, można wybrać tylko jedną wartość.",
+    "text": "Tekst wielowierszowy z obsługą znaczników.",
+    "date": "Data bez czasu.",
+    "datetime": "Data i czas",
+    "currency": "Wartość waluty. Liczba zmiennoprzecinkowa z kodem waluty.",
+    "int": "Liczba całkowita.",
+    "float": "Liczba z częścią dziesiętną.",
+    "bool": "Pole wyboru. Dwie możliwe wartości: prawda i fałsz.",
+    "multiEnum": "Lista wartości, można wybrać wiele wartości. Lista jest uporządkowana.",
+    "checklist": "Lista pól wyboru.",
+    "array": "Lista wartości, podobne do Multi-Enum.",
+    "address": "Adres zawierający ulicę, miasto, stan, kod pocztowy i kraj.",
+    "url": "Do przechowywania linków.",
+    "wysiwyg": "Tekst z obsługą HTML.",
+    "file": "Do przesyłania plików.",
+    "image": "Do przesyłania zdjęć.",
+    "attachmentMultiple": "Umożliwia przesyłanie wielu plików.",
+    "number": "Automatycznie zwiększająca się liczba typów string z możliwym prefiksem i określoną długością.",
+    "autoincrement": "Wygenerowana, tylko do odczytu, automatycznie zwiększająca się liczba całkowita.",
+    "barcode": "Kod kreskowy. Można wydrukować w formacie PDF.",
+    "email": "Zestaw adresów e-mail z parametrami: Zrezygnowano, Nieprawidłowy, Główny.",
+    "phone": "Zbiór numerów telefonów wraz z ich parametrami: Typ, Zrezygnowano, Nieprawidłowy, Główny.",
+    "foreign": "Pole pokrewnego rekordu. Tylko do odczytu.",
+    "link": "Rekord związany z relacją należą-do (wiele-do-jednego lub jeden-do-jednego).",
+    "linkParent": "Rekord związany z relacją należy-do-rodzica. Mogą mieć różne typy jednostek.",
+    "linkMultiple": "Zestaw rekordów powiązanych przez relację posiada-wiele (wiele-do-wielu lub jeden-do-wielu). Nie wszystkie relacje mają swoje pola wielokrotnego-łącza. Tylko te, które mają parametr wielokrotnego-łącza włączony."
   }
 }

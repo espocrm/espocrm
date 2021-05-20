@@ -25,22 +25,43 @@
     "isImportant": "Ważne",
     "isUsers": "Należy do użytkownika",
     "inTrash": "W koszu",
-    "name": "Temat",
+    "name": "Nazwa (Temat)",
+    "isReplied": "Odpowiedziano",
+    "isNotReplied": "Nie odpowiedziano",
     "inboundEmails": "Konto grupowe",
     "emailAccounts": "Konto osobiste",
     "hasAttachment": "Załącznik",
+    "sentBy": "Wysłane przez",
+    "assignedUsers": "Przypisani użytkownicy",
+    "bodyPlain": "Body (Zwykłe)",
+    "ccEmailAddresses": "Adresy e-mail DW",
     "messageId": "ID wiadomości",
     "messageIdInternal": "ID wiadomości (wewnętrzne)",
     "folderId": "ID folderu",
-    "fromName": "Pochodzi od"
+    "fromName": "Pochodzi od",
+    "fromString": "Od String",
+    "isSystem": "Czy system",
+    "toEmailAddresses": "Do AdresyEmail",
+    "bccEmailAddresses": "Adresy e-mail BCC",
+    "replyToEmailAddresses": "Adresy e-mail Reply-To",
+    "personStringData": "Dane String osoby",
+    "fromEmailAddress": "Od adresu (link)",
+    "replyToName": "Odpowiedz-Do Nazwa",
+    "replyToAddress": "Odpowiedz-Do Adres"
   },
   "links": {
     "replied": "Odpowiedziano",
     "replies": "Odpowiedzi",
     "inboundEmails": "Konto grupowe",
     "emailAccounts": "Konto osobiste",
+    "assignedUsers": "Przypisani użytkownicy",
+    "sentBy": "Wysłane przez",
     "attachments": "Załączniki",
-    "fromEmailAddress": "Pochodzi z adresu e-mail"
+    "fromEmailAddress": "Pochodzi z adresu e-mail",
+    "toEmailAddresses": "Do AdresyEmail",
+    "ccEmailAddresses": "DW AdresyEmail",
+    "bccEmailAddresses": "UDW AdresyEmail",
+    "replyToEmailAddresses": "Adresy e-mail Reply-To"
   },
   "options": {
     "status": {
@@ -78,19 +99,28 @@
     "Retrieve from Trash": "Przywróć z kosza",
     "Move to Folder": "Przenieś do folderu",
     "Filters": "Filtry",
-    "Folders": "Foldery"
+    "Folders": "Foldery",
+    "View Users": "Wyświetl użytkowników",
+    "No Subject": "Brak Tematu",
+    "Insert Field": "Wstaw pole"
   },
   "messages": {
     "testEmailSent": "Testowa wiadomość została wysłana",
     "emailSent": "Wiadomość została wysłana",
-    "savedAsDraft": "Zapisz jako szablon"
+    "savedAsDraft": "Zapisz jako szablon",
+    "confirmInsertTemplate": "Treść wiadomości e-mail zostanie utracona. Czy na pewno chcesz wstawić szablon?",
+    "noSmtpSetup": "SMTP nie jest skonfigurowany: {link}",
+    "sendConfirm": "Wysłać e-mail?",
+    "removeSelectedRecordsConfirmation": "Czy na pewno chcesz usunąć wybrane maile?\n\nZostaną również usunięte dla innych użytkowników.",
+    "removeRecordConfirmation": "Czy na pewno chcesz usunąć ten e-mail?\n\nZostanie również usunięty dla innych użytkowników."
   },
   "presetFilters": {
     "sent": "Wysłane",
     "archived": "Zarchiwizowany",
     "inbox": "Przychodzące",
     "drafts": "Szkice",
-    "trash": "Kosz"
+    "trash": "Kosz",
+    "important": "Ważne"
   },
   "massActions": {
     "markAsRead": "Oznacz jako przeczytane",
@@ -98,6 +128,10 @@
     "markAsImportant": "Oznacz jako ważne",
     "markAsNotImportant": "Oznacz jako normalne",
     "moveToTrash": "Przenieś do kosza",
-    "moveToFolder": "Przenieś do folderu"
+    "moveToFolder": "Przenieś do folderu",
+    "retrieveFromTrash": "Przywróć z kosza"
+  },
+  "strings": {
+    "sendingFailed": "Błąd wysyłania maila"
   }
 }

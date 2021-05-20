@@ -7,7 +7,9 @@
     "contacts": "Kontakty",
     "priority": "Priorytet",
     "type": "Rodzaj",
-    "description": "Opis "
+    "description": "Opis",
+    "attachments": "Załączniki",
+    "inboundEmail": "Grupowe Konto Email"
   },
   "links": {
     "account": "Klient",
@@ -16,7 +18,9 @@
     "calls": "Rozmowy",
     "tasks": "Zadania",
     "emails": "Wiadomości",
-    "articles": "Artykuły bazy wiedzy"
+    "articles": "Artykuły bazy wiedzy",
+    "attachments": "Załączniki",
+    "inboundEmail": "Grupowe Konto Email"
   },
   "options": {
     "status": {

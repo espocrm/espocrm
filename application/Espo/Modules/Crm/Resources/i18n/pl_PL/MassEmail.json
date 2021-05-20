@@ -32,17 +32,20 @@
   "labels": {
     "Create MassEmail": "Utwórz wiadomość masową",
     "Send Test": "Wyślij test",
+    "System SMTP": "Systemowe konto SMTP",
     "group": "grupa"
   },
   "messages": {
     "selectAtLeastOneTarget": "Wybierz przynajmniej jeden cel.",
-    "testSent": "Wiadomość testowa powinna być wysłana"
+    "testSent": "Testowe emaile które mają zostać wysłane"
   },
   "tooltips": {
     "targetLists": "Adresaci, którzy powinni otrzymać wiadomości.",
-    "excludingTargetLists": "Adresaci, którzy nie powinni otrzymać wiadomości."
+    "excludingTargetLists": "Adresaci, którzy nie powinni otrzymać wiadomości.",
+    "storeSentEmails": "Wiadomości e-mail będą przechowywane w EspoCRM."
   },
   "presetFilters": {
+    "actual": "Obecne",
     "complete": "Ukończone"
   }
 }

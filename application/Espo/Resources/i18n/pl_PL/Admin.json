@@ -7,7 +7,7 @@
     "Customization": "Dostosowywanie",
     "Available Fields": "Dostępne Pola",
     "Layout": "Układ",
-    "Entity Manager": "Menadżer jednostek",
+    "Entity Manager": "Menadżer encji",
     "Add Panel": "Dodaj panel",
     "Add Field": "Dodaj pole",
     "Settings": "Ustawienia",
@@ -24,7 +24,7 @@
     "Personal Email Accounts": "Osobiste konta pocztowe",
     "Inbound Emails": "Wiadomości przychodzące",
     "Email Templates": "Szablony wiadomości",
-    "Layout Manager": "Menadżer Widoku",
+    "Layout Manager": "Menadżer układu",
     "User Interface": "Interfejs Użytkownika",
     "Auth Tokens": "Tokeny autoryzacji",
     "Authentication": "Autoryzacja",
@@ -57,16 +57,21 @@
     "Lead Capture": "Zdobywanie leadów",
     "Attachments": "Załączniki",
     "API Users": "Użytkownicy API",
-    "Template Manager": "Menadżer szablonów e-mail",
+    "Template Manager": "Menadżer szablonów",
     "System Requirements": "Wymagania systemowe",
     "PHP Settings": "Ustawienia PHP",
     "Database Settings": "Ustawienia bazy danych",
     "Permissions": "Zezwolenie",
     "Success": "Sukces",
+    "Fail": "Błąd",
     "is recommended": "zalecane",
     "extension is missing": "Brakuje rozszerzenia",
     "PDF Templates": "Szablony PDF",
-    "Dashboard Templates": "Szablony pulpitu"
+    "Webhooks": "Webhooki",
+    "Dashboard Templates": "Szablony pulpitu",
+    "Email Addresses": "Adres e-mail",
+    "Phone Numbers": "Numery telefonów",
+    "Layout Sets": "Zestawy układów"
   },
   "layouts": {
     "list": "Lista",
@@ -83,7 +88,13 @@
     "detailPortal": "Widok szczegółowy (Portal)",
     "detailSmallPortal": "Widok szczegółowy (Mały, Portal)",
     "listSmallPortal": "Lista (Mała, Portal)",
-    "listPortal": "Lista (Portal)"
+    "listPortal": "Lista (Portal)",
+    "relationshipsPortal": "Panele relacji (Portal)",
+    "defaultSidePanel": "Pola panelu bocznego",
+    "bottomPanelsDetail": "Panele dolne",
+    "bottomPanelsEdit": "Dolne panele (edycja)",
+    "bottomPanelsDetailSmall": "Panele dolne (Małe szczegóły)",
+    "bottomPanelsEditSmall": "Panele dolne (Edycja Małe)"
   },
   "fieldTypes": {
     "address": "Adres",
@@ -118,8 +129,14 @@
     "wysiwyg": "edytor wysiwyg",
     "map": "Mapa",
     "currencyConverted": "Obecny (Konwertowany)",
+    "colorpicker": "Narzędzie kolorów",
     "int": "Liczba całkowita (Int)",
-    "checklist": "Checklista"
+    "number": "Numer (autoinkrementacja)",
+    "datetime": "Data-Godzina",
+    "datetimeOptional": "Data/Data-Godzina",
+    "checklist": "Checklista",
+    "linkOne": "Linkuj jeden",
+    "barcode": "Kod kreskowy"
   },
   "fields": {
     "type": "Rodzaj",
@@ -153,16 +170,35 @@
     "tooltipText": "Tekst w dymku podpowiedzi",
     "prefix": "Prefiks",
     "nextNumber": "Następny numer",
+    "padLength": "Długość",
     "disableFormatting": "Wyłącz formatowanie",
     "dynamicLogicVisible": "Warunki czyniące pole widocznym",
-    "dynamicLogicReadOnly": "Warunki czyniące pole tylko do podglądu(read-only)",
+    "dynamicLogicReadOnly": "Warunki czyniące pole tylko do odczytu",
     "dynamicLogicRequired": "Warunki czyniące pole wymaganym",
     "dynamicLogicOptions": "Opcje warunku",
+    "probabilityMap": "Prawdopodobieństwa etapów (%)",
     "readOnly": "Tylko do odczytu",
     "noEmptyString": "Bez pustych znaków",
+    "maxFileSize": "Maksymalny rozmiar (Mb)",
+    "isPersonalData": "Czy dane osobowe",
     "useIframe": "Użyj iFrame",
+    "useNumericFormat": "Użyj formatu liczbowego",
+    "strip": "Rozbierz",
+    "cutHeight": "Wysokość cięcia (piks)",
+    "minuteStep": "Krok minut",
+    "inlineEditDisabled": "Wyłącz edycję bezpośrednią",
+    "displayAsLabel": "Wyświetl jako etykietę",
+    "allowCustomOptions": "Zezwól na niestandardowe opcje",
+    "maxCount": "Maks. liczba przedmiotów",
     "displayRawText": "Wyświetl surowy tekst(bez markdown)",
-    "accept": "Akceptuj"
+    "notActualOptions": "Nieaktualne opcje",
+    "accept": "Akceptuj",
+    "displayAsList": "Wyświetl jako listę",
+    "viewMap": "Przycisk wyświetl mapę",
+    "codeType": "Typ kodu",
+    "lastChar": "Ostatni znak",
+    "listPreviewSize": "Rozmiar podglądu w widoku listy",
+    "onlyDefaultCurrency": "Tylko domyślna waluta"
   },
   "messages": {
     "selectEntityType": "Wybierz jednostkę z menu po lewej stonie.",
@@ -172,14 +208,19 @@
     "extensionInstalled": "Rozszerzenie {name} {version} zostało zainstalowane.",
     "installExtension": "Rozszerzenie {name} {version} jest gotowe do instalacji.",
     "upgradeBackup": "Zalecamy abyś wykonał archiwizacje swoich danych, przed aktualizacją.",
-    "thousandSeparatorEqualsDecimalMark": "Separator dziesiętny nie może być taki sam jak znak oddzielenia",
+    "thousandSeparatorEqualsDecimalMark": "Separator dziesiętny nie może być taki sam jak znak oddzielenia.",
     "userHasNoEmailAddress": "Użytkownik nie ma przypisanego adres e-mail.",
     "uninstallConfirmation": "Czy jesteś pewien, że chcesz usunąć rozszerzenie?",
+    "cronIsNotConfigured": "Zaplanowane zadania nie są uruchomione. Dlatego przychodzące e-maile, powiadomienia i przypomnienia nie działają. Postępuj zgodnie z [instrukcjami] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) aby skonfigurować zadania cron.",
+    "newExtensionVersionIsAvailable": "Nowa {extensionName} wersja {latestVersion} jest dostępna.",
     "upgradeVersion": "EspoCRM zostanie zaktualizowane do wersji **{version}**. Bądź cierpliwy, może to zająć chwilę.",
     "upgradeDone": "EspoCRM zostało zaktualizowane do wersji **{version}**.",
     "downloadUpgradePackage": "Pliki do aktualizacji możesz pobrać [tutaj]({url}).",
     "upgradeInfo": "Sprawdź [dokumentację]({url}) żeby sprawdzić jak przeprowadzić aktualizację.",
-    "upgradeRecommendation": "Najlepszym sposobem jest aktualizacja przez wiersz poleceń CLI. Nie zalecamy aktualizowania EspoCRM przez panel web."
+    "upgradeRecommendation": "Najlepszym sposobem jest aktualizacja przez wiersz poleceń CLI. Nie zalecamy aktualizowania EspoCRM przez panel web.",
+    "newVersionIsAvailable": "Dostępna jest nowa wersja EspoCRM {latestVersion}. Postępuj zgodnie z [instrukcjami] (https://www.espocrm.com/documentation/administration/upgrading/) aby zaktualizować swoją instancję.",
+    "formulaFunctions": "Więcej funkcji można znaleźć w [dokumentacji] ({DocumentationUrl}).",
+    "rebuildRequired": "Musisz uruchomić rebuild z CLI."
   },
   "descriptions": {
     "settings": "Ustawienia systemu dla aplikacji.",
@@ -206,23 +247,32 @@
     "integrations": "Integracja z usługami dodatkowymi.",
     "notifications": "Ustawienia powiadomień wewnętrznych i email.",
     "inboundEmails": "Globalne ustawienia wiadomości przychodzących.",
-    "portalUsers": "Użytkownicy portalu",
+    "portalUsers": "Użytkownicy portalu.",
     "entityManager": "Utwórz własne jednostki, edytuj istniejące. Zarzącaj polami i relacjami.",
     "emailFilters": "Wiadomości które pasują do określonych kryteriów nie będą importowane.",
-    "actionHistory": "Historia czynności użytkonika.",
+    "actionHistory": "Historia czynności użytkownika.",
     "labelManager": "Dostosuj etykiety w aplikacji.",
     "authLog": "Historia logowania.",
+    "leadCapture": "API entrypointy dla zdobywania leadów(tzw. Web-to-Lead)",
+    "attachments": "Wszystkie załączniki przechowywane w EspoCRM",
     "templateManager": "Dostosuj szablony wiadomości",
     "systemRequirements": "Wymagania systemowe dla EspoCRM",
+    "apiUsers": "Oddzielni użytkownicy do celów integracji.",
+    "jobs": "Zadania wykonują prace w tle.",
+    "pdfTemplates": "Szablony dokumentów PDF generowanych przez EspoCRM",
     "webhooks": "Zarządzaj webhookami.",
-    "dashboardTemplates": "Wdróż pulpity nawigacyjne dla użytkowników."
+    "dashboardTemplates": "Wdróż pulpity nawigacyjne dla użytkowników.",
+    "phoneNumbers": "Wszystkie numery telefonów przechowywane w EspoCRM",
+    "emailAddresses": "Wszystkie adresy e-mail przechowywane w systemie.",
+    "layoutSets": "Kolekcje układów które można przypisać do zespołów i portali."
   },
   "options": {
     "previewSize": {
       "x-small": "Bardzo Małe",
       "small": "Małe",
       "medium": "Średnie",
-      "large": "Duże"
+      "large": "Duże",
+      "": "Domyślny"
     }
   },
   "logicalOperators": {
@@ -242,8 +292,26 @@
   },
   "templates": {
     "accessInfo": "Informacje dostępowe",
+    "accessInfoPortal": "Dostęp do informacji o portalach",
+    "assignment": "Przypisanie",
     "mention": "Wzmianka",
-    "noteEmailReceived": "Notatka o otrzymanej wiadomości e-mail",
-    "notePost": "Notatka o wpisie"
+    "notePost": "Notatka o wpisie",
+    "notePostNoParent": "Uwaga o wpisie (bez rodzica)",
+    "noteStatus": "Uwaga dotycząca aktualizacji statusu",
+    "passwordChangeLink": "Link do zmiany hasła",
+    "noteEmailReceived": "Notatka o otrzymanej wiadomości e-mail"
+  },
+  "strings": {
+    "rebuildRequired": "Wymagany jest rebuild"
+  },
+  "keywords": {
+    "userInterface": "ui,wygląd,zakładki,logo,pulpit",
+    "authentication": "hasło",
+    "scheduledJob": "cron,zadania",
+    "integrations": "google,mapy,mapy google",
+    "authLog": "dziennik,historia",
+    "authTokens": "historia,dostęp,dziennik",
+    "entityManager": "pola,relacje,związki",
+    "templateManager": "powiadomienia"
   }
 }

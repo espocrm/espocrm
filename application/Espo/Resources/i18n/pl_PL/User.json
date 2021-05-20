@@ -20,13 +20,14 @@
     "isActive": "Jest aktywny",
     "contact": "Kontakt",
     "accounts": "Klienci",
-    "account": "Klient",
+    "account": "Konto (Podstawowe)",
     "sendAccessInfo": "Wyślij użytkownikowi wiadomość z danymi dostępu",
     "gender": "Płeć",
     "position": "Pozycja w drużynie",
     "ipAddress": "Adres IP",
     "passwordPreview": "Podgląd hasła",
     "isSuperAdmin": "Jest super adminem",
+    "lastAccess": "Ostatni dostęp",
     "type": "Typ",
     "apiKey": "Klucz API",
     "secretKey": "Sekretny klucz",
@@ -34,7 +35,8 @@
     "yourPassword": "Twoje obecne hasło",
     "dashboardTemplate": "Szablon pulpitu",
     "auth2FAEnable": "Włącz dwuetapową weryfikację",
-    "auth2FAMethod": "Metoda 2FA"
+    "auth2FAMethod": "Metoda 2FA",
+    "auth2FATotpSecret": "2FA TOTP Sekret"
   },
   "links": {
     "teams": "Zespoły",
@@ -44,10 +46,12 @@
     "accounts": "Klienci",
     "account": "Konto (podstawowe)",
     "tasks": "Zadania",
-    "dashboardTemplate": "Szablon pulpitu"
+    "defaultTeam": "Domyślny Zespół",
+    "dashboardTemplate": "Szablon pulpitu",
+    "userData": "Dane użytkownika"
   },
   "labels": {
-    "Create User": "Utwórz Użytkonika",
+    "Create User": "Utwórz Użytkownika",
     "Generate": "Generuj",
     "Access": "Dostęp",
     "Preferences": "Preferencje",
@@ -59,6 +63,7 @@
     "External Accounts": "Konta zewnętrzne",
     "Email Accounts": "Konta pocztowe",
     "Create Portal User": "Utwórz użytkownika portalu",
+    "Proceed w/o Contact": "Kontynuuj bez kontaktu",
     "Generate New API Key": "Generuj nowy klucz API",
     "Generate New Password": "Generuj nowe hasło",
     "Code": "Kod",
@@ -69,13 +74,13 @@
     "Secret": "Sekret"
   },
   "tooltips": {
-    "defaultTeam": "Wszystkie dane utworzone przez tego użytkonika zostaną przypisane do domyślnego zespołu.",
+    "defaultTeam": "Wszystkie dane utworzone przez tego użytkownika zostaną przypisane do domyślnego zespołu.",
     "isAdmin": "Administrator ma dostęp do wszystkiego.",
-    "isActive": "Jeśli odznaczone, użytkownik nie będzie mógł się zalogować",
+    "isActive": "Jeśli odznaczone użytkownik nie będzie mógł się zalogować.",
     "teams": "Zespoły, do których ten użytkownik należy. Poziom dostępu jest dziedziczony z rol zespołów."
   },
   "messages": {
-    "passwordWillBeSent": "Hasło zostanie wysłane na adres e-mail użytkonika.",
+    "passwordWillBeSent": "Hasło zostanie wysłane na adres e-mail użytkownika.",
     "passwordChanged": "Hasło zostało zmienione",
     "userCantBeEmpty": "Nazwa użytkownika nie może być pusta",
     "wrongUsernamePasword": "Nieprawidłowa nazwa użytkownika/hasło",
@@ -83,20 +88,30 @@
     "userNameEmailAddressNotFound": "Użytkownik/email nie został odnaleziony",
     "forbidden": "Zabronione, proszę spróbować później",
     "uniqueLinkHasBeenSent": "Unikalny adres URL został wysłany na podany adres email.",
-    "passwordChangedByRequest": "Hasło zostało zmienione",
+    "passwordChangedByRequest": "Hasło zostało zmienione.",
     "userNameExists": "Nazwa Użytkownika",
+    "setupSmtpBefore": "Musisz skonfigurować [Ustawienia SMTP] ({url}) aby system mógł wysyłać hasło w wiadomości e-mail.",
+    "passwordStrengthLength": "Musi mieć co najmniej {length} znaków.",
+    "passwordStrengthLetterCount": "Musi zawierać co najmniej {count} liter(y).",
+    "passwordStrengthNumberCount": "Musi zawierać co najmniej {count} cyfr(y).",
+    "passwordStrengthBothCases": "Musi zawierać zarówno duże, jak i małe litery.",
     "wrongCode": "Błędny kod",
     "codeIsRequired": "Kod jest wymagany",
     "enterTotpCode": "Wprowadź kod z aplikacji.",
     "verifyTotpCode": "Zeskanuj kod QR za pomocą aplikacji mobilnego uwierzytelniania. Jeśli masz problemy ze skanowaniem, możesz ręcznie wprowadzić sekret. Następnie zobaczysz w aplikacji 6-cyfrowy kod. Wpisz ten kod w polu poniżej.",
     "generateAndSendNewPassword": "Nowe hasło zostanie wygenerowane i wysłane na adres e-mail użytkownika.",
-    "security2FaResetConfimation": "Czy na pewno chcesz zresetować bieżące ustawienia 2FA?"
+    "security2FaResetConfimation": "Czy na pewno chcesz zresetować bieżące ustawienia 2FA?",
+    "ldapUserInEspoNotFound": "Nie znaleziono użytkownika w EspoCRM. Skontaktuj się z administratorem aby utworzyć użytkownika.",
+    "passwordRecoverySentIfMatched": "Zakładając, że wprowadzone dane pasują do dowolnego konta użytkownika.",
+    "auth2FARequiredHeader": "Wymagane uwierzytelnianie dwuetapowe",
+    "auth2FARequired": "Musisz skonfigurować uwierzytelnianie dwuskładnikowe. Użyj aplikacji uwierzytelniającej na swoim telefonie komórkowym (n.p. Google Authenticator)."
   },
   "boolFilters": {
     "onlyMyTeam": "Tylko mój zespół"
   },
   "presetFilters": {
-    "active": "Aktywny"
+    "active": "Aktywny",
+    "activeApi": "API jest aktywne"
   },
   "options": {
     "gender": {
@@ -104,6 +119,9 @@
       "Male": "Mężczyzna",
       "Female": "Kobieta",
       "Neutral": "Nautralne"
+    },
+    "type": {
+      "regular": "Standardowy"
     },
     "authMethod": {
       "ApiKey": "Klucz API"

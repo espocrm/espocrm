@@ -15,8 +15,9 @@
     "from": "Wiadomości zostaną wysłane z podanym adresem. Zostaw pole puste, jeśli niepotrzebne. Możesz użyć maski *.",
     "to": "Wiadomości zostaną wysłane na podany adres. Zostaw pole puste, jeśli niepotrzebne. Możesz użyć maski *.",
     "name": "Nazwa tego filtra.",
-    "subject": "Użyj maski *:\n\ntekst* - rozpoczyna się od tekst,\n*tekst* - zawiera tekst,\n*tekst - kończy się na tekst.",
-    "bodyContains": "Treść wiadomości zawiera dowolne z podanych słów lub zwrotów."
+    "bodyContains": "Treść wiadomości zawiera dowolne z podanych słów lub zwrotów.",
+    "isGlobal": "Stosuje ten filtr do wszystkich e-maili przychodzących do systemu.",
+    "subject": "Użyj symbolu wieloznacznego *:\n\n  * `text *` - zaczyna się od tekstu,\n  * `* text *` - zawiera tekst,\n  * `* text` - kończy się tekstem."
   },
   "options": {
     "action": {

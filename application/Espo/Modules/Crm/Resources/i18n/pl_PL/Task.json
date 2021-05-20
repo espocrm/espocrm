@@ -4,10 +4,10 @@
     "parent": "Rodzic",
     "dateStart": "Data rozpoczęcia",
     "dateEnd": "Data zwrotu",
-    "dateStartDate": "Data rozpoczęcia",
-    "dateEndDate": "Data zakończenia",
+    "dateStartDate": "Data rozpoczęcia (cały dzień)",
+    "dateEndDate": "Data zakończenia (cały dzień)",
     "priority": "Pryjorytet",
-    "description": "Opis ",
+    "description": "Opis",
     "isOverdue": "Przegrzany",
     "account": "Klient",
     "dateCompleted": "Data ukończenia",
@@ -37,7 +37,8 @@
   },
   "labels": {
     "Create Task": "Utwórz zadanie",
-    "Complete": "Gotowe"
+    "Complete": "Gotowe",
+    "overdue": "zaległy"
   },
   "presetFilters": {
     "actual": "Bieżący",

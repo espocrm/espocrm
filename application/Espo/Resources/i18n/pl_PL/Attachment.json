@@ -3,17 +3,26 @@
     "Document": "Wstaw dokument"
   },
   "fields": {
+    "role": "Rola",
     "related": "Powiązane",
     "file": "Plik",
     "type": "Typ",
     "field": "Pole",
+    "sourceId": "ID źródła",
+    "storage": "Pamięć",
     "size": "Rozmiar (bajty)"
   },
   "options": {
     "role": {
       "Attachment": "Załącznik",
+      "Inline Attachment": "Załącznik wbudowany",
       "Import File": "Importuj plik",
-      "Export File": "Eksportuj plik"
+      "Export File": "Eksportuj plik",
+      "Mail Merge": "Łączenie maili",
+      "Mass Pdf": "Masowy PDF"
     }
+  },
+  "presetFilters": {
+    "orphan": "Sierota"
   }
 }

@@ -16,7 +16,14 @@
     "revenue": "Zwrot",
     "revenueConverted": "Zwrot (skonwertowany)",
     "budget": "Budżet",
-    "budgetConverted": "Budżet (skonwertowany)"
+    "budgetConverted": "Budżet (skonwertowany)",
+    "contactsTemplate": "Szablon kontaktów",
+    "leadsTemplate": "Szablon leadów",
+    "accountsTemplate": "Szablon klientów",
+    "usersTemplate": "Szablon użytkowników",
+    "mailMergeOnlyWithAddress": "Pomiń rekordy bez uzupełnionego adresu",
+    "optedInCount": "Włączono",
+    "budgetCurrency": "Waluta budżetu"
   },
   "links": {
     "targetLists": "Listy docelowe",
@@ -25,7 +32,11 @@
     "leads": "Potencjalne kontakty",
     "opportunities": "Szanse sprzedaży",
     "massEmails": "Poczta masowa",
-    "trackingUrls": "Adresy śledzenia"
+    "trackingUrls": "Adresy śledzenia",
+    "contactsTemplate": "Szablon kontaktów",
+    "leadsTemplate": "Szablon leadów",
+    "accountsTemplate": "Szablon klientów",
+    "usersTemplate": "Szablon użytkowników"
   },
   "options": {
     "type": {
@@ -49,13 +60,19 @@
     "soft": "miękki",
     "Unsubscribe": "Wypisz się",
     "Mass Emails": "Poczta masowa",
-    "Email Templates": "Szablony wiadomości"
+    "Email Templates": "Szablony wiadomości",
+    "Unsubscribe again": "Odsubskrybuj ponownie",
+    "Subscribe again": "Subskrybuj ponownie",
+    "Create Target List": "Utwórz Listę Docelową",
+    "Mail Merge": "Łączenie maili",
+    "Generate Mail Merge PDF": "Wygeneruj plik PDF korespondencji seryjnej"
   },
   "presetFilters": {
     "active": "Aktywny"
   },
   "messages": {
-    "unsubscribed": "Zostałeś wypisany z naszej listy mailingowej."
+    "unsubscribed": "Zostałeś wypisany z naszej listy mailingowej.",
+    "subscribedAgain": "Jesteś ponownie subskrybowany."
   },
   "tooltips": {
     "targetLists": "Adresaci, którzy powinni otrzymać wiadomości.",

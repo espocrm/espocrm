@@ -1,5 +1,10 @@
 {
   "links": {
     "targetLists": "Listy docelowe"
+  },
+  "fields": {
+    "acceptanceStatus": "Status akceptacji",
+    "acceptanceStatusMeetings": "Status akceptacji (spotkania)",
+    "acceptanceStatusCalls": "Stan akceptacji (połączenia)"
   }
 }

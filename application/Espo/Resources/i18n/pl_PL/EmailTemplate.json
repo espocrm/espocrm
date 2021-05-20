@@ -5,19 +5,27 @@
     "body": "Treść",
     "subject": "Temat",
     "attachments": "Załączniki",
-    "category": "Katgoria"
+    "category": "Katgoria",
+    "insertField": "Symbole zastępcze"
   },
   "labels": {
-    "Create EmailTemplate": "Utwórz Szkic wiadomości"
+    "Create EmailTemplate": "Utwórz Szkic wiadomości",
+    "Available placeholders": "Dostępne symbole zastępcze"
   },
   "tooltips": {
-    "oneOff": "Sprawdź, czy będziesz używać tego szablonu tylko raz (np w poczcie masowej)."
+    "oneOff": "Sprawdź czy będziesz używać tego szablonu tylko raz. N.p. w poczcie masowej."
   },
   "presetFilters": {
     "actual": "Bieżący"
   },
   "placeholderTexts": {
+    "optOutUrl": "URL linku do rezygnacji z subskrypcji",
+    "optOutLink": "link do rezygnacji z subskrypcji",
     "today": "Dzisiejsza data",
-    "now": "Obecna data i czas"
+    "now": "Obecna data i czas",
+    "currentYear": "Aktualny rok"
+  },
+  "messages": {
+    "infoText": "Dostępne symbole zastępcze:\n\n{optOutUrl} &#8211; URL linku do rezygnacji z subskrypcji;\n\n{optOutLink} &#8211; link do rezygnacji z subskrypcji."
   }
 }

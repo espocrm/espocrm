@@ -39,12 +39,24 @@
     "Step 1": "Krok 1",
     "Step 2": "Krok 2",
     "Duplicates": "Duplikaty",
-    "Remove Import Log": "Usuń historię importu"
+    "Skip searching for duplicates": "Pomiń duplikaty w wyszukiwaniu",
+    "Timezone": "Strefa czasowa",
+    "Remove Import Log": "Usuń historię importu",
+    "New Import": "Nowy Import",
+    "Import Results": "Wyniki importu",
+    "Silent Mode": "Tryb cichy",
+    "New import with same params": "Nowy import z tymi samymi parametrami",
+    "Run Manually": "Uruchom ręcznie"
   },
   "messages": {
     "duplicatesRemoved": "Duplikaty usunięte",
+    "inIdle": "Wykonaj w trybie bezczynności (w przypadku dużych danych; przez cron)",
     "revert": "To usunie wszystkie zaimportowane rekordy permanentnie.",
-    "confirmRevert": "Zamierzasz permanentnie usunąć wszystkie zaimportowane rekordy. Jesteś pewien?"
+    "removeDuplicates": "Spowoduje to trwałe usunięcie wszystkich zaimportowanych rekordów, które zostały rozpoznane jako duplikaty.",
+    "confirmRevert": "Zamierzasz permanentnie usunąć wszystkie zaimportowane rekordy. Jesteś pewien?",
+    "confirmRemoveDuplicates": "Spowoduje to trwałe usunięcie wszystkich zaimportowanych rekordów, które zostały rozpoznane jako duplikaty. Jesteś pewny?",
+    "removeImportLog": "Spowoduje to usunięcie dziennika importu. Wszystkie zaimportowane rekordy zostaną zachowane. Użyj go, jeśli masz pewność, że import jest w porządku.",
+    "confirmRemoveImportLog": "Spowoduje to usunięcie dziennika importu. Wszystkie zaimportowane rekordy zostaną zachowane. Nie będzie można przywrócić wyników importu. Jesteś pewny?"
   },
   "fields": {
     "file": "Plik",
@@ -57,7 +69,24 @@
     "status": {
       "Failed": "Niepowodzenie",
       "In Process": "W trakcie",
-      "Complete": "Ukończone"
+      "Complete": "Ukończone",
+      "Standby": "Czekaj",
+      "Pending": "W oczekiwaniu"
+    },
+    "personNameFormat": {
+      "f l": "Imię Nazwisko",
+      "l f": "Nazwisko Imię",
+      "f m l": "Imię Drugie imię Nazwisko",
+      "l f m": "Nazwisko Drugie imię Imię",
+      "l, f": "Nazwisko, Imię"
     }
+  },
+  "strings": {
+    "commandToRun": "Polecenie do uruchomienia (z CLI)",
+    "saveAsDefault": "Zapisz jako domyślny"
+  },
+  "tooltips": {
+    "manualMode": "Jeśli zaznaczone, będziesz musiał ręcznie uruchomić import z CLI. Polecenie zostanie wyświetlone po skonfigurowaniu importu.",
+    "silentMode": "Większość skryptów po zapisaniu zostanie pominiętych, a notatki ze strumienia nie zostaną utworzone. Import będzie działał szybciej."
   }
 }

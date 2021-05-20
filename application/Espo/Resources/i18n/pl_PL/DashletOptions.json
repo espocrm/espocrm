@@ -12,7 +12,11 @@
     "entityType": "Typ modułu",
     "primaryFilter": "Główny filter",
     "boolFilterList": "Dodatkowe filtry",
-    "expandedLayout": "Układ"
+    "sortBy": "Zamówienie (pole)",
+    "sortDirection": "Zamówienie (kierunek)",
+    "expandedLayout": "Układ",
+    "dateFilter": "Filtr daty",
+    "skipOwn": "Nie pokazuj własnych rekordów"
   },
   "options": {
     "mode": {
@@ -23,5 +27,11 @@
       "agendaDay": "Dzień (agenda)",
       "timeline": "Oś czasu"
     }
+  },
+  "messages": {
+    "selectEntityType": "Wybierz typ jednostki w opcjach dashletu."
+  },
+  "tooltips": {
+    "skipOwn": "Działania wykonane przez Twoje konto użytkownika nie będą wyświetlane."
   }
 }

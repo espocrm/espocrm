@@ -20,22 +20,34 @@
     "Attachment": "Załącznik",
     "EmailFolder": "Folder wiadomości",
     "PortalUser": "Użytkownik portalu",
+    "ScheduledJobLogRecord": "Zaplanowany rekord dziennika zadań",
     "PasswordChangeRequest": "Żądanie zmiany hasła",
+    "ActionHistoryRecord": "Zapis historii akcji",
     "AuthToken": "Token autoryzacyjny",
     "UniqueId": "Unikalne ID",
     "LastViewed": "Ostatnio przeglądane",
     "Settings": "Ustawienia",
     "FieldManager": "Menadżer pól",
     "Integration": "Integracja",
-    "LayoutManager": "Menadżer widoku",
-    "EntityManager": "Menadżer jednostek",
+    "LayoutManager": "Menadżer układu",
+    "EntityManager": "Menadżer encji",
     "Export": "Eksport",
+    "DynamicLogic": "Dynamiczna logika",
+    "DashletOptions": "Opcje dashletu",
+    "Global": "Globalny",
     "Preferences": "Preferencje",
     "EmailAddress": "Adres e-mail",
     "PhoneNumber": "Numer telefonu",
+    "AuthLogRecord": "Dziennik autoryzacji",
+    "AuthFailLogRecord": "Rekord dziennika błędów autoryzacji",
     "EmailTemplateCategory": "Kategorie szablonów e-mail",
+    "LeadCapture": "Punkt wejścia do przechwytywania Leadów",
+    "LeadCaptureLogRecord": "Rekord dziennika do przechwytywania Leadów",
+    "ArrayValue": "Wartość Array",
     "ApiUser": "Użytkownik API",
-    "DashboardTemplate": "Szablon pulpitu"
+    "DashboardTemplate": "Szablon pulpitu",
+    "Currency": "Waluta",
+    "LayoutSet": "Zestaw układu"
   },
   "scopeNamesPlural": {
     "Email": "Wiadomości",
@@ -58,19 +70,30 @@
     "Attachment": "Załączniki",
     "EmailFolder": "Foldery wiadomości",
     "PortalUser": "Użytkownicy portalu",
+    "ScheduledJobLogRecord": "Zaplanowane rekordy dziennika zadań",
     "PasswordChangeRequest": "Żądania zmiany hasła",
     "ActionHistoryRecord": "Historia czynności",
     "AuthToken": "Tokeny autoryzacyjne",
     "UniqueId": "Unikalne ID",
     "LastViewed": "Ostatnio przeglądane",
+    "AuthLogRecord": "Dziennik autoryzacji",
+    "AuthFailLogRecord": "Dziennik błędów autoryzacji",
     "EmailTemplateCategory": "Kategorie szablonów e-mail",
     "Import": "Importuj",
+    "LeadCapture": "Przechwytywanie Leada",
+    "LeadCaptureLogRecord": "Rekord dziennika przechwytywania Leada",
+    "ArrayValue": "Wartości Array",
     "ApiUser": "Użytkownicy API",
     "DashboardTemplate": "Szablon pulpitu",
-    "Webhook": "Webhooki"
+    "Webhook": "Webhooki",
+    "EmailAddress": "Adresy e-mail",
+    "PhoneNumber": "Numery telefonów",
+    "Currency": "Waluty",
+    "LayoutSet": "Zestawy układów"
   },
   "labels": {
     "None": "Brak",
+    "Home": "Pulpit",
     "by": "przez",
     "Saved": "Zapisane",
     "Error": "Błąd",
@@ -91,7 +114,7 @@
     "Access": "Dostęp",
     "Are you sure?": "Jesteś pewien?",
     "Record has been removed": "Rekord został usunięty",
-    "Wrong username/password": "Zła nazwa użytkonika/hasło",
+    "Wrong username/password": "Zła nazwa użytkownika/hasło",
     "Post cannot be empty": "Notatka nie może byc pusta",
     "Removing...": "Usuwam...",
     "Posting...": "Nadaje...",
@@ -205,7 +228,19 @@
     "New notifications": "Nowe powiadomienia",
     "Manage Categories": "Zarządzaj kategoriami",
     "Manage Folders": "Zarządzaj folderami",
-    "Convert Currency": "Przelicz walutę"
+    "Convert to": "Przekonwertuj do",
+    "View Personal Data": "Zobacz dane osobwe",
+    "Personal Data": "Dane osobowe",
+    "Erase": "Wyczyść",
+    "Move Over": "Przesuń nad",
+    "Restore": "Przywróć",
+    "View Followers": "Zobacz obserwujących",
+    "Convert Currency": "Przelicz walutę",
+    "Middle Name": "Drugie imię",
+    "View on Map": "Wyświetl na mapie",
+    "Proceed": "Kontynuuj",
+    "Attached": "Przywiązany",
+    "Preview": "Podgląd"
   },
   "messages": {
     "pleaseWait": "Proszę czekać...",
@@ -224,11 +259,11 @@
     "removeRecordConfirmation": "Na pewno chcesz usunąć ten rekord?",
     "unlinkRecordConfirmation": "Na pewno chcesz odłączyć powiązanie?",
     "removeSelectedRecordsConfirmation": "Na pewno chcesz usunąć zaznaczone rekordy?",
-    "massUpdateResult": "Ilość zaktualizowanych rekordów: {count}",
-    "massUpdateResultSingle": "Ilość zaktualizowanych rekordów: {count}",
+    "massUpdateResult": "{count} rekordów zostało zaktualizowanych",
+    "massUpdateResultSingle": "{count} rekord został zaktualizowany",
     "noRecordsUpdated": "Nic nie zaktualizowano",
-    "massRemoveResult": "Ilość usuniętych rekordów: {count}",
-    "massRemoveResultSingle": "Ilość usuniętych rekordów: {count}",
+    "massRemoveResult": "{count} rekordów zostało usuniętych",
+    "massRemoveResultSingle": "{count} rekord został usunięty",
     "noRecordsRemoved": "Nic nie usunięto",
     "clickToRefresh": "Kliknij aby odświeżyć",
     "writeYourCommentHere": "Dodaj swój komentarz tutaj",
@@ -236,14 +271,15 @@
     "typeAndPressEnter": "Wpisz i wciśnij enter",
     "checkForNewNotifications": "Sprawdź czy są nowe powiadomienia",
     "duplicate": "Dane które wprowadziłeś wyglądają na powielone",
+    "dropToAttach": "Upuść, aby załączyć",
     "writeMessageToSelf": "Napisz wiadomość do siebie",
     "checkForNewNotes": "Sprawdź czy są nowe wpisy",
     "internalPost": "Post będzie widoczny tylko przez wewnętrznych użytkowników",
     "done": "Ukończone",
     "confirmMassFollow": "Czy na pewno chcesz śledzić wybrane rekordy?",
     "confirmMassUnfollow": "Jesteś pewien, że chcesz przestać obserwować zaznaczone rekordy?",
-    "massFollowResult": "{count} rekordów jest teraz śledzonych.",
-    "massUnfollowResult": "{count} rekordów nie jest teraz śledzonych.",
+    "massFollowResult": "{count} rekordów jest teraz obserwowanych",
+    "massUnfollowResult": "{count} rekordów nie jest już obserwowanych",
     "massFollowResultSingle": "{count} rekordów są teraz śledzone",
     "massUnfollowResultSingle": "{count} rekordów nie jest już śledzonych",
     "massFollowZeroResult": "Nie ma nic do śledzenia",
@@ -256,9 +292,19 @@
     "internalPostTitle": "Post jest widoczny tylko przez wewnętrznych użytkowników",
     "loading": "Ładowanie...",
     "saving": "Zapisywanie...",
+    "fieldMaxFileSizeError": "Plik nie może przekraczać {max} Mb",
     "fieldShouldBeLess": "{field} powinno być mniejsze niż {value}",
     "fieldShouldBeGreater": "{field} powinno być większe niż {value}",
-    "fieldIsUploading": "Trwa wgrywanie"
+    "fieldIsUploading": "Trwa wgrywanie",
+    "erasePersonalDataConfirmation": "Zaznaczone pola zostaną trwale usunięte. Jesteś pewny?",
+    "massPrintPdfMaxCountError": "Nie można wydrukować więcej niż {maxCount} rekordów.",
+    "fieldValueDuplicate": "Zduplikuj wartość",
+    "unlinkSelectedRecordsConfirmation": "Czy na pewno chcesz odłączyć wybrane rekordy?",
+    "recalculateFormulaConfirmation": "Czy na pewno chcesz przeliczyć formułę dla wybranych rekordów?",
+    "fieldExceedsMaxCount": "Liczba przekracza maksymalnie dozwolone {maxCount}",
+    "notUpdated": "Nie zaaktualizowane",
+    "maintenanceMode": "EspoCRM obecnie jest w trybie konserwacji. Tylko użytkownicy z uprawnieniami administratora mają dostęp. \n\nTryb konserwacji może zostać wyłączony w sekcji Administracja → Ustawienia",
+    "fieldInvalid": "{field} jest nieprawidłowy"
   },
   "boolFilters": {
     "onlyMy": "Tylko Moje",
@@ -276,7 +322,10 @@
     "export": "Eksport",
     "follow": "Śledź",
     "unfollow": "Nie śledź",
-    "printPdf": "Drukuj do PDF"
+    "convertCurrency": "Konwertuj walutę",
+    "printPdf": "Drukuj do PDF",
+    "unlink": "Odłącz",
+    "recalculateFormula": "Przelicz formułę"
   },
   "fields": {
     "name": "Nazwa",
@@ -302,7 +351,16 @@
     "phoneNumberOther": "Telefon (inny)",
     "order": "Kolejność",
     "parent": "Rodzic",
-    "type": "Typ"
+    "emailAddressData": "Dane adresu e-mail",
+    "phoneNumberData": "Dane numeru telefonu",
+    "ids": "Id",
+    "names": "Nazwy",
+    "emailAddressIsOptedOut": "Adres email został odsubskrybowany",
+    "targetListIsOptedOut": "Jest wyłączone (lista docelowa)",
+    "type": "Typ",
+    "phoneNumberIsOptedOut": "Numer telefonu został wypisany",
+    "types": "Typy",
+    "middleName": "Drugie imię"
   },
   "links": {
     "assignedUser": "Przypisany użytkownik",
@@ -359,16 +417,21 @@
     "relateThis": "{user} połączył {relatedEntityType} {relatedEntity} z tym {entityType}",
     "emailReceivedFromThis": "Wiadomość otrzymana od {from}",
     "emailReceivedInitialFromThis": "Wiadomość od {from}, to {entityType} zostało utworzone",
-    "emailReceivedThis": "{entity} has been received",
+    "emailReceivedThis": "Otrzymano email",
     "emailReceivedInitialThis": "Wiadomość otrzymana, to {entityType} zostało utworzone",
-    "emailReceived": "{entity} został otrzymane dla {entityType} {entity}",
+    "emailReceived": "Otrzymano e-mail dotyczącą {entityType} {entity}",
     "emailSent": "{by} wysłał wiadomość e-mail w sprawie {entityType} {entity}",
     "emailSentThis": "{by} wysłał wiadomość e-mail",
     "postTargetSelf": "{user} opublikował dla siebie",
     "postTargetSelfAndOthers": "{user} opublikował dla {target} i siebie",
     "createAssignedYou": "{user} utworzył {entityType} {entity} i przypisał do Ciebie",
     "createAssignedThisSelf": "{user} utworzył {entityType} i przypisał do siebie",
-    "createAssignedSelf": "{user} utworzył {entityType} {entity} i przypisał do siebie"
+    "createAssignedSelf": "{user} utworzył {entityType} {entity} i przypisał do siebie",
+    "assignYou": "{user} przypisał Ci {entityType} {entity}",
+    "assignThisVoid": "{user} cofnął przypisanie {entityType}",
+    "assignVoid": "{user} cofnął przypisanie {entityType} {entity}",
+    "assignThisSelf": "{user} przypisał sam do siebie ten {entityType}",
+    "assignSelf": "{user} przypisał do siebie {entityType} {entity}"
   },
   "lists": {
     "monthNames": [
@@ -431,11 +494,12 @@
     "salutationName": {
       "Mr.": "Pan.",
       "Mrs.": "Pani.",
-      "Ms.": "Panna"
+      "Ms.": "Pani"
     },
     "language": {
       "fa_IR": "Perski",
-      "pl_PL": "Polski"
+      "pl_PL": "Polski",
+      "es_MX": "Hiszpański (Meksyk)"
     },
     "dateSearchRanges": {
       "on": "Włączony",
@@ -444,8 +508,8 @@
       "before": "Przed",
       "between": "Między",
       "today": "Dziś",
-      "past": "Przeszłość",
-      "future": "Przyszłość",
+      "past": "W przeszłości",
+      "future": "W przyszłości",
       "currentMonth": "Bieżący miesiąc",
       "lastMonth": "Poprzedni miesiąc",
       "currentQuarter": "Bieżący kwartał",
@@ -455,23 +519,28 @@
       "lastSevenDays": "Ostatnie 7 dni",
       "lastXDays": "Ostatnie X dni",
       "nextXDays": "Kolejne X dni",
+      "ever": "Kiedykolwiek",
       "isEmpty": "Jest pusty",
       "olderThanXDays": "Starszy niż X dni",
-      "currentFiscalYear": "Obecny rok fisnalny",
-      "lastFiscalYear": "Poprzedni rok fiskalny",
-      "currentFiscalQuarter": "Obecny kwartał fiskalny",
-      "lastFiscalQuarter": "Poprzedni kwartał fiskalny"
+      "afterXDays": "Po X dniach",
+      "nextMonth": "Następny miesiąc",
+      "currentFiscalYear": "Obecny rok obrachunkowy",
+      "lastFiscalYear": "Poprzedni rok obrachunkowy",
+      "currentFiscalQuarter": "Obecny kwartał roku obrachunkowego",
+      "lastFiscalQuarter": "Ostatni kwartał roku obrachunkowego"
     },
     "searchRanges": {
       "is": "Jest",
-      "isEmpty": "Jest Puste",
+      "isEmpty": "Jest puste",
       "isNotEmpty": "Nie jest puste",
       "isFromTeams": "Jest z zespołu",
       "isOneOf": "Którykolwiek z",
       "anyOf": "Którykolwiek z",
       "isNot": "Nie jest",
       "isNotOneOf": "Żaden z",
-      "noneOf": "Żaden z"
+      "noneOf": "Żaden z",
+      "allOf": "Wszystkie z",
+      "any": "Dowolne"
     },
     "varcharSearchRanges": {
       "equals": "Równy",
@@ -480,7 +549,10 @@
       "endsWith": "Kończy się znakiem",
       "contains": "Zawiera",
       "isEmpty": "Jest Puste",
-      "isNotEmpty": "Nie jest puste"
+      "isNotEmpty": "Nie jest puste",
+      "notLike": "Nie jest podobne (%)",
+      "notContains": "Nie zawiera",
+      "notEquals": "Nie jest równe"
     },
     "intSearchRanges": {
       "equals": "Równy",
@@ -490,7 +562,8 @@
       "greaterThanOrEquals": "Większy lub Równy",
       "lessThanOrEquals": "Mniejszy lub Równy",
       "between": "Między",
-      "isEmpty": "Jest posty"
+      "isEmpty": "Jest puste",
+      "isNotEmpty": "Nie jest puste"
     },
     "autorefreshInterval": {
       "0": "Brak",
@@ -504,7 +577,7 @@
       "Mobile": "Komórka",
       "Office": "Biuro",
       "Fax": "Faks",
-      "Home": "Domowy",
+      "Home": "Pulpit",
       "Other": "Inny"
     }
   },
@@ -529,7 +602,6 @@
         "resizeQuarter": "Przeskaluj do 1/4 rozmiaru",
         "floatLeft": "Równaj do lewej",
         "floatRight": "Równaj do prawej",
-        "floatNone": "Nie zmieniaj ",
         "dragImageHere": "Upuść obraz tutaj",
         "selectFromFiles": "Wybierz plik z dysku",
         "url": "Adres do Obrazu",
@@ -599,5 +671,24 @@
         "undo": "Cofnij"
       }
     }
+  },
+  "streamMessagesMale": {
+    "postTargetSelfAndOthers": "{user} wysłał do {target} i do siebie"
+  },
+  "streamMessagesFemale": {
+    "postTargetSelfAndOthers": "{user} wysłał do {target} i do siebie"
+  },
+  "listViewModes": {
+    "list": "Lista"
+  },
+  "themes": {
+    "Espo": "Klasyczne Espo",
+    "Sakura": "Klasyczna Sakura",
+    "EspoVertical": "Pionowe Espo",
+    "SakuraVertical": "Pionowa Sakura",
+    "Violet": "Klasyczny fiolet",
+    "VioletVertical": "Pionowy fiolet",
+    "Hazyblue": "Klasyczny Hazyblue",
+    "HazyblueVertical": "Pionowy Hazyblue"
   }
 }
