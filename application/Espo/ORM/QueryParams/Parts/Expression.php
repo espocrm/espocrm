@@ -659,7 +659,7 @@ class Expression implements WhereItem
         return self::composeFunction('NOT', $argument);
     }
 
-    private function composeFunction(string $function, ...$argumentList): self
+    private static function composeFunction(string $function, ...$argumentList): self
     {
         $stringifiedItemList = array_map(
             function ($item) {
