@@ -38,6 +38,7 @@ use Espo\Core\{
     Exceptions\Forbidden,
     Exceptions\BadRequest,
     Mail\Importer,
+    Mail\ImporterData,
     Mail\MessageWrapper,
     Mail\Mail\Storage\Imap,
     Mail\Parser,
@@ -47,6 +48,7 @@ use Espo\Core\{
 use Espo\Entities\{
     EmailAccount as EmailAccountEntity,
     User,
+    Email as EmailEntity,
 };
 
 use Espo\Core\Di;
@@ -413,17 +415,19 @@ class EmailAccount extends Record implements
 
                 try {
                     $dt = new DateTime($fetchSince);
-                } catch (Exception $e) {}
+                }
+                catch (Exception $e) {}
 
                 if ($dt) {
                     $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
-                } else {
+                }
+                else {
                     return false;
                 }
             }
 
-            if ((count($idList) == 1) && !empty($lastUID)) {
-                if ($storage->getUniqueId($idList[0]) == $lastUID) {
+            if (count($idList) === 1 && !empty($lastUID)) {
+                if ($storage->getUniqueId($idList[0]) === $lastUID) {
                     continue;
                 }
             }
@@ -440,16 +444,16 @@ class EmailAccount extends Record implements
 
                     if ($uid <= $previousLastUID) {
                         $k++;
+
                         continue;
                     }
                 }
 
                 $fetchOnlyHeader = $this->checkFetchOnlyHeader($storage, $id);
 
-                $folderData = null;
+                $folderData = [];
 
                 if ($emailAccount->get('emailFolderId')) {
-                    $folderData = [];
                     $folderData[$userId] = $emailAccount->get('emailFolderId');
                 }
 
@@ -465,16 +469,19 @@ class EmailAccount extends Record implements
                         $flags = $message->getFlags();
                     }
 
+                    $importerData = ImporterData
+                        ::create()
+                        ->withTeamIdList($teamIdList)
+                        ->withUserIdList([$userId])
+                        ->withFilterList($filterCollection)
+                        ->withFetchOnlyHeader($fetchOnlyHeader)
+                        ->withFolderData($folderData);
+
                     $email = $this->importMessage(
                         $importer,
                         $emailAccount,
                         $message,
-                        $teamIdList,
-                        null,
-                        [$userId],
-                        $filterCollection,
-                        $fetchOnlyHeader,
-                        $folderData
+                        $importerData
                     );
 
                     if ($emailAccount->get('keepFetchedEmailsUnread')) {
@@ -506,14 +513,18 @@ class EmailAccount extends Record implements
 
                         try {
                             $dt = new DateTime($email->get('dateSent'));
-                        } catch (Exception $e) {}
+                        }
+                        catch (Exception $e) {}
 
                         if ($dt) {
                             $nowDt = new DateTime();
+
                             if ($dt->getTimestamp() >= $nowDt->getTimestamp()) {
                                 $dt = $nowDt;
                             }
+
                             $dateSent = $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
+
                             $lastDate = $dateSent;
                         }
                     }
@@ -561,23 +572,16 @@ class EmailAccount extends Record implements
     }
 
     protected function importMessage(
-        $importer,
-        $emailAccount,
-        $message,
-        $teamIdList,
-        $userId,
-        $userIdList,
-        $filterCollection,
-        $fetchOnlyHeader,
-        $folderData = null
-    ) {
-        $email = null;
+        Importer $importer,
+        EmailAccountEntity $emailAccount,
+        MessageWrapper $message,
+        ImporterData $data
+    ): ?EmailEntity {
 
         try {
-            $email = $importer->import(
-                $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
-            );
-        } catch (Exception $e) {
+            return $importer->import($message, $data);
+        }
+        catch (Throwable $e) {
             $this->log->error(
                 'EmailAccount '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
@@ -588,7 +592,7 @@ class EmailAccount extends Record implements
             }
         }
 
-        return $email;
+        return null;
     }
 
     protected function noteAboutEmail($email)

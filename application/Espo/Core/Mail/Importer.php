@@ -83,15 +83,13 @@ class Importer
         $this->filtersMatcher = new FiltersMatcher();
     }
 
-    public function import(
-        MessageWrapper $message,
-        ?string $assignedUserId = null,
-        array $teamsIdList = [],
-        array $userIdList = [],
-        iterable $filterList = [],
-        bool $fetchOnlyHeader = false,
-        ?array $folderData = null
-    ): ?Email {
+    public function import(MessageWrapper $message, ImporterData $data): ?Email
+    {
+        $assignedUserId = $data->getAssignedUserId();
+        $teamIdList = $data->getTeamIdList();
+        $userIdList = $data->getUserIdList();
+        $filterList = $data->getFilterList();
+        $folderData = $data->getFolderData();
 
         $parser = $message->getParser() ?? $this->parserFactory->create();
 
@@ -123,7 +121,7 @@ class Importer
             $email->addLinkMultipleId('assignedUsers', $assignedUserId);
         }
 
-        $email->set('teamsIds', $teamsIdList);
+        $email->set('teamsIds', $teamIdList);
 
         if (!empty($userIdList)) {
             foreach ($userIdList as $uId) {
@@ -163,12 +161,11 @@ class Importer
         $email->set('replyTo', implode(';', $replyToArr));
 
         $addressNameMap = $parser->getAddressNameMap($message);
+
         $email->set('addressNameMap', $addressNameMap);
 
-        if ($folderData) {
-            foreach ($folderData as $uId => $folderId) {
-                $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
-            }
+        foreach ($folderData as $uId => $folderId) {
+            $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
         }
 
         if ($this->filtersMatcher->match($email, $filterList, true)) {
@@ -201,7 +198,7 @@ class Importer
             if ($duplicate->get('status') != 'Being Imported') {
                 $duplicate = $this->entityManager->getEntity('Email', $duplicate->id);
 
-                $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+                $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamIdList);
 
                 return $duplicate;
             }
@@ -238,7 +235,7 @@ class Importer
 
         $inlineAttachmentList = [];
 
-        if (!$fetchOnlyHeader) {
+        if (!$data->fetchOnlyHeader()) {
             $inlineAttachmentList = $parser->fetchContentParts($message, $email);
 
             if ($this->filtersMatcher->match($email, $filterList)) {
@@ -392,7 +389,7 @@ class Importer
                 if ($duplicate->get('status') != 'Being Imported') {
                     $duplicate = $this->entityManager->getEntity('Email', $duplicate->id);
 
-                    $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+                    $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamIdList);
 
                     return $duplicate;
                 }
@@ -420,7 +417,7 @@ class Importer
 
             $this->entityManager->getRepository('Email')->fillAccount($duplicate);
 
-            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamIdList);
 
             return $duplicate;
         }
@@ -555,7 +552,7 @@ class Importer
         $assignedUserId,
         $userIdList,
         $folderData,
-        $teamsIdList
+        $teamIdList
     ): void {
 
         if ($duplicate->get('status') == 'Archived') {
@@ -629,8 +626,8 @@ class Importer
 
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 
-        if (!empty($teamsIdList)) {
-            foreach ($teamsIdList as $teamId) {
+        if (!empty($teamIdList)) {
+            foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $fetchedTeamIdList)) {
                     $processNoteAcl = true;
 

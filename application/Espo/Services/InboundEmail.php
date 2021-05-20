@@ -38,6 +38,7 @@ use Espo\Core\{
     Exceptions\Error,
     Exceptions\BadRequest,
     Mail\Importer,
+    Mail\ImporterData,
     Mail\MessageWrapper,
     Mail\Mail\Storage\Imap,
     Mail\Parser,
@@ -379,16 +380,19 @@ class InboundEmail extends RecordService implements
                             $flags = $message->getFlags();
                         }
 
+                        $importerData = ImporterData
+                            ::create()
+                            ->withAssignedUserId($userId)
+                            ->withTeamIdList($teamIdList)
+                            ->withUserIdList($userIdList)
+                            ->withFilterList($filterCollection)
+                            ->withFetchOnlyHeader($fetchOnlyHeader);
+
                         $email = $this->importMessage(
                             $importer,
                             $emailAccount,
                             $message,
-                            $teamIdList,
-                            $userId,
-                            $userIdList,
-                            $filterCollection,
-                            $fetchOnlyHeader,
-                            null
+                            $importerData
                         );
 
                         if ($emailAccount->get('keepFetchedEmailsUnread')) {
@@ -518,24 +522,16 @@ class InboundEmail extends RecordService implements
     }
 
     protected function importMessage(
-        $importer,
-        $emailAccount,
-        $message,
-        $teamIdList,
-        $userId,
-        $userIdList,
-        $filterCollection,
-        $fetchOnlyHeader,
-        $folderData = null
-    ) {
-        $email = null;
+        Importer $importer,
+        InboundEmailEntity $emailAccount,
+        MessageWrapper $message,
+        ImporterData $data
+    ): ?EmailEntity {
 
         try {
-            $email = $importer->import(
-                $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
-            );
+            return $importer->import($message, $data);
         }
-        catch (Exception $e) {
+        catch (Throwable $e) {
             $this->log->error(
                 'InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
@@ -546,7 +542,7 @@ class InboundEmail extends RecordService implements
             }
         }
 
-        return $email;
+        return null;
     }
 
     protected function noteAboutEmail($email)
@@ -568,7 +564,8 @@ class InboundEmail extends RecordService implements
 
         if ($case->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $case->getLinkMultipleIdList('assignedUsers');
-        } else {
+        }
+        else {
             $assignedUserId = $case->get('assignedUserId');
 
             if ($assignedUserId) {

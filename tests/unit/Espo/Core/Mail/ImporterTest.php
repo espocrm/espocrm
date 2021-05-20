@@ -34,6 +34,7 @@ use Espo\Entities\Email;
 
 use Espo\Core\{
     Mail\Importer,
+    Mail\ImporterData,
     Mail\MessageWrapper,
     Mail\ParserFactory,
     Mail\Parsers\MailMimeParser,
@@ -168,7 +169,12 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
         $message->setFullRawContent($contents);
 
-        $email = $importer->import($message, null, ['teamTestId'], ['userTestId']);
+        $data = ImporterData
+            ::create()
+            ->withTeamIdList(['teamTestId'])
+            ->withUserIdList(['userTestId']);
+
+        $email = $importer->import($message, $data);
 
         $this->assertEquals('test 3', $email->get('name'));
 
