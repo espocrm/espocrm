@@ -86,6 +86,6 @@
     "collection": {
         "orderBy": "createdAt",
         "order": "desc",
-        "textFilterFields": ["name", "bodyPlain", "body", "subject"]
+        "textFilterFields": ["name", "subject"]
     }
 }
