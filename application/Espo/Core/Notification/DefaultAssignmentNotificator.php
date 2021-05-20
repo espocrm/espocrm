@@ -39,8 +39,6 @@ use Espo\Core\{
 
 class DefaultAssignmentNotificator implements AssignmentNotificator
 {
-    private $userIdEnabledMap = [];
-
     protected $user;
 
     protected $entityManager;
