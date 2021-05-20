@@ -145,7 +145,7 @@ class EntityManager
         $this->initLocker();
     }
 
-    private function initQueryComposer()
+    private function initQueryComposer(): void
     {
         $className = $this->params['queryComposerClassName'] ?? null;
 
@@ -162,7 +162,7 @@ class EntityManager
         $this->queryComposer = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
     }
 
-    private function initLocker()
+    private function initLocker(): void
     {
         $className = $this->params['lockerClassName'] ?? null;
 
@@ -243,9 +243,7 @@ class EntityManager
      */
     public function getMapper(?string $name = null): Mapper
     {
-        $name = $name ?? $this->defaultMapperName;
-
-        $className = $this->getMapperClassName($name);
+        $className = $this->getMapperClassName($name ?? $this->defaultMapperName);
 
         if (empty($this->mappers[$className])) {
             $this->mappers[$className] = new $className(
@@ -261,7 +259,7 @@ class EntityManager
         return $this->mappers[$className];
     }
 
-    private function initPDO()
+    private function initPDO(): void
     {
         $params = $this->params;
 
@@ -365,7 +363,8 @@ class EntityManager
     /**
      * Store an entity.
      *
-     * @return Deprecated. @todo To be changed to void in 6.3.
+     * @return void
+     * @todo Change return type to void in v6.3.
      */
     public function saveEntity(Entity $entity, array $options = [])
     {
@@ -379,7 +378,7 @@ class EntityManager
     /**
      * Mark an entity as deleted (in database).
      */
-    public function removeEntity(Entity $entity, array $options = [])
+    public function removeEntity(Entity $entity, array $options = []): void
     {
         $entityType = $entity->getEntityType();
 
@@ -394,6 +393,7 @@ class EntityManager
     public function createEntity(string $entityType, $data = [], array $options = []): Entity
     {
         $entity = $this->getEntity($entityType);
+
         $entity->set($data);
 
         $this->saveEntity($entity, $options);
