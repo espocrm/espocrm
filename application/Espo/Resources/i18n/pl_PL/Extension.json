@@ -7,7 +7,7 @@
     "checkVersionUrl": "Adres URL do sprawdzania nowych wersji"
   },
   "labels": {
-    "Uninstall": "Deinstaluj",
+    "Uninstall": "Odinstaluj",
     "Install": "Instaluj"
   },
   "messages": {

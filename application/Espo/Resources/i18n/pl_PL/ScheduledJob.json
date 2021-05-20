@@ -14,7 +14,7 @@
       "CheckInboundEmails": "Sprawdź pocztę przychodzącą",
       "CheckEmailAccounts": "Sprawdź osobiste konta pocztowe",
       "SendEmailReminders": "Wyślij przypomnienia",
-      "AuthTokenControl": "Kontrola tokenu autentykacji",
+      "AuthTokenControl": "Kontrola tokenu uwierzytelniającego",
       "SendEmailNotifications": "Wysyłaj powiadomienia e-mail",
       "CheckNewVersion": "Sprawdź nową wersję",
       "ProcessWebhookQueue": "Kolejka Webhook procesów"
