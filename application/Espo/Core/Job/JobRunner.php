@@ -165,7 +165,7 @@ class JobRunner
         $this->entityManager->saveEntity($job);
 
         if ($throwException && $exception) {
-            throw new $exception;
+            throw new $exception($exception->getMessage());
         }
 
         if ($job->getScheduledJobId() && !$skipLog) {
@@ -186,6 +186,13 @@ class JobRunner
         $obj = $this->jobFactory->create($jobName);
 
         if ($obj instanceof JobTargeted) {
+            if (
+                $job->getTargetType() === null ||
+                $job->getTargetId() === null
+            ) {
+                throw new Error("Can't run targeted job '{$jobName}' w/o target.");
+            }
+
             $obj->run($job->getTargetType(), $job->getTargetId(), $job->getData());
 
             return;
