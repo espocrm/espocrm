@@ -531,7 +531,7 @@ class InboundEmail extends RecordService implements
         $email = null;
 
         try {
-            $email = $importer->importMessage(
+            $email = $importer->import(
                 $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
             );
         }

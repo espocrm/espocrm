@@ -83,7 +83,7 @@ class Importer
         $this->filtersMatcher = new FiltersMatcher();
     }
 
-    public function importMessage(
+    public function import(
         MessageWrapper $message,
         ?string $assignedUserId = null,
         array $teamsIdList = [],

@@ -168,7 +168,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
         $message->setFullRawContent($contents);
 
-        $email = $importer->importMessage($message, null, ['teamTestId'], ['userTestId']);
+        $email = $importer->import($message, null, ['teamTestId'], ['userTestId']);
 
         $this->assertEquals('test 3', $email->get('name'));
 
