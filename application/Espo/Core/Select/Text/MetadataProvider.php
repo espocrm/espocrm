@@ -33,7 +33,7 @@ use Espo\Core\{
     Utils\Metadata,
 };
 
-use Espo\ORM\Defs\Defs;
+use Espo\ORM\Defs;
 
 class MetadataProvider
 {

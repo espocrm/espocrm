@@ -125,11 +125,11 @@ class LinkMultipleItem
     }
 
     /**
-     * Create from an ID.
+     * Create.
      *
      * @throws RuntimeException
      */
-    public static function fromId(string $id): self
+    public static function create(string $id): self
     {
         return new self($id);
     }

@@ -98,7 +98,7 @@ class EntryPoint implements Runner
         $this->authBuilderFactory = $authBuilderFactory;
         $this->errorOutput = $errorOutput;
 
-        $this->params = $params ?? RunnerParams::fromNothing();
+        $this->params = $params ?? RunnerParams::create();
     }
 
     public function run(): void

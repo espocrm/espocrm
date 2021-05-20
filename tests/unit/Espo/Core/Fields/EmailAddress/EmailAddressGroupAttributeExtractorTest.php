@@ -40,9 +40,9 @@ class EmailAddressGroupAttributeExtractorTest extends \PHPUnit\Framework\TestCas
     public function testExtract()
     {
         $group = EmailAddressGroup
-            ::fromList([
-                EmailAddress::fromAddress('ONE@test.com'),
-                EmailAddress::fromAddress('two@test.com')->optedOut(),
+            ::create([
+                EmailAddress::create('ONE@test.com'),
+                EmailAddress::create('two@test.com')->optedOut(),
             ]);
 
         $valueMap = (new EmailAddressGroupAttributeExtractor())->extract($group, 'emailAddress');
@@ -74,7 +74,7 @@ class EmailAddressGroupAttributeExtractorTest extends \PHPUnit\Framework\TestCas
     public function testEmpty()
     {
         $group = EmailAddressGroup
-            ::fromList([]);
+            ::create([]);
 
         $valueMap = (new EmailAddressGroupAttributeExtractor())->extract($group, 'emailAddress');
 

@@ -35,8 +35,11 @@ use Espo\Core\{
     Mail\MessageWrapper,
     ORM\EntityManager,
     Utils\Config,
-    Notificators\Notificator,
-    Mail\Parsers\MailMimeParser,
+    Notification\AssignmentNotificator,
+    Notification\AssignmentNotificatorFactory,
+    Notification\NotificatorParams,
+    FieldProcessing\Relation\LinkMultipleSaver,
+    FieldProcessing\SaverParams,
 };
 
 use DateTime;
@@ -44,7 +47,7 @@ use DateTimeZone;
 use Exception;
 
 /**
- * Imports an email message into CRM. Handles duplicate checking, parent look-up.
+ * Imports email messages. Handles duplicate checking, parent look-up.
  */
 class Importer
 {
@@ -52,46 +55,43 @@ class Importer
 
     private $config;
 
+    /**
+     * @var AssignmentNotificator
+     */
     private $notificator;
 
     private $filtersMatcher;
 
-    protected $defaultParserClassName = MailMimeParser::class;
+    private $parserFactory;
 
-    protected $parserClassName;
+    private $linkMultipleSaver;
 
     public function __construct(
         EntityManager $entityManager,
         Config $config,
-        ?Notificator $notificator = null,
-        ?string $parserClassName = null
+        AssignmentNotificatorFactory $notificatorFactory,
+        ParserFactory $parserFactory,
+        LinkMultipleSaver $linkMultipleSaver
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
-        $this->notificator = $notificator;
+        $this->parserFactory = $parserFactory;
+        $this->linkMultipleSaver = $linkMultipleSaver;
+
+        $this->notificator = $notificatorFactory->create('Email');
 
         $this->filtersMatcher = new FiltersMatcher();
-
-        $this->parserClassName = $parserClassName ?? $this->defaultParserClassName;
     }
 
-    public function importMessage(
-        MessageWrapper $message,
-        ?string $assignedUserId = null,
-        array $teamsIdList = [],
-        array $userIdList = [],
-        iterable $filterList = [],
-        bool $fetchOnlyHeader = false,
-        ?array $folderData = null
-    ): ?Email {
+    public function import(MessageWrapper $message, ImporterData $data): ?Email
+    {
+        $assignedUserId = $data->getAssignedUserId();
+        $teamIdList = $data->getTeamIdList();
+        $userIdList = $data->getUserIdList();
+        $filterList = $data->getFilterList();
+        $folderData = $data->getFolderData();
 
-        $parser = $message->getParser();
-
-        $parserClassName = $this->parserClassName;
-
-        if (!$parser || get_class($parser) !== $parserClassName) {
-            $parser = new $parserClassName($this->entityManager);
-        }
+        $parser = $message->getParser() ?? $this->parserFactory->create();
 
         $email = $this->entityManager->getEntity('Email');
 
@@ -99,7 +99,7 @@ class Importer
 
         $subject = '';
 
-        if ($parser->checkMessageAttribute($message, 'subject')) {
+        if ($parser->hasMessageAttribute($message, 'subject')) {
             $subject = $parser->getMessageAttribute($message, 'subject');
         }
 
@@ -121,7 +121,7 @@ class Importer
             $email->addLinkMultipleId('assignedUsers', $assignedUserId);
         }
 
-        $email->set('teamsIds', $teamsIdList);
+        $email->set('teamsIds', $teamIdList);
 
         if (!empty($userIdList)) {
             foreach ($userIdList as $uId) {
@@ -132,8 +132,8 @@ class Importer
         $fromAddressData = $parser->getAddressDataFromMessage($message, 'from');
 
         if ($fromAddressData) {
-            $fromString = ($fromAddressData['name'] ? ($fromAddressData['name'] . ' ') : '') . '<' .
-                $fromAddressData['address'] .'>';
+            $fromString = ($fromAddressData->name ? ($fromAddressData->name . ' ') : '') . '<' .
+                $fromAddressData->address . '>';
 
             $email->set('fromString', $fromString);
         }
@@ -141,8 +141,8 @@ class Importer
         $replyToData = $parser->getAddressDataFromMessage($message, 'reply-To');
 
         if ($replyToData) {
-            $replyToString = ($replyToData['name'] ? ($replyToData['name'] . ' ') : '') .
-                '<' . $replyToData['address'] .'>';
+            $replyToString = ($replyToData->name ? ($replyToData->name . ' ') : '') .
+                '<' . $replyToData->address . '>';
 
             $email->set('replyToString', $replyToString);
         }
@@ -161,12 +161,11 @@ class Importer
         $email->set('replyTo', implode(';', $replyToArr));
 
         $addressNameMap = $parser->getAddressNameMap($message);
+
         $email->set('addressNameMap', $addressNameMap);
 
-        if ($folderData) {
-            foreach ($folderData as $uId => $folderId) {
-                $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
-            }
+        foreach ($folderData as $uId => $folderId) {
+            $email->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
         }
 
         if ($this->filtersMatcher->match($email, $filterList, true)) {
@@ -174,14 +173,14 @@ class Importer
         }
 
         if (
-            $parser->checkMessageAttribute($message, 'message-Id') &&
+            $parser->hasMessageAttribute($message, 'message-Id') &&
             $parser->getMessageAttribute($message, 'message-Id')
         ) {
             $messageId = $parser->getMessageMessageId($message);
 
             $email->set('messageId', $messageId);
 
-            if ($parser->checkMessageAttribute($message, 'delivered-To')) {
+            if ($parser->hasMessageAttribute($message, 'delivered-To')) {
                 $email->set(
                     'messageIdInternal',
                     $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To')
@@ -199,13 +198,13 @@ class Importer
             if ($duplicate->get('status') != 'Being Imported') {
                 $duplicate = $this->entityManager->getEntity('Email', $duplicate->id);
 
-                $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+                $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamIdList);
 
                 return $duplicate;
             }
         }
 
-        if ($parser->checkMessageAttribute($message, 'date')) {
+        if ($parser->hasMessageAttribute($message, 'date')) {
             try {
                 $dt = new DateTime($parser->getMessageAttribute($message, 'date'));
 
@@ -221,7 +220,7 @@ class Importer
             $email->set('dateSent', date('Y-m-d H:i:s'));
         }
 
-        if ($parser->checkMessageAttribute($message, 'delivery-Date')) {
+        if ($parser->hasMessageAttribute($message, 'delivery-Date')) {
             try {
                 $dt = new DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
 
@@ -236,8 +235,8 @@ class Importer
 
         $inlineAttachmentList = [];
 
-        if (!$fetchOnlyHeader) {
-            $parser->fetchContentParts($email, $message, $inlineAttachmentList);
+        if (!$data->fetchOnlyHeader()) {
+            $inlineAttachmentList = $parser->fetchContentParts($message, $email);
 
             if ($this->filtersMatcher->match($email, $filterList)) {
                 return null;
@@ -253,7 +252,7 @@ class Importer
         $replied = null;
 
         if (
-            $parser->checkMessageAttribute($message, 'in-Reply-To') &&
+            $parser->hasMessageAttribute($message, 'in-Reply-To') &&
             $parser->getMessageAttribute($message, 'in-Reply-To')
         ) {
             $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
@@ -284,7 +283,7 @@ class Importer
         }
 
         if (
-            $parser->checkMessageAttribute($message, 'references') &&
+            $parser->hasMessageAttribute($message, 'references') &&
             $parser->getMessageAttribute($message, 'references')
         ) {
             $references = $parser->getMessageAttribute($message, 'references');
@@ -390,7 +389,7 @@ class Importer
                 if ($duplicate->get('status') != 'Being Imported') {
                     $duplicate = $this->entityManager->getEntity('Email', $duplicate->id);
 
-                    $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+                    $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamIdList);
 
                     return $duplicate;
                 }
@@ -418,7 +417,7 @@ class Importer
 
             $this->entityManager->getRepository('Email')->fillAccount($duplicate);
 
-            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamsIdList);
+            $this->processDuplicate($duplicate, $assignedUserId, $userIdList, $folderData, $teamIdList);
 
             return $duplicate;
         }
@@ -553,7 +552,7 @@ class Importer
         $assignedUserId,
         $userIdList,
         $folderData,
-        $teamsIdList
+        $teamIdList
     ): void {
 
         if ($duplicate->get('status') == 'Archived') {
@@ -611,32 +610,24 @@ class Importer
             ->getRepository('Email')
             ->applyUsersFilters($duplicate);
 
-        $this->entityManager
-            ->getRepository('Email')
-            ->processLinkMultipleFieldSave($duplicate, 'users', [
-                'skipLinkMultipleRemove' => true,
-                'skipLinkMultipleUpdate' => true,
-            ]);
+        $saverParams = SaverParams::create()->withRawOptions([
+            'skipLinkMultipleRemove' => true,
+            'skipLinkMultipleUpdate' => true,
+        ]);
 
-        $this->entityManager
-            ->getRepository('Email')
-            ->processLinkMultipleFieldSave($duplicate, 'assignedUsers', [
-                'skipLinkMultipleRemove' => true,
-                'skipLinkMultipleUpdate' => true,
-            ]);
+        $this->linkMultipleSaver->process($duplicate, 'users', $saverParams);
+        $this->linkMultipleSaver->process($duplicate, 'assignedUsers', $saverParams);
 
-        $notificator = $this->notificator;
+        $notificatorParams = NotificatorParams::create()->withRawOptions([
+            'isBeingImported' => true,
+        ]);
 
-        if ($notificator) {
-            $notificator->process($duplicate, [
-                'isBeingImported' => true,
-            ]);
-        }
+        $this->notificator->process($duplicate, $notificatorParams);
 
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 
-        if (!empty($teamsIdList)) {
-            foreach ($teamsIdList as $teamId) {
+        if (!empty($teamIdList)) {
+            foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $fetchedTeamIdList)) {
                     $processNoteAcl = true;
 

@@ -93,9 +93,9 @@ class LinkParent
     }
 
     /**
-     * Create from an entity type and ID.
+     * Create.
      */
-    public static function fromEntityTypeAndId(string $entityType, string $id): self
+    public static function create(string $entityType, string $id): self
     {
         return new self($entityType, $id);
     }

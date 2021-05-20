@@ -32,7 +32,7 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\{
-    ExtensionManager,
+    Upgrades\ExtensionManager,
     Controllers\RecordBase,
     Api\Request,
     Api\Response,

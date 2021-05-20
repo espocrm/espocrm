@@ -59,6 +59,7 @@ class AccessControlFilterApplierTest extends \PHPUnit\Framework\TestCase
         $this->queryBuilder = $this->createMock(QueryBuilder::class);
         $this->filterResolver = $this->createMock(FilterResolver::class);
         $this->filter = $this->createMock(AccessControlFilter::class);
+        $this->mandatoryFilter = $this->createMock(AccessControlFilter::class);
 
         $this->aclManager
             ->expects($this->any())
@@ -150,10 +151,16 @@ class AccessControlFilterApplierTest extends \PHPUnit\Framework\TestCase
         }
 
         $this->filterFactory
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('create')
-            ->with($this->entityType, $this->user, $filterName)
-            ->willReturn($this->filter);
+            ->withConsecutive(
+                [$this->entityType, $this->user, 'mandatory'],
+                [$this->entityType, $this->user, $filterName],
+            )
+            ->willReturnOnConsecutiveCalls(
+                $this->mandatoryFilter,
+                $this->filter
+            );
 
         $this->filter
             ->expects($this->once())

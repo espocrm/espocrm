@@ -829,7 +829,7 @@ class Activities implements
             );
 
         $loadProcessorParams = FieldLoaderParams
-            ::fromNothing()
+            ::create()
             ->withSelect($searchParams->getSelect());
 
         foreach ($collection as $e) {

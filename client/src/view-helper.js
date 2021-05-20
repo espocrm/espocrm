@@ -107,7 +107,9 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             }
 
             var t;
+
             var cache = this.cache;
+
             if (cache) {
                 t = cache.get('app', 'timestamp');
             } else {
@@ -120,6 +122,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             var width = (width || 16).toString();
 
             var className = 'avatar';
+
             if (additionalClassName) {
                 className += ' ' + additionalClassName;
             }

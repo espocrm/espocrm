@@ -32,7 +32,7 @@ namespace tests\unit\Espo\ORM;
 use Espo\ORM\{
     Metadata,
     MetadataDataProvider,
-    Defs\Defs,
+    Defs,
     Defs\DefsData,
     BaseEntity,
 };

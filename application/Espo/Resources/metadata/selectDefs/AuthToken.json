@@ -1,0 +1,6 @@
+{
+    "primaryFilterClassNameMap": {
+        "active": "Espo\\Classes\\Select\\AuthToken\\PrimaryFilters\\Active",
+        "inactive": "Espo\\Classes\\Select\\AuthToken\\PrimaryFilters\\Inactive"
+    }
+}

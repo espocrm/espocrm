@@ -40,10 +40,19 @@ use Espo\ORM\{
  */
 abstract class Repository
 {
+    /**
+     * @var EntityFactory
+     */
     protected $entityFactory;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
+    /**
+     * @var string
+     */
     protected $entityType;
 
     public function __construct(string $entityType, EntityManager $entityManager, EntityFactory $entityFactory)
@@ -69,9 +78,14 @@ abstract class Repository
     }
 
     /**
-     * Get an entity. If $id is NULL, a new entity is returned.
+     * Get a new entity.
      */
-    abstract public function get(?string $id = null): ?Entity;
+    abstract public function getNew(): Entity;
+
+    /**
+     * Fetch an entity by ID.
+     */
+    abstract public function getById(string $id): ?Entity;
 
     /**
      * Store an entity.

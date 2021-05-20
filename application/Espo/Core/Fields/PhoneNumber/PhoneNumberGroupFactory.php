@@ -105,7 +105,7 @@ class PhoneNumberGroupFactory implements ValueFactory
         }
 
         foreach ($dataList as $item) {
-            $phoneNumber = PhoneNumber::fromNumber($item->phoneNumber);
+            $phoneNumber = PhoneNumber::create($item->phoneNumber);
 
             if ($item->type) {
                 $phoneNumber = $phoneNumber->withType($item->type);
@@ -126,7 +126,7 @@ class PhoneNumberGroupFactory implements ValueFactory
             $phoneNumberList[] = $phoneNumber;
         }
 
-        $group = PhoneNumberGroup::fromList($phoneNumberList);
+        $group = PhoneNumberGroup::create($phoneNumberList);
 
         if ($primaryPhoneNumber) {
             $group = $group->withPrimary($primaryPhoneNumber);

@@ -37,7 +37,7 @@ use Espo\Core\{
 
 use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\Where\OrGroup,
+    ORM\QueryParams\Parts\Where\OrGroupBuilder,
     ORM\QueryParams\Parts\WhereClause,
     Entities\User,
 };
@@ -66,38 +66,42 @@ class BoolFilterList
 
     public function apply(QueryBuilder $queryBuilder, array $boolFilterNameList): void
     {
-        $orGroup = new OrGroup();
+        $orGroupBuilder = new OrGroupBuilder();
 
         foreach ($boolFilterNameList as $filterName) {
-            $itemWhereClause = $this->applyBoolFilter($queryBuilder, $filterName);
-
-            $orGroup->add($itemWhereClause);
+            $this->applyBoolFilter($queryBuilder, $orGroupBuilder, $filterName);
         }
 
-        $whereClause = new WhereClause();
-
-        $whereClause->add($orGroup);
-
         $queryBuilder->where(
-            $whereClause->getRaw()
+            $orGroupBuilder->build()
         );
     }
 
-    protected function applyBoolFilter(QueryBuilder $queryBuilder, string $filterName): WhereClause
-    {
+    protected function applyBoolFilter(
+        QueryBuilder $queryBuilder,
+        OrGroupBuilder $orGroupBuilder,
+        string $filterName
+    ): void {
+
         if ($this->boolFilterFactory->has($this->entityType, $filterName)) {
             $filter = $this->boolFilterFactory->create($this->entityType, $this->user, $filterName);
 
-            return $filter->apply($queryBuilder);
+            $whereItem = $filter->apply($queryBuilder, $orGroupBuilder);
+
+            return;
         }
 
         // For backward compatibility.
         if ($this->selectManager->hasBoolFilter($filterName)) {
             $rawWhereClause = $this->selectManager->applyBoolFilterToQueryBuilder($queryBuilder, $filterName);
 
-            return WhereClause::fromRaw($rawWhereClause);
+            $whereItem = WhereClause::fromRaw($rawWhereClause);
+
+            $orGroupBuilder->add($whereItem);
+
+            return;
         }
 
-        throw new Error("No bool filter '{$filterName}' for '{this->entityType}'.");
+        throw new Error("No bool filter '{$filterName}' for '{$this->entityType}'.");
     }
 }

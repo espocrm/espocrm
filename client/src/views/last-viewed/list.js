@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/last-viewed/list', 'views/list', function (Dep) {
+define('views/last-viewed/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
@@ -36,8 +36,9 @@ Espo.define('views/last-viewed/list', 'views/list', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.collection.url = 'LastViewed';
-        }
+        },
 
     });
 });

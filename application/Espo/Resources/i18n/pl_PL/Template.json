@@ -11,17 +11,34 @@
     "bottomMargin": "Dolny margines",
     "printFooter": "Drukuj stopkę",
     "footerPosition": "Pozycja stopki",
+    "variables": "Dostępne symbole zastępcze",
+    "pageOrientation": "Orientacja strony",
     "pageFormat": "Format papieru",
+    "fontFace": "Czcionka",
     "pageWidth": "Szerokość strony(mm)",
-    "pageHeight": "Wysokość strony(mm)"
+    "pageHeight": "Wysokość strony(mm)",
+    "headerPosition": "Pozycja nagłówka"
   },
   "labels": {
     "Create Template": "Utwórz szablon"
   },
   "tooltips": {
-    "footer": "Użyj {pageNumber} aby wydrukować numer strony."
+    "footer": "Użyj {pageNumber} aby wydrukować numer strony.",
+    "variables": "Skopiuj i wklej potrzebny symbol zastępczy do nagłówka, treści lub stopki."
   },
   "options": {
+    "pageOrientation": {
+      "Portrait": "Pionowa",
+      "Landscape": "Poziome"
+    },
+    "placeholders": {
+      "today": "Dzisiaj (data)",
+      "now": "Teraz (data-godzina)",
+      "pagebreak": "Podział strony"
+    },
+    "fontFace": {
+      "courier": "Kurier"
+    },
     "pageFormat": {
       "Custom": "Niestandardowe"
     }

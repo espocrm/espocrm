@@ -26,8 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-Espo.define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -38,16 +37,18 @@ Espo.define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'mode
                 {
                     name: 'save',
                     text: this.translate('Apply'),
-                    style: 'primary'
+                    style: 'primary',
                 },
                 {
                     name: 'cancel',
-                    text: 'Cancel'
-                }
+                    text: 'Cancel',
+                },
             ];
 
             var model = new Model();
+
             model.name = 'LayoutManager';
+
             model.set(this.options.attributes || {});
 
             var attributeList = this.options.attributeList;
@@ -58,7 +59,7 @@ Espo.define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'mode
                 el: this.options.el + ' .edit-container',
                 attributeList: attributeList,
                 attributeDefs: attributeDefs,
-                model: model
+                model: model,
             });
         },
 
@@ -67,14 +68,17 @@ Espo.define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'mode
             var attrs = editView.fetch();
 
             editView.model.set(attrs, {silent: true});
+
             if (editView.validate()) {
                 return;
             }
 
             var attributes = {};
+
             attributes = editView.model.attributes;
 
             this.trigger('after:save', attributes);
+
             return true;
         },
     });

@@ -74,7 +74,7 @@ class PortalClient implements Runner
         $this->config = $config;
         $this->errorOutput = $errorOutput;
 
-        $this->params = $params ?? RunnerParams::fromNothing();
+        $this->params = $params ?? RunnerParams::create();
     }
 
     public function run(): void

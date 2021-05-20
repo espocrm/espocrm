@@ -125,7 +125,7 @@ class AddressTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateFromNothing()
     {
-        $address = Address::fromNothing();
+        $address = Address::create();
 
         $this->assertEquals(null, $address->getState());
     }

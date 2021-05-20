@@ -6,12 +6,13 @@
     "dateEnd": "Data zakończenia",
     "direction": "Kierunek",
     "duration": "Czas",
-    "description": "Opis ",
+    "description": "Opis",
     "users": "Użytkownik",
     "contacts": "Kontakty",
     "leads": "Potencjalne Kontakty",
     "reminders": "Przypomnienia",
-    "account": "Klient"
+    "account": "Klient",
+    "acceptanceStatus": "Status akceptacji"
   },
   "options": {
     "status": {

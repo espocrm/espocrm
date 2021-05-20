@@ -370,7 +370,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "INSERT INTO `account` (`id`, `name`) VALUES ('1', 'hello') ON DUPLICATE KEY UPDATE `deleted` = 0, `name` = 'test'";
+            "INSERT INTO `account` (`id`, `name`) VALUES ('1', 'hello') ".
+            "ON DUPLICATE KEY UPDATE `deleted` = 0, `name` = 'test'";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -419,7 +420,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
     public function testSelectAllColumnsWithExtra()
     {
         $expectedSql =
-            "SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted`, LOWER(account.name) AS `lowerName` " .
+            "SELECT account.id AS `id`, account.name AS `name`, account.deleted AS `deleted`, ".
+            "LOWER(account.name) AS `lowerName` " .
             "FROM `account` " .
             "WHERE account.deleted = 0";
 
@@ -466,7 +468,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         );
 
         $expectedSql =
-            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, comment.name AS `name`, comment.deleted AS `deleted` FROM `comment` " .
+            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `postName`, ".
+            "comment.name AS `name`, comment.deleted AS `deleted` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0";
 
@@ -608,7 +611,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'groupBy' => array('postId', 'post.name')
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, COUNT(comment.id) AS `COUNT:id` FROM `comment` " .
+            "SELECT comment.id AS `id`, comment.post_id AS `postId`, post.name AS `post.name`, ".
+            "COUNT(comment.id) AS `COUNT:id` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY comment.post_id, post.name";
@@ -622,7 +626,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'groupBy' => array('MONTH:post.createdAt')
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
+            "SELECT comment.id AS `id`, COUNT(comment.id) AS `COUNT:id`, ".
+            "DATE_FORMAT(post.created_at, '%Y-%m') AS `MONTH:post.createdAt` FROM `comment` " .
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY DATE_FORMAT(post.created_at, '%Y-%m')";
@@ -639,7 +644,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = 0 " .
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' ".
+            "AND notesLeft.deleted = 0 " .
             "WHERE post.deleted = 0";
 
         $this->assertEquals($expectedSql, $sql);
@@ -655,7 +661,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = 0 " .
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' ".
+            "AND notesLeft.deleted = 0 " .
             "AND notesLeft.name IS NOT NULL " .
             "WHERE post.deleted = 0";
 
@@ -672,7 +679,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
-            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' AND notesLeft.deleted = 0 ".
+            "LEFT JOIN `note` AS `notesLeft` ON post.id = notesLeft.parent_id AND notesLeft.parent_type = 'Post' ".
+            "AND notesLeft.deleted = 0 ".
             "AND notesLeft.name = post.name " .
             "WHERE post.deleted = 0";
 
@@ -693,7 +701,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true,
         ]));
 
-        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON (post.name = 'test' OR post.name IS NULL)";
+        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ".
+            "ON (post.name = 'test' OR post.name IS NULL)";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -713,7 +722,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true,
         ]));
 
-        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON post.name IS NULL AND (post.name = 'test' OR post.name IS NULL)";
+        $expectedSql = "SELECT note.id AS `id` FROM `note` LEFT JOIN `post` AS `post` ON post.name IS NULL ".
+            "AND (post.name = 'test' OR post.name IS NULL)";
 
         $this->assertEquals($expectedSql, $sql);
     }
@@ -822,7 +832,9 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             )
         ]));
 
-        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
+            "WHERE post.id IN (SELECT post.id AS `id` FROM `post` ".
+            "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
         $sql = $this->query->compose(Select::fromRaw([
@@ -841,23 +853,13 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             )
         ]));
 
-        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
+        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
+            "WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` ".
+            "WHERE post.name = 'test' AND post.deleted = 0) AND post.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
 
 
-        $sql = $this->query->compose(Select::fromRaw([
-            'from' => 'Post',
-            'select' => ['id', 'name'],
-            'whereClause' => array(
-                'NOT'=> array(
-                    'name' => 'test',
-                    'post.createdById' => '1'
-                )
-            )
-        ]));
 
-        $expectedSql = "SELECT post.id AS `id`, post.name AS `name` FROM `post` WHERE post.id NOT IN (SELECT post.id AS `id` FROM `post` WHERE post.name = 'test' AND post.created_by_id = '1' AND post.deleted = 0) AND post.deleted = 0";
-        $this->assertEquals($expectedSql, $sql);
     }
 
     public function testSelectWithSubquery2()
@@ -886,6 +888,52 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testNot1(): void
+    {
+        $sql = $this->query->compose(
+            Select::fromRaw([
+                'from' => 'Post',
+                'select' => ['id', 'name'],
+                'whereClause' => [
+                    'NOT' => [
+                        'name' => 'test',
+                        'post.createdById' => '1',
+                    ]
+                ]
+            ])
+        );
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
+            "WHERE NOT (post.name = 'test' AND post.created_by_id = '1') AND post.deleted = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testNot2(): void
+    {
+        $sql = $this->query->compose(
+            Select::fromRaw([
+                'from' => 'Post',
+                'select' => ['id', 'name'],
+                'whereClause' => [
+                    'NOT' => [
+                        'OR' => [
+                            ['name' => 'test1'],
+                            ['name' => 'test2'],
+                        ]
+                    ]
+                ]
+            ])
+        );
+
+        $expectedSql =
+            "SELECT post.id AS `id`, post.name AS `name` FROM `post` ".
+            "WHERE NOT (((post.name = 'test1') OR (post.name = 'test2'))) AND post.deleted = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testGroupBy()
     {
         $sql = $this->query->compose(Select::fromRaw([
@@ -894,7 +942,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'groupBy' => ['QUARTER:comment.createdAt']
         ]));
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:id`, CONCAT(YEAR(comment.created_at), '_', QUARTER(comment.created_at)) AS `QUARTER:comment.createdAt` FROM `comment` " .
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CONCAT(YEAR(comment.created_at), '_', ".
+            "QUARTER(comment.created_at)) AS `QUARTER:comment.createdAt` FROM `comment` " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY CONCAT(YEAR(comment.created_at), '_', QUARTER(comment.created_at))";
         $this->assertEquals($expectedSql, $sql);
@@ -905,10 +954,14 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'select' => ['COUNT:id', 'YEAR_5:comment.createdAt'],
             'groupBy' => ['YEAR_5:comment.createdAt']
         ]));
+
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END AS `YEAR_5:comment.createdAt` FROM `comment` " .
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 6 ".
+            "THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END AS `YEAR_5:comment.createdAt` ".
+            "FROM `comment` " .
             "WHERE comment.deleted = 0 " .
-            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) ELSE YEAR(comment.created_at) - 1 END";
+            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 6 THEN YEAR(comment.created_at) ".
+            "ELSE YEAR(comment.created_at) - 1 END";
         $this->assertEquals($expectedSql, $sql);
 
 
@@ -919,9 +972,14 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 7) / 3)) END AS `QUARTER_4:comment.createdAt` FROM `comment` " .
+            "SELECT COUNT(comment.id) AS `COUNT:id`, CASE WHEN MONTH(comment.created_at) >= 5 ".
+            "THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ".
+            "ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 7) / 3)) ".
+            "END AS `QUARTER_4:comment.createdAt` FROM `comment` " .
             "WHERE comment.deleted = 0 " .
-            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', CEIL((MONTH(comment.created_at) + 7) / 3)) END";
+            "GROUP BY CASE WHEN MONTH(comment.created_at) >= 5 THEN CONCAT(YEAR(comment.created_at), '_', ".
+            "FLOOR((MONTH(comment.created_at) - 5) / 3) + 1) ELSE CONCAT(YEAR(comment.created_at) - 1, '_', ".
+            "CEIL((MONTH(comment.created_at) + 7) / 3)) END";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1215,7 +1273,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
         $expectedSql =
             "SELECT comment.id AS `id` FROM `comment` " .
-            "WHERE CONCAT(DATE_FORMAT(comment.created_at, '%Y-%m'), ' ', CONCAT(comment.name, '+')) = 'Test Hello' AND comment.deleted = 0";
+            "WHERE CONCAT(DATE_FORMAT(comment.created_at, '%Y-%m'), ' ', CONCAT(comment.name, '+')) = 'Test Hello' ".
+            "AND comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1411,7 +1470,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'whereClause' => []
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '-03:30')) AS `MONTH_NUMBER:TZ:(comment.created_at,-3.5)` FROM `comment` " .
+            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '-03:30')) ".
+            "AS `MONTH_NUMBER:TZ:(comment.created_at,-3.5)` FROM `comment` " .
             "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1424,7 +1484,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'whereClause' => []
         ]));
         $expectedSql =
-            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '+00:00')) AS `MONTH_NUMBER:TZ:(comment.created_at,0)` FROM `comment` " .
+            "SELECT comment.id AS `id`, MONTH(CONVERT_TZ(comment.created_at, '+00:00', '+00:00')) ".
+            "AS `MONTH_NUMBER:TZ:(comment.created_at,0)` FROM `comment` " .
             "WHERE comment.deleted = 0";
         $this->assertEquals($expectedSql, $sql);
     }
@@ -1544,7 +1605,8 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         ]));
 
         $expectedSql =
-            "SELECT article.id AS `id`, MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AS `relevance` FROM `article` " .
+            "SELECT article.id AS `id`, MATCH (article.description) AGAINST ".
+            "('test' IN BOOLEAN MODE) AS `relevance` FROM `article` " .
             "WHERE MATCH (article.description) AGAINST ('test' IN BOOLEAN MODE) AND article.deleted = 0 " .
             "ORDER BY 2 DESC";
 
@@ -1791,6 +1853,94 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT (test_select.id * 1) AS `testAnother` ".
             "FROM `test_select`";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereExpression1()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select(['id'])
+            ->where([
+                "'value'" => 'test',
+            ])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id` ".
+            "FROM `test_where` ".
+            "WHERE 'value' = 'test'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereExpression2()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select(['id'])
+            ->where([
+                "2:" => 'test',
+            ])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id` ".
+            "FROM `test_where` ".
+            "WHERE 2 = test_where.test";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereExpression3()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select(['id'])
+            ->where([
+                "TRUE:" => 'test',
+            ])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id` ".
+            "FROM `test_where` ".
+            "WHERE TRUE = test_where.test";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereExpression4()
+    {
+        $queryBuilder = new QueryBuilder();
+
+        $select = $queryBuilder->select()
+            ->from('TestWhere')
+            ->select(['id'])
+            ->where([
+                "test:" => '4',
+            ])
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT test_where.id AS `id` ".
+            "FROM `test_where` ".
+            "WHERE test_where.test = 4";
 
         $this->assertEquals($expectedSql, $sql);
     }

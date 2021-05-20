@@ -33,8 +33,10 @@ interface WhereItem
 {
     public function getRaw(): array;
 
-    // Uncomment when PHP 8.0 is a min supported version.
-    //public function getRawValue(): mixed;
-
     public function getRawKey(): string;
+
+    /**
+     * @return mixed
+     */
+    public function getRawValue();
 }

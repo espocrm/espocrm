@@ -133,10 +133,6 @@ class Htmlizer
 
         $data = get_object_vars($entity->getValueMap());
 
-        //$data = $entity->toArray();
-
-        //print_r($data);
-
         $attributeList = $entity->getAttributeList();
 
         $forbiddenAttributeList = [];

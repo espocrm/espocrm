@@ -59,7 +59,7 @@ class DefaultBinding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\ORM\\Defs\\Defs',
+            'Espo\\ORM\\Defs',
             'ormDefs'
         );
 

@@ -31,7 +31,7 @@ namespace Espo\ORM\QueryComposer;
 
 class Functions
 {
-    public static $functionList = [
+    public const FUNCTION_LIST = [
         'COUNT',
         'SUM',
         'AVG',
@@ -131,7 +131,7 @@ class Functions
         'TIMESTAMPDIFF_SECOND',
     ];
 
-    public static $multipleArgumentsFunctionList = [
+    public const MULTIPLE_ARGUMENT_FUNCTION_LIST = [
         'CONCAT',
         'LEFT',
         'TZ',
@@ -167,7 +167,7 @@ class Functions
         'TIMESTAMPDIFF_SECOND',
     ];
 
-    public static $comparisonFunctionList = [
+    public const COMPARISON_FUNCTION_LIST = [
         'LIKE',
         'NOT_LIKE',
         'EQUAL',
@@ -178,7 +178,7 @@ class Functions
         'LESS_THAN_OR_EQUAL',
     ];
 
-    public static $mathOperationFunctionList = [
+    public const MATH_OPERATION_FUNCTION_LIST = [
         'ADD',
         'SUB',
         'MUL',
@@ -186,9 +186,9 @@ class Functions
         'MOD',
     ];
 
-    public static $matchFunctionList = [
+    public const MATCH_FUNCTION_LIST = [
         'MATCH_BOOLEAN',
         'MATCH_NATURAL_LANGUAGE',
-        'MATCH_QUERY_EXPANSION'
+        'MATCH_QUERY_EXPANSION',
     ];
 }

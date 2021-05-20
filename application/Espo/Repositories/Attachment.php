@@ -31,8 +31,6 @@ namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Utils\Util;
-
 use Espo\Entities\Attachment as AttachmentEntity;
 
 use Espo\Core\Di;
@@ -82,8 +80,6 @@ class Attachment extends \Espo\Core\Repositories\Database implements
 
             $entity->set('storage', $defaultStorage);
         }
-
-        $entity->id = Util::generateId();
 
         $contents = $entity->get('contents');
 

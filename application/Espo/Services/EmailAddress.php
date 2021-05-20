@@ -33,7 +33,6 @@ use Espo\{
     ORM\QueryParams\SelectBuilder as QueryBuilder,
 };
 
-
 class EmailAddress extends Record
 {
     const ERASED_PREFIX = 'ERASED:';

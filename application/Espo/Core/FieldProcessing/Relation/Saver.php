@@ -59,23 +59,21 @@ class Saver implements SaverInterface
 
     public function process(Entity $entity, SaverParams $params): void
     {
-        $options = $params->getRawOptions();
-
-        $this->processMany($entity, $options);
-        $this->processHasOne($entity, $options);
-        $this->processBelongsToHasOne($entity, $options);
+        $this->processMany($entity, $params);
+        $this->processHasOne($entity);
+        $this->processBelongsToHasOne($entity);
     }
 
-    private function processMany(Entity $entity, array $options): void
+    private function processMany(Entity $entity, SaverParams $params): void
     {
         $entityType = $entity->getEntityType();
 
         foreach ($this->getManyRelationList($entityType) as $name) {
-            $this->processManyItem($entity, $name, $options);
+            $this->processManyItem($entity, $name, $params);
         }
     }
 
-    private function processManyItem(Entity $entity, string $name, array $options): void
+    private function processManyItem(Entity $entity, string $name, SaverParams $params): void
     {
         $idListAttribute = $name . 'Ids';
         $columnsAttribute = $name . 'Columns';
@@ -84,10 +82,10 @@ class Saver implements SaverInterface
             return;
         }
 
-        $this->linkMultipleSaver->process($entity, $name, $options);
+        $this->linkMultipleSaver->process($entity, $name, $params);
     }
 
-    private function processHasOne(Entity $entity, array $options): void
+    private function processHasOne(Entity $entity): void
     {
         $entityType = $entity->getEntityType();
 
@@ -148,7 +146,7 @@ class Saver implements SaverInterface
         }
     }
 
-    private function processBelongsToHasOne(Entity $entity, array $options): void
+    private function processBelongsToHasOne(Entity $entity): void
     {
         $entityType = $entity->getEntityType();
 

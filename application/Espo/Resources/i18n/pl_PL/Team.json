@@ -1,17 +1,20 @@
 {
   "fields": {
     "name": "Nazwa",
-    "roles": "Rola"
+    "roles": "Rola",
+    "layoutSet": "Zestaw układu"
   },
   "links": {
     "users": "Użytkownik",
     "notes": "Notatki",
     "roles": "Role",
-    "inboundEmails": "Grupowe konta pocztowe"
+    "inboundEmails": "Grupowe konta pocztowe",
+    "layoutSet": "Zestaw układu"
   },
   "tooltips": {
-    "roles": "Wszyscy użytkownicy z zespołu otrzymają dostęp do ustawień zgodnie z rolami.",
-    "positionList": "Pozycje dostępne w tym zespole, np sprzedawca, menadżer."
+    "roles": "Dostęp roli. Użytkownicy tego zespołu uzyskują poziom kontroli dostępu z wybranych ról.",
+    "positionList": "Dostępne stanowiska w tym zespole. N.p. Sprzedawca, kierownik.",
+    "layoutSet": "Zapewnia możliwość posiadania układów różniących się od standardowych. Zestaw układów zostanie zastosowany do użytkowników, dla których ten zespół jest ustawiony jako zespół domyślny."
   },
   "labels": {
     "Create Team": "Utwórz Zespół"

@@ -26,16 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
-/** * Example:
- * Lead: {
- *   edit: 'own',
- *   read: 'team',
- *   delete: 'no',
- * }
- */
-
-define('acl-manager', ['acl'], function (Acl) {
+define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
 
     var AclManager = function (user, implementationClassMap, aclAllowDeleteCreated) {
         this.setEmpty();
@@ -57,8 +48,9 @@ define('acl-manager', ['acl'], function (Acl) {
             this.data = {
                 table: {},
                 fieldTable:  {},
-                fieldTableQuickAccess: {}
+                fieldTableQuickAccess: {},
             };
+
             this.implementationHash = {};
             this.forbiddenFieldsCache = {};
             this.implementationClassMap = {};
@@ -68,19 +60,24 @@ define('acl-manager', ['acl'], function (Acl) {
         getImplementation: function (scope) {
             if (!(scope in this.implementationHash)) {
                 var implementationClass = Acl;
+
                 if (scope in this.implementationClassMap) {
                     implementationClass = this.implementationClassMap[scope];
                 }
+
                 var forbiddenFieldList = this.getScopeForbiddenFieldList(scope);
+
                 var params = {
                     aclAllowDeleteCreated: this.aclAllowDeleteCreated,
                     teamsFieldIsForbidden: !!~forbiddenFieldList.indexOf('teams'),
                     forbiddenFieldList: forbiddenFieldList,
                 };
+
                 var obj = new implementationClass(this.getUser(), scope, params);
 
                 this.implementationHash[scope] = obj;
             }
+
             return this.implementationHash[scope];
         },
 
@@ -90,6 +87,7 @@ define('acl-manager', ['acl'], function (Acl) {
 
         set: function (data) {
             data = data || {};
+
             this.data = data;
             this.data.table = this.data.table || {};
             this.data.fieldTable = this.data.fieldTable || {};
@@ -158,12 +156,13 @@ define('acl-manager', ['acl'], function (Acl) {
             var scope = model.name;
 
             // todo move this to custom acl
-            if (action == 'edit') {
+            if (action === 'edit') {
                 if (!model.isEditable()) {
                     return false;
                 }
             }
-            if (action == 'delete') {
+
+            if (action === 'delete') {
                 if (!model.isRemovable()) {
                     return false;
                 }
@@ -178,6 +177,7 @@ define('acl-manager', ['acl'], function (Acl) {
             var impl = this.getImplementation(scope);
 
             var methodName = 'checkModel' + Espo.Utils.upperCaseFirst(action);
+
             if (methodName in impl) {
                 return impl[methodName](model, data, precise);
             }
@@ -261,7 +261,7 @@ define('acl-manager', ['acl'], function (Acl) {
             var key = scope + '_' + action + '_' + thresholdLevel;
 
             if (key in this.forbiddenFieldsCache) {
-                return this.forbiddenFieldsCache[key];
+                return Utils.clone(this.forbiddenFieldsCache[key]);
             }
 
             var levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
@@ -287,7 +287,7 @@ define('acl-manager', ['acl'], function (Acl) {
 
             this.forbiddenFieldsCache[key] = fieldList;
 
-            return fieldList;
+            return Utils.clone(fieldList);
         },
 
         getScopeForbiddenAttributeList: function (scope, action, thresholdLevel) {
@@ -297,7 +297,7 @@ define('acl-manager', ['acl'], function (Acl) {
             var key = scope + '_' + action + '_' + thresholdLevel;
 
             if (key in this.forbiddenAttributesCache) {
-                return this.forbiddenAttributesCache[key];
+                return Utils.clone(this.forbiddenAttributesCache[key]);
             }
 
             var levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
@@ -324,7 +324,7 @@ define('acl-manager', ['acl'], function (Acl) {
 
             this.forbiddenAttributesCache[key] = attributeList;
 
-            return attributeList;
+            return Utils.clone(attributeList);
         },
 
         checkTeamAssignmentPermission: function (teamId) {

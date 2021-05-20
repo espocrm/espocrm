@@ -8,5 +8,9 @@
   },
   "titles": {
     "GoogleMaps": "Mapy Google"
+  },
+  "help": {
+    "Google": "**Uzyskaj poświadczenia OAuth 2.0 z Google Developers Console.**\n\nOdwiedź [Google Developers Console] (https://console.developers.google.com/project) aby uzyskać dane uwierzytelniające OAuth 2.0, takie jak identyfikator klienta i klucz tajny klienta, które są potrzebne zarówno Google, jak i aplikacji EspoCRM.",
+    "GoogleMaps": "Uzyskaj klucz API [tutaj] (https://developers.google.com/maps/documentation/javascript/get-api-key)."
   }
 }

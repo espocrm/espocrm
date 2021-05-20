@@ -41,7 +41,7 @@ use Espo\Core\Exceptions\{
 
 use Espo\ORM\{
     Entity,
-    Repository\Repository,
+    Repository\RDBRepository,
     Collection,
     EntityManager,
 };
@@ -84,7 +84,8 @@ class Service implements Crud,
     Di\FieldUtilAware,
     Di\FieldValidationManagerAware,
     Di\RecordServiceContainerAware,
-    Di\SelectBuilderFactoryAware
+    Di\SelectBuilderFactoryAware,
+    Di\AssignmentCheckerManagerAware
 {
     use Di\ConfigSetter;
     use Di\ServiceFactorySetter;
@@ -97,6 +98,7 @@ class Service implements Crud,
     use Di\FieldValidationManagerSetter;
     use Di\RecordServiceContainerSetter;
     use Di\SelectBuilderFactorySetter;
+    use Di\AssignmentCheckerManagerSetter;
 
     protected $getEntityBeforeUpdate = false;
 
@@ -209,9 +211,9 @@ class Service implements Crud,
         $this->entityType = $entityType;
     }
 
-    protected function getRepository(): Repository
+    protected function getRepository(): RDBRepository
     {
-        return $this->entityManager->getRepository($this->entityType);
+        return $this->entityManager->getRDBRepository($this->entityType);
     }
 
     public function processActionHistoryRecord(string $action, Entity $entity): void
@@ -271,16 +273,11 @@ class Service implements Crud,
 
     /**
      * Get an entity by ID. Access control check is performed.
-     * If ID is not specified then it will return an empty entity.
      *
      * @throws ForbiddenSilent If no read access.
      */
-    public function getEntity(?string $id = null): ?Entity
+    public function getEntity(string $id): ?Entity
     {
-        if ($id === null) {
-            return $this->getRepository()->getNew();
-        }
-
         $entity = $this->getRepository()->getById($id);
 
         if (!$entity && $this->user->isAdmin()) {
@@ -345,10 +342,6 @@ class Service implements Crud,
         $loadProcessor->process($entity, $params);
     }
 
-    public function loadAdditionalFieldsForExport(Entity $entity)
-    {
-    }
-
     /**
      * @return void
      * @throws BadRequest
@@ -356,7 +349,7 @@ class Service implements Crud,
     public function processValidation(Entity $entity, $data)
     {
         $params = FieldValidationParams
-            ::fromNothing()
+            ::create()
             ->withSkipFieldList($this->validateSkipFieldList)
             ->withTypeSkipFieldList('required', $this->validateRequiredSkipFieldList);
 
@@ -364,253 +357,21 @@ class Service implements Crud,
     }
 
     /**
-     * @return void
      * @throws Forbidden
      */
-    public function processAssignmentCheck(Entity $entity)
+    protected function processAssignmentCheck(Entity $entity): void
     {
         if (!$this->checkAssignment($entity)) {
             throw new Forbidden("Assignment failure: assigned user or team not allowed.");
         }
     }
 
+    /**
+     * Check whether assignment can be applied for an entity.
+     */
     public function checkAssignment(Entity $entity): bool
     {
-        if (!$this->isPermittedAssignedUser($entity)) {
-            return false;
-        }
-
-        if (!$this->isPermittedTeams($entity)) {
-            return false;
-        }
-
-        if ($entity->hasLinkMultipleField('assignedUsers')) {
-            if (!$this->isPermittedAssignedUsers($entity)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public function isPermittedAssignedUsers(Entity $entity): bool
-    {
-        if (!$entity->hasLinkMultipleField('assignedUsers')) {
-            return true;
-        }
-
-        if ($this->user->isPortal()) {
-            if (count($entity->getLinkMultipleIdList('assignedUsers')) === 0) {
-                return true;
-            }
-        }
-
-        $assignmentPermission = $this->acl->get('assignmentPermission');
-
-        if (
-            $assignmentPermission === true ||
-            $assignmentPermission === AclTable::LEVEL_YES ||
-            !in_array($assignmentPermission, [AclTable::LEVEL_TEAM, AclTable::LEVEL_NO])
-        ) {
-            return true;
-        }
-
-        $toProcess = false;
-
-        if (!$entity->isNew()) {
-            $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
-
-            if ($entity->isAttributeChanged('assignedUsersIds')) {
-                $toProcess = true;
-            }
-        }
-        else {
-            $toProcess = true;
-        }
-
-        $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
-
-        if ($toProcess) {
-            if (empty($userIdList)) {
-                if ($assignmentPermission == AclTable::LEVEL_NO && !$this->user->isApi()) {
-                    return false;
-                }
-
-                return true;
-            }
-
-            $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
-
-            if ($assignmentPermission === AclTable::LEVEL_NO) {
-                foreach ($userIdList as $userId) {
-                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
-                        continue;
-                    }
-
-                    if ($this->user->id != $userId) {
-                        return false;
-                    }
-                }
-            } else if ($assignmentPermission === AclTable::LEVEL_TEAM) {
-                $teamIdList = $this->user->getLinkMultipleIdList('teams');
-
-                foreach ($userIdList as $userId) {
-                    if (!$entity->isNew() && in_array($userId, $fetchedAssignedUserIdList)) {
-                        continue;
-                    }
-
-                    if (
-                        !$this->entityManager
-                            ->getRepository('User')
-                            ->checkBelongsToAnyOfTeams($userId, $teamIdList)
-                    ) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public function isPermittedAssignedUser(Entity $entity): bool
-    {
-        if (!$entity->hasAttribute('assignedUserId')) {
-            return true;
-        }
-
-        $assignedUserId = $entity->get('assignedUserId');
-
-        if ($this->user->isPortal()) {
-            if (!$entity->isAttributeChanged('assignedUserId') && empty($assignedUserId)) {
-                return true;
-            }
-        }
-
-        $assignmentPermission = $this->acl->get('assignmentPermission');
-
-        if (
-            $assignmentPermission === true ||
-            $assignmentPermission === AclTable::LEVEL_YES ||
-            !in_array($assignmentPermission, [AclTable::LEVEL_TEAM, AclTable::LEVEL_NO])
-        ) {
-            return true;
-        }
-
-        $toProcess = false;
-
-        if (!$entity->isNew()) {
-            if ($entity->isAttributeChanged('assignedUserId')) {
-                $toProcess = true;
-            }
-        } else {
-            $toProcess = true;
-        }
-
-        if ($toProcess) {
-            if (empty($assignedUserId)) {
-                if ($assignmentPermission === AclTable::LEVEL_NO && !$this->user->isApi()) {
-                    return false;
-                }
-
-                return true;
-            }
-
-            if ($assignmentPermission === AclTable::LEVEL_NO) {
-                if ($this->user->id !== $assignedUserId) {
-                    return false;
-                }
-            }
-            else if ($assignmentPermission === AclTable::LEVEL_TEAM) {
-                $teamIdList = $this->user->get('teamsIds');
-
-                if (
-                    !$this->entityManager
-                        ->getRepository('User')
-                        ->checkBelongsToAnyOfTeams($assignedUserId, $teamIdList)
-                ) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public function isPermittedTeams(Entity $entity): bool
-    {
-        $assignmentPermission = $this->acl->get('assignmentPermission');
-
-        if (
-            empty($assignmentPermission) ||
-            $assignmentPermission === true ||
-            !in_array($assignmentPermission, [AclTable::LEVEL_TEAM, AclTable::LEVEL_NO])
-        ) {
-            return true;
-        }
-
-        if (!$entity->hasLinkMultipleField('teams')) {
-            return true;
-        }
-
-        $teamIdList = $entity->getLinkMultipleIdList('teams');
-
-        if (empty($teamIdList)) {
-            if ($assignmentPermission === 'team') {
-                if ($entity->hasLinkMultipleField('assignedUsers')) {
-                    $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
-
-                    if (empty($assignedUserIdList)) {
-                        return false;
-                    }
-                }
-                else if ($entity->hasAttribute('assignedUserId')) {
-                    if (!$entity->get('assignedUserId')) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-
-        $newIdList = [];
-
-        if (!$entity->isNew()) {
-            $existingIdList = [];
-
-            $teamCollection = $this->entityManager
-                ->getRepository($entity->getEntityType())
-                ->getRelation($entity, 'teams')
-                ->select('id')
-                ->find();
-
-            foreach ($teamCollection as $team) {
-                $existingIdList[] = $team->id;
-            }
-
-            foreach ($teamIdList as $id) {
-                if (!in_array($id, $existingIdList)) {
-                    $newIdList[] = $id;
-                }
-            }
-        } else {
-            $newIdList = $teamIdList;
-        }
-
-        if (empty($newIdList)) {
-            return true;
-        }
-
-        $userTeamIdList = $this->user->getLinkMultipleIdList('teams');
-
-        foreach ($newIdList as $id) {
-            if (!in_array($id, $userTeamIdList)) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->assignmentCheckerManager->check($this->user, $entity);
     }
 
     protected function filterInputAttribute($attribute, $value)
@@ -800,7 +561,7 @@ class Service implements Crud,
             throw new ForbiddenSilent();
         }
 
-        $entity = $this->getRepository()->get();
+        $entity = $this->getRepository()->getNew();
 
         $this->filterCreateInput($data);
 
@@ -841,17 +602,16 @@ class Service implements Crud,
             throw new ForbiddenSilent();
         }
 
-        if (empty($id)) {
+        if (!$id) {
             throw new BadRequest("ID is empty.");
         }
 
         $this->filterUpdateInput($data);
 
-        if ($this->getEntityBeforeUpdate) {
-            $entity = $this->getEntity($id);
-        } else {
-            $entity = $this->getRepository()->get($id);
-        }
+        $entity =
+            $this->getEntityBeforeUpdate ?
+            $this->getEntity($id) :
+            $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound("Record {$id} not found.");
@@ -897,11 +657,11 @@ class Service implements Crud,
             throw new ForbiddenSilent();
         }
 
-        if (empty($id)) {
+        if (!$id) {
             throw new BadRequest("ID is empty.");
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound("Record {$id} not found.");
@@ -1044,7 +804,7 @@ class Service implements Crud,
             throw new ForbiddenSilent("No access.");
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1168,7 +928,7 @@ class Service implements Crud,
 
         $this->processForbiddenLinkEditCheck($link);
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1236,7 +996,7 @@ class Service implements Crud,
 
         $this->processForbiddenLinkEditCheck($link);
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1294,7 +1054,7 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1347,7 +1107,7 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1386,19 +1146,19 @@ class Service implements Crud,
         $this->getStreamService()->unfollowEntity($entity, $foreignId);
     }
 
-    public function massLink(string $id, string $link, array $where, ?array $selectData = null)
+    public function massLink(string $id, string $link, SearchParams $searchParams): bool
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
 
-        if (empty($id) || empty($link)) {
+        if (!$id || !$link) {
             throw new BadRequest;
         }
 
         $this->processForbiddenLinkEditCheck($link);
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();
@@ -1411,7 +1171,7 @@ class Service implements Crud,
         $methodName = 'massLink' . ucfirst($link);
 
         if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $where, $selectData);
+            return $this->$methodName($id, $searchParams);
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
@@ -1430,21 +1190,10 @@ class Service implements Crud,
             throw new Forbidden();
         }
 
-        if (!is_array($where)) {
-            $where = [];
-        }
-        $params['where'] = $where;
-
-        if (is_array($selectData)) {
-            foreach ($selectData as $k => $v) {
-                $params[$k] = $v;
-            }
-        }
-
         $query = $this->selectBuilderFactory->create()
             ->from($foreignEntityType)
             ->withStrictAccessControl()
-            ->withSearchParams(SearchParams::fromRaw($params))
+            ->withSearchParams($searchParams->withSelect(null))
             ->build();
 
         if ($this->acl->getLevel($foreignEntityType, $accessActionRequired) === AclTable::LEVEL_ALL) {
@@ -1544,7 +1293,7 @@ class Service implements Crud,
             throw new Forbidden();
         }
 
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFoundSilent();
@@ -1571,7 +1320,7 @@ class Service implements Crud,
      */
     public function unfollow(string $id, ?string $userId = null): void
     {
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFoundSilent();
@@ -1684,7 +1433,7 @@ class Service implements Crud,
 
     protected function findLinkedFollowers(string $id, SearchParams $params): RecordCollection
     {
-        $entity = $this->getRepository()->get($id);
+        $entity = $this->getRepository()->getById($id);
 
         if (!$entity) {
             throw new NotFound();

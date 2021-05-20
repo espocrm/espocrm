@@ -124,24 +124,33 @@ class FieldUtil
         return $attributeList;
     }
 
-    public function getActualAttributeList(string $entityType, string $name): array
+    /**
+     * Get storable attributes of a specific field.
+     */
+    public function getActualAttributeList(string $entityType, string $field): array
     {
         return array_merge(
-            $this->getAttributeListByType($entityType, $name, 'actual'),
-            $this->getAdditionalActualAttributeList($entityType, $name)
+            $this->getAttributeListByType($entityType, $field, 'actual'),
+            $this->getAdditionalActualAttributeList($entityType, $field)
         );
     }
 
-    public function getNotActualAttributeList(string $entityType, string $name): array
+    /**
+     * Get non-storable attributes of a specific field.
+     */
+    public function getNotActualAttributeList(string $entityType, string $field): array
     {
-        return $this->getAttributeListByType($entityType, $name, 'notActual');
+        return $this->getAttributeListByType($entityType, $field, 'notActual');
     }
 
-    public function getAttributeList(string $entityType, string $name): array
+    /**
+     * Get attributes of a specific field.
+     */
+    public function getAttributeList(string $entityType, string $field): array
     {
         return array_merge(
-            $this->getActualAttributeList($entityType, $name),
-            $this->getNotActualAttributeList($entityType, $name)
+            $this->getActualAttributeList($entityType, $field),
+            $this->getNotActualAttributeList($entityType, $field)
         );
     }
 

@@ -60,6 +60,10 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
 
         duplicateAction: false,
 
+        saveAndContinueEditingAction: true,
+
+        saveAndNewAction: true,
+
         actionSave: function () {
             this.save();
         },
@@ -86,11 +90,43 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
         setupActionItems: function () {
             Dep.prototype.setupActionItems.call(this);
 
-            if (this.saveAndContinueEditingAction) {
+            if (
+                this.saveAndContinueEditingAction &&
+                this.getAcl().checkScope(this.entityType, 'edit')
+            ) {
                 this.dropdownItemList.push({
                     name: 'saveAndContinueEditing',
                     label: 'Save & Continue Editing',
                 });
+            }
+
+            if (
+                this.isNew &&
+                this.saveAndNewAction &&
+                this.getAcl().checkScope(this.entityType, 'create')
+            ) {
+                this.dropdownItemList.push({
+                    name: 'saveAndNew',
+                    label: 'Save & New',
+                });
+            }
+        },
+
+        actionSaveAndNew: function () {
+            var proceedCallback = function () {
+                Espo.Ui.success(this.translate('Created'));
+
+                this.getRouter().dispatch(this.scope, 'create', {
+                    rootUrl: this.options.rootUrl,
+                });
+
+                this.getRouter().navigate('#' + this.scope + '/create', {trigger: false});
+            }.bind(this)
+
+            this.save(proceedCallback, true);
+
+            if (this.lastSaveCancelReason === 'notModified') {
+                 proceedCallback();
             }
         },
 

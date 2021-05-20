@@ -1,20 +1,38 @@
 {
   "fields": {
+    "parent": "Rodzic",
     "dateStart": "Data rozpoczęcia",
     "dateEnd": "Data zakończenia",
     "duration": "Czas trwania",
-    "reminders": "Przypomnienia"
+    "reminders": "Przypomnienia",
+    "dateStartDate": "Data rozpoczęcia (cały dzień)",
+    "dateEndDate": "Data zakończenia (cały dzień)",
+    "isAllDay": "Cały dzień"
+  },
+  "links": {
+    "parent": "Rodzic"
   },
   "options": {
     "status": {
-      "Planned": "Planowane"
+      "Planned": "Planowane",
+      "Held": "Odbyło się",
+      "Not Held": "Nie odbyło się"
     }
   },
   "labels": {
     "Create {entityType}": "Utwórz {entityTypeTranslated}",
-    "Schedule {entityType}": "Zaplanuj {entityTypeTranslated} "
+    "Schedule {entityType}": "Zaplanuj {entityTypeTranslated}",
+    "Log {entityType}": "Dziennik {entityTypeTranslated}",
+    "Set Held": "Ustaw jako Odbyte",
+    "Set Not Held": "Ustaw jako Nieodbyte"
+  },
+  "massActions": {
+    "setHeld": "Ustaw jako Odbyte",
+    "setNotHeld": "Ustaw jako nieodbyty"
   },
   "presetFilters": {
-    "planned": "Planowane"
+    "planned": "Planowane",
+    "held": "Trzymany",
+    "todays": "Dzisiejsze"
   }
 }

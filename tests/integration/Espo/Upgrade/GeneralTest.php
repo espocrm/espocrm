@@ -29,11 +29,14 @@
 
 namespace tests\integration\Espo\Upgrade;
 
+use Espo\Core\Upgrades\UpgradeManager;
+
 class GeneralTest extends \tests\integration\Core\BaseTestCase
 {
     protected $dataFile = 'InitData.php';
 
     protected $userName = 'admin';
+
     protected $password = '1';
 
     protected $packagePath = 'Upgrade/General.zip';
@@ -43,7 +46,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $fileData = file_get_contents($this->normalizePath($this->packagePath));
         $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
 
-        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+        $upgradeManager = new UpgradeManager($this->getContainer());
         $upgradeId = $upgradeManager->upload($fileData);
 
         $this->assertStringMatchesFormat('%x', $upgradeId);
@@ -58,7 +61,8 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
     {
         $upgradeId = $this->testUpload();
 
-        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+        $upgradeManager = new UpgradeManager($this->getContainer());
+
         $upgradeManager->install(array('id' => $upgradeId));
 
         $this->assertFileDoesNotExist('data/upload/upgrades/' . $upgradeId . 'z');
@@ -79,7 +83,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
         $upgradeId = $this->testInstall();
 
-        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+        $upgradeManager = new UpgradeManager($this->getContainer());
         $upgradeManager->uninstall(array('id' => $upgradeId));
     }
 
@@ -89,7 +93,7 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
         $upgradeId = $this->testInstall();
 
-        $upgradeManager = new \Espo\Core\UpgradeManager($this->getContainer());
+        $upgradeManager = new UpgradeManager($this->getContainer());
         $upgradeManager->delete(array('id' => $upgradeId));
     }
 }

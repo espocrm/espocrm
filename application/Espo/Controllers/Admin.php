@@ -35,7 +35,7 @@ use Espo\Core\{
     Utils\AdminNotificationManager,
     Utils\SystemRequirements,
     Utils\ScheduledJob,
-    UpgradeManager,
+    Upgrades\UpgradeManager,
     Exceptions\Forbidden,
     Api\Request,
 };

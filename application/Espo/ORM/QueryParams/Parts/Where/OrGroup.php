@@ -29,14 +29,11 @@
 
 namespace Espo\ORM\QueryParams\Parts\Where;
 
-use Espo\ORM\{
-    QueryParams\Parts\WhereClause,
-    QueryParams\Parts\WhereItem,
-};
+use Espo\ORM\QueryParams\Parts\WhereItem;
 
 class OrGroup implements WhereItem
 {
-    protected $rawValue = [];
+    private $rawValue = [];
 
     public function __construct()
     {
@@ -44,14 +41,7 @@ class OrGroup implements WhereItem
 
     public function getRaw(): array
     {
-        return [
-            'OR' => $this->rawValue
-        ];
-    }
-
-    public function getRawValue(): array
-    {
-        return $this->rawValue;
+        return ['OR' => $this->rawValue];
     }
 
     public function getRawKey(): string
@@ -59,27 +49,36 @@ class OrGroup implements WhereItem
         return 'OR';
     }
 
-    public function add(WhereItem $item): void
+    /**
+     * @return array
+     */
+    public function getRawValue()
     {
-        $key = $item->getRawKey();
-        $value = $item->getRawValue();
+        return $this->rawValue;
+    }
 
-        if ($item instanceof WhereClause) {
-            $this->rawValue[] = $value;
+    public static function fromRaw(array $whereClause): self
+    {
+        $obj = new self();
 
-            return;
+        $obj->rawValue = $whereClause;
+
+        return $obj;
+    }
+
+    public static function create(WhereItem ...$itemList): self
+    {
+        $builder = self::createBuilder();
+
+        foreach ($itemList as $item) {
+            $builder->add($item);
         }
 
-        if (empty($this->rawValue)) {
-            $this->rawValue[$key] = $value;
+        return $builder->build();
+    }
 
-            return;
-        }
-
-        if (count($this->rawValue) === 1 && array_keys($this->rawValue)[0] !== 0) {
-            $this->rawValue = [$this->rawValue];
-        }
-
-        $this->rawValue[] = [$key => $value];
+    public static function createBuilder(): OrGroupBuilder
+    {
+        return new OrGroupBuilder();
     }
 }

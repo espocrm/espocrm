@@ -61,7 +61,7 @@ class EntityDefs
     }
 
     /**
-     * Get an entity name (type).
+     * Get an entity name (entity type).
      */
     public function getName(): string
     {

@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Laminas\Mail\Storage;
+use Laminas\Mail\Message;
 
 use Espo\ORM\Entity;
 
@@ -37,11 +38,11 @@ use Espo\Core\{
     Exceptions\Error,
     Exceptions\BadRequest,
     Mail\Importer,
+    Mail\ImporterData,
     Mail\MessageWrapper,
     Mail\Mail\Storage\Imap,
-    Mail\Parsers\MailMimeParser,
-    Notification\AssignmentNotificatorFactory,
-    Notification\AssignmentNotificator,
+    Mail\Parser,
+    Mail\ParserFactory,
 };
 
 use Espo\Services\{
@@ -55,6 +56,8 @@ use Espo\Entities\{
     User,
     Email as EmailEntity,
 };
+
+use Espo\Modules\Crm\Entities\CaseObj as CaseEntity;
 
 use Espo\Core\Di;
 
@@ -72,15 +75,15 @@ class InboundEmail extends RecordService implements
     use Di\CryptSetter;
     use Di\EmailSenderSetter;
 
-    private $notificator = null;
-
     private $campaignService = null;
 
     protected $storageClassName = Imap::class;
 
-    protected $parserClassName = MailMimeParser::class;
+    private const DEFAULT_AUTOREPLY_SUPPRESS_PERIOD = '2 hours';
 
-    const PORTION_LIMIT = 20;
+    private const DEFAULT_AUTOREPLY_LIMIT = 5;
+
+    protected const PORTION_LIMIT = 20;
 
     protected function getCrypt()
     {
@@ -111,10 +114,10 @@ class InboundEmail extends RecordService implements
         }
     }
 
-    public function getFolders($params)
+    public function getFolders($params): array
     {
         if (!empty($params['id'])) {
-            $account = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+            $account = $this->entityManager->getEntity('InboundEmail', $params['id']);
 
             if ($account) {
                 $params['password'] = $this->getCrypt()->decrypt($account->get('password'));
@@ -128,7 +131,7 @@ class InboundEmail extends RecordService implements
 
         $folders = new RecursiveIteratorIterator($storage->getFolders(), RecursiveIteratorIterator::SELF_FIRST);
 
-        foreach ($folders as $name => $folder) {
+        foreach ($folders as $folder) {
             $foldersArr[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
         }
 
@@ -138,7 +141,7 @@ class InboundEmail extends RecordService implements
     public function testConnection(array $params)
     {
         if (!empty($params['id'])) {
-            $account = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+            $account = $this->entityManager->getEntity('InboundEmail', $params['id']);
 
             if ($account) {
                 $params['imapHandler'] = $account->get('imapHandler');
@@ -154,18 +157,23 @@ class InboundEmail extends RecordService implements
         throw new Error();
     }
 
+    protected function createParser(): Parser
+    {
+        return $this->injectableFactory->create(ParserFactory::class)->create();
+    }
+
+    protected function createImporter(): Importer
+    {
+        return $this->injectableFactory->create(Importer::class);
+    }
+
     public function fetchFromMailServer(Entity $emailAccount)
     {
         if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
             throw new Error("Group Email Account {$emailAccount->id} is not active.");
         }
 
-        $importer = new Importer(
-            $this->getEntityManager(),
-            $this->getConfig(),
-            $this->getNotificator(),
-            $this->parserClassName
-        );
+        $importer = $this->createImporter();
 
         $teamId = $emailAccount->get('teamId');
 
@@ -181,8 +189,8 @@ class InboundEmail extends RecordService implements
 
         if (!empty($teamIdList)) {
             if ($emailAccount->get('addAllTeamUsers')) {
-                $userList = $this->getEntityManager()
-                    ->getRepository('User')
+                $userList = $this->entityManager
+                    ->getRDBRepository('User')
                     ->select(['id'])
                     ->distinct()
                     ->join('teams')
@@ -202,8 +210,8 @@ class InboundEmail extends RecordService implements
             $teamIdList[] = $teamId;
         }
 
-        $filterCollection = $this->getEntityManager()
-            ->getRepository('EmailFilter')
+        $filterCollection = $this->entityManager
+            ->getRDBRepository('EmailFilter')
             ->where([
                 'action' => 'Skip',
                 'OR' => [
@@ -212,7 +220,7 @@ class InboundEmail extends RecordService implements
                         'parentId' => $emailAccount->id,
                     ],
                     [
-                        'parentId' => null
+                        'parentId' => null,
                     ],
                 ],
             ])
@@ -245,6 +253,7 @@ class InboundEmail extends RecordService implements
         $storage = $this->getStorage($emailAccount);
 
         $monitoredFolders = $emailAccount->get('monitoredFolders');
+
         if (empty($monitoredFolders)) {
             $monitoredFolders = 'INBOX';
         }
@@ -254,11 +263,12 @@ class InboundEmail extends RecordService implements
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
 
-            $portionLimit = $this->getConfig()->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
+            $portionLimit = $this->config->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
 
             try {
                 $storage->selectFolder($folder);
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 $this->log->error(
                     'InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
                 );
@@ -284,11 +294,11 @@ class InboundEmail extends RecordService implements
             }
 
             $previousLastUID = $lastUID;
-            $previousLastDate = $lastDate;
 
             if (!empty($lastUID) && !$forceByDate) {
                 $idList = $storage->getIdsFromUID($lastUID);
-            } else {
+            }
+            else {
                 $fetchSince = $emailAccount->get('fetchSince');
 
                 if ($lastDate) {
@@ -296,13 +306,16 @@ class InboundEmail extends RecordService implements
                 }
 
                 $dt = null;
+
                 try {
                     $dt = new DateTime($fetchSince);
-                } catch (Exception $e) {}
+                }
+                catch (Exception $e) {}
 
                 if ($dt) {
                     $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
-                } else {
+                }
+                else {
                     return false;
                 }
             }
@@ -314,6 +327,7 @@ class InboundEmail extends RecordService implements
             }
 
             $k = 0;
+
             foreach ($idList as $i => $id) {
                 if ($k == count($idList) - 1) {
                     $lastUID = $storage->getUniqueId($id);
@@ -336,16 +350,19 @@ class InboundEmail extends RecordService implements
 
                 try {
                     $toSkip = false;
-                    $parser = new $this->parserClassName($this->getEntityManager());
+
+                    $parser = $this->createParser();
+
                     $message = new MessageWrapper($storage, $id, $parser);
 
-                    if ($message && $message->checkAttribute('from')) {
+                    if ($message->hasAttribute('from')) {
                         $fromString = $message->getAttribute('from');
 
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
                             try {
                                 $toSkip = $this->processBouncedMessage($message) || $toSkip;
-                            } catch (Throwable $e) {
+                            }
+                            catch (Throwable $e) {
                                 $this->log->error(
                                     'InboundEmail ' . $emailAccount->id .
                                     ' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage()
@@ -354,31 +371,44 @@ class InboundEmail extends RecordService implements
                         }
                     }
 
+                    $skipAutoReply = $this->checkMessageCannotBeAutoReplied($message);
+
+                    $isAutoReply = $this->checkMessageIsAutoReply($message);
+
                     if (!$toSkip) {
                         if ($message->isFetched() && $emailAccount->get('keepFetchedEmailsUnread')) {
                             $flags = $message->getFlags();
                         }
 
+                        $importerData = ImporterData
+                            ::create()
+                            ->withAssignedUserId($userId)
+                            ->withTeamIdList($teamIdList)
+                            ->withUserIdList($userIdList)
+                            ->withFilterList($filterCollection)
+                            ->withFetchOnlyHeader($fetchOnlyHeader);
+
                         $email = $this->importMessage(
                             $importer,
                             $emailAccount,
                             $message,
-                            $teamIdList,
-                            $userId,
-                            $userIdList,
-                            $filterCollection,
-                            $fetchOnlyHeader,
-                            null
+                            $importerData
                         );
 
                         if ($emailAccount->get('keepFetchedEmailsUnread')) {
-                            if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
+                            if (
+                                is_array($flags) &&
+                                count($flags) &&
+                                empty($flags[Storage::FLAG_SEEN])
+                            ) {
                                 unset($flags[Storage::FLAG_RECENT]);
+
                                 $storage->setFlags($id, $flags);
                             }
                         }
                     }
-                } catch (Throwable $e) {
+                }
+                catch (Throwable $e) {
                     $this->log->error(
                         'InboundEmail '.$emailAccount->id.
                         ' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage()
@@ -393,28 +423,36 @@ class InboundEmail extends RecordService implements
                             }
                         }
 
-                        $this->getEntityManager()->getRepository('InboundEmail')->relate($emailAccount, 'emails', $email);
+                        $this->entityManager
+                            ->getRDBRepository('InboundEmail')
+                            ->getRelation($emailAccount, 'emails')
+                            ->relate($email);
 
                         if ($emailAccount->get('createCase')) {
                             if ($email->isFetched()) {
-                                $email = $this->getEntityManager()->getEntity('Email', $email->id);
-                            } else {
+                                $email = $this->entityManager->getEntity('Email', $email->id);
+                            }
+                            else {
                                 $email->updateFetchedValues();
                             }
-                            if ($email) {
+
+                            if ($email && !$isAutoReply) {
                                 $this->createCase($emailAccount, $email);
                             }
-                        } else {
-                            if ($emailAccount->get('reply')) {
-                                $user = $this->getEntityManager()->getEntity('User', $userId);
+                        }
+                        else {
+                            if ($emailAccount->get('reply') && !$skipAutoReply) {
+                                $user = $this->entityManager->getEntity('User', $userId);
 
-                                $this->autoReply($emailAccount, $email, $user);
+                                $this->autoReply($emailAccount, $email, null, $user);
                             }
                         }
                     }
-                } catch (Exception $e) {
+                }
+                catch (Exception $e) {
                     $this->log->error(
-                        'InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .$e->getMessage()
+                        'InboundEmail '.$emailAccount->id.' (Post Import Logic): [' . $e->getCode() . '] ' .
+                        $e->getMessage()
                     );
                 }
 
@@ -475,7 +513,7 @@ class InboundEmail extends RecordService implements
 
             $emailAccount->set('fetchData', $fetchData);
 
-            $this->getEntityManager()->saveEntity($emailAccount, ['silent' => true]);
+            $this->entityManager->saveEntity($emailAccount, ['silent' => true]);
         }
 
         $storage->close();
@@ -484,40 +522,33 @@ class InboundEmail extends RecordService implements
     }
 
     protected function importMessage(
-        $importer,
-        $emailAccount,
-        $message,
-        $teamIdList,
-        $userId,
-        $userIdList,
-        $filterCollection,
-        $fetchOnlyHeader,
-        $folderData = null
-    ) {
-        $email = null;
+        Importer $importer,
+        InboundEmailEntity $emailAccount,
+        MessageWrapper $message,
+        ImporterData $data
+    ): ?EmailEntity {
 
         try {
-            $email = $importer->importMessage(
-                $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
-            );
-        } catch (Exception $e) {
+            return $importer->import($message, $data);
+        }
+        catch (Throwable $e) {
             $this->log->error(
                 'InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
             );
 
-            if ($this->getEntityManager()->getLocker()->isLocked()) {
-                $this->getEntityManager()->getLocker()->rollback();
+            if ($this->entityManager->getLocker()->isLocked()) {
+                $this->entityManager->getLocker()->rollback();
             }
         }
 
-        return $email;
+        return null;
     }
 
     protected function noteAboutEmail($email)
     {
         if ($email->get('parentType') && $email->get('parentId')) {
-            $parent = $this->getEntityManager()->getEntity($email->get('parentType'), $email->get('parentId'));
+            $parent = $this->entityManager->getEntity($email->get('parentType'), $email->get('parentId'));
 
             if ($parent) {
                 $this->getServiceFactory()->create('Stream')->noteEmailReceived($parent, $email);
@@ -533,7 +564,8 @@ class InboundEmail extends RecordService implements
 
         if ($case->hasLinkMultipleField('assignedUsers')) {
             $userIdList = $case->getLinkMultipleIdList('assignedUsers');
-        } else {
+        }
+        else {
             $assignedUserId = $case->get('assignedUserId');
 
             if ($assignedUserId) {
@@ -551,16 +583,16 @@ class InboundEmail extends RecordService implements
             $email->addLinkMultipleId('teams', $teamId);
         }
 
-        $this->getEntityManager()->saveEntity($email, [
+        $this->entityManager->saveEntity($email, [
             'skipLinkMultipleRemove' => true,
             'skipLinkMultipleUpdate' => true,
         ]);
     }
 
-    protected function createCase($inboundEmail, $email)
+    protected function createCase(InboundEmailEntity $inboundEmail, EmailEntity $email): void
     {
-        if ($email->get('parentType') == 'Case' && $email->get('parentId')) {
-            $case = $this->getEntityManager()->getEntity('Case', $email->get('parentId'));
+        if ($email->get('parentType') === 'Case' && $email->get('parentId')) {
+            $case = $this->entityManager->getEntity('Case', $email->get('parentId'));
 
             if ($case) {
                 $this->processCaseToEmailFields($case, $email);
@@ -576,7 +608,7 @@ class InboundEmail extends RecordService implements
         if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
             $caseNumber = $m[1];
 
-            $case = $this->getEntityManager()
+            $case = $this->entityManager
                 ->getRepository('Case')
                 ->where([
                     'number' => $caseNumber,
@@ -607,7 +639,7 @@ class InboundEmail extends RecordService implements
 
         $case = $this->emailToCase($email, $params);
 
-        $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
+        $user = $this->entityManager->getEntity('User', $case->get('assignedUserId'));
 
         $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email, true);
 
@@ -624,7 +656,7 @@ class InboundEmail extends RecordService implements
             $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\RoundRobin';
         }
 
-        $distribution = new $className($this->getEntityManager());
+        $distribution = new $className($this->entityManager);
 
         $user = $distribution->getUser($team, $targetUserPosition);
 
@@ -642,7 +674,7 @@ class InboundEmail extends RecordService implements
             $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\LeastBusy';
         }
 
-        $distribution = new $className($this->getEntityManager(), $this->getMetadata());
+        $distribution = new $className($this->entityManager, $this->getMetadata());
 
         $user = $distribution->getUser($team, $targetUserPosition);
 
@@ -654,7 +686,7 @@ class InboundEmail extends RecordService implements
 
     protected function emailToCase(EmailEntity $email, array $params = [])
     {
-        $case = $this->getEntityManager()->getEntity('Case');
+        $case = $this->entityManager->getEntity('Case');
 
         $case->populateDefaults();
 
@@ -674,13 +706,17 @@ class InboundEmail extends RecordService implements
         $copiedAttachmentIdList = [];
 
         foreach ($attachmentIdList as $attachmentId) {
-            $attachment = $this->getEntityManager()->getRepository('Attachment')->get($attachmentId);
+            $attachment = $this->entityManager
+                ->getRepository('Attachment')
+                ->get($attachmentId);
 
             if (!$attachment) {
                 continue;
             }
 
-            $copiedAttachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($attachment);
+            $copiedAttachment = $this->entityManager
+                ->getRepository('Attachment')
+                ->getCopiedAttachment($attachment);
 
             $copiedAttachmentIdList[] = $copiedAttachment->id;
         }
@@ -728,21 +764,23 @@ class InboundEmail extends RecordService implements
                     $case->set('assignedUserId', $userId);
                     $case->set('status', 'Assigned');
                 }
+
                 break;
 
             case 'Round-Robin':
                 if ($teamId) {
-                    $team = $this->getEntityManager()->getEntity('Team', $teamId);
+                    $team = $this->entityManager->getEntity('Team', $teamId);
 
                     if ($team) {
                         $this->assignRoundRobin($case, $team, $targetUserPosition);
                     }
                 }
+
                 break;
 
             case 'Least-Busy':
                 if ($teamId) {
-                    $team = $this->getEntityManager()->getEntity('Team', $teamId);
+                    $team = $this->entityManager->getEntity('Team', $teamId);
 
                     if ($team) {
                         $this->assignLeastBusy($case, $team, $targetUserPosition);
@@ -760,7 +798,7 @@ class InboundEmail extends RecordService implements
             $case->set('accountId', $email->get('accountId'));
         }
 
-        $contact = $this->getEntityManager()
+        $contact = $this->entityManager
             ->getRepository('Contact')
             ->join('emailAddresses', 'emailAddressesMultiple')
             ->where([
@@ -769,10 +807,11 @@ class InboundEmail extends RecordService implements
             ->findOne();
 
         if ($contact) {
-            $case->set('contactId', $contact->id);
-        } else {
+            $case->set('contactId', $contact->getId());
+        }
+        else {
             if (!$case->get('accountId')) {
-                $lead = $this->getEntityManager()
+                $lead = $this->entityManager
                     ->getRepository('Lead')
                     ->join('emailAddresses', 'emailAddressesMultiple')
                     ->where([
@@ -781,151 +820,180 @@ class InboundEmail extends RecordService implements
                     ->findOne();
 
                 if ($lead) {
-                    $case->set('leadId', $lead->id);
+                    $case->set('leadId', $lead->getId());
                 }
             }
         }
 
-        $this->getEntityManager()->saveEntity($case);
+        $this->entityManager->saveEntity($case);
 
         $email->set('parentType', 'Case');
-        $email->set('parentId', $case->id);
+        $email->set('parentId', $case->getId());
 
-        $this->getEntityManager()->saveEntity($email, [
+        $this->entityManager->saveEntity($email, [
             'skipLinkMultipleRemove' => true,
-            'skipLinkMultipleUpdate' => true
+            'skipLinkMultipleUpdate' => true,
         ]);
 
-        $case = $this->getEntityManager()->getEntity('Case', $case->id);
-
-        return $case;
+        return $this->entityManager->getEntity('Case', $case->getId());
     }
 
-    protected function autoReply($inboundEmail, $email, $case = null, $user = null)
-    {
+    protected function autoReply(
+        InboundEmailEntity $inboundEmail,
+        EmailEntity $email,
+        ?CaseEntity $case = null,
+        ?User $user = null
+    ): void {
+
         if (!$email->get('from')) {
-            return false;
+            return;
         }
+
+        $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
+
+        if (!$replyEmailTemplateId) {
+            return;
+        }
+
+        $limit = $this->config->get('emailAutoReplyLimit', self::DEFAULT_AUTOREPLY_LIMIT);
 
         $d = new DateTime();
 
-        $d->modify('-3 hours');
+        $period = $this->config->get('emailAutoReplySuppressPeriod', self::DEFAULT_AUTOREPLY_SUPPRESS_PERIOD);
+
+        $d->modify('-' . $period);
 
         $threshold = $d->format('Y-m-d H:i:s');
 
-        $emailAddress = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($email->get('from'));
+        $emailAddress = $this->entityManager
+            ->getRepository('EmailAddress')
+            ->getByAddress($email->get('from'));
 
-        $sent = $this->getEntityManager()
-            ->getRepository('Email')
+        $sentCount = $this->entityManager
+            ->getRDBRepository('Email')
             ->where([
-                'toEmailAddresses.id' => $emailAddress->id,
+                'toEmailAddresses.id' => $emailAddress->getId(),
                 'dateSent>' => $threshold,
                 'status' => 'Sent',
+                'createdById' => 'system',
             ])
             ->join('toEmailAddresses')
-            ->findOne();
+            ->count();
 
-        if ($sent) {
-            return false;
+        if ($sentCount >= $limit) {
+            return;
         }
 
+        $message = new Message();
+
+        $messageId = $email->get('messageId');
+
+        if ($messageId) {
+            $message->getHeaders()->addHeaderLine('In-Reply-To', $messageId);
+        }
+
+        $message->getHeaders()->addHeaderLine('Auto-Submitted', 'auto-replied');
+        $message->getHeaders()->addHeaderLine('X-Auto-Response-Suppress', 'All');
+        $message->getHeaders()->addHeaderLine('Precedence', 'auto_reply');
+
         try {
-            $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
+            $entityHash = [];
 
-            if ($replyEmailTemplateId) {
-                $entityHash = [];
+            if ($case) {
+                $entityHash['Case'] = $case;
 
-                if ($case) {
-                    $entityHash['Case'] = $case;
-
-                    if ($case->get('contactId')) {
-                        $contact = $this->getEntityManager()->getEntity('Contact', $case->get('contactId'));
-                    }
+                if ($case->get('contactId')) {
+                    $contact = $this->entityManager->getEntity('Contact', $case->get('contactId'));
                 }
-
-                if (empty($contact)) {
-                    $contact = $this->getEntityManager()->getEntity('Contact');
-
-                    $fromName = EmailService::parseFromName($email->get('fromString'));
-
-                    if (!empty($fromName)) {
-                        $contact->set('name', $fromName);
-                    }
-                }
-
-                $entityHash['Person'] = $contact;
-                $entityHash['Contact'] = $contact;
-
-                if ($user) {
-                    $entityHash['User'] = $user;
-                }
-
-                $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
-
-                $replyData = $emailTemplateService->parse($replyEmailTemplateId, ['entityHash' => $entityHash], true);
-
-                $subject = $replyData['subject'];
-
-                if ($case) {
-                    $subject = '[#' . $case->get('number'). '] ' . $subject;
-                }
-
-                $reply = $this->getEntityManager()->getEntity('Email');
-
-                $reply->set('to', $email->get('from'));
-                $reply->set('subject', $subject);
-                $reply->set('body', $replyData['body']);
-                $reply->set('isHtml', $replyData['isHtml']);
-                $reply->set('attachmentsIds', $replyData['attachmentsIds']);
-
-                if ($email->has('teamsIds')) {
-                    $reply->set('teamsIds', $email->get('teamsIds'));
-                }
-
-                if ($email->get('parentId') && $email->get('parentType')) {
-                    $reply->set('parentId', $email->get('parentId'));
-                    $reply->set('parentType', $email->get('parentType'));
-                }
-
-                $this->getEntityManager()->saveEntity($reply);
-
-                $sender = $this->emailSender->create();
-
-                if ($inboundEmail->get('useSmtp')) {
-                    $smtpParams = $this->getSmtpParamsFromInboundEmail($inboundEmail);
-
-                    if ($smtpParams) {
-                        $sender->withSmtpParams($smtpParams);
-                    }
-                }
-
-                $senderParams = [];
-
-                if ($inboundEmail->get('fromName')) {
-                    $senderParams['fromName'] = $inboundEmail->get('fromName');
-                }
-
-                if ($inboundEmail->get('replyFromAddress')) {
-                    $senderParams['fromAddress'] = $inboundEmail->get('replyFromAddress');
-                }
-
-                if ($inboundEmail->get('replyFromName')) {
-                    $senderParams['fromName'] = $inboundEmail->get('replyFromName');
-                }
-
-                if ($inboundEmail->get('replyToAddress')) {
-                    $senderParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
-                }
-
-                $sender
-                    ->withParams($senderParams)
-                    ->send($reply);
-
-                $this->getEntityManager()->saveEntity($reply);
-
-                return true;
             }
-        } catch (Exception $e) {
+
+            if (empty($contact)) {
+                $contact = $this->entityManager->getEntity('Contact');
+
+                $fromName = EmailService::parseFromName($email->get('fromString'));
+
+                if (!empty($fromName)) {
+                    $contact->set('name', $fromName);
+                }
+            }
+
+            $entityHash['Person'] = $contact;
+            $entityHash['Contact'] = $contact;
+            $entityHash['Email'] = $email;
+
+            if ($user) {
+                $entityHash['User'] = $user;
+            }
+
+            $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
+
+            $replyData = $emailTemplateService->parse(
+                $replyEmailTemplateId,
+                ['entityHash' => $entityHash],
+                true
+            );
+
+            $subject = $replyData['subject'];
+
+            if ($case) {
+                $subject = '[#' . $case->get('number'). '] ' . $subject;
+            }
+
+            $reply = $this->entityManager->getEntity('Email');
+
+            $reply->set('to', $email->get('from'));
+            $reply->set('subject', $subject);
+            $reply->set('body', $replyData['body']);
+            $reply->set('isHtml', $replyData['isHtml']);
+            $reply->set('attachmentsIds', $replyData['attachmentsIds']);
+
+            if ($email->has('teamsIds')) {
+                $reply->set('teamsIds', $email->get('teamsIds'));
+            }
+
+            if ($email->get('parentId') && $email->get('parentType')) {
+                $reply->set('parentId', $email->get('parentId'));
+                $reply->set('parentType', $email->get('parentType'));
+            }
+
+            $this->entityManager->saveEntity($reply);
+
+            $sender = $this->emailSender->create();
+
+            if ($inboundEmail->get('useSmtp')) {
+                $smtpParams = $this->getSmtpParamsFromInboundEmail($inboundEmail);
+
+                if ($smtpParams) {
+                    $sender->withSmtpParams($smtpParams);
+                }
+            }
+
+            $senderParams = [];
+
+            if ($inboundEmail->get('fromName')) {
+                $senderParams['fromName'] = $inboundEmail->get('fromName');
+            }
+
+            if ($inboundEmail->get('replyFromAddress')) {
+                $senderParams['fromAddress'] = $inboundEmail->get('replyFromAddress');
+            }
+
+            if ($inboundEmail->get('replyFromName')) {
+                $senderParams['fromName'] = $inboundEmail->get('replyFromName');
+            }
+
+            if ($inboundEmail->get('replyToAddress')) {
+                $senderParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
+            }
+
+            $sender
+                ->withParams($senderParams)
+                ->withMessage($message)
+                ->send($reply);
+
+            $this->entityManager->saveEntity($reply);
+        }
+        catch (Exception $e) {
             $this->log->error("Inbound Email: Auto-reply error: " . $e->getMessage());
         }
     }
@@ -933,6 +1001,7 @@ class InboundEmail extends RecordService implements
     protected function getSmtpParamsFromInboundEmail(InboundEmailEntity $emailAccount)
     {
         $smtpParams = [];
+
         $smtpParams['server'] = $emailAccount->get('smtpHost');
 
         if ($smtpParams['server']) {
@@ -980,14 +1049,14 @@ class InboundEmail extends RecordService implements
             return false;
         }
 
-        $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
+        $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
 
         if (!$queueItem) {
             return false;
         }
 
         $massEmailId = $queueItem->get('massEmailId');
-        $massEmail = $this->getEntityManager()->getEntity('MassEmail', $massEmailId);
+        $massEmail = $this->entityManager->getEntity('MassEmail', $massEmailId);
 
         $campaignId = null;
 
@@ -997,17 +1066,17 @@ class InboundEmail extends RecordService implements
 
         $targetType = $queueItem->get('targetType');
         $targetId = $queueItem->get('targetId');
-        $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+        $target = $this->entityManager->getEntity($targetType, $targetId);
 
         $emailAddress = $queueItem->get('emailAddress');
 
         if ($isHard && $emailAddress) {
-            $emailAddressEntity = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+            $emailAddressEntity = $this->entityManager->getRepository('EmailAddress')->getByAddress($emailAddress);
 
             if ($emailAddressEntity) {
                 $emailAddressEntity->set('invalid', true);
 
-                $this->getEntityManager()->saveEntity($emailAddressEntity);
+                $this->entityManager->saveEntity($emailAddressEntity);
             }
         }
 
@@ -1032,7 +1101,7 @@ class InboundEmail extends RecordService implements
 
     public function findAccountForSending(string $emailAddress): ?InboundEmailEntity
     {
-        $inboundEmail = $this->getEntityManager()
+        $inboundEmail = $this->entityManager
             ->getRepository('InboundEmail')
             ->where([
                 'status' => 'Active',
@@ -1083,7 +1152,7 @@ class InboundEmail extends RecordService implements
                 ];
             }
 
-            $inboundEmail = $this->getEntityManager()->getRepository('InboundEmail')->findOne($selectParams);
+            $inboundEmail = $this->entityManager->getRepository('InboundEmail')->findOne($selectParams);
 
         }
 
@@ -1219,20 +1288,9 @@ class InboundEmail extends RecordService implements
         }
     }
 
-    private function getNotificator(): AssignmentNotificator
-    {
-        if (!$this->notificator) {
-            $factory = $this->injectableFactory->create(AssignmentNotificatorFactory::class);
-
-            $this->notificator = $factory->create('Email');
-        }
-
-        return $this->notificator;
-    }
-
     protected function checkFetchOnlyHeader(Imap $storage, string $id): bool
     {
-        $maxSize = $this->getConfig()->get('emailMessageMaxSize');
+        $maxSize = $this->config->get('emailMessageMaxSize');
 
         if (!$maxSize) {
             return false;
@@ -1246,6 +1304,43 @@ class InboundEmail extends RecordService implements
         }
 
         if ($size > $maxSize * 1024 * 1024) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function checkMessageIsAutoReply(MessageWrapper $message): bool
+    {
+        if ($message->getAttribute('X-Autoreply')) {
+            return true;
+        }
+
+        if ($message->getAttribute('X-Autorespond')) {
+            return true;
+        }
+
+        if (
+            $message->getAttribute('Auto-submitted') &&
+            strtolower($message->getAttribute('Auto-submitted')) !== 'no'
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function checkMessageCannotBeAutoReplied(MessageWrapper $message): bool
+    {
+        if ($message->getAttribute('X-Auto-Response-Suppress') === 'AutoReply') {
+            return true;
+        }
+
+        if ($message->getAttribute('X-Auto-Response-Suppress') === 'All') {
+            return true;
+        }
+
+        if ($this->checkMessageIsAutoReply($message)) {
             return true;
         }
 

@@ -291,7 +291,9 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         array $order = ['User', 'Contact', 'Lead', 'Account']
     ) : ?Entity {
 
-        $selectBuilder = $this->getEntityManager()->getRepository('EntityEmailAddress')->select();
+        $selectBuilder = $this->getEntityManager()
+            ->getRepository('EntityEmailAddress')
+            ->select();
 
         $selectBuilder
             ->select(['entityType', 'entityId'])

@@ -122,6 +122,8 @@ class SearchParams
     }
 
     /**
+     * Attributes to select. NULL means to select all attributes.
+     *
      * @param string[]|null $select
      */
     public function withSelect(?array $select): self
@@ -252,7 +254,7 @@ class SearchParams
     /**
      * Create an empty instance.
      */
-    public static function fromNothing(): self
+    public static function create(): self
     {
         return new self();
     }

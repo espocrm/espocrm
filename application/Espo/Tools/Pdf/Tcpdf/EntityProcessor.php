@@ -62,7 +62,9 @@ class EntityProcessor
     {
         $additionalData = $data->getAdditionalTemplateData();
 
-        $htmlizer = $this->htmlizerFactory->create();
+        $htmlizer = $data->applyAcl() ?
+            $this->htmlizerFactory->create() :
+            $this->htmlizerFactory->createNoAcl();
 
         $fontFace = $this->config->get('pdfFontFace', $this->fontFace);
 
@@ -187,7 +189,7 @@ class EntityProcessor
                     'border' => false,
                     'vpadding' => $data['padding'] ?? 2,
                     'hpadding' => $data['padding'] ?? 2,
-                    'fgcolor' => $data['color'] ?? [0,0,0],
+                    'fgcolor' => $data['color'] ?? [0, 0, 0],
                     'bgcolor' => $data['bgcolor'] ?? false,
                     'module_width' => 1,
                     'module_height' => 1,
@@ -208,8 +210,8 @@ class EntityProcessor
                     'position' => 'S',
                     'border' => false,
                     'padding' => $data['padding'] ?? 0,
-                    'fgcolor' => $data['color'] ?? [0,0,0],
-                    'bgcolor' => $data['bgcolor'] ?? [255,255,255],
+                    'fgcolor' => $data['color'] ?? [0, 0, 0],
+                    'bgcolor' => $data['bgcolor'] ?? [255, 255, 255],
                     'text' => $data['text'] ?? true,
                     'font' => 'helvetica',
                     'fontsize' => $data['fontsize'] ?? 14,

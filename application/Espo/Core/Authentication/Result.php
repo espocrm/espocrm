@@ -84,8 +84,8 @@ class Result
     public static function fail(?string $reason = null): self
     {
         $data = $reason ?
-            ResultData::fromFailReason($reason) :
-            ResultData::fromNothing();
+            ResultData::createWithFailReason($reason) :
+            ResultData::create();
 
         return new self(self::STATUS_FAIL, null, $data);
     }

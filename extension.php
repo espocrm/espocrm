@@ -27,14 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') exit;
+if (substr(php_sapi_name(), 0, 3) !== 'cli') {
+    exit;
+}
 
 include "bootstrap.php";
 
 use Espo\Core\{
     Application,
     ApplicationRunners\Rebuild,
+    Upgrades\ExtensionManager,
 };
+
+use Exception;
 
 $arg = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : '';
 
@@ -47,6 +52,7 @@ if (!file_exists($arg)) {
 }
 
 $pathInfo = pathinfo($arg);
+
 if (!isset($pathInfo['extension']) || $pathInfo['extension'] !== 'zip' || !is_file($arg)) {
     die("Unsupported package.\n");
 }
@@ -57,7 +63,7 @@ $app->setupSystemUser();
 $config = $app->getContainer()->get('config');
 $entityManager = $app->getContainer()->get('entityManager');
 
-$upgradeManager = new \Espo\Core\ExtensionManager($app->getContainer());
+$upgradeManager = new ExtensionManager($app->getContainer());
 
 echo "Starting installation process...\n";
 
@@ -67,12 +73,14 @@ try {
 
     $upgradeId = $upgradeManager->upload($fileData);
     $upgradeManager->install(array('id' => $upgradeId));
-} catch (\Exception $e) {
+}
+catch (Exception $e) {
     die("Error: " . $e->getMessage() . "\n");
 }
 
 try {
     (new Application())->run(Rebuild::class);
-} catch (\Exception $e) {}
+}
+catch (Exception $e) {}
 
 echo "Extension installation is complete.\n";

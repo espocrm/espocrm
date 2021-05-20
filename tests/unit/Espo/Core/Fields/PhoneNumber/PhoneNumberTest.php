@@ -41,12 +41,12 @@ class PhoneNumberTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        PhoneNumber::fromNumber('');
+        PhoneNumber::create('');
     }
 
     public function testCloneInvalid()
     {
-        $number = PhoneNumber::fromNumber('+100')->invalid();
+        $number = PhoneNumber::create('+100')->invalid();
 
         $this->assertEquals('+100', $number->getNumber());
 
@@ -58,7 +58,7 @@ class PhoneNumberTest extends \PHPUnit\Framework\TestCase
 
     public function testCloneOptedOut()
     {
-        $number = PhoneNumber::fromNumber('+100')->optedOut();
+        $number = PhoneNumber::create('+100')->optedOut();
 
         $this->assertFalse($number->isInvalid());
         $this->assertTrue($number->isOptedOut());
@@ -66,7 +66,7 @@ class PhoneNumberTest extends \PHPUnit\Framework\TestCase
 
     public function testCloneWithType()
     {
-        $number = PhoneNumber::fromNumberAndType('+100', 'Office');
+        $number = PhoneNumber::createWithType('+100', 'Office');
 
         $this->assertEquals('+100', $number->getNumber());
         $this->assertEquals('Office', $number->getType());
@@ -74,7 +74,7 @@ class PhoneNumberTest extends \PHPUnit\Framework\TestCase
 
     public function testCloneNotOptedOut()
     {
-        $number = PhoneNumber::fromNumber('+100')
+        $number = PhoneNumber::create('+100')
             ->optedOut()
             ->notOptedOut()
             ->invalid()

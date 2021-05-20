@@ -7,12 +7,14 @@
     "targetType": "Moduł",
     "authToken": "Token Autoryzacyjny",
     "ipAddress": "Adres IP",
+    "authLogRecord": "Rekord dziennika autoryzacji",
     "userType": "Typ użytkownika"
   },
   "links": {
     "authToken": "Token Autoryzacyjny",
     "user": "Użytkownik",
-    "target": "Element"
+    "target": "Element",
+    "authLogRecord": "Rekord dziennika autoryzacji"
   },
   "presetFilters": {
     "onlyMy": "Tylko ja"

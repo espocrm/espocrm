@@ -34,6 +34,7 @@ use Espo\ORM\{
     Entity,
     EntityManager,
     QueryParams\Select,
+    QueryParams\Parts\WhereItem,
     Mapper\RDBMapper,
     Repository\RDBRelationSelectBuilder as Builder,
 };
@@ -94,7 +95,10 @@ class RDBRelation
         }
     }
 
-    protected function createBuilder(?Select $query = null): Builder
+    /**
+     * Create a select builder.
+     */
+    protected function createSelectBuilder(?Select $query = null): Builder
     {
         if ($this->noBuilder) {
             throw new RuntimeException("Can't use query builder for the '{$this->relationType}' relation type.");
@@ -116,7 +120,7 @@ class RDBRelation
             throw new RuntimeException("Passed query doesn't match the entity type.");
         }
 
-        return $this->createBuilder($query);
+        return $this->createSelectBuilder($query);
     }
 
     protected function isBelongsToParentType(): bool
@@ -148,7 +152,7 @@ class RDBRelation
             return $collection;
         }
 
-        return $this->createBuilder()->find();
+        return $this->createSelectBuilder()->find();
     }
 
     /**
@@ -174,27 +178,33 @@ class RDBRelation
      */
     public function count(): int
     {
-        return $this->createBuilder()->count();
+        return $this->createSelectBuilder()->count();
     }
 
     /**
      * Add JOIN.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::join()
+     * @param string $relationName
+     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param string|null $alias An alias.
+     * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function join(string $relationName, ?string $alias = null, ?array $conditions = null): Builder
+    public function join(string $relationName, ?string $alias = null, $conditions = null): Builder
     {
-        return $this->createBuilder()->join($relationName, $alias, $conditions);
+        return $this->createSelectBuilder()->join($relationName, $alias, $conditions);
     }
 
     /**
      * Add LEFT JOIN.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::leftJoin()
+     * @param string $relationName
+     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param string|null $alias An alias.
+     * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function leftJoin(string $relationName, ?string $alias = null, ?array $conditions = null): Builder
+    public function leftJoin(string $relationName, ?string $alias = null, $conditions = null): Builder
     {
-        return $this->createBuilder()->leftJoin($relationName, $alias, $conditions);
+        return $this->createSelectBuilder()->leftJoin($relationName, $alias, $conditions);
     }
 
     /**
@@ -202,7 +212,7 @@ class RDBRelation
      */
     public function distinct(): Builder
     {
-        return $this->createBuilder()->distinct();
+        return $this->createSelectBuilder()->distinct();
     }
 
     /**
@@ -210,46 +220,58 @@ class RDBRelation
      */
     public function sth(): Builder
     {
-        return $this->createBuilder()->sth();
+        return $this->createSelectBuilder()->sth();
     }
 
     /**
      * Add a WHERE clause.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::where()
+     * Usage options:
+     * * `where(WhereItem $clause)`
+     * * `where(array $clause)`
+     * * `where(string $key, string $value)`
      *
-     * @param array|string $keyOrClause
-     * @param ?array|string $value
+     * @param WhereItem|array|string $clause A key or where clause.
+     * @param array|string|null $value A value. Omitted if the first argument is not string.
      */
-    public function where($keyOrClause = [], $value = null): Builder
+    public function where($clause = [], $value = null): Builder
     {
-        return $this->createBuilder()->where($keyOrClause, $value);
+        return $this->createSelectBuilder()->where($clause, $value);
     }
 
     /**
      * Add a HAVING clause.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::having()
+     * Usage options:
+     * * `having(WhereItem $clause)`
+     * * `having(array $clause)`
+     * * `having(string $key, string $value)`
      *
-     * @param array|string $keyOrClause
-     * @param ?array|string $value
+     * @param WhereItem|array|string $clause A key or where clause.
+     * @param array|string|null $value A value. Omitted if the first argument is not string.
      */
-    public function having($keyOrClause = [], $value = null): Builder
+    public function having($clause = [], $value = null): Builder
     {
-        return $this->createBuilder()->having($keyOrClause, $value);
+        return $this->createSelectBuilder()->having($clause, $value);
     }
 
     /**
      * Apply ORDER.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::order()
+     * Usage options:
+     * * `order(Expression|string $orderBy, string|bool $direction)
+     * * `order(int $positionInSelect, string|bool $direction)
+     * * `order([[$expr1, $direction1], [$expr2, $direction2], ...])
+     * * `order([$expr1, $expr2, ...], string|bool $direction)
      *
-     * @param string|int|array $orderBy
-     * @param bool|string $direction
+     * @param string|Expression|int|array $orderBy
+     *     An attribute to order by or an array or order items.
+     *     Passing an array will reset a previously set order.
+     * @param string|bool $direction 'ASC' or 'DESC'. TRUE for DESC order.
      */
-    public function order($orderBy, $direction = 'ASC'): Builder
+    public function order($orderBy = 'id', $direction = Select::ORDER_ASC): Builder
     {
-        return $this->createBuilder()->order($orderBy, $direction);
+        return $this->createSelectBuilder()->order($orderBy, $direction);
     }
 
     /**
@@ -257,37 +279,55 @@ class RDBRelation
      */
     public function limit(?int $offset = null, ?int $limit = null): Builder
     {
-        return $this->createBuilder()->limit($offset, $limit);
+        return $this->createSelectBuilder()->limit($offset, $limit);
     }
 
     /**
-     * Specify SELECT. Which attributes to select. All attributes are selected by default.
+     * Specify SELECT. Columns and expressions to be selected. If not called, then
+     * all entity attributes will be selected. Passing an array will reset
+     * previously set items. Passing a string will append an item.
      *
-     * @see Espo\ORM\QueryParams\SelectBuilder::select()
+     * Usage options:
+     * * `select([$expr1, $expr2, ...])`
+     * * `select([[$expr1, $alias1], [$expr2, $alias2], ...])`
+     * * `select(string|Expression $expression)`
+     * * `select(string|Expression $expression, string $alias)`
      *
-     * @param array|string $select
+     * @param array|string|Expression $select An array of attributes or one attribute.
+     * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
-    public function select($select, ?string $alias = null): Builder
+    public function select($select = [], ?string $alias = null): Builder
     {
-        return $this->createBuilder()->select($select, $alias);
+        return $this->createSelectBuilder()->select($select, $alias);
     }
 
     /**
      * Specify GROUP BY.
+     * Passing an array will reset previously set items.
+     * Passing a string will append an item.
+     *
+     * Usage options:
+     * * `groupBy([$expr1, $expr2, ...])`
+     * * `groupBy(string|Expression $expression)`
+     *
+     * @param string|Expression|array $groupBy
      */
-    public function groupBy(array $groupBy): Builder
+    public function groupBy($groupBy): Builder
     {
-        return $this->createBuilder()->groupBy($groupBy);
+        return $this->createSelectBuilder()->groupBy($groupBy);
     }
 
     /**
      * Apply middle table conditions for a many-to-many relationship.
      *
-     * @see Espo\ORM\Repository\RDBRelationSelectBuilder::columnsWhere()
+     * Usage example:
+     * `->columnsWhere(['column' => $value])`
+     *
+     * @param WhereItem|array $clause Where clause.
      */
-    public function columnsWhere(array $where): Builder
+    public function columnsWhere($clause): Builder
     {
-        return $this->createBuilder()->columnsWhere($where);
+        return $this->createSelectBuilder()->columnsWhere($clause);
     }
 
     protected function processCheckForeignEntity(Entity $entity): void
@@ -322,7 +362,7 @@ class RDBRelation
 
         $this->processCheckForeignEntity($entity);
 
-        return (bool) $this->createBuilder()
+        return (bool) $this->createSelectBuilder()
             ->select(['id'])
             ->where(['id' => $entity->id])
             ->findOne();

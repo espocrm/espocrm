@@ -36,7 +36,7 @@ class BelongsToParent extends Base
         $linkParams = $this->getLinkParams();
 
         return array(
-            $entityName => array (
+            $entityName => array(
                 'fields' => array(
                     $linkName.'Id' => array(
                         'type' => 'foreignId',

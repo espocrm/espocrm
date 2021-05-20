@@ -36,7 +36,7 @@ use Espo\{
     ORM\QueryParams\Parts\WhereItem as WhereClauseItem,
     ORM\EntityManager,
     ORM\Entity,
-    ORM\Defs\Defs as ORMDefs,
+    ORM\Defs as ORMDefs,
     Entities\User,
     Core\Utils\Config,
     Core\Select\Helpers\RandomStringGenerator,

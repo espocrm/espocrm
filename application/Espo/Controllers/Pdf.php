@@ -29,18 +29,32 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\{
+    Exceptions\Forbidden,
+    Exceptions\BadRequest,
+};
 
 use Espo\Core\{
-    Controllers\Base,
     Api\Request,
+    Acl,
 };
+
+use Espo\Services\Pdf as Service;
 
 use StdClass;
 
-class Pdf extends Base
+class Pdf
 {
+    private $service;
+
+    private $acl;
+
+    public function __construct(Service $service, Acl $acl)
+    {
+        $this->service = $service;
+        $this->acl = $acl;
+    }
+
     public function postActionMassPrint(Request $request): StdClass
     {
         $data = $request->getParsedBody();
@@ -66,8 +80,7 @@ class Pdf extends Base
         }
 
         return (object) [
-            'id' => $this->getServiceFactory()
-                ->create('Pdf')
+            'id' => $this->service
                 ->massGenerate(
                     $data->entityType,
                     $data->idList,

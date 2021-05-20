@@ -223,7 +223,6 @@
         "Close": "Close",
         "Yes": "Yes",
         "No": "No",
-        "View": "View",
         "Select All Results": "Select All Results",
         "Value": "Value",
         "Current version": "Current version",
@@ -260,7 +259,9 @@
         "View on Map": "View on Map",
         "Preview": "Preview",
         "Move Over": "Move Over",
-        "Up": "Up"
+        "Up": "Up",
+        "Save & Continue Editing": "Save & Continue Editing",
+        "Save & New": "Save & New"
     },
     "messages": {
         "pleaseWait": "Please wait...",

@@ -30,8 +30,8 @@
 namespace tests\unit\Espo\Core\Upgrades;
 
 use tests\unit\ReflectionHelper,
-    Espo\Core\ExtensionManager,
-    Espo\Core\UpgradeManager;
+    Espo\Core\Upgrades\ExtensionManager,
+    Espo\Core\Upgrades\UpgradeManager;
 
 use Espo\Core\Utils\File\Manager as FileManager;
 

@@ -75,7 +75,7 @@ class Params
         return !is_null($this->ids);
     }
 
-    public static function fromIds(string $entityType, array $ids): self
+    public static function createWithIds(string $entityType, array $ids): self
     {
         return self::fromRaw([
             'entityType' => $entityType,
@@ -83,7 +83,7 @@ class Params
         ]);
     }
 
-    public static function fromSearchParams(string $entityType, SearchParams $searchParams): self
+    public static function createWithSearchParams(string $entityType, SearchParams $searchParams): self
     {
         $obj = new self();
 

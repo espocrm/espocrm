@@ -190,7 +190,7 @@ class Note extends Record
         $entity->set('post', $post);
     }
 
-    public function processAssignmentCheck(Entity $entity)
+    protected function processAssignmentCheck(Entity $entity): void
     {
         if (!$entity->isNew()) {
             return;

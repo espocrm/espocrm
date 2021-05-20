@@ -57,17 +57,17 @@ class ResultData
         $this->loggedUser = $loggedUser;
     }
 
-    public static function fromNothing(): self
+    public static function create(): self
     {
         return new self();
     }
 
-    public static function fromFailReason(string $failReason): self
+    public static function createWithFailReason(string $failReason): self
     {
         return new self(null, $failReason);
     }
 
-    public static function fromMessage(string $message): self
+    public static function createWithMessage(string $message): self
     {
         return new self($message);
     }
@@ -111,5 +111,50 @@ class ResultData
     public function getFailReason(): ?string
     {
         return $this->failReason;
+    }
+
+    public function withMessage(?string $message): self
+    {
+        $obj = clone $this;
+
+        $obj->message = $message;
+
+        return $obj;
+    }
+
+    public function withFailReason(?string $failReason): self
+    {
+        $obj = clone $this;
+
+        $obj->failReason = $failReason;
+
+        return $obj;
+    }
+
+    public function withToken(?string $token): self
+    {
+        $obj = clone $this;
+
+        $obj->token = $token;
+
+        return $obj;
+    }
+
+    public function withView(?string $view): self
+    {
+        $obj = clone $this;
+
+        $obj->view = $view;
+
+        return $obj;
+    }
+
+    public function withLoggedUser(?User $loggedUser): self
+    {
+        $obj = clone $this;
+
+        $obj->loggedUser = $loggedUser;
+
+        return $obj;
     }
 }

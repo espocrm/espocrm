@@ -1,0 +1,8 @@
+{
+    "accessControlFilterClassNameMap": {
+        "onlyOwn": "Espo\\Classes\\Select\\EmailFilter\\AccessControlFilters\\OnlyOwn"
+    },
+    "boolFilterClassNameMap": {
+        "onlyMy": "Espo\\Classes\\Select\\EmailFilter\\BoolFilters\\OnlyMy"
+    }
+}

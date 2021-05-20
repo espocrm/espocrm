@@ -251,7 +251,7 @@ class Kanban
             }
 
             $loadProcessorParams = FieldLoaderParams
-                ::fromNothing()
+                ::create()
                 ->withSelect($searchParams->getSelect());
 
             foreach ($collectionSub as $e) {

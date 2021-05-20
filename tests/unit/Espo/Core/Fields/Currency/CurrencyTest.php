@@ -48,7 +48,7 @@ class CurrencyTest extends \PHPUnit\Framework\TestCase
 
     public function testValue()
     {
-        $value = Currency::fromAmountAndCode(2.0, 'USD');
+        $value = Currency::create(2.0, 'USD');
 
         $this->assertEquals(2.0, $value->getAmount());
 

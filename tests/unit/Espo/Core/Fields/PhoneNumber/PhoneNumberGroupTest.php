@@ -40,7 +40,7 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
 {
     public function testEmpty()
     {
-        $group = PhoneNumberGroup::fromNothing();
+        $group = PhoneNumberGroup::create();
 
         $this->assertEquals(0, count($group->getNumberList()));
         $this->assertEquals(0, count($group->getSecondaryList()));
@@ -55,18 +55,18 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
         $this->expectException(RuntimeException::class);
 
         PhoneNumberGroup
-            ::fromList([
-                PhoneNumber::fromNumber('+100'),
-                PhoneNumber::fromNumber('+100'),
+            ::create([
+                PhoneNumber::create('+100'),
+                PhoneNumber::create('+100'),
             ]);
     }
 
     public function testWithPrimary1()
     {
-        $primary = PhoneNumber::fromNumber('+000')->invalid();
+        $primary = PhoneNumber::create('+000')->invalid();
 
         $group = PhoneNumberGroup
-            ::fromNothing()
+            ::create()
             ->withPrimary($primary);
 
         $this->assertEquals(1, count($group->getList()));
@@ -76,7 +76,7 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('+000', $group->getPrimary()->getNumber());
 
-        $primaryAnother = PhoneNumber::fromNumber('+001');
+        $primaryAnother = PhoneNumber::create('+001');
 
         $groupAnother = $group->withPrimary($primaryAnother);
 
@@ -94,15 +94,15 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
 
     public function testWithPrimary2()
     {
-        $number = PhoneNumber::fromNumber('+100')->invalid();
+        $number = PhoneNumber::create('+100')->invalid();
 
         $group = PhoneNumberGroup
-            ::fromList([$number])
+            ::create([$number])
             ->withAdded(
-                PhoneNumber::fromNumber('+200')
+                PhoneNumber::create('+200')
             )
             ->withPrimary(
-                PhoneNumber::fromNumber('+200')
+                PhoneNumber::create('+200')
             );
 
         $this->assertEquals('+200', $group->getPrimary()->getNumber());
@@ -112,12 +112,12 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
 
     public function testWithAdded1()
     {
-        $number = PhoneNumber::fromNumber('+100')->invalid();
+        $number = PhoneNumber::create('+100')->invalid();
 
         $group = PhoneNumberGroup
-            ::fromList([$number])
+            ::create([$number])
             ->withAdded(
-                PhoneNumber::fromNumber('+200')
+                PhoneNumber::create('+200')
             );
 
         $this->assertEquals('+100', $group->getPrimary()->getNumber());
@@ -130,10 +130,10 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
     public function testWithAddedList()
     {
         $group = PhoneNumberGroup
-            ::fromNothing()
+            ::create()
             ->withAddedList([
-                PhoneNumber::fromNumber('+100'),
-                PhoneNumber::fromNumber('+200'),
+                PhoneNumber::create('+100'),
+                PhoneNumber::create('+200'),
             ]);
 
         $this->assertEquals('+100', $group->getPrimary()->getNumber());
@@ -144,12 +144,12 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
     public function testWithRemoved1()
     {
         $group = PhoneNumberGroup
-            ::fromList([
-                PhoneNumber::fromNumber('+100'),
-                PhoneNumber::fromNumber('+200'),
-                PhoneNumber::fromNumber('+300'),
+            ::create([
+                PhoneNumber::create('+100'),
+                PhoneNumber::create('+200'),
+                PhoneNumber::create('+300'),
             ])
-            ->withRemoved(PhoneNumber::fromNumber('+200'));
+            ->withRemoved(PhoneNumber::create('+200'));
 
         $this->assertEquals('+100', $group->getPrimary()->getNumber());
 
@@ -159,12 +159,12 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
     public function testWithRemoved2()
     {
         $group = PhoneNumberGroup
-            ::fromList([
-                PhoneNumber::fromNumber('+100'),
-                PhoneNumber::fromNumber('+200'),
-                PhoneNumber::fromNumber('+300'),
+            ::create([
+                PhoneNumber::create('+100'),
+                PhoneNumber::create('+200'),
+                PhoneNumber::create('+300'),
             ])
-            ->withRemoved(PhoneNumber::fromNumber('+100'));
+            ->withRemoved(PhoneNumber::create('+100'));
 
         $this->assertEquals('+200', $group->getPrimary()->getNumber());
 
@@ -174,10 +174,10 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
     public function testWithRemoved3()
     {
         $group = PhoneNumberGroup
-            ::fromList([
-                PhoneNumber::fromNumber('+100'),
+            ::create([
+                PhoneNumber::create('+100'),
             ])
-            ->withRemoved(PhoneNumber::fromNumber('+100'));
+            ->withRemoved(PhoneNumber::create('+100'));
 
         $this->assertNull($group->getPrimary());
 
@@ -189,9 +189,9 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
     public function testHasNumber()
     {
         $group = PhoneNumberGroup
-            ::fromList([
-                PhoneNumber::fromNumber('+100'),
-                PhoneNumber::fromNumber('+200'),
+            ::create([
+                PhoneNumber::create('+100'),
+                PhoneNumber::create('+200'),
             ]);
 
         $this->assertTrue($group->hasNumber('+100'));
@@ -203,10 +203,10 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
     public function testGetByNumber()
     {
         $group = PhoneNumberGroup
-            ::fromList([
-                PhoneNumber::fromNumber('+100'),
-                PhoneNumber::fromNumber('+200'),
-                PhoneNumber::fromNumber('+300'),
+            ::create([
+                PhoneNumber::create('+100'),
+                PhoneNumber::create('+200'),
+                PhoneNumber::create('+300'),
             ]);
 
         $this->assertEquals('+100', $group->getByNumber('+100')->getNumber());
@@ -217,10 +217,10 @@ class PhoneNumberGroupTest extends \PHPUnit\Framework\TestCase
     public function testClone()
     {
         $group = PhoneNumberGroup
-            ::fromList([
-                PhoneNumber::fromNumber('+100'),
-                PhoneNumber::fromNumber('+200'),
-                PhoneNumber::fromNumber('+300'),
+            ::create([
+                PhoneNumber::create('+100'),
+                PhoneNumber::create('+200'),
+                PhoneNumber::create('+300'),
             ]);
 
         $cloned = clone $group;

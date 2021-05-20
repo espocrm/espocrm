@@ -4,6 +4,10 @@
     "Manage Categories": "Zarządzaj kategoriami",
     "EmailTemplates": "Szablony e-mail"
   },
+  "fields": {
+    "order": "Zamówienie",
+    "childList": "Lista podrzędna"
+  },
   "links": {
     "emailTemplates": "Szablony e-mail"
   }

@@ -34,9 +34,9 @@ namespace Espo\Core\Application;
  */
 class RunnerParams
 {
-    private $data;
+    private $data = [];
 
-    private function __construct()
+    public function __construct()
     {
     }
 
@@ -73,7 +73,7 @@ class RunnerParams
     }
 
     /**
-     * Create from an array.
+     * Create from an associative array.
      */
     public static function fromArray(array $data): self
     {
@@ -87,7 +87,7 @@ class RunnerParams
     /**
      * Create an empty instance.
      */
-    public static function fromNothing(): self
+    public static function create(): self
     {
         return new self();
     }

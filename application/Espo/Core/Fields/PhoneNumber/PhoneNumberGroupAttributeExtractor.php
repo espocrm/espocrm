@@ -36,7 +36,6 @@ use Espo\Core\Fields\PhoneNumberGroup;
 use StdClass;
 use InvalidArgumentException;
 
-
 /**
  * @implements AttributeExtractor<PhoneNumberGroup>
  */
@@ -51,7 +50,7 @@ class PhoneNumberGroupAttributeExtractor implements AttributeExtractor
             throw new InvalidArgumentException();
         }
 
-        $primaryNumber = $group->getPrimary() ? $group->getPrimary()->getNumber(): null;
+        $primaryNumber = $group->getPrimary() ? $group->getPrimary()->getNumber() : null;
 
         $dataList = [];
 

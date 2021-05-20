@@ -44,6 +44,8 @@ define('views/edit', 'views/main', function (Dep) {
 
         recordView: 'views/record/edit',
 
+        rootLinkDisabled: false,
+
         setup: function () {
             this.headerView = this.options.headerView || this.headerView;
             this.recordView = this.options.recordView || this.recordView;
@@ -56,7 +58,7 @@ define('views/edit', 'views/main', function (Dep) {
             this.createView('header', this.headerView, {
                 model: this.model,
                 el: '#main > .header',
-                scope: this.scope
+                scope: this.scope,
             });
         },
 
@@ -64,14 +66,17 @@ define('views/edit', 'views/main', function (Dep) {
             var o = {
                 model: this.model,
                 el: '#main > .record',
-                scope: this.scope
+                scope: this.scope,
             };
+
             this.optionsToPass.forEach(function (option) {
                 o[option] = this.options[option];
             }, this);
+
             if (this.options.params && this.options.params.rootUrl) {
                 o.rootUrl = this.options.params.rootUrl;
             }
+
             return this.createView('record', this.getRecordViewName(), o);
         },
 
@@ -80,22 +85,26 @@ define('views/edit', 'views/main', function (Dep) {
         },
 
         getHeader: function () {
-            var html = '';
-
             var headerIconHtml = this.getHeaderIconHtml();
 
             var arr = [];
 
-            if (this.options.noHeaderLinks) {
+            if (this.options.noHeaderLinks || this.rootLinkDisabled) {
                 arr.push(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
-            } else {
+            }
+            else {
                 var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-                arr.push(headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' + this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>');
+
+                arr.push(
+                    headerIconHtml + '<a href="' + rootUrl + '" class="action" data-action="navigateToRoot">' +
+                    this.getLanguage().translate(this.scope, 'scopeNamesPlural') + '</a>'
+                );
             }
 
             if (this.model.isNew()) {
                 arr.push(this.getLanguage().translate('create'));
-            } else {
+            }
+            else {
                 var name = Handlebars.Utils.escapeExpression(this.model.get('name'));
 
                 if (name === '') {
@@ -104,25 +113,35 @@ define('views/edit', 'views/main', function (Dep) {
 
                 if (this.options.noHeaderLinks) {
                     arr.push(name);
-                } else {
-                    arr.push('<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>');
+                }
+                else {
+                    arr.push(
+                        '<a href="#' + this.scope + '/view/' + this.model.id + '" class="action">' + name + '</a>'
+                    );
                 }
             }
+
             return this.buildHeaderHtml(arr);
         },
 
         updatePageTitle: function () {
             var title;
+
             if (this.model.isNew()) {
-                title = this.getLanguage().translate('Create') + ' ' + this.getLanguage().translate(this.scope, 'scopeNames');
-            } else {
+                title = this.getLanguage().translate('Create') + ' ' +
+                    this.getLanguage().translate(this.scope, 'scopeNames');
+            }
+            else {
                 var name = this.model.get('name');
+
                 if (name) {
                     title = name;
-                } else {
+                }
+                else {
                     title = this.getLanguage().translate(this.scope, 'scopeNames')
                 }
             }
+
             this.setPageTitle(title);
         },
     });

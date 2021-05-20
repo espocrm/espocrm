@@ -37,6 +37,8 @@ use Espo\Core\{
 
 /**
  * Creates services. Services are intended for a business logic. Do not confuse with container services.
+ *
+ * @deprecated Use DI to pass a specific service class to a constructor.
  */
 class ServiceFactory
 {

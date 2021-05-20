@@ -69,12 +69,9 @@ class EntityManager
         $this->entityManagerTool = $entityManagerTool;
         $this->configWriter = $configWriter;
 
-        $this->checkControllerAccess();
-    }
-
-    protected function checkAccess(): bool
-    {
-        return $this->user->isAdmin();
+        if (!$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
     }
 
     public function postActionCreateEntity(Request $request)

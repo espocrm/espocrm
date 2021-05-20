@@ -42,7 +42,7 @@ class SaverParamsTest extends \PHPUnit\Framework\TestCase
         ];
 
         $params = SaverParams
-            ::fromNothing()
+            ::create()
             ->withRawOptions($options);
 
         $this->assertEquals(true, $params->getOption('silent'));

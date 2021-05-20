@@ -57,12 +57,12 @@ class PhoneNumberTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals('+1', $group1->getPrimary()->getNumber());
 
         $group2 = PhoneNumberGroup
-            ::fromNothing()
+            ::create()
             ->withAdded(
-                PhoneNumber::fromNumber('+2')->invalid()
+                PhoneNumber::create('+2')->invalid()
             )
             ->withAdded(
-                PhoneNumber::fromNumber('+1')->optedOut()
+                PhoneNumber::create('+1')->optedOut()
             );
 
         $contact->setValueObject('phoneNumber', $group2);
@@ -83,9 +83,9 @@ class PhoneNumberTest extends \tests\integration\Core\BaseTestCase
         $this->assertTrue($group3->getList()[1]->isOptedOut());
 
         $group4 = PhoneNumberGroup
-            ::fromNothing()
+            ::create()
             ->withAdded(
-                PhoneNumber::fromNumber('+2')->invalid()
+                PhoneNumber::create('+2')->invalid()
             );
 
         $contact->setValueObject('phoneNumber', $group4);

@@ -93,7 +93,7 @@ class Application
         }
 
         $runner = $this->getInjectableFactory()->createWith($className, [
-            'params' => $params ?? RunnerParams::fromNothing(),
+            'params' => $params ?? RunnerParams::create(),
         ]);
 
         if (!$runner instanceof Runner) {

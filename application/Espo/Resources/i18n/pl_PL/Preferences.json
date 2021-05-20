@@ -21,10 +21,21 @@
     "defaultReminders": "Domyślne powiadomienia",
     "theme": "Motyw",
     "receiveAssignmentEmailNotifications": "Prześlij wiadomość po przypisaniu",
+    "receiveMentionEmailNotifications": "Powiadomienia e-mail o wzmiankach w postach",
+    "receiveStreamEmailNotifications": "Powiadomienia e-mail o wpisach i aktualizacjach statusu",
     "dashboardLayout": "Styl Głównego Panelu",
     "emailReplyForceHtml": "Odpowiadanie na e-maile w HTML",
     "autoFollowEntityTypeList": "Automatycznie obserwuj",
-    "emailReplyToAllByDefault": "Domyślnie odpowiadaj wszystkim"
+    "emailReplyToAllByDefault": "Domyślnie odpowiadaj wszystkim",
+    "doNotFillAssignedUserIfNotRequired": "Nie wypełniaj wstępnie przypisanego użytkownika podczas tworzenia rekordu",
+    "followEntityOnStreamPost": "Automatycznie obserwuj rekord po opublikowaniu w strumieniu",
+    "followCreatedEntities": "Automatycznie obserwuj utworzone rekordy",
+    "followCreatedEntityTypeList": "Automatyczne obserwuj utworzone rekordy określonych typów jednostek",
+    "emailUseExternalClient": "Użyj zewnętrznego klienta pocztowego",
+    "scopeColorsDisabled": "Wyłącz kolory ikonek",
+    "tabColorsDisabled": "Wyłącz kolory w menu",
+    "assignmentNotificationsIgnoreEntityTypeList": "Powiadomienia w aplikacji",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Powiadomienia e-mailem"
   },
   "options": {
     "weekStart": {
@@ -36,9 +47,13 @@
     "Notifications": "powiadomienia",
     "User Interface": "Interfejs Użytkownika",
     "Misc": "Różne",
-    "Locale": "Lokalizacja"
+    "Locale": "Lokalizacja",
+    "Reset Dashboard to Default": "Zresetuj pulpit do ustawień domyślnych"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Użytkownik będzie automatycznie obserwować nowe rekordy wybranych typów jednostek, będzie widzieć informacje w wiadomościach oraz otrzyma powiadomienia."
+    "autoFollowEntityTypeList": "Automatycznie śledź WSZYSTKIE nowe rekordy (utworzone przez dowolnego użytkownika) wybranych typów jednostek, aby móc przeglądać informacje w strumieniu i otrzymywać powiadomienia o wszystkich rekordach w systemie.",
+    "doNotFillAssignedUserIfNotRequired": "Podczas tworzenia rekordu przypisany użytkownik nie zostanie wypełniony własnym użytkownikiem, chyba że pole jest wymagane.",
+    "followCreatedEntities": "Podczas tworzenia nowych rekordów będą one automatycznie obserwowane, nawet jeśli zostaną przypisane do innego użytkownika.",
+    "followCreatedEntityTypeList": "Podczas tworzenia nowych rekordów wybranych opcji będą one automatycznie obserwowane, nawet jeśli zostaną przypisane do innego użytkownika."
   }
 }

@@ -1,12 +1,24 @@
 {
   "fields": {
     "urlToUse": "Kod do wstawienia zamiast URL",
-    "campaign": "Kampania"
+    "campaign": "Kampania",
+    "action": "Akcja",
+    "message": "Wiadomość"
   },
   "links": {
     "campaign": "Kampania"
   },
   "labels": {
     "Create CampaignTrackingUrl": "Utwórz adres śledzenia"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Przekierowanie",
+      "Show Message": "Wyświetl wiadomość"
+    }
+  },
+  "tooltips": {
+    "url": "Odbiorca zostanie przekierowany do tej lokalizacji po kliknięciu linku.",
+    "message": "Wiadomość zostanie wyświetlona odbiorcy po kliknięciu linku. Markdown jest obsługiwany."
   }
 }

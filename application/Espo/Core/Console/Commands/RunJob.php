@@ -87,7 +87,13 @@ class RunJob implements Command
             $this->jobManager->runJob($job);
         }
         catch (Throwable $e) {
-            $io->writeLine("Error: Job '{$jobName}' failed to execute.");
+            $message = "Error: Job '{$jobName}' failed to execute.";
+
+            if ($e->getMessage()) {
+                $message .= ' ' . $e->getMessage();
+            }
+
+            $io->writeLine($message);
 
             return;
         }

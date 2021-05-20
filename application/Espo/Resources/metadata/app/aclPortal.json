@@ -36,7 +36,9 @@
             "EmailFolder": false,
             "EmailAccount": false,
             "EmailTemplate": false,
-            "ActionHistoryRecord": false,
+            "ActionHistoryRecord": {
+                "read": "own"
+            },
             "Preferences": {
                 "read": "own",
                 "edit": "own",
@@ -104,6 +106,10 @@
                 "defaultTeam": false,
                 "auth2FA": false,
                 "isActive": false
+            },
+            "ActionHistoryRecord": {
+                "authToken": false,
+                "authLogRecord": false
             }
         }
     },

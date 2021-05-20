@@ -42,7 +42,7 @@ class QueueProcessorParamsTest extends \PHPUnit\Framework\TestCase
     public function testParams1()
     {
         $params = QueueProcessorParams
-            ::fromNothing()
+            ::create()
             ->withLimit(10);
 
         $this->assertFalse($params->useProcessPool());
@@ -56,7 +56,7 @@ class QueueProcessorParamsTest extends \PHPUnit\Framework\TestCase
     public function testParams2()
     {
         $params = QueueProcessorParams
-            ::fromNothing()
+            ::create()
             ->withLimit(10)
             ->withUseProcessPool(true)
             ->withNoLock(true)

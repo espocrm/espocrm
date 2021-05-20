@@ -5,7 +5,12 @@
     "entryCount": "Ilość jednostek",
     "campaigns": "Kampanie",
     "endDate": "Data zakończenia",
-    "targetLists": "Listy docelowe"
+    "targetLists": "Listy docelowe",
+    "includingActionList": "Włącznie z",
+    "excludingActionList": "Nie licząc",
+    "optedOutCount": "Liczba rezygnacji",
+    "targetStatus": "Stan docelowy",
+    "isOptedOut": "Zrezygnowano"
   },
   "links": {
     "accounts": "Klienci",
@@ -18,6 +23,10 @@
       "Email": "E-mail",
       "Web": "Strona internetowa",
       "Television": "Telewizja"
+    },
+    "targetStatus": {
+      "Opted Out": "Wycofał się",
+      "Listed": "Katalogowany"
     }
   },
   "labels": {

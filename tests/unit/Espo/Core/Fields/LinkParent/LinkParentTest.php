@@ -39,7 +39,7 @@ class LinkParentTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate()
     {
-        $value = LinkParent::fromEntityTypeAndId('Test', 'id');
+        $value = LinkParent::create('Test', 'id');
 
         $this->assertEquals('Test', $value->getEntityType());
         $this->assertEquals('id', $value->getId());
@@ -50,19 +50,19 @@ class LinkParentTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        LinkParent::fromEntityTypeAndId('Test', '');
+        LinkParent::create('Test', '');
     }
 
     public function testBad2()
     {
         $this->expectException(RuntimeException::class);
 
-        LinkParent::fromEntityTypeAndId('', 'id');
+        LinkParent::create('', 'id');
     }
 
     public function testWithName()
     {
-        $value = LinkParent::fromEntityTypeAndId('Test', 'id')->withName('Name');
+        $value = LinkParent::create('Test', 'id')->withName('Name');
 
         $this->assertEquals('Name', $value->getName());
     }

@@ -4,9 +4,9 @@
     "emailAddress": "E-mail",
     "website": "Strona Internetowa",
     "phoneNumber": "Telefon",
-    "billingAddress": "Adres Firmy",
-    "shippingAddress": "Adres Dostawy",
-    "description": "Opis ",
+    "billingAddress": "Adres rozliczeniowy",
+    "shippingAddress": "Adres dostawy",
+    "description": "Opis",
     "sicCode": "PKD",
     "industry": "Branża",
     "type": "Rodzaj",
@@ -14,6 +14,7 @@
     "campaign": "Kampania",
     "targetLists": "Listy docelowe",
     "targetList": "Lista docelowa",
+    "originalLead": "Oryginalny Lead",
     "contactIsInactive": "Nieaktywny"
   },
   "links": {
@@ -27,7 +28,8 @@
     "emailsPrimary": "Wiadomości (rozwinięte)",
     "targetLists": "Listy docelowe",
     "campaignLogRecords": "Log kampanii",
-    "campaign": "Kampania"
+    "campaign": "Kampania",
+    "originalLead": "Źródłowy lead"
   },
   "options": {
     "type": {
@@ -53,27 +55,41 @@
       "Grocery": "Sklep spożywczy",
       "Healthcare": "Opieka zdrowotna",
       "Insurance": "Ubezpieczenia",
+      "Manufacturing": "Produkcja",
+      "Real Estate": "Nieruchomości",
+      "Service": "Usługi",
       "Sports": "Sport",
+      "Software": "Oprogramowanie",
       "Technology": "Technologia",
       "Telecommunications": "Telekomunikacja",
       "Television": "Telewizja",
       "Transportation": "Transport",
+      "Aerospace": "Lotnictwo",
       "Architecture": "Architektura",
+      "Construction": "Budowa",
       "Defense": "Obrona",
       "Creative": "Kreatywność",
       "Culture": "Kultura",
       "Consulting": "Konsulting",
+      "Electric Power": "Energia elektryczna",
       "Hospitality": "Szpital",
       "Mass Media": "Media",
       "Mining": "Kopalnie",
       "Music": "Muzyka",
+      "Petroleum": "Ropa naftowa",
+      "Retail": "Handel detaliczny",
       "Shipping": "Dostawa",
       "Support": "Wsparcie",
-      "Water": "Woda"
+      "Testing, Inspection & Certification": "Testowanie, inspekcje i certyfikowanie",
+      "Wholesale": "Hurt",
+      "Water": "Woda",
+      "Travel": "Biura podróży"
     }
   },
   "labels": {
-    "Create Account": "Utwórz Konto"
+    "Create Account": "Utwórz Konto",
+    "Copy Billing": "Skopiuj adres firmy",
+    "Set Primary": "Ustaw Podstawowy"
   },
   "presetFilters": {
     "customers": "Klienci",

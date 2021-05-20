@@ -60,7 +60,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
 
     public function testFromIds()
     {
-        $params = Params::fromIds('Test', ['1']);
+        $params = Params::createWithIds('Test', ['1']);
 
         $this->assertEquals('Test', $params->getEntityType());
 
@@ -71,7 +71,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     {
         $searchParams = $this->createMock(SearchParams::class);
 
-        $params = Params::fromSearchParams('Test', $searchParams);
+        $params = Params::createWithSearchParams('Test', $searchParams);
 
         $this->assertEquals('Test', $params->getEntityType());
 

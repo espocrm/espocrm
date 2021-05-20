@@ -32,7 +32,7 @@ namespace Espo\Core\Fields\LinkMultiple;
 use Espo\{
     ORM\Entity,
     ORM\Value\ValueFactory,
-    ORM\Defs\Defs,
+    ORM\Defs,
     ORM\EntityManager,
 };
 
@@ -100,7 +100,7 @@ class LinkMultipleFactory implements ValueFactory
         }
 
         foreach ($idList as $id) {
-            $item = LinkMultipleItem::fromId($id);
+            $item = LinkMultipleItem::create($id);
 
             if ($columnData && property_exists($columnData, $id)) {
                 $item = $this->addColumnValues($item, $columnData->$id);

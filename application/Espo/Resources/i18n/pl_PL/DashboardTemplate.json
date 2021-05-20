@@ -1,6 +1,7 @@
 {
   "fields": {
-    "layout": "Układ"
+    "layout": "Układ",
+    "append": "Dołącz (nie usuwaj zakładek użytkownika)"
   },
   "labels": {
     "Create DashboardTemplate": "Utwórz szablon",

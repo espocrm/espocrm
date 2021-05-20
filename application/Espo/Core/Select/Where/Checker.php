@@ -34,6 +34,7 @@ use Espo\{
     Core\Exceptions\BadRequest,
     Core\Acl,
     ORM\QueryComposer\BaseQueryComposer as QueryComposer,
+    ORM\QueryComposer\Util as QueryUtil,
     ORM\EntityManager,
     ORM\Entity,
 };
@@ -104,8 +105,7 @@ class Checker
 
         if ($attribute && $forbidComplexExpressions) {
             if (
-                strpos($attribute, '.') !== false ||
-                strpos($attribute, ':') !== false
+                QueryUtil::isComplexExpression($attribute)
             ) {
                 throw new Forbidden("Complex expressions are forbidden in where.");
             }

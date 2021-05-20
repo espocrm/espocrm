@@ -1,0 +1,9 @@
+{
+  "fields": {
+    "layoutList": "Układy"
+  },
+  "labels": {
+    "Create LayoutSet": "Utwórz zestaw układów",
+    "Edit Layouts": "Edytuj układy"
+  }
+}

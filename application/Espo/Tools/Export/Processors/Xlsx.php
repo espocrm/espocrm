@@ -62,6 +62,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use RuntimeException;
 
 /**
  * @todo Refactor.
@@ -105,6 +106,10 @@ class Xlsx implements Processor
         $entityType = $params->getEntityType();
 
         $fieldList = $params->getFieldList();
+
+        if ($fieldList === null) {
+            throw new RuntimeException("Field list is required");
+        }
 
         $phpExcel = new Spreadsheet();
 

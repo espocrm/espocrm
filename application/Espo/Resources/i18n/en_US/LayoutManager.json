@@ -9,7 +9,8 @@
         "sticked": "Sticked",
         "isLarge": "Large font size",
         "hidden": "Hidden",
-        "dynamicLogicVisible": "Conditions making panel visible"
+        "dynamicLogicVisible": "Conditions making panel visible",
+        "dynamicLogicStyled": "Conditions making style applied"
     },
     "options": {
         "align": {
@@ -30,7 +31,11 @@
         "Layout": "Layout"
     },
     "tooltips": {
+        "sticked": "The panel will be sticked to the panel above. No gap between panels.",
         "hiddenPanel": "Need to click 'show more' to see the panel.",
+        "panelStyle": "A color of the panel.",
+        "dynamicLogicVisible": "If set, the panel will be hidden unless the condition is met.",
+        "dynamicLogicStyled": "A color will be applied if a specific condition is met . The color is defined by the *Style* parameter.",
         "link": "If checked, then a field value will be displayed as a link pointing to the detail view of the record. Usually it is used for *Name* fields."
     }
 }

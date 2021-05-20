@@ -1,5 +1,22 @@
 {
     "whereItemConverterClassNameMap": {
         "id_isOfType": "Espo\\Classes\\Select\\User\\Where\\ItemConverters\\IsOfType"
+    },
+    "accessControlFilterClassNameMap": {
+        "mandatory": "Espo\\Classes\\Select\\User\\AccessControlFilters\\Mandatory",
+        "onlyTeam": "Espo\\Classes\\Select\\User\\AccessControlFilters\\OnlyTeam",
+        "onlyOwn": "Espo\\Classes\\Select\\User\\AccessControlFilters\\OnlyOwn",
+        "portalOnlyOwn": "Espo\\Classes\\Select\\User\\AccessControlFilters\\PortalOnlyOwn"
+    },
+    "primaryFilterClassNameMap": {
+        "active": "Espo\\Classes\\Select\\User\\PrimaryFilters\\Active",
+        "activePortal": "Espo\\Classes\\Select\\User\\PrimaryFilters\\ActivePortal",
+        "activeApi": "Espo\\Classes\\Select\\User\\PrimaryFilters\\ActiveApi",
+        "portal": "Espo\\Classes\\Select\\User\\PrimaryFilters\\Portal",
+        "api": "Espo\\Classes\\Select\\User\\PrimaryFilters\\Api",
+        "internal": "Espo\\Classes\\Select\\User\\PrimaryFilters\\Internal"
+    },
+    "boolFilterClassNameMap": {
+        "onlyMyTeam": "Espo\\Classes\\Select\\User\\BoolFilters\\OnlyMyTeam"
     }
 }

@@ -35,7 +35,8 @@
     "CampaignTrackingUrl": "Adres śledzenia",
     "Activities": "Aktywności",
     "KnowledgeBaseArticle": "Artykuł bazy wiedzy",
-    "KnowledgeBaseCategory": "Kategoria bazy wiedzy"
+    "KnowledgeBaseCategory": "Kategoria bazy wiedzy",
+    "CampaignLogRecord": "Zapis dziennika kampanii"
   },
   "scopeNamesPlural": {
     "Account": "Klienci",
@@ -57,7 +58,8 @@
     "CampaignTrackingUrl": "Adresy śledzenia",
     "Activities": "Aktywności",
     "KnowledgeBaseArticle": "Baza wiedzy",
-    "KnowledgeBaseCategory": "Kategorie bazy wiedzy"
+    "KnowledgeBaseCategory": "Kategorie bazy wiedzy",
+    "CampaignLogRecord": "Zapisy dziennika kampanii"
   },
   "dashlets": {
     "Leads": "Moje Potencjalne Kontakty",
@@ -85,7 +87,8 @@
     "Log Call": "Zarejestruj Telefon",
     "Archive Email": "Archiwizuj e-mail",
     "Create Task": "Utwórz zadanie",
-    "Tasks": "Zadania"
+    "Tasks": "Zadania",
+    "Scheduler": "Harmonogram"
   },
   "fields": {
     "billingAddressCity": "Miasto",
@@ -102,6 +105,7 @@
     "addressMap": "Mapa",
     "shippingAddressCity": "Miasto (dostawy)",
     "shippingAddressStreet": "Ulica (dostawy)",
+    "shippingAddressState": "Województwo (dostawy)",
     "shippingAddressPostalCode": "Kod pocztowy (dostawy)",
     "shippingAddressMap": "Mapa (Dostawa)"
   },

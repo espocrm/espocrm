@@ -5,12 +5,17 @@
     "dateStart": "Data rozpoczęcia",
     "dateEnd": "Data zakończenia",
     "duration": "Czas",
-    "description": "Opis ",
+    "description": "Opis",
     "users": "Użytkownik",
     "contacts": "Kontakty",
     "leads": "Potencjalne Kontakty",
     "reminders": "Przypomnienia",
-    "account": "Klient"
+    "account": "Klient",
+    "acceptanceStatus": "Status akceptacji",
+    "dateStartDate": "Data rozpoczęcia (cały dzień)",
+    "dateEndDate": "Data zakończenia (cały dzień)",
+    "isAllDay": "Cały dzień",
+    "Acceptance": "Akceptacja"
   },
   "options": {
     "status": {
@@ -35,11 +40,16 @@
     "Set Not Held": "Nie odbyło się",
     "Send Invitations": "Wyślij Powiadomienie",
     "on time": "na czas",
-    "before": "przed"
+    "before": "przed",
+    "All-Day": "Cały dzień"
   },
   "presetFilters": {
     "planned": "Planowane",
     "held": "Odbyło się",
     "todays": "Dzisiaj"
+  },
+  "messages": {
+    "nothingHasBeenSent": "Nic nie zostało wysłane",
+    "selectAcceptanceStatus": "Ustaw swój status akceptacji."
   }
 }

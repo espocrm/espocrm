@@ -302,7 +302,14 @@ class Record extends RecordService implements
         $this->loadListAdditionalFields($entity);
     }
 
-/**
+    /**
+     * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     */
+    public function loadAdditionalFieldsForExport(Entity $entity)
+    {
+    }
+
+    /**
      * @deprecated
      */
     protected function getConvertCurrencyFieldList()

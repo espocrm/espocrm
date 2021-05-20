@@ -32,7 +32,7 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\{
     Container,
     Application,
-    UpgradeManager,
+    Upgrades\UpgradeManager,
     Console\Command,
     Console\Params,
     Console\IO,

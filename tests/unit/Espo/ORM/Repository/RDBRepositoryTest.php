@@ -46,6 +46,8 @@ use Espo\ORM\{
     CollectionFactory,
     Metadata,
     MetadataDataProvider,
+    QueryParams\Parts\Condition as Cond,
+    QueryParams\Parts\Expression as Expr,
 };
 
 use RuntimeException;
@@ -56,7 +58,7 @@ use tests\unit\testData\DB as Entities;
 
 class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $entityManager = $this->entityManager =
             $this->getMockBuilder(EntityManager::class)->disableOriginalConstructor()->getMock();
@@ -364,6 +366,26 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->repository->where('name', 'test')->find();
     }
 
+    public function testWhere3()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'whereClause' => [
+                'name=' => 'test',
+            ],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->where(Cond::equal(Expr::column('name'), 'test'))
+            ->find();
+    }
+
     public function testWhereMerge()
     {
         $paramsExpected = Select::fromRaw([
@@ -481,6 +503,26 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->repository->join('Test1', 'test1', ['k' => 'v'])->find();
     }
 
+    public function testJoin5()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'joins' => [
+                ['Test1', 'test1', ['k=' => 'v']],
+            ],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->join('Test1', 'test1', Cond::equal(Expr::column('k'), 'v'))
+            ->find();
+    }
+
     public function testLeftJoin1()
     {
         $paramsExpected = Select::fromRaw([
@@ -497,6 +539,26 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->with($paramsExpected);
 
         $this->repository->leftJoin('Test')->find();
+    }
+
+    public function testLeftJoin2()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'leftJoins' => [
+                ['Test1', 'test1', ['k=' => 'v']],
+            ],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->leftJoin('Test1', 'test1', Cond::equal(Expr::column('k'), 'v'))
+            ->find();
     }
 
     public function testMultipleLeftJoins()
@@ -584,6 +646,44 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->find();
     }
 
+    public function testOrder2()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'orderBy' => [['name', 'ASC']],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->order(Expr::create('name'))
+            ->find();
+    }
+
+    public function testOrder3()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'orderBy' => [['name', 'ASC']],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->order([
+                [Expr::create('name'), 'ASC']
+            ])
+            ->find();
+    }
+
     public function testGroupBy1()
     {
         $paramsExpected = Select::fromRaw([
@@ -638,6 +738,43 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->find();
     }
 
+    public function testGroupBy4()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'groupBy' => ['id', 'name'],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->groupBy(Expr::create('id'))
+            ->groupBy(Expr::create('name'))
+            ->find();
+    }
+
+    public function testGroupBy5()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'groupBy' => ['id', 'name'],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->groupBy([Expr::create('id'), Expr::create('name')])
+            ->find();
+    }
+
     public function testSelect1()
     {
         $paramsExpected = Select::fromRaw([
@@ -672,6 +809,50 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->repository
             ->select(['name'])
             ->select('date')
+            ->find();
+    }
+
+    public function testSelect3()
+    {
+        $select = $this->queryBuilder
+            ->select(Expr::create('name'))
+            ->from('Test')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($select);
+
+        $this->repository
+            ->select(['name'])
+            ->find();
+    }
+
+    public function testSelect4()
+    {
+        $select = $this->queryBuilder
+            ->select([
+                'name1',
+                ['name2', 'alias'],
+                ['name3'],
+            ])
+            ->from('Test')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($select);
+
+        $this->repository
+            ->select([
+                Expr::create('name1'),
+                [Expr::create('name2'), 'alias'],
+                [Expr::create('name3')],
+            ])
             ->find();
     }
 
@@ -888,7 +1069,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($collection))
             ->with($post, 'comments', $select);
 
-        $relationSelectBuilder = $repository->getRelation($post, 'comments')->find();
+        $repository->getRelation($post, 'comments')->find();
     }
 
     public function testRelationFindBelongsTo()
@@ -898,8 +1079,6 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 
         $post = $this->entityFactory->create('Post');
         $post->id = 'postId';
-
-        $collection = $this->createCollectionMock();
 
         $select = $this->queryBuilder
             ->select()
@@ -1154,7 +1333,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->createRepository('Post')->getRelation($account, 'teams')->updateColumns($team, $columns);
     }
 
-    public function testRelationSelectBuilderFind()
+    public function testRelationSelectBuilderFind1()
     {
         $repository = $this->createRepository('Post');
 
@@ -1184,6 +1363,44 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->distinct()
             ->where(['name' => 'test'])
             ->join('Test', 'test', ['id:' => 'id'])
+            ->order('id', 'DESC')
+            ->find();
+    }
+
+    public function testRelationSelectBuilderFind2()
+    {
+        $repository = $this->createRepository('Post');
+
+        $post = $this->entityFactory->create('Post');
+        $post->id = 'postId';
+
+        $collection = $this->createCollectionMock();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Comment')
+            ->select(['id'])
+            ->distinct()
+            ->where(Cond::equal(Expr::column('name'), 'test'))
+            ->join('Test', 'test', ['id=:' => 'id'])
+            ->order('id', 'DESC')
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($post, 'comments', $select);
+
+        $repository->getRelation($post, 'comments')
+            ->select(['id'])
+            ->distinct()
+            ->where(Cond::equal(Expr::column('name'), 'test'))
+            ->join(
+                'Test',
+                'test',
+                Cond::equal(Expr::column('id'), Expr::column('id'))
+            )
             ->order('id', 'DESC')
             ->find();
     }
@@ -1309,7 +1526,8 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($collection))
             ->with($account, 'teams', $select);
 
-        $this->createRepository('Account')->getRelation($account, 'teams')
+        $this->createRepository('Account')
+            ->getRelation($account, 'teams')
             ->where(['@relation.deleted' => false])
             ->find();
     }
@@ -1339,7 +1557,8 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($collection))
             ->with($account, 'teams', $select);
 
-        $this->createRepository('Account')->getRelation($account, 'teams')
+        $this->createRepository('Account')
+            ->getRelation($account, 'teams')
             ->where([
                 'OR' => [
                     ['@relation.deleted' => false],
@@ -1369,8 +1588,36 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($collection))
             ->with($account, 'teams', $select);
 
-        $this->createRepository('Account')->getRelation($account, 'teams')
+        $this->createRepository('Account')
+            ->getRelation($account, 'teams')
             ->where('@relation.deleted', false)
+            ->find();
+    }
+
+    public function testRelationSelectBuilderRelationWhere4()
+    {
+        $account = $this->entityFactory->create('Account');
+        $account->set('id', 'accountId');
+
+        $collection = $this->createCollectionMock();
+
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Team')
+            ->where(['entityTeam.deleted=' => false])
+            ->build();
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('selectRelated')
+            ->will($this->returnValue($collection))
+            ->with($account, 'teams', $select);
+
+        $this->createRepository('Account')
+            ->getRelation($account, 'teams')
+            ->where(
+                Cond::equal(Expr::column('@relation.deleted'), false)
+            )
             ->find();
     }
 }

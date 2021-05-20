@@ -60,6 +60,7 @@ use Espo\Core\{
 };
 
 use Exception;
+use InvalidArgumentException;
 
 /**
  * Sends emails. Builds parameters for sending. Should not be used directly.
@@ -139,10 +140,17 @@ class Sender
     /**
      * With parameters.
      *
-     * Available parameters: fromAddress, fromName, replyToAddress, replyToName.
+     * @param SenderParams|array $params
      */
-    public function withParams(array $params): self
+    public function withParams($params): self
     {
+        if ($params instanceof SenderParams) {
+            $params = $params->toArray();
+        }
+        else if (!is_array($params)) {
+            throw new InvalidArgumentException();
+        }
+
         $paramList = [
             'fromAddress',
             'fromName',
@@ -150,7 +158,7 @@ class Sender
             'replyToName',
         ];
 
-        foreach ($params as $key => $value) {
+        foreach (array_keys($params) as $key) {
             if (!in_array($key, $paramList)) {
                 unset($params[$key]);
             }
@@ -163,9 +171,18 @@ class Sender
 
     /**
      * With specific SMTP parameters.
+     *
+     * @param SmtpParams|array $params
      */
-    public function withSmtpParams(array $params): self
+    public function withSmtpParams($params): self
     {
+        if ($params instanceof SmtpParams) {
+            $params = $params->toArray();
+        }
+        else if (!is_array($params)) {
+            throw new InvalidArgumentException();
+        }
+
         return $this->useSmtp($params);
     }
 

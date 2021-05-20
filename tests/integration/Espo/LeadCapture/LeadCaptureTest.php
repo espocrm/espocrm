@@ -52,7 +52,7 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
             'fieldList' => ['name', 'emailAddress'],
             'leadSource' => 'Web Site'
         ];
-        $leadCapture = $leadCaptureService->createEntity($leadCapureData);
+        $leadCapture = $leadCaptureService->create($leadCapureData);
 
         $this->assertNotEmpty($leadCapture->get('apiKey'));
 

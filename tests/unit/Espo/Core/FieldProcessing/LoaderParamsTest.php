@@ -43,7 +43,7 @@ class LoaderParamsTest extends \PHPUnit\Framework\TestCase
         ];
 
         $params = LoaderParams
-            ::fromNothing()
+            ::create()
             ->withSelect($select);
 
         $this->assertEquals(true, $params->hasInSelect('id'));
@@ -55,7 +55,7 @@ class LoaderParamsTest extends \PHPUnit\Framework\TestCase
     public function testTwo(): void
     {
         $params = LoaderParams
-            ::fromNothing();
+            ::create();
 
 
         $this->assertEquals(false, $params->hasSelect());

@@ -9,17 +9,22 @@
     "doNotCall": "Nie Dzwoń",
     "closeDate": "Data Zamknięcia",
     "contacts": "Kontakty",
-    "description": "Opis ",
+    "description": "Opis",
     "amountConverted": "Wartość (konwertowana)",
     "amountWeightedConverted": "Wartość ważona",
     "campaign": "Kampania",
+    "originalLead": "Źródłowy lead",
+    "amountCurrency": "Waluta kwoty",
     "contactRole": "Rola kontaktu",
-    "lastStage": "Ostatni etap"
+    "lastStage": "Ostatni etap",
+    "contact": "Kontakt (Podstawowy)"
   },
   "links": {
     "contacts": "Kontakty",
     "documents": "Dokumenty",
-    "campaign": "Kampania"
+    "campaign": "Kampania",
+    "originalLead": "Źródłowy lead",
+    "contact": "Kontakt (Podstawowy)"
   },
   "options": {
     "stage": {
@@ -29,7 +34,7 @@
       "Value Proposition": "Oferta Produktowa",
       "Id. Decision Makers": "Oferta przekazna do osoby decyzyjnej",
       "Proposal/Price Quote": "Oferta Cenowa",
-      "Negotiation/Review": "Negocjacje ",
+      "Negotiation/Review": "Negocjacje",
       "Closed Won": "Zakończone Wygrane",
       "Closed Lost": "Zakończone Przegrane",
       "Proposal": "Oferta Cenowa",

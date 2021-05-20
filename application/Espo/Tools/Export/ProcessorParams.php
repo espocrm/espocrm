@@ -33,15 +33,15 @@ class ProcessorParams
 {
     private $fileName;
 
-    private $attributeList;
+    private $attributeList = null;
 
-    private $fieldList;
+    private $fieldList = null;
 
     private $name = null;
 
     private $entityType = null;
 
-    public function __construct(string $fileName, array $attributeList, array $fieldList)
+    public function __construct(string $fileName, array $attributeList, ?array $fieldList)
     {
         $this->fileName = $fileName;
         $this->attributeList = $attributeList;
@@ -76,7 +76,7 @@ class ProcessorParams
         return $this->attributeList;
     }
 
-    public function getFieldList(): array
+    public function getFieldList(): ?array
     {
         return $this->fieldList;
     }

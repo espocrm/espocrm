@@ -34,8 +34,8 @@ use Espo\Core\Exceptions\{
 };
 
 use Espo\Core\{
-    Record\Collection as RecordCollection,
     Api\Request,
+    Select\SearchParams,
 };
 
 use StdClass;
@@ -52,29 +52,11 @@ class Record extends RecordBase
 
         $searchParams = $this->fetchSearchParamsFromRequest($request);
 
-        $result = $this->getRecordService()->findLinked($id, $link, $searchParams);
-
-        if ($result instanceof RecordCollection) {
-            return (object) [
-                'total' => $result->getTotal(),
-                'list' => $result->getValueMapList(),
-            ];
-        }
-
-        if (is_array($result)) {
-            return [
-                'total' => $result['total'],
-                'list' => isset($result['collection']) ?
-                    $result['collection']->getValueMapList() :
-                    $result['list']
-            ];
-        }
+        $recordCollection = $this->getRecordService()->findLinked($id, $link, $searchParams);
 
         return (object) [
-            'total' => $result->total,
-            'list' => isset($result->collection) ?
-                $result->collection->getValueMapList() :
-                $result->list
+            'total' => $recordCollection->getTotal(),
+            'list' => $recordCollection->getValueMapList(),
         ];
     }
 
@@ -93,19 +75,9 @@ class Record extends RecordBase
         }
 
         if (!empty($data->massRelate)) {
-            if (!is_array($data->where)) {
-                throw new BadRequest();
-            }
+            $searchParams = $this->fetchMassLinkSearchParamsFromRequest($request);
 
-            $where = json_decode(json_encode($data->where), true);
-
-            $selectData = null;
-
-            if (isset($data->selectData) && is_array($data->selectData)) {
-                $selectData = json_decode(json_encode($data->selectData), true);
-            }
-
-            return $this->getRecordService()->massLink($id, $link, $where, $selectData);
+            return $this->getRecordService()->massLink($id, $link, $searchParams);
         }
 
         $foreignIdList = [];
@@ -190,5 +162,35 @@ class Record extends RecordBase
         $this->getRecordService()->unfollow($id);
 
         return true;
+    }
+
+    private function fetchMassLinkSearchParamsFromRequest(Request $request): SearchParams
+    {
+        $data = $request->getParsedBody();
+
+        $where = $data->where ?? null;
+
+        if ($where !== null) {
+            $where = json_decode(json_encode($where), true);
+        }
+
+        $params = json_decode(json_encode(
+            $data->searchParams ?? $data->selectData ?? (object) []
+        ), true);
+
+        if ($where !== null && !is_array($where)) {
+            throw new BadRequest("Bad 'where.");
+        }
+
+        if ($where !== null) {
+            $params['where'] = array_merge(
+                $params['where'] ?? [],
+                $where
+            );
+        }
+
+        unset($params['select']);
+
+        return SearchParams::fromRaw($params);
     }
 }

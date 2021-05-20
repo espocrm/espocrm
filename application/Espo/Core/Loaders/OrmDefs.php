@@ -34,7 +34,7 @@ use Espo\{
 };
 
 use Espo\{
-    ORM\Defs\Defs,
+    ORM\Defs,
     ORM\EntityManager,
 };
 

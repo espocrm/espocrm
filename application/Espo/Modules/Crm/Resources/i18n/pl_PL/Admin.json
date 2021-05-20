@@ -1,4 +1,7 @@
 {
+  "layouts": {
+    "listForContact": "Lista (dla Kontakt)"
+  },
   "templates": {
     "invitation": "Zaproszenie",
     "reminder": "Przypomnienie"

@@ -36,7 +36,7 @@ define('views/record/panels-container', 'view', function (Dep) {
             return {
                 panelList: this.panelList,
                 scope: this.scope,
-                entityType: this.entityType
+                entityType: this.entityType,
             };
         },
 
@@ -46,12 +46,16 @@ define('views/record/panels-container', 'view', function (Dep) {
                 var action = $target.data('action');
                 var panel = $target.data('panel');
                 var data = $target.data();
+
                 if (action && panel) {
                     var method = 'action' + Espo.Utils.upperCaseFirst(action);
                     var d = _.clone(data);
+
                     delete d['action'];
                     delete d['panel'];
+
                     var view = this.getView(panel);
+
                     if (view && typeof view[method] == 'function') {
                         view[method].call(view, d, e);
                     }
@@ -74,6 +78,7 @@ define('views/record/panels-container', 'view', function (Dep) {
 
                     if (this.isRendered()) {
                         var actionsView = this.getView(item.actionsViewKey);
+
                         if (actionsView) {
                             actionsView.reRender();
                         }
@@ -83,12 +88,16 @@ define('views/record/panels-container', 'view', function (Dep) {
         },
 
         applyAccessToActions: function (actionList) {
-            if (!actionList) return;
+            if (!actionList) {
+                return;
+            }
+
             actionList.forEach(function (item) {
                 if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
                     item.hidden = true;
                     return;
                 }
+
                 if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
                     if (item.isHiddenByAcl) {
                         item.isHiddenByAcl = false;
@@ -117,9 +126,11 @@ define('views/record/panels-container', 'view', function (Dep) {
                     inlineEditDisabled: this.inlineEditDisabled,
                     readOnly: this.readOnly,
                     disabled: p.hidden || false,
-                    recordViewObject: this.recordViewObject
+                    recordViewObject: this.recordViewObject,
                 };
+
                 options = _.extend(options, p.options);
+
                 this.createView(name, p.view, options, function (view) {
                     if ('getActionList' in view) {
                         p.actionList = view.getActionList();
@@ -141,11 +152,12 @@ define('views/record/panels-container', 'view', function (Dep) {
                     }
 
                     this.createView(name + 'Actions', 'views/record/panel-actions', {
-                        el: this.getSelector() + '.panel[data-name="'+p.name+'"] > .panel-heading > .panel-actions-container',
+                        el: this.getSelector() +
+                            '.panel[data-name="'+p.name+'"] > .panel-heading > .panel-actions-container',
                         model: this.model,
                         defs: p,
                         scope: this.scope,
-                        entityType: this.entityType
+                        entityType: this.entityType,
                     });
                 }, this);
             }, this);
@@ -155,12 +167,15 @@ define('views/record/panels-container', 'view', function (Dep) {
 
         getFieldViews: function (withHidden) {
             var fields = {};
+
             this.panelList.forEach(function (p) {
                 var panelView = this.getView(p.name);
+
                 if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
                     fields = _.extend(fields, panelView.getFieldViews());
                 }
             }, this);
+
             return fields;
         },
 
@@ -177,11 +192,14 @@ define('views/record/panels-container', 'view', function (Dep) {
                     data = _.extend(data, panelView.fetch());
                 }
             }, this);
+
             return data;
         },
 
         showPanel: function (name, softLockedType, callback) {
-            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) return;
+            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
+                return;
+            }
 
             if (softLockedType) {
                 this.recordHelper.setPanelStateParam(
@@ -191,24 +209,36 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
                 var iType = this.panelSoftLockedTypeList[i];
-                if (iType === softLockedType) continue;
+
+                if (iType === softLockedType) {
+                    continue;
+                }
+
                 var iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
-                if (this.recordHelper.getPanelStateParam(name, iParam)) return;
+
+                if (this.recordHelper.getPanelStateParam(name, iParam)) {
+                    return;
+                }
             }
 
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
             var isFound = false;
+
             this.panelList.forEach(function (d) {
                 if (d.name == name) {
                     d.hidden = false;
                     isFound = true;
                 }
             }, this);
-            if (!isFound) return;
+
+            if (!isFound) {
+                return;
+            }
 
             if (this.isRendered()) {
                 var view = this.getView(name);
+
                 if (view) {
                     view.$el.closest('.panel').removeClass('hidden');
                     view.disabled = false;
@@ -229,6 +259,7 @@ define('views/record/panels-container', 'view', function (Dep) {
             } else {
                 this.once('after:render', function () {
                     var view = this.getView(name);
+
                     if (view) {
                         view.$el.closest('.panel').removeClass('hidden');
                         view.disabled = false;
@@ -252,18 +283,24 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             if (softLockedType) {
                 this.recordHelper.setPanelStateParam(
-                     name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', true
+                     name,
+                     'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked',
+                     true
                 );
             }
 
             var isFound = false;
+
             this.panelList.forEach(function (d) {
                 if (d.name == name) {
                     d.hidden = true;
                     isFound = true;
                 }
             }, this);
-            if (!isFound) return;
+
+            if (!isFound) {
+                return;
+            }
 
             if (this.isRendered()) {
                 var view = this.getView(name);
@@ -296,20 +333,31 @@ define('views/record/panels-container', 'view', function (Dep) {
             }
 
             var newList = [];
+
             this.panelList.forEach(function (item, i) {
                 item.index = ('index' in item) ? item.index : i;
+
                 var allowedInLayout = false;
+
                 if (item.name) {
                     var itemData = layoutData[item.name] || {};
-                    if (itemData.disabled) return;
+
+                    if (itemData.disabled) {
+                        return;
+                    }
+
                     if (layoutData[item.name]) {
                         allowedInLayout = true;
                     }
+
                     for (var i in itemData) {
                         item[i] = itemData[i];
                     }
                 }
-                if (item.disabled && !allowedInLayout) return;
+                if (item.disabled && !allowedInLayout) {
+                    return;
+                }
+
                 newList.push(item);
             }, this);
 
@@ -321,6 +369,7 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
                 var dynamicLogic = this.recordViewObject.dynamicLogic;
+
                 this.panelList.forEach(function (item) {
                     if (item.dynamicLogicVisible) {
                         dynamicLogic.addPanelVisibleCondition(item.name, item.dynamicLogicVisible);
@@ -328,6 +377,10 @@ define('views/record/panels-container', 'view', function (Dep) {
                         if (this.recordHelper.getPanelStateParam(item.name, 'hidden')) {
                             item.hidden = true;
                         }
+                    }
+
+                    if (item.style && item.style !== 'default' && item.dynamicLogicStyled) {
+                        dynamicLogic.addPanelStyledCondition(item.name, item.dynamicLogicStyled);
                     }
                 }, this);
             }
@@ -344,14 +397,17 @@ define('views/record/panels-container', 'view', function (Dep) {
                     afterDelimiter = true;
                     rightAfterDelimiter = true;
                     index = i;
+
                     return;
                 }
+
                 if (afterDelimiter) {
                     p.hidden = true;
                     p.hiddenAfterDelimiter = true;
                     this.recordHelper.setPanelStateParam(p.name, 'hidden', true);
                     this.recordHelper.setPanelStateParam(p.name, 'hiddenDelimiterLocked', true);
                 }
+
                 if (rightAfterDelimiter) {
                     p.isRightAfterDelimiter = true;
                     rightAfterDelimiter = false;
@@ -367,13 +423,18 @@ define('views/record/panels-container', 'view', function (Dep) {
             }, this);
 
             this.panelsAreSet = true;
+
             this.trigger('panels-set');
         },
 
         actionShowMorePanels: function () {
             this.panelList.forEach(function (p) {
-                if (!p.hiddenAfterDelimiter) return;
+                if (!p.hiddenAfterDelimiter) {
+                    return;
+                }
+
                 delete p.isRightAfterDelimiter;
+
                 this.showPanel(p.name, 'delimiter');
             }, this);
 

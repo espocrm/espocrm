@@ -55,7 +55,7 @@ class SaveProcessor
 
     public function process(Entity $entity, array $options): void
     {
-        $params = SaverParams::fromNothing()->withRawOptions($options);
+        $params = SaverParams::create()->withRawOptions($options);
 
         foreach ($this->getSaverList($entity->getEntityType()) as $processor) {
             $processor->process($entity, $params);

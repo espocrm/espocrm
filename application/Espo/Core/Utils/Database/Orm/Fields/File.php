@@ -36,7 +36,7 @@ class File extends Base
         $fieldParams = $this->getFieldParams();
 
         $data = array(
-            $entityName => array (
+            $entityName => array(
                 'fields' => array(
                     $fieldName.'Id' => array(
                         'type' => 'foreignId',

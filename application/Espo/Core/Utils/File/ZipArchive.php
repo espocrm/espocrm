@@ -70,7 +70,7 @@ class ZipArchive
         $zip = new \ZipArchive;
         $res = $zip->open($file);
 
-        if ($res === TRUE) {
+        if ($res === true) {
 
             $this->getFileManager()->mkdir($destinationPath);
 

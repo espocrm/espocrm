@@ -1,20 +1,43 @@
 {
   "fields": {
     "name": "Nazwa",
+    "campaign": "Kampania",
     "isActive": "Jest aktywny",
+    "subscribeToTargetList": "Zapisz się do listy docelowej",
+    "subscribeContactToTargetList": "Subskrybuj Kontakt jeśli istnieje",
+    "targetList": "Lista docelowa",
+    "fieldList": "Pola Payload",
+    "optInConfirmation": "Podwójna subskrypcja",
+    "optInConfirmationEmailTemplate": "Szablon e-mail z potwierdzeniem subskrypcji",
+    "optInConfirmationLifetime": "Okres ważności potwierdzenia subskrypcji (w godzinach)",
+    "optInConfirmationSuccessMessage": "Tekst wyświetlany po potwierdzeniu subskrypcji",
+    "leadSource": "Źródło Leadu",
     "apiKey": "Klucz API",
-    "exampleRequestMethod": "Metoda"
+    "targetTeam": "Docelowy zespół",
+    "exampleRequestMethod": "Metoda",
+    "createLeadBeforeOptInConfirmation": "Utwórz potencjalnego klienta przed potwierdzeniem",
+    "duplicateCheck": "Duplikat sprawdzania",
+    "skipOptInConfirmationIfSubscribed": "Pomiń potwierdzenie jeśli Lead jest już na liście celów",
+    "smtpAccount": "Konto SMTP",
+    "inboundEmail": "Grupowe konto e-mail"
   },
   "links": {
-    "campaign": "Kampania"
+    "targetList": "Lista docelowa",
+    "campaign": "Kampania",
+    "optInConfirmationEmailTemplate": "Szablon e-mail z potwierdzeniem subskrypcji",
+    "targetTeam": "Docelowy zespół",
+    "inboundEmail": "Grupowe konto e-mail"
   },
   "labels": {
     "Create LeadCapture": "Utwórz punkt wejściowy(entry point)",
     "Generate New API Key": "Generuj nowy klucz API",
-    "Request": "Żądanie"
+    "Request": "Żądanie",
+    "Confirm Opt-In": "Potwierdź subskrypcje"
   },
   "messages": {
-    "generateApiKey": "Utwórz nowy klucz API"
+    "generateApiKey": "Utwórz nowy klucz API",
+    "optInConfirmationExpired": "Link potwierdzający subskrypcje stracił ważność.",
+    "optInIsConfirmed": "Subskrypcja potwierdzona."
   },
   "tooltips": {
     "optInConfirmationSuccessMessage": "Markdown jest wspierany."

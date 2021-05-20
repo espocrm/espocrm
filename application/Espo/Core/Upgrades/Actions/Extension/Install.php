@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Upgrades\Actions\Extension;
 
-use Espo\Core\ExtensionManager;
+use Espo\Core\Upgrades\ExtensionManager;
 
 use Espo\Core\Utils\Util;
 

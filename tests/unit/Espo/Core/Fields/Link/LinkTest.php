@@ -39,7 +39,7 @@ class LinkTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreate()
     {
-        $value = Link::fromId('id');
+        $value = Link::create('id');
 
         $this->assertEquals('id', $value->getId());
         $this->assertEquals(null, $value->getName());
@@ -49,12 +49,12 @@ class LinkTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(RuntimeException::class);
 
-        Link::fromId('');
+        Link::create('');
     }
 
     public function testWithName()
     {
-        $value = Link::fromId('id')->withName('Name');
+        $value = Link::create('id')->withName('Name');
 
         $this->assertEquals('Name', $value->getName());
     }

@@ -38,6 +38,7 @@ define('controllers/record', 'controller', function (Dep) {
             if (this.getAcl().check(this.name, action)) {
                 return true;
             }
+
             return false;
         },
 
@@ -48,7 +49,9 @@ define('controllers/record', 'controller', function (Dep) {
         },
 
         getViewName: function (type) {
-            return this.viewMap[type] || this.getMetadata().get(['clientDefs', this.name, 'views', type]) || 'views/' + Espo.Utils.camelCaseToHyphen(type);
+            return this.viewMap[type] ||
+                this.getMetadata().get(['clientDefs', this.name, 'views', type]) ||
+                'views/' + Espo.Utils.camelCaseToHyphen(type);
         },
 
         beforeList: function () {
@@ -57,6 +60,7 @@ define('controllers/record', 'controller', function (Dep) {
 
         actionList: function (options) {
             var isReturn = options.isReturn;
+
             if (this.getRouter().backProcessed) {
                 isReturn = true;
             }
@@ -78,7 +82,7 @@ define('controllers/record', 'controller', function (Dep) {
                 this.main(this.getViewName('list'), {
                     scope: this.name,
                     collection: collection,
-                    params: options
+                    params: options,
                 }, null, isReturn, key);
             }, this, false);
         },
@@ -89,12 +93,13 @@ define('controllers/record', 'controller', function (Dep) {
 
         createViewView: function (options, model, view) {
             var view = view || this.getViewName('detail');
+
             this.main(view, {
                 scope: this.name,
                 model: model,
                 returnUrl: options.returnUrl,
                 returnDispatchParams: options.returnDispatchParams,
-                params: options
+                params: options,
             });
         },
 
@@ -104,22 +109,27 @@ define('controllers/record', 'controller', function (Dep) {
             var id = options.id;
 
             var isReturn = this.getRouter().backProcessed;
+
             if (isReturn) {
                 if (this.lastViewActionOptions && this.lastViewActionOptions.id === id) {
                     options = this.lastViewActionOptions;
                 }
-            } else {
+            }
+            else {
                 delete this.lastViewActionOptions;
             }
+
             this.lastViewActionOptions = options;
 
             var createView = function (model) {
                 this.prepareModelView(model, options);
+
                 this.createViewView.call(this, options, model);
             }.bind(this);
 
             if ('model' in options) {
                 var model = options.model;
+
                 createView(model);
 
                 this.showLoadingNotification();
@@ -131,30 +141,34 @@ define('controllers/record', 'controller', function (Dep) {
                 this.listenToOnce(this.baseController, 'action', function () {
                     model.abortLastFetch();
                 }, this);
-            } else {
-                this.getModel().then(function (model) {
-                    model.id = id;
 
-                    this.showLoadingNotification();
-
-                    model.fetch({main: true}).then(function () {
-                        if (model.get('deleted')) {
-                            this.listenToOnce(model, 'after:restore-deleted', function () {
-                                createView(model);
-                            }, this);
-
-                            this.prepareModelView(model, options);
-                            this.createViewView(options, model, 'views/deleted-detail');
-                            return;
-                        }
-                        createView(model);
-                    }.bind(this));
-
-                    this.listenToOnce(this.baseController, 'action', function () {
-                        model.abortLastFetch();
-                    }, this);
-                }.bind(this));
+                return;
             }
+
+            this.getModel().then(function (model) {
+                model.id = id;
+
+                this.showLoadingNotification();
+
+                model.fetch({main: true}).then(function () {
+                    if (model.get('deleted')) {
+                        this.listenToOnce(model, 'after:restore-deleted', function () {
+                            createView(model);
+                        }, this);
+
+                        this.prepareModelView(model, options);
+                        this.createViewView(options, model, 'views/deleted-detail');
+
+                        return;
+                    }
+
+                    createView(model);
+                }.bind(this));
+
+                this.listenToOnce(this.baseController, 'action', function () {
+                    model.abortLastFetch();
+                }, this);
+            }.bind(this));
         },
 
         beforeCreate: function () {
@@ -164,7 +178,9 @@ define('controllers/record', 'controller', function (Dep) {
         prepareModelCreate: function (model, options) {
             this.listenToOnce(model, 'before:save', function () {
                 var key = this.name + 'List';
+
                 var stored = this.getStoredMainView(key);
+
                 if (stored && !stored.storeViewAfterCreate) {
                     this.clearStoredMainView(key);
                 }
@@ -172,7 +188,9 @@ define('controllers/record', 'controller', function (Dep) {
 
             this.listenToOnce(model, 'after:save', function () {
                 var key = this.name + 'List';
+
                 var stored = this.getStoredMainView(key);
+
                 if (stored && stored.storeViewAfterCreate && stored.collection) {
                     this.listenToOnce(stored, 'after:render', function () {
                         stored.collection.fetch();
@@ -183,6 +201,7 @@ define('controllers/record', 'controller', function (Dep) {
 
         create: function (options) {
             options = options || {};
+
             this.getModel().then(function (model) {
                 if (options.relate) {
                     model.setRelate(options.relate);
@@ -193,7 +212,7 @@ define('controllers/record', 'controller', function (Dep) {
                     model: model,
                     returnUrl: options.returnUrl,
                     returnDispatchParams: options.returnDispatchParams,
-                    params: options
+                    params: options,
                 };
 
                 if (options.attributes) {
@@ -217,7 +236,9 @@ define('controllers/record', 'controller', function (Dep) {
         prepareModelEdit: function (model, options) {
             this.listenToOnce(model, 'before:save', function () {
                 var key = this.name + 'List';
+
                 var stored = this.getStoredMainView(key);
+
                 if (stored && !stored.storeViewAfterUpdate) {
                     this.clearStoredMainView(key);
                 }
@@ -229,6 +250,7 @@ define('controllers/record', 'controller', function (Dep) {
 
             this.getModel().then(function (model) {
                 model.id = id;
+
                 if (options.model) {
                     model = options.model;
                 }
@@ -236,13 +258,14 @@ define('controllers/record', 'controller', function (Dep) {
                 this.prepareModelEdit(model, options);
 
                 this.showLoadingNotification();
+
                 this.listenToOnce(model, 'sync', function () {
                     var o = {
                         scope: this.name,
                         model: model,
                         returnUrl: options.returnUrl,
                         returnDispatchParams: options.returnDispatchParams,
-                        params: options
+                        params: options,
                     };
 
                     if (options.attributes) {
@@ -278,16 +301,20 @@ define('controllers/record', 'controller', function (Dep) {
                 }.bind(this);
 
                 var i = 0;
+
                 ids.forEach(function (id) {
                     var current = model.clone();
+
                     current.id = id;
                     models.push(current);
+
                     this.listenToOnce(current, 'sync', function () {
                         i++;
-                        if (i == ids.length) {
+                        if (i === ids.length) {
                             proceed();
                         }
                     });
+
                     current.fetch();
                 }.bind(this));
             }.bind(this));
@@ -303,19 +330,25 @@ define('controllers/record', 'controller', function (Dep) {
             if (!this.name) {
                 throw new Error('No collection for unnamed controller');
             }
+
             var collectionName = this.entityType || this.name;
+
             if (usePreviouslyFetched) {
                 if (collectionName in this.collectionMap) {
                     var collection = this.collectionMap[collectionName];
+
                     callback.call(context, collection);
+
                     return;
                 }
             }
             return this.collectionFactory.create(collectionName, function (collection) {
                 this.collectionMap[collectionName] = collection;
+
                 this.listenTo(collection, 'sync', function () {
                     collection.isFetched = true;
                 }, this);
+
                 if (callback) {
                     callback.call(context, collection);
                 }
@@ -332,6 +365,7 @@ define('controllers/record', 'controller', function (Dep) {
             if (!this.name) {
                 throw new Error('No collection for unnamed controller');
             }
+
             var modelName = this.entityType || this.name;
 
             return this.modelFactory.create(modelName, function (model) {

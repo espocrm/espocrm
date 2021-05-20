@@ -304,7 +304,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         ];
 
         $params = SearchParams
-            ::fromNothing()
+            ::create()
             ->withBoolFilterList(['a'])
             ->withMaxSize(10)
             ->withOffset(0)
@@ -333,7 +333,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
     public function testWithWhereAdded1(): void
     {
         $params = SearchParams
-            ::fromNothing()
+            ::create()
             ->withWhere(
                 WhereItem::fromRaw([
                     'type' => 'isTrue',
@@ -374,7 +374,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
     public function testWithWhereAdded2(): void
     {
         $params = SearchParams
-            ::fromNothing()
+            ::create()
             ->withWhereAdded(
                  WhereItem::fromRaw([
                     'type' => 'isTrue',

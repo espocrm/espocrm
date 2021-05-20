@@ -30,7 +30,7 @@
 namespace Espo\Core\Console\Commands;
 
 use Espo\Core\{
-    ExtensionManager,
+    Upgrades\ExtensionManager,
     Container,
     Console\Command,
     Console\Params,
@@ -227,7 +227,7 @@ class Extension implements Command
         }
     }
 
-    protected function createExtensionManager()
+    protected function createExtensionManager(): ExtensionManager
     {
         return new ExtensionManager($this->container);
     }

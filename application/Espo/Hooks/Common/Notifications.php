@@ -41,6 +41,7 @@ use Espo\Core\{
     ServiceFactory,
     Notification\AssignmentNotificator,
     Notification\AssignmentNotificatorFactory,
+    Notification\NotificatorParams,
 };
 
 use Espo\Entities\User;
@@ -83,7 +84,7 @@ class Notifications
         $this->user = $user;
     }
 
-    public function afterSave(Entity $entity, array $options = []) : void
+    public function afterSave(Entity $entity, array $options = []): void
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;
@@ -107,10 +108,19 @@ class Notifications
 
         $notificator = $this->getNotificator($entityType);
 
-        $notificator->process($entity, $options);
+        if (!$notificator instanceof AssignmentNotificator) {
+            // For backward compatiblity.
+            $notificator->process($entity, $options);
+
+            return;
+        }
+
+        $params = NotificatorParams::create()->withRawOptions($options);
+
+        $notificator->process($entity, $params);
     }
 
-    public function beforeRemove(Entity $entity, array $options = []) : void
+    public function beforeRemove(Entity $entity, array $options = []): void
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;
@@ -145,7 +155,7 @@ class Notifications
         }
     }
 
-    public function afterRemove(Entity $entity) : void
+    public function afterRemove(Entity $entity): void
     {
         $query = $this->entityManager->getQueryBuilder()
             ->delete()
@@ -167,7 +177,7 @@ class Notifications
         $this->entityManager->getQueryExecutor()->execute($query);
     }
 
-    private function checkHasStream($entityType) : bool
+    private function checkHasStream($entityType): bool
     {
         if (!array_key_exists($entityType, $this->hasStreamCache)) {
             $this->hasStreamCache[$entityType] = (bool) $this->metadata->get("scopes.{$entityType}.stream");
@@ -179,7 +189,7 @@ class Notifications
     /**
      * @return AssignmentNotificator
      */
-    private function getNotificator($entityType) : object
+    private function getNotificator(string $entityType): object
     {
         if (empty($this->notifatorsHash[$entityType])) {
             $notificator = $this->notificatorFactory->create($entityType);
@@ -190,7 +200,7 @@ class Notifications
         return $this->notifatorsHash[$entityType];
     }
 
-    private function getStreamService() : StreamService
+    private function getStreamService(): StreamService
     {
         if (empty($this->streamService)) {
             $this->streamService = $this->serviceFactory->create('Stream');

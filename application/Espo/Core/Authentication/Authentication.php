@@ -605,7 +605,7 @@ class Authentication
 
     private function setSecretInCookie(?string $secret): void
     {
-        $time = $secret ? strtotime('+1000 days'): -1;
+        $time = $secret ? strtotime('+1000 days') : -1;
 
         setcookie('auth-token-secret', $secret, [
             'expires' => $time,
