@@ -40,9 +40,8 @@ use Espo\Core\{
     Mail\Importer,
     Mail\MessageWrapper,
     Mail\Mail\Storage\Imap,
-    Mail\Parsers\MailMimeParser,
-    Notification\AssignmentNotificatorFactory,
-    Notification\AssignmentNotificator,
+    Mail\Parser,
+    Mail\ParserFactory,
 };
 
 use Espo\Entities\{
@@ -65,13 +64,9 @@ class EmailAccount extends Record implements
 {
     use Di\CryptSetter;
 
-    private $notificator = null;
-
     protected $storageClassName = Imap::class;
 
-    protected $parserClassName = MailMimeParser::class;
-
-    const PORTION_LIMIT = 10;
+    protected const PORTION_LIMIT = 10;
 
     protected function filterInput($data)
     {
@@ -110,7 +105,7 @@ class EmailAccount extends Record implements
         $password = $params['password'];
 
         if (!empty($params['id'])) {
-            $entity = $this->getEntityManager()->getEntity('EmailAccount', $params['id']);
+            $entity = $this->entityManager->getEntity('EmailAccount', $params['id']);
             if ($entity) {
                 $params['password'] = $this->crypt->decrypt($entity->get('password'));
                 $params['imapHandler'] = $entity->get('imapHandler');
@@ -133,7 +128,7 @@ class EmailAccount extends Record implements
     public function testConnection(array $params)
     {
         if (!empty($params['id'])) {
-            $account = $this->getEntityManager()->getEntity('EmailAccount', $params['id']);
+            $account = $this->entityManager->getEntity('EmailAccount', $params['id']);
 
             if ($account) {
                 $params['imapHandler'] = $account->get('imapHandler');
@@ -189,7 +184,7 @@ class EmailAccount extends Record implements
         if ($emailAddress && $userId && !$handlerClassName) {
             $emailAddress = strtolower($emailAddress);
 
-            $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($userId);
+            $userData = $this->entityManager->getRepository('UserData')->getByUserId($userId);
 
             if ($userData) {
                 $imapHandlers = $userData->get('imapHandlers') ?? (object) [];
@@ -232,7 +227,7 @@ class EmailAccount extends Record implements
     public function create(StdClass $data): Entity
     {
         if (!$this->getUser()->isAdmin()) {
-            $count = $this->getEntityManager()
+            $count = $this->entityManager
                 ->getRepository('EmailAccount')
                 ->where([
                     'assignedUserId' => $this->getUser()->id
@@ -249,7 +244,7 @@ class EmailAccount extends Record implements
             if (!$this->getUser()->isAdmin()) {
                 $entity->set('assignedUserId', $this->getUser()->id);
             }
-            $this->getEntityManager()->saveEntity($entity);
+            $this->entityManager->saveEntity($entity);
         }
 
         return $entity;
@@ -290,20 +285,25 @@ class EmailAccount extends Record implements
         return $storage;
     }
 
+    protected function createParser(): Parser
+    {
+        return $this->injectableFactory->create(ParserFactory::class)->create();
+    }
+
+    protected function createImporter(): Importer
+    {
+        return $this->injectableFactory->create(Importer::class);
+    }
+
     public function fetchFromMailServer(Entity $emailAccount)
     {
         if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
             throw new Error("Email Account {$emailAccount->id} is not active.");
         }
 
-        $importer = new Importer(
-            $this->getEntityManager(),
-            $this->getConfig(),
-            $this->getNotificator(),
-            $this->parserClassName
-        );
+        $importer = $this->createImporter();
 
-        $user = $this->getEntityManager()->getEntity('User', $emailAccount->get('assignedUserId'));
+        $user = $this->entityManager->getEntity('User', $emailAccount->get('assignedUserId'));
 
         if (!$user) {
             throw new Error();
@@ -317,7 +317,7 @@ class EmailAccount extends Record implements
             $teamIdList[] = $teamId;
         }
 
-        $filterCollection = $this->getEntityManager()
+        $filterCollection = $this->entityManager
             ->getRepository('EmailFilter')
             ->where([
                 'action' => 'Skip',
@@ -457,7 +457,8 @@ class EmailAccount extends Record implements
                 $email = null;
 
                 try {
-                    $parser = new $this->parserClassName($this->getEntityManager());
+                    $parser = $this->createParser();
+
                     $message = new MessageWrapper($storage, $id, $parser);
 
                     if ($message->isFetched() && $emailAccount->get('keepFetchedEmailsUnread')) {
@@ -491,7 +492,7 @@ class EmailAccount extends Record implements
                 }
 
                 if (!empty($email)) {
-                    $this->getEntityManager()->getRepository('EmailAccount')->relate($emailAccount, 'emails', $email);
+                    $this->entityManager->getRepository('EmailAccount')->relate($emailAccount, 'emails', $email);
                     if (!$email->isFetched()) {
                         $this->noteAboutEmail($email);
                     }
@@ -551,7 +552,7 @@ class EmailAccount extends Record implements
 
             $emailAccount->set('fetchData', $fetchData);
 
-            $this->getEntityManager()->saveEntity($emailAccount, ['silent' => true]);
+            $this->entityManager->saveEntity($emailAccount, ['silent' => true]);
         }
 
         $storage->close();
@@ -582,8 +583,8 @@ class EmailAccount extends Record implements
                 $e->getMessage()
             );
 
-            if ($this->getEntityManager()->getLocker()->isLocked()) {
-                $this->getEntityManager()->getLocker()->rollback();
+            if ($this->entityManager->getLocker()->isLocked()) {
+                $this->entityManager->getLocker()->rollback();
             }
         }
 
@@ -593,7 +594,7 @@ class EmailAccount extends Record implements
     protected function noteAboutEmail($email)
     {
         if ($email->get('parentType') && $email->get('parentId')) {
-            $parent = $this->getEntityManager()->getEntity($email->get('parentType'), $email->get('parentId'));
+            $parent = $this->entityManager->getEntity($email->get('parentType'), $email->get('parentId'));
             if ($parent) {
                 $this->getServiceFactory()->create('Stream')->noteEmailReceived($parent, $email);
                 return;
@@ -603,7 +604,7 @@ class EmailAccount extends Record implements
 
     public function findAccountForUser(User $user, $address)
     {
-        $emailAccount = $this->getEntityManager()
+        $emailAccount = $this->entityManager
             ->getRepository('EmailAccount')
             ->where([
                 'emailAddress' => $address,
@@ -665,17 +666,6 @@ class EmailAccount extends Record implements
         if (method_exists($handler, 'applyParams')) {
             $handler->applyParams($emailAccount->id, $params);
         }
-    }
-
-    private function getNotificator(): AssignmentNotificator
-    {
-        if (!$this->notificator) {
-            $factory = $this->injectableFactory->create(AssignmentNotificatorFactory::class);
-
-            $this->notificator = $factory->create('Email');
-        }
-
-        return $this->notificator;
     }
 
     protected function checkFetchOnlyHeader(Imap $storage, string $id): bool

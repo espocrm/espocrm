@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Mail;
 
-use Espo\Entities\Email;
+use Laminas\Mail\Storage\Message;
+
+use Espo\Core\Mail\Mail\Storage\Imap;
 
 class MessageWrapper
 {
@@ -41,18 +43,17 @@ class MessageWrapper
 
     private $rawContent = null;
 
-    private $zendMessage = null;
-
-    protected $zendMessageClass = 'Laminas\Mail\Storage\Message';
+    private $message = null;
 
     protected $fullRawContent = null;
 
     protected $flagList = null;
 
-    public function __construct($storage = null, $id = null, $parser = null)
+    public function __construct(?Imap $storage = null, ?string $id = null, ?Parser $parser = null)
     {
         if ($storage) {
             $data = $storage->getHeaderAndFlags($id);
+
             $this->rawHeader = $data['header'];
             $this->flagList = $data['flags'];
         }
@@ -62,32 +63,32 @@ class MessageWrapper
         $this->parser = $parser;
     }
 
-    public function setFullRawContent($content)
+    public function setFullRawContent(string $content): void
     {
         $this->fullRawContent = $content;
     }
 
-    public function getRawHeader()
+    public function getRawHeader(): string
     {
         return $this->rawHeader;
     }
 
-    public function getParser()
+    public function getParser(): ?Parser
     {
         return $this->parser;
     }
 
-    public function checkAttribute($attribute)
+    public function hasAttribute(string $attribute): bool
     {
-        return $this->getParser()->checkMessageAttribute($this, $attribute);
+        return $this->getParser()->hasMessageAttribute($this, $attribute);
     }
 
-    public function getAttribute($attribute)
+    public function getAttribute(string $attribute)
     {
         return $this->getParser()->getMessageAttribute($this, $attribute);
     }
 
-    public function getRawContent()
+    public function getRawContent(): string
     {
         if (is_null($this->rawContent)) {
             $this->rawContent = $this->storage->getRawContent($this->id);
@@ -96,7 +97,7 @@ class MessageWrapper
         return $this->rawContent;
     }
 
-    public function getFullRawContent()
+    public function getFullRawContent(): string
     {
         if ($this->fullRawContent) {
             return $this->fullRawContent;
@@ -105,40 +106,43 @@ class MessageWrapper
         return $this->getRawHeader() . "\n" . $this->getRawContent();
     }
 
-    public function getZendMessage()
+    public function getMessage(): Message
     {
-        if (!$this->zendMessage) {
-            $data = array();
+        if (!$this->message) {
+            $data = [];
+
             if ($this->storage) {
                 $data['handler'] = $this->storage;
             }
+
             if ($this->flagList) {
                 $data['flags'] = $this->flagList;
             }
+
             if ($this->fullRawContent) {
                 $data['raw'] = $this->fullRawContent;
-            } else {
-                if ($this->rawHeader) {
-                    $data['headers'] = $this->rawHeader;
-                }
             }
+            else if ($this->rawHeader) {
+                $data['headers'] = $this->rawHeader;
+            }
+
             if ($this->id) {
                 $data['id'] = $this->id;
             }
 
-            $this->zendMessage = new $this->zendMessageClass($data);
+            $this->message = new Message($data);
         }
 
-        return $this->zendMessage;
+        return $this->message;
     }
 
-    public function getFlags()
+    public function getFlags(): array
     {
-        return $this->flagList;
+        return $this->flagList ?? [];
     }
 
-    public function isFetched()
+    public function isFetched(): bool
     {
-        return !!$this->rawHeader;
+        return (bool) $this->rawHeader;
     }
 }

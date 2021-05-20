@@ -29,14 +29,25 @@
 
 namespace Espo\Core\Mail\Parsers;
 
-use ZBateson\MailMimeParser\MailMimeParser as Parser;
+use Espo\Entities\{
+    Email,
+    Attachment,
+};
 
-use Espo\Entities\Email as EmailEntity;
+use Espo\Core\{
+    Mail\MessageWrapper,
+    Mail\Parser,
+    ORM\EntityManager,
+};
+
+use ZBateson\MailMimeParser\MailMimeParser as WrappeeParser;
+
+use StdClass;
 
 /**
  * An adapter for MailMimeParser library.
  */
-class MailMimeParser
+class MailMimeParser implements Parser
 {
     private $entityManager;
 
@@ -44,61 +55,70 @@ class MailMimeParser
 
     protected $messageHash = [];
 
-    public function __construct($entityManager)
+    public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    protected function getEntityManager()
-    {
-        return $this->entityManager;
-    }
-
-    protected function getParser()
+    protected function getParser(): WrappeeParser
     {
         if (!$this->parser) {
-            $this->parser = new Parser();
+            $this->parser = new WrappeeParser();
         }
 
         return $this->parser;
     }
 
-    protected function loadContent($message)
+    protected function loadContent(MessageWrapper $message): void
     {
         $raw = $message->getFullRawContent();
+
         $key = spl_object_hash($message);
+
         $this->messageHash[$key] = $this->getParser()->parse($raw);
     }
 
-    protected function getMessage($message)
+    protected function getMessage(MessageWrapper $message)
     {
         $key = spl_object_hash($message);
+
         if (!array_key_exists($key, $this->messageHash)) {
             $raw = $message->getRawHeader();
+
             if (!$raw) {
                 $raw = $message->getFullRawContent();
             }
+
             $this->messageHash[$key] = $this->getParser()->parse($raw);
         }
 
         return $this->messageHash[$key];
     }
 
-    public function checkMessageAttribute($message, $attribute)
+    public function hasMessageAttribute(MessageWrapper $message, string $attribute): bool
     {
         return $this->getMessage($message)->getHeaderValue($attribute) !== null;
     }
 
-    public function getMessageAttribute($message, $attribute)
+    /**
+     * @return mixed
+     */
+    public function getMessageAttribute(MessageWrapper $message, string $attribute)
     {
-        if (!$this->checkMessageAttribute($message, $attribute)) return null;
+        if (!$this->hasMessageAttribute($message, $attribute)) {
+            return null;
+        }
 
         return $this->getMessage($message)->getHeaderValue($attribute);
     }
 
-    public function getMessageMessageId($message)
+    public function getMessageMessageId(MessageWrapper $message): ?string
     {
         $messageId = $this->getMessageAttribute($message, 'Message-ID');
+
+        if (!$messageId) {
+            return null;
+        }
 
         if ($messageId && strlen($messageId) && $messageId[0] !== '<') {
             $messageId = '<' . $messageId . '>';
@@ -107,17 +127,20 @@ class MailMimeParser
         return $messageId;
     }
 
-    public function getAddressNameMap($message)
+    public function getAddressNameMap(MessageWrapper $message): StdClass
     {
         $map = (object) [];
 
         foreach (['from', 'to', 'cc', 'reply-To'] as $type) {
             $header = $this->getMessage($message)->getHeader($type);
+
             if ($header && method_exists($header, 'getAddresses')) {
                 $list = $header->getAddresses();
+
                 foreach ($list as $item) {
                     $address = $item->getEmail();
                     $name = $item->getName();
+
                     if ($name && $address) {
                         $map->$address = $name;
                     }
@@ -128,36 +151,49 @@ class MailMimeParser
         return $map;
     }
 
-    public function getAddressDataFromMessage($message, $type)
+    public function getAddressDataFromMessage(MessageWrapper $message, string $type): ?StdClass
     {
-        $addressList = [];
         $header = $this->getMessage($message)->getHeader($type);
+
         if ($header && method_exists($header, 'getAddresses')) {
             foreach ($header->getAddresses() as $item) {
-                return [
+                return (object) [
                     'address' => $item->getEmail(),
-                    'name' => $item->getName()
+                    'name' => $item->getName(),
                 ];
             }
         }
+
         return null;
     }
 
-    public function getAddressListFromMessage($message, $type)
+    /**
+     * @return string[]
+     */
+    public function getAddressListFromMessage(MessageWrapper $message, string $type): array
     {
         $addressList = [];
+
         $header = $this->getMessage($message)->getHeader($type);
+
         if ($header && method_exists($header, 'getAddresses')) {
             $list = $header->getAddresses();
+
             foreach ($list as $address) {
                 $addressList[] = $address->getEmail();
             }
         }
+
         return $addressList;
     }
 
-    public function fetchContentParts(EmailEntity $email, $message, &$inlineAttachmentList = [])
+    /**
+     * @return Attachment[]
+     */
+    public function fetchContentParts(MessageWrapper $message, Email $email): array
     {
+        $inlineAttachmentList = [];
+
         $this->loadContent($message);
 
         $bodyPlain = '';
@@ -174,24 +210,34 @@ class MailMimeParser
         }
 
         for ($i = 0; $i < $htmlPartCount; $i++) {
-            if ($i) $bodyHtml .= "<br>";
+            if ($i) {
+                $bodyHtml .= "<br>";
+            }
+
             $inlinePart = $this->getMessage($message)->getHtmlPart($i);
+
             $bodyHtml .= $inlinePart->getContent();
         }
 
         for ($i = 0; $i < $textPartCount; $i++) {
-            if ($i) $bodyPlain .= "\n";
+            if ($i) {
+                $bodyPlain .= "\n";
+            }
+
             $inlinePart = $this->getMessage($message)->getTextPart($i);
+
             $bodyPlain .= $inlinePart->getContent();
         }
 
         if ($bodyHtml) {
             $email->set('isHtml', true);
             $email->set('body', $bodyHtml);
+
             if ($bodyPlain) {
                 $email->set('bodyPlain', $bodyPlain);
             }
-        } else {
+        }
+        else {
             $email->set('isHtml', false);
             $email->set('body', $bodyPlain);
             $email->set('bodyPlain', $bodyPlain);
@@ -202,26 +248,31 @@ class MailMimeParser
         }
 
         $attachmentObjList = $this->getMessage($message)->getAllAttachmentParts();
+
         $inlineIds = [];
 
         foreach ($attachmentObjList as $attachmentObj) {
-            $attachment = $this->getEntityManager()->getEntity('Attachment');
+            $attachment = $this->entityManager->getEntity('Attachment');
 
             $disposition = $attachmentObj->getHeaderValue('Content-Disposition');
 
-            $attachment = $this->getEntityManager()->getEntity('Attachment');
+            $attachment = $this->entityManager->getEntity('Attachment');
 
             $contentType = $attachmentObj->getHeaderValue('Content-Type');
 
             $filename = $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', null);
+
             if ($filename === null) {
                 $filename = $attachmentObj->getHeaderParameter('Content-Type', 'name', 'unnamed');
             }
+
             $attachment->set('name', $filename);
             $attachment->set('type', $contentType);
 
             $content = '';
+
             $binaryContentStream = $attachmentObj->getBinaryContentStream();
+
             if ($binaryContentStream) {
                 $content = $binaryContentStream->getContents();
             }
@@ -234,25 +285,30 @@ class MailMimeParser
 
             if ($disposition == 'inline') {
                 $attachment->set('role', 'Inline Attachment');
-            } else {
+            }
+            else {
                 $disposition = 'attachment';
                 $attachment->set('role', 'Attachment');
             }
 
             $attachment->set('contents', $content);
 
-            $this->getEntityManager()->saveEntity($attachment);
+            $this->entityManager->saveEntity($attachment);
 
             if ($disposition == 'attachment') {
                 $email->addLinkMultipleId('attachments', $attachment->id);
+
                 if ($contentId) {
                     $inlineIds[$contentId] = $attachment->id;
                 }
-            } else if ($disposition == 'inline') {
+            }
+            else if ($disposition == 'inline') {
                 if ($contentId) {
                     $inlineIds[$contentId] = $attachment->id;
+
                     $inlineAttachmentList[] = $attachment;
-                } else {
+                }
+                else {
                     $email->addLinkMultipleId('attachments', $attachment->id);
                 }
             }
@@ -264,11 +320,15 @@ class MailMimeParser
             foreach ($inlineIds as $cid => $attachmentId) {
                 if (strpos($body, 'cid:' . $cid) !== false) {
                     $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
-                } else {
+                }
+                else {
                     $email->addLinkMultipleId('attachments', $attachmentId);
                 }
             }
+
             $email->set('body', $body);
         }
+
+        return $inlineAttachmentList;
     }
 }

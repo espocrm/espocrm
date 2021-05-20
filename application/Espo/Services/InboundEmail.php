@@ -40,9 +40,8 @@ use Espo\Core\{
     Mail\Importer,
     Mail\MessageWrapper,
     Mail\Mail\Storage\Imap,
-    Mail\Parsers\MailMimeParser,
-    Notification\AssignmentNotificatorFactory,
-    Notification\AssignmentNotificator,
+    Mail\Parser,
+    Mail\ParserFactory,
 };
 
 use Espo\Services\{
@@ -73,13 +72,9 @@ class InboundEmail extends RecordService implements
     use Di\CryptSetter;
     use Di\EmailSenderSetter;
 
-    private $notificator = null;
-
     private $campaignService = null;
 
     protected $storageClassName = Imap::class;
-
-    protected $parserClassName = MailMimeParser::class;
 
     private const DEFAULT_AUTOREPLY_SUPPRESS_PERIOD = '2 hours';
 
@@ -116,10 +111,10 @@ class InboundEmail extends RecordService implements
         }
     }
 
-    public function getFolders($params)
+    public function getFolders($params): array
     {
         if (!empty($params['id'])) {
-            $account = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+            $account = $this->entityManager->getEntity('InboundEmail', $params['id']);
 
             if ($account) {
                 $params['password'] = $this->getCrypt()->decrypt($account->get('password'));
@@ -133,7 +128,7 @@ class InboundEmail extends RecordService implements
 
         $folders = new RecursiveIteratorIterator($storage->getFolders(), RecursiveIteratorIterator::SELF_FIRST);
 
-        foreach ($folders as $name => $folder) {
+        foreach ($folders as $folder) {
             $foldersArr[] = mb_convert_encoding($folder->getGlobalName(), 'UTF-8', 'UTF7-IMAP');
         }
 
@@ -143,7 +138,7 @@ class InboundEmail extends RecordService implements
     public function testConnection(array $params)
     {
         if (!empty($params['id'])) {
-            $account = $this->getEntityManager()->getEntity('InboundEmail', $params['id']);
+            $account = $this->entityManager->getEntity('InboundEmail', $params['id']);
 
             if ($account) {
                 $params['imapHandler'] = $account->get('imapHandler');
@@ -159,18 +154,23 @@ class InboundEmail extends RecordService implements
         throw new Error();
     }
 
+    protected function createParser(): Parser
+    {
+        return $this->injectableFactory->create(ParserFactory::class)->create();
+    }
+
+    protected function createImporter(): Importer
+    {
+        return $this->injectableFactory->create(Importer::class);
+    }
+
     public function fetchFromMailServer(Entity $emailAccount)
     {
         if ($emailAccount->get('status') != 'Active' || !$emailAccount->get('useImap')) {
             throw new Error("Group Email Account {$emailAccount->id} is not active.");
         }
 
-        $importer = new Importer(
-            $this->getEntityManager(),
-            $this->getConfig(),
-            $this->getNotificator(),
-            $this->parserClassName
-        );
+        $importer = $this->createImporter();
 
         $teamId = $emailAccount->get('teamId');
 
@@ -186,8 +186,8 @@ class InboundEmail extends RecordService implements
 
         if (!empty($teamIdList)) {
             if ($emailAccount->get('addAllTeamUsers')) {
-                $userList = $this->getEntityManager()
-                    ->getRepository('User')
+                $userList = $this->entityManager
+                    ->getRDBRepository('User')
                     ->select(['id'])
                     ->distinct()
                     ->join('teams')
@@ -207,8 +207,8 @@ class InboundEmail extends RecordService implements
             $teamIdList[] = $teamId;
         }
 
-        $filterCollection = $this->getEntityManager()
-            ->getRepository('EmailFilter')
+        $filterCollection = $this->entityManager
+            ->getRDBRepository('EmailFilter')
             ->where([
                 'action' => 'Skip',
                 'OR' => [
@@ -217,7 +217,7 @@ class InboundEmail extends RecordService implements
                         'parentId' => $emailAccount->id,
                     ],
                     [
-                        'parentId' => null
+                        'parentId' => null,
                     ],
                 ],
             ])
@@ -250,6 +250,7 @@ class InboundEmail extends RecordService implements
         $storage = $this->getStorage($emailAccount);
 
         $monitoredFolders = $emailAccount->get('monitoredFolders');
+
         if (empty($monitoredFolders)) {
             $monitoredFolders = 'INBOX';
         }
@@ -259,11 +260,12 @@ class InboundEmail extends RecordService implements
         foreach ($monitoredFoldersArr as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
 
-            $portionLimit = $this->getConfig()->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
+            $portionLimit = $this->config->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);
 
             try {
                 $storage->selectFolder($folder);
-            } catch (Exception $e) {
+            }
+            catch (Exception $e) {
                 $this->log->error(
                     'InboundEmail '.$emailAccount->id.' (Select Folder) [' . $e->getCode() . '] ' .$e->getMessage()
                 );
@@ -289,11 +291,11 @@ class InboundEmail extends RecordService implements
             }
 
             $previousLastUID = $lastUID;
-            $previousLastDate = $lastDate;
 
             if (!empty($lastUID) && !$forceByDate) {
                 $idList = $storage->getIdsFromUID($lastUID);
-            } else {
+            }
+            else {
                 $fetchSince = $emailAccount->get('fetchSince');
 
                 if ($lastDate) {
@@ -301,13 +303,16 @@ class InboundEmail extends RecordService implements
                 }
 
                 $dt = null;
+
                 try {
                     $dt = new DateTime($fetchSince);
-                } catch (Exception $e) {}
+                }
+                catch (Exception $e) {}
 
                 if ($dt) {
                     $idList = $storage->getIdsFromDate($dt->format('d-M-Y'));
-                } else {
+                }
+                else {
                     return false;
                 }
             }
@@ -319,6 +324,7 @@ class InboundEmail extends RecordService implements
             }
 
             $k = 0;
+
             foreach ($idList as $i => $id) {
                 if ($k == count($idList) - 1) {
                     $lastUID = $storage->getUniqueId($id);
@@ -341,16 +347,19 @@ class InboundEmail extends RecordService implements
 
                 try {
                     $toSkip = false;
-                    $parser = new $this->parserClassName($this->getEntityManager());
+
+                    $parser = $this->createParser();
+
                     $message = new MessageWrapper($storage, $id, $parser);
 
-                    if ($message && $message->checkAttribute('from')) {
+                    if ($message && $message->hasAttribute('from')) {
                         $fromString = $message->getAttribute('from');
 
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
                             try {
                                 $toSkip = $this->processBouncedMessage($message) || $toSkip;
-                            } catch (Throwable $e) {
+                            }
+                            catch (Throwable $e) {
                                 $this->log->error(
                                     'InboundEmail ' . $emailAccount->id .
                                     ' (Process Bounced Message: [' . $e->getCode() . '] ' .$e->getMessage()
@@ -377,13 +386,19 @@ class InboundEmail extends RecordService implements
                         );
 
                         if ($emailAccount->get('keepFetchedEmailsUnread')) {
-                            if (is_array($flags) && empty($flags[Storage::FLAG_SEEN])) {
+                            if (
+                                is_array($flags) &&
+                                count($flags) &&
+                                empty($flags[Storage::FLAG_SEEN])
+                            ) {
                                 unset($flags[Storage::FLAG_RECENT]);
+
                                 $storage->setFlags($id, $flags);
                             }
                         }
                     }
-                } catch (Throwable $e) {
+                }
+                catch (Throwable $e) {
                     $this->log->error(
                         'InboundEmail '.$emailAccount->id.
                         ' (Get Message): [' . $e->getCode() . '] ' .$e->getMessage()
@@ -398,20 +413,26 @@ class InboundEmail extends RecordService implements
                             }
                         }
 
-                        $this->getEntityManager()->getRepository('InboundEmail')->relate($emailAccount, 'emails', $email);
+                        $this->entityManager
+                            ->getRDBRepository('InboundEmail')
+                            ->getRelation($emailAccount, 'emails')
+                            ->relate($email);
 
                         if ($emailAccount->get('createCase')) {
                             if ($email->isFetched()) {
-                                $email = $this->getEntityManager()->getEntity('Email', $email->id);
-                            } else {
+                                $email = $this->entityManager->getEntity('Email', $email->id);
+                            }
+                            else {
                                 $email->updateFetchedValues();
                             }
+
                             if ($email) {
                                 $this->createCase($emailAccount, $email);
                             }
-                        } else {
+                        }
+                        else {
                             if ($emailAccount->get('reply')) {
-                                $user = $this->getEntityManager()->getEntity('User', $userId);
+                                $user = $this->entityManager->getEntity('User', $userId);
 
                                 $this->autoReply($emailAccount, $email, $user);
                             }
@@ -482,7 +503,7 @@ class InboundEmail extends RecordService implements
 
             $emailAccount->set('fetchData', $fetchData);
 
-            $this->getEntityManager()->saveEntity($emailAccount, ['silent' => true]);
+            $this->entityManager->saveEntity($emailAccount, ['silent' => true]);
         }
 
         $storage->close();
@@ -513,8 +534,8 @@ class InboundEmail extends RecordService implements
                 $e->getMessage()
             );
 
-            if ($this->getEntityManager()->getLocker()->isLocked()) {
-                $this->getEntityManager()->getLocker()->rollback();
+            if ($this->entityManager->getLocker()->isLocked()) {
+                $this->entityManager->getLocker()->rollback();
             }
         }
 
@@ -524,7 +545,7 @@ class InboundEmail extends RecordService implements
     protected function noteAboutEmail($email)
     {
         if ($email->get('parentType') && $email->get('parentId')) {
-            $parent = $this->getEntityManager()->getEntity($email->get('parentType'), $email->get('parentId'));
+            $parent = $this->entityManager->getEntity($email->get('parentType'), $email->get('parentId'));
 
             if ($parent) {
                 $this->getServiceFactory()->create('Stream')->noteEmailReceived($parent, $email);
@@ -558,7 +579,7 @@ class InboundEmail extends RecordService implements
             $email->addLinkMultipleId('teams', $teamId);
         }
 
-        $this->getEntityManager()->saveEntity($email, [
+        $this->entityManager->saveEntity($email, [
             'skipLinkMultipleRemove' => true,
             'skipLinkMultipleUpdate' => true,
         ]);
@@ -567,7 +588,7 @@ class InboundEmail extends RecordService implements
     protected function createCase($inboundEmail, $email)
     {
         if ($email->get('parentType') == 'Case' && $email->get('parentId')) {
-            $case = $this->getEntityManager()->getEntity('Case', $email->get('parentId'));
+            $case = $this->entityManager->getEntity('Case', $email->get('parentId'));
 
             if ($case) {
                 $this->processCaseToEmailFields($case, $email);
@@ -583,7 +604,7 @@ class InboundEmail extends RecordService implements
         if (preg_match('/\[#([0-9]+)[^0-9]*\]/', $email->get('name'), $m)) {
             $caseNumber = $m[1];
 
-            $case = $this->getEntityManager()
+            $case = $this->entityManager
                 ->getRepository('Case')
                 ->where([
                     'number' => $caseNumber,
@@ -614,7 +635,7 @@ class InboundEmail extends RecordService implements
 
         $case = $this->emailToCase($email, $params);
 
-        $user = $this->getEntityManager()->getEntity('User', $case->get('assignedUserId'));
+        $user = $this->entityManager->getEntity('User', $case->get('assignedUserId'));
 
         $this->getServiceFactory()->create('Stream')->noteEmailReceived($case, $email, true);
 
@@ -631,7 +652,7 @@ class InboundEmail extends RecordService implements
             $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\RoundRobin';
         }
 
-        $distribution = new $className($this->getEntityManager());
+        $distribution = new $className($this->entityManager);
 
         $user = $distribution->getUser($team, $targetUserPosition);
 
@@ -649,7 +670,7 @@ class InboundEmail extends RecordService implements
             $className = 'Espo\\Modules\\Crm\\Business\\Distribution\\CaseObj\\LeastBusy';
         }
 
-        $distribution = new $className($this->getEntityManager(), $this->getMetadata());
+        $distribution = new $className($this->entityManager, $this->getMetadata());
 
         $user = $distribution->getUser($team, $targetUserPosition);
 
@@ -661,7 +682,7 @@ class InboundEmail extends RecordService implements
 
     protected function emailToCase(EmailEntity $email, array $params = [])
     {
-        $case = $this->getEntityManager()->getEntity('Case');
+        $case = $this->entityManager->getEntity('Case');
 
         $case->populateDefaults();
 
@@ -681,7 +702,7 @@ class InboundEmail extends RecordService implements
         $copiedAttachmentIdList = [];
 
         foreach ($attachmentIdList as $attachmentId) {
-            $attachment = $this->getEntityManager()
+            $attachment = $this->entityManager
                 ->getRepository('Attachment')
                 ->get($attachmentId);
 
@@ -689,7 +710,7 @@ class InboundEmail extends RecordService implements
                 continue;
             }
 
-            $copiedAttachment = $this->getEntityManager()
+            $copiedAttachment = $this->entityManager
                 ->getRepository('Attachment')
                 ->getCopiedAttachment($attachment);
 
@@ -744,7 +765,7 @@ class InboundEmail extends RecordService implements
 
             case 'Round-Robin':
                 if ($teamId) {
-                    $team = $this->getEntityManager()->getEntity('Team', $teamId);
+                    $team = $this->entityManager->getEntity('Team', $teamId);
 
                     if ($team) {
                         $this->assignRoundRobin($case, $team, $targetUserPosition);
@@ -755,7 +776,7 @@ class InboundEmail extends RecordService implements
 
             case 'Least-Busy':
                 if ($teamId) {
-                    $team = $this->getEntityManager()->getEntity('Team', $teamId);
+                    $team = $this->entityManager->getEntity('Team', $teamId);
 
                     if ($team) {
                         $this->assignLeastBusy($case, $team, $targetUserPosition);
@@ -773,7 +794,7 @@ class InboundEmail extends RecordService implements
             $case->set('accountId', $email->get('accountId'));
         }
 
-        $contact = $this->getEntityManager()
+        $contact = $this->entityManager
             ->getRepository('Contact')
             ->join('emailAddresses', 'emailAddressesMultiple')
             ->where([
@@ -786,7 +807,7 @@ class InboundEmail extends RecordService implements
         }
         else {
             if (!$case->get('accountId')) {
-                $lead = $this->getEntityManager()
+                $lead = $this->entityManager
                     ->getRepository('Lead')
                     ->join('emailAddresses', 'emailAddressesMultiple')
                     ->where([
@@ -800,17 +821,17 @@ class InboundEmail extends RecordService implements
             }
         }
 
-        $this->getEntityManager()->saveEntity($case);
+        $this->entityManager->saveEntity($case);
 
         $email->set('parentType', 'Case');
         $email->set('parentId', $case->getId());
 
-        $this->getEntityManager()->saveEntity($email, [
+        $this->entityManager->saveEntity($email, [
             'skipLinkMultipleRemove' => true,
             'skipLinkMultipleUpdate' => true,
         ]);
 
-        return $this->getEntityManager()->getEntity('Case', $case->getId());
+        return $this->entityManager->getEntity('Case', $case->getId());
     }
 
     protected function autoReply($inboundEmail, $email, $case = null, $user = null)
@@ -829,11 +850,11 @@ class InboundEmail extends RecordService implements
 
         $threshold = $d->format('Y-m-d H:i:s');
 
-        $emailAddress = $this->getEntityManager()
+        $emailAddress = $this->entityManager
             ->getRepository('EmailAddress')
             ->getByAddress($email->get('from'));
 
-        $sentCount = $this->getEntityManager()
+        $sentCount = $this->entityManager
             ->getRDBRepository('Email')
             ->where([
                 'toEmailAddresses.id' => $emailAddress->getId(),
@@ -870,12 +891,12 @@ class InboundEmail extends RecordService implements
                     $entityHash['Case'] = $case;
 
                     if ($case->get('contactId')) {
-                        $contact = $this->getEntityManager()->getEntity('Contact', $case->get('contactId'));
+                        $contact = $this->entityManager->getEntity('Contact', $case->get('contactId'));
                     }
                 }
 
                 if (empty($contact)) {
-                    $contact = $this->getEntityManager()->getEntity('Contact');
+                    $contact = $this->entityManager->getEntity('Contact');
 
                     $fromName = EmailService::parseFromName($email->get('fromString'));
 
@@ -905,7 +926,7 @@ class InboundEmail extends RecordService implements
                     $subject = '[#' . $case->get('number'). '] ' . $subject;
                 }
 
-                $reply = $this->getEntityManager()->getEntity('Email');
+                $reply = $this->entityManager->getEntity('Email');
 
                 $reply->set('to', $email->get('from'));
                 $reply->set('subject', $subject);
@@ -922,7 +943,7 @@ class InboundEmail extends RecordService implements
                     $reply->set('parentType', $email->get('parentType'));
                 }
 
-                $this->getEntityManager()->saveEntity($reply);
+                $this->entityManager->saveEntity($reply);
 
                 $sender = $this->emailSender->create();
 
@@ -957,7 +978,7 @@ class InboundEmail extends RecordService implements
                     ->withMessage($message)
                     ->send($reply);
 
-                $this->getEntityManager()->saveEntity($reply);
+                $this->entityManager->saveEntity($reply);
 
                 return true;
             }
@@ -969,6 +990,7 @@ class InboundEmail extends RecordService implements
     protected function getSmtpParamsFromInboundEmail(InboundEmailEntity $emailAccount)
     {
         $smtpParams = [];
+
         $smtpParams['server'] = $emailAccount->get('smtpHost');
 
         if ($smtpParams['server']) {
@@ -1016,14 +1038,14 @@ class InboundEmail extends RecordService implements
             return false;
         }
 
-        $queueItem = $this->getEntityManager()->getEntity('EmailQueueItem', $queueItemId);
+        $queueItem = $this->entityManager->getEntity('EmailQueueItem', $queueItemId);
 
         if (!$queueItem) {
             return false;
         }
 
         $massEmailId = $queueItem->get('massEmailId');
-        $massEmail = $this->getEntityManager()->getEntity('MassEmail', $massEmailId);
+        $massEmail = $this->entityManager->getEntity('MassEmail', $massEmailId);
 
         $campaignId = null;
 
@@ -1033,17 +1055,17 @@ class InboundEmail extends RecordService implements
 
         $targetType = $queueItem->get('targetType');
         $targetId = $queueItem->get('targetId');
-        $target = $this->getEntityManager()->getEntity($targetType, $targetId);
+        $target = $this->entityManager->getEntity($targetType, $targetId);
 
         $emailAddress = $queueItem->get('emailAddress');
 
         if ($isHard && $emailAddress) {
-            $emailAddressEntity = $this->getEntityManager()->getRepository('EmailAddress')->getByAddress($emailAddress);
+            $emailAddressEntity = $this->entityManager->getRepository('EmailAddress')->getByAddress($emailAddress);
 
             if ($emailAddressEntity) {
                 $emailAddressEntity->set('invalid', true);
 
-                $this->getEntityManager()->saveEntity($emailAddressEntity);
+                $this->entityManager->saveEntity($emailAddressEntity);
             }
         }
 
@@ -1068,7 +1090,7 @@ class InboundEmail extends RecordService implements
 
     public function findAccountForSending(string $emailAddress): ?InboundEmailEntity
     {
-        $inboundEmail = $this->getEntityManager()
+        $inboundEmail = $this->entityManager
             ->getRepository('InboundEmail')
             ->where([
                 'status' => 'Active',
@@ -1119,7 +1141,7 @@ class InboundEmail extends RecordService implements
                 ];
             }
 
-            $inboundEmail = $this->getEntityManager()->getRepository('InboundEmail')->findOne($selectParams);
+            $inboundEmail = $this->entityManager->getRepository('InboundEmail')->findOne($selectParams);
 
         }
 
@@ -1255,20 +1277,9 @@ class InboundEmail extends RecordService implements
         }
     }
 
-    private function getNotificator(): AssignmentNotificator
-    {
-        if (!$this->notificator) {
-            $factory = $this->injectableFactory->create(AssignmentNotificatorFactory::class);
-
-            $this->notificator = $factory->create('Email');
-        }
-
-        return $this->notificator;
-    }
-
     protected function checkFetchOnlyHeader(Imap $storage, string $id): bool
     {
-        $maxSize = $this->getConfig()->get('emailMessageMaxSize');
+        $maxSize = $this->config->get('emailMessageMaxSize');
 
         if (!$maxSize) {
             return false;

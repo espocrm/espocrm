@@ -35,8 +35,9 @@ use Espo\Core\{
     Mail\MessageWrapper,
     ORM\EntityManager,
     Utils\Config,
-    Notificators\Notificator,
-    Mail\Parsers\MailMimeParser,
+    Notification\AssignmentNotificator,
+    Notification\AssignmentNotificatorFactory,
+    FieldProcessing\Relation\LinkMultipleSaver,
 };
 
 use DateTime;
@@ -44,7 +45,7 @@ use DateTimeZone;
 use Exception;
 
 /**
- * Imports an email message into CRM. Handles duplicate checking, parent look-up.
+ * Imports email messages. Handles duplicate checking, parent look-up.
  */
 class Importer
 {
@@ -52,27 +53,32 @@ class Importer
 
     private $config;
 
+    /**
+     * @var AssignmentNotificator
+     */
     private $notificator;
 
     private $filtersMatcher;
 
-    protected $defaultParserClassName = MailMimeParser::class;
+    private $parserFactory;
 
-    protected $parserClassName;
+    private $linkMultipleSaver;
 
     public function __construct(
         EntityManager $entityManager,
         Config $config,
-        ?Notificator $notificator = null,
-        ?string $parserClassName = null
+        AssignmentNotificatorFactory $notificatorFactory,
+        ParserFactory $parserFactory,
+        LinkMultipleSaver $linkMultipleSaver
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
-        $this->notificator = $notificator;
+        $this->parserFactory = $parserFactory;
+        $this->linkMultipleSaver = $linkMultipleSaver;
+
+        $this->notificator = $notificatorFactory->create('Email');
 
         $this->filtersMatcher = new FiltersMatcher();
-
-        $this->parserClassName = $parserClassName ?? $this->defaultParserClassName;
     }
 
     public function importMessage(
@@ -85,13 +91,7 @@ class Importer
         ?array $folderData = null
     ): ?Email {
 
-        $parser = $message->getParser();
-
-        $parserClassName = $this->parserClassName;
-
-        if (!$parser || get_class($parser) !== $parserClassName) {
-            $parser = new $parserClassName($this->entityManager);
-        }
+        $parser = $message->getParser() ?? $this->parserFactory->create();
 
         $email = $this->entityManager->getEntity('Email');
 
@@ -99,7 +99,7 @@ class Importer
 
         $subject = '';
 
-        if ($parser->checkMessageAttribute($message, 'subject')) {
+        if ($parser->hasMessageAttribute($message, 'subject')) {
             $subject = $parser->getMessageAttribute($message, 'subject');
         }
 
@@ -132,8 +132,8 @@ class Importer
         $fromAddressData = $parser->getAddressDataFromMessage($message, 'from');
 
         if ($fromAddressData) {
-            $fromString = ($fromAddressData['name'] ? ($fromAddressData['name'] . ' ') : '') . '<' .
-                $fromAddressData['address'] .'>';
+            $fromString = ($fromAddressData->name ? ($fromAddressData->name . ' ') : '') . '<' .
+                $fromAddressData->address . '>';
 
             $email->set('fromString', $fromString);
         }
@@ -141,8 +141,8 @@ class Importer
         $replyToData = $parser->getAddressDataFromMessage($message, 'reply-To');
 
         if ($replyToData) {
-            $replyToString = ($replyToData['name'] ? ($replyToData['name'] . ' ') : '') .
-                '<' . $replyToData['address'] .'>';
+            $replyToString = ($replyToData->name ? ($replyToData->name . ' ') : '') .
+                '<' . $replyToData->address . '>';
 
             $email->set('replyToString', $replyToString);
         }
@@ -174,14 +174,14 @@ class Importer
         }
 
         if (
-            $parser->checkMessageAttribute($message, 'message-Id') &&
+            $parser->hasMessageAttribute($message, 'message-Id') &&
             $parser->getMessageAttribute($message, 'message-Id')
         ) {
             $messageId = $parser->getMessageMessageId($message);
 
             $email->set('messageId', $messageId);
 
-            if ($parser->checkMessageAttribute($message, 'delivered-To')) {
+            if ($parser->hasMessageAttribute($message, 'delivered-To')) {
                 $email->set(
                     'messageIdInternal',
                     $messageId . '-' . $parser->getMessageAttribute($message, 'delivered-To')
@@ -205,7 +205,7 @@ class Importer
             }
         }
 
-        if ($parser->checkMessageAttribute($message, 'date')) {
+        if ($parser->hasMessageAttribute($message, 'date')) {
             try {
                 $dt = new DateTime($parser->getMessageAttribute($message, 'date'));
 
@@ -221,7 +221,7 @@ class Importer
             $email->set('dateSent', date('Y-m-d H:i:s'));
         }
 
-        if ($parser->checkMessageAttribute($message, 'delivery-Date')) {
+        if ($parser->hasMessageAttribute($message, 'delivery-Date')) {
             try {
                 $dt = new DateTime($parser->getMessageAttribute($message, 'delivery-Date'));
 
@@ -237,7 +237,7 @@ class Importer
         $inlineAttachmentList = [];
 
         if (!$fetchOnlyHeader) {
-            $parser->fetchContentParts($email, $message, $inlineAttachmentList);
+            $inlineAttachmentList = $parser->fetchContentParts($message, $email);
 
             if ($this->filtersMatcher->match($email, $filterList)) {
                 return null;
@@ -253,7 +253,7 @@ class Importer
         $replied = null;
 
         if (
-            $parser->checkMessageAttribute($message, 'in-Reply-To') &&
+            $parser->hasMessageAttribute($message, 'in-Reply-To') &&
             $parser->getMessageAttribute($message, 'in-Reply-To')
         ) {
             $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
@@ -284,7 +284,7 @@ class Importer
         }
 
         if (
-            $parser->checkMessageAttribute($message, 'references') &&
+            $parser->hasMessageAttribute($message, 'references') &&
             $parser->getMessageAttribute($message, 'references')
         ) {
             $references = $parser->getMessageAttribute($message, 'references');
@@ -611,27 +611,19 @@ class Importer
             ->getRepository('Email')
             ->applyUsersFilters($duplicate);
 
-        $this->entityManager
-            ->getRepository('Email')
-            ->processLinkMultipleFieldSave($duplicate, 'users', [
-                'skipLinkMultipleRemove' => true,
-                'skipLinkMultipleUpdate' => true,
-            ]);
+        $this->linkMultipleSaver->process($duplicate, 'users', [
+            'skipLinkMultipleRemove' => true,
+            'skipLinkMultipleUpdate' => true,
+        ]);
 
-        $this->entityManager
-            ->getRepository('Email')
-            ->processLinkMultipleFieldSave($duplicate, 'assignedUsers', [
-                'skipLinkMultipleRemove' => true,
-                'skipLinkMultipleUpdate' => true,
-            ]);
+        $this->linkMultipleSaver->process($duplicate, 'assignedUsers', [
+            'skipLinkMultipleRemove' => true,
+            'skipLinkMultipleUpdate' => true,
+        ]);
 
-        $notificator = $this->notificator;
-
-        if ($notificator) {
-            $notificator->process($duplicate, [
-                'isBeingImported' => true,
-            ]);
-        }
+        $this->notificator->process($duplicate, [
+            'isBeingImported' => true,
+        ]);
 
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 
