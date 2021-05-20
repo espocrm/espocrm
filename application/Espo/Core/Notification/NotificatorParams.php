@@ -29,12 +29,39 @@
 
 namespace Espo\Core\Notification;
 
-use Espo\ORM\Entity;
-
-/**
- * Processes assignment notifications. Called after entity is saved.
- */
-interface AssignmentNotificator
+class NotificatorParams
 {
-    public function process(Entity $entity, NotificatorParams $params): void;
+    private $options = [];
+
+    public function hasOption(string $option): bool
+    {
+        return array_key_exists($option, $this->options);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOption(string $option)
+    {
+        return $this->options[$option] ?? null;
+    }
+
+    public function getRawOptions(): array
+    {
+        return $this->options;
+    }
+
+    public function withRawOptions(array $options): self
+    {
+        $obj = clone $this;
+
+        $obj->options = $options;
+
+        return $obj;
+    }
+
+    public static function create(): self
+    {
+        return new self();
+    }
 }

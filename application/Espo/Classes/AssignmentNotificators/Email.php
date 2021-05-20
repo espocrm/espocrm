@@ -39,6 +39,7 @@ use Espo\{
 use Espo\Core\{
     Notification\AssignmentNotificator,
     Notification\UserEnabledChecker,
+    Notification\NotificatorParams,
     ORM\EntityManager,
     ServiceFactory,
     AclManager,
@@ -77,13 +78,13 @@ class Email implements AssignmentNotificator
         $this->aclManager = $aclManager;
     }
 
-    public function process(Entity $entity, array $options = []) : void
+    public function process(Entity $entity, NotificatorParams $params) : void
     {
         if (!in_array($entity->get('status'), ['Archived', 'Sent', 'Being Imported'])) {
             return;
         }
 
-        if (!empty($options['isJustSent'])) {
+        if ($params->getOption('isJustSent')) {
             $previousUserIdList = [];
         }
         else {
@@ -205,7 +206,10 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
-            if (!empty($options['isBeingImported']) || !empty($options['isJustSent'])) {
+            if (
+                $params->getOption('isBeingImported') ||
+                $params->getOption('isJustSent')
+            ) {
                 $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);
 
                 if ($folderId) {
@@ -237,7 +241,10 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
-            if ($entity->get('status') == 'Archived' || !empty($options['isBeingImported'])) {
+            if (
+                $entity->get('status') == 'Archived' ||
+                $params->getOption('isBeingImported')
+            ) {
                 if ($parent) {
                     if ($this->getStreamService()->checkIsFollowed($parent, $userId)) {
                         continue;

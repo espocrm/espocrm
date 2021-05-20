@@ -37,6 +37,7 @@ use Espo\Core\{
     Utils\Config,
     Notification\AssignmentNotificator,
     Notification\AssignmentNotificatorFactory,
+    Notification\NotificatorParams,
     FieldProcessing\Relation\LinkMultipleSaver,
     FieldProcessing\SaverParams,
 };
@@ -620,9 +621,11 @@ class Importer
         $this->linkMultipleSaver->process($duplicate, 'users', $saverParams);
         $this->linkMultipleSaver->process($duplicate, 'assignedUsers', $saverParams);
 
-        $this->notificator->process($duplicate, [
+        $notificatorParams = NotificatorParams::create()->withRawOptions([
             'isBeingImported' => true,
         ]);
+
+        $this->notificator->process($duplicate, $notificatorParams);
 
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 

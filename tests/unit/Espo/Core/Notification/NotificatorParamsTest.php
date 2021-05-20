@@ -27,14 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Notification;
+namespace tests\unit\Espo\Core\FieldProcessing;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    Notification\NotificatorParams,
+};
 
-/**
- * Processes assignment notifications. Called after entity is saved.
- */
-interface AssignmentNotificator
+class NotificatorParamsTest extends \PHPUnit\Framework\TestCase
 {
-    public function process(Entity $entity, NotificatorParams $params): void;
+    public function testOne(): void
+    {
+        $options = [
+            'silent' => true,
+        ];
+
+        $params = NotificatorParams
+            ::create()
+            ->withRawOptions($options);
+
+        $this->assertEquals(true, $params->getOption('silent'));
+        $this->assertEquals(true, $params->hasOption('silent'));
+        $this->assertEquals(null, $params->getOption('skipHooks'));
+        $this->assertEquals(false, $params->hasOption('skipHooks'));
+
+        $this->assertEquals($options, $params->getRawOptions());
+    }
 }

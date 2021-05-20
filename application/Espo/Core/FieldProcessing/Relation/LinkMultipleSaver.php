@@ -33,6 +33,7 @@ use Espo\ORM\Entity;
 
 use Espo\Core\{
     ORM\EntityManager,
+    FieldProcessing\SaverParams,
 };
 
 class LinkMultipleSaver
@@ -44,7 +45,7 @@ class LinkMultipleSaver
         $this->entityManager = $entityManager;
     }
 
-    public function process(Entity $entity, string $name, array $options): void
+    public function process(Entity $entity, string $name, SaverParams $params): void
     {
         $entityType = $entity->getEntityType();
 
@@ -55,9 +56,9 @@ class LinkMultipleSaver
 
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
 
-        $skipCreate = $options['skipLinkMultipleCreate'] ?? false;
-        $skipRemove = $options['skipLinkMultipleRemove'] ?? false;
-        $skipUpdate = $options['skipLinkMultipleUpdate'] ?? false;
+        $skipCreate = $params->getOption('skipLinkMultipleCreate') ?? false;
+        $skipRemove = $params->getOption('skipLinkMultipleRemove') ?? false;
+        $skipUpdate = $params->getOption('skipLinkMultipleUpdate') ?? false;
 
         if ($entity->isNew()) {
             $skipRemove = true;
@@ -156,11 +157,9 @@ class LinkMultipleSaver
                 }
 
                 if (
-                    property_exists($columnData->$id, $columnName)
-                    &&
+                    property_exists($columnData->$id, $columnName) &&
                     (
-                        !property_exists($existingColumnsData->$id, $columnName)
-                        ||
+                        !property_exists($existingColumnsData->$id, $columnName) ||
                         $columnData->$id->$columnName !== $existingColumnsData->$id->$columnName
                     )
                 ) {
