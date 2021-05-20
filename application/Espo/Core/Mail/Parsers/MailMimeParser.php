@@ -100,10 +100,7 @@ class MailMimeParser implements Parser
         return $this->getMessage($message)->getHeaderValue($attribute) !== null;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMessageAttribute(MessageWrapper $message, string $attribute)
+    public function getMessageAttribute(MessageWrapper $message, string $attribute): ?string
     {
         if (!$this->hasMessageAttribute($message, $attribute)) {
             return null;

@@ -44,6 +44,8 @@ interface Parser
 {
     public function hasMessageAttribute(MessageWrapper $message, string $attribute): bool;
 
+    public function getMessageAttribute(MessageWrapper $message, string $attribute): ?string;
+
     public function getMessageMessageId(MessageWrapper $message): ?string;
 
     public function getAddressNameMap(MessageWrapper $message): StdClass;
