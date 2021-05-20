@@ -56,6 +56,8 @@ use Espo\Entities\{
     Email as EmailEntity,
 };
 
+use Espo\Modules\Crm\Entities\CaseObj as CaseEntity;
+
 use Espo\Core\Di;
 
 use RecursiveIteratorIterator;
@@ -352,7 +354,7 @@ class InboundEmail extends RecordService implements
 
                     $message = new MessageWrapper($storage, $id, $parser);
 
-                    if ($message && $message->hasAttribute('from')) {
+                    if ($message->hasAttribute('from')) {
                         $fromString = $message->getAttribute('from');
 
                         if (preg_match('/MAILER-DAEMON|POSTMASTER/i', $fromString)) {
@@ -367,6 +369,10 @@ class InboundEmail extends RecordService implements
                             }
                         }
                     }
+
+                    $skipAutoReply = $this->checkMessageCannotBeAutoReplied($message);
+
+                    $isAutoReply = $this->checkMessageIsAutoReply($message);
 
                     if (!$toSkip) {
                         if ($message->isFetched() && $emailAccount->get('keepFetchedEmailsUnread')) {
@@ -426,15 +432,15 @@ class InboundEmail extends RecordService implements
                                 $email->updateFetchedValues();
                             }
 
-                            if ($email) {
+                            if ($email && !$isAutoReply) {
                                 $this->createCase($emailAccount, $email);
                             }
                         }
                         else {
-                            if ($emailAccount->get('reply')) {
+                            if ($emailAccount->get('reply') && !$skipAutoReply) {
                                 $user = $this->entityManager->getEntity('User', $userId);
 
-                                $this->autoReply($emailAccount, $email, $user);
+                                $this->autoReply($emailAccount, $email, null, $user);
                             }
                         }
                     }
@@ -528,7 +534,8 @@ class InboundEmail extends RecordService implements
             $email = $importer->importMessage(
                 $message, $userId, $teamIdList, $userIdList, $filterCollection, $fetchOnlyHeader, $folderData
             );
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             $this->log->error(
                 'InboundEmail '.$emailAccount->id.' (Import Message): [' . $e->getCode() . '] ' .
                 $e->getMessage()
@@ -585,9 +592,9 @@ class InboundEmail extends RecordService implements
         ]);
     }
 
-    protected function createCase($inboundEmail, $email)
+    protected function createCase(InboundEmailEntity $inboundEmail, EmailEntity $email): void
     {
-        if ($email->get('parentType') == 'Case' && $email->get('parentId')) {
+        if ($email->get('parentType') === 'Case' && $email->get('parentId')) {
             $case = $this->entityManager->getEntity('Case', $email->get('parentId'));
 
             if ($case) {
@@ -834,10 +841,21 @@ class InboundEmail extends RecordService implements
         return $this->entityManager->getEntity('Case', $case->getId());
     }
 
-    protected function autoReply($inboundEmail, $email, $case = null, $user = null)
-    {
+    protected function autoReply(
+        InboundEmailEntity $inboundEmail,
+        EmailEntity $email,
+        ?CaseEntity $case = null,
+        ?User $user = null
+    ): void {
+
         if (!$email->get('from')) {
-            return null;
+            return;
+        }
+
+        $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
+
+        if (!$replyEmailTemplateId) {
+            return;
         }
 
         $limit = $this->config->get('emailAutoReplyLimit', self::DEFAULT_AUTOREPLY_LIMIT);
@@ -866,7 +884,7 @@ class InboundEmail extends RecordService implements
             ->count();
 
         if ($sentCount >= $limit) {
-            return null;
+            return;
         }
 
         $message = new Message();
@@ -882,107 +900,103 @@ class InboundEmail extends RecordService implements
         $message->getHeaders()->addHeaderLine('Precedence', 'auto_reply');
 
         try {
-            $replyEmailTemplateId = $inboundEmail->get('replyEmailTemplateId');
+            $entityHash = [];
 
-            if ($replyEmailTemplateId) {
-                $entityHash = [];
+            if ($case) {
+                $entityHash['Case'] = $case;
 
-                if ($case) {
-                    $entityHash['Case'] = $case;
-
-                    if ($case->get('contactId')) {
-                        $contact = $this->entityManager->getEntity('Contact', $case->get('contactId'));
-                    }
+                if ($case->get('contactId')) {
+                    $contact = $this->entityManager->getEntity('Contact', $case->get('contactId'));
                 }
-
-                if (empty($contact)) {
-                    $contact = $this->entityManager->getEntity('Contact');
-
-                    $fromName = EmailService::parseFromName($email->get('fromString'));
-
-                    if (!empty($fromName)) {
-                        $contact->set('name', $fromName);
-                    }
-                }
-
-                $entityHash['Person'] = $contact;
-                $entityHash['Contact'] = $contact;
-
-                if ($user) {
-                    $entityHash['User'] = $user;
-                }
-
-                $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
-
-                $replyData = $emailTemplateService->parse(
-                    $replyEmailTemplateId,
-                    ['entityHash' => $entityHash],
-                    true
-                );
-
-                $subject = $replyData['subject'];
-
-                if ($case) {
-                    $subject = '[#' . $case->get('number'). '] ' . $subject;
-                }
-
-                $reply = $this->entityManager->getEntity('Email');
-
-                $reply->set('to', $email->get('from'));
-                $reply->set('subject', $subject);
-                $reply->set('body', $replyData['body']);
-                $reply->set('isHtml', $replyData['isHtml']);
-                $reply->set('attachmentsIds', $replyData['attachmentsIds']);
-
-                if ($email->has('teamsIds')) {
-                    $reply->set('teamsIds', $email->get('teamsIds'));
-                }
-
-                if ($email->get('parentId') && $email->get('parentType')) {
-                    $reply->set('parentId', $email->get('parentId'));
-                    $reply->set('parentType', $email->get('parentType'));
-                }
-
-                $this->entityManager->saveEntity($reply);
-
-                $sender = $this->emailSender->create();
-
-                if ($inboundEmail->get('useSmtp')) {
-                    $smtpParams = $this->getSmtpParamsFromInboundEmail($inboundEmail);
-
-                    if ($smtpParams) {
-                        $sender->withSmtpParams($smtpParams);
-                    }
-                }
-
-                $senderParams = [];
-
-                if ($inboundEmail->get('fromName')) {
-                    $senderParams['fromName'] = $inboundEmail->get('fromName');
-                }
-
-                if ($inboundEmail->get('replyFromAddress')) {
-                    $senderParams['fromAddress'] = $inboundEmail->get('replyFromAddress');
-                }
-
-                if ($inboundEmail->get('replyFromName')) {
-                    $senderParams['fromName'] = $inboundEmail->get('replyFromName');
-                }
-
-                if ($inboundEmail->get('replyToAddress')) {
-                    $senderParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
-                }
-
-                $sender
-                    ->withParams($senderParams)
-                    ->withMessage($message)
-                    ->send($reply);
-
-                $this->entityManager->saveEntity($reply);
-
-                return true;
             }
-        } catch (Exception $e) {
+
+            if (empty($contact)) {
+                $contact = $this->entityManager->getEntity('Contact');
+
+                $fromName = EmailService::parseFromName($email->get('fromString'));
+
+                if (!empty($fromName)) {
+                    $contact->set('name', $fromName);
+                }
+            }
+
+            $entityHash['Person'] = $contact;
+            $entityHash['Contact'] = $contact;
+            $entityHash['Email'] = $email;
+
+            if ($user) {
+                $entityHash['User'] = $user;
+            }
+
+            $emailTemplateService = $this->getServiceFactory()->create('EmailTemplate');
+
+            $replyData = $emailTemplateService->parse(
+                $replyEmailTemplateId,
+                ['entityHash' => $entityHash],
+                true
+            );
+
+            $subject = $replyData['subject'];
+
+            if ($case) {
+                $subject = '[#' . $case->get('number'). '] ' . $subject;
+            }
+
+            $reply = $this->entityManager->getEntity('Email');
+
+            $reply->set('to', $email->get('from'));
+            $reply->set('subject', $subject);
+            $reply->set('body', $replyData['body']);
+            $reply->set('isHtml', $replyData['isHtml']);
+            $reply->set('attachmentsIds', $replyData['attachmentsIds']);
+
+            if ($email->has('teamsIds')) {
+                $reply->set('teamsIds', $email->get('teamsIds'));
+            }
+
+            if ($email->get('parentId') && $email->get('parentType')) {
+                $reply->set('parentId', $email->get('parentId'));
+                $reply->set('parentType', $email->get('parentType'));
+            }
+
+            $this->entityManager->saveEntity($reply);
+
+            $sender = $this->emailSender->create();
+
+            if ($inboundEmail->get('useSmtp')) {
+                $smtpParams = $this->getSmtpParamsFromInboundEmail($inboundEmail);
+
+                if ($smtpParams) {
+                    $sender->withSmtpParams($smtpParams);
+                }
+            }
+
+            $senderParams = [];
+
+            if ($inboundEmail->get('fromName')) {
+                $senderParams['fromName'] = $inboundEmail->get('fromName');
+            }
+
+            if ($inboundEmail->get('replyFromAddress')) {
+                $senderParams['fromAddress'] = $inboundEmail->get('replyFromAddress');
+            }
+
+            if ($inboundEmail->get('replyFromName')) {
+                $senderParams['fromName'] = $inboundEmail->get('replyFromName');
+            }
+
+            if ($inboundEmail->get('replyToAddress')) {
+                $senderParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
+            }
+
+            $sender
+                ->withParams($senderParams)
+                ->withMessage($message)
+                ->send($reply);
+
+            $this->entityManager->saveEntity($reply);
+        }
+        catch (Exception $e) {
             $this->log->error("Inbound Email: Auto-reply error: " . $e->getMessage());
         }
     }
@@ -1293,6 +1307,43 @@ class InboundEmail extends RecordService implements
         }
 
         if ($size > $maxSize * 1024 * 1024) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function checkMessageIsAutoReply(MessageWrapper $message): bool
+    {
+        if ($message->getAttribute('X-Autoreply')) {
+            return true;
+        }
+
+        if ($message->getAttribute('X-Autorespond')) {
+            return true;
+        }
+
+        if (
+            $message->getAttribute('Auto-submitted') &&
+            strtolower($message->getAttribute('Auto-submitted')) !== 'no'
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function checkMessageCannotBeAutoReplied(MessageWrapper $message): bool
+    {
+        if ($message->getAttribute('X-Auto-Response-Suppress') === 'AutoReply') {
+            return true;
+        }
+
+        if ($message->getAttribute('X-Auto-Response-Suppress') === 'All') {
+            return true;
+        }
+
+        if ($this->checkMessageIsAutoReply($message)) {
             return true;
         }
 

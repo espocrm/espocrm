@@ -83,7 +83,7 @@ class MessageWrapper
         return $this->getParser()->hasMessageAttribute($this, $attribute);
     }
 
-    public function getAttribute(string $attribute)
+    public function getAttribute(string $attribute): ?string
     {
         return $this->getParser()->getMessageAttribute($this, $attribute);
     }
