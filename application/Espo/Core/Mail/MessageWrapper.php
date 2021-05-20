@@ -70,7 +70,7 @@ class MessageWrapper
 
     public function getRawHeader(): string
     {
-        return $this->rawHeader;
+        return $this->rawHeader ?? '';
     }
 
     public function getParser(): ?Parser
@@ -94,7 +94,7 @@ class MessageWrapper
             $this->rawContent = $this->storage->getRawContent($this->id);
         }
 
-        return $this->rawContent;
+        return $this->rawContent ?? '';
     }
 
     public function getFullRawContent(): string

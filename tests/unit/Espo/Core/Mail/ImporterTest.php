@@ -32,29 +32,53 @@ namespace tests\unit\Espo\Core\Mail;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 
-use Espo\Core\Mail\Importer;
-use Espo\Core\Mail\MessageWrapper;
+use Espo\Core\{
+    Mail\Importer,
+    Mail\MessageWrapper,
+    Mail\ParserFactory,
+    Mail\Parsers\MailMimeParser,
+    Utils\Log,
+    ORM\EntityManager,
+    Utils\Config,
+    Repositories\Database,
+    Utils\Metadata,
+    Notification\AssignmentNotificatorFactory,
+    FieldProcessing\Relation\LinkMultipleSaver,
+};
+
+use Espo\ORM\Repository\RDBSelectBuilder;
 
 class ImporterTest extends \PHPUnit\Framework\TestCase
 {
-    function setUp() : void
+    function setUp(): void
     {
-        $GLOBALS['log'] = $this->getMockBuilder('Espo\\Core\\Utils\\Log')->disableOriginalConstructor()->getMock();
+        $GLOBALS['log'] = $this->createMock(Log::class);
 
-        $entityManager = $this->entityManager =
-            $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')->disableOriginalConstructor()->getMock();
+        $entityManager = $this->entityManager = $this->createMock(EntityManager::class);
 
-        $config = $this->config = $this->getMockBuilder('Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
+        $this->config = $this->createMock(Config::class);
 
-        $emailRepository = $this->getMockBuilder('Espo\\Core\\Repositories\\Database')->disableOriginalConstructor()->getMock();
-        $emptyRepository = $this->getMockBuilder('Espo\\Core\\Repositories\\Database')->disableOriginalConstructor()->getMock();
+        $emailRepository = $this->createMock(Database::class);
+        $emptyRepository = $this->createMock(Database::class);
 
-        $metadata = $this->getMockBuilder('Espo\\ORM\\Metadata')->disableOriginalConstructor()->getMock();
+        $metadata = $this->createMock(Metadata::class);
 
-        $pdo = $this->getMockBuilder('Pdo')->disableOriginalConstructor()->getMock();
+        $selectBuilder = $this->createMock(RDBSelectBuilder::class);
 
-        $selectBuilder = $this->getMockBuilder('Espo\\ORM\\Repository\\RDBSelectBuilder')
-            ->disableOriginalConstructor()->getMock();
+        $this->assignmentNotificatorFactory = $this->createMock(AssignmentNotificatorFactory::class);
+        $this->parserFactory = $this->createMock(ParserFactory::class);
+        $this->linkMultipleSaver = $this->createMock(LinkMultipleSaver::class);
+
+        $this->parserFactory
+            ->expects($this->any())
+            ->method('create')
+            ->will(
+                $this->returnCallback(
+                    function () {
+                        return new MailMimeParser($this->entityManager);
+                    }
+                )
+            );
 
         $emailRepository
             ->expects($this->any())
@@ -65,11 +89,6 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('select')
             ->will($this->returnValue($selectBuilder));
-
-        $entityManager
-            ->expects($this->any())
-            ->method('getPdo')
-            ->will($this->returnValue($pdo));
 
         $entityManager
             ->expects($this->any())
@@ -95,7 +114,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
         $emailDefs = require('tests/unit/testData/Core/Mail/email_defs.php');
 
-        $email = $this->email = new Email('Email', $emailDefs, $entityManager);
+        $this->email = new Email('Email', $emailDefs, $entityManager);
 
         $attachmentDefs = require('tests/unit/testData/Core/Mail/attachment_defs.php');
 
@@ -106,7 +125,6 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
     function testImport1()
     {
-
         $entityManager = $this->entityManager;
         $config = $this->config;
         $email = $this->email;
@@ -119,7 +137,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $entityManager
             ->expects($this->exactly(2))
             ->method('saveEntity')
-            ->with($this->isInstanceOf('\\Espo\\Entities\\Email'));
+            ->with($this->isInstanceOf(Email::class));
 
         $entityManager
             ->expects($this->any())
@@ -130,13 +148,21 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $config
             ->expects($this->any())
             ->method('get')
-            ->will($this->returnValueMap(array(
-                array('b2cMode', false)
-            )));
+            ->will(
+                $this->returnValueMap([
+                    ['b2cMode', false]
+                ])
+            );
 
         $contents = file_get_contents('tests/unit/testData/Core/Mail/test_email_1.eml');
 
-        $importer = new Importer($entityManager, $config);
+        $importer = new Importer(
+            $entityManager,
+            $config,
+            $this->assignmentNotificatorFactory,
+            $this->parserFactory,
+            $this->linkMultipleSaver
+        );
 
         $message = new MessageWrapper();
 
@@ -153,13 +179,8 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
         $userIdList = $email->getLinkMultipleIdList('users');
         $this->assertTrue(in_array('userTestId', $userIdList));
 
-        if (method_exists($this, 'assertStringContainsString')) {  /* PHPUnit 7+ */
-            $this->assertStringContainsString('<br>Admin Test', $email->get('body'));
-            $this->assertStringContainsString('Admin Test', $email->get('bodyPlain'));
-        } else {  /* PHPUnit 6 */
-            $this->assertContains('<br>Admin Test', $email->get('body'));
-            $this->assertContains('Admin Test', $email->get('bodyPlain'));
-        }
+        $this->assertStringContainsString('<br>Admin Test', $email->get('body'));
+        $this->assertStringContainsString('Admin Test', $email->get('bodyPlain'));
 
         $this->assertEquals('<e558c4dfc2a0f0d60f5ebff474c97ffc/1466410740/1950@espo>', $email->get('messageId'));
     }

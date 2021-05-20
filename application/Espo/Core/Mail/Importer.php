@@ -38,6 +38,7 @@ use Espo\Core\{
     Notification\AssignmentNotificator,
     Notification\AssignmentNotificatorFactory,
     FieldProcessing\Relation\LinkMultipleSaver,
+    FieldProcessing\SaverParams,
 };
 
 use DateTime;
@@ -611,15 +612,13 @@ class Importer
             ->getRepository('Email')
             ->applyUsersFilters($duplicate);
 
-        $this->linkMultipleSaver->process($duplicate, 'users', [
+        $saverParams = SaverParams::create()->withRawOptions([
             'skipLinkMultipleRemove' => true,
             'skipLinkMultipleUpdate' => true,
         ]);
 
-        $this->linkMultipleSaver->process($duplicate, 'assignedUsers', [
-            'skipLinkMultipleRemove' => true,
-            'skipLinkMultipleUpdate' => true,
-        ]);
+        $this->linkMultipleSaver->process($duplicate, 'users', $saverParams);
+        $this->linkMultipleSaver->process($duplicate, 'assignedUsers', $saverParams);
 
         $this->notificator->process($duplicate, [
             'isBeingImported' => true,
