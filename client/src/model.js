@@ -44,6 +44,7 @@ define('model', [], function () {
             this.urlRoot = this.urlRoot || this.name;
 
             this.defs = this.defs || {};
+
             this.defs.fields = this.defs.fields || {};
             this.defs.links = this.defs.links || {};
 
@@ -51,19 +52,24 @@ define('model', [], function () {
         },
 
         sync: function (method, model, options) {
-            if (method === 'patch') options.type = 'PUT';
+            if (method === 'patch') {
+                options.type = 'PUT';
+            }
+
             return Dep.prototype.sync.call(this, method, model, options);
         },
 
         set: function (key, val, options) {
             if (typeof key === 'object') {
                 var o = key;
+
                 if (this.idAttribute in o) {
                     this.id = o[this.idAttribute];
                 }
             } else if (key === 'id') {
                 this.id = val;
             }
+
             return Dep.prototype.set.call(this, key, val, options);
         },
 
@@ -71,11 +77,13 @@ define('model', [], function () {
             if (key === 'id' && this.id) {
                 return this.id;
             }
+
             return Dep.prototype.get.call(this, key);
         },
 
         has: function (key) {
             var value = this.get(key);
+
             return (typeof value !== 'undefined');
         },
 
@@ -85,14 +93,17 @@ define('model', [], function () {
 
         setDefs: function (defs) {
             this.defs = defs || {};
+
             this.defs.fields = this.defs.fields || {};
         },
 
         getClonedAttributes: function () {
             var attributes = {};
+
             for (var name in this.attributes) {
                 attributes[name] = Espo.Utils.cloneDeep(this.attributes[name]);
             }
+
             return attributes;
         },
 
@@ -106,8 +117,10 @@ define('model', [], function () {
                     if (defaultValue != null) {
                         try {
                             var defaultValue = this.parseDefaultValue(defaultValue);
+
                             defaultHash[field] = defaultValue;
-                        } catch (e) {
+                        }
+                        catch (e) {
                             console.error(e);
                         }
                     }
@@ -134,7 +147,10 @@ define('model', [], function () {
         },
 
         parseDefaultValue: function (defaultValue) {
-            if (typeof defaultValue == 'string' && defaultValue.indexOf('javascript:') === 0 ) {
+            if (
+                typeof defaultValue === 'string' &&
+                defaultValue.indexOf('javascript:') === 0
+            ) {
                 var code = defaultValue.substring(11);
 
                 defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
@@ -148,7 +164,6 @@ define('model', [], function () {
         },
 
         setRelate: function (data) {
-
             var setRelate = function (options) {
                 var link = options.link;
                 var model = options.model;

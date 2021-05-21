@@ -68,12 +68,16 @@ define('collection', [], function () {
         },
 
         _onModelEvent: function(event, model, collection, options) {
-            if (event === 'sync' && collection !== this) return;
+            if (event === 'sync' && collection !== this) {
+                return;
+            }
+
             Backbone.Collection.prototype._onModelEvent.apply(this, arguments);
         },
 
         reset: function (models, options) {
             this.lengthCorrection = 0;
+
             Backbone.Collection.prototype.reset.call(this, models, options);
         },
 
@@ -85,6 +89,7 @@ define('collection', [], function () {
             } else if (order === false) {
                 order = 'asc';
             }
+
             this.order = order || 'asc';
 
             if (typeof this.asc !== 'undefined') { // TODO remove in 5.7
@@ -97,6 +102,7 @@ define('collection', [], function () {
 
         nextPage: function () {
             var offset = this.offset + this.maxSize;
+
             this.setOffset(offset);
         },
 
@@ -111,6 +117,7 @@ define('collection', [], function () {
 
         lastPage: function () {
             var offset = this.total - this.total % this.maxSize;
+
             this.setOffset(offset);
         },
 
@@ -118,9 +125,11 @@ define('collection', [], function () {
             if (offset < 0) {
                 throw new RangeError('offset can not be less than 0');
             }
+
             if (offset > this.total) {
                 throw new RangeError('offset can not be larger than total count');
             }
+
             this.offset = offset;
             this.fetch();
         },
@@ -139,6 +148,7 @@ define('collection', [], function () {
 
         fetch: function (options) {
             var options = options || {};
+
             options.data = _.extend(options.data || {}, this.data);
 
             this.offset = options.offset || this.offset;
@@ -183,9 +193,11 @@ define('collection', [], function () {
 
         getWhere: function () {
             var where = (this.where || []).concat(this.whereAdditional || []);
+
             if (this.whereFunction) {
                 where = where.concat(this.whereFunction() || []);
             }
+
             return where;
         },
 
