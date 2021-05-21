@@ -26,11 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
+define('views/admin/settings', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 
         layoutName: 'settings',
+
+        saveAndContinueEditingAction: false,
 
         setup: function () {
             Dep.prototype.setup.call(this);

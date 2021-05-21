@@ -26,11 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/user-interface', 'views/settings/record/edit', function (Dep) {
+define('views/admin/user-interface', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 
         layoutName: 'userInterface',
+
+        saveAndContinueEditingAction: false,
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -44,7 +46,7 @@ Espo.define('views/admin/user-interface', 'views/settings/record/edit', function
             } else {
                 this.showField('tabColorsDisabled');
             }
-        }
+        },
 
     });
 });

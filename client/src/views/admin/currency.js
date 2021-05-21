@@ -32,6 +32,8 @@ define('views/admin/currency', 'views/settings/record/edit', function (Dep) {
 
         layoutName: 'currency',
 
+        saveAndContinueEditingAction: false,
+
         setup: function () {
             Dep.prototype.setup.call(this);
 

@@ -32,6 +32,8 @@ define('views/admin/jobs-settings', 'views/settings/record/edit', function (Dep)
 
         layoutName: 'jobsSettings',
 
+        saveAndContinueEditingAction: false,
+
         dynamicLogicDefs: {
             fields: {
                 jobPoolConcurrencyNumber: {

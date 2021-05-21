@@ -32,6 +32,8 @@ define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
 
         sideView: null,
 
+        saveAndContinueEditingAction: false,
+
         buttonList: [
             {
                 name: 'save',

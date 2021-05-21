@@ -32,6 +32,8 @@ define('views/admin/notifications', 'views/settings/record/edit', function (Dep)
 
         layoutName: 'notifications',
 
+        saveAndContinueEditingAction: false,
+
         dynamicLogicDefs: {
             fields: {
                 assignmentEmailNotificationsEntityList: {

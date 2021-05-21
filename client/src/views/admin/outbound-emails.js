@@ -32,6 +32,8 @@ define('views/admin/outbound-emails', 'views/settings/record/edit', function (De
 
         layoutName: 'outboundEmails',
 
+        saveAndContinueEditingAction: false,
+
         dynamicLogicDefs: {
             fields: {
                 smtpUsername: {

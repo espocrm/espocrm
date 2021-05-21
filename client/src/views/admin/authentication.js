@@ -32,6 +32,8 @@ define('views/admin/authentication', 'views/settings/record/edit', function (Dep
 
         layoutName: 'authentication',
 
+        saveAndContinueEditingAction: false,
+
         setup: function () {
             this.methodList = [];
 
