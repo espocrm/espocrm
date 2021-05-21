@@ -26,31 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', function (Dep) {
+define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', function (Dep) {
 
     return Dep.extend({
 
         setupOptions: function () {
             Dep.prototype.setupOptions.call(this);
 
-            var attributeList = this.getFieldManager().getEntityTypeAttributeList(this.options.scope).sort();
+            var attributeList = this.getFieldManager()
+                .getEntityTypeAttributeList(this.options.scope)
+                .sort();
 
             var links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']);
+
             var linkList = [];
+
             Object.keys(links).forEach(function (link) {
                 var type = links[link].type;
-                if (!type) return;
+
+                if (!type) {
+                    return;
+                }
 
                 if (~['belongsToParent', 'hasOne', 'belongsTo'].indexOf(type)) {
                     linkList.push(link);
                 }
             }, this);
+
             linkList.sort();
+
             linkList.forEach(function (link) {
                 var scope = links[link].entity;
-                if (!scope) return;
-                if (links[link].disabled) return;
-                var linkAttributeList = this.getFieldManager().getEntityTypeAttributeList(scope).sort();
+                
+                if (!scope) {
+                    return;
+                }
+
+                if (links[link].disabled) {
+                    return;
+                }
+
+                var linkAttributeList = this.getFieldManager()
+                    .getEntityTypeAttributeList(scope)
+                    .sort();
+
                 linkAttributeList.forEach(function (item) {
                     attributeList.push(link + '.' + item);
                 }, this);
@@ -61,12 +80,12 @@ Espo.define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', f
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
             if (this.$element && this.$element[0] && this.$element[0].selectize) {
                 this.$element[0].selectize.focus();
             }
-        }
+        },
 
     });
-
 });
 
