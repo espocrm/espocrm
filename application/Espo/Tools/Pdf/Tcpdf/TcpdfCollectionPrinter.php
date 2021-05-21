@@ -29,17 +29,13 @@
 
 namespace Espo\Tools\Pdf\Tcpdf;
 
-use Espo\Core\{
-    Pdf\Tcpdf,
-};
-
 use Espo\{
-    ORM\Entity,
     ORM\Collection,
     Tools\Pdf\CollectionPrinter,
     Tools\Pdf\Template,
     Tools\Pdf\Contents,
     Tools\Pdf\Data,
+    Tools\Pdf\Tcpdf\Tcpdf,
 };
 
 class TcpdfCollectionPrinter implements CollectionPrinter

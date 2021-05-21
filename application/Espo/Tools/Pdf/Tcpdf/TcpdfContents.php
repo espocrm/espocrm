@@ -29,12 +29,9 @@
 
 namespace Espo\Tools\Pdf\Tcpdf;
 
-use Espo\Core\{
-    Pdf\Tcpdf,
-};
-
 use Espo\{
     Tools\Pdf\Contents,
+    Tools\Pdf\Tcpdf\Tcpdf,
 };
 
 class TcpdfContents implements Contents

@@ -33,13 +33,13 @@ use Espo\Core\{
     Utils\Config,
     Htmlizer\Htmlizer as Htmlizer,
     Htmlizer\Factory as HtmlizerFactory,
-    Pdf\Tcpdf,
 };
 
 use Espo\{
     ORM\Entity,
     Tools\Pdf\Template,
     Tools\Pdf\Data,
+    Tools\Pdf\Tcpdf\Tcpdf,
 };
 
 class EntityProcessor

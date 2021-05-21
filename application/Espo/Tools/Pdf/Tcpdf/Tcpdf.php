@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Pdf;
+namespace Espo\Tools\Pdf\Tcpdf;
 
 define('K_TCPDF_EXTERNAL_CONFIG', true);
 
@@ -61,8 +61,7 @@ define('K_TIMEZONE', 'UTC');
 
 require "vendor/tecnickcom/tcpdf/tcpdf.php";
 
-use \TCPDF_STATIC;
-use \TCPDF_FONTS;
+use TCPDF_STATIC;
 
 use Espo\Core\Utils\Util;
 
