@@ -19,7 +19,10 @@
 					        	{{#if iconClass}}
 					        	<span class="icon {{iconClass}}"></span>
 					        	{{/if}}
-					            <a href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"{{#if action}} data-action="{{action}}"{{/if}}>{{label}}</a>
+					            <a
+                                    href="{{#if url}}{{url}}{{else}}javascript:{{/if}}"
+                                    {{#if action}} data-action="{{action}}"{{/if}}
+                                >{{label}}</a>
 					        	</div>
 					        </td>
 					        <td>{{translate description scope='Admin' category='descriptions'}}</td>
@@ -33,7 +36,15 @@
 		</div>
 		<div class="col-md-5 admin-right-column">
             <div class="notifications-panel-container">{{{notificationsPanel}}}</div>
-			<iframe src="{{iframeUrl}}" style="width: 100%; height: {{iframeHeight}}px" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+            {{#unless iframeDisabled}}
+			<iframe
+                src="{{iframeUrl}}"
+                style="width: 100%; height: {{iframeHeight}}px"
+                frameborder="0"
+                webkitallowfullscreen mozallowfullscreen allowfullscreen
+            ></iframe>
+            {{/unless}}
 		</div>
 	</div>
 </div>

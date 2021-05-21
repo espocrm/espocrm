@@ -46,6 +46,7 @@ define('views/admin/index', 'view', function (Dep) {
                 panelDataList: this.panelDataList,
                 iframeUrl: this.iframeUrl,
                 iframeHeight: this.getConfig().get('adminPanelIframeHeight') || 1330,
+                iframeDisabled: this.getConfig().get('adminPanelIframeDisabled') || false,
             };
         },
 
