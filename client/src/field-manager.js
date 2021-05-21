@@ -46,6 +46,7 @@
             if (fieldType in this.defs) {
                 return this.defs[fieldType].params || [];
             }
+
             return [];
         },
 
@@ -57,6 +58,7 @@
                     return false;
                 }
             }
+
             return false;
         },
 
@@ -64,12 +66,15 @@
             if (fieldType in this.defs) {
                 return !this.defs[fieldType].notMergeable;
             }
+
             return false;
         },
 
         getEntityTypeAttributeList: function (entityType) {
             var list = [];
+
             var defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
+
             Object.keys(defs).forEach(function (field) {
                 this.getAttributeList(defs[field]['type'], field).forEach(function (attr) {
                     if (!~list.indexOf(attr)) {
@@ -77,6 +82,7 @@
                     }
                 });
             }, this);
+
             return list;
         },
 
@@ -106,6 +112,7 @@
                     fieldNames.push(fieldName);
                 }
             }
+
             return fieldNames;
         },
 
@@ -117,10 +124,12 @@
                     var notActualFields = this.defs[fieldType].notActualFields;
 
                     var naming = 'suffix';
+
                     if ('naming' in this.defs[fieldType]) {
                         naming = this.defs[fieldType].naming;
                     }
-                    if (naming == 'prefix') {
+
+                    if (naming === 'prefix') {
                         notActualFields.forEach(function (f) {
                             if (f === '') {
                                 fieldNames.push(fieldName);
@@ -140,7 +149,11 @@
 
         getEntityTypeFieldAttributeList: function (entityType, field) {
             var type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
-            if (!type) return [];
+
+            if (!type) {
+                return [];
+            }
+
             return _.union(
                 this.getAttributeList(type, field),
                 this.metadata.get(['entityDefs', entityType, 'fields', field, 'additionalAttributeList']) || []
@@ -148,7 +161,10 @@
         },
 
         getAttributeList: function (fieldType, fieldName) {
-            return _.union(this.getActualAttributeList(fieldType, fieldName), this.getNotActualAttributeList(fieldType, fieldName));
+            return _.union(
+                this.getActualAttributeList(fieldType, fieldName),
+                this.getNotActualAttributeList(fieldType, fieldName)
+            );
         },
 
         getEntityTypeFieldList: function (entityType, o) {
@@ -157,11 +173,15 @@
             o = o || {};
 
             var typeList = o.typeList;
-            if (!typeList && o.type) typeList = [o.type];
+
+            if (!typeList && o.type) {
+                typeList = [o.type];
+            }
 
             if (typeList) {
                 list = list.filter(function (item) {
                     var type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
+
                     return ~typeList.indexOf(type);
                 }, this);
             }
@@ -174,7 +194,9 @@
 
             if (o.acl) {
                 var level = o.acl || 'read';
+
                 var forbiddenEditFieldList = this.acl.getScopeForbiddenFieldList(entityType, level);
+
                 list = list.filter(function (item) {
                     return !~forbiddenEditFieldList.indexOf(item);
                 }, this);
@@ -197,6 +219,7 @@
                     return this.defs[fieldType].view;
                 }
             }
+
             return 'views/fields/' + Espo.Utils.camelCaseToHyphen(fieldType);
         },
 
@@ -217,14 +240,17 @@
         },
 
         isEntityTypeFieldAvailable: function (entityType, field) {
-            if (this.metadata.get(['entityDefs', entityType, 'fields', field, 'disabled'])) return false;
+            if (this.metadata.get(['entityDefs', entityType, 'fields', field, 'disabled'])) {
+                return false;
+            }
+
             if (
-                this.metadata.get(['entityAcl', entityType, 'fields', field, 'onlyAdmin'])
-                ||
-                this.metadata.get(['entityAcl', entityType, 'fields', field, 'forbidden'])
-                ||
+                this.metadata.get(['entityAcl', entityType, 'fields', field, 'onlyAdmin']) ||
+                this.metadata.get(['entityAcl', entityType, 'fields', field, 'forbidden']) ||
                 this.metadata.get(['entityAcl', entityType, 'fields', field, 'internal'])
-            ) return false;
+            ) {
+                return false;
+            }
 
             return true;
         },
