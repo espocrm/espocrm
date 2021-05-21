@@ -260,6 +260,8 @@ define('controllers/record', 'controller', function (Dep) {
                 this.showLoadingNotification();
 
                 this.listenToOnce(model, 'sync', function () {
+                    this.hideLoadingNotification();
+
                     var o = {
                         scope: this.name,
                         model: model,
