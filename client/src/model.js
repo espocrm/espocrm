@@ -98,6 +98,7 @@ define('model', [], function () {
 
         populateDefaults: function () {
             var defaultHash = {};
+
             if ('fields' in this.defs) {
                 for (var field in this.defs.fields) {
                     var defaultValue = this.getFieldParam(field, 'default');
@@ -112,6 +113,7 @@ define('model', [], function () {
                     }
 
                     var defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
+
                     if (defaultAttributes) {
                         for (var attribute in defaultAttributes) {
                             defaultHash[attribute] = defaultAttributes[attribute];
@@ -121,6 +123,7 @@ define('model', [], function () {
             }
 
             defaultHash = Espo.Utils.cloneDeep(defaultHash);
+
             for (var attr in defaultHash) {
                 if (this.has(attr)) {
                     delete defaultHash[attr];
@@ -133,8 +136,10 @@ define('model', [], function () {
         parseDefaultValue: function (defaultValue) {
             if (typeof defaultValue == 'string' && defaultValue.indexOf('javascript:') === 0 ) {
                 var code = defaultValue.substring(11);
+
                 defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
             }
+
             return defaultValue;
         },
 
@@ -147,27 +152,38 @@ define('model', [], function () {
             var setRelate = function (options) {
                 var link = options.link;
                 var model = options.model;
+
                 if (!link || !model) {
                     throw new Error('Bad related options');
                 }
+
                 var type = this.defs.links[link].type;
+
                 switch (type) {
                     case 'belongsToParent':
                         this.set(link + 'Id', model.id);
                         this.set(link + 'Type', model.name);
                         this.set(link + 'Name', model.get('name'));
+
                         break;
+
                     case 'belongsTo':
                         this.set(link + 'Id', model.id);
                         this.set(link + 'Name', model.get('name'));
+
                         break;
+
                     case 'hasMany':
                         var ids = [];
                         ids.push(model.id);
+
                         var names = {};
+
                         names[model.id] = model.get('name');
+
                         this.set(link + 'Ids', ids);
                         this.set(link + 'Names', names);
+
                         break;
                 }
             }.bind(this);
@@ -185,6 +201,7 @@ define('model', [], function () {
             if (this.defs && this.defs.fields && (field in this.defs.fields)) {
                 return this.defs.fields[field].type || null;
             }
+
             return null;
         },
 
@@ -194,6 +211,7 @@ define('model', [], function () {
                     return this.defs.fields[field][param];
                 }
             }
+
             return null;
         },
 
@@ -201,6 +219,7 @@ define('model', [], function () {
             if (this.defs && this.defs.links && (link in this.defs.links)) {
                 return this.defs.links[link].type || null;
             }
+
             return null;
         },
 
@@ -210,6 +229,7 @@ define('model', [], function () {
                     return this.defs.links[link][param];
                 }
             }
+
             return null;
         },
 
@@ -259,6 +279,7 @@ define('model', [], function () {
 
         fetch: function (options) {
             this.lastXhr = Dep.prototype.fetch.call(this, options);
+
             return this.lastXhr;
         },
 
@@ -266,7 +287,7 @@ define('model', [], function () {
             if (this.lastXhr && this.lastXhr.readyState < 4) {
                 this.lastXhr.abort();
             }
-        }
+        },
 
     });
 
