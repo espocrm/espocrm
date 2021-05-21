@@ -37,7 +37,7 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
                 .getEntityTypeAttributeList(this.options.scope)
                 .sort();
 
-            var links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']);
+            var links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']) || {};
 
             var linkList = [];
 
@@ -57,7 +57,7 @@ define('views/admin/formula/fields/attribute', 'views/fields/multi-enum', functi
 
             linkList.forEach(function (link) {
                 var scope = links[link].entity;
-                
+
                 if (!scope) {
                     return;
                 }

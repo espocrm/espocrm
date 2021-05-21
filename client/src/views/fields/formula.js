@@ -79,11 +79,24 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 Promise.all([
                     new Promise(function (resolve) {
                         Espo.loader.load('lib!client/lib/ace/ace.js', function () {
-                            Espo.loader.load('lib!client/lib/ace/mode-javascript.js', function () {
-                                resolve();
-                            }.bind(this));
+                            Promise
+                                .all([
+                                    new Promise(function (resolve) {
+                                        Espo.loader.load('lib!client/lib/ace/mode-javascript.js', function () {
+                                            resolve();
+                                        }.bind(this));
+                                    }),
+                                    new Promise(function (resolve) {
+                                        Espo.loader.load('lib!client/lib/ace/ext-language_tools.js', function () {
+                                            resolve();
+                                        }.bind(this));
+                                    }),
+                                ])
+                                .then(function () {
+                                    resolve();
+                                });
                         }.bind(this));
-                    }.bind(this))
+                    }.bind(this)),
                 ])
                 .then(function () {
                     ace.config.set("basePath", this.getBasePath() + 'client/lib/ace');
@@ -150,6 +163,10 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
 
                 editor.session.setMode(new JavaScriptMode());
+
+                if (!this.insertDisabled && !this.isReadMode()) {
+                    this.initAutocomplete();
+                }
             }
         },
 
@@ -187,6 +204,132 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                     this.clearView('dialog');
                 }, this);
             }, this);
+        },
+
+        initAutocomplete: function () {
+            var functionInsertList =
+                this.getMetadata()
+                    .get(['app', 'formula', 'functionList'], [])
+                    .map(function (item) {
+                        return item.insertText;
+                    })
+                    .filter(function (item) {
+                        return item;
+                    });
+
+            var attributeList = this.getAttributeList();
+
+            var languageTools = ace.require("ace/ext/language_tools");
+
+            this.editor.setOptions({
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+            });
+
+            var completer = {
+                identifierRegexps: [/[\\a-zA-Z0-9{}\[\]\.\$\'\"]/],
+
+                getCompletions: function (editor, session, pos, prefix, callback) {
+
+                    var matchedFunctionList = functionInsertList
+                        .filter(function (originalItem) {
+                            var item = originalItem.split('(')[0];
+
+                            if (item.indexOf(prefix) === 0) {
+                                return true;
+                            }
+
+                            var parts = item.split('\\');
+
+                            if (parts[parts.length - 1].indexOf(prefix) === 0) {
+                                return true;
+                            }
+
+                            return false;
+                        });
+
+                    var itemList = matchedFunctionList.map(function (item) {
+                        return {
+                            name: item,
+                            value: item,
+                            meta: 'function',
+                        };
+                    });
+
+                    var matchedAttributeList = attributeList
+                        .filter(function (item) {
+                            if (item.indexOf(prefix) === 0) {
+                                return true;
+                            }
+
+                            return false;
+                        });
+
+                    var itemAttributeList = matchedAttributeList.map(function (item) {
+                        return {
+                            name: item,
+                            value: item,
+                            meta: 'attribute',
+                        };
+                    });
+
+                    itemList = itemList.concat(itemAttributeList);
+
+                    callback(null, itemList);
+                }
+            };
+
+            languageTools.setCompleters([completer]);
+        },
+
+        getAttributeList: function () {
+            if (!this.targetEntityType) {
+                return [];
+            }
+
+            var attributeList = this.getFieldManager()
+                .getEntityTypeAttributeList(this.targetEntityType)
+                .sort();
+
+            var links = this.getMetadata().get(['entityDefs', this.targetEntityType, 'links']) || {};
+
+            var linkList = [];
+
+            Object.keys(links).forEach(function (link) {
+                var type = links[link].type;
+
+                if (!type) {
+                    return;
+                }
+
+                if (~['belongsToParent', 'hasOne', 'belongsTo'].indexOf(type)) {
+                    linkList.push(link);
+                }
+            }, this);
+
+            linkList.sort();
+
+            linkList.forEach(function (link) {
+                var scope = links[link].entity;
+
+                if (!scope) {
+                    return;
+                }
+
+                if (links[link].disabled) {
+                    return;
+                }
+
+                var linkAttributeList = this.getFieldManager()
+                    .getEntityTypeAttributeList(scope)
+                    .sort();
+
+                linkAttributeList.forEach(function (item) {
+                    attributeList.push(link + '.' + item);
+                }, this);
+            }, this);
+
+            return attributeList;
         },
 
     });
