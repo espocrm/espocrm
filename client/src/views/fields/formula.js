@@ -46,7 +46,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
             },
             'click [data-action="addFunction"]': function () {
                 this.addFunction();
-            }
+            },
         },
 
         setup: function () {
@@ -54,17 +54,28 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
             this.height = this.options.height || this.params.height || this.height;
 
-            this.maxLineDetailCount = this.options.maxLineDetailCount || this.params.maxLineDetailCount || this.maxLineDetailCount;
-            this.maxLineEditCount = this.options.maxLineEditCount || this.params.maxLineEditCount || this.maxLineEditCount;
+            this.maxLineDetailCount =
+                this.options.maxLineDetailCount ||
+                this.params.maxLineDetailCount ||
+                this.maxLineDetailCount;
 
-            this.targetEntityType = this.options.targetEntityType || this.params.targetEntityType || this.targetEntityType;
+            this.maxLineEditCount =
+                this.options.maxLineEditCount ||
+                this.params.maxLineEditCount ||
+                this.maxLineEditCount;
+
+            this.targetEntityType =
+                this.options.targetEntityType ||
+                this.params.targetEntityType ||
+                this.targetEntityType;
 
             this.insertDisabled = this.options.insertDisabled;
 
             this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
 
-            if (this.mode == 'edit' || this.mode == 'detail') {
+            if (this.mode === 'edit' || this.mode === 'detail') {
                 this.wait(true);
+
                 Promise.all([
                     new Promise(function (resolve) {
                         Espo.loader.load('lib!client/lib/ace/ace.js', function () {
@@ -73,8 +84,10 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                             }.bind(this));
                         }.bind(this));
                     }.bind(this))
-                ]).then(function () {
+                ])
+                .then(function () {
                     ace.config.set("basePath", this.getBasePath() + 'client/lib/ace');
+
                     this.wait(false);
                 }.bind(this));
             }
@@ -100,13 +113,17 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
             this.$editor = this.$el.find('#' + this.containerId);
 
-            if (this.$editor.length && (this.mode === 'edit' || this.mode == 'detail' || this.mode == 'list')) {
+            if (
+                this.$editor.length &
+                (this.mode === 'edit' || this.mode === 'detail' || this.mode === 'list')
+            ) {
                 this.$editor
                     .css('fontSize', '14px');
 
                 if (this.mode === 'edit') {
                     this.$editor.css('minHeight', this.height + 'px');
                 }
+
                 var editor = this.editor = ace.edit(this.containerId);
 
                 editor.setOptions({
@@ -131,12 +148,14 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 editor.setHighlightActiveLine(false);
 
                 var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+
                 editor.session.setMode(new JavaScriptMode());
             }
         },
 
         fetch: function () {
             var data = {};
+
             data[this.name] = this.editor.getValue()
 
             return data;
@@ -147,8 +166,10 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 scope: this.targetEntityType
             }, function (view) {
                 view.render();
+
                 this.listenToOnce(view, 'add', function (attribute) {
                     this.editor.insert(attribute);
+
                     this.clearView('dialog');
                 }, this);
             }, this);
@@ -159,8 +180,10 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 scope: this.targetEntityType
             }, function (view) {
                 view.render();
+
                 this.listenToOnce(view, 'add', function (string) {
                     this.editor.insert(string);
+
                     this.clearView('dialog');
                 }, this);
             }, this);
