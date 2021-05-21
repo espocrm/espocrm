@@ -176,10 +176,12 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
 
             var impl = this.getImplementation(scope);
 
-            var methodName = 'checkModel' + Espo.Utils.upperCaseFirst(action);
+            if (action) {
+                var methodName = 'checkModel' + Espo.Utils.upperCaseFirst(action);
 
-            if (methodName in impl) {
-                return impl[methodName](model, data, precise);
+                if (methodName in impl) {
+                    return impl[methodName](model, data, precise);
+                }
             }
 
             return impl.checkModel(model, data, action, precise);
