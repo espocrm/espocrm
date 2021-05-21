@@ -45,13 +45,14 @@ define('views/admin/index', 'view', function (Dep) {
             return {
                 panelDataList: this.panelDataList,
                 iframeUrl: this.iframeUrl,
-                iframeHeight: this.getConfig().get('adminPanelIframeHeight') || 1330
+                iframeHeight: this.getConfig().get('adminPanelIframeHeight') || 1330,
             };
         },
 
         afterRender: function () {
             if (this.quickSearchText) {
                 this.$el.find('input[data-name="quick-search"]').val(this.quickSearchText);
+
                 this.processQuickSearch(this.quickSearchText);
             }
         },
@@ -60,6 +61,7 @@ define('views/admin/index', 'view', function (Dep) {
             this.panelDataList = [];
 
             var panels = this.getMetadata().get('app.adminPanel') || {};
+
             for (var name in panels) {
                 var panelItem = Espo.Utils.cloneDeep(panels[name]);
 
@@ -72,7 +74,8 @@ define('views/admin/index', 'view', function (Dep) {
                         item.label = this.translate(item.label, 'labels', 'Admin');
 
                         if (item.description) {
-                            item.keywords = (this.getLanguage().get('Admin', 'keywords', item.description) || '').split(',');
+                            item.keywords = (this.getLanguage().get('Admin', 'keywords', item.description) || '')
+                                .split(',');
                         } else {
                             item.keywords = [];
                         }
@@ -92,16 +95,25 @@ define('views/admin/index', 'view', function (Dep) {
             }
 
             this.panelDataList.sort(function (v1, v2) {
-                if (!('order' in v1) && ('order' in v2)) return 0;
-                if (!('order' in v2)) return 0;
+                if (!('order' in v1) && ('order' in v2)) {
+                    return 0;
+                }
+
+                if (!('order' in v2)) {
+                    return 0;
+                }
+
                 return v1.order - v2.order;
             }.bind(this));
 
             var iframeParams = [
                 'version=' + encodeURIComponent(this.getConfig().get('version')),
-                'css=' + encodeURIComponent(this.getConfig().get('siteUrl') + '/' + this.getThemeManager().getStylesheet())
+                'css=' + encodeURIComponent(this.getConfig().get('siteUrl') +
+                    '/' + this.getThemeManager().getStylesheet())
             ];
+
             this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || 'https://s.espocrm.com/';
+
             if (~this.iframeUrl.indexOf('?')) {
                 this.iframeUrl += '&' + iframeParams.join('&');
             } else {
@@ -127,6 +139,7 @@ define('views/admin/index', 'view', function (Dep) {
             if (!text) {
                 this.$el.find('.admin-content-section').removeClass('hidden');
                 this.$el.find('.admin-content-row').removeClass('hidden');
+
                 return;
             }
 
@@ -134,9 +147,6 @@ define('views/admin/index', 'view', function (Dep) {
 
             this.$el.find('.admin-content-section').addClass('hidden');
             this.$el.find('.admin-content-row').addClass('hidden');
-
-            var panelsToShow = [];
-            var rowsToShow = [];
 
             anythingMatched = false;
 
@@ -165,6 +175,7 @@ define('views/admin/index', 'view', function (Dep) {
 
                     if (!matched) {
                         var wordList = row.label.split(' ');
+
                         wordList.forEach(function (word) {
                             if (word.toLowerCase().indexOf(text) === 0) {
                                 matched = true;
@@ -188,16 +199,22 @@ define('views/admin/index', 'view', function (Dep) {
 
                     if (matched) {
                         panelMatched = true;
+
                         this.$el.find(
                             '.admin-content-section[data-index="'+panelIndex.toString()+'"] '+
                             '.admin-content-row[data-index="'+rowIndex.toString()+'"]'
                         ).removeClass('hidden');
+
                         anythingMatched = true;
                     }
                 }, this);
 
                 if (panelMatched) {
-                    this.$el.find('.admin-content-section[data-index="'+panelIndex.toString()+'"]').removeClass('hidden');
+
+                    this.$el
+                        .find('.admin-content-section[data-index="' + panelIndex.toString() + '"]')
+                        .removeClass('hidden');
+
                     anythingMatched = true;
                 }
             }, this);
