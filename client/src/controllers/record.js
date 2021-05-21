@@ -151,6 +151,8 @@ define('controllers/record', 'controller', function (Dep) {
                 this.showLoadingNotification();
 
                 model.fetch({main: true}).then(function () {
+                    this.hideLoadingNotification();
+
                     if (model.get('deleted')) {
                         this.listenToOnce(model, 'after:restore-deleted', function () {
                             createView(model);
