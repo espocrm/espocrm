@@ -92,7 +92,7 @@ class Queue
         $this->processSending();
     }
 
-    protected function processEvents()
+    protected function processEvents(): void
     {
         $portionSize = $this->config->get('webhookQueueEventPortionSize', self::EVENT_PORTION_SIZE);
 
@@ -116,7 +116,7 @@ class Queue
         }
     }
 
-    protected function createQueueFromEvent(WebhookEventQueueItem $item)
+    protected function createQueueFromEvent(WebhookEventQueueItem $item): void
     {
         $webhookList = $this->entityManager
             ->getRepository('Webhook')
@@ -140,7 +140,7 @@ class Queue
         }
     }
 
-    protected function processSending()
+    protected function processSending(): void
     {
         $portionSize = $this->config->get('webhookQueuePortionSize', self::PORTION_SIZE);
         $batchSize = $this->config->get('webhookBatchSize', self::BATCH_SIZE);
@@ -264,7 +264,7 @@ class Queue
         }
     }
 
-    protected function send(Webhook $webhook, array $dataList, array $itemList)
+    protected function send(Webhook $webhook, array $dataList, array $itemList): void
     {
         try {
             $code = $this->sender->send($webhook, $dataList);
@@ -297,31 +297,31 @@ class Queue
         $this->logSending($webhook, $code);
     }
 
-    protected function logSending(Webhook $webhook, int $code)
+    protected function logSending(Webhook $webhook, int $code): void
     {
         $this->log->debug("Webhook Queue: Webhook {$webhook->id} sent, response code: {$code}.");
     }
 
-    protected function failQueueItemList(array $itemList, bool $force = false)
+    protected function failQueueItemList(array $itemList, bool $force = false): void
     {
         foreach ($itemList as $item) {
             $this->failQueueItem($item, $force);
         }
     }
 
-    protected function succeedQueueItemList(array $itemList)
+    protected function succeedQueueItemList(array $itemList): void
     {
         foreach ($itemList as $item) {
             $this->succeedQueueItem($item);
         }
     }
 
-    protected function deleteQueueItem(WebhookQueueItem $item)
+    protected function deleteQueueItem(WebhookQueueItem $item): void
     {
         $this->entityManager->getRepository('WebhookQueueItem')->deleteFromDb($item->id);
     }
 
-    protected function dropWebhook(Webhook $webhook)
+    protected function dropWebhook(Webhook $webhook): void
     {
         $itemList = $this->entityManager
             ->getRepository('WebhookQueueItem')
@@ -339,7 +339,7 @@ class Queue
         $this->entityManager->removeEntity($webhook);
     }
 
-    protected function succeedQueueItem(WebhookQueueItem $item)
+    protected function succeedQueueItem(WebhookQueueItem $item): void
     {
         $item->set([
             'attempts' => $item->get('attempts') + 1,
@@ -350,7 +350,7 @@ class Queue
         $this->entityManager->saveEntity($item);
     }
 
-    protected function failQueueItem(WebhookQueueItem $item, bool $force = false)
+    protected function failQueueItem(WebhookQueueItem $item, bool $force = false): void
     {
         $attempts = $item->get('attempts') + 1;
 

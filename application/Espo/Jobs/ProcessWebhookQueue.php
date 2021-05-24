@@ -31,39 +31,20 @@ namespace Espo\Jobs;
 
 use Espo\Core\{
     Job\Job,
-    AclManager,
-    Utils\Config,
-    ORM\EntityManager,
-    Webhook\Sender,
     Webhook\Queue,
 };
 
 class ProcessWebhookQueue implements Job
 {
-    protected $config;
+    private $queue;
 
-    protected $entityManager;
-
-    protected $aclManager;
-
-    public function __construct(Config $config, EntityManager $entityManager, AclManager $aclManager)
+    public function __construct(Queue $queue)
     {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->aclManager = $aclManager;
+        $this->queue = $queue;
     }
 
     public function run(): void
     {
-        $sender = new Sender($this->config);
-
-        $webhookQueue = new Queue(
-            $sender,
-            $this->config,
-            $this->entityManager,
-            $this->aclManager
-        );
-
-        $webhookQueue->process();
+        $this->queue->process();
     }
 }

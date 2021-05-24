@@ -36,7 +36,7 @@ use Espo\Core\{
 };
 
 /**
- * Sends a poption.
+ * Sends a portion.
  */
 class Sender
 {
