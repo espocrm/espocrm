@@ -165,13 +165,22 @@ class Job
     public function hasScheduledJobOnMinute(string $scheduledJobId, string $time) : bool
     {
         $dateObj = new DateTime($time);
-        $timeWithoutSeconds = $dateObj->format('Y-m-d H:i:');
+
+        $fromString = $dateObj->format('Y-m-d H:i:00');
+        $toString = $dateObj->format('Y-m-d H:i:59');
 
         $job = $this->getEntityManager()->getRepository('Job')
             ->select(['id'])
             ->where([
                 'scheduledJobId' => $scheduledJobId,
-                'executeTime*' => $timeWithoutSeconds . '%',
+                'status' => [ // This forces usage of an appropriate index.
+                    CronManager::PENDING,
+                    CronManager::READY,
+                    CronManager::RUNNING,
+                    CronManager::SUCCESS,
+                ],
+                'executeTime>=' => $fromString,
+                'executeTime<=' => $toString,
             ])
             ->findOne();
 
