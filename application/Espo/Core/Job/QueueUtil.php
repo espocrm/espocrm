@@ -108,7 +108,9 @@ class QueueUtil
     }
 
     public function isScheduledJobRunning(
-        string $scheduledJobId, ?string $targetId = null, ?string $targetType = null
+        string $scheduledJobId,
+        ?string $targetId = null,
+        ?string $targetType = null
     ): bool {
 
         $where = [
