@@ -154,14 +154,22 @@ class QueueUtil
     {
         $dateObj = new DateTime($time);
 
-        $timeWithoutSeconds = $dateObj->format('Y-m-d H:i:');
+        $fromString = $dateObj->format('Y-m-d H:i:00');
+        $toString = $dateObj->format('Y-m-d H:i:59');
 
         $job = $this->entityManager
             ->getRDBRepository('Job')
             ->select(['id'])
             ->where([
                 'scheduledJobId' => $scheduledJobId,
-                'executeTime*' => $timeWithoutSeconds . '%',
+                'status' => [ // This forces usage of an appropriate index.
+                    JobManager::PENDING,
+                    JobManager::READY,
+                    JobManager::RUNNING,
+                    JobManager::SUCCESS,
+                ],
+                'executeTime>=' => $fromString,
+                'executeTime<=' => $toString,
             ])
             ->findOne();
 
