@@ -666,11 +666,12 @@ define(
                 if (statusReason) {
                     try {
                         var response = JSON.parse(statusReason);
-                    } catch (e) {}
+                    }
+                    catch (e) {}
 
                     if (!response && xhr.responseText) {
                         response = {
-                            reason: statusReason,
+                            reason: statusReason.toString(),
                         };
 
                         try {
@@ -687,14 +688,36 @@ define(
                 }
             }
 
-            if (response && response.reason) {
-                var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
+            if (!response || !response.reason) {
+                return;
+            }
 
-                if (methodName in this) {
-                    xhr.errorIsHandled = true;
+            var reason = response.reason;
 
-                    this[methodName](response.data);
-                }
+            var handlerName =
+                this.getMetadata()
+                    .get(['clientDefs', this.scope, 'saveErrorHandlers', reason]) ||
+                this.getMetadata()
+                    .get(['clientDefs', 'Global', 'saveErrorHandlers', reason]);
+
+            if (handlerName) {
+                require(handlerName, function (Handler) {
+                    var handler = new Handler(this);
+
+                    handler.process(response.data);
+                }.bind(this));
+
+                xhr.errorIsHandled = true;
+
+                return;
+            }
+
+            var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(reason);
+
+            if (methodName in this) {
+                xhr.errorIsHandled = true;
+
+                this[methodName](response.data);
             }
         },
 
