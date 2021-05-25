@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Utils\Database\Orm\Fields;
 
-use Espo\Core\Utils\Util;
-
 class PersonName extends Base
 {
     protected function load($fieldName, $entityType)
