@@ -43,6 +43,7 @@ use Espo\Core\{
     Mail\Mail\Storage\Imap,
     Mail\Parser,
     Mail\ParserFactory,
+    Record\CreateParams,
 };
 
 use Espo\Entities\{
@@ -226,7 +227,7 @@ class EmailAccount extends Record implements
         return $storage;
     }
 
-    public function create(StdClass $data): Entity
+    public function create(StdClass $data, CreateParams $params): Entity
     {
         if (!$this->getUser()->isAdmin()) {
             $count = $this->entityManager
@@ -241,11 +242,13 @@ class EmailAccount extends Record implements
             }
         }
 
-        $entity = parent::create($data);
+        $entity = parent::create($data, $params);
+
         if ($entity) {
             if (!$this->getUser()->isAdmin()) {
                 $entity->set('assignedUserId', $this->getUser()->id);
             }
+
             $this->entityManager->saveEntity($entity);
         }
 

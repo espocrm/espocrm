@@ -32,6 +32,8 @@ namespace tests\integration\Espo\Record;
 use Espo\Core\{
     Exceptions\BadRequest,
     Application,
+    Record\CreateParams,
+    Record\UpdateParams,
 };
 
 use Espo\Services\Settings as SettingsService;
@@ -61,9 +63,12 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => null,
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create((object) [
+                'name' => null,
+            ], CreateParams::create());
     }
 
     public function testUpdateRequiredVarchar1()
@@ -76,15 +81,28 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ],
         ]);
 
-        $entity = $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => 'test'
-        ]);
+        $entity = $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create(
+                (object) [
+                    'name' => 'test'
+                ],
+                CreateParams::create()
+            );
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->update($entity->id, (object) [
-            'name' => '',
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->update(
+                $entity->id,
+                (object) [
+                    'name' => '',
+                ],
+                UpdateParams::create()
+            );
     }
 
     public function testRequiredVarchar2()
@@ -99,9 +117,15 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create(
+                (object) [
 
-        ]);
+                ],
+                CreateParams::create()
+            );
     }
 
     public function testRequiredVarchar3()
@@ -114,9 +138,12 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ],
         ]);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => 'test',
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create((object) [
+                'name' => 'test',
+            ], CreateParams::create());
 
         $this->assertTrue(true);
     }
@@ -134,9 +161,12 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => '123456',
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create((object) [
+                'name' => '123456',
+            ], CreateParams::create());
     }
 
     public function testMaxLength2()
@@ -150,9 +180,12 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => '12345',
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create((object) [
+                'name' => '12345',
+            ], CreateParams::create());
 
         $this->assertTrue(true);
     }
@@ -169,10 +202,13 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => 'test',
-            'assignedUserId' => null,
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create((object) [
+                'name' => 'test',
+                'assignedUserId' => null,
+            ], CreateParams::create());
     }
 
     public function testRequiredLink2()
@@ -185,10 +221,13 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => 'test',
-            'assignedUserId' => '1',
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create((object) [
+                'name' => 'test',
+                'assignedUserId' => '1',
+            ], CreateParams::create());
 
         $this->assertTrue(true);
     }
@@ -205,10 +244,13 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Account')->create((object) [
-            'name' => 'test',
-            'teamsIds' => [],
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Account')
+            ->create((object) [
+                'name' => 'test',
+                'teamsIds' => [],
+            ], CreateParams::create());
     }
 
     public function testRequiredCurrency1()
@@ -223,10 +265,13 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
-            'lastName' => 'test',
-            'opportunityAmount' => null,
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Lead')
+            ->create((object) [
+                'lastName' => 'test',
+                'opportunityAmount' => null,
+            ], CreateParams::create());
     }
 
     public function testRequiredCurrency2()
@@ -239,11 +284,14 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
-            'lastName' => 'test',
-            'opportunityAmount' => 100,
-            'opportunityAmountCurrency' => null,
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Lead')
+            ->create((object) [
+                'lastName' => 'test',
+                'opportunityAmount' => 100,
+                'opportunityAmountCurrency' => null,
+            ], CreateParams::create());
 
         $this->assertTrue(true);
     }
@@ -258,11 +306,14 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
-            'lastName' => 'test',
-            'opportunityAmount' => 100,
-            'opportunityAmountCurrency' => 'USD',
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Lead')
+            ->create((object) [
+                'lastName' => 'test',
+                'opportunityAmount' => 100,
+                'opportunityAmountCurrency' => 'USD',
+            ], CreateParams::create());
 
         $this->assertTrue(true);
     }
@@ -282,9 +333,12 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
-            'lastName' => 'test',
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Lead')
+            ->create((object) [
+                'lastName' => 'test',
+            ], CreateParams::create());
     }
 
     public function testRequiredEnum2()
@@ -299,10 +353,13 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(BadRequest::class);
 
-        $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
-            'lastName' => 'test',
-            'status' => null,
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Lead')
+            ->create((object) [
+                'lastName' => 'test',
+                'status' => null,
+            ], CreateParams::create());
     }
 
     public function testRequiredEnum3()
@@ -315,22 +372,28 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ]
         ]);
 
-        $app->getContainer()->get('serviceFactory')->create('Lead')->create((object) [
-            'lastName' => 'test',
-            'status' => 'New',
-        ]);
+        $app->getContainer()
+            ->get('serviceFactory')
+            ->create('Lead')
+            ->create((object) [
+                'lastName' => 'test',
+                'status' => 'New',
+            ], CreateParams::create());
 
         $this->assertTrue(true);
     }
 
     public function testSkipRequired()
     {
-        $this->getContainer()->get('serviceFactory')->create('Meeting')->create((object) [
-            'name' => 'test',
-            'dateStart' => '2021-01-01 00:00:00',
-            'duration' => 1000,
-            'assignedUserId' => '1',
-        ]);
+        $this->getContainer()
+            ->get('serviceFactory')
+            ->create('Meeting')
+            ->create((object) [
+                'name' => 'test',
+                'dateStart' => '2021-01-01 00:00:00',
+                'duration' => 1000,
+                'assignedUserId' => '1',
+            ], CreateParams::create());
 
         $this->assertTrue(true);
     }

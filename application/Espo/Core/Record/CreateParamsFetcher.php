@@ -29,29 +29,26 @@
 
 namespace Espo\Core\Record;
 
-use Espo\ORM\Entity;
+use Espo\Core\{
+    Api\Request,
+};
 
-use StdClass;
-
-interface Crud
+class CreateParamsFetcher
 {
-    /**
-     * Create a record.
-     */
-    public function create(StdClass $data, CreateParams $params): Entity;
+    public function __construct() {}
 
-    /**
-     * Read a record.
-     */
-    public function read(string $id): Entity;
+    public function fetch(Request $request): CreateParams
+    {
+        $data = $request->getParsedBody();
 
-    /**
-     * Update a record.
-     */
-    public function update(string $id, StdClass $data, UpdateParams $params): Entity;
+        $skipDuplicateCheck =
+            $request->getHeader('X-Skip-Duplicate-Check') ??
+            $data->_skipDuplicateCheck ?? // legacy
+            $data->skipDuplicateCheck ?? // legacy
+            $data->forceDuplicate ?? // legacy
+            false;
 
-    /**
-     * Delete a record.
-     */
-    public function delete(string $id): void;
+        return CreateParams::create()
+            ->withSkipDuplicateCheck($skipDuplicateCheck);
+    }
 }

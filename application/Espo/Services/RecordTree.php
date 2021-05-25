@@ -40,6 +40,7 @@ use Espo\Core\{
     Select\SearchParams,
     Select\Where\Item as WhereItem,
     Acl\Table as AclTable,
+    Record\UpdateParams,
 };
 
 use StdClass;
@@ -265,13 +266,13 @@ class RecordTree extends Record
         }
     }
 
-    public function update(string $id, StdClass $data): Entity
+    public function update(string $id, StdClass $data, UpdateParams $params): Entity
     {
-        if (!empty($data->parentId) && $data->parentId == $id) {
+        if (!empty($data->parentId) && $data->parentId === $id) {
             throw new Forbidden();
         }
 
-        return parent::update($id, $data);
+        return parent::update($id, $data, $params);
     }
 
     public function link(string $id, string $link, string $foreignId): void

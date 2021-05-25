@@ -46,6 +46,7 @@ use Espo\Core\{
     Di,
     Select\Where\Item as WhereItem,
     Mail\Sender,
+    Record\CreateParams,
 };
 
 use Exception;
@@ -406,9 +407,9 @@ class Email extends Record implements
         }
     }
 
-    public function create(StdClass $data): Entity
+    public function create(StdClass $data, CreateParams $params): Entity
     {
-        $entity = parent::create($data);
+        $entity = parent::create($data, $params);
 
         if ($entity && $entity->get('status') == 'Sending') {
             $this->sendEntity($entity, $this->getUser());

@@ -29,29 +29,28 @@
 
 namespace Espo\Core\Record;
 
-use Espo\ORM\Entity;
-
-use StdClass;
-
-interface Crud
+class UpdateParams
 {
-    /**
-     * Create a record.
-     */
-    public function create(StdClass $data, CreateParams $params): Entity;
+    private $skipDuplicateCheck = false;
 
-    /**
-     * Read a record.
-     */
-    public function read(string $id): Entity;
+    public function __construct() {}
 
-    /**
-     * Update a record.
-     */
-    public function update(string $id, StdClass $data, UpdateParams $params): Entity;
+    public function withSkipDuplicateCheck(bool $skipDuplicateCheck = true): self
+    {
+        $obj = clone $this;
 
-    /**
-     * Delete a record.
-     */
-    public function delete(string $id): void;
+        $obj->skipDuplicateCheck = $skipDuplicateCheck;
+
+        return $obj;
+    }
+
+    public function skipDuplicateCheck(): bool
+    {
+        return $this->skipDuplicateCheck;
+    }
+
+    public static function create(): self
+    {
+        return new self();
+    }
 }

@@ -470,16 +470,8 @@ class Service implements Crud,
     {
     }
 
-    protected function processDuplicateCheck(Entity $entity, $data)
+    protected function processDuplicateCheck(Entity $entity, StdClass $data): void
     {
-        if (
-            !empty($data->_skipDuplicateCheck) ||
-            !empty($data->skipDuplicateCheck) ||
-            !empty($data->forceDuplicate)
-        ) {
-            return;
-        }
-
         $duplicateList = $this->findDuplicates($entity, $data);
 
         if (empty($duplicateList)) {
@@ -555,7 +547,7 @@ class Service implements Crud,
      *
      * @throws ForbiddenSilent If no create access.
      */
-    public function create(StdClass $data): Entity
+    public function create(StdClass $data, CreateParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
             throw new ForbiddenSilent();
@@ -574,8 +566,13 @@ class Service implements Crud,
         }
 
         $this->processValidation($entity, $data);
+
         $this->processAssignmentCheck($entity);
-        $this->processDuplicateCheck($entity, $data);
+
+        if (!$params->skipDuplicateCheck()) {
+            $this->processDuplicateCheck($entity, $data);
+        }
+
         $this->beforeCreateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity);
@@ -596,7 +593,7 @@ class Service implements Crud,
      * @throws NotFound If record not found.
      * @throws Forbidden If no access.
      */
-    public function update(string $id, StdClass $data): Entity
+    public function update(string $id, StdClass $data, UpdateParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent();
@@ -629,7 +626,7 @@ class Service implements Crud,
 
         $this->beforeUpdateEntity($entity, $data);
 
-        if ($this->checkForDuplicatesInUpdate) {
+        if ($this->checkForDuplicatesInUpdate && !$params->skipDuplicateCheck()) {
             $this->processDuplicateCheck($entity, $data);
         }
 

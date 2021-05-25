@@ -38,6 +38,8 @@ use Espo\Core\{
     Utils\ApiKey as ApiKeyUtil,
     Di,
     Password\Recovery,
+    Record\CreateParams,
+    Record\UpdateParams,
 };
 
 use Espo\ORM\Entity;
@@ -270,7 +272,7 @@ class User extends Record implements
         }
     }
 
-    public function create(StdClass $data): Entity
+    public function create(StdClass $data, CreateParams $params): Entity
     {
         $newPassword = null;
 
@@ -284,7 +286,7 @@ class User extends Record implements
             $data->password = $this->hashPassword($data->password);
         }
 
-        $user = parent::create($data);
+        $user = parent::create($data, $params);
 
         if (!is_null($newPassword) && !empty($data->sendAccessInfo)) {
             if ($user->isActive()) {
@@ -298,7 +300,7 @@ class User extends Record implements
         return $user;
     }
 
-    public function update(string $id, StdClass $data): Entity
+    public function update(string $id, StdClass $data, UpdateParams $params): Entity
     {
         if ($id == 'system') {
             throw new Forbidden();
@@ -322,7 +324,7 @@ class User extends Record implements
             unset($data->type);
         }
 
-        $user = parent::update($id, $data);
+        $user = parent::update($id, $data, $params);
 
         if (!is_null($newPassword)) {
             try {

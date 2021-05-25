@@ -38,6 +38,8 @@ use Espo\Core\Exceptions\{
 use Espo\Core\{
     Record\ServiceContainer as RecordServiceContainer,
     Record\SearchParamsFetcher,
+    Record\CreateParamsFetcher,
+    Record\UpdateParamsFetcher,
     Container,
     Acl,
     AclManager,
@@ -70,6 +72,16 @@ class RecordBase extends Base implements Di\EntityManagerAware
     protected $searchParamsFetcher;
 
     /**
+     * @var CreateParamsFetcher
+     */
+    protected $createParamsFetcher;
+
+    /**
+     * @var UpdateParamsFetcher
+     */
+    protected $updateParamsFetcher;
+
+    /**
      * @var RecordServiceContainer
      */
     protected $recordServiceContainer;
@@ -87,6 +99,8 @@ class RecordBase extends Base implements Di\EntityManagerAware
 
     public function __construct(
         SearchParamsFetcher $searchParamsFetcher,
+        CreateParamsFetcher $createParamsFetcher,
+        UpdateParamsFetcher $updateParamsFetcher,
         RecordServiceContainer $recordServiceContainer,
         Config $config,
         User $user,
@@ -98,6 +112,8 @@ class RecordBase extends Base implements Di\EntityManagerAware
         ServiceFactory $serviceFactory // for backward compatibility
     ) {
         $this->searchParamsFetcher = $searchParamsFetcher;
+        $this->createParamsFetcher = $createParamsFetcher;
+        $this->updateParamsFetcher = $updateParamsFetcher;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->config = $config;
         $this->user = $user;
@@ -158,7 +174,9 @@ class RecordBase extends Base implements Di\EntityManagerAware
 
         $data = $request->getParsedBody();
 
-        $entity = $this->getRecordService()->create($data);
+        $params = $this->createParamsFetcher->fetch($request);
+
+        $entity = $this->getRecordService()->create($data, $params);
 
         return $entity->getValueMap();
     }
@@ -182,7 +200,9 @@ class RecordBase extends Base implements Di\EntityManagerAware
 
         $data = $request->getParsedBody();
 
-        $entity = $this->getRecordService()->update($id, $data);
+        $params = $this->updateParamsFetcher->fetch($request);
+
+        $entity = $this->getRecordService()->update($id, $data, $params);
 
         return $entity->getValueMap();
     }

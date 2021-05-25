@@ -34,6 +34,8 @@ use Espo\Core\{
     Api\Response,
     Select\SearchParams,
     Select\Where\Item as WhereItem,
+    Record\CreateParams,
+    Record\UpdateParams,
 };
 
 use Espo\Core\Exceptions\Forbidden;
@@ -223,7 +225,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('User');
 
-        $resultData = $service->update($user1->getId(), $data);
+        $resultData = $service->update($user1->getId(), $data, UpdateParams::create());
 
         $this->assertTrue(!property_exists($resultData, 'type') || $resultData->type !== 'admin');
 
@@ -327,7 +329,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Account');
 
-        $service->create((object)['name' => 'Test']);
+        $service->create((object) ['name' => 'Test'], CreateParams::create());
     }
 
     public function testUserAccessCreateNo2()
@@ -340,7 +342,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Lead');
 
-        $service->create((object)['lastName' => 'Test']);
+        $service->create((object) ['lastName' => 'Test'], CreateParams::create());
     }
 
     public function testUserAccessAclStrictCreateNo()
@@ -354,7 +356,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Case');
 
-        $e = $service->create((object)['name' => 'Test']);
+        $e = $service->create((object) ['name' => 'Test'], CreateParams::create());
     }
 
     public function testUserAccessAclStrictCreateYes()
@@ -371,7 +373,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'assignedUserId' => 'testUserId',
             'dateStart' => '2019-01-01 00:00:00',
             'dateEnd' => '2019-01-01 00:01:00',
-        ]);
+        ], CreateParams::create());
 
         $this->assertNotNull($e);
     }
@@ -398,7 +400,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'name' => 'Test',
             'dateStart' => '2019-01-01 00:00:00',
             'dateEnd' => '2019-01-01 00:01:00',
-        ]);
+        ], CreateParams::create());
     }
 
     public function testUserAccessCreateAssignedPermissionNo2()
@@ -412,13 +414,13 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(Forbidden::class);
 
-        $service->create((object)[
+        $service->create((object) [
             'name' => 'Test',
             'assignedUserId' => 'testUserId',
             'teamsIds' => ['testOtherTeamId'],
             'dateStart' => '2019-01-01 00:00:00',
             'dateEnd' => '2019-01-01 00:01:00',
-        ]);
+        ], CreateParams::create());
     }
 
     public function testUserAccessCreateAssignedPermissionYes()
@@ -430,13 +432,13 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()->get('serviceFactory')->create('Meeting');
 
-        $e = $service->create((object)[
+        $e = $service->create((object) [
             'name' => 'Test',
             'assignedUserId' => 'testUserId',
             'teamsIds' => ['testTeamId'],
             'dateStart' => '2019-01-01 00:00:00',
             'dateEnd' => '2019-01-01 00:01:00',
-        ]);
+        ], CreateParams::create());
 
         $this->assertNotNull($e);
     }
@@ -553,7 +555,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
 
         $this->expectException(Forbidden::class);
 
-        $service->update('testMeetingId', (object) []);
+        $service->update('testMeetingId', (object) [], UpdateParams::create());
     }
 
     public function testUserAccessSearchByInternalField()
