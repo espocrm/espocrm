@@ -52,7 +52,10 @@ class Integration
     protected $configWriter;
 
     public function __construct(
-        EntityManager $entityManager, User $user, Config $config, ConfigWriter $configWriter
+        EntityManager $entityManager,
+        User $user,
+        Config $config,
+        ConfigWriter $configWriter
     ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
