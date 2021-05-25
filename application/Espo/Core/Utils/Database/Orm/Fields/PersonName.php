@@ -189,7 +189,7 @@ class PersonName extends Base
             $item = "IFNULL:({$item}, '')";
         }
 
-        $select = "TRIM:(CONCAT:(" . implode(", ", $fullList) . "))";
+        $select = "NULLIF:(TRIM:(CONCAT:(" . implode(", ", $fullList) . ")), '')";
 
         return $select;
     }
