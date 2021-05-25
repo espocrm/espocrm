@@ -120,7 +120,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         convertCurrencyAction: true,
 
-        saveAndContinueEditingAction: false,
+        saveAndContinueEditingAction: true,
 
         panelSoftLockedTypeList: ['default', 'acl', 'delimiter', 'dynamicLogic'],
 
@@ -159,16 +159,21 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.delete();
         },
 
-        actionSave: function () {
+        actionSave: function (data) {
+            data = data || {};
+
             var modeBeforeSave = this.mode;
 
-            var errorCallback = function () {
-                if (modeBeforeSave === 'edit') {
-                    this.setEditMode();
-                }
-            }.bind(this);
+            this.save(data.options)
+                .catch(
+                    function (reason) {
+                        if (modeBeforeSave === 'edit' && reason === 'error') {
+                            this.setEditMode();
+                        }
+                    }.bind(this)
+                );
 
-            if (this.save(null, true, errorCallback)) {
+            if (!this.lastSaveCancelReason || this.lastSaveCancelReason === 'notModified') {
                 this.setDetailMode();
 
                 $(window).scrollTop(0);
@@ -181,8 +186,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             $(window).scrollTop(0);
         },
 
-        actionSaveAndContinueEditing: function () {
-            this.save(null, true);
+        actionSaveAndContinueEditing: function (data) {
+            data = data || {};
+
+            this.save(data.options)
+                .catch(function () {});
         },
 
         actionSelfAssign: function () {
@@ -1507,11 +1515,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 view.render();
 
                 this.listenToOnce(view, 'save', function () {
-                    this.model.set('_skipDuplicateCheck', true);
-
-                    this.actionSave();
+                    this.actionSave({
+                        options: {
+                            headers: {
+                                'X-Skip-Duplicate-Check': 'true',
+                            }
+                        }
+                    });
                 }.bind(this));
-
             }.bind(this));
         },
 

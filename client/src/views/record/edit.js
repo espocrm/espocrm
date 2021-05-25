@@ -64,8 +64,16 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
 
         saveAndNewAction: true,
 
-        actionSave: function () {
-            this.save();
+        actionSave: function (data) {
+            var isNew = this.isNew;
+
+            this.save(data.options)
+                .then(
+                    function () {
+                        this.exit(isNew ? 'create' : 'save');
+                    }.bind(this)
+                )
+                .catch(function () {});
         },
 
         actionCancel: function () {
@@ -76,6 +84,7 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
             if (this.isChanged) {
                 this.resetModelChanges();
             }
+
             this.setIsNotChanged();
             this.exit('cancel');
         },
@@ -84,6 +93,7 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
             if (this.model.isNew()) {
                 this.populateDefaults();
             }
+
             Dep.prototype.setupBeforeFinal.call(this);
         },
 
@@ -112,7 +122,9 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
             }
         },
 
-        actionSaveAndNew: function () {
+        actionSaveAndNew: function (data) {
+            data = data || {};
+
             var proceedCallback = function () {
                 Espo.Ui.success(this.translate('Created'));
 
@@ -123,7 +135,9 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
                 this.getRouter().navigate('#' + this.scope + '/create', {trigger: false});
             }.bind(this)
 
-            this.save(proceedCallback, true);
+            this.save(data.options)
+                .then(proceedCallback)
+                .catch(function () {});
 
             if (this.lastSaveCancelReason === 'notModified') {
                  proceedCallback();

@@ -544,14 +544,17 @@ define(
             this.notify('Not valid', 'error');
         },
 
-        save: function (callback, skipExit, errorCallback) {
+        save: function (options) {
+            options = options || {};
+
+            var headers = options.headers || {};
+
             this.lastSaveCancelReason = null;
 
             this.beforeBeforeSave();
 
             var data = this.fetch();
 
-            var self = this;
             var model = this.model;
 
             var initialAttributes = this.attributes;
@@ -582,7 +585,9 @@ define(
 
                 this.trigger('cancel:save', {reason: 'notModified'});
 
-                return true;
+                return new Promise(function (resolve, reject) {
+                    reject('notModified');
+                });
             }
 
             model.set(setAttributes, {silent: true});
@@ -596,7 +601,9 @@ define(
 
                 this.trigger('cancel:save', {reason: 'invalid'});
 
-                return;
+                return new Promise(function (resolve, reject) {
+                    reject('invalid');
+                });
             }
 
             this.beforeSave();
@@ -605,56 +612,52 @@ define(
 
             model.trigger('before:save');
 
-            model.save(setAttributes, {
-                success: function () {
-                    this.afterSave();
-
-                    var isNew = self.isNew;
-
-                    if (self.isNew) {
-                        self.isNew = false;
+            return new Promise(function (resolve, reject) {
+                model.save(
+                    setAttributes,
+                    {
+                        patch: !model.isNew(),
+                        headers: headers,
                     }
+                )
+                    .then(
+                        function () {
+                            this.afterSave();
 
-                    this.trigger('after:save');
+                            var isNew = this.isNew;
 
-                    model.trigger('after:save');
-
-                    if (!callback) {
-                        if (!skipExit) {
-                            if (isNew) {
-                                this.exit('create');
-                            } else {
-                                this.exit('save');
+                            if (this.isNew) {
+                                this.isNew = false;
                             }
-                        }
-                    } else {
-                        callback(this);
-                    }
-                }.bind(this),
-                error: function (e, xhr) {
-                    this.handleSaveError(e, xhr);
 
-                    this.afterSaveError();
+                            this.trigger('after:save');
 
-                    this.setModelAttributes(beforeSaveAttributes);
+                            model.trigger('after:save');
 
-                    this.lastSaveCancelReason = 'error';
+                            resolve();
 
-                    this.trigger('error:save');
-                    this.trigger('cancel:save', {reason: 'error'});
+                        }.bind(this)
+                    )
+                    .fail(
+                        function (xhr) {
+                            this.handleSaveError(xhr);
 
-                    if (errorCallback) {
-                        errorCallback.call(this, xhr);
-                    }
-                }.bind(this),
+                            this.afterSaveError();
 
-                patch: !model.isNew()
-            });
+                            this.setModelAttributes(beforeSaveAttributes);
 
-            return true;
+                            this.lastSaveCancelReason = 'error';
+
+                            this.trigger('error:save');
+                            this.trigger('cancel:save', {reason: 'error'});
+
+                            reject('error');
+                        }.bind(this)
+                    );
+            }.bind(this));
         },
 
-        handleSaveError: function (e, xhr) {
+        handleSaveError: function (xhr) {
             var response = null;
 
             if (~[409, 500].indexOf(xhr.status)) {
