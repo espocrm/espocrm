@@ -37,7 +37,8 @@
         "countDisabled": "Disable record count",
         "fullTextSearch": "Full-Text Search",
         "parentEntityTypeList": "Parent Entity Types",
-        "foreignLinkEntityTypeList": "Foreign Links"
+        "foreignLinkEntityTypeList": "Foreign Links",
+        "optimisticConcurrencyControl": "Optimistic concurrency control"
     },
     "options": {
         "type": {
@@ -70,6 +71,7 @@
         "linkConflict": "Name conflict: link or field with the same name already exists."
     },
     "tooltips": {
+        "optimisticConcurrencyControl": "Prevents writing conflicts.",
         "statusField": "Updates of this field are logged in stream.",
         "textFilterFields": "Fields used by text search.",
         "stream": "Whether entity has a Stream.",

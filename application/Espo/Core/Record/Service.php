@@ -433,6 +433,7 @@ class Service implements Crud,
         unset($data->createdById);
         unset($data->createdByName);
         unset($data->createdAt);
+        unset($data->versionNumber);
 
         $this->filterInput($data);
 
@@ -450,6 +451,7 @@ class Service implements Crud,
         unset($data->createdById);
         unset($data->createdByName);
         unset($data->createdAt);
+        unset($data->versionNumber);
 
         $this->filterInput($data);
 
@@ -468,6 +470,44 @@ class Service implements Crud,
      */
     protected function handleInput($data)
     {
+    }
+
+    protected function processConcurrencyControl(Entity $entity, StdClass $data, int $versionNumber): void
+    {
+        if ($entity->get('versionNumber') === null) {
+            return;
+        }
+
+        if ($versionNumber === $entity->get('versionNumber')) {
+            return;
+        }
+
+        $attributeList = array_keys(get_object_vars($data));
+
+        $notMatchingAttributeList = [];
+
+        foreach ($attributeList as $attribute) {
+            if ($entity->get($attribute) !== $data->$attribute) {
+                $notMatchingAttributeList[] = $attribute;
+            }
+        }
+
+        if (empty($notMatchingAttributeList)) {
+            return;
+        }
+
+        $values = (object) [];
+
+        foreach ($notMatchingAttributeList as $attribute) {
+            $values->$attribute = $entity->get($attribute);
+        }
+
+        $responseData = (object) [
+            'values' => $values,
+            'versionNumber' => $entity->get('versionNumber'),
+        ];
+
+        throw ConflictSilent::createWithBody('modified', json_encode($responseData));
     }
 
     protected function processDuplicateCheck(Entity $entity, StdClass $data): void
@@ -616,6 +656,10 @@ class Service implements Crud,
 
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
             throw new ForbiddenSilent("No edit access.");
+        }
+
+        if ($params->getVersionNumber() !== null) {
+            $this->processConcurrencyControl($entity, $data, $params->getVersionNumber());
         }
 
         $entity->set($data);

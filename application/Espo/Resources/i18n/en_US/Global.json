@@ -261,7 +261,10 @@
         "Move Over": "Move Over",
         "Up": "Up",
         "Save & Continue Editing": "Save & Continue Editing",
-        "Save & New": "Save & New"
+        "Save & New": "Save & New",
+        "Field": "Field",
+        "Resolution": "Resolution",
+        "Resolve Conflict": "Resolve Conflict"
     },
     "messages": {
         "pleaseWait": "Please wait...",
@@ -325,6 +328,7 @@
         "massUnfollowZeroResult": "Nothing got unfollowed",
         "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
         "maintenanceMode": "The application currently is in maintenance mode. Only admin users have access.\n\nMaintenance mode can be disabled at Administration → Settings.",
+        "resolveSaveConflict": "The record has been modified. You need to resolve the conflict before you can save the record.",
         "massPrintPdfMaxCountError": "Can't print more that {maxCount} records."
     },
     "boolFilters": {
@@ -665,6 +669,11 @@
             "Fax": "Fax",
             "Home": "Home",
             "Other": "Other"
+        },
+        "saveConflictResolution": {
+            "current": "Current",
+            "actual": "Actual",
+            "original": "Original"
         }
     },
     "sets": {

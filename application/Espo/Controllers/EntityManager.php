@@ -125,6 +125,9 @@ class EntityManager
         if (isset($data['countDisabled'])) {
             $params['countDisabled'] = $data['countDisabled'];
         }
+        if (isset($data['optimisticConcurrencyControl'])) {
+            $params['optimisticConcurrencyControl'] = $data['optimisticConcurrencyControl'];
+        }
 
         $params['kanbanViewMode'] = !empty($data['kanbanViewMode']);
         if (!empty($data['kanbanStatusIgnoreList'])) {

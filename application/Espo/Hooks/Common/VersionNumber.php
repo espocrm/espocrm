@@ -27,35 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record;
+namespace Espo\Hooks\Common;
+
+use Espo\ORM\Entity;
 
 use Espo\Core\{
-    Api\Request,
+    FieldProcessing\VersionNumber\BeforeSaveProcessor as Processor,
 };
 
-class UpdateParamsFetcher
+class VersionNumber
 {
-    public function __construct() {}
+    protected $processor;
 
-    public function fetch(Request $request): UpdateParams
+    public function __construct(Processor $processor)
     {
-        $data = $request->getParsedBody();
+        $this->processor = $processor;
+    }
 
-        $skipDuplicateCheck =
-            $request->getHeader('X-Skip-Duplicate-Check') ??
-            $data->_skipDuplicateCheck ?? // legacy
-            $data->skipDuplicateCheck ?? // legacy
-            $data->forceDuplicate ?? // legacy
-            false;
-
-        $versionNumber = $request->getHeader('X-Version-Number');
-
-        if ($versionNumber !== null) {
-            $versionNumber = intval($versionNumber);
-        }
-
-        return UpdateParams::create()
-            ->withSkipDuplicateCheck($skipDuplicateCheck)
-            ->withVersionNumber($versionNumber);
+    public function beforeSave(Entity $entity): void
+    {
+        $this->processor->process($entity);
     }
 }

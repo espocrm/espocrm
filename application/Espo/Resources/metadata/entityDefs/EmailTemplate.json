@@ -87,5 +87,6 @@
         "orderBy": "createdAt",
         "order": "desc",
         "textFilterFields": ["name", "subject"]
-    }
+    },
+    "optimisticConcurrencyControl": true
 }

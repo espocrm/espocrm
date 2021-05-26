@@ -604,7 +604,6 @@ class EntityManager
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
         }
 
-
         if (isset($data['fullTextSearch'])) {
             $entityDefsData = [
                 'collection' => [
@@ -620,6 +619,14 @@ class EntityManager
                 'collection' => [
                     'countDisabled' => !!$data['countDisabled'],
                 ],
+            ];
+
+            $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
+        }
+
+        if (isset($data['optimisticConcurrencyControl'])) {
+            $entityDefsData = [
+                'optimisticConcurrencyControl' => $data['optimisticConcurrencyControl'],
             ];
 
             $this->getMetadata()->set('entityDefs', $name, $entityDefsData);
@@ -1544,6 +1551,7 @@ class EntityManager
             'collection.orderBy',
             'collection.order',
             'collection.textFilterFields',
+            'optimisticConcurrencyControl',
         ]);
 
         $this->getMetadata()->save();

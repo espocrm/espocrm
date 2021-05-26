@@ -1526,6 +1526,59 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }.bind(this));
         },
 
+        errorHandlerModified: function (data) {
+            Espo.Ui.notify(false);
+
+            var versionNumber = data.versionNumber;
+
+            var values = data.values || {};
+
+            var attributeList = Object.keys(values);
+
+            var diffAttributeList = [];
+
+            attributeList.forEach(function (attribute) {
+                if (this.attributes[attribute] !== values[attribute]) {
+                    diffAttributeList.push(attribute);
+                }
+            }, this);
+
+            if (diffAttributeList.length === 0) {
+                this.model.set('versionNumber', versionNumber, {silent: true});
+                this.attributes.versionNumber = versionNumber;
+
+                this.actionSave();
+
+                return;
+            }
+
+            this.createView(
+                'dialog',
+                'views/modals/resolve-save-conflict',
+                {
+                    model: this.model,
+                    attributeList: diffAttributeList,
+                    currentAttributes: Espo.Utils.cloneDeep(this.model.attributes),
+                    originalAttributes: Espo.Utils.cloneDeep(this.attributes),
+                    actualAttributes: Espo.Utils.cloneDeep(values),
+                }
+            )
+            .then(
+                function (view) {
+                    view.render();
+
+                    this.listenTo(view, 'resolve', function () {
+                        this.model.set('versionNumber', versionNumber, {silent: true});
+                        this.attributes.versionNumber = versionNumber;
+
+                        for (let attribute in values) {
+                            this.setInitalAttributeValue(attribute, values[attribute]);
+                        }
+                    }, this);
+                }.bind(this)
+            );
+        },
+
         setReadOnly: function () {
             if (!this.readOnlyLocked) {
                 this.readOnly = true;

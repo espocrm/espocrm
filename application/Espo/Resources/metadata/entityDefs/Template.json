@@ -120,5 +120,6 @@
     "collection": {
         "orderBy": "name",
         "order": "asc"
-    }
+    },
+    "optimisticConcurrencyControl": true
 }

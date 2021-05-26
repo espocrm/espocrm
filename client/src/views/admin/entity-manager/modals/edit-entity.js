@@ -101,6 +101,11 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     'kanbanStatusIgnoreList',
                     this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []
                 );
+
+                this.model.set(
+                    'optimisticConcurrencyControl',
+                    this.getMetadata().get(['entityDefs', scope, 'optimisticConcurrencyControl']) || false
+                );
             }
         },
 
@@ -420,7 +425,18 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     },
                     translatedOptions: translatedStatusOptions
                 });
+
+                this.createView('optimisticConcurrencyControl', 'views/fields/bool', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="optimisticConcurrencyControl"]',
+                    defs: {
+                        name: 'optimisticConcurrencyControl',
+                    },
+                    tooltip: true,
+                });
             }
+
             this.model.fetchedAttributes = this.model.getClonedAttributes();
         },
 
@@ -566,6 +582,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 arr.push('sortDirection');
                 arr.push('kanbanViewMode');
                 arr.push('kanbanStatusIgnoreList');
+                arr.push('optimisticConcurrencyControl');
             }
 
             if (this.hasColorField) {
@@ -640,6 +657,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 data.sortDirection = this.model.get('sortDirection');
                 data.kanbanViewMode = this.model.get('kanbanViewMode');
                 data.kanbanStatusIgnoreList = this.model.get('kanbanStatusIgnoreList');
+                data.optimisticConcurrencyControl = this.model.get('optimisticConcurrencyControl');
             }
 
             if (!this.isNew) {

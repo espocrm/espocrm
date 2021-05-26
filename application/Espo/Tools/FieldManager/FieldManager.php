@@ -59,6 +59,7 @@ class FieldManager
         'deleted',
         'skipDuplicateCheck',
         'isFollowed',
+        'versionNumber',
         'null',
         'false',
         'true',

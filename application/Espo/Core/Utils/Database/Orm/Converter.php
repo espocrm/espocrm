@@ -495,6 +495,15 @@ class Converter
             }
         }
 
+        // @todo move to separate file
+        if ($this->metadata->get(['entityDefs', $entityType, 'optimisticConcurrencyControl'])) {
+            $ormMetadata[$entityType]['fields']['versionNumber'] = [
+                'type' => Entity::INT,
+                'dbType' => 'bigint',
+                'notExportable' => true,
+            ];
+        }
+
         return $ormMetadata;
     }
 

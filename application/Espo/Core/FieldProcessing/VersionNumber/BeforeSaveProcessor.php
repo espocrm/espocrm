@@ -27,35 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record;
+namespace Espo\Core\FieldProcessing\VersionNumber;
 
 use Espo\Core\{
-    Api\Request,
+    Utils\Metadata,
 };
 
-class UpdateParamsFetcher
+use Espo\ORM\Entity;
+
+class BeforeSaveProcessor
 {
-    public function __construct() {}
+    private $metadata;
 
-    public function fetch(Request $request): UpdateParams
+    public function __construct(Metadata $metadata)
     {
-        $data = $request->getParsedBody();
+        $this->metadata = $metadata;
+    }
 
-        $skipDuplicateCheck =
-            $request->getHeader('X-Skip-Duplicate-Check') ??
-            $data->_skipDuplicateCheck ?? // legacy
-            $data->skipDuplicateCheck ?? // legacy
-            $data->forceDuplicate ?? // legacy
-            false;
+    public function process(Entity $entity): void
+    {
+        $optimisticConcurrencyControl = $this->metadata
+            ->get(['entityDefs', $entity->getEntityType(), 'optimisticConcurrencyControl']);
 
-        $versionNumber = $request->getHeader('X-Version-Number');
-
-        if ($versionNumber !== null) {
-            $versionNumber = intval($versionNumber);
+        if (!$optimisticConcurrencyControl) {
+            return;
         }
 
-        return UpdateParams::create()
-            ->withSkipDuplicateCheck($skipDuplicateCheck)
-            ->withVersionNumber($versionNumber);
+        if ($entity->isNew()) {
+            $entity->set('versionNumber', 1);
+
+            return;
+        }
+
+        $entity->clear('versionNumber');
+
+        if (!$entity->hasFetched('versionNumber')) {
+            return;
+        }
+
+        $versionNumber = $entity->getFetched('versionNumber');
+
+        if ($versionNumber === null) {
+            $versionNumber = 0;
+        }
+
+        $versionNumber++;
+
+        $entity->set('versionNumber', $versionNumber);
     }
 }

@@ -606,6 +606,13 @@ define(
                 });
             }
 
+            var optimisticConcurrencyControl = this.getMetadata()
+                .get(['entityDefs', this.entityType, 'optimisticConcurrencyControl']);
+
+            if (optimisticConcurrencyControl && this.model.get('versionNumber') !== null) {
+                headers['X-Version-Number'] = this.model.get('versionNumber');
+            }
+
             this.beforeSave();
 
             this.trigger('before:save');
