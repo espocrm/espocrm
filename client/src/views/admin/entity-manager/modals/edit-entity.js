@@ -44,9 +44,15 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             var scope = this.scope;
 
             this.hasStreamField = true;
+
             if (scope) {
-                this.hasStreamField = (this.getMetadata().get('scopes.' + scope + '.customizable') && this.getMetadata().get('scopes.' + scope + '.object')) || false;
+                this.hasStreamField =
+                    (
+                        this.getMetadata().get('scopes.' + scope + '.customizable') &&
+                        this.getMetadata().get('scopes.' + scope + '.object')
+                    ) || false;
             }
+
             if (scope === 'User') {
                 this.hasStreamField = false;
             }
@@ -64,9 +70,19 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 this.model.set('sortBy', this.getMetadata().get('entityDefs.' + scope + '.collection.orderBy'));
                 this.model.set('sortDirection', this.getMetadata().get('entityDefs.' + scope + '.collection.order'));
 
-                this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']);
-                this.model.set('fullTextSearch', this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false);
-                this.model.set('countDisabled', this.getMetadata().get(['entityDefs', scope, 'collection', 'countDisabled']) || false);
+                this.model.set(
+                    'textFilterFields',
+                    this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']
+                );
+
+                this.model.set(
+                    'fullTextSearch',
+                    this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false
+                );
+                this.model.set(
+                    'countDisabled',
+                    this.getMetadata().get(['entityDefs', scope, 'collection', 'countDisabled']) || false
+                );
 
                 this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
 
@@ -76,8 +92,15 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
 
                 this.model.set('iconClass', this.getMetadata().get(['clientDefs', scope, 'iconClass']) || null);
 
-                this.model.set('kanbanViewMode', this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false);
-                this.model.set('kanbanStatusIgnoreList', this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []);
+                this.model.set(
+                    'kanbanViewMode',
+                    this.getMetadata().get(['clientDefs', scope, 'kanbanViewMode']) || false
+                );
+
+                this.model.set(
+                    'kanbanStatusIgnoreList',
+                    this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []
+                );
             }
         },
 
@@ -97,15 +120,19 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             var scope = this.scope = this.options.scope || false;
 
             var header = 'Create Entity';
+
             this.isNew = true;
+
             if (scope) {
                 header = 'Edit Entity';
+
                 this.isNew = false;
             }
 
             this.header = this.translate(header, 'labels', 'Admin');
 
             var model = this.model = new Model();
+
             model.name = 'EntityManager';
 
             if (!this.isNew) {
@@ -115,7 +142,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             if (!this.isNew && !this.isCustom) {
                 this.buttonList.push({
                     name: 'resetToDefault',
-                    text: this.translate('Reset to Default', 'labels', 'Admin')
+                    text: this.translate('Reset to Default', 'labels', 'Admin'),
                 });
             }
 
@@ -132,9 +159,9 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                         options: this.getMetadata().get('app.entityTemplateList') || ['Base']
                     }
                 },
-                readOnly: scope != false,
+                readOnly: scope !== false,
                 tooltip: true,
-                tooltipText: this.translate('entityType', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('entityType', 'tooltips', 'EntityManager'),
             });
 
             if (this.hasStreamField) {
@@ -146,7 +173,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                         name: 'stream'
                     },
                     tooltip: true,
-                    tooltipText: this.translate('stream', 'tooltips', 'EntityManager')
+                    tooltipText: this.translate('stream', 'tooltips', 'EntityManager'),
                 });
             }
 
@@ -158,7 +185,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     name: 'disabled'
                 },
                 tooltip: true,
-                tooltipText: this.translate('disabled', 'tooltips', 'EntityManager')
+                tooltipText: this.translate('disabled', 'tooltips', 'EntityManager'),
             });
 
             this.createView('name', 'views/fields/varchar', {
@@ -170,10 +197,10 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     params: {
                         required: true,
                         trim: true,
-                        maxLength: 100
-                    }
+                        maxLength: 100,
+                    },
                 },
-                readOnly: scope != false
+                readOnly: scope !== false
             });
             this.createView('labelSingular', 'views/fields/varchar', {
                 model: model,
@@ -183,7 +210,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     name: 'labelSingular',
                     params: {
                         required: true,
-                        trim: true
+                        trim: true,
                     }
                 }
             });
@@ -195,8 +222,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     name: 'labelPlural',
                     params: {
                         required: true,
-                        trim: true
-                    }
+                        trim: true,
+                    },
                 }
             });
 
@@ -206,8 +233,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     mode: 'edit',
                     el: this.options.el + ' .field[data-name="color"]',
                     defs: {
-                        name: 'color'
-                    }
+                        name: 'color',
+                    },
                 });
             }
 
@@ -223,17 +250,24 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             if (scope) {
                 var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
 
-                var orderableFieldList = Object.keys(fieldDefs).filter(function (item) {
-                    if (!this.getFieldManager().isScopeFieldAvailable(scope, item)) return false;
-                    if (fieldDefs[item].notStorable) {
-                        return false;
-                    }
-                    return true;
-                }, this).sort(function (v1, v2) {
-                    return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-                }.bind(this));
+                var orderableFieldList = Object.keys(fieldDefs)
+                    .filter(function (item) {
+                        if (!this.getFieldManager().isScopeFieldAvailable(scope, item)) {
+                            return false;
+                        }
+
+                        if (fieldDefs[item].notStorable) {
+                            return false;
+                        }
+
+                        return true;
+                    }, this)
+                    .sort(function (v1, v2) {
+                        return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
+                    }.bind(this));
 
                 var translatedOptions = {};
+
                 orderableFieldList.forEach(function (item) {
                     translatedOptions[item] = this.translate(item, 'fields', scope);
                 }, this);
@@ -248,7 +282,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                             options: orderableFieldList
                         }
                     },
-                    translatedOptions: translatedOptions
+                    translatedOptions: translatedOptions,
                 });
 
                 this.createView('sortDirection', 'views/fields/enum', {
@@ -270,7 +304,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     defs: {
                         name: 'fullTextSearch'
                     },
-                    tooltip: true
+                    tooltip: true,
                 });
 
                 this.createView('countDisabled', 'views/fields/bool', {
@@ -295,12 +329,18 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 var filtersOptionList = this.getTextFiltersOptionList(scope);
 
                 var textFilterFieldsTranslation = {};
+
                 filtersOptionList.forEach(function (item) {
                     if (~item.indexOf('.')) {
                         var link = item.split('.')[0];
                         var foreignField = item.split('.')[1];
+
                         var foreignEntityType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'entity']);
-                        textFilterFieldsTranslation[item] = this.translate(link, 'links', scope) + '.' + this.translate(foreignField, 'fields', foreignEntityType);
+
+                        textFilterFieldsTranslation[item] =
+                            this.translate(link, 'links', scope) + '.' +
+                            this.translate(foreignField, 'fields', foreignEntityType);
+
                         return;
                     }
                     textFilterFieldsTranslation[item] = this.translate(item, 'fields', scope);
@@ -318,25 +358,36 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     },
                     tooltip: true,
                     tooltipText: this.translate('textFilterFields', 'tooltips', 'EntityManager'),
-                    translatedOptions: textFilterFieldsTranslation
+                    translatedOptions: textFilterFieldsTranslation,
                 });
 
 
-                var enumFieldList = Object.keys(fieldDefs).filter(function (item) {
-                    if (fieldDefs[item].disabled) return;
-                    if (fieldDefs[item].type == 'enum') {
-                        return true;
-                    }
-                    return;
-                }, this).sort(function (v1, v2) {
-                    return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-                }.bind(this));
+                var enumFieldList = Object.keys(fieldDefs)
+                    .filter(function (item) {
+                        if (fieldDefs[item].disabled) {
+                            return;
+                        }
+
+                        if (fieldDefs[item].type === 'enum') {
+                            return true;
+                        }
+
+                        return;
+
+                    }, this)
+                    .sort(function (v1, v2) {
+                        return this.translate(v1, 'fields', scope)
+                            .localeCompare(this.translate(v2, 'fields', scope));
+                    }.bind(this));
 
                 var translatedStatusFields = {};
+
                 enumFieldList.forEach(function (item) {
                     translatedStatusFields[item] = this.translate(item, 'fields', scope);
                 }, this);
+
                 enumFieldList.unshift('');
+
                 translatedStatusFields[''] = '-' + this.translate('None') + '-';
 
                 this.createView('statusField', 'views/fields/enum', {
@@ -351,7 +402,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     },
                     tooltip: true,
                     tooltipText: this.translate('statusField', 'tooltips', 'EntityManager'),
-                    translatedOptions: translatedStatusFields
+                    translatedOptions: translatedStatusFields,
                 });
 
                 var statusOptionList = [];
@@ -375,26 +426,32 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
 
         hideField: function (name) {
             var view = this.getView(name);
+
             if (view) {
                 view.disabled = true;
             }
+
             this.$el.find('.cell[data-name=' + name+']').css('visibility', 'hidden');
         },
 
         showField: function (name) {
             var view = this.getView(name);
+
             if (view) {
                 view.disabled = false;
             }
+
             this.$el.find('.cell[data-name=' + name+']').css('visibility', 'visible');
         },
 
         toPlural: function (string) {
-            if (string.slice(-1) == 'y') {
+            if (string.slice(-1) === 'y') {
                 return string.substr(0, string.length - 1) + 'ies';
-            } else if (string.slice(-1) == 's') {
+            }
+            else if (string.slice(-1) === 's') {
                 return string + 'es';
-            } else {
+            }
+            else {
                 return string + 's';
             }
         },
@@ -406,25 +463,34 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 name = name.charAt(0).toUpperCase() + name.slice(1);
 
                 this.model.set('labelSingular', name);
+
                 this.model.set('labelPlural', this.toPlural(name)) ;
+
                 if (name) {
-                    name = name.replace(/\-/g, ' ').replace(/_/g, ' ').replace(/[^\w\s]/gi, '').replace(/ (.)/g, function (match, g) {
-                        return g.toUpperCase();
-                    }).replace(' ', '');
+                    name = name
+                        .replace(/\-/g, ' ')
+                        .replace(/_/g, ' ')
+                        .replace(/[^\w\s]/gi, '')
+                        .replace(/ (.)/g, function (match, g) {
+                            return g.toUpperCase();
+                        }).replace(' ', '');
                     if (name.length) {
                          name = name.charAt(0).toUpperCase() + name.slice(1);
                     }
                 }
+
                 this.model.set('name', name);
             }, this);
 
             if (!this.isNew) {
                 this.manageKanbanFields({});
+
                 this.listenTo(this.model, 'change:statusField', function (m, value, o) {
                     this.manageKanbanFields(o);
                 }, this);
 
                 this.manageKanbanViewModeField();
+
                 this.listenTo(this.model, 'change:kanbanViewMode', function () {
                     this.manageKanbanViewModeField();
                 }, this);
@@ -439,15 +505,18 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             if (o.ui) {
                 this.model.set('kanbanStatusIgnoreList', []);
             }
+
             if (this.model.get('statusField')) {
                 this.setKanbanStatusIgnoreListOptions();
                 this.showField('kanbanViewMode');
+
                 if (this.model.get('kanbanViewMode')) {
                     this.showField('kanbanStatusIgnoreList');
                 } else {
                     this.hideField('kanbanStatusIgnoreList');
                 }
-            } else {
+            }
+            else {
                 this.hideField('kanbanViewMode');
                 this.hideField('kanbanStatusIgnoreList');
             }
@@ -465,8 +534,12 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             var statusField = this.model.get('statusField');
             var fieldView = this.getView('kanbanStatusIgnoreList');
 
-            var optionList = this.getMetadata().get(['entityDefs', this.scope, 'fields', statusField, 'options']) || [];
-            var translation = this.getMetadata().get(['entityDefs', this.scope, 'fields', statusField, 'translation']) || this.scope + '.options.' + statusField;
+            var optionList = this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', statusField, 'options']) || [];
+
+            var translation = this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', statusField, 'translation']) ||
+                this.scope + '.options.' + statusField;
 
             fieldView.params.options = optionList;
             fieldView.params.translation = translation;
@@ -499,19 +572,29 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 arr.push('color');
             }
 
-            var fetchedAttributes = Espo.Utils.cloneDeep(this.model.fetchedAttributes) || {};
-
             var notValid = false;
 
             arr.forEach(function (item) {
-                if (!this.hasView(item)) return;
-                if (this.getView(item).mode != 'edit') return;
+                if (!this.hasView(item)) {
+                    return;
+                }
+
+                if (this.getView(item).mode !== 'edit') {
+                    return;
+                }
+
                 this.getView(item).fetchToModel();
             }, this);
 
             arr.forEach(function (item) {
-                if (!this.hasView(item)) return;
-                if (this.getView(item).mode != 'edit') return;
+                if (!this.hasView(item)) {
+                    return;
+                }
+
+                if (this.getView(item).mode !== 'edit') {
+                    return;
+                }
+
                 notValid = this.getView(item).validate() || notValid;
             }, this);
 
@@ -523,6 +606,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             this.disableButton('resetToDefault');
 
             var url = 'EntityManager/action/createEntity';
+
             if (this.scope) {
                 url = 'EntityManager/action/updateEntity';
             }
@@ -544,7 +628,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             };
 
             if (this.hasColorField) {
-                data.color = this.model.get('color') || null
+                data.color = this.model.get('color') || null;
             }
 
             if (data.statusField === '') {
@@ -562,6 +646,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 if (this.model.fetchedAttributes.labelPlural === data.labelPlural) {
                     delete data.labelPlural;
                 }
+
                 if (this.model.fetchedAttributes.labelSingular === data.labelSingular) {
                     delete data.labelSingular;
                 }
@@ -577,7 +662,9 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     } else {
                         Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'));
                     }
+
                     var global = ((this.getLanguage().data || {}) || {}).Global;
+
                     (global.scopeNames || {})[name] = this.model.get('labelSingular');
                     (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
 
@@ -607,10 +694,12 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                     ).then(
                         function () {
                             var rebuildRequired = data.fullTextSearch && !fetchedAttributes.fullTextSearch;
+
                             var o = {
                                 rebuildRequired: rebuildRequired,
                                 scope: name,
                             };
+
                             this.trigger('after:save', o);
                         }.bind(this)
                     );
@@ -661,7 +750,9 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                         .then(
                             function () {
                                 this.setupData();
+
                                 this.model.fetchedAttributes = this.model.getClonedAttributes();
+
                                 this.notify('Done', 'success');
                             }.bind(this)
                         );
@@ -675,38 +766,87 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
 
             var filtersOptionList = Object.keys(fieldDefs).filter(function (item) {
                 var fieldType = fieldDefs[item].type;
-                if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) return false
-                if (!this.getFieldManager().isScopeFieldAvailable(scope, item)) return false;
-                if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'textFilterDisabled'])) return false;
+
+                if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) {
+                    return false;
+                }
+
+                if (!this.getFieldManager().isScopeFieldAvailable(scope, item)) {
+                    return false;
+                }
+
+                if (this.getMetadata().get(['entityDefs', scope, 'fields', item, 'textFilterDisabled'])) {
+                    return false;
+                }
+
                 return true;
             }, this);
 
             var linkList = Object.keys(this.getMetadata().get(['entityDefs', scope, 'links']) || {});
+
             linkList.sort(function (v1, v2) {
                 return this.translate(v1, 'links', scope).localeCompare(this.translate(v2, 'links', scope));
             }.bind(this));
+
             linkList.forEach(function (link) {
                 var linkType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'type']);
-                if (linkType != 'belongsTo') return;
-                var foreignEntityType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'entity']);
-                if (!foreignEntityType) return;
-                var fields = this.getMetadata().get(['entityDefs', foreignEntityType, 'fields']) || {};
-                var fieldList = Object.keys(fields);
-                fieldList.sort(function (v1, v2) {
-                    return this.translate(v1, 'fields', foreignEntityType).localeCompare(this.translate(v2, 'fields', foreignEntityType));
-                }.bind(this));
-                fieldList.filter(function (item) {
-                    var fieldType = this.getMetadata().get(['entityDefs', foreignEntityType, 'fields', item, 'type']);
-                    if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) return false;
-                    if (!this.getMetadata().get(['fields', fieldType, 'textFilterForeign'])) return false;
-                    if (!this.getFieldManager().isScopeFieldAvailable(foreignEntityType, item)) return false;
 
-                    if (this.getMetadata().get(['entityDefs', foreignEntityType, 'fields', item, 'textFilterDisabled'])) return false;
-                    if (this.getMetadata().get(['entityDefs', foreignEntityType, 'fields', item, 'foreingAccessDisabled'])) return false;
-                    return true;
-                }, this).forEach(function (item) {
-                    filtersOptionList.push(link + '.' + item);
-                }, this);
+                if (linkType !== 'belongsTo') {
+                    return;
+                }
+
+                var foreignEntityType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'entity']);
+
+                if (!foreignEntityType) {
+                    return;
+                }
+
+                var fields = this.getMetadata().get(['entityDefs', foreignEntityType, 'fields']) || {};
+
+                var fieldList = Object.keys(fields);
+
+                fieldList.sort(function (v1, v2) {
+                    return this.translate(v1, 'fields', foreignEntityType)
+                        .localeCompare(this.translate(v2, 'fields', foreignEntityType));
+                }.bind(this));
+
+                fieldList
+                    .filter(function (item) {
+                        var fieldType = this.getMetadata()
+                            .get(['entityDefs', foreignEntityType, 'fields', item, 'type']);
+
+                        if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) {
+                            return false;
+                        }
+
+                        if (!this.getMetadata().get(['fields', fieldType, 'textFilterForeign'])) {
+                            return false;
+                        }
+
+                        if (!this.getFieldManager().isScopeFieldAvailable(foreignEntityType, item)) {
+                            return false;
+                        }
+
+                        if (
+                            this.getMetadata()
+                                .get(['entityDefs', foreignEntityType, 'fields', item, 'textFilterDisabled'])
+                        ) {
+                            return false;
+                        }
+
+                        if (
+                            this.getMetadata()
+                            .get(['entityDefs', foreignEntityType, 'fields', item, 'foreingAccessDisabled'])
+                        ) {
+                            return false;
+                        }
+
+                        return true;
+
+                    }, this)
+                    .forEach(function (item) {
+                        filtersOptionList.push(link + '.' + item);
+                    }, this);
             }, this);
 
             return filtersOptionList;
