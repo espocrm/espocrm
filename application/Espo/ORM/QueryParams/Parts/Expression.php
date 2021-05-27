@@ -673,7 +673,7 @@ class Expression implements WhereItem
         return self::create($expression);
     }
 
-    private static function stringifyArgument($arg)
+    private static function stringifyArgument($arg): string
     {
         if ($arg instanceof Expression) {
             return $arg->getValue();
