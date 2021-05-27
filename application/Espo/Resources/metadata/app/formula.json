@@ -75,7 +75,7 @@
         {
             "name": "string\\matchAll",
             "insertText": "string\\matchAll(STRING, REGULAR_EXPRESSION)",
-            "returnType": "array|null"
+            "returnType": "string[]|null"
         },
         {
             "name": "string\\replace",
