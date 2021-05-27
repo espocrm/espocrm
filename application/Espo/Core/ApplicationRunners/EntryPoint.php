@@ -172,7 +172,7 @@ class EntryPoint implements Runner
 
             ob_start();
 
-            $this->entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped/*, $data*/);
+            $this->entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped);
 
             $contents = ob_get_clean();
 
