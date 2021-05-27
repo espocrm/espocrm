@@ -35,46 +35,28 @@ use Espo\{
 };
 
 use Espo\Core\{
-    Exceptions\Error,
     Exceptions\Forbidden,
     Exceptions\BadRequest,
     Api\Request,
-    DataManager,
-    Utils\Config,
-    Utils\Config\ConfigWriter,
 };
 
 class EntityManager
 {
-    protected $user;
+    private $user;
 
-    protected $dataManager;
+    private $entityManagerTool;
 
-    protected $config;
-
-    protected $entityManagerTool;
-
-    protected $configWriter;
-
-    public function __construct(
-        User $user,
-        DataManager $dataManager,
-        Config $config,
-        EntityManagerTool $entityManagerTool,
-        ConfigWriter $configWriter
-    ) {
+    public function __construct(User $user, EntityManagerTool $entityManagerTool)
+    {
         $this->user = $user;
-        $this->dataManager = $dataManager;
-        $this->config = $config;
         $this->entityManagerTool = $entityManagerTool;
-        $this->configWriter = $configWriter;
 
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
     }
 
-    public function postActionCreateEntity(Request $request)
+    public function postActionCreateEntity(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -134,28 +116,12 @@ class EntityManager
             $params['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
         }
 
-        $result = $this->entityManagerTool->create($name, $type, $params);
-
-        if ($result) {
-            $tabList = $this->config->get('tabList', []);
-
-            if (!in_array($name, $tabList)) {
-                $tabList[] = $name;
-
-                $this->configWriter->set('tabList', $tabList);
-
-                $this->configWriter->save();
-            }
-
-            $this->dataManager->rebuild();
-        } else {
-            throw new Error();
-        }
+        $this->entityManagerTool->create($name, $type, $params);
 
         return true;
     }
 
-    public function postActionUpdateEntity(Request $request)
+    public function postActionUpdateEntity(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -166,20 +132,15 @@ class EntityManager
         }
 
         $name = $data['name'];
+
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
 
-        $result = $this->entityManagerTool->update($name, $data);
-
-        if ($result) {
-            $this->dataManager->clearCache();
-        } else {
-            throw new Error();
-        }
+        $this->entityManagerTool->update($name, $data);
 
         return true;
     }
 
-    public function postActionRemoveEntity(Request $request)
+    public function postActionRemoveEntity(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -190,32 +151,15 @@ class EntityManager
         }
 
         $name = $data['name'];
+
         $name = filter_var($name, \FILTER_SANITIZE_STRING);
 
-        $result = $this->entityManagerTool->delete($name);
-
-        if ($result) {
-            $tabList = $this->config->get('tabList', []);
-
-            if (($key = array_search($name, $tabList)) !== false) {
-                unset($tabList[$key]);
-                $tabList = array_values($tabList);
-            }
-
-            $this->configWriter->set('tabList', $tabList);
-
-            $this->configWriter->save();
-
-            $this->dataManager->clearCache();
-        }
-        else {
-            throw new Error();
-        }
+        $this->entityManagerTool->delete($name);
 
         return true;
     }
 
-    public function postActionCreateLink(Request $request)
+    public function postActionCreateLink(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -271,18 +215,12 @@ class EntityManager
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
-        $result = $this->entityManagerTool->createLink($params);
-
-        if ($result) {
-            $this->dataManager->rebuild();
-        } else {
-            throw new Error();
-        }
+        $this->entityManagerTool->createLink($params);
 
         return true;
     }
 
-    public function postActionUpdateLink(Request $request)
+    public function postActionUpdateLink(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -330,18 +268,12 @@ class EntityManager
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
-        $result = $this->entityManagerTool->updateLink($params);
-
-        if ($result) {
-            $this->dataManager->clearCache();
-        } else {
-            throw new Error();
-        }
+        $this->entityManagerTool->updateLink($params);
 
         return true;
     }
 
-    public function postActionRemoveLink(Request $request)
+    public function postActionRemoveLink(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -355,21 +287,15 @@ class EntityManager
         $d = [];
 
         foreach ($paramList as $item) {
-        	$d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            $d[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
         }
 
-        $result = $this->entityManagerTool->deleteLink($d);
-
-        if ($result) {
-            $this->dataManager->clearCache();
-        } else {
-            throw new Error();
-        }
+        $this->entityManagerTool->deleteLink($d);
 
         return true;
     }
 
-    public function postActionFormula(Request $request)
+    public function postActionFormula(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -385,12 +311,10 @@ class EntityManager
 
         $this->entityManagerTool->setFormulaData($data->scope, $formulaData);
 
-        $this->dataManager->clearCache();
-
         return true;
     }
 
-    public function postActionResetToDefault(Request $request)
+    public function postActionResetToDefault(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -399,8 +323,6 @@ class EntityManager
         }
 
         $this->entityManagerTool->resetToDefaults($data->scope);
-
-        $this->dataManager->clearCache();
 
         return true;
     }
