@@ -589,6 +589,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 arr.push('color');
             }
 
+            var fetchedAttributes = Espo.Utils.cloneDeep(this.model.fetchedAttributes) || {};
+
             var notValid = false;
 
             arr.forEach(function (item) {
@@ -711,7 +713,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                         ])
                     ).then(
                         function () {
-                            var rebuildRequired = data.fullTextSearch && !fetchedAttributes.fullTextSearch;
+                            var rebuildRequired =
+                                data.fullTextSearch && !fetchedAttributes.fullTextSearch;
 
                             var o = {
                                 rebuildRequired: rebuildRequired,
