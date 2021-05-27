@@ -207,14 +207,11 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
         },
 
         initAutocomplete: function () {
-            var functionInsertList =
+            var functionItemList =
                 this.getMetadata()
                     .get(['app', 'formula', 'functionList'], [])
-                    .map(function (item) {
-                        return item.insertText;
-                    })
                     .filter(function (item) {
-                        return item;
+                        return item.insertText;
                     });
 
             var attributeList = this.getAttributeList();
@@ -231,15 +228,15 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
                 getCompletions: function (editor, session, pos, prefix, callback) {
 
-                    var matchedFunctionList = functionInsertList
+                    var matchedFunctionItemList = functionItemList
                         .filter(function (originalItem) {
-                            var item = originalItem.split('(')[0];
+                            var text = originalItem.name;
 
-                            if (item.indexOf(prefix) === 0) {
+                            if (text.indexOf(prefix) === 0) {
                                 return true;
                             }
 
-                            var parts = item.split('\\');
+                            var parts = text.split('\\');
 
                             if (parts[parts.length - 1].indexOf(prefix) === 0) {
                                 return true;
@@ -248,11 +245,11 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                             return false;
                         });
 
-                    var itemList = matchedFunctionList.map(function (item) {
+                    var itemList = matchedFunctionItemList.map(function (item) {
                         return {
-                            name: item,
-                            value: item,
-                            meta: 'function',
+                            caption: item.name + '()',
+                            value: item.insertText,
+                            meta: item.returnType || null,
                         };
                     });
 

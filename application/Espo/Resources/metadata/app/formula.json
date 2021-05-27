@@ -10,7 +10,8 @@
         },
         {
             "name": "list",
-            "insertText": "list(ITEM_1, ITEM_2)"
+            "insertText": "list(ITEM_1, ITEM_2)",
+            "returnType": "array"
         },
         {
             "name": "while",
@@ -18,127 +19,158 @@
         },
         {
             "name": "string\\concatenate",
-            "insertText": "string\\concatenate(STRING_1, STRING_2)"
+            "insertText": "string\\concatenate(STRING_1, STRING_2)",
+            "returnType": "string"
         },
         {
             "name": "string\\substring",
-            "insertText": "string\\substring(STRING, START, LENGTH)"
+            "insertText": "string\\substring(STRING, START, LENGTH)",
+            "returnType": "string"
         },
         {
             "name": "string\\contains",
-            "insertText": "string\\contains(STRING, NEEDLE)"
+            "insertText": "string\\contains(STRING, NEEDLE)",
+            "returnType": "bool"
         },
         {
             "name": "string\\pos",
-            "insertText": "string\\pos(STRING, NEEDLE)"
+            "insertText": "string\\pos(STRING, NEEDLE)",
+            "returnType": "int"
         },
         {
             "name": "string\\pad",
-            "insertText": "string\\pad(STRING, LENGTH, PAD_STRING)"
+            "insertText": "string\\pad(STRING, LENGTH, PAD_STRING)",
+            "returnType": "string"
         },
         {
             "name": "string\\test",
-            "insertText": "string\\test(STRING, REGULAR_EXPRESSION)"
+            "insertText": "string\\test(STRING, REGULAR_EXPRESSION)",
+            "returnType": "bool"
         },
         {
             "name": "string\\length",
-            "insertText": "string\\length(STRING)"
+            "insertText": "string\\length(STRING)",
+            "returnType": "int"
         },
         {
             "name": "string\\trim",
-            "insertText": "string\\trim(STRING)"
+            "insertText": "string\\trim(STRING)",
+            "returnType": "string"
         },
         {
             "name": "string\\lowerCase",
-            "insertText": "string\\lowerCase(STRING)"
+            "insertText": "string\\lowerCase(STRING)",
+            "returnType": "string"
         },
         {
             "name": "string\\upperCase",
-            "insertText": "string\\upperCase(STRING)"
+            "insertText": "string\\upperCase(STRING)",
+            "returnType": "string"
         },
         {
             "name": "string\\match",
-            "insertText": "string\\match(STRING, REGULAR_EXPRESSION)"
+            "insertText": "string\\match(STRING, REGULAR_EXPRESSION)",
+            "returnType": "string|null"
         },
         {
             "name": "string\\matchAll",
-            "insertText": "string\\matchAll(STRING, REGULAR_EXPRESSION)"
+            "insertText": "string\\matchAll(STRING, REGULAR_EXPRESSION)",
+            "returnType": "array|null"
         },
         {
             "name": "string\\replace",
-            "insertText": "string\\replace(STRING, SEARCH, REPLACE)"
+            "insertText": "string\\replace(STRING, SEARCH, REPLACE)",
+            "returnType": "string"
         },
         {
             "name": "datetime\\today",
-            "insertText": "datetime\\today()"
+            "insertText": "datetime\\today()",
+            "returnType": "string"
         },
         {
             "name": "datetime\\now",
-            "insertText": "datetime\\now()"
+            "insertText": "datetime\\now()",
+            "returnType": "string"
         },
         {
             "name": "datetime\\format",
-            "insertText": "datetime\\format(VALUE)"
+            "insertText": "datetime\\format(VALUE)",
+            "returnType": "string"
         },
         {
             "name": "datetime\\date",
-            "insertText": "datetime\\date(VALUE)"
+            "insertText": "datetime\\date(VALUE)",
+            "returnType": "int"
         },
         {
             "name": "datetime\\month",
-            "insertText": "datetime\\month(VALUE)"
+            "insertText": "datetime\\month(VALUE)",
+            "returnType": "int"
         },
         {
             "name": "datetime\\year",
-            "insertText": "datetime\\year(VALUE)"
+            "insertText": "datetime\\year(VALUE)",
+            "returnType": "int"
         },
         {
             "name": "datetime\\hour",
-            "insertText": "datetime\\hour(VALUE)"
+            "insertText": "datetime\\hour(VALUE)",
+            "returnType": "int"
         },
         {
             "name": "datetime\\minute",
-            "insertText": "datetime\\minute(VALUE)"
+            "insertText": "datetime\\minute(VALUE)",
+            "returnType": "int"
         },
         {
             "name": "datetime\\dayOfWeek",
-            "insertText": "datetime\\dayOfWeek(VALUE)"
+            "insertText": "datetime\\dayOfWeek(VALUE)",
+            "returnType": "int"
         },
         {
             "name": "datetime\\addMinutes",
-            "insertText": "datetime\\addMinutes(VALUE, MINUTES)"
+            "insertText": "datetime\\addMinutes(VALUE, MINUTES)",
+            "returnType": "string"
         },
         {
             "name": "datetime\\addHours",
-            "insertText": "datetime\\addHours(VALUE, HOURS)"
+            "insertText": "datetime\\addHours(VALUE, HOURS)",
+            "returnType": "string"
         },
         {
             "name": "datetime\\addDays",
-            "insertText": "datetime\\addDays(VALUE, DAYS)"
+            "insertText": "datetime\\addDays(VALUE, DAYS)",
+            "returnType": "string"
         },
         {
             "name": "datetime\\addWeeks",
-            "insertText": "datetime\\addWeeks(VALUE, WEEKS)"
+            "insertText": "datetime\\addWeeks(VALUE, WEEKS)",
+            "returnType": "string"
         },
         {
             "name": "datetime\\addMonths",
-            "insertText": "datetime\\addMonths(VALUE, MONTHS)"
+            "insertText": "datetime\\addMonths(VALUE, MONTHS)",
+            "returnType": "string"
         },
         {
             "name": "datetime\\addYears",
-            "insertText": "datetime\\addYears(VALUE, YEARS)"
+            "insertText": "datetime\\addYears(VALUE, YEARS)",
+            "returnType": "string"
         },
         {
             "name": "datetime\\diff",
-            "insertText": "datetime\\diff(VALUE_1, VALUE_2, INTERVAL_TYPE)"
+            "insertText": "datetime\\diff(VALUE_1, VALUE_2, INTERVAL_TYPE)",
+            "returnType": "int"
         },
         {
             "name": "datetime\\closest",
-            "insertText": "datetime\\closest(VALUE, TYPE, TARGET, IS_PAST, TIMEZONE)"
+            "insertText": "datetime\\closest(VALUE, TYPE, TARGET, IS_PAST, TIMEZONE)",
+            "returnType": "string"
         },
         {
             "name": "number\\format",
-            "insertText": "number\\format(VALUE)"
+            "insertText": "number\\format(VALUE)",
+            "returnType": "string"
         },
         {
             "name": "number\\abs",
@@ -146,39 +178,48 @@
         },
         {
             "name": "number\\round",
-            "insertText": "number\\round(VALUE, PRECISION)"
+            "insertText": "number\\round(VALUE, PRECISION)",
+            "returnType": "int|float"
         },
         {
             "name": "number\\floor",
-            "insertText": "number\\floor(VALUE)"
+            "insertText": "number\\floor(VALUE)",
+            "returnType": "int"
         },
         {
             "name": "number\\ceil",
-            "insertText": "number\\ceil(VALUE)"
+            "insertText": "number\\ceil(VALUE)",
+            "returnType": "int"
         },
         {
             "name": "number\\randomInt",
-            "insertText": "number\\randomInt(MIN, MAX)"
+            "insertText": "number\\randomInt(MIN, MAX)",
+            "returnType": "int"
         },
         {
             "name": "entity\\isNew",
-            "insertText": "entity\\isNew()"
+            "insertText": "entity\\isNew()",
+            "returnType": "bool"
         },
         {
             "name": "entity\\isAttributeChanged",
-            "insertText": "entity\\isAttributeChanged(ATTRIBUTE)"
+            "insertText": "entity\\isAttributeChanged(ATTRIBUTE)",
+            "returnType": "bool"
         },
         {
             "name": "entity\\isAttributeNotChanged",
-            "insertText": "entity\\isAttributeNotChanged(ATTRIBUTE)"
+            "insertText": "entity\\isAttributeNotChanged(ATTRIBUTE)",
+            "returnType": "bool"
         },
         {
             "name": "entity\\attribute",
-            "insertText": "entity\\attribute(ATTRIBUTE)"
+            "insertText": "entity\\attribute(ATTRIBUTE)",
+            "returnType": "mixed"
         },
         {
             "name": "entity\\attributeFetched",
-            "insertText": "entity\\attributeFetched(ATTRIBUTE)"
+            "insertText": "entity\\attributeFetched(ATTRIBUTE)",
+            "returnType": "mixed"
         },
         {
             "name": "entity\\setAttribute",
@@ -190,7 +231,8 @@
         },
         {
             "name": "entity\\hasLinkMultipleId",
-            "insertText": "entity\\hasLinkMultipleId(LINK, ID)"
+            "insertText": "entity\\hasLinkMultipleId(LINK, ID)",
+            "returnType": "bool"
         },
         {
             "name": "entity\\removeLinkMultipleId",
@@ -198,43 +240,53 @@
         },
         {
             "name": "entity\\getLinkColumn",
-            "insertText": "entity\\getLinkColumn(LINK, ID, COLUMN)"
+            "insertText": "entity\\getLinkColumn(LINK, ID, COLUMN)",
+            "returnType": "mixed"
         },
         {
             "name": "entity\\isRelated",
-            "insertText": "entity\\isRelated(LINK, ID)"
+            "insertText": "entity\\isRelated(LINK, ID)",
+            "returnType": "bool"
         },
         {
             "name": "entity\\sumRelated",
-            "insertText": "entity\\sumRelated(LINK, FIELD, FILTER)"
+            "insertText": "entity\\sumRelated(LINK, FIELD, FILTER)",
+            "returnType": "int|float"
         },
         {
             "name": "entity\\countRelated",
-            "insertText": "entity\\countRelated(LINK, FILTER)"
+            "insertText": "entity\\countRelated(LINK, FILTER)",
+            "returnType": "int"
         },
         {
             "name": "record\\exists",
-            "insertText": "record\\exists(ENTITY_TYPE, KEY, VALUE)"
+            "insertText": "record\\exists(ENTITY_TYPE, KEY, VALUE)",
+            "returnType": "bool"
         },
         {
             "name": "record\\count",
-            "insertText": "record\\count(ENTITY_TYPE, KEY, VALUE)"
+            "insertText": "record\\count(ENTITY_TYPE, KEY, VALUE)",
+            "returnType": "int"
         },
         {
             "name": "record\\attribute",
-            "insertText": "record\\attribute(ENTITY_TYPE, ID, ATTRIBUTE)"
+            "insertText": "record\\attribute(ENTITY_TYPE, ID, ATTRIBUTE)",
+            "returnType": "mixed"
         },
         {
             "name": "record\\findOne",
-            "insertText": "record\\findOne(ENTITY_TYPE, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)"
+            "insertText": "record\\findOne(ENTITY_TYPE, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
+            "returnType": "string"
         },
         {
             "name": "record\\findRelatedOne",
-            "insertText": "record\\findRelatedOne(ENTITY_TYPE, ID, LINK, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)"
+            "insertText": "record\\findRelatedOne(ENTITY_TYPE, ID, LINK, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
+            "returnType": "string"
         },
         {
             "name": "record\\findRelatedMany",
-            "insertText": "record\\findRelatedMany(ENTITY_TYPE, ID, LINK, LIMIT, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)"
+            "insertText": "record\\findRelatedMany(ENTITY_TYPE, ID, LINK, LIMIT, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
+            "returnType": "string[]"
         },
         {
             "name": "record\\relate",
@@ -246,7 +298,8 @@
         },
         {
             "name": "record\\create",
-            "insertText": "record\\relate(ENTITY_TYPE, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)"
+            "insertText": "record\\relate(ENTITY_TYPE, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)",
+            "returnType": "string"
         },
         {
             "name": "record\\update",
@@ -254,7 +307,8 @@
         },
         {
             "name": "record\\relationColumn",
-            "insertText": "record\\relationColumn(ENTITY_TYPE, ID, LINK, FOREIGN_ID, COLUMN)"
+            "insertText": "record\\relationColumn(ENTITY_TYPE, ID, LINK, FOREIGN_ID, COLUMN)",
+            "returnType": "mixed"
         },
         {
             "name": "record\\updateRelationColumn",
@@ -262,23 +316,28 @@
         },
         {
             "name": "env\\userAttribute",
-            "insertText": "env\\userAttribute(ATTRIBUTE)"
+            "insertText": "env\\userAttribute(ATTRIBUTE)",
+            "returnType": "mixed"
         },
         {
             "name": "util\\generateId",
-            "insertText": "util\\generateId()"
+            "insertText": "util\\generateId()",
+            "returnType": "string"
         },
         {
             "name": "password\\generate",
-            "insertText": "password\\generate()"
+            "insertText": "password\\generate()",
+            "returnType": "string"
         },
         {
             "name": "password\\hash",
-            "insertText": "password\\hash(PASSWORD)"
+            "insertText": "password\\hash(PASSWORD)",
+            "returnType": "string"
         },
         {
             "name": "array\\includes",
-            "insertText": "array\\includes(LIST, VALUE)"
+            "insertText": "array\\includes(LIST, VALUE)",
+            "returnType": "bool"
         },
         {
             "name": "array\\push",
@@ -286,31 +345,38 @@
         },
         {
             "name": "array\\length",
-            "insertText": "array\\length(LIST)"
+            "insertText": "array\\length(LIST)",
+            "returnType": "int"
         },
         {
             "name": "array\\at",
-            "insertText": "array\\at(LIST, INDEX)"
+            "insertText": "array\\at(LIST, INDEX)",
+            "returnType": "mixed"
         },
         {
             "name": "array\\join",
-            "insertText": "array\\join(LIST, SEPARATOR)"
+            "insertText": "array\\join(LIST, SEPARATOR)",
+            "returnType": "string"
         },
         {
             "name": "language\\translate",
-            "insertText": "language\\translate(LABEL, CATEGORY, SCOPE)"
+            "insertText": "language\\translate(LABEL, CATEGORY, SCOPE)",
+            "returnType": "string"
         },
         {
             "name": "language\\translateOption",
-            "insertText": "language\\translateOption(OPTION, FIELD, SCOPE)"
+            "insertText": "language\\translateOption(OPTION, FIELD, SCOPE)",
+            "returnType": "string"
         },
         {
             "name": "json\\retrieve",
-            "insertText": "json\\retrieve(JSON, PATH)"
+            "insertText": "json\\retrieve(JSON, PATH)",
+            "returnType": "mixed"
         },
         {
             "name": "ext\\email\\send",
-            "insertText": "ext\\email\\send(EMAIL_ID)"
+            "insertText": "ext\\email\\send(EMAIL_ID)",
+            "returnType": "bool"
         },
         {
             "name": "ext\\email\\applyTemplate",
@@ -318,7 +384,8 @@
         },
         {
             "name": "ext\\pdf\\generate",
-            "insertText": "ext\\pdf\\generate(ENTITY_TYPE, ENTITY_ID, TEMPLATE_ID, FILENAME)"
+            "insertText": "ext\\pdf\\generate(ENTITY_TYPE, ENTITY_ID, TEMPLATE_ID, FILENAME)",
+            "returnType": "string"
         }
     ]
 }
