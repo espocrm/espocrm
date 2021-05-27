@@ -9,6 +9,14 @@
             "insertText": "ifThen(CONDITION, CONSEQUENT)"
         },
         {
+            "name": "list",
+            "insertText": "list(ITEM_1, ITEM_2)"
+        },
+        {
+            "name": "while",
+            "insertText": "while(CONDITION, STATEMENT)"
+        },
+        {
             "name": "string\\concatenate",
             "insertText": "string\\concatenate(STRING_1, STRING_2)"
         },
@@ -19,6 +27,14 @@
         {
             "name": "string\\contains",
             "insertText": "string\\contains(STRING, NEEDLE)"
+        },
+        {
+            "name": "string\\pos",
+            "insertText": "string\\pos(STRING, NEEDLE)"
+        },
+        {
+            "name": "string\\pad",
+            "insertText": "string\\pad(STRING, LENGTH, PAD_STRING)"
         },
         {
             "name": "string\\test",
@@ -39,6 +55,18 @@
         {
             "name": "string\\upperCase",
             "insertText": "string\\upperCase(STRING)"
+        },
+        {
+            "name": "string\\match",
+            "insertText": "string\\match(STRING, REGULAR_EXPRESSION)"
+        },
+        {
+            "name": "string\\matchAll",
+            "insertText": "string\\matchAll(STRING, REGULAR_EXPRESSION)"
+        },
+        {
+            "name": "string\\replace",
+            "insertText": "string\\replace(STRING, SEARCH, REPLACE)"
         },
         {
             "name": "datetime\\today",
@@ -105,6 +133,10 @@
             "insertText": "datetime\\diff(VALUE_1, VALUE_2, INTERVAL_TYPE)"
         },
         {
+            "name": "datetime\\closest",
+            "insertText": "datetime\\closest(VALUE, TYPE, TARGET, IS_PAST, TIMEZONE)"
+        },
+        {
             "name": "number\\format",
             "insertText": "number\\format(VALUE)"
         },
@@ -123,6 +155,10 @@
         {
             "name": "number\\ceil",
             "insertText": "number\\ceil(VALUE)"
+        },
+        {
+            "name": "number\\randomInt",
+            "insertText": "number\\randomInt(MIN, MAX)"
         },
         {
             "name": "entity\\isNew",
@@ -157,6 +193,14 @@
             "insertText": "entity\\hasLinkMultipleId(LINK, ID)"
         },
         {
+            "name": "entity\\removeLinkMultipleId",
+            "insertText": "entity\\removeLinkMultipleId(LINK, ID)"
+        },
+        {
+            "name": "entity\\getLinkColumn",
+            "insertText": "entity\\getLinkColumn(LINK, ID, COLUMN)"
+        },
+        {
             "name": "entity\\isRelated",
             "insertText": "entity\\isRelated(LINK, ID)"
         },
@@ -177,12 +221,104 @@
             "insertText": "record\\count(ENTITY_TYPE, KEY, VALUE)"
         },
         {
+            "name": "record\\attribute",
+            "insertText": "record\\attribute(ENTITY_TYPE, ID, ATTRIBUTE)"
+        },
+        {
+            "name": "record\\findOne",
+            "insertText": "record\\findOne(ENTITY_TYPE, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)"
+        },
+        {
+            "name": "record\\findRelatedOne",
+            "insertText": "record\\findRelatedOne(ENTITY_TYPE, ID, LINK, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)"
+        },
+        {
+            "name": "record\\findRelatedMany",
+            "insertText": "record\\findRelatedMany(ENTITY_TYPE, ID, LINK, LIMIT, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)"
+        },
+        {
+            "name": "record\\relate",
+            "insertText": "record\\relate(ENTITY_TYPE, ID, LINK, FOREIGN_ID)"
+        },
+        {
+            "name": "record\\unrelate",
+            "insertText": "record\\unrelate(ENTITY_TYPE, ID, LINK, FOREIGN_ID)"
+        },
+        {
+            "name": "record\\create",
+            "insertText": "record\\relate(ENTITY_TYPE, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)"
+        },
+        {
+            "name": "record\\update",
+            "insertText": "record\\update(ENTITY_TYPE, ID, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)"
+        },
+        {
+            "name": "record\\relationColumn",
+            "insertText": "record\\relationColumn(ENTITY_TYPE, ID, LINK, FOREIGN_ID, COLUMN)"
+        },
+        {
+            "name": "record\\updateRelationColumn",
+            "insertText": "record\\updateRelationColumn(ENTITY_TYPE, ID, LINK, FOREIGN_ID, COLUMN, VALUE)"
+        },
+        {
             "name": "env\\userAttribute",
             "insertText": "env\\userAttribute(ATTRIBUTE)"
         },
         {
             "name": "util\\generateId",
             "insertText": "util\\generateId()"
+        },
+        {
+            "name": "password\\generate",
+            "insertText": "password\\generate()"
+        },
+        {
+            "name": "password\\hash",
+            "insertText": "password\\hash(PASSWORD)"
+        },
+        {
+            "name": "array\\includes",
+            "insertText": "array\\includes(LIST, VALUE)"
+        },
+        {
+            "name": "array\\push",
+            "insertText": "array\\push(LIST, VALUE)"
+        },
+        {
+            "name": "array\\length",
+            "insertText": "array\\length(LIST)"
+        },
+        {
+            "name": "array\\at",
+            "insertText": "array\\at(LIST, INDEX)"
+        },
+        {
+            "name": "array\\join",
+            "insertText": "array\\join(LIST, SEPARATOR)"
+        },
+        {
+            "name": "language\\translate",
+            "insertText": "language\\translate(LABEL, CATEGORY, SCOPE)"
+        },
+        {
+            "name": "language\\translateOption",
+            "insertText": "language\\translateOption(OPTION, FIELD, SCOPE)"
+        },
+        {
+            "name": "json\\retrieve",
+            "insertText": "json\\retrieve(JSON, PATH)"
+        },
+        {
+            "name": "ext\\email\\send",
+            "insertText": "ext\\email\\send(EMAIL_ID)"
+        },
+        {
+            "name": "ext\\email\\applyTemplate",
+            "insertText": "ext\\email\\applyTemplate(EMAIL_ID, EMAIL_TEMPLATE_ID)"
+        },
+        {
+            "name": "ext\\pdf\\generate",
+            "insertText": "ext\\pdf\\generate(ENTITY_TYPE, ENTITY_ID, TEMPLATE_ID, FILENAME)"
         }
     ]
 }
