@@ -666,7 +666,7 @@ class EntityManager
         $this->language->save();
 
         if ($isCustom) {
-            if ($this->language->language !== $this->baseLanguage->language) {
+            if ($this->isLanguageNotBase()) {
                 $this->baseLanguage->save();
             }
         }
@@ -764,7 +764,7 @@ class EntityManager
         $this->metadata->save();
         $this->language->save();
 
-        if ($this->language->language !== $this->baseLanguage->language) {
+        if ($this->isLanguageNotBase()) {
             $this->baseLanguage->save();
         }
 
@@ -1218,7 +1218,7 @@ class EntityManager
 
         $this->language->save();
 
-        if ($this->language->language !== $this->baseLanguage->language) {
+        if ($this->isLanguageNotBase()) {
             $this->baseLanguage->set($entity, 'fields', $link, $label);
             $this->baseLanguage->set($entity, 'links', $link, $label);
 
@@ -1413,7 +1413,7 @@ class EntityManager
         $this->language->save();
 
         if ($isCustom) {
-            if ($this->baseLanguage->language !== $this->baseLanguage->language) {
+            if ($this->baseLanguage->getLanguage() !== $this->baseLanguage->getLanguage()) {
 
                 if ($label) {
                     $this->baseLanguage->set($entity, 'fields', $link, $label);
@@ -1641,7 +1641,7 @@ class EntityManager
                         $this->language->delete($itemEntityType, 'links', $linkForeign);
 
                         if (
-                            $this->language->language !== $this->baseLanguage->language
+                            $this->isLanguageNotBase()
                         ) {
                             $this->baseLanguage->delete($itemEntityType, 'links', $linkForeign);
                         }
@@ -1668,7 +1668,7 @@ class EntityManager
 
             $this->language->set($itemEntityType, 'links', $linkForeign, $label);
 
-            if ($this->language->language !== $this->baseLanguage->language) {
+            if ($this->isLanguageNotBase()) {
                 $this->baseLanguage->set($itemEntityType, 'links', $linkForeign, $label);
             }
         }
@@ -1677,8 +1677,13 @@ class EntityManager
 
         $this->language->save();
 
-        if ($this->language->language !== $this->baseLanguage->language) {
+        if ($this->isLanguageNotBase()) {
             $this->baseLanguage->save();
         }
+    }
+
+    private function isLanguageNotBase(): bool
+    {
+        return $this->language->getLanguage() !== $this->baseLanguage->getLanguage();
     }
 }
