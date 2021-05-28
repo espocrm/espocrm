@@ -41,6 +41,8 @@ class AfterUpgrade
         $this->updateTemplates($entityManager);
 
         $this->updateEventMetadata($container->get('metadata'), $container->get('fileManager'));
+        $this->updatePersonMetadata($container->get('metadata'), $container->get('fileManager'));
+        $this->updateCompanyMetadata($container->get('metadata'), $container->get('fileManager'));
     }
 
     protected function updateTemplates($entityManager)
@@ -71,7 +73,9 @@ class AfterUpgrade
         $toSave = false;
 
         $path1 = "application/Espo/Core/Templates/Metadata/Event/selectDefs.json";
+
         $contents1 = $fileManager->getContents($path1);
+
         $data1 = Json::decode($contents1, true);
 
         $path2 = "application/Espo/Core/Templates/Metadata/Event/recordDefs.json";
@@ -89,6 +93,66 @@ class AfterUpgrade
             $toSave = true;
 
             $metadata->set('selectDefs', $entityType, $data1);
+            $metadata->set('recordDefs', $entityType, $data2);
+        }
+
+        if ($toSave) {
+            $metadata->save();
+        }
+    }
+
+    private function updatePersonMetadata(Metadata $metadata, FileManager $fileManager): void
+    {
+        $defs = $metadata->get(['scopes']);
+
+        $toSave = false;
+
+        $path2 = "application/Espo/Core/Templates/Metadata/Person/recordDefs.json";
+
+        $contents2 = $fileManager->getContents($path2);
+
+        $data2 = Json::decode($contents2, true);
+
+        foreach ($defs as $entityType => $item) {
+            $isCustom = $item['isCustom'] ?? false;
+            $type = $item['type'] ?? false;
+
+            if (!$isCustom || $type !== 'Person') {
+                continue;
+            }
+
+            $toSave = true;
+
+            $metadata->set('recordDefs', $entityType, $data2);
+        }
+
+        if ($toSave) {
+            $metadata->save();
+        }
+    }
+
+    private function updateCompanyMetadata(Metadata $metadata, FileManager $fileManager): void
+    {
+        $defs = $metadata->get(['scopes']);
+
+        $toSave = false;
+
+        $path2 = "application/Espo/Core/Templates/Metadata/Company/recordDefs.json";
+
+        $contents2 = $fileManager->getContents($path2);
+
+        $data2 = Json::decode($contents2, true);
+
+        foreach ($defs as $entityType => $item) {
+            $isCustom = $item['isCustom'] ?? false;
+            $type = $item['type'] ?? false;
+
+            if (!$isCustom || $type !== 'Company') {
+                continue;
+            }
+
+            $toSave = true;
+
             $metadata->set('recordDefs', $entityType, $data2);
         }
 

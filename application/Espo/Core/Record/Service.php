@@ -44,6 +44,7 @@ use Espo\ORM\{
     Repository\RDBRepository,
     Collection,
     EntityManager,
+    QueryParams\Parts\WhereClause,
 };
 
 use Espo\Entities\User;
@@ -61,6 +62,7 @@ use Espo\Core\{
     FieldProcessing\ReadLoadProcessor,
     FieldProcessing\ListLoadProcessor,
     FieldProcessing\LoaderParams as FieldLoaderParams,
+    Record\Duplicate\Finder as DuplicateFinder,
 };
 
 use Espo\Core\Di;
@@ -161,8 +163,6 @@ class Service implements Crud,
      */
     protected $validateRequiredSkipFieldList = [];
 
-    protected $findDuplicatesSelectAttributeList = ['id', 'name'];
-
     protected $duplicateIgnoreFieldList = [];
 
     protected $duplicateIgnoreAttributeList = [];
@@ -189,9 +189,9 @@ class Service implements Crud,
 
     private $listLoadProcessor;
 
-    protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
+    private $duplicateFinder;
 
-    protected const FIND_DUPLICATES_LIMIT = 10;
+    protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
     public function __construct()
     {
@@ -1374,73 +1374,55 @@ class Service implements Crud,
         $this->getStreamService()->unfollowEntity($entity, $userId);
     }
 
-    protected function getDuplicateWhereClause(Entity $entity, $data)
+    private function getDuplicateFinder(): DuplicateFinder
     {
-        return null;
-    }
-
-    public function checkIsDuplicate(Entity $entity): bool
-    {
-        $where = $this->getDuplicateWhereClause($entity, (object) []);
-
-        if ($where) {
-            if ($entity->id) {
-                $where['id!='] = $entity->id;
-            }
-
-            $duplicate = $this->getRepository()
-                ->select(['id'])
-                ->where($where)
-                ->findOne();
-
-            if ($duplicate) {
-                return true;
-            }
+        if (!$this->duplicateFinder) {
+            $this->duplicateFinder = $this->injectableFactory->create(DuplicateFinder::class);
         }
 
-        return false;
+        return $this->duplicateFinder;
+    }
+
+    /**
+     * Check whether an entity has a duplicate.
+     */
+    public function checkIsDuplicate(Entity $entity): bool
+    {
+        $finder = $this->getDuplicateFinder();
+
+        // For backward compatibility.
+        if (method_exists($this, 'getDuplicateWhereClause')) {
+            $whereClause = $this->getDuplicateWhereClause($entity, (object) []);
+
+            if (!$whereClause) {
+                return false;
+            }
+
+            return $finder->checkByWhere($entity, WhereClause::fromRaw($whereClause));
+        }
+
+        return $finder->check($entity);
     }
 
     /**
      * Find duplicates for an entity.
      */
-    public function findDuplicates(Entity $entity, ?StdClass $data = null): ?Collection
+    public function findDuplicates(Entity $entity): ?Collection
     {
-        if (!$data) {
-            $data = (object) [];
+        $finder = $this->getDuplicateFinder();
+
+        // For backward compatibility.
+        if (method_exists($this, 'getDuplicateWhereClause')) {
+            $whereClause = $this->getDuplicateWhereClause($entity, (object) []);
+
+            if (!$whereClause) {
+                return null;
+            }
+
+            return $finder->findByWhere($entity, WhereClause::fromRaw($whereClause));
         }
 
-        $where = $this->getDuplicateWhereClause($entity, $data);
-
-        if (!$where) {
-            return null;
-        }
-
-        if ($entity->id) {
-            $where['id!='] = $entity->id;
-        }
-
-        $select = $this->findDuplicatesSelectAttributeList;
-
-        $builder = $this->selectBuilderFactory->create();
-
-        $query = $builder
-            ->from($this->entityType)
-            ->withStrictAccessControl()
-            ->build();
-
-        $duplicateCollection = $this->getRepository()
-            ->clone($query)
-            ->select($select)
-            ->where($where)
-            ->limit(0, self::FIND_DUPLICATES_LIMIT)
-            ->find();
-
-        if (count($duplicateCollection)) {
-            return $duplicateCollection;
-        }
-
-        return null;
+        return $finder->find($entity);
     }
 
     /**

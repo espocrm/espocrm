@@ -29,47 +29,13 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\ORM\Entity;
 
+/**
+ * @deprecated
+ */
 class Target extends \Espo\Services\Record
 {
-    protected function getDuplicateWhereClause(Entity $entity, $data)
-    {
-        $data = array(
-            'OR' => array(
-                array(
-                    'firstName' => $entity->get('firstName'),
-                    'lastName' => $entity->get('lastName'),
-                )
-            )
-        );
-        if (
-            ($entity->get('emailAddress') || $entity->get('emailAddressData'))
-            &&
-            ($entity->isNew() || $entity->isAttributeChanged('emailAddress') || $entity->isAttributeChanged('emailAddressData'))
-        ) {
-            if ($entity->get('emailAddress')) {
-                $list = [$entity->get('emailAddress')];
-            }
-            if ($entity->get('emailAddressData')) {
-                foreach ($entity->get('emailAddressData') as $row) {
-                    if (!in_array($row->emailAddress, $list)) {
-                        $list[] = $row->emailAddress;
-                    }
-                }
-            }
-            foreach ($list as $emailAddress) {
-                $data['OR'][] = array(
-                    'emailAddress' => $emailAddress
-                );
-            }
-        }
-
-        return $data;
-    }
-
     public function convert($id)
     {
         $entityManager = $this->getEntityManager();

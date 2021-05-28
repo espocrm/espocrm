@@ -29,23 +29,10 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\ORM\Entity;
-
 class Account extends \Espo\Services\Record
 {
     protected $linkMandatorySelectAttributeList = [
         'contacts' => ['accountIsInactive'],
         'targetLists' => ['isOptedOut'],
     ];
-
-    protected function getDuplicateWhereClause(Entity $entity, $data)
-    {
-        if (!$entity->get('name')) {
-            return false;
-        }
-
-        return [
-            'name' => $entity->get('name')
-        ];
-    }
 }

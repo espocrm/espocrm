@@ -27,9 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Templates\Services;
+namespace Espo\Core\Record\Duplicate;
 
-class Person extends \Espo\Services\Record
+use Espo\Core\{
+    InjectableFactory,
+    Utils\Metadata,
+};
+
+use RuntimeException;
+
+class WhereBuilderFactory
 {
+    private $injectableFactory;
 
+    private $metadata;
+
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
+    {
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
+    }
+
+    public function has(string $entityType): bool
+    {
+        return (bool) $this->getClassName($entityType);
+    }
+
+    public function create(string $entityType): WhereBuilder
+    {
+        $className = $this->getClassName($entityType);
+
+        if (!$className) {
+            throw new RuntimeException("No duplicate-where-builder for '{$entityType}'.");
+        }
+
+        return $this->injectableFactory->create($className);
+    }
+
+    private function getClassName(string $entityType): string
+    {
+        return $this->metadata
+            ->get(['recordDefs', $entityType, 'duplicateWhereBuilderClassName']);
+    }
 }

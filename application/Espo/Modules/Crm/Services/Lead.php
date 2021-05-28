@@ -29,7 +29,6 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ConflictSilent;
 
@@ -37,11 +36,11 @@ use Espo\ORM\Entity;
 
 use Espo\Modules\Crm\Entities\Lead as LeadEntity;
 
-use Espo\Core\Templates\Services\Person as PersonService;
+use Espo\Services\Record;
 
 use Espo\Core\Di;
 
-class Lead extends PersonService implements
+class Lead extends Record implements
 
     Di\FieldUtilAware
 {

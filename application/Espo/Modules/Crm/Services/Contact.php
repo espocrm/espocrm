@@ -31,7 +31,9 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\ORM\Entity;
 
-class Contact extends \Espo\Core\Templates\Services\Person
+use Espo\Services\Record;
+
+class Contact extends Record
 {
     protected $readOnlyAttributeList = [
         'inboundEmailId',

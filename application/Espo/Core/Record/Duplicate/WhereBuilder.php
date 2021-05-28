@@ -27,9 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Templates\Services;
+namespace Espo\Core\Record\Duplicate;
 
-class Person extends \Espo\Services\Record
+use Espo\ORM\{
+    QueryParams\Parts\WhereItem,
+    Entity,
+};
+
+interface WhereBuilder
 {
-
+    public function build(Entity $entity): ?WhereItem;
 }
