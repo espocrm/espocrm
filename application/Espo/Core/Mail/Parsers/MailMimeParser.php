@@ -253,14 +253,16 @@ class MailMimeParser implements Parser
 
             $disposition = $attachmentObj->getHeaderValue('Content-Disposition');
 
-            $attachment = $this->entityManager->getEntity('Attachment');
-
             $contentType = $attachmentObj->getHeaderValue('Content-Type');
 
             $filename = $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', null);
 
             if ($filename === null) {
                 $filename = $attachmentObj->getHeaderParameter('Content-Type', 'name', 'unnamed');
+            }
+
+            if ($contentType) {
+                $contentType = strtolower($contentType);
             }
 
             $attachment->set('name', $filename);
