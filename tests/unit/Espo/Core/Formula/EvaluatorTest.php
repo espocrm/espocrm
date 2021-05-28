@@ -38,6 +38,11 @@ use tests\unit\ContainerMocker;
 
 class EvaluatorTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Evaluator
+     */
+    private $evaluator;
+
     protected function setUp() : void
     {
         $log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
@@ -487,5 +492,27 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $actual = $this->evaluator->process($expression);
 
         $this->assertEquals(124 % 5, $actual);
+    }
+
+    function testParentheses1()
+    {
+        $expression = "
+            \$test = 1;
+
+            ifThen(
+                true,
+                (
+                    \$hello = 2;
+                    \$test = \$hello;
+                )
+            );
+        ";
+
+        $vars = (object) [];
+
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals(2, $vars->test);
+
     }
 }
