@@ -47,55 +47,53 @@ use PDO;
  */
 class SthCollection implements Collection, IteratorAggregate, Countable
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $entityType;
+    private $entityType;
 
-    protected $query = null;
+    private $query = null;
 
     private $sth = null;
 
     private $sql = null;
 
-    protected $entityList = [];
+    private $entityList = [];
 
-    protected function __construct(EntityManager $entityManager)
+    private function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
-    protected function getQueryComposer(): QueryComposer
+    private function getQueryComposer(): QueryComposer
     {
         return $this->entityManager->getQueryComposer();
     }
 
-    protected function getEntityFactory(): EntityFactory
+    private function getEntityFactory(): EntityFactory
     {
         return $this->entityManager->getEntityFactory();
     }
 
-    protected function setSql(string $sql): void
+    private function setSql(string $sql): void
     {
         $this->sql = $sql;
     }
 
-    protected function getPDO(): PDO
+    private function getSqlExecutor(): SqlExecutor
     {
-        return $this->entityManager->getPDO();
+        return $this->entityManager->getSqlExecutor();
     }
 
-    protected function executeQuery(): void
+    private function executeQuery(): void
     {
         $sql = $this->getSql();
 
-        $sth = $this->getPDO()->prepare($sql);
-
-        $sth->execute();
+        $sth = $this->getSqlExecutor()->execute($sql);
 
         $this->sth = $sth;
     }
 
-    protected function getSql(): string
+    private function getSql(): string
     {
         if (!$this->sql) {
             $this->sql = $this->getQueryComposer()->compose($this->getQuery());
@@ -104,7 +102,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         return $this->sql;
     }
 
-    protected function getQuery(): SelectQuery
+    private function getQuery(): SelectQuery
     {
         return $this->query;
     }
@@ -131,14 +129,14 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         })();
     }
 
-    protected function executeQueryIfNotExecuted(): void
+    private function executeQueryIfNotExecuted(): void
     {
         if (!$this->sth) {
             $this->executeQuery();
         }
     }
 
-    protected function fetchRow()
+    private function fetchRow()
     {
         $this->executeQueryIfNotExecuted();
 
