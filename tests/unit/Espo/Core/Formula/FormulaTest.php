@@ -41,11 +41,7 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Repositories\Database as DatabaseRepository;
 use Espo\Core\ORM\EntityManager;
 
-use Espo\Core\Container;
-
 use Espo\Entities\User;
-
-use Espo\ORM\Entity;
 
 use Espo\Core\ORM\Entity as EntityCore;
 
