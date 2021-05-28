@@ -41,8 +41,6 @@ use StdClass;
  */
 class Evaluator
 {
-    private $functionFactory;
-
     private $functionClassNameMap;
 
     private $processor;
