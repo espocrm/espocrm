@@ -66,11 +66,10 @@ class SqlExecutor
     {
         $counter = $counter ?? self::MAX_ATTEMPT_COUNT;
 
-        $sth = null;
-
         try {
             $sth = $this->pdo->query($sql);
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             $counter--;
 
             if ($counter === 0 || !$this->isExceptionIsDeadlock($e)) {
@@ -89,7 +88,7 @@ class SqlExecutor
 
     protected function isExceptionIsDeadlock(Exception $e): bool
     {
-        if (! $e instanceof PDOException) {
+        if (!$e instanceof PDOException) {
             return false;
         }
 
