@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-account/fields/folders', 'views/email-account/fields/folder', function (Dep) {
+define('views/email-account/fields/folders', 'views/email-account/fields/folder', function (Dep) {
 
     return Dep.extend({
 
@@ -34,6 +34,7 @@ Espo.define('views/email-account/fields/folders', 'views/email-account/fields/fo
             var value = this.$element.val();
 
             var folders = [];
+
             if (value != '') {
                 folders = value.split(',');
             }
@@ -41,6 +42,7 @@ Espo.define('views/email-account/fields/folders', 'views/email-account/fields/fo
             if (!~folders.indexOf(folder)) {
                 folders.push(folder);
             }
+
             this.$element.val(folders.join(','));
         },
     });

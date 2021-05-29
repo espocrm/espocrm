@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-account/modals/select-folder', 'views/modal', function (Dep) {
+define('views/email-account/modals/select-folder', 'views/modal', function (Dep) {
 
     return Dep.extend({
 
@@ -43,6 +43,7 @@ Espo.define('views/email-account/modals/select-folder', 'views/modal', function 
         events: {
             'click button[data-action="select"]': function (e) {
                 var value = $(e.currentTarget).data('value');
+
                 this.trigger('select', value);
             },
         },

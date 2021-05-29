@@ -32,6 +32,8 @@ define('views/email-account/fields/folder', 'views/fields/base', function (Dep) 
 
         editTemplate: 'email-account/fields/folder/edit',
 
+        getFoldersUrl: 'EmailAccount/action/getFolders',
+
         events: {
             'click [data-action="selectFolder"]': function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
@@ -47,17 +49,19 @@ define('views/email-account/fields/folder', 'views/fields/base', function (Dep) 
 
                 if (this.model.has('password')) {
                     data.password = this.model.get('password');
-                } else {
+                }
+                else {
                     if (!this.model.isNew()) {
                         data.id = this.model.id;
                     }
                 }
 
-                Espo.Ajax.postRequest('EmailAccount/action/getFolders', data).then(function (folders) {
+                Espo.Ajax.postRequest(this.getFoldersUrl, data).then(function (folders) {
                     this.createView('modal', 'views/email-account/modals/select-folder', {
                         folders: folders
                     }, function (view) {
                         this.notify(false);
+
                         view.render();
 
                         this.listenToOnce(view, 'select', function (folder) {
@@ -67,6 +71,7 @@ define('views/email-account/fields/folder', 'views/fields/base', function (Dep) 
                     });
                 }.bind(this)).fail(function () {
                     Espo.Ui.error(this.translate('couldNotConnectToImap', 'messages', 'EmailAccount'));
+
                     xhr.errorIsHandled = true;
                 }.bind(this));
             }
