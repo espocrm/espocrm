@@ -48,6 +48,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         addItemModalView: 'views/modals/array-field-add',
 
+        itemDelimiter: ':,:',
+
         data: function () {
             var itemHtmlList = [];
             (this.selected || []).forEach(function (value) {
@@ -284,7 +286,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             var valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
 
-            this.$element.val(valueList.join(':,:'));
+            this.$element.val(valueList.join(this.itemDelimiter));
 
             var data = [];
 
@@ -309,7 +311,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
             var selectizeOptions = {
                 options: data,
-                delimiter: ':,:',
+                delimiter: this.itemDelimiter,
                 labelField: 'label',
                 valueField: 'value',
                 highlight: false,
@@ -495,7 +497,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             var arrFront = [];
 
             if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
-                var valueList = this.$element.val().split(':,:');
+                var valueList = this.$element.val().split(this.itemDelimiter);
+
                 if (valueList.length == 1 && valueList[0] == '') {
                     valueList = [];
                 }

@@ -146,7 +146,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
                     }
                 }
 
-                this.$element.val(valueList.join(':,:'));
+                this.$element.val(valueList.join(this.itemDelimiter));
 
                 (this.params.options || []).forEach(function (value) {
                     var originalValue = value;
@@ -167,7 +167,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
 
                 var selectizeOptions = {
                     options: data,
-                    delimiter: ':,:',
+                    delimiter: this.itemDelimiter,
                     labelField: 'label',
                     valueField: 'value',
                     highlight: false,
@@ -217,7 +217,7 @@ define('views/fields/multi-enum', ['views/fields/array', 'lib!Selectize'], funct
         },
 
         fetch: function () {
-            var list = this.$element.val().split(':,:');
+            var list = this.$element.val().split(this.itemDelimiter);
             if (list.length == 1 && list[0] == '') {
                 list = [];
             }
