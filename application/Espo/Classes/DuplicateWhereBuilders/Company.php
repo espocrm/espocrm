@@ -29,7 +29,7 @@
 
 namespace Espo\Classes\DuplicateWhereBuilders;
 
-use Espo\Core\Record\Duplicate\WhereBuilder;
+use Espo\Core\Duplicate\WhereBuilder;
 
 use Espo\ORM\{
     QueryParams\Parts\Condition as Cond,

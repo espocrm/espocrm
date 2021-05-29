@@ -62,7 +62,7 @@ use Espo\Core\{
     FieldProcessing\ReadLoadProcessor,
     FieldProcessing\ListLoadProcessor,
     FieldProcessing\LoaderParams as FieldLoaderParams,
-    Record\Duplicate\Finder as DuplicateFinder,
+    Duplicate\Finder as DuplicateFinder,
 };
 
 use Espo\Core\Di;
