@@ -43,7 +43,8 @@
             "type": "varchar",
             "default": "INBOX",
             "view": "views/inbound-email/fields/folders",
-            "tooltip": true
+            "tooltip": true,
+            "maxLength": 1024
         },
         "fetchSince": {
             "type": "date"
