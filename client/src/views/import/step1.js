@@ -156,9 +156,11 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             var timeFormatDataList = this.getTimeFormatDataList();
 
             var dateFormatList = [];
+            var dateFormatOptions = {};
 
             dateFormatDataList.forEach(function (item) {
                 dateFormatList.push(item.key);
+                dateFormatOptions[item.key] = item.label;
             }, this);
 
             var timeFormatList = [];
@@ -260,6 +262,7 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
                 mode: 'edit',
                 params: {
                     options: dateFormatList,
+                    translatedOptions: dateFormatOptions,
                 },
             });
             this.createView('timeFormatField', 'views/fields/enum', {
@@ -578,10 +581,10 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
             for (let item in formatItemLabelMap) {
                 var value = formatItemLabelMap[item];
 
-                label = label.replace(item, new RegExp(value, 'g'));
+                label = label.replace(new RegExp(item, 'g'), value);
             }
 
-            return label;
+            return format + ' - ' + label;
         },
 
         getDateFormatDataList: function () {
