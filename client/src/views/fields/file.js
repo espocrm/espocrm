@@ -531,10 +531,16 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 '<span class="fas fa-times"></span></a>';
 
             var preview = name;
+
             if (this.showPreview && id) {
                 preview = this.getEditPreview(name, type, id);
             } else {
                 preview = Handlebars.Utils.escapeExpression(preview);
+            }
+
+            if (preview === name && id) {
+                preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" target="_BLANK">' +
+                    preview + '</a>';
             }
 
             var $att = $('<div>')

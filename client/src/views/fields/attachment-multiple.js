@@ -367,7 +367,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
             return preview;
         },
 
-        addAttachmentBox: function (name, type, id, link) {
+        addAttachmentBox: function (name, type, id) {
             id = Handlebars.Utils.escapeExpression(id);
 
             var $attachments = this.$attachments;
@@ -383,7 +383,7 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                 preview = Handlebars.Utils.escapeExpression(preview);
             }
 
-            if (link && preview === name) {
+            if (preview === name && id) {
                 preview = '<a href="' + this.getBasePath() + '?entryPoint=download&id=' + id + '" target="_BLANK">' +
                     preview + '</a>';
             }

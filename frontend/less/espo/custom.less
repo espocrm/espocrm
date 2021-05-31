@@ -1539,11 +1539,21 @@ label.attach-file-label {
     display: inline-block;
     width: 100%;
     max-width: 300px;
+
+    &.preview {
+        a {
+            color: @text-color;
+        }
+    }
 }
 
 .gray-box .preview {
     overflow: hidden;
     overflow-wrap: break-word;
+
+    a {
+        color: @text-color;
+    }
 }
 
 .attachment-preview {
