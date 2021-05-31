@@ -64,7 +64,7 @@ class WhereBuilderFactory
         return $this->injectableFactory->create($className);
     }
 
-    private function getClassName(string $entityType): string
+    private function getClassName(string $entityType): ?string
     {
         return $this->metadata
             ->get(['recordDefs', $entityType, 'duplicateWhereBuilderClassName']);
