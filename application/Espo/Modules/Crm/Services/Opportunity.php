@@ -62,7 +62,7 @@ class Opportunity extends Record
         ?string $teamId = null
     ) : StdClass {
 
-        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
         }
 
@@ -76,7 +76,7 @@ class Opportunity extends Record
 
         $queryBuilder = $this->selectBuilderFactory
             ->create()
-            ->from('Opportunity')
+            ->from(OpportunityEntity::ENTITY_TYPE)
             ->withStrictAccessControl()
             ->buildQueryBuilder();
 
@@ -161,11 +161,11 @@ class Opportunity extends Record
         string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
     ) : StdClass {
 
-        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
         }
 
-        if (in_array('leadSource', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+        if (in_array('leadSource', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
         }
 
@@ -177,7 +177,7 @@ class Opportunity extends Record
 
         $queryBuilder = $this->selectBuilderFactory
             ->create()
-            ->from('Opportunity')
+            ->from(OpportunityEntity::ENTITY_TYPE)
             ->withStrictAccessControl()
             ->buildQueryBuilder();
 
@@ -226,7 +226,7 @@ class Opportunity extends Record
         string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
     ) : StdClass {
 
-        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
         }
 
@@ -238,7 +238,7 @@ class Opportunity extends Record
 
         $queryBuilder = $this->selectBuilderFactory
             ->create()
-            ->from('Opportunity')
+            ->from(OpportunityEntity::ENTITY_TYPE)
             ->withStrictAccessControl()
             ->buildQueryBuilder();
 
@@ -304,7 +304,7 @@ class Opportunity extends Record
         string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
     ) : StdClass {
 
-        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList('Opportunity'))) {
+        if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
         }
 
@@ -314,7 +314,7 @@ class Opportunity extends Record
 
         $queryBuilder = $this->selectBuilderFactory
             ->create()
-            ->from('Opportunity')
+            ->from(OpportunityEntity::ENTITY_TYPE)
             ->withStrictAccessControl()
             ->buildQueryBuilder();
 
@@ -424,7 +424,7 @@ class Opportunity extends Record
         $subQuery = $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from('Opportunity')
+            ->from(OpportunityEntity::ENTITY_TYPE)
             ->select('id')
             ->where($whereClause)
             ->build();
@@ -520,7 +520,7 @@ class Opportunity extends Record
         $lostStageList = [];
 
         $probabilityMap =  $this->getMetadata()->get(
-            ['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []
+            ['entityDefs', OpportunityEntity::ENTITY_TYPE, 'fields', 'stage', 'probabilityMap'], []
         );
 
         $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
@@ -539,7 +539,7 @@ class Opportunity extends Record
         $wonStageList = [];
 
         $probabilityMap =  $this->getMetadata()->get(
-            ['entityDefs', 'Opportunity', 'fields', 'stage', 'probabilityMap'], []
+            ['entityDefs', OpportunityEntity::ENTITY_TYPE, 'fields', 'stage', 'probabilityMap'], []
         );
 
         $stageList = $this->getMetadata()->get('entityDefs.Opportunity.fields.stage.options', []);
