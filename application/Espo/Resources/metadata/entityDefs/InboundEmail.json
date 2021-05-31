@@ -40,11 +40,12 @@
             "type": "password"
         },
         "monitoredFolders": {
-            "type": "varchar",
-            "default": "INBOX",
+            "type": "array",
+            "default": ["INBOX"],
+            "options": ["INBOX"],
             "view": "views/inbound-email/fields/folders",
-            "tooltip": true,
-            "maxLength": 1024
+            "displayAsList": true,
+            "noEmptyString": true
         },
         "fetchSince": {
             "type": "date"

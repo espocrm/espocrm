@@ -26,24 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/fields/folders', 'views/inbound-email/fields/folder', function (Dep) {
+define('views/inbound-email/fields/folders', 'views/email-account/fields/folders', function (Dep) {
 
     return Dep.extend({
 
-        addFolder: function (folder) {
-            var value = this.$element.val();
+        getFoldersUrl: 'InboundEmail/action/getFolders',
 
-            var folders = [];
-
-            if (value != '') {
-                folders = value.split(',');
-            }
-
-            if (!~folders.indexOf(folder)) {
-                folders.push(folder);
-            }
-
-            this.$element.val(folders.join(','));
-        },
     });
 });

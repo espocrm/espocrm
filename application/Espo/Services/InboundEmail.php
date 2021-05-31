@@ -255,12 +255,10 @@ class InboundEmail extends RecordService implements
         $monitoredFolders = $emailAccount->get('monitoredFolders');
 
         if (empty($monitoredFolders)) {
-            $monitoredFolders = 'INBOX';
+            $monitoredFolders = ['INBOX'];
         }
 
-        $monitoredFoldersArr = explode(',', $monitoredFolders);
-
-        foreach ($monitoredFoldersArr as $folder) {
+        foreach ($monitoredFolders as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
 
             $portionLimit = $this->config->get('inboundEmailMaxPortionSize', self::PORTION_LIMIT);

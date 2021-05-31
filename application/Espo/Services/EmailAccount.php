@@ -367,12 +367,10 @@ class EmailAccount extends Record implements
         $monitoredFolders = $emailAccount->get('monitoredFolders');
 
         if (empty($monitoredFolders)) {
-            throw new Error();
+            throw new Error("No monitored folders for email account.");
         }
 
-        $monitoredFoldersArr = explode(',', $monitoredFolders);
-
-        foreach ($monitoredFoldersArr as $folder) {
+        foreach ($monitoredFolders as $folder) {
             $folder = mb_convert_encoding(trim($folder), 'UTF7-IMAP', 'UTF-8');
 
             $portionLimit = $this->getConfig()->get('personalEmailMaxPortionSize', self::PORTION_LIMIT);

@@ -41,11 +41,12 @@
             "type": "password"
         },
         "monitoredFolders": {
-            "type": "varchar",
-            "default": "INBOX",
+            "type": "array",
+            "default": ["INBOX"],
+            "options": ["INBOX"],
             "view": "views/email-account/fields/folders",
-            "tooltip": true,
-            "maxLength": 1024
+            "displayAsList": true,
+            "noEmptyString": true
         },
         "sentFolder": {
             "type": "varchar",

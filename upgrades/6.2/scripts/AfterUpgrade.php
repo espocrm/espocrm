@@ -32,6 +32,8 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Json;
 
+use Espo\ORM\EntityManager;
+
 class AfterUpgrade
 {
     public function run(Container $container): void
@@ -43,6 +45,9 @@ class AfterUpgrade
         $this->updateEventMetadata($container->get('metadata'), $container->get('fileManager'));
         $this->updatePersonMetadata($container->get('metadata'), $container->get('fileManager'));
         $this->updateCompanyMetadata($container->get('metadata'), $container->get('fileManager'));
+
+        $this->migrateEmailAccountFolders('EmailAccount', $container->get('entityManager'));
+        $this->migrateEmailAccountFolders('InboundEmail', $container->get('entityManager'));
     }
 
     protected function updateTemplates($entityManager)
@@ -158,6 +163,49 @@ class AfterUpgrade
 
         if ($toSave) {
             $metadata->save();
+        }
+    }
+
+    private function migrateEmailAccountFolders(string $entityType, EntityManager $entityManager): void
+    {
+        $selectQuery = $entityManager->getQueryBuilder()
+            ->select()
+            ->from($entityType)
+            ->select(['id', 'monitoredFolders'])
+            ->build();
+
+        $sth = $entityManager->getQueryExecutor()->execute($selectQuery);
+
+        $dataList = [];
+
+        while ($row = $sth->fetch()) {
+            $dataList[] = [
+                'id' => $row['id'],
+                'folders' => $row['monitoredFolders'] ?? '',
+            ];
+        }
+
+        foreach ($dataList as $item) {
+            $id = $item['id'];
+            $foldersString = $item['folders'];
+
+            $folders = array_map(
+                function (string $item): string {
+                    return trim($item);
+                },
+                explode(',', $foldersString)
+            );
+
+            $foldersJsonString = json_encode($folders);
+
+            $updateQuery = $entityManager->getQueryBuilder()
+                ->update()
+                ->in($entityType)
+                ->set(['monitoredFolders' => $foldersJsonString])
+                ->where(['id' => $id])
+                ->build();
+
+            $entityManager->getQueryExecutor()->execute($updateQuery);
         }
     }
 }

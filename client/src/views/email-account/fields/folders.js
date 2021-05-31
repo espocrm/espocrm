@@ -26,24 +26,81 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/fields/folders', 'views/email-account/fields/folder', function (Dep) {
+define('views/email-account/fields/folders', 'views/fields/array', function (Dep) {
 
     return Dep.extend({
 
-        addFolder: function (folder) {
-            var value = this.$element.val();
+        getFoldersUrl: 'EmailAccount/action/getFolders',
 
-            var folders = [];
+        fetchFolders: function () {
+            return new Promise(function (resolve) {
+                var data = {
+                    host: this.model.get('host'),
+                    port: this.model.get('port'),
+                    security: this.model.get('security'),
+                    username: this.model.get('username'),
+                    emailAddress: this.model.get('emailAddress'),
+                    userId: this.model.get('assignedUserId'),
+                };
 
-            if (value != '') {
-                folders = value.split(',');
-            }
+                if (this.model.has('password')) {
+                    data.password = this.model.get('password');
+                }
+                else {
+                    if (!this.model.isNew()) {
+                        data.id = this.model.id;
+                    }
+                }
 
-            if (!~folders.indexOf(folder)) {
-                folders.push(folder);
-            }
+                Espo.Ajax.postRequest(this.getFoldersUrl, data)
+                    .then(
+                        function (folders) {
+                            resolve(folders);
+                        }.bind(this)
+                    )
+                    .fail(
+                        function (xhr) {
+                            Espo.Ui.error(this.translate('couldNotConnectToImap', 'messages', 'EmailAccount'));
 
-            this.$element.val(folders.join(','));
+                            xhr.errorIsHandled = true;
+
+                            resolve(["INBOX"]);
+                        }.bind(this)
+                    );
+            }.bind(this));
+        },
+
+        actionAddItem: function () {
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+
+            this.fetchFolders()
+                .then(
+                    function (options) {
+                        Espo.Ui.notify(false);
+
+                        this.createView( 'addModal', this.addItemModalView, {options: options})
+                            .then(
+                                function (view) {
+                                    view.render();
+
+                                    view.once('add', function (item) {
+                                        this.addValue(item);
+
+                                        view.close();
+                                    }.bind(this));
+
+                                    view.once('add-mass', function (items) {
+                                        items.forEach(function (item) {
+                                            this.addValue(item);
+                                        }.bind(this));
+
+                                        view.close();
+                                    }.bind(this));
+                                }.bind(this)
+                        );
+                    }.bind(this)
+                );
+
         },
     });
 });
