@@ -31,5 +31,5 @@ namespace Espo\Entities;
 
 class NextNumber extends \Espo\Core\ORM\Entity
 {
-
+    public const ENTITY_TYPE = 'NextNumber';
 }

@@ -31,5 +31,5 @@ namespace Espo\Modules\Crm\Entities;
 
 class MassEmail extends \Espo\Core\ORM\Entity
 {
-
+    public const ENTITY_TYPE = 'MassEmail';
 }

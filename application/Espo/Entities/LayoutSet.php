@@ -31,4 +31,5 @@ namespace Espo\Entities;
 
 class LayoutSet extends \Espo\Core\ORM\Entity
 {
+    public const ENTITY_TYPE = 'LayoutSet';
 }

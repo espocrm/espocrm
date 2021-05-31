@@ -35,6 +35,8 @@ use Espo\Core\ORM\Entity;
 
 class PhoneNumber extends Entity
 {
+    public const ENTITY_TYPE = 'PhoneNumber';
+
     protected function _setName($value)
     {
         if (empty($value)) {

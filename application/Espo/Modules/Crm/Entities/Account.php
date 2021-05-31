@@ -38,22 +38,24 @@ use Espo\Core\{
 
 class Account extends Entity
 {
-    public function getEmailAddressGroup() : EmailAddressGroup
+    public const ENTITY_TYPE = 'Account';
+
+    public function getEmailAddressGroup(): EmailAddressGroup
     {
         return $this->getValueObject('emailAddress');
     }
 
-    public function getPhoneNumberGroup() : PhoneNumberGroup
+    public function getPhoneNumberGroup(): PhoneNumberGroup
     {
         return $this->getValueObject('phoneNumber');
     }
 
-    public function setEmailAddressGroup(EmailAddressGroup $group) : void
+    public function setEmailAddressGroup(EmailAddressGroup $group): void
     {
         $this->setValueObject('emailAddress', $group);
     }
 
-    public function setPhoneNumberGroup(PhoneNumberGroup $group) : void
+    public function setPhoneNumberGroup(PhoneNumberGroup $group): void
     {
         $this->setValueObject('phoneNumber', $group);
     }
@@ -63,7 +65,7 @@ class Account extends Entity
         return $this->getValueObject('billingAddress');
     }
 
-    public function setBillingAddress(Address $address) : void
+    public function setBillingAddress(Address $address): void
     {
         $this->setValueObject('billingAddress', $address);
     }
@@ -73,7 +75,7 @@ class Account extends Entity
         return $this->getValueObject('shippingAddress');
     }
 
-    public function setShippingAddress(Address $address) : void
+    public function setShippingAddress(Address $address): void
     {
         $this->setValueObject('shippingAddress', $address);
     }

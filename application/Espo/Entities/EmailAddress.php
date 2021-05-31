@@ -35,6 +35,8 @@ use Espo\Core\ORM\Entity;
 
 class EmailAddress extends Entity
 {
+    public const ENTITY_TYPE = 'EmailAddress';
+
     protected function _setName($value)
     {
         if (empty($value)) {

@@ -31,7 +31,6 @@ namespace Espo\Entities;
 
 class EmailAccount extends \Espo\Core\ORM\Entity
 {
-
-
+    public const ENTITY_TYPE = 'EmailAccount';
 }
 

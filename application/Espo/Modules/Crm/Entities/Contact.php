@@ -31,5 +31,5 @@ namespace Espo\Modules\Crm\Entities;
 
 class Contact extends \Espo\Core\Entities\Person
 {
-
+    public const ENTITY_TYPE = 'Contact';
 }

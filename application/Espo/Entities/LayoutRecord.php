@@ -31,4 +31,5 @@ namespace Espo\Entities;
 
 class LayoutRecord extends \Espo\Core\ORM\Entity
 {
+    public const ENTITY_TYPE = 'LayoutRecord';
 }

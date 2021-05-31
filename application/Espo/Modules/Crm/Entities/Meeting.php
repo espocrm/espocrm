@@ -36,22 +36,24 @@ use Espo\Core\{
 
 class Meeting extends Entity
 {
-    public function getDateStart() : ?DateTimeOptional
+    public const ENTITY_TYPE = 'Meeting';
+
+    public function getDateStart(): ?DateTimeOptional
     {
         return $this->getValueObject('dateStart');
     }
 
-    public function setDateStart(?DateTimeOptional $dateStart) : void
+    public function setDateStart(?DateTimeOptional $dateStart): void
     {
         $this->setValueObject('dateStart', $dateStart);
     }
 
-    public function getDateEnd() : ?DateTimeOptional
+    public function getDateEnd(): ?DateTimeOptional
     {
         return $this->getValueObject('dateEnd');
     }
 
-    public function setDateEnd(?DateTimeOptional $dateEnd) : void
+    public function setDateEnd(?DateTimeOptional $dateEnd): void
     {
         $this->setValueObject('dateEnd', $dateEnd);
     }

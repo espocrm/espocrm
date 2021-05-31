@@ -31,5 +31,5 @@ namespace Espo\Entities;
 
 class UserData extends \Espo\Core\ORM\Entity
 {
-
+    public const ENTITY_TYPE = 'UserData';
 }

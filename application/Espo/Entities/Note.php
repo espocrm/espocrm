@@ -33,6 +33,8 @@ use Espo\Core\ORM\Entity;
 
 class Note extends Entity
 {
+    public const ENTITY_TYPE = 'Note';
+
     public const TARGET_SELF = 'self';
 
     public const TARGET_ALL = 'all';

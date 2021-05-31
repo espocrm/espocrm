@@ -31,6 +31,8 @@ namespace Espo\Entities;
 
 class Portal extends \Espo\Core\ORM\Entity
 {
+    public const ENTITY_TYPE = 'Portal';
+
     protected $settingsAttributeList = [
         'companyLogoId',
         'tabList',
@@ -46,7 +48,7 @@ class Portal extends \Espo\Core\ORM\Entity
         'defaultCurrency',
     ];
 
-    public function getSettingsAttributeList()
+    public function getSettingsAttributeList(): array
     {
         return $this->settingsAttributeList;
     }

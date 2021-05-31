@@ -35,6 +35,8 @@ use StdClass;
 
 class Integration extends Entity
 {
+    public const ENTITY_TYPE = 'Integration';
+
     public function get(string $name, $params = [])
     {
         if ($name == 'id') {

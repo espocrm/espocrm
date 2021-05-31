@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Entities;
 
 class CampaignTrackingUrl extends \Espo\Core\ORM\Entity
 {
+    public const ENTITY_TYPE = 'CampaignTrackingUrl';
+
     protected function _getUrlToUse()
     {
         return '{trackingUrl:' . $this->id . '}';

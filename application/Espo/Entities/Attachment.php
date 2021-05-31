@@ -33,6 +33,8 @@ use Espo\Core\ORM\Entity;
 
 class Attachment extends Entity
 {
+    public const ENTITY_TYPE = 'Attachment';
+
     public function getSourceId(): ?string
     {
         $sourceId = $this->get('sourceId');

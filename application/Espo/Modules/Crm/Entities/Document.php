@@ -31,6 +31,6 @@ namespace Espo\Modules\Crm\Entities;
 
 class Document extends \Espo\Core\ORM\Entity
 {
-
+    public const ENTITY_TYPE = 'Document';
 }
 

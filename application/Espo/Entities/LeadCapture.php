@@ -31,7 +31,9 @@ namespace Espo\Entities;
 
 class LeadCapture extends \Espo\Core\ORM\Entity
 {
-    public function isToSubscribeContactIfExists() : bool
+    public const ENTITY_TYPE = 'LeadCapture';
+
+    public function isToSubscribeContactIfExists(): bool
     {
         return $this->get('subscribeToTargetList') && $this->get('subscribeContactToTargetList');
     }

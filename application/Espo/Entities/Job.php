@@ -35,6 +35,8 @@ use StdClass;
 
 class Job extends Entity
 {
+    public const ENTITY_TYPE = 'Job';
+
     /**
      * Get a status.
      */

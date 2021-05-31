@@ -33,6 +33,8 @@ use Espo\Core\Entities\Person;
 
 class User extends Person
 {
+    public const ENTITY_TYPE = 'User';
+
     public function isActive(): bool
     {
         return (bool) $this->get('isActive');

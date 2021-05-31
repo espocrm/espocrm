@@ -31,7 +31,7 @@ namespace Espo\Modules\Crm\Entities;
 
 class CaseObj extends \Espo\Core\ORM\Entity
 {
+    public const ENTITY_TYPE = 'Case';
 
     protected $entityType = 'Case';
-
 }

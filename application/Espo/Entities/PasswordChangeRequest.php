@@ -31,6 +31,5 @@ namespace Espo\Entities;
 
 class PasswordChangeRequest extends \Espo\Core\ORM\Entity
 {
-
+    public const ENTITY_TYPE = 'PasswordChangeRequest';
 }
-

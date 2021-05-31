@@ -37,6 +37,8 @@ use Espo\Core\{
 
 class Opportunity extends Entity
 {
+    public const ENTITY_TYPE = 'Opportunity';
+
     public function getAmount() : ?Currency
     {
         return $this->getValueObject('amount');

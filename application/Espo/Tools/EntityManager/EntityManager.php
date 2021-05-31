@@ -297,7 +297,8 @@ class EntityManager
             "namespace Espo\Custom\Entities;\n\n".
             "class {$normalizedName} extends {$templateNamespace}\Entities\\{$type}\n".
             "{\n".
-            "    protected \$entityType = \"$name\";\n".
+            "    public const ENTITY_TYPE = '{$name}';\n\n".
+            "    protected \$entityType = '{$name}';\n".
             "}\n";
 
         $filePath = "custom/Espo/Custom/Entities/{$normalizedName}.php";

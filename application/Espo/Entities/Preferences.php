@@ -31,7 +31,9 @@ namespace Espo\Entities;
 
 class Preferences extends \Espo\Core\ORM\Entity
 {
-    public function getSmtpParams() : ?array
+    public const ENTITY_TYPE = 'Preferences';
+
+    public function getSmtpParams(): ?array
     {
         $smtpParams = [];
         $smtpParams['server'] = $this->get('smtpServer');

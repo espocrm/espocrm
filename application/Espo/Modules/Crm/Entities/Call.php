@@ -36,22 +36,24 @@ use Espo\Core\{
 
 class Call extends Entity
 {
-    public function getDateStart() : ?DateTime
+    public const ENTITY_TYPE = 'Call';
+
+    public function getDateStart(): ?DateTime
     {
         return $this->getValueObject('dateStart');
     }
 
-    public function setDateStart(?DateTime $dateStart) : void
+    public function setDateStart(?DateTime $dateStart): void
     {
         $this->setValueObject('dateStart', $dateStart);
     }
 
-    public function getDateEnd() : ?DateTime
+    public function getDateEnd(): ?DateTime
     {
         return $this->getValueObject('dateEnd');
     }
 
-    public function setDateEnd(?DateTime $dateEnd) : void
+    public function setDateEnd(?DateTime $dateEnd): void
     {
         $this->setValueObject('dateEnd', $dateEnd);
     }

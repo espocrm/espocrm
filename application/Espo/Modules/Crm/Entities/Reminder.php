@@ -31,5 +31,5 @@ namespace Espo\Modules\Crm\Entities;
 
 class Reminder extends \Espo\Core\ORM\Entity
 {
-
+    public const ENTITY_TYPE = 'Reminder';
 }

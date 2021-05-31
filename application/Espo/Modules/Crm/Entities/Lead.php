@@ -31,6 +31,8 @@ namespace Espo\Modules\Crm\Entities;
 
 class Lead extends \Espo\Core\Entities\Person
 {
+    public const ENTITY_TYPE = 'Lead';
+
     protected function _getName()
     {
         if (!$this->hasInContainer('name') || !$this->getFromContainer('name')) {

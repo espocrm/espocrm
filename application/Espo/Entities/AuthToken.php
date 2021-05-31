@@ -36,32 +36,34 @@ use Espo\Core\{
 
 class AuthToken extends BaseEntity implements AuthTokenInterface
 {
-    public function getToken() : string
+    public const ENTITY_TYPE = 'AuthToken';
+
+    public function getToken(): string
     {
         return $this->get('token');
     }
 
-    public function getUserId() : string
+    public function getUserId(): string
     {
         return $this->get('userId');
     }
 
-    public function getPortalId() : ?string
+    public function getPortalId(): ?string
     {
         return $this->get('portalId');
     }
 
-    public function getSecret() : ?string
+    public function getSecret(): ?string
     {
         return $this->get('secret');
     }
 
-    public function isActive() : bool
+    public function isActive(): bool
     {
         return $this->get('isActive');
     }
 
-    public function getHash() : ?string
+    public function getHash(): ?string
     {
         return $this->get('hash');
     }

@@ -31,5 +31,5 @@ namespace Espo\Entities;
 
 class Team extends \Espo\Core\ORM\Entity
 {
-
+    public const ENTITY_TYPE = 'Team';
 }

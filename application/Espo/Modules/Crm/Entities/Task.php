@@ -36,6 +36,8 @@ use Espo\Core\{
 
 class Task extends Entity
 {
+    public const ENTITY_TYPE = 'Task';
+
     public function getDateStart() : ?DateTimeOptional
     {
         return $this->getValueObject('dateStart');

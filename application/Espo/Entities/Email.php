@@ -37,6 +37,8 @@ use Espo\Services\Email as EmailService;
 
 class Email extends \Espo\Core\ORM\Entity
 {
+    public const ENTITY_TYPE = 'Email';
+
     protected function _getSubject()
     {
         return $this->get('name');
