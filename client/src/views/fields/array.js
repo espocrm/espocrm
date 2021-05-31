@@ -64,7 +64,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 isEmpty: (this.selected || []).length === 0,
                 valueIsSet: this.model.has(this.name),
                 maxItemLength: this.maxItemLength,
-                allowCustomOptions: this.allowCustomOptions
+                allowCustomOptions: this.allowCustomOptions,
             }, Dep.prototype.data.call(this));
         },
 
@@ -146,22 +146,30 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         setupTranslation: function () {
             var t = {};
+
             if (this.params.translation) {
-                var data = this.getLanguage().data;
                 var arr = this.params.translation.split('.');
+
                 var pointer = this.getLanguage().data;
+
                 arr.forEach(function (key) {
                     if (key in pointer) {
                         pointer = pointer[key];
+
                         t = pointer;
                     }
                 }, this);
-            } else {
+            }
+            else {
                 t = this.translate(this.name, 'options', this.model.name);
             }
+
             this.translatedOptions = null;
+
             var translatedOptions = {};
+
             if (this.params.options) {
+
                 this.params.options.forEach(function (o) {
                     if (typeof t === 'object' && o in t) {
                         translatedOptions[o] = t[o];
@@ -169,6 +177,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                         translatedOptions[o] = o;
                     }
                 }.bind(this));
+
                 this.translatedOptions = translatedOptions;
             }
         },
@@ -181,21 +190,26 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             if (!this.originalOptionList) {
                 this.originalOptionList = this.params.options;
             }
+
             this.params.options = Espo.Utils.clone(optionList);
 
             if (this.mode == 'edit' && !silent) {
                 var selectedOptionList = [];
+
                 this.selected.forEach(function (option) {
                     if (~optionList.indexOf(option)) {
                         selectedOptionList.push(option);
                     }
                 }, this);
+
                 this.selected = selectedOptionList;
 
                 if (this.isRendered()) {
                     this.reRender();
+
                     this.trigger('change');
-                } else {
+                }
+                else {
                     this.once('after:render', function () {
                         this.trigger('change');
                     }, this);
@@ -212,7 +226,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 this.params.options = Espo.Utils.clone(this.originalOptionList);
             }
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 if (this.isRendered()) {
                     this.reRender();
                 }
@@ -221,20 +235,29 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         controlAddItemButton: function () {
             var $select = this.$select;
-            if (!$select) return;
-            if (!$select.get(0)) return;
+
+            if (!$select) {
+                return;
+            }
+
+            if (!$select.get(0)) {
+                return;
+            }
 
             var value = $select.val().toString();
+
             if (!value && this.params.noEmptyString) {
                 this.$addButton.addClass('disabled').attr('disabled', 'disabled');
-            } else {
+            }
+            else {
                 this.$addButton.removeClass('disabled').removeAttr('disabled');
             }
         },
 
         afterRender: function () {
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 this.$list = this.$el.find('.list-group');
+
                 var $select = this.$select = this.$el.find('.select');
 
                 if (this.allowCustomOptions) {
@@ -242,8 +265,11 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
                     this.$addButton.on('click', function () {
                         var value = this.$select.val().toString();
+
                         this.addValue(value);
+
                         $select.val('');
+
                         this.controlAddItemButton();
                     }.bind(this));
 
@@ -276,13 +302,13 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 });
             }
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 this.renderSearch();
             }
         },
 
         renderSearch: function () {
-            var $element = this.$element = this.$el.find('.main-element');
+            this.$element = this.$el.find('.main-element');
 
             var valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
 
@@ -383,51 +409,66 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         getValueForDisplay: function () {
             var list = this.selected.map(function (item) {
                 var label = null;
+
                 if (this.translatedOptions != null) {
                     if (item in this.translatedOptions) {
                         label = this.translatedOptions[item];
+
                         label = this.escapeValue(label);
                     }
                 }
+
                 if (label === null) {
                     label = this.escapeValue(item);
                 }
+
                 if (label === '') {
                     label = this.translate('None');
                 }
 
                 var style = this.styleMap[item] || 'default';
+
                 if (this.params.displayAsLabel) {
                     label = '<span class="label label-md label-'+style+'">' + label + '</span>';
-                } else {
+                }
+                else {
                     if (style && style != 'default') {
                         label = '<span class="text-'+style+'">' + label + '</span>';
                     }
                 }
+
                 return label;
             }, this)
 
 
             if (this.displayAsList) {
-                if (!list.length) return '';
+                if (!list.length) {
+                    return '';
+                }
+
                 var itemClassName = 'multi-enum-item-container';
+
                 if (this.displayAsLabel) {
                     itemClassName += ' multi-enum-item-label-container';
                 }
+
                 return '<div class="'+itemClassName+'">' +
                     list.join('</div><div class="'+itemClassName+'">') + '</div>';
-            } else if (this.displayAsLabel) {
+            }
+            else if (this.displayAsLabel) {
                 return list.join(' ');
-            } else {
+            }
+            else {
                 return list.join(', ')
             }
         },
 
         getItemHtml: function (value) {
-            if (this.translatedOptions != null) {
+            if (this.translatedOptions !== null) {
                 for (var item in this.translatedOptions) {
-                    if (this.translatedOptions[item] == value) {
+                    if (this.translatedOptions[item] === value) {
                         value = item;
+
                         break;
                     }
                 }
@@ -438,6 +479,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             var valueSanitized = this.escapeValue(value);
 
             var label = valueSanitized;
+
             if (this.translatedOptions) {
                 if ((value in this.translatedOptions)) {
                     label = this.translatedOptions[value];
@@ -445,9 +487,11 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                     label = this.escapeValue(label);
                 }
             }
-            var html = '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' + label +
-            '&nbsp;<a href="javascript:" class="pull-right" data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
-            '</div>';
+            var html =
+                '<div class="list-group-item" data-value="' + valueSanitized + '" style="cursor: default;">' + label +
+                '&nbsp;<a href="javascript:" class="pull-right" ' +
+                'data-value="' + valueSanitized + '" data-action="removeValue"><span class="fas fa-times"></a>' +
+                '</div>';
 
             return html;
         },
@@ -457,10 +501,13 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         },
 
         addValue: function (value) {
-            if (this.selected.indexOf(value) == -1) {
+            if (this.selected.indexOf(value) === -1) {
                 var html = this.getItemHtml(value);
+
                 this.$list.append(html);
+
                 this.selected.push(value);
+
                 this.trigger('change');
             }
         },
@@ -471,12 +518,15 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             this.$list.children('[data-value="' + valueInternal + '"]').remove();
 
             var index = this.selected.indexOf(value);
+
             this.selected.splice(index, 1);
+
             this.trigger('change');
         },
 
         fetch: function () {
             var data = {};
+
             var list = Espo.Utils.clone(this.selected || []);
 
             if (this.params.isSorted && this.translatedOptions) {
@@ -493,13 +543,10 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val() || 'anyOf';
 
-            var arr = [];
-            var arrFront = [];
-
             if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
                 var valueList = this.$element.val().split(this.itemDelimiter);
 
-                if (valueList.length == 1 && valueList[0] == '') {
+                if (valueList.length === 1 && valueList[0] === '') {
                     valueList = [];
                 }
             }
@@ -528,6 +575,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                         valueList: valueList
                     }
                 };
+
                 return data;
             }
 
@@ -540,9 +588,11 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                         valueList: valueList
                     }
                 };
+
                 if (!valueList.length) {
                     data.value = null;
                 }
+
                 return data;
             }
 
@@ -553,6 +603,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                         type: 'isEmpty'
                     }
                 };
+
                 return data;
             }
 
@@ -563,6 +614,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                         type: 'isNotEmpty'
                     }
                 };
+
                 return data;
             }
         },
@@ -570,9 +622,12 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         validateRequired: function () {
             if (this.isRequired()) {
                 var value = this.model.get(this.name);
-                if (!value || value.length == 0) {
+
+                if (!value || value.length === 0) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg, '.array-control-container');
+
                     return true;
                 }
             }
@@ -581,12 +636,15 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         validateMaxCount: function () {
             if (this.params.maxCount) {
                 var itemList = this.model.get(this.name) || [];
+
                 if (itemList.length > this.params.maxCount) {
                     var msg =
                         this.translate('fieldExceedsMaxCount', 'messages')
                             .replace('{field}', this.getLabelText())
                             .replace('{maxCount}', this.params.maxCount.toString());
+
                     this.showValidationMessage(msg, '.array-control-container');
+
                     return true;
                 }
             }
@@ -614,8 +672,10 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         actionAddItem: function () {
             this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), function (view) {
                 view.render();
+
                 view.once('add', function (item) {
                     this.addValue(item);
+
                     view.close();
                 }.bind(this));
 
@@ -623,6 +683,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                     items.forEach(function (item) {
                         this.addValue(item);
                     }.bind(this));
+
                     view.close();
                 }.bind(this));
             }.bind(this));
