@@ -104,6 +104,8 @@ define('views/record/list', 'view', function (Dep) {
          */
         layoutAclDisabled: false,
 
+        setupHandlerType: 'record/list',
+
         events: {
             'click a.link': function (e) {
                 e.stopPropagation();
@@ -1430,6 +1432,8 @@ define('views/record/list', 'view', function (Dep) {
                     this.layoutName += 'Portal';
                 }
             }
+
+            this.getHelper().processSetupHandlers(this, this.setupHandlerType);
 
             this.listenTo(this.collection, 'sync', function (c, r, options) {
                 if (this.hasView('modal') && this.getView('modal').isRendered()) {

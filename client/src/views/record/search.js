@@ -106,32 +106,39 @@ define('views/record/search', 'view', function (Dep) {
 
             this.boolFilterList = Espo.Utils.clone(
                 this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []
-            ).filter(function (item) {
-                if (typeof item === 'string') {
-                    return true;
-                }
+            )
+                .filter(function (item) {
+                    if (typeof item === 'string') {
+                        return true;
+                    }
 
-                item = item || {};
+                    item = item || {};
 
-                if (item.inPortalDisabled && this.getUser().isPortal()) return false;
-                if (item.isPortalOnly && !this.getUser().isPortal()) return false;
-
-                if (item.accessDataList) {
-                    if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                    if (item.inPortalDisabled && this.getUser().isPortal()) {
                         return false;
                     }
-                }
 
-                return true;
-            }, this).map(function (item) {
-                if (typeof item === 'string') {
-                    return item;
-                }
+                    if (item.isPortalOnly && !this.getUser().isPortal()) {
+                        return false;
+                    }
 
-                item = item || {};
+                    if (item.accessDataList) {
+                        if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                            return false;
+                        }
+                    }
 
-                return item.name;
-            }, this);
+                    return true;
+                }, this)
+                .map(function (item) {
+                    if (typeof item === 'string') {
+                        return item;
+                    }
+
+                    item = item || {};
+
+                    return item.name;
+                }, this);
 
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
@@ -142,6 +149,7 @@ define('views/record/search', 'view', function (Dep) {
                     if (~forbiddenFieldList.indexOf(field)) {
                         return;
                     }
+
                     this.moreFieldList.push(field);
                 }, this);
 
@@ -158,14 +166,20 @@ define('views/record/search', 'view', function (Dep) {
 
                 item = item || {};
 
-                if (item.inPortalDisabled && this.getUser().isPortal()) return false;
-                if (item.isPortalOnly && !this.getUser().isPortal()) return false;
+                if (item.inPortalDisabled && this.getUser().isPortal()) {
+                    return false;
+                }
+
+                if (item.isPortalOnly && !this.getUser().isPortal()) {
+                    return false;
+                }
 
                 if (item.accessDataList) {
                     if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
                         return false;
                     }
                 }
+
                 return true;
             }, this);
 
@@ -193,6 +207,7 @@ define('views/record/search', 'view', function (Dep) {
 
                     if (name === this.presetName) {
                         hasPresetListed = true;
+
                         break;
                     }
                 }
@@ -203,6 +218,7 @@ define('views/record/search', 'view', function (Dep) {
             }
 
             this.model = new this.collection.model();
+
             this.model.clear();
 
             this.createFilters();
@@ -212,6 +228,8 @@ define('views/record/search', 'view', function (Dep) {
             this.listenTo(this.collection, 'order-changed', function () {
                 this.controlResetButtonVisibility();
             }, this);
+
+            this.getHelper().processSetupHandlers(this, 'record/search');
         },
 
         setupViewModeDataList: function () {
@@ -239,7 +257,8 @@ define('views/record/search', 'view', function (Dep) {
             if (this.isRendered()) {
                 this.$el.find('[data-action="switchViewMode"]').removeClass('active');
                 this.$el.find('[data-action="switchViewMode"][data-name="'+mode+'"]').addClass('active');
-            } else {
+            }
+            else {
                 if (this.isBeingRendered() && !preventLoop) {
                     this.once('after:render', function () {
                         this.setViewMode(mode, true);
@@ -259,7 +278,8 @@ define('views/record/search', 'view', function (Dep) {
         handleLeftDropdownVisibility: function () {
             if (this.isLeftDropdown()) {
                 this.$leftDropdown.removeClass('hidden');
-            } else {
+            }
+            else {
                 this.$leftDropdown.addClass('hidden');
             }
         },
@@ -277,7 +297,8 @@ define('views/record/search', 'view', function (Dep) {
             for (var field in this.advanced) {
                 this.createFilter(field, this.advanced[field], function () {
                     i++;
-                    if (i == count) {
+
+                    if (i === count) {
                         if (typeof callback === 'function') {
                             callback();
                         }

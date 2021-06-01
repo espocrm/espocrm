@@ -64,6 +64,8 @@ define('views/record/edit', 'views/record/detail', function (Dep) {
 
         saveAndNewAction: true,
 
+        setupHandlerType: 'record/edit',
+
         actionSave: function (data) {
             var isNew = this.isNew;
 

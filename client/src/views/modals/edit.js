@@ -51,9 +51,6 @@ define('views/modals/edit', 'views/modal', function (Dep) {
         bottomDisabled: false,
 
         setup: function () {
-
-            var self = this;
-
             this.buttonList = [];
 
             if ('saveDisabled' in this.options) {
@@ -75,13 +72,13 @@ define('views/modals/edit', 'views/modal', function (Dep) {
             if (!this.fullFormDisabled) {
                 this.buttonList.push({
                     name: 'fullForm',
-                    label: 'Full Form'
+                    label: 'Full Form',
                 });
             }
 
             this.buttonList.push({
                 name: 'cancel',
-                label: 'Cancel'
+                label: 'Cancel',
             });
 
             this.scope = this.scope || this.options.scope;
@@ -92,20 +89,28 @@ define('views/modals/edit', 'views/modal', function (Dep) {
 
             if (!this.id) {
                 this.headerHtml = this.getLanguage().translate('Create ' + this.scope, 'labels', this.scope);
-            } else {
+            }
+            else {
                 this.headerHtml = this.getLanguage().translate('Edit');
                 this.headerHtml += ': ' + this.getLanguage().translate(this.scope, 'scopeNames');
             }
 
             if (!this.fullFormDisabled) {
                 if (!this.id) {
-                    this.headerHtml = '<a href="#' + this.scope + '/create" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
-                } else {
-                    this.headerHtml = '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
+                    this.headerHtml =
+                        '<a href="#' + this.scope +
+                        '/create" class="action" title="'+this.translate('Full Form')+'" data-action="fullForm">' +
+                        this.headerHtml + '</a>';
+                }
+                else {
+                    this.headerHtml =
+                        '<a href="#' + this.scope + '/edit/' + this.id+'" class="action" title="' +
+                        this.translate('Full Form')+'" data-action="fullForm">' + this.headerHtml + '</a>';
                 }
             }
 
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+
             this.headerHtml = iconHtml + this.headerHtml;
 
             this.sourceModel = this.model;
@@ -116,22 +121,30 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                 if (this.id) {
                     if (this.sourceModel) {
                         model = this.model = this.sourceModel.clone();
-                    } else {
+                    }
+                    else {
                         this.model = model;
+
                         model.id = this.id;
                     }
+
                     model.once('sync', function () {
                         this.createRecordView(model);
                     }, this);
+
                     model.fetch();
-                } else {
+                }
+                else {
                     this.model = model;
+
                     if (this.options.relate) {
                         model.setRelate(this.options.relate);
                     }
+
                     if (this.options.attributes) {
                         model.set(this.options.attributes);
                     }
+
                     this.createRecordView(model);
                 }
             }.bind(this));
@@ -144,6 +157,7 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
                 this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
                 'views/record/edit-small';
+
             var options = {
                 model: model,
                 el: this.containerSelector + ' .edit-container',
@@ -152,18 +166,25 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                 buttonsDisabled: true,
                 sideDisabled: this.sideDisabled,
                 bottomDisabled: this.bottomDisabled,
-                exit: function () {}
+                exit: function () {},
             };
+
             this.handleRecordViewOptions(options);
+
             this.createView('edit', viewName, options, callback);
         },
 
         handleRecordViewOptions: function (options) {},
 
+        getRecordView: function () {
+            return this.getView('edit');
+        },
+
         actionSave: function () {
             var editView = this.getView('edit');
 
             var model = editView.model;
+
             editView.once('after:save', function () {
                 this.trigger('after:save', model);
                 this.dialog.close();
@@ -174,6 +195,7 @@ define('views/modals/edit', 'views/modal', function (Dep) {
             }, this);
 
             var $buttons = this.dialog.$el.find('.modal-footer button');
+
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 
             editView.once('cancel:save', function () {
@@ -186,11 +208,13 @@ define('views/modals/edit', 'views/modal', function (Dep) {
         actionFullForm: function (dialog) {
             var url;
             var router = this.getRouter();
+
             if (!this.id) {
                 url = '#' + this.scope + '/create';
 
                 var attributes = this.getView('edit').fetch();
                 var model = this.getView('edit').model;
+
                 attributes = _.extend(attributes, model.getClonedAttributes());
 
                 var options = {
@@ -207,11 +231,13 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                     router.dispatch(this.scope, 'create', options);
                     router.navigate(url, {trigger: false});
                 }.bind(this), 10);
-            } else {
+            }
+            else {
                 url = '#' + this.scope + '/edit/' + this.id;
 
                 var attributes = this.getView('edit').fetch();
                 var model = this.getView('edit').model;
+
                 attributes = _.extend(attributes, model.getClonedAttributes());
 
                 var options = {
@@ -219,19 +245,22 @@ define('views/modals/edit', 'views/modal', function (Dep) {
                     returnUrl: this.options.returnUrl || Backbone.history.fragment,
                     returnDispatchParams: this.options.returnDispatchParams || null,
                     model: this.sourceModel,
-                    id: this.id
+                    id: this.id,
                 };
+
                 if (this.options.rootUrl) {
                     options.rootUrl = this.options.rootUrl;
                 }
 
                 setTimeout(function () {
                     router.dispatch(this.scope, 'edit', options);
+
                     router.navigate(url, {trigger: false});
                 }.bind(this), 10);
             }
 
             this.trigger('leave');
+
             this.dialog.close();
         }
     });

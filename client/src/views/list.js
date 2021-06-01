@@ -116,6 +116,8 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
             if (this.createButton) {
                 this.setupCreateButton();
             }
+
+            this.getHelper().processSetupHandlers(this, 'list');
         },
 
         setupModes: function () {
@@ -450,7 +452,7 @@ define('views/list', ['views/main', 'search-manager'], function (Dep, SearchMana
                 returnDispatchParams: returnDispatchParams,
             });
 
-            this.createView('quickCreate', viewName, options, function (view) {
+            return this.createView('quickCreate', viewName, options, function (view) {
                 view.render();
 
                 view.notify(false);

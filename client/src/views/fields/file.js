@@ -492,7 +492,9 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                                 function () {
                                     if (!isCanceled && this.isUploading) {
                                         $attachmentBox.trigger('ready');
+
                                         this.setAttachment(attachment);
+
                                         this.isUploading = false;
                                     }
                                 }.bind(this)
@@ -500,8 +502,10 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                             .fail(
                                 function () {
                                     $attachmentBox.remove();
+
                                     this.$el.find('.uploading-message').remove();
                                     this.$el.find('.attachment-button').removeClass('hidden');
+
                                     this.isUploading = false;
                                 }.bind(this)
                             );

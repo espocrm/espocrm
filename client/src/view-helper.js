@@ -527,6 +527,46 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
             return $window.height() - spaceHeight - 20;
         },
+
+        processSetupHandlers: function (view, type, scope) {
+            scope = scope || view.scope;
+
+            if (!scope) {
+                console.error("No scope detected for view setup handler processing.");
+
+                return;
+            }
+
+            let handlerList =
+                (this.metadata.get(['clientDefs', 'Global', 'viewSetupHandlers', type]) || [])
+                .concat(
+                    this.metadata.get(['clientDefs', scope, 'viewSetupHandlers', type]) || []
+                );
+
+            if (handlerList.length === 0) {
+                return;
+            }
+
+            for (let handlerClassName of handlerList) {
+                let promise = new Promise(function (resolve) {
+                    require(handlerClassName, function (Handler) {
+                        let result = (new Handler(view)).process(view);
+
+                        if (result && Object.prototype.toString.call(result) === '[object Promise]') {
+                            result.then(function () {
+                                resove();
+                            });
+
+                            return;
+                        }
+
+                        resolve();
+                    });
+                });
+
+                view.wait(promise);
+            }
+        },
     });
 
     return ViewHelper;

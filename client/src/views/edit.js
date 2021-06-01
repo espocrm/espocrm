@@ -52,6 +52,8 @@ define('views/edit', 'views/main', function (Dep) {
 
             this.setupHeader();
             this.setupRecord();
+
+            this.getHelper().processSetupHandlers(this, 'edit');
         },
 
         setupHeader: function () {

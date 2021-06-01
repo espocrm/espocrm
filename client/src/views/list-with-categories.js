@@ -543,13 +543,14 @@ define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         getCreateAttributes: function () {
-            var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.categoryField, 'type']);
-
             if (this.isCategoryMultiple()) {
                 if (this.currentCategoryId) {
                     var names = {};
 
-                    names[this.currentCategoryId] = this.currentCategoryName;
+                    names[this.currentCatetgoryId] =
+                        this.currentCategoryName ||
+                        (this.nestedCategoriesCollection.categoryData || {}).name ||
+                        this.currentCatetgoryId;
 
                     var data = {};
 
@@ -569,7 +570,10 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 var data = {};
 
                 data[idAttribute] = this.currentCategoryId;
-                data[nameAttribute] = this.currentCategoryName;
+                data[nameAttribute] =
+                    this.currentCategoryName ||
+                    (this.nestedCategoriesCollection.categoryData || {}).name ||
+                    this.currentCatetgoryId;
 
                 return data;
             }
@@ -599,7 +603,6 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                     this.translate(this.scope, 'scopeNamesPlural') + '</a>',
             ];
 
-            var currentId = this.nestedCategoriesCollection.categoryData.id;
             var currentName = this.nestedCategoriesCollection.categoryData.name;
 
             var upperId = this.nestedCategoriesCollection.categoryData.upperId;

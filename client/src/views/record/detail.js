@@ -126,6 +126,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
         confirmLeaveDisabled: false,
 
+        setupHandlerType: 'record/detail',
+
         events: {
             'click .button-container .action': function (e) {
                 Espo.Utils.handleAction(this, e);
@@ -1124,6 +1126,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     }
                 }.bind(this));
             }
+
+            this.getHelper().processSetupHandlers(this, this.setupHandlerType);
         },
 
         setupBeforeFinal: function () {

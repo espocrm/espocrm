@@ -172,7 +172,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             }
 
             if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
-                if (this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])) {
+                if (
+                    this.getMetadata()
+                        .get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])
+                ) {
                     this.layoutName += 'Portal';
                 }
             }
@@ -239,6 +242,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             } else {
                 this.statusFieldIsEditable = false;
             }
+
+            this.getHelper().processSetupHandlers(this, 'record/kanban');
         },
 
         afterRender: function () {

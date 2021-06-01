@@ -6,6 +6,9 @@
     "modalViews": {
         "select": "crm:views/document/modals/select-records"
     },
+    "viewSetupHandlers": {
+        "list": ["crm:view-setup-handlers/document/record-list-drag-n-drop"]
+    },
     "filterList": [
         "active",
         "draft"

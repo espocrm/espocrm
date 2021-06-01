@@ -87,6 +87,8 @@ define('views/detail', 'views/main', function (Dep) {
                     this.handleFollowButton();
                 }, this);
             }
+
+            this.getHelper().processSetupHandlers(this, 'detail');
         },
 
         setupPageTitle: function () {

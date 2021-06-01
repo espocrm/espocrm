@@ -2820,6 +2820,25 @@ a.link-gray {
     display: block;
 }
 
+.dd-backdrop {
+    opacity: .9;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1040;
+    background-color: @body-bg;
+    text-align: center;
+    padding-top: 80px;
+    font-size: 200%;
+
+    .fas,
+    .far {
+        font-size: 100%;
+    }
+}
+
 @import "elements/site.less";
 @import "elements/modal.less";
 @import "elements/buttons.less";
