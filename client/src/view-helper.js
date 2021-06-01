@@ -28,14 +28,14 @@
 
 define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
-    var ViewHelper = function (options) {
+    var ViewHelper = function () {
         this._registerHandlebarsHelpers();
 
         this.mdBeforeList = [
             {
                 regex: /\&\#x60;\&\#x60;\&\#x60;\n?([\s\S]*?)\&\#x60;\&\#x60;\&\#x60;/g,
                 value: function (s, string) {
-                    return '<pre><code>' + string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code></pre>';
+                    return '<pre><code>' +string.replace(/\*/g, '&#42;').replace(/\~/g, '&#126;') + '</code></pre>';
                 }
             },
             {
@@ -48,7 +48,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
         marked.setOptions({
             breaks: true,
-            tables: false
+            tables: false,
         });
 
         DOMPurify.addHook('beforeSanitizeAttributes', function (node) {
@@ -66,7 +66,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (node.targetBlack) {
                     node.setAttribute('target', '_blank');
                     node.setAttribute('rel', 'noopener noreferrer');
-                } else {
+                }
+                else {
                     node.removeAttribute('rel');
                 }
             }
@@ -91,9 +92,11 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
         stripTags: function (text) {
             text = text || '';
+
             if (typeof text === 'string' || text instanceof String) {
                 return text.replace(/<\/?[^>]+(>|$)/g, '');
             }
+
             return text;
         },
 
@@ -112,7 +115,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
             if (cache) {
                 t = cache.get('app', 'timestamp');
-            } else {
+            }
+            else {
                 t = Date.now();
             }
 
@@ -156,6 +160,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (left == right) {
                     return options.fn(this);
                 }
+
                 return options.inverse(this);
             });
 
@@ -163,6 +168,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (left != right) {
                     return options.fn(this);
                 }
+
                 return options.inverse(this);
             });
 
@@ -170,6 +176,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (object[property] == value) {
                     return options.fn(this);
                 }
+
                 return options.inverse(this);
             });
 
@@ -177,6 +184,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (model.get(attr) == value) {
                     return options.fn(this);
                 }
+
                 return options.inverse(this);
             });
 
@@ -199,9 +207,11 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             Handlebars.registerHelper('translate', function (name, options) {
                 var scope = options.hash.scope || null;
                 var category = options.hash.category || null;
+
                 if (name === 'null') {
                     return '';
                 }
+
                 return self.language.translate(name, category, scope);
             });
 
@@ -210,8 +220,16 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 var scope = options.hash.scope || null;
                 var label = options.hash.label || name;
 
-                var html = options.hash.html || options.hash.text || self.language.translate(label, 'labels', scope);
-                return new Handlebars.SafeString('<button class="btn btn-'+style+' action'+ (options.hash.hidden ? ' hidden' : '')+'" data-action="'+name+'" type="button">'+html+'</button>');
+                var html =
+                    options.hash.html ||
+                    options.hash.text ||
+                    self.language.translate(label, 'labels', scope);
+
+                return new Handlebars.SafeString(
+                    '<button class="btn btn-'+style+' action' +
+                    (options.hash.hidden ? ' hidden' : '') + '" data-action="' + name +
+                    '" type="button">'+html+'</button>'
+                );
             });
 
             Handlebars.registerHelper('hyphen', function (string) {
@@ -225,6 +243,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             Handlebars.registerHelper('breaklines', function (text) {
                 text = Handlebars.Utils.escapeExpression(text || '');
                 text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+
                 return new Handlebars.SafeString(text);
             });
 
@@ -235,16 +254,21 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             Handlebars.registerHelper('translateOption', function (name, options) {
                 var scope = options.hash.scope || null;
                 var field = options.hash.field || null;
+
                 if (!field) {
                     return '';
                 }
+
                 var translationHash = options.hash.translatedOptions || null;
+
                 if (translationHash === null) {
                     translationHash = self.language.translate(field, 'options', scope) || {};
+
                     if (typeof translationHash !== 'object') {
                         translationHash = {};
                     }
                 }
+
                 return translationHash[name] || name;
             });
 
@@ -252,10 +276,13 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (typeof value === 'undefined') {
                     value = false;
                 }
+
                 list = list || [];
+
                 var html = '';
 
                 var multiple = (Object.prototype.toString.call(value) === '[object Array]');
+
                 var checkOption = function (name) {
                     if (multiple) {
                         return value.indexOf(name) !== -1;
@@ -271,8 +298,10 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 var field = options.hash.field || false;
 
                 if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
+
                     if (!~list.indexOf(value)) {
                         list = Espo.Utils.clone(list);
+
                         list.push(value);
                     }
                 }
@@ -282,6 +311,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (translationHash === null) {
                     if (!category && field) {
                         translationHash = self.language.translate(field, 'options', scope) || {};
+
                         if (typeof translationHash !== 'object') {
                             translationHash = {};
                         }
@@ -289,6 +319,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                         translationHash = {};
                     }
                 }
+
                 var translate = function (name) {
                     if (!category) {
                         return translationHash[name] || name;
@@ -299,10 +330,14 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 for (var key in list) {
                     var keyVal = list[key];
                     var label = translate(list[key]);
+
                     keyVal = self.escapeString(keyVal);
                     label = self.escapeString(label);
-                    html += "<option value=\"" + keyVal + "\" " + (checkOption(list[key]) ? 'selected' : '') + ">" + label + "</option>"
+
+                    html += "<option value=\"" + keyVal + "\" " +
+                        (checkOption(list[key]) ? 'selected' : '') + ">" + label + "</option>"
                 }
+
                 return new Handlebars.SafeString(html);
             });
 
@@ -328,7 +363,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
             if (options.inline) {
                 text = marked.inlineLexer(text, []);
-            } else {
+            }
+            else {
                 text = marked(text);
             }
 
@@ -338,7 +374,9 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 text = text.replace(/<a href=/gm, '<a target="_blank" rel="noopener noreferrer" href=');
             }
 
-            text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
+            text = text.replace(
+                /<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"'
+            );
 
             return new Handlebars.SafeString(text);
         },
@@ -349,19 +387,25 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             }
 
             var color = this.metadata.get(['clientDefs', scope, 'color']);
+
             var html = '';
 
             if (color) {
                 var $span = $('<span class="color-icon fas fa-square-full">');
+
                 $span.css('color', color);
+
                 if (additionalClassName) {
                     $span.addClass(additionalClassName);
                 }
+
                 html = $span.get(0).outerHTML;
             }
 
             if (!noWhiteSpace) {
-                if (html) html += '&nbsp;';
+                if (html) {
+                    html += '&nbsp;';
+                }
             }
 
             return html;
@@ -388,12 +432,15 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             value = value.replace(/href=" *javascript\:(.*?)"/gi, function(m, $1) {
                 return 'removed=""';
             });
+
             value = value.replace(/href=' *javascript\:(.*?)'/gi, function(m, $1) {
                 return 'removed=""';
             });
+
             value = value.replace(/src=" *javascript\:(.*?)"/gi, function(m, $1) {
                 return 'removed=""';
             });
+
             value = value.replace(/src=' *javascript\:(.*?)'/gi, function(m, $1) {
                 return 'removed=""';
             });
@@ -402,48 +449,62 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
         },
 
         stripEventHandlersInHtml: function (html) {
-            function stripHTML(){
+            function stripHTML() {
                 html = html.slice(0, strip) + html.slice(j);
                 j = strip;
+
                 strip = false;
             }
+
             function isValidTagChar(str) {
                 return str.match(/[a-z?\\\/!]/i);
             }
+
             var strip = false;
             var lastQuote = false;
-            for (var i = 0; i<html.length; i++){
-                if (html[i] === "<" && html[i+1] && isValidTagChar(html[i+1])) {
+
+            for (var i = 0; i < html.length; i++){
+                if (html[i] === "<" && html[i + 1] && isValidTagChar(html[i + 1])) {
                     i++;
+
                     for (var j = i; j<html.length; j++){
                         if (!lastQuote && html[j] === ">"){
                             if (strip) {
                                 stripHTML();
                             }
+
                             i = j;
+
                             break;
                         }
+
                         if (lastQuote === html[j]){
                             lastQuote = false;
+
                             continue;
                         }
-                        if (!lastQuote && html[j-1] === "=" && (html[j] === "'" || html[j] === '"')){
+
+                        if (!lastQuote && html[j - 1] === "=" && (html[j] === "'" || html[j] === '"')){
                             lastQuote = html[j];
                         }
-                        if (!lastQuote && html[j-2] === " " && html[j-1] === "o" && html[j] === "n"){
-                            strip = j-2;
+
+                        if (!lastQuote && html[j - 2] === " " && html[j - 1] === "o" && html[j] === "n"){
+                            strip = j - 2;
                         }
+
                         if (strip && html[j] === " " && !lastQuote){
                             stripHTML();
                         }
                     }
                 }
             }
+
             return html;
         },
 
         calculateContentContainerHeight: function ($el) {
             var smallScreenWidth = this.themeManager.getParam('screenWidthXs');
+
             var $window = $(window);
 
             var footerHeight = $('#footer').height() || 26;
@@ -455,6 +516,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
                 if ($window.width() < smallScreenWidth) {
                     var $navbarCollapse = $('#navbar .navbar-body');
+
                     if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
                         top -= $navbarCollapse.height();
                     }
