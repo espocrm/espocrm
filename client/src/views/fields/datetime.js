@@ -52,6 +52,9 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             if (value) {
                 data.date = value.substr(0, value.indexOf(' '));
                 data.time = value.substr(value.indexOf(' ') + 1);
+                if (data.value.length == 19) {
+                    this.inputSeconds = data.value.match(/:(\d\d)$/)[1];
+                }                
             }
             return data;
         },
@@ -183,6 +186,9 @@ Espo.define('views/fields/datetime', 'views/fields/date', function (Dep) {
             var value = null;
             if (date != '' && time != '') {
                 value = this.parse(date + ' ' + time);
+                if (this.inputSeconds != null) {
+                    value = value.replace(/:\d\d$/, ':'+this.inputSeconds);
+                }                
             }
             data[this.name] = value;
             return data;
