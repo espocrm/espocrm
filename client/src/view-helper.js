@@ -531,14 +531,9 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
         processSetupHandlers: function (view, type, scope) {
             scope = scope || view.scope;
 
-            if (!scope) {
-                console.error("No scope detected for view setup handler processing.");
+            let handlerList = this.metadata.get(['clientDefs', 'Global', 'viewSetupHandlers', type]) || [];
 
-                return;
-            }
-
-            let handlerList =
-                (this.metadata.get(['clientDefs', 'Global', 'viewSetupHandlers', type]) || [])
+            handlerList = handlerList
                 .concat(
                     this.metadata.get(['clientDefs', scope, 'viewSetupHandlers', type]) || []
                 );
