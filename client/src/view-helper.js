@@ -533,10 +533,12 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
             let handlerList = this.metadata.get(['clientDefs', 'Global', 'viewSetupHandlers', type]) || [];
 
-            handlerList = handlerList
-                .concat(
-                    this.metadata.get(['clientDefs', scope, 'viewSetupHandlers', type]) || []
-                );
+            if (scope) {
+                handlerList = handlerList
+                    .concat(
+                        this.metadata.get(['clientDefs', scope, 'viewSetupHandlers', type]) || []
+                    );
+            }
 
             if (handlerList.length === 0) {
                 return;
