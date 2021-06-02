@@ -183,6 +183,11 @@ class DefaultBinding implements BindingProcessor
             'acl'
         );
 
+        $binder->bindService(
+            'Espo\\Core\\ExternalAccount\\ClientManager',
+            'externalAccountClientManager'
+        );
+
         $binder->bindImplementation(
             'Espo\\Core\\WebSocket\\Sender',
             'Espo\\Core\\WebSocket\\ZeroMQSender'
