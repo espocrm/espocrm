@@ -36,11 +36,11 @@ use Espo\Entities\User;
  */
 class Result
 {
-    const STATUS_SUCCESS = 'success';
+    public const STATUS_SUCCESS = 'success';
 
-    const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
+    public const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
 
-    const STATUS_FAIL = 'fail';
+    public const STATUS_FAIL = 'fail';
 
     private $user;
 
