@@ -914,6 +914,18 @@ class EntityManager
             }
         }
 
+        if ($linkForeign === lcfirst($entityForeign)) {
+            throw new Conflict(
+                'Link [' .$entityForeign . '::' . $linkForeign . '] shoud not match entity type name.'
+            );
+        }
+
+        if ($link === lcfirst($entity)) {
+            throw new Conflict(
+                'Link [' .$entity . '::' . $link . '] shoud not match entity type name.'
+            );
+        }
+
         switch ($linkType) {
             case 'oneToOneRight':
             case 'oneToOneLeft':
