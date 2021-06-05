@@ -1,28 +1,38 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "description": "Beschrijving",
+    "entryCount": "Invoer aantal",
+    "campaigns": "Campagnes",
+    "endDate": "Eind datum",
     "targetLists": "Doellijsten",
     "includingActionList": "Inclusief",
     "excludingActionList": "Exclusief",
-    "targetStatus": "Doeldatus",
+    "optedOutCount": "Afgemeld aantal",
+    "targetStatus": "Doel status",
     "isOptedOut": "Is afgemeld"
   },
   "links": {
     "accounts": "Relaties",
     "contacts": "Contacten",
-    "massEmails": "Mass E-mails"
+    "campaigns": "Campagnes",
+    "massEmails": "Verzamel e-mails"
   },
   "options": {
     "type": {
-      "Email": "E-mail"
+      "Email": "E-mail",
+      "Television": "Televisie",
+      "Newsletter": "Nieuwsbrief"
     },
     "targetStatus": {
       "Opted Out": "Afgemeld",
-      "Listed": "opgesomd"
+      "Listed": "Vermeld"
     }
   },
   "labels": {
+    "Create TargetList": "Creëer doellijst",
+    "Opted Out": "Afgemeld",
+    "Cancel Opt-Out": "Annuleer afmelding",
     "Opt-Out": "Afmelden"
   }
 }

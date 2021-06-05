@@ -1,19 +1,20 @@
 {
   "modes": {
+    "month": "Maand",
     "day": "Dag",
     "agendaDay": "Dag",
     "timeline": "Tijdlijn"
   },
   "labels": {
     "Today": "Vandaag",
-    "Create": "Aanmaken",
-    "Shared": "gedeeld",
+    "Create": "Creëer",
+    "Shared": "Gedeeld",
     "Add User": "Voeg gebruiker toe",
-    "current": "actueel",
+    "current": "huidige",
     "time": "tijd",
     "User List": "gebruikers lijst",
     "Manage Users": "Gebruikers beheren",
     "View Calendar": "Bekijk de kalender",
-    "Create Shared View": "Maak gedeelde weergave"
+    "Create Shared View": "Creëer gedeelde weergave"
   }
 }

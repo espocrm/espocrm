@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "parent": "Behorende bij",
     "dateStart": "Start Datum",
     "dateEnd": "Eind Datum",
@@ -16,26 +16,33 @@
   "options": {
     "status": {
       "Planned": "Gepland",
-      "Held": "Vastgehouden",
-      "Not Held": "Niet vastgehouden"
+      "Held": "Gedaan",
+      "Not Held": "Niet gedaan"
     },
     "direction": {
-      "Outbound": "Uitgaande",
-      "Inbound": "Binnenkomende"
+      "Outbound": "Uitgaand",
+      "Inbound": "Inkomend"
     },
     "acceptanceStatus": {
       "None": "Geen",
       "Accepted": "Geaccepteerd",
-      "Declined": "Geweigerd"
+      "Declined": "Geweigerd",
+      "Tentative": "Voorlopig"
     }
   },
+  "massActions": {
+    "setHeld": "Gedaan",
+    "setNotHeld": "Niet gedaan"
+  },
   "labels": {
-    "Create Call": "Tel. Gesprek Aanmaken",
+    "Create Call": "Creëer Gesprek",
+    "Set Held": "Gedaan",
+    "Set Not Held": "Niet gedaan",
     "Send Invitations": "Uitnodiging versturen"
   },
   "presetFilters": {
     "planned": "Gepland",
-    "held": "Vasthouden",
-    "todays": "Huidig"
+    "held": "Gedaan",
+    "todays": "Vandaag"
   }
 }

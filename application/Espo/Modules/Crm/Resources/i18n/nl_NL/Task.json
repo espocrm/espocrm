@@ -1,12 +1,16 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "parent": "Behorende bij",
     "dateStart": "Start Datum",
+    "dateEnd": "Voltooi datum",
+    "dateStartDate": "Startdatum (de hele dag)",
+    "dateEndDate": "Datum einde (hele dag)",
     "priority": "Prioriteit",
     "description": "Beschrijving",
-    "isOverdue": "Te Laat",
+    "isOverdue": "Verstreken",
     "account": "Relatie",
+    "dateCompleted": "Datum voltooid",
     "attachments": "Bijlagen",
     "reminders": "Herinneringen"
   },
@@ -29,13 +33,15 @@
     }
   },
   "labels": {
-    "Create Task": "Taak Aanmaken"
+    "Create Task": "Creëer Taak",
+    "Complete": "Voltooi",
+    "overdue": "Verstreken"
   },
   "presetFilters": {
-    "actual": "Werkelijke",
+    "actual": "Actueel",
     "completed": "Voltooid",
-    "todays": "Huidig",
-    "overdue": "Laat",
+    "todays": "Vandaag",
+    "overdue": "Verstreken",
     "deferred": "Uitgestelde"
   }
 }

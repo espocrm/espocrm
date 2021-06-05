@@ -3,8 +3,8 @@
     "name": "Naam",
     "emailAddress": "E-mail",
     "phoneNumber": "Telefoon",
-    "billingAddress": "Factuur Adres",
-    "shippingAddress": "Verzend Adres",
+    "billingAddress": "Factuuradres",
+    "shippingAddress": "Vestigingsadres",
     "description": "Beschrijving",
     "industry": "Industrie",
     "contactRole": "Titel",
@@ -19,11 +19,14 @@
     "opportunities": "Kansen",
     "cases": "Tickets",
     "documents": "Documenten",
-    "emailsPrimary": "E-mails (expanded)",
+    "meetingsPrimary": "Vergaderingen (uitgebreid)",
+    "callsPrimary": "Gesprekken (expanded)",
+    "tasksPrimary": "Taken (uitgebreid)",
+    "emailsPrimary": "E-mails (uitgebreid)",
     "targetLists": "Doellijsten",
     "campaignLogRecords": "Campagne log",
     "campaign": "Campagne",
-    "portalUsers": "Portaal-gebruikers",
+    "portalUsers": "Portaalgebruikers",
     "originalLead": "Oorspronkelijke lead"
   },
   "options": {
@@ -32,11 +35,32 @@
       "Investor": "Investeerder"
     },
     "industry": {
+      "Agriculture": "Landbouw",
+      "Advertising": "Reclame",
+      "Apparel & Accessories": "Kleding & Accessoires",
       "Banking": "Bankwezen",
+      "Biotechnology": "Biotechnologie",
       "Building Materials & Equipment": "Bouwmaterialen en -apparatuur",
+      "Chemical": "Chemisch",
       "Education": "Onderwijs",
       "Electronics": "Electronica",
+      "Energy": "Energie",
+      "Entertainment & Leisure": "Amusement & Vrije tijd",
+      "Finance": "Financiën",
+      "Food & Beverage": "Eten & Drinken",
+      "Grocery": "Kruidenier",
+      "Healthcare": "Gezondheidszorg",
       "Insurance": "Verzekeringen",
+      "Legal": "Juridisch",
+      "Manufacturing": "Productie",
+      "Publishing": "Uitgeverij",
+      "Real Estate": "Vastgoed",
+      "Sports": "Sport",
+      "Technology": "Technologie",
+      "Telecommunications": "Telecommunicatie",
+      "Television": "Televisie",
+      "Transportation": "Transport",
+      "Venture Capital": "Durfkapitaal",
       "Aerospace": "Ruimtevaart",
       "Architecture": "Architectuur",
       "Construction": "Bouw",
@@ -50,7 +74,7 @@
       "Mining": "Mijnbouw",
       "Music": "Muziek",
       "Retail": "Retailhandel",
-      "Shipping": "Verzenden",
+      "Shipping": "Scheepvaart",
       "Support": "Ondersteuning",
       "Testing, Inspection & Certification": "Testen, inspectie en certificering",
       "Wholesale": "Groothandel",
@@ -58,12 +82,12 @@
     }
   },
   "labels": {
-    "Create Account": "Relatie Aanmaken",
+    "Create Account": "Creëer Relatie",
     "Copy Billing": "Kopie factuur",
     "Set Primary": "Primair instellen"
   },
   "presetFilters": {
     "customers": "Klanten",
-    "recentlyCreated": "Recent gemaakt"
+    "recentlyCreated": "Recent gecreëerd"
   }
 }

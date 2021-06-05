@@ -1,12 +1,12 @@
 {
   "labels": {
     "Converted To": "Geconverteerd naar",
-    "Create Lead": "Lead Aanmaken",
+    "Create Lead": "Creëer Lead",
     "Convert": "Converteren",
     "convert": "converteren"
   },
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "emailAddress": "E-mail",
     "title": "Titel",
     "phoneNumber": "Telefoon",
@@ -14,46 +14,52 @@
     "doNotCall": "Niet Bellen",
     "address": "Adres",
     "source": "Bron",
-    "opportunityAmount": "Bedrag Kansen",
-    "opportunityAmountConverted": "Bedrag Kans (geconverteerd)",
+    "opportunityAmount": "Kans bedrag",
+    "opportunityAmountConverted": "Kans bedrag (geconverteerd)",
     "description": "Beschrijving",
     "createdAccount": "Relatie",
     "createdOpportunity": "Kans",
+    "campaign": "Campagne",
     "targetLists": "Doellijsten",
+    "targetList": "Doellijst",
     "industry": "Industrie",
     "acceptanceStatus": "Acceptatiestatus",
-    "opportunityAmountCurrency": "Opportunity Bedrag Valuta",
+    "opportunityAmountCurrency": "Kans bedrag valuta",
     "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
     "acceptanceStatusCalls": "Acceptatiestatus (oproepen)",
-    "convertedAt": "Omgezet op"
+    "convertedAt": "Geconverteerd op"
   },
   "links": {
     "targetLists": "Doellijsten",
+    "campaignLogRecords": "Campagne log",
+    "campaign": "Campagne",
     "createdAccount": "Relatie",
     "createdOpportunity": "Kans",
     "cases": "Tickets",
-    "documents": "documenten"
+    "documents": "Documenten"
   },
   "options": {
     "status": {
       "New": "Nieuw",
       "Assigned": "Toegewezen",
-      "In Process": "In Behandeling",
+      "In Process": "In behandeling",
       "Converted": "Geconverteerd",
       "Recycled": "Opnieuw verwerkt",
       "Dead": "Vervallen"
     },
     "source": {
-      "Call": "Tel. Gesprek",
+      "": "Geen",
+      "Call": "Gesprek",
       "Email": "E-mail",
-      "Existing Customer": "Bestaande Klant",
-      "Web Site": "Webpagina",
+      "Existing Customer": "Bestaande klant",
+      "Web Site": "Website",
+      "Campaign": "Campagne",
       "Other": "Overig"
     }
   },
   "presetFilters": {
     "active": "Actief",
-    "actual": "Werkelijke",
+    "actual": "Actueel",
     "converted": "Geconverteerd"
   }
 }

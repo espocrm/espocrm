@@ -5,14 +5,14 @@
     "requestTime": "Verzoektijd",
     "createdAt": "Gevraagd om",
     "isDenied": "Is geweigerd",
-    "denialReason": "Ontkenningsreden",
+    "denialReason": "Reden weigering",
     "portal": "Portaal",
     "user": "Gebruiker",
     "authToken": "Auth Token aangemaakt",
     "requestUrl": "Verzoek om URL",
     "requestMethod": "Verzoek methode",
     "authTokenIsActive": "Auth Token is Actief",
-    "authenticationMethod": "Authenticatiemethode"
+    "authenticationMethod": "Authenticatie methode"
   },
   "links": {
     "authToken": "Auth Token aangemaakt",
@@ -21,7 +21,8 @@
     "actionHistoryRecords": "Actiegeschiedenis"
   },
   "presetFilters": {
-    "accepted": "Aanvaard"
+    "denied": "Geweigerd",
+    "accepted": "Geaccepteerd"
   },
   "options": {
     "denialReason": {

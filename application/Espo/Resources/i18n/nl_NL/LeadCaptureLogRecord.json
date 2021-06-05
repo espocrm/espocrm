@@ -1,12 +1,14 @@
 {
   "fields": {
-    "number": "Aantal",
+    "number": "Nummer",
     "data": "Gegevens",
-    "target": "Doelwit",
-    "createdAt": "Ingevoerd om",
-    "isCreated": "Is lead gemaakt"
+    "target": "Doel",
+    "leadCapture": "Leads verwerven",
+    "createdAt": "Ingevoerd op",
+    "isCreated": "Lead gecreëerd"
   },
   "links": {
-    "target": "Doelwit"
+    "leadCapture": "Leads verwerven",
+    "target": "Doel"
   }
 }

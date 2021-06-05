@@ -1,7 +1,7 @@
 {
   "options": {
     "operators": {
-      "equals": "Is gelijk aan",
+      "equals": "Gelijk aan",
       "notEquals": "Niet gelijk aan",
       "greaterThan": "Groter dan",
       "lessThan": "Minder dan",
@@ -9,13 +9,14 @@
       "lessThanOrEquals": "Minder dan of gelijk aan",
       "notIn": "Niet in",
       "inPast": "In het verleden",
+      "inFuture": "Toekomst",
       "isToday": "Is vandaag",
       "isTrue": "Is waar",
       "isFalse": "Is fout",
       "isEmpty": "Is leeg",
       "isNotEmpty": "Is niet leeg",
-      "contains": "bevat",
-      "has": "bevat",
+      "contains": "Bevat",
+      "has": "Bevat",
       "notContains": "Bevat niet",
       "notHas": "Bevat niet"
     }

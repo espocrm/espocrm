@@ -8,16 +8,17 @@
     "isGlobal": "Is globaal",
     "emailFolder": "Map"
   },
-  "tooltips": {
-    "from": "E-mails being sent from the specified address. Leave empty if not needed.",
-    "to": "E-mails being sent to the specified address. Leave empty if not needed.",
-    "name": "Just a name of the filter.",
-    "subject": "Use wildcard *:\n\ntext* - starts with text,\n*text* - contains text,\n*text - ends with text.",
-    "bodyContains": "De inhoud van de e-mail bevat een van de opgegeven woorden of zinnen.",
-    "isGlobal": "Past dit filter toe op alle e-mails die binnenkomen op het systeem."
-  },
   "labels": {
+    "Create EmailFilter": "Creëer e-mail filter",
     "Emails": "E-mails"
+  },
+  "tooltips": {
+    "from": "E-mails worden van het opgegeven adres gestuurd. Leeg laten indien niet nodig. Je kan een wildcard * gebruiken.",
+    "to": "E-mails worden naar het opgegeven adres gestuurd. Leeg laten indien niet nodig. Je kan een wildcard * gebruiken.",
+    "name": "Geef het filter een beschrijvende naam.",
+    "bodyContains": "De inhoud van de e-mail bevat een van de opgegeven woorden of zinnen.",
+    "isGlobal": "Past dit filter toe op alle e-mails die binnenkomen op het systeem.",
+    "subject": "Gebruik een wildcard *: \n\n * `text*` - begint met tekst,\n * `*text*` - bevat tekst,\n * `*text` - eindigt met tekst."
   },
   "options": {
     "action": {

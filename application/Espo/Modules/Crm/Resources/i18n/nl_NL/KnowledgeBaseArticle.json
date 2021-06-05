@@ -1,7 +1,7 @@
 {
   "labels": {
-    "Create KnowledgeBaseArticle": "Artikel maken",
-    "Any": "elk",
+    "Create KnowledgeBaseArticle": "Creëer Artikel",
+    "Any": "Alle",
     "Send in Email": "Stuur een e-mail",
     "Move Up": "Naar boven",
     "Move Down": "Naar beneden",
@@ -12,25 +12,25 @@
     "name": "Naam",
     "status": "status",
     "attachments": "Bijlagen",
-    "publishDate": "Publiceer datum",
-    "expirationDate": "vervaldatum",
+    "publishDate": "Publicatiedatum",
+    "expirationDate": "Vervaldatum",
     "description": "Beschrijving",
     "body": "Inhoud",
     "categories": "Categorieën",
     "language": "Taal",
-    "portals": "portalen"
+    "portals": "Portalen"
   },
   "links": {
     "cases": "Tickets",
     "opportunities": "Kansen",
     "categories": "Categorieën",
-    "portals": "portalen"
+    "portals": "Portalen"
   },
   "options": {
     "status": {
       "In Review": "In beoordeling",
       "Draft": "Concept",
-      "Archived": "gearchiveerd",
+      "Archived": "Gearchiveerd",
       "Published": "Gepubliceerd"
     },
     "type": {

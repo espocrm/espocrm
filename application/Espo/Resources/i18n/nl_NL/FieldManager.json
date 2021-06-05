@@ -1,8 +1,7 @@
 {
   "labels": {
     "Dynamic Logic": "Dynamische logica",
-    "Name": "Naam",
-    "Label": "Etiket"
+    "Name": "Naam"
   },
   "options": {
     "dateTimeDefault": {
@@ -72,12 +71,13 @@
     "after": "De datumwaarde moet na de datumwaarde van het opgegeven veld liggen.",
     "readOnly": "Veldwaarde kan niet door de gebruiker worden opgegeven. Maar kan worden berekend door formule.",
     "maxFileSize": "Indien leeg of 0 dan geen limiet.",
-    "fileAccept": "Welke bestandstypen te accepteren. Het is mogelijk om aangepaste items toe te voegen."
+    "fileAccept": "Welke bestandstypen te accepteren. Het is mogelijk om aangepaste items toe te voegen.",
+    "barcodeLastChar": "Voor EAN-13 type."
   },
   "fieldParts": {
     "address": {
       "street": "Straat",
-      "city": "Stad",
+      "city": "Plaats",
       "state": "Staat",
       "country": "Land",
       "postalCode": "Postcode",
@@ -86,7 +86,8 @@
     "personName": {
       "salutation": "Begroeting",
       "first": "Eerste",
-      "last": "Laatste"
+      "last": "Laatste",
+      "middle": "Tussenvoegsel"
     },
     "currency": {
       "converted": "(Geconverteerd)",
@@ -95,5 +96,33 @@
     "datetimeOptional": {
       "date": "Datum"
     }
+  },
+  "fieldInfo": {
+    "varchar": "Een tekst van één regel.",
+    "enum": "Selectbox, kan slechts één waarde worden geselecteerd.",
+    "text": "Een meerregelige tekst met markdown-ondersteuning.",
+    "date": "Datum zonder tijd",
+    "datetime": "Datum en tijd",
+    "currency": "Een valutawaarde. Een variabel getal met een valuta code.",
+    "int": "Een heel getal.",
+    "float": "Een getal met een decimaal deel.",
+    "bool": "Een selectievakje. Twee mogelijke waarden: waar en onwaar.",
+    "multiEnum": "Een lijst van waarden, meerdere waarden kunnen worden geselecteerd. De lijst is geordend.",
+    "checklist": "Een lijst met checkboxen.",
+    "array": "Een lijst van waarden, vergelijkbaar met Multi-Enum veld.",
+    "address": "Een adres met straat, stad, staat, postcode en land.",
+    "url": "Voor het opslaan van links.",
+    "wysiwyg": "Een tekst met HTML-ondersteuning.",
+    "file": "Voor het uploaden van bestanden.",
+    "image": "Voor het uploaden van beelden.",
+    "attachmentMultiple": "Maakt het mogelijk om meerdere bestanden te uploaden.",
+    "number": "Een automatisch oplopend getal van het type string met een mogelijk voorvoegsel en een specifieke lengte.",
+    "autoincrement": "Een gegenereerd, alleen-lezen, auto-incrementing geheel getal.",
+    "barcode": "Een streepjescode. Kan worden afgedrukt naar PDF.",
+    "email": "Een reeks e-mailadressen met hun parameters: Opted-out, Ongeldig, Primair.",
+    "phone": "Een reeks telefoonnummers met hun parameters: Type, Opted-out, Ongeldig, Primair.",
+    "foreign": "Een veld van een verwante record. Alleen-lezen.",
+    "link": "Een record gerelateerd via Behoort-tot (meer-tot-één of één-op-één) relatie.",
+    "linkParent": "Een record gerelateerd door Behoort-Toe-Ouder relatie. Kan van verschillende soorten entiteiten zijn."
   }
 }

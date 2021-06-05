@@ -1,30 +1,30 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "body": "Inhoud",
     "subject": "Onderwerp",
     "attachments": "Bijlagen",
     "oneOff": "Eenmalig",
-    "category": "Categorie"
+    "category": "Categorie",
+    "insertField": "Positiehouders"
   },
   "labels": {
-    "Create EmailTemplate": "E-mail Template Aanmaken",
-    "Available placeholders": "Beschikbare tijdelijke aanduidingen"
+    "Create EmailTemplate": "Creëer E-mail Template",
+    "Available placeholders": "Beschikbare aanduidingen"
   },
   "tooltips": {
-    "oneOff": "Controleer of u deze sjabloon maar één keer gaat gebruiken. Bijv. voor E-mail"
+    "oneOff": "Controleer of u deze sjabloon maar één keer gaat gebruiken. Bijv. voor verzamel e-mail."
   },
   "presetFilters": {
-    "actual": "huidig"
-  },
-  "messages": {
-    "infoText": "Beschikbare tijdelijke aanduidingen:\n\n{optOutUrl} & # 8211; URL voor een unsubscribe-link;\n\n{optOutLink} & # 8211; een afmeldlink."
+    "actual": "Actueel"
   },
   "placeholderTexts": {
-    "optOutUrl": "URL voor een uitschrijvingslink",
     "optOutLink": "een afmeldlink",
     "today": "Datum van vandaag",
     "now": "Huidige datum en tijd",
     "currentYear": "Huidig jaar"
+  },
+  "messages": {
+    "infoText": "Beschikbare plaatshouders:\n\n{optOutUrl} &#8211; URL voor een afmeldlink;\n\n{optOutLink} &#8211; een afmeldlink."
   }
 }

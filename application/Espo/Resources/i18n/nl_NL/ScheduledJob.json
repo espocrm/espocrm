@@ -1,16 +1,19 @@
 {
   "fields": {
-    "name": "Record Naam",
-    "scheduling": "Scheduling (crontab notatie)"
+    "name": "Naam",
+    "scheduling": "Planning (crontab notatie)"
   },
   "labels": {
-    "Create ScheduledJob": "Geplande Opdracht Aanmaken"
+    "Create ScheduledJob": "Creëer geplande opdracht",
+    "As often as possible": "Biedt de mogelijkheid om lay-outs te hebben die afwijken van de standaard lay-outs."
   },
   "options": {
     "job": {
       "Cleanup": "Opschonen",
-      "CheckInboundEmails": "Controleer Binnenkomende E-mails",
-      "SendEmailReminders": "Stuur Herinnering Email",
+      "CheckInboundEmails": "Controleer groep e-mailaccounts",
+      "CheckEmailAccounts": "Controleer persoonlijke e-mail accounts",
+      "SendEmailReminders": "Stuur herinnering e-mails",
+      "AuthTokenControl": "Auth token control",
       "SendEmailNotifications": "Verzend e-mailmeldingen",
       "CheckNewVersion": "Controleer op nieuwe versie",
       "ProcessWebhookQueue": "Wachtrij proces Webhook"
@@ -27,6 +30,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Defines when and how often job will be run\n\n`*/5 * * * *` - every 5 minutes\n\n`0 */2 * * *` - every 2 hours\n\n`30 1 * * *` - at 01:30 once a day\n\n`0 0 1 * *` - on the first day of the month"
+    "scheduling": "Crontab notatie. Bepaalt de frequentie van de job runs.\n\n`*/5 * * *` - elke 5 minuten\n\n`0 */2 * *` - elke 2 uur\n\n`30 1 * *` - eenmaal per dag om 01:30\n\n`0 0 1 * *` - op de eerste dag van de maand"
   }
 }

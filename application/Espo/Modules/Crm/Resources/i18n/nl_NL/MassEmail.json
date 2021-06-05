@@ -1,40 +1,57 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "storeSentEmails": "Opslaan verzonden E-mails",
     "startAt": "Start Datum",
     "fromAddress": "Van Adres",
-    "fromName": "Van Naam",
+    "fromName": "Van naam",
+    "replyToAddress": "Antwoord Aan adres",
+    "replyToName": "Antwoord Aan naam",
+    "campaign": "Campagne",
     "emailTemplate": "E-mail Template",
+    "inboundEmail": "E-mail Account",
     "targetLists": "Doellijsten",
+    "excludingTargetLists": "Doellijsten uitgesloten",
+    "optOutEntirely": "Volledig afgemeld",
     "smtpAccount": "SMTP-account"
   },
   "links": {
     "targetLists": "Doellijsten",
-    "emailTemplate": "E-mail Template"
+    "excludingTargetLists": "Doellijsten uitgesloten",
+    "queueItems": "Wachtrij items",
+    "campaign": "Campagne",
+    "emailTemplate": "E-mail Template",
+    "inboundEmail": "E-mail Account"
   },
   "options": {
     "status": {
       "Draft": "Concept",
-      "Pending": "In afwachting",
-      "In Process": "In Behandeling",
-      "Complete": "Compleet",
+      "Pending": "In behandeling",
+      "In Process": "In behandeling",
+      "Complete": "Voltooi",
       "Canceled": "Geannuleerd",
       "Failed": "Mislukt"
     }
   },
+  "labels": {
+    "Create MassEmail": "Creëer verzamel e-mail",
+    "Send Test": "Verzend test e-mail",
+    "System SMTP": "Systeem SMTP",
+    "system": "systeem",
+    "group": "groep"
+  },
+  "messages": {
+    "selectAtLeastOneTarget": "Kies ten minste één doel.",
+    "testSent": "Test e-mail(s)zouden verzonden moeten worden"
+  },
   "tooltips": {
+    "optOutEntirely": "E-mailadressen van ontvangers die zich hebben uitgeschreven, zullen worden gemarkeerd als \"afgemeld\" en zij zullen geen verzamel e-mail meer ontvangen.",
     "targetLists": "Doelen die berichten zouden moeten ontvangen.",
     "excludingTargetLists": "Doelen die geen berichten mogen ontvangen.",
     "storeSentEmails": "E-mails worden opgeslagen in CRM."
   },
   "presetFilters": {
-    "actual": "Werkelijk",
-    "complete": "Compleet"
-  },
-  "labels": {
-    "System SMTP": "Systeem SMTP",
-    "system": "systeem",
-    "group": "groep"
+    "actual": "Actueel",
+    "complete": "Voltooi"
   }
 }

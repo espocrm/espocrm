@@ -1,26 +1,30 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "account": "Relatie",
-    "stage": "Stadium",
-    "amount": "Aantal",
-    "probability": "Waarschijnlijkheid, %",
-    "leadSource": "Leadbron",
+    "stage": "Fase",
+    "amount": "Bedrag",
+    "probability": "Scoringskans, %",
+    "leadSource": "Lead bron",
     "doNotCall": "Niet Bellen",
     "closeDate": "Datum gesloten",
     "contacts": "Contacten",
     "description": "Beschrijving",
     "amountConverted": "Bedrag (geconverteerd)",
-    "amountWeightedConverted": "Afgewogen bedrag",
+    "amountWeightedConverted": "Gewogen bedrag",
+    "campaign": "Campagne",
     "originalLead": "Oorspronkelijke lead",
     "amountCurrency": "Bedrag valuta",
     "contactRole": "Contact functie",
-    "lastStage": "Laatste fase"
+    "lastStage": "Laatste fase",
+    "contact": "Contact (Primair)"
   },
   "links": {
     "contacts": "Contacten",
     "documents": "Documenten",
-    "originalLead": "Oorspronkelijke lead"
+    "campaign": "Campagne",
+    "originalLead": "Oorspronkelijke lead",
+    "contact": "Contact (Primair)"
   },
   "options": {
     "stage": {
@@ -29,19 +33,20 @@
       "Needs Analysis": "Analyse behoefte",
       "Value Proposition": "Waarde voorstel",
       "Id. Decision Makers": "Id. Beslissers",
-      "Perception Analysis": "Perceptie Analyse",
+      "Perception Analysis": "Perceptie analyse",
       "Proposal/Price Quote": "Voorstel/Offerte",
       "Negotiation/Review": "Onderhandeling/Beoordeling",
-      "Closed Won": "Gesloten Gewonnen",
-      "Closed Lost": "Gesloten Verloren",
+      "Closed Won": "Gesloten gewonnen",
+      "Closed Lost": "Gesloten verloren",
       "Proposal": "Voorstel",
       "Negotiation": "Onderhandeling"
     }
   },
   "labels": {
-    "Create Opportunity": "Kans aanmaken"
+    "Create Opportunity": "Creëer kans"
   },
   "presetFilters": {
-    "won": "Gewonnen"
+    "won": "Gewonnen",
+    "lost": "Verloren"
   }
 }

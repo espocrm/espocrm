@@ -1,26 +1,34 @@
 {
   "fields": {
+    "width": "Breedte (%)",
+    "notSortable": "Niet sorteerbaar",
+    "align": "Uitlijnen",
     "panelName": "Paneel naam",
     "style": "Stijl",
     "sticked": "Vastgezet",
-    "isLarge": "Grote lettergrootte",
-    "dynamicLogicVisible": "Condities waardoor paneel zichtbaar is"
+    "isLarge": "Groot lettertype",
+    "dynamicLogicVisible": "Condities waardoor paneel zichtbaar is",
+    "hidden": "Verborgen"
   },
   "options": {
+    "align": {
+      "left": "Links",
+      "right": "Rechts"
+    },
     "style": {
       "default": "Standaard",
       "success": "Succesvol",
       "danger": "Gevaar",
-      "info": "info",
       "warning": "Waarschuwing",
-      "primary": "primair"
+      "primary": "Primair"
     }
   },
   "labels": {
     "New panel": "Nieuw paneel",
-    "Layout": "lay-out"
+    "Layout": "Lay-out"
   },
   "tooltips": {
-    "link": "Als deze optie is aangevinkt, wordt een veldwaarde weergegeven als een link naar het detailaanzicht van het gegevensrecord. Meestal wordt het gebruikt voor *Name* velden."
+    "link": "Als deze optie is aangevinkt, wordt een veldwaarde weergegeven als een link naar het detailaanzicht van het gegevensrecord. Meestal wordt het gebruikt voor *Naam* velden.",
+    "hiddenPanel": "Je moet op 'toon meer' klikken om het paneel te zien."
   }
 }

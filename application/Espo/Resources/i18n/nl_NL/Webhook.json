@@ -5,8 +5,8 @@
   "fields": {
     "event": "Actie",
     "isActive": "Is actief",
-    "user": "API-gebruiker",
-    "entityType": "Entiteit Type",
+    "user": "API gebruiker",
+    "entityType": "Type entiteit",
     "field": "Veld",
     "secretKey": "Geheime sleutel"
   },

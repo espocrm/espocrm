@@ -1,6 +1,8 @@
 {
   "fields": {
-    "failedAttempts": "Pogingen Mislukt",
+    "executeTime": "Uitgevoerd op",
+    "attempts": "Pogingen over",
+    "failedAttempts": "Mislukte pogingen",
     "scheduledJob": "Geplande Opdracht",
     "method": "Method",
     "scheduledJobJob": "Naam geplande taak",
@@ -8,15 +10,15 @@
     "startedAt": "Begonnen bij",
     "targetType": "Doeltype",
     "targetId": "Doel-ID",
-    "number": "Aantal",
+    "number": "Nummer",
     "queue": "Wachtrij",
     "job": "Baan"
   },
   "options": {
     "status": {
-      "Pending": "In afwachting",
+      "Pending": "In behandeling",
       "Success": "Succesvol",
-      "Running": "bezig",
+      "Running": "Actief",
       "Failed": "Mislukt"
     }
   }

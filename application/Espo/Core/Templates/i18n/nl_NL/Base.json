@@ -1,5 +1,5 @@
 {
   "labels": {
-    "Create {entityType}": "Klant {entityTypeTranslated}"
+    "Create {entityType}": "Creëer {entityTypeTranslated}"
   }
 }

@@ -1,14 +1,28 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "body": "Inhoud",
+    "entityType": "Type entiteit",
+    "header": "Koptekst",
+    "footer": "Voettekst",
+    "leftMargin": "Linker marge",
+    "rightMargin": "Rechter marge",
+    "bottomMargin": "Bodem marge",
+    "printFooter": "Print voettekst",
+    "footerPosition": "Voettekst positie",
     "variables": "Beschikbare placeholders",
     "pageOrientation": "Paginaoriëntatie",
     "pageFormat": "Papierformaat",
+    "fontFace": "Lettertype",
     "pageWidth": "Paginabreedte (mm)",
-    "pageHeight": "Pagina Hoogte (mm)"
+    "pageHeight": "Pagina Hoogte (mm)",
+    "headerPosition": "Koptekst Positie"
+  },
+  "labels": {
+    "Create Template": "Creëer Sjabloon"
   },
   "tooltips": {
+    "footer": "Gebruik {pageNumber} om het paginanummer af te drukken.",
     "variables": "Kopieer en plak de benodigde aanduiding naar koptekst, hoofdtekst of voettekst."
   },
   "options": {
@@ -18,7 +32,8 @@
     },
     "placeholders": {
       "today": "Vandaag (date)",
-      "now": "Nu (datum-tijd)"
+      "now": "Nu (datum-tijd)",
+      "pagebreak": "Pagina-einde"
     },
     "fontFace": {
       "pdfasymbol": "PDFA-symbool",

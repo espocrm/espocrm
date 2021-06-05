@@ -1,18 +1,20 @@
 {
   "labels": {
-    "Create Document": "Document Aanmaken"
+    "Create Document": "Creëer Document"
   },
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "file": "Bestand",
     "publishDate": "Publicatiedatum",
     "expirationDate": "Vervaldatum",
     "description": "Beschrijving",
-    "accounts": "Relatie"
+    "accounts": "Relaties",
+    "folder": "Map"
   },
   "links": {
-    "accounts": "Relatie",
+    "accounts": "Relaties",
     "opportunities": "Kansen",
+    "folder": "Map",
     "leads": "leads",
     "contacts": "Contacten"
   },
@@ -24,6 +26,7 @@
       "Canceled": "Geannuleerd"
     },
     "type": {
+      "": "Geen",
       "License Agreement": "Licentie Overeenkomst"
     }
   },

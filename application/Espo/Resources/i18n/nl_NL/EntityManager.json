@@ -1,19 +1,26 @@
 {
   "labels": {
+    "Fields": "Velden",
     "Relationships": "Relaties",
     "Schedule": "Planning",
-    "Formula": "Formule"
+    "Formula": "Formule",
+    "Layouts": "Lay-outs"
   },
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
+    "labelSingular": "Label enkelvoud",
+    "labelPlural": "Label meervoud",
+    "entityForeign": "Externe entiteit",
+    "linkForeign": "Externe link",
+    "labelForeign": "Extern label",
     "sortBy": "Standaard sortering (veld)",
     "sortDirection": "Standaard sortering (richting)",
     "relationName": "Middelste tabelnaam",
     "linkMultipleField": "Link meerdere velden",
-    "linkMultipleFieldForeign": "Externe link Meervoudig veld",
+    "linkMultipleFieldForeign": "Externe link meervoudig veld",
     "disabled": "Uitgeschakeld",
     "textFilterFields": "Tekst filter velden",
-    "audited": "gecontroleerde",
+    "audited": "Gecontroleerd",
     "auditedForeign": "Extern gecontroleerd",
     "statusField": "Statusveld",
     "beforeSaveCustomScript": "Voordat u Custom Script opslaat",
@@ -22,16 +29,35 @@
     "kanbanStatusIgnoreList": "Genegeerde groepen in Kanban-weergave",
     "iconClass": "Icoon",
     "fullTextSearch": "Zoek volledige text",
-    "countDisabled": "De recordtelling uitschakelen"
-  },
-  "messages": {
-    "linkConflict": "Naam conflict : link of veld met dezelfde naam bestaat al"
+    "countDisabled": "De recordtelling uitschakelen",
+    "parentEntityTypeList": "Bovenliggende entiteit type",
+    "foreignLinkEntityTypeList": "Externe links"
   },
   "options": {
     "type": {
-      "Event": "Evenement",
+      "": "Geen",
+      "Person": "Persoon",
+      "Event": "Actie",
       "Company": "Bedrijf"
+    },
+    "linkType": {
+      "manyToMany": "Meer-tot-Meer",
+      "oneToMany": "Eén-op-Meer",
+      "manyToOne": "Meer-op-één",
+      "parentToChildren": "Bovenliggend-tot-Onderliggend",
+      "childrenToParent": "Onderliggend-tot-Bovenliggend",
+      "oneToOneRight": "Eén op één rechts",
+      "oneToOneLeft": "Eén op één links"
+    },
+    "sortDirection": {
+      "desc": "Aflopend"
     }
+  },
+  "messages": {
+    "entityCreated": "Entiteit is gecreëerd",
+    "linkAlreadyExists": "Link naam conflict.",
+    "linkConflict": "Naam conflict : link of veld met dezelfde naam bestaat al",
+    "confirmRemove": "Weet u zeker dat u het entiteittype uit het systeem wilt verwijderen?"
   },
   "tooltips": {
     "statusField": "Updates van dit veld zijn gelogd in stream.",
@@ -41,7 +67,7 @@
     "linkAudited": "Het maken van gerelateerde records en het linken met bestaande records worden vastgelegd in Stream.",
     "linkMultipleField": "Link Multiple field biedt een handige manier om relaties te bewerken. Gebruik het niet als u een groot aantal gerelateerde records kunt hebben.",
     "entityType": "Base Plus - heeft panelen Activiteiten, Geschiedenis en Taken.\n\nEvenement - beschikbaar in het paneel Agenda en Activiteiten.",
-    "fullTextSearch": "Herbouwen is vereist.",
+    "fullTextSearch": "Reconstrueren is vereist.",
     "countDisabled": "Het totale aantal wordt niet weergegeven in de lijstweergave. Kan de laadtijd verkorten wanneer de DB-tabel groot is."
   }
 }

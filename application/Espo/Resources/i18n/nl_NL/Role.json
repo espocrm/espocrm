@@ -1,20 +1,22 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "roles": "Functies",
-    "portalPermission": "Portaal toestemming",
-    "groupEmailAccountPermission": "Groep e-mailaccount toestemming",
+    "assignmentPermission": "Toewijzings rechten",
+    "userPermission": "Gebruikers rechten",
+    "portalPermission": "Portaal rechten",
+    "groupEmailAccountPermission": "Groep e-mailaccount rechten",
     "exportPermission": "Exporteer rechten",
-    "dataPrivacyPermission": "Data Privacy Toestemming",
-    "massUpdatePermission": "Toestemming voor massa-update"
+    "dataPrivacyPermission": "Data privacy rechten",
+    "massUpdatePermission": "Rechten voor massale update"
   },
   "links": {
     "users": "Gebruikers",
     "teams": "Groepen"
   },
   "tooltips": {
-    "assignmentPermission": "Allows to restrict an ability for users to assign records to other users.\n\nall - no restriction\n\nteam - can assign to users from own teams\n\nno - can assign only to self",
-    "userPermission": "Allows users to view activities of other users.\n\nall - can view all\n\nteam - can view user's activities from own teams\n\nno - can't view",
+    "assignmentPermission": "Maakt het mogelijk om de mogelijkheid voor gebruikers om records en posts aan andere gebruikers toe te wijzen te beperken.\n\nalle - geen beperking\n\ngroep - kan toewijzen aan gebruikers van eigen groepen\n\nnee - kan alleen aan zichzelf toewijzen",
+    "userPermission": "Hiermee kunnen gebruikers de activiteiten van andere gebruikers bekijken.\n\nalle - kan alle bekijken\n\ngroep - kan activiteiten van gebruikers uit eigen groepen bekijken\n\nnee - kan niet bekijken",
     "portalPermission": "Definieert een toegang tot portaalinformatie, mogelijkheid om berichten naar portaalgebruikers te posten.",
     "groupEmailAccountPermission": "Definieert een toegang tot groeps E-mail accounts, een mogelijkheid om e-mails te verzenden vanuit groep SMTP.",
     "dataPrivacyPermission": "Toestaan ​​om persoonlijke gegevens te bekijken en te wissen.",
@@ -23,7 +25,8 @@
   },
   "labels": {
     "Access": "Toegang",
-    "Create Role": "Functie aanmaken",
+    "Create Role": "Creëer Functie",
+    "Scope Level": "Toepassingsniveau",
     "Field Level": "Veldniveau"
   },
   "options": {
@@ -33,7 +36,8 @@
       "disabled": "uitgeschakeld"
     },
     "levelList": {
-      "all": "allemaal",
+      "all": "alle",
+      "team": "groep",
       "account": "Relatie",
       "own": "eigen",
       "no": "nee",
@@ -45,8 +49,7 @@
     "read": "Lees",
     "edit": "Bewerken",
     "delete": "Verwijder",
-    "stream": "Stroom",
-    "create": "creëren"
+    "create": "Creëer"
   },
   "messages": {
     "changesAfterClearCache": "Alle wijzigingen in een toegangscontrolesysteem worden toegepast nadat de cache is geschoond."

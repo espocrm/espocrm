@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "emailAddress": "E-mail",
     "accountRole": "Titel",
     "account": "Relatie",
@@ -9,31 +9,37 @@
     "accountType": "Relatie Type",
     "doNotCall": "Niet Bellen",
     "address": "Adres",
-    "opportunityRole": "Functie Kansen",
+    "opportunityRole": "Kans functie",
     "description": "Beschrijving",
+    "campaign": "Campagne",
     "targetLists": "Doellijsten",
+    "targetList": "Doellijst",
     "portalUser": "Portaalgebruiker",
     "originalLead": "Oorspronkelijke lead",
     "acceptanceStatus": "Acceptatiestatus",
     "accountIsInactive": "Relatie inactief",
     "acceptanceStatusMeetings": "Acceptatiestatus (vergaderingen)",
     "acceptanceStatusCalls": "Acceptatiestatus (oproepen)",
-    "title": "Primair relatie titel"
+    "title": "Relatie titel",
+    "hasPortalUser": "Heeft portaal toegang"
   },
   "links": {
     "opportunities": "Kansen",
     "cases": "Tickets",
     "targetLists": "Doellijsten",
-    "account": "Relatie (Primary)",
-    "accounts": "Relatie",
-    "casesPrimary": "Tickets (Primary)",
+    "campaignLogRecords": "Campagne log",
+    "campaign": "Campagne",
+    "account": "Relatie (Primair)",
+    "accounts": "Relaties",
+    "casesPrimary": "Tickets (Primair)",
     "portalUser": "Portaalgebruiker",
     "originalLead": "Oorspronkelijke lead",
     "documents": "Documenten",
-    "tasksPrimary": "Taken (uitgebreid)"
+    "tasksPrimary": "Taken (uitgebreid)",
+    "opportunitiesPrimary": "Kansen (Primair)"
   },
   "labels": {
-    "Create Contact": "Contact Aanmaken"
+    "Create Contact": "Creëer Contact"
   },
   "options": {
     "opportunityRole": {
@@ -42,7 +48,7 @@
     }
   },
   "presetFilters": {
-    "portalUsers": "Portaal-gebruikers",
+    "portalUsers": "Portaalgebruikers",
     "notPortalUsers": "Geen portaalgebruikers",
     "accountActive": "Actief"
   }

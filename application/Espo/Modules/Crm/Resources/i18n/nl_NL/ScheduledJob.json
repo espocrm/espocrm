@@ -1,7 +1,8 @@
 {
   "options": {
     "job": {
-      "ControlKnowledgeBaseArticleStatus": "Controle Knowledge Base Artikel Status"
+      "ProcessMassEmail": "Verzend verzamel e-mail",
+      "ControlKnowledgeBaseArticleStatus": "Controle kennisbank artikel status"
     }
   }
 }

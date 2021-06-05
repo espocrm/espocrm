@@ -7,24 +7,28 @@
     "priority": "Prioriteit",
     "description": "Beschrijving",
     "attachments": "Bijlagen",
-    "inboundEmail": "Groeps e-mailaccount"
+    "inboundEmail": "Groep e-mailaccount"
   },
   "links": {
     "account": "Relatie",
+    "contact": "Contact (Primair)",
     "Contacts": "Contacten",
+    "meetings": "Vergaderingen",
+    "calls": "Gesprekken",
+    "tasks": "Taken",
     "emails": "E-mails",
-    "articles": "Kennisbank-artikelen",
+    "articles": "Kennisbank artikelen",
     "attachments": "Bijlagen",
-    "inboundEmail": "Groeps e-mailaccount"
+    "inboundEmail": "Groep e-mailaccount"
   },
   "options": {
     "status": {
       "New": "Nieuw",
       "Assigned": "Toegewezen",
-      "Pending": "In afwachting",
+      "Pending": "In behandeling",
       "Closed": "Gesloten",
       "Rejected": "Afgewezen",
-      "Duplicate": "Dubbel"
+      "Duplicate": "Dupliceer"
     },
     "priority": {
       "Low": "Laag",
@@ -37,6 +41,7 @@
     }
   },
   "labels": {
+    "Create Case": "Creëer Ticket",
     "Close": "Afsluiten",
     "Reject": "Afwijzen",
     "Closed": "Gesloten",

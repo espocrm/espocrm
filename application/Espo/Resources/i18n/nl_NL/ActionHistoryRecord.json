@@ -3,8 +3,8 @@
     "user": "Gebruiker",
     "action": "Actie",
     "createdAt": "Datum",
-    "target": "Doelwit",
-    "targetType": "Doelwit Type",
+    "target": "Doel",
+    "targetType": "Doel type",
     "authToken": "Auth Sleutel",
     "ipAddress": "IP adres",
     "userType": "Type gebruiker"
@@ -12,16 +12,16 @@
   "links": {
     "authToken": "Auth Sleutel",
     "user": "Gebruiker",
-    "target": "Doelwit"
+    "target": "Doel"
   },
   "presetFilters": {
     "onlyMy": "Alleen mijn"
   },
   "options": {
     "action": {
-      "read": "Lezen",
+      "read": "Lees",
       "delete": "Verwijder",
-      "create": "Creëren"
+      "create": "Creëer"
     }
   }
 }

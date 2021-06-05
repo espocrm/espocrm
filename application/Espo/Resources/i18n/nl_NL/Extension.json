@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "version": "Versie",
     "description": "Beschrijving",
     "isInstalled": "Geinstalleerd",

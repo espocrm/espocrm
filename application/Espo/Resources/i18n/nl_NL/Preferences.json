@@ -15,22 +15,27 @@
     "emailAddress": "E-mail",
     "smtpPassword": "Wachtwoord",
     "smtpEmailAddress": "E-mailadres",
-    "exportDelimiter": "Scheidingsteken Export",
-    "useCustomTabList": "Eigen Tab List",
-    "receiveAssignmentEmailNotifications": "Ontvang bevestiging toewijzingen per email.",
+    "exportDelimiter": "Scheidingsteken export",
+    "signature": "E-mail handtekening",
+    "dashboardTabList": "Tabbladen lijst",
+    "tabList": "Tabbladen lijst",
+    "defaultReminders": "Standaard herineringen",
+    "theme": "Thema",
+    "useCustomTabList": "Eigen tabbladen lijst",
+    "receiveAssignmentEmailNotifications": "Ontvang bevestiging toewijzingen per e-mail.",
     "receiveMentionEmailNotifications": "E-mailmeldingen over vermeldingen in berichten",
     "receiveStreamEmailNotifications": "E-mailberichten over berichten en statusupdates over berichten en statusupdates",
-    "dashboardLayout": "Dashboard indeling",
+    "dashboardLayout": "Dashboard lay-out",
     "emailReplyForceHtml": "E-mailantwoord in HTML",
     "autoFollowEntityTypeList": "Auto-Follow",
     "emailReplyToAllByDefault": "Standaard e-mail beantwoorden",
     "doNotFillAssignedUserIfNotRequired": "Vul de toegewezen gebruiker niet vooraf in bij het maken van een record",
     "followEntityOnStreamPost": "Record automatisch volgen na plaatsing in Stream",
-    "followCreatedEntities": "Automatisch gemaakte records volgen",
-    "followCreatedEntityTypeList": "Automatisch gemaakte records van specifieke entiteitstypen volgen",
+    "followCreatedEntities": "Aangemaakte records automatisch volgen",
+    "followCreatedEntityTypeList": "Aangemaakte records van specifieke entiteitstypen automatisch volgen",
     "emailUseExternalClient": "Gebruik een externe e-mailclient",
     "scopeColorsDisabled": "Schakel bereikkleuren uit",
-    "tabColorsDisabled": "Tabtabellen uitschakelen",
+    "tabColorsDisabled": "Tabbladkleuren uitschakelen",
     "assignmentNotificationsIgnoreEntityTypeList": "Kennisgevingen van toewijzing in de applicatie",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Kennisgevingen van e-mailtoewijzingen"
   },
@@ -43,14 +48,14 @@
   "labels": {
     "Notifications": "Meldingen",
     "User Interface": "Gebruikers Interface",
-    "Misc": "Versch.",
+    "Misc": "Overig",
     "Locale": "Lokaal",
     "Reset Dashboard to Default": "Dashboard instellen op standaard"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "User will automatically follow all new records of the selected entity types, will see information in the stream and receive notifications.",
+    "autoFollowEntityTypeList": "De gebruiker zal automatisch alle nieuwe records van de geselecteerde entiteittypes volgen, zal informatie in de stream zien en zal meldingen ontvangen.",
     "doNotFillAssignedUserIfNotRequired": "Bij het aanmaken van een record toegewezen gebruiker zal de gebruiker niet worden ingevuld met een eigen gebruikersnaam, tenzij het veld verplicht is.",
     "followCreatedEntities": "Bij het aanmaken van nieuwe records worden deze automatisch gevolgd, zelfs als ze aan een andere gebruiker worden toegewezen.",
-    "followCreatedEntityTypeList": "Wanneer u nieuwe records van geselecteerde entiteittypes aanmaakt, worden deze automatisch gevolgd, zelfs als ze aan een andere gebruiker worden toegewezen."
+    "followCreatedEntityTypeList": "Wanneer nieuwe records van geselecteerde entiteittypes worden aanmaakt, worden deze automatisch gevolgd zelfs als ze aan een andere gebruiker worden toegewezen."
   }
 }

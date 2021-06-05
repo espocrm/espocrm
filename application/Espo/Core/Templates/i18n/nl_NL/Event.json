@@ -1,6 +1,6 @@
 {
   "fields": {
-    "parent": "Bovenliggend",
+    "parent": "Behorende bij",
     "dateStart": "Start datum",
     "dateEnd": "Eind datum",
     "duration": "Duur",
@@ -11,17 +11,17 @@
     "isAllDay": "Is de hele dag"
   },
   "links": {
-    "parent": "Bovenliggend"
+    "parent": "Behorende bij"
   },
   "options": {
     "status": {
       "Planned": "Gepland",
-      "Held": "Vastgehouden",
-      "Not Held": "Niet gehouden"
+      "Held": "Gedaan",
+      "Not Held": "Niet gedaan"
     }
   },
   "labels": {
-    "Create {entityType}": "Klant {entityTypeTranslated}",
+    "Create {entityType}": "Creëer {entityTypeTranslated}",
     "Schedule {entityType}": "Schema {entityTypeTranslated}",
     "Set Held": "Gedaan",
     "Set Not Held": "Niet gedaan"

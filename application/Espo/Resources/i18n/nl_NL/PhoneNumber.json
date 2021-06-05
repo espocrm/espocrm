@@ -1,1 +1,10 @@
-{}
+{
+  "fields": {
+    "type": "Soort",
+    "optOut": "Afgemeld",
+    "invalid": "Ongeldig"
+  },
+  "presetFilters": {
+    "orphan": "Wees"
+  }
+}

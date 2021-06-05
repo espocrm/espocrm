@@ -1,9 +1,9 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "parent": "Behorende bij",
-    "dateStart": "Start Datum",
-    "dateEnd": "Eind Datum",
+    "dateStart": "Start datum",
+    "dateEnd": "Eind datum",
     "duration": "Duur",
     "description": "Beschrijving",
     "users": "Gebruikers",
@@ -19,26 +19,33 @@
   "options": {
     "status": {
       "Planned": "Gepland",
-      "Held": "Vastgehouden",
-      "Not Held": "Niet vastgehouden"
+      "Held": "Gedaan",
+      "Not Held": "Niet gedaan"
     },
     "acceptanceStatus": {
       "None": "Geen",
       "Accepted": "Geaccepteerd",
-      "Declined": "Geweigerd"
+      "Declined": "Geweigerd",
+      "Tentative": "Voorlopig"
     }
   },
+  "massActions": {
+    "setHeld": "Gedaan",
+    "setNotHeld": "Niet gedaan"
+  },
   "labels": {
-    "Create Meeting": "Plan Vergadering",
+    "Create Meeting": "Creëer vergadering",
+    "Set Held": "Gedaan",
+    "Set Not Held": "Niet gedaan",
     "Send Invitations": "Uitnodiging versturen",
     "on time": "op tijd",
-    "before": "voordat",
+    "before": "voor",
     "All-Day": "Hele dag"
   },
   "presetFilters": {
     "planned": "Gepland",
-    "held": "Vasthouden",
-    "todays": "Huidig"
+    "held": "Gedaan",
+    "todays": "Vandaag"
   },
   "messages": {
     "nothingHasBeenSent": "Er is niets verzonden",

@@ -2,24 +2,37 @@
   "fields": {
     "action": "Actie",
     "actionDate": "Datum",
+    "campaign": "Campagne",
+    "parent": "Doel",
+    "application": "Applicatie",
+    "queueItem": "Wachtrij item",
     "stringData": "Stringgegevens",
     "stringAdditionalData": "String extra gegevens"
   },
   "links": {
-    "queueItem": "Wachtrij-item",
-    "parent": "Ouder",
-    "object": "Voorwerp",
+    "queueItem": "Wachtrij item",
+    "parent": "Behorende bij",
     "campaign": "Campagne"
   },
   "options": {
     "action": {
-      "Sent": "Verstuur"
+      "Sent": "Verzonden",
+      "Opened": "Geopend",
+      "Opted Out": "Afgemeld",
+      "Clicked": "Geklikt",
+      "Lead Created": "Lead gecreëerd",
+      "Opted In": "Aangemeld"
     }
   },
   "labels": {
-    "All": "Alles"
+    "All": "Alle"
   },
   "presetFilters": {
-    "sent": "Verstuur"
+    "sent": "Verzonden",
+    "opened": "Geopend",
+    "optedOut": "Afgemeld",
+    "clicked": "Geklikt",
+    "leadCreated": "Lead gecreëerd",
+    "optedIn": "Aangemeld"
   }
 }

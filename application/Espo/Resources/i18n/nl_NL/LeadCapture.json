@@ -6,26 +6,27 @@
     "subscribeToTargetList": "Abonneer je op de doellijst",
     "subscribeContactToTargetList": "Abonneren Contactpersoon als die bestaat",
     "targetList": "Doellijst",
-    "fieldList": "Payload-velden",
+    "fieldList": "Payload velden",
+    "optInConfirmation": "Dubbele Opt-In",
     "optInConfirmationEmailTemplate": "Opt-in bevestiging e-mailsjabloon",
     "optInConfirmationLifetime": "Opt-in bevestiging levensduur (uren)",
     "optInConfirmationSuccessMessage": "Tekst die moet worden weergegeven na bevestiging van de opt-in",
+    "leadSource": "Lead bron",
     "apiKey": "API sleutel",
-    "targetTeam": "Target team",
+    "targetTeam": "Doel groep",
     "exampleRequestMethod": "Methode",
-    "exampleRequestPayload": "payload",
-    "createLeadBeforeOptInConfirmation": "Lead aanmaken voor bevestiging",
+    "createLeadBeforeOptInConfirmation": "Creëer Lead voor bevestiging",
     "duplicateCheck": "Dubbele controle",
     "skipOptInConfirmationIfSubscribed": "Bevestiging overslaan als het lood al in de doellijst is opgenomen",
     "smtpAccount": "SMTP-account",
-    "inboundEmail": "Groeps e-mailaccount"
+    "inboundEmail": "Groep e-mailaccount"
   },
   "links": {
     "targetList": "Doellijst",
     "campaign": "Campagne",
     "optInConfirmationEmailTemplate": "Opt-in bevestiging e-mailsjabloon",
-    "targetTeam": "Target team",
-    "inboundEmail": "Groeps e-mailaccount"
+    "targetTeam": "Doel groep",
+    "inboundEmail": "Groep e-mailaccount"
   },
   "labels": {
     "Create LeadCapture": "Creëer toegangspunt",
@@ -34,7 +35,7 @@
     "Confirm Opt-In": "Opt-in bevestigen"
   },
   "messages": {
-    "generateApiKey": "Maak een nieuwe API-sleutel",
+    "generateApiKey": "Creëer nieuwe API-sleutel",
     "optInConfirmationExpired": "Opt-in bevestigingslink is verlopen.",
     "optInIsConfirmed": "Opt-in is bevestigd."
   },

@@ -1,1 +1,23 @@
-{}
+{
+  "fields": {
+    "campaign": "Campagne",
+    "action": "Actie",
+    "message": "Bericht"
+  },
+  "links": {
+    "campaign": "Campagne"
+  },
+  "labels": {
+    "Create CampaignTrackingUrl": "Creëer Tracking URL"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Omleiding",
+      "Show Message": "Bericht tonen"
+    }
+  },
+  "tooltips": {
+    "url": "De ontvanger wordt na het volgen van de link doorgestuurd naar deze locatie.",
+    "message": "Het bericht wordt aan de ontvanger getoond nadat deze de link heeft gevolgd. Markdown wordt ondersteund."
+  }
+}

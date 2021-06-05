@@ -1,24 +1,35 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "description": "Beschrijving",
+    "startDate": "Start datum",
+    "endDate": "Eind datum",
     "targetLists": "Doellijsten",
-    "sentCount": "Verstuur",
-    "revenueConverted": "revenue (converted)",
-    "budgetConverted": "Budget (omgezet)",
+    "excludingTargetLists": "Doellijsten uitgesloten",
+    "sentCount": "Verzonden",
+    "openedCount": "Geopend",
+    "clickedCount": "Geklikt",
+    "optedOutCount": "Afgemeld",
+    "hardBouncedCount": "Harde bounce",
+    "leadCreatedCount": "Lead gecreëerd",
+    "revenue": "Omzet",
+    "revenueConverted": "Omzet (geconverteerd)",
+    "budgetConverted": "Budget (geconverteerd)",
     "contactsTemplate": "Contacten-sjabloon",
     "leadsTemplate": "Leads sjabloon",
     "accountsTemplate": "Relaties-sjabloon",
     "usersTemplate": "Gebruikers Sjabloon",
     "mailMergeOnlyWithAddress": "Records overslaan zonder ingevuld adres",
+    "optedInCount": "Aangemeld",
     "budgetCurrency": "Budgetvaluta"
   },
   "links": {
     "targetLists": "Doellijsten",
+    "excludingTargetLists": "Doellijsten uitgesloten",
     "accounts": "Relaties",
     "contacts": "Contacten",
     "opportunities": "Kansen",
-    "massEmails": "Mass E-mails",
+    "massEmails": "Verzamel e-mails",
     "contactsTemplate": "Contacten-sjabloon",
     "leadsTemplate": "Leads sjabloon",
     "accountsTemplate": "Relaties-sjabloon",
@@ -26,32 +37,38 @@
   },
   "options": {
     "type": {
-      "Email": "E-mail"
+      "Email": "E-mail",
+      "Television": "Televisie",
+      "Newsletter": "Nieuwsbrief",
+      "Mail": "Post"
     },
     "status": {
       "Active": "Actief",
       "Inactive": "Inactief",
-      "Complete": "Compleet"
+      "Complete": "Voltooi"
     }
   },
   "labels": {
+    "Create Campaign": "Creëer campagne",
     "Target Lists": "Doellijsten",
-    "Mass Emails": "Massale E-mails",
-    "Email Templates": "E-mailsjablonen",
+    "Unsubscribe": "Uitschrijven",
+    "Mass Emails": "Verzamel e-mails",
+    "Email Templates": "E-mail sjablonen",
     "Unsubscribe again": "Weer uitschrijven",
     "Subscribe again": "Abonneer opnieuw",
-    "Create Target List": "Maak een doellijst",
+    "Create Target List": "Creëer doellijst",
     "Mail Merge": "Mailmerge",
     "Generate Mail Merge PDF": "Genereer Mail Merge PDF"
   },
   "presetFilters": {
     "active": "Actief"
   },
+  "messages": {
+    "unsubscribed": "U bent uitgeschreven van onze mailinglijst.",
+    "subscribedAgain": "U bent opnieuw ingeschreven."
+  },
   "tooltips": {
     "targetLists": "Doelen die berichten zouden moeten ontvangen.",
     "excludingTargetLists": "Doelen die geen berichten mogen ontvangen."
-  },
-  "messages": {
-    "subscribedAgain": "U bent opnieuw ingeschreven."
   }
 }

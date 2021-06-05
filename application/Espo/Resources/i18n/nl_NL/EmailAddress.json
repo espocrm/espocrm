@@ -1,6 +1,14 @@
 {
   "labels": {
     "Primary": "Primair",
-    "Invalid": "Onjuist"
+    "Opted Out": "Afgemeld",
+    "Invalid": "Ongeldig"
+  },
+  "fields": {
+    "optOut": "Afgemeld",
+    "invalid": "Ongeldig"
+  },
+  "presetFilters": {
+    "orphan": "Wees"
   }
 }

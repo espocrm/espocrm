@@ -8,7 +8,7 @@
     "file": "Bestand",
     "field": "Veld",
     "sourceId": "Bron ID",
-    "storage": "opslagruimte",
+    "storage": "Opslagruimte",
     "size": "Grootte (bytes)"
   },
   "options": {
@@ -16,7 +16,7 @@
       "Attachment": "Bijlage",
       "Inline Attachment": "Inline bijlage",
       "Import File": "Importeer bestand",
-      "Export File": "Bestand exporteren",
+      "Export File": "Export bestand",
       "Mail Merge": "Mailmerge"
     }
   },

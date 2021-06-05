@@ -4,8 +4,8 @@
     "append": "Toevoegen (verwijder de tabbladen van de gebruiker niet)"
   },
   "labels": {
-    "Create DashboardTemplate": "Sjabloon maken",
+    "Create DashboardTemplate": "Creëer Sjabloon",
     "Deploy to Users": "Implementeer bij gebruikers",
-    "Deploy to Team": "Implementeer bij Team"
+    "Deploy to Team": "Implementeer bij groep"
   }
 }

@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "Record Naam",
+    "name": "Naam",
     "userName": "Gebruikersnaam",
     "title": "Titel",
     "isAdmin": "Is beheerder",
@@ -12,17 +12,18 @@
     "portalRoles": "Portaal functies",
     "teamRole": "Positie",
     "password": "Wachtwoord",
-    "passwordConfirm": "Bevestig Wachtwoord",
-    "newPassword": "Nieuw Wachtwoord",
-    "newPasswordConfirm": "Nieuwe Wachtwoord Bevestigen",
+    "currentPassword": "Huidig wachtwoord",
+    "passwordConfirm": "Bevestig wachtwoord",
+    "newPassword": "Nieuw wachtwoord",
+    "newPasswordConfirm": "Bevestig nieuw wachtwoord",
     "isActive": "Is actief",
-    "isPortalUser": "Is Portaal-gebruiker",
+    "isPortalUser": "Is portaalgebruiker",
     "accounts": "Relaties",
-    "account": "Relatie (primair)",
+    "account": "Relatie (Primair)",
     "sendAccessInfo": "Verzend e-mail met inlog informatie naar gebruiker",
     "portal": "Portaal",
     "gender": "Geslacht",
-    "position": "Positie in Team",
+    "position": "Positie in groep",
     "ipAddress": "IP adres",
     "passwordPreview": "Wachtwoord voorbeeld",
     "isSuperAdmin": "Is Superbeheerder",
@@ -32,7 +33,7 @@
     "authMethod": "Authenticatie methode",
     "yourPassword": "Je huidige wachtwoord",
     "dashboardTemplate": "Dashboard sjabloon",
-    "auth2FAEnable": "2-Factor Authenticatie inschakelen",
+    "auth2FAEnable": "2-Factor authenticatie inschakelen",
     "auth2FAMethod": "2FA-methode",
     "auth2FATotpSecret": "2FA TOTP-geheim"
   },
@@ -43,24 +44,26 @@
     "portals": "portalen",
     "portalRoles": "Portaal functies",
     "accounts": "Relaties",
-    "account": "Relatie (primair)",
+    "account": "Relatie (Primair)",
     "tasks": "Taken",
-    "defaultTeam": "Standaard Team",
-    "dashboardTemplate": "Dashboard sjabloon"
+    "defaultTeam": "Standaard groep",
+    "dashboardTemplate": "Dashboard sjabloon",
+    "userData": "Gebruikers gegevens"
   },
   "labels": {
-    "Create User": "Gebruiker Aanmaken",
+    "Create User": "Creëer Gebruiker",
     "Generate": "Genereer",
     "Access": "Toegang",
     "Preferences": "Voorkeuren",
     "Change Password": "Wachtwoord wijzigen",
     "Teams and Access Control": "Groeps toegang beheer",
     "Forgot Password?": "Wachtwoord vergeten?",
-    "Password Change Request": "Verzoek voor aanpassen Wachtwoord",
+    "Password Change Request": "Verzoek voor wijzigen wachtwoord",
     "Email Address": "E-mailadres",
     "External Accounts": "Externe Accounts",
+    "Email Accounts": "E-mail Accounts",
     "Portal": "Portaal",
-    "Create Portal User": "Maak een portaalgebruiker",
+    "Create Portal User": "Creëer portaalgebruiker",
     "Proceed w/o Contact": "Ga verder zonder contact",
     "Generate New API Key": "Genereer nieuwe API sleutel",
     "Generate New Password": "Genereer een nieuw wachtwoord",
@@ -70,24 +73,25 @@
     "Secret": "Geheim"
   },
   "tooltips": {
-    "defaultTeam": "Alle records aangemaakt door gebruiker worden standaard aan de groep gekoppeld.",
+    "defaultTeam": "Alle door gebruiker gecreëerde records worden standaard aan de groep gekoppeld.",
     "userName": "Letters a-z, cijfers 0-9 en underscores zijn toegestaan.",
-    "isAdmin": "Gebruiker admin heeft overal toegang",
+    "isAdmin": "Gebruiker beheerder heeft overal toegang",
+    "isActive": "Indien niet aangevinkt, zal de gebruiker niet kunnen inloggen.",
     "teams": "Tot welke groep deze gebruiker behoord. Toegang beheer is afhankelijk van groep regels.",
     "roles": "Aanvullende toegangs regels. Gebruik dit als een gebruiker tot geen enkele groep behoord of als er meer rechten gegeven moeten worden.",
     "portalRoles": "Extra portaal functies. Gebruik het om het toegangscontrole niveau exclusief voor deze gebruiker uit te breiden.",
     "portals": "Portaals waartoe deze gebruiker toegang heeft."
   },
   "messages": {
-    "passwordWillBeSent": "Wachtwoord wordt naar het emailadres van de gebruiker verzonden.",
+    "passwordWillBeSent": "Wachtwoord wordt naar het e-mailadres van de gebruiker verzonden.",
     "passwordChanged": "Het wachtwoord is gewijzigd",
     "userCantBeEmpty": "Gebruikersnaam kan niet leeg zijn",
     "wrongUsernamePasword": "Onjuiste gebruikersnaam/wachtwoord",
-    "emailAddressCantBeEmpty": "E-mail adres kan niet leeg zijn",
+    "emailAddressCantBeEmpty": "E-mailadres mag niet leeg zijn",
     "userNameEmailAddressNotFound": "Gebruikersnaam/E-mail adres niet gevonden",
     "forbidden": "Toegang niet juist, probeer later",
-    "uniqueLinkHasBeenSent": "Een unieke link is naar het gespecificeerde email adres gezonden.",
-    "passwordChangedByRequest": "Het wachtwoord is aangepast",
+    "uniqueLinkHasBeenSent": "Een unieke URL is naar het gespecificeerde e-mail adres verzonden.",
+    "passwordChangedByRequest": "Het wachtwoord is gewijzigd.",
     "userNameExists": "Gebruikersnaam bestaat al",
     "setupSmtpBefore": "Je moet [SMTP-instellingen]({url}) instellen om het systeem in staat te stellen een wachtwoord in e-mail te verzenden.",
     "passwordStrengthLength": "Moet minstens {length} tekens lang zijn.",
@@ -98,8 +102,15 @@
     "codeIsRequired": "Code is vereist",
     "enterTotpCode": "Voer een code van uw authenticatie-app in.",
     "verifyTotpCode": "Scan de QR-code met uw mobiele authenticator app. Als je problemen hebt met scannen, kun je het geheim handmatig invoeren. Daarna ziet u een 6-cijferige code in uw applicatie. Voer deze code in het onderstaande veld in.",
-    "generateAndSendNewPassword": "Een nieuw wachtwoord zal worden gegenereerd en naar het e-mailadres van de gebruiker worden gestuurd.",
-    "security2FaResetConfimation": "Weet u zeker dat u de huidige 2FA-instellingen wilt resetten?"
+    "generateAndSendNewPassword": "Een nieuw wachtwoord zal worden gegenereerd en naar het e-mailadres van de gebruiker worden verzonden.",
+    "security2FaResetConfimation": "Weet u zeker dat u de huidige 2FA-instellingen wilt resetten?",
+    "ldapUserInEspoNotFound": "De gebruiker is niet gevonden in EspoCRM. Neem contact op met uw beheerder om de gebruiker aan te maken.",
+    "passwordRecoverySentIfMatched": "Aangenomen dat de ingevoerde gegevens overeenkomen met een gebruikersaccount.",
+    "auth2FARequiredHeader": "2 factor authenticatie vereist",
+    "auth2FARequired": "Je moet 2 factor authenticatie instellen. Gebruik een authenticatie applicatie op uw mobiele telefoon (bijv. Google Authenticator)."
+  },
+  "boolFilters": {
+    "onlyMyTeam": "Alleen mijn groep"
   },
   "presetFilters": {
     "active": "Actief",
@@ -115,9 +126,10 @@
     },
     "type": {
       "regular": "Regelmatig",
+      "admin": "Beheerder",
       "portal": "Portaal",
-      "system": "systeem",
-      "super-admin": "Super admin"
+      "system": "Systeem",
+      "super-admin": "Superbeheerder"
     },
     "authMethod": {
       "ApiKey": "API sleutel"
