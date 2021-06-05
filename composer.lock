@@ -3170,24 +3170,25 @@
         },
         {
             "name": "slim/psr7",
-            "version": "1.2.0",
+            "version": "1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim-Psr7.git",
-                "reference": "832912cb3c2a807d472ef0ac392552e85703a667"
+                "reference": "0dca983ca32a26f4a91fb11173b7b9eaee29e9d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim-Psr7/zipball/832912cb3c2a807d472ef0ac392552e85703a667",
-                "reference": "832912cb3c2a807d472ef0ac392552e85703a667",
+                "url": "https://api.github.com/repos/slimphp/Slim-Psr7/zipball/0dca983ca32a26f4a91fb11173b7b9eaee29e9d6",
+                "reference": "0dca983ca32a26f4a91fb11173b7b9eaee29e9d6",
                 "shasum": ""
             },
             "require": {
-                "fig/http-message-util": "^1.1.4",
-                "php": "^7.2",
+                "fig/http-message-util": "^1.1.5",
+                "php": "^7.2 || ^8.0",
                 "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0",
-                "ralouphie/getallheaders": "^3"
+                "ralouphie/getallheaders": "^3",
+                "symfony/polyfill-php80": "^1.22"
             },
             "provide": {
                 "psr/http-factory-implementation": "1.0",
@@ -3196,11 +3197,12 @@
             "require-dev": {
                 "adriansuter/php-autoload-override": "^1.2",
                 "ext-json": "*",
-                "http-interop/http-factory-tests": "^0.6.0",
+                "http-interop/http-factory-tests": "^0.9.0",
                 "php-http/psr7-integration-tests": "dev-master",
                 "phpstan/phpstan": "^0.12",
-                "phpunit/phpunit": "^8.5",
-                "squizlabs/php_codesniffer": "^3.5"
+                "phpunit/phpunit": "^8.5 || ^9.5",
+                "squizlabs/php_codesniffer": "^3.6",
+                "weirdan/prophecy-shim": "^1.0 || ^2.0.2"
             },
             "type": "library",
             "autoload": {
@@ -3241,7 +3243,11 @@
                 "psr-7",
                 "psr7"
             ],
-            "time": "2020-08-18T22:49:11+00:00"
+            "support": {
+                "issues": "https://github.com/slimphp/Slim-Psr7/issues",
+                "source": "https://github.com/slimphp/Slim-Psr7/tree/1.4"
+            },
+            "time": "2021-05-08T18:22:56+00:00"
         },
         {
             "name": "slim/slim",
