@@ -26,14 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', function (Dep) {
+define('views/admin/dynamic-logic/conditions-string/group-base', 'view', function (Dep) {
 
     return Dep.extend({
 
         template: 'admin/dynamic-logic/conditions-string/group-base',
 
         data: function () {
-            var isEmpty = false;
             if (!this.conditionList.length) {
                 return {
                     isEmpty: true
@@ -60,15 +59,21 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', fu
             var conditionList = this.conditionList = this.itemData.value || [];
 
             this.viewDataList = [];
+
             conditionList.forEach(function (item, i) {
                 var key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
 
                 this.createItemView(i, key, item);
                 this.viewDataList.push({
                     key: key,
-                    isEnd: i === conditionList.length - 1
+                    isEnd: i === conditionList.length - 1,
                 });
             }, this);
+        },
+
+        getFieldType: function (item) {
+            return this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', item.attribute, 'type']) || 'base';
         },
 
         createItemView: function (number, key, item) {
@@ -80,11 +85,37 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', fu
 
             var type = additionalData.type || item.type || 'equals';
 
-            var viewName = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'view']);
-            if (!viewName) return;
+            var fieldType = this.getFieldType(item);
 
-            var operator = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operator']);
-            var operatorString = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operatorString']);
+            var viewName = this.getMetadata()
+                .get([
+                    'clientDefs',
+                    'DynamicLogic',
+                    'fieldTypes',
+                    fieldType,
+                    'conditionTypes',
+                    type,
+                    'itemView'
+                ]) ||
+                this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'view']);
+
+            if (!viewName) {
+                return;
+            }
+
+            var operator = this.getMetadata()
+                .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operator']);
+
+            var operatorString = this.getMetadata()
+                    .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operatorString']);
+
+            if (!operatorString) {
+                operatorString = this.getLanguage()
+                    .translateOption(type, 'operators', 'DynamicLogic')
+                    .toLowerCase();
+
+                operatorString = '<i class="small">' + operatorString + '</i>';
+            }
 
             this.createView(key, viewName, {
                 itemData: item,
@@ -93,11 +124,10 @@ Espo.define('views/admin/dynamic-logic/conditions-string/group-base', 'view', fu
                 el: this.getSelector() + ' [data-view-key="'+key+'"]',
                 number: number,
                 operator: operator,
-                operatorString: operatorString
+                operatorString: operatorString,
             });
         },
 
     });
-
 });
 

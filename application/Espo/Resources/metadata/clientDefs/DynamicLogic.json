@@ -87,6 +87,15 @@
         "notHas": {
             "view": "views/admin/dynamic-logic/conditions-string/item-value-enum",
             "operatorString": "&notni;"
+        },
+        "startsWith": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-varchar"
+        },
+        "endsWith": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-varchar"
+        },
+        "matches": {
+            "view": "views/admin/dynamic-logic/conditions-string/item-value-varchar"
         }
     },
     "fieldTypes": {
@@ -96,7 +105,27 @@
         },
         "varchar": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["equals", "notEquals", "isEmpty", "isNotEmpty"]
+            "typeList": [
+                "equals",
+                "notEquals",
+                "isEmpty",
+                "isNotEmpty",
+                "contains",
+                "notContains",
+                "startsWith",
+                "endsWith",
+                "matches"
+            ],
+            "conditionTypes": {
+                "contains": {
+                    "valueType": "field",
+                    "itemView": "views/admin/dynamic-logic/conditions-string/item-base"
+                },
+                "notContains": {
+                    "valueType": "field",
+                    "itemView": "views/admin/dynamic-logic/conditions-string/item-base"
+                }
+            }
         },
         "url": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
@@ -112,19 +141,56 @@
         },
         "text": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isEmpty", "isNotEmpty"]
+            "typeList": ["isEmpty", "isNotEmpty", "contains", "notContains", "matches"],
+            "conditionTypes": {
+                "contains": {
+                    "valueType": "varchar",
+                    "itemView": "views/admin/dynamic-logic/conditions-string/item-value-varchar"
+                },
+                "notContains": {
+                    "valueType": "varchar",
+                    "itemView": "views/admin/dynamic-logic/conditions-string/item-value-varchar"
+                }
+            }
         },
         "int": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+            "typeList": [
+                "isEmpty",
+                "isNotEmpty",
+                "equals",
+                "notEquals",
+                "greaterThan",
+                "lessThan",
+                "greaterThanOrEquals",
+                "lessThanOrEquals"
+            ]
         },
         "float": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+            "typeList": [
+                "isEmpty",
+                "isNotEmpty",
+                "equals",
+                "notEquals",
+                "greaterThan",
+                "lessThan",
+                "greaterThanOrEquals",
+                "lessThanOrEquals"
+            ]
         },
         "currency": {
             "view": "views/admin/dynamic-logic/conditions/field-types/base",
-            "typeList": ["isEmpty", "isNotEmpty", "equals", "notEquals", "greaterThan", "lessThan", "greaterThanOrEquals", "lessThanOrEquals"]
+            "typeList": [
+                "isEmpty",
+                "isNotEmpty",
+                "equals",
+                "notEquals",
+                "greaterThan",
+                "lessThan",
+                "greaterThanOrEquals",
+                "lessThanOrEquals"
+            ]
         },
         "date": {
             "view": "views/admin/dynamic-logic/conditions/field-types/date",
@@ -240,6 +306,15 @@
         },
         "notHas": {
             "valueType": "field"
+        },
+        "startsWith": {
+            "valueType": "varchar"
+        },
+        "endsWith": {
+            "valueType": "varchar"
+        },
+        "matches": {
+            "valueType": "varchar"
         }
     }
 }

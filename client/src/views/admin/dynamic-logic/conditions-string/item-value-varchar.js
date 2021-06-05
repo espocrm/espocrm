@@ -27,7 +27,7 @@
  ************************************************************************/
 
 define(
-    'views/admin/dynamic-logic/conditions-string/item-value-enum',
+    'views/admin/dynamic-logic/conditions-string/item-value-varchar',
     'views/admin/dynamic-logic/conditions-string/item-base',
     function (Dep) {
 
@@ -38,16 +38,12 @@ define(
         createValueFieldView: function () {
             var key = this.getValueViewKey();
 
-            var viewName = 'views/fields/enum';
+            var viewName = 'views/fields/varchar';
 
             this.createView('value', viewName, {
                 model: this.model,
                 name: this.field,
                 el: this.getSelector() + '[data-view-key="'+key+'"]',
-                params: {
-                    options: this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'options']) || []
-                }
             });
         },
 

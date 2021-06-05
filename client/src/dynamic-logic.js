@@ -30,6 +30,7 @@ define('dynamic-logic', [], function () {
 
     var DynamicLogic = function (defs, recordView) {
         this.defs = defs || {};
+
         this.recordView = recordView;
 
         this.fieldTypeList = ['visible', 'required', 'readOnly'];
@@ -37,7 +38,7 @@ define('dynamic-logic', [], function () {
 
         this.optionsDirtyMap = {};
         this.originalOptions = {};
-    }
+    };
 
     _.extend(DynamicLogic.prototype, {
 
@@ -57,9 +58,6 @@ define('dynamic-logic', [], function () {
                     }
 
                     var typeItem = (item[type] || {});
-
-                    var conditionGroup = typeItem.conditionGroup;
-                    var conditionGroup = (item[type] || {}).conditionGroup;
 
                     if (!typeItem.conditionGroup) {
                         return;
@@ -104,6 +102,7 @@ define('dynamic-logic', [], function () {
                         break;
                     }
                 }
+
                 if (!isMet) {
                     this.resetOptionList(field);
                 }
@@ -119,9 +118,6 @@ define('dynamic-logic', [], function () {
             }
 
             var typeItem = (item[type] || {});
-
-            var conditionGroup = typeItem.conditionGroup;
-            var conditionGroup = (item[type] || {}).conditionGroup;
 
             if (!typeItem.conditionGroup) {
                 return;
@@ -146,8 +142,10 @@ define('dynamic-logic', [], function () {
             var list;
 
             var result = false;
+
             if (type === 'and') {
                 list =  data || [];
+
                 result = true;
 
                 for (var i in list) {
@@ -157,7 +155,8 @@ define('dynamic-logic', [], function () {
                         break;
                     }
                 }
-            } else if (type === 'or') {
+            }
+            else if (type === 'or') {
                 list =  data || [];
 
                 for (var i in list) {
@@ -167,7 +166,8 @@ define('dynamic-logic', [], function () {
                         break;
                     }
                 }
-            } else if (type === 'not') {
+            }
+            else if (type === 'not') {
                 if (data) {
                     result = !this.checkCondition(data);
                 }
@@ -178,6 +178,7 @@ define('dynamic-logic', [], function () {
 
         checkCondition: function (defs) {
             defs = defs || {};
+
             var type = defs.type || 'equals';
 
             if (~['or', 'and', 'not'].indexOf(type)) {
@@ -200,107 +201,150 @@ define('dynamic-logic', [], function () {
 
                 return setValue === value;
             }
-            else if (type === 'notEquals') {
+
+            if (type === 'notEquals') {
                 if (!value) {
                     return;
                 }
 
                 return setValue !== value;
             }
-            else if (type === 'isEmpty') {
+
+            if (type === 'isEmpty') {
                 if (Array.isArray(setValue)) {
                     return !setValue.length;
                 }
 
                 return setValue === null || (setValue === '') || typeof setValue === 'undefined';
             }
-            else if (type === 'isNotEmpty') {
+
+            if (type === 'isNotEmpty') {
                 if (Array.isArray(setValue)) {
                     return !!setValue.length;
                 }
 
                 return setValue !== null && (setValue !== '') && typeof setValue !== 'undefined';
             }
-            else if (type === 'isTrue') {
+
+            if (type === 'isTrue') {
                 return !!setValue;
             }
-            else if (type === 'isFalse') {
+
+            if (type === 'isFalse') {
                 return !setValue;
             }
-            else if (type === 'contains' || type === 'has') {
+
+            if (type === 'contains' || type === 'has') {
                 if (!setValue) {
                     return false;
                 }
 
                 return !!~setValue.indexOf(value);
             }
-            else if (type === 'notContains' || type === 'notHas') {
+
+            if (type === 'notContains' || type === 'notHas') {
                 if (!setValue) {
                     return true;
                 }
 
                 return !~setValue.indexOf(value);
             }
-            else if (type === 'greaterThan') {
+
+            if (type === 'startsWith') {
+                if (!setValue) {
+                    return false;
+                }
+
+                return setValue.indexOf(value) === 0;
+            }
+
+            if (type === 'endsWith') {
+                if (!setValue) {
+                    return false;
+                }
+
+                return setValue.indexOf(value) === setValue.length - value.length;
+            }
+
+            if (type === 'matches') {
+                if (!setValue) {
+                    return false;
+                }
+
+                let match = /^\/(.*)\/([a-z]*)$/.exec(value);
+
+                if (!match || match.length < 2) {
+                    return false;
+                }
+
+                return (new RegExp(match[1], match[2])).test(setValue);
+            }
+
+            if (type === 'greaterThan') {
                 return setValue > value;
             }
-            else if (type === 'lessThan') {
+
+            if (type === 'lessThan') {
                 return setValue < value;
             }
-            else if (type === 'greaterThanOrEquals') {
+
+            if (type === 'greaterThanOrEquals') {
                 return setValue >= value;
             }
-            else if (type === 'lessThanOrEquals') {
+
+            if (type === 'lessThanOrEquals') {
                 return setValue <= value;
             }
-            else if (type === 'in') {
+
+            if (type === 'in') {
                 return ~value.indexOf(setValue);
             }
-            else if (type === 'notIn') {
+
+            if (type === 'notIn') {
                 return !~value.indexOf(setValue);
             }
-            else if (type === 'isToday') {
+
+            if (type === 'isToday') {
                 var dateTime = this.recordView.getDateTime();
+
                 if (!setValue) {
-                    return;
+                    return false;
                 }
 
-                if (setValue) {
-                    if (setValue.length > 10) {
-                        return dateTime.toMoment(setValue).isSame(dateTime.getNowMoment(), 'day');
-                    } else {
-                        return dateTime.toMomentDate(setValue).isSame(dateTime.getNowMoment(), 'day');
-                    }
+                if (setValue.length > 10) {
+                    return dateTime.toMoment(setValue).isSame(dateTime.getNowMoment(), 'day');
                 }
+
+                return dateTime.toMomentDate(setValue).isSame(dateTime.getNowMoment(), 'day');
             }
-            else if (type === 'inFuture') {
+
+            if (type === 'inFuture') {
                 var dateTime = this.recordView.getDateTime();
 
                 if (!setValue) {
-                    return;
+                    return false;
                 }
 
-                if (setValue) {
-                    if (setValue.length > 10) {
-                        return dateTime.toMoment(setValue).isAfter(dateTime.getNowMoment(), 'day');
-                    } else {
-                        return dateTime.toMomentDate(setValue).isAfter(dateTime.getNowMoment(), 'day');
-                    }
+                if (setValue.length > 10) {
+                    return dateTime.toMoment(setValue).isAfter(dateTime.getNowMoment(), 'day');
                 }
-            } else if (type === 'inPast') {
+
+                return dateTime.toMomentDate(setValue).isAfter(dateTime.getNowMoment(), 'day');
+            }
+
+            if (type === 'inPast') {
                 var dateTime = this.recordView.getDateTime();
 
                 if (!setValue) {
-                    return;
+                    return false;
                 }
 
-                if (setValue) {
-                    if (setValue.length > 10) {
-                        return dateTime.toMoment(setValue).isBefore(dateTime.getNowMoment(), 'day');
-                    } else {
-                        return dateTime.toMomentDate(setValue).isBefore(dateTime.getNowMoment(), 'day');
-                    }
+
+                if (setValue.length > 10) {
+                    return dateTime.toMoment(setValue).isBefore(dateTime.getNowMoment(), 'day');
                 }
+
+                return dateTime.toMomentDate(setValue).isBefore(dateTime.getNowMoment(), 'day');
             }
 
             return false;

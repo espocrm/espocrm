@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', function (Dep) {
+define('views/admin/dynamic-logic/conditions/field-types/base', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -37,13 +37,14 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
                 type: this.type,
                 field: this.field,
                 scope: this.scope,
-                typeList: this.typeList
+                typeList: this.typeList,
             };
         },
 
         events: {
             'click > div > div > [data-action="remove"]': function (e) {
                 e.stopPropagation();
+
                 this.trigger('remove-item');
             }
         },
@@ -57,22 +58,27 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
             this.itemData = this.options.itemData;
             this.additionalData = (this.itemData.data || {});
 
-            this.typeList = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'typeList']);
+            this.typeList = this.getMetadata()
+                .get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'typeList']);
 
             this.wait(true);
+
             this.getModelFactory().create(this.scope, function (model) {
                 this.model = model;
                 this.populateValues();
 
                 this.manageValue();
+
                 this.wait(false);
             }, this);
         },
 
         afterRender: function () {
             this.$type = this.$el.find('select[data-name="type"]');
+
             this.$type.on('change', function () {
                 this.type = this.$type.val();
+
                 this.manageValue();
             }.bind(this));
         },
@@ -81,12 +87,17 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
             if (this.itemData.attribute) {
                 this.model.set(this.itemData.attribute, this.itemData.value);
             }
+
             this.model.set(this.additionalData.values || {});
         },
 
         getValueViewName: function () {
-            var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
-            var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) || this.getFieldManager().getViewName(fieldType);
+            var fieldType = this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+
+            var viewName = this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
+                this.getFieldManager().getViewName(fieldType);
 
             return viewName;
         },
@@ -96,28 +107,58 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
         },
 
         manageValue: function () {
-            var valueType = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
+            var valueType =
+                this.getMetadata()
+                    .get([
+                        'clientDefs',
+                        'DynamicLogic',
+                        'fieldTypes',
+                        this.fieldType,
+                        'conditionTypes',
+                        this.type,
+                        'valueType'
+                    ]) ||
+                    this.getMetadata()
+                        .get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
 
             if (valueType === 'field') {
                 var viewName = this.getValueViewName();
                 var fieldName = this.getValueFieldName();
+
                 this.createView('value', viewName, {
                     model: this.model,
                     name: fieldName,
                     el: this.getSelector() + ' .value-container',
                     mode: 'edit',
-                    readOnlyDisabled: true
+                    readOnlyDisabled: true,
                 }, function (view) {
                     if (this.isRendered()) {
                         view.render();
                     }
                 }, this);
 
-            } else if (valueType === 'custom') {
+            }
+            else if (valueType === 'custom') {
                 this.clearView('value');
+
                 var methodName = 'createValueView' + Espo.Utils.upperCaseFirst(this.type);
+
                 this[methodName]();
-            } else {
+            }
+            else if (valueType === 'varchar') {
+                this.createView('value', 'views/fields/varchar', {
+                    model: this.model,
+                    name: this.getValueFieldName(),
+                    el: this.getSelector() + ' .value-container',
+                    mode: 'edit',
+                    readOnlyDisabled: true,
+                }, function (view) {
+                    if (this.isRendered()) {
+                        view.render();
+                    }
+                }, this);
+            }
+            else {
                 this.clearView('value');
             }
         },
@@ -127,18 +168,17 @@ Espo.define('views/admin/dynamic-logic/conditions/field-types/base', 'view', fun
 
             var item = {
                 type: this.type,
-                attribute: this.field
+                attribute: this.field,
             };
 
             if (valueView) {
                 valueView.fetchToModel();
+
                 item.value = this.model.get(this.field);
             }
 
             return item;
-        }
+        },
 
     });
-
 });
-

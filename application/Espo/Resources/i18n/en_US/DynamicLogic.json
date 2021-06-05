@@ -22,7 +22,10 @@
             "contains": "Contains",
             "notContains": "Not Contains",
             "has": "Contains",
-            "notHas": "Not Contains"
+            "notHas": "Not Contains",
+            "startsWith": "Starts With",
+            "endsWith": "Ends With",
+            "matches": "Matches (reg exp)"
         }
     }
 }

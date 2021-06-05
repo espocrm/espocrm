@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function (Dep) {
+define('views/admin/dynamic-logic/conditions/group-base', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -37,7 +37,7 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 viewDataList: this.viewDataList,
                 operator: this.operator,
                 level: this.level,
-                groupOperator: this.getGroupOperator()
+                groupOperator: this.getGroupOperator(),
             };
         },
 
@@ -102,6 +102,7 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
 
             var viewName;
             var fieldType;
+
             if (~['and', 'or', 'not'].indexOf(type)) {
                 viewName = 'views/admin/dynamic-logic/conditions/' + type;
             } else {
@@ -117,7 +118,9 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
 
             }
 
-            if (!viewName) return;
+            if (!viewName) {
+                return;
+            }
 
             this.createView(key, viewName, {
                 itemData: item,
@@ -127,7 +130,7 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
                 number: number,
                 type: type,
                 field: field,
-                fieldType: fieldType
+                fieldType: fieldType,
             }, function (view) {
                 if (this.isRendered()) {
                     view.render()
@@ -146,6 +149,7 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
 
             this.viewDataList.forEach(function (item) {
                 var view = this.getView(item.key);
+
                 list.push(view.fetch());
             }, this);
 
@@ -190,9 +194,11 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
 
         addField: function (field) {
             var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+
             if (!fieldType && field == 'id') {
                 fieldType = 'id';
             }
+
             if (!this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType])) {
                 throw new Error();
             }
@@ -214,14 +220,17 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
         },
 
         getIndexForNewItem: function () {
-            if (!this.viewDataList.length) return 0;
+            if (!this.viewDataList.length) {
+                return 0;
+            }
+
             return (this.viewDataList[this.viewDataList.length - 1]).index + 1;
         },
 
         addViewDataListItem: function (i, key) {
             this.viewDataList.push({
                 index: i,
-                key: key
+                key: key,
             });
         },
 
@@ -230,7 +239,11 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             this.$el.find('> .item-list').append($item);
 
             var groupOperatorLabel = this.translate(this.getGroupOperator(), 'logicalOperators', 'Admin');
-            var $operatorItem = $('<div class="group-operator" data-view-ref-key="'+this.getKey(i)+'">' + groupOperatorLabel +'</div>');
+
+            var $operatorItem = $(
+                '<div class="group-operator" data-view-ref-key="' + this.getKey(i)+'">' + groupOperatorLabel +'</div>'
+            );
+
             this.$el.find('> .item-list').append($operatorItem);
         },
 
@@ -251,9 +264,8 @@ Espo.define('views/admin/dynamic-logic/conditions/group-base', 'view', function 
             this.controlAddItemVisibility();
         },
 
-        controlAddItemVisibility: function () {}
+        controlAddItemVisibility: function () {},
 
     });
-
 });
 
