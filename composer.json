@@ -55,5 +55,9 @@
             "type": "git",
             "url": "https://github.com/yurikuzn/lightncandy.git"
         }
-    ]
+    ],
+    "replace": {
+        "ext-ldap": "*",
+        "ext-zmq": "*"
+    }
 }
