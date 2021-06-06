@@ -343,6 +343,26 @@ class FieldManager
             }
         }
 
+        if (array_key_exists('dynamicLogicInvalid', $fieldDefs)) {
+            if (!is_null($fieldDefs['dynamicLogicInvalid'])) {
+                $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
+
+                $clientDefs['dynamicLogic']['fields'][$name]['invalid'] = $fieldDefs['dynamicLogicInvalid'];
+                $clientDefsToBeSet = true;
+            }
+            else {
+                if (
+                    $this->getMetadata()->get(['clientDefs', $scope, 'dynamicLogic', 'fields', $name, 'invalid'])
+                ) {
+                    $this->prepareClientDefsFieldsDynamicLogic($clientDefs, $name);
+
+                    $clientDefs['dynamicLogic']['fields'][$name]['invalid'] = null;
+
+                    $clientDefsToBeSet = true;
+                }
+            }
+        }
+
         if ($clientDefsToBeSet) {
             $this->getMetadata()->set('clientDefs', $scope, $clientDefs);
 

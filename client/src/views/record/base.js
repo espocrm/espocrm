@@ -497,17 +497,49 @@ define(
         validate: function () {
             var notValid = false;
 
-            var fields = this.getFields();
+            var fieldViews = this.getFieldViews();
 
-            for (var i in fields) {
-                if (fields[i].mode === 'edit') {
-                    if (!fields[i].disabled && !fields[i].readOnly) {
-                        notValid = fields[i].validate() || notValid;
+            var invalidFieldMap = {};
+
+            for (var field in fieldViews) {
+                var fieldView = fieldViews[field];
+
+                if (fieldView.mode === 'edit' && !fieldView.disabled && !fieldView.readOnly) {
+                    var fieldInvalid = fieldView.validate();
+
+                    invalidFieldMap[field] = fieldInvalid;
+
+                    notValid = fieldInvalid  || notValid;
+                }
+
+                if (
+                    !invalidFieldMap[field] &&
+                    this.dynamicLogic &&
+                    this.dynamicLogicDefs &&
+                    this.dynamicLogicDefs.fields &&
+                    this.dynamicLogicDefs.fields[field] &&
+                    this.dynamicLogicDefs.fields[field].invalid &&
+                    this.dynamicLogicDefs.fields[field].invalid.conditionGroup
+                ) {
+                    var invalidConditionGroup = this.dynamicLogicDefs.fields[field].invalid.conditionGroup;
+
+                    var fieldInvalid = this.dynamicLogic.checkConditionGroup(invalidConditionGroup);
+
+                    notValid = fieldInvalid  || notValid;
+
+                    if (fieldInvalid) {
+                        var msg =
+                            this.translate('fieldInvalid', 'messages')
+                                .replace('{field}', this.translate(field, 'fields', this.entityType));
+
+                        fieldView.showValidationMessage(msg);
+
+                        fieldView.trigger('invalid');
                     }
                 }
-            };
+            }
 
-            return notValid
+            return notValid;
         },
 
         afterSave: function () {

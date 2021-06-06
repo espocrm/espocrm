@@ -353,7 +353,6 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 var dynamicLogicReadOnly = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'readOnly']);
 
-
                 this.model.set('dynamicLogicReadOnly', dynamicLogicReadOnly);
 
                 this.createFieldView(null, 'dynamicLogicReadOnly', null, {
@@ -379,6 +378,23 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                 this.createFieldView(null, 'dynamicLogicOptions', null, {
                     view: 'views/admin/field-manager/fields/dynamic-logic-options',
+                    scope: this.scope,
+                });
+
+                this.hasDynamicLogicPanel = true;
+            }
+
+            var dynamicLogicInvalidDisabled = this.getMetadata()
+                    .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicInvalidDisabled']);
+
+            if (!dynamicLogicInvalidDisabled && !readOnly) {
+                var dynamicLogicInvalid = this.getMetadata()
+                    .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'invalid']);
+
+                this.model.set('dynamicLogicInvalid', dynamicLogicInvalid);
+
+                this.createFieldView(null, 'dynamicLogicInvalid', null, {
+                    view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
                     scope: this.scope,
                 });
 
@@ -422,11 +438,13 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hideField('dynamicLogicReadOnly');
                 this.hideField('dynamicLogicRequired');
                 this.hideField('dynamicLogicOptions');
+                this.hideField('dynamicLogicInvalid');
             }
             else {
                 this.showField('dynamicLogicReadOnly');
                 this.showField('dynamicLogicRequired');
                 this.showField('dynamicLogicOptions');
+                this.showField('dynamicLogicInvalid');
             }
         },
 

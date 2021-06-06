@@ -70,6 +70,12 @@
                     <div class="field" data-name="dynamicLogicOptions">{{{dynamicLogicOptions}}}</div>
                 </div>
                 {{/if}}
+                {{#if dynamicLogicInvalid}}
+                <div class="cell form-group" data-name="dynamicLogicInvalid">
+                    <label class="control-label" data-name="dynamicLogicInvalid">{{translate 'dynamicLogicInvalid' scope='Admin' category='fields'}}</label>
+                    <div class="field" data-name="dynamicLogicInvalid">{{{dynamicLogicInvalid}}}</div>
+                </div>
+                {{/if}}
             </div>
         </div>
     </div>
