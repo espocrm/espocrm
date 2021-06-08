@@ -476,7 +476,7 @@ class EntityManager
     }
 
     /**
-     * Create a collection. An entity type can be omitted.
+     * @deprecated Use `getCollectionFactory`.
      */
     public function createCollection(?string $entityType = null, array $data = []): EntityCollection
     {

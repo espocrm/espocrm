@@ -33,6 +33,9 @@ use Espo\Core\Exceptions\NotFound;
 
 class Document extends \Espo\Services\Record
 {
+    /**
+     * @return iterable
+     */
     public function getAttachmentList(string $id)
     {
         $entity = $this->getEntity($id);
@@ -51,9 +54,14 @@ class Document extends \Espo\Services\Record
             throw new NotFound();
         }
 
-        $attachment = $this->getEntityManager()->getRepository('Attachment')->getCopiedAttachment($file, 'Attachment');
+        $attachment = $this->entityManager
+            ->getRepository('Attachment')
+            ->getCopiedAttachment($file, 'Attachment');
 
-        $attachmentList = $this->getEntityManager()->createCollection('Attachment');
+        $attachmentList = $this->entityManager
+            ->getCollectionFactory()
+            ->create('Attachment');
+
         $attachmentList[] = $attachment;
 
         return $attachmentList;

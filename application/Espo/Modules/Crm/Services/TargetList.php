@@ -308,7 +308,9 @@ class TargetList extends \Espo\Services\Record implements
 
         $sth = $em->getQueryExecutor()->execute($unionQuery);
 
-        $collection = $this->getEntityManager()->createCollection();
+        $collection = $this->entityManager
+            ->getCollectionFactory()
+            ->create();
 
         while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
             $itemEntity = $this->getEntityManager()->getEntity($row['entityType']);

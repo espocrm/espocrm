@@ -79,7 +79,9 @@ class Notification extends \Espo\Services\Record implements
 
         $now = date('Y-m-d H:i:s');
 
-        $collection = $this->entityManager->createCollection();
+        $collection = $this->entityManager
+            ->getCollectionFactory()
+            ->create();
 
         $userList = $this->entityManager
             ->getRepository('User')
@@ -87,7 +89,8 @@ class Notification extends \Espo\Services\Record implements
             ->where([
                 'isActive' => true,
                 'id' => $userIdList,
-            ])->find();
+            ])
+            ->find();
 
         foreach ($userList as $user) {
             $userId = $user->id;
