@@ -88,9 +88,10 @@ module.exports = function (grunt) {
     ];
 
     function camelCaseToHyphen (string){
-        if (string == null) {
+        if (string === null) {
             return string;
         }
+
         return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
 
@@ -101,26 +102,33 @@ module.exports = function (grunt) {
     var currentPath = path.dirname(fs.realpathSync(__filename));
 
     var themeList = [];
+
     fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(function (file) {
         themeList.push(file.substr(0, file.length - 5));
     });
 
     var cssminFilesData = {};
+
     var lessData = {};
+
     themeList.forEach(function (theme) {
         var name = camelCaseToHyphen(theme);
+
         var files = {};
+
         files['client/css/espo/'+name+'.css'] = 'frontend/less/'+name+'/main.less';
         files['client/css/espo/'+name+'-iframe.css'] = 'frontend/less/'+name+'/iframe/main.less';
 
         cssminFilesData['client/css/espo/'+name+'.css'] = 'client/css/espo/'+name+'.css';
         cssminFilesData['client/css/espo/'+name+'-iframe.css'] = 'client/css/espo/'+name+'-iframe.css';
+
         var o = {
             options: {
                 yuicompress: true,
             },
-            files: files
+            files: files,
         };
+
         lessData[theme] = o;
     });
 
@@ -135,11 +143,11 @@ module.exports = function (grunt) {
                     mode: 0755,
                     create: [
                         'build/tmp',
-                    ]
-                },
-
+                    ],
+                }
             }
         },
+
         clean: {
             start: ['build/EspoCRM-*'],
             final: ['build/tmp'],
@@ -153,12 +161,15 @@ module.exports = function (grunt) {
                 ]
             }
         },
+
         less: lessData,
+
         cssmin: {
             themes: {
                 files: cssminFilesData
             }
         },
+
         uglify: {
             options: {
                 mangle: false,
@@ -167,7 +178,7 @@ module.exports = function (grunt) {
             },
             'build/tmp/client/espo.min.js': jsFilesToMinify.map(function (item) {
                 return '' + item;
-            })
+            }),
         },
         copy: {
             options: {
@@ -234,6 +245,7 @@ module.exports = function (grunt) {
                 dest: 'build/EspoCRM-<%= pkg.version %>/',
             },
         },
+
         chmod: {
             php: {
                 options: {
@@ -249,7 +261,7 @@ module.exports = function (grunt) {
                     'build/EspoCRM-<%= pkg.version %>/client/**/*.tpl',
                     'build/EspoCRM-<%= pkg.version %>/**/*.html',
                     'build/EspoCRM-<%= pkg.version %>/**/*.txt',
-                ]
+                ],
             },
             folders: {
                 options: {
@@ -262,7 +274,7 @@ module.exports = function (grunt) {
                     'build/EspoCRM-<%= pkg.version %>/api/v1',
                     'build/EspoCRM-<%= pkg.version %>/api/v1/portal-access',
                     'build/EspoCRM-<%= pkg.version %>',
-                ]
+                ],
             },
             foldersWritable: {
                 options: {
@@ -279,6 +291,7 @@ module.exports = function (grunt) {
                 ]
             },
         },
+
         replace: {
             version: {
                 options: {
@@ -294,7 +307,7 @@ module.exports = function (grunt) {
                         src: 'build/tmp/application/Espo/Resources/defaults/config.php',
                         dest: 'build/tmp/application/Espo/Resources/defaults/config.php'
                     }
-                ]
+                ],
             }
         },
     });
