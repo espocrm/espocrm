@@ -106,7 +106,13 @@ class LinkMultipleFactory implements ValueFactory
                 $item = $this->addColumnValues($item, $columnData->$id);
             }
 
-            $itemList[] = $item->withName($nameMap->$id ?? null);
+            $name = $nameMap->$id ?? null;
+
+            if ($name !== null) {
+                $item = $item->withName($name);
+            }
+
+            $itemList[] = $item;
         }
 
         return new LinkMultiple($itemList);
