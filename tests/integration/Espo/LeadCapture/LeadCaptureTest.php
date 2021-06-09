@@ -29,9 +29,10 @@
 
 namespace tests\integration\Espo\LeadCapture;
 
+use Espo\Core\Record\CreateParams;
+
 class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
 {
-
     public function testCaptute()
     {
         $entityManager = $this->getContainer()->get('entityManager');
@@ -52,7 +53,8 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
             'fieldList' => ['name', 'emailAddress'],
             'leadSource' => 'Web Site'
         ];
-        $leadCapture = $leadCaptureService->create($leadCapureData);
+        
+        $leadCapture = $leadCaptureService->create($leadCapureData, CreateParams::create());
 
         $this->assertNotEmpty($leadCapture->get('apiKey'));
 
@@ -64,7 +66,10 @@ class LeadCaptureTest extends \tests\integration\Core\BaseTestCase
 
         $leadCaptureService->leadCapture($leadCapture->get('apiKey'), $data);
 
-        $lead = $entityManager->getRepository('Lead')->where(['emailAddress' => 'test@tester.com'])->findOne();
+        $lead = $entityManager->getRepository('Lead')
+            ->where(['emailAddress' => 'test@tester.com'])
+            ->findOne();
+
         $this->assertNotNull($lead);
 
         $this->assertEquals('Web Site', $lead->get('source'));
