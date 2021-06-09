@@ -156,7 +156,10 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
         actionApply: function (reset) {
             var data = this.getView('record').processFetch();
-            if (!data) return;
+
+            if (!data) {
+                return;
+            }
 
             this.hideButton('apply');
 
@@ -171,6 +174,9 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
                         this.listenToOnce(passwordView, 'proceed', function (data) {
                             this.model.set('password', data.password);
+
+                            passwordView.close();
+
                             resolve();
                         }, this);
                     });
