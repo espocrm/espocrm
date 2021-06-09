@@ -19,14 +19,14 @@
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
 
- /**
-  * * `grunt` - full build
-  * * `grunt dev` - build only items needed for development (takes less time)
-  * * `grunt offline` - build but skip *composer install*
-  * * `grant release` - full build plus upgrade packages`
-  * * `grant test` - build for test running
-  * * `grant run-tests` - build and run unit and integratino tests
-  */
+/**
+* * `grunt` - full build
+* * `grunt dev` - build only items needed for development (takes less time)
+* * `grunt offline` - build but skip *composer install*
+* * `grant release` - full build plus upgrade packages`
+* * `grant test` - build for tests running
+* * `grant run-tests` - build and run unit and integration tests
+*/
 
 module.exports = function (grunt) {
 
