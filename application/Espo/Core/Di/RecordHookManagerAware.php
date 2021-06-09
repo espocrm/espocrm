@@ -27,31 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record;
+namespace Espo\Core\Di;
 
-use Espo\ORM\Entity;
+use Espo\Core\Record\HookManager as RecordHookManager;
 
-use stdClass;
-
-interface Crud
+interface RecordHookManagerAware
 {
-    /**
-     * Create a record.
-     */
-    public function create(stdClass $data, CreateParams $params): Entity;
-
-    /**
-     * Read a record.
-     */
-    public function read(string $id, ReadParams $params): Entity;
-
-    /**
-     * Update a record.
-     */
-    public function update(string $id, stdClass $data, UpdateParams $params): Entity;
-
-    /**
-     * Delete a record.
-     */
-    public function delete(string $id, DeleteParams $params): void;
+    public function setRecordHookManager(RecordHookManager $recordHookManager): void;
 }

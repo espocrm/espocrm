@@ -27,31 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record;
+namespace Espo\Classes\RecordHooks\Team;
+
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Record\Hook\LinkHook;
 
 use Espo\ORM\Entity;
 
-use stdClass;
+use Espo\Entities\User;
 
-interface Crud
+class BeforeLinkUserCheck implements LinkHook
 {
-    /**
-     * Create a record.
-     */
-    public function create(stdClass $data, CreateParams $params): Entity;
+    public function process(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        if ($link !== 'users') {
+            return;
+        }
 
-    /**
-     * Read a record.
-     */
-    public function read(string $id, ReadParams $params): Entity;
+        $this->processUserCheck($foreignEntity);
+    }
 
-    /**
-     * Update a record.
-     */
-    public function update(string $id, stdClass $data, UpdateParams $params): Entity;
+    private function processUserCheck(User $user): void
+    {
+        if ($user->isPortal()) {
+            throw new Forbidden("Can't add portal users to team.");
+        }
 
-    /**
-     * Delete a record.
-     */
-    public function delete(string $id, DeleteParams $params): void;
+        if ($user->isSystem()) {
+            throw new Forbidden("Can't add system users to team.");
+        }
+    }
 }

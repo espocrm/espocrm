@@ -29,29 +29,14 @@
 
 namespace Espo\Core\Record;
 
-use Espo\ORM\Entity;
+use Espo\Core\Api\Request;
 
-use stdClass;
-
-interface Crud
+class ReadParamsFetcher
 {
-    /**
-     * Create a record.
-     */
-    public function create(stdClass $data, CreateParams $params): Entity;
+    public function __construct() {}
 
-    /**
-     * Read a record.
-     */
-    public function read(string $id, ReadParams $params): Entity;
-
-    /**
-     * Update a record.
-     */
-    public function update(string $id, stdClass $data, UpdateParams $params): Entity;
-
-    /**
-     * Delete a record.
-     */
-    public function delete(string $id, DeleteParams $params): void;
+    public function fetch(Request $request): ReadParams
+    {
+        return ReadParams::create();
+    }
 }

@@ -38,6 +38,8 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Core\Record\ReadParams;
+
 use Espo\Core\Di;
 
 use Exception;
@@ -137,9 +139,9 @@ class ExternalAccount extends Record implements Di\HookManagerAware
         }
     }
 
-    public function read(string $id): Entity
+    public function read(string $id, ReadParams $params): Entity
     {
-        list($integration, $userId) = explode('__', $id);
+        list ($integration, $userId) = explode('__', $id);
 
         if ($this->getUser()->id != $userId && !$this->getUser()->isAdmin()) {
             throw new Forbidden();

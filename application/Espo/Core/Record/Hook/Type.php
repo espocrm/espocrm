@@ -27,31 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record;
+namespace Espo\Core\Record\Hook;
 
-use Espo\ORM\Entity;
-
-use stdClass;
-
-interface Crud
+class Type
 {
-    /**
-     * Create a record.
-     */
-    public function create(stdClass $data, CreateParams $params): Entity;
+    public const BEFORE_CREATE = 'beforeCreate';
 
-    /**
-     * Read a record.
-     */
-    public function read(string $id, ReadParams $params): Entity;
+    public const BEFORE_READ = 'beforeRead';
 
-    /**
-     * Update a record.
-     */
-    public function update(string $id, stdClass $data, UpdateParams $params): Entity;
+    public const BEFORE_UPDATE = 'beforeUpdate';
 
-    /**
-     * Delete a record.
-     */
-    public function delete(string $id, DeleteParams $params): void;
+    public const BEFORE_DELETE = 'beforeDelete';
+
+    public const BEFORE_LINK = 'beforeLink';
+
+    public const BEFORE_UNLINK = 'beforeUnlink';
 }

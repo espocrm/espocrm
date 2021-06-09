@@ -29,29 +29,12 @@
 
 namespace Espo\Core\Record;
 
-use Espo\ORM\Entity;
-
-use stdClass;
-
-interface Crud
+class DeleteParams
 {
-    /**
-     * Create a record.
-     */
-    public function create(stdClass $data, CreateParams $params): Entity;
+    public function __construct() {}
 
-    /**
-     * Read a record.
-     */
-    public function read(string $id, ReadParams $params): Entity;
-
-    /**
-     * Update a record.
-     */
-    public function update(string $id, stdClass $data, UpdateParams $params): Entity;
-
-    /**
-     * Delete a record.
-     */
-    public function delete(string $id, DeleteParams $params): void;
+    public static function create(): self
+    {
+        return new self();
+    }
 }

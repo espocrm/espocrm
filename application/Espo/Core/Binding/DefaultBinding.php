@@ -109,6 +109,11 @@ class DefaultBinding implements BindingProcessor
         );
 
         $binder->bindService(
+            'Espo\\Core\\Record\\HookManager',
+            'recordHookManager'
+        );
+
+        $binder->bindService(
             'Espo\\Core\\Utils\\HookManager',
             'hookManager'
         );

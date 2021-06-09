@@ -58,6 +58,7 @@ use Espo\Core\{
     Select\SelectBuilderFactory,
     Record\Crud,
     Record\Collection as RecordCollection,
+    Record\HookManager as RecordHookManager,
     FieldValidation\Params as FieldValidationParams,
     FieldProcessing\ReadLoadProcessor,
     FieldProcessing\ListLoadProcessor,
@@ -87,7 +88,8 @@ class Service implements Crud,
     Di\FieldValidationManagerAware,
     Di\RecordServiceContainerAware,
     Di\SelectBuilderFactoryAware,
-    Di\AssignmentCheckerManagerAware
+    Di\AssignmentCheckerManagerAware,
+    Di\RecordHookManagerAware
 {
     use Di\ConfigSetter;
     use Di\ServiceFactorySetter;
@@ -101,6 +103,7 @@ class Service implements Crud,
     use Di\RecordServiceContainerSetter;
     use Di\SelectBuilderFactorySetter;
     use Di\AssignmentCheckerManagerSetter;
+    use Di\RecordHookManagerSetter;
 
     protected $getEntityBeforeUpdate = false;
 
@@ -187,6 +190,11 @@ class Service implements Crud,
      */
     protected $selectBuilderFactory;
 
+    /**
+     * @var RecordHookManager
+     */
+    protected $recordHookManager;
+
     private $listLoadProcessor;
 
     private $duplicateFinder;
@@ -250,7 +258,7 @@ class Service implements Crud,
      * @throws Error
      * @throws NotFoundSilent If no read access.
      */
-    public function read(string $id): Entity
+    public function read(string $id, ReadParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
             throw new ForbiddenSilent();
@@ -265,6 +273,8 @@ class Service implements Crud,
         if (!$entity) {
             throw new NotFoundSilent("Record {$id} does not exist.");
         }
+
+        $this->recordHookManager->processBeforeRead($entity, $params);
 
         $this->processActionHistoryRecord('read', $entity);
 
@@ -668,11 +678,13 @@ class Service implements Crud,
 
         $this->processAssignmentCheck($entity);
 
-        $this->beforeUpdateEntity($entity, $data);
-
         if ($this->checkForDuplicatesInUpdate && !$params->skipDuplicateCheck()) {
             $this->processDuplicateCheck($entity, $data);
         }
+
+        $this->recordHookManager->processBeforeUpdate($entity, $params);
+
+        $this->beforeUpdateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity);
 
@@ -692,7 +704,7 @@ class Service implements Crud,
      * @throws BadRequest
      * @throws NotFound
      */
-    public function delete(string $id): void
+    public function delete(string $id, DeleteParams $params): void
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_DELETE)) {
             throw new ForbiddenSilent();
@@ -711,6 +723,8 @@ class Service implements Crud,
         if (!$this->acl->check($entity, AclTable::ACTION_DELETE)) {
             throw new ForbiddenSilent("No delete access.");
         }
+
+        $this->recordHookManager->processBeforeDelete($entity, $params);
 
         $this->beforeDeleteEntity($entity);
 
@@ -1014,6 +1028,8 @@ class Service implements Crud,
             throw new Forbidden();
         }
 
+        $this->recordHookManager->processBeforeLink($entity, $link, $foreignEntity);
+
         $this->getRepository()->relate($entity, $link, $foreignEntity);
     }
 
@@ -1081,6 +1097,8 @@ class Service implements Crud,
         if (!$this->acl->check($foreignEntity, $accessActionRequired)) {
             throw new Forbidden();
         }
+
+        $this->recordHookManager->processBeforeUnlink($entity, $link, $foreignEntity);
 
         $this->getRepository()->unrelate($entity, $link, $foreignEntity);
     }

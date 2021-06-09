@@ -40,6 +40,7 @@ use Espo\Core\{
     Password\Recovery,
     Record\CreateParams,
     Record\UpdateParams,
+    Record\DeleteParams,
 };
 
 use Espo\ORM\Entity;
@@ -705,7 +706,7 @@ class User extends Record implements
         $sender->send($email);
     }
 
-    public function delete(string $id): void
+    public function delete(string $id, DeleteParams $params): void
     {
         if ($id == 'system') {
             throw new Forbidden();
@@ -715,7 +716,7 @@ class User extends Record implements
             throw new Forbidden();
         }
 
-        parent::delete($id);
+        parent::delete($id, $params);
     }
 
     public function afterUpdateEntity(Entity $entity, $data)

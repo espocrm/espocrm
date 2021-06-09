@@ -31,11 +31,11 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-
 use Espo\Core\{
     Controllers\RecordBase,
     Api\Request,
     Api\Response,
+    Record\ReadParams,
 };
 
 use StdClass;
@@ -108,7 +108,9 @@ class ExternalAccount extends RecordBase
     {
         $id = $request->getRouteParam('id');
 
-        return $this->getRecordService()->read($id)->getValueMap();
+        return $this->getRecordService()
+            ->read($id, ReadParams::create())
+            ->getValueMap();
     }
 
     public function putActionUpdate(Request $request, Response $response): StdClass
@@ -117,7 +119,7 @@ class ExternalAccount extends RecordBase
 
         $data = $request->getParsedBody();
 
-        list($integration, $userId) = explode('__', $id);
+        list ($integration, $userId) = explode('__', $id);
 
         if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
             throw new Forbidden();
@@ -143,7 +145,7 @@ class ExternalAccount extends RecordBase
         $id = $data->id;
         $code = $data->code;
 
-        list($integration, $userId) = explode('__', $id);
+        list ($integration, $userId) = explode('__', $id);
 
         if ($this->user->getId() != $userId && !$this->user->isAdmin()) {
             throw new Forbidden();

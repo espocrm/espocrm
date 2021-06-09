@@ -29,9 +29,12 @@
 
 namespace tests\integration\Espo\Record;
 
+use Espo\Core\Record\CreateParams;
+use Espo\Core\Record\ReadParams;
+use Espo\Core\Record\DeleteParams;
+
 class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
 {
-
     public function testDeleted()
     {
         $app = $this->createApplication();
@@ -40,11 +43,11 @@ class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
 
         $account = $service->create((object) [
             'name' => 'Test'
-        ]);
+        ], CreateParams::create());
 
-        $result = $service->delete($account->id);
+        $result = $service->delete($account->id, DeleteParams::create());
 
-        $account = $service->read($account->id);
+        $account = $service->read($account->id, ReadParams::create());
 
         $this->assertNotNull($account);
 
@@ -59,13 +62,13 @@ class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
 
         $account = $service->create((object) [
             'name' => 'Test'
-        ]);
+        ], CreateParams::create());
 
-        $service->delete($account->id);
+        $service->delete($account->id, DeleteParams::create());
 
         $service->restoreDeleted($account->id);
 
-        $account = $service->read($account->id);
+        $account = $service->read($account->id, ReadParams::create());
 
         $this->assertNotNull($account);
 

@@ -39,7 +39,9 @@ use Espo\Core\{
     Record\ServiceContainer as RecordServiceContainer,
     Record\SearchParamsFetcher,
     Record\CreateParamsFetcher,
+    Record\ReadParamsFetcher,
     Record\UpdateParamsFetcher,
+    Record\DeleteParamsFetcher,
     Container,
     Acl,
     AclManager,
@@ -77,9 +79,19 @@ class RecordBase extends Base implements Di\EntityManagerAware
     protected $createParamsFetcher;
 
     /**
+     * @var ReadParamsFetcher
+     */
+    protected $readParamsFetcher;
+
+    /**
      * @var UpdateParamsFetcher
      */
     protected $updateParamsFetcher;
+
+    /**
+     * @var DeleteParamsFetcher
+     */
+    protected $deleteParamsFetcher;
 
     /**
      * @var RecordServiceContainer
@@ -100,7 +112,9 @@ class RecordBase extends Base implements Di\EntityManagerAware
     public function __construct(
         SearchParamsFetcher $searchParamsFetcher,
         CreateParamsFetcher $createParamsFetcher,
+        ReadParamsFetcher $readParamsFetcher,
         UpdateParamsFetcher $updateParamsFetcher,
+        DeleteParamsFetcher $deleteParamsFetcher,
         RecordServiceContainer $recordServiceContainer,
         Config $config,
         User $user,
@@ -113,7 +127,9 @@ class RecordBase extends Base implements Di\EntityManagerAware
     ) {
         $this->searchParamsFetcher = $searchParamsFetcher;
         $this->createParamsFetcher = $createParamsFetcher;
+        $this->readParamsFetcher = $readParamsFetcher;
         $this->updateParamsFetcher = $updateParamsFetcher;
+        $this->deleteParamsFetcher = $deleteParamsFetcher;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->config = $config;
         $this->user = $user;
@@ -153,7 +169,9 @@ class RecordBase extends Base implements Di\EntityManagerAware
 
         $id = $request->getRouteParam('id');
 
-        $entity = $this->getRecordService()->read($id);
+        $params = $this->readParamsFetcher->fetch($request);
+
+        $entity = $this->getRecordService()->read($id, $params);
 
         if (!$entity) {
             throw new NotFound();
@@ -239,7 +257,9 @@ class RecordBase extends Base implements Di\EntityManagerAware
 
         $id = $request->getRouteParam('id');
 
-        $this->getRecordService()->delete($id);
+        $params = $this->deleteParamsFetcher->fetch($request);
+
+        $this->getRecordService()->delete($id, $params);
 
         return true;
     }

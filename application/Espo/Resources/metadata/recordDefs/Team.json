@@ -3,5 +3,8 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "beforeLinkHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Team\\BeforeLinkUserCheck"
+    ]
 }
