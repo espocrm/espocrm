@@ -304,11 +304,11 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("composer", function() {
-        cp.execSync("composer install --ignore-platform-reqs --no-dev", {stdio: 'ignore'});
+        cp.execSync("php composer.phar install --no-dev", {stdio: 'ignore'});
     });
 
     grunt.registerTask("composer-dev", function() {
-        cp.execSync("composer install --ignore-platform-reqs", {stdio: 'ignore'});
+        cp.execSync("php composer.phar install", {stdio: 'ignore'});
     });
 
     grunt.registerTask("upgrade", function() {
