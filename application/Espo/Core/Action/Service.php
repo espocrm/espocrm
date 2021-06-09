@@ -35,6 +35,7 @@ use Espo\Core\{
     Exceptions\BadRequest,
     Exceptions\NotFound,
     Record\ServiceContainer as RecordServiceContainer,
+    Record\ReadParams,
     Acl,
 };
 
@@ -88,7 +89,7 @@ class Service
 
         $service = $this->recordServiceContainer->get($entityType);
 
-        $entity = $service->read($id);
+        $entity = $service->read($id, ReadParams::create());
 
         if (!$entity) {
             throw new NotFound();
