@@ -40,15 +40,26 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
-use ZBateson\MailMimeParser\MailMimeParser as WrappeeParser;
+use ZBateson\MailMimeParser\{
+    MailMimeParser as WrappeeParser,
+    Message\Part\MessagePart,
+};
 
-use StdClass;
+use stdClass;
 
 /**
  * An adapter for MailMimeParser library.
  */
 class MailMimeParser implements Parser
 {
+    private $extMimeTypeMap = [
+        'jpg' => 'image/jpg',
+        'jpeg' => 'image/jpeg',
+        'png' => 'image/png',
+        'gif' => 'image/gif',
+        'webp' => 'image/webp',
+    ];
+
     private $entityManager;
 
     private $parser = [];
@@ -124,7 +135,7 @@ class MailMimeParser implements Parser
         return $messageId;
     }
 
-    public function getAddressNameMap(MessageWrapper $message): StdClass
+    public function getAddressNameMap(MessageWrapper $message): stdClass
     {
         $map = (object) [];
 
@@ -150,7 +161,7 @@ class MailMimeParser implements Parser
         return $map;
     }
 
-    public function getAddressDataFromMessage(MessageWrapper $message, string $type): ?StdClass
+    public function getAddressDataFromMessage(MessageWrapper $message, string $type): ?stdClass
     {
         $header = $this->getMessage($message)->getHeader($type);
 
@@ -247,21 +258,21 @@ class MailMimeParser implements Parser
             $email->set('body', $email->get('bodyPlain'));
         }
 
-        $attachmentObjList = $this->getMessage($message)->getAllAttachmentParts();
+        $attachmentPartList = $this->getMessage($message)->getAllAttachmentParts();
 
         $inlineIds = [];
 
-        foreach ($attachmentObjList as $attachmentObj) {
+        foreach ($attachmentPartList as $attachmentPart) {
             $attachment = $this->entityManager->getEntity('Attachment');
 
-            $disposition = $attachmentObj->getHeaderValue('Content-Disposition');
+            $contentType = $this->detectAttachmentContentType($attachmentPart);
 
-            $contentType = $attachmentObj->getHeaderValue('Content-Type');
+            $disposition = $attachmentPart->getHeaderValue('Content-Disposition');
 
-            $filename = $attachmentObj->getHeaderParameter('Content-Disposition', 'filename', null);
+            $filename = $attachmentPart->getHeaderParameter('Content-Disposition', 'filename', null);
 
             if ($filename === null) {
-                $filename = $attachmentObj->getHeaderParameter('Content-Type', 'name', 'unnamed');
+                $filename = $attachmentPart->getHeaderParameter('Content-Type', 'name', 'unnamed');
             }
 
             if ($contentType) {
@@ -273,13 +284,13 @@ class MailMimeParser implements Parser
 
             $content = '';
 
-            $binaryContentStream = $attachmentObj->getBinaryContentStream();
+            $binaryContentStream = $attachmentPart->getBinaryContentStream();
 
             if ($binaryContentStream) {
                 $content = $binaryContentStream->getContents();
             }
 
-            $contentId = $attachmentObj->getHeaderValue('Content-ID');
+            $contentId = $attachmentPart->getHeaderValue('Content-ID');
 
             if ($contentId) {
                 $contentId = trim($contentId, '<>');
@@ -298,20 +309,20 @@ class MailMimeParser implements Parser
             $this->entityManager->saveEntity($attachment);
 
             if ($disposition == 'attachment') {
-                $email->addLinkMultipleId('attachments', $attachment->id);
+                $email->addLinkMultipleId('attachments', $attachment->getId());
 
                 if ($contentId) {
-                    $inlineIds[$contentId] = $attachment->id;
+                    $inlineIds[$contentId] = $attachment->getId();
                 }
             }
             else if ($disposition == 'inline') {
                 if ($contentId) {
-                    $inlineIds[$contentId] = $attachment->id;
+                    $inlineIds[$contentId] = $attachment->getId();
 
                     $inlineAttachmentList[] = $attachment;
                 }
                 else {
-                    $email->addLinkMultipleId('attachments', $attachment->id);
+                    $email->addLinkMultipleId('attachments', $attachment->getId());
                 }
             }
         }
@@ -332,5 +343,43 @@ class MailMimeParser implements Parser
         }
 
         return $inlineAttachmentList;
+    }
+
+    private function detectAttachmentContentType(MessagePart $part): ?string
+    {
+        $contentType = $part->getHeaderValue('Content-Type');
+
+        if ($contentType && strtolower($contentType) !== 'application/octet-stream') {
+            return $contentType;
+        }
+
+        $ext = $this->getAttachmentFilenameExtension($part);
+
+        if (!$ext) {
+            return null;
+        }
+
+        return $this->extMimeTypeMap[$ext] ?? null;
+    }
+
+    private function getAttachmentFilenameExtension(MessagePart $part): ?string
+    {
+        $filename = $part->getHeaderParameter('Content-Disposition', 'filename', null);
+
+        if ($filename === null) {
+            $filename = $part->getHeaderParameter('Content-Type', 'name', 'unnamed');
+        }
+
+        if (!$filename) {
+            return null;
+        }
+
+        $ext = explode('.', $filename)[1] ?? null;
+
+        if (!$ext) {
+            return null;
+        }
+
+        return strtolower($ext);
     }
 }
