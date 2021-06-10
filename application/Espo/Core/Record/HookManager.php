@@ -31,11 +31,6 @@ namespace Espo\Core\Record;
 
 use Espo\ORM\Entity;
 
-use Espo\Core\Record\CreateParams;
-use Espo\Core\Record\ReadParams;
-use Espo\Core\Record\UpdateParams;
-use Espo\Core\Record\DeleteParams;
-
 use Espo\Core\Record\Hook\{
     Provider,
     Type,
