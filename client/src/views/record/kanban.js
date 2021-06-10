@@ -182,6 +182,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.orderDisabled = this.getMetadata().get(['scopes', this.scope, 'kanbanOrderDisabled']);
 
+            if (this.getUser().isPortal()) {
+                this.orderDisabled = true;
+            }
+
             this.statusField = this.getMetadata().get(['scopes', this.scope, 'statusField']);
 
             if (!this.statusField) {
@@ -331,7 +335,6 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         initSortable: function () {
-            var $item = this.$listKanban.find('.item');
             var $list = this.$listKanban.find('.group-column-list');
 
             $list.find('> .item').on('touchstart', function (e) {
