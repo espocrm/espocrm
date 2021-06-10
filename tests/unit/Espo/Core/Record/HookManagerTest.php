@@ -32,11 +32,6 @@ namespace tests\unit\Espo\Core\Record;
 use Espo\Core\{
     Record\HookManager,
     Record\Hook\Provider,
-    Record\Hook\ReadHook,
-    Record\Hook\CreateHook,
-    Record\Hook\UpdateHook,
-    Record\Hook\DeleteHook,
-    Record\Hook\LinkHook,
     Record\Hook\Type,
     Record\CreateParams,
     Record\ReadParams,
