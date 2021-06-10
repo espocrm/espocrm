@@ -131,16 +131,18 @@ class MailMimeParser implements Parser
         foreach (['from', 'to', 'cc', 'reply-To'] as $type) {
             $header = $this->getMessage($message)->getHeader($type);
 
-            if ($header && method_exists($header, 'getAddresses')) {
-                $list = $header->getAddresses();
+            if (!$header || !method_exists($header, 'getAddresses')) {
+                continue;
+            }
 
-                foreach ($list as $item) {
-                    $address = $item->getEmail();
-                    $name = $item->getName();
+            $list = $header->getAddresses();
 
-                    if ($name && $address) {
-                        $map->$address = $name;
-                    }
+            foreach ($list as $item) {
+                $address = $item->getEmail();
+                $name = $item->getName();
+
+                if ($name && $address) {
+                    $map->$address = $name;
                 }
             }
         }
@@ -202,6 +204,7 @@ class MailMimeParser implements Parser
         if (!$htmlPartCount) {
             $bodyHtml = $this->getMessage($message)->getHtmlContent();
         }
+
         if (!$textPartCount) {
             $bodyPlain = $this->getMessage($message)->getTextContent();
         }
