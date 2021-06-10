@@ -160,10 +160,13 @@ class Htmlizer
             foreach ($relationList as $relation) {
                 $collection = null;
 
+                $orderData = $this->getRelationOrder($entity->getEntityType(), $relation);
+
                 if ($entity->hasLinkMultipleField($relation)) {
                     $collection = $this->entityManager
-                        ->getRepository($entity->getEntityType())
+                        ->getRDBRepository($entity->getEntityType())
                         ->getRelation($entity, $relation)
+                        ->order($orderData)
                         ->find();
                 }
                 else if (
@@ -181,9 +184,10 @@ class Htmlizer
                     }
 
                     $collection = $this->entityManager
-                        ->getRepository($entity->getEntityType())
+                        ->getRDBRepository($entity->getEntityType())
                         ->getRelation($entity, $relation)
                         ->limit(0, $limit)
+                        ->order($orderData)
                         ->find();
                 }
 
@@ -709,5 +713,28 @@ class Htmlizer
         }
 
         return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
+    }
+
+    private function getRelationOrder(string $entityType, string $relation): array
+    {
+        $foreignEntityType = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType)
+            ->getRelation($relation)
+            ->getForeignEntityType();
+
+        $collectionParams = $this->entityManager
+            ->getDefs()
+            ->getEntity($foreignEntityType)
+            ->getParam('collection') ?? [];
+
+        $order = $collectionParams['order'] ?? null;
+        $orderBy = $collectionParams['orderBy'] ?? null;
+
+        if ($order === null && $orderBy === null) {
+            return [];
+        }
+
+        return [[$orderBy, $order]];
     }
 }
