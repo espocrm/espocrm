@@ -126,7 +126,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             var label = this.translate(name, 'fields', this.entityType);
 
-            var html = '<div class="cell form-group col-sm-6" data-name="'+name+'">' +
+            var html = '<div class="cell form-group" data-name="'+name+'">' +
                 '<label class="control-label">' + label + '</label>' +
                 '<div class="field" data-name="'+name+'" /></div>';
 

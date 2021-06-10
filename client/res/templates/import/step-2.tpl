@@ -24,7 +24,7 @@
                     </ul>
                 </div>
             </div>
-            <div id="default-values-container">
+            <div id="default-values-container" class="grid-auto-fill-md">
             </div>
         </div>
     </div>
