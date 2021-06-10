@@ -317,11 +317,11 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("composer", function() {
-        cp.execSync("php composer.phar install --no-dev", {stdio: 'ignore'});
+        cp.execSync("omposer install --no-dev", {stdio: 'ignore'});
     });
 
     grunt.registerTask("composer-dev", function() {
-        cp.execSync("php composer.phar install", {stdio: 'ignore'});
+        cp.execSync("composer install", {stdio: 'ignore'});
     });
 
     grunt.registerTask("upgrade", function() {
