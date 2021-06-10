@@ -171,7 +171,7 @@ abstract class Base
         return $this->getContainer()->get('entityManager');
     }
 
-    public function createConfigWriter() : ConfigWriter
+    public function createConfigWriter(): ConfigWriter
     {
         return $this->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
     }

@@ -60,7 +60,7 @@ class ProcessMassEmail implements Job
         $this->log = $log;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $pendingMassEmailList = $this->entityManager
             ->getRepository('MassEmail')

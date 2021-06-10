@@ -56,7 +56,7 @@ class DataPrivacy
         }
     }
 
-    public function postActionErase(Request $request, Response $response) : void
+    public function postActionErase(Request $request, Response $response): void
     {
         $data = $request->getParsedBody();
 

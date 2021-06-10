@@ -36,7 +36,7 @@ class ControlKnowledgeBaseArticleStatus implements Job
         $this->entityManager = $entityManager;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $list = $this->entityManager
             ->getRepository('KnowledgeBaseArticle')

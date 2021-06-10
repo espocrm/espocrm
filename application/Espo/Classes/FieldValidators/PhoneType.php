@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class PhoneType
 {
-    public function checkRequired(Entity $entity, string $field) : bool
+    public function checkRequired(Entity $entity, string $field): bool
     {
         if ($this->isNotEmpty($entity, $field)) {
             return true;
@@ -54,7 +54,7 @@ class PhoneType
         return false;
     }
 
-    protected function isNotEmpty(Entity $entity, string $field) : bool
+    protected function isNotEmpty(Entity $entity, string $field): bool
     {
         return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
     }

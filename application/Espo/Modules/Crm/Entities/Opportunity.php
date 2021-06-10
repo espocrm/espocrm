@@ -39,22 +39,22 @@ class Opportunity extends Entity
 {
     public const ENTITY_TYPE = 'Opportunity';
 
-    public function getAmount() : ?Currency
+    public function getAmount(): ?Currency
     {
         return $this->getValueObject('amount');
     }
 
-    public function setAmount(?Currency $amount) : void
+    public function setAmount(?Currency $amount): void
     {
         $this->setValueObject('amount', $amount);
     }
 
-    public function getCloseDate() : ?Date
+    public function getCloseDate(): ?Date
     {
         return $this->getValueObject('closeDate');
     }
 
-    public function setCloseDate(?Date $closeDate) : void
+    public function setCloseDate(?Date $closeDate): void
     {
         $this->setValueObject('closeDate', $closeDate);
     }

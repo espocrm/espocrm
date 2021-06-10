@@ -99,7 +99,7 @@ abstract class Base implements Injectable
     {
     }
 
-    protected function getVariables() : StdClass
+    protected function getVariables(): StdClass
     {
         return $this->variables;
     }
@@ -120,7 +120,7 @@ abstract class Base implements Injectable
         return $this->processor->process($item);
     }
 
-    protected function fetchArguments(StdClass $item) : array
+    protected function fetchArguments(StdClass $item): array
     {
         $args = $item->value ?? [];
 
@@ -132,7 +132,7 @@ abstract class Base implements Injectable
         return $eArgs;
     }
 
-    protected function fetchRawArguments(StdClass $item) : array
+    protected function fetchRawArguments(StdClass $item): array
     {
         return $item->value ?? [];
     }

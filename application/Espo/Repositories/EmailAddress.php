@@ -289,7 +289,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         string $address,
         ?string $entityType = null,
         array $order = ['User', 'Contact', 'Lead', 'Account']
-    ) : ?Entity {
+    ): ?Entity {
 
         $selectBuilder = $this->getEntityManager()
             ->getRepository('EntityEmailAddress')

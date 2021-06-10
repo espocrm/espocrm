@@ -56,7 +56,7 @@ class ToEquals implements ItemConverter
         $this->randomStringGenerator = $randomStringGenerator;
     }
 
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         $value = $item->getValue();
 

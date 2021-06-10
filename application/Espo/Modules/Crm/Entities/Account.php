@@ -60,7 +60,7 @@ class Account extends Entity
         $this->setValueObject('phoneNumber', $group);
     }
 
-    public function getBillingAddress() : Address
+    public function getBillingAddress(): Address
     {
         return $this->getValueObject('billingAddress');
     }
@@ -70,7 +70,7 @@ class Account extends Entity
         $this->setValueObject('billingAddress', $address);
     }
 
-    public function getShippingAddress() : Address
+    public function getShippingAddress(): Address
     {
         return $this->getValueObject('shippingAddress');
     }

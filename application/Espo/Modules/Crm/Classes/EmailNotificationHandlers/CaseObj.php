@@ -42,7 +42,7 @@ class CaseObj implements Di\EntityManagerAware
 
     protected $inboundEmailEntityHash = [];
 
-    public function getSmtpParams(string $type, Entity $case, User $user = null) : ?array
+    public function getSmtpParams(string $type, Entity $case, User $user = null): ?array
     {
         $inboundEmailId = $case->get('inboundEmailId');
 

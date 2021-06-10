@@ -72,7 +72,7 @@ class MassDelete implements MassAction
         $this->user = $user;
     }
 
-    public function process(Params $params, Data $data) : Result
+    public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 
@@ -100,7 +100,7 @@ class MassDelete implements MassAction
         return $this->massDeleteOriginal->process($params, $data);
     }
 
-    protected function checkEntity(Entity $entity) : void
+    protected function checkEntity(Entity $entity): void
     {
         if ($entity->id === 'system') {
             throw new Forbidden("Can't delete 'system' user.");

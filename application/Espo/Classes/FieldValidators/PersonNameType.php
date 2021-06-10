@@ -44,7 +44,7 @@ class PersonNameType
         $this->fieldUtil = $fieldUtil;
     }
 
-    public function checkRequired(Entity $entity, string $field) : bool
+    public function checkRequired(Entity $entity, string $field): bool
     {
         $isEmpty = true;
 

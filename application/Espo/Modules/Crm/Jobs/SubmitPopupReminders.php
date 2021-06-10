@@ -64,7 +64,7 @@ class SubmitPopupReminders implements Job
         $this->log = $log;
     }
 
-    public function run() : void
+    public function run(): void
     {
         if (!$this->config->get('useWebSocket')) {
             return;

@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class LinkMultipleType
 {
-    public function checkRequired(Entity $entity, string $field) : bool
+    public function checkRequired(Entity $entity, string $field): bool
     {
         return count($entity->getLinkMultipleIdList($field)) > 0;
     }

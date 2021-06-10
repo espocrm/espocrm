@@ -76,7 +76,7 @@ class SubscribeAgain implements EntryPoint
         $this->hasher = $hasher;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $id = $request->get('id') ?? null;
         $emailAddress = $request->get('emailAddress') ?? null;

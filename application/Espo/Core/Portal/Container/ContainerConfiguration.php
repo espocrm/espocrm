@@ -35,7 +35,7 @@ use Espo\Core\{
 
 class ContainerConfiguration extends BaseContainerConfiguration
 {
-    public function getLoaderClassName(string $name) : ?string
+    public function getLoaderClassName(string $name): ?string
     {
         try {
             $className = $this->metadata->get(['app', 'portalContainerServices', $name, 'loaderClassName']);
@@ -57,7 +57,7 @@ class ContainerConfiguration extends BaseContainerConfiguration
         return parent::getLoaderClassName($name);
     }
 
-    public function getServiceClassName(string $name) : ?string
+    public function getServiceClassName(string $name): ?string
     {
         $className =
             $this->metadata->get(['app', 'portalContainerServices', $name, 'className']) ??
@@ -66,14 +66,14 @@ class ContainerConfiguration extends BaseContainerConfiguration
         return $className;
     }
 
-    public function getServiceDependencyList(string $name) : ?array
+    public function getServiceDependencyList(string $name): ?array
     {
         return
             $this->metadata->get(['app', 'portalContainerServices', $name, 'dependencyList']) ??
             parent::getServiceDependencyList($name);
     }
 
-    public function isSettable(string $name) : bool
+    public function isSettable(string $name): bool
     {
         return
             $this->metadata->get(['app', 'portalContainerServices', $name, 'settable']) ??

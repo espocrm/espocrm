@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class LinkParentType
 {
-    public function checkRequired(Entity $entity, string $field) : bool
+    public function checkRequired(Entity $entity, string $field): bool
     {
         $idAttribute = $field . 'Id';
         $typeAttribute = $field . 'Type';

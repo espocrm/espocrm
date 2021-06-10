@@ -54,7 +54,7 @@ class IsImportantIsFalse implements ItemConverter
         $this->joinHelper = $joinHelper;
     }
 
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
 

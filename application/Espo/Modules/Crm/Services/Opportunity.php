@@ -60,7 +60,7 @@ class Opportunity extends Record
         ?string $dateTo = null,
         bool $useLastStage = false,
         ?string $teamId = null
-    ) : StdClass {
+    ): StdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
@@ -159,7 +159,7 @@ class Opportunity extends Record
 
     public function reportByLeadSource(
         string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
-    ) : StdClass {
+    ): StdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
@@ -224,7 +224,7 @@ class Opportunity extends Record
 
     public function reportByStage(
         string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
-    ) : StdClass {
+    ): StdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
@@ -302,7 +302,7 @@ class Opportunity extends Record
 
     public function reportSalesByMonth(
         string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
-    ) : StdClass {
+    ): StdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
             throw new Forbidden();
@@ -434,7 +434,7 @@ class Opportunity extends Record
         ]);
     }
 
-    protected function getDateRangeByFilter(string $dateFilter) : array
+    protected function getDateRangeByFilter(string $dateFilter): array
     {
         switch ($dateFilter) {
             case 'currentYear':
@@ -515,7 +515,7 @@ class Opportunity extends Record
         return [0, 0];
     }
 
-    protected function getLostStageList() : array
+    protected function getLostStageList(): array
     {
         $lostStageList = [];
 
@@ -534,7 +534,7 @@ class Opportunity extends Record
         return $lostStageList;
     }
 
-    protected function getWonStageList() : array
+    protected function getWonStageList(): array
     {
         $wonStageList = [];
 
@@ -553,7 +553,7 @@ class Opportunity extends Record
         return $wonStageList;
     }
 
-    public function getEmailAddressList(string $id) : array
+    public function getEmailAddressList(string $id): array
     {
         $entity = $this->getEntity($id);
 
@@ -586,7 +586,7 @@ class Opportunity extends Record
         return $list;
     }
 
-    protected function getAccountEmailAddress(OpportunityEntity $entity, array $dataList) : ?StdClass
+    protected function getAccountEmailAddress(OpportunityEntity $entity, array $dataList): ?StdClass
     {
         $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
 
@@ -613,7 +613,7 @@ class Opportunity extends Record
         ];
     }
 
-    protected function getContactEmailAddressList(OpportunityEntity $entity) : array
+    protected function getContactEmailAddressList(OpportunityEntity $entity): array
     {
         $contactIdList = $entity->getLinkMultipleIdList('contacts');
 

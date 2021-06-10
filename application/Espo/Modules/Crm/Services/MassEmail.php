@@ -74,7 +74,7 @@ class MassEmail extends RecordService
         $this->getEntityManager()->getQueryExecutor()->execute($delete);
     }
 
-    public function processTest(string $id, array $targetDataList) : void
+    public function processTest(string $id, array $targetDataList): void
     {
         $targetList = [];
 
@@ -118,21 +118,21 @@ class MassEmail extends RecordService
         $this->processTestSending($massEmail);
     }
 
-    protected function createTestQueue(Entity $massEmail, iterable $targetList) : void
+    protected function createTestQueue(Entity $massEmail, iterable $targetList): void
     {
         $queue = $this->injectableFactory->create(Queue::class);
 
         $queue->create($massEmail, true, $targetList);
     }
 
-    protected function processTestSending(Entity $massEmail) : void
+    protected function processTestSending(Entity $massEmail): void
     {
         $processor = $this->injectableFactory->create(Processor::class);
 
         $processor->process($massEmail, true);
     }
 
-    public function getSmtpAccountDataList() : array
+    public function getSmtpAccountDataList(): array
     {
         if (
             !$this->getAcl()->checkScope('MassEmail', 'create') &&

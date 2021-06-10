@@ -83,7 +83,7 @@ class Lead extends Record implements
         }
     }
 
-    public function getConvertAttributes(string $id) : array
+    public function getConvertAttributes(string $id): array
     {
         $lead = $this->getEntity($id);
 
@@ -218,7 +218,7 @@ class Lead extends Record implements
         return $data;
     }
 
-    public function convert(string $id, object $recordsData, ?object $additionalData = null) : LeadEntity
+    public function convert(string $id, object $recordsData, ?object $additionalData = null): LeadEntity
     {
         $lead = $this->getEntity($id);
 

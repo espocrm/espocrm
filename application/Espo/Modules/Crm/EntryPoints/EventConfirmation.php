@@ -58,7 +58,7 @@ class EventConfirmation implements EntryPoint
         $this->hookManager = $hookManager;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $uid = $request->get('uid') ?? null;
         $action = $request->get('action') ?? null;

@@ -82,7 +82,7 @@ class MassUpdate implements MassAction
         $this->dataManager = $dataMaanger;
     }
 
-    public function process(Params $params, Data $data) : Result
+    public function process(Params $params, Data $data): Result
     {
         $entityType = $params->getEntityType();
 
@@ -125,7 +125,7 @@ class MassUpdate implements MassAction
         return $result;
     }
 
-    protected function checkEntity(Entity $entity, Data $data) : void
+    protected function checkEntity(Entity $entity, Data $data): void
     {
         if ($entity->id === 'system') {
             throw new Forbidden("Can't update 'system' user.");
@@ -138,7 +138,7 @@ class MassUpdate implements MassAction
         }
     }
 
-    protected function afterProcess(Result $result, Data $dataWrapped) : void
+    protected function afterProcess(Result $result, Data $dataWrapped): void
     {
         $data = $dataWrapped->getRaw();
 
@@ -168,12 +168,12 @@ class MassUpdate implements MassAction
         }
     }
 
-    protected function clearRoleCache(string $id) : void
+    protected function clearRoleCache(string $id): void
     {
         $this->fileManager->removeFile('data/cache/application/acl/' . $id . '.php');
     }
 
-    protected function clearPortalRolesCache() : void
+    protected function clearPortalRolesCache(): void
     {
         $this->fileManager->removeInDir('data/cache/application/aclPortal');
     }

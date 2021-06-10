@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 
 class EmailType
 {
-    public function checkRequired(Entity $entity, string $field) : bool
+    public function checkRequired(Entity $entity, string $field): bool
     {
         if ($this->isNotEmpty($entity, $field)) {
             return true;
@@ -54,7 +54,7 @@ class EmailType
         return false;
     }
 
-    public function checkEmailAddress(Entity $entity, string $field) : bool
+    public function checkEmailAddress(Entity $entity, string $field): bool
     {
         if ($this->isNotEmpty($entity, $field)) {
             $address = $entity->get($field);
@@ -85,7 +85,7 @@ class EmailType
         return true;
     }
 
-    protected function isNotEmpty(Entity $entity, string $field) : bool
+    protected function isNotEmpty(Entity $entity, string $field): bool
     {
         return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
     }

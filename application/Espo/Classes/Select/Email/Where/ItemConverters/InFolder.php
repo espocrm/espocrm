@@ -58,7 +58,7 @@ class InFolder implements ItemConverter
         $this->joinHelper = $joinHelper;
     }
 
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         $folderId = $item->getValue();
 
@@ -86,7 +86,7 @@ class InFolder implements ItemConverter
         }
     }
 
-    protected function convertInbox(QueryBuilder $queryBuilder) : WhereClauseItem
+    protected function convertInbox(QueryBuilder $queryBuilder): WhereClauseItem
     {
         $this->joinEmailUser($queryBuilder);
 
@@ -121,7 +121,7 @@ class InFolder implements ItemConverter
         return WhereClause::fromRaw($whereClause);
     }
 
-    protected function convertSent(QueryBuilder $queryBuilder) : WhereClauseItem
+    protected function convertSent(QueryBuilder $queryBuilder): WhereClauseItem
     {
         $this->joinEmailUser($queryBuilder);
 
@@ -140,7 +140,7 @@ class InFolder implements ItemConverter
         ]);
     }
 
-    protected function convertImportant(QueryBuilder $queryBuilder) : WhereClauseItem
+    protected function convertImportant(QueryBuilder $queryBuilder): WhereClauseItem
     {
         $this->joinEmailUser($queryBuilder);
 
@@ -150,7 +150,7 @@ class InFolder implements ItemConverter
         ]);
     }
 
-    protected function convertTrash(QueryBuilder $queryBuilder) : WhereClauseItem
+    protected function convertTrash(QueryBuilder $queryBuilder): WhereClauseItem
     {
         $this->joinEmailUser($queryBuilder);
 
@@ -160,7 +160,7 @@ class InFolder implements ItemConverter
         ]);
     }
 
-    protected function convertDraft(QueryBuilder $queryBuilder) : WhereClauseItem
+    protected function convertDraft(QueryBuilder $queryBuilder): WhereClauseItem
     {
         return WhereClause::fromRaw([
             'status' => 'Draft',
@@ -168,7 +168,7 @@ class InFolder implements ItemConverter
         ]);
     }
 
-    protected function convertFolderId(QueryBuilder $queryBuilder, string $folderId) : WhereClauseItem
+    protected function convertFolderId(QueryBuilder $queryBuilder, string $folderId): WhereClauseItem
     {
         $this->joinEmailUser($queryBuilder);
 
@@ -183,7 +183,7 @@ class InFolder implements ItemConverter
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
     }
 
-    protected function getEmailAddressIdList() : array
+    protected function getEmailAddressIdList(): array
     {
         $emailAddressList = $this->entityManager
             ->getRepository('User')

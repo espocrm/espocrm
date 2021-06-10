@@ -63,7 +63,7 @@ class Integration extends Entity
         return null;
     }
 
-    public function clear(string $name) : void
+    public function clear(string $name): void
     {
         parent::clear($name);
 
@@ -78,7 +78,7 @@ class Integration extends Entity
         $this->set('data', $data);
     }
 
-    public function set($p1, $p2 = null) : void
+    public function set($p1, $p2 = null): void
     {
         if (is_object($p1)) {
             $p1 = get_object_vars($p1);
@@ -115,7 +115,7 @@ class Integration extends Entity
         }
     }
 
-    public function isAttributeChanged(string $name) : bool
+    public function isAttributeChanged(string $name): bool
     {
         if ($name === 'data') {
             return true;
@@ -128,7 +128,7 @@ class Integration extends Entity
      * @deprecated
      * @todo Make protected.
      */
-    public function populateFromArray(array $array, bool $onlyAccessible = true, bool $reset = false) : void
+    public function populateFromArray(array $array, bool $onlyAccessible = true, bool $reset = false): void
     {
         if ($reset) {
             $this->reset();
@@ -177,7 +177,7 @@ class Integration extends Entity
         );
     }
 
-    public function getValueMap() : StdClass
+    public function getValueMap(): StdClass
     {
         $arr = $this->toArray();
 

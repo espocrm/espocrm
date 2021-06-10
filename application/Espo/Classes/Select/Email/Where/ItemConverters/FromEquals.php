@@ -58,7 +58,7 @@ class FromEquals implements ItemConverter
         $this->emailAddressHelper = $emailAddressHelper;
     }
 
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         $value = $item->getValue();
 

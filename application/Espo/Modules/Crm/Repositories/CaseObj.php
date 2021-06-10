@@ -49,14 +49,14 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
         $this->handleAfterSaveContacts($entity);
     }
 
-    protected function getStreamService() : StreamService
+    protected function getStreamService(): StreamService
     {
         $this->streamService = $this->streamService ?? $this->serviceFactory->create('Stream');
 
         return $this->streamService;
     }
 
-    protected function handleAfterSaveContacts(Entity $entity) : void
+    protected function handleAfterSaveContacts(Entity $entity): void
     {
         if (!$entity->isAttributeChanged('contactId')) {
             return;

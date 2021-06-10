@@ -102,12 +102,12 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
         } while ($next);
     }
 
-    public function valid() : bool
+    public function valid(): bool
     {
         return array_key_exists($this->position, $this->dataList);
     }
 
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->dataList);
     }
@@ -130,7 +130,7 @@ class ArgumentList implements Evaluatable, Iterator, Countable, ArrayAccess, See
         throw new BadMethodCallException('Unsetting is not allowed.');
     }
 
-    public function count() : int
+    public function count(): int
     {
         return count($this->dataList);
     }

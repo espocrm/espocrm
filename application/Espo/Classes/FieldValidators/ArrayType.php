@@ -35,12 +35,12 @@ use StdClass;
 
 class ArrayType
 {
-    public function checkRequired(Entity $entity, string $field) : bool
+    public function checkRequired(Entity $entity, string $field): bool
     {
         return $this->isNotEmpty($entity, $field);
     }
 
-    public function checkMaxCount(Entity $entity, string $field, int $validationValue) : bool
+    public function checkMaxCount(Entity $entity, string $field, int $validationValue): bool
     {
         if (!$this->isNotEmpty($entity, $field)) {
             return true;
@@ -55,7 +55,7 @@ class ArrayType
         return true;
     }
 
-    public function rawCheckArray(StdClass $data, string $field) : bool
+    public function rawCheckArray(StdClass $data, string $field): bool
     {
         if (isset($data->$field) && $data->$field !== null && !is_array($data->$field)) {
             return false;
@@ -64,7 +64,7 @@ class ArrayType
         return true;
     }
 
-    protected function isNotEmpty(Entity $entity, string $field) : bool
+    protected function isNotEmpty(Entity $entity, string $field): bool
     {
         if (!$entity->has($field) || $entity->get($field) === null) {
             return false;

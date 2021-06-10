@@ -36,7 +36,7 @@ use Espo\Core\{
 
 class Formatter3 implements AddressFormatter
 {
-    public function format(Address $address) : string
+    public function format(Address $address): string
     {
         $result = '';
 

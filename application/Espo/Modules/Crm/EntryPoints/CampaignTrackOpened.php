@@ -54,7 +54,7 @@ class CampaignTrackOpened implements EntryPoint
         $this->serviceFactory = $serviceFactory;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $id = $request->get('id');
 

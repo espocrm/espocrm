@@ -55,7 +55,7 @@ class OwnerUserFieldProvider
      * Get an entity field that stores an owner-user (or multiple users).
      * Must be link or linkMulitple field. NULL means no owner.
      */
-    public function get(string $entityType) : ?string
+    public function get(string $entityType): ?string
     {
         $value = $this->metadata->get(['aclDefs', $entityType, 'readOwnerUserField']);
 

@@ -54,7 +54,7 @@ class Queue
         $this->entityManager = $entityManager;
     }
 
-    protected function cleanupQueueItems(Entity $massEmail) : void
+    protected function cleanupQueueItems(Entity $massEmail): void
     {
         $delete = $this->entityManager
             ->getQueryBuilder()
@@ -69,7 +69,7 @@ class Queue
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-    public function create(Entity $massEmail, bool $isTest = false, iterable $additionalTargetList = []) : void
+    public function create(Entity $massEmail, bool $isTest = false, iterable $additionalTargetList = []): void
     {
         if (!$isTest && $massEmail->get('status') !== 'Pending') {
             throw new Error("Mass Email '" . $massEmail->id . "' should be 'Pending'.");

@@ -78,7 +78,7 @@ class Email implements AssignmentNotificator
         $this->aclManager = $aclManager;
     }
 
-    public function process(Entity $entity, NotificatorParams $params) : void
+    public function process(Entity $entity, NotificatorParams $params): void
     {
         if (!in_array($entity->get('status'), ['Archived', 'Sent', 'Being Imported'])) {
             return;
@@ -286,7 +286,7 @@ class Email implements AssignmentNotificator
         }
     }
 
-    private function getStreamService() : StreamService
+    private function getStreamService(): StreamService
     {
         if (empty($this->streamService)) {
             $this->streamService = $this->serviceFactory->create('Stream');

@@ -42,7 +42,7 @@ class EmailAddressHelper
         $this->entityManager = $entityManager;
     }
 
-    public function getEmailAddressIdByValue(string $value) : ?string
+    public function getEmailAddressIdByValue(string $value): ?string
     {
         $emailAddress = $this->entityManager
             ->getRepository('EmailAddress')

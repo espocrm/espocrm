@@ -35,7 +35,7 @@ use Espo\{
 
 class JoinHelper
 {
-    public function joinEmailUser(QueryBuilder $queryBuilder, string $userId) : void
+    public function joinEmailUser(QueryBuilder $queryBuilder, string $userId): void
     {
         if ($queryBuilder->hasLeftJoinAlias('emailUser')) {
             return;

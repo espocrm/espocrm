@@ -64,7 +64,7 @@ class RetrieveType extends BaseFunction
         return $this->retrieveAttribute($item, $pathArray);
     }
 
-    private function splitPath(string $path) : array
+    private function splitPath(string $path): array
     {
         $pathArray = preg_split('/(?<!\\\)\./', $path);
 

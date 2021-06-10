@@ -67,7 +67,7 @@ class SendEmailReminders implements Job
         $this->log = $log;
     }
 
-    public function run() : void
+    public function run(): void
     {
         $dt = new DateTime();
 

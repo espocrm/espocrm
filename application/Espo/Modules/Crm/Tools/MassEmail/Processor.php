@@ -93,7 +93,7 @@ class Processor
         $this->log = $log;
     }
 
-    public function process(Entity $massEmail, bool $isTest = false) : void
+    public function process(Entity $massEmail, bool $isTest = false): void
     {
         $maxBatchSize = $this->config->get('massEmailMaxPerHourCount', self::MAX_PER_HOUR_COUNT);
 
@@ -231,7 +231,7 @@ class Processor
         Entity $emailTemplate,
         Entity $target,
         iterable $trackingUrlList = []
-    ) : ?Email {
+    ): ?Email {
 
         $templateParams = [
             'parent' => $target,
@@ -313,7 +313,7 @@ class Processor
         Sender $sender,
         Message $message,
         array &$params
-    ) : void {
+    ): void {
 
         $header = new XQueueItemId();
 
@@ -343,7 +343,7 @@ class Processor
         }
     }
 
-    protected function setFailed(Entity $massEmail) : void
+    protected function setFailed(Entity $massEmail): void
     {
         $massEmail->set('status', 'Failed');
 
@@ -372,7 +372,7 @@ class Processor
         ?Campaign $campaign = null,
         bool $isTest = false,
         $smtpParams = null
-    ) : bool {
+    ): bool {
 
         $queueItemFetched = $this->entityManager->getEntity($queueItem->getEntityType(), $queueItem->id);
 
@@ -524,7 +524,7 @@ class Processor
         return true;
     }
 
-    protected function getEmailTemplateService() : EmailTemplateService
+    protected function getEmailTemplateService(): EmailTemplateService
     {
         if (!$this->emailTemplateService) {
             $this->emailTemplateService = $this->serviceFactory->create('EmailTemplate');
@@ -533,7 +533,7 @@ class Processor
         return $this->emailTemplateService;
     }
 
-    protected function getCampaignService() : CampaignService
+    protected function getCampaignService(): CampaignService
     {
         if (!$this->campaignService) {
             $this->campaignService = $this->serviceFactory->create('Campaign');
@@ -542,7 +542,7 @@ class Processor
         return $this->campaignService;
     }
 
-    protected function getSiteUrl() : string
+    protected function getSiteUrl(): string
     {
         return $this->config->get('massEmailSiteUrl') ?? $this->config->get('siteUrl');
     }

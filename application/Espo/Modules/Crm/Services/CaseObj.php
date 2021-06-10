@@ -83,7 +83,7 @@ class CaseObj extends Record
         }
     }
 
-    public function getEmailAddressList(string $id) : array
+    public function getEmailAddressList(string $id): array
     {
         $entity = $this->getEntity($id);
 
@@ -129,7 +129,7 @@ class CaseObj extends Record
         return $list;
     }
 
-    protected function getAccountEmailAddress(CaseEntity $entity, array $dataList) : ?StdClass
+    protected function getAccountEmailAddress(CaseEntity $entity, array $dataList): ?StdClass
     {
         $account = $this->entityManager->getEntity('Account', $entity->get('accountId'));
 
@@ -156,7 +156,7 @@ class CaseObj extends Record
         ];
     }
 
-    protected function getLeadEmailAddress(CaseEntity $entity, array $dataList) : ?StdClass
+    protected function getLeadEmailAddress(CaseEntity $entity, array $dataList): ?StdClass
     {
         $lead = $this->entityManager->getEntity('Account', $entity->get('leadId'));
 
@@ -183,7 +183,7 @@ class CaseObj extends Record
         ];
     }
 
-    protected function getContactEmailAddressList(CaseEntity $entity) : array
+    protected function getContactEmailAddressList(CaseEntity $entity): array
     {
         $contactIdList = $entity->getLinkMultipleIdList('contacts');
 

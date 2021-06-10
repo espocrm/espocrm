@@ -172,7 +172,7 @@ class PersonName extends Base
         ];
     }
 
-    protected function getSelect(array $fullList, ?string $alias = null) : string
+    protected function getSelect(array $fullList, ?string $alias = null): string
     {
         foreach ($fullList as &$item) {
 

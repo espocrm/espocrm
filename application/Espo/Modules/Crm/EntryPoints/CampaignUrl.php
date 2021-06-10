@@ -81,7 +81,7 @@ class CampaignUrl implements EntryPoint
         $this->metadata = $metadata;
     }
 
-    public function run(Request $request, Response $response) : void
+    public function run(Request $request, Response $response): void
     {
         $queueItemId = $request->get('queueItemId') ?? null;
         $trackingUrlId = $request->get('id') ?? null;
@@ -134,7 +134,7 @@ class CampaignUrl implements EntryPoint
         }
     }
 
-    protected function processWithQueueItem(CampaignTrackingUrl $trackingUrl, EmailQueueItem $queueItem) : void
+    protected function processWithQueueItem(CampaignTrackingUrl $trackingUrl, EmailQueueItem $queueItem): void
     {
         $target = null;
         $campaign = null;
@@ -168,7 +168,7 @@ class CampaignUrl implements EntryPoint
         }
     }
 
-    protected function processWithHash(CampaignTrackingUrl $trackingUrl, string $emailAddress, string $hash) : void
+    protected function processWithHash(CampaignTrackingUrl $trackingUrl, string $emailAddress, string $hash): void
     {
         $hashActual = $this->hasher->hash($emailAddress);
 
@@ -194,7 +194,7 @@ class CampaignUrl implements EntryPoint
         }
     }
 
-    protected function processWithUniqueId(CampaignTrackingUrl $trackingUrl, string $uid, string $hash) : void
+    protected function processWithUniqueId(CampaignTrackingUrl $trackingUrl, string $uid, string $hash): void
     {
         $hashActual = $this->hasher->hash($uid);
 
@@ -207,7 +207,7 @@ class CampaignUrl implements EntryPoint
         ]);
     }
 
-    protected function displayMessage(?string $message) : void
+    protected function displayMessage(?string $message): void
     {
         $data = [
             'message' => $message ?? '',

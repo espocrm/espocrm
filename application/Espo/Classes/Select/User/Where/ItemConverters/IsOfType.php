@@ -42,7 +42,7 @@ use Espo\{
 
 class IsOfType implements ItemConverter
 {
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         $type = $item->getValue();
 

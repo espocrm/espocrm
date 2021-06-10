@@ -42,7 +42,7 @@ use Espo\{
 
 class IsNotRepliedIsTrue implements ItemConverter
 {
-    public function convert(QueryBuilder $queryBuilder, Item $item) : WhereClauseItem
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
         return WhereClause::fromRaw([
             'isReplied' => false,

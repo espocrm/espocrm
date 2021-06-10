@@ -33,12 +33,12 @@ use Espo\ORM\Entity;
 
 class VarcharType
 {
-    public function checkRequired(Entity $entity, string $field) : bool
+    public function checkRequired(Entity $entity, string $field): bool
     {
         return $this->isNotEmpty($entity, $field);
     }
 
-    public function checkMaxLength(Entity $entity, string $field, int $validationValue) : bool
+    public function checkMaxLength(Entity $entity, string $field, int $validationValue): bool
     {
         if ($this->isNotEmpty($entity, $field)) {
             $value = $entity->get($field);
@@ -51,7 +51,7 @@ class VarcharType
         return true;
     }
 
-    protected function isNotEmpty(Entity $entity, string $field) : bool
+    protected function isNotEmpty(Entity $entity, string $field): bool
     {
         return $entity->has($field) && $entity->get($field) !== '' && $entity->get($field) !== null;
     }

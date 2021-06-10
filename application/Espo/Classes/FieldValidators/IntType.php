@@ -33,12 +33,12 @@ use Espo\ORM\Entity;
 
 class IntType
 {
-    public function checkRequired(Entity $entity, string $field) : bool
+    public function checkRequired(Entity $entity, string $field): bool
     {
         return $this->isNotEmpty($entity, $field);
     }
 
-    public function checkMax(Entity $entity, string $field, $validationValue) : bool
+    public function checkMax(Entity $entity, string $field, $validationValue): bool
     {
         if (!$this->isNotEmpty($entity, $field)) {
             return true;
@@ -51,7 +51,7 @@ class IntType
         return true;
     }
 
-    public function checkMin(Entity $entity, string $field, $validationValue) : bool
+    public function checkMin(Entity $entity, string $field, $validationValue): bool
     {
         if (!$this->isNotEmpty($entity, $field)) {
             return true;
@@ -64,7 +64,7 @@ class IntType
         return true;
     }
 
-    protected function isNotEmpty(Entity $entity, string $field) : bool
+    protected function isNotEmpty(Entity $entity, string $field): bool
     {
         return $entity->has($field) && $entity->get($field) !== null;
     }

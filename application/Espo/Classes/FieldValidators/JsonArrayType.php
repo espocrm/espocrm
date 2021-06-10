@@ -35,7 +35,7 @@ use StdClass;
 
 class JsonArrayType
 {
-    public function rawCheckArray(StdClass $data, string $field) : bool
+    public function rawCheckArray(StdClass $data, string $field): bool
     {
         if (isset($data->$field) && $data->$field !== null && !is_array($data->$field)) {
             return false;
@@ -44,7 +44,7 @@ class JsonArrayType
         return true;
     }
 
-    protected function isNotEmpty(Entity $entity, string $field) : bool
+    protected function isNotEmpty(Entity $entity, string $field): bool
     {
         if (!$entity->has($field) || $entity->get($field) === null) {
             return false;
