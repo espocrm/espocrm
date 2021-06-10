@@ -98,7 +98,7 @@ class KanbanService
         $this->processAccessCheck($entityType);
 
         if ($this->user->isPortal()) {
-            throw new Forbidden();
+            throw new ForbiddenSilent("Kanban order is not allowed for portal users.");
         }
 
         $maxOrderNumber = $this->config->get('kanbanMaxOrderNumber');
@@ -119,11 +119,11 @@ class KanbanService
     private function processAccessCheck($entityType): void
     {
         if (!$this->metadata->get(['scopes', $entityType, 'object'])) {
-            throw new Forbidden("Non-object entities are not supported.");
+            throw new ForbiddenSilent("Non-object entities are not supported.");
         }
 
         if ($this->metadata->get(['recordDefs', $entityType, 'kanbanDisabled'])) {
-            throw new Forbidden("Kanban is disabled for '{$entityType}'.");
+            throw new ForbiddenSilent("Kanban is disabled for '{$entityType}'.");
         }
 
         if (!$this->aclManager->check($this->user, $entityType, Table::ACTION_READ)) {
