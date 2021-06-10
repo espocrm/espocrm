@@ -317,7 +317,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask("composer", function() {
-        cp.execSync("omposer install --no-dev", {stdio: 'ignore'});
+        cp.execSync("composer install --no-dev", {stdio: 'ignore'});
     });
 
     grunt.registerTask("composer-dev", function() {
