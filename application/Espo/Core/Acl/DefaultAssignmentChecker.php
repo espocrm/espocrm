@@ -107,7 +107,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
         $assignedUserId = $entity->get(self::ATTR_ASSIGNED_USER_ID);
 
         if ($user->isPortal()) {
-            if (!$entity->isAttributeChanged(self::ATTR_ASSIGNED_USER_ID) && !$assignedUserId) {
+            if (!$entity->isAttributeChanged(self::ATTR_ASSIGNED_USER_ID)) {
                 return true;
             }
 
@@ -255,9 +255,11 @@ class DefaultAssignmentChecker implements AssignmentChecker
         }
 
         if ($user->isPortal()) {
-            if (count($entity->getLinkMultipleIdList(self::FIELD_ASSIGNED_USERS)) === 0) {
+            if (!$entity->isAttributeChanged(self::ATTR_ASSIGNED_USERS_IDS)) {
                 return true;
             }
+
+            return false;
         }
 
         $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignmentPermission');
