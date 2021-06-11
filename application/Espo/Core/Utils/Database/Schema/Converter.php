@@ -208,7 +208,7 @@ class Converter
 
         $schema = $this->getSchema(true);
 
-        $indexList = SchemaUtils::getIndexList($ormMeta);
+        $indexes = SchemaUtils::getIndexes($ormMeta);
 
         $tables = [];
 
@@ -278,8 +278,8 @@ class Converter
 
             $tables[$entityName]->setPrimaryKey($primaryColumns);
 
-            if (!empty($indexList[$entityName])) {
-                $this->addIndexes($tables[$entityName], $indexList[$entityName]);
+            if (!empty($indexes[$entityName])) {
+                $this->addIndexes($tables[$entityName], $indexes[$entityName]);
             }
         }
 
@@ -402,7 +402,7 @@ class Converter
 
         // add defined indexes
         if (!empty($relationParams['indexes'])) {
-            $normalizedIndexes = SchemaUtils::getIndexList([
+            $normalizedIndexes = SchemaUtils::getIndexes([
                 $entityName => [
                     'fields' => [],
                     'indexes' => $relationParams['indexes'],

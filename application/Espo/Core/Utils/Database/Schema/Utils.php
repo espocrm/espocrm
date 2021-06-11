@@ -33,7 +33,7 @@ use Espo\Core\Utils\Util;
 
 class Utils
 {
-    public static function getIndexList(array $ormMeta, array $ignoreFlags = [])
+    public static function getIndexes(array $ormMeta, array $ignoreFlags = [])
     {
         $indexList = [];
 
@@ -199,7 +199,7 @@ class Utils
         $fields = [];
 
         if (!isset($indexList)) {
-            $indexList = static::getIndexList($ormMeta, ['fulltext']);
+            $indexList = static::getIndexes($ormMeta, ['fulltext']);
         }
 
         foreach ($indexList as $entityName => $indexes) {
