@@ -93,14 +93,9 @@ define('views/popup-notification', 'view', function (Dep) {
         playSound: function () {
             if (this.notificationSoundsDisabled) return;
 
-            var html = '' +
-                '<audio autoplay="autoplay">'+
-                    '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />'+
-                    '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />'+
-                    '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />'+
-                '</audio>';
-            $(html).get(0).volume = 0.3;
-            $(html).get(0).play();
+            try {
+                (new Audio(this.soundPath + '.mp3')).play();
+            } catch (e) {}
         },
 
         onShow: function () {

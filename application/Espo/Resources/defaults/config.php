@@ -157,6 +157,7 @@ return [
     'auth2FAMethodList' => ['Totp'],
     'personNameFormat' => 'firstLast',
     'newNotificationCountInTitle' => false,
+    'notificationSoundsDisabled' => true,
     'pdfEngine' => 'Tcpdf',
     'defaultFileStorage' => 'EspoUploadDir',
     'isInstalled' => false,
