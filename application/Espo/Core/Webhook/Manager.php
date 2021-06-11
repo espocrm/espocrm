@@ -101,7 +101,8 @@ class Manager
     {
         $data = [];
 
-        $list = $this->entityManager->getRepository('Webhook')
+        $list = $this->entityManager
+            ->getRDBRepository('Webhook')
             ->select(['event'])
             ->groupBy(['event'])
             ->where([
@@ -135,7 +136,7 @@ class Manager
     public function removeEvent(string $event): void
     {
         $notExists = !$this->entityManager
-            ->getRepository('Webhook')
+            ->getRDBRepository('Webhook')
             ->select(['id'])
             ->where([
                 'event' => $event,
@@ -159,7 +160,7 @@ class Manager
 
     protected function logDebugEvent(string $event, Entity $entity): void
     {
-        $this->log->debug("Webhook: {$event} on record {$entity->id}.");
+        $this->log->debug("Webhook: {$event} on record {$entity->getId()}.");
     }
 
     /**
@@ -176,7 +177,7 @@ class Manager
         $this->entityManager->createEntity('WebhookEventQueueItem', [
             'event' => $event,
             'targetType' => $entity->getEntityType(),
-            'targetId' => $entity->id,
+            'targetId' => $entity->getId(),
             'data' => $entity->getValueMap(),
         ]);
 
@@ -197,9 +198,9 @@ class Manager
         $this->entityManager->createEntity('WebhookEventQueueItem', [
             'event' => $event,
             'targetType' => $entity->getEntityType(),
-            'targetId' => $entity->id,
+            'targetId' => $entity->getId(),
             'data' => (object) [
-                'id' => $entity->id,
+                'id' => $entity->getId(),
             ],
         ]);
 
@@ -229,13 +230,13 @@ class Manager
             return;
         }
 
-        $data->id = $entity->id;
+        $data->id = $entity->getId();
 
         if ($this->eventExists($event)) {
             $this->entityManager->createEntity('WebhookEventQueueItem', [
                 'event' => $event,
                 'targetType' => $entity->getEntityType(),
-                'targetId' => $entity->id,
+                'targetId' => $entity->getId(),
                 'data' => $data,
             ]);
 
@@ -268,7 +269,7 @@ class Manager
             if ($isChanged) {
                 $itemData = (object) [];
 
-                $itemData->id = $entity->id;
+                $itemData->id = $entity->getId();
 
                 $attributeList = $this->fieldUtil->getAttributeList($entity->getEntityType(), $field);
 
@@ -283,7 +284,7 @@ class Manager
                 $this->entityManager->createEntity('WebhookEventQueueItem', [
                     'event' => $itemEvent,
                     'targetType' => $entity->getEntityType(),
-                    'targetId' => $entity->id,
+                    'targetId' => $entity->getId(),
                     'data' => $itemData,
                 ]);
 

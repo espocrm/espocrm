@@ -52,15 +52,15 @@ use DateTime;
  */
 class Queue
 {
-    const EVENT_PORTION_SIZE = 20;
+    private const EVENT_PORTION_SIZE = 20;
 
-    const PORTION_SIZE = 20;
+    private const PORTION_SIZE = 20;
 
-    const BATCH_SIZE = 50;
+    private const BATCH_SIZE = 50;
 
-    const MAX_ATTEMPT_NUMBER = 4;
+    private const MAX_ATTEMPT_NUMBER = 4;
 
-    const FAIL_ATTEMPT_PERIOD = '10 minutes';
+    private const FAIL_ATTEMPT_PERIOD = '10 minutes';
 
     private $sender;
 
@@ -97,7 +97,7 @@ class Queue
         $portionSize = $this->config->get('webhookQueueEventPortionSize', self::EVENT_PORTION_SIZE);
 
         $itemList = $this->entityManager
-            ->getRepository('WebhookEventQueueItem')
+            ->getRDBRepository('WebhookEventQueueItem')
             ->where([
                 'isProcessed' => false,
             ])
@@ -119,7 +119,7 @@ class Queue
     protected function createQueueFromEvent(WebhookEventQueueItem $item): void
     {
         $webhookList = $this->entityManager
-            ->getRepository('Webhook')
+            ->getRDBRepository('Webhook')
             ->where([
                 'event' => $item->get('event'),
                 'isActive' => true,
@@ -129,7 +129,7 @@ class Queue
 
         foreach ($webhookList as $webhook) {
             $this->entityManager->createEntity('WebhookQueueItem', [
-                'webhookId' => $webhook->id,
+                'webhookId' => $webhook->getId(),
                 'event' => $item->get('event'),
                 'targetId' => $item->get('targetId'),
                 'targetType' => $item->get('targetType'),
@@ -145,7 +145,8 @@ class Queue
         $portionSize = $this->config->get('webhookQueuePortionSize', self::PORTION_SIZE);
         $batchSize = $this->config->get('webhookBatchSize', self::BATCH_SIZE);
 
-        $groupedItemList = $this->entityManager->getRepository('WebhookQueueItem')
+        $groupedItemList = $this->entityManager
+            ->getRDBRepository('WebhookQueueItem')
             ->select(['webhookId', 'number'])
             ->where([
                 'number=s' => [
@@ -171,7 +172,7 @@ class Queue
             $webhookId = $group->get('webhookId');
 
             $itemList = $this->entityManager
-                ->getRepository('WebhookQueueItem')
+                ->getRDBRepository('WebhookQueueItem')
                 ->where([
                     'webhookId' => $webhookId,
                     'status' => 'Pending',
@@ -206,10 +207,9 @@ class Queue
 
                     continue;
                 }
-                else {
-                    $forbiddenAttributeList = $this->aclManager
-                        ->getScopeForbiddenAttributeList($user, $webhook->get('entityType'));
-                }
+
+                $forbiddenAttributeList = $this->aclManager
+                    ->getScopeForbiddenAttributeList($user, $webhook->get('entityType'));
             }
 
             $actualItemList = [];
@@ -222,7 +222,7 @@ class Queue
 
                 if ($this->entityManager->hasRepository($targetType)) {
                     $target = $this->entityManager
-                        ->getRepository($targetType)
+                        ->getRDBRepository($targetType)
                         ->where([
                             'id' => $item->get('targetId')
                         ])
@@ -273,8 +273,9 @@ class Queue
             $this->failQueueItemList($itemList, true);
 
             $this->log->error(
-                "Webhook Queue: Webhook {$webhook->id} sending failed. Error: " . $e->getMessage()
+                "Webhook Queue: Webhook '" . $webhook->getId() . "' sending failed. Error: " . $e->getMessage()
             );
+
             return;
         }
 
@@ -299,7 +300,7 @@ class Queue
 
     protected function logSending(Webhook $webhook, int $code): void
     {
-        $this->log->debug("Webhook Queue: Webhook {$webhook->id} sent, response code: {$code}.");
+        $this->log->debug("Webhook Queue: Webhook '" . $webhook->getId()  . "' sent, response code: {$code}.");
     }
 
     protected function failQueueItemList(array $itemList, bool $force = false): void
@@ -318,16 +319,16 @@ class Queue
 
     protected function deleteQueueItem(WebhookQueueItem $item): void
     {
-        $this->entityManager->getRepository('WebhookQueueItem')->deleteFromDb($item->id);
+        $this->entityManager->getRepository('WebhookQueueItem')->deleteFromDb($item->getId());
     }
 
     protected function dropWebhook(Webhook $webhook): void
     {
         $itemList = $this->entityManager
-            ->getRepository('WebhookQueueItem')
+            ->getRDBRepository('WebhookQueueItem')
             ->where([
                 'status' => 'Pending',
-                'webhookId' => $webhook->id,
+                'webhookId' => $webhook->getId(),
             ])
             ->order('number')
             ->find();

@@ -40,9 +40,9 @@ use Espo\Core\{
  */
 class Sender
 {
-    const CONNECT_TIMEOUT = 5;
+    private const CONNECT_TIMEOUT = 5;
 
-    const TIMEOUT = 10;
+    private const TIMEOUT = 10;
 
     private $config;
 
@@ -99,10 +99,13 @@ class Sender
             $code = intval($code);
         }
 
-        if ($errorNumber = curl_errno($handler)) {
-            if (in_array($errorNumber, [\CURLE_OPERATION_TIMEDOUT, \CURLE_OPERATION_TIMEOUTED])) {
-                $code = 408;
-            }
+        $errorNumber = curl_errno($handler);
+
+        if (
+            $errorNumber &&
+            in_array($errorNumber, [\CURLE_OPERATION_TIMEDOUT, \CURLE_OPERATION_TIMEOUTED])
+        ) {
+            $code = 408;
         }
 
         curl_close($handler);
@@ -110,8 +113,8 @@ class Sender
         return $code;
     }
 
-    protected function buildSignature(Webhook $webhook, string $payload, string $secretKey): string
+    private function buildSignature(Webhook $webhook, string $payload, string $secretKey): string
     {
-        return base64_encode($webhook->id . ':' . hash_hmac('sha256', $payload, $secretKey, true));
+        return base64_encode($webhook->getId() . ':' . hash_hmac('sha256', $payload, $secretKey, true));
     }
 }
