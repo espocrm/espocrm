@@ -34,6 +34,8 @@ use Espo\Core\{
     Api\Response,
 };
 
+use Espo\ORM\EntityManager;
+
 use Espo\Core\Exceptions\Forbidden;
 
 class AclTest extends \tests\integration\Core\BaseTestCase
@@ -182,5 +184,61 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             ->method('writeBody');
 
         $processor->process('Webhook', 'create', $request, $response);
+    }
+
+    public function testApiUserHasAccessDelete(): void
+    {
+        $user = $this->createUser(
+            [
+                'userName' => 'api',
+                'type' => 'api',
+                'authMethod' => 'ApiKey',
+                'apiKey' => 'test-key',
+            ],
+            [
+                'data' => [
+                    'Webhook' => true,
+                    'Account' => ['create' => 'yes', 'read' => 'own'],
+                ],
+            ]
+        );
+
+        /* @var $em EntityManager */
+        $em = $this->getContainer()->get('entityManager');
+
+        $webhook = $em->createEntity('Webhook', [
+            'event' => 'Account.create',
+            'url' => 'https://test',
+            'userId' => $user->getId(),
+        ]);
+
+        $request = $this->createRequest(
+            'DELETE',
+            [],
+            [
+                'Content-Type' => 'application/json',
+                'X-Api-Key' => 'test-key',
+            ],
+            null,
+            [
+                'id' => $webhook->getId(),
+            ]
+        );
+
+        $this->auth(null, null, null, 'ApiKey', $request);
+
+        $app = $this->createApplication();
+
+        $em = $app->getContainer()->get('entityManager');
+
+        $response = $this->createMock(Response::class);
+
+        $processor = $app->getContainer()->get('injectableFactory')->create(ActionProcessor::class);
+
+        $processor->process('Webhook', 'delete', $request, $response);
+
+        $fetchedWebhook = $em->getEntity('Webhook', $webhook->getId());
+
+        $this->assertNull($fetchedWebhook);
     }
 }
