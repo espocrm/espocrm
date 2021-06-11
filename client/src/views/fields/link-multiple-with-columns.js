@@ -38,13 +38,16 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
             this.columnsDefs = {};
 
             this.columnsName = this.name + 'Columns';
+
             this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
 
             this.listenTo(this.model, 'change:' + this.columnsName, function () {
                 this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
             }, this);
 
-            var columns = this.getMetadata().get(['entityDefs', this.model.name, 'fields', this.name, 'columns']) || {};
+            var columns = this.getMetadata()
+                .get(['entityDefs', this.model.name, 'fields', this.name, 'columns']) || {};
+
             var columnList = Object.keys(columns);
 
             this.columnList = this.columnList || columnList;
@@ -52,6 +55,7 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
             this.columnList.forEach(function (column) {
                 if (column in columnsDefsInitial) {
                     this.columnsDefs[column] = Espo.Utils.cloneDeep(columnsDefsInitial[column]);
+
                     return;
                 }
                 if (column in columns) {
@@ -72,15 +76,19 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
                     var fieldDefs = this.getMetadata().get(['entityDefs', o.scope, 'fields', field]) || {};
 
                     o.type = fieldDefs.type;
-                    if (o.type == 'enum' || o.type == 'varchar') {
+
+                    if (o.type === 'enum' || o.type === 'varchar') {
                         o.options = fieldDefs.options;
                     }
+
                     if ('default' in fieldDefs) {
                         o.default = fieldDefs.default;
                     }
+
                     if ('maxLength' in fieldDefs) {
                         o.maxLength = fieldDefs.maxLength;
                     }
+
                     this.columnsDefs[column] = o;
                 }
             }, this);
@@ -89,8 +97,9 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
                 this.events['click a[data-action="toggleBoolColumn"]'] = function (e) {
                     var id = $(e.currentTarget).data('id');
                     var column = $(e.currentTarget).data('column');
+
                     this.toggleBoolColumn(id, column);
-                }
+                };
             }
 
             this.on('render', this.disposeColumnAutocompletes, this);
@@ -99,12 +108,15 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
 
         toggleBoolColumn: function (id, column) {
             this.columns[id][column] = !this.columns[id][column];
+
             this.reRender();
         },
 
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
+
             list.push(this.name + 'Columns');
+
             return list;
         },
 
@@ -115,39 +127,53 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
 
             this.columnList.forEach(function (column) {
                 var value = (this.columns[id] || {})[column] || '';
-                var columnHtml = '';
 
                 var type = this.columnsDefs[column].type;
+
                 if (value !== '' && value) {
                     if (type === 'enum') {
-                        roleHtml += ' <span class="text-muted small">&#187;</span> ' + '<span class="text-muted small">' +
-                            this.getHelper().escapeString(this.getLanguage().translateOption(value, this.columnsDefs[column].field, this.columnsDefs[column].scope)) +
-                        '</span>';
-                    } else if (type === 'varchar') {
-                        roleHtml += ' <span class="text-muted small">&#187;</span> ' + '<span class="text-muted small">' +
-                            this.getHelper().escapeString(value)
-                        '</span>';
+                        roleHtml += ' <span class="text-muted small">&#187;</span> ' +
+                            '<span class="text-muted small">' +
+                            this.getHelper()
+                                .escapeString(
+                                    this.getLanguage().translateOption(
+                                        value,
+                                    this.columnsDefs[column].field,
+                                    this.columnsDefs[column].scope)
+                                ) +
+                            '</span>';
+                    }
+                    else if (type === 'varchar') {
+                        roleHtml += ' <span class="text-muted small">&#187;</span> ' +
+                            '<span class="text-muted small">' +
+                            this.getHelper().escapeString(value) +
+                            '</span>';
                     }
                 }
             }, this);
 
             var iconHtml = '';
-            if (this.mode == 'detail') {
+
+            if (this.mode === 'detail') {
                 iconHtml = this.getIconHtml();
             }
 
-            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' + this.getHelper().escapeString(name) + '</a> ' + roleHtml + '</div>';
+            var lineHtml = '<div>' + iconHtml + '<a href="#' + this.foreignScope + '/view/' + id + '">' +
+                this.getHelper().escapeString(name) + '</a> ' + roleHtml + '</div>';
+
             return lineHtml;
         },
 
         getValueForDisplay: function () {
-            if (this.mode == 'detail' || this.mode == 'list') {
+            if (this.mode === 'detail' || this.mode === 'list') {
                 var names = [];
+
                 this.ids.forEach(function (id) {
                     var lineHtml = this.getDetailLinkHtml(id);
 
                     names.push(lineHtml);
                 }, this);
+
                 return names.join('');
             }
         },
@@ -159,11 +185,14 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
             this.deleteLinkHtml(id);
 
             var index = this.ids.indexOf(id);
+
             if (index > -1) {
                 this.ids.splice(index, 1);
             }
+
             delete this.nameHash[id];
             delete this.columns[id];
+
             this.afterDeleteLink(id);
 
             this.trigger('change');
@@ -206,11 +235,21 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
         },
 
         getJQSelect: function (column, id, value) {
-            var $column = $('<select class="role form-control input-sm pull-right" data-id="'+id+'" data-column="'+column+'">');
+            var $column = $(
+                '<select class="role form-control input-sm pull-right" data-id="'+id+'" data-column="'+column+'">'
+            );
 
             this.columnsDefs[column].options.forEach(function (item) {
                 var selectedHtml = (item == value) ? 'selected': '';
-                option = '<option value="'+item+'" '+selectedHtml+'>' + this.getLanguage().translateOption(item, this.columnsDefs[column].field, this.columnsDefs[column].scope) + '</option>';
+
+                option = '<option value="' + item + '" '+selectedHtml+'>' +
+                    this.getLanguage().translateOption(
+                        item,
+                    this.columnsDefs[column].field,
+                    this.columnsDefs[column].scope
+                    ) +
+                    '</option>';
+
                 $column.append(option);
             }, this);
 
@@ -218,17 +257,24 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
         },
 
         addLinkHtml: function (id, name) {
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
+
             var $container = this.$el.find('.link-container');
-            var $el = $('<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">').addClass('link-' + id);
+
+            var $el = $(
+                '<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">'
+            ).addClass('link-' + id);
 
             var nameHtml = '<div class="link-item-name">' + this.getHelper().escapeString(name) + '&nbsp;' + '</div>';
-            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink"><span class="fas fa-times"></a>';
+
+            var removeHtml = '<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLink">' +
+                '<span class="fas fa-times"></a>';
 
             var columnFormElementJQList = [];
             var columnMenuItemJQList = [];
+
             this.columnList.forEach(function (column) {
                 var value = (this.columns[id] || {})[column];
                 var escapedValue = Handlebars.Utils.escapeExpression(value);
@@ -239,50 +285,75 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
 
                 var $column;
 
-                if (type == 'enum') {
+                if (type === 'enum') {
                     $column = this.getJQSelect(column, id, escapedValue);
                     columnFormElementJQList.push($column);
-                } else if (type == 'varchar') {
+
+                }
+                else if (type === 'varchar') {
                     var label = this.translate(field, 'fields', scope);
-                    $column = $('<input class="role form-control input-sm pull-right" data-column="'+column+'" placeholder="'+label+'" data-id="'+id+'" value="' + (escapedValue || '') + '">');
+
+                    $column = $(
+                        '<input class="role form-control input-sm pull-right" ' +
+                        'data-column="'+column+'" placeholder="'+label+'" data-id="'+id+'" ' +
+                        'value="' + (escapedValue || '') + '">'
+                    );
+
                     if ('maxLength' in this.columnsDefs[column]) {
                         $column.attr('maxLength', this.columnsDefs[column].maxLength);
                     }
+
                     columnFormElementJQList.push($column);
-                } else if (type == 'bool') {
+                }
+                else if (type === 'bool') {
                     var label = this.translate(field, 'fields', scope);
-                    var $menuItem = $('<li>').append(
-                        $('<a href="javascript:" data-action="toggleBoolColumn">').attr('data-column', column).attr('data-id', id).append(
-                            $('<span class="check-icon fas fa-check fa-sm pull-right">').addClass(!value ? 'hidden' : '')
-                        ).append(
-                            $('<div>').text(label)
-                        )
-                    );
+
+                    var $menuItem = $('<li>')
+                        .append(
+                            $('<a href="javascript:" data-action="toggleBoolColumn">')
+                                .attr('data-column', column)
+                                .attr('data-id', id)
+                                .append(
+                                    $('<span class="check-icon fas fa-check fa-sm pull-right">')
+                                        .addClass(!value ? 'hidden' : '')
+                                )
+                                .append(
+                                    $('<div>').text(label)
+                                )
+                        );
+
                     columnMenuItemJQList.push($menuItem);
                 }
             }, this);
 
             $left = $('<div>');
+
             if (columnFormElementJQList.length === 1) {
                 $left.append(columnFormElementJQList[0]);
-            } else {
+            }
+            else {
                 columnFormElementJQList.forEach(function ($input) {
                     $left.append($input);
                 }, this);
             }
+
             if (columnMenuItemJQList.length) {
                 var $ul = $('<ul class="dropdown-menu">');
+
                 columnMenuItemJQList.forEach(function ($item) {
                     $ul.append($item);
                 }, this);
+
                 $left.append(
                     $('<div class="btn-group pull-right">').append(
-                        $('<button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">').append(
-                            '<span class="caret">'
-                        )
+                        $('<button type="button" class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown">')
+                            .append(
+                                '<span class="caret">'
+                            )
                     ).append($ul)
                 );
             }
+
             $left.append(nameHtml);
             $el.append($left);
 
@@ -294,21 +365,32 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
 
             $container.append($el);
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 columnFormElementJQList.forEach(function ($column) {
                     var fetch = function ($target) {
-                        if (!$target || !$target.length) return;
+                        if (!$target || !$target.length) {
+                            return;
+                        }
+
                         var column = $target.data('column');
+
                         var value = $target.val().toString().trim();
+
                         var id = $target.data('id');
+
                         this.columns[id] = this.columns[id] || {};
+
                         this.columns[id][column] = value;
                     }.bind(this);
+
                     $column.on('change', function (e) {
                         var $target = $(e.currentTarget);
+
                         fetch($target);
+
                         this.trigger('change');
                     }.bind(this));
+
                     fetch($column);
                 }, this);
 
@@ -319,15 +401,23 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
         },
 
         initAutocomplete: function (id) {
-            if (!this._autocompleteElementList) this._autocompleteElementList = [];
+            if (!this._autocompleteElementList) {
+                this._autocompleteElementList = [];
+            }
 
             this.columnList.forEach(function (column) {
                 var type = this.columnsDefs[column].type;
+
                 if (type === 'varchar') {
                     var options = this.columnsDefs[column].options;
+
                     if (options && options.length) {
                         var $element = this.$el.find('[data-column="'+column+'"][data-id="'+id+'"]');
-                        if (!$element.length) return;
+
+                        if (!$element.length) {
+                            return;
+                        }
+
                         $element.autocomplete({
                             minChars: 0,
                             lookup: options,
@@ -338,22 +428,31 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
                             formatResult: function (suggestion) {
                                 return this.getHelper().escapeString(suggestion.value);
                             }.bind(this),
+
                             lookupFilter: function (suggestion, query, queryLowerCase) {
                                 if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                                    if (suggestion.value.length === queryLowerCase.length) return false;
+                                    if (suggestion.value.length === queryLowerCase.length) {
+                                        return false;
+                                    }
+
                                     return true;
                                 }
+
                                 return false;
                             },
                             onSelect: function () {
                                 this.trigger('change');
+
                                 $element.trigger('change');
                             }.bind(this)
                         });
                         $element.attr('autocomplete', 'espo-' + this.name + '-' + column + '-' + id);
 
                         $element.on('focus', function () {
-                            if ($element.val()) return;
+                            if ($element.val()) {
+                                return;
+                            }
+
                             $element.autocomplete('onValueChange');
                         });
 
@@ -379,7 +478,9 @@ define('views/fields/link-multiple-with-columns', 'views/fields/link-multiple', 
 
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
+
             data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
+
             return data;
         },
 

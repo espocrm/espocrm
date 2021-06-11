@@ -370,12 +370,22 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             var $container = this.$el.find('.link-container');
 
-            var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
+            var $el = $('<div />')
+                .addClass('link-' + id)
+                .addClass('list-group-item')
+                .attr('data-id', id);
 
             $el.html(name + '&nbsp');
 
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id +
-                '" data-action="clearLink"><span class="fas fa-times"></a>');
+            $el.prepend(
+                $('<a />')
+                    .addClass('pull-right')
+                    .attr('data-id', id)
+                    .attr('data-action', 'clearLink')
+                    .append(
+                        $('<span />').addClass('fas fa-times')
+                    )
+            );
 
             $container.append($el);
 
@@ -403,24 +413,30 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
 
             return '<a href="#' + this.foreignScope + '/view/' + id + '">' +
                 iconHtml + name + '</a>';
-
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail' || this.mode === 'list') {
-                var names = [];
-
-                this.ids.forEach(function (id) {
-                    names.push(this.getDetailLinkHtml(id));
-                }, this);
-
-                if (names.length) {
-                    return '<div class="link-multiple-item">' +
-                        names.join('</div><div class="link-multiple-item">') + '</div>';
-                }
-
-                return;
+            if (this.mode !== 'detail' && this.mode !== 'list') {
+                return null;
             }
+
+            var names = [];
+
+            this.ids.forEach(function (id) {
+                names.push(this.getDetailLinkHtml(id));
+            }, this);
+
+            if (!names.length) {
+                return null;
+            }
+            return names
+                .map(
+                    name => $('<div />')
+                        .addClass('link-multiple-item')
+                        .html(name)
+                        .wrap('<div />').parent().html()
+                )
+                .join('');
         },
 
         validateRequired: function () {
@@ -428,7 +444,8 @@ define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 var idList = this.model.get(this.idsName) || [];
 
                 if (idList.length === 0) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
 
                     this.showValidationMessage(msg);
 

@@ -234,13 +234,15 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
         handleSearchType: function (type) {
             if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {
                 this.$el.find('div.primary').removeClass('hidden');
-            } else {
+            }
+            else {
                 this.$el.find('div.primary').addClass('hidden');
             }
 
             if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
                 this.$el.find('div.one-of-container').removeClass('hidden');
-            } else {
+            }
+            else {
                 this.$el.find('div.one-of-container').addClass('hidden');
             }
         },
@@ -249,44 +251,54 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
             }
+
             return this.getConfig().get('recordsPerPage');
         },
 
         getAutocompleteUrl: function () {
             var url = this.foreignScope + '?orderBy=name&maxSize=' + this.getAutocompleteMaxCount();
+
             if (!this.forceSelectAllAttributes) {
                 var select = ['id', 'name'];
+
                 if (this.mandatorySelectAttributeList) {
                     select = select.concat(this.mandatorySelectAttributeList);
                 }
-                url += '&select=' + select.join(',')
+
+                url += '&select=' + select.join(',');
             }
+
             var boolList = this.getSelectBoolFilterList();
-            var where = [];
+
+
             if (boolList) {
                 url += '&' + $.param({'boolFilterList': boolList});
             }
+
             var primary = this.getSelectPrimaryFilterName();
+
             if (primary) {
                 url += '&' + $.param({'primaryFilter': primary});
             }
+
             return url;
         },
 
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
+            if (this.mode === 'edit' || this.mode === 'search') {
                 this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
                 this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
 
                 this.$elementName.on('change', function () {
-                    if (this.$elementName.val() == '') {
+                    if (this.$elementName.val() === '') {
                         this.$elementName.val('');
                         this.$elementId.val('');
+
                         this.trigger('change');
                     }
                 }.bind(this));
 
-                if (this.mode == 'edit') {
+                if (this.mode === 'edit') {
                     this.$elementName.on('blur', function (e) {
                         if (this.model.has(this.nameName)) {
                             e.currentTarget.value = this.model.get(this.nameName);
@@ -303,20 +315,25 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                                 $c.addClass('small');
                             }
                         }.bind(this),
+
                         serviceUrl: function (q) {
                             return this.getAutocompleteUrl(q);
                         }.bind(this),
+
                         paramName: 'q',
                         minChars: 1,
                         triggerSelectOnValidInput: false,
                         autoSelectFirst: true,
                         noCache: true,
+
                         formatResult: function (suggestion) {
                             return this.getHelper().escapeString(suggestion.name);
                         }.bind(this),
+
                         transformResult: function (response) {
                             var response = JSON.parse(response);
                             var list = [];
+
                             response.list.forEach(function(item) {
                                 list.push({
                                     id: item.id,
@@ -326,13 +343,16 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                                     attributes: item
                                 });
                             }, this);
+
                             return {
                                 suggestions: list
                             };
                         }.bind(this),
+
                         onSelect: function (s) {
                             this.getModelFactory().create(this.foreignScope, function (model) {
                                 model.set(s.attributes);
+
                                 this.select(model);
                             }, this);
                         }.bind(this)
@@ -348,21 +368,26 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                         $elementName.autocomplete('dispose');
                     }, this);
 
-                    if (this.mode == 'search') {
+                    if (this.mode === 'search') {
                         var $elementOneOf = this.$el.find('input.element-one-of');
+
                         $elementOneOf.autocomplete({
                             serviceUrl: function (q) {
                                 return this.getAutocompleteUrl(q);
                             }.bind(this),
+
                             minChars: 1,
                             paramName: 'q',
                             noCache: true,
+
                             formatResult: function (suggestion) {
                                 return this.getHelper().escapeString(suggestion.name);
                             }.bind(this),
+
                             transformResult: function (response) {
                                 var response = JSON.parse(response);
                                 var list = [];
+
                                 response.list.forEach(function(item) {
                                     list.push({
                                         id: item.id,
@@ -371,10 +396,12 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                                         value: item.name || item.id,
                                     });
                                 }, this);
+
                                 return {
                                     suggestions: list
                                 };
                             }.bind(this),
+
                             onSelect: function (s) {
                                 this.addLinkOneOf(s.id, s.name);
                                 $elementOneOf.val('');
@@ -404,8 +431,9 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 }.bind(this));
             }
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 var type = this.$el.find('select.search-type').val();
+
                 this.handleSearchType(type);
 
                 if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
@@ -423,8 +451,11 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
         validateRequired: function () {
             if (this.isRequired()) {
                 if (this.model.get(this.idName) == null) {
-                    var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                    var msg = this.translate('fieldIsRequired', 'messages')
+                        .replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg);
+
                     return true;
                 }
             }
@@ -434,9 +465,11 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
             this.deleteLinkOneOfHtml(id);
 
             var index = this.searchData.oneOfIdList.indexOf(id);
+
             if (index > -1) {
                 this.searchData.oneOfIdList.splice(index, 1);
             }
+
             delete this.searchData.oneOfNameHash[id];
 
             this.trigger('change');
@@ -458,6 +491,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
         addLinkOneOfHtml: function (id, name) {
             id = Handlebars.Utils.escapeExpression(id);
+
             name = this.getHelper().escapeString(name);
 
             var $container = this.$el.find('.link-one-of-container');
@@ -466,7 +500,10 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
             $el.html(name + '&nbsp');
 
-            $el.prepend('<a href="javascript:" class="pull-right" data-id="' + id + '" data-action="clearLinkOneOf"><span class="fas fa-times"></a>');
+            $el.prepend(
+                '<a href="javascript:" class="pull-right" data-id="' + id + '" ' +
+                'data-action="clearLinkOneOf"><span class="fas fa-times"></a>'
+            );
 
             $container.append($el);
 
@@ -475,6 +512,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
         fetch: function () {
             var data = {};
+
             data[this.nameName] = this.$el.find('[data-name="'+this.nameName+'"]').val() || null;
             data[this.idName] = this.$el.find('[data-name="'+this.idName+'"]').val() || null;
 
@@ -485,7 +523,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
             var type = this.$el.find('select.search-type').val();
             var value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
-            if (type == 'isEmpty') {
+            if (type === 'isEmpty') {
                 var data = {
                     type: 'isNull',
                     attribute: this.idName,
@@ -496,7 +534,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type == 'isNotEmpty') {
+            else if (type === 'isNotEmpty') {
                 var data = {
                     type: 'isNotNull',
                     attribute: this.idName,
@@ -507,7 +545,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type == 'isOneOf') {
+            else if (type === 'isOneOf') {
                 var data = {
                     type: 'in',
                     attribute: this.idName,
@@ -521,7 +559,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type == 'isNotOneOf') {
+            else if (type === 'isNotOneOf') {
                 var data = {
                     type: 'or',
                     value: [
@@ -543,7 +581,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                 };
 
                 return data;
-            } else if (type == 'isNotOneOfAndIsNotEmpty') {
+            }
+            else if (type === 'isNotOneOfAndIsNotEmpty') {
                 var data = {
                     type: 'notIn',
                     attribute: this.idName,
@@ -557,7 +596,7 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
 
                 return data;
             }
-            else if (type == 'isNot') {
+            else if (type === 'isNot') {
                 if (!value) {
                     return false;
                 }
@@ -584,7 +623,8 @@ define('views/fields/link', 'views/fields/base', function (Dep) {
                     }
                 };
                 return data;
-            } else if (type == 'isNotAndIsNotEmpty') {
+            }
+            else if (type === 'isNotAndIsNotEmpty') {
                 if (!value) {
                     return false;
                 }
