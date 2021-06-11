@@ -35,12 +35,13 @@ class Utils
 {
     public static function getIndexList(array $ormMeta, array $ignoreFlags = [])
     {
-        $indexList = array();
+        $indexList = [];
 
         foreach ($ormMeta as $entityName => $entityParams) {
 
             /* add indexes for additionalTables */
             $entityIndexList = static::getEntityIndexListByFieldsDefs($entityParams['fields']);
+
             foreach ($entityIndexList as $indexName => $indexParams) {
                 if (!isset($entityParams['indexes'][$indexName])) {
                     $entityParams['indexes'][$indexName] = $indexParams;
@@ -50,13 +51,18 @@ class Utils
             if (isset($entityParams['indexes']) && is_array($entityParams['indexes'])) {
                 foreach ($entityParams['indexes'] as $indexName => $indexParams) {
                     $indexType = static::getIndexTypeByIndexDefs($indexParams);
-                    $tableIndexName = isset($indexParams['key']) ? $indexParams['key'] : static::generateIndexName($indexName, $indexType);
+
+                    $tableIndexName = isset($indexParams['key']) ?
+                        $indexParams['key'] :
+                        static::generateIndexName($indexName, $indexType);
 
                     if (isset($indexParams['flags']) && is_array($indexParams['flags'])) {
                         $skipIndex = false;
+
                         foreach ($ignoreFlags as $ignoreFlag) {
                             if (($flagKey = array_search($ignoreFlag, $indexParams['flags'])) !== false) {
                                 unset($indexParams['flags'][$flagKey]);
+
                                 $skipIndex = true;
                             }
                         }
@@ -70,7 +76,9 @@ class Utils
 
                     if (is_array($indexParams['columns'])) {
                         $indexList[$entityName][$tableIndexName]['type'] = $indexType;
-                        $indexList[$entityName][$tableIndexName]['columns'] = Util::toUnderScore($indexParams['columns']);
+
+                        $indexList[$entityName][$tableIndexName]['columns'] =
+                            Util::toUnderScore($indexParams['columns']);
                     }
                 }
             }
@@ -126,12 +134,14 @@ class Utils
             }
 
             $keyValue = $fieldParams[$indexType];
+
             $columnName = $isTableColumnNames ? Util::toUnderScore($fieldName) : $fieldName;
 
             if ($keyValue === true) {
                 $indexList[$indexName]['type'] = $indexType;
-                $indexList[$indexName]['columns'] = array($columnName);
-            } else if (is_string($keyValue)) {
+                $indexList[$indexName]['columns'] = [$columnName];
+            }
+            else if (is_string($keyValue)) {
                 $indexList[$indexName]['type'] = $indexType;
                 $indexList[$indexName]['columns'][] = $columnName;
             }
@@ -142,7 +152,10 @@ class Utils
 
     public static function getIndexTypeByIndexDefs(array $indexDefs)
     {
-        if ((isset($indexDefs['type']) && $indexDefs['type'] == 'unique') || (isset($indexDefs['unique']) && $indexDefs['unique'])) {
+        if (
+            (isset($indexDefs['type']) && $indexDefs['type'] == 'unique') ||
+            (isset($indexDefs['unique']) && $indexDefs['unique'])
+        ) {
             return 'unique';
         }
 
@@ -172,13 +185,18 @@ class Utils
         return substr(implode('_', $nameList), 0, $maxLength);
     }
 
-    public static function getFieldListExceededIndexMaxLength(array $ormMeta, $indexMaxLength = 1000, array $indexList = null, $characterLength = 4)
-    {
+    public static function getFieldListExceededIndexMaxLength(
+        array $ormMeta,
+        $indexMaxLength = 1000,
+        array $indexList = null,
+        $characterLength = 4
+    ) {
+
         $permittedFieldTypeList = [
             'varchar',
         ];
 
-        $fields = array();
+        $fields = [];
 
         if (!isset($indexList)) {
             $indexList = static::getIndexList($ormMeta, ['fulltext']);
@@ -189,6 +207,7 @@ class Utils
                 $columnList = $indexParams['columns'];
 
                 $indexLength = 0;
+
                 foreach ($columnList as $columnName) {
                     $fieldName = Util::toCamelCase($columnName);
 
@@ -196,12 +215,16 @@ class Utils
                         continue;
                     }
 
-                    $indexLength += static::getFieldLength($ormMeta[$entityName]['fields'][$fieldName], $characterLength);
+                    $indexLength += static::getFieldLength(
+                        $ormMeta[$entityName]['fields'][$fieldName],
+                        $characterLength
+                    );
                 }
 
                 if ($indexLength > $indexMaxLength) {
                     foreach ($columnList as $columnName) {
                         $fieldName = Util::toCamelCase($columnName);
+
                         if (!isset($ormMeta[$entityName]['fields'][$fieldName])) {
                             continue;
                         }
@@ -229,14 +252,14 @@ class Utils
             return $length;
         }
 
-        $defaultLength = array(
+        $defaultLength = [
             'datetime' => 8,
             'time' => 4,
             'int' => 4,
             'bool' => 1,
             'float' => 4,
             'varchar' => 255,
-        );
+        ];
 
         $type = static::getDbFieldType($ormFieldDefs);
 
