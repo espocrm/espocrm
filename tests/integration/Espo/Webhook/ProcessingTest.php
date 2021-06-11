@@ -61,13 +61,13 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
         /* @var $em EntityManager */
         $em = $this->getContainer()->get('entityManager');
 
-        $webhook1 = $em->createEntity(Webhook::ENTITY_TYPE, [
+        $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.create',
             'userId' => $user->getId(),
             'url' => 'https://test',
         ]);
 
-        $webhook2 = $em->createEntity(Webhook::ENTITY_TYPE, [
+        $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.update',
             'userId' => $user->getId(),
             'url' => 'https://test',
@@ -145,6 +145,8 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
             );
 
         $queue->process();
+
+        $queue->process();
     }
 
     public function testProcessing2(): void
@@ -175,7 +177,7 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
             'assignedUserId' => $user->getId(),
         ]);
 
-        $webhook1 = $em->createEntity(Webhook::ENTITY_TYPE, [
+        $em->createEntity(Webhook::ENTITY_TYPE, [
             'event' => 'Account.delete',
             'userId' => $user->getId(),
             'url' => 'https://test',
@@ -218,6 +220,88 @@ class ProcessingTest extends \tests\integration\Core\BaseTestCase
             ->willReturn(
                 200,
             );
+
+        $queue->process();
+
+        $queue->process();
+    }
+
+    public function testProcessing3(): void
+    {
+        $user = $this->createUser(
+            [
+                'userName' => 'test',
+                'password' => '1',
+            ],
+            [
+                'data' => [
+                    'Webhook' => true,
+                    'Account' => [
+                        'create' => 'yes',
+                        'read' => 'own',
+                    ],
+                ],
+            ]
+        );
+
+        $app = $this->createApplication();
+
+        /* @var $em EntityManager */
+        $em = $app->getContainer()->get('entityManager');
+
+        $account1 = $em->createEntity(Account::ENTITY_TYPE, [
+            'name' => 'test1',
+            'assignedUserId' => $user->getId(),
+        ]);
+
+        $em->createEntity(Webhook::ENTITY_TYPE, [
+            'event' => 'Account.fieldUpdate.name',
+            'userId' => $user->getId(),
+            'url' => 'https://test',
+        ]);
+
+        $app = $this->createApplication();
+
+        $em = $app->getContainer()->get('entityManager');
+
+        $account1->set('name', 'test-1-changed');
+
+        $em->saveEntity($account1);
+
+        $dataList1 = [
+            (object) [
+                'id' => $account1->getId(),
+                'name' => 'test-1-changed',
+            ]
+        ];
+
+        $sender = $this->createMock(Sender::class);
+
+        /* @var $queue Queue */
+        $queue = $app->getContainer()
+            ->get('injectableFactory')
+            ->createWith(Queue::class, [
+                'sender' => $sender,
+            ]);
+
+        $sender
+            ->expects($this->exactly(1))
+            ->method('send')
+            ->withConsecutive(
+                [
+                    $this->callback(
+                        function (Webhook $webhook){
+                            return $webhook->get('event') === 'Account.fieldUpdate.name';
+                        }
+                    ),
+                    $dataList1,
+                ],
+            )
+            ->willReturn(
+                200,
+            );
+
+        $queue->process();
 
         $queue->process();
     }
