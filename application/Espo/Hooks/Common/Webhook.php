@@ -40,9 +40,9 @@ class Webhook
 {
     public static $order = 101;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $webhookManager;
+    private $webhookManager;
 
     public function __construct(Metadata $metadata, WebhookManager $webhookManager)
     {

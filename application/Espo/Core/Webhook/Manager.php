@@ -38,6 +38,11 @@ use Espo\Core\{
     Utils\Log,
 };
 
+use Espo\Entities\{
+    WebhookEventQueueItem,
+    Webhook,
+};
+
 /**
  * Processes events. Holds an information about existing events.
  */
@@ -102,7 +107,7 @@ class Manager
         $data = [];
 
         $list = $this->entityManager
-            ->getRDBRepository('Webhook')
+            ->getRDBRepository(Webhook::ENTITY_TYPE)
             ->select(['event'])
             ->groupBy(['event'])
             ->where([
@@ -136,7 +141,7 @@ class Manager
     public function removeEvent(string $event): void
     {
         $notExists = !$this->entityManager
-            ->getRDBRepository('Webhook')
+            ->getRDBRepository(Webhook::ENTITY_TYPE)
             ->select(['id'])
             ->where([
                 'event' => $event,
@@ -174,7 +179,7 @@ class Manager
             return;
         }
 
-        $this->entityManager->createEntity('WebhookEventQueueItem', [
+        $this->entityManager->createEntity(WebhookEventQueueItem::ENTITY_TYPE, [
             'event' => $event,
             'targetType' => $entity->getEntityType(),
             'targetId' => $entity->getId(),
@@ -195,7 +200,7 @@ class Manager
             return;
         }
 
-        $this->entityManager->createEntity('WebhookEventQueueItem', [
+        $this->entityManager->createEntity(WebhookEventQueueItem::ENTITY_TYPE, [
             'event' => $event,
             'targetType' => $entity->getEntityType(),
             'targetId' => $entity->getId(),
@@ -233,7 +238,7 @@ class Manager
         $data->id = $entity->getId();
 
         if ($this->eventExists($event)) {
-            $this->entityManager->createEntity('WebhookEventQueueItem', [
+            $this->entityManager->createEntity(WebhookEventQueueItem::ENTITY_TYPE, [
                 'event' => $event,
                 'targetType' => $entity->getEntityType(),
                 'targetId' => $entity->getId(),
@@ -281,7 +286,7 @@ class Manager
                     $itemData->$attribute = $entity->get($attribute);
                 }
 
-                $this->entityManager->createEntity('WebhookEventQueueItem', [
+                $this->entityManager->createEntity(WebhookEventQueueItem::ENTITY_TYPE, [
                     'event' => $itemEvent,
                     'targetType' => $entity->getEntityType(),
                     'targetId' => $entity->getId(),

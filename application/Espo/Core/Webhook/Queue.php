@@ -33,18 +33,24 @@ use Espo\Entities\{
     Webhook,
     WebhookQueueItem,
     WebhookEventQueueItem,
+    User,
 };
 
 use Espo\Core\{
     AclManager,
     Utils\Config,
     Utils\DateTime as DateTimeUtil,
-    ORM\EntityManager,
     Utils\Log,
+};
+
+use Espo\ORM\{
+    EntityManager,
+    QueryParams\Parts\Condition as Cond,
 };
 
 use Exception;
 use DateTime;
+use stdClass;
 
 /**
  * Groups occurred events into portions and sends them. A portion contains
@@ -97,7 +103,7 @@ class Queue
         $portionSize = $this->config->get('webhookQueueEventPortionSize', self::EVENT_PORTION_SIZE);
 
         $itemList = $this->entityManager
-            ->getRDBRepository('WebhookEventQueueItem')
+            ->getRDBRepository(WebhookEventQueueItem::ENTITY_TYPE)
             ->where([
                 'isProcessed' => false,
             ])
@@ -119,7 +125,7 @@ class Queue
     protected function createQueueFromEvent(WebhookEventQueueItem $item): void
     {
         $webhookList = $this->entityManager
-            ->getRDBRepository('Webhook')
+            ->getRDBRepository(Webhook::ENTITY_TYPE)
             ->where([
                 'event' => $item->get('event'),
                 'isActive' => true,
@@ -128,7 +134,7 @@ class Queue
             ->find();
 
         foreach ($webhookList as $webhook) {
-            $this->entityManager->createEntity('WebhookQueueItem', [
+            $this->entityManager->createEntity(WebhookQueueItem::ENTITY_TYPE, [
                 'webhookId' => $webhook->getId(),
                 'event' => $item->get('event'),
                 'targetId' => $item->get('targetId'),
@@ -143,128 +149,143 @@ class Queue
     protected function processSending(): void
     {
         $portionSize = $this->config->get('webhookQueuePortionSize', self::PORTION_SIZE);
-        $batchSize = $this->config->get('webhookBatchSize', self::BATCH_SIZE);
 
         $groupedItemList = $this->entityManager
-            ->getRDBRepository('WebhookQueueItem')
+            ->getRDBRepository(WebhookQueueItem::ENTITY_TYPE)
             ->select(['webhookId', 'number'])
-            ->where([
-                'number=s' => [
-                    'entityType' => 'WebhookQueueItem',
-                    'selectParams' => [
-                        'select' => ['MIN:number'],
-                        'whereClause' => [
+            ->where(
+                Cond::in(
+                    Cond::column('number'),
+                    $this->entityManager
+                        ->getQueryBuilder()
+                        ->select('MIN:(number)')
+                        ->from(WebhookQueueItem::ENTITY_TYPE)
+                        ->where([
                             'status' => 'Pending',
                             'OR' => [
                                 ['processAt' => null],
                                 ['processAt<=' => DateTimeUtil::getSystemNowString()],
                             ],
-                        ],
-                        'groupBy' => ['webhookId'],
-                    ]
-                ],
-            ])
+                        ])
+                        ->groupBy('webhookId')
+                        ->build()
+                )
+            )
             ->limit(0, $portionSize)
             ->order('number')
             ->find();
 
-        foreach ($groupedItemList as $group) {
-            $webhookId = $group->get('webhookId');
-
-            $itemList = $this->entityManager
-                ->getRDBRepository('WebhookQueueItem')
-                ->where([
-                    'webhookId' => $webhookId,
-                    'status' => 'Pending',
-                    'OR' => [
-                        ['processAt' => null],
-                        ['processAt<=' => DateTimeUtil::getSystemNowString()],
-                    ],
-                ])
-                ->order('number')
-                ->limit(0, $batchSize)
-                ->find();
-
-            $webhook = $this->entityManager->getEntity('Webhook', $webhookId);
-
-            if (!$webhook || !$webhook->get('isActive')) {
-                foreach ($itemList as $item) {
-                    $this->deleteQueueItem($item);
-                }
-            }
-
-            $forbiddenAttributeList = [];
-
-            $user = null;
-
-            if ($webhook->get('userId')) {
-                $user = $this->entityManager->getEntity('User', $webhook->get('userId'));
-
-                if (!$user) {
-                    foreach ($itemList as $item) {
-                        $this->deleteQueueItem($item);
-                    }
-
-                    continue;
-                }
-
-                $forbiddenAttributeList = $this->aclManager
-                    ->getScopeForbiddenAttributeList($user, $webhook->get('entityType'));
-            }
-
-            $actualItemList = [];
-
-            $dataList = [];
-
-            foreach ($itemList as $item) {
-                $targetType = $item->get('targetType');
-                $target = null;
-
-                if ($this->entityManager->hasRepository($targetType)) {
-                    $target = $this->entityManager
-                        ->getRDBRepository($targetType)
-                        ->where([
-                            'id' => $item->get('targetId')
-                        ])
-                        ->findOne(['withDeleted' => true]);
-                }
-
-                if (!$target) {
-                    $this->deleteQueueItem($item);
-
-                    continue;
-                }
-
-                if ($user) {
-                    if (!$this->aclManager->check($user, $target)) {
-                        $this->deleteQueueItem($item);
-
-                        continue;
-                    }
-                }
-
-                $data = $item->get('data') ?? (object) [];
-
-                $data = clone $data;
-
-                foreach ($forbiddenAttributeList as $attribute) {
-                    unset($data->$attribute);
-                }
-
-                $actualItemList[] = $item;
-
-                $dataList[] = $data;
-            }
-
-            if (empty($dataList)) {
-                continue;
-            }
-
-            $this->send($webhook, $dataList, $actualItemList);
+        foreach ($groupedItemList as $groupItem) {
+            $this->processSendingGroup($groupItem->get('webhookId'));
         }
     }
 
-    protected function send(Webhook $webhook, array $dataList, array $itemList): void
+    private function processSendingGroup(string $webhookId): void
+    {
+        $batchSize = $this->config->get('webhookBatchSize', self::BATCH_SIZE);
+
+        $itemList = $this->entityManager
+            ->getRDBRepository(WebhookQueueItem::ENTITY_TYPE)
+            ->where([
+                'webhookId' => $webhookId,
+                'status' => 'Pending',
+                'OR' => [
+                    ['processAt' => null],
+                    ['processAt<=' => DateTimeUtil::getSystemNowString()],
+                ],
+            ])
+            ->order('number')
+            ->limit(0, $batchSize)
+            ->find();
+
+        $webhook = $this->entityManager->getEntity(Webhook::ENTITY_TYPE, $webhookId);
+
+        if (!$webhook || !$webhook->get('isActive')) {
+            foreach ($itemList as $item) {
+                $this->deleteQueueItem($item);
+            }
+        }
+
+        $forbiddenAttributeList = [];
+
+        $user = null;
+
+        if ($webhook->get('userId')) {
+            $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $webhook->get('userId'));
+
+            if (!$user) {
+                foreach ($itemList as $item) {
+                    $this->deleteQueueItem($item);
+                }
+
+                return;
+            }
+
+            $forbiddenAttributeList = $this->aclManager
+                ->getScopeForbiddenAttributeList($user, $webhook->get('entityType'));
+        }
+
+        $actualItemList = [];
+
+        $dataList = [];
+
+        foreach ($itemList as $item) {
+            $data = $this->prepareItemData($item, $user, $forbiddenAttributeList);
+
+            if ($data === null) {
+                continue;
+            }
+
+            $actualItemList[] = $item;
+
+            $dataList[] = $data;
+        }
+
+        if (empty($dataList)) {
+            return;
+        }
+
+        $this->send($webhook, $dataList, $actualItemList);
+    }
+
+    private function prepareItemData(WebhookQueueItem $item, User $user, array $forbiddenAttributeList): ?stdClass
+    {
+        $targetType = $item->get('targetType');
+        $target = null;
+
+        if ($this->entityManager->hasRepository($targetType)) {
+            $target = $this->entityManager
+                ->getRDBRepository($targetType)
+                ->where([
+                    'id' => $item->get('targetId')
+                ])
+                ->findOne(['withDeleted' => true]);
+        }
+
+        if (!$target) {
+            $this->deleteQueueItem($item);
+
+            return null;
+        }
+
+        if ($user) {
+            if (!$this->aclManager->check($user, $target)) {
+                $this->deleteQueueItem($item);
+
+                return null;
+            }
+        }
+
+        $data = $item->get('data') ?? (object) [];
+
+        foreach ($forbiddenAttributeList as $attribute) {
+            unset($data->$attribute);
+        }
+
+        return $data;
+    }
+
+    private function send(Webhook $webhook, array $dataList, array $itemList): void
     {
         try {
             $code = $this->sender->send($webhook, $dataList);
@@ -319,13 +340,15 @@ class Queue
 
     protected function deleteQueueItem(WebhookQueueItem $item): void
     {
-        $this->entityManager->getRepository('WebhookQueueItem')->deleteFromDb($item->getId());
+        $this->entityManager
+            ->getRDBRepository(WebhookQueueItem::ENTITY_TYPE)
+            ->deleteFromDb($item->getId());
     }
 
     protected function dropWebhook(Webhook $webhook): void
     {
         $itemList = $this->entityManager
-            ->getRDBRepository('WebhookQueueItem')
+            ->getRDBRepository(WebhookQueueItem::ENTITY_TYPE)
             ->where([
                 'status' => 'Pending',
                 'webhookId' => $webhook->getId(),
