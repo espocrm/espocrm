@@ -165,7 +165,7 @@ class Converter
     {
         $this->log->debug('Schema\Converter - Start: building schema');
 
-        //check if exist files in "Tables" directory and merge with ormMetadata
+        // check if exist files in "Tables" directory and merge with ormMetadata
         $ormMeta = Util::merge($ormMeta, $this->getCustomTables($ormMeta));
 
         if (isset($ormMeta['unsetIgnore'])) {
@@ -181,11 +181,12 @@ class Converter
             unset($ormMeta['unsetIgnore']);
         }
 
-        //unset some keys in orm
+        // unset some keys in orm
         if (isset($ormMeta['unset'])) {
             $ormMeta = Util::unsetInArray($ormMeta, $ormMeta['unset']);
+
             unset($ormMeta['unset']);
-        } //END: unset some keys in orm
+        }
 
         if (isset($protectedOrmMeta)) {
             $ormMeta = Util::merge($ormMeta, $protectedOrmMeta);
@@ -209,12 +210,11 @@ class Converter
 
         $indexList = SchemaUtils::getIndexList($ormMeta);
 
-        $tables = array();
-        foreach ($ormMeta as $entityName => $entityParams) {
+        $tables = [];
 
+        foreach ($ormMeta as $entityName => $entityParams) {
             if ($entityParams['skipRebuild'] ?? false) {
                 continue;
-
             }
 
             $tableName = Util::toUnderScore($entityName);
@@ -223,7 +223,9 @@ class Converter
                 if (!isset($tables[$entityName])) {
                     $tables[$entityName] = $schema->getTable($tableName);
                 }
+
                 $this->log->debug('DBAL: Table ['.$tableName.'] exists.');
+
                 continue;
             }
 
@@ -240,8 +242,8 @@ class Converter
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
 
                 if (
-                    (isset($fieldParams['notStorable']) &&
-                    $fieldParams['notStorable']) || in_array($fieldParams['type'], $this->notStorableTypes)
+                    (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) ||
+                    in_array($fieldParams['type'], $this->notStorableTypes)
                 ) {
                     continue;
                 }
@@ -249,11 +251,14 @@ class Converter
                 switch ($fieldParams['type']) {
                     case 'id':
                         $primaryColumns[] = Util::toUnderScore($fieldName);
+
                         break;
                 }
 
                 $fieldType = isset($fieldParams['dbType']) ? $fieldParams['dbType'] : $fieldParams['type'];
-                $fieldType = strtolower($fieldType); /** doctrine uses strtolower for all field types */
+
+                /** doctrine uses strtolower for all field types */
+                $fieldType = strtolower($fieldType);
 
                 if (!in_array($fieldType, $this->typeList)) {
                     $this->log->debug(
@@ -278,9 +283,8 @@ class Converter
             }
         }
 
-        //check and create columns/tables for relations
+        // check and create columns/tables for relations
         foreach ($ormMeta as $entityName => $entityParams) {
-
             if (!isset($entityParams['relations'])) {
                 continue;
             }
@@ -291,7 +295,7 @@ class Converter
                     case 'manyMany':
                         $tableName = $relationParams['relationName'];
 
-                        //check for duplicate tables
+                        // check for duplicate tables
                         if (!isset($tables[$tableName])) { //no needs to create the table if it already exists
                             $tables[$tableName] = $this->prepareManyMany($entityName, $relationParams, $tables);
                         }
@@ -300,7 +304,6 @@ class Converter
                 }
             }
         }
-        //END: check and create columns/tables for relations
 
         $this->log->debug('Schema\Converter - End: building schema');
 
@@ -326,6 +329,7 @@ class Converter
 
         if ($this->getSchema()->hasTable($tableName)) {
             $this->log->debug('DBAL: Table ['.$tableName.'] exists.');
+
             return $this->getSchema()->getTable($tableName);
         }
 
@@ -339,7 +343,7 @@ class Converter
 
         $table->addColumn('id', 'bigint', $idColumnOptions);
 
-        //add midKeys to a schema
+        // add midKeys to a schema
         $uniqueIndex = [];
 
         if (empty($relationParams['midKeys'])) {
@@ -352,27 +356,29 @@ class Converter
             foreach($relationParams['midKeys'] as $midKey) {
                 $columnName = Util::toUnderScore($midKey);
 
-                $table->addColumn($columnName, $this->idParams['dbType'], $this->getDbFieldParams(array(
-                    'type' => 'foreignId',
-                    'len' => $this->idParams['len'],
-                )));
+                $table->addColumn(
+                    $columnName,
+                    $this->idParams['dbType'],
+                    $this->getDbFieldParams([
+                        'type' => 'foreignId',
+                        'len' => $this->idParams['len'],
+                    ])
+                );
 
-                $table->addIndex(array($columnName), SchemaUtils::generateIndexName($columnName));
+                $table->addIndex([$columnName], SchemaUtils::generateIndexName($columnName));
 
                 $uniqueIndex[] = $columnName;
             }
         }
-        //END: add midKeys to a schema
 
-        //add additionalColumns
+        // add additionalColumns
         if (!empty($relationParams['additionalColumns'])) {
             foreach($relationParams['additionalColumns'] as $fieldName => $fieldParams) {
-
                 if (!isset($fieldParams['type'])) {
-                    $fieldParams = array_merge($fieldParams, array(
+                    $fieldParams = array_merge($fieldParams, [
                         'type' => 'varchar',
                         'len' => $this->defaultLength['varchar'],
-                    ));
+                    ]);
                 }
 
                 $table->addColumn(
@@ -381,16 +387,20 @@ class Converter
                     $this->getDbFieldParams($fieldParams)
                 );
             }
-        } //END: add additionalColumns
+        }
 
-        $table->addColumn('deleted', 'bool', $this->getDbFieldParams(array(
-            'type' => 'bool',
-            'default' => false,
-        )));
+        $table->addColumn(
+            'deleted',
+            'bool',
+            $this->getDbFieldParams([
+                'type' => 'bool',
+                'default' => false,
+            ])
+        );
 
-        $table->setPrimaryKey(array("id"));
+        $table->setPrimaryKey(['id']);
 
-        //add defined indexes
+        // add defined indexes
         if (!empty($relationParams['indexes'])) {
             $normalizedIndexes = SchemaUtils::getIndexList([
                 $entityName => [
@@ -401,9 +411,8 @@ class Converter
 
             $this->addIndexes($table, $normalizedIndexes[$entityName]);
         }
-        //END: add defined indexes
 
-        //add unique indexes
+        // add unique indexes
         if (!empty($relationParams['conditions'])) {
             foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
                 $uniqueIndex[] = Util::toUnderScore($fieldName);
@@ -412,9 +421,12 @@ class Converter
 
         if (!empty($uniqueIndex)) {
             $uniqueIndexName = implode('_', $uniqueIndex);
-            $table->addUniqueIndex($uniqueIndex, SchemaUtils::generateIndexName($uniqueIndexName, 'unique'));
+
+            $table->addUniqueIndex(
+                $uniqueIndex,
+                SchemaUtils::generateIndexName($uniqueIndexName, 'unique')
+            );
         }
-        //END: add unique indexes
 
         return $table;
     }
@@ -429,12 +441,15 @@ class Converter
             switch ($indexType) {
                 case 'index':
                 case 'fulltext':
-                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
+                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : [];
+
                     $table->addIndex($indexParams['columns'], $indexName, $indexFlagList);
+
                     break;
 
                 case 'unique':
                     $table->addUniqueIndex($indexParams['columns'], $indexName);
+
                     break;
             }
         }
@@ -453,10 +468,11 @@ class Converter
         }
 
         $databaseParams = $this->getConfig()->get('database');
+
         if (!isset($databaseParams['charset']) || $databaseParams['charset'] == 'utf8mb4') {
-            $dbFieldParams['platformOptions'] = array(
+            $dbFieldParams['platformOptions'] = [
                 'collation' => 'utf8mb4_unicode_ci',
-            );
+            ];
         }
 
         switch ($fieldParams['type']) {
@@ -473,15 +489,19 @@ class Converter
             case 'jsonArray':
             case 'text':
             case 'longtext':
-                unset($dbFieldParams['default']); //for db type TEXT can't be defined a default value
+                unset($dbFieldParams['default']); // for db type TEXT can't be defined a default value
+
                 break;
 
             case 'bool':
                 $default = false;
+
                 if (array_key_exists('default', $dbFieldParams)) {
                     $default = $dbFieldParams['default'];
                 }
+
                 $dbFieldParams['default'] = intval($default);
+
                 break;
         }
 
@@ -495,17 +515,18 @@ class Converter
         }
 
         if (isset($fieldParams['binary']) && $fieldParams['binary']) {
-            $dbFieldParams['platformOptions'] = array(
+            $dbFieldParams['platformOptions'] = [
                 'collation' => 'utf8mb4_bin',
-            );
+            ];
         }
 
         if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {
-            $dbFieldParams['platformOptions'] = array(
-                'collation' => (isset($fieldParams['binary']) && $fieldParams['binary']) ?
+            $dbFieldParams['platformOptions'] = [
+                'collation' =>
+                    (isset($fieldParams['binary']) && $fieldParams['binary']) ?
                     'utf8_bin' :
-                'utf8_unicode_ci',
-            );
+                    'utf8_unicode_ci',
+            ];
         }
 
         return $dbFieldParams;
@@ -513,7 +534,7 @@ class Converter
 
     /**
      * Get custom table definition in
-     * "application/Espo/Core/Utils/Database/Schema/tables/" and in metadata 'additionalTables'.
+     * `application/Espo/Core/Utils/Database/Schema/tables/` and in metadata 'additionalTables'.
      *
      * @param array $ormMeta
      *
@@ -532,6 +553,7 @@ class Converter
 
             foreach ($moduleList as $moduleName) {
                 $modulePath = str_replace('{*}', $moduleName, $this->tablePaths['modulePath']);
+
                 $customTables = Util::merge($customTables, $this->loadData($modulePath));
             }
         }
