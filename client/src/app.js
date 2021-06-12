@@ -26,7 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
 define(
     'app',
     [
@@ -433,6 +432,7 @@ define(
 
         initBaseController: function () {
             this.baseController = new BaseController({}, this.getControllerInjection());
+
             this.viewHelper.baseController = this.baseController;
         },
 
@@ -549,10 +549,9 @@ define(
                 Espo.require(Espo.Utils.composeViewClassName(viewName), callback);
             }.bind(this);
 
-            var self = this;
-
             var getResourceInnerPath = function (type, name) {
                 var path = null;
+
                 switch (type) {
                     case 'template':
                         if (~name.indexOf('.')) {
@@ -573,7 +572,9 @@ define(
 
                         break;
                 }
+
                 return path;
+
             }.bind(this);
 
             var getResourcePath = function (type, name) {
@@ -588,14 +589,17 @@ define(
 
                     if (mod == 'custom') {
                         path = 'client/custom/' + getResourceInnerPath(type, name);
-                    } else {
+                    }
+                    else {
                         path = 'client/modules/' + mod + '/' + getResourceInnerPath(type, name);
                     }
-                } else {
+                }
+                else {
                     path = 'client/' + getResourceInnerPath(type, name);
                 }
 
                 return path;
+
             }.bind(this);
 
             this.viewFactory = new Bull.Factory({
@@ -608,13 +612,14 @@ define(
                         'template': function (name, callback) {
                             var path = getResourcePath('template', name);
 
-                            self.loader.load('res!'    + path, callback);
-                        },
+                            this.loader.load('res!' + path, callback);
+                        }.bind(this),
+
                         'layoutTemplate': function (name, callback) {
                             var path = getResourcePath('layoutTemplate', name);
 
-                            self.loader.load('res!'    + path, callback);
-                        }
+                            this.loader.load('res!' + path, callback);
+                        }.bind(this)
                     },
                 },
             });
@@ -787,8 +792,6 @@ define(
         },
 
         setupAjax: function () {
-            var self = this;
-
             $.ajaxSetup({
                 beforeSend: function (xhr, options) {
                     if (!options.local && this.apiUrl) {
@@ -798,11 +801,13 @@ define(
                     if (!options.local && this.basePath !== '') {
                         options.url = this.basePath + options.url;
                     }
+
                     if (this.auth !== null) {
                         xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
                         xhr.setRequestHeader('Espo-Authorization', this.auth);
                         xhr.setRequestHeader('Espo-Authorization-By-Token', true);
                     }
+
                 }.bind(this),
                 dataType: 'json',
                 timeout: this.ajaxTimeout,
@@ -819,22 +824,23 @@ define(
                 switch (xhr.status) {
                     case 0:
                         if (xhr.statusText == 'timeout') {
-                            Espo.Ui.error(self.language.translate('Timeout'));
+                            Espo.Ui.error(this.language.translate('Timeout'));
                         }
 
                         break;
 
                     case 200:
-                        Espo.Ui.error(self.language.translate('Bad server response'));
+                        Espo.Ui.error(this.language.translate('Bad server response'));
                         console.error('Bad server response: ' + xhr.responseText);
 
                         break;
 
                     case 401:
                         if (!options.login) {
-                            if (self.auth) {
-                                self.logout();
-                            } else {
+                            if (this.auth) {
+                                this.logout();
+                            }
+                            else {
                                 console.error('Error 401: Unauthorized.');
                             }
                         }
@@ -843,11 +849,12 @@ define(
 
                     case 403:
                         if (options.main) {
-                            self.baseController.error403();
-                        } else {
-                            var msg = self.language.translate('Error') + ' ' + xhr.status;
+                            this.baseController.error403();
+                        }
+                        else {
+                            var msg = this.language.translate('Error') + ' ' + xhr.status;
 
-                            msg += ': ' + self.language.translate('Access denied');
+                            msg += ': ' + this.language.translate('Access denied');
 
                             if (statusReason) {
                                 msg += ': ' + statusReason;
@@ -859,9 +866,9 @@ define(
                         break;
 
                     case 400:
-                        var msg = self.language.translate('Error') + ' ' + xhr.status;
+                        var msg = this.language.translate('Error') + ' ' + xhr.status;
 
-                        msg += ': ' + self.language.translate('Bad request');
+                        msg += ': ' + this.language.translate('Bad request');
 
                         if (statusReason) {
                             msg += ': ' + statusReason;
@@ -873,11 +880,12 @@ define(
 
                     case 404:
                         if (options.main) {
-                            self.baseController.error404();
-                        } else {
-                            var msg = self.language.translate('Error') + ' ' + xhr.status;
+                            this.baseController.error404();
+                        }
+                        else {
+                            var msg = this.language.translate('Error') + ' ' + xhr.status;
 
-                            msg += ': ' + self.language.translate('Not found');
+                            msg += ': ' + this.language.translate('Not found');
 
                             Espo.Ui.error(msg);
                         }
@@ -885,7 +893,7 @@ define(
                         break;
 
                     default:
-                        var msg = self.language.translate('Error') + ' ' + xhr.status;
+                        var msg = this.language.translate('Error') + ' ' + xhr.status;
 
                         if (statusReason) {
                             msg += ': ' + statusReason;
@@ -897,7 +905,7 @@ define(
                 if (statusReason) {
                     console.error('Server side error '+xhr.status+': ' + statusReason);
                 }
-            });
+            }.bind(this));
         },
 
     }, Backbone.Events);

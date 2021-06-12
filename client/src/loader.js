@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-var Espo = Espo || {classMap:{}};
+var Espo = Espo || {classMap: {}};
 
 (function (Espo, _, $) {
 
@@ -37,9 +37,7 @@ var Espo = Espo || {classMap:{}};
 
         this.cache = cache || null;
         this._loadCallbacks = {};
-
         this.pathsBeingLoaded = {};
-
         this.libsConfig = {};
 
         this.cacheTimestamp = cacheTimestamp || null;
@@ -118,34 +116,35 @@ var Espo = Espo || {classMap:{}};
 
             if (this.loadingSubject) {
                 subject = subject || this.loadingSubject;
+
                 this.loadingSubject = null;
             }
-
-            var self = this;
 
             var proceed = function (relObj) {
                 var o = callback.apply(this, arguments);
 
                 if (!o) {
-                    if (self.cache) {
-                        self.cache.clear('a', subject);
+                    if (this.cache) {
+                        this.cache.clear('a', subject);
                     }
 
                     throw new Error("Could not load '" + subject + "'");
                 }
 
-                self._setClass(subject, o);
-                self._executeLoadCallback(subject, o);
-            };
+                this._setClass(subject, o);
+                this._executeLoadCallback(subject, o);
+
+            }.bind(this);
 
             if (!dependency) {
                 proceed();
+
+                return;
             }
-            else {
-                this.require(dependency, function () {
-                    proceed.apply(this, arguments);
-                });
-            }
+
+            this.require(dependency, function () {
+                proceed.apply(this, arguments);
+            });
         },
 
         require: function (subject, callback, errorCallback) {
@@ -173,7 +172,8 @@ var Espo = Espo || {classMap:{}};
 
                 return;
             }
-            else if (totalCount) {
+
+            if (totalCount) {
                 var readyCount = 0;
                 var loaded = {};
 
@@ -194,10 +194,11 @@ var Espo = Espo || {classMap:{}};
                         }
                     });
                 }, this);
+
+                return;
             }
-            else {
-                callback.apply(this);
-            }
+
+            callback.apply(this);
         },
 
         convertCamelCaseToHyphen: function (string) {
@@ -212,7 +213,10 @@ var Espo = Espo || {classMap:{}};
             var normalizedName = name;
 
             if (~name.indexOf('.') && !~name.indexOf('!')) {
-                console.warn(name + ': class name should use slashes for a directory separator and hyphen format.');
+                console.warn(
+                    name + ': ' +
+                    'class name should use slashes for a directory separator and hyphen format.'
+                );
             }
 
             if (!!/[A-Z]/.exec(name[0])) {
@@ -223,7 +227,8 @@ var Espo = Espo || {classMap:{}};
 
                     normalizedName = this.convertCamelCaseToHyphen(modulePart) + ':' +
                         this.convertCamelCaseToHyphen(namePart).split('.').join('/');
-                } else {
+                }
+                else {
                     normalizedName = this.convertCamelCaseToHyphen(name).split('.').join('/');
                 }
             }
@@ -262,6 +267,7 @@ var Espo = Espo || {classMap:{}};
                     var libData = this.libsConfig[realName] || {};
 
                     path = libData.path || path;
+
                     exportsTo = libData.exportsTo || exportsTo;
                     exportsAs = libData.exportsAs || exportsAs;
                 }
@@ -392,23 +398,21 @@ var Espo = Espo || {classMap:{}};
                             .then(
                                 function (cached) {
                                     this._handleResponse(dtObject, cached);
-                                }
-                                .bind(this)
+
+                                }.bind(this)
                             );
-                    }
-                    .bind(this)
+
+                    }.bind(this)
                 );
         },
 
         _processCached: function (dtObject, cached) {
-
             var name = dtObject.name;
             var callback = dtObject.callback;
             var type = dtObject.type;
             var dataType = dtObject.dataType;
             var realName = dtObject.realName;
             var fetchObjectFunction = dtObject.fetchObjectFunction;
-
 
             if (type === 'class') {
                 this.loadingSubject = name;
@@ -444,7 +448,6 @@ var Espo = Espo || {classMap:{}};
         },
 
         _processRequest: function (dtObject) {
-
             var name = dtObject.name;
             var url = dtObject.url;
             var errorCallback = dtObject.errorCallback;
@@ -470,8 +473,8 @@ var Espo = Espo || {classMap:{}};
                     }
 
                     this._handleResponse(dtObject, response);
-                }
-                .bind(this),
+
+                }.bind(this),
 
                 error: function (event, xhr, options) {
                     if (typeof errorCallback == 'function') {
@@ -481,12 +484,12 @@ var Espo = Espo || {classMap:{}};
                     }
 
                     throw new Error("Could not load file '" + path + "'");
-                },
+
+                }.bind(this),
             });
         },
 
         _handleResponse: function (dtObject, response) {
-
             var name = dtObject.name;
             var callback = dtObject.callback;
             var type = dtObject.type;
@@ -565,7 +568,9 @@ var Espo = Espo || {classMap:{}};
                 local: true,
                 success: function (data) {
                     this.libsConfig = data;
+
                     callback();
+
                 }.bind(this)
             });
         },
