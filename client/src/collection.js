@@ -52,6 +52,7 @@ define('collection', [], function () {
 
         initialize: function (models, options) {
             options = options || {};
+
             this.name = options.name || this.name;
             this.urlRoot = this.urlRoot || this.name;
             this.url = this.url || this.urlRoot;
@@ -86,7 +87,8 @@ define('collection', [], function () {
 
             if (order === true) {
                 order = 'desc';
-            } else if (order === false) {
+            }
+            else if (order === false) {
                 order = 'asc';
             }
 
@@ -108,6 +110,7 @@ define('collection', [], function () {
 
         previousPage: function () {
             var offset = this.offset - this.maxSize;
+
             this.setOffset(offset);
         },
 
@@ -116,7 +119,7 @@ define('collection', [], function () {
         },
 
         lastPage: function () {
-            var offset = this.total - this.total % this.maxSize;
+            let offset = this.total - this.total % this.maxSize;
 
             this.setOffset(offset);
         },
@@ -139,7 +142,8 @@ define('collection', [], function () {
 
             if ('additionalData' in response) {
                 this.dataAdditional = response.additionalData;
-            } else {
+            }
+            else {
                 this.dataAdditional = null;
             }
 
@@ -147,7 +151,7 @@ define('collection', [], function () {
         },
 
         fetch: function (options) {
-            var options = options || {};
+            options = options || {};
 
             options.data = _.extend(options.data || {}, this.data);
 
@@ -157,13 +161,14 @@ define('collection', [], function () {
 
             this.where = options.where || this.where;
 
-            var length = this.length + this.lengthCorrection;
+            let length = this.length + this.lengthCorrection;
 
             if (!('maxSize' in options)) {
                 options.data.maxSize = options.more ? this.maxSize : (
                     (length > this.maxSize) ? length : this.maxSize
                 );
-            } else {
+            }
+            else {
                 options.data.maxSize = options.maxSize;
             }
 
@@ -223,9 +228,7 @@ define('collection', [], function () {
                 this.defaultOrder = order;
             }
         },
-
     });
 
     return Collection;
-
 });

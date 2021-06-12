@@ -39,9 +39,9 @@ define('acl-portal', ['acl'], function (Dep) {
         checkScope: function (data, action, precise, entityAccessData) {
             entityAccessData = entityAccessData || {};
 
-            var inAccount = entityAccessData.inAccount;
-            var isOwnContact = entityAccessData.isOwnContact;
-            var isOwner = entityAccessData.isOwner;
+            let inAccount = entityAccessData.inAccount;
+            let isOwnContact = entityAccessData.isOwnContact;
+            let isOwner = entityAccessData.isOwner;
 
             if (this.getUser().isAdmin()) {
                 return true;
@@ -50,12 +50,15 @@ define('acl-portal', ['acl'], function (Dep) {
             if (data === false) {
                 return false;
             }
+
             if (data === true) {
                 return true;
             }
+
             if (typeof data === 'string') {
                 return true;
             }
+
             if (data === null) {
                 return false;
             }
@@ -65,6 +68,7 @@ define('acl-portal', ['acl'], function (Dep) {
             if (action === null) {
                 return true;
             }
+
             if (!(action in data)) {
                 return false;
             }
@@ -100,23 +104,28 @@ define('acl-portal', ['acl'], function (Dep) {
                 if (inAccount === null) {
                     if (precise) {
                         result = null;
-                    } else {
+                    }
+                    else {
                         return true;
                     }
-                } else if (inAccount) {
+                }
+                else if (inAccount) {
                     return true;
                 }
             }
 
             if (value === 'contact') {
                 result = isOwnContact;
+
                 if (isOwnContact === null) {
                     if (precise) {
                         result = null;
-                    } else {
+                    }
+                    else {
                         return true;
                     }
-                } else if (isOwnContact) {
+                }
+                else if (isOwnContact) {
                     return true;
                 }
             }
@@ -124,7 +133,8 @@ define('acl-portal', ['acl'], function (Dep) {
             if (isOwner === null) {
                 if (precise) {
                     result = null;
-                } else {
+                }
+                else {
                     return true;
                 }
             }
@@ -136,11 +146,13 @@ define('acl-portal', ['acl'], function (Dep) {
             if (this.getUser().isAdmin()) {
                 return true;
             }
-            var entityAccessData = {
+
+            let entityAccessData = {
                 isOwner: this.checkIsOwner(model),
                 inAccount: this.checkInAccount(model),
                 isOwnContact: this.checkIsOwnContact(model),
             };
+
             return this.checkScope(data, action, precise, entityAccessData);
         },
 
@@ -155,7 +167,7 @@ define('acl-portal', ['acl'], function (Dep) {
         },
 
         checkInAccount: function (model) {
-            var accountIdList = this.getUser().getLinkMultipleIdList('accounts');
+            let accountIdList = this.getUser().getLinkMultipleIdList('accounts');
 
             if (!accountIdList.length) {
                 return false;
@@ -175,11 +187,12 @@ define('acl-portal', ['acl'], function (Dep) {
                 if (!model.has('accountsIds')) {
                     result = null;
                 }
-                (model.getLinkMultipleIdList('accounts')).forEach(function (id) {
+
+                (model.getLinkMultipleIdList('accounts')).forEach(id => {
                     if (~accountIdList.indexOf(id)) {
                         result = true;
                     }
-                }, this);
+                });
             }
 
             if (model.hasField('parent') && model.hasLink('parent')) {
@@ -200,7 +213,8 @@ define('acl-portal', ['acl'], function (Dep) {
         },
 
         checkIsOwnContact: function (model) {
-            var contactId = this.getUser().get('contactId');
+            let contactId = this.getUser().get('contactId');
+
             if (!contactId) {
                 return false;
             }
@@ -213,17 +227,18 @@ define('acl-portal', ['acl'], function (Dep) {
                 }
             }
 
-            var result = false;
+            let result = false;
 
             if (model.hasField('contacts') && model.hasLink('contacts')) {
                 if (!model.has('contactsIds')) {
                     result = null;
                 }
-                (model.getLinkMultipleIdList('contacts')).forEach(function (id) {
+
+                (model.getLinkMultipleIdList('contacts')).forEach(id => {
                     if (contactId === id) {
                         result = true;
                     }
-                }, this);
+                });
             }
 
             if (model.hasField('parent') && model.hasLink('parent')) {
@@ -242,6 +257,5 @@ define('acl-portal', ['acl'], function (Dep) {
         }
 
     });
-
 });
 

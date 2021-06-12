@@ -190,7 +190,7 @@ define('controller', [], function () {
 
         handleCheckAccess: function (action) {
             if (!this.checkAccess(action)) {
-                var msg;
+                let msg;
 
                 if (action) {
                     msg = "Denied access to action '" + this.name + "#" + action + "'";
@@ -214,8 +214,8 @@ define('controller', [], function () {
                 throw new Espo.Exceptions.NotFound("Action '" + this.name + "#" + action + "' is not found");
             }
 
-            var preMethod = 'before' + Espo.Utils.upperCaseFirst(action);
-            var postMethod = 'after' + Espo.Utils.upperCaseFirst(action);
+            let preMethod = 'before' + Espo.Utils.upperCaseFirst(action);
+            let postMethod = 'after' + Espo.Utils.upperCaseFirst(action);
 
             if (preMethod in this) {
                 this[preMethod].call(this, options || {});
@@ -233,7 +233,7 @@ define('controller', [], function () {
          * @param {Function} callback Master view will be argument for this.
          */
         master: function (callback) {
-            var entire = this.get('entire');
+            let entire = this.get('entire');
 
             if (entire) {
                 entire.remove();
@@ -241,10 +241,10 @@ define('controller', [], function () {
                 this.set('entire', null);
             }
 
-            var master = this.get('master');
+            let master = this.get('master');
 
             if (!master) {
-                var masterView = this.masterView || 'views/site/master';
+                let masterView = this.masterView || 'views/site/master';
 
                 this.viewFactory.create(masterView, {el: 'body'}, function (master) {
                     this.set('master', master);
@@ -275,13 +275,13 @@ define('controller', [], function () {
         main: function (view, options, callback, useStored, storedKey) {
             var isCanceled = false;
 
-            this.listenToOnce(this.baseController, 'action', function () {
+            this.listenToOnce(this.baseController, 'action', () => {
                 isCanceled = true;
-            }, this);
+            });
 
             var view = view || 'views/base';
 
-            this.master(function (master) {
+            this.master(master => {
                 if (isCanceled) {
                     return;
                 }
@@ -289,7 +289,7 @@ define('controller', [], function () {
                 options = options || {};
                 options.el = '#main';
 
-                var process = function (main) {
+                let process = main => {
                     if (isCanceled) {
                         return;
                     }
@@ -302,11 +302,11 @@ define('controller', [], function () {
                         main.updatePageTitle();
                     });
 
-                    main.listenToOnce(this.baseController, 'action', function () {
+                    main.listenToOnce(this.baseController, 'action', () => {
                         main.cancelRender();
 
                         isCanceled = true;
-                    }, this);
+                    });
 
                     if (master.currentViewKey) {
                         this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
@@ -326,14 +326,14 @@ define('controller', [], function () {
 
                     master.setView('main', main);
 
-                    main.once('after:render', function () {
+                    main.once('after:render', () => {
                         if (useStored && this.has('storedScrollTop-' + storedKey)) {
                             $(window).scrollTop(this.get('storedScrollTop-' + storedKey));
                         }
                         else {
                             $(window).scrollTop(0);
                         }
-                    }.bind(this));
+                    });
 
                     if (isCanceled) {
                         return;
@@ -345,13 +345,13 @@ define('controller', [], function () {
                     else {
                         main.render();
                     }
-                }.bind(this);
+                };
 
                 if (useStored) {
                     if (this.hasStoredMainView(storedKey)) {
-                        var main = this.getStoredMainView(storedKey);
+                        let main = this.getStoredMainView(storedKey);
 
-                        var isActual = true;
+                        let isActual = true;
 
                         if (main && typeof main.isActualForReuse === 'function') {
                             isActual = main.isActualForReuse();
@@ -377,11 +377,11 @@ define('controller', [], function () {
                 }
 
                 this.viewFactory.create(view, options, process);
-            }.bind(this));
+            });
         },
 
         showLoadingNotification: function () {
-            var master = this.get('master');
+            let master = this.get('master');
 
             if (master) {
                 master.showLoadingNotification();
@@ -389,7 +389,7 @@ define('controller', [], function () {
         },
 
         hideLoadingNotification: function () {
-            var master = this.get('master');
+            let master = this.get('master');
 
             if (master) {
                 master.hideLoadingNotification();
@@ -403,7 +403,7 @@ define('controller', [], function () {
          * @return {Espo.View}
          */
         entire: function (view, options, callback) {
-            var master = this.get('master');
+            let master = this.get('master');
 
             if (master) {
                 master.remove();
@@ -415,11 +415,11 @@ define('controller', [], function () {
             options = options || {};
             options.el = 'body';
 
-            this.viewFactory.create(view, options, function (view) {
+            this.viewFactory.create(view, options, view => {
                 this.set('entire', view);
 
                 callback(view);
-            }.bind(this));
+            });
         }
 
     }, Backbone.Events);

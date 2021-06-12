@@ -28,7 +28,7 @@
 
 define('dynamic-logic', [], function () {
 
-    var DynamicLogic = function (defs, recordView) {
+    let DynamicLogic = function (defs, recordView) {
         this.defs = defs || {};
 
         this.recordView = recordView;
@@ -43,12 +43,12 @@ define('dynamic-logic', [], function () {
     _.extend(DynamicLogic.prototype, {
 
         process: function () {
-            var fields = this.defs.fields || {};
+            let fields = this.defs.fields || {};
 
-            Object.keys(fields).forEach(function (field) {
+            Object.keys(fields).forEach(field => {
                 var item = (fields[field] || {});
 
-                this.fieldTypeList.forEach(function (type) {
+                this.fieldTypeList.forEach(type => {
                     if (!(type in item)) {
                         return;
                     }
@@ -57,42 +57,44 @@ define('dynamic-logic', [], function () {
                         return;
                     }
 
-                    var typeItem = (item[type] || {});
+                    let typeItem = (item[type] || {});
 
                     if (!typeItem.conditionGroup) {
                         return;
                     }
 
-                    var result = this.checkConditionGroup(typeItem.conditionGroup);
-                    var methodName;
+                    let result = this.checkConditionGroup(typeItem.conditionGroup);
+
+                    let methodName;
 
                     if (result) {
                         methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
-                    } else {
+                    }
+                    else {
                         methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
                     }
 
                     this[methodName](field);
-                }, this);
-            }, this);
+                });
+            });
 
-            var panels = this.defs.panels || {};
+            let panels = this.defs.panels || {};
 
-            Object.keys(panels).forEach(function (panel) {
-                this.panelTypeList.forEach(function (type) {
+            Object.keys(panels).forEach(panel => {
+                this.panelTypeList.forEach(type => {
                     this.processPanel(panel, type);
-                }, this);
-            }, this);
+                });
+            });
 
-            var options = this.defs.options || {};
+            let options = this.defs.options || {};
 
-            Object.keys(options).forEach(function (field) {
-                var itemList = options[field] || [];
+            Object.keys(options).forEach(field => {
+                let itemList = options[field] || [];
 
-                var isMet = false;
+                let isMet = false;
 
-                for (var i in itemList) {
-                    var item = itemList[i];
+                for (let i in itemList) {
+                    let item = itemList[i];
 
                     if (this.checkConditionGroup(item.conditionGroup)) {
                         this.setOptionList(field, item.optionList || []);
@@ -106,30 +108,31 @@ define('dynamic-logic', [], function () {
                 if (!isMet) {
                     this.resetOptionList(field);
                 }
-            }, this);
+            });
         },
 
         processPanel: function (panel, type) {
-            var panels = this.defs.panels || {};
-            var item = (panels[panel] || {});
+            let panels = this.defs.panels || {};
+            let item = (panels[panel] || {});
 
             if (!(type in item)) {
                 return;
             }
 
-            var typeItem = (item[type] || {});
+            let typeItem = (item[type] || {});
 
             if (!typeItem.conditionGroup) {
                 return;
             }
 
-            var result = this.checkConditionGroup(typeItem.conditionGroup);
+            let result = this.checkConditionGroup(typeItem.conditionGroup);
 
-            var methodName;
+            let methodName;
 
             if (result) {
                 methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
-            } else {
+            }
+            else {
                 methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
             }
 
@@ -139,16 +142,16 @@ define('dynamic-logic', [], function () {
         checkConditionGroup: function (data, type) {
             type = type || 'and';
 
-            var list;
+            let list;
 
-            var result = false;
+            let result = false;
 
             if (type === 'and') {
                 list =  data || [];
 
                 result = true;
 
-                for (var i in list) {
+                for (let i in list) {
                     if (!this.checkCondition(list[i])) {
                         result = false;
 
@@ -159,7 +162,7 @@ define('dynamic-logic', [], function () {
             else if (type === 'or') {
                 list =  data || [];
 
-                for (var i in list) {
+                for (let i in list) {
                     if (this.checkCondition(list[i])) {
                         result = true;
 
@@ -179,14 +182,14 @@ define('dynamic-logic', [], function () {
         checkCondition: function (defs) {
             defs = defs || {};
 
-            var type = defs.type || 'equals';
+            let type = defs.type || 'equals';
 
             if (~['or', 'and', 'not'].indexOf(type)) {
                 return this.checkConditionGroup(defs.value, type);
             }
 
-            var attribute = defs.attribute;
-            var value = defs.value;
+            let attribute = defs.attribute;
+            let value = defs.value;
 
             if (!attribute) {
                 return;
@@ -305,7 +308,7 @@ define('dynamic-logic', [], function () {
             }
 
             if (type === 'isToday') {
-                var dateTime = this.recordView.getDateTime();
+                let dateTime = this.recordView.getDateTime();
 
                 if (!setValue) {
                     return false;
@@ -319,7 +322,7 @@ define('dynamic-logic', [], function () {
             }
 
             if (type === 'inFuture') {
-                var dateTime = this.recordView.getDateTime();
+                let dateTime = this.recordView.getDateTime();
 
                 if (!setValue) {
                     return false;
@@ -333,7 +336,7 @@ define('dynamic-logic', [], function () {
             }
 
             if (type === 'inPast') {
-                var dateTime = this.recordView.getDateTime();
+                let dateTime = this.recordView.getDateTime();
 
                 if (!setValue) {
                     return false;

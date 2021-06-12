@@ -30,7 +30,7 @@ define('action-handler', [], function () {
 
     var ActionHandler = function (view) {
         this.view = view;
-    }
+    };
 
     _.extend(ActionHandler.prototype, {
 

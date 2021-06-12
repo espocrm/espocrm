@@ -28,10 +28,10 @@
 
 define('dynamic-handler', [], function () {
 
-    var DynamicHandler = function (recordView) {
+    let DynamicHandler = function (recordView) {
         this.recordView = recordView;
         this.model = recordView.model;
-    }
+    };
 
     _.extend(DynamicHandler.prototype, {
 

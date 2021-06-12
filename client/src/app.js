@@ -84,7 +84,7 @@ define(
     ) {
 
     var App = function (options, callback) {
-        var options = options || {};
+        options = options || {};
 
         this.id = options.id || 'espocrm-application-id';
 
@@ -142,8 +142,8 @@ define(
         responseCache: null,
 
         initCache: function (options) {
-            var cacheTimestamp = options.cacheTimestamp || null;
-            var storedCacheTimestamp = null;
+            let cacheTimestamp = options.cacheTimestamp || null;
+            let storedCacheTimestamp = null;
 
             if (this.useCache) {
                 this.cache = new Cache(cacheTimestamp);
@@ -158,7 +158,7 @@ define(
                 }
             }
 
-            var handleActuality = () => {
+            let handleActuality = () => {
                 if (
                     !cacheTimestamp ||
                     !storedCacheTimestamp ||
@@ -291,10 +291,10 @@ define(
                     this.webSocketManager.connect(this.auth, this.user.id);
                 }
 
-                var promiseList = [];
-                var aclImplementationClassMap = {};
+                let promiseList = [];
+                let aclImplementationClassMap = {};
 
-                var clientDefs = this.metadata.get('clientDefs') || {};
+                let clientDefs = this.metadata.get('clientDefs') || {};
 
                 Object.keys(clientDefs).forEach(scope => {
                     var o = clientDefs[scope];
@@ -349,7 +349,8 @@ define(
         },
 
         initRouter: function () {
-            var routes = this.metadata.get(['app', 'clientRoutes']) || {};
+            let routes = this.metadata.get(['app', 'clientRoutes']) || {};
+
             this.router = new Router({routes: routes});
 
             this.viewHelper.router = this.router;
@@ -441,12 +442,12 @@ define(
             }
 
             try {
-                var className = this.metadata.get('clientDefs.' + name + '.controller');
+                let className = this.metadata.get('clientDefs.' + name + '.controller');
 
                 if (!className) {
-                    var module = this.metadata.get('scopes.' + name + '.module');
+                    let module = this.metadata.get('scopes.' + name + '.module');
 
-                    className = Espo.Utils.composeClassName(module, name, 'controllers');
+                    className = Utils.composeClassName(module, name, 'controllers');
                 }
 
                 Espo.require(
@@ -492,7 +493,9 @@ define(
         },
 
         initView: function () {
-            var helper = this.viewHelper = new ViewHelper();
+            let helper = this.viewHelper = new ViewHelper();
+
+            // @todo Use `helper.container`.
 
             helper.layoutManager = new LayoutManager({cache: this.cache, applicationId: this.id});
             helper.settings = this.settings;
@@ -518,11 +521,11 @@ define(
             helper.pageTitle = new PageTitle(this.settings);
 
             this.viewLoader = (viewName, callback) => {
-                Espo.require(Espo.Utils.composeViewClassName(viewName), callback);
+                require(Utils.composeViewClassName(viewName), callback);
             };
 
             var getResourceInnerPath = function (type, name) {
-                var path = null;
+                let path = null;
 
                 switch (type) {
                     case 'template':
@@ -551,7 +554,7 @@ define(
 
             var getResourcePath = (type, name) => {
                 if (name.indexOf(':') !== -1) {
-                    var arr = name.split(':');
+                    let arr = name.split(':');
 
                     name = arr[1];
 
@@ -607,10 +610,10 @@ define(
 
         logout: function () {
             if (this.auth) {
-                var arr = Base64.decode(this.auth).split(':');
+                let arr = Base64.decode(this.auth).split(':');
 
                 if (arr.length > 1) {
-                    Espo.Ajax.postRequest('App/action/destroyAuthToken', {
+                    Ajax.postRequest('App/action/destroyAuthToken', {
                         token: arr[1]
                     });
                 }
@@ -651,7 +654,7 @@ define(
                 return;
             }
 
-            var stylesheetPath = this.basePath + this.themeManager.getStylesheet();
+            let stylesheetPath = this.basePath + this.themeManager.getStylesheet();
 
             $('#main-stylesheet').attr('href', stylesheetPath);
         },
@@ -700,11 +703,11 @@ define(
             .then(() => {
                 this.dateTime.setLanguage(this.language);
 
-                var userData = options.user || null;
-                var preferencesData = options.preferences || null;
-                var aclData = options.acl || null;
+                let userData = options.user || null;
+                let preferencesData = options.preferences || null;
+                let aclData = options.acl || null;
 
-                var settingData = options.settings || {};
+                let settingData = options.settings || {};
 
                 this.user.set(userData);
                 this.preferences.set(preferencesData);
@@ -720,7 +723,7 @@ define(
                     return;
                 }
 
-                var xhr = new XMLHttpRequest();
+                let xhr = new XMLHttpRequest();
 
                 xhr.open('GET', this.basePath + this.apiUrl + '/');
 
@@ -729,7 +732,7 @@ define(
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
 
-                        var arr = Base64.decode(this.auth).split(':');
+                        let arr = Base64.decode(this.auth).split(':');
 
                         this.setCookieAuth(arr[0], arr[1]);
 
@@ -737,7 +740,7 @@ define(
                     }
 
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 401) {
-                        Espo.Ui.error('Auth error');
+                        Ui.error('Auth error');
                     }
                 };
 
@@ -746,7 +749,7 @@ define(
         },
 
         requestUserData: function (callback) {
-            Espo.Ajax
+            Ajax
                 .getRequest('App/user')
                 .then(callback);
         },
@@ -755,7 +758,7 @@ define(
             $.ajaxSetup({
                 beforeSend: (xhr, options) => {
                     if (!options.local && this.apiUrl) {
-                        options.url = Espo.Utils.trimSlash(this.apiUrl) + '/' + options.url;
+                        options.url = Utils.trimSlash(this.apiUrl) + '/' + options.url;
                     }
 
                     if (!options.local && this.basePath !== '') {
@@ -779,18 +782,20 @@ define(
                     return;
                 }
 
-                var statusReason = xhr.getResponseHeader('X-Status-Reason');
+                let statusReason = xhr.getResponseHeader('X-Status-Reason');
+
+                let msg;
 
                 switch (xhr.status) {
                     case 0:
                         if (xhr.statusText === 'timeout') {
-                            Espo.Ui.error(this.language.translate('Timeout'));
+                            Ui.error(this.language.translate('Timeout'));
                         }
 
                         break;
 
                     case 200:
-                        Espo.Ui.error(this.language.translate('Bad server response'));
+                        Ui.error(this.language.translate('Bad server response'));
                         console.error('Bad server response: ' + xhr.responseText);
 
                         break;
@@ -812,7 +817,7 @@ define(
                             this.baseController.error403();
                         }
                         else {
-                            var msg = this.language.translate('Error') + ' ' + xhr.status;
+                            msg = this.language.translate('Error') + ' ' + xhr.status;
 
                             msg += ': ' + this.language.translate('Access denied');
 
@@ -820,13 +825,13 @@ define(
                                 msg += ': ' + statusReason;
                             }
 
-                            Espo.Ui.error(msg);
+                            Ui.error(msg);
                         }
 
                         break;
 
                     case 400:
-                        var msg = this.language.translate('Error') + ' ' + xhr.status;
+                        msg = this.language.translate('Error') + ' ' + xhr.status;
 
                         msg += ': ' + this.language.translate('Bad request');
 
@@ -834,7 +839,7 @@ define(
                             msg += ': ' + statusReason;
                         }
 
-                        Espo.Ui.error(msg);
+                        Ui.error(msg);
 
                         break;
 
@@ -843,23 +848,23 @@ define(
                             this.baseController.error404();
                         }
                         else {
-                            var msg = this.language.translate('Error') + ' ' + xhr.status;
+                            msg = this.language.translate('Error') + ' ' + xhr.status;
 
                             msg += ': ' + this.language.translate('Not found');
 
-                            Espo.Ui.error(msg);
+                            Ui.error(msg);
                         }
 
                         break;
 
                     default:
-                        var msg = this.language.translate('Error') + ' ' + xhr.status;
+                        msg = this.language.translate('Error') + ' ' + xhr.status;
 
                         if (statusReason) {
                             msg += ': ' + statusReason;
                         }
 
-                        Espo.Ui.error(msg);
+                        Ui.error(msg);
                 }
 
                 if (statusReason) {

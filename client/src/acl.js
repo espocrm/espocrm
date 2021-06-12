@@ -28,14 +28,16 @@
 
 define('acl', [], function () {
 
-    var Acl = function (user, scope, params) {
+    let Acl = function (user, scope, params) {
         this.user = user || null;
         this.scope = scope;
+
         params = params || {};
+
         this.aclAllowDeleteCreated = params.aclAllowDeleteCreated;
         this.teamsFieldIsForbidden = params.teamsFieldIsForbidden;
         this.forbiddenFieldList = params.forbiddenFieldList;
-    }
+    };
 
     _.extend(Acl.prototype, {
 
@@ -58,12 +60,15 @@ define('acl', [], function () {
             if (data === false) {
                 return false;
             }
+
             if (data === true) {
                 return true;
             }
+
             if (typeof data === 'string') {
                 return true;
             }
+
             if (data === null) {
                 return false;
             }
@@ -105,13 +110,16 @@ define('acl', [], function () {
 
             if (value === 'team') {
                 result = inTeam;
+
                 if (inTeam === null) {
                     if (precise) {
                         result = null;
-                    } else {
+                    }
+                    else {
                         return true;
                     }
-                } else if (inTeam) {
+                }
+                else if (inTeam) {
                     return true;
                 }
             }
@@ -119,7 +127,8 @@ define('acl', [], function () {
             if (isOwner === null) {
                 if (precise) {
                     result = null;
-                } else {
+                }
+                else {
                     return true;
                 }
             }
@@ -131,7 +140,8 @@ define('acl', [], function () {
             if (this.getUser().isAdmin()) {
                 return true;
             }
-            var entityAccessData = {
+
+            let entityAccessData = {
                 isOwner: this.checkIsOwner(model),
                 inTeam: this.checkInTeam(model),
             };
@@ -140,7 +150,7 @@ define('acl', [], function () {
         },
 
         checkModelDelete: function (model, data, precise) {
-            var result = this.checkModel(model, data, 'delete', precise);
+            let result = this.checkModel(model, data, 'delete', precise);
 
             if (result) {
                 return true;
@@ -151,6 +161,7 @@ define('acl', [], function () {
             }
 
             var d = data || {};
+
             if (d.read === 'no') {
                 return false;
             }
@@ -159,14 +170,16 @@ define('acl', [], function () {
                 if (model.get('createdById') === this.getUser().id && this.aclAllowDeleteCreated) {
                     if (!model.has('assignedUserId')) {
                         return true;
-                    } else {
-                        if (!model.get('assignedUserId')) {
-                            return true;
-                        }
-                        if (model.get('assignedUserId') === this.getUser().id) {
-                            return true;
-                        }
                     }
+
+                    if (!model.get('assignedUserId')) {
+                        return true;
+                    }
+
+                    if (model.get('assignedUserId') === this.getUser().id) {
+                        return true;
+                    }
+
                 }
             }
 
@@ -174,24 +187,25 @@ define('acl', [], function () {
         },
 
         checkIsOwner: function (model) {
-            var result = false;
+            let result = false;
 
             if (model.hasField('assignedUser')) {
                 if (this.getUser().id === model.get('assignedUserId')) {
                     return true;
-                } else {
-                    if (!model.has('assignedUserId')) {
-                        result = null;
-                    }
                 }
-            } else {
+
+                if (!model.has('assignedUserId')) {
+                    result = null;
+                }
+            }
+            else {
                 if (model.hasField('createdBy')) {
                     if (this.getUser().id === model.get('createdById')) {
                         return true;
-                    } else {
-                        if (!model.has('createdById')) {
-                            result = null;
-                        }
+                    }
+
+                    if (!model.has('createdById')) {
+                        result = null;
                     }
                 }
             }
@@ -203,9 +217,9 @@ define('acl', [], function () {
 
                 if (~(model.get('assignedUsersIds') || []).indexOf(this.getUser().id)) {
                     return true;
-                } else {
-                    result = false;
                 }
+
+                result = false;
             }
 
             return result;
@@ -218,17 +232,20 @@ define('acl', [], function () {
                 if (this.teamsFieldIsForbidden) {
                     return true;
                 }
+
                 return null;
             }
 
             var teamIdList = model.getTeamIdList();
+
             var inTeam = false;
 
-            userTeamIdList.forEach(function (id) {
+            userTeamIdList.forEach(id => {
                 if (~teamIdList.indexOf(id)) {
                     inTeam = true;
                 }
             });
+
             return inTeam;
         },
 

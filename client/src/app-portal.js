@@ -39,5 +39,4 @@ define('app-portal', ['app', 'acl-portal-manager'], function (Dep, AclPortalMana
         },
 
     });
-
 });

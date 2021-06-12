@@ -40,17 +40,20 @@ define('acl-portal-manager', ['acl-manager', 'acl-portal'], function (Dep, AclPo
 
         getImplementation: function (scope) {
             if (!(scope in this.implementationHash)) {
-                var implementationClass = AclPortal;
+                let implementationClass = AclPortal;
+
                 if (scope in this.implementationClassMap) {
                     implementationClass = this.implementationClassMap[scope];
                 }
-                var obj = new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
+
+                let obj = new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
+
                 this.implementationHash[scope] = obj;
             }
+
             return this.implementationHash[scope];
         },
 
     });
-
 });
 

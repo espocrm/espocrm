@@ -32,6 +32,7 @@ define('ajax', [], function () {
 
         request: function (url, type, data, options) {
             var options = options || {};
+
             options.type = type;
             options.url = url;
 
@@ -46,6 +47,7 @@ define('ajax', [], function () {
             if (data) {
                 data = JSON.stringify(data);
             }
+
             return Ajax.request(url, 'POST', data, options);
         },
 
@@ -53,6 +55,7 @@ define('ajax', [], function () {
             if (data) {
                 data = JSON.stringify(data);
             }
+
             return Ajax.request(url, 'PATCH', data, options);
         },
 
@@ -60,6 +63,7 @@ define('ajax', [], function () {
             if (data) {
                 data = JSON.stringify(data);
             }
+
             return Ajax.request(url, 'PUT', data, options);
         },
 
@@ -67,14 +71,14 @@ define('ajax', [], function () {
             if (data) {
                 data = JSON.stringify(data);
             }
+
             return Ajax.request(url, 'DELETE', data, options);
         },
 
         getRequest: function (url, data, options) {
             return Ajax.request(url, 'GET', data, options);
-        }
+        },
     };
 
     return Ajax;
-
 });

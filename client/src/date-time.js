@@ -28,9 +28,7 @@
 
 define('date-time', [], function () {
 
-    var DateTime = function () {
-
-    };
+    let DateTime = function () {};
 
     _.extend(DateTime.prototype, {
 
@@ -94,10 +92,13 @@ define('date-time', [], function () {
             if (!string) {
                 return null;
             }
-            var m = moment(string, this.dateFormat);
+
+            let m = moment(string, this.dateFormat);
+
             if (!m.isValid()) {
                 return -1;
             }
+
             return m.format(this.internalDateFormat);
         },
 
@@ -106,11 +107,12 @@ define('date-time', [], function () {
         },
 
         toDisplayDate: function (string) {
-            if (!string || (typeof string != 'string')) {
+            if (!string || (typeof string !== 'string')) {
                 return '';
             }
 
-            var m = moment(string, this.internalDateFormat);
+            let m = moment(string, this.internalDateFormat);
+
             if (!m.isValid()) {
                 return '';
             }
@@ -122,16 +124,20 @@ define('date-time', [], function () {
             if (!string) {
                 return null;
             }
-            var m;
+
+            let m;
+
             if (this.timeZone) {
                 m = moment.tz(string, this.getDateTimeFormat(), this.timeZone).utc();
-            } else {
+            }
+            else {
                 m = moment.utc(string, this.getDateTimeFormat());
             }
 
             if (!m.isValid()) {
                 return -1;
             }
+
             return m.format(this.internalDateTimeFormat) + ':00';
         },
 
@@ -147,6 +153,7 @@ define('date-time', [], function () {
             if (!string) {
                 return '';
             }
+
             return this.toMoment(string).format(this.getDateTimeFormat());
         },
 
@@ -155,15 +162,16 @@ define('date-time', [], function () {
         },
 
         toMomentDate: function (string) {
-            var m = moment.utc(string, this.internalDateFormat);
-            return m;
+            return moment.utc(string, this.internalDateFormat);
         },
 
         toMoment: function (string) {
-            var m = moment.utc(string, this.internalDateTimeFullFormat);
+            let m = moment.utc(string, this.internalDateTimeFullFormat);
+
             if (this.timeZone) {
                 m = m.tz(this.timeZone);
             }
+
             return m;
         },
 
@@ -171,7 +179,9 @@ define('date-time', [], function () {
             if (!string) {
                 return '';
             }
-            var m = moment(string).utc();
+
+            let m = moment(string).utc();
+
             return m.format(this.internalDateTimeFormat);
         },
 
@@ -179,6 +189,7 @@ define('date-time', [], function () {
             if (!string) {
                 return null;
             }
+
             return this.toMoment(string).format();
         },
 
@@ -189,11 +200,14 @@ define('date-time', [], function () {
         getDateTimeShiftedFromNow: function (shift, type, multiplicity) {
             if (!multiplicity) {
                 return moment.utc().add(type, shift).format(this.internalDateTimeFormat);
-            } else {
-                var unix = moment().unix();
-                unix = unix - (unix % (multiplicity * 60));
-                return moment.unix(unix).utc().add(type, shift).format(this.internalDateTimeFormat);
             }
+
+            let unix = moment().unix();
+
+            unix = unix - (unix % (multiplicity * 60));
+
+            return moment.unix(unix).utc().add(type, shift).format(this.internalDateTimeFormat);
+
         },
 
         getDateShiftedFromToday: function (shift, type) {
@@ -203,47 +217,57 @@ define('date-time', [], function () {
         getNow: function (multiplicity) {
             if (!multiplicity) {
                 return moment.utc().format(this.internalDateTimeFormat);
-            } else {
-                var unix = moment().unix();
-                unix = unix - (unix % (multiplicity * 60));
-                return moment.unix(unix).utc().format(this.internalDateTimeFormat);
             }
+
+            let unix = moment().unix();
+
+            unix = unix - (unix % (multiplicity * 60));
+
+            return moment.unix(unix).utc().format(this.internalDateTimeFormat);
         },
 
         setSettingsAndPreferences: function (settings, preferences) {
             if (settings.has('dateFormat')) {
                 this.dateFormat = settings.get('dateFormat');
             }
+
             if (settings.has('timeFormat')) {
                 this.timeFormat = settings.get('timeFormat');
             }
+
             if (settings.has('timeZone')) {
                 this.timeZone = settings.get('timeZone') || null;
-                if (this.timeZone == 'UTC') {
+
+                if (this.timeZone === 'UTC') {
                     this.timeZone = null;
                 }
             }
+
             if (settings.has('weekStart')) {
                 this.weekStart = settings.get('weekStart');
             }
 
-            preferences.on('change', function (model) {
+            preferences.on('change', model => {
                 if (model.has('dateFormat') && model.get('dateFormat') !== '') {
                     this.dateFormat = model.get('dateFormat');
                 }
+
                 if (model.has('timeFormat') && model.get('timeFormat') !== '') {
                     this.timeFormat = model.get('timeFormat');
                 }
+
                 if (model.has('timeZone') && model.get('timeZone') !== '') {
+
                     this.timeZone = model.get('timeZone');
                 }
                 if (model.has('weekStart') && model.get('weekStart') !== -1) {
                     this.weekStart = model.get('weekStart');
                 }
-                if (this.timeZone == 'UTC') {
+
+                if (this.timeZone === 'UTC') {
                     this.timeZone = null;
                 }
-            }, this);
+            });
         },
 
         setLanguage: function (language) {
@@ -254,10 +278,10 @@ define('date-time', [], function () {
                 weekdaysShort: language.translate('dayNamesShort', 'lists'),
                 weekdaysMin: language.translate('dayNamesMin', 'lists'),
             });
+
             moment.locale('en');
         },
     });
 
     return DateTime;
-
 });

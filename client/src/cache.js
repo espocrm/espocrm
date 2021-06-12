@@ -45,7 +45,7 @@ define('cache', [], function () {
         prefix: 'cache',
 
         handleActuality: function (cacheTimestamp) {
-            var storedTimestamp = this.getCacheTimestamp();
+            let storedTimestamp = this.getCacheTimestamp();
 
             if (storedTimestamp) {
                 if (storedTimestamp !== cacheTimestamp) {
@@ -71,7 +71,8 @@ define('cache', [], function () {
         },
 
         storeTimestamp: function () {
-            var frontendCacheTimestamp = Date.now();
+            let frontendCacheTimestamp = Date.now();
+
             this.set('app', 'timestamp', frontendCacheTimestamp);
         },
 
@@ -84,7 +85,7 @@ define('cache', [], function () {
         },
 
         checkType: function (type) {
-            if (typeof type === 'undefined' && toString.call(type) != '[object String]') {
+            if (typeof type === 'undefined' && toString.call(type) !== '[object String]') {
                 throw new TypeError("Bad type \"" + type + "\" passed to Cache().");
             }
         },
@@ -92,10 +93,10 @@ define('cache', [], function () {
         get: function (type, name) {
             this.checkType(type);
 
-            var key = this.composeKey(type, name);
+            let key = this.composeKey(type, name);
 
             try {
-                var stored = localStorage.getItem(key);
+                let stored = localStorage.getItem(key);
             }
             catch (error) {
                 console.error(error);
@@ -104,10 +105,10 @@ define('cache', [], function () {
             }
 
             if (stored) {
-                var result = stored;
+                let result = stored;
 
                 if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
-                    var jsonString = stored.substr(9);
+                    let jsonString = stored.substr(9);
 
                     try {
                         result = JSON.parse(jsonString);
@@ -126,7 +127,7 @@ define('cache', [], function () {
         set: function (type, name, value) {
             this.checkType(type);
 
-            var key = this.composeKey(type, name);
+            let key = this.composeKey(type, name);
 
             if (value instanceof Object || Array.isArray(value)) {
                 value = '__JSON__:' + JSON.stringify(value);
@@ -141,7 +142,7 @@ define('cache', [], function () {
         },
 
         clear: function (type, name) {
-            var reText;
+            let reText;
 
             if (typeof type !== 'undefined') {
                 if (typeof name === 'undefined') {
@@ -155,7 +156,7 @@ define('cache', [], function () {
                 reText = '^' + this.basePrefix + '-';
             }
 
-            var re = new RegExp(reText);
+            let re = new RegExp(reText);
 
             for (var i in localStorage) {
                 if (re.test(i)) {
@@ -163,9 +164,7 @@ define('cache', [], function () {
                 }
             }
         },
-
     });
 
     return Cache;
-
 });

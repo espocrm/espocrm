@@ -34,7 +34,7 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
         this.user = user || null;
         this.implementationClassMap = implementationClassMap || {};
         this.aclAllowDeleteCreated = aclAllowDeleteCreated;
-    }
+    };
 
     _.extend(AclManager.prototype, {
 
@@ -59,21 +59,21 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
 
         getImplementation: function (scope) {
             if (!(scope in this.implementationHash)) {
-                var implementationClass = Acl;
+                let implementationClass = Acl;
 
                 if (scope in this.implementationClassMap) {
                     implementationClass = this.implementationClassMap[scope];
                 }
 
-                var forbiddenFieldList = this.getScopeForbiddenFieldList(scope);
+                let forbiddenFieldList = this.getScopeForbiddenFieldList(scope);
 
-                var params = {
+                let params = {
                     aclAllowDeleteCreated: this.aclAllowDeleteCreated,
                     teamsFieldIsForbidden: !!~forbiddenFieldList.indexOf('teams'),
                     forbiddenFieldList: forbiddenFieldList,
                 };
 
-                var obj = new implementationClass(this.getUser(), scope, params);
+                let obj = new implementationClass(this.getUser(), scope, params);
 
                 this.implementationHash[scope] = obj;
             }
@@ -107,7 +107,7 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
          * @returns string
          */
         getPermissionLevel: function (permission) {
-            var permissionKey = permission;
+            let permissionKey = permission;
 
             if (permission.substr(-10) !== 'Permission') {
                 permissionKey = permission + 'Permission';
@@ -143,7 +143,7 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
         },
 
         checkScope: function (scope, action, precise) {
-            var data = (this.data.table || {})[scope];
+            let data = (this.data.table || {})[scope];
 
             if (typeof data === 'undefined') {
                 data = null;
@@ -168,16 +168,16 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
                 }
             }
 
-            var data = (this.data.table || {})[scope];
+            let data = (this.data.table || {})[scope];
 
             if (typeof data === 'undefined') {
                 data = null;
             }
 
-            var impl = this.getImplementation(scope);
+            let impl = this.getImplementation(scope);
 
             if (action) {
-                var methodName = 'checkModel' + Espo.Utils.upperCaseFirst(action);
+                let methodName = 'checkModel' + Espo.Utils.upperCaseFirst(action);
 
                 if (methodName in impl) {
                     return impl[methodName](model, data, precise);
@@ -191,9 +191,8 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
             if (typeof subject === 'string') {
                 return this.checkScope(subject, action, precise);
             }
-            else {
-                return this.checkModel(subject, action, precise);
-            }
+
+            return this.checkModel(subject, action, precise);
         },
 
         checkIsOwner: function (model) {
@@ -217,7 +216,7 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
                 return true;
             }
 
-            var level = this.get(permission);
+            let level = this.get(permission);
 
             if (level === 'no') {
                 if (user.id === this.getUser().id) {
@@ -232,15 +231,15 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
                     return false;
                 }
 
-                var result = false;
+                let result = false;
 
-                var teamsIds = user.get('teamsIds') || [];
+                let teamsIds = user.get('teamsIds') || [];
 
-                teamsIds.forEach(function (id) {
+                teamsIds.forEach(id => {
                     if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
                         result = true;
                     }
-                }, this);
+                });
 
                 return result;
             }
@@ -260,32 +259,32 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
             action = action || 'read';
             thresholdLevel = thresholdLevel || 'no';
 
-            var key = scope + '_' + action + '_' + thresholdLevel;
+            let key = scope + '_' + action + '_' + thresholdLevel;
 
             if (key in this.forbiddenFieldsCache) {
                 return Utils.clone(this.forbiddenFieldsCache[key]);
             }
 
-            var levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
+            let levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
 
-            var fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
-            var scopeData = fieldTableQuickAccess[scope] || {};
-            var fieldsData = scopeData.fields || {};
-            var actionData = fieldsData[action] || {};
+            let fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
+            let scopeData = fieldTableQuickAccess[scope] || {};
+            let fieldsData = scopeData.fields || {};
+            let actionData = fieldsData[action] || {};
 
-            var fieldList = [];
+            let fieldList = [];
 
-            levelList.forEach(function (level) {
-                var list = actionData[level] || [];
+            levelList.forEach(level => {
+                let list = actionData[level] || [];
 
-                list.forEach(function (field) {
+                list.forEach(field => {
                     if (~fieldList.indexOf(field)) {
                         return;
                     }
 
                     fieldList.push(field);
-                }, this);
-            }, this);
+                });
+            });
 
             this.forbiddenFieldsCache[key] = fieldList;
 
@@ -296,33 +295,33 @@ define('acl-manager', ['acl', 'utils'], function (Acl, Utils) {
             action = action || 'read';
             thresholdLevel = thresholdLevel || 'no';
 
-            var key = scope + '_' + action + '_' + thresholdLevel;
+            let key = scope + '_' + action + '_' + thresholdLevel;
 
             if (key in this.forbiddenAttributesCache) {
                 return Utils.clone(this.forbiddenAttributesCache[key]);
             }
 
-            var levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
+            let levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
 
-            var fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
-            var scopeData = fieldTableQuickAccess[scope] || {};
+            let fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
+            let scopeData = fieldTableQuickAccess[scope] || {};
 
-            var attributesData = scopeData.attributes || {};
-            var actionData = attributesData[action] || {};
+            let attributesData = scopeData.attributes || {};
+            let actionData = attributesData[action] || {};
 
-            var attributeList = [];
+            let attributeList = [];
 
-            levelList.forEach(function (level) {
-                var list = actionData[level] || [];
+            levelList.forEach(level => {
+                let list = actionData[level] || [];
 
-                list.forEach(function (attribute) {
+                list.forEach(attribute => {
                     if (~attributeList.indexOf(attribute)) {
                         return;
                     }
 
                     attributeList.push(attribute);
-                }, this);
-            }, this);
+                });
+            });
 
             this.forbiddenAttributesCache[key] = attributeList;
 
