@@ -30,54 +30,44 @@ var Espo = Espo || {classMap: {}};
 
 (function (Espo, _, $) {
 
-    var root = this;
+    let root = this;
 
     Espo.Loader = function (cache, cacheTimestamp) {
         this.basePath = $('script[data-base-path]').data('basePath') || '';
 
-        this.cache = cache || null;
+        this._cache = cache || null;
+        this._cacheTimestamp = cacheTimestamp || null;
+        this._libsConfig = {};
         this._loadCallbacks = {};
-        this.pathsBeingLoaded = {};
-        this.libsConfig = {};
-
-        this.cacheTimestamp = cacheTimestamp || null;
-
-        this.loadingSubject = null;
+        this._pathsBeingLoaded = {};
+        this._dataLoaded = {};
+        this._loadingSubject = null;
+        this._responseCache = null;
     };
 
     _.extend(Espo.Loader.prototype, {
 
-        cache: null,
-
-        responseCache: null,
-
-        data: null,
-
-        classMap: Espo,
-
-        _loadCallbacks: null,
-
-        libsConfigUrl: 'client/cfg/libs.json',
+        _classMap: Espo,
 
         _getClass: function (name) {
-            if (name in this.classMap) {
-                return this.classMap[name];
+            if (name in this._classMap) {
+                return this._classMap[name];
             }
 
             return false;
         },
 
         _setClass: function (name, o) {
-            this.classMap[name] = o;
+            this._classMap[name] = o;
         },
 
         _nameToPath: function (name) {
-            var path;
+            let path;
 
             if (name.indexOf(':') !== -1) {
-                var arr = name.split(':');
-                var namePart = arr[1];
-                var modulePart = arr[0];
+                let arr = name.split(':');
+                let namePart = arr[1];
+                let modulePart = arr[0];
 
                 if (modulePart === 'custom') {
                     path = 'client/custom/src/' + namePart;
@@ -112,10 +102,10 @@ var Espo = Espo || {classMap: {}};
                 subject = this._normalizeClassName(subject);
             }
 
-            if (this.loadingSubject) {
-                subject = subject || this.loadingSubject;
+            if (this._loadingSubject) {
+                subject = subject || this._loadingSubject;
 
-                this.loadingSubject = null;
+                this._loadingSubject = null;
             }
 
             if (!dependency) {
@@ -130,11 +120,11 @@ var Espo = Espo || {classMap: {}};
         },
 
         _defineProceed: function (callback, subject, args) {
-            var o = callback.apply(this, args);
+            let o = callback.apply(this, args);
 
             if (!o) {
-                if (this.cache) {
-                    this.cache.clear('a', subject);
+                if (this._cache) {
+                    this._cache.clear('a', subject);
                 }
 
                 throw new Error("Could not load '" + subject + "'");
@@ -145,7 +135,7 @@ var Espo = Espo || {classMap: {}};
         },
 
         require: function (subject, callback, errorCallback) {
-            var list;
+            let list;
 
             if (Object.prototype.toString.call(subject) === '[object Array]') {
                 list = subject;
@@ -208,7 +198,7 @@ var Espo = Espo || {classMap: {}};
         },
 
         _normalizeClassName: function (name) {
-            var normalizedName = name;
+            let normalizedName = name;
 
             if (~name.indexOf('.') && !~name.indexOf('!')) {
                 console.warn(
@@ -219,16 +209,17 @@ var Espo = Espo || {classMap: {}};
 
             if (!!/[A-Z]/.exec(name[0])) {
                 if (name.indexOf(':') !== -1) {
-                    var arr = name.split(':');
-                    var modulePart = arr[0];
-                    var namePart = arr[1];
+                    let arr = name.split(':');
+                    let modulePart = arr[0];
+                    let namePart = arr[1];
 
-                    normalizedName = this._convertCamelCaseToHyphen(modulePart) + ':' +
-                        this._convertCamelCaseToHyphen(namePart).split('.').join('/');
+                    return this._convertCamelCaseToHyphen(modulePart) + ':' +
+                        this._convertCamelCaseToHyphen(namePart)
+                            .split('.')
+                            .join('/');
                 }
-                else {
-                    normalizedName = this._convertCamelCaseToHyphen(name).split('.').join('/');
-                }
+
+                return normalizedName = this._convertCamelCaseToHyphen(name).split('.').join('/');
             }
 
             return normalizedName;
@@ -242,14 +233,12 @@ var Espo = Espo || {classMap: {}};
             this._loadCallbacks[name].push(callback);
         },
 
-        dataLoaded: {},
-
         load: function (name, callback, errorCallback) {
-            var dataType, type, path, fetchObjectFunction;
+            let dataType, type, path, exportsTo, exportsAs /*, fetchObjectFunction*/;
 
-            var realName = name;
+            let realName = name;
 
-            var noAppCache = false;
+            let noAppCache = false;
 
             if (name.indexOf('lib!') === 0) {
                 dataType = 'script';
@@ -258,11 +247,11 @@ var Espo = Espo || {classMap: {}};
                 realName = name.substr(4);
                 path = realName;
 
-                var exportsTo = 'window';
-                var exportsAs = realName;
+                exportsTo = 'window';
+                exportsAs = realName;
 
-                if (realName in this.libsConfig) {
-                    var libData = this.libsConfig[realName] || {};
+                if (realName in this._libsConfig) {
+                    let libData = this._libsConfig[realName] || {};
 
                     path = libData.path || path;
 
@@ -272,24 +261,7 @@ var Espo = Espo || {classMap: {}};
 
                 noAppCache = true;
 
-                fetchObjectFunction = function () {
-                    var from = root;
-
-                    if (exportsTo === 'window') {
-                        from = root;
-                    }
-                    else {
-                        exportsTo.split('.').forEach(item => {
-                            from = from[item];
-                        });
-                    }
-
-                    if (exportsAs in from) {
-                        return from[exportsAs];
-                    }
-                };
-
-                var obj = fetchObjectFunction();
+                let obj = this._fetchObject(exportsTo, exportsAs);
 
                 if (obj) {
                     callback(obj);
@@ -312,10 +284,10 @@ var Espo = Espo || {classMap: {}};
                     throw new Error("Can not load empty class name");
                 }
 
-                var c = this._getClass(name);
+                let classObj = this._getClass(name);
 
-                if (c) {
-                    callback(c);
+                if (classObj) {
+                    callback(classObj);
 
                     return;
                 }
@@ -323,69 +295,69 @@ var Espo = Espo || {classMap: {}};
                 path = this._nameToPath(name);
             }
 
-            if (name in this.dataLoaded) {
-                callback(this.dataLoaded[name]);
+            if (name in this._dataLoaded) {
+                callback(this._dataLoaded[name]);
 
                 return;
             }
 
-            var dtObject = {
+            var dto = {
                 name: name,
                 type: type,
                 dataType: dataType,
-                realName: realName,
-                fetchObjectFunction: fetchObjectFunction,
                 noAppCache: noAppCache,
                 path: path,
                 callback: callback,
                 errorCallback: errorCallback,
+                exportsAs: exportsAs,
+                exportsTo: exportsTo,
             };
 
-            if (this.cache && !this.responseCache) {
-                var cached = this.cache.get('a', name);
+            if (this._cache && !this._responseCache) {
+                let cached = this._cache.get('a', name);
 
                 if (cached) {
-                    this._processCached(dtObject, cached);
+                    this._processCached(dto, cached);
 
                     return;
                 }
             }
 
-            if (path in this.pathsBeingLoaded) {
+            if (path in this._pathsBeingLoaded) {
                 this._addLoadCallback(name, callback);
 
                 return;
             }
 
-            this.pathsBeingLoaded[path] = true;
+            this._pathsBeingLoaded[path] = true;
 
             var useCache = false;
 
-            if (this.cacheTimestamp) {
+            if (this._cacheTimestamp) {
                 useCache = true;
 
-                var sep = (path.indexOf('?') > -1) ? '&' : '?';
+                let sep = (path.indexOf('?') > -1) ? '&' : '?';
 
-                path += sep + 'r=' + this.cacheTimestamp;
+                path += sep + 'r=' + this._cacheTimestamp;
             }
 
             var url = this.basePath + path;
 
-            dtObject.path = path;
-            dtObject.url = url;
-            dtObject.useCache = useCache;
+            dto.path = path;
+            dto.url = url;
+            dto.useCache = useCache;
 
-            if (!this.responseCache) {
-                this._processRequest(dtObject);
+            if (!this._responseCache) {
+                this._processRequest(dto);
 
                 return;
             }
 
-            this.responseCache
+            this._responseCache
                 .match(new Request(url))
                 .then(response => {
                     if (!response) {
-                        this._processRequest(dtObject);
+                        this._processRequest(dto);
 
                         return;
                     }
@@ -393,21 +365,38 @@ var Espo = Espo || {classMap: {}};
                     response
                         .text()
                         .then(cached => {
-                            this._handleResponse(dtObject, cached);
+                            this._handleResponse(dto, cached);
                         });
                 });
         },
 
-        _processCached: function (dtObject, cached) {
-            var name = dtObject.name;
-            var callback = dtObject.callback;
-            var type = dtObject.type;
-            var dataType = dtObject.dataType;
-            var realName = dtObject.realName;
-            var fetchObjectFunction = dtObject.fetchObjectFunction;
+        _fetchObject: function (exportsTo, exportsAs) {
+            let from = root;
+
+            if (exportsTo === 'window') {
+                from = root;
+            }
+            else {
+                exportsTo.split('.').forEach(item => {
+                    from = from[item];
+                });
+            }
+
+            if (exportsAs in from) {
+                return from[exportsAs];
+            }
+        },
+
+        _processCached: function (dto, cached) {
+            let name = dto.name;
+            let callback = dto.callback;
+            let type = dto.type;
+            let dataType = dto.dataType;
+            let exportsAs = dto.exportsAs;
+            let exportsTo = dto.exportsTo;
 
             if (type === 'class') {
-                this.loadingSubject = name;
+                this._loadingSubject = name;
             }
 
             if (dataType === 'script') {
@@ -415,7 +404,7 @@ var Espo = Espo || {classMap: {}};
             }
 
             if (type === 'class') {
-                var classObj = this._getClass(name);
+                let classObj = this._getClass(name);
 
                 if (classObj) {
                     callback(classObj);
@@ -430,22 +419,22 @@ var Espo = Espo || {classMap: {}};
 
             var data = cached;
 
-            if (typeof fetchObjectFunction === 'function') {
-                data = fetchObjectFunction(realName, cached);
+            if (exportsTo && exportsAs) {
+                data = this._fetchObject(exportsTo, exportsAs);
             }
 
-            this.dataLoaded[name] = data;
+            this._dataLoaded[name] = data;
 
             callback(data);
         },
 
-        _processRequest: function (dtObject) {
-            var name = dtObject.name;
-            var url = dtObject.url;
-            var errorCallback = dtObject.errorCallback;
-            var path = dtObject.path;
-            var useCache = dtObject.useCache;
-            var noAppCache = dtObject.noAppCache;
+        _processRequest: function (dto) {
+            let name = dto.name;
+            let url = dto.url;
+            let errorCallback = dto.errorCallback;
+            let path = dto.path;
+            let useCache = dto.useCache;
+            let noAppCache = dto.noAppCache;
 
             $.ajax({
                 type: 'GET',
@@ -456,15 +445,15 @@ var Espo = Espo || {classMap: {}};
                 url: url,
 
                 success: response => {
-                    if (this.cache && !noAppCache && !this.responseCache) {
-                        this.cache.set('a', name, response);
+                    if (this._cache && !noAppCache && !this._responseCache) {
+                        this._cache.set('a', name, response);
                     }
 
-                    if (this.responseCache) {
-                        this.responseCache.put(url, new Response(response));
+                    if (this._responseCache) {
+                        this._responseCache.put(url, new Response(response));
                     }
 
-                    this._handleResponse(dtObject, response);
+                    this._handleResponse(dto, response);
 
                 },
 
@@ -480,25 +469,25 @@ var Espo = Espo || {classMap: {}};
             });
         },
 
-        _handleResponse: function (dtObject, response) {
-            var name = dtObject.name;
-            var callback = dtObject.callback;
-            var type = dtObject.type;
-            var dataType = dtObject.dataType;
-            var realName = dtObject.realName;
-            var fetchObjectFunction = dtObject.fetchObjectFunction;
+        _handleResponse: function (dto, response) {
+            let name = dto.name;
+            let callback = dto.callback;
+            let type = dto.type;
+            let dataType = dto.dataType;
+            let exportsAs = dto.exportsAs;
+            let exportsTo = dto.exportsTo;
 
             this._addLoadCallback(name, callback);
 
             if (type === 'class') {
-                this.loadingSubject = name;
+                this._loadingSubject = name;
             }
 
             if (dataType === 'script') {
                 this._execute(response);
             }
 
-            var data;
+            let data;
 
             if (type === 'class') {
                 data = this._getClass(name);
@@ -512,18 +501,18 @@ var Espo = Espo || {classMap: {}};
 
             data = response;
 
-            if (typeof fetchObjectFunction === 'function') {
-                data = fetchObjectFunction(realName, response);
+            if (exportsTo && exportsAs) {
+                data = this._fetchObject(exportsTo, exportsAs);
             }
 
-            this.dataLoaded[name] = data;
+            this._dataLoaded[name] = data;
 
             this._executeLoadCallback(name, data);
         },
 
         loadLib: function (url, callback) {
-            if (this.cache) {
-                var script = this.cache.get('a', url);
+            if (this._cache) {
+                let script = this._cache.get('a', url);
 
                 if (script) {
                     this._execute(script);
@@ -552,21 +541,8 @@ var Espo = Espo || {classMap: {}};
             });
         },
 
-        loadLibsConfig: function (callback) {
-            $.ajax({
-                url: this.basePath + this.libsConfigUrl,
-                dataType: 'json',
-                local: true,
-                success: data => {
-                    this.libsConfig = data;
-
-                    callback();
-                },
-            });
-        },
-
         addLibsConfig: function (data) {
-            this.libsConfig = _.extend(this.libsConfig, data);
+            this._libsConfig = _.extend(this._libsConfig, data);
         },
     });
 
@@ -581,9 +557,9 @@ var Espo = Espo || {classMap: {}};
     };
 
     root.define = Espo.define = function (arg1, arg2, arg3) {
-        var subject = null;
-        var dependency = null;
-        var callback = null;
+        let subject = null;
+        let dependency = null;
+        let callback = null;
 
         if (typeof arg1 === 'function') {
             callback = arg1;
