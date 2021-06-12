@@ -93,14 +93,9 @@ define(
         this.basePath = options.basePath || '';
         this.ajaxTimeout = options.ajaxTimeout || 0;
 
-        this
-            .initCache(options)
-            .then(
-                function () {
-                    this.init(options, callback);
-                }.bind(this)
-            );
-    }
+        this.initCache(options)
+            .then(() => this.init(options, callback));
+    };
 
     _.extend(App.prototype, {
 
@@ -163,7 +158,7 @@ define(
                 }
             }
 
-            var handleActuality = function () {
+            var handleActuality = () => {
                 if (
                     !cacheTimestamp ||
                     !storedCacheTimestamp ||
@@ -172,43 +167,25 @@ define(
                     return caches.delete('espo');
                 }
 
-                return new Promise(
-                    function (resolve) {
-                        resolve();
-                    }
-                );
+                return new Promise(resolve => resolve());
             };
 
-            return new Promise(
-                function (resolve) {
-                    if (!this.useCache) {
-                        resolve();
-                    }
-
-                    if (!window.caches) {
-                        resolve();
-                    }
-
-                    handleActuality()
-                        .then(
-                            function () {
-                                return caches.open('espo');
-                            }
-                        )
-                        .then(
-                            function (responseCache) {
-                                this.responseCache = responseCache;
-                            }
-                            .bind(this)
-                        )
-                        .then(
-                            function () {
-                                resolve();
-                            }
-                        )
+            return new Promise(resolve => {
+                if (!this.useCache) {
+                    resolve();
                 }
-                .bind(this)
-            );
+
+                if (!window.caches) {
+                    resolve();
+                }
+
+                handleActuality()
+                    .then(() => caches.open('espo'))
+                    .then(responseCache => {
+                        this.responseCache = responseCache;
+                    })
+                    .then(() => resolve())
+            });
         },
 
         init: function (options, callback) {
@@ -237,18 +214,16 @@ define(
             this.metadata = new Metadata(this.cache);
             this.fieldManager = new FieldManager();
 
-            Promise.all([
-                new Promise(function (resolve) {
-                    this.settings.load(function () {
-                        resolve();
-                    });
-                }.bind(this)),
-                new Promise(function (resolve) {
-                    this.language.load(function () {
-                        resolve();
-                    }, false, true);
-                }.bind(this))
-            ]).then(function () {
+            Promise
+            .all([
+                new Promise(resolve => {
+                    this.settings.load(() => resolve());
+                }),
+                new Promise(resolve => {
+                    this.language.load(() => resolve(), false, true);
+                })
+            ])
+            .then(() => {
                 this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
 
                 this.user = new User();
@@ -277,10 +252,10 @@ define(
 
                 this.preLoader = new PreLoader(this.cache, this.viewFactory, this.basePath);
 
-                this.preLoad(function () {
+                this.preLoad(() => {
                     callback.call(this, this);
                 });
-            }.bind(this));
+            });
         },
 
         start: function () {
@@ -290,16 +265,16 @@ define(
                 this.baseController.login();
             }
             else {
-                this.initUserData(null, function () {
+                this.initUserData(null, () => {
                     this.onAuth.call(this);
-                }.bind(this));
+                });
             }
 
             this.on('auth', this.onAuth, this);
         },
 
         onAuth: function () {
-            this.metadata.load(function () {
+            this.metadata.load(() => {
                 this.fieldManager.defs = this.metadata.get('fields');
                 this.fieldManager.metadata = this.metadata;
 
@@ -321,28 +296,27 @@ define(
 
                 var clientDefs = this.metadata.get('clientDefs') || {};
 
-                Object.keys(clientDefs).forEach(function (scope) {
+                Object.keys(clientDefs).forEach(scope => {
                     var o = clientDefs[scope];
 
                     var implClassName = (o || {})[this.aclName || 'acl'];
 
                     if (implClassName) {
                         promiseList.push(
-                            new Promise(function (resolve) {
-                                this.loader.load(implClassName, function (implClass) {
-                                        aclImplementationClassMap[scope] = implClass;
+                            new Promise(resolve => {
+                                this.loader.load(implClassName, implClass => {
+                                    aclImplementationClassMap[scope] = implClass;
 
-                                        resolve();
-                                    });
-                                }.bind(this)
-                            )
+                                    resolve();
+                                });
+                            })
                         );
                     }
-                }, this);
+                });
 
                 if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
                     promiseList.push(
-                        new Promise(function (resolve) {
+                        new Promise(resolve => {
                             (function check (i) {
                                 i = i || 0;
 
@@ -360,17 +334,18 @@ define(
 
                                 resolve();
                             }).call(this);
-                        }.bind(this))
+                        })
                     );
                 }
 
-                Promise.all(promiseList).then(function () {
-                    this.acl.implementationClassMap = aclImplementationClassMap;
+                Promise
+                    .all(promiseList)
+                    .then(() => {
+                        this.acl.implementationClassMap = aclImplementationClassMap;
 
-                    this.initRouter();
-                }.bind(this));
-            }.bind(this));
-
+                        this.initRouter();
+                    });
+            });
         },
 
         initRouter: function () {
@@ -385,15 +360,14 @@ define(
             this.router.confirmLeaveOutConfirmText = this.language.translate('Yes');
             this.router.confirmLeaveOutCancelText = this.language.translate('Cancel');
 
-            this.router.on('routed', function (params) {
-                this.doAction(params);
-            }.bind(this));
+            this.router.on('routed', params => this.doAction(params));
 
             try {
                 Backbone.history.start({
                     root: window.location.pathname
                 });
-            } catch (e) {
+            }
+            catch (e) {
                 Backbone.history.loadUrl();
             }
         },
@@ -403,7 +377,7 @@ define(
 
             this.baseController.trigger('action');
 
-            this.getController(params.controller, function (controller) {
+            this.getController(params.controller, controller => {
                 try {
                     controller.doAction(params.action, params.options);
 
@@ -427,7 +401,7 @@ define(
                             throw e;
                     }
                 }
-            }.bind(this));
+            });
         },
 
         initBaseController: function () {
@@ -477,7 +451,7 @@ define(
 
                 Espo.require(
                     className,
-                    function (controllerClass) {
+                    controllerClass => {
                         var injections = this.getControllerInjection();
 
                         injections.baseController = this.baseController;
@@ -489,9 +463,7 @@ define(
                         callback(this.controllers[name]);
                     },
                     this,
-                    function () {
-                        this.baseController.error404();
-                    }.bind(this)
+                    () => this.baseController.error404()
                 );
 
                 return;
@@ -545,9 +517,9 @@ define(
             helper.numberUtil = this.numberUtil;
             helper.pageTitle = new PageTitle(this.settings);
 
-            this.viewLoader = function (viewName, callback) {
+            this.viewLoader = (viewName, callback) => {
                 Espo.require(Espo.Utils.composeViewClassName(viewName), callback);
-            }.bind(this);
+            };
 
             var getResourceInnerPath = function (type, name) {
                 var path = null;
@@ -577,30 +549,23 @@ define(
 
             }.bind(this);
 
-            var getResourcePath = function (type, name) {
-                var path;
-
-                if (name.indexOf(':') != -1) {
+            var getResourcePath = (type, name) => {
+                if (name.indexOf(':') !== -1) {
                     var arr = name.split(':');
 
                     name = arr[1];
 
                     var mod = arr[0];
 
-                    if (mod == 'custom') {
-                        path = 'client/custom/' + getResourceInnerPath(type, name);
+                    if (mod === 'custom') {
+                        return 'client/custom/' + getResourceInnerPath(type, name);
                     }
-                    else {
-                        path = 'client/modules/' + mod + '/' + getResourceInnerPath(type, name);
-                    }
-                }
-                else {
-                    path = 'client/' + getResourceInnerPath(type, name);
+
+                    return 'client/modules/' + mod + '/' + getResourceInnerPath(type, name);
                 }
 
-                return path;
-
-            }.bind(this);
+                return 'client/' + getResourceInnerPath(type, name);
+            };
 
             this.viewFactory = new Bull.Factory({
                 useCache: false,
@@ -609,17 +574,16 @@ define(
                 viewLoader: this.viewLoader,
                 resources: {
                     loaders: {
-                        'template': function (name, callback) {
+                        'template': (name, callback) => {
                             var path = getResourcePath('template', name);
 
                             this.loader.load('res!' + path, callback);
-                        }.bind(this),
-
-                        'layoutTemplate': function (name, callback) {
+                        },
+                        'layoutTemplate': (name, callback) => {
                             var path = getResourcePath('layoutTemplate', name);
 
                             this.loader.load('res!' + path, callback);
-                        }.bind(this)
+                        },
                     },
                 },
             });
@@ -628,22 +592,17 @@ define(
         initAuth: function () {
             this.auth = this.storage.get('user', 'auth') || null;
 
-            this.baseController.on('login', function (data) {
+            this.baseController.on('login', data => {
                 this.auth = Base64.encode(data.auth.userName  + ':' + data.auth.token);
 
                 this.storage.set('user', 'auth', this.auth);
 
                 this.setCookieAuth(data.auth.userName, data.auth.token);
 
-                this.initUserData(data, function () {
-                    this.trigger('auth');
-                }.bind(this));
+                this.initUserData(data, () => this.trigger('auth'));
+            });
 
-            }.bind(this));
-
-            this.baseController.on('logout', function () {
-                this.logout();
-            }.bind(this));
+            this.baseController.on('logout', () => this.logout());
         },
 
         logout: function () {
@@ -718,71 +677,72 @@ define(
                 return;
             }
 
-            Promise.all([
-                new Promise(function (resolve) {
-                    if (options.user) {
-                        resolve();
-                        return;
-                    };
+            new Promise(resolve => {
+                if (options.user) {
+                    resolve();
 
-                    this.requestUserData(function (data) {
-                        options = data;
-                        resolve();
-                    });
-                }.bind(this))
-            ]).then(function () {
-                (new Promise(function (resolve) {
+                    return;
+                };
+
+                this.requestUserData(data => {
+                    options = data;
+
+                    resolve();
+                });
+            })
+            .then(
+                new Promise(resolve => {
                     this.language.name = options.language;
 
-                    this.language.load(function () {
-                        resolve();
-                    }.bind(this));
-                }.bind(this))).then(function () {
-                    this.dateTime.setLanguage(this.language);
+                    this.language.load(() => resolve());
+                })
+            )
+            .then(() => {
+                this.dateTime.setLanguage(this.language);
 
-                    var userData = options.user || null;
-                    var preferencesData = options.preferences || null;
-                    var aclData = options.acl || null;
+                var userData = options.user || null;
+                var preferencesData = options.preferences || null;
+                var aclData = options.acl || null;
 
-                    var settingData = options.settings || {};
+                var settingData = options.settings || {};
 
-                    this.user.set(userData);
-                    this.preferences.set(preferencesData);
+                this.user.set(userData);
+                this.preferences.set(preferencesData);
 
-                    this.settings.set(settingData);
-                    this.acl.set(aclData);
+                this.settings.set(settingData);
+                this.acl.set(aclData);
 
-                    for (var param in options.appParams) {
-                        this.appParams[param] = options.appParams[param];
+                for (var param in options.appParams) {
+                    this.appParams[param] = options.appParams[param];
+                }
+
+                if (!this.auth) {
+                    return;
+                }
+
+                var xhr = new XMLHttpRequest();
+
+                xhr.open('GET', this.basePath + this.apiUrl + '/');
+
+                xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
+
+                xhr.onreadystatechange = () => {
+                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+
+                        var arr = Base64.decode(this.auth).split(':');
+
+                        this.setCookieAuth(arr[0], arr[1]);
+
+                        callback();
                     }
 
-                    if (!this.auth) {
-                        return;
+                    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 401) {
+                        Espo.Ui.error('Auth error');
                     }
+                };
 
-                    var xhr = new XMLHttpRequest();
-
-                    xhr.open('GET', this.basePath + this.apiUrl + '/');
-                    xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
-
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-
-                            var arr = Base64.decode(this.auth).split(':');
-
-                            this.setCookieAuth(arr[0], arr[1]);
-
-                            callback();
-                        }
-
-                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 401) {
-                            Espo.Ui.error('Auth error');
-                        }
-                    }.bind(this);
-
-                    xhr.send('');
-                }.bind(this));
-            }.bind(this));
+                xhr.send('');
+            });
         },
 
         requestUserData: function (callback) {
@@ -793,7 +753,7 @@ define(
 
         setupAjax: function () {
             $.ajaxSetup({
-                beforeSend: function (xhr, options) {
+                beforeSend: (xhr, options) => {
                     if (!options.local && this.apiUrl) {
                         options.url = Espo.Utils.trimSlash(this.apiUrl) + '/' + options.url;
                     }
@@ -808,13 +768,13 @@ define(
                         xhr.setRequestHeader('Espo-Authorization-By-Token', true);
                     }
 
-                }.bind(this),
+                },
                 dataType: 'json',
                 timeout: this.ajaxTimeout,
                 contentType: 'application/json',
             });
 
-            $(document).ajaxError(function (event, xhr, options) {
+            $(document).ajaxError((event, xhr, options) => {
                 if (xhr.errorIsHandled) {
                     return;
                 }
@@ -823,7 +783,7 @@ define(
 
                 switch (xhr.status) {
                     case 0:
-                        if (xhr.statusText == 'timeout') {
+                        if (xhr.statusText === 'timeout') {
                             Espo.Ui.error(this.language.translate('Timeout'));
                         }
 
@@ -905,7 +865,7 @@ define(
                 if (statusReason) {
                     console.error('Server side error '+xhr.status+': ' + statusReason);
                 }
-            }.bind(this));
+            });
         },
 
     }, Backbone.Events);

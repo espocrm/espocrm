@@ -74,12 +74,12 @@ var Espo = Espo || {classMap: {}};
         _nameToPath: function (name) {
             var path;
 
-            if (name.indexOf(':') != -1) {
+            if (name.indexOf(':') !== -1) {
                 var arr = name.split(':');
                 var namePart = arr[1];
                 var modulePart = arr[0];
 
-                if (modulePart == 'custom') {
+                if (modulePart === 'custom') {
                     path = 'client/custom/src/' + namePart;
                 }
                 else {
@@ -101,9 +101,7 @@ var Espo = Espo || {classMap: {}};
 
         _executeLoadCallback: function (subject, o) {
             if (subject in this._loadCallbacks) {
-                this._loadCallbacks[subject].forEach(function (callback) {
-                    callback(o);
-                });
+                this._loadCallbacks[subject].forEach(callback => callback(o));
 
                 delete this._loadCallbacks[subject];
             }
@@ -120,7 +118,7 @@ var Espo = Espo || {classMap: {}};
                 this.loadingSubject = null;
             }
 
-            var proceed = function (relObj) {
+            var proceed = function () {
                 var o = callback.apply(this, arguments);
 
                 if (!o) {
