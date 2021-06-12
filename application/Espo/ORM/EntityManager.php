@@ -32,7 +32,7 @@ namespace Espo\ORM;
 use Espo\ORM\{
     QueryComposer\QueryComposer,
     Mapper\Mapper,
-    Mapper\BaseMapper,
+    Mapper\MapperFactory,
     Repository\RepositoryFactory,
     Repository\Repository,
     Repository\RDBRepository,
@@ -63,13 +63,18 @@ class EntityManager
 
     protected $eventDispatcher;
 
+    private $mapperFactory = null;
+
     private $mappers = [];
 
     private $metadata;
 
     private $repositoryHash = [];
 
-    private $params = [];
+    /**
+     * @var DatabaseParams
+     */
+    private $databaseParams;
 
     private $queryComposer;
 
@@ -81,7 +86,7 @@ class EntityManager
 
     private $locker;
 
-    protected $defaultMapperName = 'RDB';
+    private const RDB_MAPPER_NAME = 'RDB';
 
     protected $driverPlatformMap = [
         'pdo_mysql' => 'Mysql',
@@ -89,33 +94,37 @@ class EntityManager
     ];
 
     public function __construct(
-        array $params,
+        DatabaseParams $databaseParams,
         Metadata $metadata,
         RepositoryFactory $repositoryFactory,
         EntityFactory $entityFactory,
         ValueFactoryFactory $valueFactoryFactory,
         AttributeExtractorFactory $attributeExtractorFactory,
-        EventDispatcher $eventDispatcher
+        EventDispatcher $eventDispatcher,
+        ?MapperFactory $mapperFactory = null
     ) {
-        $this->params = $params;
-
+        $this->databaseParams = $databaseParams;
         $this->metadata = $metadata;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->entityFactory = $entityFactory;
+        $this->repositoryFactory = $repositoryFactory;
+        $this->mapperFactory = $mapperFactory;
 
-        if (empty($this->params['platform'])) {
-            if (empty($this->params['driver'])) {
+        if (!$this->databaseParams->getPlatform()) {
+            $driver = $this->databaseParams->getDriver();
+
+            if (!$driver) {
                 throw new Exception('No database driver specified.');
             }
 
-            $driver = $this->params['driver'];
+            $platform = $this->driverPlatformMap[$driver] ?? null;
 
-            if (empty($this->driverPlatformMap[$driver])) {
+            if (!$platform) {
                 throw new Exception("Database driver '{$driver}' is not supported.");
             }
 
-            $this->params['platform'] = $this->driverPlatformMap[$this->params['driver']];
+            $this->databaseParams = $this->databaseParams->withPlatform($platform);
         }
-
-        $this->eventDispatcher = $eventDispatcher;
 
         $valueAccessorFactory = new ValueAccessorFactory(
             $valueFactoryFactory,
@@ -123,23 +132,15 @@ class EntityManager
             $eventDispatcher
         );
 
-        $this->entityFactory = $entityFactory;
-
         $this->entityFactory->setEntityManager($this);
         $this->entityFactory->setValueAccessorFactory($valueAccessorFactory);
-
-        $this->repositoryFactory = $repositoryFactory;
 
         $this->initQueryComposer();
 
         $this->sqlExecutor = new SqlExecutor($this->getPDO());
-
         $this->queryExecutor = new QueryExecutor($this->sqlExecutor, $this->queryComposer);
-
         $this->queryBuilder = new QueryBuilder();
-
         $this->collectionFactory = new CollectionFactory($this);
-
         $this->transactionManager = new TransactionManager($this->getPDO(), $this->queryComposer);
 
         $this->initLocker();
@@ -147,16 +148,12 @@ class EntityManager
 
     private function initQueryComposer(): void
     {
-        $className = $this->params['queryComposerClassName'] ?? null;
+        $platform = $this->databaseParams->getPlatform();
 
-        if (!$className) {
-            $platform = $this->params['platform'];
+        $className = 'Espo\\ORM\\QueryComposer\\' . ucfirst($platform) . 'QueryComposer';
 
-            $className = 'Espo\\ORM\\QueryComposer\\' . ucfirst($platform) . 'QueryComposer';
-        }
-
-        if (!$className || !class_exists($className)) {
-            throw new RuntimeException("Query composer could not be created.");
+        if (!class_exists($className)) {
+            throw new RuntimeException("Query composer for '{$platform}' platform does not exits.");
         }
 
         $this->queryComposer = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
@@ -164,20 +161,12 @@ class EntityManager
 
     private function initLocker(): void
     {
-        $className = $this->params['lockerClassName'] ?? null;
+        $platform = $this->databaseParams->getPlatform();
 
-        if (!$className) {
-            $platform = $this->params['platform'];
+        $className = 'Espo\\ORM\\Locker\\' . ucfirst($platform) . 'Locker';
 
-            $className = 'Espo\\ORM\\Locker\\' . ucfirst($platform) . 'Locker';
-
-            if (!class_exists($className)) {
-                $className = BaseLocker::class;
-            }
-        }
-
-        if (!$className || !class_exists($className)) {
-            throw new RuntimeException("Locker could not be created.");
+        if (!class_exists($className)) {
+            $className = BaseLocker::class;
         }
 
         $this->locker = new $className($this->getPDO(), $this->queryComposer, $this->transactionManager);
@@ -207,46 +196,24 @@ class EntityManager
         return $this->locker;
     }
 
-    protected function getMapperClassName(string $name): string
-    {
-        $classNameMap = $this->params['mapperClassNameMap'] ?? [];
-
-        $className = $classNameMap[$name] ?? null;
-
-        if (!$className && $name === 'RDB')  {
-            $className = $this->getRDBMapperClassName();
-        }
-
-
-        if (!$className || !class_exists($className)) {
-            throw new RuntimeException("Mapper '{$name}' does not exist.");
-        }
-
-        return $className;
-    }
-
-    private function getRDBMapperClassName(): string
-    {
-        $platform = $this->params['platform'];
-
-        $className = 'Espo\\ORM\\Mapper\\' . ucfirst($platform) . 'Mapper';
-
-        if (!class_exists($className)) {
-            $className = BaseMapper::class;
-        }
-
-        return $className;
-    }
-
     /**
      * Get a Mapper.
      */
-    public function getMapper(?string $name = null): Mapper
+    public function getMapper(string $name = self::RDB_MAPPER_NAME): Mapper
     {
-        $className = $this->getMapperClassName($name ?? $this->defaultMapperName);
+        if (!array_key_exists($name, $this->mappers)) {
+            $this->loadMapper($name);
+        }
 
-        if (empty($this->mappers[$className])) {
-            $this->mappers[$className] = new $className(
+        return $this->mappers[$name];
+    }
+
+    private function loadMapper(string $name): void
+    {
+        if ($name === self::RDB_MAPPER_NAME) {
+            $className = $this->getRDBMapperClassName();
+
+            $this->mappers[$name] = new $className(
                 $this->getPDO(),
                 $this->entityFactory,
                 $this->collectionFactory,
@@ -254,45 +221,40 @@ class EntityManager
                 $this->metadata,
                 $this->sqlExecutor
             );
+
+            return;
         }
 
-        return $this->mappers[$className];
+        if (!$this->mapperFactory) {
+            throw new RuntimeException("Could not create mapper '{$name}'. No mapper factory.");
+        }
+
+        $this->mappers[$name] = $this->mapperFactory->create($name);
+    }
+
+    private function getRDBMapperClassName(): string
+    {
+        $platform = $this->databaseParams->getPlatform();
+
+        $className = 'Espo\\ORM\\Mapper\\' . ucfirst($platform) . 'Mapper';
+
+        if (!class_exists($className)) {
+            throw new RuntimeException("Mapper for '{$platform}' does not exist.");
+        }
+
+        return $className;
     }
 
     private function initPDO(): void
     {
-        $params = $this->params;
+        $platform = strtolower($this->databaseParams->getPlatform() ?? '');
 
-        $options = [];
-
-        if (isset($params['sslCA'])) {
-            $options[PDO::MYSQL_ATTR_SSL_CA] = $params['sslCA'];
-        }
-
-        if (isset($params['sslCert'])) {
-            $options[PDO::MYSQL_ATTR_SSL_CERT] = $params['sslCert'];
-        }
-
-        if (isset($params['sslKey'])) {
-            $options[PDO::MYSQL_ATTR_SSL_KEY] = $params['sslKey'];
-        }
-
-        if (isset($params['sslCAPath'])) {
-            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $params['sslCAPath'];
-        }
-
-        if (isset($params['sslCipher'])) {
-            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $params['sslCipher'];
-        }
-
-        $platform = strtolower($params['platform'] ?? '');
-
-        $host = $params['host'] ?? null;
-        $port = $params['port'] ?? null;
-        $dbname = $params['dbname'] ?? null;
-        $charset = $params['charset'] ?? null;
-        $user = $params['user'] ?? null;
-        $password = $params['password'] ?? null;
+        $host = $this->databaseParams->getHost();
+        $port = $this->databaseParams->getPort();
+        $dbname = $this->databaseParams->getName();
+        $charset = $this->databaseParams->getCharset();
+        $username = $this->databaseParams->getUsername();
+        $password = $this->databaseParams->getPassword();
 
         if (!$platform) {
             throw new RuntimeException("No 'platform' parameter.");
@@ -311,7 +273,7 @@ class EntityManager
             'host=' . $host;
 
         if ($port) {
-            $dsn .= ';' . 'port=' . $port;
+            $dsn .= ';' . 'port=' . (string) $port;
         }
 
         if ($dbname) {
@@ -322,7 +284,29 @@ class EntityManager
             $dsn .= ';' . 'charset=' . $charset;
         }
 
-        $this->pdo = new PDO($dsn, $user, $password, $options);
+        $options = [];
+
+        if ($this->databaseParams->getSslCa()) {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = $this->databaseParams->getSslCa();
+        }
+
+        if ($this->databaseParams->getSslCert()) {
+            $options[PDO::MYSQL_ATTR_SSL_CERT] = $this->databaseParams->getSslCert();
+        }
+
+        if ($this->databaseParams->getSslKey()) {
+            $options[PDO::MYSQL_ATTR_SSL_KEY] = $this->databaseParams->getSslKey();
+        }
+
+        if ($this->databaseParams->getSslCaPath()) {
+            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $this->databaseParams->getSslCaPath();
+        }
+
+        if ($this->databaseParams->getSslCipher()) {
+            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $this->databaseParams->getSslCipher();
+        }
+
+        $this->pdo = new PDO($dsn, $username, $password, $options);
 
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }

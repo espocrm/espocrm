@@ -37,6 +37,7 @@ use Espo\Core\{
 use Espo\{
     ORM\Metadata,
     ORM\EventDispatcher,
+    ORM\DatabaseParams,
 };
 
 class EntityManagerFactory
@@ -71,21 +72,20 @@ class EntityManagerFactory
 
         $config = $this->config;
 
-        $params = [
-            'host' => $config->get('database.host'),
-            'port' => $config->get('database.port'),
-            'dbname' => $config->get('database.dbname'),
-            'user' => $config->get('database.user'),
-            'charset' => $config->get('database.charset', 'utf8'),
-            'password' => $config->get('database.password'),
-            'driver' => $config->get('database.driver'),
-            'platform' => $config->get('database.platform'),
-            'sslCA' => $config->get('database.sslCA'),
-            'sslCert' => $config->get('database.sslCert'),
-            'sslKey' => $config->get('database.sslKey'),
-            'sslCAPath' => $config->get('database.sslCAPath'),
-            'sslCipher' => $config->get('database.sslCipher'),
-        ];
+        $databaseParams = DatabaseParams::create()
+            ->withHost($config->get('database.host'))
+            ->withPort($config->get('database.port') ? (int) $config->get('database.port') : null)
+            ->withName($config->get('database.dbname'))
+            ->withUsername($config->get('database.user'))
+            ->withPassword($config->get('database.password'))
+            ->withCharset($config->get('database.charset') ?? 'utf8')
+            ->withDriver($config->get('database.driver'))
+            ->withPlatform($config->get('database.platform'))
+            ->withSslCa($config->get('database.sslCA'))
+            ->withSslCert($config->get('database.sslCert'))
+            ->withSslKey($config->get('database.sslKey'))
+            ->withSslCaPath($config->get('database.sslCAPath'))
+            ->withSslCipher($config->get('database.sslCipher'));
 
         $metadata = new Metadata($this->metadataDataProvider, $this->eventDispatcher);
 
@@ -106,7 +106,7 @@ class EntityManagerFactory
         $entityManager = $this->injectableFactory->createWith(
             EntityManager::class,
             [
-                'params' => $params,
+                'databaseParams' => $databaseParams,
                 'metadata' => $metadata,
                 'repositoryFactory' => $repositoryFactory,
                 'entityFactory' => $entityFactory,
