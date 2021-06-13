@@ -28,10 +28,10 @@
 
 define('ajax', [], function () {
 
-    var Ajax = Espo.Ajax = {
+    let Ajax = Espo.Ajax = {
 
         request: function (url, type, data, options) {
-            var options = options || {};
+            options = options || {};
 
             options.type = type;
             options.url = url;

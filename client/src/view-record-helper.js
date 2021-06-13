@@ -28,13 +28,15 @@
 
 define('view-record-helper', [], function () {
 
-    var ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
+    let ViewRecordHelper = function (defaultFieldStates, defaultPanelStates) {
         if (defaultFieldStates) {
             this.defaultFieldStates = defaultFieldStates;
         }
+
         if (defaultPanelStates) {
             this.defaultPanelStates = defaultPanelStates;
         }
+
         this.fieldStateMap = {};
         this.panelStateMap = {};
 
@@ -63,11 +65,14 @@ define('view-record-helper', [], function () {
                 case 'hidden':
                     if (value) {
                         this.hiddenFields[field] = true;
-                    } else {
+                    }
+                    else {
                         delete this.hiddenFields[field];
                     }
+
                     break;
             }
+
             this.fieldStateMap[field] = this.fieldStateMap[field] || {};
             this.fieldStateMap[field][name] = value;
         },
@@ -78,9 +83,11 @@ define('view-record-helper', [], function () {
                     return this.fieldStateMap[field][name];
                 }
             }
+
             if (name in this.defaultFieldStates) {
                 return this.defaultFieldStates[name];
             }
+
             return null;
         },
 
@@ -94,6 +101,7 @@ define('view-record-helper', [], function () {
                     }
                     break;
             }
+
             this.panelStateMap[panel] = this.panelStateMap[panel] || {};
             this.panelStateMap[panel][name] = value;
         },
@@ -104,9 +112,11 @@ define('view-record-helper', [], function () {
                     return this.panelStateMap[panel][name];
                 }
             }
+
             if (name in this.defaultPanelStates) {
                 return this.defaultPanelStates[name];
             }
+
             return null;
         },
 
@@ -124,8 +134,7 @@ define('view-record-helper', [], function () {
 
         hasFieldOptionList: function (field) {
             return (field in this.fieldOptionListMap);
-        }
-
+        },
     });
 
     return ViewRecordHelper;

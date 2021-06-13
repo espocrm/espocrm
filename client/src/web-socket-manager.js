@@ -28,10 +28,10 @@
 
 define('web-socket-manager', [], function () {
 
-    var WebSocketManager = function (config) {
+    let WebSocketManager = function (config) {
         this.config = config;
 
-        var url = this.config.get('webSocketUrl');
+        let url = this.config.get('webSocketUrl');
 
         if (url) {
             if (url.indexOf('wss://') === 0) {
@@ -42,8 +42,9 @@ define('web-socket-manager', [], function () {
                 this.url = url.substr(5);
                 this.protocolPart = 'ws://';
             }
-        } else {
-            var siteUrl = this.config.get('siteUrl') || '';
+        }
+        else {
+            let siteUrl = this.config.get('siteUrl') || '';
 
             if (siteUrl.indexOf('https://') === 0) {
                 this.url = siteUrl.substr(8);
@@ -54,19 +55,13 @@ define('web-socket-manager', [], function () {
                 this.protocolPart = 'ws://';
             }
 
-
             if (~this.url.indexOf('/')) {
                 this.url = this.url.replace(/\/$/, '');
             }
 
-            if (this.protocolPart === 'wss://') {
-                var port = 443;
-            }
-            else {
-                var port = 8080;
-            }
+            let port = this.protocolPart === 'wss://' ? 443 : 8080;
 
-            var si = this.url.indexOf('/');
+            let si = this.url.indexOf('/');
 
             if (~si) {
                 this.url = this.url.substr(0, si) + ':' + port;
@@ -86,43 +81,44 @@ define('web-socket-manager', [], function () {
     _.extend(WebSocketManager.prototype, {
 
         connect: function (auth, userId) {
+            let authArray = Base64.decode(auth).split(':');
+
+            let authToken = authArray[1];
+
+            let url = this.protocolPart + this.url;
+
+            url += '?authToken=' + authToken + '&userId=' + userId;
+
             try {
-                var authArray = Base64.decode(auth).split(':');
-
-                var authToken = authArray[1];
-
-                var url = this.protocolPart + this.url;
-
-                url += '?authToken=' + authToken + '&userId=' + userId;
-
                 this.connection = new ab.Session(
                     url,
-                    function () {
+                    () => {
                         this.isConnected = true;
 
-                        this.subscribeQueue.forEach(function (item) {
+                        this.subscribeQueue.forEach(item => {
                             this.subscribe(item.category, item.callback);
-                        }, this);
+                        });
 
                         this.subscribeQueue = [];
-                    }.bind(this),
-                    function (e) {
+                    },
+                    e => {
                         if (e === ab.CONNECTION_CLOSED) {
                             this.subscribeQueue = [];
                         }
 
                         if (e === ab.CONNECTION_LOST || e === ab.CONNECTION_UNREACHABLE) {
                             setTimeout(
-                                function () {
+                                () => {
                                     this.connect(auth, userId);
-                                }.bind(this),
+                                },
                                 3000
                             );
                         }
-                    }.bind(this),
+                    },
                     {skipSubprotocolCheck: true}
                 );
-            } catch (e) {
+            }
+            catch (e) {
                 console.error(e.message);
 
                 this.connection = null;
@@ -158,7 +154,7 @@ define('web-socket-manager', [], function () {
                 return;
             }
 
-            this.subscribeQueue = this.subscribeQueue.filter(function (item) {
+            this.subscribeQueue = this.subscribeQueue.filter(item => {
                 return item.category !== category && item.callback !== callback;
             });
 

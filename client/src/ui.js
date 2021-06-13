@@ -42,7 +42,7 @@ define('ui', [], function () {
         this.dropdownItemList = [];
         this.removeOnClose = true;
         this.draggable = false;
-        this.container = 'body'
+        this.container = 'body';
         this.onRemove = function () {};
 
         this.options = options;
@@ -65,11 +65,12 @@ define('ui', [], function () {
             'container',
             'onRemove'
         ];
-        params.forEach(function (param) {
+
+        params.forEach(param => {
             if (param in options) {
                 this[param] = options[param];
             }
-        }.bind(this));
+        });
 
         if (this.buttons && this.buttons.length) {
             this.buttonList = this.buttons;
@@ -82,15 +83,23 @@ define('ui', [], function () {
         }
 
         this.contents = '';
+
         if (this.header) {
-            var headerClassName = '';
+            let headerClassName = '';
+
             if (this.options.fixedHeaderHeight) {
                 headerClassName = ' fixed-height';
             }
-            this.contents += '<header class="modal-header'+headerClassName+'">' +
-                             ((this.closeButton) ? '<a href="javascript:" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></a>' : '') +
-                             '<h4 class="modal-title"><span class="modal-title-text">' + this.header + '</span></h4>' +
-                             '</header>';
+
+            this.contents += '<header class="modal-header' + headerClassName + '">' +
+                (
+                    (this.closeButton) ?
+                    '<a href="javascript:" class="close" data-dismiss="modal">' +
+                        '<span aria-hidden="true">&times;</span></a>' :
+                    ''
+                ) +
+                '<h4 class="modal-title"><span class="modal-title-text">' + this.header + '</span></h4>' +
+                '</header>';
         }
 
         var body = '<div class="modal-body body">' + this.body + '</div>';
@@ -103,25 +112,27 @@ define('ui', [], function () {
 
         if (this.options.footerAtTheTop) {
             this.contents += footerHtml + body;
-        } else {
+        }
+        else {
             this.contents += body + footerHtml;
         }
 
-        this.contents = '<div class="modal-dialog"><div class="modal-content">' + this.contents + '</div></div>'
+        this.contents = '<div class="modal-dialog"><div class="modal-content">' + this.contents + '</div></div>';
 
-        $('<div />').attr('id', this.id)
-          .attr('class', this.className + ' modal')
-          .attr('role', 'dialog')
-          .attr('tabindex', '-1')
-          .html(this.contents)
-          .appendTo($(this.container));
+        $('<div />')
+            .attr('id', this.id)
+            .attr('class', this.className + ' modal')
+            .attr('role', 'dialog')
+            .attr('tabindex', '-1')
+            .html(this.contents)
+            .appendTo($(this.container));
 
         this.$el = $('#' + this.id);
         this.el = this.$el.get(0);
 
-        this.$el.find('header a.close').on('click', function () {
+        this.$el.find('header a.close').on('click', () => {
             //this.close();
-        }.bind(this));
+        });
 
         this.initButtonEvents();
 
@@ -140,53 +151,56 @@ define('ui', [], function () {
         }
 
         if (this.removeOnClose) {
-            this.$el.on('hidden.bs.modal', function (e) {
-                if (this.$el.get(0) == e.target) {
+            this.$el.on('hidden.bs.modal', e => {
+                if (this.$el.get(0) === e.target) {
+
                     if (this.skipRemove) {
                         return;
                     }
 
                     this.remove();
                 }
-            }.bind(this));
+            });
         }
 
         $window = $(window);
 
-        this.$el.on('shown.bs.modal', function (e, r) {
+        this.$el.on('shown.bs.modal', (e, r) => {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
-            var headerHeight = this.$el.find('.modal-header').outerHeight();
-            var footerHeight = this.$el.find('.modal-footer').outerHeight();
 
-            var diffHeight = headerHeight + footerHeight;
+            let headerHeight = this.$el.find('.modal-header').outerHeight();
+            let footerHeight = this.$el.find('.modal-footer').outerHeight();
+
+            let diffHeight = headerHeight + footerHeight;
 
             if (!options.fullHeight) {
                 diffHeight = diffHeight + options.bodyDiffHeight;
             }
 
-            var h = $window.height();
-
             if (this.fitHeight || options.fullHeight) {
-                var processResize = function () {
-                    var windowHeight = window.innerHeight;
-                    var windowWidth = $window.width();
+                let processResize = () => {
+                    let windowHeight = window.innerHeight;
+                    let windowWidth = $window.width();
 
                     if (!options.fullHeight && windowHeight < 512) {
                         this.$el.find('div.modal-body').css({
                             maxHeight: 'none',
                             overflow: 'auto',
-                            height: 'none'
+                            height: 'none',
                         });
+
                         return;
                     }
-                    var cssParams = {
-                        overflow: 'auto'
+                    let cssParams = {
+                        overflow: 'auto',
                     };
+
                     if (options.fullHeight) {
                         cssParams.height = (windowHeight - diffHeight) + 'px';
 
                         this.$el.css('paddingRight', 0);
-                    } else {
+                    }
+                    else {
                         if (windowWidth <= options.screenWidthXs) {
                             cssParams.maxHeight = 'none';
                         } else {
@@ -195,78 +209,99 @@ define('ui', [], function () {
                     }
 
                     this.$el.find('div.modal-body').css(cssParams);
-                }.bind(this);
+                };
+
                 $window.off('resize.modal-height');
                 $window.on('resize.modal-height', processResize);
+
                 processResize();
             }
-        }.bind(this));
+        });
 
-        var $body = $(document.body);
+        let $body = $(document.body);
 
-        this.$el.on('hidden.bs.modal', function (e) {
+        this.$el.on('hidden.bs.modal', e => {
             if ($('.modal:visible').length > 0) {
                 $body.addClass('modal-open');
             }
         });
-
-    }
+    };
 
     Dialog.prototype.initButtonEvents = function () {
-        this.buttonList.forEach(function (o) {
-            if (typeof o.onClick == 'function') {
-                $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]').on('click', function () {
-                    o.onClick(this);
-                }.bind(this));
+        this.buttonList.forEach(o => {
+            if (typeof o.onClick === 'function') {
+                $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]')
+                    .on('click', () => {
+                        o.onClick(this);
+                    });
             }
-        }.bind(this));
+        });
 
-        this.dropdownItemList.forEach(function (o) {
-            if (typeof o.onClick == 'function') {
-                $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]').on('click', function () {
-                    o.onClick(this);
-                }.bind(this));
+        this.dropdownItemList.forEach(o => {
+            if (typeof o.onClick === 'function') {
+                $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]')
+                    .on('click', () => {
+                        o.onClick(this);
+                    });
             }
-        }.bind(this));
-    }
+        });
+    };
 
     Dialog.prototype.getFooterHtml = function () {
-        var footer = '';
+        let footer = '';
 
         if (this.buttonList.length || this.dropdownItemList.length) {
-            var rightPart = '';
-            this.buttonList.forEach(function (o) {
-                if (o.pullLeft) return;
-                var className = '';
+            let rightPart = '';
+
+            this.buttonList.forEach(o => {
+                if (o.pullLeft) {
+                    return;
+                }
+
+                let className = '';
+
                 if (o.className) {
                     className = ' ' + o.className;
                 }
+
                 rightPart +=
                     '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
-                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + className+'" ' +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') +
+                    (o.hidden ? ' hidden' : '') + className+'" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';
-            }, this);
-            var leftPart = '';
-            this.buttonList.forEach(function (o) {
-                if (!o.pullLeft) return;
-                var className = '';
+            });
+
+            let leftPart = '';
+
+            this.buttonList.forEach(o => {
+                if (!o.pullLeft) {
+                    return;
+                }
+
+                let className = '';
+
                 if (o.className) {
                     className = ' ' + o.className;
                 }
+
                 leftPart +=
                     '<button type="button" ' + (o.disabled ? 'disabled="disabled" ' : '') +
-                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') + (o.hidden ? ' hidden' : '') + className+'" ' +
+                    'class="btn btn-' + (o.style || 'default') + (o.disabled ? ' disabled' : '') +
+                    (o.hidden ? ' hidden' : '') + className+'" ' +
                     'data-name="' + o.name + '"' + (o.title ? ' title="'+o.title+'"' : '') + '>' +
                     (o.html || o.text) + '</button> ';
-            }, this);
+            });
+
             if (leftPart !== '') {
                 leftPart = '<div class="btn-group additional-btn-group">'+leftPart+'</div>';
+
                 footer += leftPart;
             }
 
             if (this.dropdownItemList.length) {
-                var visibleCount = 0;
+                let visibleCount = 0;
+
                 this.dropdownItemList.forEach(function (o) {
                     if (!o.hidden) {
                         visibleCount++;
@@ -275,16 +310,21 @@ define('ui', [], function () {
 
                 rightPart += '<div class="btn-group'+ ((visibleCount === 0) ? ' hidden' : '') +'">';
                 rightPart += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">';
-                rightPart += '<span class="fas fa-ellipsis-h"></span>'
-                rightPart += '</button>'
+                rightPart += '<span class="fas fa-ellipsis-h"></span>';
+                rightPart += '</button>';
 
                 rightPart += '<ul class="dropdown-menu pull-right">';
-                this.dropdownItemList.forEach(function (o) {
-                    rightPart += '<li class="'+(o.hidden ? ' hidden' : '')+'"><a href="javascript:" data-name="'+o.name+'">'+(o.html || o.text)+'</a></li>';
-                }, this);
-                rightPart += '</ul>'
+
+                this.dropdownItemList.forEach(o => {
+                    rightPart +=
+                        '<li class="'+(o.hidden ? ' hidden' : '')+'">' +
+                        '<a href="javascript:" data-name="'+o.name+'">'+(o.html || o.text)+'</a></li>';
+                });
+
+                rightPart += '</ul>';
                 rightPart += '</div>';
             }
+
             if (rightPart !== '') {
                 rightPart = '<div class="btn-group main-btn-group">'+rightPart+'</div>';
                 footer += rightPart;
@@ -292,38 +332,45 @@ define('ui', [], function () {
         }
 
         return footer;
-    }
+    };
 
     Dialog.prototype.show = function () {
         this.$el.modal({
              backdrop: this.backdrop,
              keyboard: this.keyboard
         });
+
         this.$el.find('.modal-content').removeClass('hidden');
 
-        var $modalBackdrop = $('.modal-backdrop');
-        $modalBackdrop.each(function (i, el) {
+        let $modalBackdrop = $('.modal-backdrop');
+
+        $modalBackdrop.each((i, el) => {
             if (i < $modalBackdrop.length - 1) {
                 $(el).addClass('hidden');
             }
-        }.bind(this));
+        });
 
-        var $modalConainer = $('.modal-container');
-        $modalConainer.each(function (i, el) {
+        let $modalConainer = $('.modal-container');
+
+        $modalConainer.each((i, el) => {
             if (i < $modalConainer.length - 1) {
                 $(el).addClass('overlaid');
             }
-        }.bind(this));
+        });
 
         this.$el.off('click.dismiss.bs.modal');
-        this.$el.on('click.dismiss.bs.modal', '> div.modal-dialog > div.modal-content > header [data-dismiss="modal"]', function () {
-            this.close();
-        }.bind(this));
-        this.$el.on('click.dismiss.bs.modal', function (e) {
+
+        this.$el.on(
+            'click.dismiss.bs.modal',
+            '> div.modal-dialog > div.modal-content > header [data-dismiss="modal"]',
+            () => this.close()
+        );
+
+        this.$el.on('click.dismiss.bs.modal', (e) => {
             if (e.target === e.currentTarget) {
-                return this.backdrop == 'static' ? this.$el[0].focus() : this.close();
+                return this.backdrop === 'static' ? this.$el[0].focus() : this.close();
             }
-        }.bind(this));
+        });
 
         $('body > .popover').addClass('hidden');
     };
@@ -333,19 +380,21 @@ define('ui', [], function () {
     };
 
     Dialog.prototype.hideWithBackdrop = function () {
-        var $modalBackdrop = $('.modal-backdrop');
+        let $modalBackdrop = $('.modal-backdrop');
+
         $modalBackdrop.last().addClass('hidden');
 
         $($modalBackdrop.get($modalBackdrop.length - 2)).removeClass('hidden');
 
-        var $modalConainer = $('.modal-container');
+        let $modalConainer = $('.modal-container');
+
         $($modalConainer.get($modalConainer.length - 2)).removeClass('overlaid');
 
         this.skipRemove = true;
 
-        setTimeout(function () {
+        setTimeout(() => {
             this.skipRemove = false;
-        }.bind(this), 50);
+        }, 50);
 
         this.$el.modal('hide');
 
@@ -353,34 +402,41 @@ define('ui', [], function () {
     };
 
     Dialog.prototype.close = function () {
-        var $modalBackdrop = $('.modal-backdrop');
+        let $modalBackdrop = $('.modal-backdrop');
+
         $modalBackdrop.last().removeClass('hidden');
 
-        var $modalConainer = $('.modal-container');
+        let $modalConainer = $('.modal-container');
+
         $($modalConainer.get($modalConainer.length - 2)).removeClass('overlaid');
 
         this.$el.modal('hide');
+
         $(this).trigger('dialog:close');
     };
 
     Dialog.prototype.remove = function () {
         this.onRemove();
+
         this.$el.remove();
+
         $(this).off();
         $(window).off('resize.modal-height');
     };
 
-    var Ui = Espo.Ui = Espo.ui = {
+    let Ui = Espo.Ui = Espo.ui = {
 
         Dialog: Dialog,
 
         confirm: function (message, o, callback, context) {
             o = o || {};
+
             var confirmText = o.confirmText;
             var cancelText = o.cancelText;
             var confirmStyle = o.confirmStyle || 'danger';
 
             var backdrop = o.backdrop;
+
             if (typeof backdrop === 'undefined') {
                 backdrop = false;
             }
@@ -446,11 +502,21 @@ define('ui', [], function () {
             }).on('shown.bs.popover', function () {
                 if (view) {
                     $('body').off('click.popover-' + view.cid);
+
                     $('body').on('click.popover-' + view.cid, function (e) {
-                        if ($(e.target).closest('.popover-content').get(0)) return;
-                        if ($.contains($el.get(0), e.target)) return;
-                        if ($el.get(0) === e.target) return;
+                        if ($(e.target).closest('.popover-content').get(0)) {
+                            return;
+                        }
+
+                        if ($.contains($el.get(0), e.target)) {
+                            return;
+                        }
+                        if ($el.get(0) === e.target) {
+                            return;
+                        }
+
                         $('body').off('click.popover-' + view.cid);
+
                         $el.popover('hide');
                     });
                 }
@@ -467,6 +533,7 @@ define('ui', [], function () {
                     $el.popover('destroy');
                     $('body').off('click.popover-' + view.cid);
                 });
+
                 view.on('render', function () {
                     $el.popover('destroy');
                     $('body').off('click.popover-' + view.cid);
@@ -479,22 +546,26 @@ define('ui', [], function () {
 
             if (message) {
                 type = type || 'warning';
-                if (typeof closeButton == 'undefined') {
+                if (typeof closeButton === 'undefined') {
                     closeButton = false;
                 }
 
-                if (type == 'error') {
+                if (type === 'error') {
                     type = 'danger';
                 }
 
-                var el = $('<div class="alert alert-' + type + ' fade in" id="nofitication" />').css({
-                    position: 'fixed',
-                    top: '0px',
-                    'z-index': 2000,
-                }).html(message);
+                var el = $('<div class="alert alert-' + type + ' fade in" id="nofitication" />')
+                    .css({
+                        position: 'fixed',
+                        top: '0px',
+                        'z-index': 2000,
+                    })
+                    .html(message);
 
                 if (closeButton) {
-                    el.append('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>');
+                    el.append(
+                        '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+                    );
                 }
 
                 if (timeout) {
@@ -523,7 +594,7 @@ define('ui', [], function () {
         info: function (message) {
             Espo.Ui.notify(message, 'info', 2000);
         },
-    }
+    };
 
     return Ui;
 });

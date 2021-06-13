@@ -28,7 +28,7 @@
 
 define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
-    var ViewHelper = function () {
+    let ViewHelper = function () {
         this._registerHandlebarsHelpers();
 
         this.mdBeforeList = [
@@ -55,7 +55,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             if (node instanceof HTMLAnchorElement) {
                 if (node.getAttribute('target')) {
                     node.targetBlack = true;
-                } else {
+                }
+                else {
                     node.targetBlack = false;
                 }
             }
@@ -286,7 +287,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 var checkOption = function (name) {
                     if (multiple) {
                         return value.indexOf(name) !== -1;
-                    } else {
+                    }
+                    else {
                         return value === name;
                     }
                 };
@@ -315,7 +317,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                         if (typeof translationHash !== 'object') {
                             translationHash = {};
                         }
-                    } else {
+                    }
+                    else {
                         translationHash = {};
                     }
                 }

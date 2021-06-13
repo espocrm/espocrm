@@ -28,7 +28,7 @@
 
 define('utils', [], function () {
 
-    var Utils = Espo.utils = Espo.Utils = {
+    let Utils = Espo.utils = Espo.Utils = {
 
         handleAction: function (viewObject, e) {
             var $target = $(e.currentTarget);
@@ -170,6 +170,7 @@ define('utils', [], function () {
                         }
                     }
                 }
+
                 if (item.teamIdList) {
                     if (user && !(allowAllForAdmin && user.isAdmin())) {
                         var inTeam = false;
@@ -185,6 +186,7 @@ define('utils', [], function () {
                         }
                     }
                 }
+
                 if (item.portalIdList) {
                     if (user && !(allowAllForAdmin && user.isAdmin())) {
                         var inPortal = false;
@@ -200,6 +202,7 @@ define('utils', [], function () {
                         }
                     }
                 }
+
                 if (item.isPortalOnly) {
                     if (user && !(allowAllForAdmin && user.isAdmin())) {
                         if (!user.isPortal()) {
@@ -223,6 +226,7 @@ define('utils', [], function () {
                     }
                 }
             }
+
             return true;
         },
 
@@ -278,6 +282,7 @@ define('utils', [], function () {
                     data[i] = this.cloneDeep(data[i]);
                 }
             }
+
             return data;
         },
 
@@ -391,5 +396,4 @@ define('utils', [], function () {
     };
 
     return Utils;
-
 });

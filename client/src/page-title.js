@@ -28,7 +28,7 @@
 
 define('page-title', [], function () {
 
-    var PageTitle = function (config) {
+    let PageTitle = function (config) {
         this.displayNotificationNumber = config.get('newNotificationCountInTitle') || false;
 
         this.title = $('head title').text() || '';
@@ -39,26 +39,32 @@ define('page-title', [], function () {
     _.extend(PageTitle.prototype, {
         setTitle: function (title) {
             this.title = title;
+
             this.update();
         },
 
         setNotificationNumber: function (notificationNumber) {
             this.notificationNumber = notificationNumber;
+
             if (this.displayNotificationNumber) {
                 this.update();
             }
         },
 
         update: function () {
-            var value = '';
+            let value = '';
+
             if (this.displayNotificationNumber && this.notificationNumber) {
                 value = '(' + this.notificationNumber.toString() + ')';
-                if (this.title) value += ' ';
+
+                if (this.title) {
+                    value += ' ';
+                }
             }
 
             value += this.title;
 
-            $('head title').text(value)
+            $('head title').text(value);
         },
 
     });

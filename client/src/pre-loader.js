@@ -28,11 +28,11 @@
 
 define('pre-loader', [], function () {
 
-    var PreLoader = function (cache, viewFactory, basePath) {
+    let PreLoader = function (cache, viewFactory, basePath) {
         this.cache = cache;
         this.viewFactory = viewFactory;
         this.basePath = basePath || '';
-    }
+    };
 
     _.extend(PreLoader.prototype, {
 
@@ -43,77 +43,89 @@ define('pre-loader', [], function () {
         viewFactory: null,
 
         load: function (callback, app) {
+            let bar = $(
+                '<div class="progress pre-loading">' +
+                '<div class="progress-bar" id="loading-progress-bar" role="progressbar" ' +
+                'aria-valuenow="0" style="width: 0%;"></div></div>'
+            ).prependTo('body');
 
-            var bar = $('<div class="progress pre-loading"><div class="progress-bar" id="loading-progress-bar" role="progressbar" aria-valuenow="0" style="width: 0%;"></div></div>').prependTo('body');;
             bar = bar.children();
+
             bar.css({
                 'transition': 'width .1s linear',
                 '-webkit-transition': 'width .1s linear'
             });
 
-            var self = this;
+            let count = 0;
+            let countLoaded = 0;
+            let classesLoaded = 0;
+            let layoutTypesLoaded = 0;
+            let templatesLoaded = 0;
 
-            var count = 0;
-            var countLoaded = 0;
-            var classesLoaded = 0;
-            var templatesLoaded = 0;
-            var layoutTypesLoaded = 0;
+            let updateBar = () => {
+                let percents = countLoaded / count * 100;
 
-            var updateBar = function () {
-                var percents = countLoaded / count * 100;
                 bar.css('width', percents + '%').attr('aria-valuenow', percents);
-            }
+            };
 
-            var checkIfReady = function () {
+            let checkIfReady = () => {
                 if (countLoaded >= count) {
                     clearInterval(timer);
                     callback.call(app, app);
                 }
             };
-            var timer = setInterval(checkIfReady, 100);
 
-            var load = function (data) {
+            let timer = setInterval(checkIfReady, 100);
+
+            let load = (data) => {
                 data.classes = data.classes || [];
                 data.templates = data.templates || [];
                 data.layoutTypes = data.layoutTypes || [];
 
-                var d = [];
-                data.classes.forEach(function (item) {
-                    if (item != 'views/fields/enum') {
-                        d.push(item); // TODO remove this huck
+                let d = [];
+
+                data.classes.forEach(item => {
+                    if (item !== 'views/fields/enum') {
+                        d.push(item); // TODO remove this hack
                     }
-                }, this);
+                });
+
                 data.classes = d;
 
                 count = data.templates.length + data.layoutTypes.length+ data.classes.length;
 
-                var loadTemplates = function () {
-                    data.templates.forEach(function (name) {
-                        self.viewFactory._loader.load('template', name, function () {
-                            layoutTypesLoaded++;
+                let loadTemplates = () => {
+                    data.templates.forEach(name =>  {
+                        this.viewFactory._loader.load('template', name, () => {
+                            templatesLoaded++;
                             countLoaded++;
+
                             updateBar();
                         });
                     });
-                }
-                var loadLayoutTypes = function () {
-                    data.layoutTypes.forEach(function (name) {
-                        self.viewFactory._loader.load('layoutTemplate', name, function () {
+                };
+
+                let loadLayoutTypes = () => {
+                    data.layoutTypes.forEach(name => {
+                        this.viewFactory._loader.load('layoutTemplate', name, () => {
                             layoutTypesLoaded++;
                             countLoaded++;
+
                             updateBar();
                         });
                     });
-                }
-                var loadClasses = function () {
-                    data.classes.forEach(function (name) {
-                        Espo.loader.require(name, function () {
+                };
+
+                let loadClasses = () => {
+                    data.classes.forEach(name => {
+                        Espo.loader.require(name, () => {
                             classesLoaded++;
                             countLoaded++;
+
                             updateBar();
                         });
                     });
-                }
+                };
 
                 loadTemplates();
                 loadLayoutTypes();
@@ -124,13 +136,10 @@ define('pre-loader', [], function () {
                 url: this.basePath + this.configUrl,
                 dataType: 'json',
                 local: true,
-                success: function (data) {
-                    load(data);
-                }
+                success: data => load(data),
             });
         }
     });
 
     return PreLoader;
-
 });

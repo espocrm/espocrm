@@ -28,7 +28,7 @@
 
 define('action-handler', [], function () {
 
-    var ActionHandler = function (view) {
+    let ActionHandler = function (view) {
         this.view = view;
     };
 

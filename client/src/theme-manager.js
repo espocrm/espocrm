@@ -28,7 +28,7 @@
 
 define('theme-manager', [], function () {
 
-    var ThemeManager = function (config, preferences, metadata) {
+    let ThemeManager = function (config, preferences, metadata) {
         this.config = config;
         this.preferences = preferences;
         this.metadata = metadata;
@@ -39,45 +39,60 @@ define('theme-manager', [], function () {
         defaultParams: {
             screenWidthXs: 768,
             dashboardCellHeight: 155,
-            dashboardCellMargin: 19
+            dashboardCellMargin: 19,
         },
 
         getName: function () {
             if (!this.config.get('userThemesDisabled')) {
-                var name = this.preferences.get('theme');
+                let name = this.preferences.get('theme');
+
                 if (name && name !== '') {
                     return name;
                 }
             }
+
             return this.config.get('theme');
         },
 
         getAppliedName: function () {
-            var name = window.getComputedStyle(document.body).getPropertyValue('--theme-name');
-            if (!name) return null;
+            let name = window.getComputedStyle(document.body).getPropertyValue('--theme-name');
+
+            if (!name) {
+                return null;
+            }
+
             return name.trim();
         },
 
         isApplied: function () {
-            var appliedName = this.getAppliedName();
-            if (!appliedName) return true;
+            let appliedName = this.getAppliedName();
+
+            if (!appliedName) {
+                return true;
+            }
+
             return this.getName() === appliedName;
         },
 
         getStylesheet: function () {
-            var link = this.metadata.get(['themes', this.getName(), 'stylesheet']) || 'client/css/espo/espo.css';
+            let link = this.metadata.get(['themes', this.getName(), 'stylesheet']) || 'client/css/espo/espo.css';
+
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
             }
-            return link
+
+            return link;
         },
 
         getIframeStylesheet: function () {
-            var link = this.metadata.get(['themes', this.getName(), 'stylesheetIframe']) || 'client/css/espo/espo-iframe.css';
+            let link = this.metadata.get(['themes', this.getName(), 'stylesheetIframe']) ||
+                'client/css/espo/espo-iframe.css';
+
             if (this.config.get('cacheTimestamp')) {
                 link += '?r=' + this.config.get('cacheTimestamp').toString();
             }
-            return link
+
+            return link;
         },
 
         getParam: function (name) {
@@ -86,13 +101,15 @@ define('theme-manager', [], function () {
 
         isUserTheme: function () {
             if (!this.config.get('userThemesDisabled')) {
-                var name = this.preferences.get('theme');
+                let name = this.preferences.get('theme');
+
                 if (name && name !== '') {
                     if (name !== this.config.get('theme')) {
                         return true;
                     }
                 }
             }
+
             return false;
         }
 

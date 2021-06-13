@@ -44,14 +44,19 @@ define('view', [], function () {
         notify: function (label, type, timeout, scope) {
             if (label == false) {
                 Espo.Ui.notify(false);
+
                 return;
             }
+
             scope = scope || null;
             timeout = timeout || 2000;
+
             if (!type) {
                 timeout = null;
             }
-            var text = this.getLanguage().translate(label, 'labels', scope);
+
+            let text = this.getLanguage().translate(label, 'labels', scope);
+
             Espo.Ui.notify(text, type, timeout);
         },
 
@@ -179,7 +184,8 @@ define('view', [], function () {
         },
 
         ajaxRequest: function (url, type, data, options) {
-            var options = options || {};
+            options = options || {};
+
             options.type = type;
             options.url = url;
             options.context = this;
@@ -188,23 +194,16 @@ define('view', [], function () {
                 options.data = data;
             }
 
-            var xhr = $.ajax(options);
+            let xhr = $.ajax(options);
 
             return xhr;
-
-            var obj = {
-                then: xhr.then,
-                fail: xhr.fail,
-                catch: xhr.fail
-            };
-
-            return obj;
         },
 
         ajaxPostRequest: function (url, data, options) {
             if (data) {
                 data = JSON.stringify(data);
             }
+
             return this.ajaxRequest(url, 'POST', data, options);
         },
 
@@ -212,6 +211,7 @@ define('view', [], function () {
             if (data) {
                 data = JSON.stringify(data);
             }
+
             return this.ajaxRequest(url, 'PATCH', data, options);
         },
 
@@ -219,6 +219,7 @@ define('view', [], function () {
             if (data) {
                 data = JSON.stringify(data);
             }
+
             return this.ajaxRequest(url, 'PUT', data, options);
         },
 
@@ -230,25 +231,31 @@ define('view', [], function () {
             if (data) {
                 data = JSON.stringify(data);
             }
+
             return this.ajaxRequest(url, 'DELETE', data, options);
         },
 
         confirm: function (o, callback, context) {
+            let message;
+
             if (typeof o === 'string' || o instanceof String) {
-                var message = o;
+                message = o;
+
                 o = {};
-            } else {
+            }
+            else {
                 o = o || {};
-                var message = o.message;
+
+                message = o.message;
             }
 
             if (message) {
                 message = this.getHelper().transfromMarkdownText(message, {linksInNewTab: true}).toString();
             }
 
-            var confirmText = o.confirmText || this.translate('Yes');
-            var confirmStyle = o.confirmStyle || null;
-            var cancelText = o.cancelText || this.translate('Cancel');
+            let confirmText = o.confirmText || this.translate('Yes');
+            let confirmStyle = o.confirmStyle || null;
+            let cancelText = o.cancelText || this.translate('Cancel');
 
             return Espo.Ui.confirm(message, {
                 confirmText: confirmText,

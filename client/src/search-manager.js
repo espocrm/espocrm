@@ -28,7 +28,7 @@
 
 define('search-manager', [], function () {
 
-    var SearchManager = function (collection, type, storage, dateTime, defaultData, emptyOnReset) {
+    let SearchManager = function (collection, type, storage, dateTime, defaultData, emptyOnReset) {
         this.collection = collection;
         this.scope = collection.name;
         this.storage = storage;
@@ -45,7 +45,8 @@ define('search-manager', [], function () {
 
         if (defaultData) {
             this.defaultData = defaultData;
-            for (var p in this.emptyData) {
+
+            for (let p in this.emptyData) {
                 if (!(p in defaultData)) {
                     defaultData[p] = Espo.Utils.clone(this.emptyData[p]);
                 }
@@ -65,18 +66,20 @@ define('search-manager', [], function () {
             if (!('advanced' in this.data)) {
                 this.data.advanced = {};
             }
+
             if (!('bool' in this.data)) {
                 this.data.bool = {};
             }
+
             if (!('textFilter' in this.data)) {
                 this.data.textFilter = '';
             }
         },
 
         getWhere: function () {
-            var where = [];
+            let where = [];
 
-            if (this.data.textFilter && this.data.textFilter != '') {
+            if (this.data.textFilter && this.data.textFilter !== '') {
                 where.push({
                     type: 'textFilter',
                     value: this.data.textFilter
@@ -84,37 +87,43 @@ define('search-manager', [], function () {
             }
 
             if (this.data.bool) {
-                var o = {
+                let o = {
                     type: 'bool',
                     value: [],
                 };
-                for (var name in this.data.bool) {
+
+                for (let name in this.data.bool) {
                     if (this.data.bool[name]) {
                         o.value.push(name);
                     }
                 }
+
                 if (o.value.length) {
                     where.push(o);
                 }
             }
 
             if (this.data.primary) {
-                var o = {
+                let o = {
                     type: 'primary',
                     value: this.data.primary,
                 };
+
                 if (o.value.length) {
                     where.push(o);
                 }
             }
 
             if (this.data.advanced) {
-                for (var name in this.data.advanced) {
-                    var defs = this.data.advanced[name];
+                for (let name in this.data.advanced) {
+                    let defs = this.data.advanced[name];
+
                     if (!defs) {
                         continue;
                     }
-                    var part = this.getWherePart(name, defs);
+
+                    let part = this.getWherePart(name, defs);
+
                     where.push(part);
                 }
             }
@@ -127,48 +136,60 @@ define('search-manager', [], function () {
 
             if ('where' in defs) {
                 return defs.where;
-            } else {
-                var type = defs.type;
-
-                if (type == 'or' || type == 'and') {
-                    var a = [];
-                    var value = defs.value || {};
-                    for (var n in value) {
-                        a.push(this.getWherePart(n, value[n]));
-                    }
-                    return {
-                        type: type,
-                        value: a
-                    };
-                }
-                if ('field' in defs) { // for backward compatibility
-                    attribute = defs.field;
-                }
-                if ('attribute' in defs) {
-                    attribute = defs.attribute;
-                }
-                if (defs.dateTime) {
-                    return {
-                        type: type,
-                        attribute: attribute,
-                        value: defs.value,
-                        dateTime: true,
-                        timeZone: this.dateTime.timeZone || 'UTC'
-                    };
-                } else {
-                    value = defs.value;
-                    return {
-                        type: type,
-                        attribute: attribute,
-                        value: value
-                    };
-                }
             }
+
+            let type = defs.type;
+
+            if (type === 'or' || type === 'and') {
+                let a = [];
+
+                var value = defs.value || {};
+
+                for (let n in value) {
+                    a.push(this.getWherePart(n, value[n]));
+                }
+
+                return {
+                    type: type,
+                    value: a
+                };
+            }
+
+            if ('field' in defs) { // for backward compatibility
+                attribute = defs.field;
+            }
+
+            if ('attribute' in defs) {
+                attribute = defs.attribute;
+            }
+
+            if (defs.dateTime) {
+                return {
+                    type: type,
+                    attribute: attribute,
+                    value: defs.value,
+                    dateTime: true,
+                    timeZone: this.dateTime.timeZone || 'UTC',
+                };
+            }
+
+            value = defs.value;
+
+            return {
+                type: type,
+                attribute: attribute,
+                value: value
+            };
         },
 
         loadStored: function () {
-            this.data = this.storage.get(this.type + 'Search', this.scope) || Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
+            this.data =
+                this.storage.get(this.type + 'Search', this.scope) ||
+                Espo.Utils.clone(this.defaultData) ||
+                Espo.Utils.clone(this.emptyData);
+
             this.sanitizeData();
+
             return this;
         },
 
@@ -178,21 +199,25 @@ define('search-manager', [], function () {
 
         setAdvanced: function (advanced) {
             this.data = Espo.Utils.clone(this.data);
+
             this.data.advanced = advanced;
         },
 
         setBool: function (bool) {
             this.data = Espo.Utils.clone(this.data);
+
             this.data.bool = bool;
         },
 
         setPrimary: function (primary) {
             this.data = Espo.Utils.clone(this.data);
+
             this.data.primary = primary;
         },
 
         set: function (data) {
             this.data = data;
+
             if (this.storage) {
                 this.storage.set(this.type + 'Search', this.scope, data);
             }
@@ -200,6 +225,7 @@ define('search-manager', [], function () {
 
         empty: function () {
             this.data = Espo.Utils.clone(this.emptyData);
+
             if (this.storage) {
                 this.storage.clear(this.type + 'Search', this.scope);
             }
@@ -208,9 +234,12 @@ define('search-manager', [], function () {
         reset: function () {
             if (this.emptyOnReset) {
                 this.empty();
+
                 return;
             }
+
             this.data = Espo.Utils.clone(this.defaultData) || Espo.Utils.clone(this.emptyData);
+
             if (this.storage) {
                 this.storage.clear(this.type + 'Search', this.scope);
             }
@@ -220,52 +249,105 @@ define('search-manager', [], function () {
             var where = {
                 field: field
             };
+
             if (!value && ~['on', 'before', 'after'].indexOf(type)) {
                 return null;
             }
 
+            let start, from, to;
+
             switch (type) {
                 case 'today':
                     where.type = 'between';
-                    var start = this.dateTime.getNowMoment().startOf('day').utc();
 
-                    var from = start.format(this.dateTime.internalDateTimeFormat);
-                    var to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
+                    start = this.dateTime.getNowMoment().startOf('day').utc();
+
+                    from = start.format(this.dateTime.internalDateTimeFormat);
+                    to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
+
                     where.value = [from, to];
+
                     break;
+
                 case 'past':
                     where.type = 'before';
+
                     where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
+
                     break;
+
                 case 'future':
                     where.type = 'after';
+
                     where.value = this.dateTime.getNowMoment().utc().format(this.dateTime.internalDateTimeFormat);
+
                     break;
+
                 case 'on':
                     where.type = 'between';
-                    var start = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc();
 
-                    var from = start.format(this.dateTime.internalDateTimeFormat);
-                    var to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
+                    start = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc();
+
+                    from = start.format(this.dateTime.internalDateTimeFormat);
+                    to = start.add(1, 'days').format(this.dateTime.internalDateTimeFormat);
 
                     where.value = [from, to];
+
                     break;
+
                 case 'before':
                     where.type = 'before';
-                    where.value = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
+                    where.value =
+                        moment(
+                            value,
+                            this.dateTime.internalDateFormat,
+                            this.timeZone
+                        )
+                        .utc()
+                        .format(this.dateTime.internalDateTimeFormat );
+
                     break;
+
                 case 'after':
                     where.type = 'after';
-                    where.value = moment(value, this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
+                    where.value =
+                        moment(
+                            value,
+                            this.dateTime.internalDateFormat,
+                            this.timeZone
+                        )
+                        .utc()
+                        .format(this.dateTime.internalDateTimeFormat);
+
                     break;
+
                 case 'between':
                     where.type = 'between';
+
                     if (value[0] && value[1]) {
-                        var from = moment(value[0], this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
-                        var to = moment(value[1], this.dateTime.internalDateFormat, this.timeZone).utc().format(this.dateTime.internalDateTimeFormat);
+                        let from =
+                            moment(
+                                value[0],
+                                this.dateTime.internalDateFormat,
+                                this.timeZone
+                            )
+                            .utc()
+                            .format(this.dateTime.internalDateTimeFormat);
+
+                        let to =
+                            moment(
+                                value[1],
+                                this.dateTime.internalDateFormat,
+                                this.timeZone
+                            )
+                            .utc()
+                            .format(this.dateTime.internalDateTimeFormat);
+
                         where.value = [from, to];
                     }
+
                     break;
+
                 default:
                     where.type = type;
             }
