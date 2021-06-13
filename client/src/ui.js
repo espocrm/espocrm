@@ -137,8 +137,6 @@ define('ui', [], function () {
 
         contentsHtml = '<div class="modal-dialog"><div class="modal-content">' + contentsHtml + '</div></div>';
 
-        console.log(1);
-
         $('<div />')
             .attr('id', this.id)
             .attr('class', this.className + ' modal')
@@ -158,6 +156,7 @@ define('ui', [], function () {
 
         if (this.draggable) {
             this.$el.find('header').css('cursor', 'pointer');
+
             this.$el.draggable({
                 handle: 'header',
             });
