@@ -28,7 +28,7 @@
 
  define('field-manager', [], function () {
 
-    var FieldManager = function (defs, metadata, acl) {
+    let FieldManager = function (defs, metadata, acl) {
         this.defs = defs || {};
         this.metadata = metadata;
         this.acl = acl || null;
@@ -54,7 +54,8 @@
             if (fieldType in this.defs) {
                 if ('filter' in this.defs[fieldType]) {
                     return this.defs[fieldType].filter;
-                } else {
+                }
+                else {
                     return false;
                 }
             }
@@ -71,44 +72,46 @@
         },
 
         getEntityTypeAttributeList: function (entityType) {
-            var list = [];
+            let list = [];
 
-            var defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
+            let defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
 
-            Object.keys(defs).forEach(function (field) {
-                this.getAttributeList(defs[field]['type'], field).forEach(function (attr) {
+            Object.keys(defs).forEach(field => {
+                this.getAttributeList(defs[field]['type'], field).forEach(attr => {
                     if (!~list.indexOf(attr)) {
                         list.push(attr);
                     }
                 });
-            }, this);
+            });
 
             return list;
         },
 
         getActualAttributeList: function (fieldType, fieldName) {
-            var fieldNames = [];
+            let fieldNames = [];
 
             if (fieldType in this.defs) {
                 if ('actualFields' in this.defs[fieldType]) {
-                    var actualFields = this.defs[fieldType].actualFields;
+                    let actualFields = this.defs[fieldType].actualFields;
 
-                    var naming = 'suffix';
+                    let naming = 'suffix';
 
                     if ('naming' in this.defs[fieldType]) {
                         naming = this.defs[fieldType].naming;
                     }
 
-                    if (naming == 'prefix') {
-                        actualFields.forEach(function (f) {
+                    if (naming === 'prefix') {
+                        actualFields.forEach(f => {
                             fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
                         });
-                    } else {
-                        actualFields.forEach(function (f) {
+                    }
+                    else {
+                        actualFields.forEach(f => {
                             fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
                         });
                     }
-                } else {
+                }
+                else {
                     fieldNames.push(fieldName);
                 }
             }
@@ -117,38 +120,41 @@
         },
 
         getNotActualAttributeList: function (fieldType, fieldName) {
-            var fieldNames = [];
+            let fieldNames = [];
 
             if (fieldType in this.defs) {
                 if ('notActualFields' in this.defs[fieldType]) {
-                    var notActualFields = this.defs[fieldType].notActualFields;
+                    let notActualFields = this.defs[fieldType].notActualFields;
 
-                    var naming = 'suffix';
+                    let naming = 'suffix';
 
                     if ('naming' in this.defs[fieldType]) {
                         naming = this.defs[fieldType].naming;
                     }
 
                     if (naming === 'prefix') {
-                        notActualFields.forEach(function (f) {
+                        notActualFields.forEach(f => {
                             if (f === '') {
                                 fieldNames.push(fieldName);
-                            } else {
+                            }
+                            else {
                                 fieldNames.push(f + Espo.Utils.upperCaseFirst(fieldName));
                             }
                         });
-                    } else {
-                        notActualFields.forEach(function (f) {
+                    }
+                    else {
+                        notActualFields.forEach(f => {
                             fieldNames.push(fieldName + Espo.Utils.upperCaseFirst(f));
                         });
                     }
                 }
             }
+
             return fieldNames;
         },
 
         getEntityTypeFieldAttributeList: function (entityType, field) {
-            var type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
+            let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
 
             if (!type) {
                 return [];
@@ -168,38 +174,38 @@
         },
 
         getEntityTypeFieldList: function (entityType, o) {
-            var list = Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
+            let list = Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
 
             o = o || {};
 
-            var typeList = o.typeList;
+            let typeList = o.typeList;
 
             if (!typeList && o.type) {
                 typeList = [o.type];
             }
 
             if (typeList) {
-                list = list.filter(function (item) {
-                    var type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
+                list = list.filter(item => {
+                    let type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
 
                     return ~typeList.indexOf(type);
-                }, this);
+                });
             }
 
             if (o.onlyAvailable || o.acl) {
-                list = list.filter(function (item) {
+                list = list.filter(item => {
                     return this.isEntityTypeFieldAvailable(entityType, item);
-                }, this);
+                });
             }
 
             if (o.acl) {
-                var level = o.acl || 'read';
+                let level = o.acl || 'read';
 
-                var forbiddenEditFieldList = this.acl.getScopeForbiddenFieldList(entityType, level);
+                let forbiddenEditFieldList = this.acl.getScopeForbiddenFieldList(entityType, level);
 
-                list = list.filter(function (item) {
+                list = list.filter(item => {
                     return !~forbiddenEditFieldList.indexOf(item);
-                }, this);
+                });
             }
 
             return list;

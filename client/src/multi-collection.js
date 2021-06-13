@@ -28,7 +28,7 @@
 
 define('multi-collection', ['collection'], function (Collection) {
 
-    var MultiCollection = Collection.extend({
+    let MultiCollection = Collection.extend({
 
         /**
          * @prop {Object} seeds Hash off model classes.
@@ -45,11 +45,14 @@ define('multi-collection', ['collection'], function (Collection) {
 
         parse: function (resp, options) {
             this.total = resp.total;
-            return resp.list.map(function (attributes) {
-                var a = _.clone(attributes);
+
+            return resp.list.map(attributes => {
+                let a = _.clone(attributes);
+
                 delete a['_scope'];
+
                 return new this.seeds[attributes._scope](a, options);
-            }.bind(this));
+            });
         },
 
     });

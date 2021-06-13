@@ -28,7 +28,7 @@
 
 define('model-factory', [], function () {
 
-    var ModelFactory = function (loader, metadata, user) {
+    let ModelFactory = function (loader, metadata, user) {
         this.loader = loader;
         this.metadata = metadata;
         this.user = user;
@@ -49,36 +49,41 @@ define('model-factory', [], function () {
         user: null,
 
         create: function (name, callback, context) {
-            return new Promise(function (resolve) {
+            return new Promise(resolve => {
                 context = context || this;
-                this.getSeed(name, function (seed) {
-                    var model = new seed();
+
+                this.getSeed(name, seed => {
+                    let model = new seed();
+
                     if (callback) {
                         callback.call(context, model);
                     }
+
                     resolve(model);
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         getSeed: function (name, callback) {
             if ('name' in this.seeds) {
                 callback(this.seeds[name]);
+
                 return;
             }
 
             var className = this.metadata.get('clientDefs.' + name + '.model') || 'model';
 
-            Espo.loader.require(className, function (modelClass) {
+            Espo.loader.require(className, modelClass => {
                 this.seeds[name] = modelClass.extend({
                     name: name,
                     entityType: name,
                     defs: this.metadata.get('entityDefs.' + name) || {},
                     dateTime: this.dateTime,
-                    _user: this.user
+                    _user: this.user,
                 });
+
                 callback(this.seeds[name]);
-            }.bind(this));
+            });
         },
     });
 

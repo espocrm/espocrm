@@ -28,12 +28,12 @@
 
 define('metadata', [], function () {
 
-    var Metadata = function (cache) {
+    let Metadata = function (cache) {
         this.cache = cache || null;
 
         this.data = {};
         this.ajax = $.ajax;
-    }
+    };
 
     _.extend(Metadata.prototype, {
 
@@ -44,7 +44,8 @@ define('metadata', [], function () {
         url: 'Metadata',
 
         load: function (callback, disableCache, sync) {
-            var sync = (typeof sync == 'undefined') ? false: sync;
+            sync = (typeof sync === 'undefined') ? false: sync;
+
             this.off('sync');
 
             if (callback)
@@ -53,62 +54,75 @@ define('metadata', [], function () {
             if (!disableCache) {
                  if (this.loadFromCache()) {
                     this.trigger('sync');
+
                     return;
                 }
             }
+
             return this.fetch(sync);
         },
 
         fetch: function (sync) {
-            var self = this;
             return this.ajax({
                 url: this.url,
                 type: 'GET',
                 dataType: 'JSON',
                 async: !(sync || false),
-                success: function (data) {
-                    self.data = data;
-                    self.storeToCache();
-                    self.trigger('sync');
-                }
+                success: data => {
+                    this.data = data;
+
+                    this.storeToCache();
+
+                    this.trigger('sync');
+                },
             });
         },
 
         get: function (path, defaultValue) {
             defaultValue = defaultValue || null;
-            var arr;
+
+            let arr;
+
             if (Array && Array.isArray && Array.isArray(path)) {
                 arr = path;
-            } else {
+            }
+            else {
                 arr = path.split('.');
             }
 
-            var pointer = this.data;
-            var result = defaultValue;
+            let pointer = this.data;
+            let result = defaultValue;
 
             for (var i = 0; i < arr.length; i++) {
-                var key = arr[i];
+                let key = arr[i];
 
                 if (!(key in pointer)) {
                     result = defaultValue;
+
                     break;
                 }
-                if (arr.length - 1 == i) {
+
+                if (arr.length - 1 === i) {
                     result = pointer[key];
                 }
+
                 pointer = pointer[key];
             }
+
             return result;
         },
 
         loadFromCache: function () {
             if (this.cache) {
-                var cached = this.cache.get('app', 'metadata');
+                let cached = this.cache.get('app', 'metadata');
+
                 if (cached) {
                     this.data = cached;
+
                     return true;
                 }
             }
+
             return null;
         },
 
@@ -119,37 +133,61 @@ define('metadata', [], function () {
         },
 
         getScopeList: function () {
-            var scopes = this.get('scopes') || {};
-            var scopeList = [];
-            for (scope in scopes) {
+            let scopes = this.get('scopes') || {};
+            let scopeList = [];
+
+            for (let scope in scopes) {
                 var d = scopes[scope];
-                if (d.disabled) continue;
+
+                if (d.disabled) {
+                    continue;
+                }
+
                 scopeList.push(scope);
             }
+
             return scopeList;
         },
 
         getScopeObjectList: function () {
-            var scopes = this.get('scopes') || {};
-            var scopeList = [];
-            for (scope in scopes) {
-                var d = scopes[scope];
-                if (d.disabled) continue;
-                if (!d.object) continue;
+            let scopes = this.get('scopes') || {};
+            let scopeList = [];
+
+            for (let scope in scopes) {
+                let d = scopes[scope];
+
+                if (d.disabled) {
+                    continue;
+                }
+
+                if (!d.object) {
+                    continue;
+                }
+
                 scopeList.push(scope);
             }
+
             return scopeList;
         },
 
         getScopeEntityList: function () {
             var scopes = this.get('scopes') || {};
             var scopeList = [];
-            for (scope in scopes) {
-                var d = scopes[scope];
-                if (d.disabled) continue;
-                if (!d.entity) continue;
+
+            for (let scope in scopes) {
+                let d = scopes[scope];
+
+                if (d.disabled) {
+                    continue;
+                }
+
+                if (!d.entity) {
+                    continue;
+                }
+
                 scopeList.push(scope);
             }
+
             return scopeList;
         }
 

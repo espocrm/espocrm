@@ -28,9 +28,9 @@
 
 define('model', [], function () {
 
-    var Dep = Backbone.Model;
+    let Dep = Backbone.Model;
 
-    var Model = Dep.extend({
+    let Model = Dep.extend({
 
         name: null,
 
@@ -61,12 +61,13 @@ define('model', [], function () {
 
         set: function (key, val, options) {
             if (typeof key === 'object') {
-                var o = key;
+                let o = key;
 
                 if (this.idAttribute in o) {
                     this.id = o[this.idAttribute];
                 }
-            } else if (key === 'id') {
+            }
+            else if (key === 'id') {
                 this.id = val;
             }
 
@@ -82,7 +83,7 @@ define('model', [], function () {
         },
 
         has: function (key) {
-            var value = this.get(key);
+            let value = this.get(key);
 
             return (typeof value !== 'undefined');
         },
@@ -100,7 +101,7 @@ define('model', [], function () {
         getClonedAttributes: function () {
             var attributes = {};
 
-            for (var name in this.attributes) {
+            for (let name in this.attributes) {
                 attributes[name] = Espo.Utils.cloneDeep(this.attributes[name]);
             }
 
@@ -111,12 +112,12 @@ define('model', [], function () {
             var defaultHash = {};
 
             if ('fields' in this.defs) {
-                for (var field in this.defs.fields) {
-                    var defaultValue = this.getFieldParam(field, 'default');
+                for (let field in this.defs.fields) {
+                    let defaultValue = this.getFieldParam(field, 'default');
 
-                    if (defaultValue != null) {
+                    if (defaultValue !== null) {
                         try {
-                            var defaultValue = this.parseDefaultValue(defaultValue);
+                            let defaultValue = this.parseDefaultValue(defaultValue);
 
                             defaultHash[field] = defaultValue;
                         }
@@ -125,10 +126,10 @@ define('model', [], function () {
                         }
                     }
 
-                    var defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
+                    let defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
 
                     if (defaultAttributes) {
-                        for (var attribute in defaultAttributes) {
+                        for (let attribute in defaultAttributes) {
                             defaultHash[attribute] = defaultAttributes[attribute];
                         }
                     }
@@ -137,7 +138,7 @@ define('model', [], function () {
 
             defaultHash = Espo.Utils.cloneDeep(defaultHash);
 
-            for (var attr in defaultHash) {
+            for (let attr in defaultHash) {
                 if (this.has(attr)) {
                     delete defaultHash[attr];
                 }
@@ -151,7 +152,7 @@ define('model', [], function () {
                 typeof defaultValue === 'string' &&
                 defaultValue.indexOf('javascript:') === 0
             ) {
-                var code = defaultValue.substring(11);
+                let code = defaultValue.substring(11);
 
                 defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
             }
@@ -164,7 +165,7 @@ define('model', [], function () {
         },
 
         setRelate: function (data) {
-            var setRelate = function (options) {
+            let setRelate = options => {
                 var link = options.link;
                 var model = options.model;
 
@@ -192,7 +193,7 @@ define('model', [], function () {
                         var ids = [];
                         ids.push(model.id);
 
-                        var names = {};
+                        let names = {};
 
                         names[model.id] = model.get('name');
 
@@ -201,13 +202,14 @@ define('model', [], function () {
 
                         break;
                 }
-            }.bind(this);
+            };
 
             if (Object.prototype.toString.call(data) === '[object Array]') {
-                data.forEach(function (options) {
+                data.forEach(options => {
                     setRelate(options);
-                }.bind(this));
-            } else {
+                });
+            }
+            else {
                 setRelate(data);
             }
         },

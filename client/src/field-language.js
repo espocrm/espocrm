@@ -28,7 +28,7 @@
 
  define('field-language', [], function () {
 
-    var FieldLanguage = function (metadata, language) {
+    let FieldLanguage = function (metadata, language) {
         this.metadata = metadata;
         this.language = language;
     };
@@ -40,22 +40,27 @@
         language: null,
 
         translateAttribute: function (scope, name) {
-            var label = this.language.translate(name, 'fields', scope);
+            let label = this.language.translate(name, 'fields', scope);
 
             if (name.indexOf('Id') === name.length - 2) {
-                var baseField = name.substr(0, name.length - 2);
+                let baseField = name.substr(0, name.length - 2);
+
                 if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.language.translate(baseField, 'fields', scope) +
                     ' (' + this.language.translate('id', 'fields') + ')';
                 }
-            } else if (name.indexOf('Name') === name.length - 4) {
-                var baseField = name.substr(0, name.length - 4);
+            }
+            else if (name.indexOf('Name') === name.length - 4) {
+                let baseField = name.substr(0, name.length - 4);
+
                 if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.language.translate(baseField, 'fields', scope) +
                     ' (' + this.language.translate('name', 'fields') + ')';
                 }
-            } else if (name.indexOf('Type') === name.length - 4) {
-                var baseField = name.substr(0, name.length - 4);
+            }
+            else if (name.indexOf('Type') === name.length - 4) {
+                let baseField = name.substr(0, name.length - 4);
+
                 if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.language.translate(baseField, 'fields', scope) +
                     ' (' + this.language.translate('type', 'fields') + ')';
@@ -63,19 +68,24 @@
             }
 
             if (name.indexOf('Ids') === name.length - 3) {
-                var baseField = name.substr(0, name.length - 3);
+                let baseField = name.substr(0, name.length - 3);
+
                 if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.language.translate(baseField, 'fields', scope) +
                     ' (' + this.language.translate('ids', 'fields') + ')';
                 }
-            } else if (name.indexOf('Names') === name.length - 5) {
-                var baseField = name.substr(0, name.length - 5);
+            }
+            else if (name.indexOf('Names') === name.length - 5) {
+                let baseField = name.substr(0, name.length - 5);
+
                 if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.language.translate(baseField, 'fields', scope) +
                     ' (' + this.language.translate('names', 'fields') + ')';
                 }
-            } else if (name.indexOf('Types') === name.length - 5) {
-                var baseField = name.substr(0, name.length - 5);
+            }
+            else if (name.indexOf('Types') === name.length - 5) {
+                let baseField = name.substr(0, name.length - 5);
+
                 if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                     label = this.language.translate(baseField, 'fields', scope) +
                     ' (' + this.language.translate('types', 'fields') + ')';

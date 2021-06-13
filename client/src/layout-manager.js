@@ -28,14 +28,15 @@
 
 define('layout-manager', [], function () {
 
-    var LayoutManager = function (options, userId) {
-        var options = options || {};
+    let LayoutManager = function (options, userId) {
+        options = options || {};
+
         this.cache = options.cache || null;
         this.applicationId = options.applicationId || 'default-id';
         this.data = {};
         this.ajax = $.ajax;
         this.userId = userId;
-    }
+    };
 
     _.extend(LayoutManager.prototype, {
 
@@ -47,106 +48,132 @@ define('layout-manager', [], function () {
             if (this.userId) {
                 return this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
             }
+
             return this.applicationId + '-' + scope + '-' + type;
         },
 
         getUrl: function (scope, type, setId) {
-            var url = scope + '/layout/' + type;
+            let url = scope + '/layout/' + type;
+
             if (setId) {
                 url += '/' + setId;
             }
+
             return url;
         },
 
         get: function (scope, type, callback, cache) {
-            if (typeof cache == 'undefined') {
+            if (typeof cache === 'undefined') {
                 cache = true;
             }
 
-            var key = this.getKey(scope, type);
+            let key = this.getKey(scope, type);
 
             if (cache) {
                 if (key in this.data) {
                     if (typeof callback === 'function') {
                         callback(this.data[key]);
                     }
+
                     return;
                 }
             }
 
             if (this.cache && cache) {
-                var cached = this.cache.get('app-layout', key);
+                let cached = this.cache.get('app-layout', key);
+
                 if (cached) {
                     if (typeof callback === 'function') {
                         callback(cached);
                     }
+
                     this.data[key] = cached;
+
                     return;
                 }
             }
 
-            Espo.Ajax.getRequest(this.getUrl(scope, type)).then(
-                function (layout) {
-                    if (typeof callback === 'function') {
-                        callback(layout);
+            Espo.Ajax
+                .getRequest(this.getUrl(scope, type))
+                .then(
+                    layout => {
+                        if (typeof callback === 'function') {
+                            callback(layout);
+                        }
+
+                        this.data[key] = layout;
+
+                        if (this.cache) {
+                            this.cache.set('app-layout', key, layout);
+                        }
                     }
-                    this.data[key] = layout;
-                    if (this.cache) {
-                        this.cache.set('app-layout', key, layout);
-                    }
-                }.bind(this)
-            );
+                );
         },
 
         getOriginal: function (scope, type, setId, callback) {
-            var url = 'Layout/action/getOriginal?scope='+scope+'&name='+type;
-            if (setId) url += '&setId='+setId;
+            let url = 'Layout/action/getOriginal?scope='+scope+'&name='+type;
 
-            Espo.Ajax.getRequest(url).then(
-                function (layout) {
-                    if (typeof callback === 'function') {
-                        callback(layout);
+            if (setId) {
+                url += '&setId=' + setId;
+            }
+
+            Espo.Ajax
+                .getRequest(url)
+                .then(
+                    layout => {
+                        if (typeof callback === 'function') {
+                            callback(layout);
+                        }
                     }
-                }.bind(this)
-            );
+                );
         },
 
         set: function (scope, type, layout, callback, setId) {
-            Espo.Ajax.putRequest(this.getUrl(scope, type, setId), layout).then(
-                function () {
-                    var key = this.getKey(scope, type);
-                    if (this.cache && key) {
-                        this.cache.clear('app-layout', key);
-                    }
-                    delete this.data[key];
-                    this.trigger('sync');
+            Espo.Ajax
+                .putRequest(this.getUrl(scope, type, setId), layout)
+                .then(
+                    () => {
+                        let key = this.getKey(scope, type);
 
-                    if (typeof callback === 'function') {
-                        callback();
+                        if (this.cache && key) {
+                            this.cache.clear('app-layout', key);
+                        }
+
+                        delete this.data[key];
+
+                        this.trigger('sync');
+
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
                     }
-                }.bind(this)
-            );
+                );
         },
 
         resetToDefault: function (scope, type, callback, setId) {
-            Espo.Ajax.postRequest('Layout/action/resetToDefault', {
-                scope: scope,
-                name: type,
-                setId: setId,
-            }).then(
-                function (layout) {
-                    var key = this.getKey(scope, type);
-                    if (this.cache) {
-                        this.cache.clear('app-layout', key);
-                    }
-                    delete this.data[key];
-                    this.trigger('sync');
+            Espo.Ajax
+                .postRequest('Layout/action/resetToDefault', {
+                    scope: scope,
+                    name: type,
+                    setId: setId,
+                })
+                .then(
+                    () => {
+                        let key = this.getKey(scope, type);
 
-                    if (typeof callback === 'function') {
-                        callback();
+                        if (this.cache) {
+                            this.cache.clear('app-layout', key);
+                        }
+
+                        delete this.data[key];
+
+                        this.trigger('sync');
+
+                        if (typeof callback === 'function') {
+                            callback();
+                        }
                     }
-                }.bind(this)
-            );
+                );
         },
 
     }, Backbone.Events);

@@ -28,7 +28,7 @@
 
 define('model-offline', 'model', function (Model) {
 
-    var ModelOffline = Model.extend({
+    let ModelOffline = Model.extend({
 
         name: null,
 
@@ -38,8 +38,11 @@ define('model-offline', 'model', function (Model) {
 
         initialize: function (attributes, options) {
             options = options || {};
+
             Model.prototype.initialize.apply(this, arguments);
+
             this._key = this.url = this.name;
+
             this.cache = options.cache || null;
         },
 
@@ -49,6 +52,7 @@ define('model-offline', 'model', function (Model) {
             if (!disableCache) {
                 if (this.loadFromCache()) {
                     this.trigger('sync');
+
                     return;
                 }
             }
@@ -60,12 +64,15 @@ define('model-offline', 'model', function (Model) {
 
         loadFromCache: function () {
             if (this.cache) {
-                var cached = this.cache.get('app', this._key);
+                let cached = this.cache.get('app', this._key);
+
                 if (cached) {
                     this.set(cached);
+
                     return true;
                 }
             }
+
             return null;
         },
 
@@ -77,7 +84,7 @@ define('model-offline', 'model', function (Model) {
 
         isNew: function () {
             return false;
-        }
+        },
 
     });
 

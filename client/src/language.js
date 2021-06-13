@@ -28,7 +28,7 @@
 
 define('language', ['ajax'], function (Ajax) {
 
-    var Language = function (cache) {
+    let Language = function (cache) {
         this.cache = cache || null;
         this.data = {};
         this.name = 'default';
@@ -60,42 +60,53 @@ define('language', ['ajax'], function (Ajax) {
                     }
                 }
             }
-            if (scope == 'Global') {
+
+            if (scope === 'Global') {
                 return name;
             }
+
             return false;
         },
 
         translate: function (name, category, scope) {
             scope = scope || 'Global';
             category = category || 'labels';
-            var res = this.get(scope, category, name);
-            if (res === false && scope != 'Global') {
+
+            let res = this.get(scope, category, name);
+
+            if (res === false && scope !== 'Global') {
                 res = this.get('Global', category, name);
             }
+
             return res;
         },
 
         translateOption: function (value, field, scope) {
-            var translation = this.translate(field, 'options', scope);
-            if (typeof translation != 'object') {
+            let translation = this.translate(field, 'options', scope);
+
+            if (typeof translation !== 'object') {
                 translation = {};
             }
+
             return translation[value] || value;
         },
 
         loadFromCache: function (loadDefault) {
-            var name = this.name;
+            let name = this.name;
             if (loadDefault) {
                 name = 'default';
             }
+
             if (this.cache) {
-                var cached = this.cache.get('app', 'language-' + name);
+                let cached = this.cache.get('app', 'language-' + name);
+
                 if (cached) {
                     this.data = cached;
+
                     return true;
                 }
             }
+
             return null;
         },
 
@@ -106,22 +117,26 @@ define('language', ['ajax'], function (Ajax) {
         },
 
         storeToCache: function (loadDefault) {
-            var name = this.name;
+            let name = this.name;
+
             if (loadDefault) {
                 name = 'default';
             }
+
             if (this.cache) {
                 this.cache.set('app', 'language-' + name, this.data);
             }
         },
 
         load: function (callback, disableCache, loadDefault) {
-            if (callback)
+            if (callback) {
                 this.once('sync', callback);
+            }
 
             if (!disableCache) {
                 if (this.loadFromCache(loadDefault)) {
                     this.trigger('sync');
+
                     return;
                 }
             }
@@ -130,42 +145,49 @@ define('language', ['ajax'], function (Ajax) {
         },
 
         fetch: function (disableCache, loadDefault) {
-            return Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
+            return Ajax.getRequest(this.url, {default: loadDefault}).then(data => {
                 this.data = data;
+
                 if (!disableCache) {
                     this.storeToCache(loadDefault);
                 }
+
                 this.trigger('sync');
-            }.bind(this));
+            });
         },
 
         sortFieldList: function (scope, fieldList) {
-            return fieldList.sort(function (v1, v2) {
-                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-            }.bind(this));
+            return fieldList.sort((v1, v2) => {
+                 return this.translate(v1, 'fields', scope)
+                     .localeCompare(this.translate(v2, 'fields', scope));
+            });
         },
 
         sortEntityList: function (entityList, plural) {
-            var category = 'scopeNames';
+            let category = 'scopeNames';
+
             if (plural) {
                 category += 'Plural';
             }
-            return entityList.sort(function (v1, v2) {
-                 return this.translate(v1, category).localeCompare(this.translate(v2, category));
-            }.bind(this));
+
+            return entityList.sort((v1, v2) => {
+                 return this.translate(v1, category)
+                     .localeCompare(this.translate(v2, category));
+            });
         },
 
         translatePath: function (path) {
             if (typeof path === 'string' || path instanceof String) {
                 path = path.split('.');
             }
-            var pointer = this.data;
 
-            path.forEach(function (key) {
+            let pointer = this.data;
+
+            path.forEach(key => {
                 if (key in pointer) {
                     pointer = pointer[key];
                 }
-            }, this);
+            });
 
             return pointer;
         },

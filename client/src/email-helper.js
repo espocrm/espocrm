@@ -28,7 +28,7 @@
 
 define('email-helper', [], function () {
 
-    var EmailHelper = function (language, user, dateTime, acl) {
+    let EmailHelper = function (language, user, dateTime, acl) {
         this.language = language;
         this.user = user;
         this.dateTime = dateTime;
@@ -86,13 +86,13 @@ define('email-helper', [], function () {
                     let a = [];
 
                     str.split(';').forEach(item => {
-                        var part = item.trim();
-                        var address = this.parseAddressFromStringAddress(item);
+                        let part = item.trim();
+                        let address = this.parseAddressFromStringAddress(item);
 
                         if (address) {
                             a.push(address);
 
-                            var name = this.parseNameFromStringAddress(part);
+                            let name = this.parseNameFromStringAddress(part);
 
                             if (name && name !== address) {
                                 nameHash[address] = name;
@@ -132,50 +132,54 @@ define('email-helper', [], function () {
             if (cc) {
                 attributes.cc = model.get('cc') || '';
 
-                (model.get('to') || '').split(';').forEach(function (item) {
+                (model.get('to') || '').split(';').forEach(item => {
                     item = item.trim();
+
                     if (item !== this.getUser().get('emailAddress')) {
                         if (isReplyOnSent) {
                             if (attributes.to) {
-                                attributes.to += ';'
+                                attributes.to += ';';
                             }
+
                             attributes.to += item;
-                        } else {
+                        }
+                        else {
                             if (attributes.cc) {
-                                attributes.cc += ';'
+                                attributes.cc += ';';
                             }
+
                             attributes.cc += item;
                         }
                     }
-                }, this);
+                });
 
                 attributes.cc = attributes.cc.replace(/^(\; )/,"");
             }
 
             if (attributes.to) {
-                var toList = attributes.to.split(';');
+                let toList = attributes.to.split(';');
 
-                toList = toList.filter(function (item) {
+                toList = toList.filter(item => {
                     if (item.indexOf(this.erasedPlaceholder) === 0) {
                         return false;
                     }
 
                     return true;
-                }, this);
+                });
 
                 attributes.to = toList.join(';');
             }
 
             if (attributes.cc) {
-                var ccList = attributes.cc.split(';');
+                let ccList = attributes.cc.split(';');
 
-                ccList = ccList.filter(function (item) {
+                ccList = ccList.filter(item => {
                     if (item.indexOf(this.erasedPlaceholder) === 0) {
                         return false;
                     }
 
                     return true;
-                }, this);
+                });
 
                 attributes.cc = ccList.join(';');
             }
@@ -190,16 +194,16 @@ define('email-helper', [], function () {
                 attributes.teamsIds = Espo.Utils.clone(model.get('teamsIds'));
                 attributes.teamsNames = Espo.Utils.clone(model.get('teamsNames') || {});
 
-                var defaultTeamId = this.user.get('defaultTeamId');
+                let defaultTeamId = this.user.get('defaultTeamId');
 
                 if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
                     attributes.teamsIds.push(this.user.get('defaultTeamId'));
                     attributes.teamsNames[this.user.get('defaultTeamId')] = this.user.get('defaultTeamName');
                 }
 
-                attributes.teamsIds = attributes.teamsIds.filter(function (teamId) {
+                attributes.teamsIds = attributes.teamsIds.filter(teamId => {
                     return this.acl.checkTeamAssignmentPermission(teamId);
-                }, this);
+                });
             }
 
             attributes.nameHash = nameHash;
@@ -214,12 +218,12 @@ define('email-helper', [], function () {
         },
 
         getForwardAttributes: function (model, data, cc) {
-            var attributes = {
+            let attributes = {
                 status: 'Draft',
                 isHtml: model.get('isHtml'),
             };
 
-            var subject = model.get('name');
+            let subject = model.get('name');
 
             if (~!subject.toUpperCase().indexOf('FWD:') && ~!subject.toUpperCase().indexOf('FW:')) {
                 attributes['name'] = 'Fwd: ' + subject;
@@ -240,7 +244,7 @@ define('email-helper', [], function () {
         },
 
         addForwardBodyAttributes: function (model, attributes) {
-            var prepending = '';
+            let prepending = '';
 
             if (model.get('isHtml')) {
                 prepending = '<br>' + '------' +
@@ -251,12 +255,13 @@ define('email-helper', [], function () {
                     this.getLanguage().translate('Forwarded message', 'labels', 'Email') + '------';
             }
 
-            var list = [];
+            let list = [];
 
             if (model.get('from')) {
-                var from = model.get('from');
-                var line = this.getLanguage().translate('from', 'fields', 'Email') + ': ';
-                var nameHash = model.get('nameHash') || {};
+                let from = model.get('from');
+                let line = this.getLanguage().translate('from', 'fields', 'Email') + ': ';
+
+                let nameHash = model.get('nameHash') || {};
 
                 if (from in nameHash) {
                     line += nameHash[from] + ' ';
@@ -280,7 +285,7 @@ define('email-helper', [], function () {
             }
 
             if (model.get('name')) {
-                var line = this.getLanguage().translate('subject', 'fields', 'Email') + ': ';
+                let line = this.getLanguage().translate('subject', 'fields', 'Email') + ': ';
 
                 line += model.get('name');
 
@@ -288,12 +293,13 @@ define('email-helper', [], function () {
             }
 
             if (model.get('to')) {
-                var line = this.getLanguage().translate('to', 'fields', 'Email') + ': ';
-                var partList = [];
+                let line = this.getLanguage().translate('to', 'fields', 'Email') + ': ';
 
-                model.get('to').split(';').forEach(function (to) {
-                    var nameHash = model.get('nameHash') || {};
-                    var line = '';
+                let partList = [];
+
+                model.get('to').split(';').forEach(to => {
+                    let nameHash = model.get('nameHash') || {};
+                    let line = '';
 
                     if (to in nameHash) {
                         line += nameHash[to] + ' ';
@@ -307,30 +313,29 @@ define('email-helper', [], function () {
                     }
 
                     partList.push(line);
-
-                }, this);
+                });
 
                 line += partList.join(';');
 
                 list.push(line);
             }
 
-            list.forEach(function (line) {
+            list.forEach(line => {
                 if (model.get('isHtml')) {
                     prepending += '<br>' + line;
                 }
                 else {
                     prepending += '\n' + line;
                 }
-            }, this);
+            });
 
             if (model.get('isHtml')) {
-                var body = model.get('body');
+                let body = model.get('body');
 
                 attributes['body'] = prepending + '<br><br>' + body;
             }
             else {
-                var bodyPlain = model.get('body') || model.get('bodyPlain') || '';
+                let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
                 attributes['bodyPlain'] = attributes['body'] = prepending + '\n\n' + bodyPlain;
             }
@@ -338,7 +343,7 @@ define('email-helper', [], function () {
 
         parseNameFromStringAddress: function (value) {
             if (~value.indexOf('<')) {
-                var name = value.replace(/<(.*)>/, '').trim();
+                let name = value.replace(/<(.*)>/, '').trim();
 
                 if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
                     name = name.substr(1, name.length - 2);
@@ -351,8 +356,8 @@ define('email-helper', [], function () {
         },
 
         parseAddressFromStringAddress: function (value) {
-            var r = value.match(/<(.*)>/);
-            var address = null;
+            let r = value.match(/<(.*)>/);
+            let address = null;
 
             if (r && r.length > 1) {
                 address = r[1];
@@ -365,24 +370,26 @@ define('email-helper', [], function () {
         },
 
         addReplyBodyAttributes: function (model, attributes) {
-            var format = this.getDateTime().getReadableShortDateTimeFormat();
+            let format = this.getDateTime().getReadableShortDateTimeFormat();
 
-            var dateSent = model.get('dateSent');
+            let dateSent = model.get('dateSent');
 
-            var dateSentSting = null;
+            let dateSentSting = null;
 
             if (dateSent) {
-                var dateSentMoment = this.getDateTime().toMoment(dateSent);
-                dateSentSting =dateSentMoment.format(format);
+                let dateSentMoment = this.getDateTime().toMoment(dateSent);
+
+                dateSentSting = dateSentMoment.format(format);
             }
 
-            var replyHeadString =
+            let replyHeadString =
                 (dateSentSting || this.getLanguage().translate('Original message', 'labels', 'Email'));
 
-            var fromName = model.get('fromName');
+            let fromName = model.get('fromName');
 
             if (!fromName && model.get('from')) {
                 fromName = (model.get('nameHash') || {})[model.get('from')];
+
                 if (fromName) {
                     replyHeadString += ', ' + fromName;
                 }
@@ -392,20 +399,20 @@ define('email-helper', [], function () {
 
 
             if (model.get('isHtml')) {
-                var body = model.get('body');
+                let body = model.get('body');
 
                 body = '<br>' +  replyHeadString + '<br><blockquote>' +  body + '</blockquote>';
 
                 attributes['body'] = body;
             }
             else {
-                var bodyPlain = model.get('body') || model.get('bodyPlain') || '';
+                let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
-                var b = '\n\n';
+                let b = '\n\n';
 
                 b += replyHeadString + '\n';
 
-                bodyPlain.split('\n').forEach(function (line) {
+                bodyPlain.split('\n').forEach(line => {
                     b += '> ' + line + '\n';
                 });
 
@@ -417,11 +424,11 @@ define('email-helper', [], function () {
         },
 
         composeMailToLink: function (attributes, bcc) {
-            var link = 'mailto:';
+            let link = 'mailto:';
 
             link += (attributes.to || '').split(';').join(',');
 
-            var o = {};
+            let o = {};
 
             if (attributes.cc) {
                 o.cc = attributes.cc.split(';').join(',');
@@ -431,7 +438,7 @@ define('email-helper', [], function () {
                  if (!bcc) {
                     bcc = '';
                 } else {
-                    bcc += ';'
+                    bcc += ';';
                 }
                 bcc += attributes.bcc;
             }
@@ -455,9 +462,9 @@ define('email-helper', [], function () {
                 o['In-Reply-To'] = attributes.inReplyTo;
             }
 
-            var part = '';
+            let part = '';
 
-            for (var key in o) {
+            for (let key in o) {
                 if (part !== '') {
                     part += '&';
                 }
@@ -476,11 +483,11 @@ define('email-helper', [], function () {
         htmlToPlain: function (text) {
             text = text || '';
 
-            var value = text.replace(/<br\s*\/?>/mg, '\n');
+            let value = text.replace(/<br\s*\/?>/mg, '\n');
 
             value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
 
-            var $div = $('<div>').html(value);
+            let $div = $('<div>').html(value);
 
             $div.find('style').remove();
             $div.find('link[ref="stylesheet"]').remove();
