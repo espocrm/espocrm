@@ -82,7 +82,7 @@ define('ui', [], function () {
             this.backdrop = 'static';
         }
 
-        this.contents = '';
+        let contentsHtml = '';
 
         if (this.header) {
             let headerClassName = '';
@@ -91,40 +91,60 @@ define('ui', [], function () {
                 headerClassName = ' fixed-height';
             }
 
-            this.contents += '<header class="modal-header' + headerClassName + '">' +
-                (
-                    (this.closeButton) ?
-                    '<a href="javascript:" class="close" data-dismiss="modal">' +
-                        '<span aria-hidden="true">&times;</span></a>' :
-                    ''
-                ) +
-                '<h4 class="modal-title"><span class="modal-title-text">' + this.header + '</span></h4>' +
-                '</header>';
+            let $header = $('<header />').addClass('modal-header ' + headerClassName);
+
+            $header.append(
+                $('<h4 />')
+                    .addClass('modal-title')
+                    .append(
+                        $('<span />')
+                            .addClass('modal-title-text')
+                            .html(this.header)
+                    )
+            );
+
+            if (this.closeButton) {
+                $header.prepend(
+                    $('<a />')
+                        .addClass('close')
+                        .attr('data-dismiss', 'modal')
+                        .attr('href', 'javascript:')
+                        .append(
+                            $('<span />')
+                                .attr('aria-hidden', 'true')
+                                .html('&times;')
+                        )
+                );
+            }
+
+            contentsHtml += $header.wrap('<div />').parent().html();
         }
 
-        var body = '<div class="modal-body body">' + this.body + '</div>';
+        let bodyHtml = '<div class="modal-body body">' + this.body + '</div>';
 
-        var footerHtml = this.getFooterHtml();
+        let footerHtml = this.getFooterHtml();
 
         if (footerHtml !== '') {
             footerHtml = '<footer class="modal-footer">' + footerHtml + '</footer>';
         }
 
         if (this.options.footerAtTheTop) {
-            this.contents += footerHtml + body;
+            contentsHtml += footerHtml + bodyHtml;
         }
         else {
-            this.contents += body + footerHtml;
+            contentsHtml += bodyHtml + footerHtml;
         }
 
-        this.contents = '<div class="modal-dialog"><div class="modal-content">' + this.contents + '</div></div>';
+        contentsHtml = '<div class="modal-dialog"><div class="modal-content">' + contentsHtml + '</div></div>';
+
+        console.log(1);
 
         $('<div />')
             .attr('id', this.id)
             .attr('class', this.className + ' modal')
             .attr('role', 'dialog')
             .attr('tabindex', '-1')
-            .html(this.contents)
+            .html(contentsHtml)
             .appendTo($(this.container));
 
         this.$el = $('#' + this.id);
