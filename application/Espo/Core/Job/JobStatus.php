@@ -27,32 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Core\Job;
 
-use Espo\ORM\Entity;
-
-use Espo\Core\Job\JobStatus;
-
-class ScheduledJob extends \Espo\Core\Repositories\Database
+class JobStatus
 {
-    protected $hooksDisabled = true;
+    public const PENDING = 'Pending';
 
-    protected function afterSave(Entity $entity, array $options = [])
-    {
-        parent::afterSave($entity, $options);
+    public const READY = 'Ready';
 
-        if ($entity->isAttributeChanged('scheduling')) {
-            $jobList = $this->getEntityManager()
-                ->getRepository('Job')
-                ->where([
-                    'scheduledJobId' => $entity->id,
-                    'status' => JobStatus::PENDING,
-                ])
-                ->find();
+    public const RUNNING = 'Running';
 
-            foreach ($jobList as $job) {
-                $this->getEntityManager()->removeEntity($job);
-            }
-        }
-    }
+    public const SUCCESS = 'Success';
+
+    public const FAILED = 'Failed';
 }

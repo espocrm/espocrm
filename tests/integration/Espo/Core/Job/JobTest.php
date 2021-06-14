@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Core\Job;
 
 use Espo\Core\{
     Job\JobManager,
+    Job\JobStatus,
     ORM\EntitManager,
 };
 
@@ -66,21 +67,21 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
 
-        $this->assertEquals(JobManager::SUCCESS, $jobReloaded->getStatus());
+        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
     }
 
     public function testRunJobById() : void
     {
         $job = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
-            'status' => JobManager::READY,
+            'status' => JobStatus::READY,
         ]);
 
         $this->jobManager->runJobById($job->id);
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
 
-        $this->assertEquals(JobManager::SUCCESS, $jobReloaded->getStatus());
+        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
     }
 
     public function testRunJobByEntity() : void
@@ -93,6 +94,6 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
 
-        $this->assertEquals(JobManager::SUCCESS, $jobReloaded->getStatus());
+        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
     }
 }

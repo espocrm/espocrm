@@ -32,7 +32,7 @@ namespace Espo\Jobs;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
-    Job\JobManager,
+    Job\JobStatus,
     Job\JobTargeted,
     ServiceFactory,
     ORM\EntityManager,
@@ -97,7 +97,7 @@ class CheckEmailAccounts implements JobTargeted
                 ->getRepository('Job')
                 ->where([
                     'scheduledJobId' => $scheduledJob->id,
-                    'status' => [JobManager::RUNNING, JobManager::READY],
+                    'status' => [JobStatus::RUNNING, JobStatus::READY],
                     'targetType' => 'EmailAccount',
                     'targetId' => $entity->id,
                 ])
@@ -111,7 +111,7 @@ class CheckEmailAccounts implements JobTargeted
                 ->getRepository('Job')
                 ->where([
                     'scheduledJobId' => $scheduledJob->id,
-                    'status' => JobManager::PENDING,
+                    'status' => JobStatus::PENDING,
                     'targetType' => 'EmailAccount',
                     'targetId' => $entity->id,
                 ])

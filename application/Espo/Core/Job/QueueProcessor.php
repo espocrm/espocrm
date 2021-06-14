@@ -139,10 +139,10 @@ class QueueProcessor
         $job->set('startedAt', date('Y-m-d H:i:s'));
 
         if ($useProcessPool) {
-            $job->set('status', JobManager::READY);
+            $job->set('status', JobStatus::READY);
         }
         else {
-            $job->set('status', JobManager::RUNNING);
+            $job->set('status', JobStatus::RUNNING);
             $job->set('pid', System::getPid());
         }
 

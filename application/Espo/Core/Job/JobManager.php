@@ -47,16 +47,6 @@ use Throwable;
  */
 class JobManager
 {
-    const PENDING = 'Pending';
-
-    const READY = 'Ready';
-
-    const RUNNING = 'Running';
-
-    const SUCCESS = 'Success';
-
-    const FAILED = 'Failed';
-
     private $useProcessPool = false;
 
     protected $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';

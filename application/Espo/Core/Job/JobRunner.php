@@ -101,7 +101,7 @@ class JobRunner
             throw new Error("Job {$id} not found.");
         }
 
-        if ($job->getStatus() !== JobManager::READY) {
+        if ($job->getStatus() !== JobStatus::READY) {
             throw new Error("Can't run job {$id} with no status Ready.");
         }
 
@@ -109,7 +109,7 @@ class JobRunner
             $job->set('startedAt', date('Y-m-d H:i:s'));
         }
 
-        $job->set('status', JobManager::RUNNING);
+        $job->set('status', JobStatus::RUNNING);
         $job->set('pid', System::getPid());
 
         $this->entityManager->saveEntity($job);
@@ -154,7 +154,7 @@ class JobRunner
             }
         }
 
-        $status = $isSuccess ? JobManager::SUCCESS : JobManager::FAILED;
+        $status = $isSuccess ? JobStatus::SUCCESS : JobStatus::FAILED;
 
         $job->set('status', $status);
 
