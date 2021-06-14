@@ -29,11 +29,11 @@
 
 namespace Espo\Jobs;
 
-use Espo\Core\Job\Job;
+use Espo\Core\Job\JobDataLess;
 
 use Espo\Tools\EmailNotification\Processor;
 
-class SendEmailNotifications implements Job
+class SendEmailNotifications implements JobDataLess
 {
     private $processor;
 

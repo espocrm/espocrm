@@ -31,7 +31,7 @@ namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\{
     ORM\EntityManager,
-    Job\Job,
+    Job\JobDataLess,
     Utils\Log,
 };
 
@@ -42,7 +42,7 @@ use Espo\{
 
 use Throwable;
 
-class ProcessMassEmail implements Job
+class ProcessMassEmail implements JobDataLess
 {
     private $processor;
 

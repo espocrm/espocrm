@@ -32,7 +32,7 @@ namespace Espo\Jobs;
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
-    Job\Job,
+    Job\JobDataLess,
     Utils\Metadata,
     Utils\File\Manager as FileManager,
     InjectableFactory,
@@ -48,7 +48,7 @@ use SplFileInfo;
 use Exception;
 use Throwable;
 
-class Cleanup implements Job
+class Cleanup implements JobDataLess
 {
     protected $cleanupJobPeriod = '10 days';
 

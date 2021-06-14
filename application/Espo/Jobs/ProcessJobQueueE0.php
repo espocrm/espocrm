@@ -32,11 +32,11 @@ namespace Espo\Jobs;
 use Espo\Core\{
     Job\JobManager,
     Utils\Config,
-    Job\Job,
+    Job\JobDataLess,
     Job\QueueName,
 };
 
-class ProcessJobQueueE0 implements Job
+class ProcessJobQueueE0 implements JobDataLess
 {
     private $jobManager;
 

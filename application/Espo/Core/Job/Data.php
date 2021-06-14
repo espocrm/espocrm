@@ -29,23 +29,71 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Entities\ScheduledJob;
+use Espo\Core\Utils\ObjectUtil;
 
-use StdClass;
+use stdClass;
 
-/**
- * A targeted job. Processed by a cron or daemon.
- * Running is conducted according a scheduling of a scheduled job record.
- */
-interface JobTargeted
+class Data
 {
-    /**
-     * Run a job for a specific target.
-     */
-    public function run(string $targetType, string $targetId, StdClass $data): void;
+    private $data;
+
+    private $targetId = null;
+
+    private $targetType = null;
+
+    public function __construct(?stdClass $data = null)
+    {
+        $this->data = $data ?? (object) [];
+    }
+
+    public static function create(?stdClass $data = null): self
+    {
+        return new self($data);
+    }
+
+    public function getRaw(): stdClass
+    {
+        return ObjectUtil::clone($this->data);
+    }
 
     /**
-     * Create multiple job records for a scheduled job.
+     * @return mixed
      */
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime): void;
+    public function get(string $name)
+    {
+        return $this->getRaw()->$name ?? null;
+    }
+
+    public function has(string $name): bool
+    {
+        return property_exists($this->data, $name);
+    }
+
+    public function getTargetId(): ?string
+    {
+        return $this->targetId;
+    }
+
+    public function getTargetType(): ?string
+    {
+        return $this->targetType;
+    }
+
+    public function withTargetId(?string $targetId): self
+    {
+        $obj = clone $this;
+
+        $obj->targetId = $targetId;
+
+        return $obj;
+    }
+
+    public function withTargetType(?string $targetType): self
+    {
+        $obj = clone $this;
+
+        $obj->targetType = $targetType;
+
+        return $obj;
+    }
 }

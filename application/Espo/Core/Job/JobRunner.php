@@ -40,6 +40,7 @@ use Espo\Core\{
 use Espo\Entities\Job as JobEntity;
 
 use Throwable;
+use TypeError;
 
 class JobRunner
 {
@@ -70,9 +71,9 @@ class JobRunner
     /**
      * Run a job entity. Does not throw exceptions.
      */
-    public function run(JobEntity $job): void
+    public function run(JobEntity $jobEntity): void
     {
-        $this->runInternal($job, false);
+        $this->runInternal($jobEntity, false);
     }
 
     /**
@@ -80,9 +81,9 @@ class JobRunner
      *
      * @throws Throwable
      */
-    public function runThrowingException(JobEntity $job): void
+    public function runThrowingException(JobEntity $jobEntity): void
     {
-        $this->runInternal($job, true);
+        $this->runInternal($jobEntity, true);
     }
 
     /**
@@ -95,29 +96,29 @@ class JobRunner
             throw new Error();
         }
 
-        $job = $this->entityManager->getEntity('Job', $id);
+        $jobEntity = $this->entityManager->getEntity('Job', $id);
 
-        if (!$job) {
-            throw new Error("Job {$id} not found.");
+        if (!$jobEntity) {
+            throw new Error("Job '{$id}' not found.");
         }
 
-        if ($job->getStatus() !== JobStatus::READY) {
-            throw new Error("Can't run job {$id} with no status Ready.");
+        if ($jobEntity->getStatus() !== JobStatus::READY) {
+            throw new Error("Can't run job '{$id}' with no status Ready.");
         }
 
-        if (!$job->getStartedAt()) {
-            $job->set('startedAt', date('Y-m-d H:i:s'));
+        if (!$jobEntity->getStartedAt()) {
+            $jobEntity->set('startedAt', date('Y-m-d H:i:s'));
         }
 
-        $job->set('status', JobStatus::RUNNING);
-        $job->set('pid', System::getPid());
+        $jobEntity->set('status', JobStatus::RUNNING);
+        $jobEntity->set('pid', System::getPid());
 
-        $this->entityManager->saveEntity($job);
+        $this->entityManager->saveEntity($jobEntity);
 
-        $this->run($job);
+        $this->run($jobEntity);
     }
 
-    private function runInternal(JobEntity $job, bool $throwException = false): void
+    private function runInternal(JobEntity $jobEntity, bool $throwException = false): void
     {
         $isSuccess = true;
 
@@ -126,17 +127,17 @@ class JobRunner
         $exception = null;
 
         try {
-            if ($job->getScheduledJobId()) {
-                $this->runScheduledJob($job);
+            if ($jobEntity->getScheduledJobId()) {
+                $this->runScheduledJob($jobEntity);
             }
-            else if ($job->getJob()) {
-                $this->runJobByName($job);
+            else if ($jobEntity->getJob()) {
+                $this->runJobNamed($jobEntity);
             }
-            else if ($job->getServiceName()) {
-                $this->runService($job);
+            else if ($jobEntity->getServiceName()) {
+                $this->runService($jobEntity);
             }
             else {
-                $id = $job->getId();
+                $id = $jobEntity->getId();
 
                 throw new Error("Not runnable job '{$id}'.");
             }
@@ -145,7 +146,7 @@ class JobRunner
             $isSuccess = false;
 
             $this->log->error(
-                "JobManager: Failed job running, job '{$job->id}'. " .
+                "JobManager: Failed job running, job '{$jobEntity->id}'. " .
                 $e->getMessage() . "; at " . $e->getFile() . ":" . $e->getLine() . "."
             );
 
@@ -156,83 +157,81 @@ class JobRunner
 
         $status = $isSuccess ? JobStatus::SUCCESS : JobStatus::FAILED;
 
-        $job->set('status', $status);
+        $jobEntity->set('status', $status);
 
         if ($isSuccess) {
-            $job->set('executedAt', date('Y-m-d H:i:s'));
+            $jobEntity->set('executedAt', date('Y-m-d H:i:s'));
         }
 
-        $this->entityManager->saveEntity($job);
+        $this->entityManager->saveEntity($jobEntity);
 
         if ($throwException && $exception) {
             throw new $exception($exception->getMessage());
         }
 
-        if ($job->getScheduledJobId() && !$skipLog) {
+        if ($jobEntity->getScheduledJobId() && !$skipLog) {
             $this->scheduleUtil->addLogRecord(
-                $job->getScheduledJobId(),
+                $jobEntity->getScheduledJobId(),
                 $status,
                 null,
-                $job->getTargetId(),
-                $job->getTargetType()
+                $jobEntity->getTargetId(),
+                $jobEntity->getTargetType()
             );
         }
     }
 
-    protected function runJobByName(JobEntity $job): void
+    private function runJobNamed(JobEntity $jobEntity): void
     {
-        $jobName = $job->getJob();
-
-        $obj = $this->jobFactory->create($jobName);
-
-        if ($obj instanceof JobTargeted) {
-            if (
-                $job->getTargetType() === null ||
-                $job->getTargetId() === null
-            ) {
-                throw new Error("Can't run targeted job '{$jobName}' w/o target.");
-            }
-
-            $obj->run($job->getTargetType(), $job->getTargetId(), $job->getData());
-
-            return;
-        }
-
-        if (!method_exists($obj, 'run')) {
-            throw new Error("No 'run' method in job '{$jobName}'.");
-        }
-
-        $obj->run();
-    }
-
-    protected function runScheduledJob(JobEntity $job): void
-    {
-        $jobName = $job->getScheduledJobJob();
+        $jobName = $jobEntity->getJob();
 
         if (!$jobName) {
             throw new Error(
-                "Can't run job '" . $job->getId() . "'. Not a scheduled job."
+                "Can't run job '" . $jobEntity->getId() . "'. No job name."
             );
         }
 
-        $obj = $this->jobFactory->create($jobName);
+        $job = $this->jobFactory->create($jobName);
 
-        if ($obj instanceof JobTargeted) {
-            $obj->run($job->getTargetType(), $job->getTargetId(), $job->getData());
-
-            return;
-        }
-
-        if (!method_exists($obj, 'run')) {
-            throw new Error("No 'run' method in job '{$jobName}'.");
-        }
-
-        $obj->run();
+        $this->runJob($job, $jobEntity);
     }
 
-    protected function runService(JobEntity $job): void
+    private function runScheduledJob(JobEntity $jobEntity): void
     {
-        $serviceName = $job->getServiceName();
+        $jobName = $jobEntity->getScheduledJobJob();
+
+        if (!$jobName) {
+            throw new Error(
+                "Can't run job '" . $jobEntity->getId() . "'. Not a scheduled job."
+            );
+        }
+
+        $job = $this->jobFactory->create($jobName);
+
+        $this->runJob($job, $jobEntity);
+    }
+
+    /**
+     * @param Job|JobDataLess $job
+     */
+    private function runJob($job, JobEntity $jobEntity): void
+    {
+        if (
+            !$job instanceof Job &&
+            !$job instanceof JobDataLess
+        ) {
+            throw new TypeError();
+        }
+
+        $data = Data::create($jobEntity->getData())
+            ->withTargetId($jobEntity->getTargetId())
+            ->withTargetType($jobEntity->getTargetType());
+
+        $job->run($data);
+    }
+
+    private function runService(JobEntity $jobEntity): void
+    {
+        $serviceName = $jobEntity->getServiceName();
 
         if (!$serviceName) {
             throw new Error("Job with empty serviceName.");
@@ -244,7 +243,7 @@ class JobRunner
 
         $service = $this->serviceFactory->create($serviceName);
 
-        $methodName = $job->getMethodName();
+        $methodName = $jobEntity->getMethodName();
 
         if (!$methodName) {
             throw new Error('Job with empty methodName.');
@@ -254,6 +253,6 @@ class JobRunner
             throw new Error("No method '{$methodName}' in service '{$serviceName}'.");
         }
 
-        $service->$methodName($job->getData(), $job->getTargetId(), $job->getTargetType());
+        $service->$methodName($jobEntity->getData(), $jobEntity->getTargetId(), $jobEntity->getTargetType());
     }
 }

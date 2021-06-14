@@ -30,10 +30,10 @@
 namespace Espo\Jobs;
 
 use Espo\Core\{
-    Job\Job,
+    Job\JobDataLess,
 };
 
-class Dummy implements Job
+class Dummy implements JobDataLess
 {
     public function run(): void
     {

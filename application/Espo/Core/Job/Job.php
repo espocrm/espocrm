@@ -30,12 +30,12 @@
 namespace Espo\Core\Job;
 
 /**
- * A job. Processed by the Cron or Daemon. Running is conducted according a scheduling of a scheduled job record.
+ * A job.
  */
 interface Job
 {
     /**
      * Run a job.
      */
-    public function run(): void;
+    public function run(Data $data): void;
 }

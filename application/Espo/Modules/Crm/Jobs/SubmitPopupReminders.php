@@ -33,14 +33,14 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\Config,
     WebSocket\Submission as WebSocketSubmission,
-    Job\Job,
+    Job\JobDataLess,
     Utils\Log,
 };
 
 use Throwable;
 use DateTime;
 
-class SubmitPopupReminders implements Job
+class SubmitPopupReminders implements JobDataLess
 {
     private const REMINDER_PAST_HOURS = 24;
 

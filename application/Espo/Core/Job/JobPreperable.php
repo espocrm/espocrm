@@ -27,24 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Job\JobDataLess,
-    Webhook\Queue,
-};
+use Espo\Entities\ScheduledJob;
 
-class ProcessWebhookQueue implements JobDataLess
+/**
+ * Can create multiple jobs for different targets according scheduling.
+ */
+interface JobPreperable extends Job
 {
-    private $queue;
-
-    public function __construct(Queue $queue)
-    {
-        $this->queue = $queue;
-    }
-
-    public function run(): void
-    {
-        $this->queue->process();
-    }
+    /**
+     * Create multiple job records for a scheduled job.
+     */
+    public function prepare(ScheduledJob $scheduledJob, string $executeTime): void;
 }

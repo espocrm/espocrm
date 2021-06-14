@@ -33,7 +33,8 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
     Job\JobStatus,
-    Job\JobTargeted,
+    Job\JobPreperable,
+    Job\Data,
     ServiceFactory,
     ORM\EntityManager,
 };
@@ -41,13 +42,12 @@ use Espo\Core\{
 use Espo\Entities\ScheduledJob;
 
 use Throwable;
-use StdClass;
 
-class CheckInboundEmails implements JobTargeted
+class CheckInboundEmails implements JobPreperable
 {
-    protected $serviceFactory;
+    private $serviceFactory;
 
-    protected $entityManager;
+    private $entityManager;
 
     public function __construct(ServiceFactory $serviceFactory, EntityManager $entityManager)
     {
@@ -55,13 +55,16 @@ class CheckInboundEmails implements JobTargeted
         $this->entityManager = $entityManager;
     }
 
-    public function run(string $targetType, string $targetId, StdClass $data): void
+    public function run(Data $data): void
     {
+        $targetId = $data->getTargetId();
+
         if (!$targetId) {
-            throw new Error();
+            throw new Error("No target.");
         }
 
         $service = $this->serviceFactory->create('InboundEmail');
+
         $entity = $this->entityManager->getEntity('InboundEmail', $targetId);
 
         if (!$entity) {

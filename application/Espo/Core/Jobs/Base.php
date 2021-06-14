@@ -31,6 +31,9 @@ namespace Espo\Core\Jobs;
 
 use Espo\Core\Container;
 
+/**
+ * @deprecated
+ */
 abstract class Base
 {
     private $container;
@@ -69,6 +72,5 @@ abstract class Base
     {
         $this->container = $container;
     }
-
 }
 

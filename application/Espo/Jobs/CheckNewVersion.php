@@ -32,13 +32,13 @@ namespace Espo\Jobs;
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
-    Job\Job,
+    Job\JobDataLess,
 };
 
 use DateTime;
 use DateTimeZone;
 
-class CheckNewVersion implements Job
+class CheckNewVersion implements JobDataLess
 {
     protected $config;
 

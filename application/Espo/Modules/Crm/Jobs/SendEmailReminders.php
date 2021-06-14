@@ -33,7 +33,7 @@ use Espo\Core\{
     InjectableFactory,
     ORM\EntityManager,
     Utils\Config,
-    Job\Job,
+    Job\JobDataLess,
     Utils\Log,
 };
 
@@ -43,7 +43,7 @@ use Throwable;
 use DateTime;
 use DateInterval;
 
-class SendEmailReminders implements Job
+class SendEmailReminders implements JobDataLess
 {
     private const MAX_PORTION_SIZE = 10;
 

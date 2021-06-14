@@ -32,6 +32,6 @@ namespace Espo\Core\Jobs;
 /**
  * @deprecated Use `Espo\Core\Job\Job` instead.
  */
-interface Job extends \Espo\Core\Job\Job
+interface Job extends \Espo\Core\Job\JobDataLess
 {
 }

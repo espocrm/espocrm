@@ -27,24 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Job\JobDataLess,
-    Webhook\Queue,
-};
-
-class ProcessWebhookQueue implements JobDataLess
+/**
+ * A job. Processed by the Cron or Daemon. Running is conducted according a scheduling of a scheduled job record.
+ */
+interface JobDataLess
 {
-    private $queue;
-
-    public function __construct(Queue $queue)
-    {
-        $this->queue = $queue;
-    }
-
-    public function run(): void
-    {
-        $this->queue->process();
-    }
+    /**
+     * Run a job.
+     */
+    public function run(): void;
 }

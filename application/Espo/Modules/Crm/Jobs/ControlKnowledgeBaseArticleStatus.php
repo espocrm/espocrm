@@ -24,10 +24,10 @@ namespace Espo\Modules\Crm\Jobs;
 
 use Espo\Core\{
     ORM\EntityManager,
-    Job\Job,
+    Job\JobDataLess,
 };
 
-class ControlKnowledgeBaseArticleStatus implements Job
+class ControlKnowledgeBaseArticleStatus implements JobDataLess
 {
     protected $entityManager;
 

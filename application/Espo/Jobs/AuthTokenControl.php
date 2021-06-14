@@ -32,16 +32,16 @@ namespace Espo\Jobs;
 use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
-    Job\Job,
+    Job\JobDataLess,
 };
 
 use DateTime;
 
-class AuthTokenControl implements Job
+class AuthTokenControl implements JobDataLess
 {
-    protected $config;
+    private $config;
 
-    protected $entityManager;
+    private $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
