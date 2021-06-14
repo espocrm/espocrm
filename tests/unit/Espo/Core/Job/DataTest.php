@@ -44,4 +44,13 @@ class DataTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('target-id', $data->getTargetId());
         $this->assertEquals('target-type', $data->getTargetType());
     }
+
+    public function testData2()
+    {
+        $data = Data
+            ::create(['test' => '1']);
+
+        $this->assertEquals('1', $data->get('test'));
+        $this->assertEquals(null, $data->getTargetId());
+    }
 }

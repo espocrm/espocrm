@@ -31,6 +31,7 @@ namespace Espo\Core\Job;
 
 use Espo\Core\Utils\ObjectUtil;
 
+use TypeError;
 use stdClass;
 
 class Data
@@ -46,8 +47,22 @@ class Data
         $this->data = $data ?? (object) [];
     }
 
-    public static function create(?stdClass $data = null): self
+    /**
+     * Create an instance.
+     *
+     * @param stdClass|array|null $data Raw data.
+     * @return self
+     */
+    public static function create($data = null): self
     {
+        if ($data !== null && !is_object($data) && !is_array($data)) {
+            throw new TypeError();
+        }
+
+        if (is_array($data)) {
+            $data = (object) $data;
+        }
+
         return new self($data);
     }
 
