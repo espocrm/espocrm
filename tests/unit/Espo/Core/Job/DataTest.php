@@ -29,42 +29,19 @@
 
 namespace tests\unit\Espo\Core\Job;
 
-use Espo\Core\{
-    Job\QueueProcessorParams,
-};
+use Espo\Core\Job\Data;
 
-class QueueProcessorParamsTest extends \PHPUnit\Framework\TestCase
+class DataTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    public function testData1()
     {
-    }
+        $data = Data
+            ::create((object) ['test' => '1'])
+            ->withTargetId('target-id')
+            ->withTargetType('target-type');
 
-    public function testParams1()
-    {
-        $params = QueueProcessorParams
-            ::create()
-            ->withLimit(10);
-
-        $this->assertFalse($params->useProcessPool());
-        $this->assertFalse($params->noLock());
-
-        $this->assertEquals(10, $params->getLimit());
-
-        $this->assertNull($params->getQueue());
-    }
-
-    public function testParams2()
-    {
-        $params = QueueProcessorParams
-            ::create()
-            ->withLimit(10)
-            ->withUseProcessPool(true)
-            ->withNoLock(true)
-            ->withQueue('q0');
-
-        $this->assertTrue($params->useProcessPool());
-        $this->assertTrue($params->noLock());
-
-        $this->assertEquals('q0', $params->getQueue());
+        $this->assertEquals('1', $data->get('test'));
+        $this->assertEquals('target-id', $data->getTargetId());
+        $this->assertEquals('target-type', $data->getTargetType());
     }
 }
