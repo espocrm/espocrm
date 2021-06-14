@@ -50,7 +50,7 @@ class JobFactory
     /**
      * Create a job implementation.
      *
-     * @return Job|JobTargeted
+     * @return Job|JobDataLess
      * @throws Error
      */
     public function create(string $name): object
