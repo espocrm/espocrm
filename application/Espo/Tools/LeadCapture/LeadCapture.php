@@ -42,6 +42,7 @@ use Espo\Core\{
     Utils\DateTime as DateTimeUtil,
     ServiceFactory,
     Utils\Log,
+    Job\QueueName,
 };
 
 use Espo\{
@@ -199,7 +200,7 @@ class LeadCapture
             'data' => (object) [
                 'id' => $uniqueId->get('name'),
             ],
-            'queue' => 'e0',
+            'queue' => QueueName::E0,
         ]);
 
         $this->entityManager->saveEntity($job);

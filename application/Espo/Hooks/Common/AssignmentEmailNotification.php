@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\Config,
     ORM\EntityManager,
     ApplicationState,
+    Job\QueueName,
 };
 
 class AssignmentEmailNotification
@@ -129,7 +130,7 @@ class AssignmentEmailNotification
                 'entityType' => $entity->getEntityType(),
             ],
             'executeTime' => date('Y-m-d H:i:s'),
-            'queue' => 'e0',
+            'queue' => QueueName::E0,
         ]);
 
         $this->entityManager->saveEntity($job);

@@ -27,31 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Job\JobManager,
-    Utils\Config,
-    Job\Job,
-    Job\QueueName,
-};
-
-class ProcessJobQueueQ0 implements Job
+class QueueName
 {
-    private $jobManager;
+    /**
+     * Executes as soon as possible.
+     */
+    public const Q0 = 'q0';
 
-    private $config;
+    /**
+     * Executes every minute.
+     */
+    public const Q1 = 'q1';
 
-    public function __construct(JobManager $jobManager, Config $config)
-    {
-        $this->jobManager = $jobManager;
-        $this->config = $config;
-    }
-
-    public function run(): void
-    {
-        $limit = $this->config->get('jobQ0MaxPortion', 200);
-
-        $this->jobManager->processQueue(QueueName::Q0, $limit);
-    }
+    /**
+     * Executes as soon as possible. For email processing.
+     */
+    public const E0 = 'e0';
 }

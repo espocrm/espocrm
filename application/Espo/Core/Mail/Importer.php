@@ -40,6 +40,7 @@ use Espo\Core\{
     Notification\NotificatorParams,
     FieldProcessing\Relation\LinkMultipleSaver,
     FieldProcessing\SaverParams,
+    Job\QueueName,
 };
 
 use DateTime;
@@ -657,7 +658,7 @@ class Importer
                     'targetId' => $duplicate->id
                 ],
                 'executeAt' => $executeAt,
-                'queue' => 'q1',
+                'queue' => QueueName::Q1,
             ]);
 
             $this->entityManager->saveEntity($job);

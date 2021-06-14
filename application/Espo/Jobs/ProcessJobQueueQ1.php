@@ -33,6 +33,7 @@ use Espo\Core\{
     Job\JobManager,
     Utils\Config,
     Job\Job,
+    Job\QueueName,
 };
 
 class ProcessJobQueueQ1 implements Job
@@ -51,6 +52,6 @@ class ProcessJobQueueQ1 implements Job
     {
         $limit = $this->config->get('jobQ1MaxPortion', 500);
 
-        $this->jobManager->processQueue('q1', $limit);
+        $this->jobManager->processQueue(QueueName::Q1, $limit);
     }
 }

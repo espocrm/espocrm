@@ -46,6 +46,7 @@ use Espo\Core\{
     ORM\Entity,
     Select\SelectBuilderFactory,
     Record\ServiceContainer,
+    Job\QueueName,
 };
 
 use Espo\{
@@ -243,7 +244,7 @@ class Pdf
                 'id' => $attachment->id
             ],
             'executeTime' => (new DateTime())->modify('+' . $this->removeMassFilePeriod)->format('Y-m-d H:i:s'),
-            'queue' => 'q1',
+            'queue' => QueueName::Q1,
         ]);
 
         $this->entityManager->saveEntity($job);

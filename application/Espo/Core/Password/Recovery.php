@@ -44,6 +44,7 @@ use Espo\Core\{
     Htmlizer\Factory as HtmlizerFactory,
     Utils\TemplateFileManager,
     Utils\Log,
+    Job\QueueName,
 };
 
 use DateTime;
@@ -239,7 +240,7 @@ class Recovery
             'methodName' => 'removeChangePasswordRequestJob',
             'data' => ['id' => $passwordChangeRequest->id],
             'executeTime' => $dt->format('Y-m-d H:i:s'),
-            'queue' => 'q1',
+            'queue' => QueueName::Q1,
         ]);
 
         $timeDiff = $this->getDelay() - floor((microtime(true) - $microtime) / 1000);

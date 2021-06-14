@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\Metadata,
     ORM\EntityManager,
     ServiceFactory,
+    Job\QueueName,
 };
 
 use Espo\Entities\User;
@@ -321,7 +322,7 @@ class Stream
                             'entityType' => $entity->getEntityType(),
                             'entityId' => $entity->id
                         ],
-                        'queue' => 'q1'
+                        'queue' => QueueName::Q1,
                     ]);
 
                     $this->entityManager->saveEntity($job);
@@ -408,7 +409,7 @@ class Stream
                             'entityType' => $entity->getEntityType(),
                             'entityId' => $entity->id
                         ],
-                        'queue' => 'q1'
+                        'queue' => QueueName::Q1,
                     ]);
 
                     $this->entityManager->saveEntity($job);
