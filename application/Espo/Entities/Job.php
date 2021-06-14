@@ -86,6 +86,14 @@ class Job extends Entity
     }
 
     /**
+     * Get a class name.
+     */
+    public function getClassName(): ?string
+    {
+        return $this->get('className');
+    }
+
+    /**
      * Get a service name.
      */
     public function getServiceName(): ?string

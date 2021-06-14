@@ -30,6 +30,11 @@
             "unique": true,
             "autoincrement": true
         },
+        "className": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 255
+        },
         "serviceName": {
             "type": "varchar",
             "required": true,

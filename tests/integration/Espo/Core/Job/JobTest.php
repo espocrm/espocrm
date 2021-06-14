@@ -35,6 +35,8 @@ use Espo\Core\{
     ORM\EntitManager,
 };
 
+use tests\integration\testClasses\Job\Job as TestJob;
+
 class JobTest extends \tests\integration\Core\BaseTestCase
 {
     /**
@@ -47,7 +49,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
      */
     private $entityManager;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -56,7 +58,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $this->entityManager = $this->getContainer()->get('entityManager');
     }
 
-    public function testProcessQueue() : void
+    public function testProcessQueue(): void
     {
         $job = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
@@ -70,7 +72,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
     }
 
-    public function testRunJobById() : void
+    public function testRunJobById(): void
     {
         $job = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
@@ -84,7 +86,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
     }
 
-    public function testRunJobByEntity() : void
+    public function testRunJobByEntity(): void
     {
         $job = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
@@ -93,6 +95,22 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $this->jobManager->runJob($job);
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
+
+        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
+    }
+
+    public function testRunJobWithClassName(): void
+    {
+        $job = $this->entityManager->createEntity('Job', [
+            'className' => TestJob::class,
+            'data' => (object) [
+                'test' => '1',
+            ],
+        ]);
+
+        $this->jobManager->runJob($job);
+
+        $jobReloaded = $this->entityManager->getEntity('Job', $job->getId());
 
         $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
     }

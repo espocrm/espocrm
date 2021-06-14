@@ -35,6 +35,8 @@ use Espo\Core\{
     InjectableFactory,
 };
 
+use TypeError;
+
 class JobFactory
 {
     private $classFinder;
@@ -48,7 +50,7 @@ class JobFactory
     }
 
     /**
-     * Create a job implementation.
+     * Create a job.
      *
      * @return Job|JobDataLess
      * @throws Error
@@ -61,7 +63,27 @@ class JobFactory
             throw new Error("Job '{$name}' not found.");
         }
 
-        return $this->injectableFactory->create($className);
+        return $this->createByClassName($className);
+    }
+
+    /**
+     * Create a job by class name.
+
+     * @return Job|JobDataLess
+     * @throws Error
+     */
+    public function createByClassName(string $className): object
+    {
+        $job = $this->injectableFactory->create($className);
+
+        if (
+            !$job instanceof Job &&
+            !$job instanceof JobDataLess
+        ) {
+            throw new TypeError();
+        }
+
+        return $job;
     }
 
     /**

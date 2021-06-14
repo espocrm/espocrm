@@ -133,6 +133,9 @@ class JobRunner
             else if ($jobEntity->getJob()) {
                 $this->runJobNamed($jobEntity);
             }
+            else if ($jobEntity->getClassName()) {
+                $this->runJobWithClassName($jobEntity);
+            }
             else if ($jobEntity->getServiceName()) {
                 $this->runService($jobEntity);
             }
@@ -184,12 +187,6 @@ class JobRunner
     {
         $jobName = $jobEntity->getJob();
 
-        if (!$jobName) {
-            throw new Error(
-                "Can't run job '" . $jobEntity->getId() . "'. No job name."
-            );
-        }
-
         $job = $this->jobFactory->create($jobName);
 
         $this->runJob($job, $jobEntity);
@@ -207,6 +204,15 @@ class JobRunner
 
         $job = $this->jobFactory->create($jobName);
 
+        $this->runJob($job, $jobEntity);
+    }
+
+    private function runJobWithClassName(JobEntity $jobEntity): void
+    {
+        $className = $jobEntity->getClassName();
+
+        $job = $this->jobFactory->createByClassName($className);
+        
         $this->runJob($job, $jobEntity);
     }
 
