@@ -30,7 +30,7 @@
 namespace Espo\Core\Job;
 
 /**
- * A job. Processed by the Cron or Daemon. Running is conducted according a scheduling of a scheduled job record.
+ * A job w/o data.
  */
 interface JobDataLess
 {
