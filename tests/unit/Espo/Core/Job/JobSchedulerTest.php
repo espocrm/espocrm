@@ -70,7 +70,7 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
                 [
                     'className' => TestJob::class,
                     'queue' => QueueName::Q0,
-                    'group' => 'test-group',
+                    'group' => null,
                     'data' => (object) [
                         'test' => '1',
                     ],
@@ -84,7 +84,6 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
         $jobEntityReturned = $scheduler
             ->setClassName(TestJob::class)
             ->setQueue(QueueName::Q0)
-            ->setGroup('test-group')
             ->setData([
                 'test' => '1',
             ])
@@ -111,7 +110,7 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
                [
                     'className' => TestJob::class,
                     'queue' => null,
-                    'group' => null,
+                    'group' => 'g-1',
                     'data' => (object) [
                         'test' => '1',
                     ],
@@ -131,6 +130,7 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
 
         $jobEntityReturned = $scheduler
             ->setClassName(TestJob::class)
+            ->setGroup('g-1')
             ->setData($data)
             ->setTime($time)
             ->schedule();

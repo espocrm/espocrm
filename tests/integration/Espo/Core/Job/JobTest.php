@@ -65,7 +65,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
             'queue' => 'q0',
         ]);
 
-        $this->jobManager->processQueue('q0', null, 10);
+        $this->jobManager->processQueue('q0', 10);
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
 
@@ -76,22 +76,22 @@ class JobTest extends \tests\integration\Core\BaseTestCase
     {
         $job1 = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
-            'queue' => 'q0',
+            'group' => 'group-0',
         ]);
 
         $job2 = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
-            'queue' => 'q0',
             'group' => 'group-1',
         ]);
 
         $job3 = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
-            'queue' => 'q0',
             'group' => 'group-1',
         ]);
 
-        $this->jobManager->process();
+        // @todo Change to `$this->jobManager->process();`.
+        $this->jobManager->processGroup('group-0', 100);
+        $this->jobManager->processGroup('group-1', 100);
 
         $job1Reloaded = $this->entityManager->getEntity('Job', $job1->getId());
         $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());
@@ -106,22 +106,20 @@ class JobTest extends \tests\integration\Core\BaseTestCase
     {
         $job1 = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
-            'queue' => 'q0',
+            'group' => 'group-0',
         ]);
 
         $job2 = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
-            'queue' => 'q0',
             'group' => 'group-1',
         ]);
 
         $job3 = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
-            'queue' => 'q0',
             'group' => 'group-1',
         ]);
 
-        $this->jobManager->processQueue('q0', 'group-1', 100);
+        $this->jobManager->processGroup('group-1', 100);
 
         $job1Reloaded = $this->entityManager->getEntity('Job', $job1->getId());
         $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());
@@ -131,7 +129,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(JobStatus::SUCCESS, $job2Reloaded->getStatus());
         $this->assertEquals(JobStatus::SUCCESS, $job3Reloaded->getStatus());
 
-        $this->jobManager->processQueue('q0', null, 100);
+        $this->jobManager->processGroup('group-0', 100);
 
         $job1Reloaded2 = $this->entityManager->getEntity('Job', $job1->getId());
 

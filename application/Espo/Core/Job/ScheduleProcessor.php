@@ -92,7 +92,9 @@ class ScheduleProcessor
 
         foreach ($activeScheduledJobList as $scheduledJob) {
             try {
-                $this->createJobsFromScheduledJob($scheduledJob, $runningScheduledJobIdList);
+                $isRunning = in_array($scheduledJob->getId(), $runningScheduledJobIdList);
+
+                $this->createJobsFromScheduledJob($scheduledJob, $isRunning);
             }
             catch (Throwable $e) {
                 $id = $scheduledJob->getId();
@@ -102,47 +104,20 @@ class ScheduleProcessor
         }
     }
 
-    private function createJobsFromScheduledJob(
-        ScheduledJobEntity $scheduledJob,
-        array $runningScheduledJobIdList
-    ): void {
-
-        $scheduling = $scheduledJob->getScheduling();
-
+    private function createJobsFromScheduledJob(ScheduledJobEntity $scheduledJob, bool $isRunning): void
+    {
         $id = $scheduledJob->getId();
 
-        $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
+        $executeTime = $this->findExecuteTime($scheduledJob);
 
-        if ($asSoonAsPossible) {
-            $executeTime = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+        if ($executeTime === null) {
+            return;
         }
-        else {
-            try {
-                $cronExpression = CronExpression::factory($scheduling);
-            }
-            catch (Exception $e) {
-                $this->log->error(
-                    "Scheduled Job '{$id}': Scheduling expression error: " .
-                    $e->getMessage() . '.'
-                );
 
-                return;
-            }
+        $asSoonAsPossible = $this->checkAsSoonAsPossible($scheduledJob);
 
-            try {
-                $executeTime = $cronExpression->getNextRunDate()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-            }
-            catch (Exception $e) {
-                $this->log->error(
-                    "Scheduled Job '{$id}': Unsupported scheduling expression '{$scheduling}'."
-                );
-
-                return;
-            }
-
-            $jobAlreadyExists = $this->queueUtil->hasScheduledJobOnMinute($id, $executeTime);
-
-            if ($jobAlreadyExists) {
+        if (!$asSoonAsPossible) {
+            if ($this->queueUtil->hasScheduledJobOnMinute($id, $executeTime)) {
                 return;
             }
         }
@@ -154,29 +129,24 @@ class ScheduleProcessor
 
             $data = new ScheduledJobData($scheduledJob->getId(), $scheduledJob->getName());
 
-            $executeAtDt = DateTimeImmutable
+            $executeTimeObj = DateTimeImmutable
                 ::createFromFormat(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $executeTime);
 
-            $jobObj->prepare($data, $executeAtDt);
+            $jobObj->prepare($data, $executeTimeObj);
 
             return;
         }
 
-        if (in_array($id, $runningScheduledJobIdList)) {
+        if ($isRunning) {
             return;
         }
 
         $pendingCount = $this->queueUtil->getPendingCountByScheduledJobId($id);
 
-        if ($asSoonAsPossible) {
-            if ($pendingCount > 0) {
-                return;
-            }
-        }
-        else {
-            if ($pendingCount > 1) {
-                return;
-            }
+        $pendingLimit = $asSoonAsPossible ? 0 : 1;
+
+        if ($pendingCount > $pendingLimit) {
+            return;
         }
 
         $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
@@ -185,5 +155,46 @@ class ScheduleProcessor
             'scheduledJobId' => $id,
             'executeTime' => $executeTime,
         ]);
+    }
+
+    private function checkAsSoonAsPossible(ScheduledJobEntity $scheduledJob): bool
+    {
+        return in_array($scheduledJob->getScheduling(), $this->asSoonAsPossibleSchedulingList);
+    }
+
+    private function findExecuteTime(ScheduledJobEntity $scheduledJob): ?string
+    {
+        $scheduling = $scheduledJob->getScheduling();
+
+        $id = $scheduledJob->getId();
+
+        $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
+
+        if ($asSoonAsPossible) {
+            return DateTimeUtil::getSystemNowString();
+        }
+
+        try {
+            $cronExpression = CronExpression::factory($scheduling);
+        }
+        catch (Exception $e) {
+            $this->log->error(
+                "Scheduled Job '{$id}': Scheduling expression error: " .
+                $e->getMessage() . '.'
+            );
+
+            return null;
+        }
+
+        try {
+            return $cronExpression->getNextRunDate()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+        }
+        catch (Exception $e) {
+            $this->log->error(
+                "Scheduled Job '{$id}': Unsupported scheduling expression '{$scheduling}'."
+            );
+
+            return null;
+        }
     }
 }

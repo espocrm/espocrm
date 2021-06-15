@@ -108,9 +108,8 @@ class JobScheduler
     }
 
     /**
-     * In what group to run the job. Jobs with the same queue but different group
-     * can run in parallel. Jobs with the same queue and same group will run one-by-one.
-     * The group can be `null`. If the group is not `null`, setting the queue is required.
+     * In what group to run the job. Jobs within a group will run one-by-one. Jobs with different group
+     * can run in parallel. The job can't have both queue and group set.
      *
      * @param string|null $group A group. Any string ID value can be used as a group name. E.g. a user ID.
      */
@@ -171,8 +170,8 @@ class JobScheduler
             throw new RuntimeException("Class name is not set.");
         }
 
-        if ($this->group && $this->queue === null) {
-            throw new RuntimeException("A group can't be set w/o queue.");
+        if ($this->group && $this->queue) {
+            throw new RuntimeException("Can't have both queue and group.");
         }
 
         $time = $this->time ?? new DateTimeImmutable();

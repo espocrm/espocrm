@@ -131,9 +131,6 @@
         },
         "statusScheduledJobId": {
             "columns": ["status", "scheduledJobId"]
-        },
-        "queueGroupExecuteTime": {
-            "columns": ["queue", "status", "group", "executeTime"]
         }
     }
 }
