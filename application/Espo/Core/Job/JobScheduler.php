@@ -181,11 +181,7 @@ class JobScheduler
             $time = $time->add($this->delay);
         }
 
-        $data = $this->data;
-
-        if (!$data) {
-            $data = JobData::create();
-        }
+        $data = $this->data ?? JobData::create();
 
         return $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
             'className' => $this->className,
