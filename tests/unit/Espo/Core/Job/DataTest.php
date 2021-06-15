@@ -29,13 +29,13 @@
 
 namespace tests\unit\Espo\Core\Job;
 
-use Espo\Core\Job\Data;
+use Espo\Core\Job\JobData;
 
 class DataTest extends \PHPUnit\Framework\TestCase
 {
     public function testData1()
     {
-        $data = Data
+        $data = JobData
             ::create((object) ['test' => '1'])
             ->withTargetId('target-id')
             ->withTargetType('target-type');
@@ -47,7 +47,7 @@ class DataTest extends \PHPUnit\Framework\TestCase
 
     public function testData2()
     {
-        $data = Data
+        $data = JobData
             ::create(['test' => '1']);
 
         $this->assertEquals('1', $data->get('test'));

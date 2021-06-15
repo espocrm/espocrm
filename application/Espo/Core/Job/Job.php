@@ -37,5 +37,5 @@ interface Job
     /**
      * Run a job.
      */
-    public function run(Data $data): void;
+    public function run(JobData $data): void;
 }

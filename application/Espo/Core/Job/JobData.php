@@ -34,7 +34,7 @@ use Espo\Core\Utils\ObjectUtil;
 use TypeError;
 use stdClass;
 
-class Data
+class JobData
 {
     private $data;
 

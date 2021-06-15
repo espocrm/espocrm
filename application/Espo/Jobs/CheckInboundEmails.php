@@ -34,7 +34,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\{
     Job\JobStatus,
     Job\JobPreperable,
-    Job\Data,
+    Job\JobData,
     Job\ScheduledJobData,
     ServiceFactory,
     ORM\EntityManager,
@@ -56,7 +56,7 @@ class CheckInboundEmails implements JobPreperable
         $this->entityManager = $entityManager;
     }
 
-    public function run(Data $data): void
+    public function run(JobData $data): void
     {
         $targetId = $data->getTargetId();
 

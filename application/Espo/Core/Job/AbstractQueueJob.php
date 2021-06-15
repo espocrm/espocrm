@@ -60,7 +60,7 @@ abstract class AbstractQueueJob implements JobPreperable
         $this->entityManager = $entityManager;
     }
 
-    public function run(Data $data): void
+    public function run(JobData $data): void
     {
         if (!$this->queue) {
             throw new RuntimeException("No queue name.");

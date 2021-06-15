@@ -229,7 +229,7 @@ class JobRunner
             throw new TypeError();
         }
 
-        $data = Data::create($jobEntity->getData())
+        $data = JobData::create($jobEntity->getData())
             ->withTargetId($jobEntity->getTargetId())
             ->withTargetType($jobEntity->getTargetType());
 
