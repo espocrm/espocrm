@@ -35,12 +35,11 @@ use Espo\Core\{
     Job\JobStatus,
     Job\JobPreperable,
     Job\Data,
+    Job\ScheduledJobData,
     ServiceFactory,
     ORM\EntityManager,
     Utils\DateTime,
 };
-
-use Espo\Entities\ScheduledJob;
 
 use Throwable;
 use DateTimeImmutable;
@@ -87,7 +86,7 @@ class CheckInboundEmails implements JobPreperable
         }
     }
 
-    public function prepare(ScheduledJob $scheduledJob, DateTimeImmutable $executeTime): void
+    public function prepare(ScheduledJobData $data, DateTimeImmutable $executeTime): void
     {
         $collection = $this->entityManager
             ->getRDBRepository('InboundEmail')
@@ -101,7 +100,7 @@ class CheckInboundEmails implements JobPreperable
             $running = $this->entityManager
                 ->getRDBRepository('Job')
                 ->where([
-                    'scheduledJobId' => $scheduledJob->getId(),
+                    'scheduledJobId' => $data->getId(),
                     'status' => [
                         JobStatus::RUNNING,
                         JobStatus::READY,
@@ -118,7 +117,7 @@ class CheckInboundEmails implements JobPreperable
             $countPending = $this->entityManager
                 ->getRDBRepository('Job')
                 ->where([
-                    'scheduledJobId' => $scheduledJob->getId(),
+                    'scheduledJobId' => $data->getId(),
                     'status' => JobStatus::PENDING,
                     'targetType' => 'InboundEmail',
                     'targetId' => $entity->getId(),
@@ -132,8 +131,8 @@ class CheckInboundEmails implements JobPreperable
             $jobEntity = $this->entityManager->getEntity('Job');
 
             $jobEntity->set([
-                'name' => $scheduledJob->getName(),
-                'scheduledJobId' => $scheduledJob->getId(),
+                'name' => $data->getName(),
+                'scheduledJobId' => $data->getId(),
                 'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
                 'targetType' => 'InboundEmail',
                 'targetId' => $entity->getId(),

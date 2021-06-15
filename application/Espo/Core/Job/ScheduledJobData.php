@@ -29,15 +29,25 @@
 
 namespace Espo\Core\Job;
 
-use DateTimeImmutable;
-
-/**
- * Can create multiple jobs for different targets according scheduling.
- */
-interface JobPreperable extends Job
+class ScheduledJobData
 {
-    /**
-     * Create multiple job records for a scheduled job.
-     */
-    public function prepare(ScheduledJobData $data, DateTimeImmutable $executeTime): void;
+    private $id;
+
+    private $name;
+
+    public function __construct(string $id, string $name)
+    {
+        $this->id = $id;
+        $this->name = $name;
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }

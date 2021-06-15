@@ -152,10 +152,12 @@ class ScheduleProcessor
         if ($this->jobFactory->isPreparable($jobName)) {
             $jobObj = $this->jobFactory->create($jobName);
 
+            $data = new ScheduledJobData($scheduledJob->getId(), $scheduledJob->getName());
+
             $executeAtDt = DateTimeImmutable
                 ::createFromFormat(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $executeTime);
 
-            $jobObj->prepare($scheduledJob, $executeAtDt);
+            $jobObj->prepare($data, $executeAtDt);
 
             return;
         }
