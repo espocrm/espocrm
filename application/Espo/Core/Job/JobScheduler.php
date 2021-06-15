@@ -76,7 +76,7 @@ class JobScheduler
     }
 
     /**
-     * A class name of the job. Should implement `Job` interface.
+     * A class name of the job. Should implement the `Job` interface.
      */
     public function setClassName(string $className): self
     {
