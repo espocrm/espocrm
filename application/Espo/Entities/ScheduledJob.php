@@ -35,6 +35,8 @@ class ScheduledJob extends Entity
 {
     public const ENTITY_TYPE = 'ScheduledJob';
 
+    public const STATUS_ACTIVE = 'Active';
+
     public function getName(): ?string
     {
         return $this->get('name');

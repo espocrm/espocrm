@@ -34,6 +34,15 @@ use Espo\ORM\{
     EntityManager,
 };
 
+use Espo\Core\{
+    Utils\DateTime as DateTimeUtil,
+};
+
+use Espo\Entities\{
+    ScheduledJob as ScheduledJobEntity,
+    ScheduledJobLogRecord as ScheduledJobLogRecordEntity,
+};
+
 class ScheduleUtil
 {
     private $entityManager;
@@ -49,7 +58,7 @@ class ScheduleUtil
     public function getActiveScheduledJobList(): Collection
     {
         return $this->entityManager
-            ->getRepository('ScheduledJob')
+            ->getRDBRepository(ScheduledJobEntity::ENTITY_TYPE)
             ->select([
                 'id',
                 'scheduling',
@@ -57,7 +66,7 @@ class ScheduleUtil
                 'name',
             ])
             ->where([
-                'status' => 'Active'
+                'status' => ScheduledJobEntity::STATUS_ACTIVE,
             ])
             ->find();
     }
@@ -74,12 +83,12 @@ class ScheduleUtil
     ): void {
 
         if (!isset($runTime)) {
-            $runTime = date('Y-m-d H:i:s');
+            $runTime = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
         $entityManager = $this->entityManager;
 
-        $scheduledJob = $entityManager->getEntity('ScheduledJob', $scheduledJobId);
+        $scheduledJob = $entityManager->getEntity(ScheduledJobEntity::ENTITY_TYPE, $scheduledJobId);
 
         if (!$scheduledJob) {
             return;
@@ -89,11 +98,11 @@ class ScheduleUtil
 
         $entityManager->saveEntity($scheduledJob, ['silent' => true]);
 
-        $scheduledJobLog = $entityManager->getEntity('ScheduledJobLogRecord');
+        $scheduledJobLog = $entityManager->getEntity(ScheduledJobLogRecordEntity::ENTITY_TYPE);
 
         $scheduledJobLog->set([
             'scheduledJobId' => $scheduledJobId,
-            'name' => $scheduledJob->get('name'),
+            'name' => $scheduledJob->getName(),
             'status' => $status,
             'executionTime' => $runTime,
             'targetId' => $targetId,

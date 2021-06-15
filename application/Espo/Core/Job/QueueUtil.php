@@ -30,11 +30,13 @@
 namespace Espo\Core\Job;
 
 use Espo\Core\{
-    Job\JobManager,
     Utils\Config,
     ORM\EntityManager,
     Utils\System,
+    Utils\DateTime as DateTimeUtil,
 };
+
+use Espo\Entities\Job as JobEntity;
 
 use Espo\ORM\Collection;
 
@@ -62,7 +64,7 @@ class QueueUtil
     public function isJobPending(string $id): bool
     {
         $job = $this->entityManager
-            ->getRepository('Job')
+            ->getRepository(JobEntity::ENTITY_TYPE)
             ->select(['id', 'status'])
             ->where([
                 'id' => $id,
@@ -80,7 +82,7 @@ class QueueUtil
     public function getPendingJobList(?string $queue = null, int $limit = 0): Collection
     {
         $builder = $this->entityManager
-            ->getRDBRepository('Job')
+            ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->select([
                 'id',
                 'scheduledJobId',
@@ -95,7 +97,7 @@ class QueueUtil
             ])
             ->where([
                 'status' => JobStatus::PENDING,
-                'executeTime<=' => date('Y-m-d H:i:s'),
+                'executeTime<=' => DateTimeUtil::getSystemNowString(),
                 'queue' => $queue,
             ])
             ->order('number');
@@ -124,7 +126,7 @@ class QueueUtil
         }
 
         return (bool) $this->entityManager
-            ->getRepository('Job')
+            ->getRepository(JobEntity::ENTITY_TYPE)
             ->select(['id'])
             ->where($where)
             ->findOne();
@@ -135,10 +137,13 @@ class QueueUtil
         $list = [];
 
         $jobList = $this->entityManager
-            ->getRepository('Job')
+            ->getRepository(JobEntity::ENTITY_TYPE)
             ->select(['scheduledJobId'])
             ->where([
-                'status' => ['Running', 'Ready'],
+                'status' => [
+                    JobStatus::RUNNING,
+                    JobStatus::READY,
+                ],
                 'scheduledJobId!=' => null,
                 'targetId=' => null,
             ])
@@ -181,7 +186,7 @@ class QueueUtil
     public function getPendingCountByScheduledJobId(string $scheduledJobId): int
     {
         $countPending = $this->entityManager
-            ->getRDBRepository('Job')
+            ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->where([
                 'scheduledJobId' => $scheduledJobId,
                 'status' => JobStatus::PENDING,
@@ -206,7 +211,7 @@ class QueueUtil
             self::NOT_EXISTING_PROCESS_PERIOD
         );
 
-        $dateTimeThreshold = date('Y-m-d H:i:s', $timeThreshold);
+        $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $runningJobList = $this->entityManager
             ->getRepository('Job')
@@ -241,7 +246,7 @@ class QueueUtil
         $timeThreshold = time() -
             $this->config->get('jobPeriodForReadyNotStarted', SELF::READY_NOT_STARTED_PERIOD);
 
-        $dateTimeThreshold = date('Y-m-d H:i:s', $timeThreshold);
+        $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $failedJobList = $this->entityManager
             ->getRepository('Job')
@@ -273,10 +278,10 @@ class QueueUtil
 
         $timeThreshold = time() - $this->config->get($period, 7800);
 
-        $dateTimeThreshold = date('Y-m-d H:i:s', $timeThreshold);
+        $dateTimeThreshold = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $timeThreshold);
 
         $runningJobList = $this->entityManager
-            ->getRepository('Job')
+            ->getRepository(JobEntity::ENTITY_TYPE)
             ->select([
                 'id',
                 'scheduledJobId',
@@ -295,11 +300,13 @@ class QueueUtil
         $failedJobList = [];
 
         foreach ($runningJobList as $job) {
-            if (!$isForActiveProcesses) {
-                if (!$job->get('pid') || !System::isProcessActive($job->get('pid'))) {
-                    $failedJobList[] = $job;
-                }
-            } else {
+            if ($isForActiveProcesses) {
+                $failedJobList[] = $job;
+
+                continue;
+            }
+
+            if (!$job->get('pid') || !System::isProcessActive($job->get('pid'))) {
                 $failedJobList[] = $job;
             }
         }
@@ -321,7 +328,7 @@ class QueueUtil
 
         $updateQuery = $this->entityManager->getQueryBuilder()
             ->update()
-            ->in('Job')
+            ->in(JobEntity::ENTITY_TYPE)
             ->set([
                 'status' => JobStatus::FAILED,
                 'attempts' => 0,
@@ -354,12 +361,12 @@ class QueueUtil
     public function removePendingJobDuplicates(): void
     {
         $duplicateJobList = $this->entityManager
-            ->getRepository('Job')
+            ->getRepository(JobEntity::ENTITY_TYPE)
             ->select(['scheduledJobId'])
             ->where([
                 'scheduledJobId!=' => null,
                 'status' => JobStatus::PENDING,
-                'executeTime<=' => date('Y-m-d H:i:s'),
+                'executeTime<=' => DateTimeUtil::getSystemNowString(),
                 'targetId' => null,
             ])
             ->groupBy(['scheduledJobId'])
@@ -381,7 +388,7 @@ class QueueUtil
 
         foreach ($scheduledJobIdList as $scheduledJobId) {
             $toRemoveJobList = $this->entityManager
-                ->getRepository('Job')
+                ->getRepository(JobEntity::ENTITY_TYPE)
                 ->select(['id'])
                 ->where([
                     'scheduledJobId' => $scheduledJobId,
@@ -403,7 +410,7 @@ class QueueUtil
 
             $delete = $this->entityManager->getQueryBuilder()
                 ->delete()
-                ->from('Job')
+                ->from(JobEntity::ENTITY_TYPE)
                 ->where([
                     'id' => $jobIdList,
                 ])
@@ -419,15 +426,15 @@ class QueueUtil
     public function updateFailedJobAttempts(): void
     {
         $jobCollection = $this->entityManager
-            ->getRDBRepository('Job')
+            ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->select([
                 'id',
                 'attempts',
-                'failedAttempts'
+                'failedAttempts',
             ])
             ->where([
                 'status' => JobStatus::FAILED,
-                'executeTime<=' => date('Y-m-d H:i:s'),
+                'executeTime<=' => DateTimeUtil::getSystemNowString(),
                 'attempts>' => 0,
             ])
             ->find();

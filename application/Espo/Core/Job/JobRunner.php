@@ -35,6 +35,7 @@ use Espo\Core\{
     ORM\EntityManager,
     ServiceFactory,
     Utils\System,
+    Utils\DateTime as DateTimeUtil,
 };
 
 use Espo\Entities\Job as JobEntity;
@@ -96,7 +97,7 @@ class JobRunner
             throw new Error();
         }
 
-        $jobEntity = $this->entityManager->getEntity('Job', $id);
+        $jobEntity = $this->entityManager->getEntity(JobEntity::ENTITY_TYPE, $id);
 
         if (!$jobEntity) {
             throw new Error("Job '{$id}' not found.");
@@ -107,7 +108,7 @@ class JobRunner
         }
 
         if (!$jobEntity->getStartedAt()) {
-            $jobEntity->set('startedAt', date('Y-m-d H:i:s'));
+            $jobEntity->set('startedAt', DateTimeUtil::getSystemNowString());
         }
 
         $jobEntity->set('status', JobStatus::RUNNING);
@@ -163,7 +164,7 @@ class JobRunner
         $jobEntity->set('status', $status);
 
         if ($isSuccess) {
-            $jobEntity->set('executedAt', date('Y-m-d H:i:s'));
+            $jobEntity->set('executedAt', DateTimeUtil::getSystemNowString());
         }
 
         $this->entityManager->saveEntity($jobEntity);
@@ -212,7 +213,7 @@ class JobRunner
         $className = $jobEntity->getClassName();
 
         $job = $this->jobFactory->createByClassName($className);
-        
+
         $this->runJob($job, $jobEntity);
     }
 

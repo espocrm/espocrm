@@ -32,6 +32,7 @@ namespace Espo\Core\Job;
 use Espo\Core\{
     Utils\System,
     ORM\EntityManager,
+    Utils\DateTime as DateTimeUtil,
 };
 
 use Espo\{
@@ -101,7 +102,7 @@ class QueueProcessor
         if (!$noLock) {
             if ($lockTable) {
                 // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
-                $this->entityManager->getLocker()->lockExclusive('Job');
+                $this->entityManager->getLocker()->lockExclusive(JobEntity::ENTITY_TYPE);
             }
             else {
                 $this->entityManager->getTransactionManager()->start();
@@ -136,7 +137,7 @@ class QueueProcessor
             return;
         }
 
-        $job->set('startedAt', date('Y-m-d H:i:s'));
+        $job->set('startedAt', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
 
         if ($useProcessPool) {
             $job->set('status', JobStatus::READY);

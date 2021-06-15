@@ -32,10 +32,12 @@ namespace Espo\Core\Job;
 use Espo\Core\{
     ORM\EntityManager,
     Utils\Log,
+    Utils\DateTime as DateTimeUtil,
 };
 
-use Espo\{
-    Entities\ScheduledJob as ScheduledJobEntity,
+use Espo\Entities\{
+    ScheduledJob as ScheduledJobEntity,
+    Job as JobEntity,
 };
 
 use Cron\CronExpression;
@@ -111,7 +113,7 @@ class ScheduleProcessor
         $asSoonAsPossible = in_array($scheduling, $this->asSoonAsPossibleSchedulingList);
 
         if ($asSoonAsPossible) {
-            $executeTime = date('Y-m-d H:i:s');
+            $executeTime = date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
         else {
             try {
@@ -127,7 +129,7 @@ class ScheduleProcessor
             }
 
             try {
-                $executeTime = $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+                $executeTime = $cronExpression->getNextRunDate()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
             }
             catch (Exception $e) {
                 $this->log->error(
@@ -171,7 +173,7 @@ class ScheduleProcessor
             }
         }
 
-        $this->entityManager->createEntity('Job', [
+        $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
             'name' => $scheduledJob->getName(),
             'status' => JobStatus::PENDING,
             'scheduledJobId' => $id,
