@@ -38,7 +38,7 @@ use Espo\Entities\Job as JobEntity;
 use DateTimeImmutable;
 use RuntimeException;
 
-abstract class AbstractQueueJob implements JobPreperable
+abstract class AbstractQueueJob implements JobPreparable
 {
     protected $queue = null;
 

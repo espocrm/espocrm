@@ -34,7 +34,7 @@ use DateTimeImmutable;
 /**
  * Can create multiple jobs for different targets according scheduling.
  */
-interface JobPreperable extends Job
+interface JobPreparable extends Job
 {
     /**
      * Create multiple job records for a scheduled job.

@@ -33,7 +33,7 @@ use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
     Job\JobStatus,
-    Job\JobPreperable,
+    Job\JobPreparable,
     Job\JobData,
     Job\ScheduledJobData,
     ServiceFactory,
@@ -44,7 +44,7 @@ use Espo\Core\{
 use Throwable;
 use DateTimeImmutable;
 
-class CheckInboundEmails implements JobPreperable
+class CheckInboundEmails implements JobPreparable
 {
     private $serviceFactory;
 
