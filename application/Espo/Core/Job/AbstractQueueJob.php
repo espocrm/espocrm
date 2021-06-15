@@ -27,14 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Jobs;
+namespace Espo\Core\Job;
 
-use Espo\Core\{
-    Job\QueueName,
-    Job\AbstractQueueJob,
-};
+use Espo\ORM\EntityManager;
 
-class ProcessJobQueueQ1 extends AbstractQueueJob
+use RuntimeException;
+
+abstract class AbstractQueueJob implements Job
 {
-    protected $queue = QueueName::Q1;
+    protected $queue = null;
+
+    private $jobManager;
+
+    private $portionNumberProvider;
+
+    private $entityManager;
+
+    public function __construct(
+        JobManager $jobManager,
+        QueuePortionNumberProvider $portionNumberProvider,
+        EntityManager $entityManager
+    ) {
+        $this->jobManager = $jobManager;
+        $this->portionNumberProvider = $portionNumberProvider;
+        $this->entityManager = $entityManager;
+    }
+
+    public function run(Data $data): void
+    {
+        if (!$this->queue) {
+            throw new RuntimeException("No queue name.");
+        }
+
+        $limit = $this->portionNumberProvider->get($this->queue);
+
+        $this->jobManager->processQueue($this->queue, $limit);
+    }
 }
