@@ -113,7 +113,8 @@ abstract class AbstractQueueJob implements JobPreperable
                     'status' => [
                         JobStatus::RUNNING,
                         JobStatus::READY,
-                    ]
+                        JobStatus::PENDING,
+                    ],
                 ])
                 ->findOne();
 
