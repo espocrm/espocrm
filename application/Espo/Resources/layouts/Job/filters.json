@@ -4,5 +4,6 @@
     "executeTime",
     "startedAt",
     "executedAt",
-    "queue"
+    "queue",
+    "group"
 ]

@@ -1,14 +1,15 @@
 [
     {
-        "label":"",
-        "rows":[
+        "label": "",
+        "rows": [
             [{"name":"name"}, {"name": "status"}],
-            [{"name":"queue"}, {"name":"number"}]
+            [{"name":"queue"}, {"name":"number"}],
+            [{"name":"group"}, false]
         ]
     },
     {
-        "label":"",
-        "rows":[
+        "label": "",
+        "rows": [
             [{"name":"executeTime"}, {"name": "createdAt"}],
             [{"name":"startedAt"}, {"name": "modifiedAt"}],
             [{"name":"executedAt"}, false],
@@ -17,11 +18,12 @@
         ]
     },
     {
-        "label":"",
-        "rows":[
+        "label": "",
+        "rows": [
             [{"name":"scheduledJob"}, {"name":"targetType"}],
-            [{"name":"serviceName"}, {"name":"targetId"}],
-            [{"name":"methodName"}, {"name":"job"}],
+            [{"name":"className"}, {"name":"targetId"}],
+            [{"name":"serviceName"}, {"name":"job"}],
+            [{"name":"methodName"}, false],
             [{"name": "data", "fullWidth": true}]
         ]
     }

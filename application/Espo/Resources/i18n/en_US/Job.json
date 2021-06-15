@@ -16,6 +16,9 @@
         "targetId": "Target ID",
         "number": "Number",
         "queue": "Queue",
+        "group": "Group",
+        "className": "Class Name",
+        "targetGroup": "Target Group",
         "job": "Job"
     },
     "options": {
