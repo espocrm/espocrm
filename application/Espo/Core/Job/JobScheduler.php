@@ -126,10 +126,10 @@ class JobScheduler
      */
     public function setTime(?DateTimeInterface $time): self
     {
-        $this->time = null;
+        $this->time = $time;
 
-        if (!is_null($time)) {
-            $this->time = DateTimeImmutable::createFromInterface($time);
+        if (!is_null($time) && !$time instanceof DateTimeImmutable) {
+            $this->time = DateTimeImmutable::createFromMutable($time);
         }
 
         return $this;
@@ -171,7 +171,7 @@ class JobScheduler
             throw new RuntimeException("Class name is not set.");
         }
 
-        if ($this->group && $this->queue !== null) {
+        if ($this->group && $this->queue === null) {
             throw new RuntimeException("A group can't be set w/o queue.");
         }
 
@@ -181,13 +181,19 @@ class JobScheduler
             $time = $time->add($this->delay);
         }
 
+        $data = $this->data;
+
+        if (!$data) {
+            $data = JobData::create();
+        }
+
         return $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
             'className' => $this->className,
             'queue' => $this->queue,
             'group' => $this->group,
-            'targetType' => $this->data->getTargetType(),
-            'targetId' => $this->data->getTargetId(),
-            'data' => $this->data->getRaw(),
+            'targetType' => $data->getTargetType(),
+            'targetId' => $data->getTargetId(),
+            'data' => $data->getRaw(),
             'executeTime' => $time->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
         ]);
     }
