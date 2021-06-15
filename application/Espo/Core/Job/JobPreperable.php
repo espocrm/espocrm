@@ -31,6 +31,8 @@ namespace Espo\Core\Job;
 
 use Espo\Entities\ScheduledJob;
 
+use DateTimeImmutable;
+
 /**
  * Can create multiple jobs for different targets according scheduling.
  */
@@ -39,5 +41,5 @@ interface JobPreperable extends Job
     /**
      * Create multiple job records for a scheduled job.
      */
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime): void;
+    public function prepare(ScheduledJob $scheduledJob, DateTimeImmutable $executeTime): void;
 }

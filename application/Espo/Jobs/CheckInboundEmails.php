@@ -37,11 +37,13 @@ use Espo\Core\{
     Job\Data,
     ServiceFactory,
     ORM\EntityManager,
+    Utils\DateTime,
 };
 
 use Espo\Entities\ScheduledJob;
 
 use Throwable;
+use DateTimeImmutable;
 
 class CheckInboundEmails implements JobPreperable
 {
@@ -68,25 +70,27 @@ class CheckInboundEmails implements JobPreperable
         $entity = $this->entityManager->getEntity('InboundEmail', $targetId);
 
         if (!$entity) {
-            throw new Error("Job CheckInboundEmails '".$targetId."': InboundEmail does not exist.", -1);
+            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail does not exist.", -1);
         }
 
         if ($entity->get('status') !== 'Active') {
-            throw new Error("Job CheckInboundEmails '".$targetId."': InboundEmail is not active.", -1);
+            throw new Error("Job CheckInboundEmails '{$targetId}': InboundEmail is not active.", -1);
         }
 
         try {
             $service->fetchFromMailServer($entity);
         }
         catch (Throwable $e) {
-            throw new Error('Job CheckInboundEmails '.$entity->id.': [' . $e->getCode() . '] ' .$e->getMessage());
+            throw new Error(
+                'Job CheckInboundEmails ' . $entity->getId() . ': [' . $e->getCode() . '] ' .$e->getMessage()
+            );
         }
     }
 
-    public function prepare(ScheduledJob $scheduledJob, string $executeTime): void
+    public function prepare(ScheduledJob $scheduledJob, DateTimeImmutable $executeTime): void
     {
         $collection = $this->entityManager
-            ->getRepository('InboundEmail')
+            ->getRDBRepository('InboundEmail')
             ->where([
                 'status' => 'Active',
                 'useImap' => true,
@@ -95,12 +99,15 @@ class CheckInboundEmails implements JobPreperable
 
         foreach ($collection as $entity) {
             $running = $this->entityManager
-                ->getRepository('Job')
+                ->getRDBRepository('Job')
                 ->where([
-                    'scheduledJobId' => $scheduledJob->id,
-                    'status' => [JobStatus::RUNNING, JobStatus::READY],
+                    'scheduledJobId' => $scheduledJob->getId(),
+                    'status' => [
+                        JobStatus::RUNNING,
+                        JobStatus::READY,
+                    ],
                     'targetType' => 'InboundEmail',
-                    'targetId' => $entity->id,
+                    'targetId' => $entity->getId(),
                 ])
                 ->findOne();
 
@@ -109,12 +116,12 @@ class CheckInboundEmails implements JobPreperable
             }
 
             $countPending = $this->entityManager
-                ->getRepository('Job')
+                ->getRDBRepository('Job')
                 ->where([
-                    'scheduledJobId' => $scheduledJob->id,
+                    'scheduledJobId' => $scheduledJob->getId(),
                     'status' => JobStatus::PENDING,
                     'targetType' => 'InboundEmail',
-                    'targetId' => $entity->id,
+                    'targetId' => $entity->getId(),
                 ])
                 ->count();
 
@@ -125,11 +132,11 @@ class CheckInboundEmails implements JobPreperable
             $jobEntity = $this->entityManager->getEntity('Job');
 
             $jobEntity->set([
-                'name' => $scheduledJob->get('name'),
-                'scheduledJobId' => $scheduledJob->id,
-                'executeTime' => $executeTime,
+                'name' => $scheduledJob->getName(),
+                'scheduledJobId' => $scheduledJob->getId(),
+                'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
                 'targetType' => 'InboundEmail',
-                'targetId' => $entity->id,
+                'targetId' => $entity->getId(),
             ]);
 
             $this->entityManager->saveEntity($jobEntity);

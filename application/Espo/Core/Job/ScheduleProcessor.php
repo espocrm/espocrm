@@ -44,6 +44,7 @@ use Cron\CronExpression;
 
 use Throwable;
 use Exception;
+use DateTimeImmutable;
 
 /**
  * Creates jobs from scheduled jobs according scheduling.
@@ -151,7 +152,10 @@ class ScheduleProcessor
         if ($this->jobFactory->isPreparable($jobName)) {
             $jobObj = $this->jobFactory->create($jobName);
 
-            $jobObj->prepare($scheduledJob, $executeTime);
+            $executeAtDt = DateTimeImmutable
+                ::createFromFormat(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT, $executeTime);
+
+            $jobObj->prepare($scheduledJob, $executeAtDt);
 
             return;
         }
