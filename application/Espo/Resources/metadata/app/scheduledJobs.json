@@ -1,0 +1,17 @@
+{
+    "ProcessJobQueueQ0": {
+        "isPreparable": true
+    },
+    "ProcessJobQueueQ1": {
+        "isPreparable": true
+    },
+    "ProcessJobQueueE0": {
+        "isPreparable": true
+    },
+    "CheckEmailAccounts": {
+        "isPreparable": true
+    },
+    "CheckInboundEmails": {
+        "isPreparable": true
+    }
+}

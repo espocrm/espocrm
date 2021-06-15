@@ -78,6 +78,22 @@ class Job extends Entity
     }
 
     /**
+     * Get a group.
+     */
+    public function getGroup(): ?string
+    {
+        return $this->get('group');
+    }
+
+    /**
+     * Get a queue.
+     */
+    public function getQueue(): ?string
+    {
+        return $this->get('queue');
+    }
+
+    /**
      * Get data.
      */
     public function getData(): StdClass

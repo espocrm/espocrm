@@ -58,18 +58,84 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $this->entityManager = $this->getContainer()->get('entityManager');
     }
 
-    public function testProcessQueue(): void
+    public function testProcessQueueNoGroup(): void
     {
         $job = $this->entityManager->createEntity('Job', [
             'job' => 'Dummy',
             'queue' => 'q0',
         ]);
 
-        $this->jobManager->processQueue('q0', 10);
+        $this->jobManager->processQueue('q0', null, 10);
 
         $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
 
         $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
+    }
+
+    public function testProcessQueueGroupAll(): void
+    {
+        $job1 = $this->entityManager->createEntity('Job', [
+            'job' => 'Dummy',
+            'queue' => 'q0',
+        ]);
+
+        $job2 = $this->entityManager->createEntity('Job', [
+            'job' => 'Dummy',
+            'queue' => 'q0',
+            'group' => 'group-1',
+        ]);
+
+        $job3 = $this->entityManager->createEntity('Job', [
+            'job' => 'Dummy',
+            'queue' => 'q0',
+            'group' => 'group-1',
+        ]);
+
+        $this->jobManager->process();
+
+        $job1Reloaded = $this->entityManager->getEntity('Job', $job1->getId());
+        $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());
+        $job3Reloaded = $this->entityManager->getEntity('Job', $job3->getId());
+
+        $this->assertEquals(JobStatus::SUCCESS, $job1Reloaded->getStatus());
+        $this->assertEquals(JobStatus::SUCCESS, $job2Reloaded->getStatus());
+        $this->assertEquals(JobStatus::SUCCESS, $job3Reloaded->getStatus());
+    }
+
+    public function testProcessQueueGroupSeparate(): void
+    {
+        $job1 = $this->entityManager->createEntity('Job', [
+            'job' => 'Dummy',
+            'queue' => 'q0',
+        ]);
+
+        $job2 = $this->entityManager->createEntity('Job', [
+            'job' => 'Dummy',
+            'queue' => 'q0',
+            'group' => 'group-1',
+        ]);
+
+        $job3 = $this->entityManager->createEntity('Job', [
+            'job' => 'Dummy',
+            'queue' => 'q0',
+            'group' => 'group-1',
+        ]);
+
+        $this->jobManager->processQueue('q0', 'group-1', 100);
+
+        $job1Reloaded = $this->entityManager->getEntity('Job', $job1->getId());
+        $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());
+        $job3Reloaded = $this->entityManager->getEntity('Job', $job3->getId());
+
+        $this->assertEquals(JobStatus::PENDING, $job1Reloaded->getStatus());
+        $this->assertEquals(JobStatus::SUCCESS, $job2Reloaded->getStatus());
+        $this->assertEquals(JobStatus::SUCCESS, $job3Reloaded->getStatus());
+
+        $this->jobManager->processQueue('q0', null, 100);
+
+        $job1Reloaded2 = $this->entityManager->getEntity('Job', $job1->getId());
+
+        $this->assertEquals(JobStatus::SUCCESS, $job1Reloaded2->getStatus());
     }
 
     public function testRunJobById(): void

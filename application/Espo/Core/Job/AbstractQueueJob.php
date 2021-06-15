@@ -29,11 +29,16 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Utils\DateTime;
+
 use Espo\ORM\EntityManager;
 
+use Espo\Entities\Job as JobEntity;
+
+use DateTimeImmutable;
 use RuntimeException;
 
-abstract class AbstractQueueJob implements Job
+abstract class AbstractQueueJob implements JobPreperable
 {
     protected $queue = null;
 
@@ -42,6 +47,8 @@ abstract class AbstractQueueJob implements Job
     private $portionNumberProvider;
 
     private $entityManager;
+
+    private const SHIFT_PERIOD = '5 seconds';
 
     public function __construct(
         JobManager $jobManager,
@@ -61,6 +68,74 @@ abstract class AbstractQueueJob implements Job
 
         $limit = $this->portionNumberProvider->get($this->queue);
 
-        $this->jobManager->processQueue($this->queue, $limit);
+        $group = $data->get('group');
+
+        $this->jobManager->processQueue($this->queue, $group, $limit);
+    }
+
+    public function prepare(ScheduledJobData $data, DateTimeImmutable $executeTime): void
+    {
+        $groupList = [];
+
+        $shiftPeriod = self::SHIFT_PERIOD;
+
+        $query = $this->entityManager
+            ->getQueryBuilder()
+            ->select('group')
+            ->from(JobEntity::ENTITY_TYPE)
+            ->where([
+                'status' => JobStatus::PENDING,
+                'queue' => $this->queue,
+                'executeTime<=' => $executeTime
+                    ->modify($shiftPeriod)
+                    ->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
+            ])
+            ->groupBy('group')
+            ->build();
+
+        $sth = $this->entityManager->getQueryExecutor()->execute($query);
+
+        while ($row = $sth->fetch()) {
+            $groupList[] = $row['group'] ?? null;
+        }
+
+        if (!count($groupList)) {
+            return;
+        }
+
+        foreach ($groupList as $group) {
+            $existingJob = $this->entityManager
+                ->getRDBRepository(JobEntity::ENTITY_TYPE)
+                ->select('id')
+                ->where([
+                    'scheduledJobId' => $data->getId(),
+                    'targetGroup' => $group,
+                    'status' => [
+                        JobStatus::RUNNING,
+                        JobStatus::READY,
+                    ]
+                ])
+                ->findOne();
+
+            if ($existingJob) {
+                continue;
+            }
+
+            $name = $data->getName();
+
+            if ($group) {
+                $name .= ' :: ' . $group;
+            }
+
+            $this->entityManager->createEntity(JobEntity::ENTITY_TYPE, [
+                'scheduledJobId' => $data->getId(),
+                'executeTime' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
+                'name' => $data->getName(),
+                'data' => [
+                    'group' => $group,
+                ],
+                'targetGroup' => $group,
+            ]);
+        }
     }
 }

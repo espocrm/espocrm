@@ -164,11 +164,12 @@ class JobManager
     /**
      * Process pending jobs from a specific queue. Jobs within a queue are processed one by one.
      */
-    public function processQueue(string $queue, int $limit): void
+    public function processQueue(string $queue, ?string $group, int $limit): void
     {
         $params = QueueProcessorParams
             ::create()
             ->withQueue($queue)
+            ->withGroup($group)
             ->withLimit($limit)
             ->withUseProcessPool(false)
             ->withNoLock(true);

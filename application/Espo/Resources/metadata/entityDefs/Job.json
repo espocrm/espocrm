@@ -14,7 +14,8 @@
                 "Failed": "danger",
                 "Running": "warning",
                 "Ready": "warning"
-            }
+            },
+            "maxLength": 16
         },
         "executeTime": {
             "type": "datetime",
@@ -62,6 +63,16 @@
         "queue": {
             "type": "varchar",
             "maxLength": 36,
+            "default": null
+        },
+        "group": {
+            "type": "varchar",
+            "maxLength": 64,
+            "default": null
+        },
+        "targetGroup": {
+            "type": "varchar",
+            "maxLength": 64,
             "default": null
         },
         "startedAt": {
@@ -117,6 +128,12 @@
         },
         "status": {
             "columns": ["status", "deleted"]
+        },
+        "statusScheduledJobId": {
+            "columns": ["status", "scheduledJobId"]
+        },
+        "queueGroupExecuteTime": {
+            "columns": ["queue", "status", "group", "executeTime"]
         }
     }
 }

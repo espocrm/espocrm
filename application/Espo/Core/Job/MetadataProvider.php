@@ -29,90 +29,34 @@
 
 namespace Espo\Core\Job;
 
-class QueueProcessorParams
+use Espo\Core\Utils\Metadata;
+
+class MetadataProvider
 {
-    private $useProcessPool = false;
+    private $metadata;
 
-    private $noLock = false;
-
-    private $queue = null;
-
-    private $group = null;
-
-    private $limit = 0;
-
-    public function withUseProcessPool(bool $useProcessPool): self
+    public function __construct(Metadata $metadata)
     {
-        $obj = clone $this;
-
-        $obj->useProcessPool = $useProcessPool;
-
-        return $obj;
+        $this->metadata = $metadata;
     }
 
-    public function withNoLock(bool $noLock): self
+    /**
+     * @return string[]
+     */
+    public function getPreparableJobNameList(): array
     {
-        $obj = clone $this;
+        $list = [];
 
-        $obj->noLock = $noLock;
+        $items = $this->metadata->get(['app', 'scheduledJobs']) ?? [];
 
-        return $obj;
-    }
+        foreach ($items as $name => $item) {
+            $isPreparable = $item['isPreparable'] ?? false;
 
-    public function withQueue(?string $queue): self
-    {
-        $obj = clone $this;
+            if ($isPreparable) {
+                $list[] = $name;
+            }
+        }
 
-        $obj->queue = $queue;
-
-        return $obj;
-    }
-
-    public function withGroup(?string $group): self
-    {
-        $obj = clone $this;
-
-        $obj->group = $group;
-
-        return $obj;
-    }
-
-    public function withLimit(int $limit): self
-    {
-        $obj = clone $this;
-
-        $obj->limit = $limit;
-
-        return $obj;
-    }
-
-    public function useProcessPool(): bool
-    {
-        return $this->useProcessPool;
-    }
-
-    public function noLock(): bool
-    {
-        return $this->noLock;
-    }
-
-    public function getQueue(): ?string
-    {
-        return $this->queue;
-    }
-
-    public function getGroup(): ?string
-    {
-        return $this->group;
-    }
-
-    public function getLimit(): int
-    {
-        return $this->limit;
-    }
-
-    public static function create(): self
-    {
-        return new self();
+        return $list;
     }
 }

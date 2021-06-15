@@ -77,6 +77,7 @@ class QueueProcessor
 
         $pendingJobList = $this->queueUtil->getPendingJobList(
             $this->params->getQueue(),
+            $this->params->getGroup(),
             $this->params->getLimit()
         );
 

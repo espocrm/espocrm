@@ -30,44 +30,41 @@
 namespace tests\unit\Espo\Core\Job;
 
 use Espo\Core\{
-    Job\QueueProcessorParams,
+    Job\MetadataProvider,
+    Utils\Metadata,
 };
 
-class QueueProcessorParamsTest extends \PHPUnit\Framework\TestCase
+class MetadataProviderTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    private $metadata;
+
+    protected function setUp(): void
     {
+        $this->metadata = $this->createMock(Metadata::class);
     }
 
-    public function testParams1()
+    public function testGetPreparableJobNameList()
     {
-        $params = QueueProcessorParams
-            ::create()
-            ->withLimit(10);
+        $this->metadata
+            ->method('get')
+            ->with(['app', 'scheduledJobs'])
+            ->willReturn([
+                'Test1' => [
+                    'isPreparable' => true,
+                ],
+                'Test2' => [
+                    'isPreparable' => true,
+                ],
+                'Test3' => [],
+                'Test4' => [
+                    'isPreparable' => false,
+                ],
+            ]);
 
-        $this->assertFalse($params->useProcessPool());
-        $this->assertFalse($params->noLock());
+        $provider = new MetadataProvider($this->metadata);
 
-        $this->assertEquals(10, $params->getLimit());
+        $list = $provider->getPreparableJobNameList();
 
-        $this->assertNull($params->getQueue());
-    }
-
-    public function testParams2()
-    {
-        $params = QueueProcessorParams
-            ::create()
-            ->withLimit(10)
-            ->withUseProcessPool(true)
-            ->withNoLock(true)
-            ->withGroup('group-0')
-            ->withQueue('q0');
-
-        $this->assertTrue($params->useProcessPool());
-        $this->assertTrue($params->noLock());
-
-        $this->assertEquals('q0', $params->getQueue());
-
-        $this->assertEquals('group-0', $params->getGroup());
+        $this->assertEquals(['Test1', 'Test2'], $list);
     }
 }

@@ -50,15 +50,22 @@ class QueueUtil
 
     private $scheduleUtil;
 
+    private $metadataProvider;
+
     private const NOT_EXISTING_PROCESS_PERIOD = 300;
 
     private const READY_NOT_STARTED_PERIOD = 60;
 
-    public function __construct(Config $config, EntityManager $entityManager, ScheduleUtil $scheduleUtil)
-    {
+    public function __construct(
+        Config $config,
+        EntityManager $entityManager,
+        ScheduleUtil $scheduleUtil,
+        MetadataProvider $metadataProvider
+    ) {
         $this->config = $config;
         $this->entityManager = $entityManager;
         $this->scheduleUtil = $scheduleUtil;
+        $this->metadataProvider = $metadataProvider;
     }
 
     public function isJobPending(string $id): bool
@@ -79,7 +86,10 @@ class QueueUtil
         return $job->get('status') === JobStatus::PENDING;
     }
 
-    public function getPendingJobList(?string $queue = null, int $limit = 0): Collection
+    /**
+     * @return JobEntity[]
+     */
+    public function getPendingJobList(?string $queue = null, ?string $group = null, int $limit = 0): Collection
     {
         $builder = $this->entityManager
             ->getRDBRepository(JobEntity::ENTITY_TYPE)
@@ -92,6 +102,7 @@ class QueueUtil
                 'targetType',
                 'methodName',
                 'serviceName',
+                'className',
                 'job',
                 'data',
             ])
@@ -99,6 +110,7 @@ class QueueUtil
                 'status' => JobStatus::PENDING,
                 'executeTime<=' => DateTimeUtil::getSystemNowString(),
                 'queue' => $queue,
+                'group' => $group,
             ])
             ->order('number');
 
@@ -137,15 +149,16 @@ class QueueUtil
         $list = [];
 
         $jobList = $this->entityManager
-            ->getRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepository(JobEntity::ENTITY_TYPE)
             ->select(['scheduledJobId'])
+            ->leftJoin('scheduledJob')
             ->where([
                 'status' => [
                     JobStatus::RUNNING,
                     JobStatus::READY,
                 ],
                 'scheduledJobId!=' => null,
-                'targetId=' => null,
+                'scheduledJob.job!=' => $this->metadataProvider->getPreparableJobNameList(),
             ])
             ->order('executeTime')
             ->find();
@@ -363,10 +376,12 @@ class QueueUtil
         $duplicateJobList = $this->entityManager
             ->getRepository(JobEntity::ENTITY_TYPE)
             ->select(['scheduledJobId'])
+            ->leftJoin('scheduledJob')
             ->where([
                 'scheduledJobId!=' => null,
                 'status' => JobStatus::PENDING,
                 'executeTime<=' => DateTimeUtil::getSystemNowString(),
+                'scheduledJob.job!=' => $this->metadataProvider->getPreparableJobNameList(),
                 'targetId' => null,
             ])
             ->groupBy(['scheduledJobId'])

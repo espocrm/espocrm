@@ -21,6 +21,7 @@
         ["app", "massActions", "__ANY__", "implementationClassName"],
         ["app", "actions", "__ANY__", "implementationClassName"],
         ["app", "fieldProcessing"],
+        ["app", "scheduledJobs"],
         ["selectDefs"],
         ["recordDefs"],
         ["aclDefs"],
