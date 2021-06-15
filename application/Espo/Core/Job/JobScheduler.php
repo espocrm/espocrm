@@ -43,7 +43,7 @@ use RuntimeException;
 use TypeError;
 
 /**
- * Creates job records in database.
+ * Creates a job record in database.
  */
 class JobScheduler
 {
