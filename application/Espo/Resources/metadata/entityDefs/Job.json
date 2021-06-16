@@ -120,7 +120,7 @@
     "collection": {
         "orderBy": "number",
         "order": "desc",
-        "textFilterFields": ["id", "name", "methodName", "serviceName", "scheduledJob"]
+        "textFilterFields": ["id", "name", "methodName", "serviceName"]
     },
     "indexes": {
         "executeTime": {
