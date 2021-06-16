@@ -32,6 +32,8 @@ namespace tests\integration\Espo\Core\Job;
 use Espo\Core\{
     Job\JobManager,
     Job\JobStatus,
+    Job\JobSchedulerFactory,
+    Job\QueueName,
     ORM\EntitManager,
 };
 
@@ -49,6 +51,11 @@ class JobTest extends \tests\integration\Core\BaseTestCase
      */
     private $entityManager;
 
+    /**
+     * @var JobSchedulerFactory
+     */
+    private $schedulerFactory;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -56,6 +63,25 @@ class JobTest extends \tests\integration\Core\BaseTestCase
         $this->jobManager = $this->getContainer()->get('jobManager');
 
         $this->entityManager = $this->getContainer()->get('entityManager');
+
+        $this->schedulerFactory = $this->getContainer()
+            ->get('injectableFactory')
+            ->create(JobSchedulerFactory::class);
+    }
+
+    public function testScheduler(): void
+    {
+        $job = $this->schedulerFactory
+            ->create()
+            ->setClassName(TestJob::class)
+            ->setQueue(QueueName::Q0)
+            ->schedule();
+
+        $this->jobManager->processQueue(QueueName::Q0, 10);
+
+        $jobReloaded = $this->entityManager->getEntity('Job', $job->getId());
+
+        $this->assertEquals(JobStatus::SUCCESS, $jobReloaded->getStatus());
     }
 
     public function testProcessQueueNoGroup(): void
