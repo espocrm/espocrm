@@ -95,8 +95,10 @@ define('cache', [], function () {
 
             let key = this.composeKey(type, name);
 
+            let stored;
+
             try {
-                let stored = localStorage.getItem(key);
+                stored = localStorage.getItem(key);
             }
             catch (error) {
                 console.error(error);
