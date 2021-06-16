@@ -116,7 +116,8 @@ class QueueProcessor
                 $this->queueUtil->isScheduledJobRunning(
                     $job->getScheduledJobId(),
                     $job->getTargetId(),
-                    $job->getTargetType()
+                    $job->getTargetType(),
+                    $job->getTargetGroup()
                 )
             ) {
                 $skip = true;

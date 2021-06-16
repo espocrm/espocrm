@@ -78,6 +78,14 @@ class Job extends Entity
     }
 
     /**
+     * Get a target group.
+     */
+    public function getTargetGroup(): ?string
+    {
+        return $this->get('targetGroup');
+    }
+
+    /**
      * Get a group.
      */
     public function getGroup(): ?string

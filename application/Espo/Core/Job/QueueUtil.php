@@ -100,6 +100,7 @@ class QueueUtil
                 'executeTime',
                 'targetId',
                 'targetType',
+                'targetGroup',
                 'methodName',
                 'serviceName',
                 'className',
@@ -124,7 +125,8 @@ class QueueUtil
     public function isScheduledJobRunning(
         string $scheduledJobId,
         ?string $targetId = null,
-        ?string $targetType = null
+        ?string $targetType = null,
+        ?string $targetGroup = null
     ): bool {
 
         $where = [
@@ -135,6 +137,10 @@ class QueueUtil
         if ($targetId && $targetType) {
             $where['targetId'] = $targetId;
             $where['targetType'] = $targetType;
+        }
+
+        if ($targetGroup) {
+            $where['targetGroup'] = $targetGroup;
         }
 
         return (bool) $this->entityManager
