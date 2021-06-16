@@ -67,12 +67,12 @@
         },
         "group": {
             "type": "varchar",
-            "maxLength": 64,
+            "maxLength": 128,
             "default": null
         },
         "targetGroup": {
             "type": "varchar",
-            "maxLength": 64,
+            "maxLength": 128,
             "default": null
         },
         "startedAt": {
