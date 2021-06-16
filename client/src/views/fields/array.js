@@ -549,6 +549,38 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 if (valueList.length === 1 && valueList[0] === '') {
                     valueList = [];
                 }
+
+                if (valueList.length === 0) {
+                   if (type === 'anyOf') {
+                       return {
+                           type: 'any',
+                           data: {
+                               type: type,
+                               valueList: valueList,
+                           },
+                       };
+                   }
+
+                   if (type === 'noneOf') {
+                       return {
+                           type: 'any',
+                           data: {
+                               type: type,
+                               valueList: valueList,
+                           },
+                       };
+                   }
+
+                   if (type === 'allOf') {
+                       return {
+                           type: 'any',
+                           data: {
+                               type: type,
+                               valueList: valueList,
+                           },
+                       };
+                   }
+               }
             }
 
             if (type === 'anyOf') {

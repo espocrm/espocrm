@@ -333,40 +333,47 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
             var type = this.fetchSearchType();
 
             var list = this.$element.val().split(':,:');
-            if (list.length === 1 && list[0] == '') {
+
+            if (list.length === 1 && list[0] === '') {
                 list = [];
             }
 
-            list.forEach(function (item, i) {
+            list.forEach((item, i) => {
                 list[i] = this.parseItemForSearch(item);
-            }, this);
+            });
 
             if (type === 'anyOf') {
                 if (list.length === 0) {
                     return {
+                        type: 'any',
                         data: {
                             type: 'anyOf',
                             valueList: list
-                        }
+                        },
                     };
                 }
+
                 return {
                     type: 'in',
                     value: list,
                     data: {
                         type: 'anyOf',
                         valueList: list
-                    }
+                    },
                 };
-            } else if (type === 'noneOf') {
+            }
+
+            if (type === 'noneOf') {
                 if (list.length === 0) {
                     return {
+                        type: 'any',
                         data: {
                             type: 'noneOf',
                             valueList: list
-                        }
+                        },
                     };
                 }
+
                 return {
                     type: 'or',
                     value: [
@@ -383,9 +390,11 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                     data: {
                         type: 'noneOf',
                         valueList: list
-                    }
+                    },
                 };
-            } else if (type === 'isEmpty') {
+            }
+
+            if (type === 'isEmpty') {
                 return {
                     type: 'or',
                     value: [
@@ -401,9 +410,11 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                     ],
                     data: {
                         type: 'isEmpty'
-                    }
+                    },
                 };
-            } else if (type === 'isNotEmpty') {
+            }
+
+            if (type === 'isNotEmpty') {
                 return {
                     type: 'and',
                     value: [
@@ -419,7 +430,7 @@ define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (De
                     ],
                     data: {
                         type: 'isNotEmpty'
-                    }
+                    },
                 };
             }
         },
