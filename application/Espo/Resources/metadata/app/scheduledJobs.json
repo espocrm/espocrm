@@ -1,6 +1,38 @@
 {
     "ProcessJobGroup": {
+        "name": "Process Job Group",
+        "isSystem": true,
+        "scheduling": "* * * * *",
         "isPreparable": true
+    },
+    "ProcessJobQueueQ0": {
+        "name": "Process Job Queue q0",
+        "isSystem": true,
+        "scheduling": "* * * * *"
+    },
+    "ProcessJobQueueQ1": {
+        "name": "Process Job Queue q1",
+        "isSystem": true,
+        "scheduling": "*/1 * * * *"
+    },
+    "ProcessJobQueueE0": {
+        "name": "Process Job Queue e0",
+        "isSystem": true,
+        "scheduling": "* * * * *"
+    },
+    "Dummy": {
+        "isSystem": true,
+        "scheduling": "1 */12 * * *"
+    },
+    "CheckNewVersion": {
+        "name": "Check for New Version",
+        "isSystem": true,
+        "scheduling": "15 5 * * *"
+    },
+    "CheckNewExtensionVersion": {
+        "name": "Check for New Versions of Installed Extensions",
+        "isSystem": true,
+        "scheduling": "25 5 * * *"
     },
     "CheckEmailAccounts": {
         "isPreparable": true

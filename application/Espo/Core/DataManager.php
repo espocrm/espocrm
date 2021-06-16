@@ -198,15 +198,14 @@ class DataManager
      */
     public function rebuildScheduledJobs(): void
     {
-        $metadata = $this->metadata;
-
-        $entityManager = $this->entityManager;
-
-        $jobs = $metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], []);
+        $jobDefs = array_merge(
+            $this->metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], []), // for bc
+            $this->metadata->get(['app', 'scheduledJobs'], [])
+        );
 
         $systemJobNameList = [];
 
-        foreach ($jobs as $jobName => $defs) {
+        foreach ($jobDefs as $jobName => $defs) {
             if (!$jobName) {
                 continue;
             }
@@ -217,8 +216,8 @@ class DataManager
 
             $systemJobNameList[] = $jobName;
 
-            $sj = $entityManager
-                ->getRepository('ScheduledJob')
+            $sj = $this->entityManager
+                ->getRDBRepository('ScheduledJob')
                 ->where([
                     'job' => $jobName,
                     'status' => 'Active',
@@ -230,15 +229,15 @@ class DataManager
                 continue;
             }
 
-            $job = $entityManager
-                ->getRepository('ScheduledJob')
+            $existingJob = $this->entityManager
+                ->getRDBRepository('ScheduledJob')
                 ->where([
                     'job' => $jobName,
                 ])
                 ->findOne();
 
-            if ($job) {
-                $entityManager->removeEntity($job);
+            if ($existingJob) {
+                $this->entityManager->removeEntity($existingJob);
             }
 
             $name = $jobName;
@@ -247,21 +246,17 @@ class DataManager
                 $name = $defs['name'];
             }
 
-            $job = $entityManager->getEntity('ScheduledJob');
-
-            $job->set([
+            $this->entityManager->createEntity('ScheduledJob', [
                 'job' => $jobName,
                 'status' => 'Active',
                 'scheduling' => $defs['scheduling'],
                 'isInternal' => true,
                 'name' => $name,
             ]);
-
-            $entityManager->saveEntity($job);
         }
 
-        $internalScheduledJobList = $entityManager
-            ->getRepository('ScheduledJob')
+        $internalScheduledJobList = $this->entityManager
+            ->getRDBRepository('ScheduledJob')
             ->where([
                 'isInternal' => true,
             ])
@@ -271,7 +266,9 @@ class DataManager
             $jobName = $scheduledJob->get('job');
 
             if (!in_array($jobName, $systemJobNameList)) {
-                $entityManager->getRepository('ScheduledJob')->deleteFromDb($scheduledJob->id);
+                $this->entityManager
+                    ->getRDBRepository('ScheduledJob')
+                    ->deleteFromDb($scheduledJob->id);
             }
         }
     }
