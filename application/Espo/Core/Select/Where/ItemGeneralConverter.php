@@ -637,6 +637,20 @@ class ItemGeneralConverter implements ItemConverter
         ];
     }
 
+    protected function processAny(QueryBuilder $queryBuilder, string $attribute, $value): array
+    {
+        return [
+            'true:' => null,
+        ];
+    }
+
+    protected function processNone(QueryBuilder $queryBuilder, string $attribute, $value): array
+    {
+        return [
+            'false:' => null,
+        ];
+    }
+
     protected function processIsNull(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
         return [
