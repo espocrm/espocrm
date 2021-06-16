@@ -1,4 +1,7 @@
 {
+    "ProcessJobGroup": {
+        "isPreparable": true
+    },
     "CheckEmailAccounts": {
         "isPreparable": true
     },

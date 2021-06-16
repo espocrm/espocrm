@@ -89,9 +89,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
             'group' => 'group-1',
         ]);
 
-        // @todo Change to `$this->jobManager->process();`.
-        $this->jobManager->processGroup('group-0', 100);
-        $this->jobManager->processGroup('group-1', 100);
+        $this->jobManager->process();
 
         $job1Reloaded = $this->entityManager->getEntity('Job', $job1->getId());
         $job2Reloaded = $this->entityManager->getEntity('Job', $job2->getId());

@@ -92,6 +92,11 @@
             "isSystem": true,
             "scheduling": "25 5 * * *"
         },
+        "ProcessJobGroup": {
+            "name": "Process Job Group",
+            "isSystem": true,
+            "scheduling": "* * * * *"
+        },
         "ProcessJobQueueQ0": {
             "name": "Process Job Queue q0",
             "isSystem": true,
