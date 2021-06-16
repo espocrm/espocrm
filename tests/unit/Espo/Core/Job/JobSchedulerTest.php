@@ -68,6 +68,7 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
             ->with(
                 JobEntity::ENTITY_TYPE,
                 [
+                    'name' => TestJob::class,
                     'className' => TestJob::class,
                     'queue' => QueueName::Q0,
                     'group' => null,
@@ -108,6 +109,7 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
             ->with(
                 JobEntity::ENTITY_TYPE,
                [
+                    'name' => TestJob::class,
                     'className' => TestJob::class,
                     'queue' => null,
                     'group' => 'g-1',
