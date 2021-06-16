@@ -117,7 +117,7 @@ define('model', [], function () {
 
                     if (defaultValue !== null) {
                         try {
-                            let defaultValue = this.parseDefaultValue(defaultValue);
+                            defaultValue = this.parseDefaultValue(defaultValue);
 
                             defaultHash[field] = defaultValue;
                         }
