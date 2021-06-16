@@ -21,6 +21,7 @@
         "dragonmantank/cron-expression": "3.0.*",
         "laminas/laminas-mail": "2.14.*",
         "laminas/laminas-ldap": "2.*",
+        "laminas/laminas-servicemanager": "^3.3.1",
         "monolog/monolog": "2.*",
         "yzalis/identicon": "*",
         "zordius/lightncandy": "dev-espo#v1.2.5e",
