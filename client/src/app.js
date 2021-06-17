@@ -501,6 +501,19 @@ define(
                     this.trigger('auth');
                 }.bind(this));
 
+                var userId = data.user.id;
+                var lastUserId = this.storage.get('user', 'lastUserId');
+
+                if (lastUserId !== userId) {
+                    if (this.cache) {
+                        this.cache.clear('app', 'metadata');
+                    }
+
+                    this.language.clearCache();
+                }
+
+                this.storage.set('user', 'lastUserId', userId);
+
             }.bind(this));
 
             this.baseController.on('logout', function () {
