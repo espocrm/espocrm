@@ -78,6 +78,6 @@
       "notNull":false
    },
    "personalData": true,
-   "valueFactoryClassName": "Espo\\Core\\Fields\\DateTime\\DateTimeFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Fields\\DateTime\\DateTimeAttributeExtractor"
+   "valueFactoryClassName": "Espo\\Core\\Field\\DateTime\\DateTimeFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Field\\DateTime\\DateTimeAttributeExtractor"
 }

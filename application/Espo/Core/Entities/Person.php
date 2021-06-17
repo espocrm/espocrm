@@ -32,9 +32,9 @@ namespace Espo\Core\Entities;
 use Espo\Core\{
     ORM\Entity,
     ORM\Helper,
-    Fields\EmailAddressGroup,
-    Fields\PhoneNumberGroup,
-    Fields\Address,
+    Field\EmailAddressGroup,
+    Field\PhoneNumberGroup,
+    Field\Address,
 };
 
 use Espo\ORM\{

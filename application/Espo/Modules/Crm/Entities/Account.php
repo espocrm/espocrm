@@ -31,9 +31,9 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\{
     ORM\Entity,
-    Fields\EmailAddressGroup,
-    Fields\PhoneNumberGroup,
-    Fields\Address,
+    Field\EmailAddressGroup,
+    Field\PhoneNumberGroup,
+    Field\Address,
 };
 
 class Account extends Entity

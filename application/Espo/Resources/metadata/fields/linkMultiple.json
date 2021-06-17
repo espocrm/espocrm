@@ -33,6 +33,6 @@
    "notCreatable": true,
    "notSortable": true,
    "filter": true,
-   "valueFactoryClassName": "Espo\\Core\\Fields\\LinkMultiple\\LinkMultipleFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Fields\\LinkMultiple\\LinkMultipleAttributeExtractor"
+   "valueFactoryClassName": "Espo\\Core\\Field\\LinkMultiple\\LinkMultipleFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Field\\LinkMultiple\\LinkMultipleAttributeExtractor"
 }

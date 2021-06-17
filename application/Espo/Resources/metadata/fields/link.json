@@ -30,6 +30,6 @@
    ],
    "filter": true,
    "notCreatable": true,
-   "valueFactoryClassName": "Espo\\Core\\Fields\\Link\\LinkFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Fields\\Link\\LinkAttributeExtractor"
+   "valueFactoryClassName": "Espo\\Core\\Field\\Link\\LinkFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Field\\Link\\LinkAttributeExtractor"
 }

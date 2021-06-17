@@ -31,7 +31,7 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\{
     ORM\Entity,
-    Fields\DateTime,
+    Field\DateTime,
 };
 
 class Call extends Entity

@@ -31,9 +31,9 @@ namespace Espo\Core\Templates\Entities;
 
 use Espo\Core\{
     ORM\Entity,
-    Fields\EmailAddressGroup,
-    Fields\PhoneNumberGroup,
-    Fields\Address,
+    Field\EmailAddressGroup,
+    Field\PhoneNumberGroup,
+    Field\Address,
 };
 
 class Company extends Entity

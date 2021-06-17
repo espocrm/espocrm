@@ -35,8 +35,8 @@ use Espo\Core\{
     ORM\EntityManager,
     Application,
     Exceptions\Forbidden,
-    Fields\EmailAddress,
-    Fields\PhoneNumber,
+    Field\EmailAddress,
+    Field\PhoneNumber,
     Action\Actions\Merge\Merger,
     Action\Params,
 };

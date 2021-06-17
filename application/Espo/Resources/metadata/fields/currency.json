@@ -65,6 +65,6 @@
    ],
    "filter": true,
    "personalData": true,
-   "valueFactoryClassName": "Espo\\Core\\Fields\\Currency\\CurrencyFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Fields\\Currency\\CurrencyAttributeExtractor"
+   "valueFactoryClassName": "Espo\\Core\\Field\\Currency\\CurrencyFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Field\\Currency\\CurrencyAttributeExtractor"
 }

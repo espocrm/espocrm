@@ -36,7 +36,7 @@ use Espo\Core\{
     FieldProcessing\LoaderParams,
     ORM\EntityManager,
     Acl,
-    Fields\Currency\CurrencyConfigDataProvider,
+    Field\Currency\CurrencyConfigDataProvider,
 };
 
 use PDO;

@@ -32,8 +32,8 @@ namespace tests\integration\Espo\Core\FieldProcessing;
 use Espo\Core\ORM\EntityManager;
 
 use Espo\Core\{
-    Fields\EmailAddressGroup,
-    Fields\EmailAddress,
+    Field\EmailAddressGroup,
+    Field\EmailAddress,
 };
 
 class EmailAddressTest extends \tests\integration\Core\BaseTestCase

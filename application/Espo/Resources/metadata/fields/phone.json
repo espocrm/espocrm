@@ -50,6 +50,6 @@
    "translatedOptions": true,
    "textFilter": true,
    "personalData": true,
-   "valueFactoryClassName": "Espo\\Core\\Fields\\PhoneNumber\\PhoneNumberGroupFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Fields\\PhoneNumber\\PhoneNumberGroupAttributeExtractor"
+   "valueFactoryClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupAttributeExtractor"
 }

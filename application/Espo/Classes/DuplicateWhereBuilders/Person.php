@@ -31,7 +31,7 @@ namespace Espo\Classes\DuplicateWhereBuilders;
 
 use Espo\Core\{
     Duplicate\WhereBuilder,
-    Fields\EmailAddressGroup,
+    Field\EmailAddressGroup,
 };
 
 use Espo\ORM\{

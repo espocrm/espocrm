@@ -341,7 +341,7 @@ class Record extends RecordService implements
     }
 
     /**
-     * @deprecated Use `Espo\Core\Fields\Currency\CurrencyConverter`.
+     * @deprecated Use `Espo\Core\Field\Currency\CurrencyConverter`.
      */
     public function getConvertCurrencyValues(
         Entity $entity,

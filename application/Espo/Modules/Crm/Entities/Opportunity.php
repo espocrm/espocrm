@@ -31,8 +31,8 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\{
     ORM\Entity,
-    Fields\Currency,
-    Fields\Date,
+    Field\Currency,
+    Field\Date,
 };
 
 class Opportunity extends Entity

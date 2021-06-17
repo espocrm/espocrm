@@ -38,8 +38,8 @@ use Espo\Core\{
     Utils\DateTime as DateTimeUtil,
     FileStorage\Manager as FileStorageManager,
     ORM\EntityManager,
-    Fields\Address,
-    Fields\Address\AddressFormatterFactory,
+    Field\Address,
+    Field\Address\AddressFormatterFactory,
 };
 
 use Espo\Tools\Export\{

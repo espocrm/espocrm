@@ -31,7 +31,7 @@ namespace Espo\Modules\Crm\Entities;
 
 use Espo\Core\{
     ORM\Entity,
-    Fields\DateTimeOptional,
+    Field\DateTimeOptional,
 };
 
 class Task extends Entity

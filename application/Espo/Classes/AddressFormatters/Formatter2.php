@@ -30,8 +30,8 @@
 namespace Espo\Classes\AddressFormatters;
 
 use Espo\Core\{
-    Fields\Address,
-    Fields\Address\AddressFormatter,
+    Field\Address,
+    Field\Address\AddressFormatter,
 };
 
 class Formatter2 implements AddressFormatter

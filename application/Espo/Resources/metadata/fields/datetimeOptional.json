@@ -86,6 +86,6 @@
    },
    "view": "views/fields/datetime-optional",
    "personalData": true,
-   "valueFactoryClassName": "Espo\\Core\\Fields\\DateTimeOptional\\DateTimeOptionalFactory",
-   "attributeExtractorClassName": "Espo\\Core\\Fields\\DateTimeOptional\\DateTimeOptionalAttributeExtractor"
+   "valueFactoryClassName": "Espo\\Core\\Field\\DateTimeOptional\\DateTimeOptionalFactory",
+   "attributeExtractorClassName": "Espo\\Core\\Field\\DateTimeOptional\\DateTimeOptionalAttributeExtractor"
 }

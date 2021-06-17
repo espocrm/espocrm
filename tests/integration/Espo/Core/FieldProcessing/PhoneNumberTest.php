@@ -32,8 +32,8 @@ namespace tests\integration\Espo\Core\FieldProcessing;
 use Espo\Core\ORM\EntityManager;
 
 use Espo\Core\{
-    Fields\PhoneNumberGroup,
-    Fields\PhoneNumber,
+    Field\PhoneNumberGroup,
+    Field\PhoneNumber,
 };
 
 class PhoneNumberTest extends \tests\integration\Core\BaseTestCase
