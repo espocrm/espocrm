@@ -53,7 +53,7 @@ use RuntimeException;
  */
 class EntityManager
 {
-    private $pdo;
+    private $pdo = null;
 
     private $entityFactory;
 
@@ -402,11 +402,11 @@ class EntityManager
             throw new RuntimeException("Repository '{$entityType}' does not exist.");
         }
 
-        if (empty($this->repositoryHash[$entityType])) {
+        if (!array_key_exists($entityType, $this->repositoryHash)) {
             $this->repositoryHash[$entityType] = $this->repositoryFactory->create($entityType);
         }
 
-        return $this->repositoryHash[$entityType] ?? null;
+        return $this->repositoryHash[$entityType];
     }
 
     /**
@@ -452,7 +452,7 @@ class EntityManager
      */
     public function getPDO(): PDO
     {
-        if (empty($this->pdo)) {
+        if ($this->pdo === null) {
             $this->initPDO();
         }
 
