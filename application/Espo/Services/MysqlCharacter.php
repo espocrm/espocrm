@@ -51,50 +51,54 @@ class MysqlCharacter extends \Espo\Core\Services\Base
     {
         $container = $this->getContainer();
 
-        $pdo = $container->get('entityManager')->getPDO();
+
+        /* @var $em \Espo\ORM\EntityManager */
+        $em = $container->get('entityManager');
+
+        $sqlExecutor = $em->getSqlExecutor();
+
         $ormMeta = $container->get('ormMetadata')->getData(true);
 
         $databaseSchema = $container->get('schema');
         $maxIndexLength = $databaseSchema->getDatabaseHelper()->getMaxIndexLength();
+
         if ($maxIndexLength > 1000) {
             $maxIndexLength = 1000;
         }
 
-        //Account name
-        $sth = $pdo->prepare("SELECT `name` FROM `account` WHERE LENGTH(name) > 249");
-        $sth->execute();
-        $row = $sth->fetch(\PDO::FETCH_ASSOC);
-        if (empty($row)) {
-            $sth = $pdo->prepare("ALTER TABLE `account` MODIFY `name` VARCHAR(249)");
-            $sth->execute();
+        $sth = $sqlExecutor->execute("SELECT `name` FROM `account` WHERE LENGTH(name) > 249");
+
+        if (!$sth->fetch()) {
+            $sqlExecutor->execute("ALTER TABLE `account` MODIFY `name` VARCHAR(249)");
         }
 
         $fieldListExceededIndexMaxLength = SchemaUtils::getFieldListExceededIndexMaxLength($ormMeta, $maxIndexLength);
 
         foreach ($ormMeta as $entityName => $entityParams) {
-
             $tableName = \Espo\Core\Utils\Util::toUnderScore($entityName);
 
-            //Get table columns params
+            // Get table columns params
             $query = "SHOW FULL COLUMNS FROM `". $tableName ."` WHERE `Collation` <> 'utf8mb4_unicode_ci'";
 
             try {
-                $sth = $pdo->prepare($query);
-                $sth->execute();
-            } catch (\Exception $e) {
+                $sth = $sqlExecutor->execute($query);
+            }
+            catch (\Exception $e) {
                 $GLOBALS['log']->debug('Utf8mb4: Table does not exist - ' . $e->getMessage());
+
                 continue;
             }
 
-            $columnParams = array();
-            $rowList = $sth->fetchAll(\PDO::FETCH_ASSOC);
+            $columnParams = [];
+
+            $rowList = $sth->fetchAll();
+
             foreach ($rowList as $row) {
                 $columnParams[ $row['Field'] ] = $row;
             }
-            //END: get table columns params
+            // END: get table columns params
 
             foreach ($entityParams['fields'] as $fieldName => $fieldParams) {
-
                 $columnName = \Espo\Core\Utils\Util::toUnderScore($fieldName);
 
                 if (isset($fieldParams['notStorable']) && $fieldParams['notStorable']) {
@@ -120,6 +124,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
                             CHANGE COLUMN `". $columnName ."` `". $columnName ."` ". $columnParams[$columnName]['Type'] ."
                             CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
                         ";
+
                         break;
                 }
 
@@ -127,10 +132,12 @@ class MysqlCharacter extends \Espo\Core\Services\Base
                     $GLOBALS['log']->debug('Utf8mb4: execute the query - [' . $query . '].');
 
                     try {
-                        $sth = $pdo->prepare($query);
-                        $sth->execute();
-                    } catch (\Exception $e) {
-                        $GLOBALS['log']->warning('Utf8mb4: FAILED executing the query - [' . $query . '], details: '. $e->getMessage() .'.');
+                        $sqlExecutor->execute($query);
+                    }
+                    catch (\Exception $e) {
+                        $GLOBALS['log']->warning(
+                            'Utf8mb4: FAILED executing the query - [' . $query . '], details: '. $e->getMessage() .'.'
+                        );
                     }
                 }
             }
@@ -138,6 +145,7 @@ class MysqlCharacter extends \Espo\Core\Services\Base
 
         $config = $container->get('config');
         $database = $config->get('database');
+
         if (!isset($database['charset']) || $database['charset'] != 'utf8mb4') {
             $database['charset'] = 'utf8mb4';
             $config->set('database', $database);

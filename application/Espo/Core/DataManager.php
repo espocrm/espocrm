@@ -43,7 +43,6 @@ use Espo\Core\{
     Utils\Log,
 };
 
-use PDO;
 use Throwable;
 
 /**
@@ -300,17 +299,14 @@ class DataManager
             return;
         }
 
-        $pdo = $this->entityManager->getPDO();
+        $fullTextSearchMinLength = null;
 
         $sql = "SHOW VARIABLES LIKE 'ft_min_word_len'";
 
-        $sth = $pdo->prepare($sql);
-
-        $sth->execute();
-
-        $fullTextSearchMinLength = null;
-
-        $row = $sth->fetch(PDO::FETCH_ASSOC);
+        $row = $this->entityManager
+            ->getSqlExecutor()
+            ->execute($sql)
+            ->fetch();
 
         if ($row && isset($row['Value'])) {
             $fullTextSearchMinLength = intval($row['Value']);
