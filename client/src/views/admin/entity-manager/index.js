@@ -43,23 +43,9 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
         },
 
         events: {
-            /*'click a[data-action="editEntity"]': function (e) {
-                var scope = $(e.currentTarget).data('scope');
-                this.editEntity(scope);
-            },
-            'click [data-action="editFormula"]': function (e) {
-                var scope = $(e.currentTarget).data('scope');
-                this.editFormula(scope);
-            },*/
             'click button[data-action="createEntity"]': function (e) {
                 this.createEntity();
             },
-            /*'click [data-action="removeEntity"]': function (e) {
-                var scope = $(e.currentTarget).data('scope');
-                this.confirm(this.translate('confirmation', 'messages'), function () {
-                    this.removeEntity(scope);
-                }, this);
-            }*/
         },
 
         setupScopeData: function () {
@@ -126,78 +112,6 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                 }, this);
             }, this);
         },
-
-        /*editEntity: function (scope) {
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {
-                scope: scope,
-            }, function (view) {
-                view.render();
-
-                this.listenTo(view, 'after:save', function (o) {
-                    this.clearView('edit');
-                    this.setupScopeData();
-                    this.render();
-
-                    if (o.rebuildRequired) {
-                        this.createView('dialog', 'views/modal', {
-                            templateContent:
-                                "{{complexText viewObject.options.msg}}" +
-                                "{{complexText viewObject.options.msgRebuild}}",
-                            headerText: this.translate('rebuildRequired', 'strings', 'Admin'),
-                            backdrop: 'static',
-                            msg: this.translate('rebuildRequired', 'messages', 'Admin'),
-                            msgRebuild: '```php rebuild.php```',
-                            buttonList: [
-                                {
-                                    name: 'close',
-                                    label: this.translate('Close'),
-                                },
-                            ],
-                        }, function (view) {
-                            view.render();
-                        });
-                    }
-                }, this);
-
-                this.listenTo(view, 'close', function () {
-                    this.clearView('edit');
-                }, this);
-            }, this);
-        },*/
-
-        /*removeEntity: function (scope) {
-            $.ajax({
-                url: 'EntityManager/action/removeEntity',
-                type: 'POST',
-                data: JSON.stringify({
-                    name: scope,
-                })
-            }).done(function () {
-                this.$el.find('table tr[data-scope="'+scope+'"]').remove();
-                this.getMetadata().load(function () {
-                    this.getConfig().load(function () {
-                        this.setupScopeData();
-                        this.render();
-                    }.bind(this), true);
-                }.bind(this), true);
-            }.bind(this));
-        },*/
-
-        /*editFormula: function (scope) {
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-formula', {
-                scope: scope,
-            }, function (view) {
-                view.render();
-
-                this.listenTo(view, 'after:save', function () {
-                    this.clearView('edit');
-                }, this);
-
-                this.listenTo(view, 'close', function () {
-                    this.clearView('edit');
-                }, this);
-            }, this);
-        },*/
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Entity Manager', 'labels', 'Admin'));
