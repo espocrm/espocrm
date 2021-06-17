@@ -223,7 +223,6 @@ define(
                 this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
 
                 this.user = new User();
-
                 this.preferences = new Preferences();
 
                 this.preferences.settings = this.settings;
@@ -233,9 +232,7 @@ define(
                 this.fieldManager.acl = this.acl;
 
                 this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
-
                 this.modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
-
                 this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory);
 
                 if (this.settings.get('useWebSocket')) {
@@ -293,21 +290,23 @@ define(
                 let clientDefs = this.metadata.get('clientDefs') || {};
 
                 Object.keys(clientDefs).forEach(scope => {
-                    var o = clientDefs[scope];
+                    let o = clientDefs[scope];
 
-                    var implClassName = (o || {})[this.aclName || 'acl'];
+                    let implClassName = (o || {})[this.aclName || 'acl'];
 
-                    if (implClassName) {
-                        promiseList.push(
-                            new Promise(resolve => {
-                                this.loader.load(implClassName, implClass => {
-                                    aclImplementationClassMap[scope] = implClass;
-
-                                    resolve();
-                                });
-                            })
-                        );
+                    if (!implClassName) {
+                        return;
                     }
+
+                    promiseList.push(
+                        new Promise(resolve => {
+                            this.loader.load(implClassName, implClass => {
+                                aclImplementationClassMap[scope] = implClass;
+
+                                resolve();
+                            });
+                        })
+                    );
                 });
 
                 if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
