@@ -592,11 +592,23 @@ define(
             this.auth = this.storage.get('user', 'auth') || null;
 
             this.baseController.on('login', data => {
-                this.auth = Base64.encode(data.auth.userName  + ':' + data.auth.token);
+                let userId = data.user.id;
+                let userName = data.auth.userName;
+                let token = data.auth.token;
+
+                this.auth = Base64.encode(userName  + ':' + token);
+
+                let lastUserId = this.storage.get('user', 'lastUserId');
+
+                if (lastUserId !== userId) {
+                    this.metadata.clearCache();
+                    this.language.clearCache();
+                }
 
                 this.storage.set('user', 'auth', this.auth);
+                this.storage.set('user', 'lastUserId', userId);
 
-                this.setCookieAuth(data.auth.userName, data.auth.token);
+                this.setCookieAuth(userName, token);
 
                 this.initUserData(data, () => this.trigger('auth'));
             });

@@ -137,6 +137,14 @@ define('metadata', [], function () {
             }
         },
 
+        clearCache: function () {
+            if (!this.cache) {
+                return;
+            }
+
+            this.cache.clear('app', 'metadata');
+        },
+
         getScopeList: function () {
             let scopes = this.get('scopes') || {};
             let scopeList = [];
