@@ -678,7 +678,7 @@ define(
 
             new Promise(resolve => {
                 if (options.user) {
-                    resolve();
+                    resolve(options);
 
                     return;
                 };
@@ -686,16 +686,14 @@ define(
                 this.requestUserData(data => {
                     options = data;
 
-                    resolve();
+                    resolve(options);
                 });
             })
-            .then(
-                new Promise(resolve => {
-                    this.language.name = options.language;
+            .then(options => {
+                this.language.name = options.language;
 
-                    this.language.load(() => resolve());
-                })
-            )
+                return this.language.load();
+            })
             .then(() => {
                 this.dateTime.setLanguage(this.language);
 
@@ -711,7 +709,7 @@ define(
                 this.settings.set(settingData);
                 this.acl.set(aclData);
 
-                for (var param in options.appParams) {
+                for (let param in options.appParams) {
                     this.appParams[param] = options.appParams[param];
                 }
 
