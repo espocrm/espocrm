@@ -448,7 +448,7 @@ class EntityManager
     }
 
     /**
-     * Get a PDO instance.
+     * @deprecated
      */
     public function getPDO(): PDO
     {
