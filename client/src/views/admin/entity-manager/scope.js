@@ -145,7 +145,7 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
                     this.getMetadata()
                         .loadSkipCache()
                         .then(() => {
-                            this.getConfig().loadSkipCache().then(() => {
+                            this.getConfig().load().then(() => {
                                 Espo.Ui.notify(false);
 
                                 this.getRouter().navigate('#Admin/entityManager', {trigger: true});
@@ -161,7 +161,7 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
 
         },
 
-        editFormula: function (scope) {
+        editFormula: function () {
             var scope = this.scope;
 
             this.createView('edit', 'views/admin/entity-manager/modals/edit-formula', {

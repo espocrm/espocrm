@@ -26,6 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/**
+ * @internal Not used.
+ */
 define('model-offline', 'model', function (Model) {
 
     let ModelOffline = Model.extend({
@@ -59,7 +62,11 @@ define('model-offline', 'model', function (Model) {
 
             return new Promise(resolve => {
                 this.fetch()
-                    .then(() => resolve());
+                    .then(() => {
+                        this.storeToCache();
+
+                        resolve();
+                    });
             });
         },
 

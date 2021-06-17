@@ -25,37 +25,50 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('models/settings', 'model-offline', function (Dep) {
+
+define('models/settings', 'model', function (Dep) {
 
     return Dep.extend({
 
         name: 'Settings',
 
+        load: function () {
+            return new Promise(resolve => {
+                this.fetch()
+                    .then(() => resolve());
+            });
+        },
+
         getByPath: function (arr) {
-            if (!arr.length) return null;
+            if (!arr.length) {
+                return null;
+            }
 
-            var p;
+            let p;
 
-            for (var i = 0; i < arr.length; i++) {
+            for (let i = 0; i < arr.length; i++) {
                 var item = arr[i];
-                if (i == 0) {
+
+                if (i === 0) {
                     p = this.get(item);
-                } else {
+                }
+                else {
                     if (item in p) {
                         p = p[item];
-                    } else {
+                    }
+                    else {
                         return null;
                     }
                 }
+
                 if (i === arr.length - 1) {
                     return p;
                 }
+
                 if (p === null || typeof p !== 'object') {
                     return null;
                 }
             }
-        }
-
+        },
     });
-
 });

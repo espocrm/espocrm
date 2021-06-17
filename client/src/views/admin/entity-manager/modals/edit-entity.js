@@ -692,7 +692,7 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 this.getMetadata().loadSkipCache()
                 .then(
                     Promise.all([
-                        this.getConfig().loadSkipCache(),
+                        this.getConfig().load(),
                         this.getLanguage().loadSkipCache(),
                     ])
                 )
