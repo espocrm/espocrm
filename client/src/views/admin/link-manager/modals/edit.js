@@ -60,7 +60,7 @@ define('views/admin/link-manager/modals/edit',
 
             var entity = scope;
 
-            var isNew = this.isNew = (false == link);
+            var isNew = this.isNew = (false === link);
 
             var header = 'Create Link';
             if (!isNew) {
@@ -704,22 +704,27 @@ define('views/admin/link-manager/modals/edit',
                 url: url,
                 type: 'POST',
                 data: JSON.stringify(attributes),
-                error: function (xhr) {
-                    if (xhr.status == 409) {
+                error: (xhr) => {
+                    if (xhr.status === 409) {
                         var msg = this.translate('linkConflict', 'messages', 'EntityManager');
                         var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+
                         if (statusReasonHeader) {
                             console.error(statusReasonHeader);
                         }
+
                         Espo.Ui.error(msg);
+
                         xhr.errorIsHandled = true;
                     }
+
                     this.$el.find('button[data-name="save"]').removeClass('disabled').removeAttr('disabled');
-                }.bind(this)
-            }).done(function () {
+                }
+            }).then(() => {
                 if (!this.isNew) {
                     Espo.Ui.success(this.translate('Saved'));
-                } else {
+                }
+                else {
                     Espo.Ui.success(this.translate('Created'));
                 }
 
@@ -740,11 +745,11 @@ define('views/admin/link-manager/modals/edit',
                     }
                 }
 
-                this.getMetadata().load(function () {
+                this.getMetadata().loadSkipCache().then(() => {
                     this.trigger('after:save');
                     this.close();
-                }.bind(this), true);
-            }.bind(this));
+                });
+            });
         },
 
         getForeignLinkEntityTypeList: function (entityType, link, entityTypeList, onlyNotCustom) {

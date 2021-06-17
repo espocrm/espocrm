@@ -189,13 +189,15 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
                     entity: this.scope,
                     link: link,
                 })
-            }).done(function () {
+            }).then(() => {
                 this.$el.find('table tr[data-link="'+link+'"]').remove();
-                this.getMetadata().load(function () {
+
+                this.getMetadata().loadSkipCache().then(() => {
                     this.setupLinkData();
+
                     this.render();
-                }.bind(this), true);
-            }.bind(this));
+                });
+            });
         },
 
         renderHeader: function () {

@@ -551,7 +551,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.model.set('tooltip', false);
             }
 
-            this.listenToOnce(this.model, 'sync', function () {
+            this.listenToOnce(this.model, 'sync', () => {
                 Espo.Ui.notify(false);
 
                 this.enableButtons();
@@ -559,39 +559,18 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.updateLanguage();
 
                 Promise.all([
-                    new Promise(
-                        function (resolve) {
-                            this.getMetadata().load(function () {
-                                this.getMetadata().storeToCache();
-
-                                resolve();
-                            }.bind(this), true);
-                        }.bind(this)
-                    ),
-                    new Promise(
-                        function (resolve) {
-                            this.getLanguage().load(function () {
-                                this.getLanguage().storeToCache();
-
-                                resolve();
-                            }.bind(this), true);
-                        }.bind(this)
-                    )
-                ]).then(
-                    function () {
-                        this.trigger('after:save');
-                    }.bind(this)
-                );
+                    this.getMetadata().loadSkipCache(),
+                    this.getLanguage().loadSkipCache(),
+                ])
+                .then(() => this.trigger('after:save'));
 
                 this.model.fetchedAttributes = this.model.getClonedAttributes();
-            }, this);
+            });
 
             this.notify('Saving...');
 
             if (this.isNew) {
-                this.model.save().error(function () {
-                    this.enableButtons();
-                }.bind(this));
+                this.model.save().error(() => this.enableButtons());
             }
             else {
                 var attributes = this.model.getClonedAttributes();
@@ -655,40 +634,20 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.ajaxPostRequest('FieldManager/action/resetToDefault', {
                     scope: this.scope,
                     name: this.field,
-                }).then(
-                    function () {
-                        Promise
-                        .all([
-                            new Promise(
-                                function (resolve) {
-                                    this.getMetadata().load(function () {
-                                        this.getMetadata().storeToCache();
+                }).then(() => {
+                    Promise
+                    .all([
+                        this.getMetadata().loadSkipCache(),
+                        this.getLanguage().loadSkipCache(),
+                    ])
+                    .then(() => {
+                        this.setupFieldData(() => {
+                            this.notify('Done', 'success');
 
-                                        resolve();
-                                    }.bind(this), true);
-                                }.bind(this)
-                            ),
-                            new Promise(
-                                function (resolve) {
-                                    this.getLanguage().load(function () {
-                                        this.getLanguage().storeToCache();
-
-                                        resolve();
-                                    }.bind(this), true);
-                                }.bind(this)
-                            )
-                        ])
-                        .then(
-                            function () {
-                                this.setupFieldData(function () {
-                                    this.notify('Done', 'success');
-
-                                    this.reRender();
-                                }.bind(this));
-                            }.bind(this)
-                        );
-                    }.bind(this)
-                );
+                            this.reRender();
+                        });
+                    });
+                });
 
             }, this);
         },

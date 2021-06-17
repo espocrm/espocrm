@@ -137,20 +137,33 @@ define('language', ['ajax'], function (Ajax) {
                 if (this.loadFromCache(loadDefault)) {
                     this.trigger('sync');
 
-                    return;
+                    return new Promise(resolve => resolve());
                 }
             }
 
-            this.fetch(disableCache, loadDefault);
+            return new Promise(resolve => {
+                this.fetch(loadDefault)
+                    .then(() => resolve());
+            });
         },
 
-        fetch: function (disableCache, loadDefault) {
+        loadDefault: function () {
+            return this.load(null, false, true);
+        },
+
+        loadSkipCache: function () {
+            return this.load(null, true);
+        },
+
+        loadDefaultSkipCache: function () {
+            return this.load(null, true, true);
+        },
+
+        fetch: function (loadDefault) {
             return Ajax.getRequest(this.url, {default: loadDefault}).then(data => {
                 this.data = data;
 
-                if (!disableCache) {
-                    this.storeToCache(loadDefault);
-                }
+                this.storeToCache(loadDefault);
 
                 this.trigger('sync');
             });

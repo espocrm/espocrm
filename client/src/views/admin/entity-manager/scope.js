@@ -141,22 +141,18 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
                 Espo.Ajax.postRequest('EntityManager/action/removeEntity', {
                     name: scope,
                 })
-                .then(
-                    function () {
-                        this.getMetadata().load(function () {
-                            this.getConfig().load(function () {
+                .then(() => {
+                    this.getMetadata()
+                        .loadSkipCache()
+                        .then(() => {
+                            this.getConfig().loadSkipCache().then(() => {
                                 Espo.Ui.notify(false);
 
                                 this.getRouter().navigate('#Admin/entityManager', {trigger: true});
-                            }.bind(this), true);
-                        }.bind(this), true);
-                    }.bind(this)
-                )
-                .fail(
-                    function () {
-                        this.enableButtons();
-                    }.bind(this)
-                );
+                            });
+                        });
+                })
+                .fail(() => this.enableButtons());
 
             }.bind(this));
         },

@@ -672,114 +672,68 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                 }
             }
 
-            Espo.Ajax.postRequest(url, data)
-            .then(
-                function () {
-                    this.model.fetchedAttributes = this.model.getClonedAttributes();
+            Espo.Ajax
+            .postRequest(url, data)
+            .then(() => {
+                this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-                    if (this.scope) {
-                        Espo.Ui.success(this.translate('Saved'));
-                    } else {
-                        Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'));
-                    }
+                if (this.scope) {
+                    Espo.Ui.success(this.translate('Saved'));
+                }
+                else {
+                    Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'));
+                }
 
-                    var global = ((this.getLanguage().data || {}) || {}).Global;
+                var global = ((this.getLanguage().data || {}) || {}).Global;
 
-                    (global.scopeNames || {})[name] = this.model.get('labelSingular');
-                    (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
+                (global.scopeNames || {})[name] = this.model.get('labelSingular');
+                (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
 
-                    new Promise(
-                        function (resolve) {
-                            this.getMetadata().load(function () {
-                                resolve();
-                            }, true);
-                        }.bind(this)
-                    ).then(
-                        Promise.all([
-                            new Promise(
-                                function (resolve) {
-                                    this.getConfig().load(function () {
-                                        resolve();
-                                    }, true);
-                                }.bind(this)
-                            ),
-                            new Promise(
-                                function (resolve) {
-                                    this.getLanguage().load(function () {
-                                        resolve();
-                                    }, true);
-                                }.bind(this)
-                            )
-                        ])
-                    ).then(
-                        function () {
-                            var rebuildRequired =
-                                data.fullTextSearch && !fetchedAttributes.fullTextSearch;
+                this.getMetadata().loadSkipCache()
+                .then(
+                    Promise.all([
+                        this.getConfig().loadSkipCache(),
+                        this.getLanguage().loadSkipCache(),
+                    ])
+                )
+                .then(() => {
+                    var rebuildRequired =
+                        data.fullTextSearch && !fetchedAttributes.fullTextSearch;
 
-                            var o = {
-                                rebuildRequired: rebuildRequired,
-                                scope: name,
-                            };
+                    var o = {
+                        rebuildRequired: rebuildRequired,
+                        scope: name,
+                    };
 
-                            this.trigger('after:save', o);
-                        }.bind(this)
-                    );
-                }.bind(this)
-            )
-            .fail(
-                function () {
-                    this.enableButton('save');
-                    this.enableButton('resetToDefault');
-                }.bind(this)
-            );
+                    this.trigger('after:save', o);
+                });
+            })
+            .fail(() => {
+                this.enableButton('save');
+                this.enableButton('resetToDefault');
+            });
         },
 
         actionResetToDefault: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
                 this.ajaxPostRequest('EntityManager/action/resetToDefault', {
                     scope: this.scope,
                 })
-                .then(
-                    function () {
-                        (new Promise(
-                            function (resolve) {
-                                this.getMetadata().load(
-                                    function () {
-                                        this.getMetadata().storeToCache();
-                                        resolve();
-                                    }.bind(this),
-                                    true
-                                );
-                            }.bind(this)
-                        ))
-                        .then(
-                            function () {
-                                return new Promise(
-                                    function (resolve) {
-                                        this.getLanguage().load(
-                                            function () {
-                                                resolve();
-                                            }.bind(this),
-                                            true
-                                        );
-                                    }.bind(this)
-                                )
-                            }.bind(this)
-                        )
-                        .then(
-                            function () {
-                                this.setupData();
+                .then(() => {
+                    this.getMetadata()
+                        .loadSkipCache()
+                        .then(() => this.getLanguage().loadSkipCache())
+                        .then(() => {
+                            this.setupData();
 
-                                this.model.fetchedAttributes = this.model.getClonedAttributes();
+                            this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-                                this.notify('Done', 'success');
-                            }.bind(this)
-                        );
-                    }.bind(this)
-                );
-            }, this);
+                            this.notify('Done', 'success');
+                        });
+                });
+            });
         },
 
         getTextFiltersOptionList: function (scope) {

@@ -46,20 +46,25 @@ define('model-offline', 'model', function (Model) {
             this.cache = options.cache || null;
         },
 
-        load: function (callback, disableCache, sync) {
+        load: function (callback, disableCache) {
             this.once('sync', callback);
 
             if (!disableCache) {
                 if (this.loadFromCache()) {
                     this.trigger('sync');
 
-                    return;
+                    return new Promise(resolve => resolve());
                 }
             }
 
-            this.fetch({
-                async: !(sync || false)
+            return new Promise(resolve => {
+                this.fetch()
+                    .then(() => resolve());
             });
+        },
+
+        loadSkipCache: function () {
+            return this.load(null, true);
         },
 
         loadFromCache: function () {

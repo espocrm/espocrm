@@ -76,10 +76,10 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
         },
 
         removeField: function (field) {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 Espo.Ui.notify(this.translate('Removing...'));
 
-                Espo.Ajax.request('Admin/fieldManager/' + this.scope + '/' + field, 'delete').then(function () {
+                Espo.Ajax.request('Admin/fieldManager/' + this.scope + '/' + field, 'delete').then(() => {
                     Espo.Ui.success(this.translate('Removed'));
 
                     this.$el.find('tr[data-name="'+field+'"]').remove();
@@ -87,23 +87,15 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
 
                     delete data['entityDefs'][this.scope]['fields'][field];
 
-                    this.getMetadata().load(function () {
-                        this.getMetadata().storeToCache();
-
+                    this.getMetadata().loadSkipCache(() => {
                         this.buildFieldDefs()
-                        .then(
-                            function () {
-                                return this.reRender()
-                            }.bind(this)
-                        )
-                        .then(
-                            function () {
-                                Espo.Ui.success(this.translate('Removed'));
-                            }.bind(this)
-                        );
-                    }.bind(this), true);
-                }.bind(this));
-            }.bind(this));
+                            .then(() => {
+                                return this.reRender();
+                            })
+                            .then(() => Espo.Ui.success(this.translate('Removed')));
+                    });
+                });
+            });
         },
     });
 });

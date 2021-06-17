@@ -216,12 +216,8 @@ define(
 
             Promise
             .all([
-                new Promise(resolve => {
-                    this.settings.load(() => resolve());
-                }),
-                new Promise(resolve => {
-                    this.language.load(() => resolve(), false, true);
-                })
+                this.settings.load(),
+                this.language.loadDefault()
             ])
             .then(() => {
                 this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
@@ -274,7 +270,7 @@ define(
         },
 
         onAuth: function () {
-            this.metadata.load(() => {
+            this.metadata.load().then(() => {
                 this.fieldManager.defs = this.metadata.get('fields');
                 this.fieldManager.metadata = this.metadata;
 

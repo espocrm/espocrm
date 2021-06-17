@@ -43,31 +43,36 @@ define('metadata', [], function () {
 
         url: 'Metadata',
 
-        load: function (callback, disableCache, sync) {
-            sync = (typeof sync === 'undefined') ? false: sync;
-
+        load: function (callback, disableCache) {
             this.off('sync');
 
-            if (callback)
+            if (callback) {
                 this.once('sync', callback);
+            }
 
             if (!disableCache) {
                  if (this.loadFromCache()) {
                     this.trigger('sync');
 
-                    return;
+                    return new Promise(resolve => resolve());
                 }
             }
 
-            return this.fetch(sync);
+            return new Promise(resolve => {
+                this.fetch()
+                    .then(() => resolve());
+            });
         },
 
-        fetch: function (sync) {
+        loadSkipCache: function () {
+            return this.load(null, true);
+        },
+
+        fetch: function () {
             return this.ajax({
                 url: this.url,
                 type: 'GET',
                 dataType: 'JSON',
-                async: !(sync || false),
                 success: data => {
                     this.data = data;
 
