@@ -9,7 +9,7 @@
 
 <div class="button-container">
     <div class="btn-group actions-btn-group" role="group">
-        <button class="btn btn-default action" data-action="editEntity">
+        <button class="btn btn-default action btn-lg action btn-wide" data-action="editEntity">
             <span class="icon fas fa-cog"></span>
             {{translate 'Edit'}}
         </button>
