@@ -136,7 +136,7 @@ class Layout
         );
     }
 
-    private function sanitizeInput(string $name): string
+    protected function sanitizeInput(string $name): string
     {
         return preg_replace("([\.]{2,})", '', $name);
     }

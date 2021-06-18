@@ -33,6 +33,7 @@ use Espo\Core\{
     Utils\Util,
     Utils\Json,
     Utils\Layout as LayoutBase,
+    Exceptions\Error,
 };
 
 class Layout extends LayoutBase
@@ -42,8 +43,12 @@ class Layout extends LayoutBase
         $originalScope = $scope;
         $originalName = $name;
 
-        $scope = $this->sanitizeInput($scope);
-        $name = $this->sanitizeInput($name);
+        if (
+            $this->sanitizeInput($scope) !== $scope ||
+            $this->sanitizeInput($name) !== $name
+        ) {
+            throw new Error("Bad parameters.");
+        }
 
         if (isset($this->changedData[$scope][$name])) {
             return Json::encode($this->changedData[$scope][$name]);
