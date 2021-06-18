@@ -52,8 +52,6 @@ class Metadata
 
     private $metadataHelper;
 
-    private $pathToModules = 'application/Espo/Modules';
-
     private $cacheKey = 'metadata';
 
     private $objCacheKey = 'objMetadata';
@@ -65,8 +63,6 @@ class Metadata
     ];
 
     private $moduleList = null;
-
-    private $defaultModuleOrder = 10;
 
     private $deletedData = [];
 
@@ -81,16 +77,16 @@ class Metadata
     public function __construct(
         FileManager $fileManager,
         DataCache $dataCache,
+        UnifierObj $unifier,
         bool $useCache = false
     ){
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
+        $this->unifier = $unifier;
 
         $this->useCache = $useCache;
 
-        $this->module = new Module($this->fileManager, $dataCache, $useCache);
-
-        $this->unifier = new UnifierObj($this->fileManager, $this, true);
+        $this->module = new Module($this->fileManager, $this->dataCache, $useCache);
     }
 
     private function getMetadataHelper(): Helper
@@ -190,7 +186,7 @@ class Metadata
             return;
         }
 
-        $this->objData = $this->unifier->unify('metadata', $this->paths, true);
+        $this->objData = $this->unifier->unify($this->paths, true);
         $this->objData = $this->addAdditionalFieldsObj($this->objData);
 
         if ($this->useCache) {
@@ -568,30 +564,7 @@ class Metadata
 
     private function loadModuleList(): void
     {
-        $modules = $this->fileManager->getFileList($this->pathToModules, false, '', false);
-
-        $modulesToSort = [];
-
-        if (is_array($modules)) {
-            foreach ($modules as $moduleName) {
-                if (!empty($moduleName) && !isset($modulesToSort[$moduleName])) {
-                    $modulesToSort[$moduleName] = $this->module->get(
-                        $moduleName . '.order',
-                        $this->defaultModuleOrder
-                    );
-                }
-            }
-        }
-
-        array_multisort(
-            array_values($modulesToSort),
-            SORT_ASC,
-            array_keys($modulesToSort),
-            SORT_ASC,
-            $modulesToSort
-        );
-
-        $this->moduleList = array_keys($modulesToSort);
+        $this->moduleList = $this->module->getOrderedList();
     }
 
     /**

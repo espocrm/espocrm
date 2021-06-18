@@ -36,12 +36,11 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\File\Unifier;
+use Espo\Core\Utils\Module;
 
 class LanguageTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
-
-    protected $objects;
 
     protected $reflection;
 
@@ -55,19 +54,21 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     {
         $this->fileManager = new FileManager();
 
-        $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
+        $this->dataCache = $this->createMock(DataCache::class);
 
-        $this->metadata = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
+        $this->metadata = $this->createMock(Metadata::class);
 
         $this->metadata->expects($this->any())
-        ->method('getModuleList')
-        ->will($this->returnValue(
-            [
-                'Crm',
-            ]
-        ));
+            ->method('getModuleList')
+            ->will($this->returnValue(
+                [
+                    'Crm',
+                ]
+            ));
 
-        $this->unifier = new Unifier($this->fileManager, $this->metadata);
+        $module = new Module($this->fileManager);
+
+        $this->unifier = new Unifier($this->fileManager, $module);
 
         $this->object = new Language(
             null,

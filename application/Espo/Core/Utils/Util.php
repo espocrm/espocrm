@@ -497,22 +497,27 @@ class Util
 
         if (is_array($key)) {
             $keys = $key;
-        } else {
+        }
+        else {
             $keys = explode('.', $key);
         }
 
         $item = $data;
+
         foreach ($keys as $keyName) {
             if (is_array($item)) {
                 if (isset($item[$keyName])) {
                     $item = $item[$keyName];
-                } else {
+                }
+                else {
                     return $default;
                 }
-            } else if (is_object($item)) {
+            }
+            else if (is_object($item)) {
                 if (isset($item->$keyName)) {
                     $item = $item->$keyName;
-                } else {
+                }
+                else {
                     return $default;
                 }
             }

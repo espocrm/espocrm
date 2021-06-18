@@ -35,16 +35,16 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\UnifierObj;
+use Espo\Core\Utils\Module;
 
 class MetadataTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
 
-    protected $objects;
-
     protected $reflection;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->fileManager = new FileManager();
 
@@ -54,7 +54,11 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $GLOBALS['log'] = $this->log;
 
-        $this->object = new Metadata($this->fileManager, $this->dataCache, true);
+        $module = new Module($this->fileManager);
+
+        $unifier = new UnifierObj($this->fileManager, $module);
+
+        $this->object = new Metadata($this->fileManager, $this->dataCache, $unifier, true);
 
         $this->reflection = new ReflectionHelper($this->object);
     }

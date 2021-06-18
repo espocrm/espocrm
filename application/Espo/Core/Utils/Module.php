@@ -119,6 +119,8 @@ class Module
 
     /**
      * Get an ordered list of modules.
+     *
+     * @todo Use cache if available.
      */
     public function getOrderedList(): array
     {
@@ -139,7 +141,7 @@ class Module
                 continue;
             }
 
-            $modulesToSort[$moduleName] = $this->get($moduleName . '.order', self::DEFAULT_ORDER);
+            $modulesToSort[$moduleName] = $this->get([$moduleName,  'order'], self::DEFAULT_ORDER);
         }
 
         array_multisort(

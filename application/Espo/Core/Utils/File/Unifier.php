@@ -31,7 +31,7 @@ namespace Espo\Core\Utils\File;
 
 use Espo\Core\{
     Utils\File\Manager as FileManager,
-    Utils\Metadata,
+    Utils\Module,
     Utils\Util,
     Utils\DataUtil,
     Utils\Json,
@@ -43,54 +43,47 @@ class Unifier
 {
     private $fileManager;
 
-    private $metadata = null;
+    private $module;
 
     protected $useObjects = false;
 
-    protected $unsetFileName = 'unset.json';
+    private $unsetFileName = 'unset.json';
 
-    public function __construct(
-        FileManager $fileManager,
-        ?Metadata $metadata = null
-    ) {
+    private $moduleList = null;
+
+    public function __construct(FileManager $fileManager, Module $module)
+    {
         $this->fileManager = $fileManager;
-        $this->metadata = $metadata;
+        $this->module = $module;
     }
 
     /**
      * Unite file content to the file.
      *
-     * @param string $name
      * @param array $paths
      * @param boolean $recursively Note: only for first level of sub directory,
      * other levels of sub directories will be ignored.
      *
      * @return array|object
      */
-    public function unify(string $name, array $paths, bool $recursively = false)
+    public function unify(array $paths, bool $recursively = true)
     {
-        $content = $this->unifySingle($paths['corePath'], $name, $recursively);
+        $data = $this->unifySingle($paths['corePath'], $recursively);
 
         if (!empty($paths['modulePath'])) {
-            $customDir = strstr($paths['modulePath'], '{*}', true);
-
-            $moduleList = isset($this->metadata) ?
-                $this->metadata->getModuleList() :
-                $this->fileManager->getFileList($customDir, false, '', false);
-
-            foreach ($moduleList as $moduleName) {
+            foreach ($this->getModuleList() as $moduleName) {
                 $curPath = str_replace('{*}', $moduleName, $paths['modulePath']);
 
                 if ($this->useObjects) {
-                    $content = DataUtil::merge(
-                        $content,
-                        $this->unifySingle($curPath, $name, $recursively, $moduleName)
+                    $data = DataUtil::merge(
+                        $data,
+                        $this->unifySingle($curPath, $recursively, $moduleName)
                     );
                 }
                 else {
-                    $content = Util::merge(
-                        $content,
-                        $this->unifySingle($curPath, $name, $recursively, $moduleName)
+                    $data = Util::merge(
+                        $data,
+                        $this->unifySingle($curPath, $recursively, $moduleName)
                     );
                 }
             }
@@ -98,20 +91,20 @@ class Unifier
 
         if (!empty($paths['customPath'])) {
             if ($this->useObjects) {
-                $content = DataUtil::merge(
-                    $content,
-                    $this->unifySingle($paths['customPath'], $name, $recursively)
+                $data = DataUtil::merge(
+                    $data,
+                    $this->unifySingle($paths['customPath'], $recursively)
                 );
             }
             else {
-                $content = Util::merge(
-                    $content,
-                    $this->unifySingle($paths['customPath'], $name, $recursively)
+                $data = Util::merge(
+                    $data,
+                    $this->unifySingle($paths['customPath'], $recursively)
                 );
             }
         }
 
-        return $content;
+        return $data;
     }
 
     /**
@@ -123,19 +116,19 @@ class Unifier
      * other levels of sub directories will be ignored.
      * @param string $moduleName Name of module if exists.
      *
-     * @return string Content of the files.
+     * @return array|object Content of the files.
      */
-    protected function unifySingle($dirPath, $type, $recursively = false, $moduleName = '')
+    private function unifySingle(string $dirPath, bool $recursively, string $moduleName = '')
     {
-        $content = [];
+        $data = [];
         $unsets = [];
 
         if ($this->useObjects) {
-            $content = (object) [];
+            $data = (object) [];
         }
 
         if (empty($dirPath) || !file_exists($dirPath)) {
-            return $content;
+            return $data;
         }
 
         $fileList = $this->fileManager->getFileList($dirPath, $recursively, '\.json$');
@@ -143,20 +136,18 @@ class Unifier
         $dirName = $this->fileManager->getDirName($dirPath, false);
 
         foreach ($fileList as $dirName => $fileName) {
-            if (is_array($fileName)) { /*only first level of a sub-directory*/
-
+            if (is_array($fileName)) { // only first level of a sub-directory
                 $itemValue = $this->unifySingle(
                     Util::concatPath($dirPath, $dirName),
-                    $type,
                     false,
                     $moduleName
                 );
 
                 if ($this->useObjects) {
-                    $content->$dirName = $itemValue;
+                    $data->$dirName = $itemValue;
                 }
                 else {
-                    $content[$dirName] = $itemValue;
+                    $data[$dirName] = $itemValue;
                 }
 
                 continue;
@@ -179,27 +170,27 @@ class Unifier
             $name = $this->fileManager->getFileName($fileName, '.json');
 
             if ($this->useObjects) {
-                $content->$name = $itemValue;
+                $data->$name = $itemValue;
             }
             else {
-                $content[$name] = $itemValue;
+                $data[$name] = $itemValue;
             }
         }
 
         if ($this->useObjects) {
-            $content = DataUtil::unsetByKey($content, $unsets);
+            $data = DataUtil::unsetByKey($data, $unsets);
         }
         else {
-            $content = Util::unsetInArray($content, $unsets);
+            $data = Util::unsetInArray($data, $unsets);
         }
 
-        return $content;
+        return $data;
     }
 
     /**
      * Get content from files for unite files.
      */
-    protected function getContents(string $path)
+    private function getContents(string $path)
     {
         $fileContent = $this->fileManager->getContents($path);
 
@@ -211,5 +202,17 @@ class Unifier
                 "JSON syntax error in '{$path}'."
             );
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getModuleList(): array
+    {
+        if (!isset($this->moduleList)) {
+           $this->moduleList = $this->module->getOrderedList();
+        }
+
+        return $this->moduleList;
     }
 }

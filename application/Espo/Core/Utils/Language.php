@@ -380,7 +380,7 @@ class Language
                 unset($paths['customPath']);
             }
 
-            $data = $this->unifier->unify('i18n', $paths, true);
+            $data = $this->unifier->unify($paths, true);
 
             if (is_array($data)) {
                 $this->sanitizeData($data);
