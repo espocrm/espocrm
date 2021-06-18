@@ -43,20 +43,18 @@ class Unifier
 {
     private $fileManager;
 
-    private $metadata;
+    private $metadata = null;
 
-    protected $useObjects;
+    protected $useObjects = false;
 
     protected $unsetFileName = 'unset.json';
 
     public function __construct(
         FileManager $fileManager,
-        Metadata $metadata = null,
-        bool $useObjects = false
+        ?Metadata $metadata = null
     ) {
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
-        $this->useObjects = $useObjects;
     }
 
     /**

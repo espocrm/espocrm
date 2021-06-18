@@ -32,7 +32,7 @@ namespace Espo\Core\Utils;
 use Espo\Core\{
     Exceptions\Error,
     Utils\File\Manager as FileManager,
-    Utils\File\Unifier,
+    Utils\File\UnifierObj,
     Utils\Module,
     Utils\Metadata\Helper,
     Utils\DataCache,
@@ -47,8 +47,6 @@ class Metadata
     private $objData = null;
 
     private $useCache;
-
-    private $objUnifier;
 
     private $module;
 
@@ -78,23 +76,21 @@ class Metadata
 
     private $dataCache;
 
-    public function __construct(FileManager $fileManager, DataCache $dataCache, bool $useCache = false)
-    {
+    private $unifier;
+
+    public function __construct(
+        FileManager $fileManager,
+        DataCache $dataCache,
+        bool $useCache = false
+    ){
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
 
         $this->useCache = $useCache;
 
         $this->module = new Module($this->fileManager, $dataCache, $useCache);
-    }
 
-    private function getObjUnifier(): Unifier
-    {
-        if (!isset($this->objUnifier)) {
-            $this->objUnifier = new Unifier($this->fileManager, $this, true);
-        }
-
-        return $this->objUnifier;
+        $this->unifier = new UnifierObj($this->fileManager, $this, true);
     }
 
     private function getMetadataHelper(): Helper
@@ -194,7 +190,7 @@ class Metadata
             return;
         }
 
-        $this->objData = $this->getObjUnifier()->unify('metadata', $this->paths, true);
+        $this->objData = $this->unifier->unify('metadata', $this->paths, true);
         $this->objData = $this->addAdditionalFieldsObj($this->objData);
 
         if ($this->useCache) {
