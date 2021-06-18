@@ -34,7 +34,7 @@ use Espo\Core\{
     Utils\Util,
     Utils\File\Manager as FileManager,
     Utils\Metadata,
-    Utils\File\Unifier as FileUnifier,
+    Utils\File\Unifier,
     Utils\Config,
     Utils\DataCache,
 };
@@ -75,7 +75,7 @@ class Language
         ?string $language,
         FileManager $fileManager,
         Metadata $metadata,
-        FileUnifier $unifier,
+        Unifier $unifier,
         DataCache $dataCache,
         bool $useCache = false,
         bool $noCustom = false
