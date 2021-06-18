@@ -35,6 +35,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\File\Unifier;
 
 class LanguageTest extends \PHPUnit\Framework\TestCase
 {
@@ -50,7 +51,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         'customPath' => 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/i18n/{language}',
     ];
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->fileManager = new FileManager();
 
@@ -66,7 +67,16 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
             ]
         ));
 
-        $this->object = new Language(null, $this->fileManager, $this->metadata, $this->dataCache, false);
+        $this->unifier = new Unifier($this->fileManager, $this->metadata);
+
+        $this->object = new Language(
+            null,
+            $this->fileManager,
+            $this->metadata,
+            $this->unifier,
+            $this->dataCache,
+            false
+        );
 
         $this->reflection = new ReflectionHelper($this->object);
 
@@ -74,7 +84,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('currentLanguage', 'en_US');
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->object = NULL;
     }

@@ -31,49 +31,36 @@ namespace Espo\Core\Loaders;
 
 use Espo\Core\{
     Container\Loader,
-    Utils\Metadata,
     Utils\Config,
-    Utils\File\Manager as FileManager,
     Utils\Language as LanguageService,
-    Utils\DataCache,
+    InjectableFactory,
 };
 
 use Espo\Entities\Preferences;
 
 class Language implements Loader
 {
-    protected $fileManager;
+    private $injectableFactory;
 
-    protected $config;
+    private $config;
 
-    protected $metadata;
-
-    protected $dataCache;
-
-    protected $preferences;
+    private $preferences;
 
     public function __construct(
-        FileManager $fileManager,
+        InjectableFactory $injectableFactory,
         Config $config,
-        Metadata $metadata,
-        DataCache $dataCache,
         Preferences $preferences
     ) {
-        $this->fileManager = $fileManager;
+        $this->injectableFactory = $injectableFactory;
         $this->config = $config;
-        $this->metadata = $metadata;
-        $this->dataCache = $dataCache;
         $this->preferences = $preferences;
     }
 
     public function load(): LanguageService
     {
-        return new LanguageService(
-            LanguageService::detectLanguage($this->config, $this->preferences),
-            $this->fileManager,
-            $this->metadata,
-            $this->dataCache,
-            $this->config->get('useCache') ?? false
-        );
+        return $this->injectableFactory->createWith(LanguageService::class, [
+            'language' => LanguageService::detectLanguage($this->config, $this->preferences),
+            'useCache' => $this->config->get('useCache') ?? false,
+        ]);
     }
 }

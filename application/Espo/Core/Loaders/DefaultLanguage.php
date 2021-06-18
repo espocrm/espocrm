@@ -29,20 +29,12 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Utils\Language as LanguageService,
-};
+use Espo\Core\Utils\Language as LanguageService;
 
 class DefaultLanguage extends BaseLanguage
 {
-    public function load(): LanguageService
+    protected function getLanguage(): string
     {
-        return new LanguageService(
-            LanguageService::detectLanguage($this->config),
-            $this->fileManager,
-            $this->metadata,
-            $this->dataCache,
-            $this->config->get('useCache') ?? false
-        );
+        return LanguageService::detectLanguage($this->config);
     }
 }

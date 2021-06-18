@@ -31,39 +31,33 @@ namespace Espo\Core\Loaders;
 
 use Espo\Core\{
     Container\Loader,
-    Utils\Metadata,
     Utils\Config,
-    Utils\File\Manager as FileManager,
     Utils\Language as LanguageService,
-    Utils\DataCache,
+    InjectableFactory,
 };
 
 class BaseLanguage implements Loader
 {
-    protected $fileManager;
+    private $injectableFactory;
 
     protected $config;
 
-    protected $metadata;
-
-    protected $dataCache;
-
-    public function __construct(FileManager $fileManager, Config $config, Metadata $metadata, DataCache $dataCache)
+    public function __construct(InjectableFactory $injectableFactory, Config $config)
     {
-        $this->fileManager = $fileManager;
+        $this->injectableFactory = $injectableFactory;
         $this->config = $config;
-        $this->metadata = $metadata;
-        $this->dataCache = $dataCache;
     }
 
     public function load(): LanguageService
     {
-        return new LanguageService(
-            'en_US',
-            $this->fileManager,
-            $this->metadata,
-            $this->dataCache,
-            $this->config->get('useCache') ?? false
-        );
+        return $this->injectableFactory->createWith(LanguageService::class, [
+            'language' => $this->getLanguage(),
+            'useCache' => $this->config->get('useCache') ?? false,
+        ]);
+    }
+
+    protected function getLanguage(): string
+    {
+        return 'en_US';
     }
 }

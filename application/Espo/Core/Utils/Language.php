@@ -75,29 +75,20 @@ class Language
         ?string $language,
         FileManager $fileManager,
         Metadata $metadata,
-        DataCache $dataCache = null,
+        FileUnifier $unifier,
+        DataCache $dataCache,
         bool $useCache = false,
         bool $noCustom = false
     ) {
-        if ($language) {
-            $this->currentLanguage = $language;
-        }
-        else {
-            $this->currentLanguage = $this->defaultLanguage;
-        }
+        $this->currentLanguage = $language ?? $this->defaultLanguage;
 
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
+        $this->unifier = $unifier;
         $this->dataCache = $dataCache;
 
         $this->useCache = $useCache;
         $this->noCustom = $noCustom;
-
-        if (!$this->dataCache) {
-            $this->useCache = false;
-        }
-
-        $this->unifier = new FileUnifier($this->fileManager, $this->metadata);
     }
 
     public function getLanguage(): string

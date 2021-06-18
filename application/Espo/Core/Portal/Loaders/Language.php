@@ -31,11 +31,9 @@ namespace Espo\Core\Portal\Loaders;
 
 use Espo\Core\{
     Container\Loader,
-    Utils\Metadata,
     Utils\Config,
-    Utils\File\Manager as FileManager,
     Portal\Utils\Language as LanguageService,
-    Utils\DataCache,
+    InjectableFactory,
 };
 
 use Espo\Entities\{
@@ -45,43 +43,32 @@ use Espo\Entities\{
 
 class Language implements Loader
 {
-    private $fileManager;
+    private $injectableFactory;
 
     private $config;
-
-    private $metadata;
-
-    private $dataCache;
 
     private $preferences;
 
     private $portal;
 
     public function __construct(
-        FileManager $fileManager,
+        InjectableFactory $injectableFactory,
         Config $config,
-        Metadata $metadata,
-        DataCache $dataCache,
         Preferences $preferences,
         Portal $portal
     ) {
-        $this->fileManager = $fileManager;
+        $this->injectableFactory = $injectableFactory;
         $this->config = $config;
-        $this->metadata = $metadata;
-        $this->dataCache = $dataCache;
         $this->preferences = $preferences;
         $this->portal = $portal;
     }
 
     public function load(): LanguageService
     {
-        $language = new LanguageService(
-            LanguageService::detectLanguage($this->config, $this->preferences),
-            $this->fileManager,
-            $this->metadata,
-            $this->dataCache,
-            $this->config->get('useCache')
-        );
+        $language =  $this->injectableFactory->createWith(LanguageService::class, [
+            'language' => LanguageService::detectLanguage($this->config, $this->preferences),
+            'useCache' => $this->config->get('useCache') ?? false,
+        ]);
 
         $language->setPortal($this->portal);
 
