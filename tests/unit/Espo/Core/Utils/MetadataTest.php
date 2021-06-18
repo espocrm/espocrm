@@ -36,7 +36,9 @@ use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\UnifierObj;
+use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Module;
+use Espo\Core\Utils\Resource\Reader;
 
 class MetadataTest extends \PHPUnit\Framework\TestCase
 {
@@ -56,11 +58,18 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $module = new Module($this->fileManager);
 
-        $unifier = new UnifierObj($this->fileManager, $module);
+        $unifierObj = new UnifierObj($this->fileManager, $module);
+        $unifier = new Unifier($this->fileManager, $module);
 
-        $this->object = new Metadata($this->fileManager, $this->dataCache, $unifier, true);
+        $reader = new Reader($unifier, $unifierObj);
+
+        $this->object = new Metadata($this->fileManager, $this->dataCache, $reader, true);
 
         $this->reflection = new ReflectionHelper($this->object);
+
+        $this->customPath = 'tests/unit/testData/cache/metadata/custom';
+
+        $this->reflection->setProperty('customPath', $this->customPath);
     }
 
     protected function tearDown() : void
@@ -71,11 +80,9 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testGet()
     {
-        $result = 'System';
-        $this->assertEquals($result, $this->object->get('app.adminPanel.system.label'));
+        $this->assertEquals('System', $this->object->get('app.adminPanel.system.label'));
 
-        $result = 'fields';
-        $this->assertArrayHasKey($result, $this->object->get('entityDefs.User'));
+        $this->assertArrayHasKey('fields', $this->object->get('entityDefs.User'));
     }
 
     public function testSet()
@@ -238,13 +245,6 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testGetCustom()
     {
-        $customPath = 'tests/unit/testData/cache/metadata/custom';
-
-        $paths = $this->reflection->getProperty('paths');
-        $paths['customPath'] = $customPath;
-
-        $this->reflection->setProperty('paths', $paths);
-
         $this->assertNull($this->object->getCustom('entityDefs', 'Lead'));
 
         $customData = $this->object->getCustom('entityDefs', 'Lead', (object) []);
@@ -264,19 +264,11 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($data, $this->object->getCustom('entityDefs', 'Lead'));
 
-        unlink($customPath . '/entityDefs/Lead.json');
+        unlink($this->customPath . '/entityDefs/Lead.json');
     }
 
-    public function testSaveCustom()
+    public function testSaveCustom1()
     {
-        $initStatusOptions = $this->object->get('entityDefs.Lead.fields.status.options');
-
-        $customPath = 'tests/unit/testData/cache/metadata/custom';
-
-        $paths = $this->reflection->getProperty('paths');
-        $paths['customPath'] = $customPath;
-        $this->reflection->setProperty('paths', $paths);
-
         $data = (object) [
           'fields' => (object) [
             'status' => (object) [
@@ -288,28 +280,18 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $this->object->saveCustom('entityDefs', 'Lead', $data);
 
-        $savedFile = $customPath . '/entityDefs/Lead.json';
+        $savedFile = $this->customPath . '/entityDefs/Lead.json';
         $fileContent = $this->fileManager->getContents($savedFile);
 
         $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
         $this->assertEquals($data, $savedData);
 
-        $initStatusOptions[] = 'Test1';
-        $initStatusOptions[] = 'Test2';
-        $this->assertEquals($initStatusOptions, $this->object->get('entityDefs.Lead.fields.status.options'));
-
         unlink($savedFile);
     }
 
     public function testSaveCustom2()
     {
-        $customPath = 'tests/unit/testData/cache/metadata/custom';
-
-        $paths = $this->reflection->getProperty('paths');
-        $paths['customPath'] = $customPath;
-        $this->reflection->setProperty('paths', $paths);
-
         $initData = (object) [
           'fields' => (object) [
             'status' => (object) [
@@ -327,8 +309,10 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
         $customData->fields->status->options = ["__APPEND__", "Test1"];
         $this->object->saveCustom('entityDefs', 'Lead', $customData);
 
-        $savedFile = $customPath . '/entityDefs/Lead.json';
+        $savedFile = $this->customPath . '/entityDefs/Lead.json';
+
         $fileContent = $this->fileManager->getContents($savedFile);
+
         $savedData = \Espo\Core\Utils\Json::decode($fileContent);
 
         $expectedData = (object) [
@@ -346,11 +330,9 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
     public function testGetObjects()
     {
-        $result = 'System';
-        $this->assertEquals($result, $this->object->getObjects('app.adminPanel.system.label'));
+        $this->assertEquals('System', $this->object->getObjects('app.adminPanel.system.label'));
 
-        $result = 'fields';
-        $this->assertObjectHasAttribute($result, $this->object->getObjects('entityDefs.User'));
+        $this->assertObjectHasAttribute('fields', $this->object->getObjects('entityDefs.User'));
 
         $this->assertObjectHasAttribute('type', $this->object->getObjects('entityDefs.User.fields.name'));
     }

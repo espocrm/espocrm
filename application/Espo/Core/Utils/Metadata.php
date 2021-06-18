@@ -32,10 +32,11 @@ namespace Espo\Core\Utils;
 use Espo\Core\{
     Exceptions\Error,
     Utils\File\Manager as FileManager,
-    Utils\File\UnifierObj,
     Utils\Module,
     Utils\Metadata\Helper,
     Utils\DataCache,
+    Utils\Resource\Reader as ResourceReader,
+    Utils\Resource\ReaderParams as ResourceReaderParams,
 };
 
 use StdClass;
@@ -48,19 +49,11 @@ class Metadata
 
     private $useCache;
 
-    private $module;
-
-    private $metadataHelper;
-
     private $cacheKey = 'metadata';
 
     private $objCacheKey = 'objMetadata';
 
-    private $paths = [
-        'corePath' => 'application/Espo/Resources/metadata',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/metadata',
-        'customPath' => 'custom/Espo/Custom/Resources/metadata',
-    ];
+    private $customPath = 'custom/Espo/Custom/Resources/metadata';
 
     private $moduleList = null;
 
@@ -68,21 +61,25 @@ class Metadata
 
     private $changedData = [];
 
+    private $metadataHelper;
+
+    private $module;
+
     private $fileManager;
 
     private $dataCache;
 
-    private $unifier;
+    private $resourceReader;
 
     public function __construct(
         FileManager $fileManager,
         DataCache $dataCache,
-        UnifierObj $unifier,
+        ResourceReader $resourceReader,
         bool $useCache = false
     ){
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
-        $this->unifier = $unifier;
+        $this->resourceReader = $resourceReader;
 
         $this->useCache = $useCache;
 
@@ -186,7 +183,8 @@ class Metadata
             return;
         }
 
-        $this->objData = $this->unifier->unify($this->paths, true);
+        $this->objData = $this->resourceReader->read('metadata', ResourceReaderParams::create());
+
         $this->objData = $this->addAdditionalFieldsObj($this->objData);
 
         if ($this->useCache) {
@@ -359,7 +357,7 @@ class Metadata
      */
     public function getCustom($key1, $key2, $default = null)
     {
-        $filePath = $this->paths['customPath'] . "/{$key1}/{$key2}.json";
+        $filePath = $this->customPath . "/{$key1}/{$key2}.json";
 
         $fileContent = $this->fileManager->getContents($filePath);
 
@@ -388,7 +386,7 @@ class Metadata
             }
         }
 
-        $filePath = $this->paths['customPath'] . "/{$key1}/{$key2}.json";
+        $filePath = $this->customPath . "/{$key1}/{$key2}.json";
 
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
@@ -513,7 +511,7 @@ class Metadata
      */
     public function save(): bool
     {
-        $path = $this->paths['customPath'];
+        $path = $this->customPath;
 
         $result = true;
 

@@ -36,7 +36,9 @@ use Espo\Core\Utils\Language;
 use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\File\Unifier;
+use Espo\Core\Utils\File\UnifierObj;
 use Espo\Core\Utils\Module;
+use Espo\Core\Utils\Resource\Reader;
 
 class LanguageTest extends \PHPUnit\Framework\TestCase
 {
@@ -45,9 +47,9 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
     protected $reflection;
 
     protected $paths = [
-        'corePath' => 'tests/unit/testData/Utils/I18n/Espo/Resources/i18n/{language}',
-        'modulePath' => 'tests/unit/testData/Utils/I18n/Espo/Modules/{*}/Resources/i18n/{language}',
-        'customPath' => 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/i18n/{language}',
+        'corePath' => 'tests/unit/testData/Utils/I18n/Espo/Resources/',
+        'modulePath' => 'tests/unit/testData/Utils/I18n/Espo/Modules/{*}/Resources/',
+        'customPath' => 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/',
     ];
 
     protected function setUp(): void
@@ -68,20 +70,29 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
         $module = new Module($this->fileManager);
 
-        $this->unifier = new Unifier($this->fileManager, $module);
+        $unifierObj = new UnifierObj($this->fileManager, $module);
+        $unifier = new Unifier($this->fileManager, $module);
+
+        $reader = new Reader($unifier, $unifierObj);
+
+        $this->readerReflection = new ReflectionHelper($reader);
+
+        $this->readerReflection->setProperty('paths', $this->paths);
 
         $this->object = new Language(
             null,
             $this->fileManager,
             $this->metadata,
-            $this->unifier,
+            $reader,
             $this->dataCache,
             false
         );
 
         $this->reflection = new ReflectionHelper($this->object);
 
-        $this->reflection->setProperty('paths', $this->paths);
+        $this->customPath = 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/i18n/{language}';
+
+        $this->reflection->setProperty('customPath', $this->customPath);
         $this->reflection->setProperty('currentLanguage', 'en_US');
     }
 

@@ -30,14 +30,16 @@
 namespace Espo\Tools\LabelManager;
 
 use Espo\Core\{
-    Exceptions\NotFound,
-    Exceptions\Error,
-    Utils\Util,
     Di,
     Utils\Language,
+    InjectableFactory,
 };
 
-class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\FileManagerAware, Di\DataCacheAware
+class LabelManager implements
+    Di\DefaultLanguageAware,
+    Di\MetadataAware,
+    Di\FileManagerAware,
+    Di\DataCacheAware
 {
     use Di\DefaultLanguageSetter;
     use Di\MetadataSetter;
@@ -48,6 +50,13 @@ class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\File
         'Global.sets',
     ];
 
+    private $injectableFactory;
+
+    public function __construct(InjectableFactory $injectableFactory)
+    {
+        $this->injectableFactory = $injectableFactory;
+    }
+
     public function getScopeList()
     {
         $scopeList = [];
@@ -55,6 +64,7 @@ class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\File
         $languageObj = $this->defaultLanguage;
 
         $data = $languageObj->getAll();
+
         foreach (array_keys($data) as $scope) {
             if (!in_array($scope, $scopeList)) {
                 $scopeList[] = $scope;
@@ -72,7 +82,9 @@ class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\File
 
     public function getScopeData($language, $scope)
     {
-        $languageObj = new Language($language, $this->fileManager, $this->metadata, $this->dataCache);
+        $languageObj = $this->injectableFactory->createWith(Language::class, [
+            'language' => $language,
+        ]);
 
         $data = $languageObj->get($scope);
 
@@ -180,8 +192,14 @@ class LabelManager implements Di\DefaultLanguageAware, Di\MetadataAware, Di\File
 
     public function saveLabels($language, $scope, $labels)
     {
-        $languageObj = new Language($language, $this->fileManager, $this->metadata, $this->dataCache);
-        $languageOriginalObj = new Language($language, $this->fileManager, $this->metadata, $this->dataCache, false, true);
+        $languageObj = $this->injectableFactory->createWith(Language::class, [
+            'language' => $language,
+        ]);
+
+        $languageOriginalObj = $this->injectableFactory->createWith(Language::class, [
+            'language' => $language,
+            'noCustom' => true,
+        ]);
 
         $returnDataHash = [];
 

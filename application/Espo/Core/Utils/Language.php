@@ -34,9 +34,10 @@ use Espo\Core\{
     Utils\Util,
     Utils\File\Manager as FileManager,
     Utils\Metadata,
-    Utils\File\Unifier,
     Utils\Config,
     Utils\DataCache,
+    Utils\Resource\Reader as ResourceReader,
+    Utils\Resource\ReaderParams as ResourceReaderParams,
 };
 
 use Espo\{
@@ -45,12 +46,6 @@ use Espo\{
 
 class Language
 {
-    private $fileManager;
-
-    private $metadata;
-
-    private $unifier;
-
     private $data = [];
 
     private $deletedData = [];
@@ -65,17 +60,23 @@ class Language
 
     protected $noCustom = false;
 
-    protected $paths = [
-        'corePath' => 'application/Espo/Resources/i18n/{language}',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/i18n/{language}',
-        'customPath' => 'custom/Espo/Custom/Resources/i18n/{language}',
-    ];
+    private $customPath = 'custom/Espo/Custom/Resources/i18n/{language}';
+
+    private $resourcePath = 'i18n/{language}';
+
+    private $fileManager;
+
+    private $metadata;
+
+    private $resourceReader;
+
+    private $dataCache;
 
     public function __construct(
         ?string $language,
         FileManager $fileManager,
         Metadata $metadata,
-        Unifier $unifier,
+        ResourceReader $resourceReader,
         DataCache $dataCache,
         bool $useCache = false,
         bool $noCustom = false
@@ -84,7 +85,7 @@ class Language
 
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
-        $this->unifier = $unifier;
+        $this->resourceReader = $resourceReader;
         $this->dataCache = $dataCache;
 
         $this->useCache = $useCache;
@@ -220,10 +221,7 @@ class Language
      */
     public function save(): bool
     {
-        $language = $this->currentLanguage;
-
-        $path = $this->paths['customPath'];
-        $path = str_replace('{language}', $language, $path);
+        $path = str_replace('{language}', $this->currentLanguage, $this->customPath);
 
         $result = true;
 
@@ -370,7 +368,7 @@ class Language
         $cacheKey = $this->getCacheKey($language);
 
         if (!$this->useCache || !$this->dataCache->has($cacheKey) || $reload) {
-            $paths = $this->paths;
+            /*$paths = $this->paths;
 
             foreach ($paths as $k => &$path) {
                 $path = str_replace('{language}', $language, $path);
@@ -378,9 +376,17 @@ class Language
 
             if ($this->noCustom) {
                 unset($paths['customPath']);
-            }
+            }*/
 
-            $data = $this->unifier->unify($paths, true);
+            $readerParams = ResourceReaderParams::create()
+                ->withAsArray()
+                ->withNoCustom($this->noCustom);
+
+            $path = str_replace('{language}', $language, $this->resourcePath);
+
+            $data = $this->resourceReader->read($path, $readerParams);
+
+            //$data = $this->unifier->unify($paths, true);
 
             if (is_array($data)) {
                 $this->sanitizeData($data);
