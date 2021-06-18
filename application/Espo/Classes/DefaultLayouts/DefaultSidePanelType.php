@@ -40,7 +40,7 @@ class DefaultSidePanelType
         $this->metadata = $metadata;
     }
 
-    public function get(string $scope) : array
+    public function get(string $scope): array
     {
         $list = [];
 

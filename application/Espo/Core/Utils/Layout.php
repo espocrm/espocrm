@@ -32,6 +32,7 @@ namespace Espo\Core\Utils;
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\Metadata,
+    Exceptions\Error,
 };
 
 class Layout
@@ -54,15 +55,14 @@ class Layout
         $this->metadata = $metadata;
     }
 
-    protected function sanitizeInput(string $name): string
-    {
-        return preg_replace("([\.]{2,})", '', $name);
-    }
-
     public function get(string $scope, string $name): ?string
     {
-        $scope = $this->sanitizeInput($scope);
-        $name = $this->sanitizeInput($name);
+        if (
+            $this->sanitizeInput($scope) !== $scope ||
+            $this->sanitizeInput($name) !== $name
+        ) {
+            throw new Error("Bad parameters.");
+        }
 
         if (isset($this->changedData[$scope][$name])) {
             return Json::encode($this->changedData[$scope][$name]);
@@ -81,28 +81,36 @@ class Layout
         }
 
         if (!file_exists($filePath)) {
-            $defaultImplClassName = 'Espo\\Custom\\Classes\\DefaultLayouts\\' . ucfirst($name) . 'Type';
+            return $this->getDefault($scope, $name);
+        }
 
-            if (!class_exists($defaultImplClassName)) {
-                $defaultImplClassName = 'Espo\\Classes\\DefaultLayouts\\' . ucfirst($name) . 'Type';
-            }
+        return $this->fileManager->getContents($filePath);
+    }
 
-            if (class_exists($defaultImplClassName)) {
-                $defaultImpl = new $defaultImplClassName($this->metadata);
+    private function getDefault(string $scope, string $name): ?string
+    {
+        $defaultImplClassName = 'Espo\\Custom\\Classes\\DefaultLayouts\\' . ucfirst($name) . 'Type';
 
-                $data = $defaultImpl->get($scope);
+        if (!class_exists($defaultImplClassName)) {
+            $defaultImplClassName = 'Espo\\Classes\\DefaultLayouts\\' . ucfirst($name) . 'Type';
+        }
 
-                return Json::encode($data);
-            }
+        if (class_exists($defaultImplClassName)) {
+            // @todo Use factory and interface.
+            $defaultImpl = new $defaultImplClassName($this->metadata);
 
-            $filePath = Util::concatPath(
-                $this->defaultPath,
-                $name . '.json'
-            );
+            $data = $defaultImpl->get($scope);
 
-            if (!file_exists($filePath)) {
-                return null;
-            }
+            return Json::encode($data);
+        }
+
+        $filePath = Util::concatPath(
+            $this->defaultPath,
+            $name . '.json'
+        );
+
+        if (!file_exists($filePath)) {
+            return null;
         }
 
         return $this->fileManager->getContents($filePath);
@@ -126,5 +134,10 @@ class Layout
             Util::fixPath($path),
             $entityType
         );
+    }
+
+    private function sanitizeInput(string $name): string
+    {
+        return preg_replace("([\.]{2,})", '', $name);
     }
 }
