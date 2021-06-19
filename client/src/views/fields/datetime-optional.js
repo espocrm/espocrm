@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep) {
+define('views/fields/datetime-optional', 'views/fields/datetime', function (Dep) {
 
     return Dep.extend({
 
@@ -39,27 +39,34 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
 
         isDate: function () {
             var dateValue = this.model.get(this.nameDate);
-            if (dateValue && dateValue != '') {
+
+            if (dateValue && dateValue !== '') {
                 return true;
             }
+
             return false;
         },
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             if (this.isDate()) {
                 var dateValue = this.model.get(this.nameDate);
+
                 data.date = this.getDateTime().toDisplayDate(dateValue);
                 data.time = this.noneOption;
             }
+
             return data;
         },
 
         getDateStringValue: function () {
             if (this.isDate()) {
                 var dateValue = this.model.get(this.nameDate);
+
                 return this.stringifyDateValue(dateValue);
             }
+
             return Dep.prototype.getDateStringValue.call(this);
         },
 
@@ -85,6 +92,7 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
             }
 
             $time.timepicker(o);
+
             $time.parent().find('button.time-picker-btn').on('click', function () {
                 $time.timepicker('show');
             });
@@ -97,15 +105,18 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
             var time = this.$time.val();
 
             var value = null;
-            if (time != this.noneOption && time != '') {
-                if (date != '' && time != '') {
+
+            if (time !== this.noneOption && time !== '') {
+                if (date !== '' && time !== '') {
                     value = this.parse(date + ' ' + time);
                 }
+
                 data[this.name] = value;
                 data[this.nameDate] = null;
             } else {
-                if (date != '') {
+                if (date !== '') {
                     data[this.nameDate] = this.getDateTime().fromDisplayDate(date);
+
                     var dateTimeValue = data[this.nameDate] + ' 00:00:00';
 
                     dateTimeValue = moment.utc(dateTimeValue)
@@ -113,7 +124,8 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
                         .format(this.getDateTime().internalDateTimeFullFormat);
 
                     data[this.name] = dateTimeValue;
-                } else {
+                }
+                else {
                     data[this.nameDate] = null;
                     data[this.name] = null;
                 }
@@ -123,22 +135,29 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
 
         validateAfter: function () {
             var field = this.model.getFieldParam(this.name, 'after');
+
             if (field) {
                 var fieldDate  = field + 'Date';
                 var value = this.model.get(this.name) || this.model.get(this.nameDate);
                 var otherValue = this.model.get(field) || this.model.get(fieldDate);
+
                 if (value && otherValue) {
                     var isNotValid = false;
+
                     if (this.validateAfterAllowSameDay && this.model.get(this.nameDate)) {
                         isNotValid = moment(value).unix() < moment(otherValue).unix();
-                    } else {
+                    }
+                    else {
                         isNotValid = moment(value).unix() <= moment(otherValue).unix();
                     }
+
                     if (isNotValid) {
-                        var msg = this.translate('fieldShouldAfter', 'messages').replace('{field}', this.getLabelText())
-                                                                                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                        var msg = this.translate('fieldShouldAfter', 'messages')
+                            .replace('{field}', this.getLabelText())
+                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
 
                         this.showValidationMessage(msg);
+
                         return true;
                     }
                 }
@@ -147,15 +166,21 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
 
         validateBefore: function () {
             var field = this.model.getFieldParam(this.name, 'before');
+
             if (field) {
                 var fieldDate  = field + 'Date';
                 var value = this.model.get(this.name) || this.model.get(this.nameDate);
+
                 var otherValue = this.model.get(field) || this.model.get(fieldDate);
+
                 if (value && otherValue) {
                     if (moment(value).unix() >= moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldBefore', 'messages').replace('{field}', this.getLabelText())
-                                                                                 .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                        var msg = this.translate('fieldShouldBefore', 'messages')
+                            .replace('{field}', this.getLabelText())
+                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+
                         this.showValidationMessage(msg);
+
                         return true;
                     }
                 }
@@ -166,11 +191,13 @@ Espo.define('views/fields/datetime-optional', 'views/fields/datetime', function 
             if (this.isRequired()) {
                 if (this.model.get(this.name) === null && this.model.get(this.nameDate) === null) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg);
+
                     return true;
                 }
             }
-        }
+        },
 
     });
 });
