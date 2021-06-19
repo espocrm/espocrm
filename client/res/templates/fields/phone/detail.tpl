@@ -13,7 +13,7 @@
             {{/unless}}
             {{/unless}}
             {{#if type}}
-            <span class="text-muted small">({{translateOption type scope=../../scope field=../../name}})</span>
+            <span class="text-muted small">({{translateOption type scope=../scope field=../name}})</span>
             {{/if}}
         </div>
     {{/each}}
