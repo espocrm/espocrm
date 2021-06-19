@@ -595,7 +595,7 @@ define(
                 let userName = data.auth.userName;
                 let token = data.auth.token;
 
-                this.auth = Base64.encode(userName  + ':' + token);
+                this.auth = base64.encode(userName  + ':' + token);
 
                 let lastUserId = this.storage.get('user', 'lastUserId');
 
@@ -617,7 +617,7 @@ define(
 
         logout: function () {
             if (this.auth) {
-                let arr = Base64.decode(this.auth).split(':');
+                let arr = base64.decode(this.auth).split(':');
 
                 if (arr.length > 1) {
                     Ajax.postRequest('App/action/destroyAuthToken', {
@@ -647,7 +647,7 @@ define(
 
             xhr.open('GET', this.basePath + this.apiUrl + '/');
 
-            xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
+            xhr.setRequestHeader('Authorization', 'Basic ' + base64.encode('**logout:logout'));
 
             xhr.send('');
 
@@ -737,7 +737,7 @@ define(
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
 
-                        let arr = Base64.decode(this.auth).split(':');
+                        let arr = base64.decode(this.auth).split(':');
 
                         this.setCookieAuth(arr[0], arr[1]);
 

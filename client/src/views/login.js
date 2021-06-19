@@ -121,8 +121,8 @@ define('views/login', 'view', function (Dep) {
             Espo.Ajax.getRequest('App/user', null, {
                 login: true,
                 headers: {
-                    'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
-                    'Espo-Authorization': Base64.encode(userName + ':' + password),
+                    'Authorization': 'Basic ' + base64.encode(userName  + ':' + password),
+                    'Espo-Authorization': base64.encode(userName + ':' + password),
                     'Espo-Authorization-By-Token': false,
                     'Espo-Authorization-Create-Token-Secret': true,
                 },

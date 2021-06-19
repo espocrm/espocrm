@@ -100,8 +100,8 @@ define('views/login-second-step', 'view', function (Dep) {
             Espo.Ajax.getRequest('App/user', {code: code}, {
                 login: true,
                 headers: {
-                    'Authorization': 'Basic ' + Base64.encode(userName  + ':' + password),
-                    'Espo-Authorization': Base64.encode(userName + ':' + password),
+                    'Authorization': 'Basic ' + base64.encode(userName  + ':' + password),
+                    'Espo-Authorization': base64.encode(userName + ':' + password),
                     'Espo-Authorization-Code': code,
                     'Espo-Authorization-Create-Token-Secret': true,
                 },

@@ -28,21 +28,27 @@
 * * `grant run-tests` - build and run unit and integration tests
 */
 
-module.exports = function (grunt) {
+const fs = require('fs');
+const cp = require('child_process');
+const path = require('path');
 
-    var jsFilesToMinify = [
-        'client/lib/jquery-2.1.4.min.js',
-        'client/lib/underscore-min.js',
-        'client/lib/es6-promise.min.js',
-        'client/lib/backbone-min.js',
-        'client/lib/handlebars.js',
-        'client/lib/base64.js',
+module.exports = grunt => {
+
+    let clientLibList = [];
+
+    let jsFilesToMinify = [
+        'node_modules/jquery/dist/jquery.js',
+        'node_modules/underscore/underscore.js',
+        'node_modules/es6-promise/dist/es6-promise.js',
+        'node_modules/backbone/backbone.js',
+        'node_modules/handlebars/dist/handlebars.js',
+        'node_modules/base-64/base64.js',
         'client/lib/jquery-ui.min.js',
         'client/lib/jquery.ui.touch-punch.min.js',
-        'client/lib/moment.min.js',
-        'client/lib/moment-timezone.min.js',
+        'node_modules/moment/moment.js',
+        'node_modules/moment-timezone/moment-timezone.js',
         'client/lib/moment-timezone-data.js',
-        'client/lib/jquery.timepicker.min.js',
+        'node_modules/timepicker/jquery.timepicker.js',
         'client/lib/jquery.autocomplete.js',
         'client/lib/bootstrap.min.js',
         'client/lib/bootstrap-datepicker.js',
@@ -95,26 +101,24 @@ module.exports = function (grunt) {
         return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
 
-    var fs = require('fs');
-    var cp = require('child_process');
-    var path = require('path');
+    const pkg = grunt.file.readJSON('package.json');
 
-    var currentPath = path.dirname(fs.realpathSync(__filename));
+    let currentPath = path.dirname(fs.realpathSync(__filename));
 
-    var themeList = [];
+    let themeList = [];
 
-    fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(function (file) {
+    fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(file => {
         themeList.push(file.substr(0, file.length - 5));
     });
 
-    var cssminFilesData = {};
+    let cssminFilesData = {};
 
-    var lessData = {};
+    let lessData = {};
 
-    themeList.forEach(function (theme) {
-        var name = camelCaseToHyphen(theme);
+    themeList.forEach(theme => {
+        let name = camelCaseToHyphen(theme);
 
-        var files = {};
+        let files = {};
 
         files['client/css/espo/'+name+'.css'] = 'frontend/less/'+name+'/main.less';
         files['client/css/espo/'+name+'-iframe.css'] = 'frontend/less/'+name+'/iframe/main.less';
@@ -122,7 +126,7 @@ module.exports = function (grunt) {
         cssminFilesData['client/css/espo/'+name+'.css'] = 'client/css/espo/'+name+'.css';
         cssminFilesData['client/css/espo/'+name+'-iframe.css'] = 'client/css/espo/'+name+'-iframe.css';
 
-        var o = {
+        let o = {
             options: {
                 yuicompress: true,
             },
@@ -132,7 +136,7 @@ module.exports = function (grunt) {
         lessData[theme] = o;
     });
 
-    var pkg = grunt.file.readJSON('package.json');
+
 
     grunt.initConfig({
         pkg: pkg,
@@ -176,7 +180,7 @@ module.exports = function (grunt) {
                 sourceMap: true,
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
             },
-            'build/tmp/client/espo.min.js': jsFilesToMinify.map(function (item) {
+            'build/tmp/client/espo.min.js': jsFilesToMinify.map(item => {
                 return '' + item;
             }),
         },
@@ -312,55 +316,67 @@ module.exports = function (grunt) {
         },
     });
 
-    grunt.registerTask("chmod-folders", function() {
-        cp.execSync("find . -type d -exec chmod 755 {} + ", {stdio: 'ignore', cwd: 'build/EspoCRM-' + pkg.version});
+    grunt.registerTask('chmod-folders', () => {
+        cp.execSync(
+            "find . -type d -exec chmod 755 {} + ",
+            {
+                stdio: 'ignore',
+                cwd: 'build/EspoCRM-' + pkg.version,
+            }
+        );
     });
 
-    grunt.registerTask("composer", function() {
+    grunt.registerTask('composer', () => {
         cp.execSync("composer install --no-dev", {stdio: 'ignore'});
     });
 
-    grunt.registerTask("composer-dev", function() {
+    grunt.registerTask('composer-dev', () => {
         cp.execSync("composer install", {stdio: 'ignore'});
     });
 
-    grunt.registerTask("upgrade", function() {
+    grunt.registerTask('upgrade', () => {
         cp.execSync("node diff --all --vendor", {stdio: 'inherit'});
     });
 
-    grunt.registerTask("unit-tests-run", function() {
+    grunt.registerTask('unit-tests-run', () => {
         cp.execSync("vendor/bin/phpunit ./tests/unit", {stdio: 'inherit'});
     });
 
-    grunt.registerTask("integration-tests-run", function() {
+    grunt.registerTask('integration-tests-run', () => {
         cp.execSync("vendor/bin/phpunit ./tests/integration", {stdio: 'inherit'});
     });
 
-    grunt.registerTask("zip", function() {
-        var fs = require('fs');
+    grunt.registerTask('zip', () => {
+        const archiver = require('archiver');
 
-        var resolve = this.async();
+        let resolve = this.async();
 
-        var folder = 'EspoCRM-' + pkg.version;
+        let folder = 'EspoCRM-' + pkg.version;
 
-        var zipPath = 'build/' + folder +'.zip';
-        if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+        let zipPath = 'build/' + folder +'.zip';
 
-        var archiver = require('archiver');
-        var archive = archiver('zip');
+        if (fs.existsSync(zipPath)) {
+            fs.unlinkSync(zipPath);
+        }
 
-        archive.on('error', function (err) {
+        let archive = archiver('zip');
+
+        archive.on('error', err => {
             grunt.fail.warn(err);
         });
-        var zipOutput = fs.createWriteStream(zipPath);
-        zipOutput.on('close', function () {
+
+        let zipOutput = fs.createWriteStream(zipPath);
+
+        zipOutput.on('close', () => {
             console.log("EspoCRM package has been built.");
+
             resolve();
         });
 
-        archive.directory(currentPath + '/build/' + folder, folder).pipe(zipOutput);
-
-        archive.finalize();
+        archive
+            .directory(currentPath + '/build/' + folder, folder)
+            .pipe(zipOutput)
+            .finalize();
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
