@@ -220,6 +220,7 @@ define(
                 this.language.loadDefault()
             ])
             .then(() => {
+                this.loader.isDeveloperMode = this.settings.get('isDeveloperMode');
                 this.loader.addLibsConfig(this.settings.get('jsLibs') || {});
 
                 this.user = new User();

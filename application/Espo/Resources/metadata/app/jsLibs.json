@@ -24,7 +24,8 @@
         "exportsAs": "select2"
     },
     "Selectize": {
-        "path": "client/lib/selectize.min.js",
+        "path": "client/lib/selectize.js",
+        "devPath": "node_modules/selectize/dist/js/standalone/selectize.js",
         "exportsTo": "window",
         "exportsAs": "Selectize"
     },

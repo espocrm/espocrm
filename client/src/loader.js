@@ -43,6 +43,8 @@ var Espo = Espo || {classMap: {}};
         this._dataLoaded = {};
         this._loadingSubject = null;
         this._responseCache = null;
+
+        this.isDeveloperMode = false;
     };
 
     _.extend(Espo.Loader.prototype, {
@@ -254,6 +256,10 @@ var Espo = Espo || {classMap: {}};
                     let libData = this._libsConfig[realName] || {};
 
                     path = libData.path || path;
+
+                    if (this.isDeveloperMode) {
+                        path = libData.devPath || path;
+                    }
 
                     exportsTo = libData.exportsTo || exportsTo;
                     exportsAs = libData.exportsAs || exportsAs;

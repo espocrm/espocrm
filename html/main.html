@@ -16,17 +16,18 @@
         <link rel="icon" href="{{basePath}}{{faviconPath}}" type="image/x-icon">
         <link rel="shortcut icon" href="{{basePath}}{{faviconPath}}" type="image/x-icon">
         <script type="text/javascript">
-            $(function () {
+            $(() => {
                 Espo.loader.cacheTimestamp = {{loaderCacheTimestamp}};
-                Espo.require('{{appClientClassName}}', function (App) {
-                    var app = new App({
+
+                require('{{appClientClassName}}', App => {
+                    new App({
                         id: '{{applicationId}}',
                         useCache: {{useCache}},
                         cacheTimestamp: {{cacheTimestamp}},
                         basePath: '{{basePath}}',
                         apiUrl: '{{apiUrl}}',
                         ajaxTimeout: {{ajaxTimeout}},
-                    }, function (app) {
+                    }, app => {
                         {{runScript}}
                     });
                 });
