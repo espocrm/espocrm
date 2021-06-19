@@ -32,11 +32,20 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
 
         events: _.extend({
             'paste textarea': function (e) {
-                if (!e.originalEvent.clipboardData) return;
+                if (!e.originalEvent.clipboardData) {
+                    return;
+                }
+
                 var text = e.originalEvent.clipboardData.getData('text/plain');
-                if (!text) return;
+                if (!text) {
+                    return;
+                }
+
                 text = text.trim();
-                if (!text) return;
+                if (!text) {
+                    return;
+                }
+
                 this.handlePastedText(text, e.originalEvent);
             }
         }, Dep.prototype.events),
@@ -49,7 +58,9 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
+
             var placeholderText = this.options.placeholderText || this.translate('writeMessage', 'messages', 'Note');
+
             this.$element.attr('placeholder', placeholderText);
 
             this.$textarea = this.$element;
@@ -62,9 +73,13 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
 
             $textarea.on('paste', function (e) {
                 var items = e.originalEvent.clipboardData.items;
+
                 if (items) {
                     for (var i = 0; i < items.length; i++) {
-                        if (!~items[i].type.indexOf('image')) continue;
+                        if (!~items[i].type.indexOf('image')) {
+                            continue;
+                        }
+
                         var blob = items[i].getAsFile();
 
                         this.trigger('add-files', [blob]);
@@ -75,10 +90,13 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
             this.$textarea.on('drop', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+
                 var e = e.originalEvent;
+
                 if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
                     this.trigger('add-files', e.dataTransfer.files);
                 }
+
                 this.$textarea.attr('placeholder', originalPlaceholderText);
             }.bind(this));
 
@@ -86,10 +104,13 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
 
             this.$textarea.on('dragover', function (e) {
                 e.preventDefault();
+
                 this.$textarea.attr('placeholder', this.translate('dropToAttach', 'messages'));
             }.bind(this));
+            
             this.$textarea.on('dragleave', function (e) {
                 e.preventDefault();
+
                 this.$textarea.attr('placeholder', originalPlaceholderText);
             }.bind(this));
 
@@ -97,9 +118,10 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
 
             var buildUserListUrl = function (term) {
                 var url = 'User?q=' + term + '&' + $.param({'primaryFilter': 'active'}) +
-                    'orderBy=name&maxSize=' + this.getConfig().get('recordsPerPage') +
+                    '&orderBy=name&maxSize=' + this.getConfig().get('recordsPerPage') +
                     '&select=id,name,userName';
-                if (assignmentPermission == 'team') {
+
+                if (assignmentPermission === 'team') {
                     url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
                 }
                 return url;
@@ -118,7 +140,8 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
                         });
                     },
                     template: function (mention) {
-                        return this.getHelper().escapeString(mention.name) + ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
+                        return this.getHelper().escapeString(mention.name) +
+                            ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
                     }.bind(this),
                     replace: function (o) {
                         return '$1@' + o.userName + '';
@@ -141,6 +164,7 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
                     return false;
                 }
             }
+
             return Dep.prototype.validateRequired.call(this);
         },
 
@@ -156,6 +180,7 @@ define('views/note/fields/post', ['views/fields/text', 'lib!Textcomplete'], func
 
                 if (regExp.test(text)) {
                     var insertedId = this.insertedImagesData[url];
+
                     if (insertedId) {
                         if (~attachmentIdList.indexOf(insertedId)) return;
                     }
