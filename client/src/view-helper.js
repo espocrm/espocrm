@@ -137,19 +137,22 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
         },
 
         _registerHandlebarsHelpers: function () {
-            var self = this;
 
-            Handlebars.registerHelper('img', function (img) {
+            Handlebars.registerHelper('img', img => {
                 return new Handlebars.SafeString("<img src=\"img/" + img + "\"></img>");
             });
 
-            Handlebars.registerHelper('prop', function (object, name) {
+            Handlebars.registerHelper('prop', (object, name) => {
                 if (name in object) {
                     return object[name];
                 }
             });
 
-            Handlebars.registerHelper('var', function (name, context, options) {
+            Handlebars.registerHelper('var', (name, context) => {
+                if (typeof context === 'undefined') {
+                    return null;
+                }
+
                 return new Handlebars.SafeString(context[name]);
             });
 
@@ -190,41 +193,39 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
             });
 
             Handlebars.registerHelper('ifAttrNotEmpty', function (model, attr, options) {
-                var value = model.get(attr);
+                let value = model.get(attr);
+
                 if (value !== null && typeof value !== 'undefined') {
                     return options.fn(this);
                 }
+
                 return options.inverse(this);
             });
 
-            Handlebars.registerHelper('get', function (model, name) {
-                return model.get(name);
-            });
+            Handlebars.registerHelper('get', (model, name) => model.get(name));
 
-            Handlebars.registerHelper('length', function (arr) {
-                return arr.length;
-            });
+            Handlebars.registerHelper('length', arr => arr.length);
 
-            Handlebars.registerHelper('translate', function (name, options) {
-                var scope = options.hash.scope || null;
-                var category = options.hash.category || null;
+            Handlebars.registerHelper('translate', (name, options) => {
+                let scope = options.hash.scope || null;
+                let category = options.hash.category || null;
 
                 if (name === 'null') {
                     return '';
                 }
 
-                return self.language.translate(name, category, scope);
+                return this.language.translate(name, category, scope);
             });
 
-            Handlebars.registerHelper('button', function (name, options) {
-                var style = options.hash.style || 'default';
-                var scope = options.hash.scope || null;
-                var label = options.hash.label || name;
+            Handlebars.registerHelper('button', (name, options) => {
+                let style = options.hash.style || 'default';
+                let scope = options.hash.scope || null;
+                let label = options.hash.label || name;
 
-                var html =
+                let html =
                     options.hash.html ||
                     options.hash.text ||
-                    self.language.translate(label, 'labels', scope);
+                    this.language.translate(label, 'labels', scope);
 
                 return new Handlebars.SafeString(
                     '<button class="btn btn-'+style+' action' +
@@ -233,28 +234,28 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 );
             });
 
-            Handlebars.registerHelper('hyphen', function (string) {
+            Handlebars.registerHelper('hyphen', (string) => {
                 return Espo.Utils.convert(string, 'c-h');
             });
 
-            Handlebars.registerHelper('toDom', function (string) {
+            Handlebars.registerHelper('toDom', (string) => {
                 return Espo.Utils.toDom(string);
             });
 
-            Handlebars.registerHelper('breaklines', function (text) {
+            Handlebars.registerHelper('breaklines', (text) => {
                 text = Handlebars.Utils.escapeExpression(text || '');
                 text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
 
                 return new Handlebars.SafeString(text);
             });
 
-            Handlebars.registerHelper('complexText', function (text, options) {
+            Handlebars.registerHelper('complexText', (text, options) => {
                 return this.transfromMarkdownText(text, options.hash);
-            }.bind(this));
+            });
 
-            Handlebars.registerHelper('translateOption', function (name, options) {
-                var scope = options.hash.scope || null;
-                var field = options.hash.field || null;
+            Handlebars.registerHelper('translateOption', (name, options) => {
+                let scope = options.hash.scope || null;
+                let field = options.hash.field || null;
 
                 if (!field) {
                     return '';
@@ -263,7 +264,7 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 var translationHash = options.hash.translatedOptions || null;
 
                 if (translationHash === null) {
-                    translationHash = self.language.translate(field, 'options', scope) || {};
+                    translationHash = this.language.translate(field, 'options', scope) || {};
 
                     if (typeof translationHash !== 'object') {
                         translationHash = {};
@@ -273,31 +274,30 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 return translationHash[name] || name;
             });
 
-            Handlebars.registerHelper('options', function (list, value, options) {
+            Handlebars.registerHelper('options', (list, value, options) => {
                 if (typeof value === 'undefined') {
                     value = false;
                 }
 
                 list = list || [];
 
-                var html = '';
+                let html = '';
 
-                var multiple = (Object.prototype.toString.call(value) === '[object Array]');
+                let multiple = (Object.prototype.toString.call(value) === '[object Array]');
 
-                var checkOption = function (name) {
+                let checkOption = name => {
                     if (multiple) {
                         return value.indexOf(name) !== -1;
                     }
-                    else {
-                        return value === name;
-                    }
+
+                    return value === name;
                 };
 
                 options.hash = options.hash || {};
 
-                var scope = options.hash.scope || false;
-                var category = options.hash.category || false;
-                var field = options.hash.field || false;
+                let scope = options.hash.scope || false;
+                let category = options.hash.category || false;
+                let field = options.hash.field || false;
 
                 if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
 
@@ -308,11 +308,13 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                     }
                 }
 
-                var translationHash = options.hash.translationHash || options.hash.translatedOptions || null;
+                let translationHash = options.hash.translationHash ||
+                    options.hash.translatedOptions ||
+                    null;
 
                 if (translationHash === null) {
                     if (!category && field) {
-                        translationHash = self.language.translate(field, 'options', scope) || {};
+                        translationHash = this.language.translate(field, 'options', scope) || {};
 
                         if (typeof translationHash !== 'object') {
                             translationHash = {};
@@ -323,19 +325,20 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                     }
                 }
 
-                var translate = function (name) {
+                let translate = name => {
                     if (!category) {
                         return translationHash[name] || name;
                     }
-                    return self.language.translate(name, category, scope);
+
+                    return this.language.translate(name, category, scope);
                 };
 
-                for (var key in list) {
-                    var keyVal = list[key];
-                    var label = translate(list[key]);
+                for (let key in list) {
+                    let keyVal = list[key];
+                    let label = translate(list[key]);
 
-                    keyVal = self.escapeString(keyVal);
-                    label = self.escapeString(label);
+                    keyVal = this.escapeString(keyVal);
+                    label = this.escapeString(label);
 
                     html += "<option value=\"" + keyVal + "\" " +
                         (checkOption(list[key]) ? 'selected' : '') + ">" + label + "</option>"
@@ -344,8 +347,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 return new Handlebars.SafeString(html);
             });
 
-            Handlebars.registerHelper('basePath', function () {
-                return self.basePath || '';
+            Handlebars.registerHelper('basePath', () => {
+                return this.basePath || '';
             });
         },
 

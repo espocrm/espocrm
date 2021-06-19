@@ -51,13 +51,14 @@ module.exports = grunt => {
         'node_modules/bootstrap/dist/js/bootstrap.js',
         'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
         'node_modules/marked/lib/marked.js',
-        'client/lib/autobahn.js',
-        'client/lib/gridstack.all.js',
+        'node_modules/gridstack/dist/gridstack.js',
+        'node_modules/gridstack/dist/gridstack.jQueryUI.js',
 
         'client/lib/jquery-ui.min.js',
         'client/lib/jquery.ui.touch-punch.min.js',
         'client/lib/moment-timezone-data.js',
-        'client/lib/bull.js',
+        'client/lib/autobahn.js',
+        'client/lib/bullbone.js',
 
         'client/src/namespace.js',
         'client/src/exceptions.js',

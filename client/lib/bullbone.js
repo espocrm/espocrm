@@ -1,4 +1,4 @@
-/*! bull 1.0.1 2020-09-17 */
+/*! bullbone 1.0.2 2021-06-19 */
 var Bull = Bull || {};
 
 (function (Bull, _) {
@@ -1457,7 +1457,7 @@ var Bull = Bull || {};
     _.extend(Bull.Renderer.prototype, {
 
         _render: function (template, data) {
-            return template(data);
+            return template(data, {allowProtoPropertiesByDefault: true});
         },
 
         render: function (template, data) {
