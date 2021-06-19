@@ -382,6 +382,10 @@ module.exports = grunt => {
             .finalize();
     });
 
+    grunt.registerTask('npm-install', () => {
+        cp.execSync("npm install", {stdio: 'inherit'});
+    });
+
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadNpmTasks('grunt-contrib-less');
@@ -412,6 +416,7 @@ module.exports = grunt => {
 
     grunt.registerTask('default', [
         'composer',
+        'npm-install',
         'offline',
     ]);
 

@@ -1,13 +1,18 @@
 {
   "name": "espocrm",
   "version": "6.1.7",
-  "description": "",
-  "main": "index.php",
+  "description": "Open-source CRM.",
   "repository": {
     "type": "git",
     "url": "git://github.com/espocrm/espocrm.git"
   },
-  "author": "",
+  "scripts": {
+    "build": "grunt",
+    "test": "grunt run-tests",
+    "test-unit": "grunt run-unit-tests",
+    "test-integration": "grunt run-integration-tests"
+  },
+  "author": "Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko",
   "license": "GPL-3.0",
   "devDependencies": {
     "archiver": "^3.1.1",
