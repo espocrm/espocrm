@@ -39,7 +39,7 @@
     "base-64": "^1.0.0",
     "bootstrap": "^3.4.1",
     "bootstrap-datepicker": "^1.9.0",
-    "bullbone": "git+https://github.com/yurikuzn/bull.git#1.0.3",
+    "bullbone": "git://github.com/yurikuzn/bull.git#1.0.3",
     "devbridge-autocomplete": "^1.4.9",
     "es6-promise": "^3.0.2",
     "gridstack": "^1.2.1",
