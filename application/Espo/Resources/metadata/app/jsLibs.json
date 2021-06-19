@@ -15,8 +15,7 @@
         "exportsAs": "summernote"
     },
     "Textcomplete": {
-        "path": "client/lib/jquery.textcomplete.js",
-        "exportsTo": "$",
+        "exportsTo": "$.fn",
         "exportsAs": "textcomplete"
     },
     "Select2": {
