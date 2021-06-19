@@ -42,6 +42,7 @@ module.exports = grunt => {
         'node_modules/es6-promise/dist/es6-promise.js',
         'node_modules/backbone/backbone.js',
         'node_modules/handlebars/dist/handlebars.js',
+        'node_modules/bullbone/dist/bullbone.js',
         'node_modules/base-64/base64.js',
         'node_modules/moment/moment.js',
         'node_modules/moment-timezone/moment-timezone.js',
@@ -58,7 +59,6 @@ module.exports = grunt => {
         'client/lib/jquery.ui.touch-punch.min.js',
         'client/lib/moment-timezone-data.js',
         'client/lib/autobahn.js',
-        'client/lib/bullbone.js',
 
         'client/src/namespace.js',
         'client/src/exceptions.js',
