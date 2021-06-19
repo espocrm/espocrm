@@ -74,8 +74,10 @@ define('views/fields/datetime', 'views/fields/date', function (Dep) {
             var value = this.getDateTime().toDisplay(this.model.get(this.name));
 
             if (value) {
-                data.date = value.substr(0, value.indexOf(' '));
-                data.time = value.substr(value.indexOf(' ') + 1);
+                let pair = this.splitDatetime(value);
+
+                data.date = pair[0];
+                data.time = pair[1];
             }
 
             return data;
@@ -160,20 +162,30 @@ define('views/fields/datetime', 'views/fields/date', function (Dep) {
         },
 
         setDefaultTime: function () {
-            var d = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
+            var dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
 
-            var index = d.indexOf(' ');
+            var pair = this.splitDatetime(dtString);
 
-            if (~index) {
-                this.$time.val(d.substr(index + 1));
+            if (pair.length === 2) {
+                this.$time.val(pair[1]);
             }
+        },
+
+        splitDatetime: function (value) {
+            let m = moment(value, this.getDateTime().getDateTimeFormat());
+
+            let dateValue = m.format(this.getDateTime().getDateFormat());
+
+            let timeValue = value.substr(dateValue.length + 1);
+
+            return [dateValue, timeValue];
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
             if (this.mode === 'edit') {
-                var $date = this.$date = this.$element;
+                this.$date = this.$element;
                 var $time = this.$time = this.$el.find('input.time-part');
 
                 this.initTimepicker();
@@ -206,10 +218,10 @@ define('views/fields/datetime', 'views/fields/date', function (Dep) {
             if (this.mode === 'edit') {
                 var formatedValue = this.getDateTime().toDisplay(value);
 
-                var arr = formatedValue.split(' ');
+                var pair = this.splitDatetime(value);
 
-                this.$date.val(arr[0]);
-                this.$time.val(arr[1]);
+                this.$date.val(pair[0]);
+                this.$time.val(pair[1]);
             }
             else {
                 this.setup();
@@ -240,7 +252,8 @@ define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
         validateDatetime: function () {
             if (this.model.get(this.name) === -1) {
-                var msg = this.translate('fieldShouldBeDatetime', 'messages').replace('{field}', this.getLabelText());
+                var msg = this.translate('fieldShouldBeDatetime', 'messages')
+                    .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
 
