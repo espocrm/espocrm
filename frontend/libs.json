@@ -36,6 +36,10 @@
         "bundle": true
     },
     {
+        "src": "moment-timezone-data-build/build/moment-timezone-data.js",
+        "bundle": true
+    },
+    {
         "src": "timepicker/jquery.timepicker.js",
         "bundle": true
     },

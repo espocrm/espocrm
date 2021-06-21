@@ -56,6 +56,7 @@
     "marked": "^0.8.2",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.33",
+    "moment-timezone-data-build": "git://github.com/yurikuzn/moment-timezone-data-build.git#0.1.0",
     "qrcodejs": "^1.0.0",
     "selectize": "git://github.com/selectize/selectize.js.git#v0.13.3",
     "summernote": "^0.8.12",
