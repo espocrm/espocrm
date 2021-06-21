@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('view-helper', ['lib!client/lib/purify.min.js'], function () {
+define('view-helper', [/*'lib!marked', 'lib!dompurify'*/], function (/*marked, DOMPurify*/) {
 
     let ViewHelper = function () {
         this._registerHandlebarsHelpers();
@@ -54,17 +54,17 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
         DOMPurify.addHook('beforeSanitizeAttributes', function (node) {
             if (node instanceof HTMLAnchorElement) {
                 if (node.getAttribute('target')) {
-                    node.targetBlack = true;
+                    node.targetBlank = true;
                 }
                 else {
-                    node.targetBlack = false;
+                    node.targetBlank = false;
                 }
             }
         });
 
         DOMPurify.addHook('afterSanitizeAttributes', function (node) {
             if (node instanceof HTMLAnchorElement) {
-                if (node.targetBlack) {
+                if (node.targetBlank) {
                     node.setAttribute('target', '_blank');
                     node.setAttribute('rel', 'noopener noreferrer');
                 }

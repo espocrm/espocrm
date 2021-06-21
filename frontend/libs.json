@@ -14,6 +14,7 @@
     "bootstrap/dist/js/bootstrap.js",
     "bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
     "marked/lib/marked.js",
+    "dompurify/dist/purify.js",
     "gridstack/dist/gridstack.js",
     "gridstack/dist/gridstack.jQueryUI.js",
     {
@@ -30,5 +31,11 @@
     },
     {
         "path": "exif-js/exif.js"
+    },
+    {
+        "path": "jsbarcode/dist/JsBarcode.all.js"
+    },
+    {
+        "path": "qrcodejs/qrcode.js"
     }
 ]

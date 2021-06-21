@@ -26,7 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user-security/modals/totp', ['views/modal', 'model', 'lib!client/lib/qrcode.min.js'], function (Dep, Model) {
+define('views/user-security/modals/totp',
+    ['views/modal', 'model', 'lib!qrcode'],
+    function (Dep, Model, QRCode) {
 
     return Dep.extend({
 
@@ -108,7 +110,7 @@ define('views/user-security/modals/totp', ['views/modal', 'model', 'lib!client/l
         },
 
         afterRender: function () {
-            var qrcode = new QRCode(this.$el.find('.qrcode').get(0), {
+            new QRCode(this.$el.find('.qrcode').get(0), {
                 text: 'otpauth://totp/'+this.label+'?secret=' + this.secret,
                 width: 256,
                 height: 256,

@@ -18,6 +18,7 @@
         "node_modules/bootstrap/dist/js/bootstrap.js",
         "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
         "node_modules/marked/lib/marked.js",
+        "node_modules/dompurify/dist/purify.js",
         "node_modules/gridstack/dist/gridstack.js",
         "node_modules/gridstack/dist/gridstack.jQueryUI.js",
 

@@ -45,6 +45,14 @@
         "exportsTo": "window",
         "exportsAs": "GridStack"
     },
+    "marked": {
+        "exportsTo": "window",
+        "exportsAs": "marked"
+    },
+    "dompurify": {
+        "exportsTo": "window",
+        "exportsAs": "DOMPurify"
+    },
     "Colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
         "devPath": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
@@ -58,8 +66,15 @@
         "exportsAs": "EXIF"
     },
     "JsBarcode": {
-        "path": "client/lib/JsBarcode.all.min.js",
+        "path": "client/lib/JsBarcode.all.js",
+        "devPath": "node_modules/jsbarcode/dist/JsBarcode.all.js",
         "exportsTo": "window",
         "exportsAs": "JsBarcode"
+    },
+    "qrcode": {
+        "path": "client/lib/qrcode.js",
+        "devPath": "node_modules/qrcodejs/qrcode.js",
+        "exportsTo": "window",
+        "exportsAs": "QRCode"
     }
 }

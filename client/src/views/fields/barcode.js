@@ -26,8 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/barcode', [
-    'views/fields/varchar', 'lib!JsBarcode', 'lib!client/lib/qrcode.min.js'], function (Dep, JsBarcode, Qrcode) {
+define('views/fields/barcode',
+    ['views/fields/varchar', 'lib!JsBarcode', 'lib!qrcode'],
+    function (Dep, JsBarcode, QRCode) {
 
     return Dep.extend({
 
@@ -102,7 +103,7 @@ define('views/fields/barcode', [
                             size = containerWidth;
                         }
 
-                        var qrCode = new QRCode(this.$el.find('.barcode').get(0), {
+                        new QRCode(this.$el.find('.barcode').get(0), {
                             text: value,
                             width: size,
                             height: size,
