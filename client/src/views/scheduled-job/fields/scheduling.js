@@ -27,7 +27,7 @@
  ************************************************************************/
 
 define('views/scheduled-job/fields/scheduling',
-    ['views/fields/varchar', 'lib!client/lib/cronstrue-i18n.min.js'], function (Dep) {
+    ['views/fields/varchar', 'lib!cronstrue'], function (Dep, cronstrue) {
 
     return Dep.extend({
 
@@ -63,8 +63,9 @@ define('views/scheduled-job/fields/scheduling',
                 return;
             }
 
-            if (exp == '* * * * *') {
+            if (exp === '* * * * *') {
                 this.$text.text(this.translate('As often as possible', 'labels', 'ScheduledJob'));
+
                 return;
             }
 
@@ -74,7 +75,8 @@ define('views/scheduled-job/fields/scheduling',
 
             if (~localeList.indexOf(language)) {
                 locale = language;
-            } else if (~localeList.indexOf(language.split('_')[0])) {
+            }
+            else if (~localeList.indexOf(language.split('_')[0])) {
                 locale = language.split('_')[0];
             }
 
@@ -84,7 +86,8 @@ define('views/scheduled-job/fields/scheduling',
                     locale: locale,
                 });
 
-            } catch (e) {
+            }
+            catch (e) {
                 text = this.translate('Not valid');
             }
 

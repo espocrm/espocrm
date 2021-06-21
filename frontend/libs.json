@@ -18,5 +18,17 @@
     "gridstack/dist/gridstack.jQueryUI.js",
     {
         "path": "selectize/dist/js/standalone/selectize.js"
+    },
+    {
+        "path": "bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
+    },
+    {
+        "path": "cropper/dist/cropper.js"
+    },
+    {
+        "path": "cronstrue/dist/cronstrue-i18n.js"
+    },
+    {
+        "path": "exif-js/exif.js"
     }
 ]

@@ -29,23 +29,31 @@
         "exportsTo": "window",
         "exportsAs": "Selectize"
     },
+    "cronstrue": {
+        "path": "client/lib/cronstrue-i18n.js",
+        "devPath": "node_modules/cronstrue/dist/cronstrue-i18n.js",
+        "exportsTo": "window",
+        "exportsAs": "cronstrue"
+    },
     "Cropper": {
-        "path": "client/lib/cropper.min.js",
-        "exportsTo": "$",
+        "path": "client/lib/cropper.js",
+        "devPath": "node_modules/cropper/dist/cropper.js",
+        "exportsTo": "$.fn",
         "exportsAs": "cropper"
     },
     "gridstack": {
-        "path": "client/lib/gridstack.all.js",
         "exportsTo": "window",
         "exportsAs": "GridStack"
     },
     "Colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
-        "exportsTo": "$",
+        "devPath": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
+        "exportsTo": "$.fn",
         "exportsAs": "colorpicker"
     },
     "exif": {
-        "path": "client/lib/exif-js.js",
+        "path": "client/lib/exif.js",
+        "devPath": "node_modules/exif-js/exif.js",
         "exportsTo": "window",
         "exportsAs": "EXIF"
     },
