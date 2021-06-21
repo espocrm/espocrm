@@ -397,12 +397,6 @@ function getBundleLibList() {
     let list = [];
 
     libs.forEach(item => {
-        if (typeof item === 'string') {
-            list.push(item);
-
-            return;
-        }
-
         if (!item.bundle) {
             return;
         }
@@ -423,10 +417,6 @@ function getCopyLibList() {
     let list = [];
 
     libs.forEach(item => {
-        if (typeof item === 'string') {
-            return;
-        }
-
         if (item.bundle) {
             return;
         }
