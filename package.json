@@ -49,6 +49,7 @@
     "es6-promise": "^3.0.2",
     "espo-funnel-chart": "git://github.com/yurikuzn/espo-funnel-chart.git#0.1.0",
     "exif-js": "^2.3.0",
+    "flotr2": "git://github.com/yurikuzn/flotr2.git#0.1.0",
     "gridstack": "^1.2.1",
     "handlebars": "^4.7.7",
     "jquery": "^3.6.0",

@@ -103,6 +103,9 @@
         "src": "espo-funnel-chart/build/espo-funnel-chart.js"
     },
     {
+        "src": "flotr2/flotr2.js"
+    },
+    {
         "name": "ace-builds",
         "files": [
             {
