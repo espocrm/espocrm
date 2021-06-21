@@ -121,5 +121,13 @@
                 "dest": "client/lib/ace-ext-language_tools.js"
             }
         ]
+    },
+    {
+        "src": "fullcalendar/dist/fullcalendar.js",
+        "dest": "client/modules/crm/lib/fullcalendar.js"
+    },
+    {
+        "src": "vis/dist/vis.js",
+        "dest": "client/modules/crm/lib/vis.js"
     }
 ]

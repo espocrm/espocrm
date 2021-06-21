@@ -1,12 +1,13 @@
 {
     "full-calendar": {
-        "path": "client/modules/crm/lib/fullcalendar.min.js",
-        "exportsTo": "$",
+        "path": "client/modules/crm/lib/fullcalendar.js",
+        "devPath": "node_modules/fullcalendar/dist/fullcalendar.js",
+        "exportsTo": "$.fn",
         "exportsAs": "fullCalendar"
     },
     "vis": {
-        "path": "client/modules/crm/lib/vis.min.js",
-        "exportsAs": "vis",
-        "noAppCache": true
+        "path": "client/modules/crm/lib/vis.js",
+        "devPath": "node_modules/vis/dist/vis.js",
+        "exportsAs": "vis"
     }
 }
