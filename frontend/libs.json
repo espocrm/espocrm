@@ -1,0 +1,22 @@
+[
+    "jquery/dist/jquery.js",
+    "underscore/underscore.js",
+    "es6-promise/dist/es6-promise.js",
+    "backbone/backbone.js",
+    "handlebars/dist/handlebars.js",
+    "bullbone/dist/bullbone.js",
+    "base-64/base64.js",
+    "moment/moment.js",
+    "moment-timezone/moment-timezone.js",
+    "timepicker/jquery.timepicker.js",
+    "devbridge-autocomplete/dist/jquery.autocomplete.js",
+    "jquery-textcomplete/dist/jquery.textcomplete.js",
+    "bootstrap/dist/js/bootstrap.js",
+    "bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
+    "marked/lib/marked.js",
+    "gridstack/dist/gridstack.js",
+    "gridstack/dist/gridstack.jQueryUI.js",
+    {
+        "path": "selectize/dist/js/standalone/selectize.js"
+    }
+]

@@ -34,75 +34,11 @@ const path = require('path');
 
 module.exports = grunt => {
 
-    let jsFilesToMinify = [
-        'node_modules/jquery/dist/jquery.js',
-        'node_modules/underscore/underscore.js',
-        'node_modules/es6-promise/dist/es6-promise.js',
-        'node_modules/backbone/backbone.js',
-        'node_modules/handlebars/dist/handlebars.js',
-        'node_modules/bullbone/dist/bullbone.js',
-        'node_modules/base-64/base64.js',
-        'node_modules/moment/moment.js',
-        'node_modules/moment-timezone/moment-timezone.js',
-        'node_modules/timepicker/jquery.timepicker.js',
-        "node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js",
-        "node_modules/jquery-textcomplete/dist/jquery.textcomplete.js",
-        'node_modules/bootstrap/dist/js/bootstrap.js',
-        'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
-        'node_modules/marked/lib/marked.js',
-        'node_modules/gridstack/dist/gridstack.js',
-        'node_modules/gridstack/dist/gridstack.jQueryUI.js',
-
-        'client/lib/jquery-ui.min.js',
-        'client/lib/jquery.ui.touch-punch.min.js',
-        'client/lib/moment-timezone-data.js',
-        'client/lib/autobahn.js',
-
-        'client/src/namespace.js',
-        'client/src/exceptions.js',
-        'client/src/loader.js',
-        'client/src/utils.js',
-
-        'client/src/acl.js',
-        'client/src/model.js',
-        'client/src/model-offline.js',
-        'client/src/ajax.js',
-        'client/src/controller.js',
-
-        'client/src/ui.js',
-        'client/src/acl-manager.js',
-        'client/src/cache.js',
-        'client/src/storage.js',
-        'client/src/models/settings.js',
-        'client/src/language.js',
-        'client/src/metadata.js',
-        'client/src/field-manager.js',
-        'client/src/models/user.js',
-        'client/src/models/preferences.js',
-        'client/src/model-factory.js',
-        'client/src/collection-factory.js',
-        'client/src/pre-loader.js',
-        'client/src/controllers/base.js',
-        'client/src/router.js',
-        'client/src/date-time.js',
-        'client/src/layout-manager.js',
-        'client/src/theme-manager.js',
-        'client/src/session-storage.js',
-        'client/src/view-helper.js',
-        'client/src/page-title.js',
-
-        'client/src/app.js'
-    ];
-
-    function camelCaseToHyphen (string){
-        if (string === null) {
-            return string;
-        }
-
-        return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-    }
-
     const pkg = grunt.file.readJSON('package.json');
+    const bundleConfig = require('./frontend/bundle-config.json');
+
+    let jsFilesToBundle = getBundleLibList().concat(bundleConfig.jsFiles);
+    let jsFilesToCopy = getCopyLibList();
 
     let currentPath = path.dirname(fs.realpathSync(__filename));
 
@@ -137,8 +73,6 @@ module.exports = grunt => {
         lessData[theme] = o;
     });
 
-
-
     grunt.initConfig({
         pkg: pkg,
 
@@ -171,8 +105,8 @@ module.exports = grunt => {
 
         cssmin: {
             themes: {
-                files: cssminFilesData
-            }
+                files: cssminFilesData,
+            },
         },
 
         uglify: {
@@ -181,9 +115,7 @@ module.exports = grunt => {
                 sourceMap: true,
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
             },
-            'build/tmp/client/espo.min.js': jsFilesToMinify.map(item => {
-                return '' + item;
-            }),
+            'build/tmp/client/espo.min.js': jsFilesToBundle,
         },
         copy: {
             options: {
@@ -206,6 +138,12 @@ module.exports = grunt => {
                 dest: 'build/tmp/client',
             },
             frontendLib: {
+                expand: true,
+                flatten: true,
+                src: jsFilesToCopy,
+                dest: 'build/tmp/client/lib/',
+            },
+            frontendCommitedLib: {
                 expand: true,
                 dot: true,
                 cwd: 'client/lib',
@@ -303,14 +241,14 @@ module.exports = grunt => {
                     patterns: [
                         {
                             match: 'version',
-                            replacement: '<%= pkg.version %>'
+                            replacement: '<%= pkg.version %>',
                         }
                     ]
                 },
                 files: [
                     {
                         src: 'build/tmp/application/Espo/Resources/defaults/config.php',
-                        dest: 'build/tmp/application/Espo/Resources/defaults/config.php'
+                        dest: 'build/tmp/application/Espo/Resources/defaults/config.php',
                     }
                 ],
             }
@@ -401,6 +339,7 @@ module.exports = grunt => {
         'uglify',
         'copy:frontendFolders',
         'copy:frontendLib',
+        'copy:frontendCommitedLib',
         'copy:backend',
         'replace',
         'clean:beforeFinal',
@@ -451,3 +390,61 @@ module.exports = grunt => {
         'offline',
     ]);
 };
+
+function getBundleLibList() {
+    const libs = require('./frontend/libs.json');
+
+    let list = [];
+
+    libs.forEach(item => {
+        if (typeof item === 'string') {
+            list.push(item);
+
+            return;
+        }
+
+        if (!item.bundle) {
+            return;
+        }
+
+        if (!item.path) {
+            throw new Error("No lib path.");
+        }
+
+        list.push(item.path);
+    });
+
+    return list.map(item => 'node_modules/' + item);
+}
+
+function getCopyLibList() {
+    const libs = require('./frontend/libs.json');
+
+    let list = [];
+
+    libs.forEach(item => {
+        if (typeof item === 'string') {
+            return;
+        }
+
+        if (item.bundle) {
+            return;
+        }
+
+        if (!item.path) {
+            throw new Error("No lib path.");
+        }
+
+        list.push(item.path);
+    });
+
+    return list.map(item => 'node_modules/' + item);
+}
+
+function camelCaseToHyphen (string){
+    if (string === null) {
+        return string;
+    }
+
+    return string.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
