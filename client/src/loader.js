@@ -383,9 +383,13 @@ var Espo = Espo || {classMap: {}};
                 from = root;
             }
             else {
-                exportsTo.split('.').forEach(item => {
+                for (let item of exportsTo.split('.')) {
                     from = from[item];
-                });
+
+                    if (typeof from === 'undefined') {
+                        return null;
+                    }
+                }
             }
 
             if (exportsAs in from) {

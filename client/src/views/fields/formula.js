@@ -74,42 +74,35 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
             this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
 
             if (this.mode === 'edit' || this.mode === 'detail') {
-                this.wait(true);
-
-                Promise.all([
-                    new Promise(function (resolve) {
-                        Espo.loader.load('lib!client/lib/ace/ace.js', function () {
-                            Promise
-                                .all([
-                                    new Promise(function (resolve) {
-                                        Espo.loader.load('lib!client/lib/ace/mode-javascript.js', function () {
-                                            resolve();
-                                        }.bind(this));
-                                    }),
-                                    new Promise(function (resolve) {
-                                        Espo.loader.load('lib!client/lib/ace/ext-language_tools.js', function () {
-                                            resolve();
-                                        }.bind(this));
-                                    }),
-                                ])
-                                .then(function () {
-                                    resolve();
-                                });
-                        }.bind(this));
-                    }.bind(this)),
-                ])
-                .then(function () {
-                    ace.config.set("basePath", this.getBasePath() + 'client/lib/ace');
-
-                    this.wait(false);
-                }.bind(this));
+                this.wait(this.requireAce());
             }
 
-            this.on('remove', function () {
+            this.on('remove', () => {
                 if (this.editor) {
                     this.editor.destroy();
                 }
-            }, this);
+            });
+        },
+
+        requireAce: function () {
+            return new Promise(resolve =>
+                Espo.loader.require('lib!ace', () =>
+                    Promise
+                        .all([
+                            new Promise(resolve =>
+                                Espo.loader.require('lib!ace-mode-javascript', () => resolve())
+                            ),
+                            new Promise(resolve =>
+                                Espo.loader.require('lib!ace-ext-language_tools', () => resolve())
+                            ),
+                        ])
+                        .then(() => resolve())
+                )
+            );
+
+            /*.then(() => {
+                ace.config.set('basePath', this.getBasePath() + 'client/lib/ace');
+            })*/
         },
 
         data: function () {
@@ -160,7 +153,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 editor.commands.removeCommand('find');
                 editor.setHighlightActiveLine(false);
 
-                var JavaScriptMode = ace.require("ace/mode/javascript").Mode;
+                var JavaScriptMode = ace.require('ace/mode/javascript').Mode;
 
                 editor.session.setMode(new JavaScriptMode());
 

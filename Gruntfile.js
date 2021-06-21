@@ -38,7 +38,7 @@ module.exports = grunt => {
     const bundleConfig = require('./frontend/bundle-config.json');
 
     let jsFilesToBundle = getBundleLibList().concat(bundleConfig.jsFiles);
-    let jsFilesToCopy = getCopyLibList();
+    let jsFilesToCopy = getCopyLibDataList();
 
     let currentPath = path.dirname(fs.realpathSync(__filename));
 
@@ -138,10 +138,10 @@ module.exports = grunt => {
                 dest: 'build/tmp/client',
             },
             frontendLib: {
-                expand: true,
-                flatten: true,
-                src: jsFilesToCopy,
-                dest: 'build/tmp/client/lib/',
+                //expand: true,
+                //flatten: true,
+                files: jsFilesToCopy,
+                //dest: 'build/tmp/client/lib/',
             },
             frontendCommitedLib: {
                 expand: true,
@@ -401,17 +401,25 @@ function getBundleLibList() {
             return;
         }
 
-        if (!item.path) {
-            throw new Error("No lib path.");
+        if (item.files) {
+            item.files.forEach(item  => {
+                list.push(item.src);
+            });
+
+            return;
         }
 
-        list.push(item.path);
+        if (!item.src) {
+            throw new Error("No lib src.");
+        }
+
+        list.push(item.src);
     });
 
     return list.map(item => 'node_modules/' + item);
 }
 
-function getCopyLibList() {
+function getCopyLibDataList() {
     const libs = require('./frontend/libs.json');
 
     let list = [];
@@ -421,14 +429,28 @@ function getCopyLibList() {
             return;
         }
 
-        if (!item.path) {
-            throw new Error("No lib path.");
+        if (item.files) {
+            item.files.forEach(item  => {
+                list.push({
+                    src: 'node_modules/' + item.src,
+                    dest: 'build/tmp/' + (item.dest || 'client/lib/' + item.src.split('/').pop()),
+                });
+            });
+
+            return;
         }
 
-        list.push(item.path);
+        if (!item.src) {
+            throw new Error("No lib src.");
+        }
+
+        list.push({
+            src: 'node_modules/' + item.src,
+            dest: 'build/tmp/' + (item.dest || 'client/lib/' + item.src.split('/').pop()),
+        });
     });
 
-    return list.map(item => 'node_modules/' + item);
+    return list;
 }
 
 function camelCaseToHyphen (string){

@@ -1,96 +1,115 @@
 [
-
     {
-        "path": "jquery/dist/jquery.js",
+        "src": "jquery/dist/jquery.js",
         "bundle": true
     },
     {
-        "path": "underscore/underscore.js",
+        "src": "underscore/underscore.js",
         "bundle": true
     },
     {
-        "path": "es6-promise/dist/es6-promise.js",
+        "src": "es6-promise/dist/es6-promise.js",
         "bundle": true
     },
     {
-        "path": "backbone/backbone.js",
+        "src": "backbone/backbone.js",
         "bundle": true
     },
     {
-        "path": "handlebars/dist/handlebars.js",
+        "src": "handlebars/dist/handlebars.js",
         "bundle": true
     },
     {
-        "path": "bullbone/dist/bullbone.js",
+        "src": "bullbone/dist/bullbone.js",
         "bundle": true
     },
     {
-        "path": "base-64/base64.js",
+        "src": "base-64/base64.js",
         "bundle": true
     },
     {
-        "path": "moment/moment.js",
+        "src": "moment/moment.js",
         "bundle": true
     },
     {
-        "path": "moment-timezone/moment-timezone.js",
+        "src": "moment-timezone/moment-timezone.js",
         "bundle": true
     },
     {
-        "path": "timepicker/jquery.timepicker.js",
+        "src": "timepicker/jquery.timepicker.js",
         "bundle": true
     },
     {
-        "path": "devbridge-autocomplete/dist/jquery.autocomplete.js",
+        "src": "devbridge-autocomplete/dist/jquery.autocomplete.js",
         "bundle": true
     },
     {
-        "path": "jquery-textcomplete/dist/jquery.textcomplete.js",
+        "src": "jquery-textcomplete/dist/jquery.textcomplete.js",
         "bundle": true
     },
     {
-        "path": "bootstrap/dist/js/bootstrap.js",
+        "src": "bootstrap/dist/js/bootstrap.js",
         "bundle": true
     },
     {
-        "path": "bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
+        "src": "bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
         "bundle": true
     },
     {
-        "path": "marked/lib/marked.js",
+        "src": "marked/lib/marked.js",
         "bundle": true
     },
     {
-        "path": "dompurify/dist/purify.js",
+        "src": "dompurify/dist/purify.js",
         "bundle": true
     },
     {
-        "path": "gridstack/dist/gridstack.js",
+        "src": "gridstack/dist/gridstack.js",
         "bundle": true
     },
     {
-        "path": "gridstack/dist/gridstack.jQueryUI.js",
+        "src": "gridstack/dist/gridstack.jQueryUI.js",
         "bundle": true
     },
     {
-        "path": "selectize/dist/js/standalone/selectize.js"
+        "src": "selectize/dist/js/standalone/selectize.js"
     },
     {
-        "path": "bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
+        "src": "bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
     },
     {
-        "path": "cropper/dist/cropper.js"
+        "src": "cropper/dist/cropper.js"
     },
     {
-        "path": "cronstrue/dist/cronstrue-i18n.js"
+        "src": "cronstrue/dist/cronstrue-i18n.js"
     },
     {
-        "path": "exif-js/exif.js"
+        "src": "exif-js/exif.js"
     },
     {
-        "path": "jsbarcode/dist/JsBarcode.all.js"
+        "src": "jsbarcode/dist/JsBarcode.all.js"
     },
     {
-        "path": "qrcodejs/qrcode.js"
+        "src": "qrcodejs/qrcode.js"
+    },
+    {
+        "src": "summernote/dist/summernote.js"
+    },
+    {
+        "name": "ace-builds",
+        "files": [
+            {
+                "src": "ace-builds/src-noconflict/ace.js",
+                "dest": "client/lib/ace.js"
+            },
+            {
+                "src": "ace-builds/src-noconflict/mode-javascript.js",
+                "dest": "client/lib/ace-mode-javascript.js"
+            },
+            {
+                "src": "ace-builds/src-noconflict/ext-language_tools.js",
+                "dest": "client/lib/ace-ext-language_tools.js"
+            }
+        ]
     }
 ]

@@ -10,8 +10,9 @@
         "exportsAs": "EspoFunnel"
     },
     "Summernote": {
-        "path": "client/lib/summernote.min.js",
-        "exportsTo": "$",
+        "path": "client/lib/summernote.js",
+        "devPath": "node_modules/summernote/dist/summernote.js",
+        "exportsTo": "$.fn",
         "exportsAs": "summernote"
     },
     "Textcomplete": {
@@ -71,5 +72,23 @@
         "devPath": "node_modules/qrcodejs/qrcode.js",
         "exportsTo": "window",
         "exportsAs": "QRCode"
+    },
+    "ace": {
+        "path": "client/lib/ace.js",
+        "devPath": "node_modules/ace-builds/src-noconflict/ace.js",
+        "exportsTo": "window",
+        "exportsAs": "ace"
+    },
+    "ace-mode-javascript": {
+        "path": "client/lib/ace-mode-javascript.js",
+        "devPath": "node_modules/ace-builds/src-noconflict/mode-javascript.js",
+        "exportsTo": "ace.require.define.modules",
+        "exportsAs": "ace/mode/javascript"
+    },
+    "ace-ext-language_tools": {
+        "path": "client/lib/ace-ext-language_tools.js",
+        "devPath": "node_modules/ace-builds/src-noconflict/ext-language_tools.js",
+        "exportsTo": "ace.require.define.modules",
+        "exportsAs": "ace/ext/language_tools"
     }
 }
