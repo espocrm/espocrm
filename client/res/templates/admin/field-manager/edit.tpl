@@ -30,13 +30,18 @@
                 {{#each paramList}}
                     {{#unless hidden}}
                     <div class="cell form-group" data-name="{{../name}}">
-                        <label class="control-label" data-name="{{../name}}">{{translate ../name scope='Admin' category='fields'}}</label>
-                        <div class="field" data-name="{{../name}}">{{{var ../name ../../this}}}</div>
+                        <label class="control-label" data-name="{{../name}}">
+                            {{translate name scope='Admin' category='fields'}}
+                        </label>
+                        <div class="field" data-name="{{name}}">{{{var name ../this}}}</div>
                     </div>
                     {{/unless}}
                 {{/each}}
                 <div class="cell form-group" data-name="tooltipText">
-                    <label class="control-label" data-name="tooltipText">{{translate 'tooltipText' scope='Admin' category='fields'}}</label>
+                    <label
+                        class="control-label"
+                        data-name="tooltipText"
+                    >{{translate 'tooltipText' scope='Admin' category='fields'}}</label>
                     <div class="field" data-name="tooltipText">{{{tooltipText}}}</div>
                 </div>
         </div>
