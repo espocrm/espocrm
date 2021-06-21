@@ -47,6 +47,7 @@
     "devbridge-autocomplete": "^1.4.9",
     "dompurify": "^2.2.9",
     "es6-promise": "^3.0.2",
+    "espo-funnel-chart": "git://github.com/yurikuzn/espo-funnel-chart.git#0.1.0",
     "exif-js": "^2.3.0",
     "gridstack": "^1.2.1",
     "handlebars": "^4.7.7",

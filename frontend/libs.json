@@ -100,6 +100,9 @@
         "src": "summernote/dist/summernote.js"
     },
     {
+        "src": "espo-funnel-chart/build/espo-funnel-chart.js"
+    },
+    {
         "name": "ace-builds",
         "files": [
             {
