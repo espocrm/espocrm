@@ -1,4 +1,3 @@
-
 {{#unless isLoading}}
 <div class="list-nested-categories">
 

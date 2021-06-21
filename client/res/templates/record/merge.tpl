@@ -18,13 +18,13 @@
             {{#if hasCreatedAt}}
             <tr>
                 <td align="right">
-                    {{translate 'createdAt' scope=../scope category='fields'}}
+                    {{translate 'createdAt' scope=scope category='fields'}}
                 </td>
                 {{#each dataList}}
                 <td></td>
                 <td data-id="{{id}}">
                     <div class="field" data-name="createdAt">
-                        {{{var createdAtViewName ../../this}}}
+                        {{{var createdAtViewName ../this}}}
                     </div>
                 </td>
                 {{/each}}
@@ -38,7 +38,7 @@
                 {{#each columns}}
                 <td>
                     {{#unless isReadOnly}}
-                    <input type="radio" name="{{../../name}}" value="{{../id}}" data-id="{{../id}}" class="pull-right field-radio">
+                    <input type="radio" name="{{../name}}" value="{{id}}" data-id="{{id}}" class="pull-right field-radio">
                     {{/unless}}
                 </td>
                 <td data-id="{{id}}">

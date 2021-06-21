@@ -16,5 +16,3 @@
         <a href="javascript:" data-page="last"> <i class="fas fa-fast-forward"></i> </a>
     </li>
 </ul>
-
-

@@ -2,7 +2,7 @@
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
     {{#each buttonList}}
-        {{button name scope=../../scope label=label style=style}}
+        {{button name scope=../scope label=label style=style}}
     {{/each}}
 </div>
 {{/if}}
@@ -54,7 +54,11 @@
 
     {{#if showRoot}}
     <div class="root-item">
-    <a href="#{{scope}}" class="action link{{#if rootIsSelected}} text-bold{{/if}}" data-action="selectRoot">{{rootName}}{{#if isExpanded}} <span class="fas fa-level-down-alt fa-sm"></span>{{/if}}</a>
+    <a
+        href="#{{scope}}"
+        class="action link{{#if rootIsSelected}} text-bold{{/if}}"
+        data-action="selectRoot"
+    >{{rootName}}{{#if isExpanded}} <span class="fas fa-level-down-alt fa-sm"></span>{{/if}}</a>
     </div>
     {{/if}}
 
@@ -67,7 +71,12 @@
     {{#unless createDisabled}}
     <li class="list-group-item">
         <div>
-            <a href="javascript:" data-action="create" class="action small" title="{{translate 'Add'}}"><span class="fas fa-plus"></span></a>
+            <a
+                href="javascript:"
+                data-action="create"
+                class="action small"
+                title="{{translate 'Add'}}"
+            ><span class="fas fa-plus"></span></a>
         </div>
     </li>
     {{/unless}}

@@ -14,7 +14,7 @@
 >
     {{#if label}}
     <div class="panel-heading">
-        <div class="pull-right btn-group panel-actions-container">{{{var ../actionsViewKey ../../this}}}</div>
+        <div class="pull-right btn-group panel-actions-container">{{{var actionsViewKey ../this}}}</div>
 
         <h4 class="panel-title">
             {{#unless notRefreshable}}

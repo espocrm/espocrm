@@ -2,15 +2,24 @@
     {{#unless buttonsDisabled}}
     <div class="detail-button-container button-container record-buttons clearfix">
         <div class="btn-group actions-btn-group" role="group">
-            {{#each buttonList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
+            {{#each buttonList}}{{button name scope=../entityType label=label style=style hidden=hidden html=html}}{{/each}}
             {{#if dropdownItemList}}
-            <button type="button" class="btn btn-default dropdown-toggle dropdown-item-list-button{{#if dropdownItemListEmpty}} hidden{{/if}}" data-toggle="dropdown">
-                <span class="fas fa-ellipsis-h"></span>
-            </button>
+            <button
+                type="button"
+                class="btn btn-default dropdown-toggle dropdown-item-list-button{{#if dropdownItemListEmpty}} hidden{{/if}}"
+                data-toggle="dropdown"
+            ><span class="fas fa-ellipsis-h"></span></button>
             <ul class="dropdown-menu pull-left">
                 {{#each dropdownItemList}}
                 {{#if this}}
-                <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}" {{#each data}} data-{{@key}}="{{./this}}"{{/each}}>{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../entityType}}{{/if}}</a></li>
+                <li
+                    class="{{#if hidden}}hidden{{/if}}"
+                ><a
+                    href="javascript:"
+                    class="action"
+                    data-action="{{name}}"
+                    {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
+                >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a></li>
                 {{else}}
                     {{#unless @first}}
                     {{#unless @last}}
@@ -37,15 +46,25 @@
     </div>
     <div class="detail-button-container button-container edit-buttons hidden clearfix">
         <div class="btn-group actions-btn-group" role="group">
-        {{#each buttonEditList}}{{button name scope=../../entityType label=label style=style hidden=hidden html=html}}{{/each}}
+        {{#each buttonEditList}}{{button name scope=../entityType label=label style=style hidden=hidden html=html}}{{/each}}
         {{#if dropdownEditItemList}}
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="fas fa-ellipsis-h"></span>
-        </button>
+        <button
+            type="button"
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+        ><span class="fas fa-ellipsis-h"></span></button>
         <ul class="dropdown-menu pull-left">
             {{#each dropdownEditItemList}}
             {{#if this}}
-            <li class="{{#if hidden}}hidden{{/if}}"><a href="javascript:" class="action" data-action="{{name}}">{{#if html}}{{{html}}}{{else}}{{translate label scope=../../../entityType}}{{/if}}</a></li>
+            <li
+                class="{{#if hidden}}hidden{{/if}}"
+            >
+                <a
+                    href="javascript:"
+                    class="action"
+                    data-action="{{name}}"
+                >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a>
+            </li>
             {{else}}
                 {{#unless @first}}
                 {{#unless @last}}
