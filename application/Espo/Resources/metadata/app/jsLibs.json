@@ -18,11 +18,6 @@
         "exportsTo": "$.fn",
         "exportsAs": "textcomplete"
     },
-    "Select2": {
-        "path": "client/lib/select2.min.js",
-        "exportsTo": "$",
-        "exportsAs": "select2"
-    },
     "Selectize": {
         "path": "client/lib/selectize.js",
         "devPath": "node_modules/selectize/dist/js/standalone/selectize.js",
