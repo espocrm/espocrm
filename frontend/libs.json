@@ -92,7 +92,8 @@
         "bundle": true
     },
     {
-        "src": "node_modules/selectize/dist/js/standalone/selectize.js"
+        "src": "node_modules/selectize/dist/js/standalone/selectize.js",
+        "bundle": true
     },
     {
         "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
