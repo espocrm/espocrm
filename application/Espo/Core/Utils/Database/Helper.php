@@ -67,11 +67,6 @@ class Helper
         $this->config = $config;
     }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
     public function getDbalConnection()
     {
         if (!isset($this->dbalConnection)) {
@@ -103,7 +98,7 @@ class Helper
     public function createDbalConnection(array $params = null)
     {
         if (!isset($params)) {
-            $config = $this->getConfig();
+            $config = $this->config;
 
             if ($config) {
                 $params = $config->get('database');
@@ -163,7 +158,7 @@ class Helper
     public function createPdoConnection(array $params = null)
     {
         if (!isset($params)) {
-            $config = $this->getConfig();
+            $config = $this->config;
 
             if ($config) {
                 $params = $config->get('database');
