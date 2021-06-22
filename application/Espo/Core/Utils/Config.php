@@ -34,7 +34,7 @@ use Espo\Core\{
     Utils\Config\ConfigFileManager,
 };
 
-use StdClass;
+use stdClass;
 use E_USER_DEPRECATED;
 
 /**
@@ -91,16 +91,22 @@ class Config
 
         $lastBranch = $this->loadConfig();
 
-        foreach ($keys as $keyName) {
-            if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
-                if (is_array($lastBranch)) {
-                    $lastBranch = $lastBranch[$keyName];
-                } else {
-                    $lastBranch = $lastBranch->$keyName;
-                }
-            } else {
+        foreach ($keys as $key) {
+            if (!is_array($lastBranch) && !is_object($lastBranch)) {
                 return $default;
             }
+
+            if (!isset($lastBranch[$key])) {
+                return $default;
+            }
+
+            if (is_array($lastBranch)) {
+                $lastBranch = $lastBranch[$key];
+
+                continue;
+            }
+
+            $lastBranch = $lastBranch->$key;
         }
 
         return $lastBranch;
@@ -115,16 +121,22 @@ class Config
 
         $lastBranch = $this->loadConfig();
 
-        foreach ($keys as $keyName) {
-            if (isset($lastBranch[$keyName]) && (is_array($lastBranch) || is_object($lastBranch))) {
-                if (is_array($lastBranch)) {
-                    $lastBranch = $lastBranch[$keyName];
-                } else {
-                    $lastBranch = $lastBranch->$keyName;
-                }
-            } else {
+        foreach ($keys as $key) {
+            if (!is_array($lastBranch) && !is_object($lastBranch)) {
                 return false;
             }
+
+            if (!isset($lastBranch[$key])) {
+                return false;
+            }
+
+            if (is_array($lastBranch)) {
+                $lastBranch = $lastBranch[$key];
+
+                continue;
+            }
+
+            $lastBranch = $lastBranch->$key;
         }
 
         return true;
@@ -269,8 +281,8 @@ class Config
         }
 
         $configPath = $this->fileManager->isFile($this->configPath) ?
-                $this->configPath :
-                $this->defaultConfigPath;
+            $this->configPath :
+            $this->defaultConfigPath;
 
         $this->data = $this->fileManager->getPhpContents($configPath);
 
@@ -286,7 +298,7 @@ class Config
     /**
      * Get all parameters.
      */
-    public function getAllData(): StdClass
+    public function getAllData(): stdClass
     {
         return (object) $this->loadConfig();
     }

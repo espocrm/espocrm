@@ -33,9 +33,11 @@ class Url
 {
     public static function detectPortalIdForApi(): ?string
     {
-        if (!empty($_GET['portalId'])) {
-            return $_GET['portalId'];
-        }
+        $portalId = filter_input(INPUT_GET, 'portalId');
+
+        if ($portalId)  {
+            return $portalId;
+       }
 
         $url = $_SERVER['REQUEST_URI'];
 
@@ -90,9 +92,7 @@ class Url
             return false;
         }
 
-        $url = $_SERVER['REQUEST_URI'];
-
-        $a = explode('?', $url);
+        $a = explode('?', $_SERVER['REQUEST_URI']);
 
         $url = rtrim($a[0], '/');
 

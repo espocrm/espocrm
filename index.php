@@ -37,13 +37,7 @@ use Espo\Core\{
 
 $app = new Application();
 
-if (!$app->isInstalled()) {
-    header("Location: install/");
-
-    exit;
-}
-
-if (!empty($_GET['entryPoint'])) {
+if (filter_has_var(INPUT_GET, 'entryPoint')) {
     $app->run(EntryPoint::class);
 
     exit;

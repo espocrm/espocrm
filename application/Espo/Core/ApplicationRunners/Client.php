@@ -32,6 +32,7 @@ namespace Espo\Core\ApplicationRunners;
 use Espo\Core\{
     Application\Runner,
     Utils\ClientManager,
+    Utils\Config,
 };
 
 /**
@@ -41,13 +42,22 @@ class Client implements Runner
 {
     private $clientManager;
 
-    public function __construct(ClientManager $clientManager)
+    private $config;
+
+    public function __construct(ClientManager $clientManager, Config $config)
     {
         $this->clientManager = $clientManager;
+        $this->config = $config;
     }
 
     public function run(): void
     {
+        if (!$this->config->get('isInstalled')) {
+            header("Location: install/");
+
+            return;
+        }
+
         $this->clientManager->display();
     }
 }

@@ -53,14 +53,12 @@ if (Url::detectIsInPortalDir()) {
     $app->setClientBasePath($basePath);
 }
 
-if (!empty($_GET['entryPoint'])) {
+if (filter_has_var(INPUT_GET, 'entryPoint')) {
     $app->run(EntryPoint::class);
 
     exit;
 }
 
-$params = RunnerParams::fromArray([
-    'basePath' => $basePath,
-]);
+$params = RunnerParams::create()->with('basePath', $basePath);
 
 $app->run(PortalClient::class, $params);

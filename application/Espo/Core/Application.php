@@ -104,21 +104,15 @@ class Application
     }
 
     /**
-     * Whether an application is installed.
+     * Whether the application is installed.
      */
     public function isInstalled(): bool
     {
-        $config = $this->getConfig();
-
-        if (file_exists($config->getConfigPath()) && $config->get('isInstalled')) {
-            return true;
-        }
-
-        return false;
+        return $this->getConfig()->get('isInstalled');
     }
 
     /**
-     * Get a service container.
+     * Get the service container.
      */
     public function getContainer(): Container
     {

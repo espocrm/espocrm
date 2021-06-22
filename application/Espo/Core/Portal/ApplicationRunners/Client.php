@@ -52,7 +52,7 @@ class Client implements Runner
 
     public function run(): void
     {
-        $portalId = $this->applicationState->getPortal()->id;
+        $portalId = $this->applicationState->getPortal()->getId();
 
         $this->clientManager->display(null, null, [
             'portalId' => $portalId,
