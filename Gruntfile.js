@@ -138,10 +138,7 @@ module.exports = grunt => {
                 dest: 'build/tmp/client',
             },
             frontendLib: {
-                //expand: true,
-                //flatten: true,
                 files: jsFilesToCopy,
-                //dest: 'build/tmp/client/lib/',
             },
             frontendCommitedLib: {
                 expand: true,
@@ -416,7 +413,7 @@ function getBundleLibList() {
         list.push(item.src);
     });
 
-    return list.map(item => 'node_modules/' + item);
+    return list;
 }
 
 function getCopyLibDataList() {
@@ -432,7 +429,7 @@ function getCopyLibDataList() {
         if (item.files) {
             item.files.forEach(item  => {
                 list.push({
-                    src: 'node_modules/' + item.src,
+                    src: item.src,
                     dest: 'build/tmp/' + (item.dest || 'client/lib/' + item.src.split('/').pop()),
                 });
             });
@@ -445,7 +442,7 @@ function getCopyLibDataList() {
         }
 
         list.push({
-            src: 'node_modules/' + item.src,
+            src: item.src,
             dest: 'build/tmp/' + (item.dest || 'client/lib/' + item.src.split('/').pop()),
         });
     });

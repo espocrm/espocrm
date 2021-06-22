@@ -22,10 +22,10 @@
         "node_modules/dompurify/dist/purify.js",
         "node_modules/gridstack/dist/gridstack.js",
         "node_modules/gridstack/dist/gridstack.jQueryUI.js",
+        "node_modules/autobahn-espo/autobahn.js",
 
         "client/lib/jquery-ui.min.js",
         "client/lib/jquery.ui.touch-punch.min.js",
-        "client/lib/autobahn.js",
 
         "client/src/loader.js",
         "client/src/utils.js",

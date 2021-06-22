@@ -1,133 +1,145 @@
 [
     {
-        "src": "jquery/dist/jquery.js",
+        "src": "node_modules/jquery/dist/jquery.js",
         "bundle": true
     },
     {
-        "src": "underscore/underscore.js",
+        "src": "node_modules/underscore/underscore.js",
         "bundle": true
     },
     {
-        "src": "es6-promise/dist/es6-promise.js",
+        "src": "node_modules/es6-promise/dist/es6-promise.js",
         "bundle": true
     },
     {
-        "src": "backbone/backbone.js",
+        "src": "node_modules/backbone/backbone.js",
         "bundle": true
     },
     {
-        "src": "handlebars/dist/handlebars.js",
+        "src": "node_modules/handlebars/dist/handlebars.js",
         "bundle": true
     },
     {
-        "src": "bullbone/dist/bullbone.js",
+        "src": "node_modules/bullbone/dist/bullbone.js",
         "bundle": true
     },
     {
-        "src": "base-64/base64.js",
+        "src": "node_modules/base-64/base64.js",
         "bundle": true
     },
     {
-        "src": "moment/moment.js",
+        "src": "node_modules/moment/moment.js",
         "bundle": true
     },
     {
-        "src": "moment-timezone/moment-timezone.js",
+        "src": "node_modules/moment-timezone/moment-timezone.js",
         "bundle": true
     },
     {
-        "src": "moment-timezone-data-build/build/moment-timezone-data.js",
+        "src": "node_modules/moment-timezone-data-build/build/moment-timezone-data.js",
         "bundle": true
     },
     {
-        "src": "timepicker/jquery.timepicker.js",
+        "src": "node_modules/timepicker/jquery.timepicker.js",
         "bundle": true
     },
     {
-        "src": "devbridge-autocomplete/dist/jquery.autocomplete.js",
+        "src": "node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js",
         "bundle": true
     },
     {
-        "src": "jquery-textcomplete/dist/jquery.textcomplete.js",
+        "src": "node_modules/jquery-textcomplete/dist/jquery.textcomplete.js",
         "bundle": true
     },
     {
-        "src": "bootstrap/dist/js/bootstrap.js",
+        "src": "node_modules/bootstrap/dist/js/bootstrap.js",
         "bundle": true
     },
     {
-        "src": "bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
+        "src": "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
         "bundle": true
     },
     {
-        "src": "marked/lib/marked.js",
+        "src": "node_modules/marked/lib/marked.js",
         "bundle": true
     },
     {
-        "src": "dompurify/dist/purify.js",
+        "src": "node_modules/dompurify/dist/purify.js",
         "bundle": true
     },
     {
-        "src": "gridstack/dist/gridstack.js",
+        "name": "gridstack",
+        "files": [
+            {
+                "src": "node_modules/gridstack/dist/gridstack.js"
+            },
+            {
+                "src": "node_modules/gridstack/dist/gridstack.jQueryUI.js"
+            }
+        ],
         "bundle": true
     },
     {
-        "src": "gridstack/dist/gridstack.jQueryUI.js",
+        "src": "node_modules/gridstack/dist/gridstack.jQueryUI.js",
         "bundle": true
     },
     {
-        "src": "selectize/dist/js/standalone/selectize.js"
+        "src": "node_modules/autobahn-espo/autobahn.js",
+        "bundle": true
     },
     {
-        "src": "bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
+        "src": "node_modules/selectize/dist/js/standalone/selectize.js"
     },
     {
-        "src": "cropper/dist/cropper.js"
+        "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
     },
     {
-        "src": "cronstrue/dist/cronstrue-i18n.js"
+        "src": "node_modules/cropper/dist/cropper.js"
     },
     {
-        "src": "exif-js/exif.js"
+        "src": "node_modules/cronstrue/dist/cronstrue-i18n.js"
     },
     {
-        "src": "jsbarcode/dist/JsBarcode.all.js"
+        "src": "node_modules/exif-js/exif.js"
     },
     {
-        "src": "qrcodejs/qrcode.js"
+        "src": "node_modules/jsbarcode/dist/JsBarcode.all.js"
     },
     {
-        "src": "summernote/dist/summernote.js"
+        "src": "node_modules/qrcodejs/qrcode.js"
     },
     {
-        "src": "espo-funnel-chart/build/espo-funnel-chart.js"
+        "src": "node_modules/summernote/dist/summernote.js"
     },
     {
-        "src": "flotr2/flotr2.js"
+        "src": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js"
+    },
+    {
+        "src": "node_modules/flotr2/flotr2.js"
     },
     {
         "name": "ace-builds",
         "files": [
             {
-                "src": "ace-builds/src-noconflict/ace.js",
+                "src": "node_modules/ace-builds/src-noconflict/ace.js",
                 "dest": "client/lib/ace.js"
             },
             {
-                "src": "ace-builds/src-noconflict/mode-javascript.js",
+                "src": "node_modules/ace-builds/src-noconflict/mode-javascript.js",
                 "dest": "client/lib/ace-mode-javascript.js"
             },
             {
-                "src": "ace-builds/src-noconflict/ext-language_tools.js",
+                "src": "node_modules/ace-builds/src-noconflict/ext-language_tools.js",
                 "dest": "client/lib/ace-ext-language_tools.js"
             }
         ]
     },
     {
-        "src": "fullcalendar/dist/fullcalendar.js",
+        "src": "node_modules/fullcalendar/dist/fullcalendar.js",
         "dest": "client/modules/crm/lib/fullcalendar.js"
     },
     {
-        "src": "vis/dist/vis.js",
+        "src": "node_modules/vis/dist/vis.js",
         "dest": "client/modules/crm/lib/vis.js"
     }
 ]
