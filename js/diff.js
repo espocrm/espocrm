@@ -30,6 +30,7 @@ const fs = require('fs');
 const sys = require('util');
 const cp = require('child_process');
 const archiver = require('archiver');
+const process = require('process');
 
 const exec = cp.exec;
 const execSync = cp.execSync;
@@ -39,40 +40,40 @@ const execSync = cp.execSync;
  */
 class Diff
 {
-    constructor (espoPath, params) {
+    constructor(espoPath, params) {
         this.espoPath = espoPath;
         this.params = params || {};
     }
 
-    getTagList () {
-        var dirInitial = process.cwd();
+    getTagList() {
+        let dirInitial = process.cwd();
 
         process.chdir(this.espoPath);
 
-        var tagsString = cp.execSync('git tag -l --sort=-v:refname').toString();
-        var tagList = tagsString.trim().split("\n");
+        let tagsString = cp.execSync('git tag -l --sort=-v:refname').toString();
+        let tagList = tagsString.trim().split("\n");
 
         process.chdir(dirInitial);
 
         return tagList;
     }
 
-    getPreviousVersionList () {
-        var dirInitial = process.cwd();
+    getPreviousVersionList() {
+        let dirInitial = process.cwd();
 
-        var version = (require(this.espoPath + '/package.json') || {}).version;
+        let version = (require(this.espoPath + '/package.json') || {}).version;
 
         process.chdir(this.espoPath);
 
-        var tagList = this.getTagList();
+        let tagList = this.getTagList();
 
-        var versionFromList = [];
+        let versionFromList = [];
 
-        var minorVersionNumber = version.split('.')[1];
-        var hotfixVersionNumber = version.split('.')[2];
+        let minorVersionNumber = version.split('.')[1];
+        let hotfixVersionNumber = version.split('.')[2];
 
-        for (var i = 0; i < tagList.length; i++) {
-            var tag = tagList[i];
+        for (let i = 0; i < tagList.length; i++) {
+            let tag = tagList[i];
 
             if (tag === '') {
                 continue;
@@ -83,18 +84,19 @@ class Diff
             }
 
             if (!~tag.indexOf('beta') && !~tag.indexOf('alpha')) {
-                var minorVersionNumberI = tag.split('.')[1];
+                let minorVersionNumberI = tag.split('.')[1];
 
                 if (minorVersionNumberI !== minorVersionNumber) {
                     versionFromList.push(tag);
+
                     break;
                 }
             }
         }
 
         if (hotfixVersionNumber !== '0') {
-            for (var i = 0; i < tagList.length; i++) {
-                var tag = tagList[i];
+            for (let i = 0; i < tagList.length; i++) {
+                let tag = tagList[i];
 
                 if (tag === version) {
                     continue;
@@ -103,7 +105,7 @@ class Diff
                 if (!~tag.indexOf('beta') && !~tag.indexOf('alpha')) {
                     versionFromList.push(tag);
 
-                    var patchVersionNumberI = tag.split('.')[2];
+                    let patchVersionNumberI = tag.split('.')[2];
 
                     if (patchVersionNumberI === '0') {
                         break;
@@ -117,13 +119,14 @@ class Diff
         return versionFromList;
     }
 
-    buildMultipleUpgradePackages (versionFromList) {
-        var params = this.params;
-        var espoPath = this.espoPath;
+    buildMultipleUpgradePackages(versionFromList) {
+        const params = this.params;
+        const espoPath = this.espoPath;
 
-        async function buildMultiple () {
+        async function buildMultiple() {
             for (const versionFrom of versionFromList) {
                 const diff = new Diff(espoPath, params);
+
                 await diff.buildUpgradePackage(versionFrom);
             }
         }
@@ -131,61 +134,57 @@ class Diff
         buildMultiple();
     }
 
-    versionExists (version) {
+    versionExists(version) {
         return ~this.getTagList().indexOf(version);
     }
 
-    buildUpgradePackage (versionFrom) {
+    buildUpgradePackage(versionFrom) {
         const params = this.params;
-        const espoPath = this.espoPath;
+        let espoPath = this.espoPath;
 
         if (!this.versionExists(versionFrom)) {
             throw new Error('Version ' + versionFrom + ' does not exist.');
         }
 
-        return new Promise(function (resolve) {
-            var acceptedVersionName = params.acceptedVersionName || versionFrom;
-            var isDev = params.isDev;
-            var withVendor = params.withVendor;
-            var forceScripts = params.forceScripts;
+        return new Promise(resolve => {
+            let acceptedVersionName = params.acceptedVersionName || versionFrom;
+            let isDev = params.isDev;
+            let withVendor = params.withVendor;
+            let forceScripts = params.forceScripts;
 
-            var version = (require(espoPath + '/package.json') || {}).version;
+            let version = (require(espoPath + '/package.json') || {}).version;
+            let composerData = require(espoPath + '/composer.json') || {};
 
-            var composerData = require(espoPath + '/composer.json') || {};
+            let currentPath = espoPath;
+            let buildRelPath = 'build/EspoCRM-' + version;
+            let buildPath = currentPath + '/' + buildRelPath;
+            let diffFilePath = currentPath + '/build/diff';
+            let diffBeforeUpgradeFolderPath = currentPath + '/build/diffBeforeUpgrade';
 
-            var currentPath = espoPath;
+            let tempFolderPath = currentPath + '/build/upgradeTmp';
+            let folderName = 'EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
+            let upgradePath = currentPath + '/build/' + folderName;
+            let zipPath = currentPath + '/build/' + folderName + '.zip';
+            let upgradeDataFolder = versionFrom + '-' + version;
 
-            var buildRelPath = 'build/EspoCRM-' + version;
-            var buildPath = currentPath + '/' + buildRelPath;
-            var diffFilePath = currentPath + '/build/diff';
-            var diffBeforeUpgradeFolderPath = currentPath + '/build/diffBeforeUpgrade';
+            let isMinorVersion =
+                versionFrom.split('.')[1] !== version.split('.')[1] ||
+                versionFrom.split('.')[0] !== version.split('.')[0];
 
-            var tempFolderPath = currentPath + '/build/upgradeTmp';
-
-            var folderName = 'EspoCRM-upgrade-' + acceptedVersionName + '-to-' + version;
-
-            var upgradePath = currentPath + '/build/' + folderName;
-
-            var zipPath = currentPath + '/build/' + folderName + '.zip';
-
-            var upgradeDataFolder = versionFrom + '-' + version;
-            var isMinorVersion = false;
-
-            if (versionFrom.split('.')[1] !== version.split('.')[1] || versionFrom.split('.')[0] !== version.split('.')[0]) {
-                isMinorVersion = true;
+            if (isMinorVersion) {
                 upgradeDataFolder = version.split('.')[0] + '.' + version.split('.')[1];
             }
 
-            var upgradeDataFolderPath = currentPath + '/upgrades/' + upgradeDataFolder;
-            var upgradeFolderExists = fs.existsSync(upgradeDataFolderPath);
+            let upgradeDataFolderPath = currentPath + '/upgrades/' + upgradeDataFolder;
+            let upgradeFolderExists = fs.existsSync(upgradeDataFolderPath);
 
-            var upgradeData = {};
+            let upgradeData = {};
 
             if (upgradeFolderExists) {
                 upgradeData = require(upgradeDataFolderPath + '/data.json') || {};
             }
 
-            var beforeUpgradeFileList = upgradeData.beforeUpgradeFiles || [];
+            let beforeUpgradeFileList = upgradeData.beforeUpgradeFiles || [];
 
             deleteDirRecursively(diffFilePath);
             deleteDirRecursively(diffBeforeUpgradeFolderPath);
@@ -198,7 +197,7 @@ class Diff
 
             process.chdir(espoPath);
 
-            execute('git rev-parse --abbrev-ref HEAD', function (branch) {
+            execute('git rev-parse --abbrev-ref HEAD', branch => {
                 branch = branch.trim();
 
                 if (branch !== 'master' && branch !== 'stable' && branch.indexOf('hotfix/') !== 0) {
@@ -207,7 +206,9 @@ class Diff
             });
 
             if (!fs.existsSync(buildPath)) {
-                throw new Error("EspoCRM is not built. You need to run 'grunt' before building an upgrade package.");
+                throw new Error(
+                    "EspoCRM is not built. You need to run 'grunt' before building an upgrade package."
+                );
             }
 
             if (!fs.existsSync(upgradePath)) {
@@ -219,7 +220,9 @@ class Diff
             }
 
             if (fs.existsSync(upgradeDataFolderPath + '/beforeUpgradeFiles')) {
-                cp.execSync('cp -r ' + upgradeDataFolderPath + '/beforeUpgradeFiles ' + upgradePath + '/beforeUpgradeFiles');
+                cp.execSync(
+                    'cp -r ' + upgradeDataFolderPath + '/beforeUpgradeFiles ' + upgradePath + '/beforeUpgradeFiles'
+                );
             }
 
             if (beforeUpgradeFileList.length) {
@@ -228,8 +231,8 @@ class Diff
                 }
             }
 
-            var deletedFileList = this.getDeletedFileList(versionFrom);
-            var tagList = this.getTagList();
+            let deletedFileList = this.getDeletedFileList(versionFrom);
+            let tagList = this.getTagList();
 
             process.chdir(buildPath);
 
@@ -237,17 +240,18 @@ class Diff
 
             var stdout = cp.execSync('git diff --name-only ' + versionFrom).toString();
 
-            (stdout || '').trim().split('\n').forEach(function (file) {
-                if (file == '') {
+            (stdout || '').trim().split('\n').forEach(file => {
+                if (file === '') {
                     return;
                 }
+
                 fileList.push(file);
             });
 
             fileList.push('client/espo.min.js');
             fileList.push('client/espo.min.js.map');
 
-            fs.readdirSync('client/css/espo/').forEach(function (file) {
+            fs.readdirSync('client/css/espo/').forEach(file => {
                 fileList.push('client/css/espo/' + file);
             });
 
@@ -259,7 +263,8 @@ class Diff
 
             if (beforeUpgradeFileList.length) {
                 cp.execSync(
-                    'xargs -a ' + diffBeforeUpgradeFolderPath + ' cp -p --parents -t ' + upgradePath + '/beforeUpgradeFiles'
+                    'xargs -a ' + diffBeforeUpgradeFolderPath +
+                    ' cp -p --parents -t ' + upgradePath + '/beforeUpgradeFiles'
                 );
             }
 
@@ -269,25 +274,25 @@ class Diff
                 }
             }
 
-            execute('xargs -a ' + diffFilePath + ' cp -p --parents -t ' + upgradePath + '/files' , function (stdout) {
-                var d = new Date();
+            execute('xargs -a ' + diffFilePath + ' cp -p --parents -t ' + upgradePath + '/files' , stdout => {
+                let d = new Date();
 
-                var monthN = ((d.getMonth() + 1).toString());
-                monthN = monthN.length == 1 ? '0' + monthN : monthN;
+                let monthN = ((d.getMonth() + 1).toString());
+                monthN = monthN.length === 1 ? '0' + monthN : monthN;
 
-                var dateN = d.getDate().toString();
-                dateN = dateN.length == 1 ? '0' + dateN : dateN;
+                let dateN = d.getDate().toString();
+                dateN = dateN.length === 1 ? '0' + dateN : dateN;
 
-                var date = d.getFullYear().toString() + '-' + monthN + '-' + dateN.toString();
+                let date = d.getFullYear().toString() + '-' + monthN + '-' + dateN.toString();
 
-                var versionList = [];
+                let versionList = [];
 
-                tagList.forEach(function (tag) {
-                    if (tag == versionFrom) {
+                tagList.forEach(tag => {
+                    if (tag === versionFrom) {
                         versionList.push(tag);
                     }
 
-                    if (!tag || tag == version) {
+                    if (!tag || tag === version) {
                         return;
                     }
                 });
@@ -296,9 +301,9 @@ class Diff
                     versionList = [];
                 }
 
-                var name = acceptedVersionName + " to " + version;
+                let name = acceptedVersionName + " to " + version;
 
-                var manifestData = {
+                let manifestData = {
                     "name": "EspoCRM Upgrade "+name,
                     "type": "upgrade",
                     "version": version,
@@ -310,8 +315,9 @@ class Diff
                     "delete": deletedFileList,
                 };
 
-                var additionalManifestData = upgradeData.manifest || {};
-                for (var item in additionalManifestData) {
+                let additionalManifestData = upgradeData.manifest || {};
+
+                for (let item in additionalManifestData) {
                     if (Array.isArray(manifestData[item])) {
                         manifestData[item] = manifestData[item].concat(additionalManifestData[item]);
 
@@ -326,27 +332,28 @@ class Diff
                 if (fs.existsSync(diffFilePath)) {
                     fs.unlinkSync(diffFilePath);
                 }
+
                 if (fs.existsSync(diffBeforeUpgradeFolderPath)) {
                     fs.unlinkSync(diffBeforeUpgradeFolderPath);
                 }
 
-                new Promise(function (resolve) {
+                new Promise(resolve => {
                     if (!withVendor) {
                         resolve();
 
                         return;
                     }
 
-                    var output = cp.execSync("git show "+versionFrom+" --format=%H").toString();
-                    var commitHash = output.trim().split("\n")[3];
+                    let output = cp.execSync("git show "+versionFrom+" --format=%H").toString();
+                    let commitHash = output.trim().split("\n")[3];
 
                     if (!commitHash) {
                         throw new Error("Couldn't find commit hash.");
                     }
 
-                    var composerLockOldContents = cp.execSync("git show "+commitHash+":composer.lock").toString();
-                    var composerLockNewContents = cp.execSync("cat "+currentPath+"/composer.lock").toString();
-                    var composerNewContents = cp.execSync("cat "+currentPath+"/composer.json").toString();
+                    let composerLockOldContents = cp.execSync("git show "+commitHash+":composer.lock").toString();
+                    let composerLockNewContents = cp.execSync("cat "+currentPath+"/composer.lock").toString();
+                    let composerNewContents = cp.execSync("cat "+currentPath+"/composer.json").toString();
 
                     if (composerLockNewContents === composerLockOldContents) {
                         resolve();
@@ -354,18 +361,24 @@ class Diff
                         return;
                     }
 
-                    var newPackages = JSON.parse(composerLockNewContents).packages;
-                    var oldPackages = JSON.parse(composerLockOldContents).packages;
+                    let newPackages = JSON.parse(composerLockNewContents).packages;
+                    let oldPackages = JSON.parse(composerLockOldContents).packages;
 
                     fs.mkdirSync(tempFolderPath);
                     fs.mkdirSync(tempFolderPath + "/new");
 
-                    var vendorPath = tempFolderPath + "/new/vendor/";
+                    let vendorPath = tempFolderPath + "/new/vendor/";
 
                     fs.writeFileSync(tempFolderPath + "/new/composer.lock", composerLockNewContents);
                     fs.writeFileSync(tempFolderPath + "/new/composer.json", composerNewContents);
 
-                    cp.execSync("composer install --no-dev --ignore-platform-reqs", {cwd: tempFolderPath + "/new", stdio: 'ignore'});
+                    cp.execSync(
+                        "composer install --no-dev --ignore-platform-reqs",
+                        {
+                            cwd: tempFolderPath + "/new",
+                            stdio: 'ignore',
+                        }
+                    );
 
                     fs.mkdirSync(upgradePath + '/vendorFiles');
 
@@ -373,17 +386,17 @@ class Diff
                     cp.execSync("mv " + vendorPath + "/composer "+ upgradePath + "/vendorFiles/composer");
                     cp.execSync("mv " + vendorPath + "/bin "+ upgradePath + "/vendorFiles/bin");
 
-                    var folderList = [];
+                    let folderList = [];
 
                     for (var item of newPackages) {
-                        var name = item.name;
+                        let name = item.name;
 
                         if (name.indexOf('composer/') === 0) {
                             continue;
                         }
 
-                        var isFound = false;
-                        var toAdd = false;
+                        let isFound = false;
+                        let toAdd = false;
 
                         for (var oItem of oldPackages) {
                             if (oItem.name !== name) {
@@ -402,7 +415,7 @@ class Diff
                         }
 
                         if (toAdd) {
-                            var folder = name.split('/')[0];
+                            let folder = name.split('/')[0];
 
                             if (!~folderList.indexOf(folder)) {
                                 folderList.push(folder);
@@ -410,11 +423,13 @@ class Diff
                         }
                     }
 
-                    for (var folder of folderList) {
+                    for (let folder of folderList) {
                         this.deleteGitFolderInVendor(vendorPath + '/' + folder);
 
                         if (fs.existsSync(vendorPath + '/'+ folder)) {
-                            cp.execSync("mv " + vendorPath + '/'+ folder+" "+ upgradePath + '/vendorFiles/' + folder);
+                            cp.execSync(
+                                "mv " + vendorPath + '/'+ folder+" "+ upgradePath + '/vendorFiles/' + folder
+                            );
                         }
                     }
 
@@ -422,49 +437,50 @@ class Diff
 
                     resolve();
 
-                }.bind(this))
-                .then(function () {
-                    var zipOutput = fs.createWriteStream(zipPath);
+                })
+                .then(() => {
+                    let zipOutput = fs.createWriteStream(zipPath);
 
-                    var archive = archiver('zip');
+                    let archive = archiver('zip');
 
-                    archive.on('error', function (err) {
+                    archive.on('error', err => {
                         throw err;
                     });
 
-                    zipOutput.on('close', function () {
+                    zipOutput.on('close', () => {
                         console.log("Upgrade package has been built: "+name+"");
+
                         deleteDirRecursively(upgradePath);
+
                         resolve();
                     });
 
                     archive.directory(upgradePath, false).pipe(zipOutput);
-
                     archive.finalize();
                 });
-            }.bind(this));
-        }.bind(this));
+            });
+        });
     }
 
-    getDeletedFileList (versionFrom) {
-        var dirInitial = process.cwd();
+    getDeletedFileList(versionFrom) {
+        let dirInitial = process.cwd();
 
         process.chdir(this.espoPath);
 
-        var deletedFileList = this.getRepositoryDeletedFileList(versionFrom);
-        var previousAllFileList = this.getPreviousAllFileList(versionFrom);
-        var actualAllFileList = this.getActualAllFileList();
+        let deletedFileList = this.getRepositoryDeletedFileList(versionFrom);
+        let previousAllFileList = this.getPreviousAllFileList(versionFrom);
+        let actualAllFileList = this.getActualAllFileList();
 
-        previousAllFileList.forEach(function (file) {
+        previousAllFileList.forEach(file => {
             if (
-                ! ~actualAllFileList.indexOf(file) &&
-                ! ~deletedFileList.indexOf(file)
+                !~actualAllFileList.indexOf(file) &&
+                !~deletedFileList.indexOf(file)
             ) {
                 deletedFileList.push(file);
             }
         });
 
-        deletedFileList = deletedFileList.filter(function (item) {
+        deletedFileList = deletedFileList.filter(item => {
             if (
                 item.indexOf('tests/') === 0 ||
                 item.indexOf('upgrades/') === 0 ||
@@ -481,13 +497,13 @@ class Diff
         return deletedFileList;
     }
 
-    getRepositoryDeletedFileList (versionFrom) {
-        var deletedFileList = [];
+    getRepositoryDeletedFileList(versionFrom) {
+        let deletedFileList = [];
 
-        var stdout = cp.execSync('git diff --name-only --diff-filter=D ' + versionFrom).toString();
+        let stdout = cp.execSync('git diff --name-only --diff-filter=D ' + versionFrom).toString();
 
-        (stdout || '').trim().split('\n').forEach(function (file) {
-            if (file == '') {
+        (stdout || '').trim().split('\n').forEach(file => {
+            if (file === '') {
                 return;
             }
 
@@ -497,13 +513,13 @@ class Diff
         return deletedFileList;
     }
 
-    getActualAllFileList () {
-        var actualAllFileList = [];
+    getActualAllFileList() {
+        let actualAllFileList = [];
 
-        var stdout = cp.execSync('git ls-tree -r --name-only HEAD').toString();
+        let stdout = cp.execSync('git ls-tree -r --name-only HEAD').toString();
 
-        (stdout || '').trim().split('\n').forEach(function (file) {
-            if (file == '') {
+        (stdout || '').trim().split('\n').forEach(file => {
+            if (file === '') {
                 return;
             }
 
@@ -513,13 +529,13 @@ class Diff
         return actualAllFileList;
     }
 
-    getPreviousAllFileList (versionFrom) {
-        var previousAllFileList = [];
+    getPreviousAllFileList(versionFrom) {
+        let previousAllFileList = [];
 
-        var stdout = cp.execSync('git ls-tree -r --name-only ' + versionFrom).toString();
+        let stdout = cp.execSync('git ls-tree -r --name-only ' + versionFrom).toString();
 
-        (stdout || '').trim().split('\n').forEach(function (file) {
-            if (file == '') {
+        (stdout || '').trim().split('\n').forEach(file => {
+            if (file === '') {
                 return;
             }
 
@@ -529,15 +545,15 @@ class Diff
         return previousAllFileList;
     }
 
-    deleteGitFolderInVendor (dir) {
-        var folderList = fs.readdirSync(dir, {withFileTypes: true})
+    deleteGitFolderInVendor(dir) {
+        let folderList = fs.readdirSync(dir, {withFileTypes: true})
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
 
-        folderList.forEach(function (folder) {
-            var path = dir + '/' + folder;
+        folderList.forEach(folder => {
+            let path = dir + '/' + folder;
 
-            var gitPath = path + '/.git';
+            let gitPath = path + '/.git';
 
             if (fs.existsSync(gitPath)) {
                 deleteDirRecursively(gitPath);
@@ -546,27 +562,33 @@ class Diff
     }
 }
 
-var deleteDirRecursively = function (path) {
+function deleteDirRecursively(path) {
     if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
-        fs.readdirSync(path).forEach(function (file, index) {
-            var curPath = path + "/" + file;
+        fs.readdirSync(path).forEach((file, index) => {
+            let curPath = path + "/" + file;
 
             if (fs.lstatSync(curPath).isDirectory()) {
                 deleteDirRecursively(curPath);
-            } else {
+            }
+            else {
                 fs.unlinkSync(curPath);
             }
         });
 
         fs.rmdirSync(path);
-    }
-    else if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
-        fs.unlinkSync(path);
-    }
-};
 
-function execute (command, callback) {
-    exec(command, function (error, stdout, stderr) {
+        return;
+    }
+
+    if (fs.existsSync(path) && fs.lstatSync(path).isFile()) {
+        fs.unlinkSync(path);
+
+        return;
+    }
+}
+
+function execute(command, callback) {
+    exec(command, (error, stdout, stderr) => {
         callback(stdout);
     });
 };
