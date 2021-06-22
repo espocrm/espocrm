@@ -323,7 +323,7 @@ class Diff
                     fs.unlinkSync(diffBeforeUpgradeFolderPath);
                 }
 
-                if (!withVendor) {
+                if (withVendor) {
                     this.processVendor({
                         versionFrom: versionFrom,
                         currentPath: currentPath,
