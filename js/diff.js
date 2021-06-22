@@ -197,13 +197,7 @@ class Diff
 
             process.chdir(espoPath);
 
-            execute('git rev-parse --abbrev-ref HEAD', branch => {
-                branch = branch.trim();
-
-                if (branch !== 'master' && branch !== 'stable' && branch.indexOf('hotfix/') !== 0) {
-                    console.log('\x1b[33m%s\x1b[0m', "Warning! You are on " + branch + " branch.");
-                }
-            });
+            this.notifyIfBadBranch();
 
             if (!fs.existsSync(buildPath)) {
                 throw new Error(
@@ -274,16 +268,8 @@ class Diff
                 }
             }
 
-            execute('xargs -a ' + diffFilePath + ' cp -p --parents -t ' + upgradePath + '/files' , stdout => {
-                let d = new Date();
-
-                let monthN = ((d.getMonth() + 1).toString());
-                monthN = monthN.length === 1 ? '0' + monthN : monthN;
-
-                let dateN = d.getDate().toString();
-                dateN = dateN.length === 1 ? '0' + dateN : dateN;
-
-                let date = d.getFullYear().toString() + '-' + monthN + '-' + dateN.toString();
+            execute('xargs -a ' + diffFilePath + ' cp -p --parents -t ' + upgradePath + '/files' , () => {
+                let date = this.getCurrentDate();
 
                 let versionList = [];
 
@@ -301,10 +287,10 @@ class Diff
                     versionList = [];
                 }
 
-                let name = acceptedVersionName + " to " + version;
+                let upgradeName = acceptedVersionName + " to " + version;
 
                 let manifestData = {
-                    "name": "EspoCRM Upgrade "+name,
+                    "name": "EspoCRM Upgrade " + upgradeName,
                     "type": "upgrade",
                     "version": version,
                     "acceptableVersions": versionList,
@@ -337,129 +323,48 @@ class Diff
                     fs.unlinkSync(diffBeforeUpgradeFolderPath);
                 }
 
-                new Promise(resolve => {
-                    if (!withVendor) {
-                        resolve();
+                if (!withVendor) {
+                    this.processVendor({
+                        versionFrom: versionFrom,
+                        currentPath: currentPath,
+                        tempFolderPath: tempFolderPath,
+                        upgradePath: upgradePath,
+                    });
+                }
 
-                        return;
-                    }
-
-                    let output = cp.execSync("git show "+versionFrom+" --format=%H").toString();
-                    let commitHash = output.trim().split("\n")[3];
-
-                    if (!commitHash) {
-                        throw new Error("Couldn't find commit hash.");
-                    }
-
-                    let composerLockOldContents = cp.execSync("git show "+commitHash+":composer.lock").toString();
-                    let composerLockNewContents = cp.execSync("cat "+currentPath+"/composer.lock").toString();
-                    let composerNewContents = cp.execSync("cat "+currentPath+"/composer.json").toString();
-
-                    if (composerLockNewContents === composerLockOldContents) {
-                        resolve();
-
-                        return;
-                    }
-
-                    let newPackages = JSON.parse(composerLockNewContents).packages;
-                    let oldPackages = JSON.parse(composerLockOldContents).packages;
-
-                    fs.mkdirSync(tempFolderPath);
-                    fs.mkdirSync(tempFolderPath + "/new");
-
-                    let vendorPath = tempFolderPath + "/new/vendor/";
-
-                    fs.writeFileSync(tempFolderPath + "/new/composer.lock", composerLockNewContents);
-                    fs.writeFileSync(tempFolderPath + "/new/composer.json", composerNewContents);
-
-                    cp.execSync(
-                        "composer install --no-dev --ignore-platform-reqs",
-                        {
-                            cwd: tempFolderPath + "/new",
-                            stdio: 'ignore',
-                        }
-                    );
-
-                    fs.mkdirSync(upgradePath + '/vendorFiles');
-
-                    cp.execSync("mv " + vendorPath + "/autoload.php "+ upgradePath + "/vendorFiles/autoload.php");
-                    cp.execSync("mv " + vendorPath + "/composer "+ upgradePath + "/vendorFiles/composer");
-                    cp.execSync("mv " + vendorPath + "/bin "+ upgradePath + "/vendorFiles/bin");
-
-                    let folderList = [];
-
-                    for (var item of newPackages) {
-                        let name = item.name;
-
-                        if (name.indexOf('composer/') === 0) {
-                            continue;
-                        }
-
-                        let isFound = false;
-                        let toAdd = false;
-
-                        for (var oItem of oldPackages) {
-                            if (oItem.name !== name) {
-                                continue;
-                            }
-
-                            isFound = true;
-
-                            if (item.version !== oItem.version) {
-                                 toAdd = true;
-                            }
-                        }
-
-                        if (!isFound) {
-                            toAdd = true;
-                        }
-
-                        if (toAdd) {
-                            let folder = name.split('/')[0];
-
-                            if (!~folderList.indexOf(folder)) {
-                                folderList.push(folder);
-                            }
-                        }
-                    }
-
-                    for (let folder of folderList) {
-                        this.deleteGitFolderInVendor(vendorPath + '/' + folder);
-
-                        if (fs.existsSync(vendorPath + '/'+ folder)) {
-                            cp.execSync(
-                                "mv " + vendorPath + '/'+ folder+" "+ upgradePath + '/vendorFiles/' + folder
-                            );
-                        }
-                    }
-
-                    deleteDirRecursively(tempFolderPath);
-
-                    resolve();
-
+                this.processArchive({
+                    upgradeName: upgradeName,
+                    zipPath: zipPath,
+                    upgradePath: upgradePath,
                 })
-                .then(() => {
-                    let zipOutput = fs.createWriteStream(zipPath);
+                .then(() => resolve());
 
-                    let archive = archiver('zip');
-
-                    archive.on('error', err => {
-                        throw err;
-                    });
-
-                    zipOutput.on('close', () => {
-                        console.log("Upgrade package has been built: "+name+"");
-
-                        deleteDirRecursively(upgradePath);
-
-                        resolve();
-                    });
-
-                    archive.directory(upgradePath, false).pipe(zipOutput);
-                    archive.finalize();
-                });
             });
         });
+    }
+
+    notifyIfBadBranch() {
+        let currentBranch = cp.execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+
+        if (
+            currentBranch !== 'master' &&
+            currentBranch !== 'stable' &&
+            currentBranch.indexOf('hotfix/') !== 0
+        ) {
+            console.log('\x1b[33m%s\x1b[0m', "Warning! You are on " + currentBranch + " branch.");
+        }
+    }
+
+    getCurrentDate() {
+        let d = new Date();
+
+        let monthN = ((d.getMonth() + 1).toString());
+        monthN = monthN.length === 1 ? '0' + monthN : monthN;
+
+        let dateN = d.getDate().toString();
+        dateN = dateN.length === 1 ? '0' + dateN : dateN;
+
+        return d.getFullYear().toString() + '-' + monthN + '-' + dateN.toString();
     }
 
     getDeletedFileList(versionFrom) {
@@ -560,6 +465,129 @@ class Diff
             }
         });
     }
+
+    processVendor(dto) {
+        let versionFrom = dto.versionFrom;
+        let currentPath = dto.currentPath;
+        let tempFolderPath = dto.tempFolderPath;
+        let upgradePath = dto.upgradePath;
+
+        let output = cp.execSync("git show " + versionFrom + " --format=%H").toString();
+        let commitHash = output.trim().split("\n")[3];
+
+        if (!commitHash) {
+            throw new Error("Couldn't find commit hash.");
+        }
+
+        let composerLockOldContents = cp.execSync("git show " + commitHash + ":composer.lock").toString();
+        let composerLockNewContents = cp.execSync("cat " + currentPath + "/composer.lock").toString();
+        let composerNewContents = cp.execSync("cat " + currentPath + "/composer.json").toString();
+
+        if (composerLockNewContents === composerLockOldContents) {
+            return;
+        }
+
+        let newPackages = JSON.parse(composerLockNewContents).packages;
+        let oldPackages = JSON.parse(composerLockOldContents).packages;
+
+        fs.mkdirSync(tempFolderPath);
+        fs.mkdirSync(tempFolderPath + '/new');
+
+        let vendorPath = tempFolderPath + '/new/vendor/';
+
+        fs.writeFileSync(tempFolderPath + '/new/composer.lock', composerLockNewContents);
+        fs.writeFileSync(tempFolderPath + '/new/composer.json', composerNewContents);
+
+        cp.execSync(
+            "composer install --no-dev --ignore-platform-reqs",
+            {
+                cwd: tempFolderPath + "/new",
+                stdio: 'ignore',
+            }
+        );
+
+        fs.mkdirSync(upgradePath + '/vendorFiles');
+
+        cp.execSync("mv " + vendorPath + "/autoload.php " + upgradePath + "/vendorFiles/autoload.php");
+        cp.execSync("mv " + vendorPath + "/composer " + upgradePath + "/vendorFiles/composer");
+        cp.execSync("mv " + vendorPath + "/bin "+ upgradePath + "/vendorFiles/bin");
+
+        let folderList = [];
+
+        for (let item of newPackages) {
+            let name = item.name;
+
+            if (name.indexOf('composer/') === 0) {
+                continue;
+            }
+
+            let isFound = false;
+            let toAdd = false;
+
+            for (let oItem of oldPackages) {
+                if (oItem.name !== name) {
+                    continue;
+                }
+
+                isFound = true;
+
+                if (item.version !== oItem.version) {
+                     toAdd = true;
+                }
+            }
+
+            if (!isFound) {
+                toAdd = true;
+            }
+
+            if (toAdd) {
+                let folder = name.split('/')[0];
+
+                if (!~folderList.indexOf(folder)) {
+                    folderList.push(folder);
+                }
+            }
+        }
+
+        for (let folder of folderList) {
+            this.deleteGitFolderInVendor(vendorPath + '/' + folder);
+
+            if (fs.existsSync(vendorPath + '/'+ folder)) {
+                cp.execSync(
+                    'mv ' + vendorPath + '/' + folder + " " + upgradePath + '/vendorFiles/' + folder
+                );
+            }
+        }
+
+        deleteDirRecursively(tempFolderPath);
+    }
+
+    processArchive(dto) {
+        let zipPath = dto.zipPath;
+        let upgradePath = dto.upgradePath;
+        let upgradeName = dto.upgradeName;
+
+        return new Promise(resolve => {
+            let zipOutput = fs.createWriteStream(zipPath);
+
+            let archive = archiver('zip');
+
+            archive.on('error', err => {
+                throw err;
+            });
+
+            zipOutput.on('close', () => {
+                console.log("Upgrade package has been built: " + upgradeName + "");
+
+                deleteDirRecursively(upgradePath);
+
+                resolve();
+            });
+
+            archive.directory(upgradePath, false).pipe(zipOutput);
+            archive.finalize();
+        });
+    }
 }
 
 function deleteDirRecursively(path) {
@@ -588,9 +616,7 @@ function deleteDirRecursively(path) {
 }
 
 function execute(command, callback) {
-    exec(command, (error, stdout, stderr) => {
-        callback(stdout);
-    });
+    exec(command, (error, stdout, stderr) => callback(stdout));
 };
 
 module.exports = Diff;
