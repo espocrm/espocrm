@@ -187,8 +187,8 @@ define('ui', [], function () {
         this.$el.on('shown.bs.modal', (e, r) => {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
 
-            let headerHeight = this.$el.find('.modal-header').outerHeight();
-            let footerHeight = this.$el.find('.modal-footer').outerHeight();
+            let headerHeight = this.$el.find('.modal-header').outerHeight() || 0;
+            let footerHeight = this.$el.find('.modal-footer').outerHeight() || 0;
 
             let diffHeight = headerHeight + footerHeight;
 
@@ -210,6 +210,7 @@ define('ui', [], function () {
 
                         return;
                     }
+
                     let cssParams = {
                         overflow: 'auto',
                     };
