@@ -214,7 +214,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 this.$summernote = this.$el.find('.summernote');
                 this.$noteEditor = this.$el.find('> .note-editor');
             }
@@ -225,151 +225,173 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 $.summernote.lang[language] = this.getLanguage().translate('summernote', 'sets');
             }
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                     this.enableWysiwygMode();
-                } else {
+                }
+                else {
                     this.$element.removeClass('hidden');
                 }
             }
 
-            if (this.mode == 'detail' || this.mode == 'list') {
-                if (!this.model.has('isHtml') || this.model.get('isHtml')) {
-                    if (!this.useIframe) {
-                        this.$element = this.$el.find('.html-container');
-                    } else {
-                        this.$el.find('iframe').removeClass('hidden');
-
-                        var $iframe = this.$el.find('iframe');
-
-                        var iframeElement = this.iframe = $iframe.get(0);
-                        if (!iframeElement) return;
-
-                        $iframe.load(function () {
-                            $iframe.contents().find('a').attr('target', '_blank');
-                        });
-
-                        var documentElement = iframeElement.contentWindow.document;
-
-                        var body = this.sanitizeHtml(this.model.get(this.name) || '');
-
-                        var linkElement = iframeElement.contentWindow.document.createElement('link');
-                        linkElement.type = 'text/css';
-                        linkElement.rel = 'stylesheet';
-                        linkElement.href = this.getBasePath() + this.getThemeManager().getIframeStylesheet();
-
-                        body = linkElement.outerHTML + body;
-
-                        documentElement.write(body);
-                        documentElement.close();
-
-                        var $body = $iframe.contents().find('html body');
-
-                        var $document = $(documentElement);
-
-                        var processWidth = function () {
-                            var bodyElement = $body.get(0);
-                            if (bodyElement) {
-                                if (bodyElement.clientWidth !== iframeElement.scrollWidth) {
-                                    iframeElement.style.height = (iframeElement.scrollHeight + 20) + 'px';
-                                }
-                            }
-                        };
-
-                        var increaseHeightStep = 10;
-                        var processIncreaseHeight = function (iteration, previousDiff) {
-                            $body.css('height', '');
-
-                            iteration = iteration || 0;
-
-                            if (iteration > 200) {
-                                return;
-                            }
-
-                            iteration ++;
-
-                            var diff = $document.height() - iframeElement.scrollHeight;
-
-                            if (typeof previousDiff !== 'undefined') {
-                                if (diff === previousDiff) {
-                                    $body.css('height', (iframeElement.clientHeight - increaseHeightStep) + 'px');
-                                    processWidth();
-                                    return;
-                                }
-                            }
-
-                            if (diff) {
-                                var height = iframeElement.scrollHeight + increaseHeightStep;
-                                iframeElement.style.height = height + 'px';
-                                processIncreaseHeight(iteration, diff);
-                            } else {
-                                processWidth();
-                            }
-                        };
-
-                        var processHeight = function (isOnLoad) {
-                            if (!isOnLoad) {
-                                $iframe.css({
-                                    overflowY: 'hidden',
-                                    overflowX: 'hidden'
-                                });
-
-                                iframeElement.style.height = '0px';
-                            } else {
-                                if (iframeElement.scrollHeight >= $document.height()) {
-                                    return;
-                                }
-                            }
-
-                            var $body = $iframe.contents().find('html body');
-                            var height = $body.height();
-                            if (height === 0) {
-                                height = $body.children(0).height() + 100;
-                            }
-
-                            iframeElement.style.height = height + 'px';
-
-                            processIncreaseHeight();
-
-                            if (!isOnLoad) {
-                                $iframe.css({
-                                    overflowY: 'hidden',
-                                    overflowX: 'scroll'
-                                });
-                            }
-                        };
-
-                        $iframe.css({
-                            visibility: 'hidden'
-                        });
-                        setTimeout(function () {
-                            processHeight();
-                            $iframe.css({
-                                visibility: 'visible'
-                            });
-                            $iframe.load(function () {
-                                processHeight(true);
-                            });
-                        }, 40);
-
-                        if (!this.model.get(this.name)) {
-                            $iframe.addClass('hidden');
-                        }
-
-                        var windowWidth = $(window).width();
-                        $(window).off('resize.' + this.cid);
-                        $(window).on('resize.' + this.cid, function() {
-                            if ($(window).width() != windowWidth) {
-                                processHeight();
-                                windowWidth = $(window).width();
-                            }
-                        }.bind(this));
-                    }
-
-                } else {
-                    this.$el.find('.plain').removeClass('hidden');
-                }
+            if (this.mode === 'detail' || this.mode === 'list') {
+                this.renderDetail();
             }
+        },
+
+        renderDetail: function () {
+            if (this.model.has('isHtml') && !this.model.get('isHtml')) {
+                this.$el.find('.plain').removeClass('hidden');
+
+                return;
+
+            }
+
+            if (!this.useIframe) {
+                this.$element = this.$el.find('.html-container');
+
+                return;
+            }
+
+            this.$el.find('iframe').removeClass('hidden');
+
+            var $iframe = this.$el.find('iframe');
+
+            var iframeElement = this.iframe = $iframe.get(0);
+
+            if (!iframeElement) {
+                return;
+            }
+
+            $iframe.on('load', () => {
+                $iframe.contents().find('a').attr('target', '_blank');
+            });
+
+            var documentElement = iframeElement.contentWindow.document;
+
+            var body = this.sanitizeHtml(this.model.get(this.name) || '');
+
+            var linkElement = iframeElement.contentWindow.document.createElement('link');
+            linkElement.type = 'text/css';
+            linkElement.rel = 'stylesheet';
+            linkElement.href = this.getBasePath() + this.getThemeManager().getIframeStylesheet();
+
+            body = linkElement.outerHTML + body;
+
+            documentElement.write(body);
+            documentElement.close();
+
+            var $body = $iframe.contents().find('html body');
+
+            var $document = $(documentElement);
+
+            var processWidth = function () {
+                var bodyElement = $body.get(0);
+                if (bodyElement) {
+                    if (bodyElement.clientWidth !== iframeElement.scrollWidth) {
+                        iframeElement.style.height = (iframeElement.scrollHeight + 20) + 'px';
+                    }
+                }
+            };
+
+            var increaseHeightStep = 10;
+
+            var processIncreaseHeight = function (iteration, previousDiff) {
+                $body.css('height', '');
+
+                iteration = iteration || 0;
+
+                if (iteration > 200) {
+                    return;
+                }
+
+                iteration ++;
+
+                var diff = $document.height() - iframeElement.scrollHeight;
+
+                if (typeof previousDiff !== 'undefined') {
+                    if (diff === previousDiff) {
+                        $body.css('height', (iframeElement.clientHeight - increaseHeightStep) + 'px');
+                        processWidth();
+
+                        return;
+                    }
+                }
+
+                if (diff) {
+                    var height = iframeElement.scrollHeight + increaseHeightStep;
+
+                    iframeElement.style.height = height + 'px';
+                    processIncreaseHeight(iteration, diff);
+                }
+                else {
+                    processWidth();
+                }
+            };
+
+            var processHeight = function (isOnLoad) {
+                if (!isOnLoad) {
+                    $iframe.css({
+                        overflowY: 'hidden',
+                        overflowX: 'hidden'
+                    });
+
+                    iframeElement.style.height = '0px';
+                }
+                else {
+                    if (iframeElement.scrollHeight >= $document.height()) {
+                        return;
+                    }
+                }
+
+                var $body = $iframe.contents().find('html body');
+                var height = $body.height();
+
+                if (height === 0) {
+                    height = $body.children(0).height() + 100;
+                }
+
+                iframeElement.style.height = height + 'px';
+
+                processIncreaseHeight();
+
+                if (!isOnLoad) {
+                    $iframe.css({
+                        overflowY: 'hidden',
+                        overflowX: 'scroll'
+                    });
+                }
+            };
+
+            $iframe.css({
+                visibility: 'hidden'
+            });
+
+            setTimeout(() => {
+                processHeight();
+
+                $iframe.css({
+                    visibility: 'visible'
+                });
+
+                $iframe.on('load', () => {
+                    processHeight(true);
+                });
+            }, 40);
+
+            if (!this.model.get(this.name)) {
+                $iframe.addClass('hidden');
+            }
+
+            var windowWidth = $(window).width();
+
+            $(window).off('resize.' + this.cid);
+            $(window).on('resize.' + this.cid, () => {
+                if ($(window).width() !== windowWidth) {
+                    processHeight();
+                    windowWidth = $(window).width();
+                }
+            });
         },
 
         enableWysiwygMode: function () {
@@ -398,37 +420,45 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 lang: this.getConfig().get('language'),
                 keyMap: keyMap,
                 callbacks: {
-                    onImageUpload: function (files) {
+                    onImageUpload: (files) =>  {
                         var file = files[0];
+
                         this.notify('Uploading...');
-                        this.getModelFactory().create('Attachment', function (attachment) {
+
+                        this.getModelFactory().create('Attachment', (attachment) => {
                             var fileReader = new FileReader();
-                            fileReader.onload = function (e) {
+
+                            fileReader.onload = (e) => {
                                 attachment.set('name', file.name);
                                 attachment.set('type', file.type);
                                 attachment.set('role', 'Inline Attachment');
                                 attachment.set('global', true);
                                 attachment.set('size', file.size);
+
                                 if (this.model.id) {
                                     attachment.set('relatedId', this.model.id);
                                 }
+
                                 attachment.set('relatedType', this.model.name);
                                 attachment.set('file', e.target.result);
                                 attachment.set('field', this.name);
 
-                                attachment.once('sync', function () {
+                                attachment.once('sync', () => {
                                     var url = '?entryPoint=attachment&id=' + attachment.id;
                                     this.$summernote.summernote('insertImage', url);
+
                                     this.notify(false);
-                                }, this);
+                                });
+
                                 attachment.save();
-                            }.bind(this);
+                            };
+
                             fileReader.readAsDataURL(file);
-                        }, this);
-                    }.bind(this),
-                    onBlur: function () {
+                        });
+                    },
+                    onBlur: () => {
                         this.trigger('change')
-                    }.bind(this),
+                    },
                 },
                 onCreateLink: function (link) {
                     return link;
@@ -441,16 +471,20 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             if (this.height) {
                 options.height = this.height;
-            } else {
+            }
+            else {
                 var $scrollable = this.$el.closest('.modal-body');
+
                 if (!$scrollable.length) {
                     $scrollable = $(window);
                 }
+
                 this.$scrollable = $scrollable;
+
                 $scrollable.off('scroll.' + this.cid + '-edit');
-                $scrollable.on('scroll.' + this.cid + '-edit', function (e) {
+                $scrollable.on('scroll.' + this.cid + '-edit', (e) => {
                     this.onScrollEdit(e);
-                }.bind(this));
+                });
             }
 
             if (this.minHeight) {
@@ -465,17 +499,22 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             this.$toolbar = this.$el.find('.note-toolbar');
             this.$area = this.$el.find('.note-editing-area');
 
-            this.$area.on('paste', function (e) {
+            this.$area.on('paste', (e) => {
                 var items = e.originalEvent.clipboardData.items;
+
                 if (items) {
                     for (var i = 0; i < items.length; i++) {
-                        if (!~items[i].type.indexOf('image')) continue;
+                        if (!~items[i].type.indexOf('image')) {
+                            continue;
+                        }
+
                         var blob = items[i].getAsFile();
+
                         e.preventDefault();
                         e.stopPropagation();
                     }
                 }
-            }.bind(this));
+            });
         },
 
         destroySummernote: function () {
@@ -488,6 +527,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
         plainToHtml: function (html) {
             html = html || '';
             var value = html.replace(/\n/g, '<br>');
+
             return value;
         },
 
@@ -522,17 +562,21 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             var data = {};
             if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                 var code = this.$summernote.summernote('code');
-                if (code == '<p><br></p>') {
+
+                if (code === '<p><br></p>') {
                     code = '';
                 }
 
-                var imageTagString = '<img src="' + window.location.origin + window.location.pathname + '?entryPoint=attachment';
+                var imageTagString = '<img src="' + window.location.origin + window.location.pathname +
+                    '?entryPoint=attachment';
+
                 code = code.replace(
                     new RegExp(imageTagString.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'),
                     '<img src="?entryPoint=attachment'
                 );
                 data[this.name] = code;
-            } else {
+            }
+            else {
                 data[this.name] = this.$element.val();
 
                 if (this.fetchEmptyValueAsNull) {
@@ -545,10 +589,12 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             if (this.model.has('isHtml') && this.hasBodyPlainField) {
                 if (this.model.get('isHtml')) {
                     data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
-                } else {
+                }
+                else {
                     data[this.name + 'Plain'] = data[this.name];
                 }
             }
+
             return data;
         },
 
@@ -561,12 +607,15 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             if ($target.get(0) === window.document) {
                 var $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
                 var offset = $buttonContainer.offset();
+
                 if (offset) {
                     edgeTop = offset.top + $buttonContainer.height();
                     edgeTopAbsolute = edgeTop - $(window).scrollTop();
                 }
-            } else {
+            }
+            else {
                 var offset = $target.offset();
+
                 if (offset) {
                     edgeTop = offset.top;
                     edgeTopAbsolute = edgeTop - $(window).scrollTop();
@@ -605,7 +654,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         attachFile: function () {
             var $form = this.$el.closest('.record');
-            $form.find('.field[data-name="'+this.params.attachmentField+'"] input.file').click();
+            $form.find('.field[data-name="' + this.params.attachmentField + '"] input.file').click();
         },
 
        initEspoPlugin: function () {
@@ -614,6 +663,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 link: {},
                 video: {},
             };
+
             $.extend($.summernote.options, {
                 espoImage: {
                     icon: '<i class="note-icon-picture"/>',
@@ -636,7 +686,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         return;
                     }
 
-                    context.memo('button.espoImage', function () {
+                    context.memo('button.espoImage', () => {
                         var button = ui.button({
                             contents: options.espoImage.icon,
                             tooltip: options.espoImage.tooltip,
@@ -644,15 +694,19 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 context.invoke('espoImage.show');
                             },
                         });
+
                         return button.render();
                     });
 
                     this.initialize = function () {};
 
                     this.destroy = function () {
-                        if (!self) return;
+                        if (!self) {
+                            return;
+                        }
+
                         self.clearView('insertImageDialog');
-                    }
+                    };
 
                     this.show = function () {
                         self.createView('insertImageDialog', 'views/wysiwyg/modals/insert-image', {
@@ -661,26 +715,26 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 url: lang.image.url,
                                 selectFromFiles: lang.image.selectFromFiles,
                             },
-                        }, function (view) {
+                        }, (view) => {
                             view.render();
 
-                            self.listenToOnce(view, 'upload', function (target) {
+                            self.listenToOnce(view, 'upload', (target) => {
                                 self.$summernote.summernote('insertImagesOrCallback', target);
                             });
-                            self.listenToOnce(view, 'insert', function (target) {
+
+                            self.listenToOnce(view, 'insert', (target) => {
                                 self.$summernote.summernote('insertImage', target);
                             });
 
-                            self.listenToOnce(view, 'close', function () {
+                            self.listenToOnce(view, 'close', () => {
                                 self.clearView('insertImageDialog');
                                 self.fixPopovers();
-                            }, self);
+                            });
                         });
-                    }
+                    };
                 },
 
                 'linkDialog': function (context) {
-                    var ui = $.summernote.ui;
                     var options = context.options;
                     var self = options.espoView;
                     var lang = options.langInfo;
@@ -712,7 +766,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 self.fixPopovers();
                             }, self);
                         });
-                    }
+                    };
                 },
 
                 'espoLink': function (context) {
@@ -735,6 +789,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 context.invoke('espoLink.show');
                             },
                         });
+
                         return button.render();
                     });
 
@@ -746,7 +801,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         }
 
                         self.clearView('dialogInsertLink');
-                    }
+                    };
 
                     this.show = function () {
                         var linkInfo = context.invoke('editor.getLinkInfo');
@@ -771,7 +826,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                                 self.fixPopovers();
                             }, self);
                         });
-                    }
+                    };
                 },
 
                 'fullscreen': function (context) {
@@ -817,9 +872,11 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
                     this.destroy = function () {
                         this.$window.off('resize.summernote' + self.cid);
+
                         if (this.isInModal) {
                             this.$modal.css('overflow-y', '');
-                        } else {
+                        }
+                        else {
                             this.$scrollbar.css('overflow', '');
                         }
                     }
@@ -830,14 +887,21 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             this.$editable.data('orgHeight', this.$editable.css('height'));
                             this.$editable.data('orgMaxHeight', this.$editable.css('maxHeight'));
                             this.$editable.css('maxHeight', '');
-                            this.$window.on('resize.summernote' + self.cid, this.onResize.bind(this)).trigger('resize');
+
+                            this.$window
+                                .on('resize.summernote' + self.cid, this.onResize.bind(this))
+                                .trigger('resize');
+
                             if (this.isInModal) {
                                 this.$modal.css('overflow-y', 'hidden');
-                            } else {
+                            }
+                            else {
                                 this.$scrollbar.css('overflow', 'hidden');
                             }
+
                             this._isFullscreen = true;
-                        } else {
+                        }
+                        else {
                             this.$window.off('resize.summernote'  + self.cid);
                             this.resizeTo({ h: this.$editable.data('orgHeight') });
                             this.$editable.css('maxHeight', this.$editable.css('orgMaxHeight'));
