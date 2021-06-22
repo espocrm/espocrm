@@ -38,56 +38,65 @@
 const Diff = require('./js/diff');
 const path = require('path');
 const fs = require('fs');
+const process = require('process');
 
-var versionFrom = process.argv[2];
+let versionFrom = process.argv[2];
 
-var acceptedVersionName = versionFrom;
-var isDev = false;
-var isAll = false;
-var withVendor = true;
-var forceScripts = false;
+let acceptedVersionName = versionFrom;
+let isDev = false;
+let isAll = false;
+let withVendor = true;
+let forceScripts = false;
 
 if (process.argv.length > 1) {
-    for (var i in process.argv) {
+    for (let i in process.argv) {
         if (process.argv[i] === '--dev') {
             isDev = true;
             withVendor = false;
         }
+
         if (process.argv[i] === '--all') {
             isAll = true;
         }
+
         if (process.argv[i] === '--no-vendor') {
             withVendor = false;
         }
+
         if (process.argv[i] === '--scripts') {
             forceScripts = true;
         }
+
         if (~process.argv[i].indexOf('--acceptedVersion=')) {
             acceptedVersionName = process.argv[i].substr(('--acceptedVersion=').length);
         }
     }
 }
 
-var espoPath = path.dirname(fs.realpathSync(__filename));
+let espoPath = path.dirname(fs.realpathSync(__filename));
 
 if (isAll) {
-    var diff = new Diff(espoPath, {
+    let diff = new Diff(espoPath, {
         isDev: isDev,
         withVendor: withVendor,
         forceScripts: forceScripts,
     });
-    var versionFromList = diff.getPreviousVersionList();
+
+    let versionFromList = diff.getPreviousVersionList();
+
     diff.buildMultipleUpgradePackages(versionFromList);
-} else {
+}
+else {
     if (!versionFrom) {
         throw new Error("No 'version' specified.");
     }
 
-    var diff = new Diff(espoPath, {
+    let diff = new Diff(espoPath, {
         acceptedVersionName: acceptedVersionName,
         isDev: isDev,
         withVendor: withVendor,
         forceScripts: forceScripts,
     });
+
     diff.buildUpgradePackage(versionFrom);
 }

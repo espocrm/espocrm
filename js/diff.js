@@ -228,11 +228,16 @@ class Diff
             let deletedFileList = this.getDeletedFileList(versionFrom);
             let tagList = this.getTagList();
 
+            this.getLibData({
+                versionFrom: versionFrom,
+                currentPath: currentPath,
+            });
+
             process.chdir(buildPath);
 
-            var fileList = [];
+            let fileList = [];
 
-            var stdout = cp.execSync('git diff --name-only ' + versionFrom).toString();
+            let stdout = cp.execSync('git diff --name-only ' + versionFrom).toString();
 
             (stdout || '').trim().split('\n').forEach(file => {
                 if (file === '') {
@@ -338,7 +343,6 @@ class Diff
                     upgradePath: upgradePath,
                 })
                 .then(() => resolve());
-
             });
         });
     }
@@ -464,6 +468,170 @@ class Diff
                 deleteDirRecursively(gitPath);
             }
         });
+    }
+
+    getLibData(dto) {
+        let data = {
+            filesToRemove: [],
+            filesToCopy: [],
+        };
+
+        let versionFrom = dto.versionFrom;
+        let currentPath = dto.currentPath;
+
+        let output = cp.execSync("git show " + versionFrom + " --format=%H").toString();
+        let commitHash = output.trim().split("\n")[3];
+
+        if (!commitHash) {
+            throw new Error("Couldn't find commit hash.");
+        }
+
+        let packageLockOldContents = cp.execSync("git show " + commitHash + ":package-lock.json").toString();
+        let packageLockNewContents = cp.execSync("cat " + currentPath + "/package-lock.json").toString();
+
+        let depsOld = JSON.parse(packageLockOldContents).dependencies || {};
+        let depsNew = JSON.parse(packageLockNewContents).dependencies || {};
+
+        if (packageLockOldContents === packageLockNewContents) {
+            return data;
+        }
+
+        let libOldDataList = [];
+
+        if (~this.getVersionAllFileList(versionFrom).indexOf('frontend/libs.json')) {
+            libOldDataList = JSON.parse(
+                cp.execSync("git show " + commitHash + ":frontend/libs.json").toString() || '[]'
+            );
+        }
+
+        let changedLibList = [];
+        let currentLibList = [];
+
+        let libNewDataList = require(this.espoPath + '/frontend/libs.json');
+
+        libNewDataList.forEach(item => {
+            let name = item.name;
+
+            if (item.bundle) {
+                return;
+            }
+
+            if (!name) {
+                if (!item.src) {
+                    throw new Error("Bad lib data in `frontend/libs.json`.");
+                }
+
+                name = item.src.split('/')[1] || null;
+
+                if (!name) {
+                    throw new Error("Bad lib data in `frontend/libs.json`.");
+                }
+            }
+
+            if (!depsNew[name]) {
+                throw new Error("Not installed lib '" + name + "' `frontend/libs.json`.");
+            }
+
+            currentLibList.push(name);
+
+            let versionNew = depsNew[name].version || null;
+            let versionOld = (depsOld[name] || {}).version || null;
+
+            if (versionNew !== versionOld) {
+                changedLibList.push(name);
+
+                if (item.files) {
+                    item.files.forEach(item =>
+                        data.filesToCopy.push({
+                            src: item.src,
+                            dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
+                        })
+                    );
+
+                    return;
+                }
+
+                data.filesToCopy.push({
+                    src: item.src,
+                    dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
+                });
+
+                return;
+            }
+        });
+
+        libOldDataList.forEach(item => {
+            let name = item.name;
+
+            if (item.bundle) {
+                return;
+            }
+
+            if (!name) {
+                if (!item.src) {
+                    throw new Error("Bad lib data in old `frontend/libs.json`.");
+                }
+
+                name = item.src.split('/')[1] || null;
+
+                if (!name) {
+                    throw new Error("Bad lib data in old `frontend/libs.json`.");
+                }
+            }
+
+            let toRemove = false;
+
+            if (
+                ~changedLibList.indexOf(name) ||
+                !~currentLibList.indexOf(name)
+            ) {
+                toRemove = true;
+            }
+
+            if (!toRemove) {
+                return;
+            }
+
+            if (item.files) {
+                item.files.forEach(item =>
+                    data.filesToRemove.push({
+                        src: item.dest || 'client/lib/' + item.src.split('/').pop(),
+                    })
+                );
+
+                return;
+            }
+
+            data.filesToRemove.push({
+                src: item.dest || 'client/lib/' + item.src.split('/').pop(),
+            });
+
+            return;
+        });
+
+        return data;
+    }
+
+    getVersionAllFileList(version) {
+        let output = cp.execSync("git show " + version + " --format=%H").toString();
+        let commitHash = output.trim().split("\n")[3];
+
+        let list = [];
+
+        (
+            cp.execSync("git ls-tree -r " + commitHash + " --name-only").toString()
+        )
+        .trim()
+        .split('\n')
+        .forEach(file => {
+            if (file === '') {
+                return;
+            }
+
+            list.push(file);
+        });
+
+        return list;
     }
 
     processVendor(dto) {
