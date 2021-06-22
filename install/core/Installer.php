@@ -259,7 +259,10 @@ class Installer
 
     public function getSystemRequirementList($type, $requiredOnly = false, array $additionalData = null)
     {
-         $systemRequirementManager = new SystemRequirements($this->app->getContainer());
+         $systemRequirementManager = $this->app
+            ->getContainer()
+            ->get('injectableFactory')
+            ->create(SystemRequirements::class);
 
          return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
     }
