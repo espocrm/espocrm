@@ -27,6 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/**
+ * @deprecated Use `php command.php extension --file="path/to/extension/package.zip"`.
+ */
+
 if (substr(php_sapi_name(), 0, 3) !== 'cli') {
     exit;
 }
