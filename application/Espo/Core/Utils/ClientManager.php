@@ -52,6 +52,8 @@ class ClientManager
 
     private $basePath = '';
 
+    private const LIBS_FILE = 'frontend/libs.json';
+
     public function __construct(
         Config $config,
         ThemeManager $themeManager,
@@ -98,20 +100,16 @@ class ClientManager
             $htmlFilePath = $this->mainHtmlFilePath;
         }
 
-        $isDeveloperMode = $this->config->get('isDeveloperMode');
-
         $cacheTimestamp = $this->getCacheTimestamp();
 
-        if ($isDeveloperMode) {
-            $useCache = $this->config->get('useCacheInDeveloperMode');
-            $jsFileList = $this->metadata->get(['app', 'client', 'developerModeScriptList'], []);
+        $jsFileList = $this->getJsFileList();
 
+        if ($this->config->get('isDeveloperMode')) {
+            $useCache = $this->config->get('useCacheInDeveloperMode');
             $loaderCacheTimestamp = 'null';
         }
         else {
             $useCache = $this->config->get('useCache');
-            $jsFileList = $this->metadata->get(['app', 'client', 'scriptList'], []);
-
             $loaderCacheTimestamp = $cacheTimestamp;
         }
 
@@ -197,5 +195,59 @@ class ClientManager
         }
 
         return $html;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getJsFileList(): array
+    {
+        if ($this->config->get('isDeveloperMode')) {
+            return array_merge(
+                $this->getDeveloperModeBundleLibFileList(),
+                $this->metadata->get(['app', 'client', 'developerModeScriptList']) ?? [],
+            );
+        }
+
+        return $this->metadata->get(['app', 'client', 'scriptList']) ?? [];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getDeveloperModeBundleLibFileList(): array
+    {
+        $list = [];
+
+        $items = json_decode($this->fileManager->getContents(self::LIBS_FILE));
+
+        foreach ($items as $item) {
+            if (!($item->bundle ?? false)) {
+                continue;
+            }
+
+            $files = $item->files ?? null;
+
+            if ($files !== null) {
+                $list = array_merge($list, $this->getLibFileListFromItems($files));
+
+                continue;
+            }
+
+            $list[] = $item->src;
+        }
+
+        return $list;
+    }
+
+    private function getLibFileListFromItems(array $items): array
+    {
+        $list = [];
+
+        foreach ($items as $item) {
+            $list[] = $item->src;
+        }
+
+        return $list;
     }
 }

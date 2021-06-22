@@ -80,19 +80,15 @@
         "bundle": true
     },
     {
-        "src": "node_modules/gridstack/dist/gridstack.jQueryUI.js",
-        "bundle": true
-    },
-    {
-        "src": "node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
-        "bundle": true
-    },
-    {
         "src": "node_modules/autobahn-espo/autobahn.js",
         "bundle": true
     },
     {
         "src": "node_modules/jquery-ui-espo/dist/jquery-ui.js",
+        "bundle": true
+    },
+    {
+        "src": "node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
         "bundle": true
     },
     {
