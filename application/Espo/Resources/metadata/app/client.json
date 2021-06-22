@@ -24,8 +24,7 @@
         "node_modules/gridstack/dist/gridstack.jQueryUI.js",
         "node_modules/autobahn-espo/autobahn.js",
         "node_modules/jquery-ui-espo/dist/jquery-ui.js",
-
-        "client/lib/jquery.ui.touch-punch.min.js",
+        "node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
 
         "client/src/loader.js",
         "client/src/utils.js",

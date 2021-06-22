@@ -57,6 +57,7 @@
     "jquery": "^3.6.0",
     "jquery-textcomplete": "^1.8.5",
     "jquery-ui-espo": "git://github.com/yurikuzn/jquery-ui-espo.git#0.1.0",
+    "jquery-ui-touch-punch": "^0.2.3",
     "jsbarcode": "^3.11.4",
     "marked": "^0.8.2",
     "moment": "^2.24.0",

@@ -1,7 +1,5 @@
 {
     "jsFiles": [
-        "client/lib/jquery.ui.touch-punch.min.js",
-
         "client/src/namespace.js",
         "client/src/exceptions.js",
         "client/src/loader.js",
