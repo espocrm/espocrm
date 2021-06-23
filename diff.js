@@ -75,28 +75,22 @@ if (process.argv.length > 1) {
 
 let espoPath = path.dirname(fs.realpathSync(__filename));
 
+let diff = new Diff(espoPath, {
+    isAll: isAll,
+    isDev: isDev,
+    withVendor: withVendor,
+    forceScripts: forceScripts,
+    acceptedVersionName: !isAll ? acceptedVersionName : null,
+});
+
 if (isAll) {
-    let diff = new Diff(espoPath, {
-        isDev: isDev,
-        withVendor: withVendor,
-        forceScripts: forceScripts,
-    });
-
-    let versionFromList = diff.getPreviousVersionList();
-
-    diff.buildMultipleUpgradePackages(versionFromList);
+    diff.buildAllUpgradePackages();
 }
-else {
+
+if (!isAll) {
     if (!versionFrom) {
         throw new Error("No 'version' specified.");
     }
-
-    let diff = new Diff(espoPath, {
-        acceptedVersionName: acceptedVersionName,
-        isDev: isDev,
-        withVendor: withVendor,
-        forceScripts: forceScripts,
-    });
 
     diff.buildUpgradePackage(versionFrom);
 }

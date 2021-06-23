@@ -45,7 +45,7 @@ class Diff
         this.params = params || {};
     }
 
-    getTagList() {
+    _getTagList() {
         let dirInitial = process.cwd();
 
         process.chdir(this.espoPath);
@@ -58,14 +58,20 @@ class Diff
         return tagList;
     }
 
-    getPreviousVersionList() {
+    buildAllUpgradePackages() {
+        let versionFromList = this._getPreviousVersionList();
+
+        this.buildMultipleUpgradePackages(versionFromList);
+    }
+
+    _getPreviousVersionList() {
         let dirInitial = process.cwd();
 
         let version = (require(this.espoPath + '/package.json') || {}).version;
 
         process.chdir(this.espoPath);
 
-        let tagList = this.getTagList();
+        let tagList = this._getTagList();
 
         let versionFromList = [];
 
@@ -134,15 +140,15 @@ class Diff
         buildMultiple();
     }
 
-    versionExists(version) {
-        return ~this.getTagList().indexOf(version);
+    _versionExists(version) {
+        return ~this._getTagList().indexOf(version);
     }
 
     buildUpgradePackage(versionFrom) {
         const params = this.params;
         let espoPath = this.espoPath;
 
-        if (!this.versionExists(versionFrom)) {
+        if (!this._versionExists(versionFrom)) {
             throw new Error('Version ' + versionFrom + ' does not exist.');
         }
 
@@ -197,7 +203,7 @@ class Diff
 
             process.chdir(espoPath);
 
-            this.notifyIfBadBranch();
+            this._notifyIfBadBranch();
 
             if (!fs.existsSync(buildPath)) {
                 throw new Error(
@@ -225,10 +231,10 @@ class Diff
                 }
             }
 
-            let deletedFileList = this.getDeletedFileList(versionFrom);
-            let tagList = this.getTagList();
+            let deletedFileList = this._getDeletedFileList(versionFrom);
+            let tagList = this._getTagList();
 
-            this.getLibData({
+            this._getLibData({
                 versionFrom: versionFrom,
                 currentPath: currentPath,
             });
@@ -274,7 +280,7 @@ class Diff
             }
 
             execute('xargs -a ' + diffFilePath + ' cp -p --parents -t ' + upgradePath + '/files' , () => {
-                let date = this.getCurrentDate();
+                let date = this._getCurrentDate();
 
                 let versionList = [];
 
@@ -329,7 +335,7 @@ class Diff
                 }
 
                 if (withVendor) {
-                    this.processVendor({
+                    this._processVendor({
                         versionFrom: versionFrom,
                         currentPath: currentPath,
                         tempFolderPath: tempFolderPath,
@@ -337,7 +343,7 @@ class Diff
                     });
                 }
 
-                this.processArchive({
+                this._processArchive({
                     upgradeName: upgradeName,
                     zipPath: zipPath,
                     upgradePath: upgradePath,
@@ -347,7 +353,7 @@ class Diff
         });
     }
 
-    notifyIfBadBranch() {
+    _notifyIfBadBranch() {
         let currentBranch = cp.execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
 
         if (
@@ -359,7 +365,7 @@ class Diff
         }
     }
 
-    getCurrentDate() {
+    _getCurrentDate() {
         let d = new Date();
 
         let monthN = ((d.getMonth() + 1).toString());
@@ -371,14 +377,14 @@ class Diff
         return d.getFullYear().toString() + '-' + monthN + '-' + dateN.toString();
     }
 
-    getDeletedFileList(versionFrom) {
+    _getDeletedFileList(versionFrom) {
         let dirInitial = process.cwd();
 
         process.chdir(this.espoPath);
 
-        let deletedFileList = this.getRepositoryDeletedFileList(versionFrom);
-        let previousAllFileList = this.getPreviousAllFileList(versionFrom);
-        let actualAllFileList = this.getActualAllFileList();
+        let deletedFileList = this._getRepositoryDeletedFileList(versionFrom);
+        let previousAllFileList = this._getPreviousAllFileList(versionFrom);
+        let actualAllFileList = this._getActualAllFileList();
 
         previousAllFileList.forEach(file => {
             if (
@@ -406,7 +412,7 @@ class Diff
         return deletedFileList;
     }
 
-    getRepositoryDeletedFileList(versionFrom) {
+    _getRepositoryDeletedFileList(versionFrom) {
         let deletedFileList = [];
 
         let stdout = cp.execSync('git diff --name-only --diff-filter=D ' + versionFrom).toString();
@@ -422,7 +428,7 @@ class Diff
         return deletedFileList;
     }
 
-    getActualAllFileList() {
+    _getActualAllFileList() {
         let actualAllFileList = [];
 
         let stdout = cp.execSync('git ls-tree -r --name-only HEAD').toString();
@@ -438,7 +444,7 @@ class Diff
         return actualAllFileList;
     }
 
-    getPreviousAllFileList(versionFrom) {
+    _getPreviousAllFileList(versionFrom) {
         let previousAllFileList = [];
 
         let stdout = cp.execSync('git ls-tree -r --name-only ' + versionFrom).toString();
@@ -454,7 +460,7 @@ class Diff
         return previousAllFileList;
     }
 
-    deleteGitFolderInVendor(dir) {
+    _deleteGitFolderInVendor(dir) {
         let folderList = fs.readdirSync(dir, {withFileTypes: true})
             .filter(dirent => dirent.isDirectory())
             .map(dirent => dirent.name);
@@ -470,7 +476,7 @@ class Diff
         });
     }
 
-    getLibData(dto) {
+    _getLibData(dto) {
         let data = {
             filesToRemove: [],
             filesToCopy: [],
@@ -498,7 +504,7 @@ class Diff
 
         let libOldDataList = [];
 
-        if (~this.getVersionAllFileList(versionFrom).indexOf('frontend/libs.json')) {
+        if (~this._getVersionAllFileList(versionFrom).indexOf('frontend/libs.json')) {
             libOldDataList = JSON.parse(
                 cp.execSync("git show " + commitHash + ":frontend/libs.json").toString() || '[]'
             );
@@ -612,7 +618,7 @@ class Diff
         return data;
     }
 
-    getVersionAllFileList(version) {
+    _getVersionAllFileList(version) {
         let output = cp.execSync("git show " + version + " --format=%H").toString();
         let commitHash = output.trim().split("\n")[3];
 
@@ -634,7 +640,7 @@ class Diff
         return list;
     }
 
-    processVendor(dto) {
+    _processVendor(dto) {
         let versionFrom = dto.versionFrom;
         let currentPath = dto.currentPath;
         let tempFolderPath = dto.tempFolderPath;
@@ -718,7 +724,7 @@ class Diff
         }
 
         for (let folder of folderList) {
-            this.deleteGitFolderInVendor(vendorPath + '/' + folder);
+            this._deleteGitFolderInVendor(vendorPath + '/' + folder);
 
             if (fs.existsSync(vendorPath + '/'+ folder)) {
                 cp.execSync(
@@ -730,7 +736,7 @@ class Diff
         deleteDirRecursively(tempFolderPath);
     }
 
-    processArchive(dto) {
+    _processArchive(dto) {
         let zipPath = dto.zipPath;
         let upgradePath = dto.upgradePath;
         let upgradeName = dto.upgradeName;
