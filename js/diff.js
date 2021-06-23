@@ -256,8 +256,6 @@ class Diff
                 fileList.push(file);
             });
 
-            console.log(fileList);
-
             libData.filesToCopy.forEach(item => fileList.push(item));
 
             fileList.push('client/espo.min.js');
@@ -514,15 +512,16 @@ class Diff
         let libOldDataList = [];
 
         if (~this._getVersionAllFileList(versionFrom).indexOf('frontend/libs.json')) {
-            libOldDataList = JSON.parse(
-                cp.execSync("git show " + commitHash + ":frontend/libs.json").toString() || '[]'
-            );
+            libOldDataList = JSON
+                .parse(
+                    cp.execSync("git show " + commitHash + ":frontend/libs.json").toString() || '[]'
+                )
+                .filter(item => !item.bundle);
+
         }
 
-        let changedLibList = [];
-        let currentLibList = [];
-
-        let libNewDataList = require(this.espoPath + '/frontend/libs.json');
+        let libNewDataList = require(this.espoPath + '/frontend/libs.json')
+            .filter(item => !item.bundle);
 
         let resolveItemDest = item =>
             item.dest || 'client/lib/' + item.src.split('/').pop();
@@ -545,12 +544,21 @@ class Diff
             return name;
         };
 
-        libNewDataList.forEach(item => {
-            if (item.bundle) {
-                return;
-            }
+        let changedLibList = [];
+        let currentLibList = [];
 
+        let toMinifyOldMap = {};
+
+        libOldDataList.forEach(item => {
             let name = resolveItemName(item);
+
+            toMinifyOldMap[name] = item.minify || false;
+        });
+
+        libNewDataList.forEach(item => {
+            let name = resolveItemName(item);
+
+            let minify = item.minify || false;
 
             if (!depsNew[name]) {
                 throw new Error("Not installed lib '" + name + "' `frontend/libs.json`.");
@@ -558,32 +566,48 @@ class Diff
 
             currentLibList.push(name);
 
+            let isAdded = !(name in depsOld);
+
             let versionNew = depsNew[name].version || null;
             let versionOld = (depsOld[name] || {}).version || null;
 
-            if (versionNew !== versionOld) {
-                changedLibList.push(name);
+            let wasMinified = (toMinifyOldMap || {})[name];
 
-                if (item.files) {
+            if (
+                !isAdded &&
+                versionNew === versionOld &&
+                minify === wasMinified
+            ) {
+                return;
+            }
+
+            changedLibList.push(name);
+
+            if (item.files) {
+                item.files.forEach(item =>
+                    data.filesToCopy.push(resolveItemDest(item))
+                );
+
+                if (minify) {
                     item.files.forEach(item =>
-                        data.filesToCopy.push(resolveItemDest(item))
+                        data.filesToCopy.push(resolveItemDest(item) + '.map')
                     );
-
-                    return;
                 }
 
-                data.filesToCopy.push(resolveItemDest(item));
-
                 return;
+            }
+
+            data.filesToCopy.push(resolveItemDest(item));
+
+            if (minify) {
+                data.filesToCopy.push(resolveItemDest(item) + '.map');
             }
         });
 
         libOldDataList.forEach(item => {
-            if (item.bundle) {
-                return;
-            }
-
             let name = resolveItemName(item);
+
+            let minify = item.minify || false;
 
             let toRemove = false;
 
@@ -603,12 +627,20 @@ class Diff
                     data.filesToDelete.push(resolveItemDest(item))
                 );
 
+                if (minify) {
+                    item.files.forEach(item =>
+                        data.filesToDelete.push(resolveItemDest(item) + '.map')
+                    );
+                }
+
                 return;
             }
 
             data.filesToDelete.push(resolveItemDest(item));
 
-            return;
+            if (minify) {
+                data.filesToDelete.push(resolveItemDest(item) + '.map');
+            }
         });
 
         return data;

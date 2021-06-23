@@ -40,6 +40,13 @@ module.exports = grunt => {
     let jsFilesToBundle = getBundleLibList().concat(bundleConfig.jsFiles);
     let jsFilesToCopy = getCopyLibDataList();
 
+    let libFilesToMinify = jsFilesToCopy
+        .filter(item => item.minify)
+        .reduce((map, item) => (
+            map[item.dest] = item.dest,
+            map
+        ), {});
+
     let currentPath = path.dirname(fs.realpathSync(__filename));
 
     let themeList = [];
@@ -111,12 +118,25 @@ module.exports = grunt => {
 
         uglify: {
             options: {
-                mangle: false,
+                mangle: true,
                 sourceMap: true,
-                banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                output: {
+                    comments: /^!/,
+                },
             },
-            'build/tmp/client/espo.min.js': jsFilesToBundle,
+            bundle: {
+                options: {
+                    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+                },
+                files: {
+                    'build/tmp/client/espo.min.js': jsFilesToBundle,
+                },
+            },
+            lib: {
+                files: libFilesToMinify,
+            },
         },
+
         copy: {
             options: {
                 mode: true,
@@ -333,11 +353,12 @@ module.exports = grunt => {
         'mkdir:tmp',
         'less',
         'cssmin',
-        'uglify',
+        'uglify:bundle',
         'copy:frontendFolders',
         'copy:frontendLib',
         'copy:frontendCommitedLib',
         'copy:backend',
+        'uglify:lib',
         'replace',
         'clean:beforeFinal',
         'copy:final',
@@ -426,11 +447,14 @@ function getCopyLibDataList() {
             return;
         }
 
+        let minify = item.minify;
+
         if (item.files) {
             item.files.forEach(item  => {
                 list.push({
                     src: item.src,
                     dest: 'build/tmp/' + (item.dest || 'client/lib/' + item.src.split('/').pop()),
+                    minify: minify,
                 });
             });
 
@@ -444,6 +468,7 @@ function getCopyLibDataList() {
         list.push({
             src: item.src,
             dest: 'build/tmp/' + (item.dest || 'client/lib/' + item.src.split('/').pop()),
+            minify: minify,
         });
     });
 

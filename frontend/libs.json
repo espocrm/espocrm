@@ -102,25 +102,30 @@
         "src": "node_modules/cropper/dist/cropper.js"
     },
     {
-        "src": "node_modules/cronstrue/dist/cronstrue-i18n.js"
+        "src": "node_modules/cronstrue/dist/cronstrue-i18n.js",
+        "minify": true
     },
     {
-        "src": "node_modules/exif-js/exif.js"
+        "src": "node_modules/exif-js/exif.js",
+        "minify": true
     },
     {
-        "src": "node_modules/jsbarcode/dist/JsBarcode.all.js"
+        "src": "node_modules/jsbarcode/dist/JsBarcode.all.js",
+        "minify": true
     },
     {
         "src": "node_modules/qrcodejs/qrcode.js"
     },
     {
-        "src": "node_modules/summernote/dist/summernote.js"
+        "src": "node_modules/summernote/dist/summernote.js",
+        "minify": true
     },
     {
         "src": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js"
     },
     {
-        "src": "node_modules/flotr2/flotr2.js"
+        "src": "node_modules/flotr2/flotr2.js",
+        "minify": true
     },
     {
         "name": "ace-builds",
@@ -141,10 +146,12 @@
     },
     {
         "src": "node_modules/fullcalendar/dist/fullcalendar.js",
-        "dest": "client/modules/crm/lib/fullcalendar.js"
+        "dest": "client/modules/crm/lib/fullcalendar.js",
+        "minify": true
     },
     {
         "src": "node_modules/vis/dist/vis.js",
-        "dest": "client/modules/crm/lib/vis.js"
+        "dest": "client/modules/crm/lib/vis.js",
+        "minify": true
     }
 ]
