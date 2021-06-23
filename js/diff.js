@@ -256,6 +256,8 @@ class Diff
                 fileList.push(file);
             });
 
+            console.log(fileList);
+
             libData.filesToCopy.forEach(item => fileList.push(item));
 
             fileList.push('client/espo.min.js');
@@ -264,6 +266,8 @@ class Diff
             fs.readdirSync('client/css/espo/').forEach(file => {
                 fileList.push('client/css/espo/' + file);
             });
+
+            fileList = fileList.filter(item => fs.existsSync(item));
 
             fs.writeFileSync(diffFilePath, fileList.join('\n'));
 
@@ -523,24 +527,30 @@ class Diff
         let resolveItemDest = item =>
             item.dest || 'client/lib/' + item.src.split('/').pop();
 
-        libNewDataList.forEach(item => {
-            let name = item.name;
+        let resolveItemName = item => {
+            if (item.name) {
+                return item.name;
+            }
 
+            if (!item.src) {
+                throw new Error("Bad lib data in `frontend/libs.json`.");
+            }
+
+            let name = item.src.split('/')[1] || null;
+
+            if (!name) {
+                throw new Error("Bad lib data in `frontend/libs.json`.");
+            }
+
+            return name;
+        };
+
+        libNewDataList.forEach(item => {
             if (item.bundle) {
                 return;
             }
 
-            if (!name) {
-                if (!item.src) {
-                    throw new Error("Bad lib data in `frontend/libs.json`.");
-                }
-
-                name = item.src.split('/')[1] || null;
-
-                if (!name) {
-                    throw new Error("Bad lib data in `frontend/libs.json`.");
-                }
-            }
+            let name = resolveItemName(item);
 
             if (!depsNew[name]) {
                 throw new Error("Not installed lib '" + name + "' `frontend/libs.json`.");
@@ -569,23 +579,11 @@ class Diff
         });
 
         libOldDataList.forEach(item => {
-            let name = item.name;
-
             if (item.bundle) {
                 return;
             }
 
-            if (!name) {
-                if (!item.src) {
-                    throw new Error("Bad lib data in old `frontend/libs.json`.");
-                }
-
-                name = item.src.split('/')[1] || null;
-
-                if (!name) {
-                    throw new Error("Bad lib data in old `frontend/libs.json`.");
-                }
-            }
+            let name = resolveItemName(item);
 
             let toRemove = false;
 
@@ -622,18 +620,17 @@ class Diff
 
         let list = [];
 
-        (
-            cp.execSync("git ls-tree -r " + commitHash + " --name-only").toString()
-        )
-        .trim()
-        .split('\n')
-        .forEach(file => {
-            if (file === '') {
-                return;
-            }
+        cp.execSync("git ls-tree -r " + commitHash + " --name-only")
+            .toString()
+            .trim()
+            .split('\n')
+            .forEach(file => {
+                if (file === '') {
+                    return;
+                }
 
-            list.push(file);
-        });
+                list.push(file);
+            });
 
         return list;
     }
