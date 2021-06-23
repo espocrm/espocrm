@@ -17,20 +17,25 @@
         <link rel="shortcut icon" href="{{basePath}}{{faviconPath}}" type="image/x-icon">
         <script type="text/javascript">
             $(() => {
-                Espo.loader.cacheTimestamp = {{loaderCacheTimestamp}};
+                Espo.loader.setCacheTimestamp({{loaderCacheTimestamp}});
+                Espo.loader.setBasePath('{{basePath}}');
 
-                require('{{appClientClassName}}', App => {
-                    new App({
-                        id: '{{applicationId}}',
-                        useCache: {{useCache}},
-                        cacheTimestamp: {{cacheTimestamp}},
-                        basePath: '{{basePath}}',
-                        apiUrl: '{{apiUrl}}',
-                        ajaxTimeout: {{ajaxTimeout}},
-                    }, app => {
-                        {{runScript}}
-                    });
-                });
+                Espo.loader
+                    .loadLibsConfig('{{libsConfigPath}}')
+                    .then(() =>
+                        require('{{appClientClassName}}', App => {
+                            new App({
+                                id: '{{applicationId}}',
+                                useCache: {{useCache}},
+                                cacheTimestamp: {{cacheTimestamp}},
+                                basePath: '{{basePath}}',
+                                apiUrl: '{{apiUrl}}',
+                                ajaxTimeout: {{ajaxTimeout}},
+                            }, app => {
+                                {{runScript}}
+                            });
+                        })
+                    );
             });
         </script>
     </head>

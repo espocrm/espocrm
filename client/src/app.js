@@ -29,6 +29,10 @@
 define(
     'app',
     [
+        'lib!espo',
+        'lib!jquery',
+        'lib!backbone',
+        'lib!underscore',
         'ui',
         'utils',
         'acl-manager',
@@ -56,6 +60,10 @@ define(
         'page-title',
     ],
     function (
+        Espo,
+        $,
+        Backbone,
+        _,
         Ui,
         Utils,
         AclManager,
@@ -83,7 +91,7 @@ define(
         PageTitle
     ) {
 
-    var App = function (options, callback) {
+    let App = function (options, callback) {
         options = options || {};
 
         this.id = options.id || 'espocrm-application-id';
@@ -194,18 +202,15 @@ define(
 
             this.loader = Espo.loader;
 
-            this.loader.responseCache = this.responseCache;
+            this.loader.setCache(this.cache);
+            this.loader.setResponseCache(this.responseCache);
 
-            this.loader.basePath = this.basePath;
+            if (this.useCache && !this.loader.getCacheTimestamp() && options.cacheTimestamp) {
+                this.loader.setCacheTimestamp(options.cacheTimestamp);
+            }
 
             this.storage = new Storage();
             this.sessionStorage = new SessionStorage();
-
-            this.loader.cache = this.cache;
-
-            if (this.useCache && !this.loader.cacheTimestamp && options.cacheTimestamp) {
-                this.loader.cacheTimestamp = options.cacheTimestamp;
-            }
 
             this.setupAjax();
 

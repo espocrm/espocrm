@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('view-helper', [/*'lib!marked', 'lib!dompurify'*/], function (/*marked, DOMPurify*/) {
+define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPurify) {
 
     let ViewHelper = function () {
         this._registerHandlebarsHelpers();

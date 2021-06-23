@@ -43,14 +43,6 @@
         "exportsTo": "window",
         "exportsAs": "GridStack"
     },
-    "marked": {
-        "exportsTo": "window",
-        "exportsAs": "marked"
-    },
-    "dompurify": {
-        "exportsTo": "window",
-        "exportsAs": "DOMPurify"
-    },
     "Colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
         "devPath": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",

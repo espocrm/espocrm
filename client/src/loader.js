@@ -32,17 +32,16 @@ var Espo = Espo || {classMap: {}};
 
     let root = this;
 
-    Espo.Loader = function (cache, cacheTimestamp) {
-        this.basePath = $('script[data-base-path]').data('basePath') || '';
-
+    Espo.Loader = function (cache, _cacheTimestamp) {
+        this._cacheTimestamp = _cacheTimestamp || null;
         this._cache = cache || null;
-        this._cacheTimestamp = cacheTimestamp || null;
         this._libsConfig = {};
         this._loadCallbacks = {};
         this._pathsBeingLoaded = {};
         this._dataLoaded = {};
         this._loadingSubject = null;
         this._responseCache = null;
+        this._basePath = '';
 
         this.isDeveloperMode = false;
     };
@@ -50,6 +49,32 @@ var Espo = Espo || {classMap: {}};
     _.extend(Espo.Loader.prototype, {
 
         _classMap: Espo,
+
+        loadLibsConfig: function (path) {
+            return fetch(this._basePath + path + '?t=' + this._cacheTimestamp)
+                .then(response => response.json())
+                .then(data => this.addLibsConfig(data));
+        },
+
+        setBasePath: function (basePath) {
+            this._basePath = basePath;
+        },
+
+        getCacheTimestamp: function () {
+            return this._cacheTimestamp;
+        },
+
+        setCacheTimestamp: function (cacheTimestamp) {
+            this._cacheTimestamp = cacheTimestamp;
+        },
+
+        setCache: function (cache) {
+            this._cache = cache;
+        },
+
+        setResponseCache: function (responseCache) {
+            this._responseCache = responseCache;
+        },
 
         _getClass: function (name) {
             if (name in this._classMap) {
@@ -347,7 +372,7 @@ var Espo = Espo || {classMap: {}};
                 path += sep + 'r=' + this._cacheTimestamp;
             }
 
-            var url = this.basePath + path;
+            var url = this._basePath + path;
 
             dto.path = path;
             dto.url = url;
@@ -536,7 +561,7 @@ var Espo = Espo || {classMap: {}};
             }
 
             $.ajax({
-                url: this.basePath + url,
+                url: this._basePath + url,
                 type: 'GET',
                 dataType: 'script',
                 local: true,

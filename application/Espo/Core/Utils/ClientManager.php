@@ -54,6 +54,8 @@ class ClientManager
 
     private const LIBS_FILE = 'frontend/libs.json';
 
+    private $libsConfigPath = 'client/cfg/libs.json';
+
     public function __construct(
         Config $config,
         ThemeManager $themeManager,
@@ -178,6 +180,7 @@ class ClientManager
             'favicon196Path' => $favicon196Path,
             'faviconPath' => $faviconPath,
             'ajaxTimeout' => $this->config->get('ajaxTimeout') ?? 60000,
+            'libsConfigPath' => $this->libsConfigPath,
         ];
 
         $html = $this->fileManager->getContents($htmlFilePath);
