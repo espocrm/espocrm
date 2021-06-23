@@ -478,29 +478,26 @@ var Espo = Espo || {classMap: {}};
                 mimeType: 'text/plain',
                 local: true,
                 url: url,
+            })
+            .then(response => {
+                if (this._cache && !noAppCache && !this._responseCache) {
+                    this._cache.set('a', name, response);
+                }
 
-                success: response => {
-                    if (this._cache && !noAppCache && !this._responseCache) {
-                        this._cache.set('a', name, response);
-                    }
+                if (this._responseCache) {
+                    this._responseCache.put(url, new Response(response));
+                }
 
-                    if (this._responseCache) {
-                        this._responseCache.put(url, new Response(response));
-                    }
+                this._handleResponse(dto, response);
+            })
+            .catch(() => {
+                if (typeof errorCallback === 'function') {
+                    errorCallback();
 
-                    this._handleResponse(dto, response);
+                    return;
+                }
 
-                },
-
-                error: () => {
-                    if (typeof errorCallback === 'function') {
-                        errorCallback();
-
-                        return;
-                    }
-
-                    throw new Error("Could not load file '" + path + "'");
-                },
+                throw new Error("Could not load file '" + path + "'");
             });
         },
 
