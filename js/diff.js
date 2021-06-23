@@ -231,13 +231,16 @@ class Diff
                 }
             }
 
-            let deletedFileList = this._getDeletedFileList(versionFrom);
-            let tagList = this._getTagList();
-
-            this._getLibData({
+            let libData = this._getLibData({
                 versionFrom: versionFrom,
                 currentPath: currentPath,
             });
+
+            let deleteFileList = this._getDeletedFileList(versionFrom)
+                .concat(libData.filesToDelete)
+                .filter((item, i, list) => list.indexOf(item) === i);
+
+            let tagList = this._getTagList();
 
             process.chdir(buildPath);
 
@@ -252,6 +255,8 @@ class Diff
 
                 fileList.push(file);
             });
+
+            libData.filesToCopy.forEach(item => fileList.push(item));
 
             fileList.push('client/espo.min.js');
             fileList.push('client/espo.min.js.map');
@@ -309,7 +314,7 @@ class Diff
                     "releaseDate": date,
                     "author": "EspoCRM",
                     "description": "",
-                    "delete": deletedFileList,
+                    "delete": deleteFileList,
                 };
 
                 let additionalManifestData = upgradeData.manifest || {};
@@ -478,7 +483,7 @@ class Diff
 
     _getLibData(dto) {
         let data = {
-            filesToRemove: [],
+            filesToDelete: [],
             filesToCopy: [],
         };
 
@@ -515,6 +520,9 @@ class Diff
 
         let libNewDataList = require(this.espoPath + '/frontend/libs.json');
 
+        let resolveItemDest = item =>
+            item.dest || 'client/lib/' + item.src.split('/').pop();
+
         libNewDataList.forEach(item => {
             let name = item.name;
 
@@ -548,19 +556,13 @@ class Diff
 
                 if (item.files) {
                     item.files.forEach(item =>
-                        data.filesToCopy.push({
-                            src: item.src,
-                            dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
-                        })
+                        data.filesToCopy.push(resolveItemDest(item))
                     );
 
                     return;
                 }
 
-                data.filesToCopy.push({
-                    src: item.src,
-                    dest: item.dest || 'client/lib/' + item.src.split('/').pop(),
-                });
+                data.filesToCopy.push(resolveItemDest(item));
 
                 return;
             }
@@ -600,17 +602,13 @@ class Diff
 
             if (item.files) {
                 item.files.forEach(item =>
-                    data.filesToRemove.push({
-                        src: item.dest || 'client/lib/' + item.src.split('/').pop(),
-                    })
+                    data.filesToDelete.push(resolveItemDest(item))
                 );
 
                 return;
             }
 
-            data.filesToRemove.push({
-                src: item.dest || 'client/lib/' + item.src.split('/').pop(),
-            });
+            data.filesToDelete.push(resolveItemDest(item));
 
             return;
         });
