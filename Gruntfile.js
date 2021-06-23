@@ -282,11 +282,11 @@ module.exports = grunt => {
         );
     });
 
-    grunt.registerTask('composer', () => {
+    grunt.registerTask('composer-install', () => {
         cp.execSync("composer install --no-dev", {stdio: 'ignore'});
     });
 
-    grunt.registerTask('composer-dev', () => {
+    grunt.registerTask('composer-install-dev', () => {
         cp.execSync("composer install", {stdio: 'ignore'});
     });
 
@@ -369,14 +369,18 @@ module.exports = grunt => {
         'clean:final',
     ]);
 
-    grunt.registerTask('default', [
-        'composer',
+    grunt.registerTask('build', [
+        'composer-install',
         'npm-install',
         'offline',
     ]);
 
+    grunt.registerTask('default', [
+        'build',
+    ]);
+
     grunt.registerTask('release', [
-        'default',
+        'build',
         'upgrade',
         'zip',
         'clean:release',
@@ -389,7 +393,7 @@ module.exports = grunt => {
     ]);
 
     grunt.registerTask('run-unit-tests', [
-        'composer-dev',
+        'composer-install-dev',
         'unit-tests-run',
     ]);
 
@@ -399,12 +403,12 @@ module.exports = grunt => {
     ]);
 
     grunt.registerTask('dev', [
-        'composer-dev',
+        'composer-install-dev',
         'less',
     ]);
 
     grunt.registerTask('test', [
-        'composer-dev',
+        'composer-install-dev',
         'offline',
     ]);
 };
@@ -475,7 +479,7 @@ function getCopyLibDataList() {
     return list;
 }
 
-function camelCaseToHyphen (string){
+function camelCaseToHyphen(string){
     if (string === null) {
         return string;
     }
