@@ -1,7 +1,7 @@
 {
     "Flotr": {
         "path": "client/lib/flotr2.js",
-        "path": "node_modules/flotr2/flotr2.js",
+        "devPath": "node_modules/flotr2/flotr2.js",
         "exportsTo": "window",
         "exportsAs": "Flotr"
     },
