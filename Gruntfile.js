@@ -409,6 +409,7 @@ module.exports = grunt => {
 
     grunt.registerTask('test', [
         'composer-install-dev',
+        'npm-install',
         'offline',
     ]);
 };
