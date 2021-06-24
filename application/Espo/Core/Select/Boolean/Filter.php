@@ -30,8 +30,8 @@
 namespace Espo\Core\Select\Boolean;
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Part\Where\OrGroupBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\Where\OrGroupBuilder,
 };
 
 /**

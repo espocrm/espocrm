@@ -34,7 +34,7 @@ use Espo\Core\{
 };
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
     Core\Select\SearchParams,
     Classes\Select\Email\Helpers\JoinHelper,
     Entities\User,

@@ -35,9 +35,9 @@ use Espo\Core\{
 };
 
 use Espo\ORM\{
-    QueryParams\Part\Condition as Cond,
-    QueryParams\Part\WhereItem,
-    QueryParams\Part\Where\OrGroup,
+    Query\Part\Condition as Cond,
+    Query\Part\WhereItem,
+    Query\Part\Where\OrGroup,
     Entity,
 };
 

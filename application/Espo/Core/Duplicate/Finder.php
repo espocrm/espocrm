@@ -37,8 +37,8 @@ use Espo\ORM\{
     EntityManager,
     Entity,
     Collection,
-    QueryParams\Part\WhereItem,
-    QueryParams\Part\Condition as Cond,
+    Query\Part\WhereItem,
+    Query\Part\Condition as Cond,
 };
 
 class Finder

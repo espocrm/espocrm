@@ -30,14 +30,14 @@
 namespace Espo\ORM;
 
 use Espo\ORM\{
-    QueryParams\SelectBuilder,
-    QueryParams\UpdateBuilder,
-    QueryParams\DeleteBuilder,
-    QueryParams\InsertBuilder,
-    QueryParams\UnionBuilder,
-    QueryParams\Query,
-    QueryParams\Builder,
-    QueryParams\Part\Expression,
+    Query\SelectBuilder,
+    Query\UpdateBuilder,
+    Query\DeleteBuilder,
+    Query\InsertBuilder,
+    Query\UnionBuilder,
+    Query\Query,
+    Query\Builder,
+    Query\Part\Expression,
 };
 
 use ReflectionClass;

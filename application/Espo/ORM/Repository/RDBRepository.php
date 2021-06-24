@@ -36,8 +36,8 @@ use Espo\ORM\{
     SthCollection,
     Entity,
     Mapper\RDBMapper,
-    QueryParams\Select,
-    QueryParams\Part\WhereItem,
+    Query\Select,
+    Query\Part\WhereItem,
 };
 
 use StdClass;

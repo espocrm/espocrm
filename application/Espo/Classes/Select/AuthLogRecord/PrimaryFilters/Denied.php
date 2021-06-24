@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\AuthLogRecord\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
-use Espo\ORM\QueryParams\SelectBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 class Denied implements Filter
 {

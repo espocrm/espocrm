@@ -32,7 +32,7 @@ namespace Espo\Core\ORM\Repository;
 use Espo\ORM\{
     Entity,
     Repository\EmptyHookMediator,
-    QueryParams\Select,
+    Query\Select,
 };
 
 use Espo\Core\HookManager;

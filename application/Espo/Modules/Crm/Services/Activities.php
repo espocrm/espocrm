@@ -35,7 +35,7 @@ use Espo\Core\Exceptions\Forbidden;
 
 use Espo\ORM\{
     Entity,
-    QueryParams\Select,
+    Query\Select,
 };
 
 use Espo\Core\{

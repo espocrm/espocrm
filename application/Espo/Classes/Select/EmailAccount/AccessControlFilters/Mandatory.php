@@ -31,7 +31,7 @@ namespace Espo\Classes\Select\EmailAccount\AccessControlFilters;
 
 use Espo\{
     Core\Select\AccessControl\Filter,
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
     Entities\User,
 };
 

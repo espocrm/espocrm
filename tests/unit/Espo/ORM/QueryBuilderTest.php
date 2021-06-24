@@ -31,11 +31,11 @@ namespace tests\unit\Espo\ORM;
 
 use Espo\ORM\{
     QueryBuilder,
-    QueryParams\Select,
-    QueryParams\Insert,
-    QueryParams\Update,
-    QueryParams\Delete,
-    QueryParams\Union,
+    Query\Select,
+    Query\Insert,
+    Query\Update,
+    Query\Delete,
+    Query\Union,
 };
 
 use RuntimeException;

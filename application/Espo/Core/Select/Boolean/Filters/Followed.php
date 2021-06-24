@@ -30,9 +30,9 @@
 namespace Espo\Core\Select\Boolean\Filters;
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Part\WhereClause,
-    ORM\QueryParams\Part\Where\OrGroupBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\WhereClause,
+    ORM\Query\Part\Where\OrGroupBuilder,
     Core\Select\Boolean\Filter,
     Entities\User,
 };

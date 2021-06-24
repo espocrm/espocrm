@@ -32,7 +32,7 @@ namespace Espo\ORM\Mapper;
 use Espo\ORM\{
     Entity,
     Collection,
-    QueryParams\Select,
+    Query\Select,
 };
 
 interface RDBMapper extends Mapper

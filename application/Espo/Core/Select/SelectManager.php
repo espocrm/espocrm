@@ -46,7 +46,7 @@ use Espo\Core\{
 
 use Espo\ORM\{
     QueryComposer\BaseQueryComposer as QueryComposer,
-    QueryParams\Select as SelectQuery,
+    Query\Select as SelectQuery,
     Entity,
 };
 

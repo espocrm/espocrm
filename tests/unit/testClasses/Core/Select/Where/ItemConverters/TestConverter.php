@@ -30,9 +30,9 @@
 namespace tests\unit\testClasses\Core\Select\Where\ItemConverters;
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Part\WhereClause,
-    ORM\QueryParams\Part\WhereItem as WhereClauseItem,
+    ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\WhereClause,
+    ORM\Query\Part\WhereItem as WhereClauseItem,
     Core\Select\Where\Item,
     Core\Select\Where\ItemConverter,
 };

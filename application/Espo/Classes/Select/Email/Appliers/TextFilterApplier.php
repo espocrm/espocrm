@@ -36,7 +36,7 @@ use Espo\Core\{
 };
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
 };
 
 class TextFilterApplier extends TextFilterApplierBase implements EntityManagerAware

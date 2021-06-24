@@ -34,9 +34,9 @@ use Espo\ORM\{
     SthCollection,
     Entity,
     EntityManager,
-    QueryParams\Select,
-    QueryParams\SelectBuilder,
-    QueryParams\Part\WhereItem,
+    Query\Select,
+    Query\SelectBuilder,
+    Query\Part\WhereItem,
     Mapper\Mapper,
 };
 

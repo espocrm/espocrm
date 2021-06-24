@@ -30,7 +30,7 @@
 namespace Espo\ORM;
 
 use Espo\ORM\{
-    QueryParams\Select as SelectQuery,
+    Query\Select as SelectQuery,
     QueryComposer\QueryComposer as QueryComposer,
 };
 

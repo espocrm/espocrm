@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\PhoneNumber\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
-use Espo\ORM\QueryParams\SelectBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 class Orphan implements Filter
 {

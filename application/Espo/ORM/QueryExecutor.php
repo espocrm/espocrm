@@ -30,7 +30,7 @@
 namespace Espo\ORM;
 
 use Espo\ORM\{
-    QueryParams\Query,
+    Query\Query,
     QueryComposer\QueryComposer,
 };
 

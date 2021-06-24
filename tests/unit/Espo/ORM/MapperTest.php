@@ -39,7 +39,7 @@ use Espo\ORM\{
     SqlExecutor,
     QueryComposer\MysqlQueryComposer as QueryComposer,
     Mapper\MysqlMapper,
-    QueryParams\Select,
+    Query\Select,
     MetadataDataProvider,
 };
 

@@ -29,7 +29,7 @@
 
 namespace Espo\Classes\Select\Import\AccessControlFilters;
 
-use Espo\ORM\QueryParams\SelectBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 use Espo\Core\Select\AccessControl\Filter;
 

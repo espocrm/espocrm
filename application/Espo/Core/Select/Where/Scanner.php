@@ -33,7 +33,7 @@ use Espo\{
     Core\Exceptions\Error,
     ORM\EntityManager,
     ORM\Entity,
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
     ORM\QueryComposer\BaseQueryComposer as QueryComposer,
 };
 

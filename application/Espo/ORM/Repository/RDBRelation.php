@@ -33,8 +33,8 @@ use Espo\ORM\{
     Collection,
     Entity,
     EntityManager,
-    QueryParams\Select,
-    QueryParams\Part\WhereItem,
+    Query\Select,
+    Query\Part\WhereItem,
     Mapper\RDBMapper,
     Repository\RDBRelationSelectBuilder as Builder,
 };

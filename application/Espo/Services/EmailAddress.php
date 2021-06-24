@@ -30,7 +30,7 @@
 namespace Espo\Services;
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
 };
 
 class EmailAddress extends Record

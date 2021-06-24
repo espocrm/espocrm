@@ -35,8 +35,8 @@ use Espo\{
     Core\Select\Where\Item,
     ORM\EntityManager,
     ORM\BaseEntity as Entity,
-    ORM\QueryParams\Select as Query,
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\Select as Query,
+    ORM\Query\SelectBuilder as QueryBuilder,
     ORM\QueryComposer\BaseQueryComposer as QueryComposer,
 };
 

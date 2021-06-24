@@ -32,7 +32,7 @@ namespace Espo\ORM\Locker;
 use Espo\ORM\{
     TransactionManager,
     QueryComposer\QueryComposer,
-    QueryParams\LockTableBuilder,
+    Query\LockTableBuilder,
 };
 
 use PDO;

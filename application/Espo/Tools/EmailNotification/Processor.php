@@ -32,7 +32,7 @@ namespace Espo\Tools\EmailNotification;
 use Espo\{
     ORM\Entity,
     ORM\EntityManager,
-    ORM\QueryParams\SelectBuilder as SelectBuilder,
+    ORM\Query\SelectBuilder as SelectBuilder,
     Entities\User as UserEntity,
 };
 

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Select\AccessControl;
 
-use Espo\ORM\QueryParams\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 interface Filter
 {

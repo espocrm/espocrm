@@ -31,7 +31,7 @@ namespace Espo\ORM\Repository;
 
 use Espo\ORM\{
     Entity,
-    QueryParams\Select,
+    Query\Select,
 };
 
 class EmptyHookMediator implements HookMediator

@@ -33,7 +33,7 @@ use Espo\Entities\User;
 
 use Espo\Core\Select\AccessControl\Filter;
 
-use Espo\ORM\QueryParams\{
+use Espo\ORM\Query\{
     SelectBuilder,
     Part\Condition as Cond,
 };

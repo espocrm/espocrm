@@ -39,10 +39,10 @@ use Espo\ORM\{
     Metadata,
     SqlExecutor,
     QueryComposer\QueryComposer,
-    QueryParams\Select,
-    QueryParams\Update,
-    QueryParams\Delete,
-    QueryParams\Insert,
+    Query\Select,
+    Query\Update,
+    Query\Delete,
+    Query\Insert,
 };
 
 use PDO;

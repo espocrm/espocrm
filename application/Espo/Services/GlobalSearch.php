@@ -30,7 +30,7 @@
 namespace Espo\Services;
 
 use Espo\ORM\{
-    QueryParams\Select,
+    Query\Select,
 };
 
 use Espo\Core\{

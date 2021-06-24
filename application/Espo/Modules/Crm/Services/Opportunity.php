@@ -30,7 +30,7 @@
 namespace Espo\Modules\Crm\Services;
 
 use Espo\ORM\{
-    QueryParams\SelectBuilder,
+    Query\SelectBuilder,
 };
 
 use Espo\{

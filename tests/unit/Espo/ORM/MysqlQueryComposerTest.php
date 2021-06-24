@@ -38,7 +38,7 @@ use Espo\ORM\{
     MetadataDataProvider,
 };
 
-use Espo\ORM\QueryParams\{
+use Espo\ORM\Query\{
     Select,
     Insert,
     Update,

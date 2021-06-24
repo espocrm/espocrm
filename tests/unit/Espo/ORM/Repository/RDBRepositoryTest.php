@@ -37,7 +37,7 @@ use Espo\ORM\{
     Repository\RDBRelation,
     Repository\RDBRelationSelectBuilder,
     EntityCollection,
-    QueryParams\Select,
+    Query\Select,
     QueryBuilder,
     Entity,
     EntityManager,
@@ -46,8 +46,8 @@ use Espo\ORM\{
     CollectionFactory,
     Metadata,
     MetadataDataProvider,
-    QueryParams\Part\Condition as Cond,
-    QueryParams\Part\Expression as Expr,
+    Query\Part\Condition as Cond,
+    Query\Part\Expression as Expr,
 };
 
 use RuntimeException;

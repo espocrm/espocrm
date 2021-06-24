@@ -36,9 +36,9 @@ use Espo\Core\{
 };
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Part\Where\OrGroupBuilder,
-    ORM\QueryParams\Part\WhereClause,
+    ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\Where\OrGroupBuilder,
+    ORM\Query\Part\WhereClause,
     Entities\User,
 };
 

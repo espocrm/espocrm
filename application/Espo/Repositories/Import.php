@@ -31,7 +31,7 @@ namespace Espo\Repositories;
 
 use Espo\ORM\{
     Entity,
-    QueryParams\Select as Query,
+    Query\Select as Query,
     Collection,
 };
 

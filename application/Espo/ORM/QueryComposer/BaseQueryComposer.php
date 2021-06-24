@@ -35,14 +35,14 @@ use Espo\ORM\{
     BaseEntity,
     Metadata,
     Mapper\Helper,
-    QueryParams\Query as Query,
-    QueryParams\SelectingQuery,
-    QueryParams\Select as SelectQuery,
-    QueryParams\Update as UpdateQuery,
-    QueryParams\Insert as InsertQuery,
-    QueryParams\Delete as DeleteQuery,
-    QueryParams\Union as UnionQuery,
-    QueryParams\LockTable as LockTableQuery,
+    Query\Query as Query,
+    Query\SelectingQuery,
+    Query\Select as SelectQuery,
+    Query\Update as UpdateQuery,
+    Query\Insert as InsertQuery,
+    Query\Delete as DeleteQuery,
+    Query\Union as UnionQuery,
+    Query\LockTable as LockTableQuery,
 };
 
 use PDO;

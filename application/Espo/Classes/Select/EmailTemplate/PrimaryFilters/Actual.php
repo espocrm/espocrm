@@ -29,7 +29,7 @@
 
 namespace Espo\Classes\Select\EmailTemplate\PrimaryFilters;
 
-use Espo\ORM\QueryParams\SelectBuilder;
+use Espo\ORM\Query\SelectBuilder;
 
 use Espo\Core\Select\Primary\Filter;
 

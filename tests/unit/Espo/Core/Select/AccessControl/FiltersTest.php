@@ -30,7 +30,7 @@
 namespace tests\unit\Espo\Core\Select\AccessControl;
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
     Core\Select\Helpers\FieldHelper,
     Core\Select\AccessControl\Filters\No,
     Core\Select\AccessControl\Filters\OnlyOwn,

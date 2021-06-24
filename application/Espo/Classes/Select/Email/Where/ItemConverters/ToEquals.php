@@ -36,9 +36,9 @@ use Espo\Core\{
 };
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Part\WhereItem as WhereClauseItem,
-    ORM\QueryParams\Part\WhereClause,
+    ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\WhereItem as WhereClauseItem,
+    ORM\Query\Part\WhereClause,
     Classes\Select\Email\Helpers\EmailAddressHelper,
 };
 

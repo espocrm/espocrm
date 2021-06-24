@@ -30,7 +30,7 @@
 namespace Espo\Core\MassAction;
 
 use Espo\{
-    ORM\QueryParams\Select,
+    ORM\Query\Select,
 };
 
 use Espo\Core\{

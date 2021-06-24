@@ -30,8 +30,8 @@
 namespace Espo\Core\Select\Where;
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Part\WhereItem as WhereClauseItem,
+    ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\WhereItem as WhereClauseItem,
 };
 
 /**

@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\Email\Helpers;
 
 use Espo\{
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
 };
 
 class JoinHelper

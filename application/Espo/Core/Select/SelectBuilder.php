@@ -47,8 +47,8 @@ use Espo\Core\Select\{
 };
 
 use Espo\{
-    ORM\QueryParams\Select as Query,
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
+    ORM\Query\Select as Query,
+    ORM\Query\SelectBuilder as QueryBuilder,
     Entities\User,
 };
 

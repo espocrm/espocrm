@@ -30,13 +30,13 @@
 namespace Espo\ORM\QueryComposer;
 
 use Espo\ORM\{
-    QueryParams\Query as Query,
-    QueryParams\Select as SelectQuery,
-    QueryParams\Update as UpdateQuery,
-    QueryParams\Insert as InsertQuery,
-    QueryParams\Delete as DeleteQuery,
-    QueryParams\Union as UnionQuery,
-    QueryParams\LockTable as LockTableQuery,
+    Query\Query as Query,
+    Query\Select as SelectQuery,
+    Query\Update as UpdateQuery,
+    Query\Insert as InsertQuery,
+    Query\Delete as DeleteQuery,
+    Query\Union as UnionQuery,
+    Query\LockTable as LockTableQuery,
 };
 
 interface QueryComposer

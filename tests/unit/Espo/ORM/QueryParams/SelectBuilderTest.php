@@ -27,12 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\ORM\QueryParams;
+namespace tests\unit\Espo\ORM\Query;
 
 use Espo\ORM\{
-    QueryParams\SelectBuilder,
-    QueryParams\Part\Condition as Cond,
-    QueryParams\Part\Expression as Expr,
+    Query\SelectBuilder,
+    Query\Part\Condition as Cond,
+    Query\Part\Expression as Expr,
 };
 
 class SelectBuilderTest extends \PHPUnit\Framework\TestCase

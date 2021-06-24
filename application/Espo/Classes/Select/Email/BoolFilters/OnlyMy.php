@@ -31,9 +31,9 @@ namespace Espo\Classes\Select\Email\BoolFilters;
 
 use Espo\{
     Core\Select\Boolean\Filter,
-    ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Part\WhereClause,
-    ORM\QueryParams\Part\Where\OrGroupBuilder,
+    ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\WhereClause,
+    ORM\Query\Part\Where\OrGroupBuilder,
     Classes\Select\Email\Helpers\JoinHelper,
     Entities\User,
 };

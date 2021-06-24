@@ -30,7 +30,7 @@
 namespace Espo\ORM\QueryComposer;
 
 use Espo\ORM\{
-    QueryParams\LockTable as LockTableQuery,
+    Query\LockTable as LockTableQuery,
 };
 
 class MysqlQueryComposer extends BaseQueryComposer
