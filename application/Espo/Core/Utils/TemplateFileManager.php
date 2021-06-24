@@ -32,6 +32,8 @@ namespace Espo\Core\Utils;
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Exceptions\Error,
+    Utils\Resource\FileReader,
+    Utils\Resource\FileReaderParams,
 };
 
 class TemplateFileManager
@@ -42,11 +44,18 @@ class TemplateFileManager
 
     private $fileManager;
 
-    public function __construct(Config $config, Metadata $metadata, FileManager $fileManager)
-    {
+    private $fileReader;
+
+    public function __construct(
+        Config $config,
+        Metadata $metadata,
+        FileManager $fileManager,
+        FileReader $fileReader
+    ) {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
+        $this->fileReader = $fileReader;
     }
 
     /**
@@ -59,19 +68,41 @@ class TemplateFileManager
         ?string $defaultModuleName = null
     ): string {
 
-        $fileName = $this->getTemplateFileName($type, $name, $entityType, $defaultModuleName);
+        $params = FileReaderParams::create()
+            ->withScope($entityType)
+            ->withModuleName($defaultModuleName);
 
-        if (!$this->fileManager->isFile($fileName)) {
-            throw new Error("Template file not found.");
+        if ($entityType) {
+            $path1 = $this->getPath($type, $name, $entityType);
+
+            $exists1 = $this->fileReader->exists($path1, $params);
+
+            if ($exists1) {
+                return $this->fileReader->read($path1, $params);
+            }
         }
 
-        $contents = file_get_contents($fileName);
+        $path2 = $this->getPath($type, $name);
 
-        if ($contents === false) {
-            throw new Error("Could not read template file.");
+        $exists2 = $this->fileReader->exists($path2, $params);
+
+        if ($exists2) {
+            return $this->fileReader->read($path2, $params);
         }
 
-        return $contents;
+        if ($entityType) {
+            $path3 = $this->getDefaultLanguagePath($type, $name, $entityType);
+
+            $exists3 = $this->fileReader->exists($path3, $params);
+
+            if ($exists3) {
+                return $this->fileReader->read($path3, $params);
+            }
+        }
+
+        $path4 = $this->getDefaultLanguagePath($type, $name);
+
+        return $this->fileReader->read($path4, $params);
     }
 
     public function saveTemplate(
@@ -83,125 +114,59 @@ class TemplateFileManager
 
         $language = $this->config->get('language');
 
-        if ($entityType) {
-            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        }
-        else {
-            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        }
+        $filePath = $this->getCustomFilePath($language, $type, $name, $entityType);
 
-        $this->fileManager->putContents($fileName, $contents);
+        $this->fileManager->putContents($filePath, $contents);
     }
 
     public function resetTemplate(string $type, string $name, ?string $entityType = null): void
     {
         $language = $this->config->get('language');
 
-        if ($entityType) {
-            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-        }
-        else {
-            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        }
+        $filePath = $this->getCustomFilePath($language, $type, $name, $entityType);
 
-        $this->fileManager->removeFile($fileName);
+        $this->fileManager->removeFile($filePath);
     }
 
-    private function getTemplateFileName(
+    private function getCustomFilePath(
+        string $language,
         string $type,
         string $name,
-        ?string $entityType = null,
-        ?string $defaultModuleName = null
-    ): ?string {
+        ?string $entityType = null
+    ): string {
 
+        if ($entityType) {
+            return "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
+        }
+
+        return "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
+    }
+
+    private function getPath(string $type, string $name, ?string $entityType = null): string
+    {
         $language = $this->config->get('language');
 
-        if ($entityType) {
-            $moduleName = $this->metadata->getScopeModuleName($entityType);
+        return $this->getPathForLanguage($language, $type, $name, $entityType);
+    }
 
-            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-
-            if ($this->fileManager->isFile($fileName)) {
-                return $fileName;
-            }
-
-            if ($moduleName) {
-                $fileName =
-                    "application/Espo/Modules/{$moduleName}/Resources/" .
-                    "templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-
-                if ($this->fileManager->isFile($fileName)) {
-                    return $fileName;
-                }
-            }
-
-            $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-
-            if ($this->fileManager->isFile($fileName)) {
-                return $fileName;
-            }
-        }
-
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-
-        if ($this->fileManager->isFile($fileName)) {
-            return $fileName;
-        }
-
-        if ($defaultModuleName) {
-            $fileName =
-                "application/Espo/Modules/{$defaultModuleName}/" .
-                "Resources/templates/{$type}/{$language}/{$name}.tpl";
-        }
-        else {
-            $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        }
-
-        if ($this->fileManager->isFile($fileName)) {
-            return $fileName;
-        }
-
+    private function getDefaultLanguagePath(string $type, string $name, ?string $entityType = null): string
+    {
         $language = 'en_US';
 
+        return $this->getPathForLanguage($language, $type, $name, $entityType);
+    }
+
+    private function getPathForLanguage(
+        string $language,
+        string $type,
+        string $name,
+        ?string $entityType = null
+    ): string {
+
         if ($entityType) {
-            $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-
-            if ($this->fileManager->isFile($fileName)) {
-                return $fileName;
-            }
-
-            if ($moduleName) {
-                $fileName =
-                    "application/Espo/Modules/{$moduleName}/" .
-                    "Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-
-                if ($this->fileManager->isFile($fileName)) {
-                    return $fileName;
-                }
-            }
-
-            $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
-
-            if ($this->fileManager->isFile($fileName)) {
-                return $fileName;
-            }
+            return "templates/{$type}/{$language}/{$entityType}/{$name}.tpl";
         }
 
-        $fileName = "custom/Espo/Custom/Resources/templates/{$type}/{$language}/{$name}.tpl";
-
-        if ($this->fileManager->isFile($fileName)) {
-            return $fileName;
-        }
-
-        if ($defaultModuleName) {
-            $fileName =
-                "application/Espo/Modules/{$defaultModuleName}/" .
-                "Resources/templates/{$type}/{$language}/{$name}.tpl";
-        }
-        else {
-            $fileName = "application/Espo/Resources/templates/{$type}/{$language}/{$name}.tpl";
-        }
-
-        return $fileName;
+        return "templates/{$type}/{$language}/{$name}.tpl";
     }
 }

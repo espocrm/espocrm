@@ -33,6 +33,8 @@ class FileReaderParams
 {
     private $scope = null;
 
+    private $moduleName = null;
+
     public static function create(): self
     {
         return new self();
@@ -46,8 +48,21 @@ class FileReaderParams
         return $obj;
     }
 
+    public function withModuleName(?string $moduleName): self
+    {
+        $obj = clone $this;
+        $obj->moduleName = $moduleName;
+
+        return $obj;
+    }
+
     public function getScope(): ?string
     {
         return $this->scope;
+    }
+
+    public function getModuleName(): ?string
+    {
+        return $this->moduleName;
     }
 }

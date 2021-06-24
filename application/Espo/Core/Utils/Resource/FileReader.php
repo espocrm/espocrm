@@ -94,11 +94,15 @@ class FileReader
         }
 
         if ($moduleName) {
-            $modulePath = str_replace(
-                '{*}',
-                $moduleName,
-                $this->paths['modulePath'] . $path
-            );
+            $modulePath = $this->buildModulePath($path, $moduleName);
+
+            if ($this->fileManager->isFile($modulePath)) {
+                return $modulePath;
+            }
+        }
+
+        if ($params->getModuleName()) {
+            $modulePath = $this->buildModulePath($path, $params->getModuleName());
 
             if ($this->fileManager->isFile($modulePath)) {
                 return $modulePath;
@@ -112,5 +116,14 @@ class FileReader
         }
 
         return null;
+    }
+
+    private function buildModulePath(string $path, string $moduleName): string
+    {
+        return str_replace(
+            '{*}',
+            $moduleName,
+            $this->paths['modulePath'] . $path
+        );
     }
 }
