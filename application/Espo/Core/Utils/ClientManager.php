@@ -31,6 +31,7 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\{
     Utils\File\Manager as FileManager,
+    Utils\Client\DevModeJsFileListProvider,
 };
 
 /**
@@ -52,20 +53,22 @@ class ClientManager
 
     private $basePath = '';
 
-    private const LIBS_FILE = 'frontend/libs.json';
-
     private $libsConfigPath = 'client/cfg/libs.json';
+
+    private $devModeJsFileListProvider;
 
     public function __construct(
         Config $config,
         ThemeManager $themeManager,
         Metadata $metadata,
-        FileManager $fileManager
+        FileManager $fileManager,
+        DevModeJsFileListProvider $devModeJsFileListProvider
     ) {
         $this->config = $config;
         $this->themeManager = $themeManager;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
+        $this->devModeJsFileListProvider = $devModeJsFileListProvider;
     }
 
     public function setBasePath(string $basePath): void
@@ -220,37 +223,6 @@ class ClientManager
      */
     private function getDeveloperModeBundleLibFileList(): array
     {
-        $list = [];
-
-        $items = json_decode($this->fileManager->getContents(self::LIBS_FILE));
-
-        foreach ($items as $item) {
-            if (!($item->bundle ?? false)) {
-                continue;
-            }
-
-            $files = $item->files ?? null;
-
-            if ($files !== null) {
-                $list = array_merge($list, $this->getLibFileListFromItems($files));
-
-                continue;
-            }
-
-            $list[] = $item->src;
-        }
-
-        return $list;
-    }
-
-    private function getLibFileListFromItems(array $items): array
-    {
-        $list = [];
-
-        foreach ($items as $item) {
-            $list[] = $item->src;
-        }
-
-        return $list;
+        return $this->devModeJsFileListProvider->get();
     }
 }

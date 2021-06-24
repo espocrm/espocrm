@@ -6,14 +6,22 @@
         <meta content="utf-8" http-equiv="encoding">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+        {if $isBuild}
         <script type="text/javascript" src="../client/espo.min.js"></script>
+        {else}
+        {foreach from=$libFileList item=file}
+        <script type="text/javascript" src="../{$file}"></script>
+        {/foreach}
+        {/if}
 
         <script type="text/javascript" src="js/install.js"></script>
         <link href="../client/css/espo/hazyblue.css" rel="stylesheet">
         <link href="css/install.css" rel="stylesheet">
         <link rel="shortcut icon" href="../client/img/favicon.ico" type="image/x-icon">
     </head>
+
     <body class='install-body'>
+        <a href="index.tpl"></a>
         <header id="header"></header>
         <div class="container content">
             <div class="col-md-offset-1 col-md-10">
@@ -23,6 +31,7 @@
                 </div>
             </div>
         </div>
+
         <footer class="container">{include file="footer.tpl"}</footer>
     </body>
 </html>

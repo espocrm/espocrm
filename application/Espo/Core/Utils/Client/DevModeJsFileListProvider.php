@@ -27,29 +27,65 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-class Utils
-{
-    static public $actionPath = 'install/core/actions';
+namespace Espo\Core\Utils\Client;
 
-    static public function checkActionExists(string $actionName): bool
+use Espo\Core\{
+    Utils\File\Manager as FileManager,
+};
+
+/**
+ * @internal Also used by the installer w/o DI.
+ */
+class DevModeJsFileListProvider
+{
+    private $fileManager;
+
+    private const LIBS_FILE = 'frontend/libs.json';
+
+    public function __construct(FileManager $fileManager)
     {
-        return in_array($actionName, [
-            'saveSettings',
-            'buildDatabase',
-            'checkPermission',
-            'createUser',
-            'errors',
-            'finish',
-            'main',
-            'saveEmailSettings',
-            'savePreferences',
-            'settingsTest',
-            'setupConfirmation',
-            'step1',
-            'step2',
-            'step3',
-            'step4',
-            'step5',
-        ]);
+        $this->fileManager = $fileManager;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function get(): array
+    {
+        $list = [];
+
+        $items = json_decode($this->fileManager->getContents(self::LIBS_FILE));
+
+        foreach ($items as $item) {
+            if (!($item->bundle ?? false)) {
+                continue;
+            }
+
+            $files = $item->files ?? null;
+
+            if ($files !== null) {
+                $list = array_merge(
+                    $list,
+                    $this->getLibFileListFromItems($files)
+                );
+
+                continue;
+            }
+
+            $list[] = $item->src;
+        }
+
+        return $list;
+    }
+
+    private function getLibFileListFromItems(array $items): array
+    {
+        $list = [];
+
+        foreach ($items as $item) {
+            $list[] = $item->src;
+        }
+
+        return $list;
     }
 }

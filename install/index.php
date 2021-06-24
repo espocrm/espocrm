@@ -31,9 +31,11 @@ if (session_status() !== \PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-if (file_exists('../bootstrap.php')) {
-    require_once('../bootstrap.php');
-}
+require_once('../bootstrap.php');
+
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Client\DevModeJsFileListProvider;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 if (!isset($postData)) {
     require_once('core/PostData.php');
@@ -43,7 +45,7 @@ if (!isset($postData)) {
 
 $allPostData = $postData->getAll();
 
-//action
+// action
 $action = (!empty($allPostData['action']))? $allPostData['action'] : 'main';
 
 require_once('core/Utils.php');
@@ -53,12 +55,19 @@ if (!Utils::checkActionExists($action)) {
 }
 
 // temp save all settings
-$ignoredFields = array('installProcess', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDriver');
+$ignoredFields = [
+    'installProcess',
+    'dbName',
+    'hostName',
+    'dbUserName',
+    'dbUserPass',
+    'dbDriver',
+];
 
 if (!empty($allPostData)) {
     foreach ($allPostData as $key => $val) {
         if (!in_array($key, $ignoredFields)) {
-                $_SESSION['install'][$key] = trim($val);
+            $_SESSION['install'][$key] = trim($val);
         }
     }
 }
@@ -69,8 +78,10 @@ $userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['u
 require_once 'core/Language.php';
 
 $language = new Language();
+
 $langs = $language->get($userLang);
-$sanitizedLangs = \Espo\Core\Utils\Util::sanitizeHtml($langs);
+
+$sanitizedLangs = Util::sanitizeHtml($langs);
 //END: get user selected language
 
 $config = include('core/config.php');
@@ -99,8 +110,8 @@ if (!$systemHelper->initWritable()) {
 
     $message = $sanitizedLangs['messages']['Bad init Permission'];
     $message = str_replace('{*}', $dir, $message);
-    $message = str_replace('{C}', $systemHelper->getPermissionCommands(array($dir, ''), '775'), $message);
-    $message = str_replace('{CSU}', $systemHelper->getPermissionCommands(array($dir, ''), '775', true), $message);
+    $message = str_replace('{C}', $systemHelper->getPermissionCommands([$dir, ''], '775'), $message);
+    $message = str_replace('{CSU}', $systemHelper->getPermissionCommands([$dir, ''], '775', true), $message);
 
     die($message . "\n");
 }
@@ -116,7 +127,7 @@ $installer = new Installer();
 // check if app was installed
 if ($installer->isInstalled() && !isset($_SESSION['install']['installProcess'])) {
     if (isset($_SESSION['install']['redirected']) && $_SESSION['install']['redirected']) {
-            die('The installation is disabled. It can be enabled in config files.');
+        die('The installation is disabled. It can be enabled in config files.');
     }
 
     $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
@@ -183,14 +194,20 @@ $smarty->assign('config', $config);
 $smarty->assign('installerConfig', $installer->getInstallerConfigData());
 
 if (Utils::checkActionExists($action)) {
-	include $actionFile;
+    include $actionFile;
 }
 
 if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
     /* check if EspoCRM is built */
     $isBuilt = file_exists('client/espo.min.js');
 
-    $smarty->assign('isBuilt', $isBuilt);
+    $smarty->assign('isBuilt', true);
+
+    if (!$isBuilt) {
+        $libListProvider = new DevModeJsFileListProvider(new FileManager());
+
+        $smarty->assign('libFileList', $libListProvider->get());
+    }
 
     $smarty->display('index.tpl');
 }
