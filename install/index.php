@@ -28,42 +28,46 @@
  ************************************************************************/
 
 if (session_status() !== \PHP_SESSION_ACTIVE) {
-	session_start();
+    session_start();
 }
 
 if (file_exists('../bootstrap.php')) {
-	require_once('../bootstrap.php');
+    require_once('../bootstrap.php');
 }
 
 if (!isset($postData)) {
-	require_once('core/PostData.php');
-	$postData = new PostData();
+    require_once('core/PostData.php');
+
+    $postData = new PostData();
 }
 
 $allPostData = $postData->getAll();
 
 //action
 $action = (!empty($allPostData['action']))? $allPostData['action'] : 'main';
+
 require_once('core/Utils.php');
+
 if (!Utils::checkActionExists($action)) {
-	die('This page does not exist.');
+    die('This page does not exist.');
 }
 
 // temp save all settings
 $ignoredFields = array('installProcess', 'dbName', 'hostName', 'dbUserName', 'dbUserPass', 'dbDriver');
 
 if (!empty($allPostData)) {
-	foreach ($allPostData as $key => $val) {
-		if (!in_array($key, $ignoredFields)) {
-			$_SESSION['install'][$key] = trim($val);
-		}
-	}
+    foreach ($allPostData as $key => $val) {
+        if (!in_array($key, $ignoredFields)) {
+                $_SESSION['install'][$key] = trim($val);
+        }
+    }
 }
 
 // get user selected language
 $userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
 
 require_once 'core/Language.php';
+
 $language = new Language();
 $langs = $language->get($userLang);
 $sanitizedLangs = \Espo\Core\Utils\Util::sanitizeHtml($langs);
@@ -72,21 +76,33 @@ $sanitizedLangs = \Espo\Core\Utils\Util::sanitizeHtml($langs);
 $config = include('core/config.php');
 
 require_once 'core/SystemHelper.php';
+
 $systemHelper = new SystemHelper();
 
 $systemConfig = include('application/Espo/Resources/defaults/systemConfig.php');
-if (isset($systemConfig['requiredPhpVersion']) && version_compare(PHP_VERSION, $systemConfig['requiredPhpVersion'], '<')) {
-    die(str_replace("{minVersion}", $systemConfig['requiredPhpVersion'], $sanitizedLangs['messages']['phpVersion']) . ".\n");
+
+if (
+    isset($systemConfig['requiredPhpVersion']) &&
+    version_compare(PHP_VERSION, $systemConfig['requiredPhpVersion'], '<')
+) {
+    die(
+        str_replace(
+            "{minVersion}",
+            $systemConfig['requiredPhpVersion'],
+            $sanitizedLangs['messages']['phpVersion']
+        ) . ".\n"
+    );
 }
 
 if (!$systemHelper->initWritable()) {
-	$dir = $systemHelper->getWritableDir();
+    $dir = $systemHelper->getWritableDir();
 
-	$message = $sanitizedLangs['messages']['Bad init Permission'];
-	$message = str_replace('{*}', $dir, $message);
-	$message = str_replace('{C}', $systemHelper->getPermissionCommands(array($dir, ''), '775'), $message);
-	$message = str_replace('{CSU}', $systemHelper->getPermissionCommands(array($dir, ''), '775', true), $message);
-	die($message . "\n");
+    $message = $sanitizedLangs['messages']['Bad init Permission'];
+    $message = str_replace('{*}', $dir, $message);
+    $message = str_replace('{C}', $systemHelper->getPermissionCommands(array($dir, ''), '775'), $message);
+    $message = str_replace('{CSU}', $systemHelper->getPermissionCommands(array($dir, ''), '775', true), $message);
+
+    die($message . "\n");
 }
 
 require_once ('install/vendor/smarty/libs/Smarty.class.php');
@@ -99,18 +115,20 @@ $installer = new Installer();
 
 // check if app was installed
 if ($installer->isInstalled() && !isset($_SESSION['install']['installProcess'])) {
-	if (isset($_SESSION['install']['redirected']) && $_SESSION['install']['redirected']) {
-		die('The installation is disabled. It can be enabled in config files.');
-	}
+    if (isset($_SESSION['install']['redirected']) && $_SESSION['install']['redirected']) {
+            die('The installation is disabled. It can be enabled in config files.');
+    }
 
-	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-	$url = preg_replace('/install\/?/', '', $url, 1);
-	$url = strtok($url, '#');
-	$url = strtok($url, '?');
+    $url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    $url = preg_replace('/install\/?/', '', $url, 1);
+    $url = strtok($url, '#');
+    $url = strtok($url, '?');
 
-	$_SESSION['install']['redirected'] = true;
-	header("Location: {$url}");
-	exit;
+    $_SESSION['install']['redirected'] = true;
+
+    header("Location: {$url}");
+
+    exit;
 }
 
 $_SESSION['install']['installProcess'] = true;
@@ -124,32 +142,36 @@ $smarty->assign("langsJs", json_encode($langs));
 
 // include actions and set tpl name
 switch ($action) {
-	case 'main':
-		$languageList = $installer->getLanguageList();
-		$smarty->assign("languageList", $languageList);
-		break;
+    case 'main':
+        $languageList = $installer->getLanguageList();
+        $smarty->assign("languageList", $languageList);
 
-	case 'step3':
-	case 'errors':
-	case 'setupConfirmation':
-		$smarty->assign("apiPath", $systemHelper->getApiPath());
-		$modRewriteUrl = $systemHelper->getModRewriteUrl();
-		$smarty->assign("modRewriteUrl", $modRewriteUrl);
-		$serverType = $systemHelper->getServerType();
-		$smarty->assign("serverType", $serverType);
-		$os = $systemHelper->getOS();
-		$smarty->assign("OS", $os);
-		break;
+        break;
+
+    case 'step3':
+    case 'errors':
+    case 'setupConfirmation':
+        $smarty->assign("apiPath", $systemHelper->getApiPath());
+        $modRewriteUrl = $systemHelper->getModRewriteUrl();
+        $smarty->assign("modRewriteUrl", $modRewriteUrl);
+        $serverType = $systemHelper->getServerType();
+        $smarty->assign("serverType", $serverType);
+        $os = $systemHelper->getOS();
+        $smarty->assign("OS", $os);
+
+        break;
 
     case 'step4':
-		$defaultSettings = $installer->getDefaultSettings();
-		$smarty->assign("defaultSettings", $defaultSettings);
-		break;
+        $defaultSettings = $installer->getDefaultSettings();
+        $smarty->assign("defaultSettings", $defaultSettings);
+
+        break;
 
     case 'step5':
-		$defaultSettings = $installer->getDefaultSettings();
-		$smarty->assign("defaultSettings", $defaultSettings);
-		break;
+        $defaultSettings = $installer->getDefaultSettings();
+        $smarty->assign("defaultSettings", $defaultSettings);
+
+        break;
 }
 
 $actionFile = 'core/actions/'.$action.'.php';
@@ -157,7 +179,6 @@ $tplName = $action.'.tpl';
 $smarty->assign('tplName', $tplName);
 $smarty->assign('action', ucfirst($action));
 
-/** config */
 $smarty->assign('config', $config);
 $smarty->assign('installerConfig', $installer->getInstallerConfigData());
 
@@ -165,10 +186,11 @@ if (Utils::checkActionExists($action)) {
 	include $actionFile;
 }
 
-if (!empty($actionFile) && file_exists('install/core/tpl/'.$tplName)) {
-	/*check if EspoCRM is built*/
-	$isBuilt = file_exists('client/espo.min.js');
-	$smarty->assign('isBuilt', $isBuilt);
+if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
+    /* check if EspoCRM is built */
+    $isBuilt = file_exists('client/espo.min.js');
 
-	$smarty->display('index.tpl');
+    $smarty->assign('isBuilt', $isBuilt);
+
+    $smarty->display('index.tpl');
 }
