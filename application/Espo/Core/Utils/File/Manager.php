@@ -35,7 +35,6 @@ use Espo\Core\{
     Utils\Json,
 };
 
-use Exception;
 use StdClass;
 use Throwable;
 use InvalidArgumentException;
