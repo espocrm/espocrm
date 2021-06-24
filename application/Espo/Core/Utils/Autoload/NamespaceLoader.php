@@ -165,6 +165,12 @@ class NamespaceLoader
                 continue;
             }
 
+            if ($type == 'classmap') {
+                $classLoader->$methodName($list[$type]);
+
+                continue;
+            }
+
             foreach ($list[$type] as $prefix => $path) {
                 if (!$skipVendorNamespaces) {
                     $vendorNamespaces = $this->getVendorNamespaces($path);
