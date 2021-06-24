@@ -110,16 +110,16 @@ class LayoutManager
         }
 
         foreach ($this->changedData as $scope => $rowData) {
+            $dirPath = 'custom/Espo/Custom/Resources/layouts/' . $scope . '/';
+
             foreach ($rowData as $layoutName => $layoutData) {
                 if (empty($scope) || empty($layoutName)) {
                     continue;
                 }
 
-                $layoutPath = $this->getDirPath($scope, true);
-
                 $data = Json::encode($layoutData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-                $path = $layoutPath . '/' . $layoutName . '.json';
+                $path = $dirPath . $layoutName . '.json';
 
                 $result &= $this->fileManager->putContents($path, $data);
             }
@@ -138,11 +138,6 @@ class LayoutManager
     public function clearChanges(): void
     {
         $this->changedData = [];
-    }
-
-    protected function getDirPath(string $entityType, bool $isCustom = false): string
-    {
-        return $this->layout->getDirPath($entityType, $isCustom);
     }
 
     protected function sanitizeInput(string $name): string

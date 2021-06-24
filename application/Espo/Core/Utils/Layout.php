@@ -31,28 +31,33 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\{
     Utils\File\Manager as FileManager,
-    Utils\Metadata,
+    InjectableFactory,
     Exceptions\Error,
+    Utils\Resource\FileReader,
+    Utils\Resource\FileReaderParams,
 };
 
 class Layout
 {
     private $defaultPath = 'application/Espo/Resources/defaults/layouts';
 
-    private $paths = [
-        'corePath' => 'application/Espo/Resources/layouts',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/layouts',
-        'customPath' => 'custom/Espo/Custom/Resources/layouts',
-    ];
-
     private $fileManager;
 
-    private $metadata;
+    private $injectableFactory;
 
-    public function __construct(FileManager $fileManager, Metadata $metadata)
-    {
+    /**
+     * @internal Used by the portal layout util.
+     */
+    protected $fileReader;
+
+    public function __construct(
+        FileManager $fileManager,
+        InjectableFactory $injectableFactory,
+        FileReader $fileReader
+    ) {
         $this->fileManager = $fileManager;
-        $this->metadata = $metadata;
+        $this->injectableFactory = $injectableFactory;
+        $this->fileReader = $fileReader;
     }
 
     public function get(string $scope, string $name): ?string
@@ -64,27 +69,16 @@ class Layout
             throw new Error("Bad parameters.");
         }
 
-        if (isset($this->changedData[$scope][$name])) {
-            return Json::encode($this->changedData[$scope][$name]);
+        $path = 'layouts/' . $scope . '/' . $name . '.json';
+
+        $params = FileReaderParams::create()
+            ->withScope($scope);
+
+        if ($this->fileReader->exists($path, $params)) {
+            return $this->fileReader->read($path, $params);
         }
 
-        $filePath = Util::concatPath(
-            $this->getDirPath($scope, true),
-            $name . '.json'
-        );
-
-        if (!file_exists($filePath)) {
-            $filePath = Util::concatPath(
-                $this->getDirPath($scope),
-                $name . '.json'
-            );
-        }
-
-        if (!file_exists($filePath)) {
-            return $this->getDefault($scope, $name);
-        }
-
-        return $this->fileManager->getContents($filePath);
+        return $this->getDefault($scope, $name);
     }
 
     private function getDefault(string $scope, string $name): ?string
@@ -97,7 +91,7 @@ class Layout
 
         if (class_exists($defaultImplClassName)) {
             // @todo Use factory and interface.
-            $defaultImpl = new $defaultImplClassName($this->metadata);
+            $defaultImpl = $this->injectableFactory->create($defaultImplClassName);
 
             $data = $defaultImpl->get($scope);
 
@@ -109,31 +103,11 @@ class Layout
             $name . '.json'
         );
 
-        if (!file_exists($filePath)) {
+        if (!$this->fileManager->isFile($filePath)) {
             return null;
         }
 
         return $this->fileManager->getContents($filePath);
-    }
-
-    public function getDirPath(string $entityType, bool $isCustom = false): string
-    {
-        $path = $this->paths['customPath'];
-
-        if (!$isCustom) {
-            $moduleName = $this->metadata->getScopeModuleName($entityType);
-
-            $path = $this->paths['corePath'];
-
-            if ($moduleName) {
-                $path = str_replace('{*}', $moduleName, $this->paths['modulePath']);
-            }
-        }
-
-        return Util::concatPath(
-            Util::fixPath($path),
-            $entityType
-        );
     }
 
     protected function sanitizeInput(string $name): string

@@ -27,34 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Utils;
+namespace Espo\Core\Utils\Resource;
 
-use Espo\Core\{
-    Utils\Layout as LayoutBase,
-    Exceptions\Error,
-    Utils\Resource\FileReaderParams,
-};
-
-class Layout extends LayoutBase
+class FileReaderParams
 {
-    public function get(string $scope, string $name): ?string
+    private $scope = null;
+
+    public static function create(): self
     {
-        if (
-            $this->sanitizeInput($scope) !== $scope ||
-            $this->sanitizeInput($name) !== $name
-        ) {
-            throw new Error("Bad parameters.");
-        }
+        return new self();
+    }
 
-        $path = 'layouts/' . $scope . '/portal/' . $name . '.json';
+    public function withScope(?string $scope): self
+    {
+        $obj = clone $this;
+        $obj->scope = $scope;
 
-        $params = FileReaderParams::create()
-            ->withScope($scope);
+        return $obj;
+    }
 
-        if ($this->fileReader->exists($path, $params)) {
-            return $this->fileReader->read($path, $params);
-        }
-
-        return parent::get($scope, $name);
+    public function getScope(): ?string
+    {
+        return $this->scope;
     }
 }

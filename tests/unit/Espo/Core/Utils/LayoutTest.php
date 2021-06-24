@@ -29,92 +29,107 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
-use tests\unit\ReflectionHelper;
-
-use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Layout;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\InjectableFactory;
+
+use Espo\Core\{
+    Utils\Resource\FileReader,
+    Utils\Resource\FileReaderParams,
+};
 
 class LayoutTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
+    /**
+     * @var Layout
+     */
+    private $layout;
 
-    protected $objects;
+    /**
+     * @var InjectableFactory
+     */
+    private $injectableFactory;
 
-    protected $reflection;
+    /**
+     * @var FileManager
+     */
+    private $fileManager;
 
-    protected $filesPath= 'tests/unit/testData/FileManager';
+    private $fileReader;
 
     protected function setUp() : void
     {
-        $this->fileManager = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')
-            ->disableOriginalConstructor()->getMock();
+        $this->fileManager = $this->createMock(FileManager::class);
 
-        $this->metadata = $this->getMockBuilder('Espo\\Core\\Utils\\Metadata')
-            ->disableOriginalConstructor()->getMock();
+        $this->injectableFactory = $this->createMock(InjectableFactory::class);
 
-        $this->user = $this->getMockBuilder('Espo\\Entities\\User')
-            ->disableOriginalConstructor()->getMock();
+        $this->fileReader = $this->createMock(FileReader::class);
 
-        $this->object = new Layout($this->fileManager, $this->metadata, $this->user);
-
-        $this->reflection = new ReflectionHelper($this->object);
+        $this->layout = new Layout($this->fileManager, $this->injectableFactory, $this->fileReader);
     }
 
-    protected function tearDown() : void
+    public function testGet1(): void
     {
-        $this->object = NULL;
+        $this->fileReader
+            ->expects($this->once())
+            ->method('exists')
+            ->with(
+                'layouts/Test/test.json',
+                $this->callback(
+                    function (FileReaderParams $params): bool {
+                        return $params->getScope() === 'Test';
+                    }
+                )
+            )
+            ->willReturn(true);
+
+        $this->fileReader
+            ->expects($this->once())
+            ->method('read')
+            ->with(
+                'layouts/Test/test.json',
+                $this->callback(
+                    function (FileReaderParams $params): bool {
+                        return $params->getScope() === 'Test';
+                    }
+                )
+            )
+            ->willReturn('["test"]');
+
+        $result = $this->layout->get('Test', 'test');
+
+        $this->assertEquals('["test"]', $result);
     }
 
-    function testGetLayoutPathCore()
+    public function testGetDefault(): void
     {
-        $this->metadata
-            ->expects($this->exactly(1))
-            ->method('getScopeModuleName')
-            ->will($this->returnValue(null));
-
-        $this->assertEquals(Util::fixPath('application/Espo/Resources/layouts/User'),
-            $this->reflection->invokeMethod('getDirPath', ['User'])
-        );
-        $this->assertEquals(
-            Util::fixPath('custom/Espo/Custom/Resources/layouts/User'),
-            $this->reflection->invokeMethod('getDirPath', ['User', true])
-        );
-    }
-
-    function testGetLayoutPathModule()
-    {
-        $this->metadata
-            ->expects($this->exactly(1))
-            ->method('getScopeModuleName')
-            ->will($this->returnValue('Crm'));
-
-        $this->assertEquals(
-            Util::fixPath('application/Espo/Modules/Crm/Resources/layouts/Call'),
-            $this->reflection->invokeMethod('getDirPath', array('Call'))
-        );
-        $this->assertEquals(
-            Util::fixPath('custom/Espo/Custom/Resources/layouts/Call'),
-            $this->reflection->invokeMethod('getDirPath', array('Call', true))
-        );
-    }
-
-    function testGet()
-    {
-        $result =
-            '[{"label":"Overview","rows":[[{"name":"userName"}," .' .
-            '"{"name":"isAdmin"}],[{"name":"name"},{"name":"title"}]," .' .
-            '"[{"name":"defaultTeam"}],[{"name":"emailAddress"},{"name":"phone"}]]}]';
-
-        $this->metadata
-            ->expects($this->exactly(1))
-            ->method('getScopeModuleName')
-            ->will($this->returnValue(null));
+        $this->fileReader
+            ->expects($this->once())
+            ->method('exists')
+            ->with(
+                'layouts/Test/test.json',
+                $this->callback(
+                    function (FileReaderParams $params): bool {
+                        return $params->getScope() === 'Test';
+                    }
+                )
+            )
+            ->willReturn(false);
 
         $this->fileManager
-            ->expects($this->exactly(1))
-            ->method('getContents')
-            ->will($this->returnValue($result));
+            ->expects($this->once())
+            ->method('isFile')
+            ->with('application/Espo/Resources/defaults/layouts/test.json')
+            ->willReturn(true);
 
-        $this->assertEquals($result, $this->object->get('Note', 'detail'));
+        $this->fileManager
+            ->expects($this->once())
+            ->method('getContents')
+            ->with('application/Espo/Resources/defaults/layouts/test.json')
+            ->willReturn('["test"]');
+
+        $result = $this->layout->get('Test', 'test');
+
+        $this->assertEquals('["test"]', $result);
     }
 }
