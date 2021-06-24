@@ -332,7 +332,7 @@ var Espo = Espo || {classMap: {}};
                 return;
             }
 
-            var dto = {
+            let dto = {
                 name: name,
                 type: type,
                 dataType: dataType,
@@ -362,7 +362,7 @@ var Espo = Espo || {classMap: {}};
 
             this._pathsBeingLoaded[path] = true;
 
-            var useCache = false;
+            let useCache = false;
 
             if (this._cacheTimestamp) {
                 useCache = true;
@@ -372,7 +372,7 @@ var Espo = Espo || {classMap: {}};
                 path += sep + 'r=' + this._cacheTimestamp;
             }
 
-            var url = this._basePath + path;
+            let url = this._basePath + path;
 
             dto.path = path;
             dto.url = url;
@@ -452,7 +452,7 @@ var Espo = Espo || {classMap: {}};
                 return;
             }
 
-            var data = cached;
+            let data = cached;
 
             if (exportsTo && exportsAs) {
                 data = this._fetchObject(exportsTo, exportsAs);
@@ -562,14 +562,14 @@ var Espo = Espo || {classMap: {}};
                 type: 'GET',
                 dataType: 'script',
                 local: true,
-                success: () => {
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
-                },
-                error: () => {
-                    throw new Error("Could not load file '" + url + "'");
-                },
+            })
+            .then(() => {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            })
+            .catch(() => {
+                throw new Error("Could not load file '" + url + "'");
             });
         },
 
