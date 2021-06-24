@@ -45,7 +45,7 @@ use Espo\Core\{
 
 use Espo\ORM\{
     EntityManager,
-    QueryParams\Parts\Condition as Cond,
+    QueryParams\Part\Condition as Cond,
 };
 
 use Exception;

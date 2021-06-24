@@ -46,8 +46,8 @@ use Espo\ORM\{
     CollectionFactory,
     Metadata,
     MetadataDataProvider,
-    QueryParams\Parts\Condition as Cond,
-    QueryParams\Parts\Expression as Expr,
+    QueryParams\Part\Condition as Cond,
+    QueryParams\Part\Expression as Expr,
 };
 
 use RuntimeException;

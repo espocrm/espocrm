@@ -27,15 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\ORM\QueryParams\Parts;
+namespace tests\unit\Espo\ORM\QueryParams\Part;
 
 use Espo\ORM\{
-    QueryParams\Parts\Where\AndGroup,
-    QueryParams\Parts\Where\OrGroup,
-    QueryParams\Parts\WhereClause,
-    QueryParams\Parts\Where\Comparison as Comp,
-    QueryParams\Parts\Expression as Expr,
-    QueryParams\Parts\Condition as Cond,
+    QueryParams\Part\Where\AndGroup,
+    QueryParams\Part\Where\OrGroup,
+    QueryParams\Part\WhereClause,
+    QueryParams\Part\Where\Comparison as Comp,
+    QueryParams\Part\Expression as Expr,
+    QueryParams\Part\Condition as Cond,
     QueryParams\SelectBuilder,
 };
 

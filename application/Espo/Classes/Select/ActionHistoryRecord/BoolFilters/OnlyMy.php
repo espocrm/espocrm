@@ -32,8 +32,8 @@ namespace Espo\Classes\Select\ActionHistoryRecord\BoolFilters;
 use Espo\{
     Core\Select\Boolean\Filter,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\WhereClause,
-    ORM\QueryParams\Parts\Where\OrGroupBuilder,
+    ORM\QueryParams\Part\WhereClause,
+    ORM\QueryParams\Part\Where\OrGroupBuilder,
     Entities\User,
 };
 

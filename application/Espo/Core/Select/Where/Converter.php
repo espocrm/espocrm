@@ -32,8 +32,8 @@ namespace Espo\Core\Select\Where;
 use Espo\{
     Core\Exceptions\Error,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\WhereClause,
-    ORM\QueryParams\Parts\WhereItem,
+    ORM\QueryParams\Part\WhereClause,
+    ORM\QueryParams\Part\WhereItem,
     ORM\Entity,
     ORM\Defs as ORMDefs,
     Entities\User,

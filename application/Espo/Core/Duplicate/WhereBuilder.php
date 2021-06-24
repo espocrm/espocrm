@@ -30,7 +30,7 @@
 namespace Espo\Core\Duplicate;
 
 use Espo\ORM\{
-    QueryParams\Parts\WhereItem,
+    QueryParams\Part\WhereItem,
     Entity,
 };
 

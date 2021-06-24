@@ -46,7 +46,7 @@ use Espo\{
     ORM\Entity,
     ORM\Metadata as ormMetadata,
     ORM\QueryParams\SelectBuilder as QueryBuilder,
-    ORM\QueryParams\Parts\WhereClause,
+    ORM\QueryParams\Part\WhereClause,
     ORM\QueryBuilder as BaseQueryBuilder,
     ORM\QueryParams\Select,
     ORM\Defs as ORMDefs,

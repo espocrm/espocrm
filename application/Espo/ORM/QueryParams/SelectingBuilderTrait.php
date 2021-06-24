@@ -30,8 +30,8 @@
 namespace Espo\ORM\QueryParams;
 
 use Espo\ORM\QueryParams\{
-    Parts\WhereItem,
-    Parts\Expression,
+    Part\WhereItem,
+    Part\Expression,
 };
 
 use InvalidArgumentException;

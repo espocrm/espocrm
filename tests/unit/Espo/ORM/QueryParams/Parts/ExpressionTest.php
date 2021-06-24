@@ -27,10 +27,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\ORM\QueryParams\Parts;
+namespace tests\unit\Espo\ORM\QueryParams\Part;
 
 use Espo\ORM\{
-    QueryParams\Parts\Expression as Expr,
+    QueryParams\Part\Expression as Expr,
 };
 
 use RuntimeException;

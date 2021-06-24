@@ -27,9 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryParams\Parts;
+namespace Espo\ORM\QueryParams\Part;
 
-use Espo\ORM\QueryParams\Parts\{
+use Espo\ORM\QueryParams\Part\{
     WhereItem,
     Where\AndGroup,
     Where\OrGroup,

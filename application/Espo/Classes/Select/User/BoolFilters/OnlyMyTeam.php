@@ -35,8 +35,8 @@ use Espo\Core\Select\Boolean\Filter;
 
 use Espo\ORM\QueryParams\{
     SelectBuilder,
-    Parts\Where\OrGroupBuilder,
-    Parts\WhereClause,
+    Part\Where\OrGroupBuilder,
+    Part\WhereClause,
 };
 
 class OnlyMyTeam implements Filter

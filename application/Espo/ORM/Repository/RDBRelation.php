@@ -34,7 +34,7 @@ use Espo\ORM\{
     Entity,
     EntityManager,
     QueryParams\Select,
-    QueryParams\Parts\WhereItem,
+    QueryParams\Part\WhereItem,
     Mapper\RDBMapper,
     Repository\RDBRelationSelectBuilder as Builder,
 };

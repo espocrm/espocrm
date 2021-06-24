@@ -37,7 +37,7 @@ use Espo\ORM\{
     QueryParams\UnionBuilder,
     QueryParams\Query,
     QueryParams\Builder,
-    QueryParams\Parts\Expression,
+    QueryParams\Part\Expression,
 };
 
 use ReflectionClass;

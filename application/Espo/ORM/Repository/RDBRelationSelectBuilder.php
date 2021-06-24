@@ -36,7 +36,7 @@ use Espo\ORM\{
     EntityManager,
     QueryParams\Select,
     QueryParams\SelectBuilder,
-    QueryParams\Parts\WhereItem,
+    QueryParams\Part\WhereItem,
     Mapper\Mapper,
 };
 

@@ -27,66 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryParams\Parts\Where;
+namespace Espo\ORM\QueryParams\Part;
 
-use Espo\ORM\QueryParams\Parts\{
-    WhereItem,
+use Espo\ORM\QueryParams\{
+    Part\Where\AndGroup,
 };
 
-class AndGroupBuilder
+class WhereClause extends AndGroup
 {
-    private $raw = [];
-
-    public function build(): AndGroup
+    public function getRaw(): array
     {
-        return AndGroup::fromRaw($this->raw);
-    }
-
-    public function add(WhereItem $item): self
-    {
-        $key = $item->getRawKey();
-        $value = $item->getRawValue();
-
-        if ($item instanceof AndGroup) {
-            $this->raw = self::normilizeRaw($this->raw);
-
-            $this->raw[] = $item->getRawValue();
-
-            return $this;
-        }
-
-        if (count($this->raw) === 0) {
-            $this->raw[$key] = $value;
-
-            return $this;
-        }
-
-        $this->raw = self::normilizeRaw($this->raw);
-
-        $this->raw[] = [$key => $value];
-
-        return $this;
-    }
-
-    /**
-     * Merge with another AndGroup.
-     */
-    public function merge(AndGroup $andGroup): self
-    {
-        $this->raw = array_merge(
-            self::normilizeRaw($this->raw),
-            self::normilizeRaw($andGroup->getRawValue())
-        );
-
-        return $this;
-    }
-
-    private static function normilizeRaw(array $raw): array
-    {
-        if (count($raw) === 1 && array_keys($raw)[0] !== 0) {
-            return [$raw];
-        }
-
-        return $raw;
+        return $this->getRawValue();
     }
 }

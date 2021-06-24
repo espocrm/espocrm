@@ -31,8 +31,8 @@ namespace tests\unit\Espo\ORM\QueryParams;
 
 use Espo\ORM\{
     QueryParams\SelectBuilder,
-    QueryParams\Parts\Condition as Cond,
-    QueryParams\Parts\Expression as Expr,
+    QueryParams\Part\Condition as Cond,
+    QueryParams\Part\Expression as Expr,
 };
 
 class SelectBuilderTest extends \PHPUnit\Framework\TestCase

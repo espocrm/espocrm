@@ -35,7 +35,7 @@ use Espo\Core\Select\AccessControl\Filter;
 
 use Espo\ORM\QueryParams\{
     SelectBuilder,
-    Parts\Condition as Cond,
+    Part\Condition as Cond,
 };
 
 class OnlyTeam implements Filter

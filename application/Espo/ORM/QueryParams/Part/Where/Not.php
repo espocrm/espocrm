@@ -27,26 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryParams\Parts\Where;
+namespace Espo\ORM\QueryParams\Part\Where;
 
-use Espo\ORM\QueryParams\Parts\WhereItem;
+use Espo\ORM\QueryParams\Part\{
+    WhereItem,
+};
 
-class OrGroup implements WhereItem
+class Not implements WhereItem
 {
     private $rawValue = [];
 
-    public function __construct()
-    {
-    }
-
     public function getRaw(): array
     {
-        return ['OR' => $this->rawValue];
+        return ['NOT' => $this->getRawValue()];
     }
 
     public function getRawKey(): string
     {
-        return 'OR';
+        return 'NOT';
     }
 
     /**
@@ -59,6 +57,10 @@ class OrGroup implements WhereItem
 
     public static function fromRaw(array $whereClause): self
     {
+        if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {
+            $whereClause = $whereClause[0];
+        }
+
         $obj = new self();
 
         $obj->rawValue = $whereClause;
@@ -66,19 +68,8 @@ class OrGroup implements WhereItem
         return $obj;
     }
 
-    public static function create(WhereItem ...$itemList): self
+    public static function create(WhereItem $item): self
     {
-        $builder = self::createBuilder();
-
-        foreach ($itemList as $item) {
-            $builder->add($item);
-        }
-
-        return $builder->build();
-    }
-
-    public static function createBuilder(): OrGroupBuilder
-    {
-        return new OrGroupBuilder();
+        return self::fromRaw($item->getRaw());
     }
 }

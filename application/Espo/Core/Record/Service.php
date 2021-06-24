@@ -44,7 +44,7 @@ use Espo\ORM\{
     Repository\RDBRepository,
     Collection,
     EntityManager,
-    QueryParams\Parts\WhereClause,
+    QueryParams\Part\WhereClause,
 };
 
 use Espo\Entities\User;

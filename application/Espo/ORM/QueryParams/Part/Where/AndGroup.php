@@ -27,66 +27,63 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryParams\Parts\Where;
+namespace Espo\ORM\QueryParams\Part\Where;
 
-use Espo\ORM\QueryParams\Parts\{
+use Espo\ORM\QueryParams\Part\{
     WhereItem,
+    WhereClause,
 };
 
-class OrGroupBuilder
+class AndGroup implements WhereItem
 {
-    private $raw = [];
+    private $rawValue = [];
 
-    public function build(): OrGroup
+    public function getRaw(): array
     {
-        return OrGroup::fromRaw($this->raw);
+        return ['AND' => $this->getRawValue()];
     }
 
-    public function add(WhereItem $item): self
+    public function getRawKey(): string
     {
-        $key = $item->getRawKey();
-        $value = $item->getRawValue();
-
-        if ($item instanceof AndGroup) {
-            $this->raw = self::normilizeRaw($this->raw);
-
-            $this->raw[] = $value;
-
-            return $this;
-        }
-
-        if (count($this->raw) === 0) {
-            $this->raw[$key] = $value;
-
-            return $this;
-        }
-
-        $this->raw = self::normilizeRaw($this->raw);
-
-        $this->raw[] = [$key => $value];
-
-        return $this;
+        return 'AND';
     }
 
     /**
-     * Merge with another OrGroup.
+     * @return array
      */
-    public function merge(OrGroup $orGroup): self
+    public function getRawValue()
     {
-        $this->raw = array_merge(
-            self::normilizeRaw($this->raw),
-            self::normilizeRaw($orGroup->getRawValue())
-        );
-
-        return $this;
+        return $this->rawValue;
     }
 
-    private static function normilizeRaw(array $raw): array
+    public static function fromRaw(array $whereClause): self
     {
-        if (count($raw) === 1 && array_keys($raw)[0] !== 0) {
-            return [$raw];
+        if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {
+            $whereClause = $whereClause[0];
         }
 
-        return $raw;
+        $obj = static::class === WhereClause::class ?
+            new WhereClause() :
+            new self();
+
+        $obj->rawValue = $whereClause;
+
+        return $obj;
+    }
+
+    public static function create(WhereItem ...$itemList): self
+    {
+        $builder = self::createBuilder();
+
+        foreach ($itemList as $item) {
+            $builder->add($item);
+        }
+
+        return $builder->build();
+    }
+
+    public static function createBuilder(): AndGroupBuilder
+    {
+        return new AndGroupBuilder();
     }
 }

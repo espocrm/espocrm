@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\QueryParams;
 
-use Espo\ORM\QueryParams\Parts\Expression;
+use Espo\ORM\QueryParams\Part\Expression;
 
 use InvalidArgumentException;
 use RuntimeException;

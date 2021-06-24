@@ -27,11 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\QueryParams\Parts\Where;
+namespace Espo\ORM\QueryParams\Part\Where;
 
 use Espo\ORM\QueryParams\{
-    Parts\WhereItem,
-    Parts\Expression,
+    Part\WhereItem,
+    Part\Expression,
     Select,
 };
 
