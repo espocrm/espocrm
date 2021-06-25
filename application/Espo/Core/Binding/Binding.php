@@ -33,13 +33,13 @@ use LogicException;
 
 class Binding
 {
-    const IMPLEMENTATION_CLASS_NAME = 1;
+    public const IMPLEMENTATION_CLASS_NAME = 1;
 
-    const CONTAINER_SERVICE = 2;
+    public const CONTAINER_SERVICE = 2;
 
-    const VALUE = 3;
+    public const VALUE = 3;
 
-    const CALLBACK = 4;
+    public const CALLBACK = 4;
 
     private $type;
 
