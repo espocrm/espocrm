@@ -261,7 +261,7 @@ var Espo = Espo || {classMap: {}};
         },
 
         load: function (name, callback, errorCallback) {
-            let dataType, type, path, exportsTo, exportsAs /*, fetchObjectFunction*/;
+            let dataType, type, path, exportsTo, exportsAs;
 
             let realName = name;
 
