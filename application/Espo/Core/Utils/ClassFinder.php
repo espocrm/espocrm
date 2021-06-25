@@ -81,10 +81,10 @@ class ClassFinder
 
     private function load(string $category, bool $subDirs = false): void
     {
-        $path = $this->buildPaths($category);
+        $paths = $this->buildPaths($category);
         $cacheFile = $this->buildCacheKey($category);
 
-        $this->dataHashMap[$category] = $this->classMap->getData($path, $cacheFile, null, $subDirs);
+        $this->dataHashMap[$category] = $this->classMap->getData($paths, $cacheFile, null, $subDirs);
     }
 
     private function buildPaths(string $category): array
