@@ -484,9 +484,9 @@ class Util
     /**
      * Return values of defined $key.
      *
-     * @param  mixed $data
-     * @param  mixed array|string $key     Ex. of key is "entityDefs", "entityDefs.User"
-     * @param  mixed $default
+     * @param mixed $data
+     * @param mixed array|string $key     Ex. of key is "entityDefs", "entityDefs.User"
+     * @param mixed $default
      * @return mixed
      */
     public static function getValueByKey($data, $key = null, $default = null)

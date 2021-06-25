@@ -35,7 +35,7 @@ use Espo\Core\{
 
 class EspoBindingLoader implements BindingLoader
 {
-    protected $moduleNameList;
+    private $moduleNameList;
 
     public function __construct(Module $module)
     {

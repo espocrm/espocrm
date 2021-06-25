@@ -31,8 +31,8 @@ namespace Espo\Core\Utils;
 
 use Espo\Core\{
     Utils\File\Manager as FileManager,
-    Utils\File\FileUnifier,
     Utils\DataCache,
+    Utils\Json,
 };
 
 /**
@@ -40,23 +40,19 @@ use Espo\Core\{
  */
 class Module
 {
-    private const DEFAULT_ORDER = 10;
+    private const DEFAULT_ORDER = 11;
 
     private $useCache;
 
-    private $unifier;
-
     private $data = null;
+
+    private $list = null;
 
     private $cacheKey = 'modules';
 
     private $pathToModules = 'application/Espo/Modules';
 
-    private $paths = [
-        'corePath' => 'application/Espo/Resources/module.json',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/module.json',
-        'customPath' => 'custom/Espo/Custom/Resources/module.json',
-    ];
+    private $moduleFilePath = 'Resources/module.json';
 
     private $fileManager;
 
@@ -71,38 +67,30 @@ class Module
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
 
-        $this->unifier = new FileUnifier($this->fileManager);
-
         $this->useCache = $useCache;
     }
 
     /**
      * Get module parameters.
      *
+     * @param string|array|null $key
+     * @param mixed $defaultValue
      * @return mixed
      */
-    public function get($key = '', $returns = null)
+    public function get($key = null, $defaultValue = null)
     {
-        if (!isset($this->data)) {
+        if ($this->data === null) {
             $this->init();
         }
 
-        if (empty($key)) {
+        if ($key === null) {
             return $this->data;
         }
 
-        return Util::getValueByKey($this->data, $key, $returns);
+        return Util::getValueByKey($this->data, $key, $defaultValue);
     }
 
-    /**
-     * Get parameters of all modules.
-     */
-    public function getAll(): array
-    {
-        return $this->get();
-    }
-
-    protected function init(): void
+    private function init(): void
     {
         if ($this->useCache && $this->dataCache->has($this->cacheKey)) {
             $this->data = $this->dataCache->get($this->cacheKey);
@@ -110,7 +98,7 @@ class Module
             return;
         }
 
-        $this->data = $this->unifier->unify($this->paths, true);
+        $this->data = $this->loadData();
 
         if ($this->useCache) {
             $this->dataCache->store($this->cacheKey, $this->data);
@@ -120,19 +108,17 @@ class Module
     /**
      * Get an ordered list of modules.
      *
+     * @return string[]
+     *
      * @todo Use cache if available.
      */
     public function getOrderedList(): array
     {
-        $modules = $this->fileManager->getFileList($this->pathToModules, false, '', false);
+        $moduleNameList = $this->getList();
 
         $modulesToSort = [];
 
-        if (!is_array($modules)) {
-            return [];
-        }
-
-        foreach ($modules as $moduleName) {
+        foreach ($moduleNameList as $moduleName) {
             if (empty($moduleName)) {
                 continue;
             }
@@ -153,5 +139,31 @@ class Module
         );
 
         return array_keys($modulesToSort);
+    }
+
+    private function getList(): array
+    {
+        if ($this->list === null) {
+            $this->list = $this->fileManager->getDirList($this->pathToModules);
+        }
+
+        return $this->list;
+    }
+
+    private function loadData(): array
+    {
+        $data = [];
+
+        foreach ($this->getList() as $moduleName) {
+            $path = $this->pathToModules . '/' . $moduleName . '/' . $this->moduleFilePath;
+
+            $itemContents = $this->fileManager->getContents($path);
+
+            $data[$moduleName] = Json::decode($itemContents, true);
+
+            $data[$moduleName]['order'] = $data[$moduleName]['order'] ?? self::DEFAULT_ORDER;
+        }
+
+        return $data;
     }
 }

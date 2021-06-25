@@ -76,7 +76,16 @@ class Manager
     }
 
     /**
-     * Get a list of files in specified directory.
+     * Get a list of directories in a specified directory.
+     * @return string[]
+     */
+    public function getDirList(string $path): array
+    {
+        return $this->getFileList($path, false, '', false);
+    }
+
+    /**
+     * Get a list of files in a specified directory.
      *
      * @param string $path A folder path.
      * @param bool|int $recursively Find files in sub-folders.
