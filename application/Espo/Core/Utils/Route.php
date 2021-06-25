@@ -34,6 +34,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\File\Manager as FileManager,
     Utils\DataCache,
+    Utils\Resource\PathProvider,
 };
 
 class Route
@@ -42,11 +43,7 @@ class Route
 
     private $cacheKey = 'routes';
 
-    private $paths = [
-        'corePath' => 'application/Espo/Resources/routes.json',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/routes.json',
-        'customPath' => 'custom/Espo/Custom/Resources/routes.json',
-    ];
+    private $routesFileName = 'routes.json';
 
     private $config;
 
@@ -56,16 +53,20 @@ class Route
 
     private $dataCache;
 
+    private $pathProvider;
+
     public function __construct(
         Config $config,
         Metadata $metadata,
         FileManager $fileManager,
-        DataCache $dataCache
+        DataCache $dataCache,
+        PathProvider $pathProvider
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
+        $this->pathProvider = $pathProvider;
     }
 
     /**
@@ -99,30 +100,31 @@ class Route
 
     private function unify(): array
     {
-        $data = $this->addDataFromFile([], $this->paths['customPath']);
+        $customData = $this->addDataFromFile([], $this->pathProvider->getCustom() . $this->routesFileName);
 
         $moduleData = [];
 
         foreach ($this->metadata->getModuleList() as $moduleName) {
-            $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+            $moduleFilePath = $this->pathProvider->getModule($moduleName) . $this->routesFileName;
 
-            foreach ($this->addDataFromFile([], $modulePath) as $row) {
-                $key = $row['method'] . $row['route'];
+            foreach ($this->addDataFromFile([], $moduleFilePath) as $item) {
+                $key = $item['method'] . $item['route'];
 
-                $moduleData[$key] = $row;
+                $moduleData[$key] = $item;
             }
         }
 
-        $data = array_merge($data, array_values($moduleData));
+        $data = array_merge($customData, array_values($moduleData));
 
-        $data = $this->addDataFromFile($data, $this->paths['corePath']);
-
-        return $data;
+        return $this->addDataFromFile(
+            $data,
+            $this->pathProvider->getCore() . $this->routesFileName
+        );
     }
 
     private function addDataFromFile(array $currentData, string $routeFile): array
     {
-        if (!file_exists($routeFile)) {
+        if (!$this->fileManager->exists($routeFile)) {
             return $currentData;
         }
 
@@ -157,18 +159,16 @@ class Route
     /**
      * Check and adjust the route path.
      */
-    private function adjustPath(string $routePath): string
+    private function adjustPath(string $path): string
     {
-        $routePath = trim($routePath);
-
         // to fast route format
-        $routePath = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', $routePath);
+        $pathFormatteted = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', trim($path));
 
-        if (substr($routePath, 0, 1) !== '/') {
-            return '/' . $routePath;
+        if (substr($pathFormatteted, 0, 1) !== '/') {
+            return '/' . $pathFormatteted;
         }
 
-        return $routePath;
+        return $pathFormatteted;
     }
 
     public static function detectBasePath(): string

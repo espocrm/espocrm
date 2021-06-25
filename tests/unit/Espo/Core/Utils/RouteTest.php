@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  *
- * The interactive user interfaces in modified source and object code versions
+ * The interactive user interfaces in modified source and route code versions
  * of this program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU General Public License version 3.
  *
@@ -37,17 +37,16 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\Metadata,
     Utils\DataCache,
+    Utils\Resource\PathProvider,
 };
 
 class RouteTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
+    private $route;
 
-    protected $objects;
+    private $filesPath = 'tests/unit/testData/Routes';
 
-    protected $filesPath = 'tests/unit/testData/Routes';
-
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
         $this->fileManager = new FileManager();
@@ -56,35 +55,54 @@ class RouteTest extends \PHPUnit\Framework\TestCase
 
         $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
 
-        $this->object = new Route(
-            $this->config, $this->metadata, $this->fileManager, $this->dataCache
-        );
+        $this->pathProvider = $this->createMock(PathProvider::class);
 
-        $this->reflection = new ReflectionHelper($this->object);
+        $this->route = new Route(
+            $this->config,
+            $this->metadata,
+            $this->fileManager,
+            $this->dataCache,
+            $this->pathProvider
+        );
     }
 
-    protected function tearDown() : void
+    private function initPathProvider(string $folder): void
     {
-        $this->object = NULL;
-        $this->reflection = NULL;
+        $this->pathProvider
+            ->method('getCustom')
+            ->willReturn($this->filesPath . '/' . $folder . '/custom/Espo/Custom/Resources/');
+
+        $this->pathProvider
+            ->method('getCore')
+            ->willReturn($this->filesPath . '/' . $folder . '/application/Espo/Resources/');
+
+        $this->pathProvider
+            ->method('getModule')
+            ->willReturnCallback(
+                function (?string $moduleName) use ($folder): string {
+                    $path = $this->filesPath . '/' . $folder . '/application/Espo/Modules/{*}/Resources/';
+
+                    if ($moduleName === null) {
+                        return $path;
+                    }
+
+                    return str_replace('{*}', $moduleName, $path);
+                }
+            );
     }
 
     public function testUnifyCase1CustomRoutes()
     {
-        $this->reflection->setProperty('paths', array(
-            'corePath' => $this->filesPath . '/testCase1/application/Espo/Resources/routes.json',
-            'modulePath' => $this->filesPath . '/testCase1/application/Espo/Modules/{*}/Resources/routes.json',
-            'customPath' => $this->filesPath . '/testCase1/custom/Espo/Custom/Resources/routes.json',
-        ));
+        $this->initPathProvider('testCase1');
 
         $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
-            ->will($this->returnValue(array(
-                'Crm',
-        )));
+            ->willReturn(
+                ['Crm']
+            );
 
-        $result = array (
+        $expected = array (
           array (
             'route' => '/Custom/{scope}/{id}/{name}',
             'method' => 'get',
@@ -155,26 +173,21 @@ class RouteTest extends \PHPUnit\Framework\TestCase
           ),
         );
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('unify'));
+        $this->assertEquals($expected, $this->route->getFullList());
     }
 
     public function testUnifyCase2ModuleRoutes()
     {
-        $this->reflection->setProperty('paths', array(
-            'corePath' => $this->filesPath . '/testCase2/application/Espo/Resources/routes.json',
-            'modulePath' => $this->filesPath . '/testCase2/application/Espo/Modules/{*}/Resources/routes.json',
-            'customPath' => $this->filesPath . '/testCase2/custom/Espo/Custom/Resources/routes.json',
-        ));
+        $this->initPathProvider('testCase2');
 
         $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
-            ->will($this->returnValue(array(
-                'Crm',
-                'Test',
-        )));
+            ->willReturn(
+                ['Crm', 'Test']
+            );
 
-        $result = array (
+        $expected = array (
           array (
             'route' => '/Activities/{scope}/{id}/{name}',
             'method' => 'get',
@@ -242,26 +255,21 @@ class RouteTest extends \PHPUnit\Framework\TestCase
           ),
         );
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('unify'));
+        $this->assertEquals($expected, $this->route->getFullList());
     }
 
     public function testUnifyCase3ModuleRoutesWithRewrites()
     {
-        $this->reflection->setProperty('paths', array(
-            'corePath' => $this->filesPath . '/testCase3/application/Espo/Resources/routes.json',
-            'modulePath' => $this->filesPath . '/testCase3/application/Espo/Modules/{*}/Resources/routes.json',
-            'customPath' => $this->filesPath . '/testCase3/custom/Espo/Custom/Resources/routes.json',
-        ));
+        $this->initPathProvider('testCase3');
 
         $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
-            ->will($this->returnValue(array(
-                'Crm',
-                'Test',
-        )));
+            ->willReturn(
+                ['Crm', 'Test']
+            );
 
-        $result = array (
+        $expected = array (
           array (
             'route' => '/Activities/{scope}/{id}/{name}',
             'method' => 'get',
@@ -329,31 +337,21 @@ class RouteTest extends \PHPUnit\Framework\TestCase
           ),
         );
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('unify'));
+        $this->assertEquals($expected, $this->route->getFullList());
     }
 
     public function testUnifyCase4ModuleRoutesWithRewrites()
     {
-        // prepare path
-        $paths = [
-            'corePath'   => $this->filesPath.'/testCase4/application/Espo/Resources/routes.json',
-            'modulePath' => $this->filesPath.'/testCase4/application/Espo/Modules/{*}/Resources/routes.json',
-            'customPath' => $this->filesPath.'/testCase4/custom/Espo/Custom/Resources/routes.json',
-        ];
-
-        $this->reflection->setProperty('paths', $paths);
+        $this->initPathProvider('testCase4');
 
         $this->metadata
             ->expects($this->once())
             ->method('getModuleList')
-            ->will($this->returnValue(array(
-                    'Crm',
-                    'Test',
-                    'TestExt'
-        )));
+            ->willReturn(
+                ['Crm', 'Test', 'TestExt']
+            );
 
-        // prepare expected result
-        $result = [
+        $expected = [
             [
                 'route'  => '/Activities/{scope}/{id}/{name}',
                 'method' => 'get',
@@ -391,6 +389,6 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('unify'));
+        $this->assertEquals($expected, $this->route->getFullList());
     }
 }
