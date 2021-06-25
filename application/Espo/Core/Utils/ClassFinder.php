@@ -33,7 +33,7 @@ use Espo\Core\Utils\File\ClassMap;
 
 /**
  * Finds classes of a specific category. Category examples: Services, Controllers.
- * First it checks ib the custom folder, then modules, then the internal folder.
+ * First it checks in the `custom` folder, then modules, then the internal folder.
  * Available as 'classFinder' service.
  */
 class ClassFinder
