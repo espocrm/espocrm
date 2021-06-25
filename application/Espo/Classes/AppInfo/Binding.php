@@ -39,7 +39,7 @@ use Espo\Core\{
 
 class Binding
 {
-    protected $fileManager;
+    private $fileManager;
 
     public function __construct(FileManager $fileManager)
     {
