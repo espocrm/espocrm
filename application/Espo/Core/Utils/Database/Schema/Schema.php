@@ -78,13 +78,7 @@ class Schema
         'custom/Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
     ];
 
-    /**
-     * Paths of rebuild action folders.
-     */
-    protected $rebuildActionsPath = [
-        'corePath' => 'application/Espo/Core/Utils/Database/Schema/rebuildActions',
-        'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/rebuildActions',
-    ];
+    private $rebuildActionsPath = 'Core/Utils/Database/Schema/rebuildActions';
 
     /**
      * Array of rebuildActions classes in format:
@@ -295,13 +289,16 @@ class Schema
      */
     protected function initRebuildActions($currentSchema = null, $metadataSchema = null)
     {
-        $methods = ['beforeRebuild', 'afterRebuild'];
+        $methods = [
+            'beforeRebuild',
+            'afterRebuild',
+        ];
 
         $rebuildActions = $this->classMap->getData($this->rebuildActionsPath, null, $methods);
 
         $classes = [];
 
-        foreach ($rebuildActions as $actionName => $actionClass) {
+        foreach ($rebuildActions as $actionClass) {
             $rebuildActionClass = new $actionClass(
                 $this->metadata,
                 $this->config,

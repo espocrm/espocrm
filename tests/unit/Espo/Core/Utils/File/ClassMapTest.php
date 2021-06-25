@@ -36,60 +36,129 @@ use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
 
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Module;
+
+use Espo\Core\Utils\Module\PathProvider;
+
 class ClassMapTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
-
-    protected $objects;
+    /**
+     * @var ClassMap
+     */
+    protected $classMap;
 
     protected $reflection;
 
-    protected function setUp() : void
+    private $customPath = 'tests/unit/testData/EntryPoints/Espo/Custom/';
+
+    private $corePath = 'tests/unit/testData/EntryPoints/Espo/';
+
+    private $modulePath = 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/';
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
+    private $module;
+
+    protected function setUp(): void
     {
         $this->fileManager = new FileManager();
 
-        $this->config = $this->getMockBuilder('Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
-        $this->metadata = $this->getMockBuilder('Espo\Core\Utils\Metadata')->disableOriginalConstructor()->getMock();
+        $this->config = $this->createMock(Config::class);
+        $this->module = $this->createMock(Module::class);
 
-        $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
+        $this->dataCache = $this->createMock(DataCache::class);
 
         $this->log = $this->createMock(Log::class);
 
-        $this->object = new ClassMap(
+        $pathProvider = $this->createMock(PathProvider::class);
+
+        $pathProvider
+            ->method('getCustom')
+            ->willReturn($this->customPath);
+
+        $pathProvider
+            ->method('getCore')
+            ->willReturn($this->corePath);
+
+        $pathProvider
+            ->method('getModule')
+            ->willReturnCallback(
+                function (?string $moduleName): string {
+                    if ($moduleName === null) {
+                        return $this->modulePath;
+                    }
+
+                    return str_replace('{*}', $moduleName, $this->modulePath);
+                }
+            );
+
+        $this->module
+            ->method('getOrderedList')
+            ->willReturn(['Crm']);
+
+        $this->classMap = new ClassMap(
             $this->fileManager,
             $this->config,
-            $this->metadata,
+            $this->module,
             $this->dataCache,
-            $this->log
+            $this->log,
+            $pathProvider
         );
 
-        $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection = new ReflectionHelper($this->classMap);
     }
 
-    protected function tearDown() : void
+    public function testGetDataWithNoCache1(): void
     {
-        $this->object = NULL;
-    }
-
-    function testGetClassNameHash()
-    {
-        $paths = [
-            'tests/unit/testData/EntryPoints/Espo/EntryPoints',
-            'tests/unit/testData/EntryPoints/Espo/Modules/Crm/EntryPoints',
-        ];
-
-        $result = [
+        $expected = [
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
             'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
             'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
         ];
-        $this->assertEquals($result, $this->reflection->invokeMethod('getClassNameHash', [$paths, ['run']]));
+
+        $this->assertEquals($expected, $this->classMap->getData('EntryPoints', null, ['run']));
     }
 
-    function testGetDataWithCache()
+    public function testGetDataWithNoCache2(): void
+    {
+        $this->dataCache
+            ->expects($this->once())
+            ->method('has')
+            ->with('entryPoints')
+            ->willReturn(true);
+
+        $this->config
+            ->expects($this->exactly(2))
+            ->method('get')
+            ->will($this->returnValue(false));
+
+        $this->module
+            ->expects($this->once())
+            ->method('getOrderedList')
+            ->will($this->returnValue(
+                ['Crm']
+            ));
+
+        $cacheKey = 'entryPoints';
+
+        $result = [
+            'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
+            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
+            'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule',
+       ];
+
+        $this->assertEquals(
+            $result,
+            $this->classMap->getData('EntryPoints', $cacheKey, ['run'])
+        );
+    }
+
+    public function testGetDataWithCache(): void
     {
         $result = [
-            'Download' => '\\tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
+            'Download' => 'tests\\unit\\testData\\EntryPoints\\Espo\\EntryPoints\\Download',
         ];
 
         $this->config
@@ -111,113 +180,51 @@ class ClassMapTest extends \PHPUnit\Framework\TestCase
             ->with('entryPoints')
             ->willReturn($result);
 
-        $paths = [
-            'corePath' => '/tests/unit/testData/EntryPoints/Espo/EntryPoints',
-            'modulePath' => '/tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
-            'customPath' => '/tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
-        ];
+        $this->module
+            ->expects($this->never())
+            ->method('getOrderedList');
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheKey, ['run']]) );
+        $this->assertEquals($result, $this->classMap->getData('EntryPoints', $cacheKey, ['run']));
     }
 
-    function testGetDataWithNoCache()
+    public function testGetDataWithNoCacheString(): void
     {
-        $this->dataCache
-            ->expects($this->once())
-            ->method('has')
-            ->with('entryPoints')
-            ->willReturn(true);
-
         $this->config
             ->expects($this->exactly(2))
             ->method('get')
-            ->will($this->returnValue(false));
+            ->with('useCache')
+            ->will($this->returnValue(true));
 
-        $this->metadata
+        $this->module
             ->expects($this->once())
-            ->method('getModuleList')
+            ->method('getOrderedList')
             ->will($this->returnValue(
-                [
-                    'Crm',
-                ]
+                ['Crm']
             ));
 
         $cacheKey = 'entryPoints';
 
-        $paths = [
-            'corePath' => 'tests/unit/testData/EntryPoints/Espo/EntryPoints',
-            'modulePath' => 'tests/unit/testData/EntryPoints/Espo/Modules/{*}/EntryPoints',
-            'customPath' => 'tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
-        ];
-
         $result = [
             'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
             'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
-            'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule'
+            'InModule' => 'tests\unit\testData\EntryPoints\Espo\Modules\Crm\EntryPoints\InModule',
         ];
 
-        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, $cacheKey, ['run']]));
-    }
-
-    function testGetDataWithNoCacheString()
-    {
         $this->dataCache
             ->expects($this->once())
             ->method('has')
-            ->with('entryPoints')
+            ->with($cacheKey)
             ->willReturn(true);
 
-        $this->config
-            ->expects($this->exactly(2))
+        $this->dataCache
+            ->expects($this->once())
             ->method('get')
-            ->will($this->returnValue(false));
+            ->with($cacheKey)
+            ->willReturn(null);
 
-        $this->metadata
-            ->expects($this->never())
-            ->method('getModuleList')
-            ->will($this->returnValue(
-                [
-                    'Crm',
-                ]
-            ));
-
-        $cacheKey = 'entryPoints';
-        $path = 'tests/unit/testData/EntryPoints/Espo/EntryPoints';
-
-        $result = [
-            'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
-        ];
-
-        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$path, $cacheKey, ['run']]));
-    }
-
-    function testGetDataWithCacheFalse()
-    {
-        $this->config
-            ->expects($this->never())
-            ->method('get')
-            ->will($this->returnValue(false));
-
-        $this->metadata
-            ->expects($this->never())
-            ->method('getModuleList')
-            ->will($this->returnValue(
-                [
-                    'Crm',
-                ]
-            ));
-
-        $paths = [
-            'corePath' => 'tests/unit/testData/EntryPoints/Espo/EntryPoints',
-            'customPath' => 'tests/unit/testData/EntryPoints/Espo/Custom/EntryPoints',
-        ];
-
-        $result = [
-            'Download' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Download',
-            'Test' => 'tests\unit\testData\EntryPoints\Espo\EntryPoints\Test',
-        ];
-
-        $this->assertEquals($result, $this->reflection->invokeMethod('getData', [$paths, null, ['run']]));
+        $this->assertEquals(
+            $result,
+            $this->classMap->getData('EntryPoints', $cacheKey, ['run'])
+        );
     }
 }

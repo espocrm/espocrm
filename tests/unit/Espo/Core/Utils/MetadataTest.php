@@ -41,6 +41,8 @@ use Espo\Core\Utils\Module;
 use Espo\Core\Utils\Resource\Reader;
 use Espo\Core\Utils\Resource\PathProvider;
 
+use Espo\Core\Utils\Module\PathProvider as ModulePathProvider;
+
 class MetadataTest extends \PHPUnit\Framework\TestCase
 {
     protected $object;
@@ -59,7 +61,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $module = new Module($this->fileManager);
 
-        $pathProvider = new PathProvider();
+        $pathProvider = new PathProvider(new ModulePathProvider());
 
         $unifierObj = new UnifierObj($this->fileManager, $module, $pathProvider);
         $unifier = new Unifier($this->fileManager, $module, $pathProvider);

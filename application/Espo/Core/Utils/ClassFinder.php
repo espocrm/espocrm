@@ -40,12 +40,6 @@ class ClassFinder
 {
     private $classMap;
 
-    private $pathsTemplate = [
-        'corePath' => 'application/Espo/{category}',
-        'modulePath' => 'application/Espo/Modules/{*}/{category}',
-        'customPath' => 'custom/Espo/Custom/{category}',
-    ];
-
     private $dataHashMap = [];
 
     public function __construct(ClassMap $classMap)
@@ -81,21 +75,9 @@ class ClassFinder
 
     private function load(string $category, bool $subDirs = false): void
     {
-        $paths = $this->buildPaths($category);
         $cacheFile = $this->buildCacheKey($category);
 
-        $this->dataHashMap[$category] = $this->classMap->getData($paths, $cacheFile, null, $subDirs);
-    }
-
-    private function buildPaths(string $category): array
-    {
-        $paths = [];
-
-        foreach ($this->pathsTemplate as $key => $value) {
-            $paths[$key] = str_replace('{category}', $category, $value);
-        }
-
-        return $paths;
+        $this->dataHashMap[$category] = $this->classMap->getData($category, $cacheFile, null, $subDirs);
     }
 
     private function buildCacheKey(string $category): string

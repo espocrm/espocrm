@@ -27,31 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils\Resource;
-
-use Espo\Core\Utils\Module\PathProvider as ModulePathProvider;
+namespace Espo\Core\Utils\Module;
 
 class PathProvider
 {
-    private $provider;
+    private $core = 'application/Espo/';
 
-    public function __construct(ModulePathProvider $provider)
-    {
-        $this->provider = $provider;
-    }
+    private $module = 'application/Espo/Modules/{*}/';
+
+    private $custom = 'custom/Espo/Custom/';
+
+    public function __construct() {}
 
     public function getCore(): string
     {
-        return $this->provider->getCore() . 'Resources/';
+        return $this->core;
     }
 
     public function getCustom(): string
     {
-        return $this->provider->getCustom() . 'Resources/';
+        return $this->custom;
     }
 
     public function getModule(?string $moduleName): string
     {
-        return $this->provider->getModule($moduleName) . 'Resources/';
+        if ($moduleName === null) {
+            return $this->module;
+        }
+
+        return str_replace('{*}', $moduleName, $this->module);
     }
 }

@@ -33,9 +33,10 @@ use Espo\Core\{
     Utils\Util,
     Utils\File\Manager as FileManager,
     Utils\Config,
-    Utils\Metadata,
+    Utils\Module,
     Utils\DataCache,
     Utils\Log,
+    Utils\Module\PathProvider,
 };
 
 use ReflectionClass;
@@ -46,40 +47,37 @@ class ClassMap
 
     private $config;
 
-    private $metadata;
+    private $module;
 
     private $dataCache;
 
     private $log;
 
+    private $pathProvider;
+
     public function __construct(
         FileManager $fileManager,
         Config $config,
-        Metadata $metadata,
+        Module $module,
         DataCache $dataCache,
-        Log $log
-    ){
+        Log $log,
+        PathProvider $pathProvider
+    ) {
         $this->fileManager = $fileManager;
         $this->config = $config;
-        $this->metadata = $metadata;
+        $this->module = $module;
         $this->dataCache = $dataCache;
         $this->log = $log;
+        $this->pathProvider = $pathProvider;
     }
 
     /**
      * Return paths to class files.
      *
-     * @param string|array $paths in the format ```
-     * [
-     *    'corePath' => '',
-     *    'modulePath' => '',
-     *    'customPath' => '',
-     * ]
-     * ```
      * @param $allowedMethods If specified, classes w/o specified method will be ignored.
      */
     public function getData(
-        $paths,
+        string $path,
         ?string $cacheKey = null,
         ?array $allowedMethods = null,
         bool $subDirs = false
@@ -87,13 +85,11 @@ class ClassMap
 
         $data = null;
 
-        if (is_string($paths)) {
-            $paths = [
-                'corePath' => $paths,
-            ];
-        }
-
-        if ($cacheKey && $this->dataCache->has($cacheKey) && $this->config->get('useCache')) {
+        if (
+            $cacheKey &&
+            $this->dataCache->has($cacheKey) &&
+            $this->config->get('useCache')
+        ) {
             $data = $this->dataCache->get($cacheKey);
 
             if (!is_array($data)) {
@@ -101,27 +97,38 @@ class ClassMap
             }
         }
 
-        if (!is_array($data)) {
-            $data = $this->getClassNameHash($paths['corePath'], $allowedMethods, $subDirs);
+        if (is_array($data)) {
+            return $data;
+        }
 
-            if (isset($paths['modulePath'])) {
-                foreach ($this->metadata->getModuleList() as $moduleName) {
-                    $path = str_replace('{*}', $moduleName, $paths['modulePath']);
+        $data = $this->getClassNameHash(
+            $this->pathProvider->getCore() . $path,
+            $allowedMethods,
+            $subDirs
+        );
 
-                    $data = array_merge($data, $this->getClassNameHash($path, $allowedMethods, $subDirs));
-                }
-            }
+        foreach ($this->module->getOrderedList() as $moduleName) {
+            $data = array_merge(
+                $data,
+                $this->getClassNameHash(
+                    $this->pathProvider->getModule($moduleName) . $path,
+                    $allowedMethods,
+                    $subDirs
+                )
+            );
+        }
 
-            if (isset($paths['customPath'])) {
-                $data = array_merge(
-                    $data,
-                    $this->getClassNameHash($paths['customPath'], $allowedMethods, $subDirs)
-                );
-            }
+        $data = array_merge(
+            $data,
+            $this->getClassNameHash(
+                $this->pathProvider->getCustom() . $path,
+                $allowedMethods,
+                $subDirs
+            )
+        );
 
-            if ($cacheKey && $this->config->get('useCache')) {
-                $this->dataCache->store($cacheKey, $data);
-            }
+        if ($cacheKey && $this->config->get('useCache')) {
+            $this->dataCache->store($cacheKey, $data);
         }
 
         return $data;
