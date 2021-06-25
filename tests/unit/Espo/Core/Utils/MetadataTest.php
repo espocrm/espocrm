@@ -39,6 +39,7 @@ use Espo\Core\Utils\File\UnifierObj;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Module;
 use Espo\Core\Utils\Resource\Reader;
+use Espo\Core\Utils\Resource\PathProvider;
 
 class MetadataTest extends \PHPUnit\Framework\TestCase
 {
@@ -58,8 +59,10 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $module = new Module($this->fileManager);
 
-        $unifierObj = new UnifierObj($this->fileManager, $module);
-        $unifier = new Unifier($this->fileManager, $module);
+        $pathProvider = new PathProvider();
+
+        $unifierObj = new UnifierObj($this->fileManager, $module, $pathProvider);
+        $unifier = new Unifier($this->fileManager, $module, $pathProvider);
 
         $reader = new Reader($unifier, $unifierObj);
 

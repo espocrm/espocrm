@@ -29,37 +29,32 @@
 
 namespace Espo\Core\Utils\Resource;
 
-use Espo\Core\Utils\File\Unifier;
-use Espo\Core\Utils\File\UnifierObj;
-
-use stdClass;
-
-/**
- * Reads resource data. Reading is expensive. Read data is supposed to be cached after.
- */
-class Reader
+class PathProvider
 {
-    private $unifier;
+    private $core = 'application/Espo/Resources/';
 
-    private $unifierObj;
+    private $module = 'application/Espo/Modules/{*}/Resources/';
 
-    public function __construct(Unifier $unifier, UnifierObj $unifierObj)
+    private $custom = 'custom/Espo/Custom/Resources/';
+
+    public function __construct() {}
+
+    public function getCore(): string
     {
-        $this->unifier = $unifier;
-        $this->unifierObj = $unifierObj;
+        return $this->core;
     }
 
-    /**
-     * Read resource data.
-     *
-     * @return stdClass|array
-     */
-    public function read(string $path, ReaderParams $params)
+    public function getCustom(): string
     {
-        if ($params->asArray()) {
-            return $this->unifier->unify($path, $params->noCustom());
+        return $this->custom;
+    }
+
+    public function getModule(?string $moduleName): string
+    {
+        if ($moduleName === null) {
+            return $this->module;
         }
 
-        return $this->unifierObj->unify($path, $params->noCustom());
+        return str_replace('{*}', $moduleName, $this->module);
     }
 }

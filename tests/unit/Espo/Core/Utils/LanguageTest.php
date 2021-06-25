@@ -39,6 +39,8 @@ use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\File\UnifierObj;
 use Espo\Core\Utils\Module;
 use Espo\Core\Utils\Resource\Reader;
+use Espo\Core\Utils\Resource\PathProvider;
+
 
 class LanguageTest extends \PHPUnit\Framework\TestCase
 {
@@ -46,11 +48,9 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected $paths = [
-        'corePath' => 'tests/unit/testData/Utils/I18n/Espo/Resources/',
-        'modulePath' => 'tests/unit/testData/Utils/I18n/Espo/Modules/{*}/Resources/',
-        'customPath' => 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/',
-    ];
+    protected $corePath = 'tests/unit/testData/Utils/I18n/Espo/Resources/';
+    protected $modulePath = 'tests/unit/testData/Utils/I18n/Espo/Modules/{*}/Resources/';
+    protected $customPath = 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/';
 
     protected function setUp(): void
     {
@@ -70,14 +70,32 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
 
         $module = new Module($this->fileManager);
 
-        $unifierObj = new UnifierObj($this->fileManager, $module);
-        $unifier = new Unifier($this->fileManager, $module);
+        $pathProvider = $this->createMock(PathProvider::class);
+
+        $pathProvider
+            ->method('getCustom')
+            ->willReturn($this->customPath);
+
+        $pathProvider
+            ->method('getCore')
+            ->willReturn($this->corePath);
+
+        $pathProvider
+            ->method('getModule')
+            ->willReturnCallback(
+                function (?string $moduleName): string {
+                    if ($moduleName === null) {
+                        return $this->modulePath;
+                    }
+
+                    return str_replace('{*}', $moduleName, $this->modulePath);
+                }
+            );
+
+        $unifierObj = new UnifierObj($this->fileManager, $module, $pathProvider);
+        $unifier = new Unifier($this->fileManager, $module, $pathProvider);
 
         $reader = new Reader($unifier, $unifierObj);
-
-        $this->readerReflection = new ReflectionHelper($reader);
-
-        $this->readerReflection->setProperty('paths', $this->paths);
 
         $this->object = new Language(
             null,

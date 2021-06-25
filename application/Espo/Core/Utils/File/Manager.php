@@ -828,6 +828,14 @@ class Manager
     }
 
     /**
+     * Check whether a file or directory exists.
+     */
+    public function exists(string $path): bool
+    {
+        return file_exists($path);
+    }
+
+    /**
      * Check whether a file. If doesn't exist, check by path info.
      */
     private function isFilenameIsFile(string $path): bool

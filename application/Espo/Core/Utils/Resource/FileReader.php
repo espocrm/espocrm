@@ -39,20 +39,17 @@ use RuntimeException;
  */
 class FileReader
 {
-    private $paths = [
-        'corePath' => 'application/Espo/Resources/',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/',
-        'customPath' => 'custom/Espo/Custom/Resources/',
-    ];
-
     private $fileManager;
 
     private $metadata;
 
-    public function __construct(FileManager $fileManager, Metadata $metadata)
+    private $pathProvider;
+
+    public function __construct(FileManager $fileManager, Metadata $metadata, PathProvider $pathProvider)
     {
         $this->fileManager = $fileManager;
         $this->metadata = $metadata;
+        $this->pathProvider = $pathProvider;
     }
 
     /**
@@ -81,7 +78,7 @@ class FileReader
 
     private function findExactPath(string $path, FileReaderParams $params): ?string
     {
-        $customPath = $this->paths['customPath'] . $path;
+        $customPath = $this->pathProvider->getCustom() . $path;
 
         if ($this->fileManager->isFile($customPath)) {
             return $customPath;
@@ -109,7 +106,7 @@ class FileReader
             }
         }
 
-        $corePath = $this->paths['corePath'] . $path;
+        $corePath = $this->pathProvider->getCore() . $path;
 
         if ($this->fileManager->isFile($corePath)) {
             return $corePath;
@@ -120,10 +117,6 @@ class FileReader
 
     private function buildModulePath(string $path, string $moduleName): string
     {
-        return str_replace(
-            '{*}',
-            $moduleName,
-            $this->paths['modulePath'] . $path
-        );
+        return $this->pathProvider->getModule($moduleName) . $path;
     }
 }

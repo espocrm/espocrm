@@ -35,6 +35,7 @@ use Espo\Core\{
     Utils\Util,
     Utils\DataUtil,
     Utils\Json,
+    Utils\Resource\PathProvider,
 };
 
 use JsonException;
@@ -45,80 +46,71 @@ class Unifier
 
     private $module;
 
+    private $pathProvider;
+
     protected $useObjects = false;
 
     private $unsetFileName = 'unset.json';
 
     private $moduleList = null;
 
-    public function __construct(FileManager $fileManager, Module $module)
+    public function __construct(FileManager $fileManager, Module $module, PathProvider $pathProvider)
     {
         $this->fileManager = $fileManager;
         $this->module = $module;
+        $this->pathProvider = $pathProvider;
     }
 
     /**
-     * Unite file content to the file.
-     *
-     * @param array $paths
-     * @param boolean $recursively Note: only for first level of sub directory,
-     * other levels of sub directories will be ignored.
+     * Merge data of resource files.
      *
      * @return array|object
      */
-    public function unify(array $paths, bool $recursively = true)
+    public function unify(string $path, bool $noCustom = false)
     {
-        $data = $this->unifySingle($paths['corePath'], $recursively);
+        // @todo Remove variable.
+        $recursively = true;
 
-        if (!empty($paths['modulePath'])) {
-            foreach ($this->getModuleList() as $moduleName) {
-                $curPath = str_replace('{*}', $moduleName, $paths['modulePath']);
+        $data = $this->unifySingle($this->pathProvider->getCore() . $path, $recursively);
 
-                if ($this->useObjects) {
-                    $data = DataUtil::merge(
-                        $data,
-                        $this->unifySingle($curPath, $recursively, $moduleName)
-                    );
-                }
-                else {
-                    $data = Util::merge(
-                        $data,
-                        $this->unifySingle($curPath, $recursively, $moduleName)
-                    );
-                }
-            }
-        }
+        foreach ($this->getModuleList() as $moduleName) {
+            $filePath = $this->pathProvider->getModule($moduleName) . $path;
 
-        if (!empty($paths['customPath'])) {
             if ($this->useObjects) {
                 $data = DataUtil::merge(
                     $data,
-                    $this->unifySingle($paths['customPath'], $recursively)
+                    $this->unifySingle($filePath, $recursively)
                 );
+
+                continue;
             }
-            else {
-                $data = Util::merge(
-                    $data,
-                    $this->unifySingle($paths['customPath'], $recursively)
-                );
-            }
+
+            $data = Util::merge(
+                $data,
+                $this->unifySingle($filePath, $recursively)
+            );
         }
 
-        return $data;
+        if ($noCustom) {
+            return $data;
+        }
+
+        $customFilePath = $this->pathProvider->getCustom() . $path;
+
+        if ($this->useObjects) {
+            return DataUtil::merge(
+                $data,
+                $this->unifySingle($customFilePath, $recursively)
+            );
+        }
+
+        return Util::merge(
+            $data,
+            $this->unifySingle($customFilePath, $recursively)
+        );
     }
 
-    /**
-     * Unite file content to the file for one directory.
-     *
-     * @param string $dirPath
-     * @param string $type Name of type array("metadata", "layouts"), ex. $this->name.
-     * @param bool $recursively Note: only for first level of sub directory,
-     * other levels of sub directories will be ignored.
-     * @param string $moduleName Name of module if exists.
-     *
-     * @return array|object Content of the files.
-     */
-    private function unifySingle(string $dirPath, bool $recursively, string $moduleName = '')
+    private function unifySingle(string $dirPath, bool $recursively)
     {
         $data = [];
         $unsets = [];
@@ -127,7 +119,7 @@ class Unifier
             $data = (object) [];
         }
 
-        if (empty($dirPath) || !file_exists($dirPath)) {
+        if (empty($dirPath) || !$this->fileManager->exists($dirPath)) {
             return $data;
         }
 
@@ -135,23 +127,26 @@ class Unifier
 
         $dirName = $this->fileManager->getDirName($dirPath, false);
 
-        foreach ($fileList as $dirName => $fileName) {
-            if (is_array($fileName)) { // only first level of a sub-directory
+        foreach ($fileList as $dirName => $item) {
+            if (is_array($item)) {
+                // Only a first level of a sub-directory.
                 $itemValue = $this->unifySingle(
                     Util::concatPath($dirPath, $dirName),
-                    false,
-                    $moduleName
+                    false
                 );
 
                 if ($this->useObjects) {
                     $data->$dirName = $itemValue;
+
+                    continue;
                 }
-                else {
-                    $data[$dirName] = $itemValue;
-                }
+
+                $data[$dirName] = $itemValue;
 
                 continue;
             }
+
+            $fileName = $item;
 
             if ($fileName === $this->unsetFileName) {
                 $fileContent = $this->fileManager->getContents($dirPath . '/' . $fileName);
@@ -171,25 +166,20 @@ class Unifier
 
             if ($this->useObjects) {
                 $data->$name = $itemValue;
+
+                continue;
             }
-            else {
-                $data[$name] = $itemValue;
-            }
+
+            $data[$name] = $itemValue;
         }
 
         if ($this->useObjects) {
-            $data = DataUtil::unsetByKey($data, $unsets);
-        }
-        else {
-            $data = Util::unsetInArray($data, $unsets);
+            return DataUtil::unsetByKey($data, $unsets);
         }
 
-        return $data;
+        return Util::unsetInArray($data, $unsets);
     }
 
-    /**
-     * Get content from files for unite files.
-     */
     private function getContents(string $path)
     {
         $fileContent = $this->fileManager->getContents($path);

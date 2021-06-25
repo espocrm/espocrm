@@ -66,11 +66,7 @@ class ReaderTest extends \PHPUnit\Framework\TestCase
         $this->unifierObj
             ->expects($this->once())
             ->method('unify')
-            ->with([
-                'corePath' => 'application/Espo/Resources/test/hello',
-                'modulePath' => 'application/Espo/Modules/{*}/Resources/test/hello',
-                'customPath' => 'custom/Espo/Custom/Resources/test/hello',
-            ])
+            ->with('test/hello', false)
             ->willReturn((object) []);
 
         $this->reader->read('test/hello', $params);
@@ -84,11 +80,7 @@ class ReaderTest extends \PHPUnit\Framework\TestCase
         $this->unifier
             ->expects($this->once())
             ->method('unify')
-            ->with([
-                'corePath' => 'application/Espo/Resources/test/hello',
-                'modulePath' => 'application/Espo/Modules/{*}/Resources/test/hello',
-                'customPath' => 'custom/Espo/Custom/Resources/test/hello',
-            ])
+            ->with('test/hello', false)
             ->willReturn([]);
 
         $this->reader->read('test/hello', $params);
@@ -103,10 +95,7 @@ class ReaderTest extends \PHPUnit\Framework\TestCase
         $this->unifier
             ->expects($this->once())
             ->method('unify')
-            ->with([
-                'corePath' => 'application/Espo/Resources/test/hello',
-                'modulePath' => 'application/Espo/Modules/{*}/Resources/test/hello',
-            ])
+            ->with('test/hello', true)
             ->willReturn([]);
 
         $this->reader->read('test/hello', $params);
