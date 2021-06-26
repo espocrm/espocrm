@@ -98,10 +98,7 @@ class Layout
             return Json::encode($data);
         }
 
-        $filePath = Util::concatPath(
-            $this->defaultPath,
-            $name . '.json'
-        );
+        $filePath = $this->defaultPath . '/' . $name . '.json';
 
         if (!$this->fileManager->isFile($filePath)) {
             return null;
