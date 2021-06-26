@@ -37,36 +37,32 @@ use Espo\Core\{
     Utils\Util,
     Utils\DataCache,
     Utils\Log,
+    Utils\Module\PathProvider,
 };
 
 /**
- * Runs hooks. E.g. beforeSave, afterSave. Hooks can be located in a folder that matches a certain *entityType* or
- * in Common folder. Common hooks will be applied to any *entityType*.
+ * Runs hooks. E.g. beforeSave, afterSave. Hooks can be located in a folder
+ * that matches a certain *entityType* or in the `Common` folder.
+ * Common hooks are applied to all entity types.
  */
 class HookManager
 {
-    const DEFAULT_ORDER = 9;
+    private const DEFAULT_ORDER = 9;
 
     private $data;
 
-    protected $isDisabled;
+    private $isDisabled;
 
     private $hookListHash = [];
 
     private $hooks;
 
-    protected $cacheKey = 'hooks';
+    private $cacheKey = 'hooks';
 
-    protected $ignoredMethodList = [
+    private $ignoredMethodList = [
         '__construct',
         'getDependencyList',
         'inject',
-    ];
-
-    protected $paths = [
-        'corePath' => 'application/Espo/Hooks',
-        'modulePath' => 'application/Espo/Modules/{*}/Hooks',
-        'customPath' => 'custom/Espo/Custom/Hooks',
     ];
 
     private $injectableFactory;
@@ -81,13 +77,16 @@ class HookManager
 
     private $log;
 
+    private $pathProvider;
+
     public function __construct(
         InjectableFactory $injectableFactory,
         FileManager $fileManager,
         Metadata $metadata,
         Config $config,
         DataCache $dataCache,
-        Log $log
+        Log $log,
+        PathProvider $pathProvider
     ) {
         $this->injectableFactory = $injectableFactory;
         $this->fileManager = $fileManager;
@@ -95,6 +94,7 @@ class HookManager
         $this->config = $config;
         $this->dataCache = $dataCache;
         $this->log = $log;
+        $this->pathProvider = $pathProvider;
     }
 
     public function process(
@@ -146,7 +146,7 @@ class HookManager
         $this->isDisabled = false;
     }
 
-    protected function loadHooks(): void
+    private function loadHooks(): void
     {
         if ($this->config->get('useCache') && $this->dataCache->has($this->cacheKey)) {
             $this->data = $this->dataCache->get($this->cacheKey);
@@ -156,15 +156,15 @@ class HookManager
 
         $metadata = $this->metadata;
 
-        $data = $this->getHookData($this->paths['customPath']);
+        $data = $this->readHookData($this->pathProvider->getCustom() . 'Hooks');
 
         foreach ($metadata->getModuleList() as $moduleName) {
-            $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+            $modulePath = $this->pathProvider->getModule($moduleName) . 'Hooks';
 
-            $data = $this->getHookData($modulePath, $data);
+            $data = $this->readHookData($modulePath, $data);
         }
 
-        $data = $this->getHookData($this->paths['corePath'], $data);
+        $data = $this->readHookData($this->pathProvider->getCore() . 'Hooks', $data);
 
         $this->data = $this->sortHooks($data);
 
@@ -173,7 +173,7 @@ class HookManager
         }
     }
 
-    protected function createHookByClassName(string $className): object
+    private function createHookByClassName(string $className): object
     {
         if (!class_exists($className)) {
             $this->log->error("Hook class '{$className}' does not exist.");
@@ -184,55 +184,45 @@ class HookManager
         return $obj;
     }
 
-    /**
-     * Get and merge hook data by checking the files exist in $hookDirs.
-     *
-     * @param $hookDirs - can be ['Espo/Hooks', 'Espo/Custom/Hooks', 'Espo/Modules/Crm/Hooks']
-     */
-    protected function getHookData($hookDirs, array $hookData = []): array
+    private function readHookData(string $hookDir, array $hookData = []): array
     {
-        if (is_string($hookDirs)) {
-            $hookDirs = (array) $hookDirs;
+        if (!$this->fileManager->exists($hookDir)) {
+            return $hookData;
         }
 
-        foreach ($hookDirs as $hookDir) {
-            if (!file_exists($hookDir)) {
-                continue;
-            }
+        $fileList = $this->fileManager->getFileList($hookDir, 1, '\.php$', true);
 
-            $fileList = $this->fileManager->getFileList($hookDir, 1, '\.php$', true);
+        foreach ($fileList as $scopeName => $hookFiles) {
+            $hookScopeDirPath = Util::concatPath($hookDir, $scopeName);
+            $normalizedScopeName = Util::normilizeScopeName($scopeName);
 
-            foreach ($fileList as $scopeName => $hookFiles) {
-                $hookScopeDirPath = Util::concatPath($hookDir, $scopeName);
-                $normalizedScopeName = Util::normilizeScopeName($scopeName);
+            foreach ($hookFiles as $hookFile) {
+                $hookFilePath = Util::concatPath($hookScopeDirPath, $hookFile);
+                $className = Util::getClassName($hookFilePath);
 
-                $scopeHooks = [];
+                $classMethods = get_class_methods($className);
 
-                foreach ($hookFiles as $hookFile) {
-                    $hookFilePath = Util::concatPath($hookScopeDirPath, $hookFile);
-                    $className = Util::getClassName($hookFilePath);
+                $hookMethods = array_diff($classMethods, $this->ignoredMethodList);
 
-                    $classMethods = get_class_methods($className);
-                    $hookMethods = array_diff($classMethods, $this->ignoredMethodList);
-
-                    $hookMethods = array_filter($hookMethods, function ($item) {
-                        if (strpos($item, 'set') === 0) {
-                            return false;
-                        }
-
-                        return true;
-                    });
-
-                    foreach ($hookMethods as $hookType) {
-                        $entityHookData = $hookData[$normalizedScopeName][$hookType] ?? [];
-
-                        if (!$this->hookExists($className, $entityHookData)) {
-                            $hookData[$normalizedScopeName][$hookType][] = [
-                                'className' => $className,
-                                'order' => $className::$order ?? self::DEFAULT_ORDER,
-                            ];
-                        }
+                $hookMethods = array_filter($hookMethods, function ($item) {
+                    if (strpos($item, 'set') === 0) {
+                        return false;
                     }
+
+                    return true;
+                });
+
+                foreach ($hookMethods as $hookType) {
+                    $entityHookData = $hookData[$normalizedScopeName][$hookType] ?? [];
+
+                    if ($this->hookExists($className, $entityHookData)) {
+                        continue;
+                    }
+
+                    $hookData[$normalizedScopeName][$hookType][] = [
+                        'className' => $className,
+                        'order' => $className::$order ?? self::DEFAULT_ORDER,
+                    ];
                 }
             }
         }
@@ -241,12 +231,12 @@ class HookManager
     }
 
     /**
-     * Sort hooks by the order param.
+     * Sort hooks by the order parameter.
      */
-    protected function sortHooks(array $hooks): array
+    private function sortHooks(array $hooks): array
     {
-        foreach ($hooks as $scopeName => &$scopeHooks) {
-            foreach ($scopeHooks as $hookName => &$hookList) {
+        foreach ($hooks as &$scopeHooks) {
+            foreach ($scopeHooks as &$hookList) {
                 usort($hookList, [$this, 'cmpHooks']);
             }
         }
@@ -257,12 +247,12 @@ class HookManager
     /**
      * Get sorted hook list.
      */
-    protected function getHookList(string $scope, string $hookName): array
+    private function getHookList(string $scope, string $hookName): array
     {
         $key = $scope . '_' . $hookName;
 
         if (!isset($this->hookListHash[$key])) {
-            $hookList = array();
+            $hookList = [];
 
             if (isset($this->data['Common'][$hookName])) {
                 $hookList = $this->data['Common'][$hookName];
@@ -270,6 +260,7 @@ class HookManager
 
             if (isset($this->data[$scope][$hookName])) {
                 $hookList = array_merge($hookList, $this->data[$scope][$hookName]);
+
                 usort($hookList, array($this, 'cmpHooks'));
             }
 
@@ -288,7 +279,7 @@ class HookManager
     /**
      * Check if hook exists in the list.
      */
-    protected function hookExists(string $className, array $hookData): bool
+    private function hookExists(string $className, array $hookData): bool
     {
         $class = preg_replace('/^.*\\\(.*)$/', '$1', $className);
 
@@ -301,7 +292,7 @@ class HookManager
         return false;
     }
 
-    protected function cmpHooks($a, $b): int
+    private function cmpHooks($a, $b): int
     {
         if ($a['order'] == $b['order']) {
             return 0;

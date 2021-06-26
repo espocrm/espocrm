@@ -39,52 +39,69 @@ use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\DataCache,
     Utils\Log,
+    Utils\Module\PathProvider,
 };
 
 class HookManagerTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
+    private $hookManager;
 
-    protected $objects;
+    private $filesPath = 'tests/unit/testData/Hooks';
 
-    protected $filesPath = 'tests/unit/testData/Hooks';
-
-    protected function setUp() : void
+    protected function setUp(): void
     {
-
-        $this->metadata =
+        $this->metadata = $this->createMock(Metadata::class);
             $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
 
-        $this->config =
-            $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $this->config = $this->createMock(Config::class);
 
-        $this->injectableFactory =
-            $this->getMockBuilder(InjectableFactory::class)->disableOriginalConstructor()->getMock();
+        $this->injectableFactory = $this->createMock(InjectableFactory::class);
 
-        $this->dataCache =
-            $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
+        $this->dataCache = $this->createMock(DataCache::class);
 
         $this->fileManager = new FileManager();
 
-        $this->object = new HookManager(
+        $this->pathProvider = $this->createMock(PathProvider::class);
+
+        $this->hookManager = new HookManager(
             $this->injectableFactory,
             $this->fileManager,
             $this->metadata,
             $this->config,
             $this->dataCache,
-            $this->createMock(Log::class)
+            $this->createMock(Log::class),
+            $this->pathProvider
         );
 
-        $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection = new ReflectionHelper($this->hookManager);
     }
 
-    protected function tearDown() : void
+    private function initPathProvider(string $folder): void
     {
-        $this->object = NULL;
-        $this->reflection = NULL;
+        $this->pathProvider
+            ->method('getCustom')
+            ->willReturn($this->filesPath . '/' . $folder . '/custom/Espo/Custom/');
+
+        $this->pathProvider
+            ->method('getCore')
+            ->willReturn($this->filesPath . '/' . $folder . '/application/Espo/');
+
+        $this->pathProvider
+            ->method('getModule')
+            ->willReturnCallback(
+                function (?string $moduleName) use ($folder): string {
+                    $path = $this->filesPath . '/' . $folder . '/application/Espo/Modules/{*}/';
+
+                    if ($moduleName === null) {
+                        return $path;
+                    }
+
+                    return str_replace('{*}', $moduleName, $path);
+                }
+            );
     }
 
-    public function testIsHookExists()
+    public function testHookExists(): void
     {
         $data = array (
             'Espo\\Hooks\\Note\\Stream' => 8,
@@ -237,11 +254,7 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCase1CustomHook()
     {
-        $this->reflection->setProperty('paths', array(
-            'corePath' => $this->filesPath . '/testCase1/application/Espo/Hooks',
-            'modulePath' => $this->filesPath . '/testCase1/application/Espo/Modules/{*}/Hooks',
-            'customPath' => $this->filesPath . '/testCase1/custom/Espo/Custom/Hooks',
-        ));
+        $this->initPathProvider('testCase1');
 
         $this->config
             ->expects($this->exactly(2))
@@ -262,25 +275,21 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
           'Note' =>
           array (
             'beforeSave' =>
-            array (
-                array (
+            [
+                [
                     'className' => 'tests\\unit\\testData\\Hooks\\testCase1\\custom\\Espo\\Custom\\Hooks\\Note\\Mentions',
                     'order' => 7,
-                ),
-            ),
+                ],
+            ],
           ),
         );
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));
     }
 
-    public function testCase2ModuleHook()
+    public function testCase2ModuleHook1()
     {
-        $this->reflection->setProperty('paths', array(
-            'corePath' => $this->filesPath . '/testCase2/application/Espo/Hooks',
-            'modulePath' => $this->filesPath . '/testCase2/application/Espo/Modules/{*}/Hooks',
-            'customPath' => $this->filesPath . '/testCase2/custom/Espo/Custom/Hooks',
-        ));
+        $this->initPathProvider('testCase2');
 
         $this->config
             ->expects($this->exactly(2))
@@ -316,11 +325,7 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCase2ModuleHookReverseModuleOrder()
     {
-        $this->reflection->setProperty('paths', array(
-            'corePath' => $this->filesPath . '/testCase2/application/Espo/Hooks',
-            'modulePath' => $this->filesPath . '/testCase2/application/Espo/Modules/{*}/Hooks',
-            'customPath' => $this->filesPath . '/testCase2/custom/Espo/Custom/Hooks',
-        ));
+        $this->initPathProvider('testCase2');
 
         $this->config
             ->expects($this->exactly(2))
@@ -356,11 +361,7 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testCase3CoreHook()
     {
-        $this->reflection->setProperty('paths', array(
-            'corePath' => $this->filesPath . '/testCase3/application/Espo/Hooks',
-            'modulePath' => $this->filesPath . '/testCase3/application/Espo/Modules/{*}/Hooks',
-            'customPath' => $this->filesPath . '/testCase3/custom/Espo/Custom/Hooks',
-        ));
+        $this->initPathProvider('testCase3');
 
         $this->config
             ->expects($this->exactly(2))
@@ -389,80 +390,5 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertEquals($result, $this->reflection->getProperty('data'));
-    }
-
-    public function noTestGetHookList()
-    {
-        $this->reflection->setProperty('data', array (
-          'Common' =>
-          array (
-            'afterSave' =>
-            array (
-                array (
-                    'className' => 'Espo\\Hooks\\Common\\AssignmentEmailNotification',
-                    'order' => 9,
-                ),
-                array (
-                    'className' => 'Espo\\Hooks\\Common\\Stream',
-                    'order' => 9,
-                ),
-                array (
-                    'className' => 'Espo\\Hooks\\Common\\Notifications',
-                    'order' => 10,
-                ),
-            ),
-            'beforeSave' =>
-            array (
-                array (
-                    'className' => 'Espo\\Hooks\\Common\\CurrencyConverted',
-                    'order' => 1,
-                ),
-                array (
-                    'className' => 'Espo\\Hooks\\Common\\Formula',
-                    'order' => 5,
-                ),
-                array (
-                    'className' => 'Espo\\Hooks\\Common\\NextNumber',
-                    'order' => 10,
-                ),
-            ),
-          ),
-          'Note' =>
-          array (
-            'beforeSave' =>
-            array (
-                array (
-                    'className' => 'Espo\\Hooks\\Note\\Mentions',
-                    'order' => 9,
-                ),
-            ),
-            'afterSave' =>
-            array (
-                array (
-                    'className' => 'Espo\\Hooks\\Note\\Btest',
-                    'order' => 9,
-                ),
-                array (
-                    'className' => 'Espo\\Hooks\\Note\\Notifications',
-                    'order' => 14,
-                ),
-            ),
-          ),
-        ));
-
-        $resultBeforeSave = array(
-            'Espo\\Hooks\\Common\\CurrencyConverted',
-            'Espo\\Hooks\\Common\\Formula',
-            'Espo\\Hooks\\Note\\Mentions',
-            'Espo\\Hooks\\Common\\NextNumber',
-        );
-
-        $resultAfterSave = array(
-            'Espo\\Hooks\\Common\\AssignmentEmailNotification',
-            'Espo\\Hooks\\Note\\Btest',
-            'Espo\\Hooks\\Common\\Stream',
-            'Espo\\Hooks\\Common\\Notifications',
-            'Espo\\Hooks\\Note\\Notifications',
-        );
     }
 }
