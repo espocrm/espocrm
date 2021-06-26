@@ -45,10 +45,14 @@
         "phpunit/phpunit": "^9"
     },
     "autoload": {
-        "psr-0": {
-            "": "application/",
-            "tests": "",
-            "Espo\\Custom": "custom/"
+        "psr-4": {
+            "Espo\\": "application/Espo/",
+            "Espo\\Custom\\": "custom/Espo/Custom/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "tests\\": "tests/"
         }
     },
     "repositories": [
