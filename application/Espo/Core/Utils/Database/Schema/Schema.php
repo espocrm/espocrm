@@ -47,6 +47,7 @@ use Espo\Core\{
     Utils\Database\DBAL\Schema\Comparator,
     Utils\Database\Converter as DatabaseConverter,
     Utils\Log,
+    Utils\Module\PathProvider,
 };
 
 use Throwable;
@@ -73,10 +74,7 @@ class Schema
 
     private $log;
 
-    protected $fieldTypePaths = [
-        'application/Espo/Core/Utils/Database/DBAL/FieldTypes',
-        'custom/Espo/Custom/Core/Utils/Database/DBAL/FieldTypes',
-    ];
+    private $fieldTypePath = 'application/Espo/Core/Utils/Database/DBAL/FieldTypes';
 
     private $rebuildActionsPath = 'Core/Utils/Database/Schema/rebuildActions';
 
@@ -96,7 +94,8 @@ class Schema
         EntityManager $entityManager,
         ClassMap $classMap,
         OrmMetadataData $ormMetadataData,
-        Log $log
+        Log $log,
+        PathProvider $pathProvider
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
@@ -118,7 +117,8 @@ class Schema
             $this->fileManager,
             $this,
             $this->config,
-            $this->log
+            $this->log,
+            $pathProvider
         );
 
         $this->ormMetadataData = $ormMetadataData;
@@ -171,30 +171,27 @@ class Schema
 
     protected function initFieldTypes()
     {
-        foreach ($this->fieldTypePaths as $path) {
-            $typeList = $this->getFileManager()->getFileList($path, false, '\.php$');
+        $typeList = $this->getFileManager()->getFileList($this->fieldTypePath, false, '\.php$');
 
-            if ($typeList === false) {
-                continue;
+        foreach ($typeList as $name) {
+            $typeName = preg_replace('/Type\.php$/i', '', $name);
+            $dbalTypeName = strtolower($typeName);
+
+            $filePath = Util::concatPath($this->fieldTypePath, $typeName . 'Type');
+            $class = Util::getClassName($filePath);
+
+            if (!Type::hasType($dbalTypeName)) {
+                Type::addType($dbalTypeName, $class);
+            }
+            else {
+                Type::overrideType($dbalTypeName, $class);
             }
 
-            foreach ($typeList as $name) {
-                $typeName = preg_replace('/Type\.php$/i', '', $name);
-                $dbalTypeName = strtolower($typeName);
+            $dbTypeName = method_exists($class, 'getDbTypeName') ? $class::getDbTypeName() : $dbalTypeName;
 
-                $filePath = Util::concatPath($path, $typeName . 'Type');
-                $class = Util::getClassName($filePath);
-
-                if (! Type::hasType($dbalTypeName)) {
-                    Type::addType($dbalTypeName, $class);
-                } else {
-                    Type::overrideType($dbalTypeName, $class);
-                }
-
-                $dbTypeName = method_exists($class, 'getDbTypeName') ? $class::getDbTypeName() : $dbalTypeName;
-
-                $this->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping($dbTypeName, $dbalTypeName);
-            }
+            $this->getConnection()
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping($dbTypeName, $dbalTypeName);
         }
     }
 

@@ -36,7 +36,8 @@ use Espo\Core\Utils\{
     File\Manager as FileManager,
     Log,
     Database\Schema\Schema,
-    Database\Schema\Utils as SchemaUtils
+    Database\Schema\Utils as SchemaUtils,
+    Module\PathProvider,
 };
 
 use Doctrine\DBAL\{
@@ -58,11 +59,9 @@ class Converter
 
     private $log;
 
-    protected $tablePaths = [
-        'corePath' => 'application/Espo/Core/Utils/Database/Schema/tables',
-        'modulePath' => 'application/Espo/Modules/{*}/Core/Utils/Database/Schema/tables',
-        'customPath' => 'custom/Espo/Custom/Core/Utils/Database/Schema/tables',
-    ];
+    private $pathProvider;
+
+    private $tablesPath = 'Core/Utils/Database/Schema/tables';
 
     protected $typeList;
 
@@ -87,7 +86,7 @@ class Converter
     ];
 
     protected $notStorableTypes = [
-        'foreign'
+        'foreign',
     ];
 
     protected $maxIndexLength;
@@ -97,30 +96,17 @@ class Converter
         FileManager $fileManager,
         Schema $databaseSchema,
         Config $config,
-        Log $log
+        Log $log,
+        PathProvider $pathProvider
     ) {
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->databaseSchema = $databaseSchema;
         $this->config = $config;
         $this->log = $log;
+        $this->pathProvider = $pathProvider;
 
         $this->typeList = array_keys(DbalType::getTypesMap());
-    }
-
-    protected function getMetadata()
-    {
-        return $this->metadata;
-    }
-
-    protected function getFileManager()
-    {
-        return $this->fileManager;
-    }
-
-    protected function getConfig()
-    {
-        return $this->config;
     }
 
     /**
@@ -467,7 +453,7 @@ class Converter
             }
         }
 
-        $databaseParams = $this->getConfig()->get('database');
+        $databaseParams = $this->config->get('database');
 
         if (!isset($databaseParams['charset']) || $databaseParams['charset'] == 'utf8mb4') {
             $dbFieldParams['platformOptions'] = [
@@ -542,28 +528,24 @@ class Converter
      */
     protected function getCustomTables(array $ormMeta)
     {
-        $customTables = $this->loadData($this->tablePaths['corePath']);
+        $customTables = $this->loadData($this->pathProvider->getCore() . $this->tablesPath);
 
-        if (!empty($this->tablePaths['modulePath'])) {
-            $moduleDir = strstr($this->tablePaths['modulePath'], '{*}', true);
+        foreach ($this->metadata->getModuleList() as $moduleName) {
+            $modulePath = $this->pathProvider->getModule($moduleName) . $this->tablesPath;
 
-            $moduleList = isset($this->metadata) ?
-                $this->getMetadata()->getModuleList() :
-                $this->getFileManager()->getFileList($moduleDir, false, '', false);
-
-            foreach ($moduleList as $moduleName) {
-                $modulePath = str_replace('{*}', $moduleName, $this->tablePaths['modulePath']);
-
-                $customTables = Util::merge($customTables, $this->loadData($modulePath));
-            }
+            $customTables = Util::merge(
+                $customTables,
+                $this->loadData($modulePath)
+            );
         }
 
-        if (!empty($this->tablePaths['customPath'])) {
-            $customTables = Util::merge($customTables, $this->loadData($this->tablePaths['customPath']));
-        }
+        $customTables = Util::merge(
+            $customTables,
+            $this->loadData($this->pathProvider->getCustom() . $this->tablesPath)
+        );
 
-        //get custom tables from metdata 'additionalTables'
-        foreach ($ormMeta as $entityName => $entityParams) {
+        // Get custom tables from metdata 'additionalTables'.
+        foreach ($ormMeta as $entityParams) {
             if (isset($entityParams['additionalTables']) && is_array($entityParams['additionalTables'])) {
                 $customTables = Util::merge($customTables, $entityParams['additionalTables']);
             }
@@ -615,10 +597,10 @@ class Converter
             return $tables;
         }
 
-        $fileList = $this->getFileManager()->getFileList($path, false, '\.php$', true);
+        $fileList = $this->fileManager->getFileList($path, false, '\.php$', true);
 
         foreach($fileList as $fileName) {
-            $fileData = $this->getFileManager()->getPhpContents($path . '/' . $fileName);
+            $fileData = $this->fileManager->getPhpContents($path . '/' . $fileName);
 
             if (is_array($fileData)) {
                 $tables = Util::merge($tables, $fileData);
