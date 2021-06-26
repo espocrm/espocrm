@@ -49,6 +49,11 @@ class DefaultBinding implements BindingProcessor
         );
 
         $binder->bindService(
+            'Espo\\Core\\Utils\\Module',
+            'module'
+        );
+
+        $binder->bindService(
             'Espo\\ORM\\EntityManager',
             'entityManager'
         );

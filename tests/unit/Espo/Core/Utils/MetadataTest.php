@@ -38,16 +38,15 @@ use Espo\Core\Utils\DataCache;
 use Espo\Core\Utils\File\UnifierObj;
 use Espo\Core\Utils\File\Unifier;
 use Espo\Core\Utils\Module;
+use Espo\Core\Utils\Module\PathProvider as ModulePathProvider;
 use Espo\Core\Utils\Resource\Reader;
 use Espo\Core\Utils\Resource\PathProvider;
 
-use Espo\Core\Utils\Module\PathProvider as ModulePathProvider;
-
 class MetadataTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
+    private $object;
 
-    protected $reflection;
+    private $reflection;
 
     protected function setUp(): void
     {
@@ -68,7 +67,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $reader = new Reader($unifier, $unifierObj);
 
-        $this->object = new Metadata($this->fileManager, $this->dataCache, $reader, true);
+        $this->object = new Metadata($this->fileManager, $this->dataCache, $reader, $module, true);
 
         $this->reflection = new ReflectionHelper($this->object);
 

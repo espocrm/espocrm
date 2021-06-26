@@ -60,6 +60,8 @@ class ContainerBuilder
 
     private $dataCacheClassName = DataCache::class;
 
+    private $moduleClassName = Module::class;
+
     private $bindingLoader = null;
 
     private $services = [];
@@ -148,16 +150,19 @@ class ContainerBuilder
             new $this->dataCacheClassName($fileManager)
         );
 
+        $useCache = $config->get('useCache') ?? false;
+
+        $module = $this->services['module'] ?? (
+            new $this->moduleClassName($fileManager, $dataCache, $useCache)
+        );
+
         $this->services['config'] = $config;
         $this->services['fileManager'] = $fileManager;
         $this->services['dataCache'] = $dataCache;
-
-        $useCache = $config->get('useCache') ?? false;
+        $this->services['module'] = $module;
 
         $bindingLoader = $this->bindingLoader ?? (
-            new EspoBindingLoader(
-                new Module($fileManager, $dataCache, $useCache)
-            )
+            new EspoBindingLoader($module)
         );
 
         $bindingContainer = new BindingContainer($bindingLoader->load());

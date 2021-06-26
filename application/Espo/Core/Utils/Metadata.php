@@ -75,15 +75,15 @@ class Metadata
         FileManager $fileManager,
         DataCache $dataCache,
         ResourceReader $resourceReader,
+        Module $module,
         bool $useCache = false
     ){
         $this->fileManager = $fileManager;
         $this->dataCache = $dataCache;
         $this->resourceReader = $resourceReader;
+        $this->module = $module;
 
         $this->useCache = $useCache;
-
-        $this->module = new Module($this->fileManager, $this->dataCache, $useCache);
     }
 
     private function getMetadataHelper(): Helper

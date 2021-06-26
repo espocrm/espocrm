@@ -30,7 +30,6 @@
 namespace Espo\Classes\AppInfo;
 
 use Espo\Core\{
-    Utils\File\Manager as FileManager,
     Utils\Module,
     Binding\EspoBindingLoader,
     Binding\Binding as BindingItem,
@@ -39,20 +38,18 @@ use Espo\Core\{
 
 class Binding
 {
-    private $fileManager;
+    private $module;
 
-    public function __construct(FileManager $fileManager)
+    public function __construct(Module $module)
     {
-        $this->fileManager = $fileManager;
+        $this->module = $module;
     }
 
     public function process(Params $params) : ?string
     {
         $result = '';
 
-        $bindingLoader = new EspoBindingLoader(
-            new Module($this->fileManager)
-        );
+        $bindingLoader = new EspoBindingLoader($this->module);
 
         $data = $bindingLoader->load();
 

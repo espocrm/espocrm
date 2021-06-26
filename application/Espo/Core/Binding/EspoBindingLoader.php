@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Binding;
 
-use Espo\Core\{
-    Utils\Module,
-};
+use Espo\Core\Utils\Module;
 
 class EspoBindingLoader implements BindingLoader
 {
