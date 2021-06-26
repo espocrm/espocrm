@@ -29,16 +29,21 @@
 
 namespace Espo\Core\Utils\Autoload;
 
+use Espo\Core\Utils\File\Manager as FileManager;
+
 class Loader
 {
-    protected $namespaceLoader;
+    private $namespaceLoader;
 
-    public function __construct(NamespaceLoader $namespaceLoader)
+    private $fileManager;
+
+    public function __construct(NamespaceLoader $namespaceLoader, FileManager $fileManager)
     {
         $this->namespaceLoader = $namespaceLoader;
+        $this->fileManager = $fileManager;
     }
 
-    public function register(array $data)
+    public function register(array $data): void
     {
         /* load "psr-4", "psr-0", "classmap" */
         $this->namespaceLoader->register($data);
@@ -50,7 +55,7 @@ class Loader
         $this->registerFiles($data);
     }
 
-    protected function registerAutoloadFileList(array $data)
+    private function registerAutoloadFileList(array $data): void
     {
         $keyName = 'autoloadFileList';
 
@@ -59,13 +64,13 @@ class Loader
         }
 
         foreach ($data[$keyName] as $filePath) {
-            if (file_exists($filePath)) {
+            if ($this->fileManager->exists($filePath)) {
                 require_once($filePath);
             }
         }
     }
 
-    protected function registerFiles(array $data)
+    private function registerFiles(array $data): void
     {
         $keyName = 'files';
 
@@ -73,8 +78,8 @@ class Loader
             return;
         }
 
-        foreach ($data[$keyName] as $id => $filePath) {
-            if (file_exists($filePath)) {
+        foreach ($data[$keyName] as $filePath) {
+            if ($this->fileManager->exists($filePath)) {
                 require_once($filePath);
             }
         }

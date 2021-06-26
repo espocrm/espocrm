@@ -33,12 +33,10 @@ use Espo\Core\{
     Utils\Util,
     Utils\Config,
     Utils\DataCache,
-    Utils\Log,
+    Utils\File\Manager as FileManager,
 };
 
 use Composer\Autoload\ClassLoader;
-
-use Exception;
 
 class NamespaceLoader
 {
@@ -57,7 +55,6 @@ class NamespaceLoader
     private $methodNameMap = [
         'psr-4' => 'addPsr4',
         'psr-0' => 'add',
-        'classmap' => 'addClassMap',
     ];
 
     private $vendorNamespaces;
@@ -68,32 +65,32 @@ class NamespaceLoader
 
     private $dataCache;
 
-    private $log;
+    private $fileManager;
 
-    public function __construct(Config $config, DataCache $dataCache, Log $log)
+    public function __construct(Config $config, DataCache $dataCache, FileManager $fileManager)
     {
         $this->config = $config;
         $this->dataCache = $dataCache;
-        $this->log = $log;
+        $this->fileManager = $fileManager;
 
         $this->classLoader = new ClassLoader();
     }
 
-    public function register(array $data)
+    public function register(array $data): void
     {
-        $this->addListToClassLoader($this->classLoader, $data);
+        $this->addListToClassLoader($data);
 
         $this->classLoader->register(true);
     }
 
-    protected function loadNamespaces($basePath = '')
+    private function loadNamespaces(string $basePath = ''): array
     {
         $namespaces = [];
 
         foreach ($this->namespacesPaths as $type => $path) {
             $mapFile = Util::concatPath($basePath, $path);
 
-            if (!file_exists($mapFile)) {
+            if (!$this->fileManager->exists($mapFile)) {
                 continue;
             }
 
@@ -107,7 +104,7 @@ class NamespaceLoader
         return $namespaces;
     }
 
-    protected function getNamespaces()
+    private function getNamespaces(): array
     {
         if (!$this->namespaces) {
             $this->namespaces = $this->loadNamespaces();
@@ -116,18 +113,14 @@ class NamespaceLoader
         return $this->namespaces;
     }
 
-    protected function getNamespaceList($type, $default = [])
+    private function getNamespaceList(string $type): array
     {
         $namespaces = $this->getNamespaces();
 
-        if (isset($namespaces[$type])) {
-            return array_keys($namespaces[$type]);
-        }
-
-        return $default;
+        return array_keys($namespaces[$type]) ?? [];
     }
 
-    protected function addNamespace($type, $name, $path)
+    private function addNamespace(string $type, string $name, $path): void
     {
         if (!$this->namespaces) {
             $this->getNamespaces();
@@ -136,7 +129,7 @@ class NamespaceLoader
         $this->namespaces[$type][$name] = (array) $path;
     }
 
-    protected function hasNamespace($type, $name)
+    private function hasNamespace(string $type, string $name): bool
     {
         if (in_array($name, $this->getNamespaceList($type))) {
             return true;
@@ -144,6 +137,7 @@ class NamespaceLoader
 
         if (!preg_match('/\\\$/', $name)) {
             $name = $name . '\\';
+
             if (in_array($name, $this->getNamespaceList($type))) {
                 return true;
             }
@@ -152,47 +146,40 @@ class NamespaceLoader
         return false;
     }
 
-    protected function addListToClassLoader(ClassLoader $classLoader, array $list, bool $skipVendorNamespaces = false)
+    private function addListToClassLoader(array $data, bool $skipVendorNamespaces = false): void
     {
         foreach ($this->methodNameMap as $type => $methodName) {
-            if (!isset($list[$type])) {
+            $itemData = $data[$type] ?? null;
+
+            if ($itemData === null) {
                 continue;
             }
 
-            if (!method_exists($classLoader, $methodName)) {
-                $this->log->warning('Autoload: ClassLoader method ['. $methodName .'] is not found.');
-
-                continue;
-            }
-
-            if ($type == 'classmap') {
-                $classLoader->$methodName($list[$type]);
-
-                continue;
-            }
-
-            foreach ($list[$type] as $prefix => $path) {
+            foreach ($itemData as $prefix => $path) {
                 if (!$skipVendorNamespaces) {
                     $vendorNamespaces = $this->getVendorNamespaces($path);
-                    if (!empty($vendorNamespaces)) {
-                        $this->addListToClassLoader($classLoader, $vendorNamespaces, true);
-                    }
+
+                    $this->addListToClassLoader($vendorNamespaces, true);
                 }
 
-                if (!$this->hasNamespace($type, $prefix)) {
-                    try {
-                        $classLoader->$methodName($prefix, $path);
-                        $this->addNamespace($type, $prefix, $path);
-                    }
-                    catch (Exception $e) {
-                        $this->log->warning('Autoload: error adding the namespace ['. $prefix .']');
-                    }
+                if ($this->hasNamespace($type, $prefix)) {
+                    continue;
                 }
+
+                $this->classLoader->$methodName($prefix, $path);
+
+                $this->addNamespace($type, $prefix, $path);
             }
+        }
+
+        $classMap = $data['classmap'] ?? null;
+
+        if ($classMap !== null) {
+            $this->classLoader->addClassMap($classMap);
         }
     }
 
-    protected function getVendorNamespaces($path)
+    private function getVendorNamespaces(string $path): array
     {
         $useCache = $this->config->get('useCache');
 
@@ -220,16 +207,14 @@ class NamespaceLoader
             }
         }
 
-        if (isset($this->vendorNamespaces[$path])) {
-            return $this->vendorNamespaces[$path];
-        }
+        return $this->vendorNamespaces[$path] ?? [];
     }
 
-    protected function findVendorPath($path)
+    private function findVendorPath(string $path): ?string
     {
         $vendor = Util::concatPath($path, $this->autoloadFilePath);
 
-        if (file_exists($vendor)) {
+        if ($this->fileManager->exists($vendor)) {
             return $path;
         }
 
@@ -238,5 +223,7 @@ class NamespaceLoader
         if (!empty($parentDir) && $parentDir !== '.') {
             return $this->findVendorPath($parentDir);
         }
+
+        return null;
     }
 }
