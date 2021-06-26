@@ -177,6 +177,8 @@ class NamespaceLoader
                 }
                 catch (Throwable $e) {
                     $this->log->error("Could not add '{$prefix}' to autoload: " . $e->getMessage());
+
+                    continue;
                 }
 
                 $this->addNamespace($type, $prefix, $path);
