@@ -34,9 +34,12 @@ use Espo\Core\{
     Utils\Config,
     Utils\DataCache,
     Utils\File\Manager as FileManager,
+    Utils\Log,
 };
 
 use Composer\Autoload\ClassLoader;
+
+use Throwable;
 
 class NamespaceLoader
 {
@@ -67,11 +70,14 @@ class NamespaceLoader
 
     private $fileManager;
 
-    public function __construct(Config $config, DataCache $dataCache, FileManager $fileManager)
+    private $log;
+
+    public function __construct(Config $config, DataCache $dataCache, FileManager $fileManager, Log $log)
     {
         $this->config = $config;
         $this->dataCache = $dataCache;
         $this->fileManager = $fileManager;
+        $this->log = $log;
 
         $this->classLoader = new ClassLoader();
     }
@@ -166,7 +172,12 @@ class NamespaceLoader
                     continue;
                 }
 
-                $this->classLoader->$methodName($prefix, $path);
+                try {
+                    $this->classLoader->$methodName($prefix, $path);
+                }
+                catch (Throwable $e) {
+                    $this->log->error("Could not add '{$prefix}' to autoload: " . $e->getMessage());
+                }
 
                 $this->addNamespace($type, $prefix, $path);
             }
