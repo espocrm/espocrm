@@ -29,7 +29,6 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
-
 use Espo\Core\{
     Utils\Autoload,
     Utils\Config,
@@ -37,25 +36,55 @@ use Espo\Core\{
     Utils\Autoload\Loader,
     Utils\DataCache,
     Utils\File\Manager as FileManager,
+    Utils\Resource\PathProvider,
 };
 
 class AutoloadTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->config = $this->createMock(Config::class);
         $this->metadata = $this->createMock(Metadata::class);
         $this->dataCache = $this->createMock(DataCache::class);
         $this->fileManager = $this->createMock(FileManager::class);
         $this->loader = $this->createMock(Loader::class);
+        $this->pathProvider = $this->createMock(PathProvider::class);
+
+        $this->initPathProvider();
 
         $this->autoload = new Autoload(
             $this->config,
             $this->metadata,
             $this->dataCache,
             $this->fileManager,
-            $this->loader
+            $this->loader,
+            $this->pathProvider
         );
+    }
+
+    private function initPathProvider(string $rootPath = ''): void
+    {
+        $this->pathProvider
+            ->method('getCustom')
+            ->willReturn($rootPath . 'custom/Espo/Custom/Resources/');
+
+        $this->pathProvider
+            ->method('getCore')
+            ->willReturn($rootPath . 'application/Espo/Resources/');
+
+        $this->pathProvider
+            ->method('getModule')
+            ->willReturnCallback(
+                function (?string $moduleName) use ($rootPath): string {
+                    $path = $rootPath . 'application/Espo/Modules/{*}/Resources/';
+
+                    if ($moduleName === null) {
+                        return $path;
+                    }
+
+                    return str_replace('{*}', $moduleName, $path);
+                }
+            );
     }
 
     public function testMerge()

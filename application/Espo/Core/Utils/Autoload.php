@@ -33,6 +33,7 @@ use Espo\Core\{
     Utils\Autoload\Loader,
     Utils\DataCache,
     Utils\File\Manager as FileManager,
+    Utils\Resource\PathProvider,
 };
 
 use Exception;
@@ -43,11 +44,7 @@ class Autoload
 
     private $cacheKey = 'autoload';
 
-    private $paths = [
-        'corePath' => 'application/Espo/Resources/autoload.json',
-        'modulePath' => 'application/Espo/Modules/{*}/Resources/autoload.json',
-        'customPath' => 'custom/Espo/Custom/Resources/autoload.json',
-    ];
+    private $autoloadFileName = 'autoload.json';
 
     private $config;
 
@@ -59,18 +56,22 @@ class Autoload
 
     private $loader;
 
+    private $pathProvider;
+
     public function __construct(
         Config $config,
         Metadata $metadata,
         DataCache $dataCache,
         FileManager $fileManager,
-        Loader $loader
+        Loader $loader,
+        PathProvider $pathProvider
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
         $this->dataCache = $dataCache;
         $this->fileManager = $fileManager;
         $this->loader = $loader;
+        $this->pathProvider = $pathProvider;
     }
 
     private function getData(): array
@@ -101,15 +102,25 @@ class Autoload
 
     private function loadData(): array
     {
-        $data = $this->loadDataFromFile($this->paths['corePath']);
+        $corePath = $this->pathProvider->getCore() . $this->autoloadFileName;
+
+        $data = $this->loadDataFromFile($corePath);
 
         foreach ($this->metadata->getModuleList() as $moduleName) {
-            $modulePath = str_replace('{*}', $moduleName, $this->paths['modulePath']);
+            $modulePath = $this->pathProvider->getModule($moduleName) . $this->autoloadFileName;
 
-            $data = array_merge_recursive($data, $this->loadDataFromFile($modulePath));
+            $data = array_merge_recursive(
+                $data,
+                $this->loadDataFromFile($modulePath)
+            );
         }
 
-        return array_merge_recursive($data, $this->loadDataFromFile($this->paths['customPath']));
+        $customPath = $this->pathProvider->getCustom() . $this->autoloadFileName;
+
+        return array_merge_recursive(
+            $data,
+            $this->loadDataFromFile($customPath)
+        );
     }
 
     private function loadDataFromFile(string $filePath): array
