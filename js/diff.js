@@ -681,10 +681,14 @@ class Diff
         }
 
         let composerLockOldContents = cp.execSync("git show " + commitHash + ":composer.lock").toString();
+        let composerOldContents = cp.execSync("git show " + commitHash + ":composer.json").toString();
         let composerLockNewContents = cp.execSync("cat " + currentPath + "/composer.lock").toString();
         let composerNewContents = cp.execSync("cat " + currentPath + "/composer.json").toString();
 
-        if (composerLockNewContents === composerLockOldContents) {
+        if (
+            composerLockNewContents === composerLockOldContents &&
+            composerOldContents === composerNewContents
+        ) {
             return;
         }
 
