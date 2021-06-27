@@ -1,6 +1,7 @@
 {
     "name": "espocrm/espocrm",
     "description": "EspoCRM. Open source CRM application.",
+    "type": "project",
     "homepage": "https://github.com/espocrm/espocrm.git",
     "license": "GPL-3.0-only",
     "require": {
@@ -64,5 +65,18 @@
     "provide": {
         "ext-ldap": "*",
         "ext-zmq": "*"
-    }
+    },
+    "authors": [
+        {
+            "name": "Yurii Kuznietsov",
+            "role": "Developer"
+        },
+        {
+            "name": "Taras Machyshyn",
+            "role": "Developer"
+        },
+        {
+            "name": "Oleksii Avramenko"
+        }
+    ]
 }
