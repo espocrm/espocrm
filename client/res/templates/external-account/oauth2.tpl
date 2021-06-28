@@ -12,14 +12,18 @@
             </div>
         </div>
         <div class="data-panel">
-            <button type="button" class="btn btn-danger {{#if isConnected}}hidden{{/if}}" data-action="connect">{{translate 'Connect' scope='ExternalAccount'}}</button>
+            <button
+                type="button"
+                class="btn btn-danger {{#if isConnected}}hidden{{/if}}"
+                data-action="connect"
+            >{{translate 'Connect' scope='ExternalAccount'}}</button>
             <span class="connected-label label label-success {{#unless isConnected}}hidden{{/unless}}">{{translate 'Connected' scope='ExternalAccount'}}</span>
         </div>
     </div>
     <div class="col-sm-6">
         {{#if helpText}}
         <div class="well">
-            {{{../helpText}}}
+            {{{helpText}}}
         </div>
         {{/if}}
     </div>

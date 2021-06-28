@@ -10,14 +10,14 @@
             tabindex="-1"
         >{{translate 'Add Field'}} <span class="caret"></span></button>
         <ul class="dropdown-menu pull-left filter-list">
-        {{#each ../fieldList}}
+        {{#each fieldList}}
             <li
                 data-name="{{./this}}"
             ><a
                 href="javascript:"
                 data-name="{{./this}}"
                 data-action="add-field"
-            >{{translate this scope=../../entityType category='fields'}}</a></li>
+            >{{translate this scope=../entityType category='fields'}}</a></li>
         {{/each}}
         </ul>
     </div>

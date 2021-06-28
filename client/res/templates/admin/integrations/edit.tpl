@@ -23,7 +23,7 @@
     <div class="col-sm-6">
         {{#if helpText}}
         <div class="well">
-            {{complexText ../helpText}}
+            {{complexText helpText}}
         </div>
         {{/if}}
     </div>
