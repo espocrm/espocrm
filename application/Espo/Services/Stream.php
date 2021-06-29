@@ -68,9 +68,20 @@ class Stream
 
     protected $statusFields = null;
 
-    protected $successDefaultStyleList = ['Held', 'Closed Won', 'Closed', 'Completed', 'Complete', 'Sold'];
+    protected $successDefaultStyleList = [
+        'Held',
+        'Closed Won',
+        'Closed',
+        'Completed',
+        'Complete',
+        'Sold',
+    ];
 
-    protected $dangerDefaultStyleList = ['Not Held', 'Closed Lost', 'Dead'];
+    protected $dangerDefaultStyleList = [
+        'Not Held',
+        'Closed Lost',
+        'Dead',
+    ];
 
     protected $auditedFieldsCache = [];
 
@@ -1503,7 +1514,10 @@ class Stream
     }
 
     public function noteCreateRelated(
-        Entity $entity, string $parentType, string $parentId, array $options = []
+        Entity $entity,
+        string $parentType,
+        string $parentId,
+        array $options = []
     ): void {
 
         $note = $this->entityManager->getEntity('Note');
