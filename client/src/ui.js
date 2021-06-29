@@ -278,7 +278,7 @@ define('ui', [], function () {
                     return;
                 }
 
-                let className = '';
+                let className = ' btn-xs-wide';
 
                 if (o.className) {
                     className = ' ' + o.className;
@@ -299,7 +299,7 @@ define('ui', [], function () {
                     return;
                 }
 
-                let className = '';
+                let className = ' btn-xs-wide';
 
                 if (o.className) {
                     className = ' ' + o.className;

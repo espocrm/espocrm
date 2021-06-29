@@ -227,8 +227,14 @@ define('view-helper', ['lib!marked', 'lib!dompurify'], function (marked, DOMPuri
                     options.hash.text ||
                     this.language.translate(label, 'labels', scope);
 
+                className = options.hash.className || '';
+
+                if (className) {
+                    className = ' ' + className;
+                }
+
                 return new Handlebars.SafeString(
-                    '<button class="btn btn-'+style+' action' +
+                    '<button class="btn btn-' + style + ' action' + className +
                     (options.hash.hidden ? ' hidden' : '') + '" data-action="' + name +
                     '" type="button">'+html+'</button>'
                 );

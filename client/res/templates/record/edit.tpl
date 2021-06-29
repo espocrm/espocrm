@@ -2,7 +2,9 @@
     {{#unless buttonsDisabled}}
     <div class="detail-button-container button-container record-buttons clearfix">
         <div class="btn-group actions-btn-group" role="group">
-        {{#each buttonList}}{{button name scope=../entityType label=label style=style html=html}}{{/each}}
+        {{#each buttonList}}
+            {{button name scope=../entityType label=label style=style html=html className='btn-xs-wide'}}
+        {{/each}}
         {{#if dropdownItemList}}
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <span class="fas fa-ellipsis-h"></span>

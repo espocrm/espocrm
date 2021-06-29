@@ -7,7 +7,7 @@
             {{#each items.buttons}}
                 <a
                     {{#if link}}href="{{link}}"{{else}}href="javascript:"{{/if}}
-                    class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} action{{#if hidden}} hidden{{/if}}"
+                    class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} btn-xs-wide action{{#if hidden}} hidden{{/if}}"
                     data-name="{{name}}"
                     data-action="{{action}}"
                     {{#each data}} data-{{@key}}="{{./this}}"{{/each}}{{#if title}}
