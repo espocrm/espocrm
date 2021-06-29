@@ -31,6 +31,8 @@ namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
 
+use stdClass;
+
 class Note extends Entity
 {
     public const ENTITY_TYPE = 'Note';
@@ -46,6 +48,12 @@ class Note extends Entity
     public const TARGET_PORTALS = 'portals';
 
     public const TYPE_POST = 'Post';
+
+    public const TYPE_UPDATE = 'Update';
+
+    public const TYPE_STATUS = 'Status';
+
+    public const TYPE_CREATE = 'Create';
 
     private $aclIsProcessed = false;
 
@@ -72,6 +80,11 @@ class Note extends Entity
     public function getParentId(): ?string
     {
         return $this->get('parentId');
+    }
+
+    public function getData(): stdClass
+    {
+        return $this->get('data') ?? (object) [];
     }
 
     public function isInternal(): bool

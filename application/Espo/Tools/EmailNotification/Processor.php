@@ -34,6 +34,7 @@ use Espo\{
     ORM\EntityManager,
     ORM\Query\SelectBuilder as SelectBuilder,
     Entities\User as UserEntity,
+    Entities\Note as NoteEntity,
 };
 
 use Espo\Core\{
@@ -50,6 +51,8 @@ use Espo\Core\{
     Utils\Log,
 };
 
+use Espo\Services\Stream\NoteAccessControl;
+
 use Michelf\Markdown;
 
 use Exception;
@@ -58,29 +61,31 @@ use StdClass;
 
 class Processor
 {
-    const HOURS_THERSHOLD = 5;
+    protected const HOURS_THERSHOLD = 5;
 
-    const PROCESS_MAX_COUNT = 200;
+    protected const PROCESS_MAX_COUNT = 200;
 
-    protected $htmlizer;
+    private $htmlizer;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $htmlizerFactory;
+    private $htmlizerFactory;
 
-    protected $emailSender;
+    private $emailSender;
 
-    protected $config;
+    private $config;
 
-    protected $selectBuilderFactory;
+    private $selectBuilderFactory;
 
-    protected $injectableFactory;
+    private $injectableFactory;
 
-    protected $templateFileManager;
+    private $templateFileManager;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $log;
+    private $log;
+
+    private $noteAccessControl;
 
     public function __construct(
         EntityManager $entityManager,
@@ -92,7 +97,8 @@ class Processor
         TemplateFileManager $templateFileManager,
         Metadata $metadata,
         Language $language,
-        Log $log
+        Log $log,
+        NoteAccessControl $noteAccessControl
     ) {
         $this->entityManager = $entityManager;
         $this->htmlizerFactory = $htmlizerFactory;
@@ -104,6 +110,7 @@ class Processor
         $this->metadata = $metadata;
         $this->language = $language;
         $this->log = $log;
+        $this->noteAccessControl = $noteAccessControl;
     }
 
     protected $emailNotificationEntityHandlerHash = [];
@@ -437,7 +444,7 @@ class Processor
         return $this->emailNotificationEntityHandlerHash[$entityType];
     }
 
-    protected function processNotificationNotePost($note, $user): void
+    protected function processNotificationNotePost(NoteEntity $note, UserEntity $user): void
     {
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
@@ -607,8 +614,10 @@ class Processor
         return $this->config->getSiteUrl();
     }
 
-    protected function processNotificationNoteStatus($note, $user): void
+    protected function processNotificationNoteStatus(NoteEntity $note, UserEntity $user): void
     {
+        $this->noteAccessControl->apply($note, $user);
+
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');
 
@@ -643,6 +652,10 @@ class Processor
         $noteData = $note->get('data');
 
         if (empty($noteData)) {
+            return;
+        }
+
+        if ($noteData->value === null) {
             return;
         }
 
@@ -688,7 +701,7 @@ class Processor
         }
     }
 
-    protected function processNotificationNoteEmailReceived($note, $user): void
+    protected function processNotificationNoteEmailReceived(NoteEntity $note, UserEntity $user): void
     {
         $parentId = $note->get('parentId');
         $parentType = $note->get('parentType');

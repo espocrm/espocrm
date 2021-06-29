@@ -33,10 +33,13 @@ use Espo\Core\Utils\Util;
 
 use Espo\Core\{
     Record\Collection as RecordCollection,
+    Exceptions\Error,
 };
 
 use Espo\Entities\Note;
 use Espo\Entities\User;
+
+use Espo\Services\Stream\NoteAccessControl;
 
 use Espo\Core\Di;
 
@@ -48,7 +51,9 @@ class Notification extends \Espo\Services\Record implements
 
     protected $actionHistoryDisabled = true;
 
-    public function notifyAboutMentionInPost(string $userId, string $noteId)
+    private $noteAccessControl = null;
+
+    public function notifyAboutMentionInPost(string $userId, string $noteId): void
     {
         $notification = $this->entityManager->getEntity('Notification');
 
@@ -63,7 +68,7 @@ class Notification extends \Espo\Services\Record implements
         $this->entityManager->saveEntity($notification);
     }
 
-    public function notifyAboutNote(array $userIdList, Note $note)
+    public function notifyAboutNote(array $userIdList, Note $note): void
     {
         $data = ['noteId' => $note->id];
 
@@ -141,7 +146,7 @@ class Notification extends \Espo\Services\Record implements
         }
     }
 
-    public function checkUserNoteAccess(User $user, Note $note) : bool
+    public function checkUserNoteAccess(User $user, Note $note): bool
     {
         if ($user->isPortal()) {
             if ($note->get('relatedType')) {
@@ -170,7 +175,7 @@ class Notification extends \Espo\Services\Record implements
         return true;
     }
 
-    public function getNotReadCount(string $userId) : int
+    public function getNotReadCount(string $userId): int
     {
         $whereClause = array(
             'userId' => $userId,
@@ -208,7 +213,7 @@ class Notification extends \Espo\Services\Record implements
         return true;
     }
 
-    public function getList(string $userId, array $params = []) : RecordCollection
+    public function getList(string $userId, array $params = []): RecordCollection
     {
         $queryBuilder = $this->entityManager
             ->getQueryBuilder()
@@ -218,6 +223,12 @@ class Notification extends \Espo\Services\Record implements
         $whereClause = [
             'userId' => $userId,
         ];
+
+        $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
+
+        if (!$user) {
+            throw new Error("User not found.");
+        }
 
         if (!empty($params['after'])) {
             $whereClause['createdAt>'] = $params['after'];
@@ -275,53 +286,57 @@ class Notification extends \Espo\Services\Record implements
                 case 'MentionInPost':
                     $note = $this->entityManager->getEntity('Note', $data->noteId);
 
-                    if ($note) {
-                        if ($note->get('parentId') && $note->get('parentType')) {
-                            $parent = $this->entityManager
-                                ->getEntity($note->get('parentType'), $note->get('parentId'));
-
-                            if ($parent) {
-                                $note->set('parentName', $parent->get('name'));
-                            }
-                        }
-                        else {
-                            if (!$note->get('isGlobal')) {
-                                $targetType = $note->get('targetType');
-
-                                if (!$targetType || $targetType === 'users') {
-                                    $note->loadLinkMultipleField('users');
-                                }
-
-                                if ($targetType !== 'users') {
-                                    if (!$targetType || $targetType === 'teams') {
-                                        $note->loadLinkMultipleField('teams');
-                                    } else if ($targetType === 'portals') {
-                                        $note->loadLinkMultipleField('portals');
-                                    }
-                                }
-                            }
-                        }
-
-                        if ($note->get('relatedId') && $note->get('relatedType')) {
-                            $related = $this->entityManager
-                                ->getEntity($note->get('relatedType'), $note->get('relatedId'));
-
-                            if ($related) {
-                                $note->set('relatedName', $related->get('name'));
-                            }
-                        }
-
-                        $note->loadLinkMultipleField('attachments');
-
-                        $entity->set('noteData', $note->toArray());
-                    }
-                    else {
+                    if (!$note) {
                         unset($collection[$k]);
 
                         $count--;
 
                         $this->entityManager->removeEntity($entity);
+
+                        break;
                     }
+
+                    $this->getNoteAccessControl()->apply($note, $user);
+
+                    if ($note->get('parentId') && $note->get('parentType')) {
+                        $parent = $this->entityManager
+                            ->getEntity($note->get('parentType'), $note->get('parentId'));
+
+                        if ($parent) {
+                            $note->set('parentName', $parent->get('name'));
+                        }
+                    }
+                    else {
+                        if (!$note->get('isGlobal')) {
+                            $targetType = $note->get('targetType');
+
+                            if (!$targetType || $targetType === 'users') {
+                                $note->loadLinkMultipleField('users');
+                            }
+
+                            if ($targetType !== 'users') {
+                                if (!$targetType || $targetType === 'teams') {
+                                    $note->loadLinkMultipleField('teams');
+                                }
+                                else if ($targetType === 'portals') {
+                                    $note->loadLinkMultipleField('portals');
+                                }
+                            }
+                        }
+                    }
+
+                    if ($note->get('relatedId') && $note->get('relatedType')) {
+                        $related = $this->entityManager
+                            ->getEntity($note->get('relatedType'), $note->get('relatedId'));
+
+                        if ($related) {
+                            $note->set('relatedName', $related->get('name'));
+                        }
+                    }
+
+                    $note->loadLinkMultipleField('attachments');
+
+                    $entity->set('noteData', $note->toArray());
 
                     break;
             }
@@ -344,7 +359,7 @@ class Notification extends \Espo\Services\Record implements
         return new RecordCollection($collection, $count);
     }
 
-    protected function getIgnoreScopeList() : array
+    protected function getIgnoreScopeList(): array
     {
         $ignoreScopeList = [];
 
@@ -365,5 +380,14 @@ class Notification extends \Espo\Services\Record implements
         }
 
         return $ignoreScopeList;
+    }
+
+    private function getNoteAccessControl(): NoteAccessControl
+    {
+        if (!$this->noteAccessControl) {
+            $this->noteAccessControl = $this->injectableFactory->create(NoteAccessControl::class);
+        }
+
+        return $this->noteAccessControl;
     }
 }

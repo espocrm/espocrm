@@ -31,6 +31,7 @@ namespace Espo\Services;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\{
     Entity,
@@ -42,6 +43,7 @@ use Espo\{
     Entities\User,
     Entities\Note as NoteEntity,
     Services\Notification as NotificationService,
+    Services\Stream\NoteAccessControl,
 };
 
 use Espo\Core\{
@@ -52,11 +54,11 @@ use Espo\Core\{
     AclManager,
     Acl\Exceptions\NotImplemented as AclNotImplemented,
     ServiceFactory,
-    Portal\AclManagerContainer as PortalAclManagerContainer,
     Utils\FieldUtil,
     Record\Collection as RecordCollection,
     Select\SelectBuilderFactory,
     Select\SearchParams,
+    Utils\Acl\UserAclManagerProvider,
 };
 
 use StdClass;
@@ -101,11 +103,11 @@ class Stream
 
     protected $serviceFactory;
 
-    protected $portalAclManagerContainer;
-
     protected $fieldUtil;
 
     protected $selectBuilderFactory;
+
+    private $noteAccessControl;
 
     protected const NOTE_ACL_PERIOD = '1 hour';
 
@@ -117,9 +119,10 @@ class Stream
         Acl $acl,
         AclManager $aclManager,
         ServiceFactory $serviceFactory,
-        PortalAclManagerContainer $portalAclManagerContainer,
         FieldUtil $fieldUtil,
-        SelectBuilderFactory $selectBuilderFactory
+        SelectBuilderFactory $selectBuilderFactory,
+        UserAclManagerProvider $userAclManagerProvider,
+        NoteAccessControl $noteAccessControl
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -128,9 +131,10 @@ class Stream
         $this->acl = $acl;
         $this->aclManager = $aclManager;
         $this->serviceFactory = $serviceFactory;
-        $this->portalAclManagerContainer = $portalAclManagerContainer;
         $this->fieldUtil = $fieldUtil;
         $this->selectBuilderFactory = $selectBuilderFactory;
+        $this->userAclManagerProvider = $userAclManagerProvider;
+        $this->noteAccessControl = $noteAccessControl;
     }
 
     protected function getNotificationService(): NotificationService
@@ -876,6 +880,8 @@ class Stream
 
         foreach ($collection as $e) {
             $this->loadNoteAdditionalFields($e);
+
+            $this->applyAccessControlToNote($e, $user);
         }
 
         $total = -2;
@@ -1215,6 +1221,8 @@ class Stream
             if ($e->get('relatedId') && $e->get('relatedType')) {
                 $e->loadParentNameField('related');
             }
+
+            $this->applyAccessControlToNote($e);
         }
 
         $count = $this->entityManager
@@ -1964,22 +1972,12 @@ class Stream
 
     protected function getUserAclManager(User $user): ?AclManager
     {
-        $aclManager = $this->aclManager;
-
-        if ($user->isPortal() && !$this->user->isPortal()) {
-            $portal = $this->entityManager
-                ->getRepository('User')
-                ->getRelation($user, 'portals')
-                ->findOne();
-
-            if (!$portal) {
-                return null;
-            }
-
-            $aclManager = $this->portalAclManagerContainer->get($portal);
+        try {
+            return $this->userAclManagerProvider->get($user);
         }
-
-        return $aclManager;
+        catch (Error $e) {
+            return null;
+        }
     }
 
     protected function getNotAllEntityTypeList(User $user): array
@@ -2316,5 +2314,14 @@ class Stream
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
+    }
+
+    public function applyAccessControlToNote(NoteEntity $note, ?User $user = null): void
+    {
+        if (!$user) {
+            $user = $this->user;
+        }
+
+        $this->noteAccessControl->apply($note, $user);
     }
 }
