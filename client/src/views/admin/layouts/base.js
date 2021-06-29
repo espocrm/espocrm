@@ -44,9 +44,9 @@ define('views/admin/layouts/base', 'view', function (Dep) {
                 this.cancel();
             },
             'click button[data-action="resetToDefault"]': function () {
-                this.confirm(this.translate('confirmation', 'messages'), function () {
+                this.confirm(this.translate('confirmation', 'messages'), () => {
                     this.resetToDefault();
-                }, this)
+                });
             },
         },
 
@@ -97,24 +97,25 @@ define('views/admin/layouts/base', 'view', function (Dep) {
 
             if (!this.validate(layout)) {
                 this.enableButtons();
+
                 return false;
             }
 
-            this.getHelper().layoutManager.set(this.scope, this.type, layout, function () {
+            this.getHelper().layoutManager.set(this.scope, this.type, layout, () => {
                 this.notify('Saved', 'success', 2000);
 
                 this.setIsNotChanged();
 
-                if (typeof callback == 'function') {
+                if (typeof callback === 'function') {
                     callback();
                 }
-            }.bind(this), this.setId);
+            }, this.setId);
         },
 
         resetToDefault: function () {
-            this.getHelper().layoutManager.resetToDefault(this.scope, this.type, function () {
+            this.getHelper().layoutManager.resetToDefault(this.scope, this.type, () => {
                 this.cancel();
-            }.bind(this), this.options.setId);
+            }, this.options.setId);
         },
 
         reset: function () {
@@ -131,19 +132,19 @@ define('views/admin/layouts/base', 'view', function (Dep) {
             this.setId = this.options.setId;
 
             this.dataAttributeList =
-                this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.type, 'dataAttributeList'])
-                ||
+                this.getMetadata()
+                    .get(['clientDefs', this.scope, 'additionalLayouts', this.type, 'dataAttributeList']) ||
                 this.dataAttributeList;
 
             this.dataAttributeList = Espo.Utils.clone(this.dataAttributeList);
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 this.setIsNotChanged();
-            }, this);
+            });
         },
 
         unescape: function (string) {
-            if (string == null) {
+            if (string === null) {
                 return '';
             }
 
@@ -152,46 +153,53 @@ define('views/admin/layouts/base', 'view', function (Dep) {
                 '&lt;': '<',
                 '&gt;': '>',
                 '&quot;': '"',
-                '&#x27;': "'"
+                '&#x27;': "'",
             };
+
             var reg = new RegExp('(' + _.keys(map).join('|') + ')', 'g');
 
-            return ('' + string).replace(reg, function (match) {
+            return ('' + string).replace(reg, match => {
                 return map[match];
             });
         },
 
         openEditDialog: function (attributes) {
             var name = attributes.name;
+
             this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', {
                 name: attributes.name,
                 scope: this.scope,
                 attributeList: this.dataAttributeList,
                 attributeDefs: this.dataAttributesDefs,
                 attributes: attributes,
-                languageCategory: this.languageCategory
-            }, function (view) {
+                languageCategory: this.languageCategory,
+            }, view => {
                 view.render();
-                this.listenToOnce(view, 'after:save', function (attributes) {
+
+                this.listenToOnce(view, 'after:save', attributes => {
                     this.trigger('update-item', name, attributes);
+
                     var $li = $("#layout ul > li[data-name='" + name + "']");
+
                     for (var key in attributes) {
                         $li.attr('data-' + key, attributes[key]);
                         $li.data(key, attributes[key]);
                         $li.find('.' + key + '-value').text(attributes[key]);
                     }
+
                     view.close();
 
                     this.setIsChanged();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         cancel: function () {
-            this.loadLayout(function () {
+            this.loadLayout(() => {
                 this.setIsNotChanged();
+
                 this.reRender();
-            }.bind(this));
+            });
         },
 
         validate: function (layout) {
