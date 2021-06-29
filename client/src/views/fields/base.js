@@ -102,7 +102,8 @@ define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'edit') {
                 if (this.isRendered()) {
                     this.showRequiredSign();
-                } else {
+                }
+                else {
                     this.once('after:render', function () {
                         this.showRequiredSign();
                     }, this);
@@ -117,7 +118,8 @@ define('views/fields/base', 'view', function (Dep) {
             if (this.mode === 'edit') {
                 if (this.isRendered()) {
                     this.hideRequiredSign();
-                } else {
+                }
+                else {
                     this.once('after:render', function () {
                         this.hideRequiredSign();
                     }, this);
@@ -126,11 +128,16 @@ define('views/fields/base', 'view', function (Dep) {
         },
 
         setReadOnly: function (locked) {
-            if (this.readOnlyLocked) return;
+            if (this.readOnlyLocked) {
+                return;
+            }
+
             this.readOnly = true;
+
             if (locked) {
                 this.readOnlyLocked = true;
             }
+
             if (this.mode == 'edit') {
                 if (this.isInlineEditMode()) {
                     this.inlineEditClose();
@@ -144,7 +151,10 @@ define('views/fields/base', 'view', function (Dep) {
         },
 
         setNotReadOnly: function () {
-            if (this.readOnlyLocked) return;
+            if (this.readOnlyLocked) {
+                return;
+            }
+
             this.readOnly = false;
         },
 
@@ -156,6 +166,7 @@ define('views/fields/base', 'view', function (Dep) {
             if (!this.$label || !this.$label.length) {
                 this.$label = this.$el.parent().children('label');
             }
+
             return this.$label;
         },
 
@@ -174,7 +185,9 @@ define('views/fields/base', 'view', function (Dep) {
          */
         show: function () {
             this.$el.removeClass('hidden');
+
             var $cell = this.getCellElement();
+
             $cell.children('label').removeClass('hidden');
             $cell.removeClass('hidden-cell');
         },
@@ -185,8 +198,9 @@ define('views/fields/base', 'view', function (Dep) {
                 name: this.name,
                 defs: this.defs,
                 params: this.params,
-                value: this.getValueForDisplay()
+                value: this.getValueForDisplay(),
             };
+
             if (this.mode === 'search') {
                 data.searchParams = this.searchParams;
                 data.searchData = this.searchData;
@@ -227,21 +241,27 @@ define('views/fields/base', 'view', function (Dep) {
             var modeIsChanged = this.mode !== mode;
 
             this.mode = mode;
+
             var property = mode + 'Template';
+
             if (!(property in this)) {
                 this[property] = 'fields/' + Espo.Utils.camelCaseToHyphen(this.type) + '/' + this.mode;
             }
+
             this.template = this[property];
 
             var contentProperty = mode + 'TemplateContent';
 
             if (!this._template) {
                 this._templateCompiled = null;
+
                 if (contentProperty in this) {
                     this.compiledTemplatesCache = this.compiledTemplatesCache || {};
+
                     this._templateCompiled =
                     this.compiledTemplatesCache[contentProperty] =
-                        this.compiledTemplatesCache[contentProperty] || this._templator.compileTemplate(this[contentProperty]);
+                        this.compiledTemplatesCache[contentProperty] ||
+                        this._templator.compileTemplate(this[contentProperty]);
                 }
             }
 
@@ -283,12 +303,19 @@ define('views/fields/base', 'view', function (Dep) {
 
             this.mode = this.options.mode || this.mode;
 
-            this.readOnly = this.readOnly || this.params.readOnly || this.model.getFieldParam(this.name, 'readOnly') || this.model.getFieldParam(this.name, 'clientReadOnly');
+            this.readOnly = this.readOnly || this.params.readOnly ||
+                this.model.getFieldParam(this.name, 'readOnly') ||
+                this.model.getFieldParam(this.name, 'clientReadOnly');
+
             this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
-            this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
+
+            this.inlineEditDisabled = this.options.inlineEditDisabled ||
+                this.params.inlineEditDisabled || this.inlineEditDisabled;
+
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
-            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip') || this.tooltip;
+            this.tooltip = this.options.tooltip || this.params.tooltip ||
+                this.model.getFieldParam(this.name, 'tooltip') || this.tooltip;
 
             if (this.options.readOnlyDisabled) {
                 this.readOnly = false;
@@ -297,13 +324,13 @@ define('views/fields/base', 'view', function (Dep) {
             this.disabledLocked = this.options.disabledLocked || false;
             this.disabled = this.disabledLocked || this.options.disabled || this.disabled;
 
-            if (this.mode == 'edit' && this.readOnly) {
+            if (this.mode === 'edit' && this.readOnly) {
                 this.mode = 'detail';
             }
 
             this.setMode(this.mode || 'detail');
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 this.searchParams = _.clone(this.options.searchParams || {});
                 this.searchData = {};
                 this.setupSearch();
@@ -326,10 +353,13 @@ define('views/fields/base', 'view', function (Dep) {
 
             this.on('invalid', function () {
                 var $cell = this.getCellElement();
+
                 $cell.addClass('has-error');
+
                 this.$el.one('click', function () {
                     $cell.removeClass('has-error');
                 });
+
                 this.once('render', function () {
                     $cell.removeClass('has-error');
                 });
@@ -354,13 +384,13 @@ define('views/fields/base', 'view', function (Dep) {
                 this.initTooltip();
             }
 
-            if (this.mode == 'detail') {
+            if (this.mode === 'detail') {
                 if (!this.inlineEditDisabled) {
                     this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
                 }
             }
 
-            if (this.mode != 'search') {
+            if (this.mode !== 'search') {
                 this.attributeList = this.getAttributeList(); // for backward compatibility, to be removed
 
                 this.listenTo(this.model, 'change', function (model, options) {
@@ -394,10 +424,16 @@ define('views/fields/base', 'view', function (Dep) {
 
         initTooltip: function () {
             var $a;
-            this.once('after:render', function () {
-                $a = $('<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>');
+
+            this.once('after:render', () => {
+                $a = $(
+                    '<a href="javascript:" class="text-muted field-info"><span class="fas fa-info-circle"></span></a>'
+                );
+
                 var $label = this.getLabelElement();
+
                 $label.append(' ');
+
                 this.getLabelElement().append($a);
 
                 var tooltipText = this.options.tooltipText || this.tooltipText;
@@ -409,41 +445,51 @@ define('views/fields/base', 'view', function (Dep) {
                 tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
                 tooltipText = this.getHelper().transfromMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
-                var hidePopover = function () {
+                var hidePopover = () => {
                     $('body').off('click.popover-' + this.id);
+
                     this.stopListening(this, 'mode-changed', hidePopover);
+
                     $a.popover('hide');
-                }.bind(this);
+                };
 
                 $a.popover({
                     placement: 'bottom',
                     container: 'body',
                     html: true,
                     content: tooltipText,
-                }).on('shown.bs.popover', function () {
+                }).on('shown.bs.popover', () => {
                     $('body').off('click.popover-' + this.id);
+
                     this.stopListening(this, 'mode-changed', hidePopover);
 
-                    $('body').on('click.popover-' + this.id , function (e) {
-                        if ($(e.target).closest('.popover-content').get(0)) return;
-                        if ($.contains($a.get(0), e.target)) return;
+                    $('body').on('click.popover-' + this.id , (e) => {
+                        if ($(e.target).closest('.popover-content').get(0)) {
+                            return;
+                        }
+
+                        if ($.contains($a.get(0), e.target)) {
+                            return;
+                        }
+
                         hidePopover();
-                    }.bind(this));
+                    });
 
                     this.listenToOnce(this, 'mode-changed', hidePopover);
-                }.bind(this));
+                });
 
                 $a.on('click', function () {
                     $(this).popover('toggle');
                 });
-            }, this);
+            });
 
-            this.on('remove', function () {
+            this.on('remove', () => {
                 if ($a) {
                     $a.popover('destroy')
                 }
+
                 $('body').off('click.popover-' + this.id);
-            }, this);
+            });
         },
 
         showRequiredSign: function () {
@@ -455,12 +501,14 @@ define('views/fields/base', 'view', function (Dep) {
                 $('<span class="required-sign"> *</span>').insertAfter($text);
                 $sign = $label.find('span.required-sign');
             }
+
             $sign.show();
         },
 
         hideRequiredSign: function () {
             var $label = this.getLabelElement();
             var $sign = $label.find('span.required-sign');
+
             $sign.hide();
         },
 
@@ -482,52 +530,63 @@ define('views/fields/base', 'view', function (Dep) {
 
         initInlineEdit: function () {
             var $cell = this.getCellElement();
-            var $editLink = $('<a href="javascript:" class="pull-right inline-edit-link hidden"><span class="fas fa-pencil-alt fa-sm"></span></a>');
 
-            if ($cell.length == 0) {
+            var $editLink = $(
+                '<a href="javascript:" class="pull-right inline-edit-link hidden">' +
+                '<span class="fas fa-pencil-alt fa-sm"></span></a>'
+            );
+
+            if ($cell.length === 0) {
                 this.listenToOnce(this, 'after:render', this.initInlineEdit, this);
+
                 return;
             }
 
             $cell.prepend($editLink);
 
-            $editLink.on('click', function () {
+            $editLink.on('click', () => {
                 this.inlineEdit();
-            }.bind(this));
+            });
 
-            $cell.on('mouseenter', function (e) {
+            $cell.on('mouseenter', (e) => {
                 e.stopPropagation();
+
                 if (this.disabled || this.readOnly) {
                     return;
                 }
-                if (this.mode == 'detail') {
+
+                if (this.mode === 'detail') {
                     $editLink.removeClass('hidden');
                 }
-            }.bind(this)).on('mouseleave', function (e) {
+            }).on('mouseleave', (e) => {
                 e.stopPropagation();
-                if (this.mode == 'detail') {
+
+                if (this.mode === 'detail') {
                     $editLink.addClass('hidden');
                 }
-            }.bind(this));
+            });
         },
 
         initElement: function () {
             this.$element = this.$el.find('[data-name="' + this.name + '"]');
+
             if (!this.$element.length) {
                 this.$element = this.$el.find('[name="' + this.name + '"]');
             }
+
             if (!this.$element.length) {
                 this.$element = this.$el.find('.main-element');
             }
-            if (this.mode == 'edit') {
-                this.$element.on('change', function () {
+
+            if (this.mode === 'edit') {
+                this.$element.on('change', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
         afterRender: function () {
-            if (this.mode == 'edit' || this.mode == 'search') {
+            if (this.mode === 'edit' || this.mode === 'search') {
                 this.initElement();
             }
         },
@@ -566,6 +625,7 @@ define('views/fields/base', 'view', function (Dep) {
             if (this.validate()) {
                 this.notify('Not valid', 'error');
                 model.set(prev, {silent: true});
+
                 return;
             }
 
@@ -588,6 +648,7 @@ define('views/fields/base', 'view', function (Dep) {
 
         removeInlineEditLinks: function () {
             var $cell = this.getCellElement();
+
             $cell.find('.inline-save-link').remove();
             $cell.find('.inline-cancel-link').remove();
             $cell.find('.inline-edit-link').addClass('hidden');
@@ -595,17 +656,27 @@ define('views/fields/base', 'view', function (Dep) {
 
         addInlineEditLinks: function () {
             var $cell = this.getCellElement();
-            var $saveLink = $('<a href="javascript:" class="pull-right inline-save-link">' + this.translate('Update') + '</a>');
-            var $cancelLink = $('<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>');
+
+            var $saveLink = $(
+                '<a href="javascript:" class="pull-right inline-save-link">' + this.translate('Update') + '</a>'
+            );
+
+            var $cancelLink = $(
+                '<a href="javascript:" class="pull-right inline-cancel-link">' + this.translate('Cancel') + '</a>'
+            );
+
             $cell.prepend($saveLink);
             $cell.prepend($cancelLink);
+
             $cell.find('.inline-edit-link').addClass('hidden');
-            $saveLink.click(function () {
+
+            $saveLink.click(() => {
                 this.inlineEditSave();
-            }.bind(this));
-            $cancelLink.click(function () {
+            });
+
+            $cancelLink.click(() => {
                 this.inlineEditClose();
-            }.bind(this));
+            });
         },
 
         setIsInlineEditMode: function (value) {
@@ -614,13 +685,15 @@ define('views/fields/base', 'view', function (Dep) {
 
         inlineEditClose: function (dontReset) {
             this.trigger('inline-edit-off');
+
             this._isInlineEditMode = false;
 
-            if (this.mode != 'edit') {
+            if (this.mode !== 'edit') {
                 return;
             }
 
             this.setMode('detail');
+
             this.once('after:render', function () {
                 this.removeInlineEditLinks();
             }, this);
@@ -642,9 +715,9 @@ define('views/fields/base', 'view', function (Dep) {
 
             this.initialAttributes = this.model.getClonedAttributes();
 
-            this.once('after:render', function () {
+            this.once('after:render', () => {
                 this.addInlineEditLinks();
-            }, this);
+            });
 
             this._isInlineEditMode = true;
 
@@ -666,6 +739,7 @@ define('views/fields/base', 'view', function (Dep) {
             if (!$el.length && this.$element) {
                 $el = this.$element;
             }
+
             $el.popover({
                 placement: 'bottom',
                 container: 'body',
@@ -676,13 +750,19 @@ define('views/fields/base', 'view', function (Dep) {
             var isDestroyed = false;
 
             $el.closest('.field').one('mousedown click', function () {
-                if (isDestroyed) return;
+                if (isDestroyed) {
+                    return;
+                }
+
                 $el.popover('destroy');
                 isDestroyed = true;
             });
 
             this.once('render remove', function () {
-                if (isDestroyed) return;
+                if (isDestroyed) {
+                    return;
+                }
+
                 if ($el) {
                     $el.popover('destroy');
                     isDestroyed = true;
@@ -694,17 +774,23 @@ define('views/fields/base', 'view', function (Dep) {
             }
 
             this._timeout = setTimeout(function () {
-                if (isDestroyed) return;
+                if (isDestroyed) {
+                    return;
+                }
+
                 $el.popover('destroy');
                 isDestroyed = true;
+
             }, this.VALIDATION_POPOVER_TIMEOUT);
         },
 
         validate: function () {
             for (var i in this.validations) {
                 var method = 'validate' + Espo.Utils.upperCaseFirst(this.validations[i]);
+
                 if (this[method].call(this)) {
                     this.trigger('invalid');
+
                     return true;
                 }
             }
@@ -719,7 +805,9 @@ define('views/fields/base', 'view', function (Dep) {
             if (this.isRequired()) {
                 if (this.model.get(this.name) === '' || this.model.get(this.name) === null) {
                     var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+
                     this.showValidationMessage(msg);
+
                     return true;
                 }
             }
@@ -735,19 +823,24 @@ define('views/fields/base', 'view', function (Dep) {
 
         fetch: function () {
             var data = {};
+
             data[this.name] = this.$element.val();
+
             return data;
         },
 
         fetchSearch: function () {
             var value = this.$element.val().toString().trim();
+
             if (value) {
                 var data = {
                     type: 'equals',
                     value: value
                 };
+
                 return data;
             }
+
             return false;
         },
 
