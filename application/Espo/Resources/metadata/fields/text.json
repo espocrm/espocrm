@@ -1,53 +1,53 @@
 {
    "params":[
-      {
-         "name":"required",
-         "type":"bool",
-         "default":false
-      },
-      {
-         "name":"default",
-         "type":"text"
-      },
-      {
-         "name":"maxLength",
-         "type":"int"
-      },
-      {
-         "name":"seeMoreDisabled",
-         "type":"bool",
-         "tooltip": true
-      },
-      {
-         "name": "rows",
-         "type": "int",
-         "min": 1
-      },
-      {
-         "name": "rowsMin",
-         "type": "int",
-         "default": 2,
-         "min": 1,
-         "hidden": true
-      },
-      {
-         "name": "cutHeight",
-         "type": "int",
-         "default": 200,
-         "min": 1
-      },
-      {
-         "name": "displayRawText",
-         "type":"bool"
-      },
-      {
-         "name":"readOnly",
-         "type":"bool"
-      }
-   ],
-   "filter": true,
-   "personalData": true,
-   "textFilter": true,
-   "textFilterForeign": true,
-   "fullTextSearch": true
+        {
+            "name":"required",
+            "type":"bool",
+            "default":false
+        },
+        {
+            "name":"default",
+            "type":"text"
+        },
+        {
+            "name":"maxLength",
+            "type":"int"
+        },
+        {
+            "name":"seeMoreDisabled",
+            "type":"bool",
+            "tooltip": true
+        },
+        {
+            "name": "rows",
+            "type": "int",
+            "min": 1
+        },
+        {
+            "name": "rowsMin",
+            "type": "int",
+            "default": 2,
+            "min": 1,
+            "hidden": true
+        },
+        {
+            "name": "cutHeight",
+            "type": "int",
+            "default": 200,
+            "min": 1
+        },
+        {
+            "name": "displayRawText",
+            "type":"bool"
+        },
+        {
+            "name":"readOnly",
+            "type":"bool"
+        }
+    ],
+    "filter": true,
+    "personalData": true,
+    "textFilter": true,
+    "textFilterForeign": true,
+    "fullTextSearch": true
 }
