@@ -570,32 +570,35 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             this.notify('Saving...');
 
             if (this.isNew) {
-                this.model.save().error(() => this.enableButtons());
+                this.model
+                    .save()
+                    .catch(() => this.enableButtons());
+
+                return;
             }
-            else {
-                var attributes = this.model.getClonedAttributes();
 
-                if (this.model.fetchedAttributes.label === attributes.label) {
-                    delete attributes.label;
-                }
+            var attributes = this.model.getClonedAttributes();
 
-                if (
-                    this.model.fetchedAttributes.tooltipText === attributes.tooltipText ||
-                    !this.model.fetchedAttributes.tooltipText && !attributes.tooltipText
-                ) {
-                    delete attributes.tooltipText;
-                }
-
-                if ('translatedOptions' in attributes) {
-                    if (_.isEqual(this.model.fetchedAttributes.translatedOptions, attributes.translatedOptions)) {
-                        delete attributes.translatedOptions;
-                    }
-                }
-
-                this.model.save(attributes, {patch: true}).error(function () {
-                    this.enableButtons();
-                }.bind(this));
+            if (this.model.fetchedAttributes.label === attributes.label) {
+                delete attributes.label;
             }
+
+            if (
+                this.model.fetchedAttributes.tooltipText === attributes.tooltipText ||
+                !this.model.fetchedAttributes.tooltipText && !attributes.tooltipText
+            ) {
+                delete attributes.tooltipText;
+            }
+
+            if ('translatedOptions' in attributes) {
+                if (_.isEqual(this.model.fetchedAttributes.translatedOptions, attributes.translatedOptions)) {
+                    delete attributes.translatedOptions;
+                }
+            }
+
+            this.model
+                .save(attributes, {patch: true})
+                .catch(() => this.enableButtons());
         },
 
         updateLanguage: function () {
