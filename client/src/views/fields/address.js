@@ -52,25 +52,32 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             'click [data-action="viewMap"]': function (e) {
                 e.preventDefault();
                 e.stopPropagation();
+
                 this.viewMapAction();
             },
         },
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.ucName = Espo.Utils.upperCaseFirst(this.name);
 
-            this.addressPartList.forEach(function (item) {
+            this.addressPartList.forEach(item => {
                 var value = this.model.get(this[item + 'Field']);
-                data[item + 'Value'] = value;
-            }, this);
 
-            if (this.mode == 'detail' || this.mode == 'list') {
+                data[item + 'Value'] = value;
+            });
+
+            if (this.mode === 'detail' || this.mode === 'list') {
                 data.formattedAddress = this.getFormattedAddress();
 
                 if (this.params.viewMap && this.canBeDisplayedOnMap()) {
                     data.viewMap = true;
-                    data.viewMapLink = '#AddressMap/view/' + this.model.entityType + '/' + this.model.id + '/' + this.name;
+
+                    data.viewMapLink = '#AddressMap/view/' +
+                        this.model.entityType + '/' +
+                        this.model.id + '/' +
+                        this.name;
                 }
             }
 
@@ -96,10 +103,11 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
         getFormattedAddress: function () {
             var isNotEmpty = false;
             var isSet = false;
-            this.addressAttributeList.forEach(function (attribute) {
+
+            this.addressAttributeList.forEach(attribute => {
                 isNotEmpty = isNotEmpty || this.model.get(attribute);
                 isSet = isSet || this.model.has(attribute);
-            }, this);
+            });
 
             var isEmpty = !isNotEmpty;
 
@@ -107,9 +115,11 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
                 if (this.mode === 'list') {
                     return '';
                 }
+
                 if (!isSet) {
                     return this.translate('...');
                 }
+
                 return this.translate('None');
             }
 
@@ -128,22 +138,27 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             var countryValue = this.model.get(this.countryField);
 
             var html = '';
+
             if (streetValue) {
                 html += streetValue;
             }
+
             if (cityValue || stateValue || postalCodeValue) {
-                if (html != '') {
+                if (html !== '') {
                     html += '\n';
                 }
+
                 if (cityValue) {
                     html += cityValue;
                 }
+
                 if (stateValue) {
                     if (cityValue) {
                         html += ', ';
                     }
                     html += stateValue;
                 }
+
                 if (postalCodeValue) {
                     if (cityValue || stateValue) {
                         html += ' ';
@@ -152,11 +167,13 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
                 }
             }
             if (countryValue) {
-                if (html != '') {
+                if (html !== '') {
                     html += '\n';
                 }
+
                 html += countryValue;
             }
+
             return html;
         },
 
@@ -168,37 +185,47 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             var countryValue = this.model.get(this.countryField);
 
             var html = '';
+
             if (streetValue) {
                 html += streetValue;
             }
+
             if (cityValue || postalCodeValue) {
-                if (html != '') {
+                if (html !== '') {
                     html += '\n';
                 }
+
                 if (postalCodeValue) {
                     html += postalCodeValue;
+
                     if (cityValue) {
                         html += ' ';
                     }
                 }
+
                 if (cityValue) {
                     html += cityValue;
                 }
             }
+
             if (stateValue || countryValue) {
-                if (html != '') {
+                if (html !== '') {
                     html += '\n';
                 }
+
                 if (stateValue) {
                     html += stateValue;
+
                     if (countryValue) {
                         html += ' ';
                     }
                 }
+
                 if (countryValue) {
                     html += countryValue;
                 }
             }
+
             return html;
         },
 
@@ -210,22 +237,27 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             var countryValue = this.model.get(this.countryField);
 
             var html = '';
+
             if (countryValue) {
                 html += countryValue;
             }
+
             if (cityValue || stateValue || postalCodeValue) {
-                if (html != '') {
+                if (html !== '') {
                     html += '\n';
                 }
+
                 if (postalCodeValue) {
                     html += postalCodeValue;
                 }
+
                 if (stateValue) {
                     if (postalCodeValue) {
                         html += ' ';
                     }
                     html += stateValue;
                 }
+
                 if (cityValue) {
                     if (postalCodeValue || stateValue) {
                         html += ' ';
@@ -234,11 +266,13 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
                 }
             }
             if (streetValue) {
-                if (html != '') {
+                if (html !== '') {
                     html += '\n';
                 }
+
                 html += streetValue;
             }
+
             return html;
         },
 
@@ -250,32 +284,41 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             var countryValue = this.model.get(this.countryField);
 
             var html = '';
+
             if (streetValue) {
                 html += streetValue;
             }
+
             if (cityValue) {
-                if (html != '') {
+                if (html !== '') {
                     html += '\n';
                 }
+
                 html += cityValue;
             }
+
             if (countryValue || stateValue || postalCodeValue) {
-                if (html != '') {
+                if (html !== '') {
                     html += '\n';
                 }
+
                 if (countryValue) {
                     html += countryValue;
                 }
+
                 if (stateValue) {
                     if (countryValue) {
                         html += ' - ';
                     }
+
                     html += stateValue;
                 }
+
                 if (postalCodeValue) {
                     if (countryValue || stateValue) {
                         html += ' ';
                     }
+
                     html += postalCodeValue;
                 }
             }
@@ -284,12 +327,14 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
         },
 
         _getTemplateName: function () {
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 var prop = 'editTemplate' + this.getAddressFormat().toString();
+
                 if (prop in this) {
                     return this[prop];
                 }
             }
+
             return Dep.prototype._getTemplateName.call(this);
         },
 
@@ -298,134 +343,171 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
         },
 
         afterRender: function () {
-            var self = this;
-
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 this.$street = this.$el.find('[data-name="' + this.streetField + '"]');
                 this.$postalCode = this.$el.find('[data-name="' + this.postalCodeField + '"]');
                 this.$state = this.$el.find('[data-name="' + this.stateField + '"]');
                 this.$city = this.$el.find('[data-name="' + this.cityField + '"]');
                 this.$country = this.$el.find('[data-name="' + this.countryField + '"]');
 
-                this.$street.on('change', function () {
-                    self.trigger('change');
+                this.$street.on('change', () => {
+                    this.trigger('change');
                 });
-                this.$postalCode.on('change', function () {
-                    self.trigger('change');
+
+                this.$postalCode.on('change', () => {
+                    this.trigger('change');
                 });
-                this.$state.on('change', function () {
-                    self.trigger('change');
+
+                this.$state.on('change', () => {
+                    this.trigger('change');
                 });
-                this.$city.on('change', function () {
-                    self.trigger('change');
+
+                this.$city.on('change', () => {
+                    this.trigger('change');
                 });
-                this.$country.on('change', function () {
-                    self.trigger('change');
+
+                this.$country.on('change', () => {
+                    this.trigger('change');
                 });
 
                 var countryList = this.getConfig().get('addressCountryList') || [];
+
                 if (countryList.length) {
                     this.$country.autocomplete({
                         minChars: 0,
                         lookup: countryList,
                         maxHeight: 200,
-                        formatResult: function (suggestion) {
+                        formatResult: suggestion => {
                             return this.getHelper().escapeString(suggestion.value);
-                        }.bind(this),
-                        lookupFilter: function (suggestion, query, queryLowerCase) {
+                        },
+                        lookupFilter: (suggestion, query, queryLowerCase) => {
                             if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                                if (suggestion.value.length === queryLowerCase.length) return false;
+                                if (suggestion.value.length === queryLowerCase.length) {
+                                    return false;
+                                }
+
                                 return true;
                             }
+
                             return false;
                         },
-                        onSelect: function () {
-                            this.trigger('change');
-                        }.bind(this)
+                        onSelect: () => this.trigger('change'),
                     });
-                    this.$country.on('focus', function () {
-                        if (this.$country.val()) return;
+
+                    this.$country.on('focus', () => {
+                        if (this.$country.val()) {
+                            return;
+                        }
+
                         this.$country.autocomplete('onValueChange');
-                    }.bind(this));
-                    this.once('render', function () {
+                    });
+
+                    this.once('render', () => {
                         this.$country.autocomplete('dispose');
-                    }, this);
-                    this.once('remove', function () {
+                    });
+
+                    this.once('remove', () => {
                         this.$country.autocomplete('dispose');
-                    }, this);
+                    });
+
                     this.$country.attr('autocomplete', 'espo-country');
                 }
 
                 var cityList = this.getConfig().get('addressCityList') || [];
+
                 if (cityList.length) {
                     this.$city.autocomplete({
                         minChars: 0,
                         lookup: cityList,
                         maxHeight: 200,
-                        formatResult: function (suggestion) {
+                        formatResult: (suggestion) => {
                             return this.getHelper().escapeString(suggestion.value);
-                        }.bind(this),
-                        lookupFilter: function (suggestion, query, queryLowerCase) {
+                        },
+                        lookupFilter: (suggestion, query, queryLowerCase) => {
                             if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                                if (suggestion.value.length === queryLowerCase.length) return false;
+                                if (suggestion.value.length === queryLowerCase.length) {
+                                    return false;
+                                }
+
                                 return true;
                             }
+
                             return false;
                         },
-                        onSelect: function () {
+                        onSelect: () => {
                             this.trigger('change');
-                        }.bind(this)
+                        },
                     });
-                    this.$city.on('focus', function () {
-                        if (this.$city.val()) return;
+
+                    this.$city.on('focus', () => {
+                        if (this.$city.val()) {
+                            return;
+                        }
+
                         this.$city.autocomplete('onValueChange');
-                    }.bind(this));
-                    this.once('render', function () {
+                    });
+
+                    this.once('render', () => {
                         this.$city.autocomplete('dispose');
-                    }, this);
-                    this.once('remove', function () {
+                    });
+
+                    this.once('remove', () => {
                         this.$city.autocomplete('dispose');
-                    }, this);
+                    });
+
                     this.$city.attr('autocomplete', 'espo-city');
                 }
 
                 var stateList = this.getConfig().get('addressStateList') || [];
+
                 if (stateList.length) {
                     this.$state.autocomplete({
                         minChars: 0,
                         lookup: stateList,
                         maxHeight: 200,
-                        formatResult: function (suggestion) {
+                        formatResult: suggestion => {
                             return this.getHelper().escapeString(suggestion.value);
-                        }.bind(this),
+                        },
                         lookupFilter: function (suggestion, query, queryLowerCase) {
                             if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                                if (suggestion.value.length === queryLowerCase.length) return false;
+                                if (suggestion.value.length === queryLowerCase.length) {
+                                    return false;
+                                }
+
                                 return true;
                             }
+
                             return false;
                         },
-                        onSelect: function () {
+                        onSelect: () => {
                             this.trigger('change');
-                        }.bind(this)
+                        },
                     });
-                    this.$state.on('focus', function () {
-                        if (this.$state.val()) return;
+
+                    this.$state.on('focus', () => {
+                        if (this.$state.val()) {
+                            return;
+                        }
+
                         this.$state.autocomplete('onValueChange');
-                    }.bind(this));
-                    this.once('render', function () {
+                    });
+
+                    this.once('render', () => {
                         this.$state.autocomplete('dispose');
-                    }, this);
-                    this.once('remove', function () {
+                    });
+
+                    this.once('remove', () => {
                         this.$state.autocomplete('dispose');
-                    }, this);
+                    });
+
                     this.$state.attr('autocomplete', 'espo-state');
                 }
 
                 this.controlStreetTextareaHeight();
-                this.$street.on('input', function (e) {
+
+                this.$street.on('input', () => {
                     this.controlStreetTextareaHeight();
-                }.bind(this));
+                });
             }
         },
 
@@ -435,6 +517,7 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
 
             if (typeof lastHeight === 'undefined' && clientHeight === 0) {
                 setTimeout(this.controlStreetTextareaHeight.bind(this), 10);
+
                 return;
             }
 
@@ -443,8 +526,10 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             if (scrollHeight > clientHeight + 1) {
                 var rows = this.$street.prop('rows');
                 this.$street.attr('rows', rows + 1);
+
                 this.controlStreetTextareaHeight(clientHeight);
             }
+
             if (this.$street.val().length === 0) {
                 this.$street.attr('rows', 1);
             }
@@ -456,56 +541,71 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             var actualAttributePartList = this.getMetadata().get(['fields', this.type, 'actualFields']) || [];
             this.addressAttributeList = [];
             this.addressPartList = [];
-            actualAttributePartList.forEach(function (item) {
+
+            actualAttributePartList.forEach(item => {
                 var attribute = this.name + Espo.Utils.upperCaseFirst(item);
+
                 this.addressAttributeList.push(attribute);
                 this.addressPartList.push(item);
+
                 this[item + 'Field'] = attribute;
 
-                this[item + 'MaxLength'] = this.getMetadata().get(['entityDefs', this.model.name, 'fields', attribute, 'maxLength']);
-            }, this);
+                this[item + 'MaxLength'] =
+                    this.getMetadata().get(['entityDefs', this.model.name, 'fields', attribute, 'maxLength']);
+            });
         },
 
         validateRequired: function () {
-            var validate = function (name) {
+            var validate = name => {
                 if (this.model.isRequired(name)) {
                     if (this.model.get(name) === '') {
-                        var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.translate(name, 'fields', this.model.name));
+                        var msg = this.translate('fieldIsRequired', 'messages')
+                            .replace('{field}', this.translate(name, 'fields', this.model.name));
+
                         this.showValidationMessage(msg, '[data-name="'+name+'"]');
+
                         return true;
                     }
                 }
-            }.bind(this);
+            };
 
             var result = false;
+
             result = validate(this.postalCodeField) || result;
             result = validate(this.streetField) || result;
             result = validate(this.stateField) || result;
             result = validate(this.cityField) || result;
             result = validate(this.countryField) || result;
+
             return result;
         },
 
         isRequired: function () {
             return this.model.getFieldParam(this.postalCodeField, 'required') ||
-                   this.model.getFieldParam(this.streetField, 'required') ||
-                   this.model.getFieldParam(this.stateField, 'required') ||
-                   this.model.getFieldParam(this.cityField, 'required') ||
-                   this.model.getFieldParam(this.countryField, 'required');
+                this.model.getFieldParam(this.streetField, 'required') ||
+                this.model.getFieldParam(this.stateField, 'required') ||
+                this.model.getFieldParam(this.cityField, 'required') ||
+                this.model.getFieldParam(this.countryField, 'required');
         },
 
         fetch: function () {
             var data = {};
+
             data[this.postalCodeField] = this.$postalCode.val().toString().trim();
             data[this.streetField] = this.$street.val().toString().trim();
             data[this.stateField] = this.$state.val().toString().trim();
             data[this.cityField] = this.$city.val().toString().trim();
             data[this.countryField] = this.$country.val().toString().trim();
+
             return data;
         },
 
         fetchSearch: function () {
-            var value = this.$el.find('input.main-element').val().toString().trim();
+            var value = this.$el.find('input.main-element')
+                .val()
+                .toString()
+                .trim();
+
             if (value) {
                 var data = {
                     type: 'or',
@@ -540,8 +640,10 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
                         value: value
                     }
                 };
+
                 return data;
             }
+
             return false;
         },
 
@@ -549,9 +651,7 @@ define('views/fields/address', 'views/fields/base', function (Dep) {
             this.createView('mapDialog', 'views/modals/view-map', {
                 model: this.model,
                 field: this.name,
-            }, function (view) {
-                view.render();
-            });
+            }, view => view.render());
         },
 
     });
