@@ -34,7 +34,7 @@ use Espo\Core\Formula\Exceptions\SyntaxError;
 use StdClass;
 
 /**
- * Parses a formula script. Returns a RAW data object that represents a tree of functions.
+ * Parses a formula script into AST. Returns a RAW data object that represents a tree of functions.
  */
 class Parser
 {
