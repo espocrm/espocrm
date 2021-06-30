@@ -78,7 +78,8 @@ define('views/site/navbar', 'view', function (Dep) {
 
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
-                if (typeof this[method] == 'function') {
+
+                if (typeof this[method] === 'function') {
                     var data = $el.data();
                     this[method](data, e);
                     e.preventDefault();
@@ -151,7 +152,8 @@ define('views/site/navbar', 'view', function (Dep) {
 
             if (isVertical) {
                 var tabHeight = this.$tabs.find('> .tab').height();
-            } else {
+            }
+            else {
                 var tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
             }
 
@@ -185,7 +187,7 @@ define('views/site/navbar', 'view', function (Dep) {
 
             $window.off('scroll.navbar-tab-group');
 
-            $window.on('scroll.navbar-tab-group', function () {
+            $window.on('scroll.navbar-tab-group', () => {
                 if (!$menu.get(0) || !$target.get(0)) {
                     return;
                 }
@@ -203,15 +205,15 @@ define('views/site/navbar', 'view', function (Dep) {
 
             this.handleGroupMenuPosition($menu, $target);
 
-            setTimeout(function () {
+            setTimeout(() => {
                 this.adjustBodyMinHeight();
-            }.bind(this), 50);
+            }, 50);
 
             $target.off('hidden.bs.dropdown');
 
-            $target.on('hidden.bs.dropdown', function () {
+            $target.on('hidden.bs.dropdown', () => {
                 this.adjustBodyMinHeight();
-            }.bind(this));
+            });
         },
 
         handleGroupDropdownInMoreOpen: function ($target) {
@@ -352,54 +354,56 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         setup: function () {
-            this.getRouter().on('routed', function (e) {
+            this.getRouter().on('routed', (e) => {
                 if (e.controller) {
                     this.selectTab(e.controller);
-                } else {
+                }
+                else {
                     this.selectTab(false);
                 }
-            }.bind(this));
+            });
 
             var tabList = this.getTabList();
 
             var scopes = this.getMetadata().get('scopes') || {};
 
-            this.tabList = tabList.filter(
-                function (item) {
-                    if (!item) {
+            this.tabList = tabList.filter(item => {
+                if (!item) {
+                    return false;
+                }
+
+                if (typeof item === 'object') {
+                    item.itemList = item.itemList || [];
+
+                    item.itemList = item.itemList.filter(item => {
+                        return this.filterTabItem(item);
+                    });
+
+                    if (!item.itemList.length) {
                         return false;
                     }
 
-                    if (typeof item === 'object') {
-                        item.itemList = item.itemList || [];
+                    return true;
+                }
 
-                        item.itemList = item.itemList.filter(
-                            function (item) {
-                                return this.filterTabItem(item);
-                            },
-                            this
-                        );
+                return this.filterTabItem(item);
+            });
 
-                        if (!item.itemList.length) {
-                            return false;
-                        }
+            this.quickCreateList = this.getQuickCreateList().filter(scope =>{
+                if (!scopes[scope]) {
+                    return false;
+                }
 
-                        return true;
-                    }
+                if ((scopes[scope] || {}).disabled) {
+                    return;
+                }
 
-                    return this.filterTabItem(item);
-                },
-                this
-            );
-
-            this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
-                if (!scopes[scope]) return false;
-                if ((scopes[scope] || {}).disabled) return;
                 if ((scopes[scope] || {}).acl) {
                     return this.getAcl().check(scope, 'create');
                 }
+
                 return true;
-            }, this);
+            });
 
             this.createView('notificationsBadge', 'views/notification/badge', {
                 el: this.options.el + ' .notifications-badge-container'
@@ -409,7 +413,7 @@ define('views/site/navbar', 'view', function (Dep) {
 
             this.setupTabDefsList();
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 $(window).off('resize.navbar');
                 $(window).off('scroll.navbar');
                 $(window).off('scroll.navbar-tab-group');
@@ -447,12 +451,16 @@ define('views/site/navbar', 'view', function (Dep) {
 
         setupGlobalSearch: function () {
             this.globalSearchAvailable = false;
-            (this.getConfig().get('globalSearchEntityList') || []).forEach(function (scope) {
-                if (this.globalSearchAvailable) return;
+
+            (this.getConfig().get('globalSearchEntityList') || []).forEach(scope => {
+                if (this.globalSearchAvailable) {
+                    return;
+                }
+
                 if (this.getAcl().checkScope(scope)) {
                     this.globalSearchAvailable = true;
                 }
-            }, this);
+            });
 
             if (this.globalSearchAvailable) {
                 this.createView('globalSearch', 'views/global-search/global-search', {
@@ -475,20 +483,23 @@ define('views/site/navbar', 'view', function (Dep) {
                 updateWidth();
             });
 
-            $window.on('scroll.navbar', function () {
-                if (!this.isMoreDropdownShown) return;
-                $more.scrollTop($window.scrollTop());
-            }.bind(this));
+            $window.on('scroll.navbar', () => {
+                if (!this.isMoreDropdownShown) {
+                    return;
+                }
 
-            this.$moreDropdown.on('shown.bs.dropdown', function () {
-                $more.scrollTop($window.scrollTop());
-            });
-
-            this.on('show-more-tabs', function () {
                 $more.scrollTop($window.scrollTop());
             });
 
-            var updateMoreHeight = function () {
+            this.$moreDropdown.on('shown.bs.dropdown', () => {
+                $more.scrollTop($window.scrollTop());
+            });
+
+            this.on('show-more-tabs', () => {
+                $more.scrollTop($window.scrollTop());
+            });
+
+            var updateMoreHeight = () => {
                 var windowHeight = window.innerHeight;
                 var windowWidth = window.innerWidth;
 
@@ -499,21 +510,29 @@ define('views/site/navbar', 'view', function (Dep) {
                     $more.css('overflow-y', 'hidden');
                     $more.css('max-height', (windowHeight - navbarHeight) + 'px');
                 }
-            }.bind(this);
+            };
 
-            $window.on('resize.navbar', function() {
+            $window.on('resize.navbar', () => {
                 updateMoreHeight();
             });
+
             updateMoreHeight();
 
-            var hideOneTab = function () {
+            var hideOneTab = () => {
                 var count = $tabs.children().length;
-                if (count <= 1) return;
+
+                if (count <= 1) {
+                    return;
+                }
+
                 var $one = $tabs.children().eq(count - 2);
+
                 $one.prependTo($more);
             };
-            var unhideOneTab = function () {
+
+            var unhideOneTab = () => {
                 var $one = $more.children().eq(0);
+
                 if ($one.length) {
                     $one.insertBefore($moreDropdown);
                 }
@@ -522,9 +541,10 @@ define('views/site/navbar', 'view', function (Dep) {
             var $navbar = $('#navbar .navbar');
 
             if (window.innerWidth >= smallScreenWidth) {
-                $tabs.children('li').each(function (i, li) {
+                $tabs.children('li').each((i, li) => {
                     hideOneTab();
                 });
+
                 $navbar.css('max-height', 'unset');
                 $navbar.css('overflow', 'visible');
             }
@@ -540,11 +560,11 @@ define('views/site/navbar', 'view', function (Dep) {
             $moreDd = $('#nav-more-tabs-dropdown');
             $moreLi = $moreDd.closest('li');
 
-            var updateWidth = function () {
+            var updateWidth = () => {
                 var windowWidth = window.innerWidth;
                 var moreWidth = $moreLi.width();
 
-                $more.children('li.not-in-more').each(function (i, li) {
+                $more.children('li.not-in-more').each(() => {
                     unhideOneTab();
                 });
 
@@ -563,14 +583,14 @@ define('views/site/navbar', 'view', function (Dep) {
                 var width = $tabs.width();
 
                 var i = 0;
+
                 while (width > maxWidth) {
                     hideOneTab();
                     width = $tabs.width();
                     i++;
+
                     if (i >= tabCount) {
-                        setTimeout(function () {
-                            updateWidth();
-                        }, 100);
+                        setTimeout(() => updateWidth(), 100);
                         break;
                     }
                 }
@@ -581,26 +601,22 @@ define('views/site/navbar', 'view', function (Dep) {
                 if ($more.children().length > 0) {
                     $moreDropdown.removeClass('hidden');
                 }
-            }.bind(this);
+            };
 
-            var processUpdateWidth = function (isRecursive) {
+            var processUpdateWidth = isRecursive => {
                 if ($navbar.height() > navbarNeededHeight) {
                     updateWidth();
-                    setTimeout(function () {
-                        processUpdateWidth(true);
-                    }, 200);
-                } else {
+                    setTimeout(() => processUpdateWidth(true), 200);
+                }
+                else {
                     if (!isRecursive) {
                         updateWidth();
-                        setTimeout(function () {
-                            processUpdateWidth(true);
-                        }, 10);
+                        setTimeout(() => processUpdateWidth(true), 10);
                     }
-                    setTimeout(function () {
-                        processUpdateWidth(true);
-                    }, 1000);
+
+                    setTimeout(() => processUpdateWidth(true), 1000);
                 }
-            }.bind(this);
+            };
 
             if ($navbar.height() <= navbarNeededHeight && $more.children().length === 0) {
                 $more.parent().addClass('hidden');
@@ -624,39 +640,47 @@ define('views/site/navbar', 'view', function (Dep) {
                 $more.parent().addClass('hidden');
             }
 
-            $window.on('scroll.navbar', function () {
+            $window.on('scroll.navbar', () => {
                 $tabs.scrollTop($window.scrollTop());
-                if (!this.isMoreDropdownShown) return;
-                $more.scrollTop($window.scrollTop());
-            }.bind(this));
 
-            this.$moreDropdown.on('shown.bs.dropdown', function () {
-                $more.scrollTop($window.scrollTop());
-            });
+                if (!this.isMoreDropdownShown) {
+                    return;
+                }
 
-            this.on('show-more-tabs', function () {
                 $more.scrollTop($window.scrollTop());
             });
 
-            var updateSizeForVertical = function () {
+            this.$moreDropdown.on('shown.bs.dropdown', () => {
+                $more.scrollTop($window.scrollTop());
+            });
+
+            this.on('show-more-tabs', () => {
+                $more.scrollTop($window.scrollTop());
+            });
+
+            var updateSizeForVertical = () => {
                 var windowHeight = window.innerHeight;
                 var windowWidth = window.innerWidth;
 
                 if (windowWidth < smallScreenWidth) {
                     $tabs.css('height', 'auto');
                     $more.css('max-height', '');
-                } else {
+                }
+                else {
                     $tabs.css('height', (windowHeight - navbarStaticItemsHeight) + 'px');
                     $more.css('max-height', windowHeight + 'px');
                 }
-            }.bind(this);
+            };
 
-            $(window).on('resize.navbar', function() {
+            $(window).on('resize.navbar', () => {
                 updateSizeForVertical();
             });
+
             updateSizeForVertical();
 
-            this.$el.find('.notifications-badge-container').insertAfter(this.$el.find('.quick-create-container'));
+            this.$el
+                .find('.notifications-badge-container')
+                .insertAfter(this.$el.find('.quick-create-container'));
 
             this.adjustBodyMinHeight();
         },
@@ -670,7 +694,9 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         adjustBodyMinHeight: function () {
-            if (!this.adjustBodyMinHeightMethodName) return;
+            if (!this.adjustBodyMinHeightMethodName) {
+                return;
+            }
 
             this[this.adjustBodyMinHeightMethodName]();
         },
@@ -679,16 +705,18 @@ define('views/site/navbar', 'view', function (Dep) {
             var minHeight = this.$tabs.get(0).scrollHeight + this.getStaticItemsHeight();
 
             var moreHeight = 0;
-            this.$more.find('> li:visible').each(function (i, el) {
+
+            this.$more.find('> li:visible').each((i, el) => {
                 var $el = $(el);
+
                 moreHeight += $el.height();
-            }.bind(this));
+            });
 
             minHeight = Math.max(minHeight, moreHeight);
 
             var tabHeight = this.$tabs.find('> .tab').height();
 
-            this.tabList.forEach(function (item, i) {
+            this.tabList.forEach((item, i) => {
                 if (typeof item !== 'object') {
                     return;
                 }
@@ -706,7 +734,7 @@ define('views/site/navbar', 'view', function (Dep) {
                 if (menuHeight > minHeight) {
                     minHeight = menuHeight;
                 }
-            }, this);
+            });
 
             this.$body.css('minHeight', minHeight + 'px');
         },
@@ -714,25 +742,26 @@ define('views/site/navbar', 'view', function (Dep) {
         adjustBodyMinHeightHorizontal: function () {
             var minHeight = this.getNavbarHeight();
 
-            this.$more.find('> li').each(function (i, el) {
+            this.$more.find('> li').each((i, el) => {
                 var $el = $(el);
 
                 if (!this.isMoreTabsShown) {
                     if ($el.hasClass('after-show-more')) {
                         return;
                     }
-                } else {
+                }
+                else {
                     if ($el.hasClass('show-more')) {
                         return;
                     }
                 }
 
                 minHeight += $el.height();
-            }.bind(this));
+            });
 
             var tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
 
-            this.tabList.forEach(function (item, i) {
+            this.tabList.forEach((item, i) => {
                 if (typeof item !== 'object') {
                     return;
                 }
@@ -750,7 +779,7 @@ define('views/site/navbar', 'view', function (Dep) {
                 if (menuHeight > minHeight) {
                     minHeight = menuHeight;
                 }
-            }, this);
+            });
 
             this.$body.css('minHeight', minHeight + 'px');
         },
@@ -762,16 +791,16 @@ define('views/site/navbar', 'view', function (Dep) {
 
             var $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
 
-            $moreDd.on('shown.bs.dropdown', function () {
+            $moreDd.on('shown.bs.dropdown', () => {
                 this.isMoreDropdownShown = true;
                 this.adjustBodyMinHeight();
-            }.bind(this));
+            });
 
-            $moreDd.on('hidden.bs.dropdown', function () {
+            $moreDd.on('hidden.bs.dropdown', () => {
                 this.isMoreDropdownShown = false;
                 this.hideMoreTabs();
                 this.adjustBodyMinHeight();
-            }.bind(this));
+            });
 
             this.selectTab(this.getRouter().getLast().controller);
 
@@ -793,70 +822,75 @@ define('views/site/navbar', 'view', function (Dep) {
             this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
 
             var handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
+
             if (handlerClassName) {
-                require(handlerClassName, function (Handler) {
+                require(handlerClassName, (Handler) => {
                     var handler = new Handler(this);
 
                     this.navbarAdjustmentHandler = handler;
 
                     handler.process();
-                }.bind(this));
+                });
             }
 
-            if (this.getThemeManager().getParam('skipDefaultNavbarAdjustment')) return;
+            if (this.getThemeManager().getParam('skipDefaultNavbarAdjustment')) {
+                return;
+            }
 
             if (this.getThemeManager().getParam('navbarIsVertical')) {
-                var process = function () {
+                var process = () => {
                     if (this.$navbar.height() < $(window).height() / 2) {
-                        setTimeout(function () {
-                            process();
-                        }.bind(this), 50);
+                        setTimeout(() => process(), 50);
+
                         return;
                     }
+
                     if (this.getThemeManager().isUserTheme()) {
-                        setTimeout(function () {
-                            this.adjustVertical();
-                        }.bind(this), 10);
+                        setTimeout(() => this.adjustVertical(), 10);
+
                         return;
                     }
+
                     this.adjustVertical();
-                }.bind(this);
+                };
+
                 process();
-            } else {
-                var process = function () {
+            }
+            else {
+                var process = () => {
                     if (this.$el.width() < $(window).width() / 2) {
-                        setTimeout(function () {
-                            process();
-                        }.bind(this), 50);
+                        setTimeout(() => process(), 50);
+
                         return;
                     }
+
                     if (this.getThemeManager().isUserTheme()) {
-                        setTimeout(function () {
-                            this.adjustHorizontal();
-                        }.bind(this), 10);
+                        setTimeout(() => this.adjustHorizontal(), 10);
+
                         return;
                     }
+
                     this.adjustHorizontal();
-                }.bind(this);
+                };
+
                 process();
             }
         },
 
         selectTab: function (name) {
-            if (this.currentTab != name) {
+            if (this.currentTab !== name) {
                 this.$el.find('ul.tabs li.active').removeClass('active');
+
                 if (name) {
                     this.$el.find('ul.tabs li[data-name="' + name + '"]').addClass('active');
                 }
+
                 this.currentTab = name;
             }
         },
 
         setupTabDefsList: function () {
             var tabDefsList = [];
-
-            var moreIsMet = false;
-            var isHidden = false;
 
             var colorsDisabled =
                 this.getPreferences().get('scopeColorsDisabled') ||
@@ -876,14 +910,15 @@ define('views/site/navbar', 'view', function (Dep) {
                 isHidden: false,
             };
 
-            this.tabList.forEach(function (tab, i) {
+            this.tabList.forEach((tab, i) => {
                 if (tab === '_delimiter_' || tab === '_delimiter-ext_') {
                     if (!vars.moreIsMet) {
                         vars.moreIsMet = true;
 
                         return;
-                    } else {
-                        if (i == this.tabList.length - 1) {
+                    }
+                    else {
+                        if (i === this.tabList.length - 1) {
                             return;
                         }
 
@@ -904,7 +939,7 @@ define('views/site/navbar', 'view', function (Dep) {
                 tabDefsList.push(
                     this.prepareTabItemDefs(params, tab, i, vars)
                 );
-            }, this);
+            });
 
             this.tabDefsList = tabDefsList;
         },
@@ -923,7 +958,7 @@ define('views/site/navbar', 'view', function (Dep) {
 
             var aClassName = 'nav-link';
 
-            if (tab == 'Home') {
+            if (tab === 'Home') {
                 label = this.getLanguage().translate(tab);
                 link = '#';
             }
@@ -975,12 +1010,9 @@ define('views/site/navbar', 'view', function (Dep) {
             };
 
             if (isGroup) {
-                o.itemList = tab.itemList.map(
-                    function (tab, i) {
-                        return this.prepareTabItemDefs(params, tab, i, vars);
-                    },
-                    this
-                );
+                o.itemList = tab.itemList.map((tab, i) => {
+                    return this.prepareTabItemDefs(params, tab, i, vars);
+                });
             }
 
             if (vars.isHidden) {
@@ -996,7 +1028,10 @@ define('views/site/navbar', 'view', function (Dep) {
 
         getMenuDataList: function () {
             var avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
-            if (avatarHtml) avatarHtml += ' ';
+
+            if (avatarHtml) {
+                avatarHtml += ' ';
+            }
 
             var list = [
                 {
@@ -1048,12 +1083,13 @@ define('views/site/navbar', 'view', function (Dep) {
 
         quickCreate: function (scope) {
             Espo.Ui.notify(this.translate('Loading...'));
+
             var type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
             var viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
-            this.createView('quickCreate', viewName , {scope: scope}, function (view) {
-                view.once('after:render', function () {
-                    Espo.Ui.notify(false);
-                });
+
+            this.createView('quickCreate', viewName , {scope: scope}, (view) => {
+                view.once('after:render', () => Espo.Ui.notify(false));
+
                 view.render();
             });
         },
@@ -1063,21 +1099,23 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         actionShowLastViewed: function () {
-            this.createView('dialog', 'views/modals/last-viewed', {}, function (view) {
+            this.createView('dialog', 'views/modals/last-viewed', {}, (view) => {
                 view.render();
-                this.listenTo(view, 'close', function () {
+
+                this.listenTo(view, 'close', () => {
                     this.clearView('dialog');
-                }, this);
-            }, this);
+                });
+            });
         },
 
         actionShowHistory: function () {
-            this.createView('dialog', 'views/modals/action-history', {}, function (view) {
+            this.createView('dialog', 'views/modals/action-history', {}, (view) => {
                 view.render();
-                this.listenTo(view, 'close', function () {
+
+                this.listenTo(view, 'close', () => {
                     this.clearView('dialog');
-                }, this);
-            }, this);
+                });
+            });
         },
 
         showMoreTabs: function () {
