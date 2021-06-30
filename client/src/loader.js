@@ -542,37 +542,6 @@ var Espo = Espo || {classMap: {}};
             this._executeLoadCallback(name, data);
         },
 
-        loadLib: function (url, callback) {
-            if (this._cache) {
-                let script = this._cache.get('a', url);
-
-                if (script) {
-                    this._execute(script);
-
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
-
-                    return;
-                }
-            }
-
-            $.ajax({
-                url: this._basePath + url,
-                type: 'GET',
-                dataType: 'script',
-                local: true,
-            })
-            .then(() => {
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            })
-            .catch(() => {
-                throw new Error("Could not load file '" + url + "'");
-            });
-        },
-
         addLibsConfig: function (data) {
             this._libsConfig = _.extend(this._libsConfig, data);
         },
@@ -607,10 +576,6 @@ var Espo = Espo || {classMap: {}};
         }
 
         Espo.loader.define(subject, dependency, callback);
-    };
-
-    Espo.loadLib = function (url, callback) {
-        Espo.loader.loadLib(url, callback);
     };
 
 }).call(this, Espo, _, $);
