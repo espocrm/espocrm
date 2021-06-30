@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
+define('views/admin/label-manager/edit', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -71,19 +71,20 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
 
             this.ajaxPostRequest('LabelManager/action/getScopeData', {
                 scope: this.scope,
-                language: this.language
-            }).then(function (data) {
+                language: this.language,
+            }).then(data => {
                 this.scopeData = data;
 
                 this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
                 this.wait(false);
-            }.bind(this));
+            });
         },
 
         getCategoryList: function () {
-            var categoryList = Object.keys(this.scopeData).sort(function (v1, v2) {
+            var categoryList = Object.keys(this.scopeData).sort((v1, v2) => {
+
                 return v1.localeCompare(v2);
-            }.bind(this));
+            });
 
             return categoryList;
         },
@@ -100,7 +101,9 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
             this.dirtyLabelList.push(name);
             this.setConfirmLeaveOut(true);
 
-            if (!this.hasView(category)) return;
+            if (!this.hasView(category)) {
+                return;
+            }
 
             this.getView(category).categoryData[name] = value;
         },
@@ -120,18 +123,19 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
 
             var data = {};
 
-            this.dirtyLabelList.forEach(function (name) {
+            this.dirtyLabelList.forEach(name => {
                 var category = name.split('[.]')[0];
                 var value = this.scopeData[category][name];
                 data[name] = value;
-            }, this);
+            });
 
             Espo.Ui.notify(this.translate('saving', 'messages'));
+
             this.ajaxPostRequest('LabelManager/action/saveLabels', {
                 scope: this.scope,
                 language: this.language,
                 labels: data
-            }).then(function (returnData) {
+            }).then(returnData => {
                 this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
                 this.dirtyLabelList = [];
                 this.setConfirmLeaveOut(false);
@@ -145,23 +149,26 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
                 }
 
                 Espo.Ui.success(this.translate('Saved'));
-            }.bind(this)).fail(function () {
+            }).fail(() => {
                 this.$save.removeClass('disabled').removeAttr('disabled');
                 this.$cancel.removeClass('disabled').removeAttr('disabled');
-            }.bind(this));
+            });
         },
 
         actionCancel: function () {
             this.scopeData = Espo.Utils.cloneDeep(this.scopeDataInitial);
             this.dirtyLabelList = [];
+
             this.setConfirmLeaveOut(false);
 
-            this.getCategoryList().forEach(function (category) {
-                if (!this.hasView(category)) return;
+            this.getCategoryList().forEach(category => {
+                if (!this.hasView(category)) {
+                    return;
+                }
 
                 this.getView(category).categoryData = this.scopeData[category];
                 this.getView(category).reRender();
-            }, this);
+            });
         },
 
         showCategory: function (category) {
@@ -170,18 +177,20 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
             if (this.hasView(category)) {
                 this.$el.find('a[data-action="hideCategory"][data-name="'+category+'"]').removeClass('hidden');
                 this.$el.find('.panel-body[data-name="'+category+'"]').removeClass('hidden');
+
                 return;
             }
+
             this.createView(category, 'views/admin/label-manager/category', {
                 el: this.getSelector() + ' .panel-body[data-name="'+category+'"]',
                 categoryData: this.getCategoryData(category),
                 scope: this.scope,
-                language: this.language
-            }, function (view) {
+                language: this.language,
+            }, view => {
                 this.$el.find('.panel-body[data-name="'+category+'"]').removeClass('hidden');
                 this.$el.find('a[data-action="hideCategory"][data-name="'+category+'"]').removeClass('hidden');
                 view.render();
-            }, this);
+            });
         },
 
         hideCategory: function (category) {
@@ -194,7 +203,7 @@ Espo.define('views/admin/label-manager/edit', 'view', function (Dep) {
 
         getCategoryData: function (category) {
             return this.scopeData[category] || {};
-        }
+        },
 
     });
 });
