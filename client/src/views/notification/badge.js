@@ -53,7 +53,7 @@ define('views/notification/badge', 'view', function (Dep) {
 
             this.useWebSocket = this.getConfig().get('useWebSocket');
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 if (this.timeout) {
                     clearTimeout(this.timeout);
                 }
@@ -61,9 +61,10 @@ define('views/notification/badge', 'view', function (Dep) {
                 for (var name in this.popupTimeouts) {
                     clearTimeout(this.popupTimeouts[name]);
                 }
-            }, this);
+            });
 
-            this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') || this.notificationsCheckInterval;
+            this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') ||
+                this.notificationsCheckInterval;
 
             this.lastId = 0;
             this.shownNotificationIds = [];
@@ -74,8 +75,8 @@ define('views/notification/badge', 'view', function (Dep) {
             delete localStorage['messageClosePopupNotificationId'];
             delete localStorage['messageNotificationRead'];
 
-            window.addEventListener('storage', function (e) {
-                if (e.key == 'messageClosePopupNotificationId') {
+            window.addEventListener('storage', e => {
+                if (e.key === 'messageClosePopupNotificationId') {
                     var id = localStorage.getItem('messageClosePopupNotificationId');
 
                     if (id) {
@@ -86,15 +87,17 @@ define('views/notification/badge', 'view', function (Dep) {
                             this.clearView(key);
                         }
                     }
-
                 }
 
-                if (e.key == 'messageNotificationRead') {
-                    if (!this.isBroadcastingNotificationRead && localStorage.getItem('messageNotificationRead')) {
+                if (e.key === 'messageNotificationRead') {
+                    if (
+                        !this.isBroadcastingNotificationRead &&
+                        localStorage.getItem('messageNotificationRead')
+                    ) {
                         this.checkUpdates();
                     }
                 }
-            }.bind(this), false);
+            }, false);
         },
 
         afterRender: function () {
@@ -107,10 +110,14 @@ define('views/notification/badge', 'view', function (Dep) {
             this.$popupContainer = $('#popup-notifications-container');
 
             if (!$(this.$popupContainer).length) {
-                this.$popupContainer = $('<div>').attr('id', 'popup-notifications-container').addClass('hidden').appendTo('body');
+                this.$popupContainer = $('<div>')
+                    .attr('id', 'popup-notifications-container')
+                    .addClass('hidden')
+                    .appendTo('body');
             }
 
-            var popupNotificationsData = this.popupNotificationsData = this.getMetadata().get('app.popupNotifications') || {};
+            var popupNotificationsData = this.popupNotificationsData =
+                this.getMetadata().get('app.popupNotifications') || {};
 
             for (var name in popupNotificationsData) {
                 this.checkPopupNotifications(name);
@@ -126,10 +133,11 @@ define('views/notification/badge', 'view', function (Dep) {
 
             var html = '' +
                 '<audio autoplay="autoplay">'+
-                    '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />'+
-                    '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />'+
-                    '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />'+
+                    '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />' +
+                    '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />' +
+                    '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />' +
                 '</audio>';
+
             $(html).get(0).volume = 0.3;
             $(html).get(0).play();
         },
@@ -153,8 +161,7 @@ define('views/notification/badge', 'view', function (Dep) {
             var last = this.getRouter().getLast() || {};
 
             if (
-                last.controller == 'Admin'
-                &&
+                last.controller === 'Admin' &&
                 ~['upgrade', 'extensions'].indexOf(last.action)
             ) {
                 return true;
@@ -166,44 +173,51 @@ define('views/notification/badge', 'view', function (Dep) {
                 return;
             }
 
-            Espo.Ajax.getRequest('Notification/action/notReadCount').then(function (count) {
-                if (!isFirstCheck && count > this.unreadCount) {
-                    var messageBlockPlayNotificationSound = localStorage.getItem('messageBlockPlayNotificationSound');
+            Espo.Ajax
+                .getRequest('Notification/action/notReadCount')
+                .then(count => {
+                    if (!isFirstCheck && count > this.unreadCount) {
+                        var messageBlockPlayNotificationSound =
+                            localStorage.getItem('messageBlockPlayNotificationSound');
 
-                    if (!messageBlockPlayNotificationSound) {
-                        this.playSound();
+                        if (!messageBlockPlayNotificationSound) {
+                            this.playSound();
 
-                        localStorage.setItem('messageBlockPlayNotificationSound', true);
+                            localStorage.setItem('messageBlockPlayNotificationSound', true);
 
-                        setTimeout(function () {
-                            delete localStorage['messageBlockPlayNotificationSound'];
-                        }, this.notificationsCheckInterval * 1000);
+                            setTimeout(() => {
+                                delete localStorage['messageBlockPlayNotificationSound'];
+                            }, this.notificationsCheckInterval * 1000);
+                        }
                     }
-                }
-                this.unreadCount = count;
 
-                if (count) {
-                    this.showNotRead(count);
-                } else {
+                    this.unreadCount = count;
+
+                    if (count) {
+                        this.showNotRead(count);
+
+                        return;
+                    }
+
                     this.hideNotRead();
-                }
-            }.bind(this));
+                });
         },
 
         runCheckUpdates: function (isFirstCheck) {
             this.checkUpdates(isFirstCheck);
 
             if (this.useWebSocket) {
-                this.getHelper().webSocketManager.subscribe('newNotification', function () {
+                this.getHelper().webSocketManager.subscribe('newNotification', () => {
                     this.checkUpdates();
-                }.bind(this));
+                });
 
                 return;
             }
 
-            this.timeout = setTimeout(function () {
-                this.runCheckUpdates();
-            }.bind(this), this.notificationsCheckInterval * 1000);
+            this.timeout = setTimeout(
+                () => this.runCheckUpdates(),
+                this.notificationsCheckInterval * 1000
+            );
         },
 
         checkGroupedPopupNotifications: function () {
@@ -228,17 +242,13 @@ define('views/notification/badge', 'view', function (Dep) {
             }
 
             Espo.Ajax.getRequest('PopupNotification/action/grouped')
-                .then(
-                    function (result) {
-                        for (const type in result) {
-                            const list = result[type];
+                .then(result => {
+                    for (const type in result) {
+                        const list = result[type];
 
-                            list.forEach(function (item) {
-                                this.showPopupNotification(type, item);
-                            }, this);
-                        }
-                    }.bind(this)
-                );
+                        list.forEach(item => this.showPopupNotification(type, item));
+                    }
+                });
         },
 
         checkPopupNotifications: function (name, isNotFirstCheck) {
@@ -263,22 +273,20 @@ define('views/notification/badge', 'view', function (Dep) {
             if (useWebSocket) {
                 var category = 'popupNotifications.' + (data.webSocketCategory || name);
 
-                this.getHelper().webSocketManager.subscribe(category, function (c, response) {
+                this.getHelper().webSocketManager.subscribe(category, (c, response) => {
                     if (!response.list) {
                         return;
                     }
 
-                    response.list.forEach(function (item) {
+                    response.list.forEach(item => {
                         this.showPopupNotification(name, item);
-                    }, this);
-                }.bind(this))
+                    });
+                });
             }
 
             if (data.grouped && interval && !useWebSocket && isFirstCheck) {
                 this.popupTimeouts[name] = setTimeout(
-                    function () {
-                        this.checkPopupNotifications(name, true);
-                    }.bind(this),
+                    () => this.checkPopupNotifications(name, true),
                     interval * 1000
                 );
 
@@ -297,40 +305,34 @@ define('views/notification/badge', 'view', function (Dep) {
                 return;
             }
 
-            (new Promise(
-                function (resolve) {
+            (
+                new Promise(resolve => {
                     if (this.checkBypass()) {
                         resolve();
 
                         return;
                     }
 
-                    Espo.Ajax.getRequest(url)
-                    .then(
-                        function (list) {
-                            list.forEach(function (item) {
-                                this.showPopupNotification(name, item, isNotFirstCheck);
-                            }, this);
-                        }.bind(this)
-                    )
-                    .always(
-                        function() {
-                            resolve();
-                        }
-                    );
+                    Espo.Ajax
+                        .getRequest(url)
+                        .then(list =>
+                            list.forEach(item =>
+                                this.showPopupNotification(name, item, isNotFirstCheck)
+                            )
+                        )
+                        .always(() => resolve());
+                })
+            )
+            .then(() => {
+                if (useWebSocket) {
+                    return;
+                }
 
-                }.bind(this)
-            )).then(
-                function () {
-                    if (useWebSocket) {
-                        return;
-                    }
-
-                    this.popupTimeouts[name] = setTimeout(function () {
-                        this.checkPopupNotifications(name, true);
-                    }.bind(this), interval * 1000);
-                }.bind(this)
-            );
+                this.popupTimeouts[name] = setTimeout(
+                    () => this.checkPopupNotifications(name, true),
+                    interval * 1000
+                );
+            });
         },
 
         showPopupNotification: function (name, data, isNotFirstCheck) {
@@ -358,7 +360,8 @@ define('views/notification/badge', 'view', function (Dep) {
                 if (~this.closedNotificationIds.indexOf(id)) {
                     return;
                 }
-            } else {
+            }
+            else {
                 id = this.lastId++;
             }
 
@@ -369,16 +372,17 @@ define('views/notification/badge', 'view', function (Dep) {
                 notificationId: data.id,
                 id: id,
                 isFirstCheck: !isNotFirstCheck,
-            }, function (view) {
+            }, view => {
                 view.render();
 
                 this.$popupContainer.removeClass('hidden');
 
-                this.listenTo(view, 'remove', function () {
+                this.listenTo(view, 'remove', () => {
                     this.markPopupRemoved(id);
+
                     localStorage.setItem('messageClosePopupNotificationId', id);
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         markPopupRemoved: function (id) {
@@ -388,7 +392,7 @@ define('views/notification/badge', 'view', function (Dep) {
                 this.shownNotificationIds.splice(index, 1);
             }
 
-            if (this.shownNotificationIds.length == 0) {
+            if (this.shownNotificationIds.length === 0) {
                 this.$popupContainer.addClass('hidden');
             }
 
@@ -404,11 +408,10 @@ define('views/notification/badge', 'view', function (Dep) {
 
             localStorage.setItem('messageNotificationRead', true);
 
-            setTimeout(function () {
+            setTimeout(() => {
                 this.isBroadcastingNotificationRead = false;
-
                 delete localStorage['messageNotificationRead'];
-            }.bind(this), 500);
+            }, 500);
         },
 
         showNotifications: function () {
@@ -420,48 +423,48 @@ define('views/notification/badge', 'view', function (Dep) {
 
             this.createView('panel', 'views/notification/panel', {
                 el: '#notifications-panel',
-            }, function (view) {
+            }, view => {
                 view.render();
 
-                this.listenTo(view, 'all-read', function () {
+                this.listenTo(view, 'all-read', () => {
                     this.hideNotRead();
                     this.$el.find('.badge-circle-warning').remove();
                     this.broadcastNotificationsRead();
-                }, this);
+                });
 
-                this.listenTo(view, 'collection-fetched', function () {
+                this.listenTo(view, 'collection-fetched', () => {
                     this.checkUpdates();
                     this.broadcastNotificationsRead();
-                }, this);
+                });
 
-                this.listenToOnce(view, 'close', function () {
+                this.listenToOnce(view, 'close', () => {
                     this.closeNotifications();
-                }, this);
+                });
             });
 
             $document = $(document);
 
-            $document.on('mouseup.notification', function (e) {
+            $document.on('mouseup.notification', e => {
                 if (!$container.is(e.target) && $container.has(e.target).length === 0) {
                     if (!$(e.target).closest('div.modal-dialog').length) {
                         this.closeNotifications();
                     }
                 }
-            }.bind(this));
+            });
 
             if (window.innerWidth < this.getThemeManager().getParam('screenWidthXs')) {
-                this.listenToOnce(this.getRouter(), 'route', function () {
+                this.listenToOnce(this.getRouter(), 'route', () => {
                     this.closeNotifications();
-                }, this);
+                });
             }
         },
 
         closeNotifications: function () {
-            $container = $('#notifications-panel');
+            let $container = $('#notifications-panel');
 
             $('#notifications-panel').remove();
 
-            $document = $(document);
+            let $document = $(document);
 
             if (this.hasView('panel')) {
                 this.getView('panel').remove();
