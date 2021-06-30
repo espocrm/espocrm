@@ -14,7 +14,7 @@
             {{translate 'Edit'}}
         </button>
         {{#if isRemovable}}
-        <button class="btn btn-default dropdown-toggle item-dropdown-button" data-toggle="dropdown">
+        <button class="btn btn-default btn-lg dropdown-toggle item-dropdown-button" data-toggle="dropdown">
             <span class="fas fa-ellipsis-h"></span>
         </button>
         <ul class="dropdown-menu pull-left">
