@@ -26,7 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-
 define('controllers/admin', ['controller', 'search-manager'], function (Dep, SearchManager) {
 
     return Dep.extend({
@@ -35,6 +34,7 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             if (this.getUser().isAdmin()) {
                 return true;
             }
+
             return false;
         },
 
@@ -42,18 +42,20 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             var isReturn = options.isReturn;
             var key = this.name + 'Index';
 
-            if (this.getRouter().backProcessed)
+            if (this.getRouter().backProcessed) {
                 isReturn = true;
+            }
 
-            if (!isReturn && this.getStoredMainView(key))
+            if (!isReturn && this.getStoredMainView(key)) {
                 this.clearStoredMainView(key);
+            }
 
-            this.main('views/admin/index', null, function (view) {
+            this.main('views/admin/index', null, view => {
                 view.render();
 
                 this.listenTo(view, 'clear-cache', this.clearCache);
                 this.listenTo(view, 'rebuild', this.rebuild);
-            }.bind(this), isReturn, key);
+            }, isReturn, key);
         },
 
         actionLayouts: function (options) {
@@ -111,85 +113,92 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
         },
 
         getSettingsModel: function () {
-            var model = this.getConfig().clone();
+            let model = this.getConfig().clone();
             model.defs = this.getConfig().defs;
 
             return model;
         },
 
         actionSettings: function () {
-            var model = this.getSettingsModel();
+            let model = this.getSettingsModel();
 
-            model.once('sync', function () {
+            model.fetch().then(() => {
                 model.id = '1';
+
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/settings',
                     recordView: 'views/admin/settings'
                 });
-            }, this);
-            model.fetch();
+            });
         },
 
         actionNotifications: function () {
-            var model = this.getSettingsModel();
+            let model = this.getSettingsModel();
 
-            model.once('sync', function () {
+            model.fetch().then(() => {
                 model.id = '1';
+
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/notifications',
                     recordView: 'views/admin/notifications'
                 });
-            }, this);
-            model.fetch();
+            });
         },
 
         actionOutboundEmails: function () {
-            var model = this.getSettingsModel();
+            let model = this.getSettingsModel();
 
-            model.once('sync', function () {
+            model.fetch().then(() => {
                 model.id = '1';
+
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/outbound-emails',
                     recordView: 'views/admin/outbound-emails'
                 });
-            }, this);
-            model.fetch();
+            });
         },
 
         actionInboundEmails: function () {
-            var model = this.getSettingsModel();
+            let model = this.getSettingsModel();
 
-            model.once('sync', function () {
+            model.fetch().then(() => {
                 model.id = '1';
+
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/inbound-emails',
                     recordView: 'views/admin/inbound-emails'
                 });
-            }, this);
-            model.fetch();
+            });
         },
 
         actionCurrency: function () {
-            var model = this.getSettingsModel();
+            let model = this.getSettingsModel();
 
-            model.once('sync', function () {
+            model.fetch().then(() => {
                 model.id = '1';
+
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/currency',
                     recordView: 'views/admin/currency'
                 });
-            }, this);
-            model.fetch();
+            });
         },
 
         actionAuthTokens: function () {
-            this.collectionFactory.create('AuthToken', function (collection) {
-                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+            this.collectionFactory.create('AuthToken', collection => {
+
+                var searchManager = new SearchManager(
+                    collection,
+                    'list',
+                    this.getStorage(),
+                    this.getDateTime()
+                );
+
                 searchManager.loadStored();
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
@@ -199,13 +208,20 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
                     collection: collection,
                     searchManager: searchManager
                 });
-            }, this);
+            });
         },
 
         actionAuthLog: function () {
-            this.collectionFactory.create('AuthLogRecord', function (collection) {
-                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+            this.collectionFactory.create('AuthLogRecord', collection => {
+                var searchManager = new SearchManager(
+                    collection,
+                    'list',
+                    this.getStorage(),
+                    this.getDateTime()
+                );
+
                 searchManager.loadStored();
+
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
@@ -214,13 +230,20 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
                     collection: collection,
                     searchManager: searchManager
                 });
-            }, this);
+            });
         },
 
         actionJobs: function () {
-            this.collectionFactory.create('Job', function (collection) {
-                var searchManager = new SearchManager(collection, 'list', this.getStorage(), this.getDateTime());
+            this.collectionFactory.create('Job', collection => {
+                var searchManager = new SearchManager(
+                    collection,
+                    'list',
+                    this.getStorage(),
+                    this.getDateTime()
+                );
+
                 searchManager.loadStored();
+
                 collection.where = searchManager.getWhere();
                 collection.maxSize = this.getConfig().get('recordsPerPage') || collection.maxSize;
 
@@ -229,49 +252,49 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
                     collection: collection,
                     searchManager: searchManager,
                 });
-            }, this);
+            });
         },
 
         actionUserInterface: function () {
-            var model = this.getSettingsModel();
+            let model = this.getSettingsModel();
 
-            model.once('sync', function () {
+            model.fetch().then(() => {
                 model.id = '1';
+
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/user-interface',
                     recordView: 'views/admin/user-interface'
                 });
-            }, this);
-            model.fetch();
+            });
         },
 
         actionAuthentication: function () {
-            var model = this.getSettingsModel();
+            let model = this.getSettingsModel();
 
-            model.once('sync', function () {
+            model.fetch().then(() => {
                 model.id = '1';
+
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/authentication',
                     recordView: 'views/admin/authentication'
                 });
-            }, this);
-            model.fetch();
+            });
         },
 
         actionJobsSettings: function () {
-            var model = this.getSettingsModel();
+            let model = this.getSettingsModel();
 
-            model.once('sync', function () {
+            model.fetch().then(() => {
                 model.id = '1';
+
                 this.main('views/settings/edit', {
                     model: model,
                     headerTemplate: 'admin/settings/headers/jobs-settings',
                     recordView: 'views/admin/jobs-settings'
                 });
-            }, this);
-            model.fetch();
+            });
         },
 
         actionIntegrations: function (options) {
@@ -280,44 +303,56 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             this.main('views/admin/integrations/index', {integration: integration});
         },
 
-        actionExtensions: function (options) {
+        actionExtensions: function () {
             this.main('views/admin/extensions/index');
         },
 
-        rebuild: function (options) {
-            if (this.rebuildRunning) return;
+        rebuild: function () {
+            if (this.rebuildRunning) {
+                return;
+            }
+
             this.rebuildRunning = true;
 
             var master = this.get('master');
+
             Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
 
-            Espo.Ajax.postRequest('Admin/rebuild')
-                .then(function () {
-                    var msg = master.translate('Rebuild has been done', 'labels', 'Admin');
+            Espo.Ajax
+                .postRequest('Admin/rebuild')
+                .then(() => {
+                    let msg = master.translate('Rebuild has been done', 'labels', 'Admin');
+
                     Espo.Ui.success(msg);
+
                     this.rebuildRunning = false;
-                }.bind(this))
-                .fail(function () {
+                })
+                .catch(() => {
                     this.rebuildRunning = false;
-                }.bind(this));
+                });
         },
 
-        clearCache: function (options) {
-            if (this.clearCacheRunning) return;
+        clearCache: function () {
+            if (this.clearCacheRunning) {
+                return;
+            }
+
             this.clearCacheRunning = true;
 
             var master = this.get('master');
             Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
 
             Espo.Ajax.postRequest('Admin/clearCache')
-                .then(function () {
-                    var msg = master.translate('Cache has been cleared', 'labels', 'Admin');
+                .then(() => {
+                    let msg = master.translate('Cache has been cleared', 'labels', 'Admin');
+
                     Espo.Ui.success(msg);
+
                     this.clearCacheRunning = false;
-                }.bind(this))
-                .fail(function () {
+                })
+                .catch(() => {
                     this.clearCacheRunning = false;
-                }.bind(this));
+                });
         }
     });
 });
