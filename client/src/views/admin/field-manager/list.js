@@ -36,7 +36,7 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
             return {
                 scope: this.scope,
                 fieldDefsArray: this.fieldDefsArray,
-                typeList: this.typeList
+                typeList: this.typeList,
             };
         },
 
@@ -57,22 +57,26 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
         },
 
         buildFieldDefs: function () {
-            return this.getModelFactory().create(this.scope).then(
-                function (model) {
-                    this.fields = model.defs.fields;
-                    this.fieldList = Object.keys(this.fields).sort();
-                    this.fieldDefsArray = [];
-                    this.fieldList.forEach(function (field) {
-                        var defs = this.fields[field];
-                        if (defs.customizationDisabled) return;
-                        this.fieldDefsArray.push({
-                            name: field,
-                            isCustom: defs.isCustom || false,
-                            type: defs.type
-                        });
-                    }, this);
-                }.bind(this)
-            );
+            return this.getModelFactory().create(this.scope).then(model => {
+                this.fields = model.defs.fields;
+
+                this.fieldList = Object.keys(this.fields).sort();
+                this.fieldDefsArray = [];
+
+                this.fieldList.forEach(field => {
+                    var defs = this.fields[field];
+
+                    if (defs.customizationDisabled) {
+                        return;
+                    }
+
+                    this.fieldDefsArray.push({
+                        name: field,
+                        isCustom: defs.isCustom || false,
+                        type: defs.type,
+                    });
+                });
+            });
         },
 
         removeField: function (field) {
@@ -87,15 +91,24 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
 
                     delete data['entityDefs'][this.scope]['fields'][field];
 
-                    this.getMetadata().loadSkipCache(() => {
+                    this.getMetadata().loadSkipCache().then(() =>
                         this.buildFieldDefs()
                             .then(() => {
+                                this.broadcastUpdate();
+
                                 return this.reRender();
                             })
-                            .then(() => Espo.Ui.success(this.translate('Removed')));
-                    });
+                            .then(() =>
+                                Espo.Ui.success(this.translate('Removed'))
+                            )
+                    );
                 });
             });
+        },
+
+        broadcastUpdate: function () {
+            this.getHelper().broadcastChannel.postMessage('update:metadata');
+            this.getHelper().broadcastChannel.postMessage('update:language');
         },
     });
 });

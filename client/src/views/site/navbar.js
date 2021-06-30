@@ -357,37 +357,46 @@ define('views/site/navbar', 'view', function (Dep) {
             this.getRouter().on('routed', (e) => {
                 if (e.controller) {
                     this.selectTab(e.controller);
+
+                    return;
                 }
-                else {
-                    this.selectTab(false);
-                }
+
+                this.selectTab(false);
             });
 
-            var tabList = this.getTabList();
+            this.createView('notificationsBadge', 'views/notification/badge', {
+                el: this.options.el + ' .notifications-badge-container'
+            });
 
+            let setup = () => {
+                this.setupQuickCreateList();
+                this.setupGlobalSearch();
+                this.setupTabDefsList();
+            };
+
+            setup();
+
+            this.listenTo(this.getHelper().settings, 'sync', () => {
+                setup();
+
+                this.reRender();
+            });
+
+            this.listenTo(this.getHelper().language, 'sync', () => {
+                setup();
+
+                this.reRender();
+            });
+
+            this.once('remove', () => {
+                $(window).off('resize.navbar');
+                $(window).off('scroll.navbar');
+                $(window).off('scroll.navbar-tab-group');
+            });
+        },
+
+        setupQuickCreateList: function () {
             var scopes = this.getMetadata().get('scopes') || {};
-
-            this.tabList = tabList.filter(item => {
-                if (!item) {
-                    return false;
-                }
-
-                if (typeof item === 'object') {
-                    item.itemList = item.itemList || [];
-
-                    item.itemList = item.itemList.filter(item => {
-                        return this.filterTabItem(item);
-                    });
-
-                    if (!item.itemList.length) {
-                        return false;
-                    }
-
-                    return true;
-                }
-
-                return this.filterTabItem(item);
-            });
 
             this.quickCreateList = this.getQuickCreateList().filter(scope =>{
                 if (!scopes[scope]) {
@@ -403,20 +412,6 @@ define('views/site/navbar', 'view', function (Dep) {
                 }
 
                 return true;
-            });
-
-            this.createView('notificationsBadge', 'views/notification/badge', {
-                el: this.options.el + ' .notifications-badge-container'
-            });
-
-            this.setupGlobalSearch();
-
-            this.setupTabDefsList();
-
-            this.once('remove', () => {
-                $(window).off('resize.navbar');
-                $(window).off('scroll.navbar');
-                $(window).off('scroll.navbar-tab-group');
             });
         },
 
@@ -890,6 +885,30 @@ define('views/site/navbar', 'view', function (Dep) {
         },
 
         setupTabDefsList: function () {
+            var tabList = this.getTabList();
+
+            this.tabList = tabList.filter(item => {
+                if (!item) {
+                    return false;
+                }
+
+                if (typeof item === 'object') {
+                    item.itemList = item.itemList || [];
+
+                    item.itemList = item.itemList.filter(item => {
+                        return this.filterTabItem(item);
+                    });
+
+                    if (!item.itemList.length) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                return this.filterTabItem(item);
+            });
+
             var tabDefsList = [];
 
             var colorsDisabled =

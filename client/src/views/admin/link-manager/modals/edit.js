@@ -746,6 +746,8 @@ define('views/admin/link-manager/modals/edit',
                 }
 
                 this.getMetadata().loadSkipCache().then(() => {
+                    this.broadcastUpdate();
+
                     this.trigger('after:save');
                     this.close();
                 });
@@ -759,8 +761,13 @@ define('views/admin/link-manager/modals/edit',
                 var linkDefs = this.getMetadata().get(['entityDefs', item, 'links']) || {};
 
                 var isFound = false;
+
                 for (var i in linkDefs) {
-                    if (linkDefs[i].foreign == link && linkDefs[i].entity == entityType && linkDefs[i].type === 'hasChildren') {
+                    if (
+                        linkDefs[i].foreign === link &&
+                        linkDefs[i].entity === entityType &&
+                        linkDefs[i].type === 'hasChildren'
+                    ) {
                         if (onlyNotCustom) {
                             if (linkDefs[i].isCustom) {
                                 continue;
@@ -777,6 +784,11 @@ define('views/admin/link-manager/modals/edit',
             }, this);
 
             return list;
+        },
+
+        broadcastUpdate: function () {
+            this.getHelper().broadcastChannel.postMessage('update:metadata');
+            this.getHelper().broadcastChannel.postMessage('update:language');
         },
     });
 });

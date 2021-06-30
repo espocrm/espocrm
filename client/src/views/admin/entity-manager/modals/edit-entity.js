@@ -705,6 +705,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                         scope: name,
                     };
 
+                    this.broadcastUpdate();
+
                     this.trigger('after:save', o);
                 });
             })
@@ -731,6 +733,8 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
                             this.model.fetchedAttributes = this.model.getClonedAttributes();
 
                             this.notify('Done', 'success');
+
+                            this.broadcastUpdate();
                         });
                 });
             });
@@ -825,6 +829,12 @@ define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model']
             }, this);
 
             return filtersOptionList;
+        },
+
+        broadcastUpdate: function () {
+            this.getHelper().broadcastChannel.postMessage('update:metadata');
+            this.getHelper().broadcastChannel.postMessage('update:language');
+            this.getHelper().broadcastChannel.postMessage('update:config');
         },
 
     });

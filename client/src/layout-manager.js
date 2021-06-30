@@ -176,6 +176,10 @@ define('layout-manager', [], function () {
                 );
         },
 
+        clearLoadedData: function () {
+            this.data = {};
+        },
+
     }, Backbone.Events);
 
     return LayoutManager;

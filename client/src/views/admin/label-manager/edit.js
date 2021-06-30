@@ -134,8 +134,9 @@ define('views/admin/label-manager/edit', 'view', function (Dep) {
             this.ajaxPostRequest('LabelManager/action/saveLabels', {
                 scope: this.scope,
                 language: this.language,
-                labels: data
-            }).then(returnData => {
+                labels: data,
+            })
+            .then(returnData => {
                 this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
                 this.dirtyLabelList = [];
                 this.setConfirmLeaveOut(false);
@@ -149,7 +150,12 @@ define('views/admin/label-manager/edit', 'view', function (Dep) {
                 }
 
                 Espo.Ui.success(this.translate('Saved'));
-            }).fail(() => {
+
+                this.getHelper().broadcastChannel.postMessage('update:language');
+
+                this.getLanguage().loadSkipCache();
+            })
+            .fail(() => {
                 this.$save.removeClass('disabled').removeAttr('disabled');
                 this.$cancel.removeClass('disabled').removeAttr('disabled');
             });

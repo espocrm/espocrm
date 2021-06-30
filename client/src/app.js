@@ -58,6 +58,7 @@ define(
         'ajax',
         'number',
         'page-title',
+        'broadcast-channel'
     ],
     function (
         Espo,
@@ -88,7 +89,8 @@ define(
         WebSocketManager,
         Ajax,
         NumberUtil,
-        PageTitle
+        PageTitle,
+        BroadcastChannel
     ) {
 
     let App = function (options, callback) {
@@ -148,6 +150,8 @@ define(
         masterView: 'views/site/master',
 
         responseCache: null,
+
+        broadcastChannel: null,
 
         initCache: function (options) {
             let cacheTimestamp = options.cacheTimestamp || null;
@@ -290,6 +294,8 @@ define(
                     this.webSocketManager.connect(this.auth, this.user.id);
                 }
 
+                this.initBroadcastChannel();
+
                 let promiseList = [];
                 let aclImplementationClassMap = {};
 
@@ -426,6 +432,7 @@ define(
                 storage: this.storage,
                 metadata: this.metadata,
                 dateTime: this.dateTime,
+                broadcastChannel: this.broadcastChannel,
             };
         },
 
@@ -649,14 +656,17 @@ define(
 
             this.unsetCookieAuth();
 
+            if (this.broadcastChannel.object) {
+                this.broadcastChannel.object.close();
+            }
+
+            this.broadcastChannel = null;
+
             xhr = new XMLHttpRequest;
 
             xhr.open('GET', this.basePath + this.apiUrl + '/');
-
             xhr.setRequestHeader('Authorization', 'Basic ' + base64.encode('**logout:logout'));
-
             xhr.send('');
-
             xhr.abort();
 
             this.loadStylesheet();
@@ -882,6 +892,37 @@ define(
                     console.error('Server side error '+xhr.status+': ' + statusReason);
                 }
             });
+        },
+
+        initBroadcastChannel: function () {
+            this.broadcastChannel = new BroadcastChannel();
+
+            this.broadcastChannel.subscribe(event => {
+                if (event.data === 'update:all') {
+                    this.metadata.loadSkipCache();
+                    this.settings.loadSkipCache();
+                    this.language.loadSkipCache();
+                    this.viewHelper.layoutManager.clearLoadedData();
+                }
+
+                if (event.data === 'update:metadata') {
+                    this.metadata.loadSkipCache();
+                }
+
+                if (event.data === 'update:config') {
+                    this.settings.load();
+                }
+
+                if (event.data === 'update:language') {
+                    this.language.loadSkipCache();
+                }
+
+                if (event.data === 'update:layout') {
+                    this.viewHelper.layoutManager.clearLoadedData();
+                }
+            });
+
+            this.viewHelper.broadcastChannel = this.broadcastChannel;
         },
 
     }, Backbone.Events);

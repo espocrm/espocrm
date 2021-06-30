@@ -109,6 +109,8 @@ define('views/admin/layouts/base', 'view', function (Dep) {
                 if (typeof callback === 'function') {
                     callback();
                 }
+
+                this.getHelper().broadcastChannel.postMessage('update:layout');
             }, this.setId);
         },
 

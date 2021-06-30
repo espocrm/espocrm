@@ -116,6 +116,12 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             let model = this.getConfig().clone();
             model.defs = this.getConfig().defs;
 
+            this.listenTo(model, 'after:save', () => {
+                this.getConfig().load();
+
+                this._broadcastChannel.postMessage('update:config');
+            });
+
             return model;
         },
 

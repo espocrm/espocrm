@@ -50,6 +50,7 @@ define('controller', [], function () {
         this._storage = injections.storage || null;
         this._metadata = injections.metadata || null;
         this._dateTime = injections.dateTime || null;
+        this._broadcastChannel = injections.broadcastChannel || null;
 
         this.set('masterRendered', false);
     };

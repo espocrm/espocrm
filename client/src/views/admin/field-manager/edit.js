@@ -565,6 +565,8 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 .then(() => this.trigger('after:save'));
 
                 this.model.fetchedAttributes = this.model.getClonedAttributes();
+
+                this.broadcastUpdate();
             });
 
             this.notify('Saving...');
@@ -648,11 +650,19 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             this.notify('Done', 'success');
 
                             this.reRender();
+
+                            this.broadcastUpdate();
                         });
                     });
                 });
 
             }, this);
+        },
+
+        broadcastUpdate: function () {
+            this.getHelper().broadcastChannel.postMessage('update:metadata');
+            this.getHelper().broadcastChannel.postMessage('update:language');
+            this.getHelper().broadcastChannel.postMessage('update:settings');
         },
 
     });

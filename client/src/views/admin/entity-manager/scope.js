@@ -148,6 +148,8 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
                             this.getConfig().load().then(() => {
                                 Espo.Ui.notify(false);
 
+                                this.broadcastUpdate();
+
                                 this.getRouter().navigate('#Admin/entityManager', {trigger: true});
                             });
                         });
@@ -193,6 +195,11 @@ define('views/admin/entity-manager/scope', 'view', function (Dep) {
         enableButtons: function () {
             this.$el.find('.btn.action').removeClass('disabled').removeAttr('disabled');
             this.$el.find('.item-dropdown-button"]').removeClass('disabled').removeAttr('disabled');
+        },
+
+        broadcastUpdate: function () {
+            this.getHelper().broadcastChannel.postMessage('update:metadata');
+            this.getHelper().broadcastChannel.postMessage('update:settings');
         },
 
     });
