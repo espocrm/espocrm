@@ -48,9 +48,13 @@ class Module
 
     private $list = null;
 
+    private $internalList = null;
+
     private $cacheKey = 'modules';
 
-    private $pathToModules = 'application/Espo/Modules';
+    private $internalPath = 'application/Espo/Modules';
+
+    private $customPath = 'custom/Espo/Modules';
 
     private $moduleFilePath = 'Resources/module.json';
 
@@ -141,10 +145,34 @@ class Module
         return array_keys($modulesToSort);
     }
 
+    private function getInternalList(): array
+    {
+        if ($this->internalList === null) {
+            $this->internalList = $this->fileManager->getDirList($this->internalPath);
+        }
+
+        return $this->internalList;
+    }
+
+    private function isInternal(string $moduleName): bool
+    {
+        return in_array($moduleName, $this->getInternalList());
+    }
+
+    public function getModulePath(string $moduleName): string
+    {
+        $basePath = $this->isInternal($moduleName) ? $this->internalPath : $this->customPath;
+
+        return $basePath . '/' . $moduleName;
+    }
+
     private function getList(): array
     {
         if ($this->list === null) {
-            $this->list = $this->fileManager->getDirList($this->pathToModules);
+            $this->list = array_merge(
+                $this->getInternalList(),
+                $this->fileManager->getDirList($this->customPath)
+            );
         }
 
         return $this->list;
@@ -155,7 +183,7 @@ class Module
         $data = [];
 
         foreach ($this->getList() as $moduleName) {
-            $path = $this->pathToModules . '/' . $moduleName . '/' . $this->moduleFilePath;
+            $path = $this->getModulePath($moduleName) . '/' . $this->moduleFilePath;
 
             $itemContents = $this->fileManager->getContents($path);
 

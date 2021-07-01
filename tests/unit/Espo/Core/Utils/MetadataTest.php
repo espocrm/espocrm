@@ -60,7 +60,7 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $module = new Module($this->fileManager);
 
-        $pathProvider = new PathProvider(new ModulePathProvider());
+        $pathProvider = new PathProvider(new ModulePathProvider($module));
 
         $unifierObj = new UnifierObj($this->fileManager, $module, $pathProvider);
         $unifier = new Unifier($this->fileManager, $module, $pathProvider);

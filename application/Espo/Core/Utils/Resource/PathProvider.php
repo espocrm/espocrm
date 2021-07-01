@@ -50,7 +50,7 @@ class PathProvider
         return $this->provider->getCustom() . 'Resources/';
     }
 
-    public function getModule(?string $moduleName): string
+    public function getModule(string $moduleName): string
     {
         return $this->provider->getModule($moduleName) . 'Resources/';
     }

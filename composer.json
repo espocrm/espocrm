@@ -48,7 +48,8 @@
     "autoload": {
         "psr-4": {
             "Espo\\": "application/Espo/",
-            "Espo\\Custom\\": "custom/Espo/Custom/"
+            "Espo\\Custom\\": "custom/Espo/Custom/",
+            "Espo\\Modules\\": "custom/Espo/Modules/"
         }
     },
     "autoload-dev": {

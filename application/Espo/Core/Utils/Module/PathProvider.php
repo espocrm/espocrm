@@ -29,32 +29,33 @@
 
 namespace Espo\Core\Utils\Module;
 
+use Espo\Core\Utils\Module;
+
 class PathProvider
 {
-    private $core = 'application/Espo/';
+    private $corePath = 'application/Espo/';
 
-    private $module = 'application/Espo/Modules/{*}/';
+    private $customPath = 'custom/Espo/Custom/';
 
-    private $custom = 'custom/Espo/Custom/';
+    private $module;
 
-    public function __construct() {}
+    public function __construct(Module $module)
+    {
+        $this->module = $module;
+    }
 
     public function getCore(): string
     {
-        return $this->core;
+        return $this->corePath;
     }
 
     public function getCustom(): string
     {
-        return $this->custom;
+        return $this->customPath;
     }
 
-    public function getModule(?string $moduleName): string
+    public function getModule(string $moduleName): string
     {
-        if ($moduleName === null) {
-            return $this->module;
-        }
-
-        return str_replace('{*}', $moduleName, $this->module);
+        return $this->module->getModulePath($moduleName) . '/';
     }
 }
