@@ -75,20 +75,24 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
             data.showEditLink = this.showEditLink;
 
-            if (this.level == 0 && this.selectable && (this.selectedData || {}).id === null) {
+            if (this.level === 0 && this.selectable && (this.selectedData || {}).id === null) {
                 data.rootIsSelected = true;
             }
 
-            if (this.level == 0 && this.options.hasExpandedToggler) {
+            if (this.level === 0 && this.options.hasExpandedToggler) {
                 data.hasExpandedToggler = true;
             }
 
-            if (this.level == 0) {
+            if (this.level === 0) {
                 data.isExpanded = this.isExpanded;
             }
 
             if (data.hasExpandedToggler || this.showEditLink) {
                 data.showRootMenu = true;
+            }
+
+            if (this.options.menuDisabled) {
+                data.showRootMenu = false;
             }
 
             return data;
@@ -123,7 +127,7 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
             this.rootView = this.options.rootView || this;
 
-            if (this.level == 0) {
+            if (this.level === 0) {
                 this.selectedData = {
                     id: null,
                     path: [],
@@ -138,15 +142,16 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
             Dep.prototype.setup.call(this);
 
             if (this.selectable) {
-                this.on('select', function (o) {
+                this.on('select', o => {
                     if (o.id) {
                         this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
 
-                        if (this.level == 0) {
+                        if (this.level === 0) {
                             this.$el.find('a.link').removeClass('text-bold');
                             this.$el.find('a.link[data-id="'+o.id+'"]').addClass('text-bold');
 
                             this.setSelected(o.id);
+
                             o.selectedData = this.selectedData;
                         }
                     }
@@ -154,30 +159,32 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                     if (this.level > 0) {
                         this.getParentView().trigger('select', o);
                     }
-                }, this);
+                });
             }
         },
 
         setSelected: function (id) {
             if (id === null) {
                 this.selectedData.id = null;
-            } else {
+            }
+            else {
                 this.selectedData.id = id;
             }
 
-            this.rowList.forEach(function (key) {
+            this.rowList.forEach(key => {
                 var view = this.getView(key);
 
-                if (view.model.id == id) {
+                if (view.model.id === id) {
                     view.setIsSelected();
-                } else {
+                }
+                else {
                     view.isSelected = false;
                 }
 
                 if (view.hasView('children')) {
                     view.getView('children').setSelected(id);
                 }
-            }, this);
+            });
         },
 
         buildRows: function (callback) {
@@ -191,7 +198,7 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                 var count = modelList.length;
                 var built = 0;
 
-                modelList.forEach(function (model, i) {
+                modelList.forEach((model, i) => {
                     var key = model.id;
 
                     this.rowList.push(key);
@@ -203,28 +210,29 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                         createDisabled: this.createDisabled,
                         readOnly: this.readOnly,
                         level: this.level,
-                        isSelected: model.id == this.selectedData.id,
+                        isSelected: model.id === this.selectedData.id,
                         selectedData: this.selectedData,
                         selectable: this.selectable,
                         setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
                         rootView: this.rootView,
-                    }, function () {
+                    }, () => {
                         built++;
 
-                        if (built == count) {
-                            if (typeof callback == 'function') {
+                        if (built === count) {
+                            if (typeof callback === 'function') {
                                 callback();
                             }
 
                             this.wait(false);
                         };
-                    }.bind(this));
-                }, this);
+                    });
+                });
 
-            } else {
-                if (typeof callback == 'function') {
-                    callback();
-                }
+                return;
+            }
+
+            if (typeof callback === 'function') {
+                callback();
             }
         },
 
@@ -247,11 +255,11 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
             var maxOrder = 0;
 
-            this.collection.models.forEach(function (m) {
+            this.collection.models.forEach((m) => {
                 if (m.get('order') > maxOrder) {
                     maxOrder = m.get('order');
                 }
-            }, this);
+            });
 
             attributes.order = maxOrder + 1;
 
@@ -265,15 +273,16 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
             var scope = this.collection.name;
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+                'views/modals/edit';
 
             this.createView('quickCreate', viewName, {
                 scope: scope,
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'after:save', function (model) {
+                this.listenToOnce(view, 'after:save', model => {
                     view.close();
 
                     model.set('childCollection', this.collection.createSeed());
@@ -284,7 +293,8 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
                         while (1) {
                             if (v.level) {
                                 v = v.getParentView().getParentView();
-                            } else {
+                            }
+                            else {
                                 break;
                             }
                         }
@@ -296,11 +306,11 @@ define('views/record/list-tree', 'views/record/list', function (Dep) {
 
                     this.collection.push(model);
 
-                    this.buildRows(function () {
+                    this.buildRows(() => {
                         this.render();
-                    }.bind(this));
-                }, this);
-            }.bind(this));
+                    });
+                });
+            });
         },
 
         actionSelectRoot: function () {

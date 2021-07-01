@@ -38,8 +38,9 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
                 var action = $el.data('action');
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
 
-                if (typeof this[method] == 'function') {
+                if (typeof this[method] === 'function') {
                     var data = $el.data();
+
                     this[method](data, e);
 
                     e.preventDefault();
@@ -64,13 +65,15 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
 
             data.hasExpandedToggler = this.options.hasExpandedToggler;
             data.showEditLink = this.options.showEditLink;
+            data.hasNavigationPanel = this.options.hasNavigationPanel;
 
             return data;
         },
 
         getDataList: function () {
             var list = [];
-            this.collection.forEach(function (model) {
+
+            this.collection.forEach(model => {
                 var o = {
                     id: model.id,
                     name: model.get('name'),
@@ -78,14 +81,15 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
                     isEmpty: model.get('isEmpty')
                 };
                 list.push(o);
-            }, this);
+            });
+
             return list;
         },
 
         setup: function () {
-            this.listenTo(this.collection, 'sync', function () {
+            this.listenTo(this.collection, 'sync', () => {
                 this.reRender();
-            }, this);
+            });
         },
 
         actionShowMore: function () {
@@ -93,9 +97,9 @@ define('views/record/list-nested-categories', 'view', function (Dep) {
 
             this.collection.fetch({
                 remove: false,
-                more: true
+                more: true,
             });
-        }
+        },
 
     });
 });

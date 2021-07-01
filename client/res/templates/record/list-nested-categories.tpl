@@ -29,6 +29,20 @@
                 </li>
                 {{/if}}
 
+                <li>
+                    <a
+                        href="javascript:"
+                        class="navigation-toggle-link action"
+                        data-action="toggleNavigationPanel"
+                    >
+                        {{#if hasNavigationPanel}}
+                            {{translate 'Hide Navigation Panel'}}
+                        {{else}}
+                            {{translate 'Show Navigation Panel'}}
+                        {{/if}}
+                    </a>
+                </li>
+
             </ul>
         </div>
         {{#if currentId}}
