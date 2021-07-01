@@ -8,7 +8,7 @@
     </div>
     {{/if}}
     <div class="{{#if hasTree}} col-md-9 col-sm-8{{else}} col-md-12{{/if}} list-main-column">
-        <div class="nested-categories-container{{#if hasTree}} hidden{{/if}}">{{{nestedCategories}}}</div>
+        <div class="nested-categories-container{{#unless hasNestedCategories}} hidden{{/unless}}">{{{nestedCategories}}}</div>
         <div class="list-container">{{{list}}}</div>
     </div>
 </div>

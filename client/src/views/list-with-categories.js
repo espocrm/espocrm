@@ -63,6 +63,8 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
             data.hasTree = (this.isExpanded || this.hasNavigationPanel) && !this.categoriesDisabled;
 
+            data.hasNestedCategories = !this.isExpanded;
+
             return data;
         },
 
@@ -214,7 +216,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             }
 
             if (!this.isExpanded && !this.hasView('nestedCategories')) {
-                this.loadNestedCategories();
+                   this.loadNestedCategories();
             }
         },
 
@@ -226,11 +228,6 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.applyCategoryToCollection();
 
             this.clearView('nestedCategories');
-
-            /*if (this.hasView('categories')) {
-                this.getView('categories').isExpanded = true;
-            }*/
-
             this.clearView('categories');
 
             this.getRouter().navigate('#' + this.scope);
@@ -250,9 +247,6 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             this.applyCategoryToCollection();
             this.applyCategoryToNestedCategoriesCollection();
 
-            /*if (this.hasView('categories')) {
-                this.getView('categories').isExpanded = false;
-            }*/
             this.clearView('categories');
 
             this.navigateToCurrentCategory();
@@ -325,25 +319,22 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 Promise.all([
                     this.nestedCategoriesCollection
                         .fetch()
-                        .then(
-                            function () {
-                                this.controlNestedCategoriesVisibility();
-                                this.updateHeader();
-
-                            }.bind(this)
-                        ),
+                        .then(() => {
+                            this.controlNestedCategoriesVisibility();
+                            this.updateHeader();
+                        }),
 
                     this.collection.fetch({openCategory: true})
-                ]).then(function () {
+                ]).then(() => {
                     Espo.Ui.notify(false);
 
                     this.controlListVisibility();
-                }.bind(this));
+                });
             }
             else {
-                this.collection.fetch().then(function () {
+                this.collection.fetch().then(() => {
                     Espo.Ui.notify(false);
-                }.bind(this));
+                });
             }
         },
 
