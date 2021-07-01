@@ -81,7 +81,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             var isCollapsedByDefault = this.getMetadata()
                 .get(['clientDefs', this.categoryScope, 'isCollapsedByDefault']) || false;
 
-            if (this.isCollapsedByDefault) {
+            if (isCollapsedByDefault) {
                 this.isExpanded = false;
             }
 
