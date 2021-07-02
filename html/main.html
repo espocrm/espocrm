@@ -19,6 +19,7 @@
             window.addEventListener('DOMContentLoaded', () => {
                 Espo.loader.setCacheTimestamp({{loaderCacheTimestamp}});
                 Espo.loader.setBasePath('{{basePath}}');
+                Espo.loader.setInternalModuleList({{internalModuleList}});
 
                 Espo.loader
                     .loadLibsConfig('{{libsConfigPath}}')
@@ -31,6 +32,7 @@
                                 basePath: '{{basePath}}',
                                 apiUrl: '{{apiUrl}}',
                                 ajaxTimeout: {{ajaxTimeout}},
+                                internalModuleList: {{internalModuleList}},
                             }, app => {
                                 {{runScript}}
                             });

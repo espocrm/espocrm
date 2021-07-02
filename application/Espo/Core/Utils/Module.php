@@ -145,7 +145,12 @@ class Module
         return array_keys($modulesToSort);
     }
 
-    private function getInternalList(): array
+    /**
+     * Get the list of internal modules.
+     *
+     * @return string[]
+     */
+    public function getInternalList(): array
     {
         if ($this->internalList === null) {
             $this->internalList = $this->fileManager->getDirList($this->internalPath);
@@ -166,7 +171,12 @@ class Module
         return $basePath . '/' . $moduleName;
     }
 
-    private function getList(): array
+    /**
+     * Get the list of modules. Not ordered.
+     *
+     * @return string[]
+     */
+    public function getList(): array
     {
         if ($this->list === null) {
             $this->list = array_merge(

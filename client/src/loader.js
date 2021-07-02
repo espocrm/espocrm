@@ -42,6 +42,8 @@ var Espo = Espo || {classMap: {}};
         this._loadingSubject = null;
         this._responseCache = null;
         this._basePath = '';
+        this._internalModuleList = [];
+        this._internalModuleMap = {};
 
         this.isDeveloperMode = false;
     };
@@ -76,6 +78,11 @@ var Espo = Espo || {classMap: {}};
             this._responseCache = responseCache;
         },
 
+        setInternalModuleList: function (internalModuleList) {
+            this._internalModuleList = internalModuleList;
+            this._internalModuleMap = {};
+        },
+
         _getClass: function (name) {
             if (name in this._classMap) {
                 return this._classMap[name];
@@ -89,27 +96,23 @@ var Espo = Espo || {classMap: {}};
         },
 
         _nameToPath: function (name) {
-            let path;
-
-            if (name.indexOf(':') !== -1) {
-                let arr = name.split(':');
-                let namePart = arr[1];
-                let modulePart = arr[0];
-
-                if (modulePart === 'custom') {
-                    path = 'client/custom/src/' + namePart;
-                }
-                else {
-                    path = 'client/modules/' + modulePart + '/src/' + namePart;
-                }
-            }
-            else {
-                path = 'client/src/' + name;
+            if (name.indexOf(':') === -1) {
+                return 'client/src/' + name + '.js';
             }
 
-            path += '.js';
+            let arr = name.split(':');
+            let namePart = arr[1];
+            let modulePart = arr[0];
 
-            return path;
+            if (modulePart === 'custom') {
+                return 'client/custom/src/' + namePart + '.js' ;
+            }
+
+            if (this._isModuleInternal(modulePart)) {
+                return'client/modules/' + modulePart + '/src/' + namePart + '.js';
+            }
+
+            return 'client/custom/modules/' + modulePart + '/src/' + namePart + '.js';
         },
 
         _execute: function (script) {
@@ -544,6 +547,14 @@ var Espo = Espo || {classMap: {}};
 
         addLibsConfig: function (data) {
             this._libsConfig = _.extend(this._libsConfig, data);
+        },
+
+        _isModuleInternal: function (moduleName) {
+            if (!(moduleName in this._internalModuleMap)) {
+                this._internalModuleMap[moduleName] = this._internalModuleList.indexOf(moduleName) !== -1;
+            }
+
+            return this._internalModuleMap[moduleName];
         },
     });
 

@@ -106,6 +106,10 @@ module.exports = grunt => {
                     '!build/tmp/custom/Espo/Modules/.htaccess',
                     'build/tmp/install/config.php',
                     'build/tmp/vendor/*/*/.git',
+                    'build/tmp/custom/Espo/Custom/*',
+                    'build/tmp/client/custom/*',
+                    '!build/tmp/client/custom/modules',
+                    'build/tmp/client/custom/modules/*',
                 ]
             }
         },

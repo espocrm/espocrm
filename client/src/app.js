@@ -102,6 +102,7 @@ define(
         this.apiUrl = options.apiUrl || this.apiUrl;
         this.basePath = options.basePath || '';
         this.ajaxTimeout = options.ajaxTimeout || 0;
+        this.internalModuleList = options.internalModuleList || [];
 
         this.initCache(options)
             .then(() => this.init(options, callback));
@@ -532,7 +533,17 @@ define(
                 require(Utils.composeViewClassName(viewName), callback);
             };
 
-            var getResourceInnerPath = function (type, name) {
+            let internalModuleMap = {};
+
+            let isModuleInternal = (module) => {
+                if (!(module in internalModuleMap)) {
+                    internalModuleMap[module] = this.internalModuleList.indexOf(module) !== -1;
+                }
+
+                return internalModuleMap[module];
+            };
+
+            let getResourceInnerPath = (type, name) => {
                 let path = null;
 
                 switch (type) {
@@ -557,25 +568,26 @@ define(
                 }
 
                 return path;
+            };
 
-            }.bind(this);
-
-            var getResourcePath = (type, name) => {
-                if (name.indexOf(':') !== -1) {
-                    let arr = name.split(':');
-
-                    name = arr[1];
-
-                    var mod = arr[0];
-
-                    if (mod === 'custom') {
-                        return 'client/custom/' + getResourceInnerPath(type, name);
-                    }
-
-                    return 'client/modules/' + mod + '/' + getResourceInnerPath(type, name);
+            let getResourcePath = (type, name) => {
+                if (name.indexOf(':') === -1) {
+                    return 'client/' + getResourceInnerPath(type, name);
                 }
 
-                return 'client/' + getResourceInnerPath(type, name);
+                let arr = name.split(':');
+                let mod = arr[0];
+                let path = arr[1];
+
+                if (mod === 'custom') {
+                    return 'client/custom/' + getResourceInnerPath(type, path);
+                }
+
+                if (isModuleInternal(mod)) {
+                    return 'client/modules/' + mod + '/' + getResourceInnerPath(type, path);
+                }
+
+                return 'client/custom/modules/' + mod + '/' + getResourceInnerPath(type, path);
             };
 
             this.viewFactory = new Bull.Factory({
@@ -585,12 +597,12 @@ define(
                 viewLoader: this.viewLoader,
                 resources: {
                     loaders: {
-                        'template': (name, callback) => {
+                        template: (name, callback) => {
                             var path = getResourcePath('template', name);
 
                             this.loader.load('res!' + path, callback);
                         },
-                        'layoutTemplate': (name, callback) => {
+                        layoutTemplate: (name, callback) => {
                             var path = getResourcePath('layoutTemplate', name);
 
                             this.loader.load('res!' + path, callback);

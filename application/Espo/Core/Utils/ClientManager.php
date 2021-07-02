@@ -32,6 +32,8 @@ namespace Espo\Core\Utils;
 use Espo\Core\{
     Utils\File\Manager as FileManager,
     Utils\Client\DevModeJsFileListProvider,
+    Utils\Module,
+    Utils\Json,
 };
 
 /**
@@ -39,14 +41,6 @@ use Espo\Core\{
  */
 class ClientManager
 {
-    private $themeManager;
-
-    private $config;
-
-    private $metadata;
-
-    private $fileManager;
-
     protected $mainHtmlFilePath = 'html/main.html';
 
     protected $runScript = "app.start();";
@@ -55,20 +49,32 @@ class ClientManager
 
     private $libsConfigPath = 'client/cfg/libs.json';
 
+    private $themeManager;
+
+    private $config;
+
+    private $metadata;
+
+    private $fileManager;
+
     private $devModeJsFileListProvider;
+
+    private $module;
 
     public function __construct(
         Config $config,
         ThemeManager $themeManager,
         Metadata $metadata,
         FileManager $fileManager,
-        DevModeJsFileListProvider $devModeJsFileListProvider
+        DevModeJsFileListProvider $devModeJsFileListProvider,
+        Module $module
     ) {
         $this->config = $config;
         $this->themeManager = $themeManager;
         $this->metadata = $metadata;
         $this->fileManager = $fileManager;
         $this->devModeJsFileListProvider = $devModeJsFileListProvider;
+        $this->module = $module;
     }
 
     public function setBasePath(string $basePath): void
@@ -166,6 +172,13 @@ class ClientManager
 
         $faviconPath = $this->metadata->get(['app', 'client', 'favicon']) ?? 'client/img/favicon.ico';
 
+        $internalModuleList = array_map(
+            function (string $moduleName): string {
+                return Util::fromCamelCase($moduleName, '-');
+            },
+            $this->module->getInternalList()
+        );
+
         $data = [
             'applicationId' => 'espocrm-application-id',
             'apiUrl' => 'api/v1',
@@ -184,6 +197,7 @@ class ClientManager
             'faviconPath' => $faviconPath,
             'ajaxTimeout' => $this->config->get('ajaxTimeout') ?? 60000,
             'libsConfigPath' => $this->libsConfigPath,
+            'internalModuleList' => Json::encode($internalModuleList),
         ];
 
         $html = $this->fileManager->getContents($htmlFilePath);

@@ -41,6 +41,7 @@ use Espo\Core\{
     HookManager,
     Utils\Database\Schema\SchemaProxy,
     Utils\Log,
+    Utils\Module,
 };
 
 use Throwable;
@@ -68,6 +69,8 @@ class DataManager
 
     private $log;
 
+    private $module;
+
     private $cachePath = 'data/cache';
 
     public function __construct(
@@ -79,7 +82,8 @@ class DataManager
         OrmMetadataData $ormMetadataData,
         HookManager $hookManager,
         SchemaProxy $schemaProxy,
-        Log $log
+        Log $log,
+        Module $module
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -90,6 +94,7 @@ class DataManager
         $this->hookManager = $hookManager;
         $this->schemaProxy = $schemaProxy;
         $this->log = $log;
+        $this->module = $module;
     }
 
     /**
@@ -99,6 +104,7 @@ class DataManager
     {
         $this->clearCache();
         $this->disableHooks();
+        $this->checkModules();
         $this->populateConfigParameters();
         $this->rebuildMetadata();
         $this->rebuildDatabase($entityList);
@@ -328,5 +334,17 @@ class DataManager
     protected function enableHooks(): void
     {
         $this->hookManager->enable();
+    }
+
+    private function checkModules(): void
+    {
+        $moduleNameList = $this->module->getList();
+
+        if (count(array_unique($moduleNameList)) !== count($moduleNameList)) {
+            throw new Error(
+                "There is a same module in both `custom` and `internal` directories. " .
+                "Should be only in one location."
+            );
+        }
     }
 }
