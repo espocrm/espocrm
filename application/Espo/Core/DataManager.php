@@ -98,17 +98,11 @@ class DataManager
     public function rebuild(?array $entityList = null): void
     {
         $this->clearCache();
-
         $this->disableHooks();
-
         $this->populateConfigParameters();
-
         $this->rebuildMetadata();
-
         $this->rebuildDatabase($entityList);
-
         $this->rebuildScheduledJobs();
-
         $this->enableHooks();
     }
 
