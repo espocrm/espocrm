@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/record/edit-view', 'views/record/base', function (Dep) {
+define('crm:views/calendar/record/edit-view', 'views/record/base', function (Dep) {
 
     return Dep.extend({
 
@@ -54,7 +54,6 @@ Espo.define('crm:views/calendar/record/edit-view', 'views/record/base', function
                 labelText: this.translate('teams', 'fields'),
                 foreignScope: 'Team'
             });
-        }
-
+        },
     });
 });
