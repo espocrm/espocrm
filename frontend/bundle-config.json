@@ -3,6 +3,7 @@
         "client/src/namespace.js",
         "client/src/exceptions.js",
         "client/src/loader.js",
+        "client/src/loader-init-libs.js",
         "client/src/utils.js",
 
         "client/src/acl.js",
@@ -33,6 +34,8 @@
         "client/src/view-helper.js",
         "client/src/page-title.js",
         "client/src/broadcast-channel.js",
+        "client/src/web-socket-manager.js",
+        "client/src/number.js",
 
         "client/src/app.js"
     ]

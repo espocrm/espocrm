@@ -21,23 +21,19 @@
                 Espo.loader.setBasePath('{{basePath}}');
                 Espo.loader.setInternalModuleList({{internalModuleList}});
 
-                Espo.loader
-                    .loadLibsConfig('{{libsConfigPath}}')
-                    .then(() =>
-                        require('{{appClientClassName}}', App => {
-                            new App({
-                                id: '{{applicationId}}',
-                                useCache: {{useCache}},
-                                cacheTimestamp: {{cacheTimestamp}},
-                                basePath: '{{basePath}}',
-                                apiUrl: '{{apiUrl}}',
-                                ajaxTimeout: {{ajaxTimeout}},
-                                internalModuleList: {{internalModuleList}},
-                            }, app => {
-                                {{runScript}}
-                            });
-                        })
-                    );
+                require('{{appClientClassName}}', App => {
+                    new App({
+                        id: '{{applicationId}}',
+                        useCache: {{useCache}},
+                        cacheTimestamp: {{cacheTimestamp}},
+                        basePath: '{{basePath}}',
+                        apiUrl: '{{apiUrl}}',
+                        ajaxTimeout: {{ajaxTimeout}},
+                        internalModuleList: {{internalModuleList}},
+                    }, app => {
+                        {{runScript}}
+                    });
+                });
             });
         </script>
     </head>
