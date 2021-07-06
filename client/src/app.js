@@ -668,7 +668,7 @@ define(
 
             this.unsetCookieAuth();
 
-            if (this.broadcastChannel.object) {
+            if (this.broadcastChannel && this.broadcastChannel.object) {
                 this.broadcastChannel.object.close();
             }
 
