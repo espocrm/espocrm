@@ -36,6 +36,8 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
 
         detailTemplate: 'fields/url/detail',
 
+        defaultProtocol: 'https:',
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
@@ -67,11 +69,8 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
         strip: function (value) {
             value = value.trim();
 
-            if (value.indexOf('http://') === 0) {
-                value = value.substr(7);
-            }
-            else if (value.indexOf('https://') === 0) {
-                value = value.substr(8);
+            if (value.indexOf('//') !== -1) {
+                value = value.substr(value.indexOf('//') + 2);
             }
 
             value = value.replace(/\/+$/, '');
@@ -83,8 +82,8 @@ define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function 
             var url = this.model.get(this.name);
 
             if (url && url !== '') {
-                if (!(url.indexOf('http://') === 0) && !(url.indexOf('https://') === 0)) {
-                    url = 'http://' + url;
+                if (url.indexOf('//') === -1) {
+                    url = this.defaultProtocol + '//' + url;
                 }
 
                 return url;
