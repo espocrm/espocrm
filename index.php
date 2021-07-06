@@ -79,6 +79,7 @@ More detals in the <a href="https://docs.espocrm.com/administration/apache-serve
 <h2>For nginx webserver</h2>
 
 <p>
-You need to configure the document root to look at the `public` directory and create an alias for the `client` directory. More detals in the <a href="https://docs.espocrm.com/administration/nginx-server-configuration/">documentation</a>.
+You need to configure the document root to look at the `public` directory and create an alias for the `client` directory.
+More detals in the <a href="https://docs.espocrm.com/administration/nginx-server-configuration/">documentation</a>.
 </p>
 EOL;
