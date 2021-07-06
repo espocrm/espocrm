@@ -52,12 +52,6 @@ var Espo = Espo || {classMap: {}};
 
         _classMap: Espo,
 
-        loadLibsConfig: function (path) {
-            return fetch(this._basePath + path + '?t=' + this._cacheTimestamp)
-                .then(response => response.json())
-                .then(data => this.addLibsConfig(data));
-        },
-
         setBasePath: function (basePath) {
             this._basePath = basePath;
         },
