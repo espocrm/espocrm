@@ -36,7 +36,7 @@ define('crm:views/calendar/record/edit-view', 'views/record/base', function (Dep
             Dep.prototype.setup.call(this);
 
             this.createField('mode', 'views/fields/enum', {
-                options: ['basicWeek', 'month', 'basicDay'],
+                options: this.getMetadata().get(['clientDefs', 'Calendar', 'sharedViewModeList']) || [],
                 translation: 'DashletOptions.options.mode'
             }, null, null, {
                 labelText: this.translate('mode', 'fields', 'DashletOptions')
