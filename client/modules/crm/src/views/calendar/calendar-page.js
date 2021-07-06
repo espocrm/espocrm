@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
+define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -56,7 +56,8 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                     var viewId = this.mode.substr(5);
                     var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
                     var isFound = false;
-                    calendarViewDataList.forEach(function (item) {
+
+                    calendarViewDataList.forEach(item => {
                         if (item.id === viewId) {
                             isFound = true;
                         }
@@ -74,7 +75,8 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
 
             if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
                 this.setupCalendar();
-            } else {
+            }
+            else {
                 if (this.mode === 'timeline') {
                     this.setupTimeline();
                 }
@@ -87,18 +89,23 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
             if (this.mode || this.date) {
                 url += '/';
             }
+
             if (this.mode) {
                 url += 'mode=' + this.mode;
             }
+
             if (this.date) {
                 url += '&date=' + this.date;
             }
+
             if (this.options.userId) {
                 url += '&userId=' + this.options.userId;
+
                 if (this.options.userName) {
                     url += '&userName=' + this.getHelper().escapeString(this.options.userName).replace(/\\|\//g,'');
                 }
             }
+
             this.getRouter().navigate(url, {trigger: trigger});
         },
 
@@ -111,55 +118,66 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
                 userName: this.options.userName,
                 mode: this.mode,
                 el: '#main > .calendar-container',
-            }, function (view) {
+            }, view => {
                 var initial = true;
-                this.listenTo(view, 'view', function (date, mode) {
+
+                this.listenTo(view, 'view', (date, mode) => {
                     this.date = date;
                     this.mode = mode;
+
                     if (!initial) {
                         this.updateUrl();
                     }
+
                     initial = false;
-                }, this);
-                this.listenTo(view, 'change:mode', function (mode, refresh) {
+                });
+
+                this.listenTo(view, 'change:mode', (mode, refresh) => {
                     this.mode = mode;
+
                     if (!this.options.userId) {
                         this.getStorage().set('state', 'calendarMode', mode);
                     }
+
                     if (refresh) {
                         this.updateUrl(true);
                         return;
                     }
+
                     if (!~this.fullCalendarModeList.indexOf(mode)) {
                         this.updateUrl(true);
                     }
-                }, this);
-            }, this);
+                });
+            });
         },
 
         setupTimeline: function () {
-            var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) || 'crm:views/calendar/timeline';
+            var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
+                'crm:views/calendar/timeline';
 
             this.createView('calendar', viewName, {
                 date: this.date,
                 userId: this.options.userId,
                 userName: this.options.userName,
                 el: '#main > .calendar-container',
-            }, function (view) {
-                var first = true;
-                this.listenTo(view, 'view', function (date, mode) {
+            }, (view) => {
+                this.listenTo(view, 'view', (date, mode) => {
                     this.date = date;
                     this.mode = mode;
+
                     this.updateUrl();
-                }, this);
-                this.listenTo(view, 'change:mode', function (mode) {
+                });
+
+                this.listenTo(view, 'change:mode', (mode) => {
                     this.mode = mode;
+
                     if (!this.options.userId) {
                         this.getStorage().set('state', 'calendarMode', mode);
                     }
+
                     this.updateUrl(true);
-                }, this);
-            }, this);
+                });
+            });
         },
 
         updatePageTitle: function () {
@@ -167,41 +185,48 @@ Espo.define('crm:views/calendar/calendar-page', 'view', function (Dep) {
         },
 
         createCustomView: function () {
-            this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {}, function (view) {
+            this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {}, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'after:save', function (data) {
+                this.listenToOnce(view, 'after:save', (data) => {
                     view.close();
                     this.mode = 'view-' + data.id;
                     this.date = null;
+
                     this.updateUrl(true);
-                }, this);
+                });
             });
         },
 
         editCustomView: function () {
             var viewId = this.getView('calendar').viewId;
-            if (!viewId) return;
+
+            if (!viewId) {
+                return;
+            }
 
             this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {
                 id: viewId
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'after:save', function (data) {
+                this.listenToOnce(view, 'after:save', (data) => {
                     view.close();
                     var calendarView = this.getView('calendar');
+
                     calendarView.setupMode();
 
                     calendarView.reRender();
-                }, this);
+                });
 
-                this.listenToOnce(view, 'after:remove', function (data) {
+                this.listenToOnce(view, 'after:remove', (data) => {
                     view.close();
+
                     this.mode = null;
                     this.date = null;
+
                     this.updateUrl(true);
-                }, this);
+                });
             });
         }
     });

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function (Dep, Model) {
+define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -35,7 +35,7 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
         buttonList: [
             {
                 name: 'cancel',
-                label: 'Cancel'
+                label: 'Cancel',
             }
         ],
 
@@ -56,7 +56,8 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
                     label: 'Create',
                     style: 'danger'
                 });
-            } else {
+            }
+            else {
                 this.buttonList.unshift({
                     name: 'remove',
                     label: 'Remove'
@@ -70,11 +71,13 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
             }
 
             var model = new Model();
+
             model.name = 'CalendarView';
 
             var modelData = {};
+
             if (!this.isNew) {
-                calendarViewDataList.forEach(function (item) {
+                calendarViewDataList.forEach(item => {
                     if (id === item.id) {
                         modelData.teamsIds = item.teamIdList || [];
                         modelData.teamsNames = item.teamNames || {};
@@ -83,14 +86,18 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
                         modelData.mode = item.mode;
                     }
                 });
-            } else {
+            }
+            else {
                 modelData.name = this.translate('Shared', 'labels', 'Calendar');
+
                 var foundCount = 0;
-                calendarViewDataList.forEach(function (item) {
+
+                calendarViewDataList.forEach(item => {
                     if (item.name.indexOf(modelData.name) === 0) {
                         foundCount++;
                     }
-                }, this);
+                });
+
                 if (foundCount) {
                     modelData.name += ' ' + foundCount;
                 }
@@ -134,58 +141,71 @@ Espo.define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], fun
                 calendarViewDataList.push(data);
             } else {
                 data.id = this.getView('record').model.id;
-                calendarViewDataList.forEach(function (item, i) {
-                    if (item.id == data.id) {
+
+                calendarViewDataList.forEach((item, i) => {
+                    if (item.id === data.id) {
                         calendarViewDataList[i] = data;
                     }
-                }, this);
+                });
             }
 
             Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            this.getPreferences().save({
-                'calendarViewDataList': calendarViewDataList
-            }, {patch: true}).then(function () {
-                Espo.Ui.notify(false);
-                this.trigger('after:save', data);
-                this.remove();
-            }.bind(this)).fail(function () {
-                this.enableButton('remove');
-                this.enableButton('save');
-            }.bind(this));
+            this.getPreferences()
+                .save(
+                    {
+                        'calendarViewDataList': calendarViewDataList
+                    },
+                    {patch: true}
+                )
+                .then(() =>{
+                    Espo.Ui.notify(false);
+                        this.trigger('after:save', data);
+                        this.remove();
+                })
+                .fail(() => {
+                    this.enableButton('remove');
+                    this.enableButton('save');
+                });
         },
 
         actionRemove: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.disableButton('save');
                 this.disableButton('remove');
 
                 var id = this.options.id;
 
-                if (!id) return;
+                if (!id) {
+                    return;
+                }
 
                 var newCalendarViewDataList = [];
 
                 var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
 
-                calendarViewDataList.forEach(function (item, i) {
+                calendarViewDataList.forEach((item) => {
                     if (item.id !== id) {
                         newCalendarViewDataList.push(item);
                     }
-                }, this);
+                });
 
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.getPreferences().save({
-                    'calendarViewDataList': newCalendarViewDataList
-                }, {patch: true}).then(function () {
-                    Espo.Ui.notify(false);
-                    this.trigger('after:remove');
-                    this.remove();
-                }.bind(this)).fail(function () {
-                    this.enableButton('remove');
-                    this.enableButton('save');
-                }.bind(this));
-            }.bind(this));
+
+                this.getPreferences()
+                    .save({
+                        'calendarViewDataList': newCalendarViewDataList
+                    }, {patch: true})
+                    .then(() => {
+                        Espo.Ui.notify(false);
+                        this.trigger('after:remove');
+                        this.remove();
+                    })
+                    .fail(() => {
+                        this.enableButton('remove');
+                        this.enableButton('save');
+                    });
+            });
         }
     });
 });

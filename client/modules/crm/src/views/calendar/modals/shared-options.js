@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/modals/shared-options', ['views/modal', 'model'], function (Dep, Model) {
+define('crm:views/calendar/modals/shared-options', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -36,12 +36,12 @@ Espo.define('crm:views/calendar/modals/shared-options', ['views/modal', 'model']
             {
                 name: 'save',
                 label: 'Save',
-                style: 'primary'
+                style: 'primary',
             },
             {
                 name: 'cancel',
-                label: 'Cancel'
-            }
+                label: 'Cancel',
+            },
         ],
 
         setup: function () {
@@ -49,13 +49,16 @@ Espo.define('crm:views/calendar/modals/shared-options', ['views/modal', 'model']
 
             var userIdList = [];
             var userNames = {};
-            userList.forEach(function (item) {
+
+            userList.forEach(item => {
                 userIdList.push(item.id);
                 userNames[item.id] = item.name;
             });
 
             var model = new Model();
+
             model.name = 'SharedCalendarOptions';
+
             model.set({
                 usersIds: userIdList,
                 usersNames: userNames
@@ -63,7 +66,7 @@ Espo.define('crm:views/calendar/modals/shared-options', ['views/modal', 'model']
 
             this.createView('record', 'crm:views/calendar/record/shared-options', {
                 el: this.options.el + ' .record-container',
-                model: model
+                model: model,
             });
         },
 
@@ -71,7 +74,8 @@ Espo.define('crm:views/calendar/modals/shared-options', ['views/modal', 'model']
             var data = this.getView('record').fetch();
 
             var userList = [];
-            (data.usersIds || []).forEach(function (id) {
+
+            (data.usersIds || []).forEach(id => {
                 userList.push({
                     id: id,
                     name: (data.usersNames || {})[id] || id
@@ -86,4 +90,3 @@ Espo.define('crm:views/calendar/modals/shared-options', ['views/modal', 'model']
         },
     });
 });
-
