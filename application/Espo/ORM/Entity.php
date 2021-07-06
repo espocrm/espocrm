@@ -29,6 +29,8 @@
 
 namespace Espo\ORM;
 
+use stdClass;
+
 /**
  * An entity. Represents a single record in DB.
  */
@@ -156,4 +158,9 @@ interface Entity
      * Whether a fetched value is set for a specific attribute.
      */
     public function hasFetched(string $attribute): bool;
+
+    /**
+     * Get values.
+     */
+    public function getValueMap(): stdClass;
 }
