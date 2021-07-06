@@ -31,14 +31,14 @@ if (session_status() !== \PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-require_once('../bootstrap.php');
+require_once('../../bootstrap.php');
 
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Client\DevModeJsFileListProvider;
 use Espo\Core\Utils\File\Manager as FileManager;
 
 if (!isset($postData)) {
-    require_once('core/PostData.php');
+    require_once('install/core/PostData.php');
 
     $postData = new PostData();
 }
@@ -48,7 +48,7 @@ $allPostData = $postData->getAll();
 // action
 $action = (!empty($allPostData['action']))? $allPostData['action'] : 'main';
 
-require_once('core/Utils.php');
+require_once('install/core/Utils.php');
 
 if (!Utils::checkActionExists($action)) {
     die('This page does not exist.');
@@ -75,7 +75,7 @@ if (!empty($allPostData)) {
 // get user selected language
 $userLang = (!empty($_SESSION['install']['user-lang']))? $_SESSION['install']['user-lang'] : 'en_US';
 
-require_once 'core/Language.php';
+require_once 'install/core/Language.php';
 
 $language = new Language();
 
@@ -84,9 +84,9 @@ $langs = $language->get($userLang);
 $sanitizedLangs = Util::sanitizeHtml($langs);
 //END: get user selected language
 
-$config = include('core/config.php');
+$config = include('install/core/config.php');
 
-require_once 'core/SystemHelper.php';
+require_once 'install/core/SystemHelper.php';
 
 $systemHelper = new SystemHelper();
 
@@ -118,8 +118,8 @@ if (!$systemHelper->initWritable()) {
 
 require_once ('install/vendor/smarty/libs/Smarty.class.php');
 
-require_once 'core/Installer.php';
-require_once 'core/Utils.php';
+require_once 'install/core/Installer.php';
+require_once 'install/core/Utils.php';
 
 $smarty = new Smarty();
 $installer = new Installer();
@@ -185,8 +185,10 @@ switch ($action) {
         break;
 }
 
-$actionFile = 'core/actions/'.$action.'.php';
-$tplName = $action.'.tpl';
+$actionFile = 'install/core/actions/' . $action . '.php';
+
+$tplName = $action . '.tpl';
+
 $smarty->assign('tplName', $tplName);
 $smarty->assign('action', ucfirst($action));
 
@@ -201,7 +203,7 @@ if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
     /* check if EspoCRM is built */
     $isBuilt = file_exists('client/espo.min.js');
 
-    $smarty->assign('isBuilt', true);
+    $smarty->assign('isBuilt', $isBuilt);
 
     if (!$isBuilt) {
         $libListProvider = new DevModeJsFileListProvider(new FileManager());

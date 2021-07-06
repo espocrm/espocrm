@@ -40,8 +40,11 @@ class Url
        }
 
         $url = $_SERVER['REQUEST_URI'];
+        $scriptName = $_SERVER['SCRIPT_NAME'];
 
-        return explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
+        $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
+
+        return explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
     }
 
     public static function detectPortalId(): ?string
@@ -53,8 +56,11 @@ class Url
         }
 
         $url = $_SERVER['REQUEST_URI'];
+        $scriptName = $_SERVER['SCRIPT_NAME'];
 
-        $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
+        $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
+
+        $portalId = explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
 
         if (strpos($url, '=') !== false) {
             $portalId = null;
@@ -70,7 +76,7 @@ class Url
             return null;
         }
 
-        $portalId = explode('/', $url)[count(explode('/', $_SERVER['SCRIPT_NAME'])) - 1] ?? null;
+        $portalId = explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
 
         if ($portalId === '') {
             $portalId = null;

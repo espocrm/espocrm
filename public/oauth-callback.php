@@ -27,14 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-require_once('../../../bootstrap.php');
+include "../bootstrap.php";
 
 use Espo\Core\{
-    Portal\Application,
-    Portal\ApplicationRunners\Api,
-    Portal\Utils\Url,
+    Application,
+    ApplicationRunners\EntryPoint,
+    Application\RunnerParams,
 };
 
-$portalId = Url::detectPortalIdForApi();
+$app = new Application();
 
-(new Application($portalId))->run(Api::class);
+$app->run(
+    EntryPoint::class,
+    RunnerParams::fromArray([
+        'entryPoint' => 'oauthCallback',
+    ])
+);

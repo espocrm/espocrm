@@ -27,19 +27,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-include "bootstrap.php";
+include "../bootstrap.php";
 
 use Espo\Core\{
     Application,
+    ApplicationRunners\Client,
     ApplicationRunners\EntryPoint,
-    Application\RunnerParams,
 };
 
 $app = new Application();
 
-$app->run(
-    EntryPoint::class,
-    RunnerParams::fromArray([
-        'entryPoint' => 'oauthCallback',
-    ])
-);
+if (filter_has_var(INPUT_GET, 'entryPoint')) {
+    $app->run(EntryPoint::class);
+
+    exit;
+}
+
+$app->run(Client::class);

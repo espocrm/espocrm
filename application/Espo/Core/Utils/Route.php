@@ -174,7 +174,10 @@ class Route
     public static function detectBasePath(): string
     {
         $scriptName = parse_url($_SERVER['SCRIPT_NAME'] , PHP_URL_PATH);
-        $scriptDir = dirname($scriptName);
+
+        $scriptNameModified = str_replace('public/api/', 'api/', $scriptName);
+
+        $scriptDir = dirname($scriptNameModified);
 
         $uri = parse_url('http://any.com' . $_SERVER['REQUEST_URI'], PHP_URL_PATH);
 

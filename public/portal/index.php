@@ -27,58 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-$path = getcwd();
+include "../../bootstrap.php";
 
-echo <<<EOL
-<h2>For apache webserver</h2>
+use Espo\Core\{
+    Application,
+    Application\RunnerParams,
+    ApplicationRunners\EntryPoint,
+    ApplicationRunners\PortalClient,
+    Portal\Utils\Url,
+};
 
-<h4>Non-production environment</h4>
+$app = new Application();
 
-<p>
-You need to enable `.htaccess` usage in the apache configuration. Add the code:
-</p>
+if (!$app->isInstalled()) {
+    exit;
+}
 
-<pre>
-<code>
-&ltDirectory $path>
-  AllowOverride All
-&lt/Directory>
-</code>
-</pre>
+if (Url::detectIsInPortalDir()) {
+    $basePath = '../';
 
-<h4>Poduction environment</h4>
+    if (Url::detectIsInPortalWithId()) {
+        $basePath = '../../';
+    }
 
-<p>
-It's recommended to configure the document root to look at the `public`
-directory and create an alias for the `client` directory. The code to add to the apache configuration:
-</p>
+    $app->setClientBasePath($basePath);
+}
 
-<pre>
-<code>
-DocumentRoot $path/public/
-Alias /client/ $path/client/
-</code>
-</pre>
+if (filter_has_var(INPUT_GET, 'entryPoint')) {
+    $app->run(EntryPoint::class);
 
-<p>
-And allow override for the `public` directory:
-</p>
+    exit;
+}
 
-<pre>
-<code>
-&ltDirectory $path/public/>
-  AllowOverride All
-&lt/Directory>
-</code>
-</pre>
+$params = RunnerParams::create()->with('basePath', $basePath);
 
-<p>
-More detals in the <a href="https://docs.espocrm.com/administration/apache-server-configuration/">documentation</a>.
-</p>
-
-<h2>For nginx webserver</h2>
-
-<p>
-You need to configure the document root to look at the `public` directory and create an alias for the `client` directory. More detals in the <a href="https://docs.espocrm.com/administration/nginx-server-configuration/">documentation</a>.
-</p>
-EOL;
+$app->run(PortalClient::class, $params);
