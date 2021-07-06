@@ -70,9 +70,9 @@ class Kanban
     {
         $data = $request->getParsedBody();
 
-        $entityType = $data->entityType;
-        $group = $data->group;
-        $ids = $data->ids;
+        $entityType = $data->entityType ?? null;
+        $group = $data->group ?? null;
+        $ids = $data->ids ?? null;
 
         if (empty($entityType) || !is_string($entityType)) {
             throw new BadRequest();
