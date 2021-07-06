@@ -86,6 +86,10 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if (!$hasParent) {
+            if ($entity->get('createdById') === $user->getId()) {
+                return true;
+            }
+
             return false;
         }
 
