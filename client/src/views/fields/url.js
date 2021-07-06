@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
+define('views/fields/url', ['views/fields/varchar', 'lib!underscore'], function (Dep, _) {
 
     return Dep.extend({
 
@@ -38,6 +38,7 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
             this.params.trim = true;
         },
 
@@ -52,34 +53,43 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
 
             if (this.mode === 'edit') {
                 if (this.params.strip) {
-                    this.$element.on('change', function () {
+                    this.$element.on('change', () => {
                         var value = this.$element.val() || '';
+
                         value = this.strip(value);
+
                         this.$element.val(value);
-                    }.bind(this));
+                    });
                 }
             }
         },
 
         strip: function (value) {
             value = value.trim();
+
             if (value.indexOf('http://') === 0) {
                 value = value.substr(7);
-            } else if (value.indexOf('https://') === 0) {
+            }
+            else if (value.indexOf('https://') === 0) {
                 value = value.substr(8);
             }
+
             value = value.replace(/\/+$/, '');
+
             return value;
         },
 
         getUrl: function () {
             var url = this.model.get(this.name);
-            if (url && url != '') {
+
+            if (url && url !== '') {
                 if (!(url.indexOf('http://') === 0) && !(url.indexOf('https://') === 0)) {
                     url = 'http://' + url;
                 }
+
                 return url;
             }
+
             return url;
         },
 
@@ -89,8 +99,9 @@ Espo.define('views/fields/url', 'views/fields/varchar', function (Dep) {
             if (this.params.strip && data[this.name]) {
                 data[this.name] = this.strip(data[this.name]);
             }
+
             return data;
-        }
+        },
 
     });
 });
