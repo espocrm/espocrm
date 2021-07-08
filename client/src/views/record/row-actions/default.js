@@ -73,6 +73,13 @@ Espo.define('views/record/row-actions/default', 'view', function (Dep) {
                     },
                     link: '#' + this.model.name + '/edit/' + this.model.id
                 });
+                list.push({
+                    label: 'Full Edit',
+                    data: {
+                        id: this.model.id
+                    },
+                    link: '/#' + this.model.name + '/edit/' + this.model.id
+                });
             }
             if (this.options.acl.delete) {
                 list.push({
