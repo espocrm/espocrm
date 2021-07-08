@@ -47,16 +47,11 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->fileManager = new FileManager();
 
         $this->reflection = new ReflectionHelper($this->fileManager);
-    }
-
-    protected function tearDown() : void
-    {
-        $this->fileManager = NULL;
     }
 
     public function testGetFileName()
@@ -398,6 +393,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $fileList = array_map('\Espo\Core\Utils\Util::fixPath', $fileList);
 
         $res = $this->fileManager->copy($path, $cachePath, true);
+
         if ($res) {
             $this->assertTrue($this->fileManager->remove($fileList, null, true));
             $this->assertEquals($result, $this->fileManager->getFileList($cachePath, true, '', null, true));
@@ -436,6 +432,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'custom/Espo/Custom/Modules/ExtensionTest/File.php',
             'custom/Espo/Custom/Modules/TestModule/SubFolder/Tester.txt',
         ];
+
         $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
         $result = $this->fileManager->copy($path, $cachePath, true);
@@ -457,6 +454,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'data/upload/5a86d9bf1154968dc',
             'test0.php'
         ];
+
         $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
         $result = $this->fileManager->copy($path, $cachePath, true);
@@ -561,6 +559,9 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetRelativePath($path, $expectedResult, $basePath = null, $dirSeparator = null)
     {
-        $this->assertEquals(Util::fixPath($expectedResult), $this->fileManager->getRelativePath($path, $basePath, $dirSeparator));
+        $this->assertEquals(
+            Util::fixPath($expectedResult),
+            $this->fileManager->getRelativePath($path, $basePath, $dirSeparator)
+        );
     }
 }
