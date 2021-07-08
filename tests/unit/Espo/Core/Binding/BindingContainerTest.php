@@ -35,11 +35,18 @@ use Espo\Core\{
     Binding\BindingData,
     Binding\Binder,
     Binding\Binding,
+    Binding\BindingContainerBuilder,
+    Binding\ContextualBinder,
 };
 
 use ReflectionClass;
 use ReflectionParameter;
 use ReflectionNamedType;
+
+use tests\unit\testClasses\Core\Binding\SomeInterface1;
+use tests\unit\testClasses\Core\Binding\SomeInterface2;
+use tests\unit\testClasses\Core\Binding\SomeClass1;
+use tests\unit\testClasses\Core\Binding\SomeClass2;
 
 class BindingContainerTest extends \PHPUnit\Framework\TestCase
 {
@@ -48,7 +55,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
      */
     private $binder;
 
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->loader = $this->createMock(BindingLoader::class);
 
@@ -530,5 +537,25 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Binding::CONTAINER_SERVICE, $binding->getType());
 
         $this->assertEquals('testHello', $binding->getValue());
+    }
+
+    public function testBindingContainerBuilder1(): void
+    {
+        $container = BindingContainerBuilder::create()
+            ->bindImplementation(SomeInterface1::class, SomeClass1::class)
+            ->inContext(SomeClass1::class, function (ContextualBinder $binder): void {
+                $binder->bindImplementation(SomeInterface2::class, SomeClass2::class);
+            })
+            ->build();
+
+        $param1 = $this->createParamMock('test', SomeInterface1::class);
+        $this->assertTrue($container->has(null, $param1));
+
+        $param2 = $this->createParamMock('test', SomeInterface2::class);
+        $this->assertFalse($container->has(null, $param2));
+
+        $class3 = $this->createClassMock(SomeClass1::class);
+        $param3 = $this->createParamMock('test', SomeInterface2::class);
+        $this->assertTrue($container->has($class3, $param3));
     }
 }
