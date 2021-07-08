@@ -36,9 +36,10 @@ use Espo\Core\Utils\File\Manager as FileManager;
 
 class ManagerTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
-
-    protected $objects;
+    /**
+     * @var FileManager
+     */
+    private $fileManager;
 
     protected $filesPath = 'tests/unit/testData/FileManager';
 
@@ -48,25 +49,25 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     protected function setUp() : void
     {
-        $this->object = new FileManager();
+        $this->fileManager = new FileManager();
 
-        $this->reflection = new ReflectionHelper($this->object);
+        $this->reflection = new ReflectionHelper($this->fileManager);
     }
 
     protected function tearDown() : void
     {
-        $this->object = NULL;
+        $this->fileManager = NULL;
     }
 
     public function testGetFileName()
     {
-        $this->assertEquals('Donwload', $this->object->getFileName('Donwload.php'));
+        $this->assertEquals('Donwload', $this->fileManager->getFileName('Donwload.php'));
 
-        $this->assertEquals('Donwload', $this->object->getFileName('/Donwload.php'));
+        $this->assertEquals('Donwload', $this->fileManager->getFileName('/Donwload.php'));
 
-        $this->assertEquals('Donwload', $this->object->getFileName('\Donwload.php'));
+        $this->assertEquals('Donwload', $this->fileManager->getFileName('\Donwload.php'));
 
-        $this->assertEquals('Donwload', $this->object->getFileName('application/Espo/EntryPoints/Donwload.php'));
+        $this->assertEquals('Donwload', $this->fileManager->getFileName('application/Espo/EntryPoints/Donwload.php'));
     }
 
     public function testGetContents()
@@ -75,7 +76,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             $result,
-            $this->object->getContents($this->filesPath . '/getContent/test.json')
+            $this->fileManager->getContents($this->filesPath . '/getContent/test.json')
         );
     }
 
@@ -86,12 +87,12 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $result= 'next value';
 
         $this->assertTrue(
-            $this->object->putContents($testPath . '/setContent.json', $result)
+            $this->fileManager->putContents($testPath . '/setContent.json', $result)
         );
 
         $this->assertEquals(
             $result,
-            $this->object->getContents($testPath . '/setContent.json')
+            $this->fileManager->getContents($testPath . '/setContent.json')
         );
 
         @unlink($testPath . '/setContent.json');
@@ -131,64 +132,64 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     {
         $input = 'data/logs/espo.log';
         $result = 'logs';
-        $this->assertEquals($result, $this->object->getDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getDirName($input, false));
 
         $input = 'data/logs/espo.log/';
         $result = 'logs';
-        $this->assertEquals($result, $this->object->getDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getDirName($input, false));
 
         $input = 'application/Espo/Resources/metadata/entityDefs';
         $result = 'entityDefs';
-        $this->assertEquals($result, $this->object->getDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getDirName($input, false));
 
         $input = 'application/Espo/Resources/metadata/entityDefs/';
         $result = 'entityDefs';
-        $this->assertEquals($result, $this->object->getDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getDirName($input, false));
 
         //path doesn't exists. Be careful to use "/" at the beginning
         $input = '/application/Espo/Resources/metadata/entityDefs';
         $result = 'metadata';
-        $this->assertEquals($result, $this->object->getDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getDirName($input, false));
 
         $input = 'notRealPath/logs/espo.log';
         $result = 'logs';
-        $this->assertEquals($result, $this->object->getDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getDirName($input, false));
 
         $input = $this->filesPath . '/getContent';
         $result = 'getContent';
-        $this->assertEquals($result, $this->object->getDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getDirName($input, false));
     }
 
     public function testGetDirNameFullPath()
     {
         $input = 'data/logs/espo.log';
         $result = 'data/logs';
-        $this->assertEquals($result, $this->object->getDirName($input));
+        $this->assertEquals($result, $this->fileManager->getDirName($input));
 
         $input = 'data/logs/espo.log/';
         $result = 'data/logs';
-        $this->assertEquals($result, $this->object->getDirName($input));
+        $this->assertEquals($result, $this->fileManager->getDirName($input));
 
         $input = 'application/Espo/Resources/metadata/entityDefs';
         $result = 'application/Espo/Resources/metadata/entityDefs';
-        $this->assertEquals($result, $this->object->getDirName($input));
+        $this->assertEquals($result, $this->fileManager->getDirName($input));
 
         $input = 'application/Espo/Resources/metadata/entityDefs/';
         $result = 'application/Espo/Resources/metadata/entityDefs';
-        $this->assertEquals($result, $this->object->getDirName($input));
+        $this->assertEquals($result, $this->fileManager->getDirName($input));
 
         //path doesn't exists. Be careful to use "/" at the beginning
         $input = '/application/Espo/Resources/metadata/entityDefs';
         $result = '/application/Espo/Resources/metadata';
-        $this->assertEquals($result, $this->object->getDirName($input));
+        $this->assertEquals($result, $this->fileManager->getDirName($input));
 
         $input = 'notRealPath/logs/espo.log';
         $result = 'notRealPath/logs';
-        $this->assertEquals($result, $this->object->getDirName($input));
+        $this->assertEquals($result, $this->fileManager->getDirName($input));
 
         $input = $this->filesPath . '/getContent';
         $result = $this->filesPath . '/getContent';
-        $this->assertEquals($result, $this->object->getDirName($input, true));
+        $this->assertEquals($result, $this->fileManager->getDirName($input, true));
     }
 
     public function testUnsetContents()
@@ -196,10 +197,10 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         $testPath = $this->cachePath.'/unsets.json';
 
         $initData = '{"fields":{"someName":{"type":"varchar","maxLength":40},"someName2":{"type":"varchar","maxLength":36}}}';
-        $this->object->putContents($testPath, $initData);
+        $this->fileManager->putContents($testPath, $initData);
 
         $unsets = ['fields.someName2'];
-        $this->assertTrue($this->object->unsetJsonContents($testPath, $unsets));
+        $this->assertTrue($this->fileManager->unsetJsonContents($testPath, $unsets));
 
         $result = '{"fields":{"someName":{"type":"varchar","maxLength":40}}}';
 
@@ -208,13 +209,13 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testIsDirEmpty()
     {
-        $this->assertFalse($this->object->isDirEmpty('application'));
-        $this->assertFalse($this->object->isDirEmpty('tests/unit/Espo'));
-        $this->assertFalse($this->object->isDirEmpty('tests/unit/Espo/Core/Utils/File'));
+        $this->assertFalse($this->fileManager->isDirEmpty('application'));
+        $this->assertFalse($this->fileManager->isDirEmpty('tests/unit/Espo'));
+        $this->assertFalse($this->fileManager->isDirEmpty('tests/unit/Espo/Core/Utils/File'));
 
         $dirPath = 'tests/unit/testData/cache/EmptyDir';
         if (file_exists($dirPath) || mkdir($dirPath, 0755)) {
-            $this->assertTrue($this->object->isDirEmpty($dirPath));
+            $this->assertTrue($this->fileManager->isDirEmpty($dirPath));
         }
     }
 
@@ -222,29 +223,29 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
     {
         $input = 'application/Espo/Resources/metadata/entityDefs';
         $result = 'metadata';
-        $this->assertEquals($result, $this->object->getParentDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getParentDirName($input, false));
 
         $input = 'application/Espo/Resources/metadata/entityDefs/';
         $result = 'metadata';
-        $this->assertEquals($result, $this->object->getParentDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getParentDirName($input, false));
 
         //path doesn't exists. Be careful to use "/" at the beginning
         $input = '/application/Espo/Resources/metadata/entityDefs';
         $result = 'metadata';
-        $this->assertEquals($result, $this->object->getParentDirName($input, false));
+        $this->assertEquals($result, $this->fileManager->getParentDirName($input, false));
 
         //path doesn't exists. Be careful to use "/" at the beginning
         $input = '/application/Espo/Resources/metadata/entityDefs';
         $result = '/application/Espo/Resources/metadata';
-        $this->assertEquals($result, $this->object->getParentDirName($input));
+        $this->assertEquals($result, $this->fileManager->getParentDirName($input));
 
         $input = 'notRealPath/logs/espo.log';
         $result = 'notRealPath/logs';
-        $this->assertEquals($result, $this->object->getParentDirName($input));
+        $this->assertEquals($result, $this->fileManager->getParentDirName($input));
 
         $input = $this->filesPath . '/getContent';
         $result = $this->filesPath;
-        $this->assertEquals($result, $this->object->getParentDirName($input, true));
+        $this->assertEquals($result, $this->fileManager->getParentDirName($input, true));
     }
 
     public function testGetSingleFileListAll()
@@ -396,10 +397,10 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         );
         $fileList = array_map('\Espo\Core\Utils\Util::fixPath', $fileList);
 
-        $res = $this->object->copy($path, $cachePath, true);
+        $res = $this->fileManager->copy($path, $cachePath, true);
         if ($res) {
-            $this->assertTrue($this->object->remove($fileList, null, true));
-            $this->assertEquals($result, $this->object->getFileList($cachePath, true, '', null, true));
+            $this->assertTrue($this->fileManager->remove($fileList, null, true));
+            $this->assertEquals($result, $this->fileManager->getFileList($cachePath, true, '', null, true));
         }
     }
 
@@ -437,11 +438,11 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         ];
         $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
-        $result = $this->object->copy($path, $cachePath, true);
+        $result = $this->fileManager->copy($path, $cachePath, true);
 
         if ($result) {
-            $this->assertEquals($expectedResult, $this->object->getFileList($cachePath, true, '', true, true));
-            $this->object->removeInDir($cachePath);
+            $this->assertEquals($expectedResult, $this->fileManager->getFileList($cachePath, true, '', true, true));
+            $this->fileManager->removeInDir($cachePath);
         }
     }
 
@@ -458,11 +459,11 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
         ];
         $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
-        $result = $this->object->copy($path, $cachePath, true);
+        $result = $this->fileManager->copy($path, $cachePath, true);
 
         if ($result) {
-            $this->assertEquals($expectedResult, $this->object->getFileList($cachePath, true, '', true, true));
-            $this->object->removeInDir($cachePath);
+            $this->assertEquals($expectedResult, $this->fileManager->getFileList($cachePath, true, '', true, true));
+            $this->fileManager->removeInDir($cachePath);
         }
     }
 
@@ -477,17 +478,23 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'data/upload/5a86d9bf1154968dc',
             'test0.php'
         ];
+
         $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
-        $fileList = $this->object->getFileList($path, true, '', true, true);
+        $fileList = $this->fileManager->getFileList($path, true, '', true, true);
 
         $this->assertEquals($expectedResult, $fileList, "Expected Result and File List");
 
-        $result = $this->object->copy($path, $cachePath, true, $fileList);
+        $result = $this->fileManager->copy($path, $cachePath, true, $fileList);
 
         if ($result) {
-            $this->assertEquals($expectedResult, $this->object->getFileList($cachePath, true, '', true, true), "Expected Result and List of copied files");
-            $this->object->removeInDir($cachePath);
+            $this->assertEquals(
+                $expectedResult,
+                $this->fileManager->getFileList($cachePath, true, '', true, true),
+                "Expected Result and List of copied files"
+            );
+
+            $this->fileManager->removeInDir($cachePath);
         }
     }
 
@@ -507,17 +514,23 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             'data/upload/5a86d9bf1154968dc',
             'test0.php'
         ];
+
         $expectedResult = array_map('\Espo\Core\Utils\Util::fixPath', $expectedResult);
 
-        $fileList = $this->object->getFileList($path, true, '', null, true);
+        $fileList = $this->fileManager->getFileList($path, true, '', null, true);
 
         $this->assertEquals($expectedResult, $fileList, "Expected Result and File List");
 
-        $result = $this->object->copy($path, $cachePath, true, $fileList);
+        $result = $this->fileManager->copy($path, $cachePath, true, $fileList);
 
         if ($result) {
-            $this->assertEquals($expectedResult, $this->object->getFileList($cachePath, true, '', null, true), "Expected Result and List of copied files");
-            $this->object->removeInDir($cachePath);
+            $this->assertEquals(
+                $expectedResult,
+                $this->fileManager->getFileList($cachePath, true, '', null, true),
+                "Expected Result and List of copied files"
+            );
+
+            $this->fileManager->removeInDir($cachePath);
         }
     }
 
@@ -537,6 +550,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             ['C:espocrm\\data\\config.php', 'data\\config.php', 'C:espocrm', '\\'],
             ['C:\\espocrm\\data\\tmp\\' . basename($tmpFile), 'data\\tmp\\' . basename($tmpFile), 'C:\\espocrm', '\\'],
         ];
+
         @unlink($tmpFile);
 
         return $data;
@@ -547,6 +561,6 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetRelativePath($path, $expectedResult, $basePath = null, $dirSeparator = null)
     {
-        $this->assertEquals(Util::fixPath($expectedResult), $this->object->getRelativePath($path, $basePath, $dirSeparator));
+        $this->assertEquals(Util::fixPath($expectedResult), $this->fileManager->getRelativePath($path, $basePath, $dirSeparator));
     }
 }
