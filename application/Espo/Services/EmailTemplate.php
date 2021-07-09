@@ -105,9 +105,9 @@ class EmailTemplate extends Record implements
         if (empty($params['parent'])) {
             if (!empty($params['parentId']) && !empty($params['parentType'])) {
                 $parent = $this->getEntityManager()->getEntity($params['parentType'], $params['parentId']);
-                $services = $this->recordServiceContainer->get($params['parentType']);
-                $services->loadAdditionalFields($parent);
                 if ($parent) {
+                    $services = $this->recordServiceContainer->get($params['parentType']);
+                    $services->loadAdditionalFields($parent);
                     $params['parent'] = $parent;
                 }
             }
