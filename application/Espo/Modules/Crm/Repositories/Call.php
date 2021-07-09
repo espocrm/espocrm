@@ -29,10 +29,4 @@
 
 namespace Espo\Modules\Crm\Repositories;
 
-use Espo\ORM\Entity;
-
-class Call extends Meeting
-{
-
-}
-
+class Call extends Meeting {}

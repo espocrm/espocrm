@@ -52,16 +52,6 @@ class Event extends Database implements
 
     protected $preserveDuration = true;
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getDateTime()
-    {
-        return $this->dateTime;
-    }
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if (
@@ -156,7 +146,7 @@ class Event extends Database implements
 
     protected function convertDateTimeToDefaultTimezone($string)
     {
-        $timeZone = $this->getConfig()->get('timeZone') ?? 'UTC';
+        $timeZone = $this->config->get('timeZone') ?? 'UTC';
 
         $tz = new DateTimeZone($timeZone);
 

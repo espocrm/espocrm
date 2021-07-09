@@ -30,8 +30,9 @@
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\Core\Repositories\Event as EventRepository;
 
-class Task extends \Espo\Core\Repositories\Event
+class Task extends EventRepository
 {
     protected $reminderSkippingStatusList = ['Completed', 'Canceled'];
 
@@ -61,7 +62,7 @@ class Task extends \Espo\Core\Repositories\Event
         parent::beforeSave($entity, $options);
     }
 
-    protected function processParentChanged(Entity $entity)
+    protected function processParentChanged(Entity $entity): void
     {
         $parent = null;
 
@@ -106,16 +107,15 @@ class Task extends \Espo\Core\Repositories\Event
                 $accountId = $parent->id;
                 $accountName = $parent->get('name');
             }
-            else if ($parent->getEntityType() == 'Lead') {
-                if ($parent->get('status') == 'Converted') {
-                    if ($parent->get('createdAccountId')) {
-                        $accountId = $parent->get('createdAccountId');
-                        $accountName = $parent->get('createdAccountName');
-                    }
-                    if ($parent->get('createdContactId')) {
-                        $contactId = $parent->get('createdContactId');
-                        $contactName = $parent->get('createdContactName');
-                    }
+            else if ($parent->getEntityType() == 'Lead' && $parent->get('status') == 'Converted') {
+                if ($parent->get('createdAccountId')) {
+                    $accountId = $parent->get('createdAccountId');
+                    $accountName = $parent->get('createdAccountName');
+                }
+
+                if ($parent->get('createdContactId')) {
+                    $contactId = $parent->get('createdContactId');
+                    $contactName = $parent->get('createdContactName');
                 }
             }
             else if ($parent->getEntityType() == 'Contact') {
@@ -123,11 +123,17 @@ class Task extends \Espo\Core\Repositories\Event
                 $contactName = $parent->get('name');
             }
 
-            if (!$accountId && $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account') {
+            if (
+                !$accountId &&
+                $parent->get('accountId') && $parent->getRelationParam('account', 'entity') == 'Account'
+            ) {
                 $accountId = $parent->get('accountId');
             }
 
-            if (!$contactId && $parent->get('contactId') && $parent->getRelationParam('contact', 'entity') == 'Contact') {
+            if (
+                !$contactId &&
+                $parent->get('contactId') && $parent->getRelationParam('contact', 'entity') == 'Contact'
+            ) {
                 $contactId = $parent->get('contactId');
             }
         }
@@ -139,8 +145,7 @@ class Task extends \Espo\Core\Repositories\Event
         $entity->set('contactName', $contactName);
 
         if (
-            $entity->get('accountId')
-            &&
+            $entity->get('accountId') &&
             !$entity->get('accountName')
         ) {
             $account = $this->entityManager
@@ -155,8 +160,7 @@ class Task extends \Espo\Core\Repositories\Event
         }
 
         if (
-            $entity->get('contactId')
-            &&
+            $entity->get('contactId') &&
             !$entity->get('contactName')
         ) {
             $contact = $this->entityManager

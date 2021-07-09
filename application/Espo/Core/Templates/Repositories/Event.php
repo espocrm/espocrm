@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Templates\Repositories;
 
-class Event extends \Espo\Core\Repositories\Event
-{
+use Espo\Core\Repositories\Event as BaseEvent;
 
-}
+class Event extends BaseEvent {}

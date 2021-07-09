@@ -30,11 +30,13 @@
 namespace Espo\Modules\Crm\Repositories;
 
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Util;
-
+use Espo\Core\Repositories\Event as EventRepository;
 use Espo\Core\Di;
 
-class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, Di\UserAware
+class Meeting extends EventRepository implements
+
+    Di\ConfigAware,
+    Di\UserAware
 {
     use Di\ConfigSetter;
     use Di\UserSetter;
@@ -61,8 +63,10 @@ class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, D
                         $entity->getLinkMultipleName('assignedUsers', $assignedUserId)
                     );
                 }
-            } else {
+            }
+            else {
                 $assignedUserId = $entity->get('assignedUserId');
+
                 if ($assignedUserId) {
                     $entity->addLinkMultipleId('users', $assignedUserId);
                     $entity->setLinkMultipleName('users', $assignedUserId, $entity->get('assignedUserName'));
@@ -73,11 +77,9 @@ class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, D
         if ($entity->isNew()) {
             $currentUserId = $this->user->id;
             if (
-                $entity->hasLinkMultipleId('users', $currentUserId)
-                &&
+                $entity->hasLinkMultipleId('users', $currentUserId) &&
                 (
-                    !$entity->getLinkMultipleColumn('users', 'status', $currentUserId)
-                    ||
+                    !$entity->getLinkMultipleColumn('users', 'status', $currentUserId) ||
                     $entity->getLinkMultipleColumn('users', 'status', $currentUserId) === 'None'
                 )
             ) {
@@ -86,7 +88,7 @@ class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, D
         }
     }
 
-    protected function processParentChanged(Entity $entity)
+    protected function processParentChanged(Entity $entity): void
     {
         $parent = null;
 
@@ -123,13 +125,13 @@ class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, D
                 $accountId = $parent->id;
                 $accountName = $parent->get('name');
             }
-            else if ($parent->getEntityType() == 'Lead') {
-                if ($parent->get('status') == 'Converted') {
-                    if ($parent->get('createdAccountId')) {
-                        $accountId = $parent->get('createdAccountId');
-                        $accountName = $parent->get('createdAccountName');
-                    }
-                }
+            else if (
+                $parent->getEntityType() == 'Lead' &&
+                $parent->get('status') == 'Converted' &&
+                $parent->get('createdAccountId')
+            ) {
+                $accountId = $parent->get('createdAccountId');
+                $accountName = $parent->get('createdAccountName');
             }
 
             if (
@@ -146,8 +148,7 @@ class Meeting extends \Espo\Core\Repositories\Event implements Di\ConfigAware, D
         }
 
         if (
-            $entity->get('accountId')
-            &&
+            $entity->get('accountId') &&
             !$entity->get('accountName')
         ) {
             $account = $this->entityManager
