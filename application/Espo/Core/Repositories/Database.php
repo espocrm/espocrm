@@ -42,10 +42,10 @@ use Espo\Core\ORM\{
 
 use Espo\Core\{
     Utils\Metadata,
-    Utils\Util,
     HookManager,
     ApplicationState,
     Utils\DateTime as DateTimeUtil,
+    Utils\Id\RecordIdGenerator,
 };
 
 class Database extends RDBRepository
@@ -72,17 +72,21 @@ class Database extends RDBRepository
 
     protected $applicationState;
 
+    protected $recordIdGenerator;
+
     public function __construct(
         string $entityType,
         EntityManager $entityManager,
         EntityFactory $entityFactory,
         Metadata $metadata,
         HookManager $hookManager,
-        ApplicationState $applicationState
+        ApplicationState $applicationState,
+        RecordIdGenerator $recordIdGenerator
     ) {
         $this->metadata = $metadata;
         $this->hookManager = $hookManager;
         $this->applicationState = $applicationState;
+        $this->recordIdGenerator = $recordIdGenerator;
 
         $hookMediator = null;
 
@@ -115,7 +119,7 @@ class Database extends RDBRepository
             !$entity->has('id') &&
             !$entity->getAttributeParam('id', 'autoincrement')
         ) {
-            $entity->set('id', Util::generateId());
+            $entity->set('id', $this->recordIdGenerator->generate());
         }
 
         if (empty($options['skipAll'])) {

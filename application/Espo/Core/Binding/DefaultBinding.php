@@ -208,9 +208,14 @@ class DefaultBinding implements BindingProcessor
             'Espo\\Core\\WebSocket\\ZeroMQSubscriber'
         );
 
-         $binder->bindImplementation(
+        $binder->bindImplementation(
             'Espo\\Core\\Acl\\Table\\TableFactory',
             'Espo\\Core\\Acl\\Table\\DefaultTableFactory'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Utils\\Id\\RecordIdGenerator',
+            'Espo\\Core\\Utils\\Id\\DefaultRecordIdGenerator'
         );
     }
 }

@@ -32,16 +32,13 @@ namespace Espo\Core\ORM\Repositories;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 
-use Espo\ORM\Entity;
-
 use Espo\Core\Interfaces\Injectable;
 
 use Espo\Core\{
     Utils\Metadata,
-    Utils\Config,
-    Utils\FieldManagerUtil,
     HookManager,
     ApplicationState,
+    Utils\Id\RecordIdGenerator,
 };
 
 /** @deprecated */
@@ -98,9 +95,18 @@ class RDB extends \Espo\Core\Repositories\Database implements Injectable
         EntityFactory $entityFactory,
         Metadata $metadata,
         HookManager $hookManager,
-        ApplicationState $applicationState
+        ApplicationState $applicationState,
+        RecordIdGenerator $recordIdGenerator
     ) {
-        parent::__construct($entityType, $entityManager, $entityFactory, $metadata, $hookManager, $applicationState);
+        parent::__construct(
+            $entityType,
+            $entityManager,
+            $entityFactory,
+            $metadata,
+            $hookManager,
+            $applicationState,
+            $recordIdGenerator
+        );
 
         $this->init();
     }
