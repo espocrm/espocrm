@@ -39,7 +39,5 @@ $app = new Application();
 
 $app->run(
     EntryPoint::class,
-    RunnerParams::fromArray([
-        'entryPoint' => 'oauthCallback',
-    ])
+    RunnerParams::create()->with('entryPoint', 'oauthCallback')
 );
