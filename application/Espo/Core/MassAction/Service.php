@@ -36,8 +36,7 @@ use Espo\Core\{
     Acl,
 };
 
-use RuntimeException;
-use StdClass;
+use stdClass;
 
 class Service
 {
@@ -59,27 +58,20 @@ class Service
      * @throws Forbidden
      * @throws BadRequest
      */
-    public function process(string $entityType, string $action, array $params, StdClass $data): Result
+    public function process(string $entityType, string $action, Params $params, stdClass $data): Result
     {
         if (!$this->acl->checkScope($entityType)) {
             throw new ForbiddenSilent();
         }
 
-        try {
-            $massActionParams = Params::fromRaw($params, $entityType);
-        }
-        catch (RuntimeException $e) {
-            throw new BadReqest($e->getMessage());
-        }
-
         $massAction = $this->factory->create($action, $entityType);
 
         $result = $massAction->process(
-            $massActionParams,
+            $params,
             Data::fromRaw($data)
         );
 
-        if ($massActionParams->hasIds()) {
+        if ($params->hasIds()) {
             return $result;
         }
 

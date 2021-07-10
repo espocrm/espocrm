@@ -33,10 +33,12 @@ use Espo\Core\{
     Exceptions\BadRequest,
     MassAction\Service,
     MassAction\Result,
+    MassAction\Params,
     Api\Request,
 };
 
-use StdClass;
+use stdClass;
+use RuntimeException;
 
 /**
  * Mass-Action framework.
@@ -50,7 +52,7 @@ class MassAction
         $this->service = $service;
     }
 
-    public function postActionProcess(Request $request): StdClass
+    public function postActionProcess(Request $request): stdClass
     {
         $body = $request->getParsedBody();
 
@@ -63,17 +65,24 @@ class MassAction
             throw new BadRequest();
         }
 
+        try {
+            $massActionParams = Params::fromRaw($this->prepareMassActionParams($params), $entityType);
+        }
+        catch (RuntimeException $e) {
+            throw new BadReqest($e->getMessage());
+        }
+
         $result = $this->service->process(
             $entityType,
             $action,
-            $this->prepareMassActionParams($params),
+            $massActionParams,
             $data
         );
 
         return $this->convertResult($result);
     }
 
-    private function prepareMassActionParams(StdClass $data): array
+    private function prepareMassActionParams(stdClass $data): array
     {
         $where = $data->where ?? null;
         $searchParams = $data->searchParams ?? null;
@@ -102,7 +111,7 @@ class MassAction
         throw new BadRequest("Bad search params for mass action.");
     }
 
-    private function convertResult(Result $result): StdClass
+    private function convertResult(Result $result): stdClass
     {
         $data = (object) [];
 
