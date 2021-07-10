@@ -65,7 +65,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
         $this->actionProcessor = $this->app
             ->getContainer()
             ->get('injectableFactory')
-            ->create(ActionProcessor::class);;
+            ->create(ActionProcessor::class);
     }
 
     public function testUpdate1(): void
