@@ -31,10 +31,14 @@ namespace Espo\Core\Record;
 
 use Espo\Core\{
     Exceptions\Forbidden,
+    Exceptions\BadRequest,
     Utils\Config,
     Api\Request,
     Select\SearchParams,
+    Utils\Json,
 };
+
+use JsonException;
 
 class SearchParamsFetcher
 {
@@ -55,6 +59,27 @@ class SearchParamsFetcher
     }
 
     private function fetchRaw(Request $request): array
+    {
+        $params = $request->hasQueryParam('searchParams') ?
+            $this->fetchRawJsonSearchParams($request):
+            $this->fetchRawMultipleParams($request);
+
+        $this->handleRawParams($params);
+
+        return $params;
+    }
+
+    private function fetchRawJsonSearchParams(Request $request): array
+    {
+        try {
+            return Json::decode($request->getQueryParam('searchParams'), true);
+        }
+        catch (JsonException $e) {
+            throw new BadRequest("Invalid search params JSON.");
+        }
+    }
+
+    private function fetchRawMultipleParams(Request $request): array
     {
         $params = [];
 
@@ -119,9 +144,16 @@ class SearchParamsFetcher
             $params['select'] = explode(',', $request->getQueryParam('select'));
         }
 
-        $this->handleMaxSize($params);
-
         return $params;
+    }
+
+    private function handleRawParams(array &$params): void
+    {
+        if (isset($params['maxSize']) && !is_int($params['maxSize'])) {
+            throw new BadRequest('maxSize must be integer.');
+        }
+
+        $this->handleMaxSize($params);
     }
 
     private function handleMaxSize(array &$params): void
