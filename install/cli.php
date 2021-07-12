@@ -91,7 +91,7 @@ if (session_status() != \PHP_SESSION_ACTIVE) {
 ob_start();
 
 try {
-    require('public/install/index.php');
+    require('entry.php');
 }
 catch (\Throwable $e) {
     fwrite(\STDOUT, "Error: ". $e->getMessage() .".\n");
