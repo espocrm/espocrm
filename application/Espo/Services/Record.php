@@ -166,7 +166,7 @@ class Record extends RecordService implements
     /**
      * @deprecated Use `$this->user`.
      */
-    protected function getUser(): User
+    protected function getUser()
     {
         return $this->user;
     }
