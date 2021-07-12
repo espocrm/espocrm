@@ -27,12 +27,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-if (substr(php_sapi_name(), 0, 3) != 'cli') die('The file can be run only via CLI.');
+if (substr(php_sapi_name(), 0, 3) != 'cli') {
+    die('The file can be run only via CLI.');
+}
 
 $options = getopt("a:d:");
 
 if (empty($options['a'])) {
     fwrite(\STDOUT, "Error: the option [-a] is required.\n");
+
     exit;
 }
 
@@ -43,6 +46,7 @@ if (!empty($options['d'])) {
 
     if (empty($allPostData) || !is_array($allPostData)) {
         fwrite(\STDOUT, "Error: Incorrect input data.\n");
+
         exit;
     }
 }
@@ -52,28 +56,34 @@ $allPostData['action'] = $action;
 
 chdir(dirname(__FILE__));
 set_include_path(dirname(__FILE__));
+
 require_once('../bootstrap.php');
 
 $_SERVER['SERVER_SOFTWARE'] = 'Cli';
 
 require_once('core/PostData.php');
+
 $postData = new PostData();
 $postData->set($allPostData);
 
 require_once('core/InstallerConfig.php');
+
 $installerConfig = new InstallerConfig();
 
 if ($installerConfig->get('isInstalled')) {
     fwrite(\STDOUT, "Error: EspoCRM is already installed.\n");
+
     exit;
 }
 
 if (session_status() != \PHP_SESSION_ACTIVE) {
     if (!$installerConfig->get('cliSessionId')) {
         session_start();
+
         $installerConfig->set('cliSessionId', session_id());
         $installerConfig->save();
-    } else {
+    }
+    else {
         session_id($installerConfig->get('cliSessionId'));
     }
 }
@@ -81,9 +91,11 @@ if (session_status() != \PHP_SESSION_ACTIVE) {
 ob_start();
 
 try {
-    require('install/index.php');
-} catch (\Throwable $e) {
+    require('public/install/index.php');
+}
+catch (\Throwable $e) {
     fwrite(\STDOUT, "Error: ". $e->getMessage() .".\n");
+
     exit;
 }
 
@@ -92,11 +104,19 @@ ob_end_clean();
 
 if (preg_match('/"success":false/i', $result)) {
     $resultData = json_decode($result, true);
+
     if (empty($resultData)) {
         fwrite(\STDOUT, "Error: Unexpected error occurred.\n");
+
         exit;
     }
 
-    fwrite(\STDOUT, "Error: ". (!empty($resultData['errors']) ? print_r($resultData['errors'], true) : $resultData['errorMsg']) ."\n");
+    fwrite(
+        \STDOUT,
+        "Error: ". (!empty($resultData['errors']) ?
+            print_r($resultData['errors'], true) :
+            $resultData['errorMsg']) ."\n"
+    );
+
     exit;
 }
