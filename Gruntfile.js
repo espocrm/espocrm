@@ -272,8 +272,25 @@ module.exports = grunt => {
                         dest: 'build/tmp/application/Espo/Resources/defaults/config.php',
                     }
                 ],
-            }
+            },
+            dev: {
+                options: {
+                    patterns: [
+                        {
+                            match: /\# \{\#dev\}(.*)\{\/dev\}/gs,
+                            replacement: '',
+                        }
+                    ]
+                },
+                files: [
+                    {
+                        src: 'build/tmp/.htaccess',
+                        dest: 'build/tmp/.htaccess',
+                    }
+                ],
+            },
         },
+
     });
 
     grunt.registerTask('chmod-folders', () => {

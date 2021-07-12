@@ -24,8 +24,10 @@ Options -Indexes
     # Skip redirect for `client` dir.
     RewriteRule ^client/ - [L]
 
+# {#dev}
     # Skip redirect for `node_modules` dir. Actual only for dev environment.
     RewriteRule ^node_modules/ - [L]
+# {/dev}
 
     # Store base path.
     RewriteCond %{REQUEST_URI}::$1 ^(.*?/)(.*)::\2$
