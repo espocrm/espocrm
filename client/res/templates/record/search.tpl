@@ -99,6 +99,8 @@
                     style="visibility: hidden;"
                 >
                     <span class="fas fa-times"></span>
+                <button type="button" class="btn btn-text btn-icon-wide" data-action="refreshFilters" title="{{translate 'Reset Search Values'}}" style="visibility: hidden;">
+                    <span class="fas fa-redo-alt"></span>
                 </button>
                 <ul class="dropdown-menu pull-right filter-list">
                     <li class="dropdown-header">{{translate 'Add Field'}}</li>

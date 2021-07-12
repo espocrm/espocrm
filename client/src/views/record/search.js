@@ -349,6 +349,9 @@ define('views/record/search', 'view', function (Dep) {
             'click button[data-action="refresh"]': function (e) {
                 this.refresh();
             },
+            'click button[data-action="refreshFilters"]': function (e) {
+                this.refreshFilters();
+            },
             'click a[data-action="selectPreset"]': function (e) {
                 var presetName = $(e.currentTarget).data('name') || null;
 
@@ -411,6 +414,7 @@ define('views/record/search', 'view', function (Dep) {
             this.manageLabels();
             this.handleLeftDropdownVisibility();
             this.controlResetButtonVisibility();
+            this.controlRefreshButtonVisibility();
 
             if (this.isSearchedWithAdvancedFilter) {
                 this.showResetFiltersButton();
@@ -441,7 +445,7 @@ define('views/record/search', 'view', function (Dep) {
 
             this.manageLabels();
             this.controlResetButtonVisibility();
-
+            this.controlRefreshButtonVisibility();
 
         },
 
@@ -497,6 +501,17 @@ define('views/record/search', 'view', function (Dep) {
             this.selectPreset(this.presetName, true);
 
             this.hideApplyFiltersButton();
+        },
+
+        refreshFilters: function () {
+            this.textFilter = '';
+            for (var valueIndex in this.advanced) {
+                this.advanced[valueIndex] = false;
+            }
+            this.trigger('reset');
+
+            this.collection.resetOrderToDefault();
+            this.selectPreset(this.presetName, false);
         },
 
         savePreset: function (name) {
@@ -593,6 +608,7 @@ define('views/record/search', 'view', function (Dep) {
         	this.$filtersButton = this.$el.find('.search-row button.filters-button');
             this.$leftDropdown = this.$el.find('div.search-row div.left-dropdown');
             this.$resetButton = this.$el.find('[data-action="reset"]');
+            this.$refreshButton = this.$el.find('[data-action="refreshFilters"]');
             this.$applyFiltersContainer = this.$el.find('.advanced-filters-apply-container');
 
             this.updateAddFilterButton();
@@ -602,6 +618,7 @@ define('views/record/search', 'view', function (Dep) {
             this.manageLabels();
 
             this.controlResetButtonVisibility();
+            this.controlRefreshButtonVisibility();
         },
 
         manageLabels: function () {
@@ -648,6 +665,42 @@ define('views/record/search', 'view', function (Dep) {
                 $resetButton.css('visibility', 'visible');
             } else {
                 $resetButton.css('visibility', 'hidden');
+            }
+        },
+
+         controlRefreshButtonVisibility: function () {
+            var presetName = this.presetName || null;
+            var primary = this.primary;
+
+            var $refreshButton = this.$refreshButton;
+
+            var toShow = false;
+
+            if (this.textFilter) {
+                toShow = true;
+            } else {
+                if (presetName && presetName != primary) {
+
+                } else {
+                    if (Object.keys(this.advanced).length) {
+                        toShow = true;
+                    }
+                }
+            }
+
+            if (!toShow) {
+                if (
+                    this.collection.orderBy !== this.collection.defaultOrderBy ||
+                    this.collection.order !== this.collection.defaultOrder
+                ) {
+                    toShow = true;
+                }
+            }
+
+            if (toShow) {
+                $refreshButton.css('visibility', 'visible');
+            } else {
+                $refreshButton.css('visibility', 'hidden');
             }
         },
 
@@ -704,7 +757,6 @@ define('views/record/search', 'view', function (Dep) {
                 if (primary) {
                 	var label = this.translate(primary, 'presetFilters', this.entityType);
                 	var style = this.getPrimaryFilterStyle();
-
                 	filterLabel = label;
                 	filterStyle = style;
                 }
@@ -739,6 +791,7 @@ define('views/record/search', 'view', function (Dep) {
             this.updateSearch();
             this.updateCollection();
             this.controlResetButtonVisibility();
+            this.controlRefreshButtonVisibility();
 
             this.isSearchedWithAdvancedFilter = this.hasAdvancedFilter();
         },
