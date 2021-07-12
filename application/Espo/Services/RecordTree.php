@@ -62,6 +62,18 @@ class RecordTree extends Record
         if (!$this->subjectEntityType) {
             $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
         }
+
+        if ($this->entityType === 'RecordTree') {
+            $this->entityType = null;
+            $this->subjectEntityType = null;
+        }
+    }
+
+    public function setEntityType(string $entityType): void
+    {
+        parent::setEntityType($entityType);
+
+        $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
     }
 
     public function getTree(
