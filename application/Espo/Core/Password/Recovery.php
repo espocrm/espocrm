@@ -127,7 +127,7 @@ class Recovery
         }
     }
 
-    public function request(string $emailAddress, ?string $userName = null, ?string $url): bool
+    public function request(string $emailAddress, string $userName, ?string $url): bool
     {
         $config = $this->config;
         $em = $this->entityManager;
