@@ -216,7 +216,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
             }
 
             if (!this.isExpanded && !this.hasView('nestedCategories')) {
-                   this.loadNestedCategories();
+                this.loadNestedCategories();
             }
         },
 
@@ -359,15 +359,6 @@ define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         controlNestedCategoriesVisibility: function () {
-            if (
-                !this.nestedCategoriesCollection.models.length &&
-                !this.currentCategoryId
-            ) {
-                this.$nestedCategoriesContainer.addClass('hidden');
-
-                return;
-            }
-
             this.$nestedCategoriesContainer.removeClass('hidden');
         },
 
