@@ -339,7 +339,7 @@ class Service implements Crud,
         $loadProcessor->process($entity);
     }
 
-    private function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams): void
+    protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams = null): void
     {
         $params = new FieldLoaderParams();
 

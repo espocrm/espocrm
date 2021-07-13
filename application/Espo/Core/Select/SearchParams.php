@@ -275,6 +275,16 @@ class SearchParams
         $offset = $params['offset'] ?? null;
         $maxSize = $params['maxSize'] ?? null;
 
+        // For bc.
+        if (is_string($offset) && is_numeric($offset)) {
+            $offset = (int) $offset;
+        }
+
+        // For bc.
+        if (is_string($maxSize) && is_numeric($maxSize)) {
+            $maxSize = (int) $maxSize;
+        }
+
         $boolFilterList = $params['boolFilterList'] ?? [];
         $primaryFilter = $params['primaryFilter'] ?? null;
         $textFilter = $params['textFilter'] ?? $params['q'] ?? null;
