@@ -59,13 +59,12 @@ class RecordTree extends Record
     {
         parent::__construct();
 
-        if (!$this->subjectEntityType) {
+        if (!$this->subjectEntityType && $this->entityType !== 'RecordTree') {
             $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
         }
 
         if ($this->entityType === 'RecordTree') {
             $this->entityType = null;
-            $this->subjectEntityType = null;
         }
     }
 
@@ -73,7 +72,9 @@ class RecordTree extends Record
     {
         parent::setEntityType($entityType);
 
-        $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
+        if (!$this->subjectEntityType) {
+            $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
+        }
     }
 
     public function getTree(
