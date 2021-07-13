@@ -193,14 +193,27 @@ class Module
         $data = [];
 
         foreach ($this->getList() as $moduleName) {
-            $path = $this->getModulePath($moduleName) . '/' . $this->moduleFilePath;
-
-            $itemContents = $this->fileManager->getContents($path);
-
-            $data[$moduleName] = Json::decode($itemContents, true);
-
-            $data[$moduleName]['order'] = $data[$moduleName]['order'] ?? self::DEFAULT_ORDER;
+            $data[$moduleName] = $this->loadModuleData($moduleName);
         }
+
+        return $data;
+    }
+
+    private function loadModuleData(string $moduleName): array
+    {
+        $path = $this->getModulePath($moduleName) . '/' . $this->moduleFilePath;
+
+        if (!$this->fileManager->exists($path)) {
+            return [
+                'order' => self::DEFAULT_ORDER,
+            ];
+        }
+
+        $contents = $this->fileManager->getContents($path);
+
+        $data = Json::decode($contents, true);
+
+        $data['order'] = $data['order'] ?? self::DEFAULT_ORDER;
 
         return $data;
     }
