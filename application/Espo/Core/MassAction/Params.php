@@ -114,30 +114,30 @@ class Params
 
         $searchParams = $params['searchParams'] ?? $params['selectData'] ?? null;
 
-        if ($where && !is_array($where)) {
+        if ($where !== null && !is_array($where)) {
             throw new RuntimeException("Bad 'where'.");
         }
 
-        if ($searchParams && !is_array($searchParams)) {
+        if ($searchParams !== null && !is_array($searchParams)) {
             throw new RuntimeException("Bad 'searchParams'.");
         }
 
-        if ($where && $searchParams) {
+        if ($where !== null && $searchParams !== null) {
             $searchParams['where'] = $where;
         }
 
-        if ($where && !$searchParams) {
+        if ($where !== null && $searchParams === null) {
             $searchParams = [
                 'where' => $where,
             ];
         }
 
-        if ($searchParams) {
-            if ($ids) {
+        if ($searchParams !== null) {
+            if ($ids !== null) {
                 throw new RuntimeException("Can't combine 'ids' and search params.");
             }
         }
-        else if ($ids) {
+        else if ($ids !== null) {
             if (!is_array($ids)) {
                 throw new RuntimeException("Bad 'ids'.");
             }
@@ -148,7 +148,7 @@ class Params
             throw new RuntimeException("Bad mass action params.");
         }
 
-        if ($searchParams) {
+        if ($searchParams !== null) {
             $actualSearchParams = $searchParams;
 
             unset($actualSearchParams['select']);

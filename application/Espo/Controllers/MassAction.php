@@ -65,11 +65,13 @@ class MassAction
             throw new BadRequest();
         }
 
+        $rawParams = $this->prepareMassActionParams($params);
+
         try {
-            $massActionParams = Params::fromRaw($this->prepareMassActionParams($params), $entityType);
+            $massActionParams = Params::fromRaw($rawParams, $entityType);
         }
         catch (RuntimeException $e) {
-            throw new BadReqest($e->getMessage());
+            throw new BadRequest($e->getMessage());
         }
 
         $result = $this->service->process(
