@@ -85,7 +85,8 @@ class EntityManagerFactory
             ->withSslCert($config->get('database.sslCert'))
             ->withSslKey($config->get('database.sslKey'))
             ->withSslCaPath($config->get('database.sslCAPath'))
-            ->withSslCipher($config->get('database.sslCipher'));
+            ->withSslCipher($config->get('database.sslCipher'))
+            ->withSslVerifyDisabled($config->get('database.sslVerifyDisabled') ?? false);
 
         $metadata = new Metadata($this->metadataDataProvider, $this->eventDispatcher);
 

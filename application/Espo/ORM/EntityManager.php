@@ -306,6 +306,10 @@ class EntityManager
             $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $this->databaseParams->getSslCipher();
         }
 
+        if ($this->databaseParams->isSslVerifyDisabled()) {
+            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+        }
+
         $this->pdo = new PDO($dsn, $username, $password, $options);
 
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

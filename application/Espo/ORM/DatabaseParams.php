@@ -57,6 +57,8 @@ class DatabaseParams
 
     private $sslCipher = null;
 
+    private $sslVerifyDisabled = false;
+
     public static function create(): self
     {
         return new self();
@@ -125,6 +127,11 @@ class DatabaseParams
     public function getSslKey(): ?string
     {
         return $this->sslKey;
+    }
+
+    public function isSslVerifyDisabled(): bool
+    {
+        return $this->sslVerifyDisabled;
     }
 
     public function withPlatform(?string $platform): self
@@ -227,6 +234,14 @@ class DatabaseParams
     {
         $obj = clone $this;
         $obj->sslKey = $sslKey;
+
+        return $obj;
+    }
+
+    public function withSslVerifyDisabled(bool $sslVerifyDisabled = true): self
+    {
+        $obj = clone $this;
+        $obj->sslVerifyDisabled = $sslVerifyDisabled;
 
         return $obj;
     }
