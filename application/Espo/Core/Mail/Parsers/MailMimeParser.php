@@ -89,6 +89,9 @@ class MailMimeParser implements Parser
         $this->messageHash[$key] = $this->getParser()->parse($raw);
     }
 
+    /**
+     * @return MessagePart
+     */
     protected function getMessage(MessageWrapper $message)
     {
         $key = spl_object_hash($message);
