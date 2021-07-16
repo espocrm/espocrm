@@ -43,6 +43,7 @@ use Espo\Core\{
 use ZBateson\MailMimeParser\{
     MailMimeParser as WrappeeParser,
     Message\Part\MessagePart,
+    Message,
 };
 
 use stdClass;
@@ -89,8 +90,9 @@ class MailMimeParser implements Parser
         $this->messageHash[$key] = $this->getParser()->parse($raw);
     }
 
+
     /**
-     * @return MessagePart
+     * @return Message
      */
     protected function getMessage(MessageWrapper $message)
     {
