@@ -347,6 +347,13 @@ class MailMimeParser implements Parser
             $email->set('body', $body);
         }
 
+        /* @var $textCalendarPart MessagePart */
+        $textCalendarPart = $this->getMessage($message)->getAllPartsByMimeType('text/calendar')[0] ?? null;
+
+        if ($textCalendarPart && $textCalendarPart->hasContent()) {
+            $email->set('icsContents', $textCalendarPart->getContent());
+        }
+
         return $inlineAttachmentList;
     }
 

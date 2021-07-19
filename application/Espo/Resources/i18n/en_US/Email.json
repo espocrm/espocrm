@@ -51,7 +51,11 @@
         "fromAddress": "From Address",
         "replyToName": "Reply-To Name",
         "replyToAddress": "Reply-To Address",
-        "isSystem": "Is System"
+        "isSystem": "Is System",
+        "icsContents": "ICS Contents",
+        "icsEventData": "ICS Event Data",
+        "icsEventUid": "ICS Event UID",
+        "createdEvent": "Created Event"
     },
     "links": {
         "replied": "Replied",

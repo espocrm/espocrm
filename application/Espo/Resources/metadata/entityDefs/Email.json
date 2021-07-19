@@ -327,6 +327,35 @@
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "noLoad": true
+        },
+        "icsContents": {
+            "type": "text",
+            "readOnly": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "dbType": "text"
+        },
+        "icsEventData": {
+            "type": "jsonObject",
+            "readOnly": true,
+            "directAccessDisabled": true,
+            "notStorable": true
+        },
+        "icsEventUid": {
+            "type": "varchar",
+            "maxLength": 255,
+            "index": true
+        },
+        "createEventButton": {
+            "type": "base",
+            "disabled": true,
+            "notStorable": true
+        },
+        "createdEvent": {
+            "type": "linkParent",
+            "readOnly": true,
+            "view": "views/email/fields/created-event"
         }
     },
     "links": {
@@ -470,6 +499,10 @@
             "type": "hasMany",
             "entity": "EmailAccount",
             "foreign": "emails"
+        },
+        "createdEvent": {
+            "type": "belongsToParent",
+            "entityList": ["Meeting"]
         }
     },
     "collection": {

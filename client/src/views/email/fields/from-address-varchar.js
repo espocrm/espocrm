@@ -42,10 +42,13 @@ define(
 
             this.erasedPlaceholder = 'ERASED:';
 
-            this.on('render', function () {
-                if (this.mode === 'search') return;
+            this.on('render', () => {
+                if (this.mode === 'search') {
+                    return;
+                }
+
                 this.initAddressList();
-            }, this);
+            });
         },
 
         events: {
@@ -85,18 +88,18 @@ define(
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
+            if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {
                 EmailAddress.prototype.initSearchAutocomplete.call(this);
             }
 
-            if (this.mode == 'edit' && this.getAcl().check('Email', 'create')) {
+            if (this.mode === 'edit' && this.getAcl().check('Email', 'create')) {
                 EmailAddress.prototype.initSearchAutocomplete.call(this);
             }
 
-            if (this.mode == 'search') {
-                this.$input.on('input', function () {
+            if (this.mode === 'search') {
+                this.$input.on('input', () => {
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -114,17 +117,21 @@ define(
 
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
+
             list.push('nameHash');
             list.push('idHash');
             list.push('accountId');
+
             return list;
         },
 
         getValueForDisplay: function () {
-            if (this.mode == 'detail') {
+            if (this.mode === 'detail') {
                 var address = this.model.get(this.name);
+
                 return this.getDetailAddressHtml(address);
             }
+
             return Dep.prototype.getValueForDisplay.call(this);
         },
 
@@ -147,13 +154,16 @@ define(
             var addressHtml = this.getHelper().escapeString(address);
 
             var lineHtml = '';
+
             if (id) {
                 lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name +
                     '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
-            } else {
+            }
+            else {
                 if (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create')) {
                     lineHtml += this.getCreateHtml(address);
                 }
+
                 if (name) {
                     lineHtml += '<span class="email-address-line">' + name +
                         ' <span class="text-muted">&#187;</span> <span>' + addressHtml + '</span></span>';
@@ -162,6 +172,7 @@ define(
                 }
             }
             lineHtml = '<div>' + lineHtml + '</div>';
+
             return lineHtml;
         },
 
@@ -176,16 +187,23 @@ define(
             '';
 
             if (this.getAcl().check('Contact', 'create')) {
-                html += '<li><a href="javascript:" data-action="createContact" data-address="'+address+'">'+this.translate('Create Contact', 'labels', 'Email')+'</a></li>';
+                html += '<li><a href="javascript:" data-action="createContact" data-address="'+address+'">'+
+                    this.translate('Create Contact', 'labels', 'Email')+'</a></li>';
             }
+
             if (this.getAcl().check('Lead', 'create')) {
-                html += '<li><a href="javascript:" data-action="createLead" data-address="'+address+'">'+this.translate('Create Lead', 'labels', 'Email')+'</a></li>';
+                html += '<li><a href="javascript:" data-action="createLead" data-address="'+address+'">'+
+                    this.translate('Create Lead', 'labels', 'Email')+'</a></li>';
             }
+
             if (this.getAcl().check('Contact', 'edit')) {
-                html += '<li><a href="javascript:" data-action="addToContact" data-address="'+address+'">'+this.translate('Add to Contact', 'labels', 'Email')+'</a></li>';
+                html += '<li><a href="javascript:" data-action="addToContact" data-address="'+address+'">'+
+                    this.translate('Add to Contact', 'labels', 'Email')+'</a></li>';
             }
+
             if (this.getAcl().check('Lead', 'edit')) {
-                html += '<li><a href="javascript:" data-action="addToLead" data-address="'+address+'">'+this.translate('Add to Lead', 'labels', 'Email')+'</a></li>';
+                html += '<li><a href="javascript:" data-action="addToLead" data-address="'+address+'">'+
+                    this.translate('Add to Lead', 'labels', 'Email')+'</a></li>';
             }
 
             html += '</ul>' +
@@ -196,13 +214,17 @@ define(
 
         parseNameFromStringAddress: function (value) {
             value = value || '';
+
             if (~value.indexOf('<')) {
                 var name = value.replace(/<(.*)>/, '').trim();
+
                 if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
                     name = name.substr(1, name.length - 2);
                 }
+
                 return name;
             }
+
             return null;
         },
 
@@ -213,7 +235,7 @@ define(
             var name = this.nameHash[address] || null;
 
             if (!name) {
-                if (this.name == 'from') {
+                if (this.name === 'from') {
                     name = this.parseNameFromStringAddress(fromString) || null;
                 }
             }
@@ -226,7 +248,7 @@ define(
                 emailAddress: address
             };
 
-            if (this.model.get('accountId') && scope == 'Contact') {
+            if (this.model.get('accountId') && scope === 'Contact') {
                 attributes.accountId = this.model.get('accountId');
                 attributes.accountName = this.model.get('accountName');
             }
@@ -234,18 +256,21 @@ define(
             if (name) {
                 var firstName = name.split(' ').slice(0, -1).join(' ');
                 var lastName = name.split(' ').slice(-1).join(' ');
+
                 attributes.firstName = firstName;
                 attributes.lastName = lastName;
             }
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') || 'views/modals/edit';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+                'views/modals/edit';
 
             this.createView('create', viewName, {
                 scope: scope,
                 attributes: attributes
-            }, function (view) {
+            }, (view) => {
                 view.render();
-                this.listenTo(view, 'after:save', function (model) {
+
+                this.listenTo(view, 'after:save', (model) => {
                     var nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
                     var typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
                     var idHash = Espo.Utils.clone(this.model.get('idHash') || {});
@@ -264,11 +289,15 @@ define(
                         typeHash: typeHash
                     };
 
-                    setTimeout(function () {
+                    setTimeout(() => {
                         this.model.set(attributes);
-                    }.bind(this), 50);
-                }, this);
-            }.bind(this));
+
+                        if (this.model.get('icsContents')) {
+                            this.model.fetch();
+                        }
+                    }, 50);
+                });
+            });
         },
 
         addToPerson: function (scope, address) {
@@ -278,7 +307,7 @@ define(
             var name = this.nameHash[address] || null;
 
             if (!name) {
-                if (this.name == 'from') {
+                if (this.name === 'from') {
                     name = this.parseNameFromStringAddress(fromString) || null;
                 }
             }
@@ -288,19 +317,21 @@ define(
             }
 
             var attributes = {
-                emailAddress: address
+                emailAddress: address,
             };
 
-            if (this.model.get('accountId') && scope == 'Contact') {
+            if (this.model.get('accountId') && scope === 'Contact') {
                 attributes.accountId = this.model.get('accountId');
                 attributes.accountName = this.model.get('accountName');
             }
 
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') || 'views/modals/select-records';
+            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') ||
+                'views/modals/select-records';
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
             var filters = {};
+
             if (name) {
                 filters['name'] = {
                     type: 'equals',
@@ -312,12 +343,14 @@ define(
             this.createView('dialog', viewName, {
                 scope: scope,
                 createButton: false,
-                filters: filters
-            }, function (view) {
+                filters: filters,
+            }, (view) => {
                 view.render();
+
                 Espo.Ui.notify(false);
-                this.listenToOnce(view, 'select', function (model) {
-                    var afterSave = function () {
+
+                this.listenToOnce(view, 'select', (model) => {
+                    var afterSave = () => {
                         var nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
                         var typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
                         var idHash = Espo.Utils.clone(this.model.get('idHash') || {});
@@ -336,31 +369,38 @@ define(
                             typeHash: typeHash
                         };
 
-                        setTimeout(function () {
+                        setTimeout(() => {
                             this.model.set(attributes);
-                        }.bind(this), 50);
-                    }.bind(this);
+
+                            if (this.model.get('icsContents')) {
+                                this.model.fetch();
+                            }
+                        }, 50);
+                    };
 
                     if (!model.get('emailAddress')) {
                         model.save({
                             'emailAddress': address
                         }, {patch: true}).then(afterSave);
-                    } else {
-                        model.fetch().then(function () {
+                    }
+                    else {
+                        model.fetch().then(() => {
                             var emailAddressData = model.get('emailAddressData') || [];
+
                             var item = {
                                 emailAddress: address,
                                 primary: emailAddressData.length === 0
                             };
+
                             emailAddressData.push(item);
+
                             model.save({
                                 'emailAddressData': emailAddressData
                             }, {patch: true}).then(afterSave);
-                        }.bind(this));
+                        });
                     }
-
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         fetchSearch: function () {
@@ -386,7 +426,9 @@ define(
 
             if (!re.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
                 var msg = this.translate('fieldShouldBeEmail', 'messages').replace('{field}', this.getLabelText());
+
                 this.showValidationMessage(msg);
+
                 return true;
             }
         },

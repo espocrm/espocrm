@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "af0847061a6e091c97c60a2baca90e03",
+    "content-hash": "87105dc022b64332e3634927585487df",
     "packages": [
         {
             "name": "async-aws/core",
@@ -976,6 +976,71 @@
                 "source": "https://github.com/guzzle/psr7/tree/1.6.1"
             },
             "time": "2019-07-01T23:21:34+00:00"
+        },
+        {
+            "name": "johngrogg/ics-parser",
+            "version": "v3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/u01jmg3/ics-parser.git",
+                "reference": "c74f5881198760386f243d6b1e090e54952ac825"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/u01jmg3/ics-parser/zipball/c74f5881198760386f243d6b1e090e54952ac825",
+                "reference": "c74f5881198760386f243d6b1e090e54952ac825",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5",
+                "squizlabs/php_codesniffer": "~3.6.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ICal": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Goode",
+                    "role": "Developer/Owner"
+                },
+                {
+                    "name": "John Grogg",
+                    "email": "john.grogg@gmail.com",
+                    "role": "Developer/Prior Owner"
+                }
+            ],
+            "description": "ICS Parser",
+            "homepage": "https://github.com/u01jmg3/ics-parser",
+            "keywords": [
+                "iCalendar",
+                "ical",
+                "ical-parser",
+                "ics",
+                "ics-parser",
+                "ifb"
+            ],
+            "support": {
+                "issues": "https://github.com/u01jmg3/ics-parser/issues",
+                "source": "https://github.com/u01jmg3/ics-parser/tree/v3.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/u01jmg3",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-06-17T14:20:46+00:00"
         },
         {
             "name": "laminas/laminas-ldap",

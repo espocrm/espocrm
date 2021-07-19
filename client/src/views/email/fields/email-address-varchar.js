@@ -41,7 +41,9 @@ define(
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+
             data.valueIsSet = this.model.has(this.name);
+
             return data;
         },
 
@@ -51,7 +53,9 @@ define(
                 this.deleteAddress(address);
             },
             'keyup input': function (e) {
-                if (this.mode === 'search') return;
+                if (this.mode === 'search') {
+                    return;
+                }
 
                 if (e.keyCode == 188 || e.keyCode == 186 || e.keyCode == 13) {
                     var $input = $(e.currentTarget);
@@ -66,13 +70,17 @@ define(
                 }
             },
             'change input': function (e) {
-                if (this.mode === 'search') return;
+                if (this.mode === 'search') {
+                    return;
+                }
 
                 var $input = $(e.currentTarget);
                 var address = $input.val().replace(',','').replace(';','').trim();
+
                 if (~address.indexOf('@')) {
                     if (this.checkEmailAddressInString(address)) {
                         this.addAddress(address, '');
+
                         $input.val('');
                     }
                 }
@@ -99,6 +107,7 @@ define(
             if (this.autocompleteMaxCount) {
                 return this.autocompleteMaxCount;
             }
+
             return this.getConfig().get('recordsPerPage');
         },
 
@@ -108,12 +117,14 @@ define(
 
         getAttributeList: function () {
             var list = Dep.prototype.getAttributeList.call(this);
+
             list.push('nameHash');
             list.push('typeHash');
             list.push('idHash');
             list.push('accountId');
             list.push(this.name + 'EmailAddressesNames');
             list.push(this.name + 'EmailAddressesIds');
+
             return list;
         },
 
@@ -127,11 +138,14 @@ define(
 
         initAddressList: function () {
             this.nameHash = {};
-            this.addressList = (this.model.get(this.name) || '').split(';').filter(function (item) {
-                return item != '';
-            }).map(function (item) {
-                return item.trim();
-            });
+
+            this.addressList = (this.model.get(this.name) || '')
+                .split(';')
+                .filter((item) => {
+                    return item != '';
+                }).map((item) =>{
+                    return item.trim();
+                });
 
             this.idHash = this.idHash || {};
             this.typeHash = this.typeHash || {};
@@ -149,28 +163,31 @@ define(
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 this.$input = this.$element = this.$el.find('input');
 
-                this.addressList.forEach(function (item) {
+                this.addressList.forEach((item) => {
                     this.addAddressHtml(item, this.nameHash[item] || '');
-                }, this);
+                });
 
                 this.$input.autocomplete({
-                    serviceUrl: function (q) {
-                        return 'EmailAddress/action/searchInAddressBook?onlyActual=true&maxSize=' + this.getAutocompleteMaxCount();
-                    }.bind(this),
+                    serviceUrl: (q) => {
+                        return 'EmailAddress/action/searchInAddressBook?onlyActual=true&maxSize=' +
+                            this.getAutocompleteMaxCount();
+                    },
                     paramName: 'q',
                     minChars: 1,
                     autoSelectFirst: true,
                     triggerSelectOnValidInput: false,
-                    formatResult: function (suggestion) {
-                        return this.getHelper().escapeString(suggestion.name) + ' &#60;' + this.getHelper().escapeString(suggestion.id) + '&#62;';
-                    }.bind(this),
-                    transformResult: function (response) {
+                    formatResult: (suggestion) => {
+                        return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
+                            this.getHelper().escapeString(suggestion.id) + '&#62;';
+                    },
+                    transformResult: (response) => {
                         var response = JSON.parse(response);
                         var list = [];
-                        response.forEach(function(item) {
+
+                        response.forEach((item) => {
                             list.push({
                                 id: item.emailAddress,
                                 name: item.entityName,
@@ -181,15 +198,17 @@ define(
                                 data: item.emailAddress,
                                 value: item.emailAddress
                             });
-                        }, this);
+                        });
+
                         return {
                             suggestions: list
                         };
-                    }.bind(this),
-                    onSelect: function (s) {
+                    },
+                    onSelect: (s) => {
                         this.addAddress(s.emailAddress, s.entityName, s.entityType, s.entityId);
+
                         this.$input.val('');
-                    }.bind(this)
+                    },
                 });
 
                 this.once('render', function () {
@@ -201,7 +220,7 @@ define(
                 }, this);
             }
 
-            if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
+            if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {
                 EmailAddress.prototype.initSearchAutocomplete.call(this);
             }
 
@@ -214,7 +233,10 @@ define(
 
         checkEmailAddressInString: function (string) {
             var arr = string.match(this.emailAddressRegExp);
-            if (!arr || !arr.length) return;
+
+            if (!arr || !arr.length) {
+                return;
+            }
 
             return true;
         },
@@ -223,16 +245,22 @@ define(
             if (this.justAddedAddress) {
                 this.deleteAddress(this.justAddedAddress);
             }
+
             this.justAddedAddress = address;
-            setTimeout(function () {
+
+            setTimeout(() => {
                 this.justAddedAddress = null;
-            }.bind(this), 100);
+            }, 100);
 
             address = address.trim();
 
             if (!type) {
                 var arr = address.match(this.emailAddressRegExp);
-                if (!arr || !arr.length) return;
+
+                if (!arr || !arr.length) {
+                    return;
+                }
+
                 address = arr[0];
             }
 
@@ -256,17 +284,21 @@ define(
             if (name) {
                 name = this.getHelper().escapeString(name);
             }
+
             if (address) {
                 address = this.getHelper().escapeString(address);
             }
 
             var container = this.$el.find('.link-container');
+
             var html =
             '<div data-address="'+address+'" class="list-group-item">' +
-                '<a href="javascript:" class="pull-right" data-address="' + address + '" data-action="clearAddress"><span class="fas fa-times"></a>' +
-                '<span>'+ ((name) ? (name + ' <span class="text-muted">&#187;</span> ') : '') + '<span>'+address+'</span>'+'</span>' +
-
+                '<a href="javascript:" class="pull-right" data-address="' + address + '" ' +
+                'data-action="clearAddress"><span class="fas fa-times"></a>' +
+                '<span>'+ ((name) ? (name + ' <span class="text-muted">&#187;</span> ') : '') +
+                '<span>'+address+'</span>'+'</span>' +
             '</div>';
+
             container.append(html);
         },
 
@@ -274,10 +306,13 @@ define(
             this.deleteAddressHtml(address);
 
             var index = this.addressList.indexOf(address);
+
             if (index > -1) {
                 this.addressList.splice(index, 1);
             }
+
             delete this.nameHash[address];
+
             this.trigger('change');
         },
 
@@ -287,6 +322,7 @@ define(
 
         fetch: function () {
             var data = {};
+
             data[this.name] = this.addressList.join(';');
 
             return data;
@@ -307,11 +343,13 @@ define(
         },
 
         getValueForDisplay: function () {
-            if (this.mode == 'detail') {
+            if (this.mode === 'detail') {
                 var names = [];
-                this.addressList.forEach(function (address) {
+
+                this.addressList.forEach((address) => {
                     names.push(this.getDetailAddressHtml(address));
-                }, this);
+                });
+
                 return names.join('');
             }
         },
@@ -320,6 +358,7 @@ define(
             if (!address) {
                 return '';
             }
+
             var name = this.nameHash[address] || null;
             var entityType = this.typeHash[address] || null;
             var id = this.idHash[address] || null;
@@ -331,22 +370,30 @@ define(
             }
 
             var lineHtml;
+
             if (id) {
-                lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' + name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
-            } else {
+                lineHtml = '<div>' + '<a href="#' + entityType + '/view/' + id + '">' +
+                    name + '</a> <span class="text-muted">&#187;</span> ' + addressHtml + '</div>';
+            }
+            else {
                 if (name) {
-                    lineHtml = '<span class="email-address-line">' + name + ' <span class="text-muted">&#187;</span> <span>' +
+                    lineHtml = '<span class="email-address-line">' + name +
+                        ' <span class="text-muted">&#187;</span> <span>' +
                         addressHtml + '</span></span>';
-                } else {
+                }
+                else {
                     lineHtml = '<span class="email-address-line">' + addressHtml + '</span>';
                 }
             }
+
             if (!id) {
                 if (this.getAcl().check('Contact', 'edit')) {
                     lineHtml = From.prototype.getCreateHtml.call(this, address) + lineHtml;
                 }
             }
+
             lineHtml = '<div>' + lineHtml + '</div>';
+
             return lineHtml;
         },
 
