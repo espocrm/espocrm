@@ -175,7 +175,7 @@ class SearchParamsTest extends \PHPUnit\Framework\TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $params = SearchParams::fromRaw([
-            'offset' => '1',
+            'offset' => 'hello',
         ]);
     }
 
