@@ -56,10 +56,10 @@ class MetadataProvider
         ]) ?? null;
     }
 
-    public function getSelectAttributesDependancyMap(string $entityType): ?array
+    public function getSelectAttributesDependencyMap(string $entityType): ?array
     {
         return $this->metadata->get([
-            'selectDefs', $entityType, 'selectAttributesDependancyMap'
+            'selectDefs', $entityType, 'selectAttributesDependencyMap'
         ]) ?? null;
     }
 

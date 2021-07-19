@@ -43,8 +43,6 @@ use Espo\{
 
 class Select
 {
-    protected $selectAttributesDependancyMap = [];
-
     protected $aclAttributeList = [
         'assignedUserId',
         'createdById',
@@ -174,10 +172,10 @@ class Select
             }
         }
 
-        $selectAttributesDependancyMap =
-            $this->metadataProvider->getSelectAttributesDependancyMap($this->entityType) ?? [];
+        $selectAttributesDependencyMap =
+            $this->metadataProvider->getSelectAttributesDependencyMap($this->entityType) ?? [];
 
-        foreach ($selectAttributesDependancyMap as $attribute => $dependantAttributeList) {
+        foreach ($selectAttributesDependencyMap as $attribute => $dependantAttributeList) {
             if (!in_array($attribute, $attributeList)) {
                 continue;
             }

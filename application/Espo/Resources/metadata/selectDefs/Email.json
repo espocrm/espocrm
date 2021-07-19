@@ -27,7 +27,7 @@
         "additional": "Espo\\Classes\\Select\\Email\\Appliers\\AdditionalApplier",
         "textFilter": "Espo\\Classes\\Select\\Email\\Appliers\\TextFilterApplier"
     },
-    "selectAttributesDependancyMap": {
+    "selectAttributesDependencyMap": {
         "subject": ["name"],
         "personStringData": ["fromString", "fromEmailAddressId"]
     }

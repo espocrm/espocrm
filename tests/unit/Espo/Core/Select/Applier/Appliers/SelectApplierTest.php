@@ -126,7 +126,7 @@ class SelectApplierTest extends \PHPUnit\Framework\TestCase
 
         $this->metadataProvider
             ->expects($this->any())
-            ->method('getSelectAttributesDependancyMap')
+            ->method('getSelectAttributesDependencyMap')
             ->with($this->entityType)
             ->willReturn($dependencyMap);
 
