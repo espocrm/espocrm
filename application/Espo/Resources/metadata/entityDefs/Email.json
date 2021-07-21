@@ -140,7 +140,8 @@
         "folder": {
             "type": "link",
             "notStorable": true,
-            "readOnly": true
+            "readOnly": true,
+            "entity": "EmailFolder"
         },
         "nameHash": {
             "type": "text",
