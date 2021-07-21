@@ -107,13 +107,13 @@ class Avatar extends Image implements Di\MetadataAware
             $size = 'small';
         }
 
-        if (empty($this->imageSizes[$size])) {
+        if (empty($this->getSizes()[$size])) {
             $this->renderBlank($response);
 
             return;
         }
 
-        $width = $this->imageSizes[$size][0];
+        $width = $this->getSizes()[$size][0];
 
         $response
             ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')

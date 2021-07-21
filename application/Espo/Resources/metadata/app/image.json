@@ -1,0 +1,35 @@
+{
+    "allowedFileTypeList": [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+        "image/svg+xml"
+    ],
+    "resizableFileTypeList": [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp"
+    ],
+    "fixOrientationFileTypeList": [
+        "image/jpeg"
+    ],
+    "previewFileTypeList": [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+        "image/svg+xml"
+    ],
+    "sizes": {
+        "xxx-small": [18, 18],
+        "xx-small": [32, 32],
+        "x-small": [64, 64],
+        "small": [128, 128],
+        "medium": [256, 256],
+        "large": [512, 512],
+        "x-large": [864, 864],
+        "xx-large": [1024, 1024]
+    }
+}

@@ -44,13 +44,6 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
         accept: false,
 
-        previewTypeList: [
-            'image/jpeg',
-            'image/png',
-            'image/gif',
-            'image/webp',
-        ],
-
         defaultType: false,
 
         previewSize: 'small',
@@ -167,6 +160,9 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
             this.foreignScope = 'Attachment';
 
             this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
+
+            this.previewTypeList = this.getMetadata().get(['app', 'image', 'previewFileTypeList']) || [];
+            this.imageSizes = this.getMetadata().get(['app', 'image', 'sizes']) || {};
 
             var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
 
@@ -298,7 +294,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 return name;
             }
 
-            var previewSize = this.previewSize;
+            let previewSize = this.previewSize;
 
             if (this.isListMode()) {
                 previewSize = 'small';
@@ -310,35 +306,59 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             id = Handlebars.Utils.escapeExpression(id);
 
-            var src = this.getBasePath() + '?entryPoint=image&size=' + previewSize + '&id=' + id;
+            let src = this.getBasePath() + '?entryPoint=image&size=' + previewSize + '&id=' + id;
 
-            var img = '<img src="' + src + '" class="image-preview">';
+            let $img = $('<img>')
+                .attr('src', src)
+                .addClass('image-preview')
+                .css({
+                    maxWidth: (this.imageSizes[this.previewSize] || {})[0],
+                    maxHeight: (this.imageSizes[this.previewSize] || {})[1],
+                });
 
             if (this.mode === 'listLink') {
-                var link = '#' + this.model.entityType + '/view/' + this.model.id;
+                let link = '#' + this.model.entityType + '/view/' + this.model.id;
 
-                return '<a href="'+link+'">' + img + '</a>';
+                let html = $('<a>')
+                    .attr('href', link)
+                    .append($img)
+                    .get(0)
+                    .outerHTML;
+
+                return html;
             }
 
-            var preview = '' +
-                '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getImageUrl(id) + '">' +
-                img +
-                '</a>';
+            let html = $('<a>')
+                .attr('data-action', 'showImagePreview')
+                .attr('data-id', id)
+                .attr('title', name)
+                .attr('href', this.getImageUrl(id))
+                .append($img)
+                .get(0)
+                .outerHTML;
 
-            return preview;
+            return html;
         },
 
         getEditPreview: function (name, type, id) {
             name = Handlebars.Utils.escapeExpression(name);
             id = Handlebars.Utils.escapeExpression(id);
 
-            var preview = name;
-
-            if (~this.previewTypeList.indexOf(type)) {
-                preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
+            if (!~this.previewTypeList.indexOf(type)) {
+                return null;
             }
 
-            return preview;
+            let html = $('<img>')
+                .attr('src', this.getImageUrl(id, 'small'))
+                .attr('title', name)
+                .css({
+                    maxWidth: (this.imageSizes[this.previewSize] || {})[0],
+                    maxHeight: (this.imageSizes[this.previewSize] || {})[1],
+                })
+                .get(0)
+                .outerHTML;
+
+            return html;
         },
 
         getValueForDisplay: function () {
@@ -549,7 +569,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             var $att = $('<div>')
                 .append(removeLink)
-                 .append(
+                .append(
                     $('<span class="preview">' + preview + '</span>')
                         .addClass('gray-box')
                 );

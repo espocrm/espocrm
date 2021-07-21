@@ -43,34 +43,13 @@ use Espo\Core\{
     FileStorage\Manager as FileStorageManager,
     Utils\File\Manager as FileManager,
     Utils\Config,
+    Utils\Metadata,
 };
 
 use Espo\Entities\Attachment;
 
 class Image implements EntryPoint
 {
-    protected $allowedFileTypes = [
-        'image/jpeg',
-        'image/png',
-        'image/gif',
-        'image/webp',
-    ];
-
-    protected $imageSizes = [
-        'xxx-small' => [18, 18],
-        'xx-small' => [32, 32],
-        'x-small' => [64, 64],
-        'small' => [128, 128],
-        'medium' => [256, 256],
-        'large' => [512, 512],
-        'x-large' => [864, 864],
-        'xx-large' => [1024, 1024],
-    ];
-
-    protected $fixOrientationFileTypeList = [
-        'image/jpeg',
-    ];
-
     protected $allowedRelatedTypeList = null;
 
     protected $allowedFieldList = null;
@@ -85,18 +64,22 @@ class Image implements EntryPoint
 
     protected $config;
 
+    private $metadata;
+
     public function __construct(
         FileStorageManager $fileStorageManager,
         Acl $acl,
         EntityManager $entityManager,
         FileManager $fileManager,
-        Config $config
+        Config $config,
+        Metadata $metadata
     ) {
         $this->fileStorageManager = $fileStorageManager;
         $this->acl = $acl;
         $this->entityManager = $entityManager;
         $this->fileManager = $fileManager;
         $this->config = $config;
+        $this->metadata = $metadata;
     }
 
     public function run(Request $request, Response $response): void
@@ -125,8 +108,8 @@ class Image implements EntryPoint
 
         $fileType = $attachment->get('type');
 
-        if (!in_array($fileType, $this->allowedFileTypes)) {
-            throw new Error();
+        if (!in_array($fileType, $this->getAllowedFileTypeList())) {
+            throw new Forbidden("Not allowed file type '{$fileType}'.");
         }
 
         if ($this->allowedRelatedTypeList) {
@@ -141,7 +124,9 @@ class Image implements EntryPoint
             }
         }
 
-        if ($size) {
+        $toResize = $size && in_array($fileType, $this->getResizableFileTypeList());
+
+        if ($toResize) {
             $fileName = $size . '-' . $attachment->get('name');
 
             $contents = $this->getThumbContents($attachment, $size);
@@ -173,7 +158,7 @@ class Image implements EntryPoint
 
     protected function getThumbContents(Attachment $attachment, string $size): string
     {
-        if (!array_key_exists($size, $this->imageSizes)) {
+        if (!array_key_exists($size, $this->getSizes())) {
             throw new Error("Bad size.");
         }
 
@@ -242,7 +227,7 @@ class Image implements EntryPoint
 
         list($originalWidth, $originalHeight) = getimagesize($filePath);
 
-        list($width, $height) = $this->imageSizes[$size];
+        list($width, $height) = $this->getSizes()[$size];
 
         if ($originalWidth <= $width && $originalHeight <= $height) {
             $targetWidth = $originalWidth;
@@ -323,7 +308,7 @@ class Image implements EntryPoint
                 break;
         }
 
-        if (in_array($fileType, $this->fixOrientationFileTypeList)) {
+        if (in_array($fileType, $this->getFixOrientationFileTypeList())) {
             $targetImage = $this->fixOrientation($targetImage, $filePath);
         }
 
@@ -352,5 +337,25 @@ class Image implements EntryPoint
         }
 
         return $targetImage;
+    }
+
+    private function getAllowedFileTypeList(): array
+    {
+        return $this->metadata->get(['app', 'image', 'allowedFileTypeList']) ?? [];
+    }
+
+    private function getResizableFileTypeList(): array
+    {
+        return $this->metadata->get(['app', 'image', 'resizableFileTypeList']) ?? [];
+    }
+
+    private function getFixOrientationFileTypeList(): array
+    {
+        return $this->metadata->get(['app', 'image', 'fixOrientationFileTypeList']) ?? [];
+    }
+
+    protected function getSizes(): array
+    {
+        return $this->metadata->get(['app', 'image', 'sizes']) ?? [];
     }
 }

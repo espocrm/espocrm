@@ -52,13 +52,6 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
         showPreviews: true,
 
-        previewTypeList: [
-            'image/jpeg',
-            'image/png',
-            'image/gif',
-            'image/webp',
-        ],
-
         accept: null,
 
         validations: ['ready', 'required'],
@@ -175,7 +168,8 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
 
             this.previewSize = this.options.previewSize || this.params.previewSize || this.previewSize;
 
-            var self = this;
+            this.previewTypeList = this.getMetadata().get(['app', 'image', 'previewFileTypeList']) || [];
+            this.imageSizes = this.getMetadata().get(['app', 'image', 'sizes']) || {};
 
             this.nameHash = _.clone(this.model.get(this.nameHashName)) || {};
 
@@ -358,13 +352,21 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
             name = Handlebars.Utils.escapeExpression(name);
             id = Handlebars.Utils.escapeExpression(id);
 
-            var preview = name;
-
-            if (~this.previewTypeList.indexOf(type)) {
-                preview = '<img src="' + this.getImageUrl(id, 'small') + '" title="' + name + '">';
+            if (!~this.previewTypeList.indexOf(type)) {
+                return name;
             }
 
-            return preview;
+            let html = $('<img>')
+                .attr('src', this.getImageUrl(id, 'small'))
+                .attr('title', name)
+                .css({
+                    maxWidth: (this.imageSizes[this.previewSize] || {})[0],
+                    maxHeight: (this.imageSizes[this.previewSize] || {})[1],
+                })
+                .get(0)
+                .outerHTML;
+
+            return html;
         },
 
         addAttachmentBox: function (name, type, id) {
@@ -609,22 +611,35 @@ define('views/fields/attachment-multiple', 'views/fields/base', function (Dep) {
                 return true;
             }
 
-            return false
+            return false;
         },
 
         getDetailPreview: function (name, type, id) {
             name = Handlebars.Utils.escapeExpression(name);
             id = Handlebars.Utils.escapeExpression(id);
 
-            var preview = name;
-
-            if (this.isTypeIsImage(type)) {
-                preview = '<a data-action="showImagePreview" data-id="' + id + '" href="' +
-                    this.getImageUrl(id) + '"><img src="'+
-                    this.getImageUrl(id, this.previewSize)+'" class="image-preview"></a>';
+            if (!this.isTypeIsImage(type)) {
+                return name;
             }
 
-            return preview;
+            let html = $('<a>')
+                .attr('data-action', 'showImagePreview')
+                .attr('data-id', id)
+                .attr('title', name)
+                .attr('href', this.getImageUrl(id))
+                .append(
+                    $('<img>')
+                        .attr('src', this.getImageUrl(id, this.previewSize))
+                        .addClass('image-preview')
+                        .css({
+                            maxWidth: (this.imageSizes[this.previewSize] || {})[0],
+                            maxHeight: (this.imageSizes[this.previewSize] || {})[1],
+                        })
+                )
+                .get(0)
+                .outerHTML;
+
+            return html;
         },
 
         getValueForDisplay: function () {
