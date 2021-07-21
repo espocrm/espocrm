@@ -55,7 +55,9 @@
         "icsContents": "ICS Contents",
         "icsEventData": "ICS Event Data",
         "icsEventUid": "ICS Event UID",
-        "createdEvent": "Created Event"
+        "createdEvent": "Created Event",
+        "event": "Event",
+        "icsEventDateStart": "ICS Event Date Start"
     },
     "links": {
         "replied": "Replied",
@@ -110,7 +112,8 @@
         "Filters": "Filters",
         "Folders": "Folders",
         "No Subject": "No Subject",
-        "View Users": "View Users"
+        "View Users": "View Users",
+        "Event": "Event"
     },
     "strings": {
         "sendingFailed": "Email sending failed"

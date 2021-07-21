@@ -39,62 +39,20 @@ define('views/email/record/panels/default-side', 'views/record/panels/default-si
                 noLabel: true,
             });
 
-            this.fieldList.push({
-                name: 'createEventButton',
-                view: 'views/email/fields/create-event-button',
-                noLabel: true,
-                readOnly: true,
-            });
-
-            this.fieldList.push({
-                name: 'createdEvent',
-                readOnly: true,
-            });
-
             this.controlHasAttachmentField();
-            this.controlCreateEventButtonField();
 
             this.listenTo(this.model, 'change:hasAttachment', this.controlHasAttachmentField, this);
-            this.listenTo(this.model, 'change:icsEventData', this.controlCreateEventButtonField, this);
-            this.listenTo(this.model, 'change:createdEventId', this.controlCreateEventButtonField, this);
         },
 
         controlHasAttachmentField: function () {
             if (this.model.get('hasAttachment')) {
                 this.recordViewObject.showField('hasAttachment');
+
+                return;
             }
-            else {
-                this.recordViewObject.hideField('hasAttachment');
-            }
+
+            this.recordViewObject.hideField('hasAttachment');
         },
 
-        controlCreateEventButtonField: function () {
-            if (!this.model.get('icsEventData')) {
-                this.recordViewObject.hideField('createEventButton');
-                this.recordViewObject.showField('createdEvent');
-
-                return;
-            }
-
-            let eventData = this.model.get('icsEventData');
-
-            if (eventData.createdEvent) {
-                this.recordViewObject.hideField('createEventButton');
-                this.recordViewObject.showField('createdEvent');
-
-                return;
-            }
-
-            if (!this.model.get('createdEventId')) {
-                this.recordViewObject.hideField('createdEvent');
-                this.recordViewObject.showField('createEventButton');
-
-                return;
-            }
-
-            this.recordViewObject.hideField('createEventButton');
-            this.recordViewObject.showField('createdEvent');
-        },
     });
-
 });

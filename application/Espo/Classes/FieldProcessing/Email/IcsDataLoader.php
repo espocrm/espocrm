@@ -156,6 +156,8 @@ class IcsDataLoader implements Loader
         $this->loadCreatedEvent($entity, $espoEvent, $eventData);
 
         $entity->set('icsEventData', $eventData);
+
+        $entity->set('icsEventDateStart', $espoEvent->getDateStart());
     }
 
     private function loadCreatedEvent(Entity $entity, EspoEvent $espoEvent, object $eventData): void

@@ -347,10 +347,16 @@
             "maxLength": 255,
             "index": true
         },
-        "createEventButton": {
+        "icsEventDateStart": {
+            "type": "datetime",
+            "readOnly": true,
+            "notStorable": true
+        },
+        "createEvent": {
             "type": "base",
             "disabled": true,
-            "notStorable": true
+            "notStorable": true,
+            "view": "views/email/fields/create-event"
         },
         "createdEvent": {
             "type": "linkParent",

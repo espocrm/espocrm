@@ -26,13 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/create-event-button', ['views/fields/base', 'lib!espo'], function (Dep, Espo) {
+define('views/email/fields/create-event', ['views/fields/base', 'lib!espo'], function (Dep, Espo) {
 
     return Dep.extend({
 
-        detailTemplate: 'email/fields/create-event-button/detail',
+        detailTemplate: 'email/fields/create-event/detail',
 
         eventEntityType: 'Meeting',
+
+        getAttributeList: function () {
+            return [
+                'icsEventData',
+                'createdEventId',
+            ];
+        },
 
         events: {
             'click [data-action="createEvent"]': function () {

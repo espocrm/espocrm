@@ -27,6 +27,17 @@
         "replied",
         "replies"
     ],
+    "sidePanels": {
+        "detail": [
+            {
+                "name": "event",
+                "label": "Event",
+                "view": "views/email/record/panels/event",
+                "isForm": true,
+                "hidden": true
+            }
+        ]
+    },
     "menu":{
         "list":{
             "buttons":[
@@ -115,6 +126,18 @@
                             "data": {
                                 "field": "replies"
                             }
+                        }
+                    ]
+                }
+            }
+        },
+        "panels": {
+            "event": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "icsEventDateStart"
                         }
                     ]
                 }
