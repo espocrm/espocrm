@@ -30,6 +30,16 @@ define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
 
     return Dep.extend({
 
+        setup: function () {
+            Dep.prototype.setup.call(this);
+
+            this.on('after:inline-save', () => {
+                this.suspendCache = true;
+
+                this.reRender();
+            });
+        },
+
         handleFileUpload: function (file, contents, callback) {
             this.createView('crop', 'views/modals/image-crop', {
                 contents: contents,
@@ -45,8 +55,6 @@ define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
                         params = params || {};
                         params.name = 'avatar.jpg';
                         params.type = 'image/jpeg';
-
-                        this.suspendCache = true;
 
                         callback(croppedContents, params);
                     }, 10);

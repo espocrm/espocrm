@@ -637,6 +637,7 @@ define('views/fields/base', 'view', function (Dep) {
             model
                 .save(attrs, {patch: true})
                 .then(() => {
+                    this.trigger('after:inline-save');
                     this.trigger('after:save');
 
                     model.trigger('after:save');
