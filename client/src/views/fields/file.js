@@ -82,7 +82,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                     id: id,
                     model: this.model,
                     name: this.model.get(this.nameName),
-                }, function (view) {
+                }, (view) => {
                     view.render();
                 });
             },
@@ -99,7 +99,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 acceptAttribute: this.acceptAttribute,
             }, Dep.prototype.data.call(this));
 
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 data.sourceList = this.sourceList;
             }
 
@@ -129,7 +129,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
                     if (this.isUploading) {
                         $target = this.$el.find('.gray-box');
-                    } else {
+                    }
+                    else {
                         $target = this.$el.find('.attachment-button label');
                     }
 
@@ -172,37 +173,32 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 .concat(
                     this.getMetadata().get(['clientDefs', 'Attachment', 'generalSourceList']) || []
                 )
-                .filter(
-                    function (item, i, self) {
-                        return self.indexOf(item) === i;
+                .filter((item, i, self) => {
+                    return self.indexOf(item) === i;
+                })
+                .filter((item) => {
+                    var defs = sourceDefs[item] || {};
+
+                    if (defs.accessDataList) {
+                        if (
+                            !Espo.Utils.checkAccessDataList(
+                                defs.accessDataList, this.getAcl(), this.getUser()
+                            )
+                        ) {
+                            return false;
+                        }
                     }
-                )
-                .filter(
-                    function (item) {
-                        var defs = sourceDefs[item] || {};
 
-                        if (defs.accessDataList) {
-                            if (
-                                !Espo.Utils.checkAccessDataList(
-                                    defs.accessDataList, this.getAcl(), this.getUser()
-                                )
-                            ) {
-                                return false;
-                            }
+                    if (defs.configCheck) {
+                        var arr = defs.configCheck.split('.');
+
+                        if (!this.getConfig().getByPath(arr)) {
+                            return false;
                         }
+                    }
 
-                        if (defs.configCheck) {
-                            var arr = defs.configCheck.split('.');
-
-                            if (!this.getConfig().getByPath(arr)) {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    },
-                    this
-                );
+                    return true;
+                });
 
             if ('showPreview' in this.params) {
                 this.showPreview = this.params.showPreview;
@@ -216,19 +212,19 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.acceptAttribute = this.accept.join(', ');
             }
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 if (this.resizeIsBeingListened) {
                     $(window).off('resize.' + this.cid);
                 }
-            }.bind(this));
+            });
 
-            this.on('inline-edit-off', function () {
+            this.on('inline-edit-off', () => {
                 this.isUploading = false;
-            }, this);
+            });
         },
 
         afterRender: function () {
-            if (this.mode == 'edit') {
+            if (this.mode === 'edit') {
                 this.$attachment = this.$el.find('div.attachment');
 
                 var name = this.model.get(this.nameName);
@@ -243,7 +239,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.$el.off('dragover');
                 this.$el.off('dragleave');
 
-                this.$el.on('drop', function (e) {
+                this.$el.on('drop', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
 
@@ -252,18 +248,18 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                     if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
                         this.uploadFile(e.dataTransfer.files[0]);
                     }
-                }.bind(this));
+                });
 
-                this.$el.on('dragover', function (e) {
+                this.$el.on('dragover', (e) => {
                     e.preventDefault();
-                }.bind(this));
+                });
 
-                this.$el.on('dragleave', function (e) {
+                this.$el.on('dragleave', (e) =>{
                     e.preventDefault();
-                }.bind(this));
+                });
             }
 
-            if (this.mode == 'search') {
+            if (this.mode === 'search') {
                 var type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
@@ -274,9 +270,9 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                     this.handleResize();
                     this.resizeIsBeingListened = true;
 
-                    $(window).on('resize.' + this.cid, function () {
+                    $(window).on('resize.' + this.cid, () => {
                         this.handleResize();
-                    }.bind(this));
+                    });
                 }
             }
         },
@@ -432,7 +428,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             if (id) {
                 if (this.model.isNew()) {
-                    this.getModelFactory().create('Attachment', function (attachment) {
+                    this.getModelFactory().create('Attachment', (attachment) => {
                         attachment.id = id;
                         attachment.destroy();
                     });
@@ -479,12 +475,12 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             this.isUploading = true;
 
-            this.getModelFactory().create('Attachment', function (attachment) {
+            this.getModelFactory().create('Attachment', (attachment) => {
                 var $attachmentBox = this.addAttachmentBox(file.name, file.type);
 
                 this.$el.find('.attachment-button').addClass('hidden');
 
-                $attachmentBox.find('.remove-attachment').on('click.uploading', function () {
+                $attachmentBox.find('.remove-attachment').on('click.uploading', () => {
                     isCanceled = true;
 
                     this.$el.find('.attachment-button').removeClass('hidden');
@@ -492,12 +488,12 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                     this.isUploading = false;
 
                     this.$el.find('input.file').val(null);
-                }.bind(this));
+                });
 
                 var fileReader = new FileReader();
 
-                fileReader.onload = function (e) {
-                    this.handleFileUpload(file, e.target.result, function (result, fileParams) {
+                fileReader.onload = (e) => {
+                    this.handleFileUpload(file, e.target.result, (result, fileParams) => {
                         attachment.set('name', fileParams.name);
                         attachment.set('type', fileParams.type || 'text/plain');
                         attachment.set('size', fileParams.size);
@@ -508,32 +504,28 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
                         attachment
                             .save({}, {timeout: 0})
-                            .then(
-                                function () {
-                                    if (!isCanceled && this.isUploading) {
-                                        $attachmentBox.trigger('ready');
+                            .then(() => {
+                                if (!isCanceled && this.isUploading) {
+                                    $attachmentBox.trigger('ready');
 
-                                        this.setAttachment(attachment);
-
-                                        this.isUploading = false;
-                                    }
-                                }.bind(this)
-                            )
-                            .fail(
-                                function () {
-                                    $attachmentBox.remove();
-
-                                    this.$el.find('.uploading-message').remove();
-                                    this.$el.find('.attachment-button').removeClass('hidden');
+                                    this.setAttachment(attachment);
 
                                     this.isUploading = false;
-                                }.bind(this)
-                            );
-                    }.bind(this));
-                }.bind(this);
+                                }
+                            })
+                            .fail(() => {
+                                $attachmentBox.remove();
+
+                                this.$el.find('.uploading-message').remove();
+                                this.$el.find('.attachment-button').removeClass('hidden');
+
+                                this.isUploading = false;
+                            });
+                    });
+                };
 
                 fileReader.readAsDataURL(file);
-            }, this);
+            });
         },
 
         handleFileUpload: function (file, contents, callback) {
@@ -549,8 +541,6 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
         addAttachmentBox: function (name, type, id) {
             this.$attachment.empty();
 
-            var self = this;
-
             var removeLink = '<a href="javascript:" class="remove-attachment pull-right">' +
                 '<span class="fas fa-times"></span></a>';
 
@@ -558,7 +548,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
             if (this.showPreview && id) {
                 preview = this.getEditPreview(name, type, id);
-            } else {
+            }
+            else {
                 preview = Handlebars.Utils.escapeExpression(preview);
             }
 
@@ -584,8 +575,8 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
 
                 $container.append($loading);
 
-                $att.on('ready', function () {
-                    $loading.html(self.translate('Ready'));
+                $att.on('ready', () => {
+                    $loading.html(this.translate('Ready'));
                 });
             }
 
@@ -607,7 +598,9 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                     filters = this['getSelectFilters' + source]();
 
                     if (this.model.get('parentId') && this.model.get('parentType') === 'Account') {
-                        if (this.getMetadata().get(['entityDefs', source, 'fields', 'account', 'type']) === 'link') {
+                        if (
+                            this.getMetadata().get(['entityDefs', source, 'fields', 'account', 'type']) === 'link'
+                        ) {
                             filters = {
                                 account: {
                                     type: 'equals',
@@ -619,6 +612,7 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                         }
                     }
                 }
+
                 var boolFilterList = this.getMetadata().get(
                     ['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']
                 );
@@ -642,36 +636,38 @@ define('views/fields/file', 'views/fields/link', function (Dep) {
                     boolFilterList: boolFilterList,
                     primaryFilterName: primaryFilterName,
                     multiple: false,
-                }, function (view) {
+                }, (view) => {
                     view.render();
 
                     this.notify(false);
 
-                    this.listenToOnce(view, 'select', function (modelList) {
+                    this.listenToOnce(view, 'select', (modelList) => {
                         if (Object.prototype.toString.call(modelList) !== '[object Array]') {
                             modelList = [modelList];
                         }
 
-                        modelList.forEach(function (model) {
+                        modelList.forEach((model) => {
                             if (model.name === 'Attachment') {
                                 this.setAttachment(model);
+
+                                return;
                             }
-                            else {
-                                this.ajaxPostRequest(source + '/action/getAttachmentList', {
-                                    id: model.id,
-                                }).done(function (attachmentList) {
-                                    attachmentList.forEach(function (item) {
-                                        this.getModelFactory().create('Attachment', function (attachment) {
+
+                            this.ajaxPostRequest(source + '/action/getAttachmentList', {
+                                id: model.id,
+                            })
+                                .then((attachmentList) => {
+                                    attachmentList.forEach((item) => {
+                                        this.getModelFactory().create('Attachment', (attachment) => {
                                             attachment.set(item);
 
                                             this.setAttachment(attachment, true);
-                                        }, this);
-                                    }, this);
-                                }.bind(this));
-                            }
-                        }, this);
+                                        });
+                                    });
+                                });
+                        });
                     });
-                }, this);
+                });
 
                 return;
             }

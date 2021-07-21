@@ -32,73 +32,88 @@ define('views/user/fields/avatar', 'views/fields/image', function (Dep) {
 
         handleFileUpload: function (file, contents, callback) {
             this.createView('crop', 'views/modals/image-crop', {
-                contents: contents
-            }, function (view) {
+                contents: contents,
+            }, (view) => {
                 view.render();
 
-                var cropped = false;
+                let cropped = false;
 
-                this.listenToOnce(view, 'crop', function (croppedContents, params) {
+                this.listenToOnce(view, 'crop', (croppedContents, params) => {
                     cropped = true;
 
-                    setTimeout(function () {
+                    setTimeout(() => {
                         params = params || {};
                         params.name = 'avatar.jpg';
                         params.type = 'image/jpeg';
 
+                        this.suspendCache = true;
+
                         callback(croppedContents, params);
-                    }.bind(this), 10);
+                    }, 10);
                 });
 
-                this.listenToOnce(view, 'remove', function () {
+                this.listenToOnce(view, 'remove', () => {
                     if (!cropped) {
-                        setTimeout(function () {
-                            this.render();
-                        }.bind(this), 10);
+                        setTimeout(() => this.render(), 10);
                     }
 
                     this.clearView('crop');
-                }.bind(this));
-            }.bind(this));
+                });
+            });
         },
 
         getValueForDisplay: function () {
-            if (this.mode === 'detail' || this.mode === 'list') {
-                var id = this.model.get(this.idName);
-                var userId = this.model.id;
-
-                var t = this.cacheTimestamp = this.cacheTimestamp || Date.now();
-
-                var imgHtml;
-
-                if (this.mode === 'detail') {
-                    imgHtml =
-                        '<img src="'+ this.getBasePath() +
-                        '?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId +
-                        '&t=' + t + '&attachmentId=' + (id || 'false') + '">';
-                }
-                else {
-                    var cache = this.getCache();
-
-                    if (cache) {
-                        t = cache.get('app', 'timestamp');
-                    }
-
-                    imgHtml =
-                        '<img width="16" src="' + this.getBasePath() + '?entryPoint=avatar&size=' +
-                        this.previewSize + '&id=' + userId + '&t=' + t + '">';
-
-                    return imgHtml;
-                }
-
-                if (id) {
-                    return '<a data-action="showImagePreview" data-id="' + id + '" href="' + this.getBasePath() +
-                        '?entryPoint=image&id=' + id + '">' + imgHtml +' </a>';
-                }
-                else {
-                    return imgHtml;
-                }
+            if (!this.isReadMode()) {
+                return '';
             }
+
+            let id = this.model.get(this.idName);
+            let userId = this.model.id;
+
+            let t = this.cacheTimestamp = this.cacheTimestamp || Date.now();
+
+            if (this.suspendCache) {
+                t = Date.now();
+            }
+
+            let src = this.getBasePath() +
+                '?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId +
+                '&t=' + t + '&attachmentId=' + (id || 'false');
+
+            let $img = $('<img>')
+                .attr('src', src)
+                .css({
+                    maxWidth: (this.imageSizes[this.previewSize] || {})[0],
+                    maxHeight: (this.imageSizes[this.previewSize] || {})[1],
+                });
+
+            if (!this.isDetailMode()) {
+                if (this.getCache()) {
+                    t = this.getCache().get('app', 'timestamp');
+                }
+
+                let src = this.getBasePath() + '?entryPoint=avatar&size=' +
+                    this.previewSize + '&id=' + userId + '&t=' + t;
+
+                $img
+                    .attr('width', '16')
+                    .attr('src', src)
+                    .css('maxWidth', '16px');
+            }
+
+            if (!id) {
+                return $img
+                    .get(0)
+                    .outerHTML;
+            }
+
+            return $('<a>')
+                .attr('data-id', id)
+                .attr('data-action', 'showImagePreview')
+                .attr('href', this.getBasePath() + '?entryPoint=image&id=' + id)
+                .append($img)
+                .get(0)
+                .outerHTML;
         },
 
     });
