@@ -159,27 +159,33 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
             this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.name + '-' + this.model.id;
 
-            this.on('remove', function () {
+            this.on('remove', () => {
                 this.storeControl();
+
                 $(window).off('beforeunload.stream-'+ this.cid);
-            }, this);
+            });
+
             $(window).off('beforeunload.stream-'+ this.cid);
-            $(window).on('beforeunload.stream-'+ this.cid, function () {
+
+            $(window).on('beforeunload.stream-'+ this.cid, () => {
                 this.storeControl();
-            }.bind(this));
+            });
 
             var storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
 
             this.setupActions();
 
             this.wait(true);
-            this.getModelFactory().create('Note', function (model) {
+
+            this.getModelFactory().create('Note', (model) => {
                 this.seed = model;
+
                 if (storedAttachments) {
                     this.hasStoredAttachments = true;
                     this.seed.set({
                         attachmentsIds: storedAttachments.idList,
-                        attachmentsNames: storedAttachments.names
+                        attachmentsNames: storedAttachments.names,
+                        attachmentsTypes: storedAttachments.types,
                     });
                 }
 
@@ -187,6 +193,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     if (this.getMetadata().get(['entityDefs', 'Note', 'fields', 'isInternal', 'default'])) {
                         this.isInternalNoteMode = true;
                     }
+
                     if (this.getSessionStorage().has(this.storageIsInernalKey)) {
                         this.isInternalNoteMode = this.getSessionStorage().get(this.storageIsInernalKey);
                     }
@@ -207,13 +214,14 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                     },
                     model: this.seed,
                     placeholderText: this.placeholderText
-                }, function (view) {
+                }, (view) => {
                     this.initPostEvents(view);
                 });
+
                 this.createCollection(function () {
                     this.wait(false);
                 }, this);
-            }, this);
+            });
 
             if (!this.defs.hidden) {
                 this.subscribeToWebSocket();
@@ -266,10 +274,13 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             if (this.$textarea && this.$textarea.length) {
                 var text = this.$textarea.val();
+
                 if (text.length) {
                     this.getSessionStorage().set(this.storageTextKey, text);
+
                     isNotEmpty = true;
-                } else {
+                }
+                else {
                     if (this.hasStoredText) {
                         this.getSessionStorage().clear(this.storageTextKey);
                     }
@@ -277,13 +288,17 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             }
 
             var attachmetIdList = this.seed.get('attachmentsIds') || [];
+
             if (attachmetIdList.length) {
                 this.getSessionStorage().set(this.storageAttachmentsKey, {
                     idList: attachmetIdList,
-                    names: this.seed.get('attachmentsNames') || {}
+                    names: this.seed.get('attachmentsNames') || {},
+                    types: this.seed.get('attachmentsTypes') || {},
                 });
+
                 isNotEmpty = true;
-            } else {
+            }
+            else {
                 if (this.hasStoredAttachments) {
                     this.getSessionStorage().clear(this.storageAttachmentsKey);
                 }
@@ -291,7 +306,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
             if (isNotEmpty) {
                 this.getSessionStorage().set(this.storageIsInernalKey, this.isInternalNoteMode);
-            } else {
+            }
+            else {
                 this.getSessionStorage().clear(this.storageIsInernalKey);
             }
         },
@@ -487,12 +503,14 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             this.getModelFactory().create('Note', function (model) {
                 if (this.getView('attachments').validateReady()) {
                     this.$textarea.prop('disabled', false)
+
                     return;
                 }
 
-                if (message == '' && (this.seed.get('attachmentsIds') || []).length == 0) {
+                if (message === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
                     this.notify('Post cannot be empty', 'error');
                     this.$textarea.prop('disabled', false);
+
                     return;
                 }
 
