@@ -602,7 +602,6 @@ define('views/fields/base', 'view', function (Dep) {
         inlineEditSave: function () {
             var data = this.fetch();
 
-            var self = this;
             var model = this.model;
             var prev = this.initialAttributes;
 
@@ -610,39 +609,48 @@ define('views/fields/base', 'view', function (Dep) {
             data = model.attributes;
 
             var attrs = false;
+
             for (var attr in data) {
                 if (_.isEqual(prev[attr], data[attr])) {
                     continue;
                 }
+
                 (attrs || (attrs = {}))[attr] =    data[attr];
             }
 
             if (!attrs) {
                 this.inlineEditClose();
+
                 return;
             }
 
             if (this.validate()) {
                 this.notify('Not valid', 'error');
+
                 model.set(prev, {silent: true});
 
                 return;
             }
 
             this.notify('Saving...');
-            model.save(attrs, {
-                success: function () {
-                    self.trigger('after:save');
+
+            model
+                .save(attrs, {patch: true})
+                .then(() => {
+                    this.trigger('after:save');
+
                     model.trigger('after:save');
-                    self.notify('Saved', 'success');
-                },
-                error: function () {
-                    self.notify('Error occurred', 'error');
+
+                    this.notify('Saved', 'success');
+                })
+                .catch(() => {
+                    this.notify('Error occurred', 'error');
+
                     model.set(prev, {silent: true});
-                    self.render()
-                },
-                patch: true
-            });
+
+                    this.render();
+                });
+
             this.inlineEditClose(true);
         },
 
