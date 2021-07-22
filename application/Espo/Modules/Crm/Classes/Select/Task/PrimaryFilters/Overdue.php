@@ -27,50 +27,68 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Classes\Select\Call\PrimaryFilters;
+namespace Espo\Modules\Crm\Classes\Select\Task\PrimaryFilters;
 
 use Espo\Entities\User;
 
+use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\Part\Condition as Cond;
+
 use Espo\Core\Select\Primary\Filter;
 use Espo\Core\Select\Helpers\UserTimeZoneProvider;
-use Espo\Core\Select\Where\ConverterFactory;
 use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\ConverterFactory;
+use Espo\Core\Utils\Metadata;
 
-use Espo\ORM\Query\SelectBuilder;
+use Espo\Modules\Crm\Entities\Task;
 
-use Espo\Modules\Crm\Entities\Call;
-
-class Todays implements Filter
+class Overdue implements Filter
 {
     private $user;
 
     private $userTimeZoneProvider;
+
+    private $metadata;
 
     private $converterFactory;
 
     public function __construct(
         User $user,
         UserTimeZoneProvider $userTimeZoneProvider,
+        Metadata $metadata,
         ConverterFactory $converterFactory
     ) {
         $this->user = $user;
         $this->userTimeZoneProvider = $userTimeZoneProvider;
+        $this->metadata = $metadata;
         $this->converterFactory = $converterFactory;
     }
 
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $item = Item::fromRaw([
-            'type' => 'today',
-            'attribute' => 'dateStart',
+        $notActualStatusList =
+            array_filter(
+                $this->metadata->get(['entityDefs', 'Task', 'fields', 'status', 'notActualOptions']) ?? [],
+                function (string $item) {
+                    return $item !== 'Deferred';
+                }
+            );
+
+        $pastItem = Item::fromRaw([
+            'type' => 'past',
+            'attribute' => 'dateEnd',
             'timeZone' => $this->userTimeZoneProvider->get(),
             'dateTime' => true,
         ]);
 
-        $whereItem = $this->converterFactory
-            ->create(Call::ENTITY_TYPE, $this->user)
-            ->convert($queryBuilder, $item);
+        $pastWhereItem = $this->converterFactory
+            ->create(Task::ENTITY_TYPE, $this->user)
+            ->convert($queryBuilder, $pastItem);
 
-        $queryBuilder->where($whereItem);
+        $queryBuilder
+            ->where($pastWhereItem)
+            ->where(
+                Cond::notIn(Cond::column('status'), $notActualStatusList)
+            );
     }
 }

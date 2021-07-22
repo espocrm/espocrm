@@ -4,5 +4,17 @@
         "dateEnd": [
             "status"
         ]
+    },
+    "primaryFilterClassNameMap": {
+        "actual": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\PrimaryFilters\\Actual",
+        "completed": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\PrimaryFilters\\Completed",
+        "deferred": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\PrimaryFilters\\Deferred",
+        "todays": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\PrimaryFilters\\Todays",
+        "actualStartingNotInFuture": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\PrimaryFilters\\ActualStartingNotInFuture",
+        "overdue": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\PrimaryFilters\\Overdue"
+    },
+    "boolFilterClassNameMap": {
+        "actual": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\BoolFilters\\Actual",
+        "completed": "Espo\\Modules\\Crm\\Classes\\Select\\Task\\BoolFilters\\Completed"
     }
 }

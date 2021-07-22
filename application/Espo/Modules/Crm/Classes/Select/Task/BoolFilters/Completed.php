@@ -27,34 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Where;
+namespace Espo\Modules\Crm\Classes\Select\Task\BoolFilters;
 
-use Espo\Core\InjectableFactory;
-use Espo\Entities\User;
-use Espo\Core\Binding\BindingContainerBuilder;
-use Espo\Core\Binding\ContextualBinder;
+use Espo\Core\Select\Boolean\Filter;
 
-class ItemGeneralConverterFactory
+use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\Condition as Cond;
+
+class Completed implements Filter
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
+    public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    public function create(string $entityType, User $user): ItemGeneralConverter
-    {
-        $container = BindingContainerBuilder::create()
-            ->bindInstance(User::class, $user)
-            ->inContext(
-                ItemGeneralConverter::class,
-                function (ContextualBinder $binder) use ($entityType) {
-                    $binder->bindValue('$entityType', $entityType);
-                }
+        $orGroupBuilder->add(
+            Cond::equal(
+                Cond::column('status'),
+                'Completed'
             )
-            ->build();
-
-        return $this->injectableFactory->createWithBinding(ItemGeneralConverter::class, $container);
+        );
     }
 }
