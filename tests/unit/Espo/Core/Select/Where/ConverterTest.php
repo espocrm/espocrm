@@ -93,7 +93,6 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             ->willReturn('Random');
 
         $this->dateTimeItemTransformer = new DateTimeItemTransformer(
-            $this->entityType,
             $this->user
         );
 

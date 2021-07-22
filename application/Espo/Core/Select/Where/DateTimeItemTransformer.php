@@ -29,10 +29,9 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\{
-    Core\Exceptions\Error,
-    Entities\User,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Entities\User;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 use DateTime;
 use DateTimeZone;
@@ -43,19 +42,16 @@ use DateInterval;
  */
 class DateTimeItemTransformer
 {
-    protected $entityType;
-
     protected $user;
 
-    public function __construct(string $entityType, User $user)
+    public function __construct(User $user)
     {
-        $this->entityType = $entityType;
         $this->user = $user;
     }
 
     public function transform(Item $item): Item
     {
-        $format = 'Y-m-d H:i:s';
+        $format = DateTimeUtil::SYSTEM_DATE_TIME_FORMAT;
 
         $type = $item->getType();
         $value = $item->getValue();

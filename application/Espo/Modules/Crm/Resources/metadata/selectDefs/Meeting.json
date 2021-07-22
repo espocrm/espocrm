@@ -5,5 +5,17 @@
             "dateStart",
             "dateEnd"
         ]
+    },
+    "primaryFilterClassNameMap": {
+        "planned": "Espo\\Modules\\Crm\\Classes\\Select\\Meeting\\PrimaryFilters\\Planned",
+        "held": "Espo\\Modules\\Crm\\Classes\\Select\\Meeting\\PrimaryFilters\\Held",
+        "todays": "Espo\\Modules\\Crm\\Classes\\Select\\Meeting\\PrimaryFilters\\Todays"
+    },
+    "boolFilterClassNameMap": {
+        "onlyMy": "Espo\\Modules\\Crm\\Classes\\Select\\Meeting\\BoolFilters\\OnlyMy"
+    },
+    "accessControlFilterClassNameMap": {
+        "onlyOwn": "Espo\\Modules\\Crm\\Classes\\Select\\Meeting\\AccessControlFilters\\OnlyOwn",
+        "onlyTeam": "Espo\\Modules\\Crm\\Classes\\Select\\Meeting\\AccessControlFilters\\OnlyTeam"
     }
 }

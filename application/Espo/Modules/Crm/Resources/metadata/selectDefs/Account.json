@@ -1,0 +1,11 @@
+{
+    "primaryFilterClassNameMap": {
+        "customers": "Espo\\Modules\\Crm\\Classes\\Select\\Account\\PrimaryFilters\\Customers",
+        "resellers": "Espo\\Modules\\Crm\\Classes\\Select\\Account\\PrimaryFilters\\Resellers",
+        "partners": "Espo\\Modules\\Crm\\Classes\\Select\\Account\\PrimaryFilters\\Partners",
+        "recentlyCreated": "Espo\\Modules\\Crm\\Classes\\Select\\Account\\PrimaryFilters\\RecentlyCreated"
+    },
+    "accessControlFilterClassNameMap": {
+        "portalOnlyAccount": "Espo\\Modules\\Crm\\Classes\\Select\\Account\\AccessControlFilters\\PortalOnlyAccount"
+    }
+}

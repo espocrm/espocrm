@@ -27,56 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\Account\PrimaryFilters;
 
-class Account extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Query\SelectBuilder;
+
+class Resellers implements Filter
 {
-    protected function filterPartners(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = array(
-            'type' => 'Partner'
-        );
+        $queryBuilder->where([
+            'type' => 'Reseller',
+        ]);
     }
-
-    protected function filterCustomers(&$result)
-    {
-        $result['whereClause'][] = array(
-            'type' => 'Customer'
-        );
-    }
-
-    protected function filterResellers(&$result)
-    {
-        $result['whereClause'][] = array(
-            'type' => 'Reseller'
-        );
-    }
-
-    protected function filterRecentlyCreated(&$result)
-    {
-        $dt = new \DateTime('now');
-        $dt->modify('-7 days');
-
-        $result['whereClause'][] = array(
-            'createdAt>=' => $dt->format('Y-m-d H:i:s')
-        );
-    }
-
-    protected function accessPortalOnlyAccount(&$result)
-    {
-        $d = array();
-
-        $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
-
-        if (count($accountIdList)) {
-            $result['whereClause'][] = array(
-                'id' => $accountIdList
-            );
-        } else {
-            $result['whereClause'][] = array(
-                'id' => null
-            );
-        }
-    }
-
- }
+}
