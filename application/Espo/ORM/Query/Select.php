@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\Query;
 
+use Espo\ORM\Query\Part\WhereClause;
+
 use RuntimeException;
 
 /**
@@ -83,6 +85,17 @@ class Select implements SelectingQuery
     public function getGroupBy(): array
     {
         return $this->params['orderBy'] ?? [];
+    }
+
+    public function getWhere(): ?WhereClause
+    {
+        $whereClause = $this->params['whereClause'] ?? null;
+
+        if ($whereClause === null || $whereClause === []) {
+            return null;
+        }
+
+        return WhereClause::fromRaw($whereClause);
     }
 
     private function validateRawParams(array $params): void

@@ -88,12 +88,26 @@ class RDBRelationSelectBuilder
 
         $this->foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
-        if ($query) {
-            $this->builder = $this->createSelectBuilder()->clone($query);
+        $this->builder = $query ?
+            $this->cloneQueryToBuilder($query) :
+            $this->createSelectBuilder()->from($this->foreignEntityType);
+    }
+
+    private function cloneQueryToBuilder(Select $query): SelectBuilder
+    {
+        $where = $query->getWhere();
+
+        if ($where === null) {
+            return $this->createSelectBuilder()->clone($query);
         }
-        else {
-            $this->builder = $this->createSelectBuilder()->from($this->foreignEntityType);
-        }
+
+        $rawQuery = $query->getRaw();
+
+        $rawQuery['whereClause'] = $this->applyRelationAliasToWhereClause($where->getRaw());
+
+        $newQuery = Select::fromRaw($rawQuery);
+
+        return $this->createSelectBuilder()->clone($newQuery);
     }
 
     protected function createSelectBuilder(): SelectBuilder
