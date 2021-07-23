@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\Select\Task\BoolFilters;
 
-use Espo\Core\Select\Boolean\Filter;
+use Espo\Core\Select\Bool\Filter;
 
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;

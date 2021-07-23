@@ -32,8 +32,8 @@ namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 use Espo\Core\{
     Exceptions\Error,
     Select\Applier\Appliers\BoolFilterList as BoolFilterListApplier,
-    Select\Boolean\FilterFactory as BoolFilterFactory,
-    Select\Boolean\Filter as BoolFilter,
+    Select\Bool\FilterFactory as BoolFilterFactory,
+    Select\Bool\Filter as BoolFilter,
     Select\SelectManager,
 };
 

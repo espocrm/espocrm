@@ -27,11 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Select\Boolean;
+namespace tests\unit\Espo\Core\Select\Bool;
 
 use Espo\Core\{
-    Select\Boolean\FilterFactory as BoolFilterFactory,
-    Select\Boolean\Filters\Followed,
+    Select\Bool\FilterFactory as BoolFilterFactory,
+    Select\Bool\Filters\Followed,
     Utils\Metadata,
     InjectableFactory,
     Binding\BindingContainer,

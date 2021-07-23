@@ -31,7 +31,7 @@ namespace Espo\Classes\Select\User\BoolFilters;
 
 use Espo\Entities\User;
 
-use Espo\Core\Select\Boolean\Filter;
+use Espo\Core\Select\Bool\Filter;
 
 use Espo\ORM\Query\{
     SelectBuilder,

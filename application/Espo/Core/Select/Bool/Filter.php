@@ -27,46 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Boolean\Filters;
+namespace Espo\Core\Select\Bool;
 
 use Espo\{
     ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereClause,
     ORM\Query\Part\Where\OrGroupBuilder,
-    Core\Select\Boolean\Filter,
-    Entities\User,
 };
 
-class Followed implements Filter
+/**
+ * Applies a bool filter. A where item should be added to OrGroupBuilder.
+ */
+interface Filter
 {
-    private $entityType;
-
-    private $user;
-
-    public function __construct(string $entityType, User $user)
-    {
-        $this->entityType = $entityType;
-        $this->user = $user;
-    }
-
-    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
-    {
-        $alias = 'subscriptionFollowedBoolFilter';
-
-        $queryBuilder->leftJoin(
-            'Subscription',
-            $alias,
-            [
-                $alias . '.entityType' => $this->entityType,
-                $alias . '.entityId=:' => 'id',
-                $alias . '.userId' => $this->user->getId(),
-            ]
-        );
-
-        $orGroupBuilder->add(
-            WhereClause::fromRaw([
-                $alias . '.id!=' => null,
-            ])
-        );
-    }
+    public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void;
 }

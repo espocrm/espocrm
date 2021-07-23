@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\Select\CaseObj\BoolFilters;
 
-use Espo\Core\Select\Boolean\Filter;
+use Espo\Core\Select\Bool\Filter;
 use Espo\Core\Utils\Metadata;
 
 use Espo\ORM\Query\SelectBuilder;

@@ -32,7 +32,7 @@ namespace Espo\Core\Select\Applier\Appliers;
 use Espo\Core\{
     Exceptions\Error,
     Select\SelectManager,
-    Select\Boolean\FilterFactory as BoolFilterFactory,
+    Select\Bool\FilterFactory as BoolFilterFactory,
 };
 
 use Espo\{

@@ -30,7 +30,7 @@
 namespace Espo\Classes\Select\EmailFilter\BoolFilters;
 
 use Espo\{
-    Core\Select\Boolean\Filter,
+    Core\Select\Bool\Filter,
     ORM\Query\SelectBuilder as QueryBuilder,
     ORM\Query\Part\WhereClause,
     ORM\Query\Part\Where\OrGroupBuilder,

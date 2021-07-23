@@ -27,11 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Boolean;
+namespace Espo\Core\Select\Bool;
 
 use Espo\Core\{
     Exceptions\Error,
-    Select\Boolean\Filter,
+    Select\Bool\Filter,
     InjectableFactory,
     Utils\Metadata,
     Binding\BindingContainer,
@@ -106,7 +106,7 @@ class FilterFactory
 
     protected function getDefaultClassName(string $name): ?string
     {
-        $className = 'Espo\\Core\\Select\\Boolean\\Filters\\' . ucfirst($name);
+        $className = 'Espo\\Core\\Select\\Bool\\Filters\\' . ucfirst($name);
 
         if (!class_exists($className)) {
             return null;
