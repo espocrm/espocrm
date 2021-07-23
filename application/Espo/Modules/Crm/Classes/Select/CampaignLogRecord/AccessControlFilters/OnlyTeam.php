@@ -27,49 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\CampaignLogRecord\AccessControlFilters;
 
-class MassEmail extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\ORM\Query\SelectBuilder;
+
+use Espo\Entities\User;
+
+class OnlyTeam implements Filter
 {
-    protected function filterActual(&$result)
+    private $user;
+
+    public function __construct(User $user)
     {
-        $result['whereClause'][] = [
-            'status' => ['Pending', 'Draft'],
-        ];
+        $this->user = $user;
     }
 
-    protected function filterComplete(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = [
-            'status' => 'Complete',
-        ];
-    }
-
-    protected function accessOnlyOwn(&$result)
-    {
-        $this->addLeftJoin(['campaign', 'campaignAccess'], $result);
-
-        $result['whereClause'][] = [
-            'campaignAccess.assignedUserId' => $this->getUser()->id,
-        ];
-    }
-
-    protected function accessOnlyTeam(&$result)
-    {
-        $this->addLeftJoin(['campaign', 'campaignAccess'], $result);
+        $queryBuilder->leftJoin('campaign', 'campaignAccess');
 
         $teamIdList = $this->user->getLinkMultipleIdList('teams');
 
-        if (empty($teamIdList)) {
-            $result['whereClause'][] = [
-                'campaignAccess.assignedUserId' => $this->getUser()->id,
-            ];
+        if (count($teamIdList) === 0) {
+            $queryBuilder->where([
+                'campaignAccess.assignedUserId' => $this->user->getId(),
+            ]);
 
             return;
         }
 
-        $this->addLeftJoin(
-            [
+        $queryBuilder
+            ->leftJoin(
                 'EntityTeam',
                 'entityTeamAccess',
                 [
@@ -77,16 +66,13 @@ class MassEmail extends \Espo\Core\Select\SelectManager
                     'entityTeamAccess.entityId:' => 'campaignAccess.id',
                     'entityTeamAccess.deleted' => false,
                 ]
-            ],
-            $result
-        );
-
-        $result['whereClause'][] = [
-            'OR' => [
-                'entityTeamAccess.teamId' => $teamIdList,
-                'campaignAccess.assignedUserId' => $this->getUser()->id,
-            ],
-            'campaignId!=' => null,
-        ];
+            )
+            ->where([
+                'OR' => [
+                    'entityTeamAccess.teamId' => $teamIdList,
+                    'campaignAccess.assignedUserId' => $this->user->getId(),
+                ],
+                'campaignId!=' => null,
+            ]);
     }
 }

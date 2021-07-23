@@ -1,0 +1,10 @@
+{
+    "accessControlFilterClassNameMap": {
+        "onlyOwn": "Espo\\Modules\\Crm\\Classes\\Select\\MassEmail\\AccessControlFilters\\OnlyOwn",
+        "onlyTeam": "Espo\\Modules\\Crm\\Classes\\Select\\MassEmail\\AccessControlFilters\\OnlyTeam"
+    },
+    "primaryFilterClassNameMap": {
+        "actual": "Espo\\Modules\\Crm\\Classes\\Select\\MassEmail\\PrimaryFilters\\Actual",
+        "complete": "Espo\\Modules\\Crm\\Classes\\Select\\MassEmail\\PrimaryFilters\\Complete"
+    }
+}

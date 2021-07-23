@@ -27,52 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\CampaignLogRecord\PrimaryFilters;
 
-class CampaignTrackingUrl extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Query\SelectBuilder;
+
+class OptedOut implements Filter
 {
-    protected function accessOnlyOwn(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $this->addLeftJoin(['campaign', 'campaignAccess'], $result);
-
-        $result['whereClause'][] = [
-            'campaignAccess.assignedUserId' => $this->getUser()->id,
-        ];
-    }
-
-    protected function accessOnlyTeam(&$result)
-    {
-        $this->addLeftJoin(['campaign', 'campaignAccess'], $result);
-
-        $teamIdList = $this->user->getLinkMultipleIdList('teams');
-
-        if (empty($teamIdList)) {
-            $result['whereClause'][] = [
-                'campaignAccess.assignedUserId' => $this->getUser()->id,
-            ];
-
-            return;
-        }
-
-        $this->addLeftJoin(
-            [
-                'EntityTeam',
-                'entityTeamAccess',
-                [
-                    'entityTeamAccess.entityType' => 'Campaign',
-                    'entityTeamAccess.entityId:' => 'campaignAccess.id',
-                    'entityTeamAccess.deleted' => false,
-                ]
-            ],
-            $result
-        );
-
-        $result['whereClause'][] = [
-            'OR' => [
-                'entityTeamAccess.teamId' => $teamIdList,
-                'campaignAccess.assignedUserId' => $this->getUser()->id,
-            ],
-            'campaignId!=' => null,
-        ];
+        $queryBuilder->where([
+            'action' => 'Opted Out',
+        ]);
     }
 }
