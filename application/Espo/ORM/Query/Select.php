@@ -30,6 +30,8 @@
 namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\SelectExpression as SelectExpr;
+use Espo\ORM\Query\Part\SelectItem;
 
 use RuntimeException;
 
@@ -43,9 +45,9 @@ class Select implements SelectingQuery
     use SelectingTrait;
     use BaseTrait;
 
-    const ORDER_ASC = 'ASC';
+    public const ORDER_ASC = 'ASC';
 
-    const ORDER_DESC = 'DESC';
+    public const ORDER_DESC = 'DESC';
 
     /**
      * Get an entity type.
@@ -57,10 +59,26 @@ class Select implements SelectingQuery
 
     /**
      * Get select items.
+     *
+     * @return SelectItem[]
      */
     public function getSelect(): array
     {
-        return $this->params['select'] ?? [];
+        return array_map(
+            function ($item) {
+                if (is_array($item) && count($item)) {
+                    return SelectExpr::fromString($item[0])
+                        ->withAlias($item[1] ?? null);
+                }
+
+                if (is_string($item)) {
+                    return SelectExpr::fromString($item);
+                }
+
+                throw new RuntimeException("Bad select item.");
+            },
+            $this->params['select'] ?? []
+        );
     }
 
     /**

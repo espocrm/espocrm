@@ -30,6 +30,7 @@
 namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\SelectItem;
 
 use InvalidArgumentException;
 use RuntimeException;
@@ -126,21 +127,23 @@ class SelectBuilder implements Builder
     /**
      * Specify SELECT. Columns and expressions to be selected. If not called, then
      * all entity attributes will be selected. Passing an array will reset
-     * previously set items. Passing a string will append an item.
+     * previously set items. Passing a string|Expression|SelectItem will append the item.
      *
      * Usage options:
      * * `select([$expr1, $expr2, ...])`
      * * `select([[$expr1, $alias1], [$expr2, $alias2], ...])`
+     * * `select([$selectItem1, $selectItem2, ...])`
      * * `select(string|Expression $expression)`
      * * `select(string|Expression $expression, string $alias)`
+     * * `select(SelectItem $selectItem)`
      *
-     * @param array|string|Expression $select An array of attributes or one attribute.
+     * @param array|string|Expression|SelectItem $select An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
     public function select($select, ?string $alias = null): self
     {
         if (is_array($select)) {
-            $this->params['select'] = $this->normilizeExpressionItemArray($select);
+            $this->params['select'] = $this->normilizeSelectItemArray($select);
 
             return $this;
         }
@@ -148,12 +151,15 @@ class SelectBuilder implements Builder
         if ($select instanceof Expression) {
             $select = $select->getValue();
         }
+        else if ($select instanceof SelectItem) {
+            $alias = $alias ?? $select->getAlias();
+            $select = $select->getExpression()->getValue();
+        }
 
         if (is_string($select)) {
             $this->params['select'] = $this->params['select'] ?? [];
 
-            $this->params['select'][] =
-                $alias ?
+            $this->params['select'][] = $alias ?
                 [$select, $alias] :
                 $select;
 
@@ -166,7 +172,7 @@ class SelectBuilder implements Builder
     /**
      * Specify GROUP BY.
      * Passing an array will reset previously set items.
-     * Passing a string will append an item.
+     * Passing a string|Expression will append an item.
      *
      * Usage options:
      * * `groupBy([$expr1, $expr2, ...])`
@@ -263,5 +269,44 @@ class SelectBuilder implements Builder
         $this->params['withDeleted'] = true;
 
         return $this;
+    }
+
+    private function normilizeSelectItemArray(array $itemList): array
+    {
+        $resultList = [];
+
+        foreach ($itemList as $item) {
+            if ($item instanceof Expression) {
+                $resultList[] = $item->getValue();
+
+                continue;
+            }
+
+            if ($item instanceof SelectItem) {
+                $resultList[] = $item->getAlias() ?
+                    [$item->getExpression()->getValue(), $item->getAlias()] :
+                    [$item->getExpression()->getValue()];
+
+                continue;
+            }
+
+            if (!is_array($item) || !count($item) || !$item[0] instanceof Expression) {
+                $resultList[] = $item;
+
+                continue;
+            }
+
+            $newItem = [$item[0]->getValue()];
+
+            if (count($item) > 1) {
+                $newItem[] = $item[1];
+            }
+
+            $resultList[] = $newItem;
+
+            continue;
+        }
+
+        return $resultList;
     }
 }

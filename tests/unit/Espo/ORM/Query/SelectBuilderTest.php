@@ -33,6 +33,7 @@ use Espo\ORM\{
     Query\SelectBuilder,
     Query\Part\Condition as Cond,
     Query\Part\Expression as Expr,
+    Query\Part\SelectExpression,
 };
 
 class SelectBuilderTest extends \PHPUnit\Framework\TestCase
@@ -65,7 +66,14 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->select('test')
             ->build();
 
-        $this->assertEquals(['id', 'name', 'test'], $select->getSelect());
+        $this->assertEquals(
+            [
+                SelectExpression::fromString('id'),
+                SelectExpression::fromString('name'),
+                SelectExpression::fromString('test'),
+            ],
+            $select->getSelect()
+        );
     }
 
     public function testSelect2()
@@ -76,7 +84,13 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->select(['id', 'name'])
             ->build();
 
-        $this->assertEquals(['id', 'name'], $select->getSelect());
+        $this->assertEquals(
+            [
+                SelectExpression::fromString('id'),
+                SelectExpression::fromString('name'),
+            ],
+            $select->getSelect()
+        );
     }
 
     public function testSelect3()
@@ -86,7 +100,12 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->select('test', 'hello')
             ->build();
 
-        $this->assertEquals([['test', 'hello']], $select->getSelect());
+        $this->assertEquals(
+            [
+                SelectExpression::fromString('test')->withAlias('hello'),
+            ],
+            $select->getSelect()
+        );
     }
 
     public function testSelect4()
@@ -96,7 +115,12 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->select(Expr::create('test'), 'hello')
             ->build();
 
-        $this->assertEquals([['test', 'hello']], $select->getSelect());
+        $this->assertEquals(
+            [
+                SelectExpression::fromString('test')->withAlias('hello'),
+            ],
+            $select->getSelect()
+        );
     }
 
     public function testSelect5()
@@ -107,7 +131,13 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->select([Expr::create('id'), Expr::create('name')])
             ->build();
 
-        $this->assertEquals(['id', 'name'], $select->getSelect());
+        $this->assertEquals(
+            [
+                SelectExpression::fromString('id'),
+                SelectExpression::fromString('name'),
+            ],
+            $select->getSelect()
+        );
     }
 
     public function testSelect6()
@@ -121,7 +151,34 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ])
             ->build();
 
-        $this->assertEquals([['id', 'id'], ['name', 'name']], $select->getSelect());
+        $this->assertEquals(
+            [
+                SelectExpression::fromString('id')->withAlias('id'),
+                SelectExpression::fromString('name')->withAlias('name'),
+            ],
+            $select->getSelect()
+        );
+    }
+
+    public function testSelect7()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->select([
+                'id',
+                SelectExpression::create(Expr::create('name'))
+            ])
+            ->select(SelectExpression::fromString('test')->withAlias('testAlias'))
+            ->build();
+
+        $this->assertEquals(
+            [
+                SelectExpression::fromString('id'),
+                SelectExpression::fromString('name'),
+                SelectExpression::fromString('test')->withAlias('testAlias'),
+            ],
+            $select->getSelect()
+        );
     }
 
     public function testCloneNotSame()

@@ -68,6 +68,9 @@ class SelectBuilder
 
     private $sourceQuery = null;
 
+    /**
+     * @var SearchParams
+     */
     private $searchParams = null;
 
     private $applyAccessControlFilter = false;
