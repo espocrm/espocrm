@@ -562,10 +562,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 if (this.currentCategoryId) {
                     var names = {};
 
-                    names[this.currentCatetgoryId] =
-                        this.currentCategoryName ||
-                        (this.nestedCategoriesCollection.categoryData || {}).name ||
-                        this.currentCatetgoryId;
+                    names[this.currentCatetgoryId] = this.getCurrentCategoryName();
 
                     var data = {};
 
@@ -585,13 +582,26 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 var data = {};
 
                 data[idAttribute] = this.currentCategoryId;
-                data[nameAttribute] =
-                    this.currentCategoryName ||
-                    (this.nestedCategoriesCollection.categoryData || {}).name ||
-                    this.currentCatetgoryId;
+                data[nameAttribute] = this.getCurrentCategoryName();
 
                 return data;
             }
+        },
+
+        getCurrentCategoryName: function () {
+            if (this.currentCategoryName) {
+                return this.currentCategoryName;
+            }
+
+            if (
+                this.nestedCategoriesCollection &&
+                this.nestedCategoriesCollection.categoryData &&
+                this.nestedCategoriesCollection.categoryData.name
+            ) {
+                return this.nestedCategoriesCollection.categoryData.name;
+            }
+
+            return this.currentCatetgoryId;
         },
 
         actionManageCategories: function () {
