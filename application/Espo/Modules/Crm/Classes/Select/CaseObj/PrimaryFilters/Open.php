@@ -27,28 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\CaseObj\PrimaryFilters;
 
-class CaseObj extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\Query\Part\Condition as Cond;
+
+class Open implements Filter
 {
-    protected function boolFilterOpen(&$result)
+    private $metadata;
+
+    public function __construct(Metadata $metadata)
     {
-        return [
-            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
-        ];
+        $this->metadata = $metadata;
     }
 
-    protected function filterOpen(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = [
-            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
-        ];
-    }
+        $notActualStatusList = $this->metadata
+            ->get(['entityDefs', 'Case', 'fields', 'status', 'notActualOptions']) ?? [];
 
-    protected function filterClosed(&$result)
-    {
-        $result['whereClause'][] = [
-            'status' => 'Closed'
-        ];
+        $queryBuilder->where(
+            Cond::notIn(
+                Cond::column('status'),
+                $notActualStatusList
+            )
+        );
     }
 }

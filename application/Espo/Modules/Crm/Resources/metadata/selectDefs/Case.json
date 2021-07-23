@@ -1,0 +1,9 @@
+{
+    "primaryFilterClassNameMap": {
+        "open": "Espo\\Modules\\Crm\\Classes\\Select\\CaseObj\\PrimaryFilters\\Open",
+        "closed": "Espo\\Modules\\Crm\\Classes\\Select\\CaseObj\\PrimaryFilters\\Closed"
+    },
+    "boolFilterClassNameMap": {
+        "open": "Espo\\Modules\\Crm\\Classes\\Select\\CaseObj\\BoolFilters\\Open"
+    }
+}

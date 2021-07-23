@@ -27,52 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\CaseObj\BoolFilters;
 
-class Contact extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Boolean\Filter;
+use Espo\Core\Utils\Metadata;
+
+use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\Condition as Cond;
+
+class Open implements Filter
 {
-    protected function filterPortalUsers(&$result)
+    private $metadata;
+
+    public function __construct(Metadata $metadata)
     {
-        $this->addJoin([
-            'portalUser',
-            'portalUserFilter',
-        ], $result);
+        $this->metadata = $metadata;
     }
 
-    protected function filterNotPortalUsers(&$result)
+    public function apply(SelectBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {
-        $this->addLeftJoin([
-            'portalUser',
-            'portalUserFilter',
-        ], $result);
+        $notActualStatusList = $this->metadata
+            ->get(['entityDefs', 'Case', 'fields', 'status', 'notActualOptions']) ?? [];
 
-        $this->addAndWhere(array(
-            'portalUserFilter.id' => null
-        ), $result);
+        $orGroupBuilder->add(
+            Cond::notIn(
+                Cond::column('status'),
+                $notActualStatusList
+            )
+        );
     }
-
-    protected function accessPortalOnlyContact(&$result)
-    {
-        $d = [];
-
-        $contactId = $this->getUser()->get('contactId');
-
-        if ($contactId) {
-            $result['whereClause'][] = array(
-                'id' => $contactId
-            );
-        } else {
-            $result['whereClause'][] = array(
-                'id' => null
-            );
-        }
-    }
-
-    protected function filterAccountActive(&$result)
-    {
-        if (!array_key_exists('additionalColumnsConditions', $result)) {
-            $result['additionalColumnsConditions'] = array();
-        }
-        $result['additionalColumnsConditions']['isInactive'] = false;
-    }
- }
+}
