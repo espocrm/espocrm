@@ -606,6 +606,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
 
         actionManageCategories: function () {
             this.clearView('categories');
+            this.clearView('nestedCategories');
 
             this.getRouter().navigate('#' + this.categoryScope, {trigger: true});
         },
