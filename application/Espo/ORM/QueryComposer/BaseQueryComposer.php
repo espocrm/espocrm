@@ -2048,7 +2048,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     protected function getAttributePathForOrderBy(Entity $entity, string $orderBy, array $params): ?string
     {
-        if (strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
+        if (Util::isComplexExpression($orderBy)) {
             return $this->convertComplexExpression(
                 $entity,
                 $orderBy,

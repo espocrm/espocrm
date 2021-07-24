@@ -36,6 +36,7 @@ use Espo\ORM\{
     QueryBuilder,
     EntityManager,
     MetadataDataProvider,
+    Query\Part\Expression,
 };
 
 use Espo\ORM\Query\{
@@ -1091,6 +1092,26 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "SELECT DISTINCT article.id AS `id`, article.name AS `name`, article.description AS `description` " .
             "FROM `article` WHERE article.deleted = 0 ".
             "ORDER BY MATCH (article.name,article.description) AGAINST ('test' IN BOOLEAN MODE) DESC";
+
+        $sql = $this->query->compose($select);
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testOrderByExpression3()
+    {
+        $select = $this->queryBuilder
+            ->select()
+            ->from('Article')
+            ->distinct()
+            ->select(['id'])
+            ->order(Expression::create('1'), 'DESC')
+            ->build();
+
+        $expectedSql =
+            "SELECT DISTINCT article.id AS `id` " .
+            "FROM `article` WHERE article.deleted = 0 ".
+            "ORDER BY 1 DESC";
 
         $sql = $this->query->compose($select);
 
