@@ -1040,14 +1040,16 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
 
     public function testOrderByList()
     {
-        $sql = $this->query->compose(Select::fromRaw([
-            'from' => 'Comment',
-            'select' => ['id'],
-            'leftJoins' => ['post'],
-            'groupBy' => ['post.name'],
-            'orderBy' => 'LIST:post.name:Test,Hello',
-            'distinct' => true,
-        ]));
+        $select = $this->queryBuilder
+            ->select('id')
+            ->from('Comment')
+            ->leftJoin('post')
+            ->distinct()
+            ->order('LIST:post.name:Test,Hello')
+            ->groupBy('post.name')
+            ->build();
+
+        $sql = $this->query->compose($select);
 
         $expectedSql =
             "SELECT comment.id AS `id`, post.name AS `post.name` FROM `comment` " .
@@ -1055,6 +1057,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "WHERE comment.deleted = 0 " .
             "GROUP BY post.name ".
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
+
         $this->assertEquals($expectedSql, $sql);
     }
 
