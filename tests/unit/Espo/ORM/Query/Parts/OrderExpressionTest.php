@@ -31,7 +31,6 @@ namespace tests\unit\Espo\ORM\Query\Part;
 
 use Espo\ORM\Query\Part\OrderExpression as OrderExpr;
 use Espo\ORM\Query\Part\Expression as Expr;
-use Espo\ORM\Query\Select;
 
 class OrderExpressionTest extends \PHPUnit\Framework\TestCase
 {
@@ -40,7 +39,7 @@ class OrderExpressionTest extends \PHPUnit\Framework\TestCase
         $order = OrderExpr::fromString('test')->withDesc();
 
         $this->assertEquals(Expr::create('test'), $order->getExpression());
-        $this->assertEquals(Select::ORDER_DESC, $order->getDirection());
+        $this->assertEquals(OrderExpr::DESC, $order->getDirection());
         $this->assertEquals(true, $order->isDesc());
     }
 
@@ -48,7 +47,7 @@ class OrderExpressionTest extends \PHPUnit\Framework\TestCase
     {
         $order = OrderExpr::fromString('test');
 
-        $this->assertEquals(Select::ORDER_ASC, $order->getDirection());
+        $this->assertEquals(OrderExpr::ASC, $order->getDirection());
         $this->assertEquals(false, $order->isDesc());
     }
 
@@ -57,14 +56,14 @@ class OrderExpressionTest extends \PHPUnit\Framework\TestCase
         $order = OrderExpr::createWithPosition(1)->withAsc();
 
         $this->assertEquals(Expr::create('1'), $order->getExpression());
-        $this->assertEquals(Select::ORDER_ASC, $order->getDirection());
+        $this->assertEquals(OrderExpr::ASC, $order->getDirection());
         $this->assertEquals(false, $order->isDesc());
     }
 
     public function testCreate4(): void
     {
-        $order = OrderExpr::fromString('test')->withDirection(Select::ORDER_DESC);
+        $order = OrderExpr::fromString('test')->withDirection(OrderExpr::DESC);
 
-        $this->assertEquals(Select::ORDER_DESC, $order->getDirection());
+        $this->assertEquals(OrderExpr::DESC, $order->getDirection());
     }
 }

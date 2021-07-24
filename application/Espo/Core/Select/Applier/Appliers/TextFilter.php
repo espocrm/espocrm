@@ -41,6 +41,7 @@ use Espo\Core\{
 
 use Espo\{
     ORM\Query\SelectBuilder as QueryBuilder,
+    ORM\Query\Part\OrderExpression as OrderExpr,
     ORM\Entity,
     Entities\User,
 };
@@ -179,7 +180,7 @@ class TextFilter
 
             if (!$hasOrderBy || $fullTextOrderType === self::FT_ORDER_RELEVANCE) {
                 $queryBuilder->order([
-                    [$relevanceExpression, 'desc']
+                    OrderExpr::fromString($relevanceExpression)->withDesc()
                 ]);
             }
             else if ($fullTextOrderType === self::FT_ORDER_COMBINTED) {
@@ -189,7 +190,7 @@ class TextFilter
 
                 $newOrderBy = array_merge(
                     [
-                        [$relevanceExpression, 'desc']
+                        OrderExpr::fromString($relevanceExpression)->withDesc()
                     ],
                     $previousOrderBy
                 );

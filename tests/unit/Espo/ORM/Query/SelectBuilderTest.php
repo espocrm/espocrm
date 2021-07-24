@@ -34,6 +34,7 @@ use Espo\ORM\{
     Query\Part\Condition as Cond,
     Query\Part\Expression as Expr,
     Query\Part\SelectExpression,
+    Query\Part\OrderExpression,
 };
 
 class SelectBuilderTest extends \PHPUnit\Framework\TestCase
@@ -313,6 +314,46 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $raw = $select->getRaw();
 
         $this->assertEquals([['test', 'DESC']], $raw['orderBy']);
+    }
+
+    public function testOrder5()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->order(OrderExpression::fromString('test')->withDesc())
+            ->order('hello', true)
+            ->order(2, OrderExpression::ASC)
+            ->build();
+
+        $this->assertEquals(
+            [
+                OrderExpression::fromString('test')->withDesc(),
+                OrderExpression::fromString('hello')->withDesc(),
+                OrderExpression::createWithPosition(2)->withAsc(),
+            ],
+            $select->getOrder()
+        );
+    }
+
+    public function testOrder6()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->order([
+                OrderExpression::fromString('test')->withDesc(),
+                ['hello', true],
+                [2, OrderExpression::ASC],
+            ])
+            ->build();
+
+        $this->assertEquals(
+            [
+                OrderExpression::fromString('test')->withDesc(),
+                OrderExpression::fromString('hello')->withDesc(),
+                OrderExpression::createWithPosition(2)->withAsc(),
+            ],
+            $select->getOrder()
+        );
     }
 
     public function testClone()

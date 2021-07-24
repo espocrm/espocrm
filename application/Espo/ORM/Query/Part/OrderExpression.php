@@ -29,12 +29,14 @@
 
 namespace Espo\ORM\Query\Part;
 
-use Espo\ORM\Query\Select;
-
 use RuntimeException;
 
 class OrderExpression
 {
+    public const ASC = 'ASC';
+
+    public const DESC = 'DESC';
+
     private $expression;
 
     private $isDesc = false;
@@ -60,11 +62,11 @@ class OrderExpression
     /**
      * Get a direction.
      *
-     * @return Select::ORDER_DESC|Select::ORDER_ASC
+     * @return self::DESC|self::ASC
      */
     public function getDirection(): string
     {
-        return $this->isDesc ? Select::ORDER_DESC : Select::ORDER_ASC;
+        return $this->isDesc ? self::DESC : self::ASC;
     }
 
     /**
@@ -118,15 +120,15 @@ class OrderExpression
     /**
      * Clone with a direction.
      *
-     * @params Select::ORDER_ASC|Select::ORDER_DESC $direction
+     * @params self::ASC|self::DESC $direction
      * @throws RuntimeException
      */
     public function withDirection(string $direction): self
     {
         $obj = clone $this;
-        $obj->isDesc = strtoupper($direction) === Select::ORDER_DESC;
+        $obj->isDesc = strtoupper($direction) === self::DESC;
 
-        if (!in_array(strtoupper($direction), [Select::ORDER_DESC, Select::ORDER_ASC])) {
+        if (!in_array(strtoupper($direction), [self::DESC, self::ASC])) {
             throw new RuntimeException("Bad order direction.");
         }
 

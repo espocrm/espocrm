@@ -48,6 +48,7 @@ use Espo\ORM\{
     MetadataDataProvider,
     Query\Part\Condition as Cond,
     Query\Part\Expression as Expr,
+    Query\Part\OrderExpression as OrderExpr,
 };
 
 use RuntimeException;
@@ -681,6 +682,52 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->order([
                 [Expr::create('name'), 'ASC']
             ])
+            ->find();
+    }
+
+    public function testOrder4()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'orderBy' => [
+                ['name', 'ASC'],
+                ['hello', 'DESC'],
+            ],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->order([
+                OrderExpr::fromString('name'),
+                OrderExpr::fromString('hello')->withDesc(),
+            ])
+            ->find();
+    }
+
+    public function testOrder5()
+    {
+        $paramsExpected = Select::fromRaw([
+            'from' => 'Test',
+            'orderBy' => [
+                ['name', 'ASC'],
+                ['hello', 'DESC'],
+            ],
+        ]);
+
+        $this->mapper
+            ->expects($this->once())
+            ->method('select')
+            ->will($this->returnValue($this->collection))
+            ->with($paramsExpected);
+
+        $this->repository
+            ->order(OrderExpr::fromString('name'))
+            ->order(OrderExpr::fromString('hello')->withDesc())
             ->find();
     }
 

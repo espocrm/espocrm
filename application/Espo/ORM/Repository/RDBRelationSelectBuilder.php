@@ -61,6 +61,9 @@ class RDBRelationSelectBuilder
 
     protected $relationType = null;
 
+    /**
+     * @var SelectBuilder
+     */
     protected $builder = null;
 
     protected $additionalSelect = [];
@@ -331,20 +334,20 @@ class RDBRelationSelectBuilder
     }
 
     /**
-     * Apply ORDER.
+     * Apply ORDER. Passing an array will override previously set items.
+     * Passing non-array will append an item,
      *
      * Usage options:
-     * * `order(Expression|string $orderBy, string|bool $direction)
-     * * `order(int $positionInSelect, string|bool $direction)
-     * * `order([[$expr1, $direction1], [$expr2, $direction2], ...])
-     * * `order([$expr1, $expr2, ...], string|bool $direction)
+     * * `order(OrderExpression $expression)
+     * * `order([$expr1, $expr2, ...])
+     * * `order(string $expression, string $direction)
      *
-     * @param string|Expression|int|array $orderBy
-     *     An attribute to order by or an array or order items.
-     *     Passing an array will reset a previously set order.
-     * @param string|bool $direction 'ASC' or 'DESC'. TRUE for DESC order.
+     * @param OrderExpression|OrderExpression[]|Expression|string|int $orderBy
+     * An attribute to order by or an array or order items.
+     * Passing an array will reset a previously set order.
+     * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
      */
-    public function order($orderBy = 'id', $direction = Select::ORDER_ASC): self
+    public function order($orderBy = 'id', $direction = null): self
     {
         $this->builder->order($orderBy, $direction);
 

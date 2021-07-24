@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\Query;
 
+use Espo\ORM\Query\Part\OrderExpression;
+
 use InvalidArgumentException;
 
 class UnionBuilder implements Builder
@@ -87,10 +89,14 @@ class UnionBuilder implements Builder
      * Apply ORDER.
      *
      * @param int|string|array $orderBy A position in select (starting from 1) or select alias.
-     * @param bool|string $direction 'ASC' or 'DESC'. TRUE for DESC order.
+     * @param string|bool $direction OrderExpression::ASC|OrderExpression::DESC. TRUE for DESC order.
      */
-    public function order($orderBy, $direction = Select::ORDER_ASC): self
+    public function order($orderBy, $direction = OrderExpression::ASC): self
     {
+        if (is_bool($direction)) {
+            $direction = $direction ? OrderExpression::DESC : OrderExpression::ASC;
+        }
+
         if (!$orderBy) {
             throw new InvalidArgumentException();
         }

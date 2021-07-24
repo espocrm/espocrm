@@ -29,10 +29,9 @@
 
 namespace Espo\ORM\Query;
 
-use Espo\ORM\Query\{
-    Part\WhereItem,
-    Part\Expression,
-};
+use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\OrderExpression;
 
 use InvalidArgumentException;
 
@@ -99,23 +98,30 @@ trait SelectingBuilderTrait
     }
 
     /**
-     * Apply ORDER.
+     * Apply ORDER. Passing an array will override previously set items.
+     * Passing non-array will append an item,
      *
      * Usage options:
-     * * `order(Expression|string $orderBy, string|bool $direction)
-     * * `order(int $positionInSelect, string|bool $direction)
-     * * `order([[$expr1, $direction1], [$expr2, $direction2], ...])
-     * * `order([$expr1, $expr2, ...], string|bool $direction)
+     * * `order(OrderExpression $expression)
+     * * `order([$expr1, $expr2, ...])
+     * * `order(string $expression, string $direction)
      *
-     * @param string|Expression|int|array $orderBy
-     *     An attribute to order by or an array or order items.
-     *     Passing an array will reset a previously set order.
-     * @param string|bool $direction 'ASC' or 'DESC'. TRUE for DESC order.
+     * @param OrderExpression|OrderExpression[]|Expression|string|int $orderBy
+     * An attribute to order by or an array or order items.
+     * Passing an array will reset a previously set order.
+     * @param string|bool|null $direction OrderExpression::ASC|OrderExpression::DESC.
      */
-    public function order($orderBy, $direction = Select::ORDER_ASC): self
+    public function order($orderBy, $direction = null): self
     {
+        if (is_bool($direction)) {
+            $direction = $direction ? OrderExpression::DESC : OrderExpression::ASC;
+        }
+
         if (is_array($orderBy)) {
-            $this->params['orderBy'] = $this->normilizeOrderExpressionItemArray($orderBy, $direction);
+            $this->params['orderBy'] = $this->normilizeOrderExpressionItemArray(
+                $orderBy,
+                $direction ?? OrderExpression::ASC
+            );
 
             return $this;
         }
@@ -128,6 +134,14 @@ trait SelectingBuilderTrait
 
         if ($orderBy instanceof Expression) {
             $orderBy = $orderBy->getValue();
+            $direction = $direction ?? OrderExpression::ASC;
+        }
+        else if ($orderBy instanceof OrderExpression) {
+            $direction = $direction ?? $orderBy->getDirection();
+            $orderBy = $orderBy->getExpression()->getValue();
+        }
+        else {
+            $direction = $direction ?? OrderExpression::ASC;
         }
 
         $this->params['orderBy'][] = [$orderBy, $direction];
@@ -327,30 +341,51 @@ trait SelectingBuilderTrait
                 continue;
             }
 
+            if (is_int($item)) {
+                $resultList[] = [(string) $item, $direction];
+
+                continue;
+            }
+
+            if ($item instanceof OrderExpression) {
+                $resultList[] = [
+                    $item->getExpression()->getValue(),
+                    $item->getDirection()
+                ];
+
+                continue;
+            }
+
             if ($item instanceof Expression) {
-                $resultList[] = [$item->getValue(), $direction];
+                $resultList[] = [
+                    $item->getValue(),
+                    $direction
+                ];
 
                 continue;
             }
 
-            if (!is_array($item) || !count($item) || !$item[0] instanceof Expression) {
-                $resultList[] = $item;
-
-                continue;
+            if (!is_array($item) || !count($item)) {
+                throw new RuntimeException("Bad order item.");
             }
 
-            $newItem = [$item[0]->getValue()];
+            $itemValue = $item[0] instanceof Expression ?
+                $item[0]->getValue() :
+                $item[0];
 
-            if (count($item) > 1) {
-                $newItem[] = $item[1];
+            if (!is_string($itemValue) && !is_int($itemValue)) {
+                throw new RuntimeException("Bad order item.");
             }
-            else {
-                $newItem[] = $direction;
+
+            $itemDirection = count($item) > 1 ? $item[1] : $direction;
+
+            if (is_bool($itemDirection)) {
+                $itemDirection = $itemDirection ?
+                    OrderExpression::DESC :
+                    OrderExpression::ASC;
             }
 
-            $resultList[] = $newItem;
-
-            continue;
+            $resultList[] = [$itemValue, $itemDirection];
         }
 
         return $resultList;

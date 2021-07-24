@@ -30,8 +30,8 @@
 namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\WhereClause;
-use Espo\ORM\Query\Part\SelectExpression as SelectExpr;
 use Espo\ORM\Query\Part\SelectExpression;
+use Espo\ORM\Query\Part\OrderExpression;
 
 use RuntimeException;
 
@@ -45,9 +45,9 @@ class Select implements SelectingQuery
     use SelectingTrait;
     use BaseTrait;
 
-    public const ORDER_ASC = 'ASC';
+    public const ORDER_ASC = OrderExpression::ASC;
 
-    public const ORDER_DESC = 'DESC';
+    public const ORDER_DESC = OrderExpression::DESC;
 
     /**
      * Get an entity type.
@@ -67,12 +67,12 @@ class Select implements SelectingQuery
         return array_map(
             function ($item) {
                 if (is_array($item) && count($item)) {
-                    return SelectExpr::fromString($item[0])
+                    return SelectExpression::fromString($item[0])
                         ->withAlias($item[1] ?? null);
                 }
 
                 if (is_string($item)) {
-                    return SelectExpr::fromString($item);
+                    return SelectExpression::fromString($item);
                 }
 
                 throw new RuntimeException("Bad select item.");
@@ -83,10 +83,28 @@ class Select implements SelectingQuery
 
     /**
      * Get ORDER items.
+     *
+     * @return OrderExpression[]
      */
     public function getOrder(): array
     {
-        return $this->params['orderBy'] ?? [];
+        return array_map(
+            function ($item) {
+                if (is_array($item) && count($item)) {
+                    $itemValue = is_int($item[0]) ? (string) $item[0] : $item[0];
+
+                    return OrderExpression::fromString($itemValue)
+                        ->withDirection($item[1] ?? OrderExpression::ASC);
+                }
+
+                if (is_string($item)) {
+                    return OrderExpression::fromString($item);
+                }
+
+                throw new RuntimeException("Bad order item.");
+            },
+            $this->params['orderBy'] ?? []
+        );
     }
 
     /**
