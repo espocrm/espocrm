@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\Query\Part;
 
-class SelectExpression implements SelectItem
+class SelectExpression
 {
     private $expression;
 

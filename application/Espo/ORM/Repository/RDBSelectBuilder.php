@@ -37,7 +37,7 @@ use Espo\ORM\{
     Query\Select,
     Query\SelectBuilder,
     Query\Part\WhereItem,
-    Query\Part\SelectItem,
+    Query\Part\SelectExpression,
     Mapper\Mapper,
 };
 
@@ -304,7 +304,7 @@ class RDBSelectBuilder
     /**
      * Specify SELECT. Columns and expressions to be selected. If not called, then
      * all entity attributes will be selected. Passing an array will reset
-     * previously set items. Passing a string|Expression|SelectItem will append the item.
+     * previously set items. Passing a string|Expression|SelectExpression will append the item.
      *
      * Usage options:
      * * `select([$expr1, $expr2, ...])`
@@ -312,9 +312,9 @@ class RDBSelectBuilder
      * * `select([$selectItem1, $selectItem2, ...])`
      * * `select(string|Expression $expression)`
      * * `select(string|Expression $expression, string $alias)`
-     * * `select(SelectItem $selectItem)`
+     * * `select(SelectExpression $selectItem)`
      *
-     * @param array|string|Expression|SelectItem $select An array of expressions or one expression.
+     * @param array|string|Expression|SelectExpression $select An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is a string.
      */
     public function select($select, ?string $alias = null): self

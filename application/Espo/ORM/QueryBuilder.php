@@ -38,7 +38,7 @@ use Espo\ORM\{
     Query\Query,
     Query\Builder,
     Query\Part\Expression,
-    Query\Part\SelectItem,
+    Query\Part\SelectExpression,
 };
 
 use ReflectionClass;
@@ -52,18 +52,16 @@ class QueryBuilder
     /**
      * Specify SELECT. Columns and expressions to be selected. If not called, then
      * all entity attributes will be selected. Passing an array will reset
-     * previously set items. Passing a string|Expression|SelectItem will append the item.
+     * previously set items. Passing a SelectExpression|Expression|string will append the item.
      *
      * Usage options:
+     * * `select(SelectExpression $expression)`
      * * `select([$expr1, $expr2, ...])`
-     * * `select([[$expr1, $alias1], [$expr2, $alias2], ...])`
-     * * `select([$selectItem1, $selectItem2, ...])`
-     * * `select(string|Expression $expression)`
-     * * `select(string|Expression $expression, string $alias)`
-     * * `select(SelectItem $selectItem)`
+     * * `select(string $expression, string $alias)`
      *
-     * @param array|string|Expression|SelectItem $select An array of expressions or one expression.
-     * @param string|null $alias An alias. Actual if the first parameter is a string.
+     * @param SelectExpression|SelectExpression[]|Expression|string $select
+     * An array of expressions or one expression.
+     * @param string|null $alias An alias. Actual if the first parameter is not an array.
      */
     public function select($select = null, ?string $alias = null): SelectBuilder
     {

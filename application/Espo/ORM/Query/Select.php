@@ -31,7 +31,7 @@ namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\SelectExpression as SelectExpr;
-use Espo\ORM\Query\Part\SelectItem;
+use Espo\ORM\Query\Part\SelectExpression;
 
 use RuntimeException;
 
@@ -58,9 +58,9 @@ class Select implements SelectingQuery
     }
 
     /**
-     * Get select items.
+     * Get SELECT items.
      *
-     * @return SelectItem[]
+     * @return SelectExpression[]
      */
     public function getSelect(): array
     {
@@ -82,7 +82,7 @@ class Select implements SelectingQuery
     }
 
     /**
-     * Get order.
+     * Get ORDER items.
      */
     public function getOrder(): array
     {
@@ -90,7 +90,7 @@ class Select implements SelectingQuery
     }
 
     /**
-     * Whether is distinct.
+     * Whether DISTINCT is applied.
      */
     public function isDistinct(): bool
     {
@@ -98,13 +98,16 @@ class Select implements SelectingQuery
     }
 
     /**
-     * Get group by.
+     * Get GROUP BY items.
      */
     public function getGroupBy(): array
     {
         return $this->params['orderBy'] ?? [];
     }
 
+    /**
+     * Get WHERE clause.
+     */
     public function getWhere(): ?WhereClause
     {
         $whereClause = $this->params['whereClause'] ?? null;
