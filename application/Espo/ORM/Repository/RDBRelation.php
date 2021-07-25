@@ -36,6 +36,7 @@ use Espo\ORM\{
     Query\Select,
     Query\Part\WhereItem,
     Query\Part\SelectExpression,
+    Query\Part\Join,
     Mapper\RDBMapper,
     Repository\RDBRelationSelectBuilder as Builder,
 };
@@ -185,27 +186,27 @@ class RDBRelation
     /**
      * Add JOIN.
      *
-     * @param string $relationName
-     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param Join|string $target
+     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function join(string $relationName, ?string $alias = null, $conditions = null): Builder
+    public function join(string $target, ?string $alias = null, $conditions = null): Builder
     {
-        return $this->createSelectBuilder()->join($relationName, $alias, $conditions);
+        return $this->createSelectBuilder()->join($target, $alias, $conditions);
     }
 
     /**
      * Add LEFT JOIN.
      *
-     * @param string $relationName
-     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param Join|string $target
+     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function leftJoin(string $relationName, ?string $alias = null, $conditions = null): Builder
+    public function leftJoin(string $target, ?string $alias = null, $conditions = null): Builder
     {
-        return $this->createSelectBuilder()->leftJoin($relationName, $alias, $conditions);
+        return $this->createSelectBuilder()->leftJoin($target, $alias, $conditions);
     }
 
     /**

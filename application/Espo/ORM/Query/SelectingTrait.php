@@ -31,6 +31,7 @@ namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\OrderExpression;
 use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\Join;
 
 use RuntimeException;
 
@@ -74,6 +75,48 @@ trait SelectingTrait
         }
 
         return WhereClause::fromRaw($whereClause);
+    }
+
+    /**
+     * Get JOIN items.
+     *
+     * @return Join[]
+     */
+    public function getJoins(): array
+    {
+        return array_map(
+            function ($item) {
+                $conditions = isset($item[2]) ?
+                    WhereClause::fromRaw($item[2]) :
+                    null;
+
+                return Join::create($item[0])
+                    ->withAlias($item[1] ?? null)
+                    ->withConditions($conditions);
+            },
+            $this->params['joins'] ?? []
+        );
+    }
+
+    /**
+     * Get LEFT JOIN items.
+     *
+     * @return Join[]
+     */
+    public function getLeftJoins(): array
+    {
+        return array_map(
+            function ($item) {
+                $conditions = isset($item[2]) ?
+                    WhereClause::fromRaw($item[2]) :
+                    null;
+
+                return Join::create($item[0])
+                    ->withAlias($item[1] ?? null)
+                    ->withConditions($conditions);
+            },
+            $this->params['leftJoins'] ?? []
+        );
     }
 
     private static function validateRawParamsSelecting(array $params): void

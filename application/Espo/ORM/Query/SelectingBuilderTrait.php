@@ -32,6 +32,7 @@ namespace Espo\ORM\Query;
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\OrderExpression;
+use Espo\ORM\Query\Part\Join;
 
 use InvalidArgumentException;
 
@@ -152,13 +153,19 @@ trait SelectingBuilderTrait
     /**
      * Add JOIN.
      *
-     * @param string $relationName
-     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param Join|string $target
+     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function join($relationName, ?string $alias = null, $conditions = null): self
+    public function join($target, ?string $alias = null, $conditions = null): self
     {
+        if ($target instanceof Join) {
+            $alias = $alias ?? $target->getAlias();
+            $conditions = $conditions ?? $target->getConditions();
+            $target = $target->getTarget();
+        }
+
         if ($conditions !== null && !is_array($conditions) && !$conditions instanceof WhereItem) {
             throw new InvalidArgumentException("Conditions must be WhereItem or array.");
         }
@@ -171,8 +178,8 @@ trait SelectingBuilderTrait
             $this->params['joins'] = [];
         }
 
-        if (is_array($relationName)) {
-            $joinList = $relationName;
+        if (is_array($target)) {
+            $joinList = $target;
 
             foreach ($joinList as $item) {
                 $this->params['joins'][] = $item;
@@ -181,23 +188,23 @@ trait SelectingBuilderTrait
             return $this;
         }
 
-        if (is_null($alias) && is_null($conditions) && $this->hasJoinAlias($relationName)) {
+        if (is_null($alias) && is_null($conditions) && $this->hasJoinAlias($target)) {
             return $this;
         }
 
         if (is_null($alias) && is_null($conditions)) {
-            $this->params['joins'][] = $relationName;
+            $this->params['joins'][] = $target;
 
             return $this;
         }
 
         if (is_null($conditions)) {
-            $this->params['joins'][] = [$relationName, $alias];
+            $this->params['joins'][] = [$target, $alias];
 
             return $this;
         }
 
-        $this->params['joins'][] = [$relationName, $alias, $conditions];
+        $this->params['joins'][] = [$target, $alias, $conditions];
 
         return $this;
     }
@@ -205,13 +212,19 @@ trait SelectingBuilderTrait
     /**
      * Add LEFT JOIN.
      *
-     * @param string $relationName
-     *     A relationName or table. A relationName is in camelCase, a table is in CamelCase.
+     * @param Join|string $target
+     * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array|null $conditions Join conditions.
      */
-    public function leftJoin($relationName, ?string $alias = null, $conditions = null): self
+    public function leftJoin($target, ?string $alias = null, $conditions = null): self
     {
+        if ($target instanceof Join) {
+            $alias = $alias ?? $target->getAlias();
+            $conditions = $conditions ?? $target->getConditions();
+            $target = $target->getTarget();
+        }
+
         if ($conditions !== null && !is_array($conditions) && !$conditions instanceof WhereItem) {
             throw new InvalidArgumentException("Conditions must be WhereItem or array.");
         }
@@ -224,8 +237,8 @@ trait SelectingBuilderTrait
             $this->params['leftJoins'] = [];
         }
 
-        if (is_array($relationName)) {
-            $joinList = $relationName;
+        if (is_array($target)) {
+            $joinList = $target;
 
             foreach ($joinList as $item) {
                 $this->params['leftJoins'][] = $item;
@@ -234,23 +247,23 @@ trait SelectingBuilderTrait
             return $this;
         }
 
-        if (is_null($alias) && is_null($conditions) && $this->hasLeftJoinAlias($relationName)) {
+        if (is_null($alias) && is_null($conditions) && $this->hasLeftJoinAlias($target)) {
             return $this;
         }
 
         if (is_null($alias) && is_null($conditions)) {
-            $this->params['leftJoins'][] = $relationName;
+            $this->params['leftJoins'][] = $target;
 
             return $this;
         }
 
         if (is_null($conditions)) {
-            $this->params['leftJoins'][] = [$relationName, $alias];
+            $this->params['leftJoins'][] = [$target, $alias];
 
             return $this;
         }
 
-        $this->params['leftJoins'][] = [$relationName, $alias, $conditions];
+        $this->params['leftJoins'][] = [$target, $alias, $conditions];
 
         return $this;
     }

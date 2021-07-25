@@ -35,6 +35,8 @@ use Espo\ORM\{
     Query\Part\Expression as Expr,
     Query\Part\SelectExpression,
     Query\Part\OrderExpression,
+    Query\Part\Join,
+    Query\Part\WhereClause,
 };
 
 class SelectBuilderTest extends \PHPUnit\Framework\TestCase
@@ -473,7 +475,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $raw['whereClause']);
     }
 
-    public function testLeftJoin()
+    public function testLeftJoin1()
     {
         $params = $this->builder
             ->from('Test')
@@ -486,7 +488,50 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['link1', 'link2'], $params['leftJoins']);
     }
 
-    public function testJoin()
+    public function testLeftJoin2()
+    {
+        $query = $this->builder
+            ->from('Test')
+            ->leftJoin('link1', 'alias1', ['name' => 'test'])
+            ->leftJoin('link2', 'alias2')
+            ->build();
+
+        $this->assertEquals(
+            [
+                Join::create('link1', 'alias1')
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test'])),
+                Join::create('link2', 'alias2'),
+            ],
+            $query->getLeftJoins()
+        );
+    }
+
+    public function testLeftJoin3()
+    {
+        $query = $this->builder
+            ->from('Test')
+            ->leftJoin(
+                Join::create('link1', 'alias1')
+                    ->withConditions(
+                        WhereClause::fromRaw(['name' => 'test'])
+                    )
+            )
+            ->leftJoin(
+                Join::create('link2', 'alias2')
+            )
+            ->build();
+
+        $this->assertEquals(
+            [
+                Join::create('link1', 'alias1')
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test'])),
+                Join::create('link2', 'alias2'),
+            ],
+            $query->getLeftJoins()
+        );
+    }
+
+    public function testJoin1()
     {
         $params = $this->builder
             ->from('Test')
@@ -497,6 +542,45 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->getRaw();
 
         $this->assertEquals(['link1', 'link2'], $params['joins']);
+    }
+
+    public function testJoin2()
+    {
+        $query = $this->builder
+            ->from('Test')
+            ->join('link1', 'alias1', ['name' => 'test'])
+            ->join('link2', 'alias2')
+            ->build();
+
+        $this->assertEquals(
+            [
+                Join::create('link1', 'alias1')
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test'])),
+                Join::create('link2', 'alias2'),
+            ],
+            $query->getJoins()
+        );
+    }
+
+    public function testJoin3()
+    {
+        $query = $this->builder
+            ->from('Test')
+            ->join(
+                Join::create('link1', 'alias1')
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test']))
+            )
+            ->join(Join::create('link2', 'alias2'))
+            ->build();
+
+        $this->assertEquals(
+            [
+                Join::create('link1', 'alias1')
+                    ->withConditions(WhereClause::fromRaw(['name' => 'test'])),
+                Join::create('link2', 'alias2'),
+            ],
+            $query->getJoins()
+        );
     }
 
     public function testWhereItemUsage1()

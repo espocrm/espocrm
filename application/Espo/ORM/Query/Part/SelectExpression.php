@@ -35,7 +35,7 @@ class SelectExpression
 
     private $alias = null;
 
-    public function __construct(Expression $expression, ?string $alias = null)
+    private function __construct(Expression $expression, ?string $alias = null)
     {
         $this->expression = $expression;
         $this->alias = $alias;
