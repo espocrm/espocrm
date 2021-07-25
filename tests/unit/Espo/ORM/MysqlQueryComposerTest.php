@@ -37,6 +37,7 @@ use Espo\ORM\{
     EntityManager,
     MetadataDataProvider,
     Query\Part\Expression,
+    Query\Part\OrderExpression,
 };
 
 use Espo\ORM\Query\{
@@ -984,7 +985,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testOrderBy()
+    public function testOrderBy1()
     {
         $sql = $this->query->compose(Select::fromRaw([
             'from' => 'Comment',
@@ -1038,7 +1039,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
-    public function testOrderByList()
+    public function testOrderByList1()
     {
         $select = $this->queryBuilder
             ->select('id')
@@ -1056,6 +1057,34 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
             "WHERE comment.deleted = 0 " .
             "GROUP BY post.name ".
+            "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testOrderByList2()
+    {
+        $select = $this->queryBuilder
+            ->select('id')
+            ->from('Comment')
+            ->leftJoin('post')
+            ->order(
+                OrderExpression::createByPositionInList(
+                    Expression::column('post.name'),
+                    [
+                        'Test',
+                        'Hello',
+                    ]
+                )
+            )
+            ->build();
+
+        $sql = $this->query->compose($select);
+
+        $expectedSql =
+            "SELECT comment.id AS `id` FROM `comment` " .
+            "LEFT JOIN `post` AS `post` ON comment.post_id = post.id " .
+            "WHERE comment.deleted = 0 " .
             "ORDER BY FIELD(post.name, 'Hello', 'Test') DESC";
 
         $this->assertEquals($expectedSql, $sql);

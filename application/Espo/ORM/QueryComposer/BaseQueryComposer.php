@@ -1021,6 +1021,9 @@ abstract class BaseQueryComposer implements QueryComposer
 
             case 'TIMESTAMPDIFF_SECOND':
                 return 'TIMESTAMPDIFF(SECOND, ' . implode(', ', $argumentPartList) . ')';
+
+            case 'POSITION_IN_LIST':
+                return 'FIELD(' . implode(', ', $argumentPartList) . ')';
         }
 
         if ($distinct) {

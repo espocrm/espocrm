@@ -53,9 +53,9 @@ class OrderExpressionTest extends \PHPUnit\Framework\TestCase
 
     public function testCreate3(): void
     {
-        $order = OrderExpr::createWithPosition(1)->withAsc();
+        $order = OrderExpr::fromString('test')->withAsc();
 
-        $this->assertEquals(Expr::create('1'), $order->getExpression());
+        $this->assertEquals(Expr::create('test'), $order->getExpression());
         $this->assertEquals(OrderExpr::ASC, $order->getDirection());
         $this->assertEquals(false, $order->isDesc());
     }
@@ -65,5 +65,14 @@ class OrderExpressionTest extends \PHPUnit\Framework\TestCase
         $order = OrderExpr::fromString('test')->withDirection(OrderExpr::DESC);
 
         $this->assertEquals(OrderExpr::DESC, $order->getDirection());
+    }
+
+    public function testReverseOrder(): void
+    {
+        $order = OrderExpr::fromString('test')
+            ->withDirection(OrderExpr::DESC)
+            ->withReverseDirection();
+
+        $this->assertEquals(OrderExpr::ASC, $order->getDirection());
     }
 }

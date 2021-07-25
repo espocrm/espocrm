@@ -88,11 +88,16 @@ class OrderExpression
     }
 
     /**
-     * Create with a position in SELECT.
+     * Create an order by position in list.
+     * Note: Reverses the list and applies DESC order.
+     *
+     * @param string[]|int[]|float[] $list
      */
-    public static function createWithPosition(int $positionInSelect): self
+    public static function createByPositionInList(Expression $expression, array $list): self
     {
-        return self::fromString((string) $positionInSelect);
+        $orderExpression = Expression::positionInList($expression, array_reverse($list));
+
+        return self::create($orderExpression)->withDesc();
     }
 
     /**
@@ -131,6 +136,17 @@ class OrderExpression
         if (!in_array(strtoupper($direction), [self::DESC, self::ASC])) {
             throw new RuntimeException("Bad order direction.");
         }
+
+        return $obj;
+    }
+
+    /**
+     * Clone with a reverse direction.
+     */
+    public function withReverseDirection(): self
+    {
+        $obj = clone $this;
+        $obj->isDesc = !$this->isDesc;
 
         return $obj;
     }

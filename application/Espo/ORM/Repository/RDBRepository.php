@@ -762,7 +762,7 @@ class RDBRepository extends Repository
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param OrderExpression|OrderExpression[]|Expression|string|int $orderBy
+     * @param OrderExpression|OrderExpression[]|Expression|string $orderBy
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.

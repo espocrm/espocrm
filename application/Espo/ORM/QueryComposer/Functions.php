@@ -129,6 +129,7 @@ class Functions
         'TIMESTAMPDIFF_HOUR',
         'TIMESTAMPDIFF_MINUTE',
         'TIMESTAMPDIFF_SECOND',
+        'POSITION_IN_LIST',
     ];
 
     public const MULTIPLE_ARGUMENT_FUNCTION_LIST = [
@@ -165,6 +166,7 @@ class Functions
         'TIMESTAMPDIFF_HOUR',
         'TIMESTAMPDIFF_MINUTE',
         'TIMESTAMPDIFF_SECOND',
+        'POSITION_IN_LIST',
     ];
 
     public const COMPARISON_FUNCTION_LIST = [

@@ -542,6 +542,18 @@ class Expression implements WhereItem
     }
 
     /**
+     * 'FIELD' operator (in MySQL). Returns an index (position) of an expression
+     * in a list. Returns `0` if not found. The first index is `1`.
+     *
+     * @param Expression $expression
+     * @param Expression[]|string[]|int[]|float[] $list
+     */
+    public static function positionInList(Expression $expression, array $list): self
+    {
+        return self::composeFunction('POSITION_IN_LIST', $expression, ...$list);
+    }
+
+    /**
      * 'ADD' function. Adds two or more numbers.
      *
      * @param Expression|int|float ...$argumentList
