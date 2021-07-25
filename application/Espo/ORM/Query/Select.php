@@ -32,13 +32,14 @@ namespace Espo\ORM\Query;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\SelectExpression;
 use Espo\ORM\Query\Part\OrderExpression;
+use Espo\ORM\Query\Part\Expression;
 
 use RuntimeException;
 
 /**
  * Select parameters.
  *
- * @todo Add validation and normalization (from ORM\DB\BaseQuery).
+ * @todo Add validation and normalization.
  */
 class Select implements SelectingQuery
 {
@@ -55,6 +56,48 @@ class Select implements SelectingQuery
     public function getFrom(): ?string
     {
         return $this->params['from'] ?? null;
+    }
+
+    /**
+     * Get a from-alias
+     */
+    public function getFromAlias(): ?string
+    {
+        return $this->params['fromAlias'] ?? null;
+    }
+
+    /**
+     * Get a from-query.
+     */
+    public function getFromQuery(): ?SelectingQuery
+    {
+        return $this->params['fromQuery'] ?? null;
+    }
+
+    /**
+     * Get an OFFSET.
+     */
+    public function getOffset(): ?int
+    {
+        return $this->params['offset'] ?? null;
+    }
+
+    /**
+     * Get a LIMIT.
+     */
+    public function getLimit(): ?int
+    {
+        return $this->params['limit'] ?? null;
+    }
+
+    /**
+     * Get USE INDEX (list of indexes).
+     *
+     * @return string[]
+     */
+    public function getUseIndex(): array
+    {
+        return $this->params['useIndex'] ?? [];
     }
 
     /**
@@ -82,32 +125,6 @@ class Select implements SelectingQuery
     }
 
     /**
-     * Get ORDER items.
-     *
-     * @return OrderExpression[]
-     */
-    public function getOrder(): array
-    {
-        return array_map(
-            function ($item) {
-                if (is_array($item) && count($item)) {
-                    $itemValue = is_int($item[0]) ? (string) $item[0] : $item[0];
-
-                    return OrderExpression::fromString($itemValue)
-                        ->withDirection($item[1] ?? OrderExpression::ASC);
-                }
-
-                if (is_string($item)) {
-                    return OrderExpression::fromString($item);
-                }
-
-                throw new RuntimeException("Bad order item.");
-            },
-            $this->params['orderBy'] ?? []
-        );
-    }
-
-    /**
      * Whether DISTINCT is applied.
      */
     public function isDistinct(): bool
@@ -116,25 +133,48 @@ class Select implements SelectingQuery
     }
 
     /**
-     * Get GROUP BY items.
+     * Whether a FOR SHARE lock mode is set.
      */
-    public function getGroupBy(): array
+    public function isForShare(): bool
     {
-        return $this->params['orderBy'] ?? [];
+        return $this->params['forShare'] ?? false;
     }
 
     /**
-     * Get WHERE clause.
+     * Whether a FOR UPDATE lock mode is set.
      */
-    public function getWhere(): ?WhereClause
+    public function isForUpdate(): bool
     {
-        $whereClause = $this->params['whereClause'] ?? null;
+        return $this->params['forUpdate'] ?? false;
+    }
 
-        if ($whereClause === null || $whereClause === []) {
+    /**
+     * Get GROUP BY items.
+     *
+     * @return Expression[]
+     */
+    public function getGroupBy(): array
+    {
+        return array_map(
+            function (string $item) {
+                return Expression::create($item);
+            },
+            $this->params['groupBy'] ?? []
+        );
+    }
+
+    /**
+     * Get HAVING clause.
+     */
+    public function getHaving(): ?WhereClause
+    {
+        $havingClause = $this->params['havingClause'] ?? null;
+
+        if ($havingClause === null || $havingClause === []) {
             return null;
         }
 
-        return WhereClause::fromRaw($whereClause);
+        return WhereClause::fromRaw($havingClause);
     }
 
     private function validateRawParams(array $params): void

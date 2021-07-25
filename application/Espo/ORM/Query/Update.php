@@ -29,6 +29,8 @@
 
 namespace Espo\ORM\Query;
 
+use Espo\ORM\Query\Part\WhereClause;
+
 use RuntimeException;
 
 /**
@@ -38,6 +40,22 @@ class Update implements Query
 {
     use SelectingTrait;
     use BaseTrait;
+
+    /**
+     * Get an entity type.
+     */
+    public function getIn(): ?string
+    {
+        return $this->params['from'] ?? null;
+    }
+
+    /**
+     * Get a LIMIT.
+     */
+    public function getLimit(): ?int
+    {
+        return $this->params['limit'] ?? null;
+    }
 
     private function validateRawParams(array $params): void
     {

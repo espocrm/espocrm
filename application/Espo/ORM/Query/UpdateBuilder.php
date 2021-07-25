@@ -53,7 +53,6 @@ class UpdateBuilder implements Builder
         return $this;
     }
 
-
     /**
      * For what entity type to build a query.
      */

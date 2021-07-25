@@ -38,9 +38,9 @@ class LockTable implements Query
 {
     use BaseTrait;
 
-    const MODE_SHARE = 'SHARE';
+    public const MODE_SHARE = 'SHARE';
 
-    const MODE_EXCLUSIVE = 'EXCLUSIVE';
+    public const MODE_EXCLUSIVE = 'EXCLUSIVE';
 
     protected function validateRawParams(array $params): void
     {

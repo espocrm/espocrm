@@ -248,8 +248,6 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $raw = $select->getRaw();
 
-        $this->assertEquals(['test=' => null], $raw['havingClause']);
-
         $this->assertEquals(['test'], $raw['groupBy']);
     }
 
@@ -257,15 +255,35 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
     {
         $select = $this->builder
             ->from('Test')
-            ->having(Cond::equal(Expr::column('test'), null))
-            ->groupBy([Expr::create('test')])
+            ->groupBy([
+                Expr::create('test1'),
+                Expr::create('test2'),
+            ])
             ->build();
 
-        $raw = $select->getRaw();
 
-        $this->assertEquals(['test=' => null], $raw['havingClause']);
+        $this->assertEquals(
+            [
+                Expr::create('test1'),
+                Expr::create('test2'),
+            ],
+            $select->getGroupBy()
+        );
+    }
 
-        $this->assertEquals(['test'], $raw['groupBy']);
+    public function testHaving1()
+    {
+        $select = $this->builder
+            ->from('Test')
+            ->having(Cond::equal(Expr::column('test'), null))
+            ->groupBy(Expr::create('test'))
+            ->build();
+
+
+        $this->assertEquals(
+            Cond::equal(Expr::column('test'), null)->getRaw(),
+            $select->getHaving()->getRaw()
+        );
     }
 
     public function testOrder1()

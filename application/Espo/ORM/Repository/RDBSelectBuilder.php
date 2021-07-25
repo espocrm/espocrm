@@ -327,13 +327,13 @@ class RDBSelectBuilder
     /**
      * Specify GROUP BY.
      * Passing an array will reset previously set items.
-     * Passing a string will append an item.
+     * Passing a string|Expression will append an item.
      *
      * Usage options:
+     * * `groupBy(Expression|string $expression)`
      * * `groupBy([$expr1, $expr2, ...])`
-     * * `groupBy(string|Expression $expression)`
      *
-     * @param string|Expression|array $groupBy
+     * @param Expression|Expression[]|string|string[] $groupBy
      */
     public function groupBy($groupBy): self
     {
