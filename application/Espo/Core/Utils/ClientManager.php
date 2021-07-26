@@ -61,6 +61,8 @@ class ClientManager
 
     private $module;
 
+    private const APP_DESCRIPTION = "EspoCRM - Open Source CRM application.";
+
     public function __construct(
         Config $config,
         ThemeManager $themeManager,
@@ -198,6 +200,7 @@ class ClientManager
             'ajaxTimeout' => $this->config->get('ajaxTimeout') ?? 60000,
             'libsConfigPath' => $this->libsConfigPath,
             'internalModuleList' => Json::encode($internalModuleList),
+            'applicationDescription' => $this->config->get('applicationDescription') ?? self::APP_DESCRIPTION,
         ];
 
         $html = $this->fileManager->getContents($htmlFilePath);
