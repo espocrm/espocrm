@@ -301,7 +301,9 @@ class Opportunity extends Record
     }
 
     public function reportSalesByMonth(
-        string $dateFilter, ?string $dateFrom = null, ?string $dateTo = null
+        string $dateFilter,
+        ?string $dateFrom = null,
+        ?string $dateTo = null
     ): StdClass {
 
         if (in_array('amount', $this->getAcl()->getScopeForbiddenAttributeList(OpportunityEntity::ENTITY_TYPE))) {
@@ -334,7 +336,7 @@ class Opportunity extends Record
                 ['MONTH:closeDate', 'month'],
                 ['SUM:amountConverted', 'amount'],
             ])
-            ->order(1)
+            ->order('MONTH:closeDate')
             ->groupBy('MONTH:closeDate')
             ->where($whereClause);
 

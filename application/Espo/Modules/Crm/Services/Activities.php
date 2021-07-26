@@ -36,6 +36,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\{
     Entity,
     Query\Select,
+    Query\Part\OrderExpression,
 };
 
 use Espo\Core\{
@@ -129,14 +130,14 @@ class Activities implements
                 ['dateEnd', 'dateEnd'],
                 ['dateStartDate', 'dateStartDate'],
                 ['dateEndDate', 'dateEndDate'],
-                ['VALUE:Meeting', '_scope'],
+                ['"Meeting"', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
                 'parentType',
                 'parentId',
                 'status',
                 'createdAt',
-                ['VALUE:', 'hasAttachment'],
+                ['""', 'hasAttachment'],
             ])
             ->leftJoin(
                 'MeetingUser',
@@ -189,20 +190,20 @@ class Activities implements
                 ['dateEnd', 'dateEnd'],
                 (
                     $seed->hasAttribute('dateStartDate') ?
-                        ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']
+                        ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']
                 ),
                 (
                     $seed->hasAttribute('dateEndDate') ?
-                        ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']
+                        ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']
                 ),
-                ['VALUE:Call', '_scope'],
+                ['"Call"', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
                 'parentType',
                 'parentId',
                 'status',
                 'createdAt',
-                ['VALUE:', 'hasAttachment'],
+                ['""', 'hasAttachment'],
             ])
             ->leftJoin(
                 'CallUser',
@@ -258,10 +259,10 @@ class Activities implements
                 'id',
                 'name',
                 ['dateSent', 'dateStart'],
-                ['VALUE:', 'dateEnd'],
-                ['VALUE:', 'dateStartDate'],
-                ['VALUE:', 'dateEndDate'],
-                ['VALUE:Email', '_scope'],
+                ['""', 'dateEnd'],
+                ['""', 'dateStartDate'],
+                ['""', 'dateEndDate'],
+                ['"Email"', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
                 'parentType',
@@ -319,20 +320,20 @@ class Activities implements
                 ['dateEnd', 'dateEnd'],
                 (
                     $seed->hasAttribute('dateStartDate') ?
-                        ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']
+                        ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']
                 ),
                 (
                     $seed->hasAttribute('dateEndDate') ?
-                        ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']
+                        ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']
                 ),
-                ['VALUE:Meeting', '_scope'],
+                ['"Meeting"', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
                 'parentType',
                 'parentId',
                 'status',
                 'createdAt',
-                ['VALUE:', 'hasAttachment'],
+                ['""', 'hasAttachment'],
             ]);
 
         if (!empty($statusList)) {
@@ -454,10 +455,10 @@ class Activities implements
                 'id',
                 'name',
                 ['dateSent', 'dateStart'],
-                ['VALUE:', 'dateEnd'],
-                ['VALUE:', 'dateStartDate'],
-                ['VALUE:', 'dateEndDate'],
-                ['VALUE:Email', '_scope'],
+                ['""', 'dateEnd'],
+                ['""', 'dateStartDate'],
+                ['""', 'dateEndDate'],
+                ['"Email"', '_scope'],
                 'assignedUserId',
                 'assignedUserName',
                 'parentType',
@@ -621,14 +622,23 @@ class Activities implements
             $newQueryList = [];
 
             foreach ($queryList as $query) {
-                $subBuilder = $this->entityManager->getQueryBuilder()->clone($query);
+                $subBuilder = $this->entityManager
+                    ->getQueryBuilder()
+                    ->select()
+                    ->clone($query);
 
                 if ($maxSize) {
                     $subBuilder->limit(0, $offset + $maxSize + 1);
                 }
 
-                // order by dateStart
-                $subBuilder->order(3, 'DESC');
+                // Order by `dateStart`.
+                $subBuilder->order(
+                    OrderExpression
+                        ::create(
+                            $query->getSelect()[2]->getExpression()
+                        )
+                        ->withDesc()
+                );
 
                 $newQueryList[] = $subBuilder->build();
             }
@@ -958,7 +968,7 @@ class Activities implements
         }
 
         $select = [
-            ['VALUE:Meeting', 'scope'],
+            ['"Meeting"', 'scope'],
             'id',
             'name',
             ['dateStart', 'dateStart'],
@@ -980,7 +990,7 @@ class Activities implements
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
                 [$attribute, $attribute] :
-                ['VALUE:', $attribute];
+                ['""', $attribute];
         }
 
         return $builder
@@ -1019,14 +1029,14 @@ class Activities implements
         }
 
         $select = [
-            ['VALUE:Call', 'scope'],
+            ['"Call"', 'scope'],
             'id',
             'name',
             ['dateStart', 'dateStart'],
             ['dateEnd', 'dateEnd'],
             'status',
-            ['VALUE:', 'dateStartDate'],
-            ['VALUE:', 'dateEndDate'],
+            ['""', 'dateStartDate'],
+            ['""', 'dateEndDate'],
             'parentType',
             'parentId',
             'createdAt',
@@ -1041,7 +1051,7 @@ class Activities implements
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
                 [$attribute, $attribute] :
-                ['VALUE:', $attribute];
+                ['""', $attribute];
         }
 
         return $builder
@@ -1080,7 +1090,7 @@ class Activities implements
         }
 
         $select = [
-            ['VALUE:Task', 'scope'],
+            ['"Task"', 'scope'],
             'id',
             'name',
             ['dateStart', 'dateStart'],
@@ -1102,7 +1112,7 @@ class Activities implements
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
                 [$attribute, $attribute] :
-                ['VALUE:', $attribute];
+                ['""', $attribute];
         }
 
         $queryBuilder = $builder
@@ -1167,16 +1177,16 @@ class Activities implements
         $seed = $this->entityManager->getEntity($scope);
 
         $select = [
-            ['VALUE:' . $scope, 'scope'],
+            ['"' . $scope . '"', 'scope'],
             'id',
             'name',
             ['dateStart', 'dateStart'],
             ['dateEnd', 'dateEnd'],
-            ($seed->hasAttribute('status') ? ['status', 'status'] : ['VALUE:', 'status']),
-            ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
-            ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
-            ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
-            ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
+            ($seed->hasAttribute('status') ? ['status', 'status'] : ['""', 'status']),
+            ($seed->hasAttribute('dateStartDate') ? ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']),
+            ($seed->hasAttribute('dateEndDate') ? ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']),
+            ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['""', 'parentType']),
+            ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['""', 'parentId']),
             'createdAt',
         ];
 
@@ -1187,7 +1197,7 @@ class Activities implements
         foreach ($additionalAttributeList as $attribute) {
             $select[] = $seed->hasAttribute($attribute) ?
                 [$attribute, $attribute] :
-                ['VALUE:', $attribute];
+                ['""', $attribute];
         }
 
         $orGroup = [
@@ -1310,22 +1320,22 @@ class Activities implements
             ->select([
                 'id',
                 'name',
-                ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['VALUE:', 'dateStart']),
-                ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['VALUE:', 'dateEnd']),
+                ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['""', 'dateStart']),
+                ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['""', 'dateEnd']),
                 ($seed->hasAttribute('dateStartDate') ?
-                    ['dateStartDate', 'dateStartDate'] : ['VALUE:', 'dateStartDate']),
+                    ['dateStartDate', 'dateStartDate'] : ['""', 'dateStartDate']),
                 ($seed->hasAttribute('dateEndDate') ?
-                    ['dateEndDate', 'dateEndDate'] : ['VALUE:', 'dateEndDate']),
-                ['VALUE:' . $scope, '_scope'],
+                    ['dateEndDate', 'dateEndDate'] : ['""', 'dateEndDate']),
+                ['"' . $scope . '"', '_scope'],
                 ($seed->hasAttribute('assignedUserId') ?
-                    ['assignedUserId', 'assignedUserId'] : ['VALUE:', 'assignedUserId']),
+                    ['assignedUserId', 'assignedUserId'] : ['""', 'assignedUserId']),
                 ($seed->hasAttribute('assignedUserName') ? ['assignedUserName', 'assignedUserName'] :
-                    ['VALUE:', 'assignedUserName']),
-                ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['VALUE:', 'parentType']),
-                ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['VALUE:', 'parentId']),
+                    ['""', 'assignedUserName']),
+                ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['""', 'parentType']),
+                ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['""', 'parentId']),
                 'status',
                 'createdAt',
-                ['VALUE:', 'hasAttachment'],
+                ['""', 'hasAttachment'],
             ]);
 
         if ($entity->getEntityType() === 'User') {
@@ -2047,7 +2057,7 @@ class Activities implements
             'name',
             'dateStart',
             'dateEnd',
-            ['VALUE:' . $entityType, 'entityType'],
+            ['"' . $entityType . '"', 'entityType'],
         ]);
 
         return $queryBuilder->build();

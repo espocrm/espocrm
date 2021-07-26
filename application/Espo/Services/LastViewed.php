@@ -87,7 +87,7 @@ class LastViewed
                 'action' => 'read',
                 'targetType' => $targetTypeList,
             ])
-            ->order(4, 'DESC')
+            ->order('MAX:createdAt', 'DESC')
             ->select([
                 'targetId',
                 'targetType',
