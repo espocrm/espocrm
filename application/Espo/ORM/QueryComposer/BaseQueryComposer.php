@@ -760,7 +760,11 @@ abstract class BaseQueryComposer implements QueryComposer
         if (!empty($params['joins']) && is_array($params['joins'])) {
             // @todo array unique
             $joinsItemPart = $this->getJoinsTypePart(
-                $entity, $params['joins'], false, $params['joinConditions'], $params
+                $entity,
+                $params['joins'],
+                false,
+                $params['joinConditions'],
+                $params
             );
 
             if (!empty($joinsItemPart)) {
@@ -775,7 +779,11 @@ abstract class BaseQueryComposer implements QueryComposer
         if (!empty($params['leftJoins']) && is_array($params['leftJoins'])) {
             // @todo array unique
             $joinsItemPart = $this->getJoinsTypePart(
-                $entity, $params['leftJoins'], true, $params['joinConditions'], $params
+                $entity,
+                $params['leftJoins'],
+                true,
+                $params['joinConditions'],
+                $params
             );
 
             if (!empty($joinsItemPart)) {
@@ -1939,7 +1947,15 @@ abstract class BaseQueryComposer implements QueryComposer
                     $joinsArr[] = 'LEFT ' . $join;
                 }
                 else if ($type == Entity::HAS_ONE) {
-                    $join =  $this->getJoinItemPart($entity, $relationName, true, [], null, $params);
+                    $join =  $this->getJoinItemPart(
+                        $entity,
+                        $relationName,
+                        true,
+                        [],
+                        null,
+                        [],
+                        $params,
+                    );
 
                     $joinsArr[] = $join;
                 }
@@ -2677,23 +2693,27 @@ abstract class BaseQueryComposer implements QueryComposer
 
         foreach ($joins as $item) {
             $itemConditions = [];
-            $params = [];
+            $itemParams = [];
 
             if (is_array($item)) {
                 $relationName = $item[0];
 
                 if (count($item) > 1) {
                     $alias = $item[1] ?? $relationName;
+
                     if (count($item) > 2) {
                         $itemConditions = $item[2] ?? [];
                     }
+
                     if (count($item) > 3) {
-                        $params = $item[3] ?? [];
+                        $itemParams = $item[3] ?? [];
                     }
-                } else {
+                }
+                else {
                     $alias = $relationName;
                 }
-            } else {
+            }
+            else {
                 $relationName = $item;
                 $alias = $relationName;
             }
@@ -2708,7 +2728,15 @@ abstract class BaseQueryComposer implements QueryComposer
                 $conditions[$left] = $right;
             }
 
-            $sql = $this->getJoinItemPart($entity, $relationName, $isLeft, $conditions, $alias, $params);
+            $sql = $this->getJoinItemPart(
+                $entity,
+                $relationName,
+                $isLeft,
+                $conditions,
+                $alias,
+                $itemParams,
+                $params
+            );
 
             if ($sql) {
                 $joinSqlList[] = $sql;
@@ -2831,6 +2859,7 @@ abstract class BaseQueryComposer implements QueryComposer
         bool $isLeft = false,
         array $conditions = [],
         ?string $alias = null,
+        array $joinParams = [],
         array $params = []
     ): string {
 
@@ -2839,9 +2868,11 @@ abstract class BaseQueryComposer implements QueryComposer
         if (!$entity->hasRelation($name)) {
             if (!$alias) {
                 $alias = $this->sanitize($name);
-            } else {
+            }
+            else {
                 $alias = $this->sanitizeSelectAlias($alias);
             }
+
             $table = $this->toDb($this->sanitize($name));
 
             $sql = $prefix . "JOIN " . $this->quoteIdentifier($table) . " AS " . $this->quoteIdentifier($alias) . "";
@@ -2855,7 +2886,13 @@ abstract class BaseQueryComposer implements QueryComposer
             $joinSqlList = [];
 
             foreach ($conditions as $left => $right) {
-                $joinSqlList[] = $this->buildJoinConditionStatement($entity, $alias, $left, $right, $params);
+                $joinSqlList[] = $this->buildJoinConditionStatement(
+                    $entity,
+                    $alias,
+                    $left,
+                    $right,
+                    $params
+                );
             }
 
             if (count($joinSqlList)) {
@@ -2908,7 +2945,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $midAlias = $alias . 'Middle';
 
                 $indexKeyList = null;
-                $indexList = $params['useIndex'] ?? null;
+                $indexList = $joinParams['useIndex'] ?? null;
 
                 if ($indexList) {
                     $indexKeyList = [];
@@ -2953,14 +2990,20 @@ abstract class BaseQueryComposer implements QueryComposer
                 $joinSqlList = [];
 
                 foreach ($conditions as $left => $right) {
-                    $joinSqlList[] = $this->buildJoinConditionStatement($entity, $midAlias, $left, $right, $params);
+                    $joinSqlList[] = $this->buildJoinConditionStatement(
+                        $entity,
+                        $midAlias,
+                        $left,
+                        $right,
+                        $params
+                    );
                 }
 
                 if (count($joinSqlList)) {
                     $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
 
-                $onlyMiddle = $params['onlyMiddle'] ?? false;
+                $onlyMiddle = $joinParams['onlyMiddle'] ?? false;
 
                 if (!$onlyMiddle) {
                     $sql .= " {$prefix}JOIN " . $this->quoteIdentifier($distantTable)." AS " .
