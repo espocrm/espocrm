@@ -116,6 +116,8 @@ return [
         'webSocketSslAllowSelfSigned',
         'webSocketUseSecureServer',
         'webSocketPort',
+        'webSocketZeroMQSubscriberDsn',
+        'webSocketZeroMQSubmissionDsn',
         'actualDatabaseType',
         'actualDatabaseVersion',
     ],

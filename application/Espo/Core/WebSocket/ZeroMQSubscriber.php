@@ -29,23 +29,33 @@
 
 namespace Espo\Core\WebSocket;
 
-use React\{
-    EventLoop\LoopInterface,
-    ZMQ\Context as ZMQContext,
-};
+use Espo\Core\Utils\Config;
+
+use React\EventLoop\LoopInterface;
+use React\ZMQ\Context as ZMQContext;
 
 use ZMQ;
 
 class ZeroMQSubscriber implements Subscriber
 {
+    private $config;
+
+    private const DSN = 'tcp://127.0.0.1:5555';
+
+    public function __construct(Config $config)
+    {
+        $this->config = $config;
+    }
+
     public function subscribe(Pusher $pusher, LoopInterface $loop): void
     {
+        $dsn = $this->config->get('webSocketZeroMQSubscriberDsn') ?? self::DSN;
+
         $context = new ZMQContext($loop);
 
         $pull = $context->getSocket(ZMQ::SOCKET_PULL);
 
-        $pull->bind('tcp://127.0.0.1:5555');
-
+        $pull->bind($dsn);
         $pull->on('message', [$pusher, 'onMessageReceive']);
     }
 }
