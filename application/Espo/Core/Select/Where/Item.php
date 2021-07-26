@@ -44,7 +44,7 @@ class Item
 
     private $value = null;
 
-    private $dateTime = null;
+    private $dateTime = false;
 
     private $timeZone = null;
 
@@ -139,17 +139,25 @@ class Item
         return $raw;
     }
 
+    /**
+     * Get a type;
+     */
     public function getType(): string
     {
         return $this->type;
     }
 
+    /**
+     * Get an attribute.
+     */
     public function getAttribute(): ?string
     {
         return $this->attribute;
     }
 
     /**
+     * Get a value.
+     *
      * @return mixed
      */
     public function getValue()
@@ -179,13 +187,27 @@ class Item
         return $list;
     }
 
+    /**
+     * Whether is 'date-time'.
+     */
     public function isDateTime(): bool
     {
         return $this->dateTime;
     }
 
+    /**
+     * Get a time zone. Actual only for 'date-time' items.
+     */
     public function getTimeZone(): ?string
     {
         return $this->timeZone;
+    }
+
+    /**
+     * Create a builder.
+     */
+    public static function createBuilder(): ItemBuilder
+    {
+        return new ItemBuilder();
     }
 }

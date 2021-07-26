@@ -29,25 +29,24 @@
 
 namespace tests\unit\Espo\Core\Select\Where;
 
-use Espo\Core\{
-    Select\Where\Item,
-};
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\ItemBuilder;
 
 use InvalidArgumentException;
 
 class ItemTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
     }
 
     public function testFromArray()
     {
-        $item = Item::fromRaw([
-            'type' => 'equals',
-            'attribute' => 'test',
-            'value' => 'testValue',
-        ]);
+        $item = Item::createBuilder()
+            ->setType('equals')
+            ->setAttribute('test')
+            ->setValue('testValue')
+            ->build();
 
         $this->assertEquals('equals', $item->getType());
         $this->assertEquals('test', $item->getAttribute());
@@ -55,34 +54,33 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($item->isDateTime());
         $this->assertEquals(null, $item->getTimeZone());
 
-        $item = Item::fromRaw([
-            'type' => 'equals',
-            'attribute' => 'test',
-            'value' => 1,
-        ]);
+        $item1 = Item::createBuilder()
+            ->setType('equals')
+            ->setAttribute('test')
+            ->setValue(1)
+            ->build();
 
-        $this->assertEquals('equals', $item->getType());
-        $this->assertEquals('test', $item->getAttribute());
-        $this->assertEquals(1, $item->getValue());
+        $this->assertEquals('equals', $item1->getType());
+        $this->assertEquals('test', $item1->getAttribute());
+        $this->assertEquals(1, $item1->getValue());
 
-        $item = Item::fromRaw([
-            'type' => 'equals',
-            'attribute' => 'test',
-            'value' => 'testValue',
-            'dateTime' => true,
-            'timeZone' => 'Europe/London',
-        ]);
+        $item2 = Item::createBuilder()
+            ->setType('equals')
+            ->setAttribute('test')
+            ->setValue('testValue')
+            ->setIsDateTime(true)
+            ->setTimeZone('Europe/London')
+            ->build();
 
-        $this->assertTrue($item->isDateTime());
-        $this->assertEquals('Europe/London', $item->getTimeZone());
+        $this->assertTrue($item2->isDateTime());
+        $this->assertEquals('Europe/London', $item2->getTimeZone());
     }
 
     public function testEmpty()
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $item = Item::fromRaw([
-        ]);
+        $item = Item::fromRaw([]);
     }
 
     public function testEmptyAttribute1()
@@ -153,7 +151,7 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($raw, $result);
     }
 
-    public function testGetItemList()
+    public function testGetItemList1()
     {
         $raw = [
             'type' => 'and',
@@ -170,6 +168,25 @@ class ItemTest extends \PHPUnit\Framework\TestCase
         ];
 
         $item = Item::fromRaw($raw);
+
+        $this->assertEquals('or', $item->getItemList()[0]->getType());
+    }
+
+    public function testGetItemList2()
+    {
+        $item = Item::createBuilder()
+            ->setType('and')
+            ->setItemList([
+                Item::createBuilder()
+                    ->setType('or')
+                    ->setItemList([])
+                    ->build(),
+                Item::createBuilder()
+                    ->setType('or')
+                    ->setItemList([])
+                    ->build(),
+            ])
+            ->build();
 
         $this->assertEquals('or', $item->getItemList()[0]->getType());
     }
