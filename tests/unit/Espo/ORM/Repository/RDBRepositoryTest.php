@@ -744,7 +744,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($this->collection))
             ->with($paramsExpected);
 
-        $this->repository->groupBy('id')->find();
+        $this->repository->group('id')->find();
     }
 
     public function testGroupBy2()
@@ -761,8 +761,8 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->with($paramsExpected);
 
         $this->repository
-            ->groupBy('id')
-            ->groupBy('name')
+            ->group('id')
+            ->group('name')
             ->find();
     }
 
@@ -780,8 +780,8 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->with($paramsExpected);
 
         $this->repository
-            ->groupBy('id')
-            ->groupBy(['id', 'name'])
+            ->group('id')
+            ->group(['id', 'name'])
             ->find();
     }
 
@@ -799,8 +799,8 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->with($paramsExpected);
 
         $this->repository
-            ->groupBy(Expr::create('id'))
-            ->groupBy(Expr::create('name'))
+            ->group(Expr::create('id'))
+            ->group(Expr::create('name'))
             ->find();
     }
 
@@ -818,7 +818,7 @@ class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
             ->with($paramsExpected);
 
         $this->repository
-            ->groupBy([Expr::create('id'), Expr::create('name')])
+            ->group([Expr::create('id'), Expr::create('name')])
             ->find();
     }
 

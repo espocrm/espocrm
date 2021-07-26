@@ -167,7 +167,7 @@ class Queue
                                 ['processAt<=' => DateTimeUtil::getSystemNowString()],
                             ],
                         ])
-                        ->groupBy('webhookId')
+                        ->group('webhookId')
                         ->build()
                 )
             )

@@ -81,7 +81,7 @@ abstract class AbstractGroupJob implements JobPreparable
                 'group!=' => null,
                 'executeTime<=' => $executeTime->format(DateTime::SYSTEM_DATE_TIME_FORMAT),
             ])
-            ->groupBy('group')
+            ->group('group')
             ->build();
 
         $sth = $this->entityManager->getQueryExecutor()->execute($query);

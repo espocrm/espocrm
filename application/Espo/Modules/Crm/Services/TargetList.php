@@ -126,7 +126,7 @@ class TargetList extends \Espo\Services\Record implements
             'action=' => $includingActionList,
         ]);
 
-        $queryBuilder->groupBy([
+        $queryBuilder->group([
             'parentId',
             'parentType',
             'id',

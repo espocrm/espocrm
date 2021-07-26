@@ -336,11 +336,19 @@ class RDBSelectBuilder
      *
      * @param Expression|Expression[]|string|string[] $groupBy
      */
-    public function groupBy($groupBy): self
+    public function group($groupBy): self
     {
-        $this->builder->groupBy($groupBy);
+        $this->builder->group($groupBy);
 
         return $this;
+    }
+
+    /**
+     * @deprecated Use `group` method.
+     */
+    public function groupBy($groupBy): self
+    {
+        return $this->group($groupBy);
     }
 
     protected function handleReturnCollection(SthCollection $collection): Collection

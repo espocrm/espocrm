@@ -230,7 +230,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $select = $this->builder
             ->from('Test')
             ->having(['test' => null])
-            ->groupBy(['test'])
+            ->group(['test'])
             ->build();
 
         $raw = $select->getRaw();
@@ -245,7 +245,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $select = $this->builder
             ->from('Test')
             ->having(Cond::equal(Expr::column('test'), null))
-            ->groupBy(Expr::create('test'))
+            ->group(Expr::create('test'))
             ->build();
 
         $raw = $select->getRaw();
@@ -257,7 +257,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
     {
         $select = $this->builder
             ->from('Test')
-            ->groupBy([
+            ->group([
                 Expr::create('test1'),
                 Expr::create('test2'),
             ])
@@ -269,7 +269,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
                 Expr::create('test1'),
                 Expr::create('test2'),
             ],
-            $select->getGroupBy()
+            $select->getGroup()
         );
     }
 
@@ -278,7 +278,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $select = $this->builder
             ->from('Test')
             ->having(Cond::equal(Expr::column('test'), null))
-            ->groupBy(Expr::create('test'))
+            ->group(Expr::create('test'))
             ->build();
 
 

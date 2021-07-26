@@ -220,7 +220,7 @@ class StatsLoader implements Loader
                     'stage' => 'Closed Won',
                     'campaignId' => $entity->getId(),
                 ])
-                ->groupBy('opportunity.campaignId')
+                ->group('opportunity.campaignId')
                 ->build();
 
             $sth = $this->entityManager->getQueryExecutor()->execute($query);

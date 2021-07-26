@@ -390,7 +390,7 @@ class QueueUtil
                 'scheduledJob.job!=' => $this->metadataProvider->getPreparableJobNameList(),
                 'targetId' => null,
             ])
-            ->groupBy(['scheduledJobId'])
+            ->group(['scheduledJobId'])
             ->having([
                 'COUNT:id>' => 1,
             ])

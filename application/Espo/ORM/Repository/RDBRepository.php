@@ -810,9 +810,17 @@ class RDBRepository extends Repository
      *
      * @param Expression|Expression[]|string|string[] $groupBy
      */
+    public function group($groupBy): RDBSelectBuilder
+    {
+        return $this->createSelectBuilder()->group($groupBy);
+    }
+
+    /**
+     * @deprecated Use `group` method.
+     */
     public function groupBy($groupBy): RDBSelectBuilder
     {
-        return $this->createSelectBuilder()->groupBy($groupBy);
+        return $this->group($groupBy);
     }
 
     /**

@@ -110,7 +110,7 @@ class Opportunity extends Record
                 ['SUM:amountConverted', 'amount'],
             ])
             ->order('LIST:'.$stageField.':' . implode(',', $options))
-            ->groupBy($stageField)
+            ->group($stageField)
             ->where($whereClause);
 
         if ($teamId) {
@@ -200,7 +200,7 @@ class Opportunity extends Record
                 ['SUM:amountWeightedConverted', 'amount'],
             ])
             ->order('LIST:leadSource:' . implode(',', $options))
-            ->groupBy('leadSource')
+            ->group('leadSource')
             ->where($whereClause);
 
         $this->handleDistinctReportQueryBuilder($queryBuilder, $whereClause);
@@ -260,7 +260,7 @@ class Opportunity extends Record
                 ['SUM:amountConverted', 'amount'],
             ])
             ->order('LIST:stage:' . implode(',', $options))
-            ->groupBy('stage')
+            ->group('stage')
             ->where($whereClause);
 
         $stageIgnoreList = array_merge($this->getLostStageList(), $this->getWonStageList());
@@ -337,7 +337,7 @@ class Opportunity extends Record
                 ['SUM:amountConverted', 'amount'],
             ])
             ->order('MONTH:closeDate')
-            ->groupBy('MONTH:closeDate')
+            ->group('MONTH:closeDate')
             ->where($whereClause);
 
         $this->handleDistinctReportQueryBuilder($queryBuilder, $whereClause);

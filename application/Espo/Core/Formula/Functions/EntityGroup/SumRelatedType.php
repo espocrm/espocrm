@@ -136,7 +136,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base implements
             ]);
         }
 
-        $queryBuilder->groupBy($foreignLinkAlias . '.id');
+        $queryBuilder->group($foreignLinkAlias . '.id');
 
         $sth = $entityManager->getQueryExecutor()->execute($queryBuilder->build());
 

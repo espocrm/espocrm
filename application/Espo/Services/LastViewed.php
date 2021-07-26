@@ -94,7 +94,7 @@ class LastViewed
                 'MAX:number',
                 ['MAX:createdAt', 'createdAt'],
             ])
-            ->groupBy(['targetId', 'targetType'])
+            ->group(['targetId', 'targetType'])
             ->limit($offset, $params['maxSize'] + 1)
             ->find();
 

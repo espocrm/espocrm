@@ -153,7 +153,7 @@ class Select implements SelectingQuery
      *
      * @return Expression[]
      */
-    public function getGroupBy(): array
+    public function getGroup(): array
     {
         return array_map(
             function (string $item) {

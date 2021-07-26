@@ -178,7 +178,7 @@ class SelectBuilder implements Builder
      *
      * @param Expression|Expression[]|string|string[] $groupBy
      */
-    public function groupBy($groupBy): self
+    public function group($groupBy): self
     {
         if (is_array($groupBy)) {
             $this->params['groupBy'] = $this->normilizeExpressionItemArray($groupBy);
@@ -199,6 +199,14 @@ class SelectBuilder implements Builder
         }
 
         throw new InvalidArgumentException();
+    }
+
+    /**
+     * @deprecated Use `group` method.
+     */
+    public function groupBy($groupBy): self
+    {
+        return $this->group($groupBy);
     }
 
     /**

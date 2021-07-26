@@ -1047,7 +1047,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ->leftJoin('post')
             ->distinct()
             ->order('LIST:post.name:Test,Hello')
-            ->groupBy('post.name')
+            ->group('post.name')
             ->build();
 
         $sql = $this->query->compose($select);
@@ -2388,7 +2388,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
                 'a.name' => 'Test',
             ])
             ->order('a.name')
-            ->groupBy(['id'])
+            ->group(['id'])
             ->withDeleted()
             ->build();
 

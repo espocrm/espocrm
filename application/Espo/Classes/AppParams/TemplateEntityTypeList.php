@@ -65,7 +65,7 @@ class TemplateEntityTypeList
             ->withAccessControlFilter()
             ->buildQueryBuilder()
             ->select(['entityType'])
-            ->groupBy(['entityType'])
+            ->group(['entityType'])
             ->build();
 
         $templateCollection = $this->entityManager

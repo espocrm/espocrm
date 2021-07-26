@@ -109,7 +109,7 @@ class Manager
         $list = $this->entityManager
             ->getRDBRepository(Webhook::ENTITY_TYPE)
             ->select(['event'])
-            ->groupBy(['event'])
+            ->group(['event'])
             ->where([
                 'isActive' => true,
                 'event!=' => null,
