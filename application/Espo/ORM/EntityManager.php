@@ -45,7 +45,6 @@ use Espo\ORM\{
 };
 
 use PDO;
-use Exception;
 use RuntimeException;
 
 /**
@@ -114,13 +113,13 @@ class EntityManager
             $driver = $this->databaseParams->getDriver();
 
             if (!$driver) {
-                throw new Exception('No database driver specified.');
+                throw new RuntimeException('No database driver specified.');
             }
 
             $platform = $this->driverPlatformMap[$driver] ?? null;
 
             if (!$platform) {
-                throw new Exception("Database driver '{$driver}' is not supported.");
+                throw new RuntimeException("Database driver '{$driver}' is not supported.");
             }
 
             $this->databaseParams = $this->databaseParams->withPlatform($platform);
