@@ -41,9 +41,9 @@ use RuntimeException;
  */
 class SqlExecutor
 {
-    protected $pdo;
+    private $pdo;
 
-    const MAX_ATTEMPT_COUNT = 4;
+    private const MAX_ATTEMPT_COUNT = 4;
 
     public function __construct(PDO $pdo)
     {
@@ -62,7 +62,7 @@ class SqlExecutor
         return $this->executeSqlWithDeadlockHandling($sql);
     }
 
-    protected function executeSqlWithDeadlockHandling(string $sql, ?int $counter = null): PDOStatement
+    private function executeSqlWithDeadlockHandling(string $sql, ?int $counter = null): PDOStatement
     {
         $counter = $counter ?? self::MAX_ATTEMPT_COUNT;
 
@@ -86,7 +86,7 @@ class SqlExecutor
         return $sth;
     }
 
-    protected function isExceptionIsDeadlock(Exception $e): bool
+    private function isExceptionIsDeadlock(Exception $e): bool
     {
         if (!$e instanceof PDOException) {
             return false;

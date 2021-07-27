@@ -48,23 +48,23 @@ use RuntimeException;
  */
 class RDBRelation
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $hookMediator;
+    private $hookMediator;
 
-    protected $entity;
+    private $entity;
 
-    protected $entityType;
+    private $entityType;
 
-    protected $foreignEntityType = null;
+    private $foreignEntityType = null;
 
-    protected $relationName;
+    private $relationName;
 
-    protected $relationType = null;
+    private $relationType = null;
 
-    protected $builder = null;
+    private $builder = null;
 
-    protected $noBuilder = false;
+    private $noBuilder = false;
 
     public function __construct(
         EntityManager $entityManager,
@@ -100,7 +100,7 @@ class RDBRelation
     /**
      * Create a select builder.
      */
-    protected function createSelectBuilder(?Select $query = null): Builder
+    private function createSelectBuilder(?Select $query = null): Builder
     {
         if ($this->noBuilder) {
             throw new RuntimeException("Can't use query builder for the '{$this->relationType}' relation type.");
@@ -125,12 +125,12 @@ class RDBRelation
         return $this->createSelectBuilder($query);
     }
 
-    protected function isBelongsToParentType(): bool
+    private function isBelongsToParentType(): bool
     {
         return $this->relationType === Entity::BELONGS_TO_PARENT;
     }
 
-    protected function getMapper(): RDBMapper
+    private function getMapper(): RDBMapper
     {
         return $this->entityManager->getMapper();
     }
@@ -340,7 +340,7 @@ class RDBRelation
         return $this->createSelectBuilder()->columnsWhere($clause);
     }
 
-    protected function processCheckForeignEntity(Entity $entity): void
+    private function processCheckForeignEntity(Entity $entity): void
     {
         if ($this->foreignEntityType && $this->foreignEntityType !== $entity->getEntityType()) {
             throw new RuntimeException("Entity type doesn't match an entity type of the relation.");
@@ -378,7 +378,7 @@ class RDBRelation
             ->findOne();
     }
 
-    protected function isRelatedBelongsToParent(Entity $entity): bool
+    private function isRelatedBelongsToParent(Entity $entity): bool
     {
         $fromEntity = $this->entity;
 
@@ -399,7 +399,7 @@ class RDBRelation
             $fromEntity->get($typeAttribute) === $entity->getEntityType();
     }
 
-    protected function isRelatedBelongsTo(Entity $entity): bool
+    private function isRelatedBelongsTo(Entity $entity): bool
     {
         $fromEntity = $this->entity;
 
@@ -554,32 +554,32 @@ class RDBRelation
         return $this->getMapper()->getRelationColumn($this->entity, $this->relationName, $entity->getId(), $column);
     }
 
-    protected function beforeRelate(Entity $entity, ?array $columnData, array $options): void
+    private function beforeRelate(Entity $entity, ?array $columnData, array $options): void
     {
         $this->hookMediator->beforeRelate($this->entity, $this->relationName, $entity, $columnData, $options);
     }
 
-    protected function afterRelate(Entity $entity, ?array $columnData, array $options): void
+    private function afterRelate(Entity $entity, ?array $columnData, array $options): void
     {
         $this->hookMediator->afterRelate($this->entity, $this->relationName, $entity, $columnData, $options);
     }
 
-    protected function beforeUnrelate(Entity $entity, array $options): void
+    private function beforeUnrelate(Entity $entity, array $options): void
     {
         $this->hookMediator->beforeUnrelate($this->entity, $this->relationName, $entity, $options);
     }
 
-    protected function afterUnrelate(Entity $entity, array $options): void
+    private function afterUnrelate(Entity $entity, array $options): void
     {
         $this->hookMediator->afterUnrelate($this->entity, $this->relationName, $entity, $options);
     }
 
-    protected function beforeMassRelate(Select $query, array $options): void
+    private function beforeMassRelate(Select $query, array $options): void
     {
         $this->hookMediator->beforeMassRelate($this->entity, $this->relationName, $query, $options);
     }
 
-    protected function afterMassRelate(Select $query, array $options): void
+    private function afterMassRelate(Select $query, array $options): void
     {
         $this->hookMediator->afterMassRelate($this->entity, $this->relationName, $query, $options);
     }

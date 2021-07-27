@@ -50,30 +50,26 @@ use InvalidArgumentException;
  */
 class RDBRelationSelectBuilder
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $entity;
+    private $entity;
 
-    protected $entityType;
+    private $entityType;
 
-    protected $foreignEntityType;
+    private $foreignEntityType;
 
-    protected $relationName;
+    private $relationName;
 
-    protected $relationType = null;
+    private $relationType = null;
 
     /**
      * @var SelectBuilder
      */
-    protected $builder = null;
-
-    protected $additionalSelect = [];
-
-    protected $selectIsAdded = false;
+    private $builder = null;
 
     private $middleTableAlias = null;
 
-    protected $returnSthCollection = false;
+    private $returnSthCollection = false;
 
     public function __construct(
         EntityManager $entityManager,

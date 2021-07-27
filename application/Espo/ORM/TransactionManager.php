@@ -40,11 +40,11 @@ use Closure;
 
 class TransactionManager
 {
-    protected $level = 0;
+    private $level = 0;
 
-    protected $pdo;
+    private $pdo;
 
-    protected $queryComposer;
+    private $queryComposer;
 
     public function __construct(PDO $pdo, QueryComposer $queryComposer)
     {
@@ -149,26 +149,26 @@ class TransactionManager
         $this->pdo->rollBack();
     }
 
-    protected function getCurrentSavepoint(): string
+    private function getCurrentSavepoint(): string
     {
         return 'POINT_' . (string) $this->level;
     }
 
-    protected function createSavepoint(): void
+    private function createSavepoint(): void
     {
         $sql = $this->queryComposer->composeCreateSavepoint($this->getCurrentSavepoint());
 
         $this->pdo->exec($sql);
     }
 
-    protected function releaseSavepoint(): void
+    private function releaseSavepoint(): void
     {
         $sql = $this->queryComposer->composeReleaseSavepoint($this->getCurrentSavepoint());
 
         $this->pdo->exec($sql);
     }
 
-    protected function rollbackToSavepoint(): void
+    private function rollbackToSavepoint(): void
     {
         $sql = $this->queryComposer->composeRollbackToSavepoint($this->getCurrentSavepoint());
 

@@ -40,9 +40,9 @@ use RuntimeException;
  */
 class RDBTransactionManager
 {
-    protected $transactionManager;
+    private $transactionManager;
 
-    protected $level = 0;
+    private $level = 0;
 
     public function __construct(TransactionManager $transactionManager)
     {

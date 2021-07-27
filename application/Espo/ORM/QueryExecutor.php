@@ -41,9 +41,9 @@ use PDOStatement;
  */
 class QueryExecutor
 {
-    protected $sqlExecutor;
+    private $sqlExecutor;
 
-    protected $queryComposer;
+    private $queryComposer;
 
     public function __construct(SqlExecutor $sqlExecutor, QueryComposer $queryComposer)
     {

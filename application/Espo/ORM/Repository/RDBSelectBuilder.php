@@ -49,15 +49,15 @@ use RuntimeException;
  */
 class RDBSelectBuilder
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $builder;
+    private $builder;
 
-    protected $repository = null;
+    private $repository = null;
 
-    protected $entityType = null;
+    private $entityType = null;
 
-    protected $returnSthCollection = false;
+    private $returnSthCollection = false;
 
     public function __construct(EntityManager $entityManager, string $entityType, ?Select $query = null)
     {
