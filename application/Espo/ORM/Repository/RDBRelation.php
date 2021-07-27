@@ -62,8 +62,6 @@ class RDBRelation
 
     private $relationType = null;
 
-    private $builder = null;
-
     private $noBuilder = false;
 
     public function __construct(
