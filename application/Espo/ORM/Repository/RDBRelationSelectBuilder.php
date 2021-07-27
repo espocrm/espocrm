@@ -37,7 +37,7 @@ use Espo\ORM\{
     Query\Select,
     Query\SelectBuilder,
     Query\Part\WhereItem,
-    Query\Part\SelectExpression,
+    Query\Part\Selection,
     Query\Part\Join,
     Mapper\Mapper,
 };
@@ -375,7 +375,7 @@ class RDBRelationSelectBuilder
      * * `select([$expr1, $expr2, ...])`
      * * `select(string $expression, string $alias)`
      *
-     * @param SelectExpression|SelectExpression[]|Expression|string $select
+     * @param Selection|Selection[]|Expression|string $select
      * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
      */

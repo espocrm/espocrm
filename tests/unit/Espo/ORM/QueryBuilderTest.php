@@ -36,7 +36,7 @@ use Espo\ORM\{
     Query\Update,
     Query\Delete,
     Query\Union,
-    Query\Part\SelectExpression,
+    Query\Part\Selection,
 };
 
 use RuntimeException;
@@ -99,8 +99,8 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('col1'),
-                SelectExpression::fromString('col2'),
+                Selection::fromString('col1'),
+                Selection::fromString('col2'),
             ],
             $select->getSelect()
         );
@@ -115,7 +115,7 @@ class QueryBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('col1')->withAlias('alias1')
+                Selection::fromString('col1')->withAlias('alias1')
             ],
             $select->getSelect()
         );

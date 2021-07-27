@@ -30,7 +30,7 @@
 namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\Expression;
-use Espo\ORM\Query\Part\SelectExpression;
+use Espo\ORM\Query\Part\Selection;
 
 use InvalidArgumentException;
 use RuntimeException;
@@ -134,7 +134,7 @@ class SelectBuilder implements Builder
      * * `select([$expr1, $expr2, ...])`
      * * `select(string $expression, string $alias)`
      *
-     * @param SelectExpression|SelectExpression[]|Expression|string $select
+     * @param Selection|Selection[]|Expression|string $select
      * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
      */
@@ -149,7 +149,7 @@ class SelectBuilder implements Builder
         if ($select instanceof Expression) {
             $select = $select->getValue();
         }
-        else if ($select instanceof SelectExpression) {
+        else if ($select instanceof Selection) {
             $alias = $alias ?? $select->getAlias();
             $select = $select->getExpression()->getValue();
         }
@@ -288,7 +288,7 @@ class SelectBuilder implements Builder
                 continue;
             }
 
-            if ($item instanceof SelectExpression) {
+            if ($item instanceof Selection) {
                 $resultList[] = $item->getAlias() ?
                     [$item->getExpression()->getValue(), $item->getAlias()] :
                     [$item->getExpression()->getValue()];

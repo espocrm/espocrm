@@ -38,7 +38,7 @@ use Espo\ORM\{
     Query\Query,
     Query\Builder,
     Query\Part\Expression,
-    Query\Part\SelectExpression,
+    Query\Part\Selection,
 };
 
 use ReflectionClass;
@@ -59,7 +59,7 @@ class QueryBuilder
      * * `select([$expr1, $expr2, ...])`
      * * `select(string $expression, string $alias)`
      *
-     * @param SelectExpression|SelectExpression[]|Expression|string $select
+     * @param Selection|Selection[]|Expression|string $select
      * An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
      */

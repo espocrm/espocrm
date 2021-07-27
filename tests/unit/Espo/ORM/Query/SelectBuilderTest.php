@@ -33,7 +33,7 @@ use Espo\ORM\{
     Query\SelectBuilder,
     Query\Part\Condition as Cond,
     Query\Part\Expression as Expr,
-    Query\Part\SelectExpression,
+    Query\Part\Selection,
     Query\Part\OrderExpression,
     Query\Part\Join,
     Query\Part\WhereClause,
@@ -71,9 +71,9 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('id'),
-                SelectExpression::fromString('name'),
-                SelectExpression::fromString('test'),
+                Selection::fromString('id'),
+                Selection::fromString('name'),
+                Selection::fromString('test'),
             ],
             $select->getSelect()
         );
@@ -89,8 +89,8 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('id'),
-                SelectExpression::fromString('name'),
+                Selection::fromString('id'),
+                Selection::fromString('name'),
             ],
             $select->getSelect()
         );
@@ -105,7 +105,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('test')->withAlias('hello'),
+                Selection::fromString('test')->withAlias('hello'),
             ],
             $select->getSelect()
         );
@@ -120,7 +120,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('test')->withAlias('hello'),
+                Selection::fromString('test')->withAlias('hello'),
             ],
             $select->getSelect()
         );
@@ -136,8 +136,8 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('id'),
-                SelectExpression::fromString('name'),
+                Selection::fromString('id'),
+                Selection::fromString('name'),
             ],
             $select->getSelect()
         );
@@ -156,8 +156,8 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('id')->withAlias('id'),
-                SelectExpression::fromString('name')->withAlias('name'),
+                Selection::fromString('id')->withAlias('id'),
+                Selection::fromString('name')->withAlias('name'),
             ],
             $select->getSelect()
         );
@@ -169,16 +169,16 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             ->from('Test')
             ->select([
                 'id',
-                SelectExpression::create(Expr::create('name'))
+                Selection::create(Expr::create('name'))
             ])
-            ->select(SelectExpression::fromString('test')->withAlias('testAlias'))
+            ->select(Selection::fromString('test')->withAlias('testAlias'))
             ->build();
 
         $this->assertEquals(
             [
-                SelectExpression::fromString('id'),
-                SelectExpression::fromString('name'),
-                SelectExpression::fromString('test')->withAlias('testAlias'),
+                Selection::fromString('id'),
+                Selection::fromString('name'),
+                Selection::fromString('test')->withAlias('testAlias'),
             ],
             $select->getSelect()
         );

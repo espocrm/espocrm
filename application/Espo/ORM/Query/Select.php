@@ -30,7 +30,7 @@
 namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\WhereClause;
-use Espo\ORM\Query\Part\SelectExpression;
+use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\Part\OrderExpression;
 use Espo\ORM\Query\Part\Expression;
 
@@ -103,19 +103,19 @@ class Select implements SelectingQuery
     /**
      * Get SELECT items.
      *
-     * @return SelectExpression[]
+     * @return Selection[]
      */
     public function getSelect(): array
     {
         return array_map(
             function ($item) {
                 if (is_array($item) && count($item)) {
-                    return SelectExpression::fromString($item[0])
+                    return Selection::fromString($item[0])
                         ->withAlias($item[1] ?? null);
                 }
 
                 if (is_string($item)) {
-                    return SelectExpression::fromString($item);
+                    return Selection::fromString($item);
                 }
 
                 throw new RuntimeException("Bad select item.");
