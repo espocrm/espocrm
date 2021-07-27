@@ -27,28 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\Lead\PrimaryFilters;
 
-class Lead extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\Part\Condition as Cond;
+
+class Converted implements Filter
 {
-    protected function filterActive(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = [
-            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
-        ];
+        $queryBuilder->where(
+            Cond::equal(
+                Cond::column('status'),
+                'Converted'
+            )
+        );
     }
-
-    protected function filterActual(&$result)
-    {
-        $result['whereClause'][] = [
-            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
-        ];
-    }
-
-    protected function filterConverted(&$result)
-    {
-        $result['whereClause'][] = [
-            'status=' => 'Converted'
-        ];
-    }
- }
+}
