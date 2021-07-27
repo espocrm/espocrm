@@ -34,6 +34,9 @@ use Espo\ORM\Query\Part\{
     WhereClause,
 };
 
+/**
+ * AND-group. Immutable.
+ */
 class AndGroup implements WhereItem
 {
     private $rawValue = [];

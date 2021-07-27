@@ -31,6 +31,9 @@ namespace Espo\ORM\Query\Part\Where;
 
 use Espo\ORM\Query\Part\WhereItem;
 
+/**
+ * OR-group. Immutable.
+ */
 class OrGroup implements WhereItem
 {
     private $rawValue = [];

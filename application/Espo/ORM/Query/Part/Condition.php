@@ -39,6 +39,9 @@ use Espo\ORM\Query\Part\{
 
 use Espo\ORM\Query\Select;
 
+/**
+ * A util-class for creating items that can be used as a where-clause.
+ */
 class Condition
 {
     private function __construct()

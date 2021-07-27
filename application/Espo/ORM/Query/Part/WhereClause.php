@@ -33,6 +33,9 @@ use Espo\ORM\Query\{
     Part\Where\AndGroup,
 };
 
+/**
+ * A where-clause. Immutable.
+ */
 class WhereClause extends AndGroup
 {
     public function getRaw(): array

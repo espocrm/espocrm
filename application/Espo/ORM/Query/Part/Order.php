@@ -31,6 +31,9 @@ namespace Espo\ORM\Query\Part;
 
 use RuntimeException;
 
+/**
+ * An order item. Immutable.
+ */
 class Order
 {
     public const ASC = 'ASC';

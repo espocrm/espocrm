@@ -29,9 +29,13 @@
 
 namespace Espo\ORM\Query\Part;
 
-use RuntimeException;
-use InvalidArgumentException;
+use Espo\ORM\Query\Part\Expression\Util;
 
+use RuntimeException;
+
+/**
+ * A complex expression. Can be a function or a simple column reference. Immutable.
+ */
 class Expression implements WhereItem
 {
     private $expression;
@@ -673,44 +677,11 @@ class Expression implements WhereItem
 
     private static function composeFunction(string $function, ...$argumentList): self
     {
-        $stringifiedItemList = array_map(
-            function ($item) {
-                return self::stringifyArgument($item);
-            },
-            $argumentList
-        );
-
-        $expression = $function . ':(' . implode(', ', $stringifiedItemList) . ')';
-
-        return self::create($expression);
+        return Util::composeFunction($function, ...$argumentList);
     }
 
     private static function stringifyArgument($arg): string
     {
-        if ($arg instanceof Expression) {
-            return $arg->getValue();
-        }
-
-        if (is_null($arg)) {
-            return 'NULL';
-        }
-
-       if (is_bool($arg)) {
-            return $arg ? 'TRUE': 'FALSE';
-        }
-
-        if (is_int($arg)) {
-            return strval($arg);
-        }
-
-        if (is_float($arg)) {
-            return strval($arg);
-        }
-
-        if (is_string($arg)) {
-            return '\'' . str_replace('\'', '\\\'', $arg) . '\'';
-        }
-
-        throw new InvalidArgumentException("Bad argument type.");
+        return Util::stringifyArgument($arg);
     }
 }

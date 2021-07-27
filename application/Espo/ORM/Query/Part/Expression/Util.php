@@ -27,52 +27,63 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM\Query\Part\Where;
+namespace Espo\ORM\Query\Part\Expression;
 
-use Espo\ORM\Query\Part\{
-    WhereItem,
-};
+use Espo\ORM\Query\Part\Expression as Expr;
 
-/**
- * A NOT-operator. Immutable.
- */
-class Not implements WhereItem
+use InvalidArgumentException;
+
+class Util
 {
-    private $rawValue = [];
-
-    public function getRaw(): array
+    /**
+     * Compose an expression by a function name and arguments.
+     */
+    public static function composeFunction(string $function, ...$argumentList): Expr
     {
-        return ['NOT' => $this->getRawValue()];
-    }
+        $stringifiedItemList = array_map(
+            function ($item) {
+                return self::stringifyArgument($item);
+            },
+            $argumentList
+        );
 
-    public function getRawKey(): string
-    {
-        return 'NOT';
+        $expression = $function . ':(' . implode(', ', $stringifiedItemList) . ')';
+
+        return Expr::create($expression);
     }
 
     /**
-     * @return array
+     * Stringify an argument.
+     *
+     * @param Expr|bool|int|float|string|null $arg
+     * @throws InvalidArgumentException
      */
-    public function getRawValue()
+    public static function stringifyArgument($arg): string
     {
-        return $this->rawValue;
-    }
-
-    public static function fromRaw(array $whereClause): self
-    {
-        if (count($whereClause) === 1 && array_keys($whereClause)[0] === 0) {
-            $whereClause = $whereClause[0];
+        if ($arg instanceof Expr) {
+            return $arg->getValue();
         }
 
-        $obj = new self();
+        if (is_null($arg)) {
+            return 'NULL';
+        }
 
-        $obj->rawValue = $whereClause;
+       if (is_bool($arg)) {
+            return $arg ? 'TRUE': 'FALSE';
+        }
 
-        return $obj;
-    }
+        if (is_int($arg)) {
+            return strval($arg);
+        }
 
-    public static function create(WhereItem $item): self
-    {
-        return self::fromRaw($item->getRaw());
+        if (is_float($arg)) {
+            return strval($arg);
+        }
+
+        if (is_string($arg)) {
+            return '\'' . str_replace('\'', '\\\'', $arg) . '\'';
+        }
+
+        throw new InvalidArgumentException("Bad argument type.");
     }
 }

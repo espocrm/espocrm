@@ -29,6 +29,9 @@
 
 namespace Espo\ORM\Query\Part;
 
+/**
+ * A select item. Immutable.
+ */
 class Selection
 {
     private $expression;

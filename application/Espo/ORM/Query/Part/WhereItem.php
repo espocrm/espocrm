@@ -29,6 +29,9 @@
 
 namespace Espo\ORM\Query\Part;
 
+/**
+ * Can used as a where-clause.
+ */
 interface WhereItem
 {
     public function getRaw(): array;

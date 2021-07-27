@@ -31,6 +31,9 @@ namespace Espo\ORM\Query\Part;
 
 use RuntimeException;
 
+/**
+ * A join item. Immutable.
+ */
 class Join
 {
     private $target;

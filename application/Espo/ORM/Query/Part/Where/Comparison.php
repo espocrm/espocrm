@@ -39,7 +39,7 @@ use RuntimeException;
 use InvalidArgumentException;
 
 /**
- * Compares an expression to a value or another expression.
+ * Compares an expression to a value or another expression. Immutable.
  */
 class Comparison implements WhereItem
 {
