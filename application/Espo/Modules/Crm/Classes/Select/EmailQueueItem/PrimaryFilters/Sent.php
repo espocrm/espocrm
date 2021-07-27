@@ -27,31 +27,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\EmailQueueItem\PrimaryFilters;
 
-class KnowledgeBaseArticle extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Query\SelectBuilder;
+
+class Sent implements Filter
 {
-    protected function filterPublished(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = array(
-            'status' => 'Published'
-        );
+        $queryBuilder->where([
+            'status' => 'Sent',
+        ]);
     }
-
-    protected function access(&$result)
-    {
-        parent::access($result);
-
-        if ($this->checkIsPortal()) {
-            $this->filterPublished($result);
-
-            $this->setDistinct(true, $result);
-            $this->addLeftJoin('portals', $result);
-            $this->addOrWhere(array(
-                array(
-                    'portals.id' => $this->getUser()->get('portalId')
-                )
-            ), $result);
-        }
-    }
- }
+}

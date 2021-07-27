@@ -27,21 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\KnowledgeBaseArticle\AccessControlFilters;
 
-class Document extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\ORM\Query\SelectBuilder;
+
+use Espo\Entities\User;
+
+class Mandatory implements Filter
 {
-    protected function filterActive(&$result)
+    private $user;
+
+    public function __construct(User $user)
     {
-        $result['whereClause'][] = array(
-            'status' => 'Active'
-        );
+        $this->user = $user;
     }
 
-    protected function filterDraft(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = array(
-            'status' => 'Draft'
-        );
+        if (!$this->user->isPortal()) {
+            return;
+        }
+
+        $queryBuilder
+            ->where([
+                'status' => 'Published',
+            ])
+            ->distinct()
+            ->leftJoin('portals', 'portalsAccess')
+            ->where([
+                'portalsAccess.id' => $this->user->get('portalId'),
+            ]);
     }
- }
+}

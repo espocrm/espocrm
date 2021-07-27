@@ -1,0 +1,6 @@
+{
+    "primaryFilterClassNameMap": {
+        "active": "Espo\\Modules\\Crm\\Classes\\Select\\Document\\PrimaryFilters\\Active",
+        "draft": "Espo\\Modules\\Crm\\Classes\\Select\\Document\\PrimaryFilters\\Draft"
+    }
+}

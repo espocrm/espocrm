@@ -1,0 +1,7 @@
+{
+    "primaryFilterClassNameMap": {
+        "pending": "Espo\\Modules\\Crm\\Classes\\Select\\EmailQueueItem\\PrimaryFilters\\Pending",
+        "failed": "Espo\\Modules\\Crm\\Classes\\Select\\EmailQueueItem\\PrimaryFilters\\Failed",
+        "sent": "Espo\\Modules\\Crm\\Classes\\Select\\EmailQueueItem\\PrimaryFilters\\Sent"
+    }
+}

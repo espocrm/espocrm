@@ -27,28 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\SelectManagers;
+namespace Espo\Modules\Crm\Classes\Select\Document\PrimaryFilters;
 
-class EmailQueueItem extends \Espo\Core\Select\SelectManager
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Query\SelectBuilder;
+
+class Active implements Filter
 {
-    protected function filterPending(&$result)
+    public function apply(SelectBuilder $queryBuilder): void
     {
-        $result['whereClause'][] = array(
-            'status=' => 'Pending'
-        );
-    }
-
-    protected function filterSent(&$result)
-    {
-        $result['whereClause'][] = array(
-            'status=' => 'Sent'
-        );
-    }
-
-    protected function filterFailed(&$result)
-    {
-        $result['whereClause'][] = array(
-            'status=' => 'Failed'
-        );
+        $queryBuilder
+            ->where([
+                'status' => 'Active',
+            ]);
     }
 }
