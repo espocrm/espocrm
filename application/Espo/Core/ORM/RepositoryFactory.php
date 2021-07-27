@@ -29,6 +29,9 @@
 
 namespace Espo\Core\ORM;
 
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Binding\ContextualBinder;
+
 use Espo\Core\{
     InjectableFactory,
     Utils\ClassFinder,
@@ -75,9 +78,18 @@ class RepositoryFactory implements RepositoryFactoryInterface
             $className = $this->defaultClassName;
         }
 
-        return $this->injectableFactory->createWith($className, [
-            'entityFactory' => $this->entityFactory,
-            'entityType' => $entityType,
-        ]);
+        return $this->injectableFactory->createWithBinding(
+            $className,
+            BindingContainerBuilder::create()
+                ->bindInstance(EntityFactoryInteface::class, $this->entityFactory)
+                ->bindInstance(EntityFactory::class, $this->entityFactory)
+                ->inContext(
+                    $className,
+                    function (ContextualBinder $binder) use ($entityType) {
+                        $binder->bindValue('$entityType', $entityType);
+                    }
+                )
+                ->build()
+        );
     }
 }
