@@ -40,6 +40,10 @@ use Espo\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
 use Espo\ORM\EntityFactory as EntityFactoryInteface;
 use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInteface;
 use Espo\ORM\Value\AttributeExtractorFactory as AttributeExtractorFactoryInteface;
+use Espo\ORM\PDO\PDOProvider;
+use Espo\ORM\PDO\DefaultPDOProvider;
+
+use RuntimeException;
 
 class EntityManagerFactory
 {
@@ -50,6 +54,11 @@ class EntityManagerFactory
     private $metadataDataProvider;
 
     private $eventDispatcher;
+
+    private $driverPlatformMap = [
+        'pdo_mysql' => 'Mysql',
+        'mysqli' => 'Mysql',
+    ];
 
     public function __construct(
         Config $config,
@@ -74,23 +83,7 @@ class EntityManagerFactory
                 ->build()
         );
 
-        $config = $this->config;
-
-        $databaseParams = DatabaseParams::create()
-            ->withHost($config->get('database.host'))
-            ->withPort($config->get('database.port') ? (int) $config->get('database.port') : null)
-            ->withName($config->get('database.dbname'))
-            ->withUsername($config->get('database.user'))
-            ->withPassword($config->get('database.password'))
-            ->withCharset($config->get('database.charset') ?? 'utf8')
-            ->withDriver($config->get('database.driver'))
-            ->withPlatform($config->get('database.platform'))
-            ->withSslCa($config->get('database.sslCA'))
-            ->withSslCert($config->get('database.sslCert'))
-            ->withSslKey($config->get('database.sslKey'))
-            ->withSslCaPath($config->get('database.sslCAPath'))
-            ->withSslCipher($config->get('database.sslCipher'))
-            ->withSslVerifyDisabled($config->get('database.sslVerifyDisabled') ?? false);
+        $databaseParams = $this->createDatabaseParams();
 
         $metadata = new Metadata($this->metadataDataProvider, $this->eventDispatcher);
 
@@ -116,8 +109,47 @@ class EntityManagerFactory
             ->bindInstance(ValueFactoryFactoryInteface::class, $valueFactoryFactory)
             ->bindInstance(AttributeExtractorFactoryInteface::class, $attributeExtractorFactory)
             ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
+            ->bindImplementation(PDOProvider::class, DefaultPDOProvider::class)
             ->build();
 
         return $this->injectableFactory->createWithBinding(EntityManager::class, $binding);
+    }
+
+    private function createDatabaseParams(): DatabaseParams
+    {
+        $config = $this->config;
+
+        $databaseParams = DatabaseParams::create()
+            ->withHost($config->get('database.host'))
+            ->withPort($config->get('database.port') ? (int) $config->get('database.port') : null)
+            ->withName($config->get('database.dbname'))
+            ->withUsername($config->get('database.user'))
+            ->withPassword($config->get('database.password'))
+            ->withCharset($config->get('database.charset') ?? 'utf8')
+            ->withPlatform($config->get('database.platform'))
+            ->withSslCa($config->get('database.sslCA'))
+            ->withSslCert($config->get('database.sslCert'))
+            ->withSslKey($config->get('database.sslKey'))
+            ->withSslCaPath($config->get('database.sslCAPath'))
+            ->withSslCipher($config->get('database.sslCipher'))
+            ->withSslVerifyDisabled($config->get('database.sslVerifyDisabled') ?? false);
+
+        if (!$databaseParams->getPlatform()) {
+            $driver = $config->get('database.driver');
+
+            if (!$driver) {
+                throw new RuntimeException('No database driver specified.');
+            }
+
+            $platform = $this->driverPlatformMap[$driver] ?? null;
+
+            if (!$platform) {
+                throw new RuntimeException("Database driver '{$driver}' is not supported.");
+            }
+
+            $databaseParams = $databaseParams->withPlatform($platform);
+        }
+
+        return $databaseParams;
     }
 }

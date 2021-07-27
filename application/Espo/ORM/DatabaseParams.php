@@ -45,8 +45,6 @@ class DatabaseParams
 
     private $charset = null;
 
-    private $driver = null;
-
     private $sslCa = null;
 
     private $sslCert = null;
@@ -97,11 +95,6 @@ class DatabaseParams
     public function getCharset(): ?string
     {
         return $this->charset;
-    }
-
-    public function getDriver(): ?string
-    {
-        return $this->driver;
     }
 
     public function getSslCa(): ?string
@@ -186,14 +179,6 @@ class DatabaseParams
     {
         $obj = clone $this;
         $obj->charset = $charset;
-
-        return $obj;
-    }
-
-    public function withDriver(?string $driver): self
-    {
-        $obj = clone $this;
-        $obj->driver = $driver;
 
         return $obj;
     }

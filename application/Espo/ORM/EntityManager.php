@@ -47,6 +47,8 @@ use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueFactoryFactory;
 use Espo\ORM\Value\AttributeExtractorFactory;
 
+use Espo\ORM\PDO\PDOProvider;
+
 use PDO;
 use RuntimeException;
 
@@ -55,8 +57,6 @@ use RuntimeException;
  */
 class EntityManager
 {
-    private $pdo = null;
-
     private $entityFactory;
 
     private $collectionFactory;
@@ -88,12 +88,9 @@ class EntityManager
 
     private $locker;
 
-    private const RDB_MAPPER_NAME = 'RDB';
+    private $pdoProvider;
 
-    protected $driverPlatformMap = [
-        'pdo_mysql' => 'Mysql',
-        'mysqli' => 'Mysql',
-    ];
+    private const RDB_MAPPER_NAME = 'RDB';
 
     public function __construct(
         DatabaseParams $databaseParams,
@@ -103,6 +100,7 @@ class EntityManager
         ValueFactoryFactory $valueFactoryFactory,
         AttributeExtractorFactory $attributeExtractorFactory,
         EventDispatcher $eventDispatcher,
+        PDOProvider $pdoProvider,
         ?MapperFactory $mapperFactory = null
     ) {
         $this->databaseParams = $databaseParams;
@@ -111,21 +109,10 @@ class EntityManager
         $this->entityFactory = $entityFactory;
         $this->repositoryFactory = $repositoryFactory;
         $this->mapperFactory = $mapperFactory;
+        $this->pdoProvider = $pdoProvider;
 
         if (!$this->databaseParams->getPlatform()) {
-            $driver = $this->databaseParams->getDriver();
-
-            if (!$driver) {
-                throw new RuntimeException('No database driver specified.');
-            }
-
-            $platform = $this->driverPlatformMap[$driver] ?? null;
-
-            if (!$platform) {
-                throw new RuntimeException("Database driver '{$driver}' is not supported.");
-            }
-
-            $this->databaseParams = $this->databaseParams->withPlatform($platform);
+            throw new RuntimeException("No 'platform' parameter.");
         }
 
         $valueAccessorFactory = new ValueAccessorFactory(
@@ -139,11 +126,11 @@ class EntityManager
 
         $this->initQueryComposer();
 
-        $this->sqlExecutor = new SqlExecutor($this->getPDO());
+        $this->sqlExecutor = new SqlExecutor($this->pdoProvider->get());
         $this->queryExecutor = new QueryExecutor($this->sqlExecutor, $this->queryComposer);
         $this->queryBuilder = new QueryBuilder();
         $this->collectionFactory = new CollectionFactory($this);
-        $this->transactionManager = new TransactionManager($this->getPDO(), $this->queryComposer);
+        $this->transactionManager = new TransactionManager($this->pdoProvider->get(), $this->queryComposer);
 
         $this->initLocker();
     }
@@ -158,7 +145,7 @@ class EntityManager
             throw new RuntimeException("Query composer for '{$platform}' platform does not exits.");
         }
 
-        $this->queryComposer = new $className($this->getPDO(), $this->entityFactory, $this->metadata);
+        $this->queryComposer = new $className($this->pdoProvider->get(), $this->entityFactory, $this->metadata);
     }
 
     private function initLocker(): void
@@ -171,7 +158,7 @@ class EntityManager
             $className = BaseLocker::class;
         }
 
-        $this->locker = new $className($this->getPDO(), $this->queryComposer, $this->transactionManager);
+        $this->locker = new $className($this->pdoProvider->get(), $this->queryComposer, $this->transactionManager);
     }
 
     /**
@@ -216,7 +203,7 @@ class EntityManager
             $className = $this->getRDBMapperClassName();
 
             $this->mappers[$name] = new $className(
-                $this->getPDO(),
+                $this->pdoProvider->get(),
                 $this->entityFactory,
                 $this->collectionFactory,
                 $this->getQueryComposer(),
@@ -245,76 +232,6 @@ class EntityManager
         }
 
         return $className;
-    }
-
-    private function initPDO(): void
-    {
-        $platform = strtolower($this->databaseParams->getPlatform() ?? '');
-
-        $host = $this->databaseParams->getHost();
-        $port = $this->databaseParams->getPort();
-        $dbname = $this->databaseParams->getName();
-        $charset = $this->databaseParams->getCharset();
-        $username = $this->databaseParams->getUsername();
-        $password = $this->databaseParams->getPassword();
-
-        if (!$platform) {
-            throw new RuntimeException("No 'platform' parameter.");
-        }
-
-        if (!$host) {
-            throw new RuntimeException("No 'host' parameter.");
-        }
-
-        if (!$dbname) {
-            throw new RuntimeException("No 'dbname' parameter.");
-        }
-
-        $dsn =
-            $platform . ':' .
-            'host=' . $host;
-
-        if ($port) {
-            $dsn .= ';' . 'port=' . (string) $port;
-        }
-
-        if ($dbname) {
-            $dsn .= ';' . 'dbname=' . $dbname;
-        }
-
-        if ($charset) {
-            $dsn .= ';' . 'charset=' . $charset;
-        }
-
-        $options = [];
-
-        if ($this->databaseParams->getSslCa()) {
-            $options[PDO::MYSQL_ATTR_SSL_CA] = $this->databaseParams->getSslCa();
-        }
-
-        if ($this->databaseParams->getSslCert()) {
-            $options[PDO::MYSQL_ATTR_SSL_CERT] = $this->databaseParams->getSslCert();
-        }
-
-        if ($this->databaseParams->getSslKey()) {
-            $options[PDO::MYSQL_ATTR_SSL_KEY] = $this->databaseParams->getSslKey();
-        }
-
-        if ($this->databaseParams->getSslCaPath()) {
-            $options[PDO::MYSQL_ATTR_SSL_CAPATH] = $this->databaseParams->getSslCaPath();
-        }
-
-        if ($this->databaseParams->getSslCipher()) {
-            $options[PDO::MYSQL_ATTR_SSL_CIPHER] = $this->databaseParams->getSslCipher();
-        }
-
-        if ($this->databaseParams->isSslVerifyDisabled()) {
-            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
-        }
-
-        $this->pdo = new PDO($dsn, $username, $password, $options);
-
-        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     /**
@@ -458,11 +375,7 @@ class EntityManager
      */
     public function getPDO(): PDO
     {
-        if ($this->pdo === null) {
-            $this->initPDO();
-        }
-
-        return $this->pdo;
+        return $this->pdoProvider->get();
     }
 
     /**
