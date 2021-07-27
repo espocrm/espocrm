@@ -29,20 +29,23 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\{
-    QueryComposer\QueryComposer,
-    Mapper\Mapper,
-    Mapper\MapperFactory,
-    Repository\RepositoryFactory,
-    Repository\Repository,
-    Repository\RDBRepository,
-    Locker\Locker,
-    Locker\BaseLocker,
-    Defs\Defs,
-    Value\ValueAccessorFactory,
-    Value\ValueFactoryFactory,
-    Value\AttributeExtractorFactory,
-};
+use Espo\ORM\Defs\Defs;
+
+use Espo\ORM\QueryComposer\QueryComposer;
+
+use Espo\ORM\Mapper\Mapper;
+use Espo\ORM\Mapper\MapperFactory;
+
+use Espo\ORM\Repository\RepositoryFactory;
+use Espo\ORM\Repository\Repository;
+use Espo\ORM\Repository\RDBRepository;
+
+use Espo\ORM\Locker\Locker;
+use Espo\ORM\Locker\BaseLocker;
+
+use Espo\ORM\Value\ValueAccessorFactory;
+use Espo\ORM\Value\ValueFactoryFactory;
+use Espo\ORM\Value\AttributeExtractorFactory;
 
 use PDO;
 use RuntimeException;

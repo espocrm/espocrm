@@ -29,16 +29,17 @@
 
 namespace Espo\Core\ORM;
 
-use Espo\Core\{
-    Utils\Config,
-    InjectableFactory,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Binding\BindingContainerBuilder;
 
-use Espo\{
-    ORM\Metadata,
-    ORM\EventDispatcher,
-    ORM\DatabaseParams,
-};
+use Espo\ORM\Metadata;
+use Espo\ORM\EventDispatcher;
+use Espo\ORM\DatabaseParams;
+use Espo\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
+use Espo\ORM\EntityFactory as EntityFactoryInteface;
+use Espo\ORM\Value\ValueFactoryFactory as ValueFactoryFactoryInteface;
+use Espo\ORM\Value\AttributeExtractorFactory as AttributeExtractorFactoryInteface;
 
 class EntityManagerFactory
 {
@@ -66,9 +67,12 @@ class EntityManagerFactory
     {
         $entityFactory = $this->injectableFactory->create(EntityFactory::class);
 
-        $repositoryFactory = $this->injectableFactory->createWith(RepositoryFactory::class, [
-            'entityFactory' => $entityFactory,
-        ]);
+        $repositoryFactory = $this->injectableFactory->createWithBinding(
+            RepositoryFactory::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(EntityFactoryInteface::class, $entityFactory)
+                ->build()
+        );
 
         $config = $this->config;
 
@@ -90,33 +94,30 @@ class EntityManagerFactory
 
         $metadata = new Metadata($this->metadataDataProvider, $this->eventDispatcher);
 
-        $valueFactoryFactory = $this->injectableFactory->createWith(
+        $valueFactoryFactory = $this->injectableFactory->createWithBinding(
             ValueFactoryFactory::class,
-            [
-                'ormMetadata' => $metadata,
-            ]
+            BindingContainerBuilder::create()
+                ->bindInstance(Metadata::class, $metadata)
+                ->build()
         );
 
-        $attributeExtractorFactory = $this->injectableFactory->createWith(
+        $attributeExtractorFactory = $this->injectableFactory->createWithBinding(
             AttributeExtractorFactory::class,
-            [
-                'ormMetadata' => $metadata,
-            ]
+            BindingContainerBuilder::create()
+                ->bindInstance(Metadata::class, $metadata)
+                ->build()
         );
 
-        $entityManager = $this->injectableFactory->createWith(
-            EntityManager::class,
-            [
-                'databaseParams' => $databaseParams,
-                'metadata' => $metadata,
-                'repositoryFactory' => $repositoryFactory,
-                'entityFactory' => $entityFactory,
-                'valueFactoryFactory' => $valueFactoryFactory,
-                'attributeExtractorFactory' => $attributeExtractorFactory,
-                'eventDispatcher' => $this->eventDispatcher,
-            ]
-        );
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(DatabaseParams::class, $databaseParams)
+            ->bindInstance(Metadata::class, $metadata)
+            ->bindInstance(RepositoryFactoryInterface::class, $repositoryFactory)
+            ->bindInstance(EntityFactoryInteface::class, $entityFactory)
+            ->bindInstance(ValueFactoryFactoryInteface::class, $valueFactoryFactory)
+            ->bindInstance(AttributeExtractorFactoryInteface::class, $attributeExtractorFactory)
+            ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
+            ->build();
 
-        return $entityManager;
+        return $this->injectableFactory->createWithBinding(EntityManager::class, $binding);
     }
 }

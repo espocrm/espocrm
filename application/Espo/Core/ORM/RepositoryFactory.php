@@ -38,6 +38,7 @@ use Espo\Core\{
 use Espo\ORM\{
     Repository\RepositoryFactory as RepositoryFactoryInterface,
     Repository\Repository,
+    EntityFactory as EntityFactoryInteface,
 };
 
 class RepositoryFactory implements RepositoryFactoryInterface
@@ -51,7 +52,7 @@ class RepositoryFactory implements RepositoryFactoryInterface
     protected $classFinder;
 
     public function __construct(
-        EntityFactory $entityFactory,
+        EntityFactoryInteface $entityFactory,
         InjectableFactory $injectableFactory,
         ClassFinder $classFinder
     ) {
