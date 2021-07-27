@@ -41,7 +41,7 @@ use Espo\Core\{
 
 use Espo\{
     ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\OrderExpression as OrderExpr,
+    ORM\Query\Part\Order as OrderExpr,
     ORM\Entity,
     Entities\User,
 };

@@ -34,7 +34,7 @@ use Espo\ORM\{
     Query\Part\Condition as Cond,
     Query\Part\Expression as Expr,
     Query\Part\Selection,
-    Query\Part\OrderExpression,
+    Query\Part\Order,
     Query\Part\Join,
     Query\Part\WhereClause,
 };
@@ -340,14 +340,14 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
     {
         $select = $this->builder
             ->from('Test')
-            ->order(OrderExpression::fromString('test')->withDesc())
+            ->order(Order::fromString('test')->withDesc())
             ->order('hello', true)
             ->build();
 
         $this->assertEquals(
             [
-                OrderExpression::fromString('test')->withDesc(),
-                OrderExpression::fromString('hello')->withDesc(),
+                Order::fromString('test')->withDesc(),
+                Order::fromString('hello')->withDesc(),
             ],
             $select->getOrder()
         );
@@ -358,15 +358,15 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
         $select = $this->builder
             ->from('Test')
             ->order([
-                OrderExpression::fromString('test')->withDesc(),
+                Order::fromString('test')->withDesc(),
                 ['hello', true],
             ])
             ->build();
 
         $this->assertEquals(
             [
-                OrderExpression::fromString('test')->withDesc(),
-                OrderExpression::fromString('hello')->withDesc(),
+                Order::fromString('test')->withDesc(),
+                Order::fromString('hello')->withDesc(),
             ],
             $select->getOrder()
         );

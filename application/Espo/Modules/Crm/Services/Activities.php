@@ -36,7 +36,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\{
     Entity,
     Query\Select,
-    Query\Part\OrderExpression,
+    Query\Part\Order,
 };
 
 use Espo\Core\{
@@ -633,7 +633,7 @@ class Activities implements
 
                 // Order by `dateStart`.
                 $subBuilder->order(
-                    OrderExpression
+                    Order
                         ::create(
                             $query->getSelect()[2]->getExpression()
                         )

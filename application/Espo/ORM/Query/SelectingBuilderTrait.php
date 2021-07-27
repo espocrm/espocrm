@@ -31,7 +31,7 @@ namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\Part\Expression;
-use Espo\ORM\Query\Part\OrderExpression;
+use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Join;
 
 use InvalidArgumentException;
@@ -107,7 +107,7 @@ trait SelectingBuilderTrait
      * * `order([$expr1, $expr2, ...])
      * * `order(string $expression, string $direction)
      *
-     * @param OrderExpression|OrderExpression[]|Expression|string $orderBy
+     * @param Order|Order[]|Expression|string $orderBy
      * An attribute to order by or an array or order items.
      * Passing an array will reset a previously set order.
      * @param string|bool|null $direction OrderExpression::ASC|OrderExpression::DESC.
@@ -115,13 +115,13 @@ trait SelectingBuilderTrait
     public function order($orderBy, $direction = null): self
     {
         if (is_bool($direction)) {
-            $direction = $direction ? OrderExpression::DESC : OrderExpression::ASC;
+            $direction = $direction ? Order::DESC : Order::ASC;
         }
 
         if (is_array($orderBy)) {
             $this->params['orderBy'] = $this->normilizeOrderExpressionItemArray(
                 $orderBy,
-                $direction ?? OrderExpression::ASC
+                $direction ?? Order::ASC
             );
 
             return $this;
@@ -135,14 +135,14 @@ trait SelectingBuilderTrait
 
         if ($orderBy instanceof Expression) {
             $orderBy = $orderBy->getValue();
-            $direction = $direction ?? OrderExpression::ASC;
+            $direction = $direction ?? Order::ASC;
         }
-        else if ($orderBy instanceof OrderExpression) {
+        else if ($orderBy instanceof Order) {
             $direction = $direction ?? $orderBy->getDirection();
             $orderBy = $orderBy->getExpression()->getValue();
         }
         else {
-            $direction = $direction ?? OrderExpression::ASC;
+            $direction = $direction ?? Order::ASC;
         }
 
         $this->params['orderBy'][] = [$orderBy, $direction];
@@ -360,7 +360,7 @@ trait SelectingBuilderTrait
                 continue;
             }
 
-            if ($item instanceof OrderExpression) {
+            if ($item instanceof Order) {
                 $resultList[] = [
                     $item->getExpression()->getValue(),
                     $item->getDirection()
@@ -394,8 +394,8 @@ trait SelectingBuilderTrait
 
             if (is_bool($itemDirection)) {
                 $itemDirection = $itemDirection ?
-                    OrderExpression::DESC :
-                    OrderExpression::ASC;
+                    Order::DESC :
+                    Order::ASC;
             }
 
             $resultList[] = [$itemValue, $itemDirection];

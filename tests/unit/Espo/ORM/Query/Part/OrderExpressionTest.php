@@ -29,7 +29,7 @@
 
 namespace tests\unit\Espo\ORM\Query\Part;
 
-use Espo\ORM\Query\Part\OrderExpression as OrderExpr;
+use Espo\ORM\Query\Part\Order as OrderExpr;
 use Espo\ORM\Query\Part\Expression as Expr;
 
 class OrderExpressionTest extends \PHPUnit\Framework\TestCase

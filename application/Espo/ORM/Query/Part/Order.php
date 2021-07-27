@@ -31,7 +31,7 @@ namespace Espo\ORM\Query\Part;
 
 use RuntimeException;
 
-class OrderExpression
+class Order
 {
     public const ASC = 'ASC';
 

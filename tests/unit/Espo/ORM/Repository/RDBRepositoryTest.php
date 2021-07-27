@@ -48,7 +48,7 @@ use Espo\ORM\{
     MetadataDataProvider,
     Query\Part\Condition as Cond,
     Query\Part\Expression as Expr,
-    Query\Part\OrderExpression as OrderExpr,
+    Query\Part\Order as OrderExpr,
 };
 
 use RuntimeException;

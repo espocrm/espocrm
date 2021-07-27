@@ -37,7 +37,7 @@ use Espo\ORM\{
     EntityManager,
     MetadataDataProvider,
     Query\Part\Expression,
-    Query\Part\OrderExpression,
+    Query\Part\Order,
 };
 
 use Espo\ORM\Query\{
@@ -1069,7 +1069,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ->from('Comment')
             ->leftJoin('post')
             ->order(
-                OrderExpression::createByPositionInList(
+                Order::createByPositionInList(
                     Expression::column('post.name'),
                     [
                         'Test',

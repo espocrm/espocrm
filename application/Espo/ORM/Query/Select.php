@@ -31,7 +31,7 @@ namespace Espo\ORM\Query;
 
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\Selection;
-use Espo\ORM\Query\Part\OrderExpression;
+use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Expression;
 
 use RuntimeException;
@@ -46,9 +46,9 @@ class Select implements SelectingQuery
     use SelectingTrait;
     use BaseTrait;
 
-    public const ORDER_ASC = OrderExpression::ASC;
+    public const ORDER_ASC = Order::ASC;
 
-    public const ORDER_DESC = OrderExpression::DESC;
+    public const ORDER_DESC = Order::DESC;
 
     /**
      * Get an entity type.

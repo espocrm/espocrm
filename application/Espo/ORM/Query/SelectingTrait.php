@@ -29,7 +29,7 @@
 
 namespace Espo\ORM\Query;
 
-use Espo\ORM\Query\Part\OrderExpression;
+use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\Join;
 
@@ -40,7 +40,7 @@ trait SelectingTrait
     /**
      * Get ORDER items.
      *
-     * @return OrderExpression[]
+     * @return Order[]
      */
     public function getOrder(): array
     {
@@ -49,12 +49,12 @@ trait SelectingTrait
                 if (is_array($item) && count($item)) {
                     $itemValue = is_int($item[0]) ? (string) $item[0] : $item[0];
 
-                    return OrderExpression::fromString($itemValue)
-                        ->withDirection($item[1] ?? OrderExpression::ASC);
+                    return Order::fromString($itemValue)
+                        ->withDirection($item[1] ?? Order::ASC);
                 }
 
                 if (is_string($item)) {
-                    return OrderExpression::fromString($item);
+                    return Order::fromString($item);
                 }
 
                 throw new RuntimeException("Bad order item.");
