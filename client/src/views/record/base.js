@@ -28,8 +28,8 @@
 
 define(
     'views/record/base',
-    ['view', 'view-record-helper', 'dynamic-logic'],
-    function (Dep, ViewRecordHelper, DynamicLogic) {
+    ['view', 'view-record-helper', 'dynamic-logic', 'lib!underscore'],
+    function (Dep, ViewRecordHelper, DynamicLogic, _) {
 
     return Dep.extend({
 
@@ -140,6 +140,8 @@ define(
         },
 
         setFieldReadOnly: function (name, locked) {
+            let previousvalue = this.recordHelper.getFieldStateParam(name, 'readOnly');
+
             this.recordHelper.setFieldStateParam(name, 'readOnly', true);
 
             if (locked) {
@@ -151,9 +153,15 @@ define(
             if (view) {
                 view.setReadOnly(locked);
             }
+
+            if (!previousvalue) {
+                this.trigger('set-field-read-only', name);
+            }
         },
 
         setFieldNotReadOnly: function (name) {
+            let previousvalue = this.recordHelper.getFieldStateParam(name, 'readOnly');
+
             this.recordHelper.setFieldStateParam(name, 'readOnly', false);
 
             var view = this.getFieldView(name);
@@ -172,18 +180,30 @@ define(
                     }
                 }
             }
+
+            if (previousvalue) {
+                this.trigger('set-field-not-read-only', name);
+            }
         },
 
         setFieldRequired: function (name) {
+            let previousvalue = this.recordHelper.getFieldStateParam(name, 'required');
+
             this.recordHelper.setFieldStateParam(name, 'required', true);
 
             var view = this.getFieldView(name);
             if (view) {
                 view.setRequired();
             }
+
+            if (!previousvalue) {
+                this.trigger('set-field-required', name);
+            }
         },
 
         setFieldNotRequired: function (name) {
+            let previousvalue = this.recordHelper.getFieldStateParam(name, 'required');
+
             this.recordHelper.setFieldStateParam(name, 'required', false);
 
             var view = this.getFieldView(name);
@@ -191,9 +211,16 @@ define(
             if (view) {
                 view.setNotRequired();
             }
+
+            if (previousvalue) {
+                this.trigger('set-field-not-required', name);
+            }
         },
 
         setFieldOptionList: function (name, list) {
+            let had = this.recordHelper.hasFieldOptionList(name);
+            let previousList = this.recordHelper.getFieldOptionList(name);
+
             this.recordHelper.setFieldOptionList(name, list);
 
             var view = this.getFieldView(name);
@@ -202,9 +229,15 @@ define(
                     view.setOptionList(list);
                 }
             }
+
+            if (!had || !_(previousList).isEqual(list)) {
+                this.trigger('set-field-option-list', name, list);
+            }
         },
 
         resetFieldOptionList: function (name) {
+            let had = this.recordHelper.hasFieldOptionList(name);
+
             this.recordHelper.clearFieldOptionList(name);
 
             var view = this.getFieldView(name);
@@ -213,6 +246,10 @@ define(
                 if ('resetOptionList' in view) {
                     view.resetOptionList();
                 }
+            }
+
+            if (had) {
+                this.trigger('reset-field-option-list', name);
             }
         },
 
@@ -334,6 +371,12 @@ define(
             var fieldViews = this.getFieldViews();
 
             return Object.keys(fieldViews);
+        },
+
+        getFieldViewList: function () {
+            return this.getFieldList()
+                .map(field => this.getFieldView(field))
+                .filter(view => view !== null);
         },
 
         data: function () {

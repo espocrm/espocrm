@@ -142,19 +142,21 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.setEditMode();
 
                 $(window).scrollTop(0);
-            } else {
-                var options = {
-                    id: this.model.id,
-                    model: this.model,
-                };
 
-                if (this.options.rootUrl) {
-                    options.rootUrl = this.options.rootUrl;
-                }
-
-                this.getRouter().navigate('#' + this.scope + '/edit/' + this.model.id, {trigger: false});
-                this.getRouter().dispatch(this.scope, 'edit', options);
+                return;
             }
+
+            var options = {
+                id: this.model.id,
+                model: this.model,
+            };
+
+            if (this.options.rootUrl) {
+                options.rootUrl = this.options.rootUrl;
+            }
+
+            this.getRouter().navigate('#' + this.scope + '/edit/' + this.model.id, {trigger: false});
+            this.getRouter().dispatch(this.scope, 'edit', options);
         },
 
         actionDelete: function () {
@@ -167,13 +169,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             var modeBeforeSave = this.mode;
 
             this.save(data.options)
-                .catch(
-                    function (reason) {
-                        if (modeBeforeSave === 'edit' && reason === 'error') {
-                            this.setEditMode();
-                        }
-                    }.bind(this)
-                );
+                .catch((reason) => {
+                    if (modeBeforeSave === 'edit' && reason === 'error') {
+                        this.setEditMode();
+                    }
+                });
 
             if (!this.lastSaveCancelReason || this.lastSaveCancelReason === 'notModified') {
                 this.setDetailMode();
@@ -192,7 +192,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             data = data || {};
 
             this.save(data.options)
-                .catch(function () {});
+                .catch(() => {});
         },
 
         actionSelfAssign: function () {
@@ -638,32 +638,39 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             var fields = this.getFieldViews();
 
             var fieldInEditMode = null;
+
             for (var field in fields) {
                 var fieldView = fields[field];
 
-                this.listenTo(fieldView, 'edit', function (view) {
+                this.listenTo(fieldView, 'edit', (view) => {
                     if (fieldInEditMode && fieldInEditMode.mode === 'edit') {
                         fieldInEditMode.inlineEditClose();
                     }
 
                     fieldInEditMode = view;
-                }, this);
+                });
 
-                this.listenTo(fieldView, 'inline-edit-on', function () {
+                this.listenTo(fieldView, 'inline-edit-on', () => {
                     this.inlineEditModeIsOn = true;
-                }, this);
+                });
 
-                this.listenTo(fieldView, 'inline-edit-off', function () {
+                this.listenTo(fieldView, 'inline-edit-off', (o) => {
+                    o = o || {};
+
+                    if (o.all) {
+                        return;
+                    }
+
                     this.inlineEditModeIsOn = false;
 
                     this.setIsNotChanged();
-                }, this);
+                });
 
-                this.listenTo(fieldView, 'after:inline-edit-off', function () {
+                this.listenTo(fieldView, 'after:inline-edit-off', () => {
                     if (this.updatedAttributes) {
                         this.resetModelChanges();
                     }
-                }, this);
+                });
             }
         },
 
@@ -767,6 +774,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
         setEditMode: function () {
             this.trigger('before:set-edit-mode');
 
+            this.inlineEditModeIsOn = false;
+
             this.$el.find('.record-buttons').addClass('hidden');
             this.$el.find('.edit-buttons').removeClass('hidden');
 
@@ -797,6 +806,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.$el.find('.edit-buttons').addClass('hidden');
             this.$el.find('.record-buttons').removeClass('hidden');
 
+            this.inlineEditModeIsOn = false;
+
             var fields = this.getFieldViews(true);
 
             for (var field in fields) {
@@ -804,7 +815,9 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
                 if (fieldView.mode !== 'detail') {
                     if (fieldView.mode === 'edit') {
-                        fieldView.trigger('inline-edit-off');
+                        fieldView.trigger('inline-edit-off', {
+                            all: true,
+                        });
                     }
 
                     fieldView.setMode('detail');
@@ -1128,6 +1141,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             this.getHelper().processSetupHandlers(this, this.setupHandlerType);
+
+            this.initInlideEditDynamicWithLogicInteroperability();
         },
 
         setupBeforeFinal: function () {
@@ -1141,15 +1156,15 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 this.model.set(this.options.attributes);
             }
 
-            this.listenTo(this.model, 'sync', function () {
+            this.listenTo(this.model, 'sync', () => {
                 this.attributes = this.model.getClonedAttributes();
-            }, this);
+            });
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', () => {
                 if (this.mode === 'edit' || this.inlineEditModeIsOn) {
                     this.setIsChanged();
                 }
-            }, this);
+            });
 
             var dependencyDefs = Espo.Utils.clone(
                 this.getMetadata().get(['clientDefs', this.model.name, 'formDependency']) || {}
@@ -1170,6 +1185,52 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             this.setupFieldLevelSecurity();
 
             this.initDynamicHandler();
+        },
+
+        initInlideEditDynamicWithLogicInteroperability: function () {
+            let blockEdit = false;
+
+            let process = (type, field) => {
+                if (!this.inlineEditModeIsOn || this.editModeDisabled) {
+                    return;
+                }
+
+                if (blockEdit) {
+                    return;
+                }
+
+                if (type === 'required') {
+                    let fieldView = this.getFieldView(field);
+
+                    if (fieldView.validateRequired) {
+                        fieldView.suspendValidatinMessage();
+
+                       console.log(fieldView);
+
+                        try {
+                            if (!fieldView.validateRequired()) {
+                                return;
+                            }
+                        }
+                        catch (e) {}
+                    }
+                }
+
+                blockEdit = true;
+
+                setTimeout(() => blockEdit = false, 300);
+
+                setTimeout(() => {
+                    this.setEditMode();
+
+                    this.getFieldViewList()
+                        .forEach(view => view.removeInlineEditLinks());
+                }, 10);
+            };
+
+            this.on('set-field-required', (field) => process('required', field));
+            this.on('set-field-option-list', (field) => process('options', field));
+            this.on('reset-field-option-list', (field) => process('options', field));
         },
 
         initDynamicHandler: function () {

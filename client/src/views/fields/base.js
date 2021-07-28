@@ -734,7 +734,17 @@ define('views/fields/base', 'view', function (Dep) {
             this.trigger('inline-edit-on');
         },
 
+        suspendValidatinMessage: function (time) {
+            this.validationMessageSuspended = true;
+
+            setTimeout(() => this.validationMessageSuspended = false, time || 200);
+        },
+
         showValidationMessage: function (message, target) {
+            if (this.validationMessageSuspended) {
+                return;
+            }
+
             var $el;
 
             target = target || this.validationElementSelector || '.main-element';
