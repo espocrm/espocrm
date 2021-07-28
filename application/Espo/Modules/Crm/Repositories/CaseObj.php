@@ -67,7 +67,7 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
         $fetchedContactId = $entity->getFetched('contactId');
 
         if ($fetchedContactId) {
-            $previousPortalUser = $this->getEntityManager()
+            $previousPortalUser = $this->entityManager
                 ->getRepository('User')
                 ->select(['id'])
                 ->where([
@@ -89,7 +89,7 @@ class CaseObj extends \Espo\Core\Repositories\Database implements
             return;
         }
 
-        $portalUser = $this->getEntityManager()
+        $portalUser = $this->entityManager
             ->getRepository('User')
             ->select(['id'])
             ->where([

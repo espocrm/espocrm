@@ -44,7 +44,7 @@ class Email extends \Espo\Core\Repositories\Database implements
             return;
         }
 
-        $eaRepository = $this->getEntityManager()->getRepository('EmailAddress');
+        $eaRepository = $this->entityManager->getRepository('EmailAddress');
 
         $addressValue = $entity->get($type);
         $idList = [];
@@ -75,7 +75,7 @@ class Email extends \Espo\Core\Repositories\Database implements
 
     protected function addUserByEmailAddressId(Entity $entity, $emailAddressId, $addAssignedUser = false)
     {
-        $userList = $this->getEntityManager()
+        $userList = $this->entityManager
             ->getRepository('EmailAddress')
             ->getEntityListByAddressId($emailAddressId, null, 'User', true);
 
@@ -97,7 +97,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
 
         if ($entity->get('fromEmailAddressId')) {
-            $ea = $this->getEntityManager()
+            $ea = $this->entityManager
                 ->getRepository('EmailAddress')
                 ->get($entity->get('fromEmailAddressId'));
 
@@ -230,12 +230,12 @@ class Email extends \Espo\Core\Repositories\Database implements
         $idHash = (object) [];
 
         foreach ($addressList as $address) {
-            $p = $this->getEntityManager()
+            $p = $this->entityManager
                 ->getRepository('EmailAddress')
                 ->getEntityByAddress($address);
 
             if (!$p) {
-                $p = $this->getEntityManager()
+                $p = $this->entityManager
                     ->getRepository('InboundEmail')
                     ->where(array('emailAddress' => $address))
                     ->findOne();
@@ -292,7 +292,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                 $from = trim($entity->get('from'));
 
                 if (!empty($from)) {
-                    $ids = $this->getEntityManager()
+                    $ids = $this->entityManager
                         ->getRepository('EmailAddress')
                         ->getIds([$from]);
 
@@ -303,7 +303,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                         $this->addUserByEmailAddressId($entity, $ids[0], true);
 
                         if (!$entity->get('sentById')) {
-                            $user = $this->getEntityManager()
+                            $user = $this->entityManager
                                 ->getRepository('EmailAddress')
                                 ->getEntityByAddressId(
                                     $entity->get('fromEmailAddressId'),
@@ -373,7 +373,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         $parentType = $entity->get('parentType');
 
         if ($parentId && $parentType) {
-            $parent = $this->getEntityManager()->getEntity($parentType, $parentId);
+            $parent = $this->entityManager->getEntity($parentType, $parentId);
 
             if ($parent) {
                 $accountId = null;
@@ -391,7 +391,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                 }
 
                 if ($accountId) {
-                    $account = $this->getEntityManager()->getEntity('Account', $accountId);
+                    $account = $this->entityManager->getEntity('Account', $accountId);
 
                     if ($account) {
                         $entity->set('accountId', $accountId);
@@ -453,7 +453,7 @@ class Email extends \Espo\Core\Repositories\Database implements
                             'parentType' => $entity->get('parentType')
                         ]);
 
-                        $this->getEntityManager()->saveEntity($reply);
+                        $this->entityManager->saveEntity($reply);
                     }
                 }
             }
@@ -465,10 +465,10 @@ class Email extends \Espo\Core\Repositories\Database implements
             ($entity->isAttributeChanged('status') || $entity->isNew())
         ) {
             if ($entity->get('repliedId')) {
-                $replied = $this->getEntityManager()->getEntity('Email', $entity->get('repliedId'));
+                $replied = $this->entityManager->getEntity('Email', $entity->get('repliedId'));
                 if ($replied && $replied->id !== $entity->id && !$replied->get('isReplied')) {
                     $replied->set('isReplied', true);
-                    $this->getEntityManager()->saveEntity($replied, ['silent' => true]);
+                    $this->entityManager->saveEntity($replied, ['silent' => true]);
                 }
             }
         }

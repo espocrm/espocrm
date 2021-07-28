@@ -151,7 +151,7 @@ class PhoneNumber extends Database implements
             ];
         }
 
-        $itemList = $this->getEntityManager()
+        $itemList = $this->entityManager
             ->getRepository('EntityPhoneNumber')
             ->sth()
             ->select(['entityType', 'entityId'])
@@ -166,11 +166,11 @@ class PhoneNumber extends Database implements
                 continue;
             }
 
-            if (!$this->getEntityManager()->hasRepository($itemEntityType)) {
+            if (!$this->entityManager->hasRepository($itemEntityType)) {
                 continue;
             }
 
-            $entity = $this->getEntityManager()->getEntity($itemEntityType, $itemEntityId);
+            $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
 
             if (!$entity) {
                 continue;
@@ -192,7 +192,7 @@ class PhoneNumber extends Database implements
             $where[] = ['entityType' => $entityType];
         }
 
-        $itemList = $this->getEntityManager()->getRepository('EntityPhoneNumber')
+        $itemList = $this->entityManager->getRepository('EntityPhoneNumber')
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -211,11 +211,11 @@ class PhoneNumber extends Database implements
                 continue;
             }
 
-            if (!$this->getEntityManager()->hasRepository($itemEntityType)) {
+            if (!$this->entityManager->hasRepository($itemEntityType)) {
                 continue;
             }
 
-            $entity = $this->getEntityManager()->getEntity($itemEntityType, $itemEntityId);
+            $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
 
             if ($entity) {
                 if ($entity->getEntityType() === 'User') {

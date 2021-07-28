@@ -30,15 +30,17 @@
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\EntityFactory;
 use Espo\ORM\Repository\Repository;
 use Espo\Core\Utils\Json;
 
-use PDO;
-use StdClass;
+use stdClass;
 
 use Espo\Core\Di;
 
-class Preferences extends Repository implements
+class Preferences implements Repository,
+
     Di\MetadataAware,
     Di\ConfigAware,
     Di\EntityManagerAware
@@ -47,6 +49,14 @@ class Preferences extends Repository implements
     use Di\ConfigSetter;
     use Di\EntityManagerSetter;
 
+    public function __construct(
+        EntityManager $entityManager,
+        EntityFactory $entityFactory
+    ) {
+        $this->entityFactory = $entityFactory;
+        $this->entityManager = $entityManager;
+    }
+
     protected $defaultAttributeListFromSettings = [
         'decimalMark',
         'thousandSeparator',
@@ -54,9 +64,7 @@ class Preferences extends Repository implements
         'followCreatedEntities',
     ];
 
-    protected $data = [];
-
-    protected $entityType = 'Preferences';
+    private $data = [];
 
     public function getNew(): Entity
     {
@@ -95,7 +103,7 @@ class Preferences extends Repository implements
     {
         $data = null;
 
-        $select = $this->getEntityManager()->getQueryBuilder()
+        $select = $this->entityManager->getQueryBuilder()
             ->select()
             ->from('Preferences')
             ->select(['id', 'data'])
@@ -105,9 +113,9 @@ class Preferences extends Repository implements
             ->limit(0, 1)
             ->build();
 
-        $sth = $this->getEntityManager()->getQueryExecutor()->execute($select);
+        $sth = $this->entityManager->getQueryExecutor()->execute($select);
 
-        while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $sth->fetch()) {
             $data = Json::decode($row['data']);
 
             break;
@@ -157,7 +165,7 @@ class Preferences extends Repository implements
         $autoFollowEntityTypeList = [];
 
         $autofollowList = $this->entityManager
-            ->getRepository('Autofollow')
+            ->getRDBRepository('Autofollow')
             ->select(['entityType'])
             ->where([
                 'userId' => $id,
@@ -224,7 +232,7 @@ class Preferences extends Repository implements
 
         $dataString = Json::encode($data, \JSON_PRETTY_PRINT);
 
-        $insert = $this->getEntityManager()->getQueryBuilder()
+        $insert = $this->entityManager->getQueryBuilder()
             ->insert()
             ->into('Preferences')
             ->columns(['id', 'data'])
@@ -237,9 +245,10 @@ class Preferences extends Repository implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->execute($insert);
+        $this->entityManager->getQueryExecutor()->execute($insert);
 
         $user = $this->entityManager->getEntity('User', $entity->id);
+
         if ($user && !$user->isPortal()) {
             $this->storeAutoFollowEntityTypeList($entity);
         }
@@ -247,7 +256,7 @@ class Preferences extends Repository implements
 
     public function deleteFromDb(string $id): void
     {
-        $delete = $this->getEntityManager()->getQueryBuilder()
+        $delete = $this->entityManager->getQueryBuilder()
             ->delete()
             ->from('Preferences')
             ->where([
@@ -255,7 +264,7 @@ class Preferences extends Repository implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->execute($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     public function remove(Entity $entity, array $options = []): void
@@ -271,7 +280,7 @@ class Preferences extends Repository implements
         }
     }
 
-    public function resetToDefaults(string $userId): ?StdClass
+    public function resetToDefaults(string $userId): ?stdClass
     {
         $this->deleteFromDb($userId);
 

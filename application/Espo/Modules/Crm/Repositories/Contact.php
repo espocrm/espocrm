@@ -47,13 +47,17 @@ class Contact extends \Espo\Core\Repositories\Database
 
     protected function handleAfterSaveAccounts(Entity $entity, array $options = [])
     {
-        $accountIdChanged = $entity->has('accountId') && $entity->get('accountId') != $entity->getFetched('accountId');
+        $accountIdChanged = $entity->has('accountId') &&
+            $entity->get('accountId') != $entity->getFetched('accountId');
+
         $titleChanged = $entity->has('title') && $entity->get('title') != $entity->getFetched('title');
 
         if ($accountIdChanged) {
             $accountId = $entity->get('accountId');
+
             if (empty($accountId)) {
                 $this->unrelate($entity, 'accounts', $entity->getFetched('accountId'));
+
                 return;
             }
         }
@@ -61,6 +65,7 @@ class Contact extends \Espo\Core\Repositories\Database
         if ($titleChanged) {
             if (empty($accountId)) {
                 $accountId = $entity->getFetched('accountId');
+
                 if (empty($accountId)) {
                     return;
                 }
@@ -68,7 +73,7 @@ class Contact extends \Espo\Core\Repositories\Database
         }
 
         if ($accountIdChanged || $titleChanged) {
-            $accountContact = $this->getEntityManager()->getRepository('AccountContact')
+            $accountContact = $this->entityManager->getRepository('AccountContact')
                 ->select(['role'])
                 ->where([
                     'accountId' => $accountId,
@@ -83,6 +88,7 @@ class Contact extends \Espo\Core\Repositories\Database
                         'role' => $entity->get('title')
                     ]);
                 }
+
                 return;
             }
 

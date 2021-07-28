@@ -42,7 +42,7 @@ class ScheduledJob extends \Espo\Core\Repositories\Database
         parent::afterSave($entity, $options);
 
         if ($entity->isAttributeChanged('scheduling')) {
-            $jobList = $this->getEntityManager()
+            $jobList = $this->entityManager
                 ->getRepository('Job')
                 ->where([
                     'scheduledJobId' => $entity->id,
@@ -51,7 +51,7 @@ class ScheduledJob extends \Espo\Core\Repositories\Database
                 ->find();
 
             foreach ($jobList as $job) {
-                $this->getEntityManager()->removeEntity($job);
+                $this->entityManager->removeEntity($job);
             }
         }
     }

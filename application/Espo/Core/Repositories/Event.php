@@ -132,7 +132,7 @@ class Event extends Database implements
     {
         parent::afterRemove($entity, $options);
 
-        $delete = $this->getEntityManager()->getQueryBuilder()
+        $delete = $this->entityManager->getQueryBuilder()
             ->delete()
             ->from('Reminder')
             ->where([
@@ -141,7 +141,7 @@ class Event extends Database implements
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->execute($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
     protected function convertDateTimeToDefaultTimezone($string)

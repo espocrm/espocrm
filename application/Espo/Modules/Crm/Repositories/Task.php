@@ -69,7 +69,7 @@ class Task extends EventRepository
         $parentId = $entity->get('parentId');
         $parentType = $entity->get('parentType');
 
-        if ($parentId && $parentType && $this->getEntityManager()->hasRepository($parentType)) {
+        if ($parentId && $parentType && $this->entityManager->hasRepository($parentType)) {
             $columnList = ['id', 'name'];
 
             $defs = $this->entityManager->getMetadata()->getDefs();

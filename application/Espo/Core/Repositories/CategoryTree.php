@@ -39,7 +39,7 @@ class CategoryTree extends Database
 
         $parentId = $entity->get('parentId');
 
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
 
         $pathEntityType = $entity->getEntityType() . 'Path';
 
@@ -152,7 +152,7 @@ class CategoryTree extends Database
 
         $pathEntityType = $entity->getEntityType() . 'Path';
 
-        $em = $this->getEntityManager();
+        $em = $this->entityManager;
 
         $delete = $em->getQueryBuilder()
             ->delete()

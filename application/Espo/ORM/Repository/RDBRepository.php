@@ -29,25 +29,29 @@
 
 namespace Espo\ORM\Repository;
 
-use Espo\ORM\{
-    EntityManager,
-    EntityFactory,
-    Collection,
-    SthCollection,
-    Entity,
-    Mapper\RDBMapper,
-    Query\Select,
-    Query\Part\WhereItem,
-    Query\Part\Selection,
-    Query\Part\Join,
-};
+use Espo\ORM\EntityManager;
+use Espo\ORM\EntityFactory;
+use Espo\ORM\Collection;
+use Espo\ORM\SthCollection;
+use Espo\ORM\Entity;
+use Espo\ORM\Mapper\RDBMapper;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\Part\WhereItem;
+use Espo\ORM\Query\Part\Selection;
+use Espo\ORM\Query\Part\Join;
 
-use StdClass;
+use stdClass;
 use RuntimeException;
 use PDO;
 
-class RDBRepository extends Repository
+class RDBRepository implements Repository
 {
+    protected $entityType;
+
+    protected $entityManager;
+
+    protected $entityFactory;
+
     protected $mapper;
 
     protected $hookMediator;
@@ -60,16 +64,18 @@ class RDBRepository extends Repository
         EntityFactory $entityFactory,
         ?HookMediator $hookMediator = null
     ) {
-        parent::__construct($entityType, $entityManager, $entityFactory);
+        $this->entityType = $entityType;
+        $this->entityFactory = $entityFactory;
+        $this->entityManager = $entityManager;
 
         $this->hookMediator = $hookMediator ?? (new EmptyHookMediator());
 
         $this->transactionManager = new RDBTransactionManager($entityManager->getTransactionManager());
     }
 
-    protected function getMapper(): RDBMapper
+    public function getEntityType(): string
     {
-        return $this->entityManager->getMapper();
+        return $this->entityType;
     }
 
     /**
@@ -456,7 +462,7 @@ class RDBRepository extends Repository
         else {
             $data = $columnData;
 
-            if ($columnData instanceof StdClass) {
+            if ($columnData instanceof stdClass) {
                 $data = get_object_vars($columnData);
             }
 
@@ -582,7 +588,7 @@ class RDBRepository extends Repository
             throw new RuntimeException("Bad foreign value.");
         }
 
-        if ($columnData instanceof StdClass) {
+        if ($columnData instanceof stdClass) {
             $columnData = get_object_vars($columnData);
         }
 
@@ -859,5 +865,18 @@ class RDBRepository extends Repository
     protected function afterRemove(Entity $entity, array $options = [])
     {
         $this->hookMediator->afterRemove($entity, $options);
+    }
+
+    protected function getMapper(): RDBMapper
+    {
+        return $this->entityManager->getMapper();
+    }
+
+    /**
+     * @deprecated Use `$this->entityManager`.
+     */
+    protected function getEntityManager(): EntityManager
+    {
+        return $this->entityManager;
     }
 }

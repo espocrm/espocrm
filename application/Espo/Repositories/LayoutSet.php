@@ -43,7 +43,7 @@ class LayoutSet extends \Espo\Core\Repositories\Database
 
             foreach ($listBefore as $name) {
                 if (!in_array($name, $listNow)) {
-                    $layout = $this->getEntityManager()
+                    $layout = $this->entityManager
                         ->getRepository('LayoutRecord')
                         ->where([
                             'layoutSetId' => $entity->id,
@@ -52,7 +52,7 @@ class LayoutSet extends \Espo\Core\Repositories\Database
                         ->findOne();
 
                     if ($layout) {
-                        $this->getEntityManager()->removeEntity($layout);
+                        $this->entityManager->removeEntity($layout);
                     }
                 }
             }
@@ -61,7 +61,7 @@ class LayoutSet extends \Espo\Core\Repositories\Database
 
     protected function afterRemove(Entity $entity, array $options = [])
     {
-        $layoutList = $this->getEntityManager()
+        $layoutList = $this->entityManager
             ->getRepository('LayoutRecord')
             ->where([
                 'layoutSetId' => $entity->id,
@@ -69,7 +69,7 @@ class LayoutSet extends \Espo\Core\Repositories\Database
             ->find();
 
         foreach ($layoutList as $layout) {
-            $this->getEntityManager()->removeEntity($layout);
+            $this->entityManager->removeEntity($layout);
         }
     }
 }

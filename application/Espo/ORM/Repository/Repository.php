@@ -29,66 +29,25 @@
 
 namespace Espo\ORM\Repository;
 
-use Espo\ORM\{
-    Entity,
-    EntityManager,
-    EntityFactory,
-};
+use Espo\ORM\Entity;
 
 /**
  * An access point for fetching and storing records.
  */
-abstract class Repository
+interface Repository
 {
-    /**
-     * @var EntityFactory
-     */
-    protected $entityFactory;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var string
-     */
-    protected $entityType;
-
-    public function __construct(string $entityType, EntityManager $entityManager, EntityFactory $entityFactory)
-    {
-        $this->entityType = $entityType;
-        $this->entityFactory = $entityFactory;
-        $this->entityManager = $entityManager;
-    }
-
-    protected function getEntityFactory(): EntityFactory
-    {
-        return $this->entityFactory;
-    }
-
-    protected function getEntityManager(): EntityManager
-    {
-        return $this->entityManager;
-    }
-
-    public function getEntityType(): string
-    {
-        return $this->entityType;
-    }
-
     /**
      * Get a new entity.
      */
-    abstract public function getNew(): Entity;
+    public function getNew(): Entity;
 
     /**
      * Fetch an entity by ID.
      */
-    abstract public function getById(string $id): ?Entity;
+    public function getById(string $id): ?Entity;
 
     /**
      * Store an entity.
      */
-    abstract public function save(Entity $entity): void;
+    public function save(Entity $entity): void;
 }

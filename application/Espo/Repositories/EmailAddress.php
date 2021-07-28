@@ -170,7 +170,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             ];
         }
 
-        $itemList = $this->getEntityManager()->getRepository('EntityEmailAddress')
+        $itemList = $this->entityManager->getRepository('EntityEmailAddress')
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -184,7 +184,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 continue;
             }
 
-            if (!$this->getEntityManager()->hasRepository($itemEntityType)) {
+            if (!$this->entityManager->hasRepository($itemEntityType)) {
                 continue;
             }
 
@@ -195,13 +195,13 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     $select[] = 'isActive';
                 }
 
-                $entity = $this->getEntityManager()->getRepository($itemEntityType)
+                $entity = $this->entityManager->getRepository($itemEntityType)
                     ->select($select)
                     ->where(['id' => $itemEntityId])
                     ->findOne();
             }
             else {
-                $entity = $this->getEntityManager()->getEntity($itemEntityType, $itemEntityId);
+                $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
             }
 
             if (!$entity) {
@@ -232,7 +232,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
             $where[] = ['entityType' => $entityType];
         }
 
-        $itemList = $this->getEntityManager()->getRepository('EntityEmailAddress')
+        $itemList = $this->entityManager->getRepository('EntityEmailAddress')
             ->sth()
             ->select(['entityType', 'entityId'])
             ->where($where)
@@ -251,7 +251,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 continue;
             }
 
-            if (!$this->getEntityManager()->hasRepository($itemEntityType)) {
+            if (!$this->entityManager->hasRepository($itemEntityType)) {
                 continue;
             }
 
@@ -262,13 +262,13 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                     $select[] = 'isActive';
                 }
 
-                $entity = $this->getEntityManager()->getRepository($itemEntityType)
+                $entity = $this->entityManager->getRepository($itemEntityType)
                     ->select($select)
                     ->where(['id' => $itemEntityId])
                     ->findOne();
             }
             else {
-                $entity = $this->getEntityManager()->getEntity($itemEntityType, $itemEntityId);
+                $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
             }
 
             if ($entity) {
@@ -291,7 +291,7 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
         array $order = ['User', 'Contact', 'Lead', 'Account']
     ): ?Entity {
 
-        $selectBuilder = $this->getEntityManager()
+        $selectBuilder = $this->entityManager
             ->getRepository('EntityEmailAddress')
             ->select();
 
@@ -317,11 +317,11 @@ class EmailAddress extends \Espo\Core\Repositories\Database implements
                 continue;
             }
 
-            if (!$this->getEntityManager()->hasRepository($itemEntityType)) {
+            if (!$this->entityManager->hasRepository($itemEntityType)) {
                 continue;
             }
 
-            $entity = $this->getEntityManager()->getEntity($itemEntityType, $itemEntityId);
+            $entity = $this->entityManager->getEntity($itemEntityType, $itemEntityId);
 
             if ($entity) {
                 if ($entity->getEntityType() === 'User') {

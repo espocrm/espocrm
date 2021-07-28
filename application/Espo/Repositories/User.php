@@ -83,7 +83,7 @@ class User extends Database
                 throw new Error("Username can't be empty.");
             }
 
-            $this->getEntityManager()->getLocker()->lockExclusive($this->entityType);
+            $this->entityManager->getLocker()->lockExclusive($this->entityType);
 
             $user = $this
                 ->select(['id'])
@@ -93,7 +93,7 @@ class User extends Database
                 ->findOne();
 
             if ($user) {
-                $this->getEntityManager()->getLocker()->rollback();
+                $this->entityManager->getLocker()->rollback();
 
                 throw new Conflict(json_encode(['reason' => 'userNameExists']));
             }
@@ -105,7 +105,7 @@ class User extends Database
                     throw new Error("Username can't be empty.");
                 }
 
-                $this->getEntityManager()->getLocker()->lockExclusive($this->entityType);
+                $this->entityManager->getLocker()->lockExclusive($this->entityType);
 
                 $user = $this
                     ->select(['id'])
@@ -116,7 +116,7 @@ class User extends Database
                     ->findOne();
 
                 if ($user) {
-                    $this->getEntityManager()->getLocker()->rollback();
+                    $this->entityManager->getLocker()->rollback();
 
                     throw new Conflict(json_encode(['reason' => 'userNameExists']));
                 }
@@ -126,8 +126,8 @@ class User extends Database
 
     protected function afterSave(Entity $entity, array $options = [])
     {
-        if ($this->getEntityManager()->getLocker()->isLocked()) {
-            $this->getEntityManager()->getLocker()->commit();
+        if ($this->entityManager->getLocker()->isLocked()) {
+            $this->entityManager->getLocker()->commit();
         }
 
         parent::afterSave($entity, $options);
@@ -137,10 +137,10 @@ class User extends Database
     {
         parent::afterRemove($entity, $options);
 
-        $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($entity->id);
+        $userData = $this->entityManager->getRepository('UserData')->getByUserId($entity->id);
 
         if ($userData) {
-            $this->getEntityManager()->removeEntity($userData);
+            $this->entityManager->removeEntity($userData);
         }
     }
 
@@ -150,7 +150,7 @@ class User extends Database
             return false;
         }
 
-        return (bool) $this->getEntityManager()
+        return (bool) $this->entityManager
             ->getRepository('TeamUser')
             ->where([
                 'deleted' => false,

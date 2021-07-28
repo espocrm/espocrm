@@ -48,7 +48,7 @@ class Import extends Database
 
         $modifiedQuery = $this->addImportEntityJoin($entity, $relationName, $query);
 
-        return $this->getEntityManager()
+        return $this->entityManager
             ->getRepository($entityType)
             ->clone($modifiedQuery)
             ->find();
@@ -109,7 +109,7 @@ class Import extends Database
 
         $modifiedQuery = $this->addImportEntityJoin($entity, $relationName, $query);
 
-        return $this->getEntityManager()
+        return $this->entityManager
             ->getRepository($entityType)
             ->clone($modifiedQuery)
             ->count();
@@ -118,13 +118,13 @@ class Import extends Database
     protected function afterRemove(Entity $entity, array $options = [])
     {
         if ($entity->get('fileId')) {
-            $attachment = $this->getEntityManager()->getEntity('Attachment', $entity->get('fileId'));
+            $attachment = $this->entityManager->getEntity('Attachment', $entity->get('fileId'));
             if ($attachment) {
-                $this->getEntityManager()->removeEntity($attachment);
+                $this->entityManager->removeEntity($attachment);
             }
         }
 
-        $delete = $this->getEntityManager()
+        $delete = $this->entityManager
             ->getQueryBuilder()
             ->delete()
             ->from('ImportEntity')
@@ -133,7 +133,7 @@ class Import extends Database
             ])
             ->build();
 
-        $this->getEntityManager()->getQueryExecutor()->execute($delete);
+        $this->entityManager->getQueryExecutor()->execute($delete);
 
         parent::afterRemove($entity, $options);
     }

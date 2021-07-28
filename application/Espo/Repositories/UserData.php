@@ -43,7 +43,7 @@ class UserData extends \Espo\Core\Repositories\Database
             return $userData;
         }
 
-        $user = $this->getEntityManager()
+        $user = $this->entityManager
             ->getRepository('User')
             ->getById($userId);
 

@@ -48,6 +48,9 @@ use Espo\Core\{
     Utils\Id\RecordIdGenerator,
 };
 
+/**
+ * The default repository used for all entities.
+ */
 class Database extends RDBRepository
 {
     protected $hooksDisabled = false;
@@ -195,7 +198,7 @@ class Database extends RDBRepository
             $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
             if ($foreignEntityType) {
-                $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
+                $foreign = $this->entityManager->getEntity($foreignEntityType);
 
                 $foreign->set('id', $foreignId);
 
@@ -226,7 +229,7 @@ class Database extends RDBRepository
             $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
 
             if ($foreignEntityType) {
-                $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
+                $foreign = $this->entityManager->getEntity($foreignEntityType);
                 $foreign->id = $foreignId;
                 $foreign->setAsFetched();
             }
