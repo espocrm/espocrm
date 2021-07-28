@@ -187,14 +187,12 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                     'createdAt<' => '2020-12-12 10:00:00',
                 ],
                 [
-                    'type' => 'Customer',
-                ],
-                [
                     'OR' => [
                         'teamsAccess.id' => [],
                         'assignedUserId' => $userId,
                     ],
                 ],
+                'type' => 'Customer',
             ],
         ];
 
@@ -206,7 +204,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $this->assertTrue($raw['distinct']);
     }
 
-    public function testBuildLegacyAccessFilter()
+    public function testBuild2()
     {
         $app = $this->initTest(
             [
@@ -244,13 +242,11 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
             ],
             'distinct' => true,
             'whereClause' => [
-                [
-                    'OR' => [
-                        'teamsAccessMiddle.teamId' => [],
-                        'usersAccessMiddle.userId' => $userId,
-                        'assignedUserId' => $userId,
-                    ],
-                ]
+                'OR' => [
+                    ['teamsAccessMiddle.teamId=' => []],
+                    ['usersAccessMiddle.userId=' => $userId],
+                    ['assignedUserId=' => $userId],
+                ],
             ],
         ];
 

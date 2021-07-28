@@ -118,12 +118,11 @@ class LegacyTest extends \tests\integration\Core\BaseTestCase
 
         $result = $selectManager->getSelectParams($params, true, true, true);
 
+
         $this->assertEquals(
             [
                 'assignedUserId' => $userId,
-                [
-                    'stage!=' => ['Closed Won', 'Closed Lost'],
-                ]
+                'stage!=' => ['Closed Won', 'Closed Lost'],
             ],
             $result['whereClause']
         );
