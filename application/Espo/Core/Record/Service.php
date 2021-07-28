@@ -199,7 +199,7 @@ class Service implements Crud,
 
     private $duplicateFinder;
 
-    protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
+    protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
     public function __construct()
     {
