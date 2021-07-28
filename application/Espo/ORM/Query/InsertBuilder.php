@@ -36,6 +36,14 @@ class InsertBuilder implements Builder
     protected $params = [];
 
     /**
+     * Create an instance.
+     */
+    public function create(): self
+    {
+        return new self();
+    }
+
+    /**
      * Build a INSERT query.
      */
     public function build(): Insert

@@ -40,6 +40,14 @@ class SelectBuilder implements Builder
     use SelectingBuilderTrait;
 
     /**
+     * Create an instance.
+     */
+    public function create(): self
+    {
+        return new self();
+    }
+
+    /**
      * Build a SELECT query.
      */
     public function build(): Select

@@ -38,6 +38,14 @@ class UnionBuilder implements Builder
     use BaseBuilderTrait;
 
     /**
+     * Create an instance.
+     */
+    public function create(): self
+    {
+        return new self();
+    }
+
+    /**
      * Build a UNION select query.
      */
     public function build(): Union

@@ -36,6 +36,14 @@ class UpdateBuilder implements Builder
     use SelectingBuilderTrait;
 
     /**
+     * Create an instance.
+     */
+    public function create(): self
+    {
+        return new self();
+    }
+
+    /**
      * Build a UPDATE query.
      */
     public function build(): Update

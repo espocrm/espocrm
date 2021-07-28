@@ -34,6 +34,14 @@ class LockTableBuilder implements Builder
     use BaseBuilderTrait;
 
     /**
+     * Create an instance.
+     */
+    public function create(): self
+    {
+        return new self();
+    }
+
+    /**
      * Build a LOCK TABLE query.
      */
     public function build(): LockTable

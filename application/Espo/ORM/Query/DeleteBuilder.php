@@ -34,6 +34,14 @@ class DeleteBuilder implements Builder
     use SelectingBuilderTrait;
 
     /**
+     * Create an instance.
+     */
+    public function create(): self
+    {
+        return new self();
+    }
+
+    /**
      * Build a DELETE query.
      */
     public function build(): Delete
