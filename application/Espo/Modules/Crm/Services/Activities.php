@@ -820,7 +820,9 @@ class Activities implements
             $query = $queryList[0];
         }
 
-        $builder = $this->entityManager->getQueryBuilder()->clone($query);
+        $builder = $this->entityManager
+            ->getQueryBuilder()
+            ->clone($query);
 
         if ($order) {
             $builder->order($order);

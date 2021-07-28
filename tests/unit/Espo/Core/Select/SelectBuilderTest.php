@@ -42,7 +42,6 @@ use Espo\Core\Select\{
     Applier\Appliers\Additional as AdditionalApplier,
     Applier\Appliers\BoolFilterList as BoolFilterListApplier,
     Where\Params as WhereParams,
-    Where\Item as WhereItem,
     Order\Params as OrderParams,
     Text\FilterParams as TextFilterParams,
 };
@@ -54,6 +53,11 @@ use Espo\{
 
 class SelectBuilderTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var SelectBuilder
+     */
+    private $selectBuilder;
+
     protected function setUp() : void
     {
         $this->user = $this->createMock(User::class);

@@ -108,6 +108,9 @@ class QueryBuilder
 
     /**
      * Clone an existing query and proceed modifying it.
+     *
+     * @return SelectBuilder|UpdateBuilder|DeleteBuilder|InsertBuilder|UnionBuilder
+     * @throws RuntimeException
      */
     public function clone(Query $query): Builder
     {

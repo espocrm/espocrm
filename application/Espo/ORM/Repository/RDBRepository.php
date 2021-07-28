@@ -48,6 +48,9 @@ class RDBRepository implements Repository
 {
     protected $entityType;
 
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     protected $entityFactory;
@@ -350,7 +353,9 @@ class RDBRepository implements Repository
             ];
         }
 
-        return $this->entityManager->getQueryBuilder()
+        return $this->entityManager
+            ->getQueryBuilder()
+            ->select()
             ->clone($select)
             ->select($selectItemList)
             ->build();
@@ -369,7 +374,10 @@ class RDBRepository implements Repository
 
         $middleName = lcfirst($entity->getRelationParam($relationName, 'relationName'));
 
-        $builder = $this->entityManager->getQueryBuilder()->clone($select);
+        $builder = $this->entityManager
+            ->getQueryBuilder()
+            ->select()
+            ->clone($select);
 
         foreach ($conditions as $column => $value) {
             $builder->where(

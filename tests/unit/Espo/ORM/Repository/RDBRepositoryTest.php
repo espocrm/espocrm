@@ -59,6 +59,11 @@ use tests\unit\testData\DB as Entities;
 
 class RDBRepositoryTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Repository
+     */
+    private $repository;
+
     protected function setUp(): void
     {
         $entityManager = $this->entityManager =

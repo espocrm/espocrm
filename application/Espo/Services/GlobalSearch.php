@@ -201,6 +201,7 @@ class GlobalSearch implements
 
         $queryBuilder = $this->entityManager
             ->getQueryBuilder()
+            ->select()
             ->clone($query)
             ->limit(0, $offset + $maxSize + 1)
             ->select($selectList)
