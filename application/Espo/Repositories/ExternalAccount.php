@@ -33,13 +33,14 @@ use Espo\ORM\Entity;
 
 class ExternalAccount extends \Espo\Core\Repositories\Database
 {
-    public function get(?string $id = null): ?Entity
+    public function getById(string $id): ?Entity
     {
-        $entity = parent::get($id);
+        $entity = parent::getById($id);
 
-        if (empty($entity) && !empty($id)) {
+        if (!$entity) {
             $entity = $this->get();
-            $entity->id = $id;
+
+            $entity->set('id', $id);
         }
 
         return $entity;
