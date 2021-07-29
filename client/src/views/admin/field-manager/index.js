@@ -48,54 +48,67 @@ define('views/admin/field-manager/index', 'view', function (Dep) {
         events: {
             'click #scopes-menu a.scope-link': function (e) {
                 var scope = $(e.currentTarget).data('scope');
+
                 this.openScope(scope);
             },
 
             'click #fields-content a.field-link': function (e) {
                 e.preventDefault();
+
                 var scope = $(e.currentTarget).data('scope');
                 var field = $(e.currentTarget).data('field');
+
                 this.openField(scope, field);
             },
 
             'click [data-action="addField"]': function () {
-                this.createView('dialog', 'views/admin/field-manager/modals/add-field', {}, function (view) {
+                this.createView('dialog', 'views/admin/field-manager/modals/add-field', {}, (view) => {
                     view.render();
-                    this.listenToOnce(view, 'add-field', function (type) {
+
+                    this.listenToOnce(view, 'add-field', (type) => {
                         this.createField(this.scope, type);
-                    }, this);
-                }, this);
+                    });
+                });
             },
         },
 
         setup: function () {
             this.scopeList = [];
 
-            var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
+            var scopesAll = Object.keys(this.getMetadata().get('scopes')).sort((v1, v2) => {
                 return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
-            }.bind(this));
+            });
 
-            scopesAll.forEach(function (scope) {
+            scopesAll.forEach((scope) => {
                 if (this.getMetadata().get('scopes.' + scope + '.entity')) {
                     if (this.getMetadata().get('scopes.' + scope + '.customizable')) {
                         this.scopeList.push(scope);
                     }
                 }
-            }.bind(this));
+            });
 
             this.scope = this.options.scope || null;
             this.field = this.options.field || null;
 
-            this.on('after:render', function () {
+            this.on('after:render', () => {
                 if (!this.scope) {
                     this.renderDefaultPage();
-                } else {
-                    if (!this.field) {
-                        this.openScope(this.scope);
-                    } else {
-                        this.openField(this.scope, this.field);
-                    }
+
+                    return;
                 }
+
+                if (!this.field) {
+                    this.openScope(this.scope);
+                }
+                else {
+                    this.openField(this.scope, this.field);
+                }
+            });
+
+            this.createView('header', 'views/admin/field-manager/header', {
+                el: this.getSelector() + '> .page-header',
+                scope: this.scope,
+                field: this.field,
             });
         },
 
@@ -103,62 +116,78 @@ define('views/admin/field-manager/index', 'view', function (Dep) {
             this.scope = scope;
             this.field = null;
 
+            this.getView('header').setField(null);
+
             this.getRouter().navigate('#Admin/fieldManager/scope=' + scope, {trigger: false});
 
             this.notify('Loading...');
+
             this.createView('content', 'views/admin/field-manager/list', {
                 el: '#fields-content',
                 scope: scope,
-            }, function (view) {
+            }, (view) => {
                 view.render();
+
                 this.notify(false);
+
                 $(window).scrollTop(0);
-            }.bind(this));
+            });
         },
 
         openField: function (scope, field) {
             this.scope = scope;
-            this.field = field
+            this.field = field;
 
-            this.getRouter().navigate('#Admin/fieldManager/scope=' + scope + '&field=' + field, {trigger: false});
+            this.getView('header').setField(field);
+
+            this.getRouter()
+                .navigate('#Admin/fieldManager/scope=' + scope + '&field=' + field, {trigger: false});
 
             this.notify('Loading...');
+
             this.createView('content', 'views/admin/field-manager/edit', {
                 el: '#fields-content',
                 scope: scope,
                 field: field,
-            }, function (view) {
+            }, (view) => {
                 view.render();
+
                 this.notify(false);
+
                 $(window).scrollTop(0);
 
-                this.listenTo(view, 'after:save', function () {
+                this.listenTo(view, 'after:save', () => {
                     this.notify('Saved', 'success');
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         createField: function (scope, type) {
             this.scope = scope;
             this.type = type;
 
-            this.getRouter().navigate('#Admin/fieldManager/scope=' + scope + '&type=' + type + '&create=true', {trigger: false});
+            this.getRouter()
+                .navigate('#Admin/fieldManager/scope=' + scope + '&type=' + type + '&create=true', {trigger: false});
 
             this.notify('Loading...');
+
             this.createView('content', 'Admin.FieldManager.Edit', {
                 el: '#fields-content',
                 scope: scope,
                 type: type,
-            }, function (view) {
+            }, (view) => {
                 view.render();
+
                 this.notify(false);
+
                 $(window).scrollTop(0);
 
-                view.once('after:save', function () {
+                view.once('after:save', () => {
                     this.openScope(this.scope);
+
                     this.notify('Created', 'success');
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         renderDefaultPage: function () {

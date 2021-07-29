@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/fields/base', function (Dep) {
+define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -45,7 +45,9 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
 
         setup: function () {
             this.conditionGroup = Espo.Utils.cloneDeep((this.model.get(this.name) || {}).conditionGroup || []);
+
             this.scope = this.params.scope || this.options.scope;
+
             this.createStringView();
         },
 
@@ -56,33 +58,36 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
                     value: this.conditionGroup
                 },
                 operator: 'and',
-                scope: this.scope
-            }, function (view) {
+                scope: this.scope,
+            }, (view) => {
                 if (this.isRendered()) {
                     view.render();
                 }
-            }, this);
+            });
         },
 
         edit: function () {
             this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
                 conditionGroup: this.conditionGroup,
-                scope: this.scope
-            }, function (view) {
+                scope: this.scope,
+            }, (view) => {
                 view.render();
 
-                this.listenTo(view, 'apply', function (conditionGroup) {
+                this.listenTo(view, 'apply', (conditionGroup) => {
                     this.conditionGroup = conditionGroup;
 
+                    this.trigger('change');
+
                     this.createStringView();
-                }, this);
-            }, this);
+                });
+            });
         },
 
         fetch: function () {
             var data = {};
+
             data[this.name] = {
-                conditionGroup: this.conditionGroup
+                conditionGroup: this.conditionGroup,
             };
 
             if (this.conditionGroup.length === 0) {
@@ -90,7 +95,6 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-conditions', 'views/
             }
 
             return data;
-        }
+        },
     });
-
 });

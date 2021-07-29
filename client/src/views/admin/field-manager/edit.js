@@ -63,7 +63,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
         events: {
             'click button[data-action="close"]': function () {
-                this.getRouter().navigate('#Admin/fieldManager/scope=' + this.scope, {trigger: true});
+                this.actionClose();
             },
             'click button[data-action="save"]': function () {
                 this.save();
@@ -113,13 +113,13 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.model.set('type', this.type);
             }
 
-            this.listenTo(this.model, 'change:readOnly', function () {
+            this.listenTo(this.model, 'change:readOnly', () => {
                 this.readOnlyControl();
-            }, this);
+            });
 
             var hasRequired = false;
 
-            this.getModelFactory().create(this.scope, function (model) {
+            this.getModelFactory().create(this.scope, (model) => {
                 if (!this.isNew) {
                     this.type = model.getFieldType(this.field);
                 }
@@ -133,25 +133,21 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                 this.hasInlineEditDisabled = this.type !== 'foreign';
 
-                new Promise(
-                    function (resolve) {
-                        if (this.isNew) {
+                new Promise((resolve) => {
+                    if (this.isNew) {
+                        resolve();
+
+                        return;
+                    }
+
+                    this.ajaxGetRequest('Admin/fieldManager/' + this.scope + '/' + this.field)
+                        .then((data) => {
+                            this.defs = data;
+
                             resolve();
-
-                            return;
-                        }
-
-                        this.ajaxGetRequest('Admin/fieldManager/' + this.scope + '/' + this.field)
-                            .then(
-                                function (data) {
-                                    this.defs = data;
-
-                                    resolve();
-                                }.bind(this)
-                            );
-                    }.bind(this)
-                )
-                .then(function () {
+                        });
+                })
+                .then(() => {
                     this.paramList = [];
 
                     var paramList = Espo.Utils.clone(this.getFieldManager().getParams(this.type) || []);
@@ -164,12 +160,12 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                                     this.field, 'fieldManagerAdditionalParamList'
                                 ]) || [];
 
-                        fieldManagerAdditionalParamList.forEach(function (item) {
+                        fieldManagerAdditionalParamList.forEach((item) =>  {
                             paramList.push(item);
-                        }, this);
+                        });
                     }
 
-                    paramList.forEach(function (o) {
+                    paramList.forEach((o) => {
                         var item = o.name;
 
                         if (item === 'required') {
@@ -196,7 +192,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         }
 
                         this.paramList.push(o);
-                    }, this);
+                    });
 
                     if (this.hasPersonalData) {
                         this.paramList.push({
@@ -212,9 +208,9 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                     }
 
-                    this.paramList.forEach(function (o) {
+                    this.paramList.forEach((o) => {
                         this.model.defs.fields[o.name] = o;
-                    }, this);
+                    });
 
                     this.model.set(this.defs);
 
@@ -249,7 +245,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                     this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-                    this.paramList.forEach(function (o) {
+                    this.paramList.forEach((o) => {
                         if (o.hidden) {
                             return;
                         }
@@ -269,12 +265,19 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         }
 
                         this.createFieldView(o.type, o.name, null, o, options);
-                    }, this);
+                    });
 
                     callback();
+                });
+            });
 
-                }.bind(this));
-            }.bind(this));
+            this.listenTo(this.model, 'change', (m, o) => {
+                if (!o.ui) {
+                    return;
+                }
+
+                this.setIsChanged();
+            });
         },
 
         setup: function () {
@@ -290,9 +293,9 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             this.wait(true);
 
-            this.setupFieldData(function () {
+            this.setupFieldData(() => {
                 this.wait(false);
-            }.bind(this));
+            });
         },
 
         setupDynamicLogicFields: function (hasRequired) {
@@ -403,7 +406,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         afterRender: function () {
-            this.getView('name').on('change', function (m) {
+            this.getView('name').on('change', (m) => {
                 var name = this.model.get('name');
 
                 var label = name;
@@ -419,7 +422,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         .replace(/-/g, '')
                         .replace(/_/g, '')
                         .replace(/[^\w\s]/gi, '')
-                        .replace(/ (.)/g, function (match, g) {
+                        .replace(/ (.)/g, (match, g) => {
                             return g.toUpperCase();
                         })
                         .replace(' ', '');
@@ -430,7 +433,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 }
 
                 this.model.set('name', name);
-            }, this);
+            });
         },
 
         readOnlyControl: function () {
@@ -449,7 +452,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         hideField: function (name) {
-            var f = function () {
+            var f = () => {
                 var view = this.getView(name);
 
                 if (view) {
@@ -457,7 +460,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                     view.setDisabled();
                 }
-            }.bind(this);
+            };
 
             if (this.isRendered()) {
                 f();
@@ -468,7 +471,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         showField: function (name) {
-            var f = function () {
+            var f = () => {
                 var view = this.getView(name);
 
                 if (view) {
@@ -476,7 +479,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                     view.setNotDisabled();
                 }
-            }.bind(this);
+            };
 
             if (this.isRendered()) {
                 f();
@@ -522,19 +525,19 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         save: function () {
             this.disableButtons();
 
-            this.fieldList.forEach(function (field) {
+            this.fieldList.forEach((field) => {
                 var view = this.getView(field);
 
                 if (!view.readOnly) {
                     view.fetchToModel();
                 }
-            }, this);
+            });
 
             var notValid = false;
 
-            this.fieldList.forEach(function (field) {
+            this.fieldList.forEach((field) => {
                 notValid = this.getView(field).validate() || notValid;
-            }, this);
+            });
 
             if (notValid) {
                 this.notify('Not valid', 'error');
@@ -553,6 +556,8 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             this.listenToOnce(this.model, 'sync', () => {
                 Espo.Ui.notify(false);
+
+                this.setIsNotChanged();
 
                 this.enableButtons();
 
@@ -632,8 +637,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         resetToDefault: function () {
-            this.confirm(this.translate('confirmation', 'messages'), function () {
-
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
                 this.ajaxPostRequest('FieldManager/action/resetToDefault', {
@@ -646,6 +650,8 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         this.getLanguage().loadSkipCache(),
                     ])
                     .then(() => {
+                        this.setIsNotChanged();
+
                         this.setupFieldData(() => {
                             this.notify('Done', 'success');
 
@@ -655,8 +661,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                     });
                 });
-
-            }, this);
+            });
         },
 
         broadcastUpdate: function () {
@@ -665,5 +670,24 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             this.getHelper().broadcastChannel.postMessage('update:settings');
         },
 
+        actionClose: function () {
+            this.setIsNotChanged();
+
+            this.getRouter().navigate('#Admin/fieldManager/scope=' + this.scope, {trigger: true});
+        },
+
+        setConfirmLeaveOut: function (value) {
+            this.getRouter().confirmLeaveOut = value;
+        },
+
+        setIsChanged: function () {
+            this.isChanged = true;
+            this.setConfirmLeaveOut(true);
+        },
+
+        setIsNotChanged: function () {
+            this.isChanged = false;
+            this.setConfirmLeaveOut(false);
+        },
     });
 });

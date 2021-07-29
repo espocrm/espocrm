@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fields/base', 'model'], function (Dep, Model) {
+define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fields/base', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -35,6 +35,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fi
         events: {
             'click [data-action="editConditions"]': function (e) {
                 var index = parseInt($(e.currentTarget).data('index'));
+
                 this.edit(index);
             },
             'click [data-action="addOptionList"]': function (e) {
@@ -62,27 +63,33 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fi
 
         setupItems: function () {
             this.itemDataList = [];
-            this.optionsDefsList.forEach(function (item, i) {
+
+            this.optionsDefsList.forEach((item, i) => {
                 this.itemDataList.push({
                     conditionGroupViewKey: 'conditionGroup' + i.toString(),
                     optionsViewKey: 'options' + i.toString(),
-                    index: i
+                    index: i,
                 });
-            }, this);
+            });
         },
 
         setupItemViews: function () {
-            this.optionsDefsList.forEach(function (item, i) {
+            this.optionsDefsList.forEach((item, i) => {
                 this.createStringView(i);
+
                 this.createOptionsView(i);
-            }, this);
+            });
         },
 
         createOptionsView: function (num) {
             var key = 'options' + num.toString();
-            if (!this.optionsDefsList[num]) return;
+
+            if (!this.optionsDefsList[num]) {
+                return;
+            }
 
             var model = new Model();
+
             model.set('options', this.optionsDefsList[num].optionList || []);
 
             this.createView(key, 'views/fields/multi-enum', {
@@ -94,38 +101,46 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fi
                     options: this.model.get('options'),
                     translatedOptions: this.model.get('translatedOptions')
                 }
-            }, function (view) {
+            }, (view) => {
                 if (this.isRendered()) {
                     view.render();
                 }
 
-                this.listenTo(this.model, 'change:options', function () {
+                this.listenTo(this.model, 'change:options', () => {
                     view.setTranslatedOptions(this.getTranslatedOptions());
-                    view.setOptionList(this.model.get('options'));
-                }, this);
 
-                this.listenTo(model, 'change', function () {
+                    view.setOptionList(this.model.get('options'));
+                });
+
+                this.listenTo(model, 'change', () => {
                     this.optionsDefsList[num].optionList = model.get('options') || [];
-                }, this);
-            }, this);
+                });
+            });
         },
 
         getTranslatedOptions: function () {
             if (this.model.get('translatedOptions')) {
                 return this.model.get('translatedOptions');
             }
+
             var translatedOptions = {};
+
             var list = this.model.get('options') || [];
-            list.forEach(function (value) {
-                translatedOptions[value] = this.getLanguage().translateOption(value, this.options.field, this.options.scope);
-            }, this);
+
+            list.forEach((value) => {
+                translatedOptions[value] = this.getLanguage()
+                    .translateOption(value, this.options.field, this.options.scope);
+            });
 
             return translatedOptions;
         },
 
         createStringView: function (num) {
             var key = 'conditionGroup' + num.toString();
-            if (!this.optionsDefsList[num]) return;
+
+            if (!this.optionsDefsList[num]) {
+                return;
+            }
 
             this.createView(key, 'views/admin/dynamic-logic/conditions-string/group-base', {
                 el: this.getSelector() + ' .string-container[data-key="'+key+'"]',
@@ -133,26 +148,29 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fi
                     value: this.optionsDefsList[num].conditionGroup
                 },
                 operator: 'and',
-                scope: this.scope
-            }, function (view) {
+                scope: this.scope,
+            }, (view) => {
                 if (this.isRendered()) {
                     view.render();
                 }
-            }, this);
+            });
         },
 
         edit: function (num) {
             this.createView('modal', 'views/admin/dynamic-logic/modals/edit', {
                 conditionGroup: this.optionsDefsList[num].conditionGroup,
-                scope: this.options.scope
-            }, function (view) {
+                scope: this.options.scope,
+            }, (view) => {
                 view.render();
 
-                this.listenTo(view, 'apply', function (conditionGroup) {
+                this.listenTo(view, 'apply', (conditionGroup) => {
                     this.optionsDefsList[num].conditionGroup = conditionGroup;
+
+                    this.trigger('change');
+
                     this.createStringView(num);
-                }, this);
-            }, this);
+                });
+            });
         },
 
         addOptionList: function () {
@@ -160,12 +178,14 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fi
 
             this.optionsDefsList.push({
                 optionList: this.model.get('options') || [],
-                conditionGroup: null
+                conditionGroup: null,
             });
 
             this.setupItems();
             this.reRender();
             this.setupItemViews();
+
+            this.trigger('change');
         },
 
         removeItem: function (num) {
@@ -174,6 +194,8 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fi
             this.setupItems();
             this.reRender();
             this.setupItemViews();
+
+            this.trigger('change');
         },
 
         fetch: function () {
@@ -186,7 +208,7 @@ Espo.define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fi
             }
 
             return data;
-        }
-    });
+        },
 
+    });
 });
