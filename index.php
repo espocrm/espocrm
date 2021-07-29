@@ -36,7 +36,8 @@ echo <<<EOL
 <body style="padding: 20px 10px 60px 10px; max-width: 900px; margin: 0 auto">
 
 <p>
-<strong>You need to configure your webserver in order to being able to run EspoCRM.</strong>
+<strong>You need to configure your webserver in order to being able to run EspoCRM. After that
+refresh the page.</strong>
 </p>
 
 <h2>For Apache webserver</h2>
