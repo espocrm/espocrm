@@ -46,37 +46,45 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
             'click button[data-action="createEntity"]': function (e) {
                 this.createEntity();
             },
+
+            'keyup input[data-name="quick-search"]': function (e) {
+                this.processQuickSearch(e.currentTarget.value);
+            },
         },
 
         setupScopeData: function () {
             this.scopeDataList = [];
 
-            var scopeList = Object.keys(this.getMetadata().get('scopes')).sort(function (v1, v2) {
-                return v1.localeCompare(v2);
-            }.bind(this));
+            var scopeList = Object.keys(this.getMetadata().get('scopes'))
+                .sort((v1, v2) => {
+                    return v1.localeCompare(v2);
+                });
 
             var scopeListSorted = [];
 
-            scopeList.forEach(function (scope) {
+            scopeList.forEach((scope) => {
                 var d = this.getMetadata().get('scopes.' + scope);
+
                 if (d.entity && d.customizable) {
                     scopeListSorted.push(scope);
                 }
-            }, this);
+            });
 
-            scopeList.forEach(function (scope) {
+            scopeList.forEach((scope) => {
                 var d = this.getMetadata().get('scopes.' + scope);
+
                 if (d.entity && !d.customizable) {
                     scopeListSorted.push(scope);
                 }
-            }, this);
+            });
 
             scopeList = scopeListSorted;
 
-            scopeList.forEach(function (scope) {
+            scopeList.forEach((scope) => {
                 var d = this.getMetadata().get('scopes.' + scope);
 
                 var isRemovable = !!d.isCustom;
+
                 if (d.isNotRemovable) {
                     isRemovable = false;
                 }
@@ -90,8 +98,7 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
                     label: this.getLanguage().translate(scope, 'scopeNames'),
                     layouts: d.layouts,
                 });
-
-            }, this);
+            });
         },
 
         setup: function () {
@@ -99,22 +106,93 @@ define('views/admin/entity-manager/index', 'view', function (Dep) {
         },
 
         createEntity: function () {
-            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {}, function (view) {
+            this.createView('edit', 'views/admin/entity-manager/modals/edit-entity', {}, (view) => {
                 view.render();
 
-                this.listenTo(view, 'after:save', function (o) {
+                this.listenTo(view, 'after:save', (o) => {
                     this.clearView('edit');
-                    this.getRouter().navigate('#Admin/entityManager/scope=' + o.scope, {trigger: true});
-                }, this);
 
-                this.listenTo(view, 'close', function () {
+                    this.getRouter().navigate('#Admin/entityManager/scope=' + o.scope, {trigger: true});
+                });
+
+                this.listenTo(view, 'close', () => {
                     this.clearView('edit');
-                }, this);
-            }, this);
+                });
+            });
+        },
+
+        afterRender: function () {
+            this.$noData = this.$el.find('.no-data');
         },
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Entity Manager', 'labels', 'Admin'));
+        },
+
+        processQuickSearch: function (text) {
+            text = text.trim();
+
+            let $noData = this.$noData;
+
+            $noData.addClass('hidden');
+
+            if (!text) {
+                this.$el.find('table tr.scope-row').removeClass('hidden');
+
+                return;
+            }
+
+            let matchedList = [];
+
+            let lowerCaseText = text.toLowerCase();
+
+            this.scopeDataList.forEach(item => {
+                let matched = false;
+
+                if (
+                    item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    item.name.toLowerCase().indexOf(lowerCaseText) === 0
+                ) {
+                    matched = true;
+                }
+
+                if (!matched) {
+                    let wordList = item.label.split(' ')
+                        .concat(
+                            item.label.split(' ')
+                        );
+
+                    wordList.forEach((word) => {
+                        if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                            matched = true;
+                        }
+                    });
+                }
+
+                if (matched) {
+                    matchedList.push(item.name);
+                }
+            });
+
+            if (matchedList.length === 0) {
+                this.$el.find('table tr.scope-row').addClass('hidden');
+
+                $noData.removeClass('hidden');
+
+                return;
+            }
+
+            this.scopeDataList
+                .map(item => item.name)
+                .forEach(scope => {
+                    if (!~matchedList.indexOf(scope)) {
+                        this.$el.find('table tr.scope-row[data-scope="'+scope+'"]').addClass('hidden');
+
+                        return;
+                    }
+
+                    this.$el.find('table tr.scope-row[data-scope="'+scope+'"]').removeClass('hidden');
+                });
         },
     });
 });

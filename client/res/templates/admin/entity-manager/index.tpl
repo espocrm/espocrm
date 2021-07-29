@@ -11,7 +11,17 @@
 
 <div class="row">
 <div class="col-md-9">
-<table class="table table-hover">
+
+<div class="margin-bottom-2x margin-top">
+    <input
+        type="text"
+        maxlength="64"
+        placeholder="{{translate 'Search'}}"
+        data-name="quick-search"
+        class="form-control"
+    >
+</div>
+<table class="table table-hover scopes-table">
     <thead>
         <tr>
             <th>{{translate 'name' scope='EntityManager' category='fields'}}</th>
@@ -21,7 +31,7 @@
     </thead>
     <tbody>
     {{#each scopeDataList}}
-        <tr data-scope="{{name}}">
+        <tr data-scope="{{name}}" class="scope-row">
             <td>
                 {{#if customizable}}
                 <a href="#Admin/entityManager/scope={{name}}">{{name}}</a>
@@ -41,5 +51,6 @@
     {{/each}}
     </tbody>
 </table>
+<div class="no-data hidden">{{translate 'No Data'}}</div>
 </div>
 </div>
