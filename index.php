@@ -30,9 +30,29 @@
 $path = getcwd();
 
 echo <<<EOL
-<h2>For apache webserver</h2>
 
-<h4>Non-production environment</h4>
+<link href="client/css/espo/hazyblue-vertical.css" rel="stylesheet" id='main-stylesheet'>
+
+<body style="padding: 10px; max-width: 900px; padding-top: 20px; margin: 0 auto;">
+
+<p>
+<strong>You need to configure your webserver in order to being able to run EspoCRM.</strong>
+</p>
+
+<h1>For Apache webserver</h1>
+
+<p>
+You need to have <strong>mod_rewrite</strong> enabled. You can do it by running in the terminal:
+</p>
+
+<pre>
+<code>
+sudo a2enmod rewrite
+sudo service apache2 restart
+</code>
+</pre>
+
+<h3>Non-production environment</h3>
 
 <p>
 You need to enable `.htaccess` usage in the apache configuration. Add the code:
@@ -46,7 +66,7 @@ You need to enable `.htaccess` usage in the apache configuration. Add the code:
 </code>
 </pre>
 
-<h4>Poduction environment</h4>
+<h3>Production environment</h3>
 
 <p>
 It's recommended to configure the document root to look at the `public`
@@ -73,13 +93,23 @@ And allow override for the `public` directory:
 </pre>
 
 <p>
-More detals in the <a href="https://docs.espocrm.com/administration/apache-server-configuration/">documentation</a>.
+<strong>
+See more details in the <a href="https://docs.espocrm.com/administration/apache-server-configuration/">documentation</a>.
+</strong>
 </p>
 
-<h2>For nginx webserver</h2>
+<h1>For Nginx webserver</h1>
 
 <p>
 You need to configure the document root to look at the `public` directory and create an alias for the `client` directory.
-More detals in the <a href="https://docs.espocrm.com/administration/nginx-server-configuration/">documentation</a>.
 </p>
+
+<p>
+<strong>
+See more details in the <a href="https://docs.espocrm.com/administration/nginx-server-configuration/">documentation</a>.
+</strong>
+</p>
+
+</body>
+
 EOL;
