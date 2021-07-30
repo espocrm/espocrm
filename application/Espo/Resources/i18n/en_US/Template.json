@@ -18,7 +18,8 @@
         "pageFormat": "Paper Format",
         "pageWidth": "Page Width (mm)",
         "pageHeight": "Page Height (mm)",
-        "fontFace": "Font"
+        "fontFace": "Font",
+        "title": "Title"
     },
     "links": {
     },

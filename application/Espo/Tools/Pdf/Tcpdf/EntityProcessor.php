@@ -72,6 +72,11 @@ class EntityProcessor
             $fontFace = $template->getFontFace();
         }
 
+        if ($template->hasTitle()) {
+            // @todo Support placeholders.
+            $pdf->SetTitle($template->getTitle());
+        }
+
         $pdf->setFont($fontFace, '', $this->fontSize, '', true);
 
         $pdf->setAutoPageBreak(true, $template->getBottomMargin());

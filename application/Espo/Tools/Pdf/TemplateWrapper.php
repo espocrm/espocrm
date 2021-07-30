@@ -119,4 +119,14 @@ class TemplateWrapper implements Template
     {
         return $this->template->get('pageHeight') ?? 0.0;
     }
+
+    public function hasTitle(): bool
+    {
+        return $this->template->get('title') !== null;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->template->get('title') ?? '';
+    }
 }

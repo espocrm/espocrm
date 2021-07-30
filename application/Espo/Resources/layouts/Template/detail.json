@@ -33,6 +33,7 @@
     {
         "label": "",
         "rows": [
+            [{"name": "title"}, false],
             [{"name":"printHeader"}, {"name":"headerPosition"}],
             [{"name":"header","fullWidth":true}],
             [{"name":"printFooter"}, {"name":"footerPosition"}],
