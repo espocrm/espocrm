@@ -4,7 +4,17 @@
     </div>
 </div>
 
-<table class="table">
+<div class="margin-bottom-2x margin-top">
+    <input
+        type="text"
+        maxlength="64"
+        placeholder="{{translate 'Search'}}"
+        data-name="quick-search"
+        class="form-control"
+    >
+</div>
+
+<table class="table fields-table">
     <thead>
         <th width="35%">{{translate 'Name' scope='FieldManager'}}</td>
         <th width="35%">{{translate 'Label' scope='FieldManager'}}</td>
@@ -13,7 +23,7 @@
     </thead>
     <tbody>
     {{#each fieldDefsArray}}
-    <tr data-name="{{name}}">
+    <tr data-name="{{name}}" class="field-row">
         <td>
             <a
                 href="#Admin/fieldManager/scope={{../scope}}&field={{name}}"
@@ -29,3 +39,5 @@
     {{/each}}
     </tbody>
 </table>
+
+<div class="no-data hidden">{{translate 'No Data'}}</div>

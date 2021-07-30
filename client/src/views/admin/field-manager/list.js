@@ -45,7 +45,10 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
                 var field = $(e.currentTarget).data('name');
 
                 this.removeField(field);
-            }
+            },
+            'keyup input[data-name="quick-search"]': function (e) {
+                this.processQuickSearch(e.currentTarget.value);
+            },
         },
 
         setup: function () {
@@ -54,6 +57,10 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
             this.wait(
                 this.buildFieldDefs()
             );
+        },
+
+        afterRender: function () {
+            this.$noData = this.$el.find('.no-data');
         },
 
         buildFieldDefs: function () {
@@ -74,6 +81,7 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
                         name: field,
                         isCustom: defs.isCustom || false,
                         type: defs.type,
+                        label: this.translate(field, 'fields', this.scope),
                     });
                 });
             });
@@ -109,6 +117,72 @@ define('views/admin/field-manager/list', 'view', function (Dep) {
         broadcastUpdate: function () {
             this.getHelper().broadcastChannel.postMessage('update:metadata');
             this.getHelper().broadcastChannel.postMessage('update:language');
+        },
+
+        processQuickSearch: function (text) {
+            text = text.trim();
+
+            let $noData = this.$noData;
+
+            $noData.addClass('hidden');
+
+            if (!text) {
+                this.$el.find('table tr.field-row').removeClass('hidden');
+
+                return;
+            }
+
+            let matchedList = [];
+
+            let lowerCaseText = text.toLowerCase();
+
+            this.fieldDefsArray.forEach(item => {
+                let matched = false;
+
+                if (
+                    item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    item.name.toLowerCase().indexOf(lowerCaseText) === 0
+                ) {
+                    matched = true;
+                }
+
+                if (!matched) {
+                    let wordList = item.label.split(' ')
+                        .concat(
+                            item.label.split(' ')
+                        );
+
+                    wordList.forEach((word) => {
+                        if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                            matched = true;
+                        }
+                    });
+                }
+
+                if (matched) {
+                    matchedList.push(item.name);
+                }
+            });
+
+            if (matchedList.length === 0) {
+                this.$el.find('table tr.field-row').addClass('hidden');
+
+                $noData.removeClass('hidden');
+
+                return;
+            }
+
+            this.fieldDefsArray
+                .map(item => item.name)
+                .forEach(scope => {
+                    if (!~matchedList.indexOf(scope)) {
+                        this.$el.find('table tr.field-row[data-name="'+scope+'"]').addClass('hidden');
+
+                        return;
+                    }
+
+                    this.$el.find('table tr.field-row[data-name="'+scope+'"]').removeClass('hidden');
+                });
         },
     });
 });
