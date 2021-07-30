@@ -88,8 +88,8 @@ class IcsDataLoader implements Loader
 
         $espoEvent = EspoEvent::create()
             ->withUid($event->uid ?? null)
-            ->withDateStart($event->dtstart ?? null)
-            ->withDateEnd($event->dtend ?? null)
+            ->withDateStart($event->dtstart_tz ?? null)
+            ->withDateEnd($event->dtend_tz ?? null)
             ->withName($event->summary ?? null)
             ->withLocation($event->location ?? null)
             ->withDescription($event->description ?? null)

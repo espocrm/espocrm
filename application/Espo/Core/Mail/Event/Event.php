@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Mail\Event;
 
-use stdClass;
-
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 
 use DateTime;

@@ -92,6 +92,27 @@ END:VEVENT
 END:VCALENDAR
 ";
 
+    private $icsContents2 =
+"BEGIN:VCALENDAR
+VERSION:2.0
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+SUMMARY:Test-2a
+DTSTART;TZID=America/New_York:20130802T103400
+DTEND;TZID=America/New_York:20130802T110400
+LOCATION:1 Broadway Ave.\, Brooklyn
+DESCRIPTION: Description Test 1
+STATUS:CONFIRMED
+SEQUENCE:3
+BEGIN:VALARM
+TRIGGER:-PT10M
+DESCRIPTION:Pickup Reminder
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+END:VCALENDAR
+";
+
     public function testEvent1(): void
     {
         $ical = new ICal();
@@ -103,8 +124,8 @@ END:VCALENDAR
 
         $espoEvent = MailEvent::create()
             ->withUid($event->uid ?? null)
-            ->withDateStart($event->dtstart ?? null)
-            ->withDateEnd($event->dtend ?? null)
+            ->withDateStart($event->dtstart_tz ?? null)
+            ->withDateEnd($event->dtend_tz ?? null)
             ->withName($event->summary ?? null)
             ->withLocation($event->location ?? null)
             ->withDescription($event->description ?? null)
@@ -123,5 +144,42 @@ END:VCALENDAR
         $this->assertEquals('test-org@test.com', $espoEvent->getOrganizerEmailAddress());
 
         $this->assertEquals(['test-1@test.com', 'test-2@test.com'], $espoEvent->getAttendeeEmailAddressList());
+    }
+
+    public function testEvent2(): void
+    {
+        $ical = new ICal();
+
+        $ical->initString($this->icsContents2);
+
+        /* @var $event Event */
+        $event = $ical->events()[0];
+
+        $espoEvent = MailEvent::create()
+            ->withUid($event->uid ?? null)
+            ->withDateStart($event->dtstart_tz ?? null)
+            ->withDateEnd($event->dtend_tz ?? null)
+            ->withName($event->summary ?? null)
+            ->withLocation($event->location ?? null)
+            ->withDescription($event->description ?? null)
+            ->withTimezone($ical->calendarTimeZone() ?? null)
+            ->withOrganizer($event->organizer)
+            ->withAttendees($event->attendee);
+
+        $this->assertEquals(
+            null,
+            $espoEvent->getUid()
+        );
+
+        $this->assertEquals('2013-08-02 14:34:00', $espoEvent->getDateStart());
+
+        $this->assertEquals(null, $espoEvent->getOrganizerEmailAddress());
+
+        $this->assertEquals([], $espoEvent->getAttendeeEmailAddressList());
+
+        $this->assertEquals(
+            "1 Broadway Ave., Brooklyn",
+            $espoEvent->getLocation()
+        );
     }
 }
