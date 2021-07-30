@@ -20,11 +20,29 @@
 
 <table class="table">
     {{#unless linkDataList.length}}
-     <tr>
+    <tr>
         <td>
             {{translate 'No Data'}}
         </td>
-     </tr>
+    </tr>
+    {{else}}
+    <thead>
+        <tr>
+            <th width="15%" align="left">{{translate 'entity' category='fields' scope='EntityManager'}}</th>
+            <th width="15%" align="left">{{translate 'linkForeign' category='fields' scope='EntityManager'}}</th>
+            <th width="10%" align="center" style="text-align: center">
+                {{translate 'linkType' category='fields' scope='EntityManager'}}
+            </th>
+            <th width="15%" align="right" style="text-align: right">
+                {{translate 'link' category='fields' scope='EntityManager'}}
+            </th>
+            <th width="15%" align="right" style="text-align: right">
+                {{translate 'entityForeign' category='fields' scope='EntityManager'}}
+            </th>
+        </tr>
+    </thead>
+
+    </tr>
     {{/unless}}
     {{#each linkDataList}}
     <tr data-link="{{link}}">
@@ -32,7 +50,9 @@
             {{translate entity category='scopeNames'}}
         </td>
         <td width="15%" align="left">
-            {{linkForeign}}
+            <span title="{{translate linkForeign category='links' scope=entityForeign}}">
+                {{linkForeign}}
+            </span>
         </td>
         <td width="10%" align="center">
             <strong>
@@ -40,7 +60,9 @@
             </strong>
         </td>
         <td width="15%" align="right">
-            {{link}}
+            <span title="{{translate link category='links' scope=entity}}">
+                {{link}}
+            </span>
         </td>
         <td width="15%" align="right">
             {{translate entityForeign category='scopeNames'}}

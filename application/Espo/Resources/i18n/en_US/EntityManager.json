@@ -15,6 +15,7 @@
         "stream": "Stream",
         "label": "Label",
         "linkType": "Link Type",
+        "entity": "Entity",
         "entityForeign": "Foreign Entity",
         "linkForeign": "Foreign Link",
         "link": "Link",
