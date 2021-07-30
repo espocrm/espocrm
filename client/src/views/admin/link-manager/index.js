@@ -56,40 +56,54 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
                 this.confirm(this.translate('confirmation', 'messages'), function () {
                     this.removeLink(link);
                 }, this);
-            }
+            },
+            'keyup input[data-name="quick-search"]': function (e) {
+                this.processQuickSearch(e.currentTarget.value);
+            },
         },
 
         computeRelationshipType: function (type, foreignType) {
             if (type == 'hasMany') {
                 if (foreignType == 'hasMany') {
                     return 'manyToMany';
-                } else if (foreignType == 'belongsTo') {
+                }
+                else if (foreignType == 'belongsTo') {
                     return 'oneToMany';
-                } else {
+                }
+                else {
                     return;
                 }
-            } else if (type == 'belongsTo') {
+            }
+            else if (type == 'belongsTo') {
                 if (foreignType == 'hasMany') {
                     return 'manyToOne';
-                } else if (foreignType == 'hasOne') {
+                }
+                else if (foreignType == 'hasOne') {
                     return 'oneToOneRight';
-                } else {
+                }
+                else {
                     return;
                 }
-            } else if (type == 'belongsToParent') {
+            }
+            else if (type == 'belongsToParent') {
                 if (foreignType == 'hasChildren') {
                     return 'childrenToParent'
                 }
+
                 return;
-            } else if (type == 'hasChildren') {
+            }
+            else if (type == 'hasChildren') {
                 if (foreignType == 'belongsToParent') {
                     return 'parentToChildren'
                 }
+
                 return;
-            } else if (type === 'hasOne') {
+            }
+            else if (type === 'hasOne') {
                 if (foreignType == 'belongsTo') {
                     return 'oneToOneLeft';
                 }
+
                 return;
             }
         },
@@ -98,25 +112,37 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
             this.linkDataList = [];
 
             var links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
-            var linkList = Object.keys(links).sort(function (v1, v2) {
-                return v1.localeCompare(v2);
-            }.bind(this));
 
-            linkList.forEach(function (link) {
+            var linkList = Object.keys(links).sort((v1, v2) => {
+                return v1.localeCompare(v2);
+            });
+
+            linkList.forEach((link) => {
                 var d = links[link];
 
                 var linkForeign = d.foreign;
 
                 if (d.type === 'belongsToParent') {
                     var type = 'childrenToParent';
-                } else {
-                    if (!d.entity) return;
-                    if (!linkForeign) return;
-                    var foreignType = this.getMetadata().get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
+                }
+                else {
+                    if (!d.entity) {
+                        return;
+                    }
+
+                    if (!linkForeign) {
+                        return;
+                    }
+
+                    var foreignType = this.getMetadata()
+                        .get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
+
                     var type = this.computeRelationshipType(d.type, foreignType);
                 }
 
-                if (!type) return;
+                if (!type) {
+                    return;
+                }
 
                 this.linkDataList.push({
                     link: link,
@@ -126,12 +152,12 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
                     type: type,
                     entityForeign: d.entity,
                     entity: this.scope,
+                    labelEntityForeign: this.getLanguage().translate(d.entity, 'scopeNames'),
                     linkForeign: linkForeign,
                     label: this.getLanguage().translate(link, 'links', this.scope),
                     labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity),
                 });
-
-            }, this);
+            });
         },
 
         setup: function () {
@@ -139,46 +165,50 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
 
             this.setupLinkData();
 
-            this.on('after:render', function () {
+            this.on('after:render', () => {
                 this.renderHeader();
             });
+        },
+
+        afterRender: function () {
+            this.$noData = this.$el.find('.no-data');
         },
 
         createLink: function () {
             this.createView('edit', 'views/admin/link-manager/modals/edit', {
                 scope: this.scope
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenTo(view, 'after:save', function () {
+                this.listenTo(view, 'after:save', () => {
                     this.clearView('edit');
                     this.setupLinkData();
                     this.render();
-                }, this);
+                });
 
-                this.listenTo(view, 'close', function () {
+                this.listenTo(view, 'close', () => {
                     this.clearView('edit');
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         editLink: function (link) {
             this.createView('edit', 'views/admin/link-manager/modals/edit', {
                 scope: this.scope,
-                link: link
-            }, function (view) {
+                link: link,
+            }, (view) => {
                 view.render();
 
-                this.listenTo(view, 'after:save', function () {
+                this.listenTo(view, 'after:save', () => {
                     this.clearView('edit');
                     this.setupLinkData();
                     this.render();
-                }, this);
+                });
 
-                this.listenTo(view, 'close', function () {
+                this.listenTo(view, 'close', () => {
                     this.clearView('edit');
                 }, this);
-            }.bind(this));
+            });
         },
 
         removeLink: function (link) {
@@ -211,6 +241,80 @@ define('views/admin/link-manager/index', 'view', function (Dep) {
 
         updatePageTitle: function () {
             this.setPageTitle(this.getLanguage().translate('Entity Manager', 'labels', 'Admin'));
+        },
+
+        processQuickSearch: function (text) {
+            text = text.trim();
+
+            let $noData = this.$noData;
+
+            $noData.addClass('hidden');
+
+            if (!text) {
+                this.$el.find('table tr.link-row').removeClass('hidden');
+
+                return;
+            }
+
+            let matchedList = [];
+
+            let lowerCaseText = text.toLowerCase();
+
+            this.linkDataList.forEach(item => {
+                let matched = false;
+
+                if (
+                    item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    item.link.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    item.entityForeign.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    item.labelEntityForeign.toLowerCase().indexOf(lowerCaseText) === 0
+                ) {
+                    matched = true;
+                }
+
+                if (!matched) {
+                    let wordList = item.link.split(' ')
+                        .concat(
+                            item.label.split(' ')
+                        )
+                        .concat(
+                            item.entityForeign.split(' ')
+                        )
+                        .concat(
+                            item.labelEntityForeign.split(' ')
+                        );
+
+                    wordList.forEach((word) => {
+                        if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                            matched = true;
+                        }
+                    });
+                }
+
+                if (matched) {
+                    matchedList.push(item.link);
+                }
+            });
+
+            if (matchedList.length === 0) {
+                this.$el.find('table tr.link-row').addClass('hidden');
+
+                $noData.removeClass('hidden');
+
+                return;
+            }
+
+            this.linkDataList
+                .map(item => item.link)
+                .forEach(scope => {
+                    if (!~matchedList.indexOf(scope)) {
+                        this.$el.find('table tr.link-row[data-link="'+scope+'"]').addClass('hidden');
+
+                        return;
+                    }
+
+                    this.$el.find('table tr.link-row[data-link="'+scope+'"]').removeClass('hidden');
+                });
         },
     });
 });

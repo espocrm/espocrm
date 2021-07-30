@@ -18,6 +18,18 @@
 </div>
 
 
+{{#if linkDataList.length}}
+<div class="margin-bottom-2x margin-top">
+    <input
+        type="text"
+        maxlength="64"
+        placeholder="{{translate 'Search'}}"
+        data-name="quick-search"
+        class="form-control"
+    >
+</div>
+{{/if}}
+
 <table class="table">
     {{#unless linkDataList.length}}
     <tr>
@@ -39,13 +51,13 @@
             <th width="15%" align="right" style="text-align: right">
                 {{translate 'entityForeign' category='fields' scope='EntityManager'}}
             </th>
+            <th width="10%"></th>
+            <th width="10%"></th>
         </tr>
     </thead>
-
-    </tr>
     {{/unless}}
     {{#each linkDataList}}
-    <tr data-link="{{link}}">
+    <tr data-link="{{link}}" class="link-row">
         <td width="15%" align="left">
             {{translate entity category='scopeNames'}}
         </td>
@@ -83,4 +95,4 @@
     {{/each}}
 </table>
 
-
+<div class="no-data hidden">{{translate 'No Data'}}</div>
