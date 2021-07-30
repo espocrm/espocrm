@@ -62,4 +62,6 @@ interface Template
     public function getPageWidth() : float;
 
     public function getPageHeight() : float;
+
+    public function getName() : string;
 }

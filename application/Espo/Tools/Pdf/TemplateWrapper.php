@@ -119,4 +119,9 @@ class TemplateWrapper implements Template
     {
         return $this->template->get('pageHeight') ?? 0.0;
     }
+
+    public function getName() : string
+    {
+        return $this->template->get('name');
+    }
 }
