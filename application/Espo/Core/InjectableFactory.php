@@ -29,12 +29,10 @@
 
 namespace Espo\Core;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Interfaces\Injectable,
-    Binding\BindingContainer,
-    Binding\Binding,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\Binding;
+use Espo\Core\Interfaces\Injectable;
 
 use ReflectionClass;
 use ReflectionParameter;

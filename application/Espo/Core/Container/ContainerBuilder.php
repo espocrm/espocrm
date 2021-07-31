@@ -29,21 +29,22 @@
 
 namespace Espo\Core\Container;
 
-use Espo\Core\{
-    Container,
-    Container\ContainerConfiguration,
-    Binding\BindingContainer,
-    Binding\BindingLoader,
-    Binding\EspoBindingLoader,
-    Utils\File\Manager as FileManager,
-    Utils\Config\ConfigFileManager,
-    Utils\Config,
-    Utils\DataCache,
-    Utils\Module,
-    Loaders\Log as LogLoader,
-    Loaders\DataManager as DataManagerLoader,
-    Loaders\Metadata as MetadataLoader,
-};
+use Espo\Core\Container;
+use Espo\Core\Container\ContainerConfiguration;
+
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingLoader;
+use Espo\Core\Binding\EspoBindingLoader;
+
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Config\ConfigFileManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\Module;
+
+use Espo\Core\Loaders\Log as LogLoader;
+use Espo\Core\Loaders\DataManager as DataManagerLoader;
+use Espo\Core\Loaders\Metadata as MetadataLoader;
 
 /**
  * Builds a service container.

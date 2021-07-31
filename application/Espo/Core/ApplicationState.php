@@ -29,10 +29,8 @@
 
 namespace Espo\Core;
 
-use Espo\Entities\{
-    Portal as PortalEntity,
-    User as UserEntity,
-};
+use Espo\Entities\Portal as PortalEntity;
+use Espo\Entities\User as UserEntity;
 
 /**
  * Provides information about an application, current user, portal.

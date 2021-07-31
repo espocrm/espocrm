@@ -29,12 +29,10 @@
 
 namespace Espo\Core;
 
-use Espo\Core\{
-    InjectableFactory,
-    Container\Loader,
-    Container\Container as ContainerInterface,
-    Binding\BindingContainer,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Container\Loader;
+use Espo\Core\Container\Container as ContainerInterface;
+use Espo\Core\Binding\BindingContainer;
 
 use ReflectionClass;
 use RuntimeException;

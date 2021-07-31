@@ -29,19 +29,19 @@
 
 namespace Espo\Core;
 
-use Espo\Core\{
-    Container\ContainerBuilder,
-    InjectableFactory,
-    Container,
-    Application\Runner,
-    Application\RunnerParams,
-    ApplicationUser,
-    Utils\Autoload,
-    Utils\Config,
-    Utils\Metadata,
-    Utils\ClientManager,
-    Utils\Log,
-};
+use Espo\Core\Container;
+use Espo\Core\Container\ContainerBuilder;
+use Espo\Core\InjectableFactory;
+
+use Espo\Core\Application\Runner;
+use Espo\Core\Application\RunnerParams;
+use Espo\Core\ApplicationUser;
+
+use Espo\Core\Utils\Autoload;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\ClientManager;
+use Espo\Core\Utils\Log;
 
 use ReflectionClass;
 

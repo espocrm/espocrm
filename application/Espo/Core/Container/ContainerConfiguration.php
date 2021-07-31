@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Container;
 
-use Espo\Core\{
-    Utils\Log,
-    Utils\Metadata,
-};
+use Espo\Core\Utils\Log;
+use Espo\Core\Utils\Metadata;
 
 use ReflectionClass;
 use Exception;
