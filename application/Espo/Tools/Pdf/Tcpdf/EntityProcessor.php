@@ -73,8 +73,7 @@ class EntityProcessor
         }
 
         if ($template->hasTitle()) {
-            // @todo Support placeholders.
-            $pdf->SetTitle($template->getTitle());
+            $pdf->SetTitle($this->render($htmlizer, $entity, $template->getTitle(), $additionalData));
         }
 
         $pdf->setFont($fontFace, '', $this->fontSize, '', true);
