@@ -198,6 +198,10 @@ define(
                         this.responseCache = responseCache;
 
                         resolve();
+                    })
+                    .catch(() => {
+                        console.error("Could not open `espo` cache.");
+                        resolve();
                     });
             });
         },
