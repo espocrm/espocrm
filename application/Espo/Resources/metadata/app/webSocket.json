@@ -9,5 +9,11 @@
             "paramList": ["scope", "id"],
             "accessCheckCommand": "AclCheck --userId=:userId --scope=:scope --id=:id --action=stream"
         }
+    },
+    "messagers": {
+        "ZeroMQ": {
+            "senderClassName": "Espo\\Core\\WebSocket\\ZeroMQSender",
+            "subscriberClassName": "Espo\\Core\\WebSocket\\ZeroMQSubscriber"
+        }
     }
 }

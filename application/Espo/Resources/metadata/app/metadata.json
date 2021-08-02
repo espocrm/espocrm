@@ -22,6 +22,7 @@
         ["app", "actions", "__ANY__", "implementationClassName"],
         ["app", "fieldProcessing"],
         ["app", "scheduledJobs"],
+        ["app", "webSocket", "messagers"],
         ["selectDefs"],
         ["recordDefs"],
         ["aclDefs"],

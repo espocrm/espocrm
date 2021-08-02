@@ -199,16 +199,6 @@ class DefaultBinding implements BindingProcessor
         );
 
         $binder->bindImplementation(
-            'Espo\\Core\\WebSocket\\Sender',
-            'Espo\\Core\\WebSocket\\ZeroMQSender'
-        );
-
-        $binder->bindImplementation(
-            'Espo\\Core\\WebSocket\\Subscriber',
-            'Espo\\Core\\WebSocket\\ZeroMQSubscriber'
-        );
-
-        $binder->bindImplementation(
             'Espo\\Core\\Acl\\Table\\TableFactory',
             'Espo\\Core\\Acl\\Table\\DefaultTableFactory'
         );

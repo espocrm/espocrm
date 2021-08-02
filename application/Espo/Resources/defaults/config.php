@@ -154,6 +154,7 @@ return [
     'noteEditThresholdPeriod' => '7 days',
     'emailForceUseExternalClient' => false,
     'useWebSocket' => false,
+    'webSocketMessager' => 'ZeroMQ',
     'auth2FAMethodList' => ['Totp'],
     'personNameFormat' => 'firstLast',
     'newNotificationCountInTitle' => false,

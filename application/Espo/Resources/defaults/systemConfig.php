@@ -118,6 +118,7 @@ return [
         'webSocketPort',
         'webSocketZeroMQSubscriberDsn',
         'webSocketZeroMQSubmissionDsn',
+        'webSocketMessager',
         'actualDatabaseType',
         'actualDatabaseVersion',
     ],

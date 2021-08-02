@@ -46,6 +46,9 @@ use Ratchet\Wamp\WampServer;
  */
 class ServerStarter
 {
+    /**
+     * @var Subscriber
+     */
     private $subscriber;
 
     private $categoriesData;
@@ -62,9 +65,9 @@ class ServerStarter
 
     private $metadata;
 
-    public function __construct(Subscriber $subscriber, Config $config, Metadata $metadata)
+    public function __construct(SubscriberFactory $subscriberFactory, Config $config, Metadata $metadata)
     {
-        $this->subscriber = $subscriber;
+        $this->subscriber = $subscriberFactory->create();
         $this->config = $config;
         $this->metadata = $metadata;
 

@@ -29,47 +29,38 @@
 
 namespace Espo\Core\WebSocket;
 
-use Espo\Core\Utils\Log;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Exceptions\Error;
 
-use stdClass;
-
-class Submission
+class SubscriberFactory
 {
-    /**
-     * @var Sender
-     */
-    private $sender;
+    private $injectableFactory;
 
-    private $log;
+    private $config;
 
-    public function __construct(SenderFactory $senderFactory, Log $log)
+    private $metadata;
+
+    private const DEFAULT_MESSAGER = 'ZeroMQ';
+
+    public function __construct(InjectableFactory $injectableFactory, Config $config, Metadata $metadata)
     {
-        $this->sender = $senderFactory->create();
-        $this->log = $log;
+        $this->injectableFactory = $injectableFactory;
+        $this->config = $config;
+        $this->metadata = $metadata;
     }
 
-    /**
-     * Submit to a web-socket server.
-     */
-    public function submit(string $topic, ?string $userId = null, ?stdClass $data = null): void
+    public function create(): Subscriber
     {
-        if (!$data) {
-            $data = (object) [];
+        $messager = $this->config->get('webSocketMessager') ?? self::DEFAULT_MESSAGER;
+
+        $className = $this->metadata->get(['app', 'webSocket', 'messagers', $messager, 'subscriberClassName']);
+
+        if (!$className) {
+            throw new Error("No subscriber for messager '{$messager}'.");
         }
 
-        if ($userId) {
-            $data->userId = $userId;
-        }
-
-        $data->topicId = $topic;
-
-        $message = json_encode($data);
-
-        try {
-            $this->sender->send($message);
-        }
-        catch (Throwable $e) {
-            $this->log->error("WebSocketSubmission: " . $e->getMessage());
-        }
+        return $this->injectableFactory->create($className);
     }
 }
