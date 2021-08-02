@@ -196,8 +196,9 @@ define(
                     .then(() => caches.open('espo'))
                     .then(responseCache => {
                         this.responseCache = responseCache;
-                    })
-                    .then(() => resolve())
+
+                        resolve();
+                    });
             });
         },
 
