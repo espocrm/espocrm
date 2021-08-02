@@ -62,6 +62,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
                 this.getHelper().escapeString(this.userModel.get('userName'));
 
             var model = this.model = new Model();
+
             model.name = 'UserSecurity';
             model.id = this.userModel.id;
             model.url = 'UserSecurity/' + this.userModel.id;
@@ -83,7 +84,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
             });
 
             this.wait(
-                model.fetch().then(function () {
+                model.fetch().then(() => {
                     this.initialAttributes = Espo.Utils.cloneDeep(model.attributes);
 
                     if (model.get('auth2FA')) {
@@ -112,31 +113,32 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
                         ],
                     }, function (view) {
                         this.controlFieldsVisibility(view);
-                        this.listenTo(this.model, 'change:auth2FA', function () {
+
+                        this.listenTo(this.model, 'change:auth2FA', () => {
                             this.controlFieldsVisibility(view);
-                        }, this);
+                        });
                     });
-                }.bind(this))
+                })
             );
 
-            this.listenTo(this.model, 'change', function (m, o) {
+            this.listenTo(this.model, 'change', () => {
                 if (this.initialAttributes ) {
-                    if (
-                        this.isChanged()
-                    ) {
+                    if (this.isChanged()) {
                         this.showButton('apply');
-                    } else {
+                    }
+                    else {
                         this.hideButton('apply');
                     }
                 }
-            }, this);
+            });
         },
 
         controlFieldsVisibility: function (view) {
             if (this.model.get('auth2FA')) {
                 view.showField('auth2FAMethod');
                 view.setFieldRequired('auth2FAMethod');
-            } else {
+            }
+            else {
                 view.hideField('auth2FAMethod');
                 view.setFieldNotRequired('auth2FAMethod');
             }
@@ -148,10 +150,9 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
         },
 
         actionReset: function () {
-            this.confirm(this.translate('security2FaResetConfimation', 'messages', 'User'), function () {
+            this.confirm(this.translate('security2FaResetConfimation', 'messages', 'User'), () => {
                 this.actionApply(true);
-            }.bind(this));
-
+            });
         },
 
         actionApply: function (reset) {
@@ -163,29 +164,21 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
             this.hideButton('apply');
 
-            new Promise(
-                function (resolve) {
-                    this.createView('dialog', 'views/user/modals/password', {}, function (passwordView) {
-                        passwordView.render();
+            new Promise((resolve) => {
+                this.createView('dialog', 'views/user/modals/password', {}, (passwordView) => {
+                    passwordView.render();
 
-                        this.listenToOnce(passwordView, 'cancel', function () {
-                            this.showButton('apply');
-                        }, this);
+                    this.listenToOnce(passwordView, 'cancel', () => this.showButton('apply'));
 
-                        this.listenToOnce(passwordView, 'proceed', function (data) {
-                            this.model.set('password', data.password);
+                    this.listenToOnce(passwordView, 'proceed', (data) => {
+                        this.model.set('password', data.password);
 
-                            passwordView.close();
+                        passwordView.close();
 
-                            resolve();
-                        }, this);
+                        resolve();
                     });
-                }.bind(this)
-            ).then(
-                function () {
-                    this.processApply(reset);
-                }.bind(this)
-            );
+                });
+            }).then(() => this.processApply(reset));
         },
 
         processApply: function (reset) {
@@ -196,53 +189,61 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
                 if (view) {
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
                     this.createView('dialog', view, {
                         model: this.model,
                         reset: reset,
-                    }, function (view) {
+                    }, (view) => {
                         Espo.Ui.notify(false);
+
                         view.render();
 
-                        this.listenToOnce(view, 'cancel', function () {
+                        this.listenToOnce(view, 'cancel', () => {
                             this.close();
-                        }, this);
+                        });
 
-                        this.listenToOnce(view, 'apply', function () {
+                        this.listenToOnce(view, 'apply', () => {
                             view.close();
-                            this.processSave();
-                        }, this);
 
-                        this.listenToOnce(view, 'done', function () {
+                            this.processSave();
+                        });
+
+                        this.listenToOnce(view, 'done', () => {
                             Espo.Ui.success(this.translate('Done'));
                             this.trigger('done');
+
                             view.close();
                             this.close();
-                        }, this);
+                        });
                     });
-                } else {
-                    if (reset) {
-                        this.model.set('auth2FA', false);
-                    }
-                    this.processSave();
+
+                    return ;
                 }
-            } else {
+
+                if (reset) {
+                    this.model.set('auth2FA', false);
+                }
+
                 this.processSave();
+
+                return;
             }
+
+            this.processSave();
+
         },
 
         processSave: function () {
             this.hideButton('apply');
 
-            this.model.save().then(
-                function () {
+            this.model
+                .save()
+                .then(() => {
                     this.close();
+
                     Espo.Ui.success(this.translate('Done'));
-                }.bind(this)
-            ).fail(
-                function () {
-                    this.showButton('apply');
-                }.bind(this)
-            );
+                })
+                .fail(() => this.showButton('apply'));
         },
 
     });

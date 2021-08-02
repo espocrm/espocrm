@@ -52,21 +52,24 @@ define('views/user-security/modals/totp',
             this.headerHtml = false;
 
             var model = new Model();
+
             model.name = 'UserSecurity';
 
             this.wait(
-                Espo.Ajax.postRequest('UserSecurity/action/generate2FAData', {
-                    id: this.model.id,
-                    password: this.model.get('password'),
-                    auth2FAMethod: this.model.get('auth2FAMethod'),
-                    reset: this.options.reset,
-                }).then(function (data) {
-                    this.secret = data.auth2FATotpSecret;
-                    model.set('secret', data.auth2FATotpSecret);
-                    this.label = data.label;
-                }.bind(this))
-            );
+                Espo.Ajax
+                    .postRequest('UserSecurity/action/generate2FAData', {
+                        id: this.model.id,
+                        password: this.model.get('password'),
+                        auth2FAMethod: this.model.get('auth2FAMethod'),
+                        reset: this.options.reset,
+                    })
+                    .then(data => {
+                        this.label = data.label;
+                        this.secret = data.auth2FATotpSecret;
 
+                        model.set('secret', data.auth2FATotpSecret);
+                    })
+            );
 
             model.setDefs({
                 fields: {
@@ -111,7 +114,7 @@ define('views/user-security/modals/totp',
 
         afterRender: function () {
             new QRCode(this.$el.find('.qrcode').get(0), {
-                text: 'otpauth://totp/'+this.label+'?secret=' + this.secret,
+                text: 'otpauth://totp/' + this.label + '?secret=' + this.secret,
                 width: 256,
                 height: 256,
                 colorDark : '#000000',
@@ -122,7 +125,10 @@ define('views/user-security/modals/totp',
 
         actionApply: function () {
             var data = this.getView('record').processFetch();
-            if (!data) return;
+
+            if (!data) {
+                return;
+            }
 
             this.model.set('code', data.code);
 
@@ -131,17 +137,16 @@ define('views/user-security/modals/totp',
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            this.model.save().then(
-                function () {
+            this.model
+                .save()
+                .then(() => {
                     Espo.Ui.notify(false);
                     this.trigger('done');
-                }.bind(this)
-            ).fail(
-                function () {
+                })
+                .catch(() => {
                     this.showButton('apply');
                     this.showButton('cancel');
-                }.bind(this)
-            );
+                });
         },
 
     });
