@@ -29,44 +29,38 @@
 
 namespace Espo\Core\WebSocket;
 
-use Espo\Core\{
-    Utils\Config,
-    Utils\Metadata,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 
-use React\{
-    EventLoop\Factory as EventLoopFactory,
-    Socket\Server as SocketServer,
-    Socket\SecureServer as SocketSecureServer,
-};
+use React\EventLoop\Factory as EventLoopFactory;
+use React\Socket\Server as SocketServer;
+use React\Socket\SecureServer as SocketSecureServer;
 
-use Ratchet\{
-    Server\IoServer,
-    Http\HttpServer,
-    WebSocket\WsServer,
-    Wamp\WampServer,
-};
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+use Ratchet\Wamp\WampServer;
 
 /**
  * Starts a web-socket server.
  */
 class ServerStarter
 {
-    protected $subscriber;
+    private $subscriber;
 
-    protected $categoriesData;
+    private $categoriesData;
 
-    protected $phpExecutablePath;
+    private $phpExecutablePath;
 
-    protected $isDebugMode;
+    private $isDebugMode;
 
-    protected $useSecureServer;
+    private $useSecureServer;
 
-    protected $port;
+    private $port;
 
-    protected $config;
+    private $config;
 
-    protected $metadata;
+    private $metadata;
 
     public function __construct(Subscriber $subscriber, Config $config, Metadata $metadata)
     {

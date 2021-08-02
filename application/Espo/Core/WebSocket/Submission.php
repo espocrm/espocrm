@@ -31,7 +31,7 @@ namespace Espo\Core\WebSocket;
 
 use Espo\Core\Utils\Log;
 
-use StdClass;
+use stdClass;
 
 class Submission
 {
@@ -48,7 +48,7 @@ class Submission
     /**
      * Submit to a web-socket server.
      */
-    public function submit(string $topic, ?string $userId = null, ?StdClass $data = null): void
+    public function submit(string $topic, ?string $userId = null, ?stdClass $data = null): void
     {
         if (!$data) {
             $data = (object) [];
