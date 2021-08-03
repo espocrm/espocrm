@@ -32,9 +32,10 @@ namespace Espo\Core\WebSocket;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Binding\Factory;
 use Espo\Core\Exceptions\Error;
 
-class SenderFactory
+class SenderFactory implements Factory
 {
     private $injectableFactory;
 

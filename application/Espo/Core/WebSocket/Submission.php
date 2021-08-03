@@ -35,16 +35,13 @@ use stdClass;
 
 class Submission
 {
-    /**
-     * @var Sender
-     */
     private $sender;
 
     private $log;
 
-    public function __construct(SenderFactory $senderFactory, Log $log)
+    public function __construct(Sender $sender, Log $log)
     {
-        $this->sender = $senderFactory->create();
+        $this->sender = $sender;
         $this->log = $log;
     }
 
