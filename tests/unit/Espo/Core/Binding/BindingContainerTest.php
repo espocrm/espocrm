@@ -254,19 +254,30 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testGetClassName()
+    public function testGetClassNameImplementation(): void
     {
         $this->binder->bindImplementation('Espo\\Test', 'Espo\\ImplTest');
 
         $class = $this->createClassMock('Espo\\Context');
-
         $param = $this->createParamMock('test', 'Espo\\Test');
 
         $binding = $this->createContainer()->get($class, $param);
 
         $this->assertEquals(Binding::IMPLEMENTATION_CLASS_NAME, $binding->getType());
-
         $this->assertEquals('Espo\\ImplTest', $binding->getValue());
+    }
+
+    public function testGetClassNameFactory(): void
+    {
+        $this->binder->bindFactory('Espo\\Test', 'Espo\\TestFactory');
+
+        $class = $this->createClassMock('Espo\\Context');
+        $param = $this->createParamMock('test', 'Espo\\Test');
+
+        $binding = $this->createContainer()->get($class, $param);
+
+        $this->assertEquals(Binding::FACTORY_CLASS_NAME, $binding->getType());
+        $this->assertEquals('Espo\\TestFactory', $binding->getValue());
     }
 
     public function testGetService()
@@ -406,7 +417,7 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('test', $binding->getValue());
     }
 
-    public function testContextGetClassName()
+    public function testContextGetClassNameImplementation(): void
     {
         $this->binder
             ->for('Espo\\Context')
@@ -419,8 +430,23 @@ class BindingContainerTest extends \PHPUnit\Framework\TestCase
         $binding = $this->createContainer()->get($class, $param);
 
         $this->assertEquals(Binding::IMPLEMENTATION_CLASS_NAME, $binding->getType());
-
         $this->assertEquals('Espo\\ImplTest', $binding->getValue());
+    }
+
+    public function testContextGetClassNameFactory(): void
+    {
+        $this->binder
+            ->for('Espo\\Context')
+            ->bindFactory('Espo\\Test', 'Espo\\TestFactory');
+
+        $class = $this->createClassMock('Espo\\Context');
+
+        $param = $this->createParamMock('test', 'Espo\\Test');
+
+        $binding = $this->createContainer()->get($class, $param);
+
+        $this->assertEquals(Binding::FACTORY_CLASS_NAME, $binding->getType());
+        $this->assertEquals('Espo\\TestFactory', $binding->getValue());
     }
 
     public function testNoContextClassName()

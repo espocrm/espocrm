@@ -139,6 +139,25 @@ class ContextualBinder
         return $this;
     }
 
+    /**
+     * Bind an interface to a factory.
+     *
+     * @param $key An interface or interface with a parameter name (`Interface $name`).
+     * @param $factoryClassName A factory class name.
+     */
+    public function bindFactory(string $key, string $factoryClassName): self
+    {
+        $this->validateBindingKeyNoParameterName($key);
+
+        $this->data->addContext(
+            $this->className,
+            $key,
+            Binding::createFromFactoryClassName($factoryClassName)
+        );
+
+        return $this;
+    }
+
     private function validateBinding(string $key): void
     {
         if (!$key) {

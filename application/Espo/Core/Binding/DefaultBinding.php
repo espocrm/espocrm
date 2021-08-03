@@ -207,5 +207,15 @@ class DefaultBinding implements BindingProcessor
             'Espo\\Core\\Utils\\Id\\RecordIdGenerator',
             'Espo\\Core\\Utils\\Id\\DefaultRecordIdGenerator'
         );
+
+        $binder->bindFactory(
+            'Espo\\Core\\WebSocket\\Subscriber',
+            'Espo\\Core\\WebSocket\\SubscriberFactory'
+        );
+
+        $binder->bindFactory(
+            'Espo\\Core\\WebSocket\\Sender',
+            'Espo\\Core\\WebSocket\\SenderFactory'
+        );
     }
 }

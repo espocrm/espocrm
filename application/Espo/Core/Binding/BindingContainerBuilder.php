@@ -92,6 +92,19 @@ class BindingContainerBuilder
 
         return $this;
     }
+    
+    /**
+     * Bind an interface to a factory.
+     *
+     * @param $key An interface or interface with a parameter name (`Interface $name`).
+     * @param $factoryClassName A factory class name.
+     */
+    public function bindFactory(string $key, string $factoryClassName): self
+    {
+        $this->binder->bindFactory($key, $factoryClassName);
+
+        return $this;
+    }
 
     /**
      * Creates a contextual binder.

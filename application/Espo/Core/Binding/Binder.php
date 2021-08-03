@@ -113,6 +113,24 @@ class Binder
     }
 
     /**
+     * Bind an interface to a factory.
+     *
+     * @param $key An interface or interface with a parameter name (`Interface $name`).
+     * @param $factoryClassName A factory class name.
+     */
+    public function bindFactory(string $key, string $factoryClassName): self
+    {
+        $this->validateBindingKey($key);
+
+        $this->data->addGlobal(
+            $key,
+            Binding::createFromFactoryClassName($factoryClassName)
+        );
+
+        return $this;
+    }
+
+    /**
      * Creates a contextual binder.
      *
      * @param $className A context.

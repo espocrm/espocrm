@@ -41,6 +41,8 @@ class Binding
 
     public const CALLBACK = 4;
 
+    public const FACTORY_CLASS_NAME = 5;
+
     private $type;
 
     private $value;
@@ -87,5 +89,14 @@ class Binding
     public static function createFromCallback(callable $callback): self
     {
         return new self(self::CALLBACK, $callback);
+    }
+
+    public static function createFromFactoryClassName(string $factoryClassName): self
+    {
+        if (!$factoryClassName) {
+            throw new LogicException("Bad binding.");
+        }
+
+        return new self(self::FACTORY_CLASS_NAME, $factoryClassName);
     }
 }

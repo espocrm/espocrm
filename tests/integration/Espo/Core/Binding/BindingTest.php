@@ -43,15 +43,16 @@ use tests\integration\testClasses\Binding\{
     SomeService,
     SomeClassRequiringService,
     SomeClassRequiringValue,
+    SomeFactory,
 };
 
 class BindingTest extends \tests\integration\Core\BaseTestCase
 {
-    public function testImplementation()
+    public function testImplementation(): void
     {
         $bindingLoader = new class() implements BindingLoader
         {
-            public function load() : BindingData
+            public function load(): BindingData
             {
                 $data = new BindingData();
 
@@ -59,6 +60,41 @@ class BindingTest extends \tests\integration\Core\BaseTestCase
                     SomeInterface::class,
                     Binding::createFromImplementationClassName(
                         SomeImplementation::class
+                    )
+                );
+
+                return $data;
+            }
+        };
+
+        $container = (new ContainerBuilder())
+            ->withBindingLoader($bindingLoader)
+            ->build();
+
+        $injectableFactory = $container->get('injectableFactory');
+
+        $obj = $injectableFactory->create(SomeClass::class);
+
+        $this->assertNotNull($obj);
+
+        $this->assertInstanceOf(
+            SomeImplementation::class,
+            $obj->get()
+        );
+    }
+
+    public function testFactory(): void
+    {
+        $bindingLoader = new class() implements BindingLoader
+        {
+            public function load(): BindingData
+            {
+                $data = new BindingData();
+
+                $data->addGlobal(
+                    SomeInterface::class,
+                    Binding::createFromFactoryClassName(
+                        SomeFactory::class
                     )
                 );
 

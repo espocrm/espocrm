@@ -32,6 +32,7 @@ namespace Espo\Core;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\Binding;
+use Espo\Core\Binding\Factory;
 use Espo\Core\Interfaces\Injectable;
 
 use ReflectionClass;
@@ -251,6 +252,13 @@ class InjectableFactory
             $dependencyList = $this->getCallbackInjectionList($callback);
 
             return $callback(...$dependencyList);
+        }
+
+        if ($type === Binding::FACTORY_CLASS_NAME) {
+            /** @var Factory $factory */
+            $factory = $this->createInternal($value, null, $bindingContainer);
+
+            return $factory->create();
         }
 
         throw new Error("InjectableFactory: Bad binding.");
