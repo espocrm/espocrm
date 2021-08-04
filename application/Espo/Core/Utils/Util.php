@@ -145,7 +145,7 @@ class Util
     }
 
     /**
-     * Merge arrays recursively (default PHP function is not suitable).
+     * Merge arrays recursively. $newArray overrides $currentArray.
      *
      * @param array $currentArray
      * @param array $newArray - chief array (priority is same as for array_merge())
