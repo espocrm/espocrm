@@ -112,16 +112,17 @@ class Installer
 
         if (!file_exists($configPath)) {
             $fileManager->putPhpContents($configPath, []);
+
+            $config->update();
         }
 
-        $app = new Application();
-
-        $configData = include('data/config.php');
+        $configData = get_object_vars($config->getAllData());
+        $defaultData = $config->getDefaults();
 
         $configWriterFileManager = new ConfigWriterFileManager(null, $configData['defaultPermissions'] ?? null);
 
         /** @var InjectableFactory $injectableFactory */
-        $injectableFactory = $app->getContainer()->get('injectableFactory');
+        $injectableFactory = (new Application())->getContainer()->get('injectableFactory');
 
         $configWriter = $injectableFactory->createWithBinding(
             ConfigWriter::class,
@@ -130,8 +131,6 @@ class Installer
                 ->bindInstance(ConfigWriterFileManager::class, $configWriterFileManager)
                 ->build()
         );
-
-        $defaultData = $config->getDefaults();
 
         // Save default data if does not exist.
         if (!Util::arrayKeysExists(array_keys($defaultData), $configData)) {

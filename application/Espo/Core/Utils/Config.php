@@ -323,6 +323,14 @@ class Config
     }
 
     /**
+     * Get all parameters.
+     */
+    public function getAllData(): stdClass
+    {
+        return (object) $this->getData();
+    }
+
+    /**
      * Get all parameters excluding those that are set in the internal config.
      */
     public function getAllNonInternalData(): stdClass
