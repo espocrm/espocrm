@@ -14,7 +14,7 @@
     ],
     "params": {
         "awsS3Storage": {
-            "system": true
+            "level": "system"
         }
     }
 }

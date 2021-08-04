@@ -529,8 +529,7 @@
             "view": "views/settings/fields/busy-ranges-entity-list"
         },
         "googleMapsApiKey": {
-            "type": "varchar",
-            "onlyUser": true
+            "type": "varchar"
         },
         "massEmailDisableMandatoryOptOutLink": {
             "type": "bool"

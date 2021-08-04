@@ -35,6 +35,14 @@ use Espo\Core\Utils\FieldUtil;
 
 class Access
 {
+    public const LEVEL_SYSTEM = 'system';
+
+    public const LEVEL_SUPER_ADMIN = 'superAdmin';
+
+    public const LEVEL_ADMIN = 'admin';
+
+    public const LEVEL_GLOBAL = 'global';
+
     private $config;
 
     private $metadata;
@@ -51,7 +59,7 @@ class Access
     /**
      * @return string[]
      */
-    public function getAdminOnlyItemList(): array
+    public function getAdminParamList(): array
     {
         $itemList = $this->config->get('adminItems') ?? [];
 
@@ -67,35 +75,18 @@ class Access
             }
         }
 
-        return array_values($itemList);
+        return array_values(
+            array_merge(
+                $itemList,
+                $this->getParamListByLevel(self::LEVEL_ADMIN)
+            )
+        );
     }
 
     /**
      * @return string[]
      */
-    public function getUserOnlyItemList(): array
-    {
-        $itemList = $this->config->get('userItems') ?? [];
-
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
-
-        foreach ($fieldDefs as $field => $fieldParams) {
-            if (empty($fieldParams['onlyUser'])) {
-                continue;
-            }
-
-            foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
-                $itemList[] = $attribute;
-            }
-        }
-
-        return array_values($itemList);
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getSystemOnlyItemList(): array
+    public function getSystemParamList(): array
     {
         $itemList = $this->config->get('systemItems') ?? [];
 
@@ -111,23 +102,18 @@ class Access
             }
         }
 
-        $params = $this->metadata->get(['app', 'config', 'params']) ?? [];
-
-        foreach ($params as $name => $item) {
-            if (empty($item['system'])) {
-                continue;
-            }
-
-            $itemList[] = $name;
-        }
-
-        return array_values($itemList);
+        return array_values(
+            array_merge(
+                $itemList,
+                $this->getParamListByLevel(self::LEVEL_SYSTEM)
+            )
+        );
     }
 
     /**
      * @return string[]
      */
-    public function getGlobalItemList(): array
+    public function getGlobalParamList(): array
     {
         $itemList = $this->config->get('globalItems', []);
 
@@ -143,16 +129,46 @@ class Access
             }
         }
 
-        return array_values($itemList);
+        return array_values(
+            array_merge(
+                $itemList,
+                $this->getParamListByLevel(self::LEVEL_GLOBAL)
+            )
+        );
     }
 
     /**
      * @return string[]
      */
-    public function getSuperAdminOnlyItemList(): array
+    public function getSuperAdminParamList(): array
     {
-        $itemList = $this->config->get('superAdminItems') ?? [];
+        return array_values(
+            array_merge(
+                $this->config->get('superAdminItems') ?? [],
+                $this->getParamListByLevel(self::LEVEL_SUPER_ADMIN)
+            )
+        );
+    }
 
-        return array_values($itemList);
+    /**
+     * @return string[]
+     */
+    private function getParamListByLevel(string $level): array
+    {
+        $itemList = [];
+
+        $params = $this->metadata->get(['app', 'config', 'params']) ?? [];
+
+        foreach ($params as $name => $item) {
+            $level = $item['level'] ?? null;
+
+            if ($level !== $level) {
+                continue;
+            }
+
+            $itemList[] = $name;
+        }
+
+        return $itemList;
     }
 }

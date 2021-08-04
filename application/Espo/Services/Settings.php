@@ -120,12 +120,12 @@ class Settings
 
         $ignoreItemList = [];
 
-        foreach ($this->access->getSystemOnlyItemList() as $item) {
+        foreach ($this->access->getSystemParamList() as $item) {
             $ignoreItemList[] = $item;
         }
 
         if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
-            foreach ($this->access->getSuperAdminOnlyItemList() as $item) {
+            foreach ($this->access->getSuperAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
             }
 
@@ -192,18 +192,12 @@ class Settings
 
         $ignoreItemList = [];
 
-        foreach ($this->access->getSystemOnlyItemList() as $item) {
+        foreach ($this->access->getSystemParamList() as $item) {
             $ignoreItemList[] = $item;
         }
 
         if (!$user->isAdmin() || $user->isSystem()) {
-            foreach ($this->access->getAdminOnlyItemList() as $item) {
-                $ignoreItemList[] = $item;
-            }
-        }
-
-        if ($user->isSystem()) {
-            foreach ($this->access->getUserOnlyItemList() as $item) {
+            foreach ($this->access->getAdminParamList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
@@ -219,7 +213,7 @@ class Settings
         }
 
         if ($user->isSystem()) {
-            $globalItemList = $this->access->getGlobalItemList();
+            $globalItemList = $this->access->getGlobalParamList();
 
             foreach (array_keys(get_object_vars($data)) as $item) {
                 if (!in_array($item, $globalItemList)) {
