@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Utils;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Utils\Config\ConfigFileManager,
-};
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Config\ConfigFileManager;
 
 use stdClass;
 use E_USER_DEPRECATED;
@@ -337,51 +335,6 @@ class Config
         }
 
         return $this->set($timestamp);
-    }
-
-    /**
-     * @todo Remove.
-     * @deprecated
-     */
-    public function getAdminOnlyItemList(): array
-    {
-        return $this->get('adminItems', []);
-    }
-
-    /**
-     * @todo Remove.
-     * @deprecated
-     */
-    public function getSuperAdminOnlyItemList(): array
-    {
-        return $this->get('superAdminItems', []);
-    }
-
-    /**
-     * @todo Remove.
-     * @deprecated
-     */
-    public function getSystemOnlyItemList(): array
-    {
-        return $this->get('systemItems', []);
-    }
-
-    /**
-     * @todo Remove.
-     * @deprecated
-     */
-    public function getSuperAdminOnlySystemItemList(): array
-    {
-        return $this->get('superAdminSystemItems', []);
-    }
-
-    /**
-     * @todo Remove.
-     * @deprecated
-     */
-    public function getUserOnlyItemList(): array
-    {
-        return $this->get('userItems', []);
     }
 
     /**

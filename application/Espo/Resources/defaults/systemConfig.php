@@ -74,7 +74,6 @@ return [
         'systemItems',
         'adminItems',
         'superAdminItems',
-        'superAdminSystemItems',
         'configPath',
         'cachePath',
         'database',
@@ -228,11 +227,7 @@ return [
         'useWebSocket',
         'webSocketUrl',
     ],
-    'superAdminSystemItems' => [
-    ],
-    'userItems' => [
-
-    ],
+    'userItems' => [],
     'globalItems' => [
         'cacheTimestamp',
         'language',

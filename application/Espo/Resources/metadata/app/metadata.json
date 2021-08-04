@@ -23,6 +23,7 @@
         ["app", "fieldProcessing"],
         ["app", "scheduledJobs"],
         ["app", "webSocket", "messagers"],
+        ["app", "config"],
         ["selectDefs"],
         ["recordDefs"],
         ["aclDefs"],

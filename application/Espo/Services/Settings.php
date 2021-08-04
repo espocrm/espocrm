@@ -30,45 +30,48 @@
 namespace Espo\Services;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    ApplicationState,
-    Acl,
-    InjectableFactory,
-    ORM\EntityManager,
-    Utils\Metadata,
-    Utils\FieldUtil,
-    Utils\Config,
-    Utils\Config\ConfigWriter,
-    DataManager,
-    FieldValidation\FieldValidationManager,
-    Currency\DatabasePopulator as CurrencyDatabasePopulator,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ApplicationState;
+use Espo\Core\Acl;
+use Espo\Core\InjectableFactory;
 
-use StdClass;
+use Espo\Core\DataManager;
+use Espo\Core\FieldValidation\FieldValidationManager;
+use Espo\Core\Currency\DatabasePopulator as CurrencyDatabasePopulator;
+
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Config\Access;
+
+use stdClass;
 
 class Settings
 {
-    protected $applicationState;
+    private $applicationState;
 
-    protected $config;
+    private $config;
 
-    protected $configWriter;
+    private $configWriter;
 
-    protected $fieldUtil;
+    private $fieldUtil;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $acl;
+    private $acl;
 
-    protected $entityManager;
+    private $entityManager;
 
-    protected $dataManager;
+    private $dataManager;
 
-    protected $fieldValidationManager;
+    private $fieldValidationManager;
 
-    protected $injectableFactory;
+    private $injectableFactory;
+
+    private $access;
 
     public function __construct(
         ApplicationState $applicationState,
@@ -80,7 +83,8 @@ class Settings
         EntityManager $entityManager,
         DataManager $dataManager,
         FieldValidationManager $fieldValidationManager,
-        InjectableFactory $injectableFactory
+        InjectableFactory $injectableFactory,
+        Access $access
     ) {
         $this->applicationState = $applicationState;
         $this->config = $config;
@@ -92,124 +96,21 @@ class Settings
         $this->dataManager = $dataManager;
         $this->fieldValidationManager = $fieldValidationManager;
         $this->injectableFactory = $injectableFactory;
+        $this->access = $access;
     }
 
-    public function getConfigData(): StdClass
+    public function getConfigData(): stdClass
     {
         $data = $this->config->getAllData();
 
-        $user = $this->applicationState->getUser();
-
-        $ignoreItemList = [];
-
-        foreach ($this->getSystemOnlyItemList() as $item) {
-            $ignoreItemList[] = $item;
-        }
-
-        if (!$user->isAdmin() || $user->isSystem()) {
-            foreach ($this->getAdminOnlyItemList() as $item) {
-                $ignoreItemList[] = $item;
-            }
-        }
-
-        if ($user->isSystem()) {
-            foreach ($this->getUserOnlyItemList() as $item) {
-                $ignoreItemList[] = $item;
-            }
-        }
-
-        if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
-            foreach ($this->config->getSuperAdminOnlySystemItemList() as $item) {
-                $ignoreItemList[] = $item;
-            }
-        }
-
-        if ($this->applicationState->isPortal()) {
-            $portal = $this->applicationState->getPortal();
-
-            $this->entityManager->getRepository('Portal')->loadUrlField($portal);
-
-            $data->siteUrl = $portal->get('url');
-        }
-
-        foreach ($ignoreItemList as $item) {
-            unset($data->$item);
-        }
-
-        if ($user->isSystem()) {
-            $globalItemList = $this->getGlobalItemList();
-
-            foreach (get_object_vars($data) as $item => $value) {
-                if (!in_array($item, $globalItemList)) {
-                    unset($data->$item);
-                }
-            }
-        }
-
-        if (!$user->isAdmin() && !$user->isSystem()) {
-            $entityTypeListParamList = [
-                'tabList',
-                'quickCreateList',
-                'globalSearchEntityList',
-                'assignmentEmailNotificationsEntityList',
-                'assignmentNotificationsEntityList',
-                'calendarEntityList',
-                'streamEmailNotificationsEntityList',
-                'activitiesEntityList',
-                'historyEntityList',
-                'streamEmailNotificationsTypeList',
-                'emailKeepParentTeamsEntityList',
-            ];
-
-            $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
-
-            foreach ($scopeList as $scope) {
-                if (!$this->metadata->get(['scopes', $scope, 'acl'])) {
-                    continue;
-                }
-
-                if ($this->acl->check($scope)) {
-                    continue;
-                }
-
-                foreach ($entityTypeListParamList as $param) {
-                    $list = $data->$param ?? [];
-
-                    foreach ($list as $i => $item) {
-                        if ($item === $scope) {
-                            unset($list[$i]);
-                        }
-                    }
-
-                    $list = array_values($list);
-
-                    $data->$param = $list;
-                }
-            }
-        }
-
-        if (
-            ($this->config->get('outboundEmailFromAddress') || $this->config->get('internalSmtpServer'))
-            &&
-            !$this->config->get('passwordRecoveryDisabled')
-        ) {
-            $data->passwordRecoveryEnabled = true;
-        }
-
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
-
-        foreach ($fieldDefs as $field => $fieldParams) {
-            if ($fieldParams['type'] === 'password') {
-                unset($data->$field);
-            }
-        }
-
+        $this->filterDataByAccess($data);
         $this->filterData($data);
+        $this->loadAdditionalParams($data);
 
         return $data;
     }
 
-    public function setConfigData(StdClass $data): void
+    public function setConfigData(stdClass $data): void
     {
         $user = $this->applicationState->getUser();
 
@@ -219,16 +120,16 @@ class Settings
 
         $ignoreItemList = [];
 
-        foreach ($this->getSystemOnlyItemList() as $item) {
+        foreach ($this->access->getSystemOnlyItemList() as $item) {
             $ignoreItemList[] = $item;
         }
 
         if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
-            foreach ($this->config->getSuperAdminOnlyItemList() as $item) {
+            foreach ($this->access->getSuperAdminOnlyItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
 
-            foreach ($this->config->getSuperAdminOnlySystemItemList() as $item) {
+            foreach ($this->access->getSuperAdminOnlySystemItemList() as $item) {
                 $ignoreItemList[] = $item;
             }
         }
@@ -240,7 +141,6 @@ class Settings
         $entity = $this->entityManager->getEntity('Settings');
 
         $entity->set($data);
-
         $entity->setAsNotNew();
 
         $this->processValidation($entity, $data);
@@ -266,14 +166,118 @@ class Settings
         }
     }
 
-    protected function populateDatabaseWithCurrencyRates(): void
+    private function loadAdditionalParams(stdClass $data): void
+    {
+        if ($this->applicationState->isPortal()) {
+            $portal = $this->applicationState->getPortal();
+
+            $this->entityManager
+                ->getRepository('Portal')
+                ->loadUrlField($portal);
+
+            $data->siteUrl = $portal->get('url');
+        }
+
+        if (
+            ($this->config->get('outboundEmailFromAddress') || $this->config->get('internalSmtpServer')) &&
+            !$this->config->get('passwordRecoveryDisabled')
+        ) {
+            $data->passwordRecoveryEnabled = true;
+        }
+    }
+
+    private function filterDataByAccess(stdClass $data): void
+    {
+        $user = $this->applicationState->getUser();
+
+        $ignoreItemList = [];
+
+        foreach ($this->access->getSystemOnlyItemList() as $item) {
+            $ignoreItemList[] = $item;
+        }
+
+        if (!$user->isAdmin() || $user->isSystem()) {
+            foreach ($this->access->getAdminOnlyItemList() as $item) {
+                $ignoreItemList[] = $item;
+            }
+        }
+
+        if ($user->isSystem()) {
+            foreach ($this->access->getUserOnlyItemList() as $item) {
+                $ignoreItemList[] = $item;
+            }
+        }
+
+        if ($this->config->get('restrictedMode') && !$user->isSuperAdmin()) {
+            foreach ($this->config->getSuperAdminOnlySystemItemList() as $item) {
+                $ignoreItemList[] = $item;
+            }
+        }
+
+        foreach ($ignoreItemList as $item) {
+            unset($data->$item);
+        }
+
+        if ($user->isSystem()) {
+            $globalItemList = $this->access->getGlobalItemList();
+
+            foreach (array_keys(get_object_vars($data)) as $item) {
+                if (!in_array($item, $globalItemList)) {
+                    unset($data->$item);
+                }
+            }
+        }
+    }
+
+    private function filterEntityTypeParams(stdClass $data): void
+    {
+        $entityTypeListParamList = $this->metadata->get(['app', 'config', 'entityTypeListParamList']) ?? [];
+
+        $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
+
+        foreach ($scopeList as $scope) {
+            if (!$this->metadata->get(['scopes', $scope, 'acl'])) {
+                continue;
+            }
+
+            if ($this->acl->check($scope)) {
+                continue;
+            }
+
+            foreach ($entityTypeListParamList as $param) {
+                $list = $data->$param ?? [];
+
+                foreach ($list as $i => $item) {
+                    if ($item === $scope) {
+                        unset($list[$i]);
+                    }
+                }
+
+                $data->$param = array_values($list);
+            }
+        }
+    }
+
+    private function populateDatabaseWithCurrencyRates(): void
     {
         $this->injectableFactory->create(CurrencyDatabasePopulator::class)->process();
     }
 
-    protected function filterData(StdCLass $data): void
+    private function filterData(stdClass $data): void
     {
         $user = $this->applicationState->getUser();
+
+        if (!$user->isAdmin() && !$user->isSystem()) {
+            $this->filterEntityTypeParams($data);
+        }
+
+        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
+
+        foreach ($fieldDefs as $field => $fieldParams) {
+            if ($fieldParams['type'] === 'password') {
+                unset($data->$field);
+            }
+        }
 
         if (empty($data->useWebSocket)) {
             unset($data->webSocketUrl);
@@ -288,8 +292,7 @@ class Settings
         }
 
         if (
-            !$this->acl->checkScope('Email', 'create')
-            ||
+            !$this->acl->checkScope('Email', 'create') ||
             !$this->config->get('outboundEmailIsShared')
         ) {
             unset($data->outboundEmailFromAddress);
@@ -298,74 +301,7 @@ class Settings
         }
     }
 
-    public function getAdminOnlyItemList(): array
-    {
-        $itemList = $this->config->getAdminOnlyItemList();
-
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
-        foreach ($fieldDefs as $field => $fieldParams) {
-            if (!empty($fieldParams['onlyAdmin'])) {
-                foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
-                    $itemList[] = $attribute;
-                }
-            }
-        }
-
-        return $itemList;
-    }
-
-    public function getUserOnlyItemList(): array
-    {
-        $itemList = $this->config->getUserOnlyItemList();
-
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
-
-        foreach ($fieldDefs as $field => $fieldParams) {
-            if (!empty($fieldParams['onlyUser'])) {
-                foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
-                    $itemList[] = $attribute;
-                }
-            }
-        }
-
-        return $itemList;
-    }
-
-    public function getSystemOnlyItemList(): array
-    {
-        $itemList = $this->config->getSystemOnlyItemList();
-
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
-
-        foreach ($fieldDefs as $field => $fieldParams) {
-            if (!empty($fieldParams['onlySystem'])) {
-                foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
-                    $itemList[] = $attribute;
-                }
-            }
-        }
-
-        return $itemList;
-    }
-
-    public function getGlobalItemList(): array
-    {
-        $itemList = $this->config->get('globalItems', []);
-
-        $fieldDefs = $this->metadata->get(['entityDefs', 'Settings', 'fields']);
-
-        foreach ($fieldDefs as $field => $fieldParams) {
-            if (!empty($fieldParams['global'])) {
-                foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
-                    $itemList[] = $attribute;
-                }
-            }
-        }
-
-        return $itemList;
-    }
-
-    protected function processValidation(Entity $entity, StdClass $data): void
+    private function processValidation(Entity $entity, stdClass $data): void
     {
         $this->fieldValidationManager->process($entity, $data);
     }

@@ -1,0 +1,15 @@
+{
+    "entityTypeListParamList": [
+        "tabList",
+        "quickCreateList",
+        "globalSearchEntityList",
+        "assignmentEmailNotificationsEntityList",
+        "assignmentNotificationsEntityList",
+        "calendarEntityList",
+        "streamEmailNotificationsEntityList",
+        "activitiesEntityList",
+        "historyEntityList",
+        "streamEmailNotificationsTypeList",
+        "emailKeepParentTeamsEntityList"
+    ]
+}
