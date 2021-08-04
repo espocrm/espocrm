@@ -49,25 +49,23 @@ use Espo\Core\ORM\EntityManager;
 
 class Installer
 {
-    protected $app = null;
+    private $app = null;
 
-    protected $language = null;
+    private $language = null;
 
-    protected $systemHelper = null;
+    private $systemHelper = null;
 
-    protected $databaseHelper = null;
+    private $databaseHelper = null;
 
-    protected $installerConfig;
+    private $installerConfig;
 
-    protected $isAuth = false;
-
-    protected $permissionError;
+    private $isAuth = false;
 
     private $passwordHash;
 
-    protected $defaultSettings;
+    private $defaultSettings;
 
-    protected $permittedSettingList = [
+    private $permittedSettingList = [
         'dateFormat',
         'timeFormat',
         'timeZone',
@@ -102,7 +100,7 @@ class Installer
         $this->databaseHelper = new DatabaseHelper($this->getConfig());
     }
 
-    protected function initialize(): void
+    private function initialize(): void
     {
         $fileManager = new ConfigFileManager();
 
@@ -116,10 +114,22 @@ class Installer
             $config->update();
         }
 
-        $configData = get_object_vars($config->getAllData());
-        $defaultData = $config->getDefaults();
+        $defaultData = include('application/Espo/Resources/defaults/config.php');
 
-        $configWriterFileManager = new ConfigWriterFileManager(null, $configData['defaultPermissions'] ?? null);
+        $configData = [];
+
+        foreach (array_keys($defaultData) as $key) {
+            if (!$config->has($key)) {
+                continue;
+            }
+
+            $configData[$key] = $config->get($key);
+        }
+
+        $configWriterFileManager = new ConfigWriterFileManager(
+            null,
+            $config->get('defaultPermissions') ?? null
+        );
 
         /** @var InjectableFactory $injectableFactory */
         $injectableFactory = (new Application())->getContainer()->get('injectableFactory');
@@ -143,12 +153,12 @@ class Installer
         $this->app = new Application();
     }
 
-    protected function getContainer(): Container
+    private function getContainer(): Container
     {
         return $this->app->getContainer();
     }
 
-    protected function getEntityManager(): EntityManager
+    private function getEntityManager(): EntityManager
     {
         return $this->getContainer()->get('entityManager');
     }
@@ -168,27 +178,27 @@ class Installer
         return $this->app->getContainer()->get('injectableFactory')->create(ConfigWriter::class);
     }
 
-    protected function getSystemHelper()
+    private function getSystemHelper()
     {
         return $this->systemHelper;
     }
 
-    protected function getDatabaseHelper()
+    private function getDatabaseHelper()
     {
         return $this->databaseHelper;
     }
 
-    protected function getInstallerConfig()
+    private function getInstallerConfig()
     {
         return $this->installerConfig;
     }
 
-    protected function getFileManager(): FileManager
+    private function getFileManager(): FileManager
     {
         return $this->app->getContainer()->get('fileManager');
     }
 
-    protected function getPasswordHash(): PasswordHash
+    private function getPasswordHash(): PasswordHash
     {
         if (!isset($this->passwordHash)) {
             $config = $this->getConfig();
@@ -205,7 +215,7 @@ class Installer
         return $this->getConfig()->get('version');
     }
 
-    protected function auth()
+    private function auth()
     {
         if (!$this->isAuth) {
             $this->app->setupSystemUser();
@@ -227,7 +237,7 @@ class Installer
         return $this->app->isInstalled();
     }
 
-    protected function getLanguage(): Language
+    private function getLanguage(): Language
     {
         if (!isset($this->language)) {
             try {
@@ -256,7 +266,7 @@ class Installer
         return $languageList;
     }
 
-    protected function getCurrencyList(): array
+    private function getCurrencyList(): array
     {
         return $this->getMetadata()->get('app.currency.list');
     }
@@ -409,7 +419,7 @@ class Installer
         return $result;
     }
 
-    protected function createRecords()
+    private function createRecords()
     {
         $records = include('install/core/afterInstall/records.php');
 
@@ -424,7 +434,7 @@ class Installer
         return $result;
     }
 
-    protected function createRecord($entityName, $data)
+    private function createRecord($entityName, $data)
     {
         if (isset($data['id'])) {
 
@@ -500,7 +510,7 @@ class Installer
         return $result;
     }
 
-    protected function saveAdminPreferences($preferences)
+    private function saveAdminPreferences($preferences)
     {
         $permittedSettingList = [
             'dateFormat',
@@ -600,7 +610,7 @@ class Installer
         return $this->defaultSettings;
     }
 
-    protected function normalizeSettingParams(array $params)
+    private function normalizeSettingParams(array $params)
     {
         $defaultSettings = $this->getDefaultSettings();
 
@@ -654,7 +664,7 @@ class Installer
         return $normalizedParams;
     }
 
-    protected function translateSetting($name, array $settingDefs)
+    private function translateSetting($name, array $settingDefs)
     {
         if (isset($settingDefs['options'])) {
             $optionLabel = $this->getLanguage()
@@ -684,7 +694,7 @@ class Installer
         return $this->getContainer()->get('scheduledJob')->getSetupMessage();
     }
 
-    protected function executeQueries()
+    private function executeQueries()
     {
         $queries = include('install/core/afterInstall/queries.php');
 
@@ -707,12 +717,12 @@ class Installer
         return $result;
     }
 
-    protected function executeFinalScript()
+    private function executeFinalScript()
     {
         $this->prepareDummyJob();
     }
 
-    protected function prepareDummyJob()
+    private function prepareDummyJob()
     {
         $scheduledJob = $this->getEntityManager()
             ->getRepository('ScheduledJob')

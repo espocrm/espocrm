@@ -40,13 +40,11 @@ use E_USER_DEPRECATED;
  */
 class Config
 {
-    private $defaultConfigPath = 'application/Espo/Resources/defaults/config.php';
-
-    private $systemConfigPath = 'application/Espo/Resources/defaults/systemConfig.php';
-
-    protected $configPath = 'data/config.php';
+    private $configPath = 'data/config.php';
 
     private $internalConfigPath = 'data/config-internal.php';
+
+    private $systemConfigPath = 'application/Espo/Resources/defaults/systemConfig.php';
 
     private $cacheTimestamp = 'cacheTimestamp';
 
@@ -275,17 +273,6 @@ class Config
         return $result;
     }
 
-    /**
-     * Get system default config parameters.
-     *
-     * @deprecated
-     * @todo Move to `Espo\Core\Utils\Config\ConfigDefaults`.
-     */
-    public function getDefaults(): array
-    {
-        return $this->fileManager->getPhpContents($this->defaultConfigPath);
-    }
-
     private function isLoaded(): bool
     {
         return isset($this->data) && !empty($this->data);
@@ -304,12 +291,10 @@ class Config
 
     private function load(): void
     {
-        $configPath = $this->fileManager->isFile($this->configPath) ?
-            $this->configPath :
-            $this->defaultConfigPath;
-
-        $data = $this->fileManager->getPhpContents($configPath);
         $systemData = $this->fileManager->getPhpContents($this->systemConfigPath);
+
+        $data = $this->fileManager->isFile($this->configPath) ?
+            $this->fileManager->getPhpContents($this->configPath) : [];
 
         $internalData = $this->fileManager->isFile($this->internalConfigPath) ?
             $this->fileManager->getPhpContents($this->internalConfigPath) : [];
@@ -320,14 +305,6 @@ class Config
         $this->internalParamList = array_keys($internalData);
 
         $this->fileManager->setConfig($this);
-    }
-
-    /**
-     * Get all parameters.
-     */
-    public function getAllData(): stdClass
-    {
-        return (object) $this->getData();
     }
 
     /**
