@@ -27,23 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-use Espo\Core\{
-    Application,
-    Container,
-    Utils\Util,
-    Utils\Config\ConfigFileManager,
-    Utils\Config,
-    Utils\Config\ConfigWriter,
-    Utils\Config\ConfigWriterFileManager,
-    Utils\Config\ConfigWriterHelper,
-    Utils\Database\Helper as DatabaseHelper,
-    Utils\PasswordHash,
-    Utils\SystemRequirements,
-    Utils\Metadata,
-    Utils\File\Manager as FileManager,
-    Utils\Language,
-    ORM\EntityManager,
-};
+use Espo\Core\Application;
+use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
+
+use Espo\Core\Utils\Util;
+use Espo\Core\Utils\Config\ConfigFileManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Config\ConfigWriterFileManager;
+use Espo\Core\Utils\Database\Helper as DatabaseHelper;
+use Espo\Core\Utils\PasswordHash;
+use Espo\Core\Utils\SystemRequirements;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Language;
+
+use Espo\Core\Binding\BindingContainerBuilder;
+
+use Espo\Core\ORM\EntityManager;
 
 class Installer
 {
@@ -89,8 +91,6 @@ class Installer
     {
         $this->initialize();
 
-        $this->app = new Application();
-
         require_once('install/core/InstallerConfig.php');
 
         $this->installerConfig = new InstallerConfig();
@@ -114,24 +114,34 @@ class Installer
             $fileManager->putPhpContents($configPath, []);
         }
 
-        $data = include('data/config.php');
+        $app = new Application();
 
-        $configWriter = new ConfigWriter(
-            $config,
-            new ConfigWriterFileManager(null, $data['defaultPermissions'] ?? null),
-            new ConfigWriterHelper()
+        $configData = include('data/config.php');
+
+        $configWriterFileManager = new ConfigWriterFileManager(null, $configData['defaultPermissions'] ?? null);
+
+        /** @var InjectableFactory $injectableFactory */
+        $injectableFactory = $app->getContainer()->get('injectableFactory');
+
+        $configWriter = $injectableFactory->createWithBinding(
+            ConfigWriter::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(Config::class, $config)
+                ->bindInstance(ConfigWriterFileManager::class, $configWriterFileManager)
+                ->build()
         );
 
         $defaultData = $config->getDefaults();
 
-        //save default data if not exists, check by keys
-        if (!Util::arrayKeysExists(array_keys($defaultData), $data)) {
-            $defaultData = array_replace_recursive($defaultData, $data);
+        // Save default data if does not exist.
+        if (!Util::arrayKeysExists(array_keys($defaultData), $configData)) {
+            $defaultData = array_replace_recursive($defaultData, $configData);
 
             $configWriter->setMultiple($defaultData);
-
             $configWriter->save();
         }
+
+        $this->app = new Application();
     }
 
     protected function getContainer(): Container
@@ -308,7 +318,11 @@ class Installer
     public function saveData(array $saveData)
     {
         $initData = include('install/core/afterInstall/config.php');
-        $databaseDefaults = $this->app->getContainer()->get('config')->get('database');
+
+        $databaseDefaults = $this->app
+            ->getContainer()
+            ->get('config')
+            ->get('database');
 
         $siteUrl = !empty($saveData['siteUrl']) ? $saveData['siteUrl'] : $this->getSystemHelper()->getBaseUrl();
 
