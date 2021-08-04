@@ -34,15 +34,15 @@ use Espo\Core\{
     Utils\Config as BaseConfig,
 };
 
-use StdClass;
+use stdClass;
 
 class Config extends BaseConfig
 {
-    protected $portalParamsSet = false;
+    private $portalParamsSet = false;
 
-    protected $portalData = [];
+    private $portalData = [];
 
-    protected $portalParamList = [
+    private $portalParamList = [
         'companyLogoId',
         'tabList',
         'quickCreateList',
@@ -75,9 +75,9 @@ class Config extends BaseConfig
         return parent::has($name);
     }
 
-    public function getAllData(): StdClass
+    public function getAllNonInternalData(): stdClass
     {
-        $data = parent::getAllData();
+        $data = parent::getAllNonInternalData();
 
         foreach ($this->portalData as $k => $v) {
             $data->$k = $v;

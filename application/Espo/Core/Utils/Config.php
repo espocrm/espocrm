@@ -46,6 +46,8 @@ class Config
 
     protected $configPath = 'data/config.php';
 
+    private $internalConfigPath = 'data/config-internal.php';
+
     private $cacheTimestamp = 'cacheTimestamp';
 
     protected $associativeArrayAttributeList = [
@@ -63,6 +65,8 @@ class Config
 
     private $fileManager;
 
+    private $internalParamList = [];
+
     public function __construct(ConfigFileManager $fileManager)
     {
         $this->fileManager = $fileManager;
@@ -79,6 +83,16 @@ class Config
     }
 
     /**
+     * A path to the internal config file.
+     *
+     * @todo Move to ConfigData.
+     */
+    public function getInternalConfigPath(): string
+    {
+        return $this->internalConfigPath;
+    }
+
+    /**
      * Get a parameter value.
      *
      * @return mixed
@@ -87,7 +101,7 @@ class Config
     {
         $keys = explode('.', $name);
 
-        $lastBranch = $this->loadConfig();
+        $lastBranch = $this->getData();
 
         foreach ($keys as $key) {
             if (!is_array($lastBranch) && !is_object($lastBranch)) {
@@ -117,7 +131,7 @@ class Config
     {
         $keys = explode('.', $name);
 
-        $lastBranch = $this->loadConfig();
+        $lastBranch = $this->getData();
 
         foreach ($keys as $key) {
             if (!is_array($lastBranch) && !is_object($lastBranch)) {
@@ -148,7 +162,7 @@ class Config
      */
     public function update()
     {
-        $this->loadConfig(true);
+        $this->load();
     }
 
     /**
@@ -255,7 +269,7 @@ class Config
             $this->changedData = [];
             $this->removeData = [];
 
-            $this->loadConfig(true);
+            $this->load();
         }
 
         return $result;
@@ -272,41 +286,66 @@ class Config
         return $this->fileManager->getPhpContents($this->defaultConfigPath);
     }
 
-    protected function loadConfig(bool $reload = false)
+    private function isLoaded(): bool
     {
-        if (!$reload && isset($this->data) && !empty($this->data)) {
+        return isset($this->data) && !empty($this->data);
+    }
+
+    private function getData(bool $reload = false): array
+    {
+        if (!$reload && $this->isLoaded()) {
             return $this->data;
         }
 
-        $configPath = $this->fileManager->isFile($this->configPath) ?
-            $this->configPath :
-            $this->defaultConfigPath;
-
-        $this->data = $this->fileManager->getPhpContents($configPath);
-
-        $systemConfig = $this->fileManager->getPhpContents($this->systemConfigPath);
-
-        $this->data = Util::merge($systemConfig, $this->data);
-
-        $this->fileManager->setConfig($this);
+        $this->load();
 
         return $this->data;
     }
 
-    /**
-     * Get all parameters.
-     */
-    public function getAllData(): stdClass
+    private function load(): void
     {
-        return (object) $this->loadConfig();
+        $configPath = $this->fileManager->isFile($this->configPath) ?
+            $this->configPath :
+            $this->defaultConfigPath;
+
+        $data = $this->fileManager->getPhpContents($configPath);
+        $systemData = $this->fileManager->getPhpContents($this->systemConfigPath);
+
+        $internalData = $this->fileManager->isFile($this->internalConfigPath) ?
+            $this->fileManager->getPhpContents($this->internalConfigPath) : [];
+
+        $this->data = Util::merge($systemData, $data);
+        $this->data = Util::merge($this->data, $internalData);
+
+        $this->internalParamList = array_keys($internalData);
+
+        $this->fileManager->setConfig($this);
     }
 
-    /** @deprecated */
-    public function getData()
+    /**
+     * Get all parameters excluding those that are set in the internal config.
+     */
+    public function getAllNonInternalData(): stdClass
     {
-        $data = $this->loadConfig();
+        $data = (object) $this->getData();
+
+        foreach ($this->internalParamList as $param) {
+            unset($data->$param);
+        }
 
         return $data;
+    }
+
+    /**
+     * Whether a parameter is set in the internal config.
+     */
+    public function isInternal(string $name): bool
+    {
+        if (!$this->isLoaded()) {
+            $this->load();
+        }
+
+        return in_array($name, $this->internalParamList);
     }
 
     /** @deprecated */

@@ -35,18 +35,6 @@ use Espo\Core\Utils\FieldUtil;
 
 class Access
 {
-    public const DEFAULT_ACCESS_LEVEL = self::ACCESS_LEVEL_USER;
-
-    public const ACCESS_LEVEL_GLOBAL = 'global';
-
-    public const ACCESS_LEVEL_USER = 'user';
-
-    public const ACCESS_LEVEL_ADMIN = 'admin';
-
-    public const ACCESS_LEVEL_SUPER_ADMIN = 'superAdmin';
-
-    public const ACCESS_LEVEL_SYSTEM = 'system';
-
     private $config;
 
     private $metadata;
@@ -121,6 +109,16 @@ class Access
             foreach ($this->fieldUtil->getAttributeList('Settings', $field) as $attribute) {
                 $itemList[] = $attribute;
             }
+        }
+
+        $params = $this->metadata->get(['app', 'config', 'params']) ?? [];
+
+        foreach ($params as $name => $item) {
+            if (empty($item['system'])) {
+                continue;
+            }
+
+            $itemList[] = $name;
         }
 
         return array_values($itemList);

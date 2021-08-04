@@ -27,13 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Utils;
+namespace tests\unit\Espo\Core\Utils\Config;
 
 use Espo\Core\{
     Utils\Config,
     Utils\Config\ConfigWriter,
     Utils\Config\ConfigWriterFileManager,
     Utils\Config\ConfigWriterHelper,
+    Utils\Config\InternalConfigHelper,
 };
 
 class ConfigWriterTest extends \PHPUnit\Framework\TestCase
@@ -46,14 +47,27 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
 
         $this->helper = $this->createMock(ConfigWriterHelper::class);
 
-        $this->configWriter = new ConfigWriter($this->config, $this->fileManager, $this->helper);
+        $this->internalConfigHelper = $this->createMock(InternalConfigHelper::class);
+
+        $this->configWriter = new ConfigWriter(
+            $this->config,
+            $this->fileManager,
+            $this->helper,
+            $this->internalConfigHelper
+        );
 
         $this->configPath = 'somepath';
+        $this->internalConfigPath = 'internalSomepath';
 
         $this->config
             ->expects($this->any())
             ->method('getConfigPath')
             ->willReturn($this->configPath);
+
+        $this->config
+            ->expects($this->any())
+            ->method('getInternalConfigPath')
+            ->willReturn($this->internalConfigPath);
     }
 
     public function testSave1()
@@ -97,10 +111,15 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
             ->method('update');
 
         $this->fileManager
-            ->expects($this->once())
             ->method('isFile')
-            ->with($this->configPath)
-            ->willReturn(true);
+            ->withConsecutive(
+                [$this->configPath],
+                [$this->internalConfigPath],
+            )
+            ->willReturnOnConsecutiveCalls(
+                true,
+                false
+            );
 
         $this->fileManager
             ->expects($this->once())

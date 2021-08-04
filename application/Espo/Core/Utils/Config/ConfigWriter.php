@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Utils\Config;
 
-use Espo\Core\{
-    Utils\Config,
-    Exceptions\Error,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Exceptions\Error;
 
 use Exception;
 
@@ -54,20 +52,24 @@ class ConfigWriter
 
     private $cacheTimestampParam = 'cacheTimestamp';
 
-    protected $config;
+    private $config;
 
-    protected $fileManager;
+    private $fileManager;
 
-    protected $helper;
+    private $helper;
+
+    private $internalConfigHelper;
 
     public function __construct(
         Config $config,
         ConfigWriterFileManager $fileManager,
-        ConfigWriterHelper $helper
+        ConfigWriterHelper $helper,
+        InternalConfigHelper $internalConfigHelper
     ) {
         $this->config = $config;
         $this->fileManager = $fileManager;
         $this->helper = $helper;
+        $this->internalConfigHelper = $internalConfigHelper;
     }
 
     /**
@@ -112,12 +114,16 @@ class ConfigWriter
         }
 
         $configPath = $this->config->getConfigPath();
+        $internalConfigPath = $this->config->getInternalConfigPath();
 
         if (!$this->fileManager->isFile($configPath)) {
             throw new Error("Config file '{$configPath}' was not found.");
         }
 
         $data = $this->fileManager->getPhpContents($configPath);
+
+        $dataInternal = $this->fileManager->isFile($internalConfigPath) ?
+            $this->fileManager->getPhpContents($internalConfigPath) : [];
 
         if (!is_array($data)) {
             $data = $this->fileManager->getPhpContents($configPath);
@@ -127,45 +133,75 @@ class ConfigWriter
             throw new Error("Could not read config.");
         }
 
+        if (!is_array($dataInternal)) {
+            throw new Error("Could not read config-internal.");
+        }
+
+        $toSaveInternal = false;
+
         foreach ($changedData as $key => $value) {
+            if ($this->internalConfigHelper->isParamForInternalConfig($key)) {
+                $dataInternal[$key] = $value;
+                unset($data[$key]);
+
+                $toSaveInternal = true;
+
+                continue;
+            }
+
             $data[$key] = $value;
         }
 
         foreach ($this->removeParamList as $key) {
+            if ($this->internalConfigHelper->isParamForInternalConfig($key)) {
+                unset($dataInternal[$key]);
+
+                $toSaveInternal = true;
+
+                continue;
+            }
+
             unset($data[$key]);
         }
 
-        if (!is_array($data)) {
-            throw new Error("Invalid config data while saving.");
-        }
+        $this->saveData($configPath, $data, 'microtime');
 
-        $data['microtime'] = $microtime = $this->helper->generateMicrotime();
-
-        try {
-            $this->fileManager->putPhpContents($configPath, $data);
-        }
-        catch (Exception $e) {
-            throw new Error("Could not save config.");
-        }
-
-        $reloadedData = $this->fileManager->getPhpContents($configPath);
-
-        if (
-            !is_array($reloadedData) ||
-            $microtime !== ($reloadedData['microtime'] ?? null)
-        ) {
-            try {
-                $this->fileManager->putPhpContentsNoRenaming($configPath, $data);
-            }
-            catch (Exception $e) {
-                throw new Error("Could not save config.");
-            }
+        if ($toSaveInternal) {
+            $this->saveData($internalConfigPath, $dataInternal, 'microtimeInternal');
         }
 
         $this->changedData = [];
         $this->removeParamList = [];
 
         $this->config->update();
+    }
+
+    private function saveData(string $path, array &$data, string $timeParam): void
+    {
+        $data[$timeParam] = $microtime = $this->helper->generateMicrotime();
+
+        try {
+            $this->fileManager->putPhpContents($path, $data);
+        }
+        catch (Exception $e) {
+            throw new Error("Could not save config.");
+        }
+
+        $reloadedData = $this->fileManager->getPhpContents($path);
+
+        if (
+            is_array($reloadedData) &&
+            $microtime === ($reloadedData[$timeParam] ?? null)
+        ) {
+            return;
+        }
+
+        try {
+            $this->fileManager->putPhpContentsNoRenaming($path, $data);
+        }
+        catch (Exception $e) {
+            throw new Error("Could not save config.");
+        }
     }
 
     /**

@@ -101,7 +101,7 @@ class Settings
 
     public function getConfigData(): stdClass
     {
-        $data = $this->config->getAllData();
+        $data = $this->config->getAllNonInternalData();
 
         $this->filterDataByAccess($data);
         $this->filterData($data);

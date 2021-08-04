@@ -70,20 +70,21 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     public function testLoadConfig()
     {
-        $this->assertArrayHasKey('database', $this->reflection->invokeMethod('loadConfig', array()));
+        $this->assertArrayHasKey('database', $this->reflection->invokeMethod('getData', []));
 
-        $this->assertArrayHasKey('dateFormat', $this->reflection->invokeMethod('loadConfig', array()));
+        $this->assertArrayHasKey('dateFormat', $this->reflection->invokeMethod('getData', []));
     }
 
     public function testGet()
     {
-        $result = array(
+        $result = [
             'driver' => 'pdo_mysql',
             'host' => 'localhost',
             'dbname' => 'espocrm',
             'user' => 'root',
             'password' => '',
-        );
+        ];
+
         $this->assertEquals($result, $this->config->get('database'));
 
         $result = 'pdo_mysql';
@@ -102,7 +103,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayNotHasKey('systemItems', $configDataWithoutSystem);
         $this->assertArrayNotHasKey('adminItems', $configDataWithoutSystem);
 
-        $configData = $this->reflection->invokeMethod('loadConfig', array());
+        $configData = $this->reflection->invokeMethod('getData', []);
 
         $this->assertArrayHasKey('systemItems', $configData);
         $this->assertArrayHasKey('adminItems', $configData);

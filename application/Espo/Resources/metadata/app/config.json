@@ -11,5 +11,10 @@
         "historyEntityList",
         "streamEmailNotificationsTypeList",
         "emailKeepParentTeamsEntityList"
-    ]
+    ],
+    "params": {
+        "awsS3Storage": {
+            "system": true
+        }
+    }
 }

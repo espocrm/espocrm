@@ -634,8 +634,7 @@
             "tooltip": true
         },
         "awsS3Storage": {
-            "type": "jsonObject",
-            "onlySystem": true
+            "type": "jsonObject"
         }
     }
 }
