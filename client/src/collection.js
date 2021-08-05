@@ -48,6 +48,8 @@ define('collection', [], function () {
 
         lengthCorrection: 0,
 
+        maxMaxSize: 0,
+
         _user: null,
 
         initialize: function (models, options) {
@@ -167,6 +169,10 @@ define('collection', [], function () {
                 options.data.maxSize = options.more ? this.maxSize : (
                     (length > this.maxSize) ? length : this.maxSize
                 );
+
+                if (this.maxMaxSize && options.data.maxSize > this.maxMaxSize) {
+                    options.data.maxSize = this.maxMaxSize;
+                }
             }
             else {
                 options.data.maxSize = options.maxSize;

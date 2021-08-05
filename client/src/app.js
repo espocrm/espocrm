@@ -249,7 +249,7 @@ define(
 
                 this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
                 this.modelFactory = new ModelFactory(this.loader, this.metadata, this.user);
-                this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory);
+                this.collectionFactory = new CollectionFactory(this.loader, this.modelFactory, this.settings);
 
                 if (this.settings.get('useWebSocket')) {
                     this.webSocketManager = new WebSocketManager(this.settings);

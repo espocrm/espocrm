@@ -28,9 +28,10 @@
 
  define('collection-factory', [], function () {
 
-    var CollectionFactory = function (loader, modelFactory) {
+    var CollectionFactory = function (loader, modelFactory, config) {
         this.loader = loader;
         this.modelFactory = modelFactory;
+        this.config = config;
     };
 
     _.extend(CollectionFactory.prototype, {
@@ -38,6 +39,8 @@
         loader: null,
 
         modelFactory: null,
+
+        recordListMaxSizeLimit: 200,
 
         create: function (name, callback, context) {
             return new Promise(resolve => {
@@ -63,6 +66,9 @@
                         collection.model = seed;
                         collection._user = this.modelFactory.user;
                         collection.entityType = name;
+
+                        collection.maxMaxSize = this.config.get('recordListMaxSizeLimit') ||
+                            this.recordListMaxSizeLimit;
 
                         if (callback) {
                             callback.call(context, collection);
