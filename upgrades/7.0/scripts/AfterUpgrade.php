@@ -31,6 +31,8 @@ use Espo\Core\Container;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Config\ConfigWriter;
 
 use Espo\ORM\EntityManager;
 
@@ -48,6 +50,11 @@ class AfterUpgrade
 
         $this->migrateEmailAccountFolders('EmailAccount', $container->get('entityManager'));
         $this->migrateEmailAccountFolders('InboundEmail', $container->get('entityManager'));
+
+        $this->updateConfig(
+            $container->get('config'),
+            $container->get('injectableFactory')->create(ConfigWriter::class)
+        );
     }
 
     protected function updateTemplates($entityManager)
@@ -207,5 +214,31 @@ class AfterUpgrade
 
             $entityManager->getQueryExecutor()->execute($updateQuery);
         }
+    }
+
+    private function updateConfig(Config $config, ConfigWriter $configWriter): void
+    {
+        $map = [];
+
+        $itemList = [
+            'cryptKey',
+            'hashSecretKey',
+            'apiSecretKeys',
+            'database',
+            'internalSmtpPassword',
+            'passwordSalt',
+            'webSocketSslCertificateLocalPrivateKey',
+        ];
+
+        foreach ($itemList as $item) {
+            if (!$config->has($item)) {
+                continue;
+            }
+
+            $map[$item] = $config->get($item);
+        }
+
+        $configWriter->setMultiple($map);
+        $configWriter->save();
     }
 }
