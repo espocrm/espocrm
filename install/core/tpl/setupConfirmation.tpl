@@ -83,7 +83,7 @@
                 </tbody>
             </table>
 
-            <div class="cell cell-website pull-right" align="right">
+            <div class="cell cell-website pull-right margin-top" align="right">
                 <a target="_blank" href="https://www.espocrm.com/documentation/administration/server-configuration/" style="font-weight:600;">{$langs['labels']['Configuration Instructions']}</a>
             </div>
         </div>
