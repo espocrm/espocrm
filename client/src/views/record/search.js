@@ -100,14 +100,14 @@ define('views/record/search', 'view', function (Dep) {
             this.viewMode = this.options.viewMode;
             this.viewModeList = this.options.viewModeList;
 
-            this.addReadyCondition(function () {
+            this.addReadyCondition(() => {
                 return this.fieldList != null && this.moreFieldList != null;
-            }.bind(this));
+            });
 
             this.boolFilterList = Espo.Utils.clone(
                 this.getMetadata().get('clientDefs.' + this.scope + '.boolFilterList') || []
             )
-                .filter(function (item) {
+                .filter((item) => {
                     if (typeof item === 'string') {
                         return true;
                     }
@@ -129,8 +129,8 @@ define('views/record/search', 'view', function (Dep) {
                     }
 
                     return true;
-                }, this)
-                .map(function (item) {
+                })
+                .map((item) => {
                     if (typeof item === 'string') {
                         return item;
                     }
@@ -138,28 +138,28 @@ define('views/record/search', 'view', function (Dep) {
                     item = item || {};
 
                     return item.name;
-                }, this);
+                });
 
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
-            this._helper.layoutManager.get(this.entityType, 'filters', function (list) {
+            this._helper.layoutManager.get(this.entityType, 'filters', (list) => {
                 this.moreFieldList = [];
 
-                (list || []).forEach(function (field) {
+                (list || []).forEach((field) => {
                     if (~forbiddenFieldList.indexOf(field)) {
                         return;
                     }
 
                     this.moreFieldList.push(field);
-                }, this);
+                });
 
                 this.tryReady();
-            }.bind(this));
+            });
 
             var filterList = this.options.filterList ||
                 this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
 
-            this.presetFilterList = Espo.Utils.clone(filterList).filter(function (item) {
+            this.presetFilterList = Espo.Utils.clone(filterList).filter((item) => {
                 if (typeof item === 'string') {
                     return true;
                 }
@@ -181,11 +181,11 @@ define('views/record/search', 'view', function (Dep) {
                 }
 
                 return true;
-            }, this);
+            });
 
-            ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach(function (item) {
+            ((this.getPreferences().get('presetFilters') || {})[this.scope] || []).forEach((item) => {
                 this.presetFilterList.push(item);
-            }, this);
+            });
 
             if (this.getMetadata().get('scopes.' + this.entityType + '.stream')) {
                 this.boolFilterList.push('followed');
@@ -225,9 +225,9 @@ define('views/record/search', 'view', function (Dep) {
 
             this.setupViewModeDataList();
 
-            this.listenTo(this.collection, 'order-changed', function () {
+            this.listenTo(this.collection, 'order-changed', () => {
                 this.controlResetButtonVisibility();
-            }, this);
+            });
 
             this.getHelper().processSetupHandlers(this, 'record/search');
         },
@@ -239,14 +239,15 @@ define('views/record/search', 'view', function (Dep) {
 
             var list = [];
 
-            this.viewModeList.forEach(function (item) {
+            this.viewModeList.forEach((item) => {
                 var o = {
                     name: item,
                     title: this.translate(item, 'listViewModes'),
                     iconClass: this.viewModeIconClassMap[item]
                 };
+
                 list.push(o);
-            }, this);
+            });
 
             this.viewModeDataList = list;
         },
@@ -260,7 +261,7 @@ define('views/record/search', 'view', function (Dep) {
             }
             else {
                 if (this.isBeingRendered() && !preventLoop) {
-                    this.once('after:render', function () {
+                    this.once('after:render', () => {
                         this.setViewMode(mode, true);
                     });
                 }
@@ -272,7 +273,9 @@ define('views/record/search', 'view', function (Dep) {
         },
 
         isLeftDropdown: function () {
-            return this.presetFilterList.length || this.boolFilterList.length || Object.keys(this.advanced || {}).length;
+            return this.presetFilterList.length ||
+                this.boolFilterList.length ||
+                Object.keys(this.advanced || {}).length;
         },
 
         handleLeftDropdownVisibility: function () {
@@ -288,14 +291,14 @@ define('views/record/search', 'view', function (Dep) {
             var i = 0;
             var count = Object.keys(this.advanced || {}).length;
 
-            if (count == 0) {
+            if (count === 0) {
                 if (typeof callback === 'function') {
                     callback();
                 }
             }
 
             for (var field in this.advanced) {
-                this.createFilter(field, this.advanced[field], function () {
+                this.createFilter(field, this.advanced[field], () =>{
                     i++;
 
                     if (i === count) {
@@ -309,25 +312,29 @@ define('views/record/search', 'view', function (Dep) {
 
         events: {
             'keypress input[data-name="textFilter"]': function (e) {
-                if (e.keyCode == 13) {
+                if (e.keyCode === 13) {
                     this.search();
 
                     this.hideApplyFiltersButton();
                 }
             },
+
             'focus input[data-name="textFilter"]': function (e) {
                 e.currentTarget.select();
             },
+
             'click .advanced-filters-apply-container a[data-action="applyFilters"]': function (e) {
                 this.search();
 
                 this.hideApplyFiltersButton();
             },
+
             'click button[data-action="search"]': function (e) {
                 this.search();
 
                 this.hideApplyFiltersButton();
             },
+
             'click a[data-action="addFilter"]': function (e) {
                 var $target = $(e.currentTarget);
                 var name = $target.data('name');
@@ -336,6 +343,7 @@ define('views/record/search', 'view', function (Dep) {
 
                 this.addFilter(name);
             },
+
             'click .advanced-filters a.remove-filter': function (e) {
                 var $target = $(e.currentTarget);
 
@@ -343,44 +351,51 @@ define('views/record/search', 'view', function (Dep) {
 
                 this.removeFilter(name);
             },
+
             'click button[data-action="reset"]': function (e) {
                 this.resetFilters();
             },
+
             'click button[data-action="refresh"]': function (e) {
                 this.refresh();
             },
+
             'click a[data-action="selectPreset"]': function (e) {
                 var presetName = $(e.currentTarget).data('name') || null;
 
                 this.selectPreset(presetName);
             },
+
             'click .dropdown-menu a[data-action="savePreset"]': function (e) {
-                this.createView('savePreset', 'views/modals/save-filters', {}, function (view) {
+                this.createView('savePreset', 'views/modals/save-filters', {}, (view) => {
                     view.render();
 
-                    this.listenToOnce(view, 'save', function (name) {
+                    this.listenToOnce(view, 'save', (name) => {
                         this.savePreset(name);
                         view.close();
 
                         this.removeFilters();
-                        this.createFilters(function () {
+                        this.createFilters(() => {
                             this.render();
-                        }.bind(this));
-
-                    }, this);
-                }.bind(this));
+                        });
+                    });
+                });
             },
+
             'click .dropdown-menu a[data-action="removePreset"]': function (e) {
                 var id = this.presetName;
-                this.confirm(this.translate('confirmation', 'messages'), function () {
+
+                this.confirm(this.translate('confirmation', 'messages'), () => {
                     this.removePreset(id);
-                }, this);
+                });
             },
+
             'change .search-row ul.filter-menu input[data-role="boolFilterCheckbox"]': function (e) {
                 e.stopPropagation();
                 this.search();
                 this.manageLabels();
             },
+
             'click [data-action="switchViewMode"]': function (e) {
                 var mode = $(e.currentTarget).data('name');
 
