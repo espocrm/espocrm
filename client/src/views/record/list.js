@@ -155,9 +155,9 @@ define('views/record/list', 'view', function (Dep) {
 
                 Espo.Ui.notify(this.translate('loading', 'messages'));
 
-                this.collection.once('sync', function () {
+                this.collection.once('sync', () => {
                     this.notify(false);
-                }.bind(this));
+                });
 
                 if (page === 'current') {
                     this.collection.fetch();
@@ -602,19 +602,19 @@ define('views/record/list', 'view', function (Dep) {
             else {
                 var layoutFieldList = [];
 
-                (this.listLayout || []).forEach(function (item) {
+                (this.listLayout || []).forEach((item) => {
                     if (item.name) {
                         layoutFieldList.push(item.name);
                     }
-                }, this);
+                });
 
                 o.fieldList = layoutFieldList;
             }
 
-            this.createView('dialogExport', 'views/export/modals/export', o, function (view) {
+            this.createView('dialogExport', 'views/export/modals/export', o, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'proceed', function (dialogData) {
+                this.listenToOnce(view, 'proceed', (dialogData) => {
                     if (!dialogData.exportAllFields) {
                         data.attributeList = dialogData.attributeList;
                         data.fieldList = dialogData.fieldList;
@@ -624,18 +624,17 @@ define('views/record/list', 'view', function (Dep) {
 
                     Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                    Espo.Ajax.postRequest(url, data, {timeout: 0})
-                        .then(
-                            function (data) {
-                                Espo.Ui.notify(false);
+                    Espo.Ajax
+                        .postRequest(url, data, {timeout: 0})
+                        .then((data) => {
+                            Espo.Ui.notify(false);
 
-                                if ('id' in data) {
-                                    window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
-                                }
-                            }.bind(this)
-                        );
-                }, this);
-            }, this);
+                            if ('id' in data) {
+                                window.location = this.getBasePath() + '?entryPoint=download&id=' + data.id;
+                            }
+                        });
+                });
+            });
         },
 
         massAction: function (name) {
@@ -652,11 +651,11 @@ define('views/record/list', 'view', function (Dep) {
                     params: this.getMassActionSelectionPostData(),
                 };
 
-                require(handler, function (Handler) {
+                require(handler, (Handler) => {
                     var handler = new Handler(this);
 
                     handler[method].call(handler, data);
-                }.bind(this));
+                });
 
                 return;
             }
