@@ -29,8 +29,6 @@
 
 namespace Espo\Core\Authentication\Login;
 
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\{
     ORM\EntityManager,
     Api\Request,
@@ -38,7 +36,6 @@ use Espo\Core\{
     Utils\PasswordHash,
     Utils\Language,
     Utils\Log,
-    ApplicationUser,
     Authentication\Login,
     Authentication\LoginData,
     Authentication\Result,
@@ -67,8 +64,6 @@ class LDAP implements Login
 
     private $language;
 
-    private $applicationUser;
-
     private $log;
 
     public function __construct(
@@ -76,7 +71,6 @@ class LDAP implements Login
         EntityManager $entityManager,
         PasswordHash $passwordHash,
         Language $defaultLanguage,
-        ApplicationUser $applicationUser,
         Log $log,
         Espo $baseLogin,
         bool $isPortal = false
@@ -85,7 +79,6 @@ class LDAP implements Login
         $this->entityManager = $entityManager;
         $this->passwordHash = $passwordHash;
         $this->language = $defaultLanguage;
-        $this->applicationUser = $applicationUser;
         $this->log = $log;
         $this->baseLogin = $baseLogin;
 
@@ -204,18 +197,21 @@ class LDAP implements Login
             }
         }
 
-        $user = $this->entityManager->getRepository('User')->findOne([
-            'whereClause' => [
+        $user = $this->entityManager
+            ->getRDBRepository('User')
+            ->where([
                 'userName' => $username,
-                'type!=' => ['api', 'system']
-            ]
-        ]);
+                'type!=' => ['api', 'system'],
+            ])
+            ->findOne();
 
         if (!isset($user)) {
             if (!$this->utils->getOption('createEspoUser')) {
-                $this->useSystemUser();
+                $this->log->warning(
+                    "LDAP: Authentication success for user {$username}, but user is not created in EspoCRM."
+                );
 
-                throw new Error($this->language->translate('ldapUserInEspoNotFound', 'messages', 'User'));
+                return Result::fail();
             }
 
             $userData = $ldapClient->getEntry($userDn);
@@ -228,11 +224,6 @@ class LDAP implements Login
         }
 
         return Result::success($user);
-    }
-
-    private function useSystemUser()
-    {
-        $this->applicationUser->setupSystemUser();
     }
 
     private function getLdapClient()
@@ -270,37 +261,32 @@ class LDAP implements Login
             $ip = $_SERVER['REMOTE_ADDR'] ?? '';
 
             $this->log->alert(
-                'Unauthorized access attempt for user [' . $username . '] from IP ['.$ip.']'
+                'Unauthorized access attempt for user [' . $username . '] from IP [' . $ip . ']'
             );
 
             return null;
         }
 
-        $user = $this->entityManager->getRepository('User')->findOne([
-            'whereClause' => [
+        return $this->entityManager
+            ->getRDBRepository('User')
+            ->where([
                 'userName' => $username,
-            ]
-        ]);
-
-        return $user;
+            ])
+            ->findOne();
     }
 
-    /**
-     * Login user with administrator rights.
-     */
     private function adminLogin($username, $password)
     {
         $hash = $this->passwordHash->hash($password);
 
-        $user = $this->entityManager->getRepository('User')->findOne([
-            'whereClause' => [
+        return $this->entityManager
+            ->getRDBRepository('User')
+            ->where([
                 'userName' => $username,
                 'password' => $hash,
                 'type' => ['admin', 'super-admin'],
-            ]
-        ]);
-
-        return $user;
+            ])
+            ->findOne();
     }
 
     /**
@@ -326,7 +312,6 @@ class LDAP implements Login
             }
         }
 
-
         if ($isPortal) {
             $userFields = $this->loadFields('portalUser');
 
@@ -344,9 +329,10 @@ class LDAP implements Login
 
         $user->set($data);
 
-        $this->applicationUser->setUser($user);
-
-        $this->entityManager->saveEntity($user);
+        $this->entityManager->saveEntity($user, [
+            // Prevent `user` service being loaded by hooks.
+            'skipHooks' => true,
+        ]);
 
         return $this->entityManager->getEntity('User', $user->id);
     }
