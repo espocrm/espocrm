@@ -36,15 +36,11 @@ use Espo\Core\Utils\Config\ConfigFileManager;
 
 class ConfigTest extends \PHPUnit\Framework\TestCase
 {
-    protected $object;
+    private $defaultTestConfig = 'tests/unit/testData/Utils/Config/config.php';
 
-    protected $objects;
+    private $configPath = 'tests/unit/testData/cache/config.php';
 
-    protected $defaultTestConfig = 'tests/unit/testData/Utils/Config/config.php';
-
-    protected $configPath = 'tests/unit/testData/cache/config.php';
-
-    protected $systemConfigPath = 'tests/unit/testData/Utils/Config/systemConfig.php';
+    private $systemConfigPath = 'tests/unit/testData/Utils/Config/systemConfig.php';
 
     protected function setUp() : void
     {
@@ -107,5 +103,55 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
         $this->assertArrayHasKey('systemItems', $configData);
         $this->assertArrayHasKey('adminItems', $configData);
+    }
+
+    public function testGet1(): void
+    {
+        $fileManager = $this->createMock(ConfigFileManager::class);
+
+        $fileManager
+            ->method('isFile')
+            ->willReturn(true);
+
+        $data = [
+            'test1' => '1',
+        ];
+
+        $dataInternal = [
+            'test2' => '2',
+        ];
+
+        $dataSystem = [
+            'test3' => '3',
+        ];
+
+        $fileManager
+            ->method('getPhpContents')
+            ->will(
+                $this->returnValueMap([
+                    ['data/config.php', $data],
+                    ['data/config-internal.php', $dataInternal],
+                    ['application/Espo/Resources/defaults/systemConfig.php', $dataSystem],
+                ])
+            );
+
+
+        $config = new Config($fileManager);
+
+        $this->assertEquals('1', $config->get('test1'));
+        $this->assertEquals('2', $config->get('test2'));
+        $this->assertEquals('3', $config->get('test3'));
+
+        $this->assertEquals(false, $config->isInternal('test1'));
+        $this->assertEquals(true, $config->isInternal('test2'));
+        $this->assertEquals(false, $config->isInternal('test3'));
+
+        $this->assertEquals(
+            (object) [
+                'test1' => '1',
+                'test3' => '3',
+            ],
+            $config->getAllNonInternalData(),
+        );
     }
 }

@@ -278,13 +278,11 @@ class Config
         return isset($this->data) && !empty($this->data);
     }
 
-    private function getData(bool $reload = false): array
+    private function getData(): array
     {
-        if (!$reload && $this->isLoaded()) {
-            return $this->data;
+        if (!$this->isLoaded()) {
+            $this->load();
         }
-
-        $this->load();
 
         return $this->data;
     }

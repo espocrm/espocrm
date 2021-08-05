@@ -39,7 +39,7 @@ use Espo\Core\{
 
 class ConfigWriterTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp() : void
+    protected function setUp(): void
     {
         $this->fileManager = $this->createMock(ConfigWriterFileManager::class);
 
@@ -70,7 +70,7 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
             ->willReturn($this->internalConfigPath);
     }
 
-    public function testSave1()
+    public function testSave1(): void
     {
         $this->configWriter->set('k1', 'v1');
 
@@ -135,6 +135,66 @@ class ConfigWriterTest extends \PHPUnit\Framework\TestCase
                 [$this->configPath],
             )
             ->willReturnOnConsecutiveCalls($previousData);
+
+        $this->configWriter->save();
+    }
+
+    public function testSave2(): void
+    {
+        $this->configWriter->set('k1', 'v1');
+        $this->configWriter->set('k2', 'v2');
+
+        $this->internalConfigHelper
+            ->method('isParamForInternalConfig')
+            ->will(
+                $this->returnValueMap([
+                    ['k1', false],
+                    ['k2', true],
+                    ['cacheTimestamp', false],
+                ])
+            );
+
+        $this->helper
+            ->expects($this->exactly(2))
+            ->method('generateMicrotime')
+            ->willReturn(1.0);
+
+        $this->helper
+            ->expects($this->once())
+            ->method('generateCacheTimestamp')
+            ->willReturn(1);
+
+        $this->fileManager
+            ->method('isFile')
+            ->withConsecutive(
+                [$this->configPath],
+                [$this->internalConfigPath],
+            )
+            ->willReturnOnConsecutiveCalls(
+                true,
+                true
+            );
+
+        $this->fileManager
+            ->expects($this->exactly(4))
+            ->method('getPhpContents')
+            ->withConsecutive(
+                [$this->configPath],
+                [$this->internalConfigPath],
+                [$this->configPath],
+                [$this->internalConfigPath],
+            )
+            ->willReturnOnConsecutiveCalls(
+                [],
+                [],
+            );
+
+        $this->fileManager
+            ->method('putPhpcontents')
+            ->withConsecutive(
+                [$this->configPath, ['k1' => 'v1', 'cacheTimestamp' => 1, 'microtime' => 1.0]],
+                [$this->internalConfigPath, ['k2' => 'v2', 'microtimeInternal' => 1.0]],
+            );
 
         $this->configWriter->save();
     }

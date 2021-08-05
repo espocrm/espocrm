@@ -76,6 +76,9 @@ class ConfigFileManager
         $this->putPhpContentsInternal($path, $data, false);
     }
 
+    /**
+     * @return array|false
+     */
     public function getPhpContents(string $path)
     {
         return $this->fileManager->getPhpContents($path);
