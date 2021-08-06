@@ -199,10 +199,6 @@ class Unifier
      */
     private function getModuleList(): array
     {
-        if (!isset($this->moduleList)) {
-           $this->moduleList = $this->module->getOrderedList();
-        }
-
-        return $this->moduleList;
+        return $this->module->getOrderedList();
     }
 }

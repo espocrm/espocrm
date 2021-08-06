@@ -117,6 +117,8 @@ class DataManager
      */
     public function clearCache(): void
     {
+        $this->module->clearCache();
+
         $result = $this->fileManager->removeInDir($this->cachePath);
 
         if ($result != true) {

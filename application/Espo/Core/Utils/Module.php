@@ -188,6 +188,17 @@ class Module
         return $this->list;
     }
 
+    /**
+     * @todo Use event-dispatcher class (passed via constructor).
+     * `$this->clearCacheEventDispatcher->subscribe( ... );`
+     */
+    public function clearCache(): void
+    {
+        $this->data = null;
+        $this->list = null;
+        $this->internalList = null;
+    }
+
     private function loadData(): array
     {
         $data = [];
