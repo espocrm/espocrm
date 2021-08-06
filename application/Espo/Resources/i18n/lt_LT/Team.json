@@ -2,17 +2,20 @@
   "fields": {
     "name": "Vardas",
     "roles": "Rolės",
-    "positionList": "Pozicijų sąrašas"
+    "positionList": "Pozicijų sąrašas",
+    "layoutSet": "Maketų rinkinys"
   },
   "links": {
     "users": "Vartotojai",
     "notes": "Pastabos",
     "roles": "Rolės",
-    "inboundEmails": "Grupės el. pašto paskyros"
+    "inboundEmails": "Grupės el. pašto paskyros",
+    "layoutSet": "Maketų rinkinys"
   },
   "tooltips": {
     "roles": "Prieigos rolės. Šios komandos vartotojai gauna prieigos kontrolės lygį iš pasirinktų rolių.",
-    "positionList": "Galimos pozicijos šioje komandoje. Pavyzdžiui pardavėjas, vadybininkas.\n"
+    "positionList": "Galimos pozicijos šioje komandoje. Pavyzdžiui pardavėjas, vadybininkas.\n",
+    "layoutSet": "Suteikiama galimybė kurti kitokius nei standartiniai maketus. Maketų rinkinys bus taikomas naudotojams, kuriems ši komanda nustatyta kaip numatytoji komanda."
   },
   "labels": {
     "Create Team": "Sukurti komandą"

@@ -45,7 +45,10 @@
     "Success": "Panākumi",
     "Fail": "Neveiksme",
     "is recommended": "ir ieteicams",
-    "extension is missing": "trūkst pagarinājuma"
+    "extension is missing": "trūkst pagarinājuma",
+    "headerTitle": "EspoCRM uzstādīšana",
+    "Crontab setup instructions": "Ja netiks palaisti plānotie darbi, ienākošie e-pasti, paziņojumi un atgādinājumi nedarbosies. Šeit varat izlasīt {SETUP_INSTRUCTIONS}.",
+    "Setup instructions": "iestatīšanas instrukcijas"
   },
   "fields": {
     "Choose your language": "Izvēlieties valodu",
@@ -105,23 +108,12 @@
     "Thousand Separator and Decimal Mark equal": "Tūkstošu atdalītājs un decimālzīme nedrīkst būt vienādi",
     "extension": "{0} paplašinājums iztrūkst",
     "option": "Ieteicamā vērtība ir {0}",
-    "mysqlSettingError": "\"EspoCRM\" pieprasa, lai MySQL iestatījuma \"{name}\" vērtība būtu {vērtība}"
-  },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Atrodiet failu \"httpd.conf\" (parasti to var atrast mapē ar nosaukumu \"conf\", \"config\" u. tml.)<br>\n2. Failā \"httpd.conf\" atkomentējiet rindu <code>{WINDOWS_APACHE1}</code> (noņemiet rindas sākumā esošās restītes \"#\" )<br>\n3. Tāpat pārliecinieties, ka rinda \"ClearModuleList\" ir atkomentēta un rinda \"AddModule mod_rewrite.c\" nav atzīmēta ar zvaigznīti.\n</pre>"
-      },
-      "nginx": {
-        "linux": "<br>Pievienojiet šo kodu jūsu \"Nginx\" servera bloku konfigurācijas failam <code>{NGINX_PATH}</code> \"servera\" sadaļā:\n<pre>\n{NGINX}\n</pre> <br> Vairāk informācijas atradīsiet vadlīnijās <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>API kļūda: EspoCRM API nav pieejams.</h3><br>Veiciet tikai nepieciešamos soļus. Pēc katra soļa pārbaudiet, vai problēma ir atrisināta.",
-      "nginx": "<h3>API kļūda: \"EspoCRM\" API nav pieejams.</h3>",
-      "microsoft-iis": "<h3>API kļūda: \"EspoCRM\" API nav pieejams.</h3>Iespējamā problēma: nav atļauts \"URL Rewrite\". Pārbaudiet un atļaujiet \"URL Rewrite\" moduli IIS serverī",
-      "default": "<h3>API kļūda: EspoCRM API nav pieejams.</h3> Iespējamā problēma: nav atļauts \"Rewrite\" modulis. Pārbaudiet un atļaujiet \"Rewrite\" moduli serverī (Piem., mod_rewrite \"Apache\" serverī) un \".htaccess\" atbalstu."
-    }
+    "mysqlSettingError": "\"EspoCRM\" pieprasa, lai MySQL iestatījuma \"{name}\" vērtība būtu {vērtība}",
+    "requiredMariadbVersion": "Jūsu MariaDB versiju EspoCRM neatbalsta, lūdzu, atjauniniet to vismaz līdz MariaDB {minVersion}.",
+    "Ajax failed": "Notika neparedzēta kļūda",
+    "Bad init Permission": "Atļauja liegta direktorijai \"{*}\". Lūdzu, iestatiet \"{*}\" 775 vai vienkārši izpildiet šo komandu terminālī <pre><b>{C}</b></pre> Operācija nav atļauta? Izmēģiniet šo: {CSU}",
+    "permissionInstruction": "<br>Terminālā izpildiet šo komandu:<pre><b>\"{C}\"</b></pre>",
+    "operationNotPermitted": "Darbība nav atļauta? Izmēģiniet šo: <br><br>{CSU}"
   },
   "systemRequirements": {
     "requiredPhpVersion": "PHP versija",
@@ -130,6 +122,7 @@
     "dbname": "Datubāzes nosaukums",
     "user": "Lietotāja vārds",
     "writable": "Rakstiski",
-    "readable": "Lasāmi"
+    "readable": "Lasāmi",
+    "requiredMariadbVersion": "MariaDB versija"
   }
 }

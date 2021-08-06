@@ -19,8 +19,11 @@
     "forum": "форум",
     "Installation Guide": "Инструкция по установке",
     "admin": "админ",
-    "Locale": "Локаль",
+    "localhost": "Локальный хост",
+    "port": "3306 - адрес порта",
+    "Locale": "Местный",
     "Outbound Email Configuration": "Настройка исходящей эл. почты",
+    "SMTP": "SMTP - протокол передачи эл.почты",
     "Start": "Начать",
     "Back": "Назад",
     "Next": "Далее",
@@ -37,10 +40,17 @@
     "dbName": "Имя БД",
     "dbUserName": "Имя пользователя БД",
     "OK": "ОК",
-    "SetupConfirmation page title": "Системные Требования",
+    "SetupConfirmation page title": "Системные требования",
     "PHP Configuration": "Конфигурация PHP",
     "MySQL Configuration": "Конфигурация Базы Данных",
-    "Permission Requirements": "Права Доступа"
+    "Permission Requirements": "Права доступа",
+    "Success": "Успешно",
+    "Fail": "Сбой",
+    "is recommended": "рекомендовано",
+    "extension is missing": "расширение отсутствует",
+    "headerTitle": "Установка EspoCRM",
+    "Crontab setup instructions": "Без запущеного планировщика заданий входящие электронные письма, уведомления и напоминания не будут работать. Здесь вы можете прочитать {SETUP_INSTRUCTIONS}.",
+    "Setup instructions": "инструкции по настройке"
   },
   "fields": {
     "Choose your language": "Выберите ваш язык",
@@ -100,29 +110,21 @@
     "Thousand Separator and Decimal Mark equal": "Тысячный разделитель не может быть таким же как и десятичный разделитель",
     "extension": "{0} расширение отсутствует",
     "option": "Рекомендуемое значение {0}",
-    "mysqlSettingError": "Для EspoCRM требуется, чтобы значением \"{NAME}\" являлось {VALUE}"
-  },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Найдите файл httpd.conf (как правило, вы можете найти его в папке conf, config или в папке с похожим названием)<br>\n2. Внутри файла httpd.conf раскомментируйте строку <code>{WINDOWS_APACHE1}</code> (удалите знак '#' в начале строки)<br>\n3. Также убедитесь что раскомментирована строка ClearModuleList и что строка AddModule mod_rewrite.c не закомментирована.\n</pre>"
-      },
-      "nginx": {
-        "linux": "<br> Добавьте этот код в конфигурацию Nginx <code>{NGINX_PATH}</code> в блок \"server\":<pre>{NGINX}</pre> <br> Для получения более подробной информации, пожалуйста, перейдите <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>Ошибка API: EspoCRM API недоступен.</h3><br>Совершайте только необходимые шаги. После каждого шага проверяйте решена ли проблема.",
-      "nginx": "<h3>Ошибка API: EspoCRM API недоступен.</h3>",
-      "microsoft-iis": "<h3>Ошибка API: EspoCRM API недоступен.</h3><br> Возможная проблема: не подключен модуль \"URL Rewrite\". Пожалуйста, проверьте и подключите модуль \"URL Rewrite\" к IIS серверу.",
-      "default": "<h3>Ошибка API: EspoCRM API недоступен.</h3><br> Возможная проблема: не подключен модуль Rewrite. Пожалуйста, проверьте и подключите к серверу модуль Rewrite (например mod_rewrite в Apache) и поддержку .htaccess."
-    }
+    "mysqlSettingError": "Для EspoCRM требуется, чтобы значением \"{NAME}\" являлось {VALUE}",
+    "requiredMariadbVersion": "Ваша версия MariaDB не поддерживается EspoCRM, пожалуйста, обновите MariaDB хотя бы к {minVersion}",
+    "Ajax failed": "Произошла непредвиденная ошибка",
+    "Bad init Permission": "В доступе к каталогу \"{*}\" отказано. Пожалуйста, установите 775 для \"{*}\" или просто выполните эту команду в терминале <pre><b>{C}</b></pre> Операция запрещена? Попробуйте это: {CSU}",
+    "permissionInstruction": "<br>Запустите эту команду в Терминале:<pre><b>\"{C}\"</b></pre>",
+    "operationNotPermitted": "Операция запрещена? Попробуйте это: <br><br>{CSU}"
   },
   "systemRequirements": {
     "requiredPhpVersion": "Версия PHP",
     "requiredMysqlVersion": "Версия MySQL",
     "host": "Сервер",
     "dbname": "Имя БД",
-    "user": "Имя пользователя"
+    "user": "Имя пользователя",
+    "writable": "С доступом записи",
+    "readable": "С доступом чтения",
+    "requiredMariadbVersion": "Версия MariaDB"
   }
 }

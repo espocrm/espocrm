@@ -47,7 +47,10 @@
     "LeadCapture": "\"Lead Capture Entry Point\"",
     "LeadCaptureLogRecord": "Švino surinkimo žurnalo įrašas",
     "ArrayValue": "Masyvo vertė",
-    "ApiUser": "API naudotojas"
+    "ApiUser": "API naudotojas",
+    "DashboardTemplate": "Prietaisų skydelio šablonas",
+    "Currency": "Valiuta",
+    "LayoutSet": "Maketų rinkinys"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -85,7 +88,12 @@
     "LeadCapture": "\"Lead Capture\"",
     "LeadCaptureLogRecord": "Švino surinkimo žurnalas",
     "ArrayValue": "Masyvo reikšmės",
-    "ApiUser": "API naudotojai"
+    "ApiUser": "API naudotojai",
+    "DashboardTemplate": "Prietaisų skydelio šablonai",
+    "EmailAddress": "El. pašto adresai",
+    "PhoneNumber": "Telefono numeriai",
+    "Currency": "Valiuta",
+    "LayoutSet": "Maketų rinkiniai"
   },
   "labels": {
     "Misc": "Įvairūs",
@@ -238,7 +246,15 @@
     "View Personal Data": "Peržiūrėkite asmeninius duomenis",
     "Personal Data": "Asmeniniai duomenys",
     "Erase": "Ištrinti",
-    "Move Over": "Pasitrauk"
+    "Move Over": "Pasitrauk",
+    "Restore": "Atkurti",
+    "View Followers": "Peržiūrėti sekėjus",
+    "Convert Currency": "Konvertuoti valiutą",
+    "Middle Name": "Vidurinis vardas",
+    "View on Map": "Žiūrėti žemėlapyje",
+    "Proceed": "Tęsti",
+    "Attached": "Pridedamas",
+    "Preview": "Peržiūra"
   },
   "messages": {
     "pleaseWait": "Prašome palaukti...",
@@ -295,11 +311,19 @@
     "fieldShouldBeGreater": "{field} neturėtų būti mažesnis nei {value}",
     "fieldIsUploading": "Įkėlimas vykdomas",
     "erasePersonalDataConfirmation": "Pažymėti laukai bus ištrinti visam laikui. Ar tu tuo tikras?",
-    "massPrintPdfMaxCountError": "Negalima spausdinti daugiau {maxCount} įrašų."
+    "massPrintPdfMaxCountError": "Negalima spausdinti daugiau {maxCount} įrašų.",
+    "fieldValueDuplicate": "Dubliuojanti vertė",
+    "unlinkSelectedRecordsConfirmation": "Ar tikrai norite panaikinti pasirinktus įrašus?",
+    "recalculateFormulaConfirmation": "Ar tikrai norite perskaičiuoti pasirinktų įrašų formulę?",
+    "fieldExceedsMaxCount": "Skaičius viršija didžiausią leistiną {maxCount}",
+    "notUpdated": "Neatnaujinta",
+    "maintenanceMode": "Šiuo metu programa veikia techninės priežiūros režimu. Prieigą turi tik administratoriaus naudotojai.\n\nPriežiūros režimą galima išjungti adresu Administravimas → Nustatymai.",
+    "fieldInvalid": "{field} yra negaliojantis"
   },
   "boolFilters": {
     "onlyMy": "Tik mano",
-    "followed": "Stebimas"
+    "followed": "Stebimas",
+    "onlyMyTeam": "Mano komanda"
   },
   "presetFilters": {
     "followed": "Stebimas",
@@ -313,7 +337,9 @@
     "follow": "Stebėti",
     "unfollow": "Nebesekti",
     "convertCurrency": "Pakeisti valiutą",
-    "printPdf": "Spausdinti PDF formatu"
+    "printPdf": "Spausdinti PDF formatu",
+    "unlink": "Atsieti",
+    "recalculateFormula": "Perskaičiuoti formulę"
   },
   "fields": {
     "name": "Vardas",
@@ -346,7 +372,10 @@
     "names": "Vardai",
     "emailAddressIsOptedOut": "El. Pašto adresas yra išjungtas",
     "targetListIsOptedOut": "Atmetamas (tikslinius sąrašus)",
-    "type": "Įveskite"
+    "type": "Įveskite",
+    "phoneNumberIsOptedOut": "Telefono numeris yra išjungtas",
+    "types": "Tipai",
+    "middleName": "Vidurinis vardas"
   },
   "links": {
     "assignedUser": "Priskirtas darbuotojas",
@@ -528,7 +557,9 @@
       "anyOf": "Bet kuris",
       "isNot": "Ne",
       "isNotOneOf": "Nei vienas",
-      "noneOf": "Nei vienas"
+      "noneOf": "Nei vienas",
+      "allOf": "Visi iš",
+      "any": "Bet kuris"
     },
     "varcharSearchRanges": {
       "equals": "Lygu",

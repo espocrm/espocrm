@@ -18,15 +18,18 @@
     "weekStart": "Pirmā nedēļas diena",
     "defaultCurrency": "Noklusējuma valūta",
     "customUrl": "Pielāgotais vietrādis URL",
-    "customId": "Pielāgots ID"
+    "customId": "Pielāgots ID",
+    "layoutSet": "Izkārtojuma komplekts"
   },
   "links": {
     "users": "Lietotāji",
     "portalRoles": "Lomas",
-    "notes": "Piezīmes"
+    "notes": "Piezīmes",
+    "layoutSet": "Izkārtojuma komplekts"
   },
   "tooltips": {
-    "portalRoles": "Norādītais portāls tiks attiecināts uz visiem šī portāla lietotājiem."
+    "portalRoles": "Norādītais portāls tiks attiecināts uz visiem šī portāla lietotājiem.",
+    "layoutSet": "Nodrošina iespēju izmantot izkārtojumus, kas atšķiras no standarta izkārtojumiem."
   },
   "labels": {
     "Create Portal": "Izveidot portālu",

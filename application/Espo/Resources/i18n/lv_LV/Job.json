@@ -12,8 +12,11 @@
     "scheduledJobJob": "Ieplānotā darba nosaukums",
     "executedAt": "Izpildīts",
     "startedAt": "Sākās",
+    "targetType": "Mērķa tips",
+    "targetId": "Mērķa ID",
     "number": "Numurs",
-    "queue": "Rinda"
+    "queue": "Rinda",
+    "job": "Darbs"
   },
   "options": {
     "status": {

@@ -7,7 +7,8 @@
     "targetType": "Mērķa adresātu tips",
     "authToken": "Autentifikācijas tokens",
     "ipAddress": "IP adrese",
-    "authLogRecord": "Autentifikācijas reģistra ieraksts"
+    "authLogRecord": "Autentifikācijas reģistra ieraksts",
+    "userType": "Lietotāja tips"
   },
   "links": {
     "authToken": "Autentifikācijas tokens",

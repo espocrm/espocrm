@@ -7,7 +7,8 @@
     "subject": "Tēma",
     "attachments": "Pielikumi",
     "oneOff": "Pa vienam",
-    "category": "Kategorija"
+    "category": "Kategorija",
+    "insertField": "Vietrāži"
   },
   "labels": {
     "Create EmailTemplate": "Izveidot e-pasta veidni",
@@ -20,14 +21,13 @@
   "presetFilters": {
     "actual": "Faktiskais"
   },
-  "messages": {
-    "infoText": "Pieejamie vietturi:\n\n{optOutUrl} &#8211; vietrādis URL atrakstīšanās saitei;\n\n{optOutLink} &#8211; atrakstīšanās saite."
-  },
   "placeholderTexts": {
-    "optOutUrl": "vietrādis URL atrakstīšanās saitei",
     "optOutLink": "atrakstīšanās saite",
     "today": "Šodienas datums",
     "now": "Pašreizējais laiks un datums",
     "currentYear": "Esošais gads"
+  },
+  "messages": {
+    "infoText": "Pieejamās vietzīmes:\n\nTālrunis URL norakstīšanās saitei;\n\n{optOutLink} &#8211; norakstīšanās saite."
   }
 }

@@ -12,7 +12,11 @@
     "leads": "Potencialūs klientai",
     "reminders": "Priminimai",
     "account": "Įmonė",
-    "acceptanceStatus": "Priėmimo statusas"
+    "acceptanceStatus": "Priėmimo statusas",
+    "dateStartDate": "Data Pradžia (visą dieną)",
+    "dateEndDate": "Data Pabaiga (visą dieną)",
+    "isAllDay": "Ar visą dieną",
+    "Acceptance": "Priėmimas"
   },
   "options": {
     "status": {
@@ -37,7 +41,8 @@
     "Set Not Held": "Pažymėti kaip neįvykdytą",
     "Send Invitations": "Siųsti pakvietimus",
     "on time": "laiku",
-    "before": "prieš"
+    "before": "prieš",
+    "All-Day": "Visą dieną"
   },
   "presetFilters": {
     "planned": "Suplanuota",
@@ -45,6 +50,7 @@
     "todays": "Šiandienos"
   },
   "messages": {
-    "nothingHasBeenSent": "Nieko nebuvo išsiųsta"
+    "nothingHasBeenSent": "Nieko nebuvo išsiųsta",
+    "selectAcceptanceStatus": "Nustatykite priėmimo būseną."
   }
 }

@@ -11,7 +11,8 @@
     "authToken": "Токен аутентификации создан",
     "requestUrl": "URL запроса",
     "requestMethod": "Метод запроса",
-    "authTokenIsActive": "Токен аутентификации активен"
+    "authTokenIsActive": "Токен аутентификации активен",
+    "authenticationMethod": "Метод аутентификации"
   },
   "links": {
     "authToken": "Токен аутентификации создан",

@@ -8,7 +8,8 @@
     "style": "Stilius",
     "sticked": "Prikabinta",
     "isLarge": "Didelis šrifto dydis",
-    "dynamicLogicVisible": "Sąlygos, dėl kurių skydas matomas"
+    "dynamicLogicVisible": "Sąlygos, dėl kurių skydas matomas",
+    "hidden": "Paslėptas"
   },
   "options": {
     "align": {
@@ -27,5 +28,9 @@
   "labels": {
     "New panel": "Nauja panelė",
     "Layout": "Išdėtymas"
+  },
+  "tooltips": {
+    "link": "Jei pažymėta, lauko reikšmė bus rodoma kaip nuoroda, nukreipianti į išsamią įrašo peržiūrą. Paprastai tai naudojama *Vardas* laukams.",
+    "hiddenPanel": "Norint pamatyti skydelį, reikia spustelėti \"Rodyti daugiau\"."
   }
 }

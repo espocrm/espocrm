@@ -52,7 +52,10 @@
     "Timezone": "Laika zona",
     "Remove Import Log": "Noņemt importēto ierakstu reģistru",
     "New Import": "Jauna importēšana",
-    "Import Results": "Importēt rezultātus"
+    "Import Results": "Importēt rezultātus",
+    "Silent Mode": "Klusais režīms",
+    "New import with same params": "Jauns imports ar tiem pašiem parametriem",
+    "Run Manually": "Palaist manuāli"
   },
   "messages": {
     "utf8": "Jābūt UTF-8 kodējumā",
@@ -62,7 +65,8 @@
     "removeDuplicates": "Šī izvēle neatgriezeniski noņems visus importētos ierakstus, kas atpazīti kā dublikāti.",
     "confirmRevert": "Šī izvēle neatgriezeniski noņems visus importētos ierakstus. Vai tiešām vēlaties turpināt?",
     "confirmRemoveDuplicates": "Šī izvēle neatgriezeniski noņems visus importētos ierakstus, kas būs atpazīti kā dublikāti. Vai tiešām vēlaties turpināt?",
-    "removeImportLog": "Šī izvēle noņems importēto ierakstu reģistru. Visi importētie ieraksti tiks saglabāti. Izmantojiet šo izvēli, ja vēlaties pieļaut importēšanu."
+    "removeImportLog": "Šī izvēle noņems importēto ierakstu reģistru. Visi importētie ieraksti tiks saglabāti. Izmantojiet šo izvēli, ja vēlaties pieļaut importēšanu.",
+    "confirmRemoveImportLog": "Tādējādi tiks noņemts importa žurnāls. Visi importētie ieraksti tiks saglabāti. Jūs nevarēsiet atgriezt importa rezultātus. Vai esat pārliecināts?"
   },
   "fields": {
     "file": "Fails",
@@ -76,7 +80,24 @@
     "status": {
       "Failed": "Neizdevās",
       "In Process": "Procesā",
-      "Complete": "Pabeigts"
+      "Complete": "Pabeigts",
+      "Standby": "Gaidīšanas režīms",
+      "Pending": "Gaida"
+    },
+    "personNameFormat": {
+      "f l": "Pirmais Pēdējais",
+      "l f": "Pēdējais Pirmais",
+      "f m l": "Pirmais vidējais uzvārds",
+      "l f m": "Uzvārds Pirmais Vidējais",
+      "l, f": "Pēdējais, Pirmais"
     }
+  },
+  "strings": {
+    "commandToRun": "Izpildāmā komanda (no CLI)",
+    "saveAsDefault": "Saglabāt kā noklusējuma"
+  },
+  "tooltips": {
+    "manualMode": "Ja ir atzīmēts, jums būs nepieciešams palaist importu manuāli no CLI. Komanda tiks parādīta pēc importa iestatīšanas.",
+    "silentMode": "Lielākā daļa pēc saglabāšanas skriptu tiks izlaisti, plūsmas piezīmes netiks izveidotas. Imports darbosies ātrāk."
   }
 }

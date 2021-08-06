@@ -12,7 +12,11 @@
     "leads": "Potenciālie klienti",
     "reminders": "Atgādinājumi",
     "account": "Konts",
-    "acceptanceStatus": "Akcepta statuss"
+    "acceptanceStatus": "Akcepta statuss",
+    "dateStartDate": "Datums Sākums (visu dienu)",
+    "dateEndDate": "Beigu datums (visu dienu)",
+    "isAllDay": "Vai ir visas dienas",
+    "Acceptance": "Pieņemšana"
   },
   "options": {
     "status": {
@@ -37,7 +41,8 @@
     "Set Not Held": "Iestatīt kā nenotikušu",
     "Send Invitations": "Nosūtīt uzaicinājumus",
     "on time": "laikā",
-    "before": "pirms"
+    "before": "pirms",
+    "All-Day": "Visas dienas"
   },
   "presetFilters": {
     "planned": "Plānota",
@@ -45,6 +50,7 @@
     "todays": "Šīsdienas"
   },
   "messages": {
-    "nothingHasBeenSent": "Nekas netika nosūtīts"
+    "nothingHasBeenSent": "Nekas netika nosūtīts",
+    "selectAcceptanceStatus": "Iestatiet pieņemšanas statusu."
   }
 }

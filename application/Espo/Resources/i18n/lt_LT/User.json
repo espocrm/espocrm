@@ -33,7 +33,12 @@
     "type": "Tipas",
     "apiKey": "API raktas",
     "secretKey": "Saugos raktas",
-    "authMethod": "Prisijungimo būdai"
+    "authMethod": "Prisijungimo būdai",
+    "yourPassword": "Jūsų dabartinis slaptažodis",
+    "dashboardTemplate": "Prietaisų skydelio šablonas",
+    "auth2FAEnable": "Įjungti 2 veiksnių autentiškumo nustatymą",
+    "auth2FAMethod": "2FA metodas",
+    "auth2FATotpSecret": "2FA TOTP paslaptis"
   },
   "links": {
     "teams": "Komandos",
@@ -44,7 +49,10 @@
     "contact": "Kontaktas",
     "accounts": "Įmonės",
     "account": "Paskyra (pirminė)",
-    "tasks": "Užduotys"
+    "tasks": "Užduotys",
+    "defaultTeam": "Numatytoji komanda",
+    "dashboardTemplate": "Prietaisų skydelio šablonas",
+    "userData": "Naudotojo duomenys"
   },
   "labels": {
     "Create User": "Sukurti vartotoją",
@@ -61,14 +69,21 @@
     "Portal": "Portalas",
     "Create Portal User": "Sukurti portalo vartotoją",
     "Proceed w/o Contact": "Pereiti prie kontaktų",
-    "Generate New API Key": "Sugeneruoti naują API raktą"
+    "Generate New API Key": "Sugeneruoti naują API raktą",
+    "Generate New Password": "Sukurti naują slaptažodį",
+    "Code": "Kodas",
+    "Back to login form": "Atgal į prisijungimo formą",
+    "Requirements": "Reikalavimai",
+    "Security": "Apsauga",
+    "Reset 2FA": "Iš naujo nustatyti 2FA",
+    "Secret": "Paslaptis"
   },
   "tooltips": {
     "defaultTeam": "Visi šio naudotojo sukurti įrašai bus susiję su šia komanda pagal nutylėjimą.",
     "userName": "Leidžiami raidės a-z, skaičiai 0-9, taškai, brūkšniai, @ -žymėjimai ir pabraukimai.",
     "isAdmin": "Administratorius turi prieigą prie visko",
     "isActive": "Jei nepažymėta, vartotojas negalės prisijungti.",
-    "teams": "Komandos,kurioms priklauso šis naudotojas. Prieigos kontrolės lygis yra perimtas iš komandos rolės.",
+    "teams": "Komandos kurioms priklauso šis naudotojas. Prieigos kontrolės lygis yra perimtas iš komandos rolės.",
     "roles": "Papildomos prieigos vaidmenys. Naudokite jį, jei naudotojas nepriklauso jokiai komandai arba jums reikia išplėsti prieigos kontrolės lygį tik šiam vartotojui.",
     "portalRoles": "Papildomos portalo rolės. Naudokite ją, kad galėtumėte išplėsti prieigos kontrolės lygį tik šiam vartotojui.",
     "portals": "Portalai, prie kurių šis vartotojas turi prieigą."
@@ -83,14 +98,30 @@
     "forbidden": "Draudžiama, prašome pabandyti vėliau",
     "uniqueLinkHasBeenSent": "Unikalus URL buvo išsiųstas nurodytu el. pašto adresu.",
     "passwordChangedByRequest": "Slaptažodis pakeistas.",
-    "userNameExists": "Toks vartotojas jau sukurtas"
+    "userNameExists": "Toks vartotojas jau sukurtas",
+    "setupSmtpBefore": "Kad sistema galėtų siųsti slaptažodį el. paštu, reikia nustatyti [SMTP nustatymus]({url}).",
+    "passwordStrengthLength": "Turi būti bent {ilgis} simbolių ilgio.",
+    "passwordStrengthLetterCount": "Turi būti ne mažiau kaip {skaičius} raidžių.",
+    "passwordStrengthNumberCount": "Turi būti ne mažiau kaip {skaičius} skaitmenų.",
+    "passwordStrengthBothCases": "Turi būti didžiosios ir mažosios raidės.",
+    "wrongCode": "Neteisingas kodas",
+    "codeIsRequired": "Reikalingas kodas",
+    "enterTotpCode": "Įveskite autentifikatoriaus programėlės kodą.",
+    "verifyTotpCode": "Nuskaitykite QR kodą mobiliąja autentifikavimo programa. Jei turite problemų su nuskaitymu, paslaptį galite įvesti rankiniu būdu. Po to programoje pamatysite 6 skaitmenų kodą. Įveskite šį kodą į toliau esantį laukelį.",
+    "generateAndSendNewPassword": "Naujas slaptažodis bus sugeneruotas ir išsiųstas naudotojo el. pašto adresu.",
+    "security2FaResetConfimation": "Ar tikrai norite iš naujo nustatyti dabartinius 2FA nustatymus?",
+    "ldapUserInEspoNotFound": "Vartotojas nerastas \"EspoCRM\". Kreipkitės į administratorių, kad jis sukurtų naudotoją.",
+    "passwordRecoverySentIfMatched": "Darant prielaidą, kad įvesti duomenys atitinka bet kurią naudotojo paskyrą.",
+    "auth2FARequiredHeader": "Reikalingas 2 veiksnių autentiškumo patvirtinimas",
+    "auth2FARequired": "Reikia nustatyti 2 veiksnių autentifikavimą. Mobiliajame telefone naudokite autentifikavimo programą (pvz., \"Google Authenticator\")."
   },
   "boolFilters": {
     "onlyMyTeam": "Tik mano komanda"
   },
   "presetFilters": {
     "active": "Aktyvus",
-    "activePortal": "Aktyvus portalas"
+    "activePortal": "Aktyvus portalas",
+    "activeApi": "API aktyvus"
   },
   "options": {
     "gender": {

@@ -25,7 +25,8 @@
     "accountsTemplate": "Sąskaitų šablonas",
     "usersTemplate": "Vartotojų šablonas",
     "mailMergeOnlyWithAddress": "Praleisti įrašus be užpildyto adreso",
-    "optedInCount": "Pasirinkta"
+    "optedInCount": "Pasirinkta",
+    "budgetCurrency": "Biudžetas Valiuta"
   },
   "links": {
     "targetLists": "Adresatų sąrašai",

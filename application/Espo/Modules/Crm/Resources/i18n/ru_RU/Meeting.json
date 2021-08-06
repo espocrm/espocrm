@@ -9,10 +9,14 @@
     "description": "Описание",
     "users": "Пользователи",
     "contacts": "Контакты",
-    "leads": "Кандидаты",
+    "leads": "Лиды",
     "reminders": "Напоминания",
     "account": "Контрагент",
-    "acceptanceStatus": "Статус принятия"
+    "acceptanceStatus": "Статус принятия",
+    "dateStartDate": "Дата начала (весь день)",
+    "dateEndDate": "Дата окончания (весь день)",
+    "isAllDay": "Весь день",
+    "Acceptance": "Принятие"
   },
   "options": {
     "status": {
@@ -37,7 +41,8 @@
     "Set Not Held": "Не состоялось",
     "Send Invitations": "Отправить приглашения",
     "on time": "во время",
-    "before": "до начала"
+    "before": "до начала",
+    "All-Day": "Весь день"
   },
   "presetFilters": {
     "planned": "Запланированные",
@@ -45,6 +50,7 @@
     "todays": "На сегодня"
   },
   "messages": {
-    "nothingHasBeenSent": "Ничего не было отправлено"
+    "nothingHasBeenSent": "Ничего не было отправлено",
+    "selectAcceptanceStatus": "Установите свой статус принятия."
   }
 }

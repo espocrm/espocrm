@@ -14,7 +14,10 @@
     "variables": "Pieejamie vietturi",
     "pageOrientation": "Lappuses orientācija",
     "pageFormat": "Papīra formāts",
-    "fontFace": "Fonts"
+    "fontFace": "Fonts",
+    "pageWidth": "Lapas platums (mm)",
+    "pageHeight": "Lapas augstums (mm)",
+    "headerPosition": "Virsraksta pozīcija"
   },
   "labels": {
     "Create Template": "Izveidot veidni"
@@ -30,7 +33,8 @@
     },
     "placeholders": {
       "today": "Šodien (datums)",
-      "now": "Tagad (datums-laiks)"
+      "now": "Tagad (datums-laiks)",
+      "pagebreak": "Lapas pārtraukums"
     },
     "fontFace": {
       "aealarabiya": "\"AlArabiya\"",
@@ -61,6 +65,9 @@
       "symbol": "\"Symbol\"",
       "times": "\"Times\"",
       "dejavuserifcondensed": "\"DejaVu Serif Condensed\""
+    },
+    "pageFormat": {
+      "Custom": "Pielāgots"
     }
   }
 }

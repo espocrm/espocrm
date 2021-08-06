@@ -3,5 +3,12 @@
     "Primary": "Основной",
     "Opted Out": "Отписан",
     "Invalid": "Неверный адрес"
+  },
+  "fields": {
+    "optOut": "Отписан",
+    "invalid": "Неверный адрес"
+  },
+  "presetFilters": {
+    "orphan": "Сирота"
   }
 }

@@ -60,6 +60,10 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mėnesių",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mėnesių",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 metai"
+    },
+    "barcodeType": {
+      "pharmacode": "Farmakodas",
+      "QRcode": "QR kodas"
     }
   },
   "tooltips": {
@@ -74,7 +78,9 @@
     "before": "Duomenų vertė turėtų būti prieš duomenų vertės nurodytą laukelį",
     "after": "Duomenų vertė turėtų būti poduomenų vertės nurodyto laukelio",
     "readOnly": "artotojas negali nurodyti laukelio vertės. Bet gali būti apskaičiuojamas pagal formulę.",
-    "maxFileSize": "Jei tuščia arba 0, tai nelimituojama"
+    "maxFileSize": "Jei tuščia arba 0, tai nelimituojama",
+    "fileAccept": "Kokius failų tipus priimti. Galima pridėti pasirinktinių elementų.",
+    "barcodeLastChar": "EAN-13 tipo."
   },
   "fieldParts": {
     "address": {
@@ -88,7 +94,8 @@
     "personName": {
       "salutation": "Sveikinimas",
       "first": "Pirmas",
-      "last": "Paskutinis"
+      "last": "Paskutinis",
+      "middle": "Vidurio"
     },
     "currency": {
       "converted": "(Konvertuota)",
@@ -97,5 +104,33 @@
     "datetimeOptional": {
       "date": "Data"
     }
+  },
+  "fieldInfo": {
+    "varchar": "Vienos eilutės tekstas.",
+    "enum": "Pasirinkimo laukelyje galima pasirinkti tik vieną reikšmę.",
+    "text": "Daugiajuostis tekstas su žymėjimo palaikymu.",
+    "date": "Data be laiko.",
+    "datetime": "Data ir laikas",
+    "currency": "Valiutos vertė. Plaukiojantis skaičius su valiutos kodu.",
+    "int": "Visas skaičius.",
+    "float": "Skaičius su dešimtaine dalimi.",
+    "bool": "Žymimasis langelis. Dvi galimos reikšmės: true ir false.",
+    "multiEnum": "Reikšmių sąrašas, galima pasirinkti kelias reikšmes. Sąrašas yra sutvarkytas.",
+    "checklist": "Žymimųjų langelių sąrašas.",
+    "array": "Reikšmių sąrašas, panašus į \"Multi-Enum\" lauką.",
+    "address": "Adresas su gatve, miestu, valstija, pašto kodu ir šalimi.",
+    "url": "Nuorodoms saugoti.",
+    "wysiwyg": "Tekstas su HTML palaikymu.",
+    "file": "Failų įkėlimui.",
+    "image": "Paveikslėlių įkėlimui.",
+    "attachmentMultiple": "Leidžia įkelti kelis failus.",
+    "number": "Automatiškai didėjantis eilutės tipo skaičius su galimu priešdėliu ir tam tikru ilgiu.",
+    "autoincrement": "Sukurtas tik skaitymui skirtas automatiškai didėjantis sveikasis skaičius.",
+    "barcode": "Brūkšninis kodas. Galima spausdinti PDF formatu.",
+    "email": "El. pašto adresų rinkinys su jų parametrais: Atmesti, Negaliojantys, Pirminiai.",
+    "phone": "Telefono numerių ir jų parametrų rinkinys: Tipas, Atsisakyta, Negaliojantis, Pirminis.",
+    "foreign": "Susijusio įrašo laukas. Tik nuskaitymui.",
+    "link": "Įrašas, susijęs per ryšį \"Priklauso-tam\" (daug-prieš-vieną arba vienas-prieš-vieną).",
+    "linkParent": "Įrašas, susijęs per \"priklauso tėvams\" ryšį. Gali būti skirtingų tipų."
   }
 }

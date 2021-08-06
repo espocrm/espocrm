@@ -1,6 +1,8 @@
 {
   "labels": {
     "Connect": "Prisijungti",
-    "Connected": "Prisijungta"
+    "Connected": "Prisijungta",
+    "Disconnect": "Atjunkite",
+    "Disconnected": "Atjungtas"
   }
 }

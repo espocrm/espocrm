@@ -20,7 +20,8 @@
     "accountIsInactive": "Įmonė neaktyvi",
     "acceptanceStatusMeetings": "Priėmimo statusas (susirinkimai)",
     "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)",
-    "title": "Pagrindinė paskyros antraštė"
+    "title": "Sąskaitos pavadinimas",
+    "hasPortalUser": "Turi portalo naudotoją"
   },
   "links": {
     "opportunities": "Galimybės",
@@ -30,11 +31,12 @@
     "campaign": "Kampanija",
     "account": "Kontaktas (pirminis)",
     "accounts": "Įmonės",
-    "casesPrimary": "Bylos (pirminis)",
+    "casesPrimary": "Atvejai (pirminiai)",
     "portalUser": "Portalo vartotojas",
     "originalLead": "Originalus potencialus klientas",
     "documents": "Dokumentai",
-    "tasksPrimary": "Užduotys (išplėstos)"
+    "tasksPrimary": "Užduotys (išplėstos)",
+    "opportunitiesPrimary": "Galimybės (pirminės)"
   },
   "labels": {
     "Create Contact": "Sukurti kontaktą"

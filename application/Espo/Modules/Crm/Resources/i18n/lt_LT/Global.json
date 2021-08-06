@@ -87,7 +87,8 @@
     "Log Call": "Skambučio eiga",
     "Archive Email": "Suarchyvuoti laiškai",
     "Create Task": "Sukurti užduotį",
-    "Tasks": "Užduotys"
+    "Tasks": "Užduotys",
+    "Scheduler": "Planuotojas"
   },
   "fields": {
     "billingAddressCity": "Miestas",

@@ -10,7 +10,8 @@
     "authToken": "Sukurtas \"Auth Token\"",
     "requestUrl": "Prašyti URL",
     "requestMethod": "Prašymo metodas",
-    "authTokenIsActive": "Auth Token yra aktyvus"
+    "authTokenIsActive": "Auth Token yra aktyvus",
+    "authenticationMethod": "Autentifikavimo metodas"
   },
   "links": {
     "authToken": "Sukurtas \"Auth Token\"",

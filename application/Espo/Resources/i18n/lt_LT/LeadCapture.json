@@ -15,14 +15,20 @@
     "apiKey": "API raktas",
     "targetTeam": "Tikslinė komanda",
     "exampleRequestMethod": "Metodas",
-    "exampleRequestPayload": "Naudingoji apkrova"
+    "exampleRequestPayload": "Naudingoji apkrova",
+    "createLeadBeforeOptInConfirmation": "Sukurti švino prieš patvirtinimą",
+    "duplicateCheck": "Dublikatų tikrinimas",
+    "skipOptInConfirmationIfSubscribed": "Praleisti patvirtinimą, jei vadovas jau yra tiksliniame sąraše",
+    "smtpAccount": "SMTP paskyra",
+    "inboundEmail": "Grupės el. pašto paskyra"
   },
   "links": {
     "targetList": "Tikslinis sąrašas",
     "campaign": "Kampanija",
     "optInConfirmationEmailTemplate": "Atsisakyti patvirtinimo el. Laiško šablono",
     "targetTeam": "Tikslinė komanda",
-    "logRecords": "Prisijungti"
+    "logRecords": "Prisijungti",
+    "inboundEmail": "Grupės el. pašto paskyra"
   },
   "labels": {
     "Create LeadCapture": "Sukurkite atvykimo tašką",

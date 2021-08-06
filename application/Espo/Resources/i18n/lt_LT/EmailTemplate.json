@@ -6,9 +6,9 @@
     "body": "Laiško tekstas",
     "subject": "Tema",
     "attachments": "Prisegtukai",
-    "insertField": "Įterpti laukelį",
     "oneOff": "Vienkartinis",
-    "category": "Kategorija"
+    "category": "Kategorija",
+    "insertField": "Vietos ženklai"
   },
   "labels": {
     "Create EmailTemplate": "Sukurti el. pašto laiško šabloną",
@@ -21,11 +21,13 @@
   "presetFilters": {
     "actual": "Esamas"
   },
-  "messages": {
-    "infoText": "Galimi užpildai:\n\n{optOutUrl} & # 8211; \"Unsubscribe\" nuorodos URL;\n\n{optOutLink} & # 8211; Atsisakyti prenumeratos nuorodą."
-  },
   "placeholderTexts": {
-    "optOutUrl": "URL nepasirinkto šlamšto nuorodos",
-    "optOutLink": "atsisakyti prenumeratos nuorodą"
+    "optOutLink": "atsisakyti prenumeratos nuorodą",
+    "today": "Šiandienos data",
+    "now": "Dabartinė data ir laikas",
+    "currentYear": "Einamieji metai"
+  },
+  "messages": {
+    "infoText": "Galimos vietos žymos:\n\n{optOutUrl} &#8211; Atsisakymo nuorodos URL;\n\n{optOutLink} &#8211; prenumeratos atsisakymo nuoroda."
   }
 }

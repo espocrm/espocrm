@@ -19,7 +19,7 @@
     "Rebuild": "Atstatyti",
     "Teams": "Komandos",
     "Roles": "Rolės",
-    "Portal": "Portalas\n",
+    "Portal": "Portalas",
     "Portals": "Portalai",
     "Portal Roles": "Portalo rolės",
     "Outbound Emails": "Išsiunčiami el. laiškai",
@@ -69,7 +69,12 @@
     "Success": "Pavyko",
     "Fail": "Nepavyko",
     "is recommended": "rekomenduojama",
-    "extension is missing": "trūksta plėtinio"
+    "extension is missing": "trūksta plėtinio",
+    "PDF Templates": "PDF šablonai",
+    "Dashboard Templates": "Prietaisų skydelio šablonai",
+    "Email Addresses": "El. pašto adresai",
+    "Phone Numbers": "Telefono numeriai",
+    "Layout Sets": "Maketų rinkiniai"
   },
   "layouts": {
     "list": "Sąrašas",
@@ -87,7 +92,12 @@
     "detailSmallPortal": "Plati informacija (mažesnis variantas, portalas)",
     "listSmallPortal": "Sąrašas (mažas, portalas)",
     "listPortal": "Sąrašas (Portalas)",
-    "relationshipsPortal": "Santykių grupės (portalas)"
+    "relationshipsPortal": "Santykių grupės (portalas)",
+    "defaultSidePanel": "Šoninio skydelio laukai",
+    "bottomPanelsDetail": "Apatiniai skydai",
+    "bottomPanelsEdit": "Apatiniai skydai (Redaguoti)",
+    "bottomPanelsDetailSmall": "Apatinės plokštės (maža detalė)",
+    "bottomPanelsEditSmall": "Apatiniai skydeliai (Redaguoti mažą)"
   },
   "fieldTypes": {
     "address": "Adresas",
@@ -122,7 +132,10 @@
     "number": "Numeris (automatinis prieaugis)",
     "jsonObject": "Json objektas",
     "datetime": "Data-laikas",
-    "datetimeOptional": "Data / data-laikas"
+    "datetimeOptional": "Data / data-laikas",
+    "checklist": "Kontrolinis sąrašas",
+    "linkOne": "Pirmoji sąsaja",
+    "barcode": "Brūkšninis kodas"
   },
   "fields": {
     "type": "Tipas",
@@ -167,7 +180,22 @@
     "isPersonalData": "Ar asmeniniai duomenys",
     "useIframe": "Naudokite \"Iframe\"",
     "useNumericFormat": "Naudokite skaitmeninį formatą",
-    "strip": "Juostos juosta"
+    "strip": "Juostos juosta",
+    "cutHeight": "Pjūvio aukštis (px)",
+    "minuteStep": "Protokolas Žingsnis",
+    "inlineEditDisabled": "Išjungti eilučių redagavimą",
+    "displayAsLabel": "Rodyti kaip etiketę",
+    "allowCustomOptions": "Leisti pasirinktines parinktis",
+    "maxCount": "Maksimalus elementų skaičius",
+    "displayRawText": "Rodyti neapdorotą tekstą (be žymėjimo)",
+    "notActualOptions": "Ne faktinės parinktys",
+    "accept": "Priimti",
+    "displayAsList": "Rodyti kaip sąrašą",
+    "viewMap": "Peržiūrėti žemėlapio mygtuką",
+    "codeType": "Kodo tipas",
+    "lastChar": "Paskutinis simbolis",
+    "listPreviewSize": "Peržiūros dydis sąrašo rodinyje",
+    "onlyDefaultCurrency": "Tik numatytoji valiuta"
   },
   "messages": {
     "selectEntityType": "Pasirinkite objekto tipą kairiajame meniu.",
@@ -179,10 +207,17 @@
     "upgradeBackup": "Prieš atnaujinant EspoCRM, rekomenduojame išsisaugoti failų ir duomenų bazės kopijas.",
     "thousandSeparatorEqualsDecimalMark": "Tūkstančių skirtukų simbolis negali būti toks pat kaip dešimtainio skirtuko simbolis.",
     "userHasNoEmailAddress": "Vartotojas neturi el. pašto adreso.",
-    "newVersionIsAvailable": "Nauja EspoCRM versija {latestVersion} yra prieinama.",
     "uninstallConfirmation": "Ar tikrai norite pašalinti plėtinį?",
-    "cronIsNotConfigured": "Numatytos darbo vietos neveikia. Taigi įeinantys laiškai, pranešimai ir priminimai neveikia. Prašome laikytis [instrukcijų] (https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) nustatyti cron darbą.",
-    "newExtensionVersionIsAvailable": "Yra nauja {extensionName} versija {latestVersion}."
+    "cronIsNotConfigured": "Numatytos darbo vietos neveikia. Taigi įeinantys laiškai, pranešimai ir priminimai neveikia. Prašome laikytis [instrukcijų](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) nustatyti cron darbą.",
+    "newExtensionVersionIsAvailable": "Yra nauja {extensionName} versija {latestVersion}.",
+    "upgradeVersion": "\"EspoCRM\" bus atnaujinta į **{versiją}**. Būkite kantrūs, nes tai gali užtrukti.",
+    "upgradeDone": "\"EspoCRM\" atnaujinta į **{versiją}**.",
+    "downloadUpgradePackage": "Atsisiųskite atnaujinimo paketą (-us) [čia]({url}).",
+    "upgradeInfo": "Patikrinkite [dokumentaciją]({url}) apie tai, kaip atnaujinti \"EspoCRM\" egzempliorių.",
+    "upgradeRecommendation": "Šis atnaujinimo būdas nerekomenduojamas. Geriau atnaujinti iš CLI.",
+    "newVersionIsAvailable": "Yra nauja \"EspoCRM\" versija {latestVersion}. Norėdami atnaujinti savo instanciją, vadovaukitės [instrukcijomis](https://www.espocrm.com/documentation/administration/upgrading/).",
+    "formulaFunctions": "Daugiau funkcijų rasite [dokumentacija]({documentationUrl}).",
+    "rebuildRequired": "Reikia paleisti atkūrimą iš CLI."
   },
   "descriptions": {
     "settings": "Sistemos programos nustatymai.",
@@ -196,7 +231,7 @@
     "portals": "Portalų valdymas.",
     "portalRoles": "Portalo rolės.",
     "outboundEmails": "El. pašto SMTP nustatymai išsiunčiamiems laiškams.",
-    "groupEmailAccounts": "IMAP grupės el.pašto paskyros. Importuoti el. laiškus ir el. pastas pagal atvejį.",
+    "groupEmailAccounts": "IMAP grupės el.pašto paskyros. Importuoti el. laiškus ir kurti atvejį.",
     "personalEmailAccounts": "Vartotojų el. pašto paskyros.",
     "emailTemplates": "Išsiunčiamų laiškų šablonai.",
     "import": "Importuoti duomenis iš CSV failo.",
@@ -219,14 +254,22 @@
     "attachments": "Visi failo priedai, saugomi sistemoje.",
     "templateManager": "Koreguoti pranešimų šablonus.",
     "systemRequirements": "EspoCRM sistemos reikalavimai",
-    "apiUsers": "Atskirti naudotojus integracijos tikslais."
+    "apiUsers": "Atskirti naudotojus integracijos tikslais.",
+    "jobs": "Užduotys vykdomos fone.",
+    "pdfTemplates": "Šablonai, skirti spausdinti į PDF.",
+    "webhooks": "Tvarkykite žiniatinklio kabutes.",
+    "dashboardTemplates": "Įdiegti prietaisų skydelius naudotojams.",
+    "phoneNumbers": "Visi sistemoje išsaugoti telefono numeriai.",
+    "emailAddresses": "Visi sistemoje saugomi el. pašto adresai.",
+    "layoutSets": "Maketų, kuriuos galima priskirti komandoms ir portalams, rinkiniai."
   },
   "options": {
     "previewSize": {
       "x-small": "X-mažas",
       "small": "Mažas",
       "medium": "Vidutinis",
-      "large": "Didelis"
+      "large": "Didelis",
+      "": "Numatytoji"
     }
   },
   "logicalOperators": {
@@ -241,17 +284,32 @@
     "dbname": "Duomenų bazės pavadinimas",
     "user": "Naudotojo vardas",
     "writable": "Įrašoma",
-    "readable": "Skaitoma"
+    "readable": "Skaitoma",
+    "requiredMariadbVersion": "MariaDB versija"
   },
   "templates": {
     "accessInfo": "Priegos informacija",
     "accessInfoPortal": "Prieiga prie informacijos portalams",
     "assignment": "Priskyrimai",
     "mention": "Paminėti",
-    "noteEmailReceived": "Pranešimas apie gautą el. laišką",
     "notePost": "Pranešimas apie įrašą",
     "notePostNoParent": "Pranešimas apie įrašą (be susijusių)",
     "noteStatus": "Pranešimas apie statuso atnaujinimą",
-    "passwordChangeLink": "Slaptažodžio keitimo nuoroda"
+    "passwordChangeLink": "Slaptažodžio keitimo nuoroda",
+    "noteEmailReceived": "Pranešimas apie gautą el. laišką"
+  },
+  "strings": {
+    "rebuildRequired": "Reikia atstatyti"
+  },
+  "keywords": {
+    "settings": "sistema",
+    "userInterface": "ui, tema, skirtukai, logotipas, prietaisų skydelis",
+    "authentication": "slaptažodis",
+    "scheduledJob": "cron, darbo vietos",
+    "integrations": "\"Google\", žemėlapiai, \"Google\" žemėlapiai",
+    "authLog": "žurnalas, istorija",
+    "authTokens": "istorija, prieiga, žurnalas",
+    "entityManager": "laukai,santykiai,ryšiai",
+    "templateManager": "pranešimai"
   }
 }

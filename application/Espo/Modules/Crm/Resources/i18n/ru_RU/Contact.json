@@ -19,7 +19,9 @@
     "acceptanceStatus": "Статус принятия",
     "accountIsInactive": "Неактивный контрагент",
     "acceptanceStatusMeetings": "Статус принятия (Встречи)",
-    "acceptanceStatusCalls": "Статус принятия (Звонки)"
+    "acceptanceStatusCalls": "Статус принятия (Звонки)",
+    "title": "Название счета",
+    "hasPortalUser": "Есть пользователь портала"
   },
   "links": {
     "opportunities": "Сделки",
@@ -33,7 +35,8 @@
     "portalUser": "Пользователь портала",
     "originalLead": "Изначальный кандидат",
     "documents": "Документы",
-    "tasksPrimary": "Задачи (развернуто)"
+    "tasksPrimary": "Задачи (развернуто)",
+    "opportunitiesPrimary": "Сделки (основные)"
   },
   "labels": {
     "Create Contact": "Создать контакт"

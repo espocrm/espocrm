@@ -6,7 +6,7 @@
     "Users": "Пользователи",
     "Email": "Эл. почта",
     "Data": "Данные",
-    "Customization": "Кастомизация",
+    "Customization": "Индивидуальная настройка",
     "Available Fields": "Доступные поля",
     "Layout": "Макет",
     "Entity Manager": "Управление объектами",
@@ -57,19 +57,25 @@
     "Portal Users": "Пользователи портала",
     "Action History": "История действий",
     "Label Manager": "Управление метками",
-    "Auth Log": "Лог Аутентификации",
+    "Auth Log": "Журнал Аутентификации",
     "Lead Capture": "Захват кандидата",
     "Attachments": "Вложения",
-    "API Users": "Пользователи Интерфейса Программирования Приложений",
+    "API Users": "API пользователи",
     "Template Manager": "Менеджер Шаблонов",
-    "System Requirements": "Системные Требования",
+    "System Requirements": "Системные требования",
     "PHP Settings": "Конфигурация PHP",
     "Database Settings": "Конфигурация Базы Данных",
     "Permissions": "Права Доступа",
     "Success": "Операция завершилась успешно",
     "Fail": "Операция завершилась неудачей",
     "is recommended": "рекомендовано",
-    "extension is missing": "расширение отсутствует"
+    "extension is missing": "расширение отсутствует",
+    "PDF Templates": "Шаблоны PDF",
+    "Webhooks": "Вебхуки",
+    "Dashboard Templates": "Шаблоны панели виджетов",
+    "Email Addresses": "Адреса эл. почты",
+    "Phone Numbers": "Телефонные номера",
+    "Layout Sets": "Наборы макетов"
   },
   "layouts": {
     "list": "Список",
@@ -87,7 +93,13 @@
     "detailSmallPortal": "Детализация (Cжатая, Portal)",
     "listSmallPortal": "Список (Сжатый, Portal)",
     "listPortal": "Список (Portal)",
-    "relationshipsPortal": "Отношения (Portal)"
+    "relationshipsPortal": "Отношения (Portal)",
+    "kanban": "Kanban- метод \"точно в срок\"",
+    "defaultSidePanel": "Поля боковой панели",
+    "bottomPanelsDetail": "Нижняя панель",
+    "bottomPanelsEdit": "Нижние панели (Правка)",
+    "bottomPanelsDetailSmall": "Нижние панели (мелкие детали)",
+    "bottomPanelsEditSmall": "Нижние панели (мелкое редактирование)"
   },
   "fieldTypes": {
     "address": "Адресс",
@@ -97,7 +109,7 @@
     "password": "Пароль",
     "personName": "Имя человека",
     "autoincrement": "Автоинкрементый",
-    "bool": "Boolean ",
+    "bool": "Логический тип",
     "currency": "Валюта",
     "date": "Дата",
     "email": "Эл. почта",
@@ -106,8 +118,11 @@
     "enumFloat": "Список дробные числа",
     "float": "Десятичная дробь",
     "link": "Ссылка",
+    "linkMultiple": "Связь (Многие)",
+    "linkParent": "Связь (Отец)",
     "phone": "Телефон",
     "text": "Текст",
+    "url": "Url-адрес ресурса",
     "varchar": "Строка",
     "file": "Файл",
     "image": "Изображение",
@@ -123,9 +138,12 @@
     "int": "Целое число",
     "number": "Номер",
     "jsonArray": "Json массив",
-    "jsonObject": "Json объект ",
+    "jsonObject": "Json объект",
     "datetime": "Дата-время",
-    "datetimeOptional": "Дата/Дата-время"
+    "datetimeOptional": "Дата/Дата-время",
+    "checklist": "Контрольный список",
+    "linkOne": "Связь (Один)",
+    "barcode": "Штрих-код"
   },
   "fields": {
     "type": "Тип",
@@ -172,7 +190,22 @@
     "isPersonalData": "Личные данные",
     "useIframe": "Использовать Iframe",
     "useNumericFormat": "Использовать числовой формат",
-    "strip": "Стрип"
+    "strip": "Стрип",
+    "cutHeight": "Высота среза (px)",
+    "minuteStep": "Интервал в минутах",
+    "inlineEditDisabled": "Отключить встроенное редактирование",
+    "displayAsLabel": "Отображать как метку",
+    "allowCustomOptions": "Разрешить пользовательские варианты",
+    "maxCount": "Максимальное количество элементов",
+    "displayRawText": "Показать необработанный текст (без markdown)",
+    "notActualOptions": "Не актуальные варианты",
+    "accept": "Принять",
+    "displayAsList": "Отображать как список",
+    "viewMap": "Кнопка просмотра карты",
+    "codeType": "Тип кода",
+    "lastChar": "Последний знак",
+    "listPreviewSize": "Предварительный просмотр в виде списка",
+    "onlyDefaultCurrency": "Только валюта по умолчанию"
   },
   "messages": {
     "selectEntityType": "Выберите тип объекта в левом меню.",
@@ -186,7 +219,15 @@
     "userHasNoEmailAddress": "У пользователя нет адреса эл. почты.",
     "uninstallConfirmation": "Вы действительно хотите удалить расширение?",
     "cronIsNotConfigured": "Запланированные задания не выполняются. Следовательно, входящие письма, уведомления и напоминания не работают. Пожалуйста, следуйте инструкциям [https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) для установки cron job.",
-    "newExtensionVersionIsAvailable": "Новая {extensionName} версия {latestVersion} доступна."
+    "newExtensionVersionIsAvailable": "Новая {extensionName} версия {latestVersion} доступна.",
+    "upgradeVersion": "EspoCRM будет обновлен до версии **{version}**. Пожалуйста, будьте терпеливы, так как это может занять некоторое время.",
+    "upgradeDone": "EspoCRM был обновлён до версии **{version}**.",
+    "downloadUpgradePackage": "Загрузите пакет(ы) обновлений [здесь]({url}).",
+    "upgradeInfo": "Посмотрите [документацию]({url}) о том, как обновить EspoCRM.",
+    "upgradeRecommendation": "Этот способ обновления не рекомендуется. Лучше обновлять с CLI.",
+    "newVersionIsAvailable": "Доступна новая версия EspoCRM {latestVersion}. Пожалуйста, следуйте [инструкциям](https://www.espocrm.com/documentation/administration/upgrading/), чтобы обновить ваш экземпляр.",
+    "formulaFunctions": "Дополнительные функции можно найти в [документации] ({documentationUrl}).",
+    "rebuildRequired": "Вам нужно перезапуститься из командной строки."
   },
   "descriptions": {
     "settings": "Системные настройки.",
@@ -222,14 +263,23 @@
     "leadCapture": "Точки входа API для Web-to-Lead.",
     "attachments": "Все вложения, хранящиеся в системе.",
     "templateManager": "Настроить шаблоны сообщений.",
-    "systemRequirements": "Системные Требования для EspoCRM."
+    "systemRequirements": "Системные требования для EspoCRM.",
+    "apiUsers": "Отдельные пользователи для целей интеграции.",
+    "jobs": "Задания выполняются в фоновом режиме.",
+    "pdfTemplates": "Шаблоны для печати в PDF.",
+    "webhooks": "Управление вебхуками.",
+    "dashboardTemplates": "Применить панели виджетов для пользователей.",
+    "phoneNumbers": "Все телефонные номера, которые хранятся в системе.",
+    "emailAddresses": "Все адреса электронной почты хранятся в системе.",
+    "layoutSets": "Коллекции макетов, которые можно назначать командам и порталам."
   },
   "options": {
     "previewSize": {
       "x-small": "Очень маленький",
       "small": "Маленький",
       "medium": "Средний",
-      "large": "Большой"
+      "large": "Большой",
+      "": "По умончанию"
     }
   },
   "logicalOperators": {
@@ -242,6 +292,35 @@
     "requiredMysqlVersion": "Версия MySQL",
     "host": "Сервер",
     "dbname": "Имя БД",
-    "user": "Имя пользователя"
+    "user": "Имя пользователя",
+    "writable": "С доступом записи",
+    "readable": "С доступом чтения",
+    "requiredMariadbVersion": "Версия MariaDB"
+  },
+  "templates": {
+    "accessInfo": "Реквизиты доступа",
+    "accessInfoPortal": "Реквизиты доступа для порталов",
+    "assignment": "Назначение",
+    "mention": "Упоминание",
+    "notePost": "Заметка о сообщении",
+    "notePostNoParent": "Заметка о сообщении (без источника)",
+    "noteStatus": "Заметка об обновлении статуса",
+    "passwordChangeLink": "Ссылка для смены пароля",
+    "noteEmailReceived": "Заметка о полученном письме"
+  },
+  "strings": {
+    "rebuildRequired": "Требуется перестройка"
+  },
+  "keywords": {
+    "settings": "система",
+    "userInterface": "пользовательский интерфейс, тема, вкладки, логотип, панель управления",
+    "authentication": "пароль",
+    "scheduledJob": "Планировщик заданий, задание выполняемое по расписанию",
+    "integrations": "гугл, карты, гугл карты",
+    "authLog": "Журнал истории",
+    "authTokens": "Журнал истории доступа",
+    "entityManager": "набор записей, отношения, связь",
+    "templateManager": "уведомления",
+    "jobs": "Планировщик заданий"
   }
 }

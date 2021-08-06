@@ -80,7 +80,6 @@
     "historyEntityList": "Istorijos subjektų sąrašas",
     "currencyFormat": "Valiutos formatas",
     "currencyDecimalPlaces": "Valiutos dešimtainiai skaičiai",
-    "aclStrictMode": "ACL griežtas režimas",
     "followCreatedEntities": "Sekti sukurtus įrašus",
     "aclAllowDeleteCreated": "Leisti pašalinti sukurtus įrašus",
     "adminNotifications": "Sisteminiai pranešimai administravimo skiltyje",
@@ -101,18 +100,37 @@
     "ldapPortalUserPortals": "Numatytieji portalai portalų naudotojui",
     "ldapPortalUserRoles": "Numatytos rolės portalo naudotojui",
     "addressCountryList": "Adreso šalies automatinio užbaigimo sąrašas",
-    "fiscalYearShift": "Fiskalinių metų pradžia"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Sekmadienis",
-      "1": "Pirmadienis"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "Pranešimai",
-      "Status": "Būsenos atnaujinimai",
-      "EmailReceived": "Gauti el. Laiškai"
-    }
+    "fiscalYearShift": "Fiskalinių metų pradžia",
+    "jobRunInParallel": "Lygiagrečiai vykdomi darbai",
+    "jobMaxPortion": "Darbai Maksimali porcija",
+    "jobPoolConcurrencyNumber": "Darbo vietų baseino darbo vietų skaičius",
+    "daemonInterval": "Demono intervalas",
+    "daemonMaxProcessNumber": "Demono maksimalus proceso skaičius",
+    "daemonProcessTimeout": "Demono proceso laiko limitas",
+    "addressCityList": "Adreso miestas Automatiškai pildomas sąrašas",
+    "addressStateList": "Adreso valstybės automatinis užbaigimo sąrašas",
+    "cronDisabled": "Išjungti \"Cron",
+    "maintenanceMode": "Priežiūros režimas",
+    "useWebSocket": "Naudokite \"WebSocket",
+    "emailNotificationsDelay": "Elektroninio pašto pranešimų vėlavimas (sekundėmis)",
+    "massEmailOpenTracking": "Atidarytų el. laiškų stebėjimas",
+    "passwordRecoveryDisabled": "Išjungti slaptažodžio atkūrimą",
+    "passwordRecoveryForAdminDisabled": "Išjungti slaptažodžio atkūrimą administratoriaus naudotojams",
+    "passwordGenerateLength": "Sugeneruotų slaptažodžių ilgis",
+    "passwordStrengthLength": "Mažiausias slaptažodžio ilgis",
+    "passwordStrengthLetterCount": "Raidžių, kurių reikia slaptažodžiui, skaičius",
+    "passwordStrengthNumberCount": "Reikalaujamų slaptažodžio skaitmenų skaičius",
+    "passwordStrengthBothCases": "Slaptažodį turi sudaryti didžiosios ir mažosios raidės",
+    "auth2FA": "Įjungti 2 veiksnių autentiškumo nustatymą",
+    "auth2FAMethodList": "Galimi 2FA metodai",
+    "personNameFormat": "Asmens vardo ir pavardės formatas",
+    "newNotificationCountInTitle": "Naujo pranešimo numerio rodymas puslapio pavadinime",
+    "massEmailVerp": "Naudokite VERP",
+    "emailAddressLookupEntityTypeList": "El. pašto adreso paieškos sritys",
+    "busyRangesEntityList": "Laisvų / užimtų subjektų sąrašas",
+    "passwordRecoveryForInternalUsersDisabled": "Išjungti slaptažodžio atkūrimą vidaus naudotojams",
+    "passwordRecoveryNoExposure": "Užkirsti kelią el. pašto adreso atskleidimui slaptažodžio atkūrimo formoje",
+    "auth2FAForced": "Priversti nuolatinius naudotojus nustatyti 2FA"
   },
   "tooltips": {
     "recordsPerPage": "Iš pradžių rodomas įrašų skaičius sąrašo rodinyje.",
@@ -154,7 +172,37 @@
     "cleanupDeletedRecords": "Ištrinti įrašai bus ištrinti iš duomenų bazės po kurio laiko.",
     "ldapPortalUserLdapAuth": "Leisti portalo naudotojams naudoti LDAP autentifikavimą vietoje Espo autentifikavimo.",
     "ldapPortalUserPortals": "Pagrindinis portalas sukurtam naudotojui",
-    "ldapPortalUserRoles": "Pagrindinės rolės sukurtam portalo naudotojui"
+    "ldapPortalUserRoles": "Pagrindinės rolės sukurtam portalo naudotojui",
+    "jobRunInParallel": "Užduotys bus vykdomos lygiagrečiais procesais.",
+    "jobPoolConcurrencyNumber": "Didžiausias vienu metu vykdomų procesų skaičius.",
+    "jobMaxPortion": "Didžiausias darbo vietų, apdorojamų per vieną vykdymą, skaičius.",
+    "daemonInterval": "Intervalas tarp \"cron\" proceso paleidimų sekundėmis.",
+    "daemonMaxProcessNumber": "Didžiausias vienu metu vykdomų \"cron\" procesų skaičius.",
+    "daemonProcessTimeout": "Maksimalus vienam \"cron\" procesui skirtas vykdymo laikas (sekundėmis).",
+    "cronDisabled": "\"Cron\" nebus paleistas.",
+    "maintenanceMode": "Prieigą prie sistemos turės tik administratoriai.",
+    "ldapAccountCanonicalForm": "Jūsų paskyros kanoninės formos tipas. Yra 4 parinktys:\n\n- \"Dn\" - forma formatu \"CN=tester,OU=espocrm,DC=test, DC=lan\".\n\n- 'Username' (Vartotojo vardas) - forma 'tester' (bandytojas).\n\n- 'Backslash' - forma 'COMPANY\\tester'.\n\n- \"Principal\" - forma \"tester@company.com\".",
+    "massEmailVerp": "Kintamas voko grąžinimo kelias. Kad būtų galima geriau tvarkyti atšauktus pranešimus. Įsitikinkite, kad jūsų SMTP paslaugų teikėjas tai palaiko.",
+    "displayListViewRecordCount": "Sąrašo rodinyje bus rodomas bendras įrašų skaičius.",
+    "currencyList": "Kokiomis valiutomis bus galima naudotis sistemoje.",
+    "activitiesEntityList": "Kokius įrašus bus galima rasti skydelyje Veikla.",
+    "historyEntityList": "Kokie įrašai bus prieinami istorijos skydelyje.",
+    "calendarEntityList": "Kokius įrašus bus galima rasti kalendoriuje.",
+    "addressStateList": "Valstybės pasiūlymai dėl adreso laukų.",
+    "addressCityList": "Pasiūlymai dėl miestų adresų laukų.",
+    "addressCountryList": "Šalies pasiūlymai adreso laukams.",
+    "exportDisabled": "Naudotojai negalės eksportuoti įrašų. Tai bus leidžiama tik administratoriui.",
+    "globalSearchEntityList": "Kokių įrašų galima ieškoti naudojant visuotinę paiešką.",
+    "siteUrl": "Šio \"EspoCRM\" egzemplioriaus URL. Jį reikia pakeisti, jei pereisite į kitą domeną.",
+    "useCache": "Nerekomenduojama išjungti, nebent kūrimo tikslais.",
+    "useWebSocket": "\"WebSocket\" suteikia galimybę palaikyti abipusį interaktyvų ryšį tarp serverio ir naršyklės. Reikia nustatyti WebSocket demoną serveryje. Daugiau informacijos rasite dokumentuose.",
+    "passwordRecoveryForInternalUsersDisabled": "Atkurti slaptažodį galės tik portalo naudotojai.",
+    "passwordRecoveryNoExposure": "Nebus galima nustatyti, ar konkretus el. pašto adresas yra užregistruotas sistemoje.",
+    "emailAddressLookupEntityTypeList": "El. pašto adreso automatiniam užbaigimui.",
+    "emailNotificationsDelay": "Prieš išsiunčiant pranešimą, pranešimą galima redaguoti per nurodytą laikotarpį.",
+    "outboundEmailFromAddress": "Sistemos el. pašto adresas.",
+    "smtpServer": "Jei tuščia, bus naudojama grupės el. pašto paskyra su atitinkamu el. pašto adresu.",
+    "busyRangesEntityList": "Į ką bus atsižvelgta rodant užimto laiko intervalus tvarkaraštyje ir laiko juostoje."
   },
   "labels": {
     "System": "Sistema",
@@ -167,9 +215,27 @@
     "Test Connection": "Patikrinti ryšį",
     "Connecting": "Prisijungiama...",
     "Activities": "Veikla",
-    "Admin Notifications": "Administratoriaus priminimai"
+    "Admin Notifications": "Administratoriaus priminimai",
+    "Search": "Paieška",
+    "Misc": "Įvairūs",
+    "Passwords": "Slaptažodžiai",
+    "2-Factor Authentication": "2 veiksnių autentiškumo nustatymas",
+    "Group Tab": "Skirtukas Grupė"
   },
   "messages": {
     "ldapTestConnection": "Prisijungėte sėkmingai. Ryšys veikia."
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Post": "Pranešimai",
+      "Status": "Būsenos atnaujinimai",
+      "EmailReceived": "Gauti el. Laiškai"
+    },
+    "personNameFormat": {
+      "firstLast": "Pirmas Paskutinis",
+      "lastFirst": "Paskutinis Pirmas",
+      "firstMiddleLast": "Pirmas Vidurinis Paskutinis",
+      "lastFirstMiddle": "Pavardė Pirmas Vidurys"
+    }
   }
 }

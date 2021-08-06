@@ -16,9 +16,9 @@
     "from": "E-pasti tiek sūtīti no norādītās adreses. Ja nav nepieciešams, atstājiet neaizpildītu. Varat izmantot aizstājējzīmi *.",
     "to": "E-pasti tiek sūtīti uz norādīto adresi. Ja nav nepieciešams, atstājiet neaizpildītu. Varat izmantot aizstājējzīmi *.",
     "name": "Dot filtriem aprakstošo nosaukumu.",
-    "subject": "Lietot a aizstājējzīmi *:\n\nteksts* - sākas ar tekstu,\n*teksts* - satur tekstu,\n*teksts -beidzas ar tekstu.",
     "bodyContains": "E-pasta pamatteksts satur jebkuru no norādītajiem vārdiem vai frāzēm",
-    "isGlobal": "Attiecina šo filtru uz visiem sistēmā ienākošajiem e-pastiem."
+    "isGlobal": "Attiecina šo filtru uz visiem sistēmā ienākošajiem e-pastiem.",
+    "subject": "Izmantojiet aizstājējzīmi *:\n\n * `teksts*` - sākas ar tekstu,\n * `*text*` - satur tekstu,\n * `*text` - beidzas ar tekstu."
   },
   "options": {
     "action": {

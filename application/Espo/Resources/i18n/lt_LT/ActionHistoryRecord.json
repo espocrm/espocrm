@@ -6,7 +6,8 @@
     "target": "Tikslas",
     "targetType": "Adresatų tipas",
     "ipAddress": "IP Adresss",
-    "authLogRecord": "Auth žurnalo įrašas"
+    "authLogRecord": "Auth žurnalo įrašas",
+    "userType": "Naudotojo tipas"
   },
   "links": {
     "authToken": "Autentikavimo žymė",

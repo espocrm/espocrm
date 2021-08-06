@@ -38,7 +38,8 @@
   },
   "labels": {
     "Create Task": "Izveidot uzdevumu",
-    "Complete": "Pabeigts"
+    "Complete": "Pabeigts",
+    "overdue": "nokavēts"
   },
   "presetFilters": {
     "actual": "Faktiskais",

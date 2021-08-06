@@ -11,11 +11,65 @@
       "javascript: return this.dateTime.getNow(1);": "Сейчас",
       "javascript: return this.dateTime.getNow(5);": "Теперь (5 мин)",
       "javascript: return this.dateTime.getNow(15);": "Теперь (15 мин)",
-      "javascript: return this.dateTime.getNow(30);": "Теперь (30 мин)"
+      "javascript: return this.dateTime.getNow(30);": "Теперь (30 мин)",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'hours', 15);": "+1 час",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'hours', 15);": "+2 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'hours', 15);": "+3 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'hours', 15);": "+4 часа",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'hours', 15);": "+5 часов",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'hours', 15);": "+6 часов",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(7, 'hours', 15);": "+7 часов",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(8, 'hours', 15);": "+8 часов",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(9, 'hours', 15);": "+9 часов",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(10, 'hours', 15);": "+10 часов",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(11, 'hours', 15);": "+11 часов",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(12, 'hours', 15);": "+12 часов",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'days', 15);": "+1 день",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(2, 'days', 15);": "+2 дня",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(3, 'days', 15);": "+3 дня",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(4, 'days', 15);": "+4 дня",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(5, 'days', 15);": "+5 дней",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(6, 'days', 15);": "+6 дней",
+      "javascript: return this.dateTime.getDateTimeShiftedFromNow(1, 'week', 15);": "+1 неделя"
     },
     "dateDefault": {
       "": "Нет",
-      "javascript: return this.dateTime.getToday();": "Сегодня"
+      "javascript: return this.dateTime.getToday();": "Сегодня",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'days');": "+1 день",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'days');": "+2 дня",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'days');": "+3 дня",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'days');": "+4 дня",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'days');": "+5 дней",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'days');": "+6 дней",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'days');": "+7 дней",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'days');": "+8 дней",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'days');": "+9 дней",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'days');": "+10 дней",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'weeks');": "+1 неделя",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'weeks');": "+2 недели",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'weeks');": "+3 недели",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'months');": "+1 месяц",
+      "javascript: return this.dateTime.getDateShiftedFromToday(2, 'months');": "+2 месяца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(3, 'months');": "+3 месяца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(4, 'months');": "+4 месяца",
+      "javascript: return this.dateTime.getDateShiftedFromToday(5, 'months');": "+5 месяцев",
+      "javascript: return this.dateTime.getDateShiftedFromToday(6, 'months');": "+6 месяцев",
+      "javascript: return this.dateTime.getDateShiftedFromToday(7, 'months');": "+7 месяцев",
+      "javascript: return this.dateTime.getDateShiftedFromToday(8, 'months');": "+8 месяцев",
+      "javascript: return this.dateTime.getDateShiftedFromToday(9, 'months');": "+9 месяцев",
+      "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 месяцев",
+      "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 месяцев",
+      "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 год"
+    },
+    "barcodeType": {
+      "EAN13": "европейский стандарт штрихкода (EAN-13)",
+      "EAN8": "европейский стандарт штрихкода (EAN-8)",
+      "EAN5": "европейский стандарт штрихкода (EAN-5)",
+      "EAN2": "европейский стандарт штрихкода (EAN-2)",
+      "UPC": "Американский стандарт штрихкода (UPC (A))",
+      "UPCE": "Американский стандарт штрихкода (UPC (E))",
+      "pharmacode": "Фармацевтический двоичный код",
+      "QRcode": "QR код"
     }
   },
   "tooltips": {
@@ -30,13 +84,15 @@
     "before": "Значение даты должно быть перед значением даты в указанном поле.",
     "after": "Значение даты должно быть после значения даты в указанном поле.",
     "readOnly": "Значение поля не может быть задано пользователем. Но может быть рассчитано по формуле.",
-    "maxFileSize": "Если пустой или 0, то неограниченный"
+    "maxFileSize": "Если пустой или 0, то неограниченный",
+    "fileAccept": "Какие типы файлов принимать. Можно добавлять пользовательские элементы.",
+    "barcodeLastChar": "Для типа EAN-13."
   },
   "fieldParts": {
     "address": {
       "street": "Улица",
       "city": "Город",
-      "state": "Штат",
+      "state": "Регион",
       "country": "Страна",
       "postalCode": "Почтовый индекс",
       "map": "Карта"
@@ -44,7 +100,8 @@
     "personName": {
       "salutation": "Обращение",
       "first": "Имя",
-      "last": "Фамилия"
+      "last": "Фамилия",
+      "middle": "Отчество"
     },
     "currency": {
       "converted": "(Сконвертированная)",
@@ -53,5 +110,33 @@
     "datetimeOptional": {
       "date": "Дата"
     }
+  },
+  "fieldInfo": {
+    "varchar": "Однострочный текст.",
+    "enum": "Поле выбора, можно выбрать только одно значение.",
+    "text": "Многострочный текст с поддержкой разметки.",
+    "date": "Дата без времени.",
+    "datetime": "Дата и время",
+    "currency": "Значение валюты. Плавающее число с кодом валюты.",
+    "int": "Целое число.",
+    "float": "Число с десятичной частью.",
+    "bool": "Флажок. Два возможных значения: истина и ложь.",
+    "multiEnum": "Список значений, можно выбрать несколько значений. Список упорядочен.",
+    "checklist": "Список флажков.",
+    "array": "Список значений, аналогичный полю мульти-перечислений",
+    "address": "Адрес с улицей, городом, областью, почтовым индексом и страной.",
+    "url": "Для хранения ссылок",
+    "wysiwyg": "Текст с поддержкой HTML.",
+    "file": "Для загрузки файлов.",
+    "image": "Для загрузки изображений.",
+    "attachmentMultiple": "Позволяет загружать несколько файлов.",
+    "number": "Автоматически увеличивающееся число строкового типа с возможным префиксом и определенной длиной.",
+    "autoincrement": "Сгенерированное автоматически увеличивающееся целое число только для чтения.",
+    "barcode": "Штрих-код. Может быть распечатан в формате PDF.",
+    "email": "Набор адресов электронной почты с их параметрами: Отказ, Недействительно, Главный.",
+    "phone": "Набор телефонных номеров с их параметрами: Тип, Не активен, Недействительный, Основной.",
+    "foreign": "Поле связанной записи. Только для чтения.",
+    "link": "Запись, связанная через отношение Принадлежит (многие-к-одному или один-к-одному).",
+    "linkParent": "Запись, связанная через отношение \"Принадлежит родителю\". Может быть разных типов сущностей."
   }
 }

@@ -1,10 +1,6 @@
 {
-  "labels": {
-    "Primary": "Pirminis",
-    "Opted Out": "Pasirinkta",
-    "Invalid": "Neteisingas"
-  },
   "fields": {
+    "type": "Tipas",
     "optOut": "Atsisakyta",
     "invalid": "Negaliojantis"
   },

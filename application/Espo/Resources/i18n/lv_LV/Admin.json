@@ -69,7 +69,12 @@
     "Success": "Panākumi",
     "Fail": "Neveiksme",
     "is recommended": "ir ieteicams",
-    "extension is missing": "trūkst pagarinājuma"
+    "extension is missing": "trūkst pagarinājuma",
+    "PDF Templates": "PDF veidnes",
+    "Dashboard Templates": "Informācijas paneļa veidnes",
+    "Email Addresses": "E-pasta adreses",
+    "Phone Numbers": "Tālruņu numuri",
+    "Layout Sets": "Izkārtojuma komplekti"
   },
   "layouts": {
     "list": "Saraksts",
@@ -88,7 +93,12 @@
     "listSmallPortal": "Saraksts (īsais, portālam)",
     "listPortal": "Saraksts (portālam)",
     "relationshipsPortal": "Relāciju paneļi (portāls)",
-    "kanban": "\"Kanban\""
+    "kanban": "\"Kanban\"",
+    "defaultSidePanel": "Sānu paneļa lauki",
+    "bottomPanelsDetail": "Apakšējie paneļi",
+    "bottomPanelsEdit": "Apakšējie paneļi (rediģēšana)",
+    "bottomPanelsDetailSmall": "Apakšējie paneļi (detaļa mazs)",
+    "bottomPanelsEditSmall": "Apakšējie paneļi (Rediģēt mazo)"
   },
   "fieldTypes": {
     "address": "Adrese",
@@ -129,7 +139,10 @@
     "jsonArray": "\"Json\" masīvs",
     "jsonObject": "\"Json\" objekts",
     "datetime": "Datums-laiks",
-    "datetimeOptional": "Datums/Datums-laiks"
+    "datetimeOptional": "Datums/Datums-laiks",
+    "checklist": "Kontrolsaraksts",
+    "linkOne": "Pirmā saite",
+    "barcode": "Svītrkods"
   },
   "fields": {
     "type": "Tips",
@@ -177,7 +190,21 @@
     "useIframe": "Izmantot \"Iframe\"",
     "useNumericFormat": "Izmantot skaitlisko formātu",
     "strip": "Virkne",
-    "accept": "Piekrist"
+    "cutHeight": "Griezuma augstums (px)",
+    "minuteStep": "Protokols Solis",
+    "inlineEditDisabled": "Inline rediģēšanas atspējošana",
+    "displayAsLabel": "Rādīt kā etiķeti",
+    "allowCustomOptions": "Atļaut pielāgotās opcijas",
+    "maxCount": "Maksimālais vienību skaits",
+    "displayRawText": "Rādīt neapstrādātu tekstu (bez iezīmēšanas)",
+    "notActualOptions": "Ne faktiskās opcijas",
+    "accept": "Piekrist",
+    "displayAsList": "Parādīt kā sarakstu",
+    "viewMap": "Skatīt kartes pogu",
+    "codeType": "Kods Veids",
+    "lastChar": "Pēdējais raksturs",
+    "listPreviewSize": "Priekšskatījuma lielums saraksta skatā",
+    "onlyDefaultCurrency": "Tikai noklusējuma valūta"
   },
   "messages": {
     "selectEntityType": "Atlasīt vienību tipu kreisajā izvēlnē.",
@@ -191,7 +218,15 @@
     "userHasNoEmailAddress": "Lietotājam nav e-pasta adreses.",
     "uninstallConfirmation": "Vai tiešām vēlaties atinstalēt paplašinājumu?",
     "cronIsNotConfigured": "Ieplānotie darbi netiek izpildīti. Līdz ar to ienākošie e-pasti, paziņojumi un atgādinājumi nedarbojas. Sekojiet instrukcijai [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), lai iestatītu uzdevumu plānotāja darbu.",
-    "newExtensionVersionIsAvailable": "Ir pieejama jauna {extensionName} versija {latestVersion}."
+    "newExtensionVersionIsAvailable": "Ir pieejama jauna {extensionName} versija {latestVersion}.",
+    "upgradeVersion": "EspoCRM tiks atjaunināts uz **{versiju}**. Lūdzu, esiet pacietīgi, jo tas var aizņemt kādu laiku.",
+    "upgradeDone": "EspoCRM ir atjaunināts līdz **{versijai}**.",
+    "downloadUpgradePackage": "Lejupielādējiet jaunināšanas paketi(-es) [šeit]({url}).",
+    "upgradeInfo": "Skatiet [dokumentāciju]({url}) par to, kā atjaunināt savu EspoCRM gadījumu.",
+    "upgradeRecommendation": "Šāds atjaunināšanas veids nav ieteicams. Labāk ir atjaunināt no CLI.",
+    "newVersionIsAvailable": "Ir pieejama jauna EspoCRM versija {latestVersion}. Lūdzu, sekojiet [norādījumiem](https://www.espocrm.com/documentation/administration/upgrading/), lai atjauninātu savu instanci.",
+    "formulaFunctions": "Vairāk funkciju var atrast [documentation]({documentationUrl}).",
+    "rebuildRequired": "Pārbūve ir jāveic no CLI."
   },
   "descriptions": {
     "settings": "Lietotnes sistēmas iestatījumi.",
@@ -228,14 +263,22 @@
     "attachments": "Visi failu pielikumi tiek uzglabāti sistēmā.",
     "templateManager": "Pielāgojiet ziņojumu veidnes.",
     "systemRequirements": "Sistēmas prasības EspoCRM.",
-    "apiUsers": "Atsevišķi lietotāji integrācijas nolūkos."
+    "apiUsers": "Atsevišķi lietotāji integrācijas nolūkos.",
+    "jobs": "Uzdevumi tiek izpildīti fonā.",
+    "pdfTemplates": "PDF drukāšanai paredzētās veidnes.",
+    "webhooks": "Tīmekļa āķu pārvaldība.",
+    "dashboardTemplates": "Izvietojiet informācijas paneļus lietotājiem.",
+    "phoneNumbers": "Visi sistēmā saglabātie tālruņa numuri.",
+    "emailAddresses": "Visas sistēmā saglabātās e-pasta adreses.",
+    "layoutSets": "Izkārtojumu kolekcijas, ko var piešķirt komandām un portāliem."
   },
   "options": {
     "previewSize": {
       "x-small": "Ļoti mazs",
       "small": "Mazs",
       "medium": "Vidējs",
-      "large": "Liels"
+      "large": "Liels",
+      "": "Noklusējuma"
     }
   },
   "logicalOperators": {
@@ -258,10 +301,24 @@
     "accessInfoPortal": "Piekļuves informācija par portāliem",
     "assignment": "Uzdevums",
     "mention": "Pieminēt",
-    "noteEmailReceived": "Piezīme par saņemto e-pastu",
     "notePost": "Piezīme par Postu",
     "notePostNoParent": "Piezīme par ziņojumu (bez vecākiem)",
     "noteStatus": "Piezīme par statusa atjaunināšanu",
-    "passwordChangeLink": "Paroles maiņas saite"
+    "passwordChangeLink": "Paroles maiņas saite",
+    "noteEmailReceived": "Piezīme par saņemto e-pastu"
+  },
+  "strings": {
+    "rebuildRequired": "Nepieciešama pārbūve"
+  },
+  "keywords": {
+    "settings": "sistēma",
+    "userInterface": "ui, tēma, cilnes, logotips, instrumentu panelis",
+    "authentication": "parole",
+    "scheduledJob": "cron, darbavietas",
+    "integrations": "Google, Google kartes, Google Maps",
+    "authLog": "žurnāls,vēsture",
+    "authTokens": "vēsture, piekļuve, žurnāls",
+    "entityManager": "lauki,attiecības,attiecības,attiecības",
+    "templateManager": "paziņojumi"
   }
 }

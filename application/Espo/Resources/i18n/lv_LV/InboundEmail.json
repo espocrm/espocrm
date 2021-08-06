@@ -34,7 +34,10 @@
     "fromName": "Kā vārdā",
     "smtpIsShared": "SMTP ir kopīgots",
     "smtpIsForMassEmail": "SMTP ir paredzēts masveida e-pastam",
-    "useImap": "Ienest e-pastus"
+    "useImap": "Ienest e-pastus",
+    "keepFetchedEmailsUnread": "Saņemto e-pasta ziņojumu saglabāšana kā nelasītu",
+    "smtpAuthMechanism": "SMTP autentificēšanas mehānisms",
+    "security": "Drošība"
   },
   "tooltips": {
     "reply": "Paziņot e-pasta nosūtītājiem, ka e-pasts ir saņemts.\n\nLai novērstu ieciklošanos, noteiktam lietotājam zināmā periodā iespējams nosūtīt tikai vienu e-pastu.",
@@ -49,7 +52,8 @@
     "monitoredFolders": "Vairākas mapes cita no citas jāatdala ar komatu.",
     "smtpIsShared": "Ja būs atzīmēta šī izvēle, lietotāji varēs nosūtīt e-pastus, izmantojot šo SMTP. Pieejamību kontrolēs lomas ar grupas e-pasta konta atļaujas starpniecību.",
     "smtpIsForMassEmail": "Ja būs atzīmēta šī izvēle, masveida e-pastiem būs pieejams SMTP",
-    "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī."
+    "storeSentEmails": "Nosūtītie e-pasti tiks uzglabāti IMAP serverī.",
+    "useSmtp": "Iespēja sūtīt e-pasta ziņojumus."
   },
   "links": {
     "filters": "Filtri",

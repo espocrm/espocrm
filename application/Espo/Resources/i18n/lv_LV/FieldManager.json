@@ -60,6 +60,10 @@
       "javascript: return this.dateTime.getDateShiftedFromToday(10, 'months');": "+10 mēneši",
       "javascript: return this.dateTime.getDateShiftedFromToday(11, 'months');": "+11 mēneši",
       "javascript: return this.dateTime.getDateShiftedFromToday(1, 'year');": "+1 gads"
+    },
+    "barcodeType": {
+      "pharmacode": "Farmakodekss",
+      "QRcode": "QR kods"
     }
   },
   "tooltips": {
@@ -74,7 +78,9 @@
     "before": "Datuma vērtībai jābūt pirms norādītā lauka datuma vērtības.",
     "after": "Datums vērtībai jābūt pēc norādītā lauka datuma vērtības.",
     "readOnly": "Lietotājs nevar norādīt lauka vērtību. Taču to iespējams aprēķināt pēc formulas.",
-    "maxFileSize": "If tukšs vai 0, tad limita nav."
+    "maxFileSize": "If tukšs vai 0, tad limita nav.",
+    "fileAccept": "Kādus failu tipus pieņemt. Ir iespējams pievienot pielāgotus vienumus.",
+    "barcodeLastChar": "EAN-13 tipam."
   },
   "fieldParts": {
     "address": {
@@ -97,5 +103,33 @@
     "datetimeOptional": {
       "date": "Datums"
     }
+  },
+  "fieldInfo": {
+    "varchar": "Vienas rindas teksts.",
+    "enum": "Atlases lodziņā var atlasīt tikai vienu vērtību.",
+    "text": "Daudzrindu teksts ar marķēšanas atbalstu.",
+    "date": "Datums bez laika.",
+    "datetime": "Datums un laiks",
+    "currency": "Valūtas vērtība. Mainīgs skaitlis ar valūtas kodu.",
+    "int": "Vesels skaitlis.",
+    "float": "Skaitlis ar decimāldaļu.",
+    "bool": "izvēles rūtiņa. Divas iespējamās vērtības: true un false.",
+    "multiEnum": "Vērtību saraksts, var atlasīt vairākas vērtības. Saraksts ir sakārtots.",
+    "checklist": "izvēles rūtiņu saraksts.",
+    "array": "Vērtību saraksts, līdzīgi kā Multi-Enum laukā.",
+    "address": "Adrese, kurā norādīta iela, pilsēta, štats, pasta indekss un valsts.",
+    "url": "Saites glabāšanai.",
+    "wysiwyg": "Teksts ar HTML atbalstu.",
+    "file": "Failu augšupielādei.",
+    "image": "Attēlu augšupielādei.",
+    "attachmentMultiple": "Ļauj augšupielādēt vairākus failus.",
+    "number": "Automātiski pieaugošs virknes tipa skaitlis ar iespējamu prefiksu un noteiktu garumu.",
+    "autoincrement": "Ģenerēts tikai lasāms automātiski pieaugošs vesels skaitlis.",
+    "barcode": "Svītrkods. Var izdrukāt PDF formātā.",
+    "email": "E-pasta adrešu kopums ar to parametriem: Atteiktas, Nederīgas, Primārās.",
+    "phone": "Tālruņu numuru kopums ar to parametriem: Tips, Atteikts, Nederīgs, Primārais.",
+    "foreign": "Saistītā ieraksta lauks. Tikai nolasāms.",
+    "link": "Ieraksts, kas saistīts ar pieder vienam vai vienam ar otru (daudzi ar vienu vai viens ar vienu).",
+    "linkParent": "Ieraksts, kas saistīts ar pieder vecākiem. Var būt dažādu tipu vienības."
   }
 }

@@ -12,5 +12,9 @@
   },
   "titles": {
     "GoogleMaps": "\"Google Maps\""
+  },
+  "help": {
+    "Google": "**Iegūt OAuth 2.0 akreditācijas datus no Google Izstrādātāju konsoles.**\n\nApmeklējiet [Google Developers Console](https://console.developers.google.com/project), lai iegūtu OAuth 2.0 akreditācijas datus, piemēram, klienta ID un klienta noslēpumu, kas ir zināmi gan Google, gan EspoCRM lietojumprogrammai.",
+    "GoogleMaps": "Iegūstiet API atslēgu [šeit](https://developers.google.com/maps/documentation/javascript/get-api-key)."
   }
 }

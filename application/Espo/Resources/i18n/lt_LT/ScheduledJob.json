@@ -6,7 +6,8 @@
     "scheduling": "Planavimas"
   },
   "labels": {
-    "Create ScheduledJob": "Sukurkite numatytą darbą"
+    "Create ScheduledJob": "Sukurkite numatytą darbą",
+    "As often as possible": "Kuo dažniau"
   },
   "options": {
     "job": {
@@ -16,7 +17,8 @@
       "SendEmailReminders": "Siųsti priminimus el. paštu",
       "AuthTokenControl": "Autentikavimo žymės kontrolė",
       "SendEmailNotifications": "Siųsti pranešimus el. paštu",
-      "CheckNewVersion": "Patikrinkite, ar nėra naujos versijos"
+      "CheckNewVersion": "Patikrinkite, ar nėra naujos versijos",
+      "ProcessWebhookQueue": "Apdoroti \"Webhook\" eilę"
     },
     "cronSetup": {
       "linux": "Pastaba: įtraukite šią eilutę į crontab failą, kad paleistumėte \"Espo Suplanuoti darbai\":",
@@ -30,6 +32,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Cron užduočių žymėjimas. Nurodo darbo eigos dažnumą.\n\n* / 5 * * * * - kas 5 minutes\n\n0 * / 2 * * * - kas 2 valandas\n\n30 1 * * * -  tokiu laiku 01:30 kartą per dieną\n\n0 0 1 * * - pirmąją mėnesio dieną"
+    "scheduling": "Crontab užrašas. Apibrėžia užduočių vykdymo dažnumą.\n\n`*/5 * * * *` - kas 5 minutes\n\n`0 */2 * * * *` - kas 2 valandas\n\n`30 1 * * * *` - kartą per dieną 01:30 val.\n\n`0 0 0 1 * * *` - pirmąją mėnesio dieną"
   }
 }

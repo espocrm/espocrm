@@ -3,7 +3,7 @@
     "parent": "Источник",
     "contacts": "Контакты",
     "opportunities": "Сделки",
-    "leads": "Кандидаты",
+    "leads": "Лиды",
     "meetings": "Встречи",
     "calls": "Звонки",
     "tasks": "Задачи",
@@ -33,15 +33,15 @@
     "MassEmail": "Массовая рассылка эл. писем",
     "EmailQueueItem": "Элемент очереди эл. почты",
     "CampaignTrackingUrl": "Целевой URL-адрес",
-    "Activities": "Действия",
+    "Activities": "Деятельность",
     "KnowledgeBaseArticle": "Статья базы знаний",
     "KnowledgeBaseCategory": "Категория базы знаний",
-    "CampaignLogRecord": "Запись Лога Кампании"
+    "CampaignLogRecord": "Запись журнала Кампании"
   },
   "scopeNamesPlural": {
     "Account": "Контрагенты",
     "Contact": "Контакты",
-    "Lead": "Кандидаты",
+    "Lead": "Лиды",
     "Target": "Цели",
     "Opportunity": "Сделки",
     "Meeting": "Встречи",
@@ -56,13 +56,13 @@
     "MassEmail": "Массовые рассылки эл. писем",
     "EmailQueueItem": "Элементы очереди эл. почты",
     "CampaignTrackingUrl": "Целевые URL-адреса",
-    "Activities": "Действия",
+    "Activities": "Деятельность",
     "KnowledgeBaseArticle": "Статьи базы знаний",
     "KnowledgeBaseCategory": "Категории базы знаний",
-    "CampaignLogRecord": "Записи Лога Кампании"
+    "CampaignLogRecord": "Записи журнала Кампании"
   },
   "dashlets": {
-    "Leads": "Мои кандидаты",
+    "Leads": "Мои лиды",
     "Opportunities": "Мои сделки",
     "Tasks": "Мои задачи",
     "Cases": "Мои обращения",
@@ -70,14 +70,14 @@
     "Calls": "Мои звонки",
     "Meetings": "Мои встречи",
     "OpportunitiesByStage": "Сделки по стадиям",
-    "OpportunitiesByLeadSource": "Сделки по источнику кандидатов",
+    "OpportunitiesByLeadSource": "Сделки по источнику лидов",
     "SalesByMonth": "Продажи по месяцам",
     "SalesPipeline": "Источники продаж",
-    "Activities": "Мои действия"
+    "Activities": "Моя деятельность"
   },
   "labels": {
     "Create InboundEmail": "Создать входящую эл. почту",
-    "Activities": "Действия",
+    "Activities": "Деятельность",
     "History": "История",
     "Attendees": "Участники",
     "Schedule Meeting": "Запланировать встречу",
@@ -87,7 +87,8 @@
     "Log Call": "Записать звонок",
     "Archive Email": "Отправить эл. письмо в архив",
     "Create Task": "Создать задачу",
-    "Tasks": "Задачи"
+    "Tasks": "Задачи",
+    "Scheduler": "Планировщик"
   },
   "fields": {
     "billingAddressCity": "Город",

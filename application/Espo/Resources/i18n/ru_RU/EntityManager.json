@@ -4,7 +4,8 @@
     "Relationships": "Отношения",
     "Schedule": "График",
     "Log": "Лог",
-    "Formula": "Формула"
+    "Formula": "Формула",
+    "Layouts": "Макеты"
   },
   "fields": {
     "name": "Название",
@@ -14,24 +15,35 @@
     "stream": "Лента",
     "label": "Метка",
     "linkType": "Тип ссылки",
+    "entityForeign": "Внешний объект",
+    "linkForeign": "Внешняя связь",
     "link": "Ссылка",
+    "labelForeign": "Внешняя метка",
     "sortBy": "Сортировка (поле)",
     "sortDirection": "Сортировка (направление)",
-    "linkMultipleFieldForeign": "Поле Foreign Link Multiple",
+    "linkMultipleField": "Поле связь (Многие)",
+    "linkMultipleFieldForeign": "Поле внешняя связь (Многие)",
     "disabled": "Отключено",
     "textFilterFields": "Поля текстовых фильтров",
     "audited": "Проверено",
+    "auditedForeign": "Внешний аудит",
     "statusField": "Поле статуса",
+    "beforeSaveCustomScript": "Перед сохранением пользовательского сценария",
     "color": "Цвет",
-    "kanbanStatusIgnoreList": "Группы, которые не отражаются в Kanban View",
+    "kanbanViewMode": "Просмотр Канбан ",
+    "kanbanStatusIgnoreList": "Группы, которые не могут просматривать Канбан",
     "iconClass": "Значок",
-    "fullTextSearch": "Полнотекстовый поиск"
+    "fullTextSearch": "Полнотекстовый поиск",
+    "countDisabled": "Отключить счетчик записей",
+    "parentEntityTypeList": "Тип объекта источника",
+    "foreignLinkEntityTypeList": "Внешние связи"
   },
   "options": {
     "type": {
       "": "Нет",
       "Base": "База",
       "Person": "Личность",
+      "CategoryTree": "Дерево категорий",
       "Event": "Событие",
       "Company": "Компания"
     },
@@ -39,7 +51,10 @@
       "manyToMany": "Многие-ко-многим",
       "oneToMany": "Один-ко-многим",
       "manyToOne": "Много-к-одному",
-      "childrenToParent": "От сына к отцу"
+      "parentToChildren": "От отца к сыну",
+      "childrenToParent": "От сына к отцу",
+      "oneToOneRight": "Один-к-одному правое",
+      "oneToOneLeft": "Один-к-одному левое"
     },
     "sortDirection": {
       "asc": "По возрастанию",
@@ -49,7 +64,8 @@
   "messages": {
     "entityCreated": "Объект был создан",
     "linkAlreadyExists": "Конфликт названий связей (link).",
-    "linkConflict": "Связь (link) с таким названием уже существует."
+    "linkConflict": "Связь (link) с таким названием уже существует.",
+    "confirmRemove": "Вы уверены, что хотите удалить тип объекта (сущности) из системы?"
   },
   "tooltips": {
     "statusField": "Обновления этого поля записываются в ленту.",
@@ -57,8 +73,9 @@
     "stream": "Есть ли у объекта Лента.",
     "disabled": "Отметьте, если вам не нужна эта сущность в вашей системе.",
     "linkAudited": "Создание связанной записи и привязка к существующей записи будет регистрироваться в Ленте.",
-    "linkMultipleField": "Link Multiple field предоставляет удобный способ редактирования отношений. Не используйте его, если у вас может быть большое количество связанных записей.",
-    "entityType": "\nEvent - available in Calendar and Activities panel.",
-    "fullTextSearch": "Требуется выполнить перестройку."
+    "linkMultipleField": "Поле связь (Многие) предоставляет удобный способ редактирования отношений. Не используйте его, если у вас может быть большое количество связанных записей.",
+    "entityType": "Base Plus - имеет панели «Действия», «История» и «Задачи».\n\nСобытие - доступно в панели Календарь и Действия. ",
+    "fullTextSearch": "Требуется выполнить перестройку.",
+    "countDisabled": "Общее количество не будет отображаться в виде списке. Может уменьшить время загрузки, когда таблица БД велика."
   }
 }

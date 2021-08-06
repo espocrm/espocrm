@@ -1,1 +1,11 @@
-{}
+{
+  "fields": {
+    "layout": "Izkārtojums",
+    "append": "Pievienot (neizdzēst lietotāja cilnes)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Izveidot veidni",
+    "Deploy to Users": "Izvietošana lietotājiem",
+    "Deploy to Team": "Izvietošana komandā"
+  }
+}

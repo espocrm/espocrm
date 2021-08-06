@@ -37,7 +37,8 @@
   },
   "labels": {
     "Create Task": "Sukurti užduotį",
-    "Complete": "Įvykdyta"
+    "Complete": "Įvykdyta",
+    "overdue": "pradelstas"
   },
   "presetFilters": {
     "actual": "Esamas",

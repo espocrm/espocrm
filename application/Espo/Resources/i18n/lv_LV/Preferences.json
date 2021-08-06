@@ -37,7 +37,9 @@
     "followCreatedEntityTypeList": "Automātiski sekot izveidotajiem ierakstiem par noteiktiem vienību tipiem",
     "emailUseExternalClient": "Lietot ārējā e-pasta klientu",
     "scopeColorsDisabled": "Izslēgt tvēruma krāsas",
-    "tabColorsDisabled": "Izslēgt ciļņa krāsas"
+    "tabColorsDisabled": "Izslēgt ciļņa krāsas",
+    "assignmentNotificationsIgnoreEntityTypeList": "Aplikācijā pieejamie uzdevuma paziņojumi",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Paziņojumi par uzdevumiem pa e-pastu"
   },
   "options": {
     "weekStart": {

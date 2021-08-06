@@ -38,7 +38,8 @@
   },
   "labels": {
     "Create Task": "Создать задачу",
-    "Complete": "Завершить"
+    "Complete": "Завершить",
+    "overdue": "просроченный"
   },
   "presetFilters": {
     "actual": "Актуальные",

@@ -1,7 +1,11 @@
 {
   "layouts": {
-    "detailConvert": "Конвертировать лид",
+    "detailConvert": "Конвертировать кандидата",
     "listForAccount": "Список (для контрагента)",
     "listForContact": "Список (для контакта)"
+  },
+  "templates": {
+    "invitation": "Приглашение",
+    "reminder": "Напоминание"
   }
 }

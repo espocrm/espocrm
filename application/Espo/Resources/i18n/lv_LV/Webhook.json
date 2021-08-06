@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "Create Webhook": "Izveidot Webhook"
+  },
+  "fields": {
+    "event": "Pasākums",
+    "isActive": "Vai ir aktīvs",
+    "user": "API lietotājs",
+    "entityType": "Vienības veids",
+    "field": "Laukums",
+    "secretKey": "Slepenā atslēga"
+  },
+  "links": {
+    "user": "Lietotājs"
+  }
+}

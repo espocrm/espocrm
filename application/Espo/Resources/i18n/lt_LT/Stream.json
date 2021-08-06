@@ -1,1 +1,14 @@
-{}
+{
+  "messages": {
+    "infoMention": "Įveskite **@username**, kad pranešime paminėtumėte naudotoją.",
+    "infoSyntax": "Turima žymėjimo sintaksė"
+  },
+  "syntaxItems": {
+    "code": "kodas",
+    "multilineCode": "kelių eilučių kodas",
+    "strongText": "stiprus tekstas",
+    "emphasizedText": "paryškintas tekstas",
+    "deletedText": "ištrintas tekstas",
+    "link": "nuoroda"
+  }
+}

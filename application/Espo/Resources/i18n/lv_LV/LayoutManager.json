@@ -8,7 +8,8 @@
     "style": "Stils",
     "sticked": "Nostiprināts",
     "isLarge": "Liels šrifta izmērs",
-    "dynamicLogicVisible": "Nosacījumi, lai panelis kļūtu redzams"
+    "dynamicLogicVisible": "Nosacījumi, lai panelis kļūtu redzams",
+    "hidden": "Slēptais"
   },
   "options": {
     "align": {
@@ -27,5 +28,9 @@
   "labels": {
     "New panel": "Jauns panelis",
     "Layout": "Izkārtojums"
+  },
+  "tooltips": {
+    "link": "Ja ir atzīmēts, lauka vērtība tiks parādīta kā saite, kas norāda uz ieraksta detalizētu pārskatu. Parasti to izmanto *Nosaukums* laukiem.",
+    "hiddenPanel": "Lai redzētu paneli, ir jānoklikšķina uz \"parādīt vairāk\"."
   }
 }

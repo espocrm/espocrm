@@ -1,1 +1,11 @@
-{}
+{
+  "fields": {
+    "layout": "Maketavimas",
+    "append": "Pridėti (nepašalinkite naudotojo skirtukų)"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Sukurti šabloną",
+    "Deploy to Users": "Diegimas naudotojams",
+    "Deploy to Team": "Diegimas į komandą"
+  }
+}

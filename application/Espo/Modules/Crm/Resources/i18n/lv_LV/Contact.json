@@ -20,7 +20,8 @@
     "accountIsInactive": "Konts neaktīvs",
     "acceptanceStatusMeetings": "Akcepta statuss (tikšanās)",
     "acceptanceStatusCalls": "Akcepta statuss (zvani)",
-    "title": "Galvenā konta sadaļa"
+    "title": "Konta nosaukums",
+    "hasPortalUser": "Ir portāla lietotājs"
   },
   "links": {
     "opportunities": "Iespējas",
@@ -34,7 +35,8 @@
     "portalUser": "Portāla lietotājs",
     "originalLead": "Potenciālā klienta oriģinālais ieraksts",
     "documents": "Dokumenti",
-    "tasksPrimary": "Uzdevumi (izvērsts)"
+    "tasksPrimary": "Uzdevumi (izvērsts)",
+    "opportunitiesPrimary": "Iespējas (primārās)"
   },
   "labels": {
     "Create Contact": "Izveidot kontaktu"

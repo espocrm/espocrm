@@ -47,7 +47,10 @@
     "LeadCapture": "Potenciālā klienta tvēruma ieejas punkts",
     "LeadCaptureLogRecord": "Potenciālā klienta tvēruma reģistra ieraksts",
     "ArrayValue": "Masīva vērtība",
-    "ApiUser": "API lietotājs"
+    "ApiUser": "API lietotājs",
+    "DashboardTemplate": "Informācijas paneļa veidne",
+    "Currency": "Valūta",
+    "LayoutSet": "Izkārtojuma komplekts"
   },
   "scopeNamesPlural": {
     "Email": "E-pasti",
@@ -85,7 +88,12 @@
     "LeadCapture": "Potenciālā klienta tvērums",
     "LeadCaptureLogRecord": "Potenciālā klienta tvēruma reģistrs",
     "ArrayValue": "Masīva vērtības",
-    "ApiUser": "API lietotājs"
+    "ApiUser": "API lietotājs",
+    "DashboardTemplate": "Informācijas paneļa veidnes",
+    "EmailAddress": "E-pasta adreses",
+    "PhoneNumber": "Tālruņu numuri",
+    "Currency": "Valūta",
+    "LayoutSet": "Izkārtojuma komplekti"
   },
   "labels": {
     "Misc": "Dažādi",
@@ -239,7 +247,14 @@
     "Personal Data": "Personas dati",
     "Erase": "Dzēst",
     "Move Over": "Pāriet",
-    "Restore": "Atjaunot"
+    "Restore": "Atjaunot",
+    "View Followers": "Pārskatīt sekotājus",
+    "Convert Currency": "Konvertēt valūtu",
+    "Middle Name": "Vidējais vārds",
+    "View on Map": "Skatīt kartē",
+    "Proceed": "Turpināt",
+    "Attached": "Pievienots",
+    "Preview": "Priekšskatījums"
   },
   "messages": {
     "pleaseWait": "Lūdzu, uzgaidiet...",
@@ -298,11 +313,17 @@
     "erasePersonalDataConfirmation": "Atzīmētie lauki tiks neatgriezeniski dzēstu. Vai tiešām vēlaties turpināt?",
     "massPrintPdfMaxCountError": "Nevar izdrukāt vairāk kā {maxCount} ierakstus.",
     "fieldValueDuplicate": "Dublētais ieraksts",
-    "unlinkSelectedRecordsConfirmation": "Vai Jūs esat pārliecināts, ka gribat atvienot atzīmētos ieraks"
+    "unlinkSelectedRecordsConfirmation": "Vai Jūs esat pārliecināts, ka gribat atvienot atzīmētos ieraks",
+    "recalculateFormulaConfirmation": "Vai esat pārliecināts, ka vēlaties pārrēķināt formulu atlasītajiem ierakstiem?",
+    "fieldExceedsMaxCount": "Skaits pārsniedz maksimālo atļauto {maxCount}",
+    "notUpdated": "Nav atjaunināts",
+    "maintenanceMode": "Pašlaik lietojumprogramma ir uzturēšanas režīmā. Piekļuve ir tikai administratoram.\n\nUzturēšanas režīmu var atspējot sadaļā Administrācija → Iestatījumi.",
+    "fieldInvalid": "{field} ir nederīgs"
   },
   "boolFilters": {
     "onlyMy": "Tikai manējie",
-    "followed": "Kuriem sekoju"
+    "followed": "Kuriem sekoju",
+    "onlyMyTeam": "Mana komanda"
   },
   "presetFilters": {
     "followed": "Kuriem sekoju",
@@ -316,7 +337,9 @@
     "follow": "Sekot",
     "unfollow": "Atcelt sekošanu",
     "convertCurrency": "Konvertēt valūtu",
-    "printPdf": "Izdrukāt PDF formātā"
+    "printPdf": "Izdrukāt PDF formātā",
+    "unlink": "Atvienojiet saiti",
+    "recalculateFormula": "Pārrēķināt formulu"
   },
   "fields": {
     "name": "Nosaukums/vārds",
@@ -349,7 +372,10 @@
     "names": "Vārdi/nosaukumi",
     "emailAddressIsOptedOut": "E-pasta adrese ir neizvēlēta",
     "targetListIsOptedOut": "Ir neizvēlētas (mērķa saraksts)",
-    "type": "Tips"
+    "type": "Tips",
+    "phoneNumberIsOptedOut": "Tālruņa numurs ir izslēgts",
+    "types": "Veidi",
+    "middleName": "Vidējais vārds"
   },
   "links": {
     "assignedUser": "Piešķirtais lietotājs",
@@ -598,7 +624,9 @@
       "anyOf": "Jebkurš no",
       "isNot": "Nav",
       "isNotOneOf": "Neviens no",
-      "noneOf": "Neviens no"
+      "noneOf": "Neviens no",
+      "allOf": "Visi no",
+      "any": "Jebkurš"
     },
     "varcharSearchRanges": {
       "equals": "Vienāds ar",

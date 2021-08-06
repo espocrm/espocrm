@@ -14,14 +14,21 @@
     "leadSource": "Источник кандидата",
     "apiKey": "Ключ API",
     "targetTeam": "Группа",
-    "exampleRequestMethod": "Метод"
+    "exampleRequestMethod": "Метод",
+    "exampleRequestPayload": "Полезная нагрузка",
+    "createLeadBeforeOptInConfirmation": "Создать лидов до подтверждения",
+    "duplicateCheck": "Проверка на дубликаты",
+    "skipOptInConfirmationIfSubscribed": "Пропустить подтверждение, если кандидат уже в списке целей",
+    "smtpAccount": "SMTP-аккаунт",
+    "inboundEmail": "Учетная запись эл. почты группы"
   },
   "links": {
     "targetList": "Список целей",
     "campaign": "Кампания",
     "optInConfirmationEmailTemplate": "Шаблон письма для подтверждения подписки",
     "targetTeam": "Группа",
-    "logRecords": "Лог"
+    "logRecords": "Журнал",
+    "inboundEmail": "Учетная запись эл. почты группы"
   },
   "labels": {
     "Create LeadCapture": "Создать точку входа",

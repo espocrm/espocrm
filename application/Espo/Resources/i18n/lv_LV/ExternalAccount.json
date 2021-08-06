@@ -1,6 +1,8 @@
 {
   "labels": {
     "Connect": "Savienot",
-    "Connected": "Savienots"
+    "Connected": "Savienots",
+    "Disconnect": "Atvienojiet",
+    "Disconnected": "Atvienots"
   }
 }

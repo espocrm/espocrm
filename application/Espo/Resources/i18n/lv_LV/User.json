@@ -32,7 +32,12 @@
     "lastAccess": "Pēdējā piekļuve",
     "type": "Tips",
     "apiKey": "API atslēga",
-    "authMethod": "Autentifikācijas metode"
+    "authMethod": "Autentifikācijas metode",
+    "yourPassword": "Jūsu pašreizējā parole",
+    "dashboardTemplate": "Informācijas paneļa veidne",
+    "auth2FAEnable": "Iespējot 2 faktoru autentifikāciju",
+    "auth2FAMethod": "2FA metode",
+    "auth2FATotpSecret": "2FA TOTP noslēpums"
   },
   "links": {
     "teams": "Grupas",
@@ -44,7 +49,9 @@
     "accounts": "Konti",
     "account": "Konts (primārais)",
     "tasks": "Uzdevumi",
-    "defaultTeam": "Noklusējuma komanda"
+    "defaultTeam": "Noklusējuma komanda",
+    "dashboardTemplate": "Informācijas paneļa veidne",
+    "userData": "Lietotāja dati"
   },
   "labels": {
     "Create User": "Izveidot lietotāju",
@@ -60,7 +67,14 @@
     "Portal": "Portāls",
     "Create Portal User": "Izveidot portāla lietotāju",
     "Proceed w/o Contact": "Turpināt bez kontakta",
-    "Generate New API Key": "Izveidot jaunu API atslēgu"
+    "Generate New API Key": "Izveidot jaunu API atslēgu",
+    "Generate New Password": "Izveidot jaunu paroli",
+    "Code": "Kods",
+    "Back to login form": "Atgriezties pie pieteikšanās veidlapas",
+    "Requirements": "Prasības",
+    "Security": "Drošība",
+    "Reset 2FA": "2FA atiestatīšana",
+    "Secret": "Noslēpums"
   },
   "tooltips": {
     "defaultTeam": "Visus šī lietotāja izveidotie ieraksti pēc noklusējuma tiks sasaistīti ar šo grupu.",
@@ -82,7 +96,22 @@
     "forbidden": "Aizliegts, lūdzu, mēģiniet vēlāk",
     "uniqueLinkHasBeenSent": "Unikālais vietrādis URL nosūtīts uz norādīto e-pasta adresi.",
     "passwordChangedByRequest": "Parole nomainīta.",
-    "userNameExists": "Šāds lietotājvārds jau pastāv"
+    "userNameExists": "Šāds lietotājvārds jau pastāv",
+    "setupSmtpBefore": "Lai sistēma spētu nosūtīt paroli pa e-pastu, ir jāiestata [SMTP iestatījumi]({url}).",
+    "passwordStrengthLength": "Jābūt vismaz {garumam} rakstzīmju garumā.",
+    "passwordStrengthLetterCount": "Jāietver vismaz {skaitlis} burtu(-u).",
+    "passwordStrengthNumberCount": "Jāietver vismaz {skaitlis} ciparu(-u).",
+    "passwordStrengthBothCases": "Tajā jābūt gan lielajiem, gan mazajiem burtiem.",
+    "wrongCode": "Nepareizs kods",
+    "codeIsRequired": "Nepieciešams kods",
+    "enterTotpCode": "Ievadiet kodu no autentifikatora lietotnes.",
+    "verifyTotpCode": "Noskenējiet QR kodu, izmantojot mobilā autentifikatora lietotni. Ja jums rodas problēmas ar skenēšanu, varat ievadīt noslēpumu manuāli. Pēc tam savā lietojumprogrammā redzēsiet sešciparu kodu. Ievadiet šo kodu turpmāk norādītajā laukā.",
+    "generateAndSendNewPassword": "Uz lietotāja e-pasta adresi tiks ģenerēta un nosūtīta jauna parole.",
+    "security2FaResetConfimation": "Vai esat pārliecināts, ka vēlaties atiestatīt pašreizējos 2FA iestatījumus?",
+    "ldapUserInEspoNotFound": "Lietotājs nav atrodams EspoCRM. Sazinieties ar administratoru, lai izveidotu lietotāju.",
+    "passwordRecoverySentIfMatched": "Pieņemot, ka ievadītie dati atbilst kādam lietotāja kontam.",
+    "auth2FARequiredHeader": "Nepieciešama 2 faktoru autentifikācija",
+    "auth2FARequired": "Jums ir jāiestata 2 faktoru autentifikācija. Izmantojiet autentifikatora programmu savā mobilajā tālrunī (piemēram, Google Authenticator)."
   },
   "boolFilters": {
     "onlyMyTeam": "Tikai manai grupai"

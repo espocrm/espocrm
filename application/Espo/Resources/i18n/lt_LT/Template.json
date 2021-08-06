@@ -14,7 +14,10 @@
     "variables": "Galimi sandoriai",
     "pageOrientation": "Lapo padėtis",
     "pageFormat": "Lapo formatas",
-    "fontFace": "Šriftas"
+    "fontFace": "Šriftas",
+    "pageWidth": "Puslapio plotis (mm)",
+    "pageHeight": "Puslapio aukštis (mm)",
+    "headerPosition": "Antraštės padėtis"
   },
   "labels": {
     "Create Template": "Sukurti šabloną"
@@ -30,7 +33,8 @@
     },
     "placeholders": {
       "today": "Šiandien (data)",
-      "now": "Dabar (data-laikas)"
+      "now": "Dabar (data-laikas)",
+      "pagebreak": "Puslapio pertrauka"
     },
     "fontFace": {
       "aefurat": "Aefuratas",
@@ -42,6 +46,9 @@
       "pdfasymbol": "PDFA simbolis",
       "symbol": "Simbolis",
       "times": "Laikai"
+    },
+    "pageFormat": {
+      "Custom": "Pasirinktinis"
     }
   }
 }

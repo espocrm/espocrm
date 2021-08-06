@@ -1,1 +1,10 @@
-{}
+{
+  "fields": {
+    "type": "Тип",
+    "optOut": "Не звонить",
+    "invalid": "Неверный номер"
+  },
+  "presetFilters": {
+    "orphan": "Сирота"
+  }
+}

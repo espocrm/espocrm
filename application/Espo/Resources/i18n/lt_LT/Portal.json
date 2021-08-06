@@ -17,15 +17,18 @@
     "weekStart": "Pirma savaitės diena",
     "defaultCurrency": "Pagrindinė valiuta",
     "customUrl": "Pritaikytas URL",
-    "customId": "Pritaikytas ID"
+    "customId": "Pritaikytas ID",
+    "layoutSet": "Maketų rinkinys"
   },
   "links": {
     "users": "Vartotojai",
     "portalRoles": "Rolės",
-    "notes": "Pastabos"
+    "notes": "Pastabos",
+    "layoutSet": "Maketų rinkinys"
   },
   "tooltips": {
-    "portalRoles": "Nurodyti portalo vaidmenys bus taikomi visiems šio portalo naudotojams."
+    "portalRoles": "Nurodyti portalo vaidmenys bus taikomi visiems šio portalo naudotojams.",
+    "layoutSet": "Suteikiama galimybė kurti kitokius nei standartiniai maketus."
   },
   "labels": {
     "Create Portal": "Sukurti portalą",

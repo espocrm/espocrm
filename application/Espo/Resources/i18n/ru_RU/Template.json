@@ -9,12 +9,15 @@
     "topMargin": "Верхний отступ",
     "rightMargin": "Правый отступ",
     "bottomMargin": "Нижний отступ",
-    "printFooter": "Отображать подвал",
-    "footerPosition": "Положение подвала",
+    "printFooter": "Отображать колонтитул?",
+    "footerPosition": "Положение колонтитула",
     "variables": "Доступные заполнители",
     "pageOrientation": "Ориентация страницы",
     "pageFormat": "Формат бумаги",
-    "fontFace": "Шрифт"
+    "fontFace": "Шрифт",
+    "pageWidth": "Ширина страницы (мм)",
+    "pageHeight": "Высота страницы (мм)",
+    "headerPosition": "Положение заголовка"
   },
   "labels": {
     "Create Template": "Создать шаблон"
@@ -30,7 +33,31 @@
     },
     "placeholders": {
       "today": "Сегодня (дата)",
-      "now": "Теперь (дата-время)"
+      "now": "Теперь (дата-время)",
+      "pagebreak": "Разрыв страницы"
+    },
+    "fontFace": {
+      "aealarabiya": "арабоязычный",
+      "aefurat": "Aefurat шрифт",
+      "courier": "Courier шрифт курьер",
+      "dejavusans": "DejaVu Sans шрифты",
+      "dejavusanscondensed": "DejaVu Sans Condensed- шрифт",
+      "dejavusansextralight": "DejaVu Sans ExtraLight - шрифт",
+      "dejavusansmono": "DejaVu Sans Mono - шрифт",
+      "dejavuserif": "DejaVu Serif - шрифт",
+      "freemono": "FreeMono - шрифт",
+      "freesans": "FreeSans- шрифт",
+      "freeserif": "FreeSerif шрифт",
+      "helvetica": "Helvetica - шрифт",
+      "hysmyeongjostdmedium": "Hysmyeongjostd Medium - шрифт",
+      "kozgopromedium": "Kozgo Pro Medium - шрифт",
+      "kozminproregular": "Kozmin Pro Regular - шрифт",
+      "symbol": "Символ",
+      "times": "Время",
+      "dejavuserifcondensed": "DejaVu Serif Condensed - шрифт"
+    },
+    "pageFormat": {
+      "Custom": "Пользовательский"
     }
   }
 }

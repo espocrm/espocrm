@@ -2,12 +2,24 @@
   "fields": {
     "url": "Vietrādis URL",
     "urlToUse": "Vietrāža URL vietā ievietojamais kods",
-    "campaign": "Kampaņa"
+    "campaign": "Kampaņa",
+    "action": "Rīcība",
+    "message": "Ziņa"
   },
   "links": {
     "campaign": "Kampaņa"
   },
   "labels": {
     "Create CampaignTrackingUrl": "Izveidot sekošanas vietrādi URL"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Pārvirzīt",
+      "Show Message": "Rādīt ziņojumu"
+    }
+  },
+  "tooltips": {
+    "url": "Pēc tam, kad saņēmējs sekos saitei, viņš tiks novirzīts uz šo vietu.",
+    "message": "Saņēmējam ziņojums tiks parādīts pēc tam, kad viņš sekos saitei. Tiek atbalstīta izcelšana."
   }
 }

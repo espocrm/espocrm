@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "Create Webhook": "Создать вебхук"
+  },
+  "fields": {
+    "event": "Событие",
+    "isActive": "Активный",
+    "user": "API пользователь",
+    "entityType": "Тип объекта",
+    "field": "Поле",
+    "secretKey": "Секретный ключ"
+  },
+  "links": {
+    "user": "Пользователь"
+  }
+}

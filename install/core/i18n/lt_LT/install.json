@@ -42,7 +42,10 @@
     "Success": "Pavyko",
     "Fail": "Nepavyko",
     "is recommended": "rekomenduojama",
-    "extension is missing": "trūksta plėtinio"
+    "extension is missing": "trūksta plėtinio",
+    "headerTitle": "\"EspoCRM\" diegimas",
+    "Crontab setup instructions": "Nevykdant suplanuotų užduočių neveiks gaunamieji el. laiškai, pranešimai ir priminimai. Čia galite perskaityti {SETUP_INSTRUKCIJOS}.",
+    "Setup instructions": "sąrankos instrukcijos"
   },
   "fields": {
     "Choose your language": "Pasirinkite kalb?",
@@ -101,24 +104,12 @@
     "Thousand Separator and Decimal Mark equal": "Tūkstančių atskyriklis ir dešimtainis ženklas negali būti vienodi",
     "extension": "Trūksta {0} plėtinio",
     "option": "Rekomenduojama vertė yra {0} ",
-    "mysqlSettingError": "EspoCRM reikalauja, kad MySQL nustatymas \"{NAME}\" būtų nustatytas į \"{VALUE}\""
-  },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Suraskite httpd.conf failą (paprastai jį rasite aplanke, pavadintame conf, config arba kažką panašaus į šias eilutes) <br>\n2. Failo httpd.conf viduje atkomentuokite eilutę LoadModule rewrite_module modules / mod_rewrite.so (priešais liniją nuimkite ženkliuką \"#\") <br>\n3. Taip pat raskite eilutę ClearModuleList yra nekomentuotų, tada suraskite ir įsitikinkite, kad eilutė AddModule mod_rewrite.c nėra komentuojama.\n</pre>",
-        "linux": "<br> 1. Įgalinti \"mod_rewrite\". Norėdami tai padaryti, paleiskite tas komandas terminale: <pre>{APACHE1} </pre> <br> 2. Įgalinti .htaccess palaikymą. Pridėti / redaguoti serverio konfigūracijos nustatymus (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>): <pre>{APACHE2}</pre> \nVėliau paleiskite šią komandą į terminalą: <pre>{APACHE3}</pre> <br> 3. Pabandykite įtraukti RewriteBase kelią, atidarykite failą {API_PATH} .htaccess ir pakeiskite šią eilutę: <pre>{APACHE4}</pre> to <pre>{APACHE5}</pre> <br> Daugiau informacijos rasite apsilankę <a href=\"{APACHE_LINK}\" target=\"_blank\"> EspoCRM konfigūracija \"Apache\" </a>. <br> <br>"
-      },
-      "nginx": {
-        "linux": "<br> Pridėti šį kodą į jūsų Nginx serverio blokų konfigūracijos failą <code>{NGINX_PATH}</code> \"serverio\" skyriuje:<pre>\n{NGINX}\n</pre> <br> Daugiau informacijos rasite <a href=\"{NGINX_LINK}\" target=\"_blank\"> Nginx serverio konfigūracijoje EspoCRM </a>. <br> <br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>API Klaida: EspoCRM API nepasiekiamas.</h3> <br> Atlikite tik būtinus veiksmus. Po kiekvieno žingsnio patikrinkite, ar problema išspręsta.",
-      "nginx": "<h3>API Klaida: EspoCRM API nepasiekiamas.</h3>",
-      "microsoft-iis": "<h3>API Klaida: EspoCRM API nepasiekiamas.</h3> Galima problema: išjungta \"URL Rewrite\". Patikrinkite ir įjunkite \"URL Rewrite\" modulį IIS serveryje",
-      "default": "<h3>API Klaida: EspoCRM API nepasiekiamas.</h3> Galima problema: neįgalintas Rewrite Module. Patikrinkite ir įjunkite \"Rewrite Module\" savo serveryje (pvz., Mod_rewrite \"Apache\") ir .htaccess palaikymą."
-    }
+    "mysqlSettingError": "EspoCRM reikalauja, kad MySQL nustatymas \"{NAME}\" būtų nustatytas į \"{VALUE}\"",
+    "requiredMariadbVersion": "EspoCRM nepalaiko jūsų MariaDB versijos, atnaujinkite ją bent iki MariaDB {minVersion}.",
+    "Ajax failed": "Įvyko netikėta klaida",
+    "Bad init Permission": "Atsisakyta suteikti leidimą \"{*}\" katalogui. Prašome nustatyti 775 \"{*}\" arba tiesiog įvykdyti šią komandą terminale <pre><b>{C}</b></pre> Operacija neleidžiama? Išbandykite šią: {CSU}",
+    "permissionInstruction": "<br>Paleiskite šią komandą terminale:<pre><b>\"{C}\"</b></pre>",
+    "operationNotPermitted": "Operacija neleidžiama? Išbandykite šį: <br><br>{CSU}"
   },
   "systemRequirements": {
     "requiredPhpVersion": "PHP versija",
@@ -127,6 +118,7 @@
     "dbname": "Duomenų bazės pavadinimas",
     "user": "naudotojo vardas",
     "writable": "Įrašymo",
-    "readable": "Skaitymo"
+    "readable": "Skaitymo",
+    "requiredMariadbVersion": "MariaDB versija"
   }
 }

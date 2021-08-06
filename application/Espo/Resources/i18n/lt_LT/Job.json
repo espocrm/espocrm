@@ -9,7 +9,14 @@
     "scheduledJob": "Suplanuoti darbai",
     "data": "Duomenys",
     "method": "Metodas (nebetinkamas)",
-    "scheduledJobJob": "Numatytas darbo pavadinimas"
+    "scheduledJobJob": "Numatytas darbo pavadinimas",
+    "executedAt": "Vykdoma adresu",
+    "startedAt": "Pradėta nuo",
+    "targetType": "Tikslinis tipas",
+    "targetId": "Tikslinis ID",
+    "number": "Numeris",
+    "queue": "Eilė",
+    "job": "Darbas"
   },
   "options": {
     "status": {

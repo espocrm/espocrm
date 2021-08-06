@@ -1,10 +1,10 @@
 {
   "labels": {
-    "Create Lead": "Создать кандидата",
+    "Create Lead": "Создать лида",
     "Create Contact": "Создать контакт",
     "Create Task": "Создать задачу",
     "Create Case": "Создать обращение",
     "Add to Contact": "Добавить в контакты",
-    "Add to Lead": "Добавить в кандидаты"
+    "Add to Lead": "Добавить в лиды"
   }
 }

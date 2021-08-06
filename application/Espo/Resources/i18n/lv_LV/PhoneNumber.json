@@ -1,1 +1,10 @@
-{}
+{
+  "fields": {
+    "type": "Tips",
+    "optOut": "Izslēgts",
+    "invalid": "Nederīgs"
+  },
+  "presetFilters": {
+    "orphan": "Bāreņi"
+  }
+}

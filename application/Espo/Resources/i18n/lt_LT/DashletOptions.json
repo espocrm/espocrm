@@ -15,7 +15,8 @@
     "sortBy": "Rikiavimas (laukelių)",
     "sortDirection": "Rikiavimas kryptis)",
     "expandedLayout": "Išdėstymas",
-    "dateFilter": "Data filtras"
+    "dateFilter": "Data filtras",
+    "skipOwn": "Nerodyti savo įrašų"
   },
   "options": {
     "mode": {
@@ -29,5 +30,8 @@
   },
   "messages": {
     "selectEntityType": "Pasirinkite vedinio tipą  iš skydelio variantų"
+  },
+  "tooltips": {
+    "skipOwn": "Jūsų naudotojo paskyros veiksmai nebus rodomi."
   }
 }

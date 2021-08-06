@@ -5,12 +5,12 @@
     "dateSent": "Дата отправки",
     "from": "От",
     "to": "Кому",
-    "cc": "Копия (Cc)",
-    "bcc": "Слепая копия (Bcc)",
+    "cc": "Копия (вторичные получатели письма)",
+    "bcc": "Скрытая копия (скрытые получатели письма)",
     "replyTo": "Ответить",
     "replyToString": "Куда отвечать (строка)",
     "isHtml": "HTML-код",
-    "body": "Тело",
+    "body": "Текст письма",
     "subject": "Тема",
     "attachments": "Вложения",
     "selectTemplate": "Выбрать шаблон",
@@ -35,17 +35,21 @@
     "hasAttachment": "Имеет Вложения",
     "sentBy": "Отправлено (кем)",
     "assignedUsers": "Ответственные",
-    "bodyPlain": "Тело (Простое)",
+    "bodyPlain": "Текст письма (Простое)",
     "ccEmailAddresses": "CC адрес эл. почты",
-    "messageId": "Id сообщения",
-    "messageIdInternal": "Id сообщения (внутренний)",
-    "folderId": "Id папки",
+    "messageId": "Идентификатор сообщения",
+    "messageIdInternal": "Идентификатор сообщения (внутренний)",
+    "folderId": "Идентификатор папки",
     "fromName": "Имя отправителя",
     "fromString": "Строка От",
     "isSystem": "Системный",
     "toEmailAddresses": "Адреса эл. почты получателей",
     "bccEmailAddresses": "BCC Адреса эл. почты получателей",
-    "replyToEmailAddresses": "Обратные адреса эл. почты"
+    "replyToEmailAddresses": "Обратные адреса эл. почты",
+    "personStringData": "Данные личности в формате string",
+    "fromEmailAddress": "Адрес отправителя (ссылка)",
+    "replyToName": "Имя для обратного адреса",
+    "replyToAddress": "Обратный адрес"
   },
   "links": {
     "replied": "Ответили",
@@ -90,19 +94,27 @@
     "Sending...": "Отправляется...",
     "Save Draft": "Сохранить черновик",
     "Mark all as read": "Пометить все как прочитанные",
+    "Show Plain Text": "Показать обычный текст",
     "Mark as Important": "Пометить как важное",
     "Unmark Importance": "Снять пометку важности",
     "Move to Trash": "Переместить в корзину",
     "Retrieve from Trash": "Восстановить из корзины",
     "Move to Folder": "Переместить в папку",
     "Filters": "Фильтры",
-    "Folders": "Папки"
+    "Folders": "Папки",
+    "View Users": "Просмотреть пользователей",
+    "No Subject": "Без темы",
+    "Insert Field": "Вставить поле"
   },
   "messages": {
     "testEmailSent": "Тестовое эл. письмо было отправлено",
     "emailSent": "Эл. письмо было отправлено",
     "savedAsDraft": "Сохранено как черновик",
-    "confirmInsertTemplate": "Тело эл. письма будет потеряно. Вы действительно хотите вставить шаблон?"
+    "confirmInsertTemplate": "Текст эл. письма будет потерян. Вы действительно хотите вставить шаблон?",
+    "noSmtpSetup": "SMTP не настроен: {link}",
+    "sendConfirm": "Отправить письмо?",
+    "removeSelectedRecordsConfirmation": "Вы действительно хотите удалить выбранные электронные письма?\n\nОни будут удалены и для других пользователей.",
+    "removeRecordConfirmation": "Вы уверены, что хотите удалить письмо?\n\nОн будет удален и для других пользователей."
   },
   "presetFilters": {
     "sent": "Отправленные",
@@ -120,5 +132,8 @@
     "moveToTrash": "Переместить в корзину",
     "moveToFolder": "Переместить в папку",
     "retrieveFromTrash": "Восстановить из корзины"
+  },
+  "strings": {
+    "sendingFailed": "Ошибка отправки электронной почты"
   }
 }

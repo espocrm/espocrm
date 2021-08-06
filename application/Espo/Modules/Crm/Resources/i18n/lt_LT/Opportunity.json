@@ -16,13 +16,15 @@
     "originalLead": "Originalus švinas",
     "amountCurrency": "Valiutos suma",
     "contactRole": "Kontakto vaidmuo",
-    "lastStage": "Paskutinis etapas"
+    "lastStage": "Paskutinis etapas",
+    "contact": "Kontaktinis asmuo (pagrindinis)"
   },
   "links": {
     "contacts": "Kontaktai",
     "documents": "Dokumentai",
     "campaign": "Kampanija",
-    "originalLead": "Originalus švinas"
+    "originalLead": "Originalus švinas",
+    "contact": "Kontaktinis asmuo (pagrindinis)"
   },
   "options": {
     "stage": {

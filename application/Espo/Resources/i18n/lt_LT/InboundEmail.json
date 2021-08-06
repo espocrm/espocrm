@@ -17,7 +17,7 @@
     "replyToAddress": "Atsakyti adresatui",
     "replyFromName": "Atsakyti nuo vardo",
     "targetUserPosition": "Adresato pozicija",
-    "fetchSince": "Išeiti iš",
+    "fetchSince": "Atsisiųsti nuo",
     "addAllTeamUsers": "Visiems komandos nariams",
     "team": "Adresatų komanda",
     "teams": "Komandos",
@@ -33,7 +33,10 @@
     "fromName": "Nuo vardo",
     "smtpIsShared": "SMTP yra bendrai naudojamas",
     "smtpIsForMassEmail": "SMTP yra masinio el. pašto adresas",
-    "useImap": "Paimkite el. Laiškus"
+    "useImap": "Paimkite el. Laiškus",
+    "keepFetchedEmailsUnread": "Laikykite gautus laiškus neperskaitytus",
+    "smtpAuthMechanism": "SMTP autentifikavimo mechanizmas",
+    "security": "Apsauga"
   },
   "tooltips": {
     "reply": "Pranešti siuntėjams, kad jų el. Laiškai buvo gauti.\n\n  Tam tikram gavėjui per tam tikrą laikotarpį bus išsiųstas tik vienas el. laiškas, kad būtų išvengta kartojimų.",
@@ -48,7 +51,8 @@
     "monitoredFolders": "Keli aplankai turėtų būti atskirti kableliais.",
     "smtpIsShared": "Jei pažymėsite, vartotojai galės siųsti el. laiškus naudodami šį SMTP. Prieinamumą kontroliuoja Rolės, per leidimą grupės el. Pašto paskyrai.",
     "smtpIsForMassEmail": "Jei pažymėta, SMTP bus prieinamas masiniams el.laiškams.",
-    "storeSentEmails": "Išsiųsti el. laiškai bus saugomi IMAP serveryje."
+    "storeSentEmails": "Išsiųsti el. laiškai bus saugomi IMAP serveryje.",
+    "useSmtp": "Galimybė siųsti el. laiškus."
   },
   "links": {
     "filters": "Filtrai",
@@ -64,6 +68,9 @@
       "": "Joks",
       "Direct-Assignment": "Tiesioginis priskyrimas",
       "Least-Busy": "mažiausiai-užimta"
+    },
+    "smtpAuthMechanism": {
+      "login": "PRISIJUNGIMAS"
     }
   },
   "labels": {

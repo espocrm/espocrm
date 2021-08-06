@@ -87,7 +87,8 @@
     "Log Call": "Reģistrēt zvanu",
     "Archive Email": "Arhivēt e-pastu",
     "Create Task": "Izveidot uzdevumu",
-    "Tasks": "Uzdevumi"
+    "Tasks": "Uzdevumi",
+    "Scheduler": "Plānotājs"
   },
   "fields": {
     "billingAddressCity": "Pilsēta",

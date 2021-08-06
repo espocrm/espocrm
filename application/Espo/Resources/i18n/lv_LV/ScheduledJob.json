@@ -9,7 +9,8 @@
     "log": "Reģistrs"
   },
   "labels": {
-    "Create ScheduledJob": "Izveidot ieplānoto darbu"
+    "Create ScheduledJob": "Izveidot ieplānoto darbu",
+    "As often as possible": "Cik bieži vien iespējams"
   },
   "options": {
     "job": {
@@ -19,7 +20,8 @@
       "SendEmailReminders": "Nosūtīt atgādinājumus pa e-pastu ",
       "AuthTokenControl": "Autentifikācijas tokenu vadība",
       "SendEmailNotifications": "Nosūtīt e-pasta paziņojumus",
-      "CheckNewVersion": "Pārbaudīt, vai ir jauna versija"
+      "CheckNewVersion": "Pārbaudīt, vai ir jauna versija",
+      "ProcessWebhookQueue": "Webhook rindas apstrāde"
     },
     "cronSetup": {
       "linux": "Piezīme: lai izpildītu \"Espo\" ieplānotos darbus, pievienojiet uzdevumu plānotāja ciļņa failam šo rindu: ",
@@ -33,6 +35,6 @@
     }
   },
   "tooltips": {
-    "scheduling": "Uzdevumu plānotāja ciļņa notācija. Nosaka darbu izpildes biežumu.\n\n*/5 * * * * - ik pēc 5 minūtēm\n\n0 */2 * * * - ik pēc 2 stundām\n\n30 1 * * * - vienu reizi dienā plkst. 01:30\n\n0 0 1 * * - mēneša pirmajā dienā"
+    "scheduling": "Crontab pieraksts. Nosaka uzdevumu izpildes biežumu.\n\n`*/5 * * * * *` - ik pēc 5 minūtēm\n\n`0 */2 * * * *` - ik pēc 2 stundām\n\n`30 1 * * * *` - reizi dienā pulksten 01:30\n\n`0 0 0 1 * * *` - mēneša pirmajā dienā"
   }
 }

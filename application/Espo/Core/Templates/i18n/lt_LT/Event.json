@@ -5,7 +5,10 @@
     "dateEnd": "Pabaigos data",
     "duration": "Trukmė",
     "status": "Statusas",
-    "reminders": "Priminimai"
+    "reminders": "Priminimai",
+    "dateStartDate": "Data Pradžia (visą dieną)",
+    "dateEndDate": "Data Pabaiga (visą dieną)",
+    "isAllDay": "Ar visą dieną"
   },
   "links": {
     "parent": "Pagrindinis"

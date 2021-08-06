@@ -13,16 +13,18 @@
     "amountConverted": "Сумма (сконвертированная)",
     "amountWeightedConverted": "Сумма (средневзвешенная)",
     "campaign": "Кампания",
-    "originalLead": "Изначальный кандидат",
+    "originalLead": "Оригинальный лид",
     "amountCurrency": "Валюта суммы",
     "contactRole": "Роль контактов",
-    "lastStage": "Последняя стадия"
+    "lastStage": "Последняя стадия",
+    "contact": "Контакт (основной)"
   },
   "links": {
     "contacts": "Контакты",
     "documents": "Документы",
     "campaign": "Кампания",
-    "originalLead": "Изначальный кандидат"
+    "originalLead": "Оригинальный лид",
+    "contact": "Контакт (основной)"
   },
   "options": {
     "stage": {

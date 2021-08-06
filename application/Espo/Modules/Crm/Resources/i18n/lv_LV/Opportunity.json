@@ -16,13 +16,15 @@
     "originalLead": "Potenciālā klienta oriģinālais ieraksts",
     "amountCurrency": "Summas valūta",
     "contactRole": "Kontaktpersonas loma",
-    "lastStage": "Jaunākais posms"
+    "lastStage": "Jaunākais posms",
+    "contact": "Kontaktpersona (primārā)"
   },
   "links": {
     "contacts": "Kontakti",
     "documents": "Dokumenti",
     "campaign": "Kampaņa",
-    "originalLead": "Potenciālā klienta oriģinālais ieraksts"
+    "originalLead": "Potenciālā klienta oriģinālais ieraksts",
+    "contact": "Kontaktpersona (primārā)"
   },
   "options": {
     "stage": {

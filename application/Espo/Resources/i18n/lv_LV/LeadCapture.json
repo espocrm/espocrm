@@ -16,14 +16,20 @@
     "targetTeam": "Mērķa adresātu grupa",
     "exampleRequestMethod": "Metode",
     "exampleRequestUrl": "Vietrādis URL",
-    "exampleRequestPayload": "Lietderīgā slodze"
+    "exampleRequestPayload": "Lietderīgā slodze",
+    "createLeadBeforeOptInConfirmation": "Izveidot Lead pirms apstiprināšanas",
+    "duplicateCheck": "Dublikātu pārbaude",
+    "skipOptInConfirmationIfSubscribed": "Izlaist apstiprinājumu, ja līderis jau ir mērķa sarakstā",
+    "smtpAccount": "SMTP konts",
+    "inboundEmail": "Grupas e-pasta konts"
   },
   "links": {
     "targetList": "Mērķa adresātu saraksts",
     "campaign": "Kampaņa",
     "optInConfirmationEmailTemplate": "Izvēlēšanās apstiprinājuma e-pasta veidne",
     "targetTeam": "Mērķa adresātu grupa",
-    "logRecords": "Reģistrs"
+    "logRecords": "Reģistrs",
+    "inboundEmail": "Grupas e-pasta konts"
   },
   "labels": {
     "Create LeadCapture": "Izveidot ieejas punktu",

@@ -42,12 +42,17 @@
     "Preferences": "Персональные Настройки",
     "EmailAddress": "Адрес эл. почты",
     "PhoneNumber": "Номер телефона",
-    "AuthLogRecord": "Запись Лога Аутентификации",
-    "AuthFailLogRecord": "Запись Сбоя Лога Аутентификации",
+    "AuthLogRecord": "Запись журнала Аутентификации",
+    "AuthFailLogRecord": "Запись Сбоя журнала Аутентификации",
     "EmailTemplateCategory": "Категории шаблонов эл. писем",
     "LeadCapture": "Точка входа захвата кандидата",
     "LeadCaptureLogRecord": "Запись лога захвата кандидата",
-    "ArrayValue": "Значение массива"
+    "ArrayValue": "Значение массива",
+    "ApiUser": "API пользователь",
+    "DashboardTemplate": "Шаблон панели виджетов",
+    "Webhook": "Вебхук",
+    "Currency": "Валюта",
+    "LayoutSet": "Набор макетов"
   },
   "scopeNamesPlural": {
     "Email": "Эл. письма",
@@ -78,20 +83,27 @@
     "AuthToken": "Токены сессий аутентификации",
     "UniqueId": "Уникальные IDs",
     "LastViewed": "Последние просмотренные",
-    "AuthLogRecord": "Лог Аутентификации",
-    "AuthFailLogRecord": "Сбой Лога Аутентификации",
+    "AuthLogRecord": "Журнал Аутентификации",
+    "AuthFailLogRecord": "Сбой журнал Аутентификации",
     "EmailTemplateCategory": "Категории шаблонов эл. писем",
     "Import": "Импорт",
     "LeadCapture": "Захват кандидата",
-    "LeadCaptureLogRecord": "Лог захвата кандидата",
-    "ArrayValue": "Значения массива"
+    "LeadCaptureLogRecord": "Журнал захвата кандидата",
+    "ArrayValue": "Значения массива",
+    "ApiUser": "API пользователи",
+    "DashboardTemplate": "Шаблоны панели виджетов",
+    "Webhook": "Вебхуки",
+    "EmailAddress": "Адреса эл. почты",
+    "PhoneNumber": "Телефонные номера",
+    "Currency": "Валюта",
+    "LayoutSet": "Наборы макетов"
   },
   "labels": {
     "Misc": "Разное",
     "Merge": "Объединить",
     "None": "Нет",
     "Home": "Главная",
-    "by": "по",
+    "by": "по (от)",
     "Saved": "Сохранено",
     "Error": "Ошибка",
     "Select": "Выбрать",
@@ -238,7 +250,15 @@
     "View Personal Data": "Просмотреть личные данные",
     "Personal Data": "Личные данные",
     "Erase": "Стереть",
-    "Move Over": "Подвинуть"
+    "Move Over": "Подвинуть",
+    "Restore": "Восстановить",
+    "View Followers": "Просмотреть подписчиков",
+    "Convert Currency": "Конвертировать валюту",
+    "Middle Name": "Отчество",
+    "View on Map": "Просмотреть на карте",
+    "Proceed": "Продолжить",
+    "Attached": "Прилагается",
+    "Preview": "Предварительный просмотр"
   },
   "messages": {
     "pleaseWait": "Пожалуйста, подождите...",
@@ -276,8 +296,17 @@
     "done": "Готово",
     "confirmMassFollow": "Вы уверены, что хотите подписаться на выбранные записи?",
     "confirmMassUnfollow": "Вы уверены, что хотите отписаться от выбранных записей?",
+    "massFollowResult": "{count} в настоящее время идут записи ",
+    "massUnfollowResult": "{count} запись в настоящее время не выполняется",
+    "massFollowResultSingle": "{count} запись выполняется",
+    "massUnfollowResultSingle": "{count} запись сейчас не выполняется",
     "massFollowZeroResult": "Не на что подписываться",
     "massUnfollowZeroResult": "Не от чего отписываться",
+    "fieldShouldBeEmail": "{field} должен быть действующим адресом эл.почты",
+    "fieldShouldBeFloat": "{field} должно быть допустимым числом с плавающей запятой",
+    "fieldShouldBeInt": "{field} должно быть действительным целым числом",
+    "fieldShouldBeDate": "{field} должно быть действительной датой",
+    "fieldShouldBeDatetime": "{field} должно быть действительной датой / временем",
     "internalPostTitle": "Сообщение видно только внутренним пользователям",
     "loading": "Загрузка ...",
     "saving": "Сохраняется ...",
@@ -287,11 +316,18 @@
     "fieldIsUploading": "Выполняется загрузка",
     "erasePersonalDataConfirmation": "Отмеченные поля будут стерты навсегда. Вы уверены?",
     "massPrintPdfMaxCountError": "Невозможно напечатать больше {maxCount} записей.",
-    "recalculateFormulaConfirmation": "Вы уверены что хотите пересчитать формулу для выбраных записей?"
+    "fieldValueDuplicate": "Дублирующее значение",
+    "unlinkSelectedRecordsConfirmation": "Вы уверены, что хотите убрать выбранные записи?",
+    "recalculateFormulaConfirmation": "Вы уверены что хотите пересчитать формулу для выбраных записей?",
+    "fieldExceedsMaxCount": "Количество превышает максимально допустимое {maxCount}",
+    "notUpdated": "Не обновлено",
+    "maintenanceMode": "В настоящее время приложение находится в режиме обслуживания. Только администраторы имеют доступ.\n\nРежим обслуживания можно отключить в разделе Администрирование → Настройки.",
+    "fieldInvalid": "{field} недопустимое значение"
   },
   "boolFilters": {
     "onlyMy": "Только мои",
-    "followed": "Вы подписаны"
+    "followed": "Вы подписаны",
+    "onlyMyTeam": "Моя группа"
   },
   "presetFilters": {
     "followed": "Вы подписаны",
@@ -300,12 +336,13 @@
   "massActions": {
     "remove": "Удалить",
     "merge": "Объединить",
-    "massUpdate": "Обновить все",
+    "massUpdate": "Массовое обновление",
     "export": "Экспортировать",
     "follow": "Подписаться",
     "unfollow": "Отписаться",
     "convertCurrency": "Конвертировать валюту",
     "printPdf": "Распечатать в PDF",
+    "unlink": "Убрать ссылку",
     "recalculateFormula": "Пересчитать формулу"
   },
   "fields": {
@@ -333,12 +370,17 @@
     "order": "Порядок",
     "parent": "Источник",
     "children": "Потомок",
+    "id": "ID - уникальный идентификатор",
     "emailAddressData": "Данные адреса эл. почты",
     "phoneNumberData": "Данные телефонного номера",
+    "ids": "IDs-система обнаружения вторжения",
     "names": "Названия",
     "emailAddressIsOptedOut": "Эл. адрес не участвует в рассылке массовых сообщений",
     "targetListIsOptedOut": "Отписалось (Списки целей)",
-    "type": "Тип"
+    "type": "Тип",
+    "phoneNumberIsOptedOut": "Номер телефона не участвует в звонках",
+    "types": "Типы",
+    "middleName": "Отчество"
   },
   "links": {
     "assignedUser": "Ответственный",
@@ -354,7 +396,8 @@
   "dashlets": {
     "Stream": "Лента",
     "Emails": "Моя почта",
-    "Records": "Список записей"
+    "Records": "Список записей",
+    "Iframe": "Отдельное окно"
   },
   "notificationMessages": {
     "assign": "Вам было назначено {entityType} {entity}",
@@ -411,6 +454,8 @@
     "createAssignedThisSelf": "{user} создал этот {entityType} self-assigned",
     "createAssignedSelf": "{user} создал {entityType} {entity} self-assigned",
     "assignYou": "{user} назначил {entityType} {entity} Вам",
+    "assignThisVoid": "{user} не назначил это {entityType}",
+    "assignVoid": "{user} неназначенный {entityType} {entity}",
     "assignThisSelf": "{user} назначил {entityType} на себя",
     "assignSelf": "{user} назначил {entityType} {entity} на себя"
   },
@@ -479,7 +524,7 @@
       "Dr.": "Д-р."
     },
     "language": {
-      "af_ZA": "Африкаанс",
+      "af_ZA": "Африкаанс (язык юж.Африки)",
       "az_AZ": "Азербайджанский",
       "be_BY": "Белорусский",
       "bg_BG": "Болгарский",
@@ -574,7 +619,11 @@
       "isEmpty": "Пусто",
       "olderThanXDays": "Более давний чем Х дней",
       "afterXDays": "После X дней",
-      "nextMonth": "Следующий месяц"
+      "nextMonth": "Следующий месяц",
+      "currentFiscalYear": "Текущий фискальный год",
+      "lastFiscalYear": "Прошлый фискальный год",
+      "currentFiscalQuarter": "Текущий фискальный квартал",
+      "lastFiscalQuarter": "Прошлый фискальный квартал"
     },
     "searchRanges": {
       "is": "Является",
@@ -585,7 +634,9 @@
       "anyOf": "Любой из",
       "isNot": "Не",
       "isNotOneOf": "Ни один из",
-      "noneOf": "Ни один из"
+      "noneOf": "Ни один из",
+      "allOf": "Все из",
+      "any": "Любой"
     },
     "varcharSearchRanges": {
       "equals": "Равняется",
@@ -650,7 +701,7 @@
         "floatNone": "Расположение по умолчанию",
         "dragImageHere": "Перетащите изображение сюда",
         "selectFromFiles": "Выбрать из файлов",
-        "url": "URL изображения",
+        "url": "URL адрес изображения",
         "remove": "Удалить изображение"
       },
       "link": {
@@ -659,15 +710,15 @@
         "unlink": "Убрать ссылку",
         "edit": "Редактировать",
         "textToDisplay": "Отображаемый текст",
-        "url": "URL для перехода",
+        "url": "URL адрес для перехода",
         "openInNewWindow": "Открывать в новом окне"
       },
       "video": {
         "video": "Видео",
         "videoLink": "Ссылка на видео",
         "insert": "Вставить видео",
-        "url": "URL видео",
-        "providers": "(YouTube, Vimeo, Vine, Instagram или DailyMotion)"
+        "url": "URL адрес видео",
+        "providers": "(Ютуб, Вимео, Вине, Инстаграмм или ДейлиМотион)"
       },
       "table": {
         "table": "Таблица"
@@ -735,6 +786,17 @@
   "streamMessagesFemale": {
     "postTargetSelfAndOthers": "{user} оставила сообщение для {target} и для себя"
   },
+  "themes": {
+    "EspoRtl": "RTL Espo уровень регистровых передач",
+    "Espo": "Классический  Espo",
+    "Sakura": "Классический Sakura",
+    "EspoVertical": "Вертикальный Espo",
+    "SakuraVertical": "Вертикальный Sakura",
+    "Violet": "Классический Violet",
+    "VioletVertical": "Вертикальный Violet",
+    "Hazyblue": "Классический Hazyblue",
+    "HazyblueVertical": "Вертикальный Hazyblue"
+  },
   "durationUnits": {
     "d": "д",
     "h": "ч",
@@ -742,6 +804,7 @@
     "s": "с"
   },
   "listViewModes": {
-    "list": "Список"
+    "list": "Список",
+    "kanban": "Канбан"
   }
 }

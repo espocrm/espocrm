@@ -25,14 +25,15 @@
     "accountsTemplate": "Шаблон контрагентов",
     "usersTemplate": "Шаблон пользователей",
     "mailMergeOnlyWithAddress": "Пропустить записи без заполненного адреса",
-    "optedInCount": "Подписан"
+    "optedInCount": "Подписан",
+    "budgetCurrency": "Валюта бюджета"
   },
   "links": {
     "targetLists": "Списки целей",
     "excludingTargetLists": "Исключая списки целей",
     "accounts": "Контрагенты",
     "contacts": "Контакты",
-    "leads": "Кандидаты",
+    "leads": "Лид (потенциальный клиент)",
     "opportunities": "Сделки",
     "campaignLogRecords": "Журнал",
     "massEmails": "Массовые рассылки эл. писем",

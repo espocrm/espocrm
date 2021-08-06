@@ -1,12 +1,24 @@
 {
   "fields": {
     "urlToUse": "Įterpti kodą vietoj URL",
-    "campaign": "Kampanija"
+    "campaign": "Kampanija",
+    "action": "Veiksmas",
+    "message": "Žinutė"
   },
   "links": {
     "campaign": "Kampanija"
   },
   "labels": {
     "Create CampaignTrackingUrl": "Sukurkite stebėjimo URL"
+  },
+  "options": {
+    "action": {
+      "Redirect": "Peradresuoti",
+      "Show Message": "Rodyti pranešimą"
+    }
+  },
+  "tooltips": {
+    "url": "Paspaudus nuorodą gavėjas bus nukreiptas į šią vietą.",
+    "message": "Paspaudus nuorodą, gavėjui bus parodytas pranešimas. Palaikomas \"Markdown\"."
   }
 }

@@ -84,7 +84,6 @@
     "historyEntityList": "Vēstures vienību saraksts",
     "currencyFormat": "Valūtas formāts",
     "currencyDecimalPlaces": "Valūtas ciparu skaits aiz komata",
-    "aclStrictMode": "\"ACL Strict\" režīms",
     "followCreatedEntities": "Sekot izveidotajiem ierakstiem",
     "aclAllowDeleteCreated": "Ļaut noņemt izveidotos ierakstus",
     "adminNotifications": "Sistēmas paziņojumi administrēšanas panelī",
@@ -105,18 +104,37 @@
     "ldapPortalUserPortals": "Portāla lietotāju noklusētie portāli",
     "ldapPortalUserRoles": "Noklusējuma lomas portāla lietotājam",
     "addressCountryList": "Adreses vietņu automātiskās pabeigšanas saraksts",
-    "fiscalYearShift": "Fiskālā gada sākums"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Svētdiena",
-      "1": "Pirmdiena"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "Publicējumi",
-      "Status": "Statuss atjauninājumi",
-      "EmailReceived": "Saņemtie e-pasti"
-    }
+    "fiscalYearShift": "Fiskālā gada sākums",
+    "jobRunInParallel": "Paralēli darbvietu izpilde",
+    "jobMaxPortion": "Darbavietas Maksimālā porcija",
+    "jobPoolConcurrencyNumber": "Darbvietu kopfonda pieejamība Skaits",
+    "daemonInterval": "Demon intervāls",
+    "daemonMaxProcessNumber": "Demon maksimālais procesa numurs",
+    "daemonProcessTimeout": "Demona procesa laika ierobežojums",
+    "addressCityList": "Adrešu pilsēta automātiskās papildināšanas saraksts",
+    "addressStateList": "Adreses valsts automātiskās papildināšanas saraksts",
+    "cronDisabled": "Atslēgt Cron",
+    "maintenanceMode": "Uzturēšanas režīms",
+    "useWebSocket": "WebSocket izmantošana",
+    "emailNotificationsDelay": "E-pasta paziņojumu kavēšanās (sekundēs)",
+    "massEmailOpenTracking": "E-pasta atvēršanas izsekošana",
+    "passwordRecoveryDisabled": "Atslēgt paroles atgūšanu",
+    "passwordRecoveryForAdminDisabled": "Atslēgt paroles atgūšanu admin lietotājiem",
+    "passwordGenerateLength": "Ģenerēto paroļu garums",
+    "passwordStrengthLength": "Minimālais paroles garums",
+    "passwordStrengthLetterCount": "Parolē vajadzīgo burtu skaits",
+    "passwordStrengthNumberCount": "Parolei vajadzīgo ciparu skaits",
+    "passwordStrengthBothCases": "Parolei jāsatur gan lielie, gan mazie burti.",
+    "auth2FA": "Iespējot 2 faktoru autentifikāciju",
+    "auth2FAMethodList": "Pieejamās 2FA metodes",
+    "personNameFormat": "Personas vārda formāts",
+    "newNotificationCountInTitle": "Jaunā paziņojuma numura rādīšana lapas virsrakstā",
+    "massEmailVerp": "Izmantojiet VERP",
+    "emailAddressLookupEntityTypeList": "E-pasta adrešu meklēšanas darbības jomas",
+    "busyRangesEntityList": "Brīvo/aizņemto vienību saraksts",
+    "passwordRecoveryForInternalUsersDisabled": "Paroles atjaunošanas atspējošanas atspējošana iekšējiem lietotājiem",
+    "passwordRecoveryNoExposure": "Novērst e-pasta adreses atklāšanu paroles atgūšanas veidlapā",
+    "auth2FAForced": "Piespiest regulāros lietotājus iestatīt 2FA"
   },
   "tooltips": {
     "recordsPerPage": "Saraksta skatījumos sākotnēji parādāmo ierakstu skaits.",
@@ -158,7 +176,37 @@
     "cleanupDeletedRecords": "Noņemtie ieraksti pēc brīža tiks izdzēsti no datu bāzes.",
     "ldapPortalUserLdapAuth": "Atļaut portāla lietotājiem izmantot Espo autentifikācijas vietā LDAP autentifikāciju.",
     "ldapPortalUserPortals": "Noklusējuma portāli izveidotā portāla lietotājam",
-    "ldapPortalUserRoles": "Noklusējuma lomas izveidotā portāla lietotājam"
+    "ldapPortalUserRoles": "Noklusējuma lomas izveidotā portāla lietotājam",
+    "jobRunInParallel": "Uzdevumi tiks izpildīti paralēlos procesos.",
+    "jobPoolConcurrencyNumber": "Maksimālais vienlaicīgi darbojošos procesu skaits.",
+    "jobMaxPortion": "Maksimālais apstrādāto darbvietu skaits vienā izpildījumā.",
+    "daemonInterval": "Intervāls starp procesu cron palaišanas reizēm sekundēs.",
+    "daemonMaxProcessNumber": "Maksimālais vienlaicīgi palaisto cron procesu skaits.",
+    "daemonProcessTimeout": "Maksimālais izpildes laiks (sekundēs), kas piešķirts vienam cron procesam.",
+    "cronDisabled": "Cron netiks palaists.",
+    "maintenanceMode": "Sistēmai var piekļūt tikai administratori.",
+    "ldapAccountCanonicalForm": "Konta kanoniskās formas veids. Ir 4 iespējas:\n\n- \"Dn\" - forma formātā \"CN=tester,OU=espocrm,DC=test, DC=lan\".\n\n- \"Lietotājvārds\" - forma \"tester\".\n\n- \"Backslash\" - formā \"COMPANY\\tester\".\n\n- \"Principal\" - forma \"tester@company.com\".",
+    "massEmailVerp": "Mainīgs aploksnes atgriešanās ceļš. Labākai atpakaļ saņemto ziņojumu apstrādei. Pārliecinieties, ka jūsu SMTP pakalpojumu sniedzējs to atbalsta.",
+    "displayListViewRecordCount": "Saraksta skatā tiks parādīts kopējais ierakstu skaits.",
+    "currencyList": "Kādas valūtas būs pieejamas sistēmā.",
+    "activitiesEntityList": "Kādi ieraksti būs pieejami panelī Darbības.",
+    "historyEntityList": "Kādi ieraksti būs pieejami vēstures panelī.",
+    "calendarEntityList": "Kādi ieraksti būs pieejami kalendārā.",
+    "addressStateList": "Valsts ieteikumi par adreses laukiem.",
+    "addressCityList": "Pilsētas ieteikumi adrešu laukiem.",
+    "addressCountryList": "Valstu ieteikumi adrešu laukiem.",
+    "exportDisabled": "Lietotāji nevarēs eksportēt ierakstus. Tas būs atļauts tikai administratoram.",
+    "globalSearchEntityList": "Kādus ierakstus var meklēt, izmantojot globālo meklēšanu.",
+    "siteUrl": "Šī EspoCRM gadījuma URL. Tas jāmaina, ja pārceļat uz citu domēnu.",
+    "useCache": "Nav ieteicams atslēgt, ja vien tas nav paredzēts izstrādes nolūkos.",
+    "useWebSocket": "WebSocket nodrošina divvirzienu interaktīvu saziņu starp serveri un pārlūkprogrammu. Serverī nepieciešams iestatīt WebSocket dēmonu. Lai iegūtu vairāk informācijas, skatiet dokumentāciju.",
+    "passwordRecoveryForInternalUsersDisabled": "Tikai portāla lietotāji varēs atgūt paroli.",
+    "passwordRecoveryNoExposure": "Nebūs iespējams noteikt, vai konkrētā e-pasta adrese ir reģistrēta sistēmā.",
+    "emailAddressLookupEntityTypeList": "E-pasta adreses automātiskajai papildināšanai.",
+    "emailNotificationsDelay": "Ziņojumu var rediģēt norādītajā laikā pirms paziņojuma nosūtīšanas.",
+    "outboundEmailFromAddress": "Sistēmas e-pasta adrese.",
+    "smtpServer": "Ja tas ir tukšs, tiks izmantots grupas e-pasta konts ar atbilstošo e-pasta adresi.",
+    "busyRangesEntityList": "Kas tiks ņemts vērā, rādot aizņemtā laika diapazonus plānotājā un laika grafikā."
   },
   "labels": {
     "System": "Sistēma",
@@ -173,9 +221,26 @@
     "Connecting": "Savienojas…",
     "Activities": "Aktivitātes",
     "Admin Notifications": "Administratora paziņojumi",
-    "Search": "Meklēt"
+    "Search": "Meklēt",
+    "Misc": "Dažādi",
+    "Passwords": "Paroles",
+    "2-Factor Authentication": "2 faktoru autentifikācija",
+    "Group Tab": "Grupas cilne"
   },
   "messages": {
     "ldapTestConnection": "Savienojums sekmīgi izveidots."
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Post": "Publicējumi",
+      "Status": "Statuss atjauninājumi",
+      "EmailReceived": "Saņemtie e-pasti"
+    },
+    "personNameFormat": {
+      "firstLast": "Pirmais Pēdējais",
+      "lastFirst": "Pēdējais Pirmais",
+      "firstMiddleLast": "Pirmais vidējais uzvārds",
+      "lastFirstMiddle": "Uzvārds Pirmais Vidējais"
+    }
   }
 }

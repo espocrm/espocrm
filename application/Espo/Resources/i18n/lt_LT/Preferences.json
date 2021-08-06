@@ -36,7 +36,9 @@
     "followCreatedEntityTypeList": "Automatiškai sekti specialių vedinių tipų sukurtus įrašus",
     "emailUseExternalClient": "Naudokite išorinį el. Pašto klientą",
     "scopeColorsDisabled": "Išjunkite spalvų apimtį",
-    "tabColorsDisabled": "Išjungti kortelių spalvas"
+    "tabColorsDisabled": "Išjungti kortelių spalvas",
+    "assignmentNotificationsIgnoreEntityTypeList": "Pranešimai apie paskyrimą programėlėje",
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Pranešimai apie paskyrimą el. paštu"
   },
   "options": {
     "weekStart": {

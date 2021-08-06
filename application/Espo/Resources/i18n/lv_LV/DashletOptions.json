@@ -15,7 +15,8 @@
     "sortBy": "Kārtot (lauks)",
     "sortDirection": "Kārtot (virziens)",
     "expandedLayout": "Izkārtojums",
-    "dateFilter": "Datumu filtrs"
+    "dateFilter": "Datumu filtrs",
+    "skipOwn": "Neparādiet savus ierakstus"
   },
   "options": {
     "mode": {
@@ -29,5 +30,8 @@
   },
   "messages": {
     "selectEntityType": "Atlasīt vienības tipu minipaneļa opcijās."
+  },
+  "tooltips": {
+    "skipOwn": "Jūsu lietotāja konta veiktās darbības netiks rādītas."
   }
 }

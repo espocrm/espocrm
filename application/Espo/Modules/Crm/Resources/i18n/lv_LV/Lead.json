@@ -29,7 +29,8 @@
     "acceptanceStatus": "Akcepta statuss",
     "opportunityAmountCurrency": "Iespēju summas valūta",
     "acceptanceStatusMeetings": "Akcepta statuss (tikšanās)",
-    "acceptanceStatusCalls": "Akcepta statuss (zvani)"
+    "acceptanceStatusCalls": "Akcepta statuss (zvani)",
+    "convertedAt": "Pārveidots pie"
   },
   "links": {
     "targetLists": "Mērķa adresātu saraksti",

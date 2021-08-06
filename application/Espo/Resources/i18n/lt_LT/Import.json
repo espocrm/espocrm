@@ -52,7 +52,10 @@
     "Timezone": "Laiko zona",
     "Remove Import Log": "Pašalinti importo žurnalą",
     "New Import": "Naujas importas",
-    "Import Results": "Importuoti rezultatus"
+    "Import Results": "Importuoti rezultatus",
+    "Silent Mode": "Tylusis režimas",
+    "New import with same params": "Naujas importas su tais pačiais parametrais",
+    "Run Manually": "Paleisti rankiniu būdu"
   },
   "messages": {
     "utf8": "Turėtų būti užkoduotas UTF-8",
@@ -62,8 +65,8 @@
     "removeDuplicates": "Tai visam laikui pašalins visus importuotus įrašus, kurie buvo pripažinti kaip pasikartojantys.",
     "confirmRevert": "Tai pašalins visus importuotus įrašus visam laikui. Ar tu tuo tikras?",
     "confirmRemoveDuplicates": "Tai visam laikui pašalins visus importuotus įrašus, kurie buvo pripažinti kaip pasikartojantys. Ar tu tuo tikras?",
-    "confirmRemoveImportLog": "Tai pašalins importo žurnalą. Visi importuoti įrašai bus saugomi. Jūs negalėsite sugrąžinti importo rezultatų. Ar tu esi įsitikinęs?",
-    "removeImportLog": "Tai pašalins importo žurnalą. Visi importuoti įrašai bus saugomi. Naudok jį, jei esate tikri, kad importas yra gerai."
+    "removeImportLog": "Tai pašalins importo žurnalą. Visi importuoti įrašai bus saugomi. Naudok jį, jei esate tikri, kad importas yra gerai.",
+    "confirmRemoveImportLog": "Taip bus pašalintas importo žurnalas. Visi importuoti įrašai bus išsaugoti. Negalėsite grąžinti importo rezultatų. Ar esate tikri?"
   },
   "fields": {
     "file": "Failas",
@@ -77,7 +80,24 @@
     "status": {
       "Failed": "Nepavyko",
       "In Process": "Vyksta",
-      "Complete": "Įvykdyta"
+      "Complete": "Įvykdyta",
+      "Standby": "Budėjimo režimas",
+      "Pending": "Laukiama"
+    },
+    "personNameFormat": {
+      "f l": "Pirmas Paskutinis",
+      "l f": "Paskutinis Pirmas",
+      "f m l": "Pirmas Vidurinis Paskutinis",
+      "l f m": "Pavardė Pirmas Vidurys",
+      "l, f": "Paskutinis, Pirmasis"
     }
+  },
+  "strings": {
+    "commandToRun": "Vykdoma komanda (iš CLI)",
+    "saveAsDefault": "Išsaugoti kaip numatytąjį"
+  },
+  "tooltips": {
+    "manualMode": "Jei pažymėta, turėsite paleisti importą rankiniu būdu iš CLI. Komanda bus rodoma nustačius importą.",
+    "silentMode": "Dauguma po išsaugojimo sukurtų scenarijų bus praleisti, srauto pastabos nebus sukurtos. Importas vyks greičiau."
   }
 }

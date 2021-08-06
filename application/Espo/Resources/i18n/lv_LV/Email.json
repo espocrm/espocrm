@@ -47,6 +47,7 @@
     "bccEmailAddresses": "Diskrētā kopija (BCC) uz e-pasta adresēm",
     "replyToEmailAddresses": "Atbildēt uz e-pasta adresi",
     "personStringData": "Peronas teksta dati",
+    "fromEmailAddress": "No adreses (saite)",
     "replyToName": "Vārds Atbildēt",
     "replyToAddress": "Atbildes adrese"
   },
@@ -101,13 +102,19 @@
     "Move to Folder": "Pārvietot uz mapi",
     "Filters": "Filtri",
     "Folders": "Mapes",
-    "View Users": "Skatīt lietotājus"
+    "View Users": "Skatīt lietotājus",
+    "No Subject": "Nav tēmas",
+    "Insert Field": "Ievietot lauku"
   },
   "messages": {
     "testEmailSent": "Nosūtīts testa e-pasts",
     "emailSent": "Nosūtīts e-pasts",
     "savedAsDraft": "Saglabāts kā melnraksts",
-    "confirmInsertTemplate": "E-pasta pamatteksts tiks zaudēts. Vai tiešām vēlaties ievietot veidni?"
+    "confirmInsertTemplate": "E-pasta pamatteksts tiks zaudēts. Vai tiešām vēlaties ievietot veidni?",
+    "noSmtpSetup": "SMTP nav konfigurēts: {link}",
+    "sendConfirm": "Nosūtīt e-pastu?",
+    "removeSelectedRecordsConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst atlasītos e-pasta ziņojumus?\n\nTie tiks noņemti arī citiem lietotājiem.",
+    "removeRecordConfirmation": "Vai esat pārliecināts, ka vēlaties dzēst e-pastu?\n\nTas tiks noņemts arī citiem lietotājiem."
   },
   "presetFilters": {
     "sent": "Nosūtīts",
@@ -125,5 +132,8 @@
     "moveToTrash": "Pārvietot uz atkritni",
     "moveToFolder": "Pārvietot uz mapi",
     "retrieveFromTrash": "Izgūt no atkritnes"
+  },
+  "strings": {
+    "sendingFailed": "E-pasta nosūtīšana neizdevās"
   }
 }

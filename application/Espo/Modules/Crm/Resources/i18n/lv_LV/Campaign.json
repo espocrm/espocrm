@@ -25,7 +25,8 @@
     "accountsTemplate": "Kontu veidne",
     "usersTemplate": "Lietotāju veidne",
     "mailMergeOnlyWithAddress": "Izlaist ierakstus bez aizpildītas adreses",
-    "optedInCount": "Izvēlēts"
+    "optedInCount": "Izvēlēts",
+    "budgetCurrency": "Budžeta valūta"
   },
   "links": {
     "targetLists": "Mērķa saraksts",

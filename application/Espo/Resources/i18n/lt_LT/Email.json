@@ -43,7 +43,11 @@
     "isSystem": "Ar sistema",
     "toEmailAddresses": "El. Pašto adresai",
     "bccEmailAddresses": "BCC el. Pašto adresai",
-    "replyToEmailAddresses": "Atsakymas į el. Pašto adresus"
+    "replyToEmailAddresses": "Atsakymas į el. Pašto adresus",
+    "personStringData": "Asmens eilutės duomenys",
+    "fromEmailAddress": "Iš Adresas (nuoroda)",
+    "replyToName": "Atsakyti į pavadinimą",
+    "replyToAddress": "Atsakymo į adresą adresas"
   },
   "links": {
     "replied": "Atsakyta",
@@ -95,14 +99,20 @@
     "Retrieve from Trash": "Gražinti iš šiukšlinės",
     "Move to Folder": "Perkelti į aplanką",
     "Filters": "Filtrai",
-    "Folders": "Aplankai"
+    "Folders": "Aplankai",
+    "View Users": "Peržiūrėti naudotojus",
+    "No Subject": "Nėra temos",
+    "Insert Field": "Įterpti lauką"
   },
   "messages": {
-    "noSmtpSetup": "Nėra SMTP nustatymų. {link}.",
     "testEmailSent": "Bandomasis el. laiškas išsiųstas",
     "emailSent": "El. laiškas yra išsiųstas",
     "savedAsDraft": "Juodraštis šsaugotas",
-    "confirmInsertTemplate": "El. Paštas bus prarastas. Ar tikrai norite įterpti šabloną?"
+    "confirmInsertTemplate": "El. Paštas bus prarastas. Ar tikrai norite įterpti šabloną?",
+    "noSmtpSetup": "SMTP nėra sukonfigūruotas: {link}",
+    "sendConfirm": "Siųsti el. laišką?",
+    "removeSelectedRecordsConfirmation": "Ar tikrai norite pašalinti pasirinktus el. laiškus?\n\nJie bus pašalinti ir kitiems naudotojams.",
+    "removeRecordConfirmation": "Ar tikrai norite pašalinti el. laišką?\n\nJis bus pašalintas ir kitiems naudotojams."
   },
   "presetFilters": {
     "sent": "Išsiųsta",
@@ -120,5 +130,8 @@
     "moveToTrash": "Perkelti į šiukšlinę",
     "moveToFolder": "Perkelti į aplanką",
     "retrieveFromTrash": "Iškelti iš šiukšlinės"
+  },
+  "strings": {
+    "sendingFailed": "Nepavyko išsiųsti el. laiško"
   }
 }

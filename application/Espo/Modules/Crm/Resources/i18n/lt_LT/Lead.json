@@ -29,7 +29,8 @@
     "acceptanceStatus": "Priėmimo statusas",
     "opportunityAmountCurrency": "Galimybių suma Valiuta",
     "acceptanceStatusMeetings": "Priėmimo statusas (susirinkimai)",
-    "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)"
+    "acceptanceStatusCalls": "Priėmimo statusas (skambučiai)",
+    "convertedAt": "Konvertuota į"
   },
   "links": {
     "targetLists": "Adresatų sarašai",

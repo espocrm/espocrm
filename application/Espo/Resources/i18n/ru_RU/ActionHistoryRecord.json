@@ -7,13 +7,14 @@
     "targetType": "Тип цели",
     "authToken": "Токен аутентификации",
     "ipAddress": "IP адрес",
-    "authLogRecord": "Запись Лога Аутентификации"
+    "authLogRecord": "Запись журнала Аутентификации",
+    "userType": "Тип пользователя"
   },
   "links": {
     "authToken": "Токен аутентификации",
     "user": "Пользователь",
     "target": "Цель",
-    "authLogRecord": "Запись Лога Аутентификации"
+    "authLogRecord": "Запись журнал Аутентификации"
   },
   "presetFilters": {
     "onlyMy": "Только мои"

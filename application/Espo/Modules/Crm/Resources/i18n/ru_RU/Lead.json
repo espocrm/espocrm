@@ -29,7 +29,8 @@
     "acceptanceStatus": "Статус принятия",
     "opportunityAmountCurrency": "Валюта суммы сделки",
     "acceptanceStatusMeetings": "Статус принятия (Встречи)",
-    "acceptanceStatusCalls": "Статус принятия (Звонки)"
+    "acceptanceStatusCalls": "Статус принятия (Звонки)",
+    "convertedAt": "Конвертирован в"
   },
   "links": {
     "targetLists": "Списки целей",

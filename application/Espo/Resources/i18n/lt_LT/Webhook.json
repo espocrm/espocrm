@@ -1,1 +1,16 @@
-{}
+{
+  "labels": {
+    "Create Webhook": "Sukurti Webhook"
+  },
+  "fields": {
+    "event": "Renginys",
+    "isActive": "Yra aktyvus",
+    "user": "API naudotojas",
+    "entityType": "Subjekto tipas",
+    "field": "Laukas",
+    "secretKey": "Slaptasis raktas"
+  },
+  "links": {
+    "user": "Vartotojas"
+  }
+}

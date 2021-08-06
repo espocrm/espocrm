@@ -5,7 +5,10 @@
     "dateEnd": "Дата окончания",
     "duration": "Длительность",
     "status": "Статус",
-    "reminders": "Напоминания"
+    "reminders": "Напоминания",
+    "dateStartDate": "Дата начала (весь день)",
+    "dateEndDate": "Дата окончания (весь день)",
+    "isAllDay": "Весь день"
   },
   "links": {
     "parent": "Источник"
@@ -20,6 +23,7 @@
   "labels": {
     "Create {entityType}": "Создать {entityTypeTranslated}",
     "Schedule {entityType}": "Запланировать {entityTypeTranslated}",
+    "Log {entityType}": "Журнал {entityTypeTranslated}",
     "Set Held": "Состоялось",
     "Set Not Held": "Не состоялось"
   },
