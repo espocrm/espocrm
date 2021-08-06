@@ -55,8 +55,6 @@ class Metadata
 
     private $customPath = 'custom/Espo/Custom/Resources/metadata';
 
-    private $moduleList = null;
-
     private $deletedData = [];
 
     private $changedData = [];
@@ -560,11 +558,6 @@ class Metadata
         return (bool) $result;
     }
 
-    private function loadModuleList(): void
-    {
-        $this->moduleList = $this->module->getOrderedList();
-    }
-
     /**
      * Get a module list.
      *
@@ -572,11 +565,7 @@ class Metadata
      */
     public function getModuleList(): array
     {
-        if (!isset($this->moduleList)) {
-            $this->loadModuleList();
-        }
-
-        return $this->moduleList;
+        return $this->module->getOrderedList();
     }
 
     /**
@@ -590,6 +579,5 @@ class Metadata
     private function clearVars(): void
     {
         $this->data = null;
-        $this->moduleList = null;
     }
 }

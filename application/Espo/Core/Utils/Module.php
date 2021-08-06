@@ -50,6 +50,8 @@ class Module
 
     private $internalList = null;
 
+    private $orderedList = null;
+
     private $cacheKey = 'modules';
 
     private $internalPath = 'application/Espo/Modules';
@@ -118,6 +120,10 @@ class Module
      */
     public function getOrderedList(): array
     {
+        if ($this->orderedList !== null) {
+            return $this->orderedList;
+        }
+
         $moduleNameList = $this->getList();
 
         $modulesToSort = [];
@@ -142,7 +148,9 @@ class Module
             $modulesToSort
         );
 
-        return array_keys($modulesToSort);
+        $this->orderedList = array_keys($modulesToSort);
+
+        return $this->orderedList;
     }
 
     /**
@@ -197,6 +205,7 @@ class Module
         $this->data = null;
         $this->list = null;
         $this->internalList = null;
+        $this->orderedList = null;
     }
 
     private function loadData(): array
