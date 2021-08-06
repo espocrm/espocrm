@@ -248,7 +248,7 @@ class Queue
         $this->send($webhook, $dataList, $actualItemList);
     }
 
-    private function prepareItemData(WebhookQueueItem $item, User $user, array $forbiddenAttributeList): ?stdClass
+    private function prepareItemData(WebhookQueueItem $item, ?User $user, array $forbiddenAttributeList): ?stdClass
     {
         $targetType = $item->get('targetType');
         $target = null;
