@@ -29,28 +29,23 @@
 
 namespace Espo\Tools\Pdf\Tcpdf;
 
-use Espo\Core\{
-    Utils\Config,
-    Htmlizer\Htmlizer as Htmlizer,
-    Htmlizer\Factory as HtmlizerFactory,
-};
-
-use Espo\{
-    ORM\Entity,
-    Tools\Pdf\Template,
-    Tools\Pdf\Data,
-    Tools\Pdf\Tcpdf\Tcpdf,
-};
+use Espo\Core\Utils\Config;
+use Espo\Core\Htmlizer\Htmlizer as Htmlizer;
+use Espo\Core\Htmlizer\Factory as HtmlizerFactory;
+use Espo\ORM\Entity;
+use Espo\Tools\Pdf\Template;
+use Espo\Tools\Pdf\Data;
+use Espo\Tools\Pdf\Tcpdf\Tcpdf;
 
 class EntityProcessor
 {
-    protected $fontFace = 'freesans';
+    private $fontFace = 'freesans';
 
-    protected $fontSize = 12;
+    private $fontSize = 12;
 
-    protected $config;
+    private $config;
 
-    protected $htmlizerFactory;
+    private $htmlizerFactory;
 
     public function __construct(Config $config, HtmlizerFactory $htmlizerFactory)
     {
@@ -67,6 +62,7 @@ class EntityProcessor
             $this->htmlizerFactory->createNoAcl();
 
         $fontFace = $this->config->get('pdfFontFace', $this->fontFace);
+        $fontSize = $this->config->get('pdfFontSize', $this->fontSize);
 
         if ($template->getFontFace()) {
             $fontFace = $template->getFontFace();
@@ -78,7 +74,7 @@ class EntityProcessor
             $pdf->SetTitle($title);
         }
 
-        $pdf->setFont($fontFace, '', $this->fontSize, '', true);
+        $pdf->setFont($fontFace, '', $fontSize, '', true);
 
         $pdf->setAutoPageBreak(true, $template->getBottomMargin());
 
@@ -136,7 +132,7 @@ class EntityProcessor
         $pdf->writeHTML($htmlBody, true, false, true, false, '');
     }
 
-    protected function render(Htmlizer $htmlizer, Entity $entity, string $template, array $additionalData): string
+    private function render(Htmlizer $htmlizer, Entity $entity, string $template, array $additionalData): string
     {
         $html = $htmlizer->render(
             $entity,
@@ -160,7 +156,7 @@ class EntityProcessor
         return $html;
     }
 
-    protected function composeBarcodeTag(array $data): string
+    private function composeBarcodeTag(array $data): string
     {
         $value = $data['value'] ?? null;
 
@@ -202,7 +198,8 @@ class EntityProcessor
                 ],
                 'N',
             ];
-        } else {
+        }
+        else {
             $function = 'write1DBarcode';
 
             $params = [

@@ -29,18 +29,16 @@
 
 namespace Espo\Tools\Pdf\Tcpdf;
 
-use Espo\{
-    ORM\Collection,
-    Tools\Pdf\CollectionPrinter,
-    Tools\Pdf\Template,
-    Tools\Pdf\Contents,
-    Tools\Pdf\Data,
-    Tools\Pdf\Tcpdf\Tcpdf,
-};
+use Espo\ORM\Collection;
+use Espo\Tools\Pdf\CollectionPrinter;
+use Espo\Tools\Pdf\Template;
+use Espo\Tools\Pdf\Contents;
+use Espo\Tools\Pdf\Data;
+use Espo\Tools\Pdf\Tcpdf\Tcpdf;
 
 class TcpdfCollectionPrinter implements CollectionPrinter
 {
-    protected $entityProcessor;
+    private $entityProcessor;
 
     public function __construct(EntityProcessor $entityProcessor)
     {
