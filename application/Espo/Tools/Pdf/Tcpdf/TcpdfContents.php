@@ -29,18 +29,30 @@
 
 namespace Espo\Tools\Pdf\Tcpdf;
 
-use Espo\{
-    Tools\Pdf\Contents,
-    Tools\Pdf\Tcpdf\Tcpdf,
-};
+use Espo\Tools\Pdf\Contents;
+use Espo\Tools\Pdf\Tcpdf\Tcpdf;
+
+use Psr\Http\Message\StreamInterface;
+
+use GuzzleHttp\Psr7\Stream;
 
 class TcpdfContents implements Contents
 {
-    protected $pdf;
+    private $pdf;
 
     public function __construct(Tcpdf $pdf)
     {
         $this->pdf = $pdf;
+    }
+
+    public function getStream(): StreamInterface
+    {
+        $resource = fopen('php://temp', 'r+');
+
+        fwrite($resource, $this->getString());
+        rewind($resource);
+
+        return new Stream($resource);
     }
 
     public function getString(): string
