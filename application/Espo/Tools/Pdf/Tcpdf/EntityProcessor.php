@@ -73,8 +73,9 @@ class EntityProcessor
         }
 
         if ($template->hasTitle()) {
-            // @todo Support placeholders.
-            $pdf->SetTitle($template->getTitle());
+            $title = $this->replacePlaceholders($template->getTitle(), $entity);
+
+            $pdf->SetTitle($title);
         }
 
         $pdf->setFont($fontFace, '', $this->fontSize, '', true);
@@ -229,5 +230,20 @@ class EntityProcessor
         $paramsString = urlencode(json_encode($params));
 
         return "<tcpdf method=\"{$function}\" params=\"{$paramsString}\" />";
+    }
+
+    private function replacePlaceholders(string $string, Entity $entity): string
+    {
+        $newString = $string;
+
+        $attributeList = ['name'];
+
+        foreach ($attributeList as $attribute) {
+            $value = (string) ($entity->get($attribute) ?? '');
+
+            $newString = str_replace('{$' . $attribute . '}', $value, $newString);
+        }
+
+        return $newString;
     }
 }
