@@ -54,9 +54,12 @@ class Application
 
     public function __construct()
     {
-        date_default_timezone_set('UTC');
-
         $this->initContainer();
+
+        // Get the time-zone from Config
+        $timezone = $this->getConfig()->get('timeZone');
+        date_default_timezone_set((isset($timezone))? $timezone:'UTC');
+
         $this->initAutoloads();
         $this->initPreloads();
     }
