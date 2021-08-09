@@ -29,22 +29,26 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Container,
-    DataManager,
-    Utils\AdminNotificationManager,
-    Utils\SystemRequirements,
-    Utils\ScheduledJob,
-    Upgrades\UpgradeManager,
-    Exceptions\Forbidden,
-    Api\Request,
-};
+use Espo\Core\Exceptions\Forbidden;
+
+use Espo\Core\Container;
+use Espo\Core\DataManager;
+use Espo\Core\Api\Request;
+
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\AdminNotificationManager;
+use Espo\Core\Utils\SystemRequirements;
+use Espo\Core\Utils\ScheduledJob;
+
+use Espo\Core\Upgrades\UpgradeManager;
 
 use Espo\Entities\User;
 
 class Admin
 {
     private $container;
+
+    private $config;
 
     private $user;
 
@@ -58,6 +62,7 @@ class Admin
 
     public function __construct(
         Container $container,
+        Config $config,
         User $user,
         AdminNotificationManager $adminNotificationManager,
         SystemRequirements $systemRequirements,
@@ -65,6 +70,7 @@ class Admin
         DataManager $dataManager
     ) {
         $this->container = $container;
+        $this->config = $config;
         $this->user = $user;
         $this->adminNotificationManager = $adminNotificationManager;
         $this->systemRequirements = $systemRequirements;
