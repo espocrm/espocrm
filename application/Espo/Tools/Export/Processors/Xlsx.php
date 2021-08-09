@@ -850,7 +850,7 @@ class Xlsx implements Processor
             return $value;
         }
 
-        if (in_array($value, ['+', '-', '@', '='])) {
+        if (in_array($value[0], ['+', '-', '@', '='])) {
             return "'" . $value;
         }
 
