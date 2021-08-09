@@ -2,6 +2,9 @@
     "fields": {
         "users": {
             "readOnly": true
+        },
+        "messageId": {
+            "readOnly": true
         }
     },
     "links": {

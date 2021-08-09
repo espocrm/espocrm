@@ -30,12 +30,11 @@
 namespace Espo\Entities;
 
 use Espo\Core\Utils\Util;
-
+use Espo\Core\ORM\Entity;
 use Espo\Entities\Attachment;
-
 use Espo\Services\Email as EmailService;
 
-class Email extends \Espo\Core\ORM\Entity
+class Email extends Entity
 {
     public const ENTITY_TYPE = 'Email';
 
@@ -342,5 +341,10 @@ class Email extends \Espo\Core\ORM\Entity
     public function setDummyMessageId(): void
     {
         $this->set('messageId', 'dummy:' . Util::generateId());
+    }
+
+    public function getMessageId(): ?string
+    {
+        return $this->get('messageId');
     }
 }

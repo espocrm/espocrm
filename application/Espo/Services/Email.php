@@ -284,6 +284,7 @@ class Email extends Record implements
 
         if ($repliedMessageId) {
             $message->getHeaders()->addHeaderLine('In-Reply-To', $repliedMessageId);
+            $message->getHeaders()->addHeaderLine('References', $repliedMessageId);
         }
 
         try {
@@ -980,6 +981,7 @@ class Email extends Record implements
             return null;
         }
 
+        /** @var EmailEntity $replied */
         $replied = $this->entityManager
             ->getRDBRepository('Email')
             ->select(['messageId'])
@@ -992,6 +994,6 @@ class Email extends Record implements
             return null;
         }
 
-        return $replied->get('messageId');
+        return $replied->getMessageId();
     }
 }
