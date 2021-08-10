@@ -36,6 +36,8 @@ use Espo\Core\Utils\Config\ConfigWriter;
 
 use Espo\ORM\EntityManager;
 
+use Throwable;
+
 class AfterUpgrade
 {
     public function run(Container $container): void
@@ -51,10 +53,14 @@ class AfterUpgrade
         $this->migrateEmailAccountFolders('EmailAccount', $container->get('entityManager'));
         $this->migrateEmailAccountFolders('InboundEmail', $container->get('entityManager'));
 
-        $this->updateConfig(
-            $container->get('config'),
-            $container->get('injectableFactory')->create(ConfigWriter::class)
-        );
+
+        try {
+            $this->updateConfig(
+                $container->get('config'),
+                $container->get('injectableFactory')->create(ConfigWriter::class)
+            );
+        }
+        catch (Throwable $e) {}
     }
 
     protected function updateTemplates($entityManager)
@@ -74,7 +80,7 @@ class AfterUpgrade
             $template->set('body', $body);
             $template->set('header', null);
 
-            $entityManager->saveEntity($template);
+            $entityManager->saveEntity($template, ['skipHooks' => true]);
         }
     }
 
