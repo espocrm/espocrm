@@ -42,6 +42,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
             if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
                 var body = (this.model.get('body') || '').replace(/\n/g, '<br>');
+                
                 this.model.set('body', body);
                 this.model.set('isHtml', true);
             }
@@ -53,28 +54,32 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
             if (!this.options.signatureDisabled && this.hasSignature()) {
                 var addSignatureMethod = 'prependSignature';
+
                 if (this.options.appendSignature) {
                     addSignatureMethod = 'appendSignature';
                 }
+
                 var body = this[addSignatureMethod](this.model.get('body') || '', this.model.get('isHtml'));
+
                 this.model.set('body', body);
             }
 
             this.isBodyChanged = false;
 
-            this.listenTo(this.model, 'change:body', function () {
+            this.listenTo(this.model, 'change:body', () => {
                 this.isBodyChanged = true;
-            }, this);
+            });
 
             if (!this.options.removeAttachmentsOnSelectTemplate) {
                 this.initialAttachmentsIds = this.model.get('attachmentsIds') || [];
                 this.initialAttachmentsNames = this.model.get('attachmentsNames') || {};
             }
 
-            this.listenTo(this.model, 'insert-template', function (data) {
+            this.listenTo(this.model, 'insert-template', (data) => {
                 var body = this.model.get('body') || '';
 
                 var bodyPlain = body.replace(/<br\s*\/?>/mg, '');
+
                 bodyPlain = bodyPlain.replace(/<\/p\s*\/?>/mg, '');
                 bodyPlain = bodyPlain.replace(/ /g, '');
                 bodyPlain = bodyPlain.replace(/\n/g, '');
@@ -92,11 +97,12 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
                     }, function () {
                         this.insertTemplate(data);
                     }, this);
-                } else {
+                }
+                else {
                     this.insertTemplate(data);
                 }
 
-            }, this);
+            });
 
             if (this.options.selectTemplateDisabled) {
                 this.hideField('selectTemplate');
@@ -105,12 +111,14 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
         insertTemplate: function (data) {
             var body = data.body;
+
             if (this.hasSignature()) {
                 body = this.appendSignature(body || '', data.isHtml);
             }
 
             if (this.initialBody && !this.isBodyChanged) {
                 var initialBody = this.initialBody;
+
                 if (data.isHtml !== this.initialIsHtml) {
                     if (data.isHtml) {
                         initialBody = this.plainToHtml(initialBody);
@@ -132,14 +140,15 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
             this.model.set('body', body);
 
             if (!this.options.removeAttachmentsOnSelectTemplate) {
-                this.initialAttachmentsIds.forEach(function (id) {
+                this.initialAttachmentsIds.forEach((id) => {
                     if (data.attachmentsIds) {
                         data.attachmentsIds.push(id);
                     }
+
                     if (data.attachmentsNames) {
                         data.attachmentsNames[id] = this.initialAttachmentsNames[id] || id;
                     }
-                }, this);
+                });
             }
 
             this.model.set({
@@ -153,29 +162,33 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
         prependSignature: function (body, isHtml) {
             if (isHtml) {
                 var signature = this.getSignature();
+
                 if (body) {
-                    signature += '<br>';
+                    signature += '';
                 }
-                body = '<p><br></p><br>' + signature + body;
-            } else {
-                var signature = this.getPlainTextSignature();
-                if (body) {
-                    signature += '\n';
-                }
-                body = '\n\n' + signature + body;
+
+                return'<p><br></p>' + signature + body;
             }
-            return body;
+
+            var signature = this.getPlainTextSignature();
+
+            if (body) {
+                signature += '\n';
+            }
+
+            return '\n\n' + signature + body;
         },
 
         appendSignature: function (body, isHtml) {
             if (isHtml) {
                 var signature = this.getSignature();
-                body = body + '<p><br></p>' + signature;
-            } else {
-                var signature = this.getPlainTextSignature();
-                body = body + '\n\n' + signature;
+
+                return  body + '<p><br></p>' + signature;
             }
-            return body;
+
+            var signature = this.getPlainTextSignature();
+
+            return body + '\n\n' + signature;
         },
 
         hasSignature: function () {
@@ -188,14 +201,16 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
         getPlainTextSignature: function () {
             var value = this.getSignature().replace(/<br\s*\/?>/mg, '\n');
+
             value = $('<div>').html(value).text();
+
             return value;
         },
 
         afterSave: function () {
             Dep.prototype.afterSave.call(this);
 
-            if (/*this.isNew &&*/ this.isSending && this.model.get('status') === 'Sent') {
+            if (this.isSending && this.model.get('status') === 'Sent') {
                 Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
             }
         },
@@ -209,6 +224,7 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
             model.set('status', 'Draft');
 
             var subjectView = this.getFieldView('subject');
+
             if (subjectView) {
                 subjectView.fetchToModel();
                 if (!model.get('name')) {
@@ -221,11 +237,13 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
         htmlToPlain: function (text) {
             text = text || '';
+
             var value = text.replace(/<br\s*\/?>/mg, '\n');
 
             value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
 
             var $div = $('<div>').html(value);
+
             $div.find('style').remove();
             $div.find('link[ref="stylesheet"]').remove();
 
@@ -236,13 +254,14 @@ define('views/email/record/compose', ['views/record/edit', 'views/email/record/d
 
         plainToHtml: function (html) {
             html = html || '';
+
             var value = html.replace(/\n/g, '<br>');
+
             return value;
         },
 
         errorHandlerSendingFail: function (data) {
             Detail.prototype.errorHandlerSendingFail.call(this, data);
         },
-
     });
 });

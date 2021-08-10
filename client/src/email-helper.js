@@ -397,11 +397,10 @@ define('email-helper', [], function () {
 
             replyHeadString += ':';
 
-
             if (model.get('isHtml')) {
                 let body = model.get('body');
 
-                body = '<br>' +  replyHeadString + '<br><blockquote>' +  body + '</blockquote>';
+                body = '<p>&nbsp;</p><p>' +  replyHeadString + '</p><blockquote>' +  body + '</blockquote>';
 
                 attributes['body'] = body;
             }
