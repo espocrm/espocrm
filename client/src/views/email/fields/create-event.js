@@ -68,15 +68,9 @@ define('views/email/fields/create-event', ['views/fields/base', 'lib!espo'], fun
                 .then(view => {
                     view.render();
 
-                    this.listenToOnce(view, 'after:save', model => {
-                        let id = model.id;
-
-                        this.model.set('createdEventId', id);
-                        this.model.set('createdEventType', model.entityType);
-                        this.model.set('icsEventUid', eventData.uid);
-
+                    this.listenToOnce(view, 'after:save', () => {
                         this.model
-                            .save()
+                            .fetch()
                             .then(() =>
                                 Espo.Ui.success(this.translate('Done'))
                             );

@@ -250,6 +250,18 @@
             "additionalAttributeList": ["columns"],
             "orderBy": "name"
         },
+        "sourceEmail": {
+            "type": "link",
+            "notStorable": true,
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutFiltersDisabled": true,
+            "exportDisabled": true,
+            "importDisabled": true,
+            "entity": "TargetList",
+            "directAccessDisabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true

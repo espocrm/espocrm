@@ -91,7 +91,9 @@ class IcsDataLoader implements Loader
 
         $espoEvent = EventFactory::createFromU01jmg3Ical($ical);
 
-        $valueMap = (object) [];
+        $valueMap = (object) [
+            'sourceEmailId' => $entity->getId(),
+        ];
 
         try {
             $valueMap->name = $espoEvent->getName();

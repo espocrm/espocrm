@@ -3,6 +3,7 @@
         "Espo\\Core\\FieldProcessing\\Reminder\\Loader"
     ],
     "saverClassNameList": [
-        "Espo\\Core\\FieldProcessing\\Reminder\\Saver"
+        "Espo\\Core\\FieldProcessing\\Reminder\\Saver",
+        "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\Meeting\\SourceEmailSaver"
     ]
 }
