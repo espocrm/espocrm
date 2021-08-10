@@ -29,6 +29,10 @@
 
 namespace Espo\Tools\Pdf;
 
+use Psr\Http\Message\StreamInterface;
+
+use GuzzleHttp\Psr7\Stream;
+
 class ContentsString implements Contents
 {
     private $contents;
@@ -36,6 +40,16 @@ class ContentsString implements Contents
     private function __construct(string $contents)
     {
         $this->contents = $contents;
+    }
+
+    public function getStream(): StreamInterface
+    {
+        $resource = fopen('php://temp', 'r+');
+
+        fwrite($resource, $this->getString());
+        rewind($resource);
+
+        return new Stream($resource);
     }
 
     public function getString(): string
