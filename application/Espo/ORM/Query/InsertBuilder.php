@@ -38,7 +38,7 @@ class InsertBuilder implements Builder
     /**
      * Create an instance.
      */
-    public function create(): self
+    public static function create(): self
     {
         return new self();
     }
