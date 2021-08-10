@@ -55,10 +55,11 @@ class Event
 
     private $uid = null;
 
+    private $isAllDay = false;
+
     public function withAttendees(?string $attendees): self
     {
         $obj = clone $this;
-
         $obj->attendees = $attendees;
 
         return $obj;
@@ -67,7 +68,6 @@ class Event
     public function withOrganizer(?string $organizer): self
     {
         $obj = clone $this;
-
         $obj->organizer = $organizer;
 
         return $obj;
@@ -76,7 +76,6 @@ class Event
     public function withDateStart(?string $dateStart): self
     {
         $obj = clone $this;
-
         $obj->dateStart = $dateStart;
 
         return $obj;
@@ -85,7 +84,6 @@ class Event
     public function withDateEnd(?string $dateEnd): self
     {
         $obj = clone $this;
-
         $obj->dateEnd = $dateEnd;
 
         return $obj;
@@ -94,7 +92,6 @@ class Event
     public function withLocation(?string $location): self
     {
         $obj = clone $this;
-
         $obj->location = $location;
 
         return $obj;
@@ -103,7 +100,6 @@ class Event
     public function withName(?string $name): self
     {
         $obj = clone $this;
-
         $obj->name = $name;
 
         return $obj;
@@ -112,7 +108,6 @@ class Event
     public function withDescription(?string $description): self
     {
         $obj = clone $this;
-
         $obj->description = $description;
 
         return $obj;
@@ -121,7 +116,6 @@ class Event
     public function withTimezone(?string $timezone): self
     {
         $obj = clone $this;
-
         $obj->timezone = $timezone;
 
         return $obj;
@@ -130,8 +124,15 @@ class Event
     public function withUid(?string $uid): self
     {
         $obj = clone $this;
-
         $obj->uid = $uid;
+
+        return $obj;
+    }
+
+    public function withIsAllDay(bool $isAllDay): self
+    {
+        $obj = clone $this;
+        $obj->isAllDay = $isAllDay;
 
         return $obj;
     }
@@ -139,6 +140,11 @@ class Event
     public function getUid(): ?string
     {
         return $this->uid;
+    }
+
+    public function isAllDay(): bool
+    {
+        return $this->isAllDay;
     }
 
     public function getName(): ?string
@@ -153,7 +159,7 @@ class Event
 
     public function getDateEnd(): ?string
     {
-        return $this->convertDate($this->dateEnd);
+        return $this->convertDate($this->dateEnd, true);
     }
 
     public function getLocation(): ?string
@@ -171,10 +177,24 @@ class Event
         return new self();
     }
 
-    private function convertDate(?string $value): ?string
+    private function convertDate(?string $value, bool $isEnd = false): ?string
     {
         if ($value === null) {
             return null;
+        }
+
+        if ($this->isAllDay) {
+            $dt = DateTime::createFromFormat('Ymd', $value);
+
+            if ($dt === false) {
+                throw new RuntimeException("Could not parse '{$value}'.");
+            }
+
+            if ($isEnd) {
+                $dt->modify('-1 day');
+            }
+
+            return $dt->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
         }
 
         $timezone = $this->timezone ?? 'UTC';

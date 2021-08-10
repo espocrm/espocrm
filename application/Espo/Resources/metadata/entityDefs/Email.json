@@ -349,7 +349,7 @@
             "index": true
         },
         "icsEventDateStart": {
-            "type": "datetime",
+            "type": "datetimeOptional",
             "readOnly": true,
             "notStorable": true
         },

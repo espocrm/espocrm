@@ -32,6 +32,7 @@ namespace tests\unit\Espo\Core\Mail\Event;
 use ICal\ICal;
 use ICal\Event;
 
+use Espo\Core\Mail\Event\EventFactory;
 use Espo\Core\Mail\Event\Event as MailEvent;
 
 class EventTest extends \PHPUnit\Framework\TestCase
@@ -113,6 +114,32 @@ END:VEVENT
 END:VCALENDAR
 ";
 
+    private $icsContents3 =
+"BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20210810
+DTEND;VALUE=DATE:20210811
+DTSTAMP:20210810T091857Z
+ORGANIZER;CN=test:mailto:test@group.calendar.google.c
+ om
+UID:4r15namb5v2h4dou58gkfajjbe@google.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN=test.com;X-NUM-GUESTS=0:mailto:test@test.com
+X-MICROSOFT-CDO-OWNERAPPTID:1443094082
+CREATED:20210810T091748Z
+LAST-MODIFIED:20210810T091856Z
+LOCATION:
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:test ics 4
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR";
+
     public function testEvent1(): void
     {
         $ical = new ICal();
@@ -181,5 +208,20 @@ END:VCALENDAR
             "1 Broadway Ave., Brooklyn",
             $espoEvent->getLocation()
         );
+
+        $this->assertFalse($espoEvent->isAllDay());
+    }
+
+    public function testEvent3(): void
+    {
+        $ical = new ICal();
+
+        $ical->initString($this->icsContents3);
+
+        $event = EventFactory::createFromU01jmg3Ical($ical);
+
+        $this->assertTrue($event->isAllDay());
+        $this->assertEquals('2021-08-10', $event->getDateStart());
+        $this->assertEquals('2021-08-10', $event->getDateEnd());
     }
 }

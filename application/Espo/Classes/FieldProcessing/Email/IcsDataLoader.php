@@ -39,6 +39,7 @@ use Espo\Core\{
     FieldProcessing\Loader,
     FieldProcessing\LoaderParams,
     Mail\Event\Event as EspoEvent,
+    Mail\Event\EventFactory,
     Utils\Log,
 };
 
@@ -84,18 +85,13 @@ class IcsDataLoader implements Loader
             return;
         }
 
-        $valueMap = (object) [];
+        if ($event->status === 'CANCELLED') {
+            return;
+        }
 
-        $espoEvent = EspoEvent::create()
-            ->withUid($event->uid ?? null)
-            ->withDateStart($event->dtstart_tz ?? null)
-            ->withDateEnd($event->dtend_tz ?? null)
-            ->withName($event->summary ?? null)
-            ->withLocation($event->location ?? null)
-            ->withDescription($event->description ?? null)
-            ->withTimezone($ical->calendarTimeZone() ?? null)
-            ->withOrganizer($event->organizer ?? null)
-            ->withAttendees($event->attendee ?? null);
+        $espoEvent = EventFactory::createFromU01jmg3Ical($ical);
+
+        $valueMap = (object) [];
 
         try {
             $valueMap->name = $espoEvent->getName();
@@ -103,6 +99,12 @@ class IcsDataLoader implements Loader
             $valueMap->dateStart = $espoEvent->getDateStart();
             $valueMap->dateEnd = $espoEvent->getDateEnd();
             $valueMap->location = $espoEvent->getLocation();
+            $valueMap->isAllDay = $espoEvent->isAllDay();
+
+            if ($espoEvent->isAllDay()) {
+                $valueMap->dateStartDate = $espoEvent->getDateStart();
+                $valueMap->dateEndDate = $espoEvent->getDateEnd();
+            }
         }
         catch (Throwable $e) {
             $this->log->warning("Error while converting ICS event '" . $entity->getId() . "': " . $e->getMessage());
@@ -158,6 +160,10 @@ class IcsDataLoader implements Loader
         $entity->set('icsEventData', $eventData);
 
         $entity->set('icsEventDateStart', $espoEvent->getDateStart());
+
+        if ($espoEvent->isAllDay()) {
+            $entity->set('icsEventDateStartDate', $espoEvent->getDateStart());
+        }
     }
 
     private function loadCreatedEvent(Entity $entity, EspoEvent $espoEvent, object $eventData): void
