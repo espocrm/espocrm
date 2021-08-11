@@ -43,6 +43,8 @@ use Espo\Core\{
     Record\UpdateParams,
 };
 
+use Espo\Core\Acl\Exceptions\NotImplemented;
+
 use StdClass;
 
 class RecordTree extends Record
@@ -148,11 +150,18 @@ class RecordTree extends Record
         return $collection;
     }
 
-    protected function checkFilterOnlyNotEmpty()
+    protected function checkFilterOnlyNotEmpty(): bool
     {
-        if (!$this->acl->checkScope($this->subjectEntityType, 'create')) {
-            return true;
+        try {
+            if (!$this->acl->checkScope($this->subjectEntityType, 'create')) {
+                return true;
+            }
         }
+        catch (NotImplemented $e) {
+            return false;
+        }
+
+        return false;
     }
 
     protected function checkItemIsEmpty(Entity $entity): bool
