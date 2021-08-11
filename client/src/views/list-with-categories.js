@@ -562,7 +562,7 @@ define('views/list-with-categories', 'views/list', function (Dep) {
                 if (this.currentCategoryId) {
                     var names = {};
 
-                    names[this.currentCatetgoryId] = this.getCurrentCategoryName();
+                    names[this.currentCategoryId] = this.getCurrentCategoryName();
 
                     var data = {};
 
