@@ -53,7 +53,9 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 this.initEspoPlugin();
             }
 
-            this.hasBodyPlainField = !!~this.getFieldManager().getEntityTypeFieldList(this.model.entityType).indexOf(this.name + 'Plain');
+            this.hasBodyPlainField = !!~this.getFieldManager()
+                .getEntityTypeFieldList(this.model.entityType)
+                .indexOf(this.name + 'Plain');
 
             if ('height' in this.params) {
                 this.height = this.params.height;
@@ -67,49 +69,59 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
             this.setupToolbar();
 
-            this.listenTo(this.model, 'change:isHtml', function (model, value, o) {
-                if (o.ui && this.mode == 'edit') {
+            this.listenTo(this.model, 'change:isHtml', (model, value, o) => {
+                if (o.ui && this.mode === 'edit') {
                     if (this.isRendered()) {
                         if (!model.has('isHtml') || model.get('isHtml')) {
                             var value = this.plainToHtml(this.model.get(this.name));
-                            if (this.lastHtmlValue && this.model.get(this.name) === this.htmlToPlain(this.lastHtmlValue)) {
+
+                            if (
+                                this.lastHtmlValue &&
+                                this.model.get(this.name) === this.htmlToPlain(this.lastHtmlValue)
+                            ) {
                                 value = this.lastHtmlValue;
                             }
+
                             this.model.set(this.name, value, {skipReRender: true});
                             this.enableWysiwygMode();
-                        } else {
+                        }
+                        else {
                             this.lastHtmlValue = this.model.get(this.name);
+
                             var value = this.htmlToPlain(this.model.get(this.name));
+
                             this.disableWysiwygMode();
+
                             this.model.set(this.name, value);
                         }
                     }
                 }
-                if (this.mode == 'detail') {
+                if (this.mode === 'detail') {
                     if (this.isRendered()) {
                         this.reRender();
                     }
                 }
-            }, this);
+            });
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 this.destroySummernote();
             });
 
-            this.on('inline-edit-off', function () {
+            this.on('inline-edit-off', () => {
                 this.destroySummernote();
             });
 
-            this.on('render', function () {
+            this.on('render', () => {
                 this.destroySummernote();
             });
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 $(window).off('resize.' + this.cid);
+
                 if (this.$scrollable) {
                     this.$scrollable.off('scroll.' + this.cid + '-edit');
                 }
-            }.bind(this));
+            });
         },
 
         data: function () {
@@ -138,7 +150,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
                 ['table', ['table', 'espoLink', 'espoImage', 'hr']],
-                ['misc', ['codeview', 'fullscreen']]
+                ['misc', ['codeview', 'fullscreen']],
             ];
 
             if (!this.params.toolbar) {
@@ -147,23 +159,27 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         'attachment',
                         ['attachment']
                     ]);
-                    var AttachmentButton = function (context) {
+
+                    var AttachmentButton = () => {
                         var ui = $.summernote.ui;
+
                         var button = ui.button({
                             contents: '<i class="fas fa-paperclip"></i>',
                             tooltip: this.translate('Attach File'),
-                            click: function () {
+                            click: () => {
                                 this.attachFile();
 
-                                this.listenToOnce(this.model, 'attachment-uploaded:attachments', function () {
+                                this.listenToOnce(this.model, 'attachment-uploaded:attachments', () => {
                                     if (this.mode === 'edit') {
                                         Espo.Ui.success(this.translate('Attached'));
                                     }
-                                }, this);
-                            }.bind(this)
+                                });
+                            }
                         });
+
                         return button.render();
-                    }.bind(this);
+                    };
+
                     this.buttons['attachment'] = AttachmentButton;
                 }
             }
@@ -179,9 +195,11 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
          getValueForDisplay: function () {
             var value = Dep.prototype.getValueForDisplay.call(this);
+
             if (this.isPlain()) {
                 return value;
             }
+
             return this.sanitizeHtml(value);
         },
 
@@ -272,6 +290,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
             var body = this.sanitizeHtml(this.model.get(this.name) || '');
 
             var linkElement = iframeElement.contentWindow.document.createElement('link');
+
             linkElement.type = 'text/css';
             linkElement.rel = 'stylesheet';
             linkElement.href = this.getBasePath() + this.getThemeManager().getIframeStylesheet();
@@ -533,11 +552,13 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         htmlToPlain: function (text) {
             text = text || '';
+
             var value = text.replace(/<br\s*\/?>/mg, '\n');
 
             value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
 
             var $div = $('<div>').html(value);
+
             $div.find('style').remove();
             $div.find('link[ref="stylesheet"]').remove();
 
@@ -548,6 +569,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         disableWysiwygMode: function () {
             this.destroySummernote();
+
             if (this.$summernote) {
                 this.$summernote.addClass('hidden');
             }
@@ -560,6 +582,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
         fetch: function () {
             var data = {};
+
             if (!this.model.has('isHtml') || this.model.get('isHtml')) {
                 var code = this.$summernote.summernote('code');
 
@@ -793,7 +816,11 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         return button.render();
                     });
 
-                    this.initialize = function () {};
+                    this.initialize = function () {
+                        this.$modalBody = self.$el.closest('.modal-body');
+
+                        this.isInModal = this.$modalBody.length > 0;
+                    };
 
                     this.destroy = function () {
                         if (!self) {
@@ -805,6 +832,8 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
 
                     this.show = function () {
                         var linkInfo = context.invoke('editor.getLinkInfo');
+
+                        let container = this.isInModal ? this.$modalBody.get(0) : window;
 
                         self.createView('dialogInsertLink', 'views/wysiwyg/modals/insert-link', {
                             labels: {
@@ -818,7 +847,13 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                             view.render();
 
                             self.listenToOnce(view, 'insert', function (data) {
+                                let scrollY = ('scrollY' in container) ?
+                                    container.scrollY :
+                                    container.scrollTop;
+
                                 self.$summernote.summernote('createLink', data);
+
+                                setTimeout(() => container.scroll(0, scrollY), 20);
                             });
 
                             self.listenToOnce(view, 'close', function () {
@@ -879,7 +914,7 @@ define('views/fields/wysiwyg', ['views/fields/text', 'lib!Summernote'], function
                         else {
                             this.$scrollbar.css('overflow', '');
                         }
-                    }
+                    };
 
                     this.toggle = function () {
                         this.$editor.toggleClass('fullscreen');
