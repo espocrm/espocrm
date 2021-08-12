@@ -267,7 +267,8 @@ class Record extends RecordService implements
         return $export
             ->setParams(ExportParams::fromRaw($params))
             ->setCollection($collection)
-            ->run();
+            ->run()
+            ->getAttachmentId();
     }
 
     /**
