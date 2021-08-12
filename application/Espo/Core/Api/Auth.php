@@ -29,19 +29,14 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\Exceptions\{
-    BadRequest,
-    ServiceUnavailable,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\ServiceUnavailable;
 
-
-use Espo\Core\{
-    Api\Request,
-    Api\Response,
-    Authentication\Authentication,
-    Authentication\Result,
-    Utils\Log,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Authentication\Authentication;
+use Espo\Core\Authentication\Result;
+use Espo\Core\Utils\Log;
 
 use Exception;
 
@@ -51,13 +46,13 @@ use Exception;
  */
 class Auth
 {
-    protected $log;
+    private $log;
 
-    protected $authentication;
+    private $authentication;
 
-    protected $authRequired;
+    private $authRequired;
 
-    protected $isEntryPoint;
+    private $isEntryPoint;
 
     public function __construct(
         Log $log,
@@ -82,11 +77,15 @@ class Auth
             list($username, $password) = $this->obtainUsernamePasswordFromRequest($request);
         }
 
-        $hasAuthData = $username || $authenticationMethod;
+        $hasAuthData = (bool) ($username || $authenticationMethod);
 
         if (!$this->authRequired && !$this->isEntryPoint && $hasAuthData) {
             $authResult = $this->processAuthNotRequired(
-                $username, $password, $request, $response, $authenticationMethod
+                $username,
+                $password,
+                $request,
+                $response,
+                $authenticationMethod
             );
 
             if ($authResult) {
@@ -100,7 +99,11 @@ class Auth
 
         if ($hasAuthData) {
             return $this->processWithAuthData(
-                $username, $password, $request, $response, $authenticationMethod
+                $username,
+                $password,
+                $request,
+                $response,
+                $authenticationMethod
             );
         }
 
