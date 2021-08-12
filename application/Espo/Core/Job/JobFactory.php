@@ -76,12 +76,12 @@ class JobFactory
     {
         $job = $this->injectableFactory->create($className);
 
-        if (
+        /*if (
             !$job instanceof Job &&
             !$job instanceof JobDataLess
         ) {
-            throw new TypeError();
-        }
+            throw new TypeError("{$className} should implement Job or JobDataLess interface.");
+        }*/
 
         return $job;
     }
