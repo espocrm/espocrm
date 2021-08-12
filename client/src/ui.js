@@ -252,7 +252,7 @@ define('ui', [], function () {
             if (typeof o.onClick === 'function') {
                 $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]')
                     .on('click', () => {
-                        o.onClick();
+                        o.onClick(this);
                     });
             }
         });
@@ -261,7 +261,7 @@ define('ui', [], function () {
             if (typeof o.onClick === 'function') {
                 $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]')
                     .on('click', () => {
-                        o.onClick();
+                        o.onClick(this);
                     });
             }
         });
