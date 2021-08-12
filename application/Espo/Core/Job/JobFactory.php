@@ -35,8 +35,6 @@ use Espo\Core\{
     InjectableFactory,
 };
 
-use TypeError;
-
 class JobFactory
 {
     private $classFinder;
@@ -70,18 +68,10 @@ class JobFactory
      * Create a job by class name.
 
      * @return Job|JobDataLess
-     * @throws Error
      */
     public function createByClassName(string $className): object
     {
         $job = $this->injectableFactory->create($className);
-
-        /*if (
-            !$job instanceof Job &&
-            !$job instanceof JobDataLess
-        ) {
-            throw new TypeError("{$className} should implement Job or JobDataLess interface.");
-        }*/
 
         return $job;
     }

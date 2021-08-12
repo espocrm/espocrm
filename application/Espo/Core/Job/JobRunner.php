@@ -41,7 +41,6 @@ use Espo\Core\{
 use Espo\Entities\Job as JobEntity;
 
 use Throwable;
-use TypeError;
 
 class JobRunner
 {
@@ -222,13 +221,6 @@ class JobRunner
      */
     private function runJob($job, JobEntity $jobEntity): void
     {
-        /*if (
-            !$job instanceof Job &&
-            !$job instanceof JobDataLess
-        ) {
-            throw new TypeError();
-        }*/
-
         $data = JobData::create($jobEntity->getData())
             ->withTargetId($jobEntity->getTargetId())
             ->withTargetType($jobEntity->getTargetType());
