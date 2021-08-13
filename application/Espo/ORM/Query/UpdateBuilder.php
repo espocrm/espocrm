@@ -54,7 +54,7 @@ class UpdateBuilder implements Builder
     /**
      * Clone an existing query for a subsequent modifying and building.
      */
-    public function clone(Delete $query): self
+    public function clone(Update $query): self
     {
         $this->cloneInternal($query);
 
