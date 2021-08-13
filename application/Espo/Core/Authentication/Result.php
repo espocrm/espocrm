@@ -31,6 +31,8 @@ namespace Espo\Core\Authentication;
 
 use Espo\Entities\User;
 
+use stdClass;
+
 /**
  * An authentication result.
  */
@@ -56,10 +58,14 @@ class Result
 
     private $failReason = null;
 
+    private $data = null;
+
     private function __construct(string $status, ?User $user = null, ?ResultData $data = null)
     {
         $this->user = $user;
         $this->status = $status;
+
+        $this->data = $data;
 
         if ($data) {
             $this->message = $data->getMessage();
@@ -169,6 +175,14 @@ class Result
     public function getToken(): ?string
     {
         return $this->token;
+    }
+
+    /**
+     * Additional data that can be needed to a second step.
+     */
+    public function getData(): ?stdClass
+    {
+        return $this->data ? $this->data->getData() : null;
     }
 
     /**

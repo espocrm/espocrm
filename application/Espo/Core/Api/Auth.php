@@ -197,6 +197,7 @@ class Auth
             'message' => $result->getMessage(),
             'view' => $result->getView(),
             'token' => $result->getToken(),
+            'data' => $result->getData(),
         ];
 
         $response->writeBody(json_encode($bodyData));
@@ -254,6 +255,7 @@ class Auth
         if ($request->hasHeader('X-Hmac-Authorization')) {
             return 'Hmac';
         }
+
         if ($request->hasHeader('X-Api-Key')) {
             return 'ApiKey';
         }
@@ -276,7 +278,8 @@ class Auth
         }
 
         if (
-            $request->getServerParam('PHP_AUTH_USER') && $request->getServerParam('PHP_AUTH_PW')
+            $request->getServerParam('PHP_AUTH_USER') &&
+            $request->getServerParam('PHP_AUTH_PW')
         ) {
             $username = $request->getServerParam('PHP_AUTH_USER');
             $password = $request->getServerParam('PHP_AUTH_PW');
@@ -285,7 +288,8 @@ class Auth
         }
 
         if (
-            $request->getCookieParam('auth-username') && $request->getCookieParam('auth-token')
+            $request->getCookieParam('auth-username') &&
+            $request->getCookieParam('auth-token')
         ) {
 
             $username = $request->getCookieParam('auth-username');

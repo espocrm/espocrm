@@ -31,6 +31,8 @@ namespace Espo\Core\Authentication;
 
 use Espo\Entities\User;
 
+use stdClass;
+
 class ResultData
 {
     private $message = null;
@@ -42,6 +44,8 @@ class ResultData
     private $loggedUser = null;
 
     private $failReason = null;
+
+    private $data = [];
 
     private function __construct(
         ?string $message = null,
@@ -72,7 +76,7 @@ class ResultData
         return new self($message);
     }
 
-    public static function fromArray(array $data): self
+    /*public static function fromArray(array $data): self
     {
         return new self(
             $data['message'] ?? null,
@@ -81,7 +85,7 @@ class ResultData
             $data['view'] ?? null,
             $data['loggedUser'] ?? null
         );
-    }
+    }*/
 
     public function getLoggedUser(): ?User
     {
@@ -113,10 +117,14 @@ class ResultData
         return $this->failReason;
     }
 
+    public function getData(): stdClass
+    {
+        return (object) $this->data;
+    }
+
     public function withMessage(?string $message): self
     {
         $obj = clone $this;
-
         $obj->message = $message;
 
         return $obj;
@@ -125,7 +133,6 @@ class ResultData
     public function withFailReason(?string $failReason): self
     {
         $obj = clone $this;
-
         $obj->failReason = $failReason;
 
         return $obj;
@@ -134,7 +141,6 @@ class ResultData
     public function withToken(?string $token): self
     {
         $obj = clone $this;
-
         $obj->token = $token;
 
         return $obj;
@@ -143,7 +149,6 @@ class ResultData
     public function withView(?string $view): self
     {
         $obj = clone $this;
-
         $obj->view = $view;
 
         return $obj;
@@ -152,8 +157,18 @@ class ResultData
     public function withLoggedUser(?User $loggedUser): self
     {
         $obj = clone $this;
-
         $obj->loggedUser = $loggedUser;
+
+        return $obj;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function withDataItem(string $name, $value): self
+    {
+        $obj = clone $this;
+        $obj->data[$name] = $value;
 
         return $obj;
     }
