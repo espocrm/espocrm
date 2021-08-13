@@ -31,7 +31,7 @@ namespace tests\integration\Espo\ORM;
 
 use Espo\ORM\EntityManager;
 
-class EntityManager extends \tests\integration\Core\BaseTestCase
+class EntityManagerTest extends \tests\integration\Core\BaseTestCase
 {
     public function testRefreshEntity(): void
     {
@@ -49,5 +49,7 @@ class EntityManager extends \tests\integration\Core\BaseTestCase
         $em->refreshEntity($entity);
 
         $this->assertEquals('Test', $entity->get('name'));
+
+        $this->assertFalse($entity->isAttributeChanged('name'));
     }
 }
