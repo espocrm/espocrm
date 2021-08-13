@@ -151,11 +151,11 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
         actionReset: function () {
             this.confirm(this.translate('security2FaResetConfimation', 'messages', 'User'), () => {
-                this.actionApply(true);
+                this.actionApply(dialog, true);
             });
         },
 
-        actionApply: function (reset) {
+        actionApply: function (dialog, reset) {
             var data = this.getView('record').processFetch();
 
             if (!data) {
@@ -230,7 +230,6 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
             }
 
             this.processSave();
-
         },
 
         processSave: function () {
@@ -243,7 +242,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
 
                     Espo.Ui.success(this.translate('Done'));
                 })
-                .fail(() => this.showButton('apply'));
+                .catch(() => this.showButton('apply'));
         },
 
     });
