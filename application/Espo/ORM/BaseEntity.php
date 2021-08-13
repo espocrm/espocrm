@@ -594,7 +594,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Set as not new. Meaning an entity is fetched or already saved.
+     * Set as not new. Meaning the entity is fetched or already saved.
      */
     public function setAsNotNew(): void
     {

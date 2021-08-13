@@ -138,12 +138,18 @@ interface Entity
     public function isNew(): bool;
 
     /**
-     * Whether is fetched from DB.
+     * Set an entity as fetched. All current attribute values will be set as those that are fetched
+     * from the database.
+     */
+    public function setAsFetched(): void;
+
+    /**
+     * Whether is fetched from the database.
      */
     public function isFetched(): bool;
 
     /**
-     * Whether an attribute was changed (since syncing with DB).
+     * Whether an attribute was changed (since syncing with the database).
      */
     public function isAttributeChanged(string $name): bool;
 
