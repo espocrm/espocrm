@@ -45,7 +45,7 @@ define('views/login', 'view', function (Dep) {
 
                 return false;
             },
-            'click a[data-action="passwordChangeRequest"]': function (e) {
+            'click a[data-action="passwordChangeRequest"]': function () {
                 this.showPasswordChangeRequest();
             }
         },
@@ -99,7 +99,7 @@ define('views/login', 'view', function (Dep) {
 
                 $cell.addClass('has-error');
 
-                $el.one('mousedown click', function () {
+                $el.one('mousedown click', () => {
                     $cell.removeClass('has-error');
 
                     if (this.isPopoverDestroyed) {
@@ -109,7 +109,7 @@ define('views/login', 'view', function (Dep) {
                     $el.popover('destroy');
 
                     this.isPopoverDestroyed = true;
-                }.bind(this));
+                });
 
                 return;
             }
@@ -118,25 +118,25 @@ define('views/login', 'view', function (Dep) {
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            Espo.Ajax.getRequest('App/user', null, {
-                login: true,
-                headers: {
-                    'Authorization': 'Basic ' + base64.encode(userName  + ':' + password),
-                    'Espo-Authorization': base64.encode(userName + ':' + password),
-                    'Espo-Authorization-By-Token': false,
-                    'Espo-Authorization-Create-Token-Secret': true,
-                },
-            }).then(
-                function (data) {
+            Espo.Ajax
+                .getRequest('App/user', null, {
+                    login: true,
+                    headers: {
+                        'Authorization': 'Basic ' + base64.encode(userName  + ':' + password),
+                        'Espo-Authorization': base64.encode(userName + ':' + password),
+                        'Espo-Authorization-By-Token': false,
+                        'Espo-Authorization-Create-Token-Secret': true,
+                    },
+                })
+                .then(data => {
                     this.notify(false);
 
                     this.trigger('login', userName, data);
-                }.bind(this)
-            ).fail(
-                function (xhr) {
+                })
+                .catch(xhr => {
                     $submit.removeClass('disabled').removeAttr('disabled');
 
-                    if (xhr.status == 401) {
+                    if (xhr.status === 401) {
                         var data = xhr.responseJSON || {};
 
                         var statusReason = xhr.getResponseHeader('X-Status-Reason');
@@ -151,8 +151,7 @@ define('views/login', 'view', function (Dep) {
 
                         this.onWrongCredentials();
                     }
-                }.bind(this)
-            );
+                });
         },
 
         onSecondStepRequired: function (userName, password, data) {
@@ -166,7 +165,7 @@ define('views/login', 'view', function (Dep) {
 
             cell.addClass('has-error');
 
-            this.$el.one('mousedown click', function () {
+            this.$el.one('mousedown click', () => {
                 cell.removeClass('has-error');
             });
 
@@ -178,7 +177,7 @@ define('views/login', 'view', function (Dep) {
 
             this.createView('passwordChangeRequest', 'views/modals/password-change-request', {
                 url: window.location.href,
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
                 Espo.Ui.notify(false);
