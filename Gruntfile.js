@@ -159,7 +159,7 @@ module.exports = grunt => {
                     'img/**',
                     'css/**',
                     'sounds/**',
-                    'custom/**'
+                    'custom/**',
                 ],
                 dest: 'build/tmp/client',
             },
@@ -184,6 +184,7 @@ module.exports = grunt => {
                     'html/**',
                     'public/**',
                     'install/**',
+                    'bin/**',
                     'bootstrap.php',
                     'cron.php',
                     'daemon.php',
@@ -253,6 +254,14 @@ module.exports = grunt => {
                     'build/EspoCRM-<%= pkg.version %>/client/modules',
                     'build/EspoCRM-<%= pkg.version %>/application/Espo/Modules',
                 ]
+            },
+            executable: {
+                options: {
+                    mode: '754'
+                },
+                src: [
+                    'build/EspoCRM-<%= pkg.version %>/bin/*',
+                ],
             },
         },
 
@@ -387,6 +396,7 @@ module.exports = grunt => {
         'chmod:php',
         'chmod:folders',
         'chmod:foldersWritable',
+        'chmod:executable',
         'clean:final',
     ]);
 
