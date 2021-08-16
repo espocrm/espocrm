@@ -29,10 +29,8 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    Console\CommandManager as ConsoleCommandManager,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\Console\CommandManager as ConsoleCommandManager;
 
 use Exception;
 
