@@ -92,6 +92,7 @@ class Binding
             BindingItem::CONTAINER_SERVICE => 'Service',
             BindingItem::VALUE => 'Value',
             BindingItem::CALLBACK => 'Callback',
+            BindingItem::FACTORY_CLASS_NAME => 'Factory',
         ][$type];
 
         $result .= $tab . "Type:  {$typeString}\n";
