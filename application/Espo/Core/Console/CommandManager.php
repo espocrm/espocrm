@@ -29,13 +29,11 @@
 
 namespace Espo\Core\Console;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\Metadata,
-    Utils\Util,
-    Console\Exceptions\CommandNotSpecified,
-    Console\Exceptions\CommandNotFound,
-};
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Util;
+use Espo\Core\Console\Exceptions\CommandNotSpecified;
+use Espo\Core\Console\Exceptions\CommandNotFound;
 
 /**
  * Processes console commands. A console command can be run in CLI by running `php command.php`.
@@ -45,6 +43,8 @@ class CommandManager
     private $injectableFactory;
 
     private $metadata;
+
+    private const DEFAULT_COMMAND = 'Help';
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -77,7 +77,11 @@ class CommandManager
     {
         $command = isset($argv[1]) ? trim($argv[1]) : null;
 
-        if (!$command) {
+        if ($command === null && count($argv) < 2) {
+            return self::DEFAULT_COMMAND;
+        }
+
+        if (!$command || !ctype_alpha($command[0])) {
             throw new CommandNotSpecified("Command name is not specified.");
         }
 
@@ -103,7 +107,7 @@ class CommandManager
         $className = 'Espo\\Core\\Console\\Commands\\' . $command;
 
         if (!class_exists($className)) {
-            throw new CommandNotFound("Command '{$command}' does not exist.");
+            throw new CommandNotFound("Command '" . Util::camelCaseToHyphen($command) ."' does not exist.");
         }
 
         return $className;

@@ -1,5 +1,30 @@
 {
     "import": {
-        "className": "Espo\\Classes\\ConsoleCommands\\Import"
+        "className": "Espo\\Classes\\ConsoleCommands\\Import",
+        "listed": true
+    },
+    "clearCache": {
+        "listed": true
+    },
+    "rebuild": {
+        "listed": true
+    },
+    "appInfo": {
+        "listed": true
+    },
+    "setPassword": {
+        "listed": true
+    },
+    "upgrade": {
+        "listed": true
+    },
+    "extension": {
+        "listed": true
+    },
+    "runJob": {
+        "listed": true
+    },
+    "version": {
+        "listed": true
     }
 }

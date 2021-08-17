@@ -55,6 +55,10 @@ class Util
         return self::toCamelCase($string, '-');
     }
 
+    public static function camelCaseToHyphen(string $string): string
+    {
+        return static::fromCamelCase($string, '-');
+    }
 
     /**
      * Convert to format with defined delimeter.
