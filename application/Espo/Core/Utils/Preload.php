@@ -98,6 +98,10 @@ class Preload
             }
         }
 
+        if (strpos($file, 'vendor/composer/ClassLoader.php') !== false) {
+            return true;
+        }
+
         return false;
     }
 }
