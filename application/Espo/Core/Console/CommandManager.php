@@ -36,7 +36,7 @@ use Espo\Core\Console\Exceptions\CommandNotSpecified;
 use Espo\Core\Console\Exceptions\CommandNotFound;
 
 /**
- * Processes console commands. A console command can be run in CLI by running `php command.php`.
+ * Processes console commands.
  */
 class CommandManager
 {
@@ -45,6 +45,8 @@ class CommandManager
     private $metadata;
 
     private const DEFAULT_COMMAND = 'Help';
+
+    private const DEFAULT_COMMAND_FLAG = 'help';
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -55,8 +57,23 @@ class CommandManager
     public function run(array $argv): void
     {
         $command = $this->getCommandNameFromArgv($argv);
+        $params = $this->createParamsFromArgv($argv);
 
-        $params = $this->createParams($argv);
+        if (
+            $command === null &&
+            (
+                $params->hasFlag(self::DEFAULT_COMMAND_FLAG) ||
+                count($params->getFlagList()) === 0 &&
+                count($params->getOptions()) === 0 &&
+                count($params->getArgumentList()) === 0
+            )
+        ) {
+            $command = self::DEFAULT_COMMAND;
+        }
+
+        if ($command === null) {
+            throw new CommandNotSpecified("Command name is not specified.");
+        }
 
         $io = new IO();
 
@@ -64,7 +81,6 @@ class CommandManager
 
         if (!$commandObj instanceof Command) {
             // for backward compatibility
-
             $commandObj->run($params->getOptions(), $params->getFlagList(), $params->getArgumentList());
 
             return;
@@ -73,16 +89,16 @@ class CommandManager
         $commandObj->run($params, $io);
     }
 
-    private function getCommandNameFromArgv(array $argv): string
+    private function getCommandNameFromArgv(array $argv): ?string
     {
         $command = isset($argv[1]) ? trim($argv[1]) : null;
 
         if ($command === null && count($argv) < 2) {
-            return self::DEFAULT_COMMAND;
+            return null;
         }
 
         if (!$command || !ctype_alpha($command[0])) {
-            throw new CommandNotSpecified("Command name is not specified.");
+            return null;
         }
 
         return ucfirst(Util::hyphenToCamelCase($command));
@@ -113,37 +129,8 @@ class CommandManager
         return $className;
     }
 
-    private function createParams(array $argv): Params
+    private function createParamsFromArgv(array $argv): Params
     {
-        $argumentList = [];
-        $options = [];
-        $flagList = [];
-
-        $itemList = array_slice($argv, 2);
-
-        foreach ($itemList as $item) {
-            if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
-                list($name, $value) = explode('=', substr($item, 2));
-
-                $name = Util::hyphenToCamelCase($name);
-
-                $options[$name] = $value;
-            }
-            else if (strpos($item, '--') === 0) {
-                $flagList[] = Util::hyphenToCamelCase(substr($item, 2));
-            }
-            else if (strpos($item, '-') === 0) {
-                $flagList[] = substr($item, 1);
-            }
-            else {
-                $argumentList[] = $item;
-            }
-        }
-
-        return new Params([
-            'argumentList' => $argumentList,
-            'options' => $options,
-            'flagList' => $flagList,
-        ]);
+        return Params::fromArgs(array_slice($argv, 1));
     }
 }

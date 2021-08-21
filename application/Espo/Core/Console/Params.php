@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Console;
 
+use Espo\Core\Utils\Util;
+
 /**
  * Command parameters.
  */
@@ -40,20 +42,20 @@ class Params
     private $options;
 
     /**
-     * @var array<int, string>
+     * @var string[]
      */
     private $flagList;
 
     /**
-     * @var array<int, string>
+     * @var string[]
      */
     private $argumentList;
 
-    public function __construct(array $params)
+    public function __construct(?array $options, ?array $flagList, ?array $argumentList)
     {
-        $this->options = $params['options'] ?? [];
-        $this->flagList = $params['flagList'] ?? [];
-        $this->argumentList = $params['argumentList'] ?? [];
+        $this->options = $options ?? [];
+        $this->flagList = $flagList ?? [];
+        $this->argumentList = $argumentList ?? [];
     }
 
     /**
@@ -65,7 +67,7 @@ class Params
     }
 
     /**
-     * @return array<int, string>
+     * @return string[]
      */
     public function getFlagList(): array
     {
@@ -73,7 +75,7 @@ class Params
     }
 
     /**
-     * @return array<int, string>
+     * @return string[]
      */
     public function getArgumentList(): array
     {
@@ -110,5 +112,33 @@ class Params
     public function getArgument(int $index): ?string
     {
         return $this->argumentList[$index] ?? null;
+    }
+
+    public static function fromArgs(array $args): self
+    {
+        $argumentList = [];
+        $options = [];
+        $flagList = [];
+
+        foreach ($args as $i => $item) {
+            if (strpos($item, '--') === 0 && strpos($item, '=') > 2) {
+                list($name, $value) = explode('=', substr($item, 2));
+
+                $name = Util::hyphenToCamelCase($name);
+
+                $options[$name] = $value;
+            }
+            else if (strpos($item, '--') === 0) {
+                $flagList[] = Util::hyphenToCamelCase(substr($item, 2));
+            }
+            else if (strpos($item, '-') === 0) {
+                $flagList[] = substr($item, 1);
+            }
+            else if ($i > 0) {
+                $argumentList[] = $item;
+            }
+        }
+
+        return new self($options, $flagList, $argumentList);
     }
 }

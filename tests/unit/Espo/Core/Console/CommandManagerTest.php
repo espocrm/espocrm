@@ -71,13 +71,13 @@ class CommandManagerTest extends \PHPUnit\Framework\TestCase
             ->with($className)
             ->willReturn($this->command);
 
-        $expectedParams = new Params([
-           'argumentList' => ['a1', 'a2'],
-           'flagList' => ['flag', 'flagA', 'f'],
-           'options' => [
+        $expectedParams = new Params(
+            [
                'optionOne' => 'test',
             ],
-        ]);
+            ['flag', 'flagA', 'f'],
+            ['a1', 'a2']
+        );
 
         $io = new IO();
 

@@ -43,7 +43,11 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $params = new Params($raw);
+        $params = new Params(
+            $raw['options'],
+            $raw['flagList'],
+            $raw['argumentList']
+        );
 
         $this->assertEquals($raw['argumentList'], $params->getArgumentList());
         $this->assertEquals($raw['flagList'], $params->getFlagList());
