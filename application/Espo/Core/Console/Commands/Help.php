@@ -56,6 +56,7 @@ class Help implements Command
 
         sort($commandList);
 
+        $io->writeLine("");
         $io->writeLine("Available commands:");
         $io->writeLine("");
 
