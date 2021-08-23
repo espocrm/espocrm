@@ -154,7 +154,7 @@ class Meeting extends \Espo\Services\Record implements
             ) {
                 $invitationManager->sendInvitation($entity, $contact, 'contacts');
 
-                $emailHash[$user->get('emailAddress')] = true;
+                $emailHash[$contact->get('emailAddress')] = true;
 
                 $sentCount ++;
             }
@@ -172,7 +172,7 @@ class Meeting extends \Espo\Services\Record implements
             ) {
                 $invitationManager->sendInvitation($entity, $lead, 'leads');
 
-                $emailHash[$user->get('emailAddress')] = true;
+                $emailHash[$lead->get('emailAddress')] = true;
 
                 $sentCount ++;
             }
