@@ -144,7 +144,7 @@ class Meeting extends \Espo\Services\Record implements
         foreach ($contacts as $contact) {
             if ($contact->get('emailAddress') && !array_key_exists($contact->get('emailAddress'), $emailHash)) {
                 $invitationManager->sendInvitation($entity, $contact, 'contacts');
-                $emailHash[$user->get('emailAddress')] = true;
+                $emailHash[$contact->get('emailAddress')] = true;
                 $sentCount ++;
             }
         }
@@ -157,7 +157,7 @@ class Meeting extends \Espo\Services\Record implements
         foreach ($leads as $lead) {
             if ($lead->get('emailAddress') && !array_key_exists($lead->get('emailAddress'), $emailHash)) {
                 $invitationManager->sendInvitation($entity, $lead, 'leads');
-                $emailHash[$user->get('emailAddress')] = true;
+                $emailHash[$lead->get('emailAddress')] = true;
                 $sentCount ++;
             }
         }
