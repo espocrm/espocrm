@@ -29,13 +29,15 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\{
-    Upgrades\ExtensionManager,
-    Container,
-    Console\Command,
-    Console\Params,
-    Console\IO,
-};
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Params;
+use Espo\Core\Console\IO;
+
+use Espo\ORM\EntityManager;
+
+use Espo\Core\Upgrades\ExtensionManager;
+use Espo\Core\Container;
+use Espo\Core\Utils\File\Manager as FileManager;
 
 use Throwable;
 
@@ -43,77 +45,75 @@ class Extension implements Command
 {
     private $container;
 
-    public function __construct(Container $container)
+    private $entityManager;
+
+    private $fileManager;
+
+    public function __construct(Container $container, EntityManager $entityManager, FileManager $fileManager)
     {
         $this->container = $container;
+        $this->entityManager = $entityManager;
+        $this->fileManager = $fileManager;
     }
 
     public function run(Params $params, IO $io): void
     {
-        $options = $params->getOptions();
-
         if ($params->hasFlag('u')) {
-            // uninstall
-
-            $name = $options['name'] ?? null;
-            $id = $options['id'] ?? null;
+            $name = $params->getOption('name');
+            $id = $params->getOption('id');
 
             if (!$name && !$id) {
-                $this->out("Can't uninstall. Specify --name=\"Extension Name\".\n");
+                $io->writeLine("Can't uninstall. Specify --name=\"Extension Name\".");
 
                 return;
             }
 
-            $uninstallParams = [];
-
-            if ($id) {
-                $uninstallParams['id'] = $id;
-            }
-            else {
-                $uninstallParams['name'] = $name;
-            }
-
-            $uninstallParams['delete'] = !$params->hasFlag('k');
-
-            $this->runUninstall($uninstallParams);
+            $this->runUninstall($params, $io);
 
             return;
         }
 
-        // install
-
-        $file = $options['file'] ?? null;
+        $file = $params->getOption('file');
 
         if (!$file) {
-            $this->out("Can't install. Specify --file=\"path/to/package.zip\".\n");
+            $io->writeLine("");
+            $io->writeLine("Install extension:");
+            $io->writeLine("");
+            $io->writeLine(" bin/command --file=\"path/to/package.zip\"");
+            $io->writeLine("");
+
+            $io->writeLine("Uninstall extension:");
+            $io->writeLine("");
+            $io->writeLine(" bin/command -u --name=\"Extension Name\"");
+            $io->writeLine("");
 
             return;
         }
 
-        $this->runInstall($file);
+        $this->runInstall($file, $io);
 
         return;
     }
 
-    protected function runInstall(string $file)
+    private function runInstall(string $file, IO $io): void
     {
         $manager = $this->createExtensionManager();
 
-        if (!file_exists($file)) {
-            $this->out("File does not exist.\n");
+        if (!$this->fileManager->isFile($file)) {
+            $io->writeLine("File does not exist.");
 
             return;
         }
 
-        $fileData = file_get_contents($file);
+        $fileData = $this->fileManager->getContents($file);
 
-        $fileData = 'data:application/zip;base64,' . base64_encode($fileData);
+        $fileDataEncoded = 'data:application/zip;base64,' . base64_encode($fileData);
 
         try {
-            $id = $manager->upload($fileData);
+            $id = $manager->upload($fileDataEncoded);
         }
         catch (Throwable $e) {
-            $this->out($e->getMessage() . "\n");
+            $io->writeLine($e->getMessage());
 
             return;
         }
@@ -124,35 +124,36 @@ class Extension implements Command
         $version = $manifest['version'] ?? null;
 
         if (!$name) {
-            $this->out("Can't install. Bad manifest.\n");
+            $io->writeLine("Can't install. Bad manifest.json file.");
 
             return;
         }
 
-        $this->out("Installing... Do not close the terminal. This may take a while...");
+        $io->write("Installing... Do not close the terminal. This may take a while...");
 
         try {
             $manager->install(['id' => $id]);
         }
         catch (Throwable $e) {
-            $this->out("\n");
-            $this->out($e->getMessage() . "\n");
+            $io->writeLine("");
+            $io->writeLine($e->getMessage());
 
             return;
         }
 
-        $this->out("\n");
-
-        $this->out("Extension '{$name}' version {$version} is installed.\nExtension ID: '{$id}'.\n");
+        $io->writeLine("");
+        $io->writeLine("Extension '{$name}' v{$version} is installed.\nExtension ID: '{$id}'.");
     }
 
-    protected function runUninstall(array $params)
+    protected function runUninstall(Params $params, IO $io): void
     {
-        $id = $params['id'] ?? null;
+        $id = $params->getOption('id');
+        $name = $params->getOption('name');
+        $toKeep = $params->hasFlag('k');
 
         if ($id) {
-            $record = $this->getEntityManager()
-                ->getRepository('Extension')
+            $record = $this->entityManager
+                ->getRDBRepository('Extension')
                 ->where([
                     'id' => $id,
                     'isInstalled' => true,
@@ -160,7 +161,7 @@ class Extension implements Command
                 ->findOne();
 
             if (!$record) {
-                $this->out("Extension with ID '{$id}' is not installed.\n");
+                $io->writeLine("Extension with ID '{$id}' is not installed.");
 
                 return;
             }
@@ -168,16 +169,14 @@ class Extension implements Command
             $name = $record->get('name');
         }
         else {
-            $name = $params['name'] ?? null;
-
             if (!$name) {
-                $this->out("Can't uninstall. No --name or --id specified.\n");
+                $io->writeLine("Can't uninstall. No --name or --id specified.");
 
                 return;
             }
 
-            $record = $this->getEntityManager()
-                ->getRepository('Extension')
+            $record = $this->entityManager
+                ->getRDBRepository('Extension')
                 ->where([
                     'name' => $name,
                     'isInstalled' => true,
@@ -185,7 +184,7 @@ class Extension implements Command
                 ->findOne();
 
             if (!$record) {
-                $this->out("Extension '{$name}' is not installed.\n");
+                $io->writeLine("Extension '{$name}' is not installed.");
 
                 return;
             }
@@ -195,50 +194,44 @@ class Extension implements Command
 
         $manager = $this->createExtensionManager();
 
-        $this->out("Uninstalling... Do not close the terminal. This may take a while...");
+        $io->write("Uninstalling... Do not close the terminal. This may take a while...");
 
         try {
             $manager->uninstall(['id' => $id]);
         }
         catch (Throwable $e) {
-            $this->out("\n");
-            $this->out($e->getMessage() . "\n");
+            $io->writeLine("");
+            $io->writeLine($e->getMessage());
 
             return;
         }
 
-        $this->out("\n");
+        $io->writeLine("");
 
-        if ($params['delete'] ?? false) {
-            try {
-                $manager->delete(['id' => $id]);
-            }
-            catch (Throwable $e) {
-                $this->out($e->getMessage() . "\n");
-                $this->out("Extension '{$name}' is uninstalled but could not be deleted.\n");
+        if ($toKeep) {
+            $io->writeLine("Extension '{$name}' is uninstalled.");
 
-                return;
-            }
-
-            $this->out("Extension '{$name}' is uninstalled and deleted.\n");
+            return;
         }
-        else {
-            $this->out("Extension '{$name}' is uninstalled.\n");
+
+
+        try {
+            $manager->delete(['id' => $id]);
         }
+        catch (Throwable $e) {
+            $io->writeLine($e->getMessage());
+            $io->writeLine("Extension '{$name}' is uninstalled but could not be deleted.");
+
+            return;
+        }
+
+        $io->writeLine("Extension '{$name}' is uninstalled and deleted.");
+
+        return;
     }
 
-    protected function createExtensionManager(): ExtensionManager
+    private function createExtensionManager(): ExtensionManager
     {
         return new ExtensionManager($this->container);
-    }
-
-    protected function getEntityManager()
-    {
-        return $this->container->get('entityManager');
-    }
-
-    protected function out(string $string)
-    {
-        fwrite(\STDOUT, $string);
     }
 }
