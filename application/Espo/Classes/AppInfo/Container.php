@@ -37,8 +37,9 @@ use Espo\Core\{
 
 class Container
 {
-    protected $container;
-    protected $metadata;
+    private $container;
+
+    private $metadata;
 
     public function __construct(ContainerService $container, Metadata $metadata)
     {
@@ -46,7 +47,7 @@ class Container
         $this->metadata = $metadata;
     }
 
-    public function process(Params $params) : ?string
+    public function process(Params $params): string
     {
         $nameOnly = $params->hasFlag('nameOnly');
 

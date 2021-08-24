@@ -37,11 +37,13 @@ use Espo\Core\{
     Console\IO,
 };
 
+use Espo\Core\Utils\Util;
+
 class AppInfo implements Command
 {
-    protected $injectableFactory;
+    private $injectableFactory;
 
-    protected $fileManager;
+    private $fileManager;
 
     public function __construct(InjectableFactory $injectableFactory, FileManager $fileManager)
     {
@@ -61,7 +63,7 @@ class AppInfo implements Command
         );
 
         foreach ($typeList as $type) {
-            if ($params->hasFlag($type)) {
+            if ($params->hasFlag(Util::camelCaseToHyphen($type))) {
                 $this->processType($io, $type, $params);
 
                 return;
@@ -69,12 +71,13 @@ class AppInfo implements Command
         }
 
         if (count($params->getFlagList()) === 0) {
-            $io->writeLine("No flag specified.");
-
             $io->writeLine("");
             $io->writeLine("Available flags:");
-            $io->writeLine("  --container");
-            $io->writeLine("  --binding");
+            $io->writeLine("");
+
+            foreach ($typeList as $type) {
+                $io->writeLine(' --' . Util::camelCaseToHyphen($type));
+            }
 
             return;
         }
@@ -88,10 +91,10 @@ class AppInfo implements Command
 
         $obj = $this->injectableFactory->create($className);
 
+        $io->writeLine('');
+
         $result = $obj->process($params);
 
-        if ($result) {
-            $io->write($result);
-        }
+        $io->write($result);
     }
 }

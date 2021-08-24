@@ -45,7 +45,7 @@ class Binding
         $this->module = $module;
     }
 
-    public function process(Params $params) : ?string
+    public function process(Params $params): string
     {
         $result = '';
 
@@ -76,7 +76,7 @@ class Binding
         return $result;
     }
 
-    private function printItem(string $key, BindingItem $binding) : string
+    private function printItem(string $key, BindingItem $binding): string
     {
         $result = '';
 
