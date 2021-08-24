@@ -76,6 +76,7 @@ class RunJob implements Command
             $io->writeLine("To print all available jobs, run:");
             $io->writeLine("");
             $io->writeLine(" bin/command app-info --jobs");
+            $io->writeLine("");
 
             return;
         }

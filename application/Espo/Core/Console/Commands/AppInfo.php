@@ -79,6 +79,8 @@ class AppInfo implements Command
                 $io->writeLine(' --' . Util::camelCaseToHyphen($type));
             }
 
+            $io->writeLine("");
+
             return;
         }
 
@@ -91,10 +93,10 @@ class AppInfo implements Command
 
         $obj = $this->injectableFactory->create($className);
 
-        $io->writeLine('');
-
         $result = $obj->process($params);
 
+        $io->writeLine('');
         $io->write($result);
+        $io->writeLine("");
     }
 }
