@@ -73,14 +73,14 @@ class FindByEmailAddressType extends BaseFunction implements
 
         $em = $this->entityManager;
 
-        $account = $em->getRepository('Account')
+        $account = $em->getRDBRepository('Account')
             ->where([
                 'emailAddress' => $emailAddress,
             ])
             ->findOne();
 
         if ($account) {
-            return $account->id;
+            return $account->getId();
         }
 
         $ignoreList = json_decode(
@@ -89,7 +89,7 @@ class FindByEmailAddressType extends BaseFunction implements
             )
         ) ?? [];
 
-        $contact = $em->getRepository('Contact')
+        $contact = $em->getRDBRepository('Contact')
             ->where([
                 'emailAddress' => $emailAddress,
             ])
@@ -97,16 +97,16 @@ class FindByEmailAddressType extends BaseFunction implements
 
         if ($contact) {
             if (!in_array($domain, $ignoreList)) {
-                $account = $em->getRepository('Account')
+                $account = $em->getRDBRepository('Account')
                     ->join('contacts')
                     ->where([
-                        'emailAddress*' => '%' . $domain,
-                        'contacts.id' => $contact->id,
+                        'emailAddress*' => '%@' . $domain,
+                        'contacts.id' => $contact->getId(),
                     ])
                     ->findOne();
 
                 if ($account) {
-                    return $account->id;
+                    return $account->getId();
                 }
             }
             else {
@@ -120,9 +120,9 @@ class FindByEmailAddressType extends BaseFunction implements
             return null;
         }
 
-        $account = $em->getRepository('Account')
+        $account = $em->getRDBRepository('Account')
             ->where([
-                'emailAddress*' => '%' . $domain,
+                'emailAddress*' => '%@' . $domain,
             ])
             ->findOne();
 
@@ -130,6 +130,6 @@ class FindByEmailAddressType extends BaseFunction implements
             return null;
         }
 
-        return $account->id;
+        return $account->getId();
     }
 }
