@@ -117,18 +117,15 @@ class Importer
         $email->set('name', $subject);
         $email->set('status', Email::STATUS_ARCHIVED);
         $email->set('attachmentsIds', []);
+        $email->set('teamsIds', $teamIdList);
 
         if ($assignedUserId) {
             $email->set('assignedUserId', $assignedUserId);
             $email->addLinkMultipleId('assignedUsers', $assignedUserId);
         }
 
-        $email->set('teamsIds', $teamIdList);
-
-        if (!empty($userIdList)) {
-            foreach ($userIdList as $uId) {
-                $email->addLinkMultipleId('users', $uId);
-            }
+        foreach ($userIdList as $uId) {
+            $email->addLinkMultipleId('users', $uId);
         }
 
         $fromAddressData = $parser->getAddressDataFromMessage($message, 'from');
@@ -620,10 +617,10 @@ class Importer
 
     private function processDuplicate(
         Email $duplicate,
-        $assignedUserId,
-        $userIdList,
-        $folderData,
-        $teamIdList
+        ?string $assignedUserId,
+        array $userIdList,
+        array $folderData,
+        array $teamIdList
     ): void {
 
         if ($duplicate->get('status') == Email::STATUS_ARCHIVED) {
@@ -649,30 +646,26 @@ class Importer
             $duplicate->addLinkMultipleId('assignedUsers', $assignedUserId);
         }
 
-        if (!empty($userIdList)) {
-            foreach ($userIdList as $uId) {
-                if (!in_array($uId, $fetchedUserIdList)) {
-                    $processNoteAcl = true;
+        foreach ($userIdList as $uId) {
+            if (!in_array($uId, $fetchedUserIdList)) {
+                $processNoteAcl = true;
 
-                    $duplicate->addLinkMultipleId('users', $uId);
-                }
+                $duplicate->addLinkMultipleId('users', $uId);
             }
         }
 
-        if ($folderData) {
-            foreach ($folderData as $uId => $folderId) {
-                if (!in_array($uId, $fetchedUserIdList)) {
-                    $duplicate->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
+        foreach ($folderData as $uId => $folderId) {
+            if (!in_array($uId, $fetchedUserIdList)) {
+                $duplicate->setLinkMultipleColumn('users', 'folderId', $uId, $folderId);
 
-                    continue;
-                }
-
-                $this->entityManager
-                    ->getRepository('Email')
-                    ->updateRelation($duplicate, 'users', $uId, [
-                        'folderId' => $folderId,
-                    ]);
+                continue;
             }
+
+            $this->entityManager
+                ->getRepository('Email')
+                ->updateRelation($duplicate, 'users', $uId, [
+                    'folderId' => $folderId,
+                ]);
         }
 
         $duplicate->set('isBeingImported', true);
@@ -698,13 +691,11 @@ class Importer
 
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 
-        if (!empty($teamIdList)) {
-            foreach ($teamIdList as $teamId) {
-                if (!in_array($teamId, $fetchedTeamIdList)) {
-                    $processNoteAcl = true;
+        foreach ($teamIdList as $teamId) {
+            if (!in_array($teamId, $fetchedTeamIdList)) {
+                $processNoteAcl = true;
 
-                    $this->entityManager->getRepository('Email')->relate($duplicate, 'teams', $teamId);
-                }
+                $this->entityManager->getRepository('Email')->relate($duplicate, 'teams', $teamId);
             }
         }
 
