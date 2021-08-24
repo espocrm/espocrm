@@ -689,10 +689,12 @@ class Importer
         $this->linkMultipleSaver->process($duplicate, 'users', $saverParams);
         $this->linkMultipleSaver->process($duplicate, 'assignedUsers', $saverParams);
 
-        $this->notificator->process(
-            $duplicate,
-            NotificatorParams::create()->withRawOptions(['isBeingImported' => true])
-        );
+        if ($this->emailNotificationsEnabled()) {
+            $this->notificator->process(
+                $duplicate,
+                NotificatorParams::create()->withRawOptions(['isBeingImported' => true])
+            );
+        }
 
         $fetchedTeamIdList = $duplicate->getLinkMultipleIdList('teams');
 
@@ -732,5 +734,13 @@ class Importer
 
             $this->entityManager->saveEntity($job);
         }
+    }
+
+    private function emailNotificationsEnabled(): bool
+    {
+        return in_array(
+            Email::ENTITY_TYPE,
+            $this->config->get('assignmentNotificationsEntityList') ?? []
+        );
     }
 }
