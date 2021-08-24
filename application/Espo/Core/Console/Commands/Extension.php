@@ -58,6 +58,12 @@ class Extension implements Command
 
     public function run(Params $params, IO $io): void
     {
+        if ($params->hasFlag('l') || $params->hasFlag('list')) {
+            $this->printList($io);
+
+            return;
+        }
+
         if ($params->hasFlag('u')) {
             $name = $params->getOption('name');
             $id = $params->getOption('id');
@@ -79,12 +85,17 @@ class Extension implements Command
             $io->writeLine("");
             $io->writeLine("Install extension:");
             $io->writeLine("");
-            $io->writeLine(" bin/command --file=\"path/to/package.zip\"");
+            $io->writeLine(" bin/command extension --file=\"path/to/package.zip\"");
             $io->writeLine("");
 
             $io->writeLine("Uninstall extension:");
             $io->writeLine("");
-            $io->writeLine(" bin/command -u --name=\"Extension Name\"");
+            $io->writeLine(" bin/command extension -u --name=\"Extension Name\"");
+            $io->writeLine("");
+
+            $io->writeLine("List all extensions:");
+            $io->writeLine("");
+            $io->writeLine(" bin/command extension --list");
             $io->writeLine("");
 
             return;
@@ -228,6 +239,35 @@ class Extension implements Command
         $io->writeLine("Extension '{$name}' is uninstalled and deleted.");
 
         return;
+    }
+
+    private function printList(IO $io): void
+    {
+        $collection = $this->entityManager
+            ->getRepository('Extension')
+            ->find();
+
+        if (count($collection) === 0) {
+            $io->writeLine("");
+            $io->writeLine("No extensions.");
+            $io->writeLine("");
+
+            return;
+        }
+
+        $io->writeLine("");
+        $io->writeLine("Extensions:");
+        $io->writeLine("");
+
+        foreach ($collection as $extension) {
+            $isInstalled = $extension->get('isInstalled');
+
+            $io->writeLine(' Name:' . $extension->get('name'));
+            $io->writeLine(' ID: ' . $extension->getId());
+            $io->writeLine(' Installed: ' . $isInstalled ? 'yes' : 'no');
+
+            $io->writeLine("");
+        }
     }
 
     private function createExtensionManager(): ExtensionManager
