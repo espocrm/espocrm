@@ -66,7 +66,16 @@ class RunJob implements Command
         }
 
         if (!$jobName) {
-            $io->writeLine("Error: No job specified.");
+            $io->writeLine("");
+            $io->writeLine("A job name must be specified:");
+            $io->writeLine("");
+
+            $io->writeLine(" bin/command run-job [JobName]");
+            $io->writeLine("");
+
+            $io->writeLine("To print all available jobs, run:");
+            $io->writeLine("");
+            $io->writeLine(" bin/command app-info --jobs");
 
             return;
         }
