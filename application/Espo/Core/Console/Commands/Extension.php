@@ -262,7 +262,7 @@ class Extension implements Command
         foreach ($collection as $extension) {
             $isInstalled = $extension->get('isInstalled');
 
-            $io->writeLine(' Name:' . $extension->get('name'));
+            $io->writeLine(' Name: ' . $extension->get('name'));
             $io->writeLine(' ID: ' . $extension->getId());
             $io->writeLine(' Installed: ' . ($isInstalled ? 'yes' : 'no'));
 
