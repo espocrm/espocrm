@@ -353,10 +353,6 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 connectWith: '.group-column-list',
                 cancel: '.dropdown-menu *',
                 start: (e, ui) => {
-                    if (this.isItemBeingMoved) {
-
-                    }
-
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
                 },
                 stop: (e, ui) => {
@@ -387,8 +383,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         $list.sortable('disable');
 
                         model
-                            .save(attributes, {patch: true, isDrop: true})
-                            .then(function () {
+                            .save(attributes, {
+                                patch: true,
+                                isDrop: true,
+                            })
+                            .then(() => {
                                 Espo.Ui.success(this.translate('Saved'));
 
                                 $list.sortable('destroy');
@@ -403,24 +402,25 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                                 }
 
                                 this.rebuildGroupDataList();
-                            }.bind(this))
-                            .fail(function () {
+                            })
+                            .catch(() => {
                                 $list.sortable('cancel');
                                 $list.sortable('enable');
-                            }.bind(this));
-                    } else {
-                        if (orderDisabled) {
-                            $list.sortable('cancel');
-                            $list.sortable('enable');
+                            });
 
-                            return;
-                        }
-
-                        this.reOrderGroup(group);
-                        this.storeGroupOrder(group);
-
-                        this.rebuildGroupDataList();
+                        return;
                     }
+
+                    if (orderDisabled) {
+                        $list.sortable('cancel');
+                        $list.sortable('enable');
+
+                        return;
+                    }
+
+                    this.reOrderGroup(group);
+                    this.storeGroupOrder(group);
+                    this.rebuildGroupDataList();
                 },
             });
         },
@@ -457,7 +457,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             });
 
             while (groupCollection.models.length) {
-                groupCollection.pop({silent: true})
+                groupCollection.pop({silent: true});
             }
 
             ids.forEach(function (id) {
