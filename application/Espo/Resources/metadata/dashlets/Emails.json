@@ -46,7 +46,13 @@
                 "bool": {
                     "onlyMy": true
                 },
-                "primary": "inbox"
+                "advanced": [
+                    {
+                        "attribute": "folderId",
+                        "type": "inFolder",
+                        "value": "inbox"
+                    }
+                ]
             }
         },
         "layout": [
