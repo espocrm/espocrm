@@ -264,7 +264,7 @@ class Extension implements Command
 
             $io->writeLine(' Name:' . $extension->get('name'));
             $io->writeLine(' ID: ' . $extension->getId());
-            $io->writeLine(' Installed: ' . $isInstalled ? 'yes' : 'no');
+            $io->writeLine(' Installed: ' . ($isInstalled ? 'yes' : 'no'));
 
             $io->writeLine("");
         }
