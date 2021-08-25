@@ -509,8 +509,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            var top = this.$listKanban.find('table > tbody').position().top;
-            var bottom = this.$content.position().top + this.$content.outerHeight(true);
+            var top = this.$listKanban.find('table.kanban-columns > tbody').get(0).getBoundingClientRect().top;
+            var bottom = this.$content.get(0).getBoundingClientRect().top + this.$content.outerHeight(true);
 
             var height = bottom - top;
 
