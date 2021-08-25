@@ -514,7 +514,6 @@ class Stream
             ->select($select)
             ->order('number', 'DESC')
             ->limit(0, $sqLimit)
-            ->useIndex('number')
             ->where(
                 $this->getUserStreamWhereClause($params, $user)
             );
