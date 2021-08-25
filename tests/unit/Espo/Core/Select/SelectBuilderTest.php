@@ -188,7 +188,7 @@ class SelectBuilderTest extends \PHPUnit\Framework\TestCase
             );
 
         $this->additionalApplier
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('apply')
             ->with(
                 $this->isInstanceOf(QueryBuilder::class)

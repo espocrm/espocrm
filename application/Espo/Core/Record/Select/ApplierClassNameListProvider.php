@@ -27,44 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Record\Select;
 
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
-use Espo\Core\Select\SearchParams;
-use Espo\Core\InjectableFactory;
-use Espo\Core\Select\Applier\AdditionalApplier;
-use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Core\Utils\Metadata;
 
-use Espo\Entities\User;
-
-class Additional
+class ApplierClassNameListProvider
 {
-    private $user;
+    private $metadata;
 
-    private $injectableFactory;
-
-    public function __construct(User $user, InjectableFactory $injectableFactory)
+    public function __construct(Metadata $metadata)
     {
-        $this->user = $user;
-        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
-    public function apply(array $classNameList, QueryBuilder $queryBuilder, SearchParams $searchParams): void
+    public function get(string $entityType): array
     {
-        foreach ($classNameList as $className) {
-            $applier = $this->createApplier($className);
-
-            $applier->apply($queryBuilder, $searchParams);
-        }
-    }
-
-    private function createApplier(string $className): AdditionalApplier
-    {
-        return $this->injectableFactory->createWithBinding(
-            $className,
-            BindingContainerBuilder::create()
-                ->bindInstance(User::class, $this->user)
-                ->build()
-        );
+        return $this->metadata->get(['recordDefs', $entityType, 'selectApplierClassNameList']) ?? [];
     }
 }

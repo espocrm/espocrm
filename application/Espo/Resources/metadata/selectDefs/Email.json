@@ -24,7 +24,6 @@
         "onlyMy": "Espo\\Classes\\Select\\Email\\BoolFilters\\OnlyMy"
     },
     "applierClassNameMap": {
-        "additional": "Espo\\Classes\\Select\\Email\\Appliers\\AdditionalApplier",
         "textFilter": "Espo\\Classes\\Select\\Email\\Appliers\\TextFilterApplier"
     },
     "selectAttributesDependencyMap": {

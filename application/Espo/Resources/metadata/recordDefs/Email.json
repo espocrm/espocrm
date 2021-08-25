@@ -7,5 +7,8 @@
     ],
     "listLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\Email\\StringDataLoader"
+    ],
+    "selectApplierClassNameList": [
+        "Espo\\Classes\\Select\\Email\\AdditionalAppliers\\Main"
     ]
 }

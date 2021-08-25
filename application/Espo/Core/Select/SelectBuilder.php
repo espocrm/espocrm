@@ -29,28 +29,26 @@
 
 namespace Espo\Core\Select;
 
-use Espo\Core\Select\{
-    Applier\Factory as ApplierFactory,
-    Applier\Appliers\Where as WhereApplier,
-    Applier\Appliers\Select as SelectApplier,
-    Applier\Appliers\Order as OrderApplier,
-    Applier\Appliers\Limit as LimitApplier,
-    Applier\Appliers\AccessControlFilter as AccessControlFilterApplier,
-    Applier\Appliers\PrimaryFilter as PrimaryFilterApplier,
-    Applier\Appliers\BoolFilterList as BoolFilterListApplier,
-    Applier\Appliers\TextFilter as TextFilterApplier,
-    Applier\Appliers\Additional as AdditionalApplier,
-    Where\Params as WhereParams,
-    Where\Item as WhereItem,
-    Order\Params as OrderParams,
-    Text\FilterParams as TextFilterParams,
-};
+use Espo\Core\Select\Applier\Factory as ApplierFactory;
+use Espo\Core\Select\Applier\Appliers\Where as WhereApplier;
+use Espo\Core\Select\Applier\Appliers\Select as SelectApplier;
+use Espo\Core\Select\Applier\Appliers\Order as OrderApplier;
+use Espo\Core\Select\Applier\Appliers\Limit as LimitApplier;
+use Espo\Core\Select\Applier\Appliers\AccessControlFilter as AccessControlFilterApplier;
+use Espo\Core\Select\Applier\Appliers\PrimaryFilter as PrimaryFilterApplier;
+use Espo\Core\Select\Applier\Appliers\BoolFilterList as BoolFilterListApplier;
+use Espo\Core\Select\Applier\Appliers\TextFilter as TextFilterApplier;
+use Espo\Core\Select\Applier\Appliers\Additional as AdditionalApplier;
 
-use Espo\{
-    ORM\Query\Select as Query,
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\Core\Select\Where\Params as WhereParams;
+use Espo\Core\Select\Where\Item as WhereItem;
+use Espo\Core\Select\Order\Params as OrderParams;
+use Espo\Core\Select\Text\FilterParams as TextFilterParams;
+
+use Espo\ORM\Query\Select as Query;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+
+use Espo\Entities\User;
 
 use LogicException;
 
@@ -89,13 +87,14 @@ class SelectBuilder
 
     private $applyComplexExpressionsForbidden = false;
 
+    private $additionalApplierClassNameList = [];
+
     private $applierFactory;
 
     public function __construct(User $user, ApplierFactory $applierFactory)
     {
-        $this->applierFactory = $applierFactory;
-
         $this->user = $user;
+        $this->applierFactory = $applierFactory;
     }
 
     /**
@@ -122,7 +121,6 @@ class SelectBuilder
         }
 
         $this->entityType = $query->getFrom();
-
         $this->sourceQuery = $query;
 
         return $this;
@@ -307,6 +305,8 @@ class SelectBuilder
 
     /**
      * Apply a list of bool filters.
+     *
+     * @param string[] $boolFilterList
      */
     public function withBoolFilterList(array $boolFilterList): self
     {
@@ -321,6 +321,22 @@ class SelectBuilder
     public function withWhere(WhereItem $whereItem): self
     {
         $this->whereItemList[] = $whereItem;
+
+        return $this;
+    }
+
+    /**
+     * Apply a list of additional applier class names.
+     * Classes must implement `Applier\AdditionalApplier` interface.
+     *
+     * @param string[] $additionalApplierClassNameList
+     */
+    public function withAdditionalApplierClassNameList(array $additionalApplierClassNameList): self
+    {
+        $this->additionalApplierClassNameList = array_merge(
+            $this->additionalApplierClassNameList,
+            $additionalApplierClassNameList
+        );
 
         return $this;
     }
@@ -462,6 +478,10 @@ class SelectBuilder
 
     private function applyAdditional(): void
     {
+        if (count($this->additionalApplierClassNameList) === 0) {
+            return;
+        }
+
         $searchParams = SearchParams::fromRaw([
             'boolFilterList' => $this->boolFilterList,
             'primaryFilter' => $this->primaryFilter,
@@ -473,6 +493,7 @@ class SelectBuilder
         }
 
         $this->createAdditionalApplier()->apply(
+            $this->additionalApplierClassNameList,
             $this->queryBuilder,
             $searchParams
         );

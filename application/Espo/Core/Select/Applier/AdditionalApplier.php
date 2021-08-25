@@ -27,44 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Select\Applier\Appliers;
+namespace Espo\Core\Select\Applier;
 
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Core\Select\SearchParams;
-use Espo\Core\InjectableFactory;
-use Espo\Core\Select\Applier\AdditionalApplier;
-use Espo\Core\Binding\BindingContainerBuilder;
 
-use Espo\Entities\User;
-
-class Additional
+interface AdditionalApplier
 {
-    private $user;
-
-    private $injectableFactory;
-
-    public function __construct(User $user, InjectableFactory $injectableFactory)
-    {
-        $this->user = $user;
-        $this->injectableFactory = $injectableFactory;
-    }
-
-    public function apply(array $classNameList, QueryBuilder $queryBuilder, SearchParams $searchParams): void
-    {
-        foreach ($classNameList as $className) {
-            $applier = $this->createApplier($className);
-
-            $applier->apply($queryBuilder, $searchParams);
-        }
-    }
-
-    private function createApplier(string $className): AdditionalApplier
-    {
-        return $this->injectableFactory->createWithBinding(
-            $className,
-            BindingContainerBuilder::create()
-                ->bindInstance(User::class, $this->user)
-                ->build()
-        );
-    }
+    public function apply(SelectBuilder $queryBuilder, SearchParams $searchParams): void;
 }

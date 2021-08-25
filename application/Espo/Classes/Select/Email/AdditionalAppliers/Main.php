@@ -27,24 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Select\Email\Appliers;
+namespace Espo\Classes\Select\Email\AdditionalAppliers;
 
-use Espo\Core\{
-    Select\Applier\Appliers\Additional as AdditionalApplierBase,
-};
+use Espo\Core\Select\Applier\AdditionalApplier;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\Core\Select\SearchParams;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Core\Select\SearchParams,
-    Classes\Select\Email\Helpers\JoinHelper,
-    Entities\User,
-};
+use Espo\Classes\Select\Email\Helpers\JoinHelper;
 
-class AdditionalApplier extends AdditionalApplierBase
+use Espo\Entities\User;
+
+class Main implements AdditionalApplier
 {
-    protected $user;
+    private $user;
 
-    protected $joinHelper;
+    private $joinHelper;
 
     public function __construct(User $user, JoinHelper $joinHelper)
     {
@@ -52,7 +49,7 @@ class AdditionalApplier extends AdditionalApplierBase
         $this->joinHelper = $joinHelper;
     }
 
-    public function apply(QueryBuilder $queryBuilder, SearchParams $searchParams): void
+    public function apply(SelectBuilder $queryBuilder, SearchParams $searchParams): void
     {
         $folder = $this->retrieveFolder($searchParams);
 
@@ -71,7 +68,7 @@ class AdditionalApplier extends AdditionalApplierBase
         }
     }
 
-    protected function joinEmailUser(QueryBuilder $queryBuilder): void
+    protected function joinEmailUser(SelectBuilder $queryBuilder): void
     {
         $this->joinHelper->joinEmailUser($queryBuilder, $this->user->id);
 
@@ -106,7 +103,7 @@ class AdditionalApplier extends AdditionalApplierBase
         return null;
     }
 
-    protected function checkApplyDateSentIndex(QueryBuilder $queryBuilder, SearchParams $searchParams): bool
+    protected function checkApplyDateSentIndex(SelectBuilder $queryBuilder, SearchParams $searchParams): bool
     {
         if ($searchParams->getTextFilter()) {
             return false;
