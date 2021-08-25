@@ -270,6 +270,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             }
 
             this.initStickableHeader();
+
+            this.$showMore = this.$el.find('.group-column .show-more');
         },
 
         initStickableHeader: function () {
@@ -353,10 +355,17 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 connectWith: '.group-column-list',
                 cancel: '.dropdown-menu *',
                 start: (e, ui) => {
+                    this.$el.find('.group-column-list').addClass('drop-active');
+
+                    $list.sortable('refreshPositions');
+
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
+                    this.$showMore.addClass('hidden');
                 },
                 stop: (e, ui) => {
                     var $item = $(ui.item);
+
+                    this.$el.find('.group-column-list').removeClass('drop-active');
 
                     var group = $item.closest('.group-column-list').data('name');
                     var id = $item.data('id');
@@ -364,6 +373,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     var draggedGroupFrom = this.draggedGroupFrom;
 
                     this.draggedGroupFrom = null;
+
+                    this.$showMore.removeClass('hidden');
 
                     if (group !== draggedGroupFrom) {
                         var model = this.collection.get(id);
@@ -509,18 +520,16 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            var top = this.$listKanban.find('table.kanban-columns > tbody').get(0).getBoundingClientRect().top;
-            var bottom = this.$content.get(0).getBoundingClientRect().top + this.$content.outerHeight(true);
+            var containerHeight = this.getHelper()
+                .calculateContentContainerHeight(this.$el.find('.kanban-columns-container'));
 
-            var height = bottom - top;
-
-            height = height - 100;
+            var height = containerHeight;
 
             if (height < 100) {
                 height = 100;
             }
 
-            this.$listKanban.find('td.group-column > div').css({
+            this.$listKanban.find('td.group-column').css({
                 minHeight: height + 'px',
             });
         },

@@ -367,6 +367,10 @@ div.list-kanban > div > table {
 
         padding-top: @padding-base-horizontal;
 
+        > div {
+            height: 100%;
+        }
+
         .show-more a {
             margin: 0 auto;
             display: block;
@@ -380,7 +384,11 @@ div.list-kanban > div > table {
         }
 
         .group-column-list {
-            min-height: 200px;
+            min-height: 100px;
+        }
+
+        .group-column-list.drop-active {
+            height: ~"calc(100%)";
         }
     }
 
