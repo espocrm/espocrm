@@ -198,13 +198,13 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             var statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
 
-            this.statusList = this.statusList.filter(function (item) {
+            this.statusList = this.statusList.filter((item) => {
                 if (~statusIgnoreList.indexOf(item)) {
                     return;
                 }
 
                 return true;
-            }, this);
+            });
 
             this.seedCollection = this.collection.clone();
             this.seedCollection.reset();
@@ -214,34 +214,36 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.seedCollection.orderBy = this.collection.defaultOrderBy;
             this.seedCollection.order = this.collection.defaultOrder;
 
-            this.listenTo(this.collection, 'sync', function (c, r, options) {
+            this.listenTo(this.collection, 'sync', () => {
                 if (this.hasView('modal') && this.getView('modal').isRendered()) {
                     return;
                 }
 
-                this.buildRows(function () {
+                this.buildRows(() => {
                     this.render();
-                }.bind(this));
-            }, this);
+                });
+            });
 
-            this.collection.listenTo(this.collection, 'change:' + this.statusField, this.onChangeGroup.bind(this), this);
+            this.collection.listenTo(
+                this.collection,
+                'change:' + this.statusField,
+                this.onChangeGroup.bind(this),
+                this
+            );
 
             this.buildRows();
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 $(window).off('resize.kanban');
                 $(window).off('scroll.kanban-' + this.cid);
                 $(window).off('resize.kanban-' + this.cid);
             });
 
             if (
-                this.getAcl().checkScope(this.entityType, 'edit')
-                &&
-                !~this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').indexOf(this.statusField)
-                &&
+                this.getAcl().checkScope(this.entityType, 'edit') &&
+                !~this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').indexOf(this.statusField) &&
                 !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled'])
             ) {
-
                 this.statusFieldIsEditable = true;
             } else {
                 this.statusFieldIsEditable = false;
@@ -257,9 +259,9 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.$content = $('#content');
 
             $window.off('resize.kanban');
-            $window.on('resize.kanban', function() {
+            $window.on('resize.kanban', () => {
                 this.adjustMinHeight();
-            }.bind(this));
+            });
 
             this.adjustMinHeight();
 
@@ -279,20 +281,24 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             var $middle = this.$el.find('.kanban-columns-container');
             var $window = $(window);
 
-            var $block = $('<div>').addClass('.kanban-head-paceholder').html('&nbsp;').hide().insertAfter($container);
+            var $block = $('<div>')
+                .addClass('.kanban-head-paceholder')
+                .html('&nbsp;')
+                .hide()
+                .insertAfter($container);
 
             $window.off('scroll.kanban-' + this.cid);
-            $window.on('scroll.kanban-' + this.cid, function (e) {
+
+            $window.on('scroll.kanban-' + this.cid, () => {
                 controlSticking();
-            }.bind(this));
+            });
 
             $window.off('resize.kanban-' + this.cid);
-            $window.on('resize.kanban-' + this.cid, function (e) {
+            $window.on('resize.kanban-' + this.cid, () => {
                 controlSticking();
-            }.bind(this));
+            });
 
-
-            var controlSticking = function () {
+            var controlSticking = () => {
                 var width = $middle.width();
 
                 if ($(window.document).width() < screenWidthXs) {
@@ -331,15 +337,15 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     $container.hide();
                     $block.show();
                 }
-            }.bind(this);
+            };
         },
 
         initSortable: function () {
             var $list = this.$listKanban.find('.group-column-list');
 
-            $list.find('> .item').on('touchstart', function (e) {
+            $list.find('> .item').on('touchstart', (e) => {
                 e.originalEvent.stopPropagation();
-            }.bind(this));
+            });
 
             var orderDisabled = this.orderDisabled;
 
@@ -558,10 +564,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             var count = 0;
             var loadedCount = 0;
 
-            this.getListLayout(function (listLayout) {
+            this.getListLayout((listLayout) => {
                 this.listLayout = listLayout;
 
-                groupList.forEach(function (item, i) {
+                groupList.forEach((item, i) => {
                     var collection = this.seedCollection.clone();
 
                     collection.total = item.total;
@@ -591,14 +597,14 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                     var itemDataList = [];
 
-                    collection.models.forEach(function (model) {
+                    collection.models.forEach((model) => {
                         count ++;
 
                         itemDataList.push({
                             key: model.id,
                             id: model.id,
                         });
-                    }, this);
+                    });
 
                     var nextStyle = null;
 
@@ -622,7 +628,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     };
 
                     this.groupDataList.push(o);
-                }, this);
+                });
 
                 if (count === 0) {
                     this.wait(false);
@@ -631,11 +637,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         callback();
                     }
                 } else {
-                    this.groupDataList.forEach(function (groupItem) {
-                        groupItem.dataList.forEach(function (item, j) {
+                    this.groupDataList.forEach((groupItem) => {
+                        groupItem.dataList.forEach((item, j) => {
                             var model = groupItem.collection.get(item.id);
 
-                            this.buildRow(j, model, function (view) {
+                            this.buildRow(j, model, (view) => {
                                 loadedCount++;
 
                                 if (loadedCount === count) {
@@ -646,8 +652,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                                     }
                                 }
                             });
-                        }, this);
-                    }, this);
+                        });
+                    });
                 }
             });
         },
@@ -681,11 +687,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             this.$el.find('.item[data-id="'+id+'"]').remove();
 
-            this.collection.subCollectionList.forEach(function (collection) {
+            this.collection.subCollectionList.forEach((collection) => {
                 if (collection.get(id)) {
                     collection.remove(id);
                 }
-            }, this);
+            });
 
             for (var i in this.groupDataList) {
                 var groupItem = this.groupDataList[i];
@@ -713,7 +719,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             var id = model.id;
             var group = model.get(this.statusField);
 
-            this.collection.subCollectionList.forEach(function (collection) {
+            this.collection.subCollectionList.forEach((collection) => {
                 if (collection.get(id)) {
                     collection.remove(id);
 
@@ -721,7 +727,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         collection.total--;
                     }
                 }
-            }, this);
+            });
 
             var dataItem;
 
@@ -762,7 +768,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                     groupItem.dataList.unshift(dataItem);
 
                     groupItem.hasShowMore = groupItem.collection.total > groupItem.collection.length ||
-                        groupItem.collection.total == -1;
+                        groupItem.collection.total === -1;
                 }
             }
 
@@ -802,10 +808,10 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             collection.data.select = this.collection.data.select;
 
-            this.showMoreRecords(collection, $list, $showMore, function () {
+            this.showMoreRecords(collection, $list, $showMore, () => {
                 this.noRebuild = false;
 
-                collection.models.forEach(function (model) {
+                collection.models.forEach((model) => {
                     if (this.collection.get(model.id)) {
                         return;
                     }
@@ -816,7 +822,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         key: model.id,
                         id: model.id,
                     });
-                }, this);
+                });
             });
         },
 
@@ -834,7 +840,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             this.createView('moveOverDialog', 'views/modals/kanban-move-over', {
                 model: model,
                 statusField: this.statusField,
-            }, function (view) {
+            }, (view) => {
                 view.render();
             });
         },
@@ -842,12 +848,11 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         getGroupCollection: function (group) {
             var collection = null;
 
-            this.collection.subCollectionList.forEach(function (itemCollection) {
+            this.collection.subCollectionList.forEach((itemCollection) => {
                 if (itemCollection.groupName === group) {
                     collection = itemCollection;
                 }
-
-            }, this);
+            });
 
             return collection;
         },
