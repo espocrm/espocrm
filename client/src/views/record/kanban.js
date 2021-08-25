@@ -352,14 +352,14 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
             $list.sortable({
                 connectWith: '.group-column-list',
                 cancel: '.dropdown-menu *',
-                start: function (e, ui) {
+                start: (e, ui) => {
                     if (this.isItemBeingMoved) {
 
                     }
 
                     this.draggedGroupFrom = $(ui.item).closest('.group-column-list').data('name');
-                }.bind(this),
-                stop: function (e, ui) {
+                },
+                stop: (e, ui) => {
                     var $item = $(ui.item);
 
                     var group = $item.closest('.group-column-list').data('name');
@@ -421,7 +421,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
                         this.rebuildGroupDataList();
                     }
-                }.bind(this)
+                },
             });
         },
 
@@ -438,7 +438,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             var $group = this.$el.find('.group-column-list[data-name="'+group+'"]');
 
-            $group.children().each(function (i, el) {
+            $group.children().each((i, el) => {
                 ids.push($(el).data('id'));
             });
 
@@ -452,7 +452,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
 
             var modelMap = {};
 
-            groupCollection.models.forEach(function (m) {
+            groupCollection.models.forEach((m) => {
                 modelMap[m.id] = m;
             });
 
@@ -472,7 +472,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
         },
 
         rebuildGroupDataList: function () {
-            this.groupDataList.forEach(function (item) {
+            this.groupDataList.forEach((item) => {
                 item.dataList = [];
 
                 for (var model of item.collection.models) {
@@ -481,7 +481,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                         id: model.id,
                     });
                 }
-            }, this);
+            });
         },
 
         moveModelBetweenGroupCollections: function (model, groupFrom, groupTo) {
@@ -532,14 +532,14 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 return;
             }
 
-            this._loadListLayout(function (listLayout) {
+            this._loadListLayout((listLayout) => {
                 this.listLayout = listLayout;
                 callback.call(this, listLayout);
-            }.bind(this));
+            });
         },
 
         getSelectAttributeList: function (callback) {
-            Dep.prototype.getSelectAttributeList.call(this, function (attrubuteList) {
+            Dep.prototype.getSelectAttributeList.call(this, (attrubuteList) => {
                 if (attrubuteList) {
                     if (!~attrubuteList.indexOf(this.statusField)) {
                         attrubuteList.push(this.statusField);
@@ -547,7 +547,7 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 }
 
                 callback(attrubuteList);
-            }.bind(this));
+            });
         },
 
         buildRows: function (callback) {
