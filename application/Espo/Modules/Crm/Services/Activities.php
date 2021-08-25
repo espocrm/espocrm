@@ -44,6 +44,7 @@ use Espo\Core\{
     Select\SearchParams,
     Select\Where\Item as WhereItem,
     Select\Where\ConverterFactory as WhereConverterFactory,
+    Select\SelectBuilderFactory,
     FieldProcessing\ListLoadProcessor,
     FieldProcessing\LoaderParams as FieldLoaderParams,
     Di,
@@ -66,8 +67,7 @@ class Activities implements
     Di\AclAware,
     Di\ServiceFactoryAware,
     Di\EntityManagerAware,
-    Di\UserAware,
-    Di\SelectBuilderFactoryAware
+    Di\UserAware
 {
 
     use Di\ConfigSetter;
@@ -76,7 +76,6 @@ class Activities implements
     use Di\ServiceFactorySetter;
     use Di\EntityManagerSetter;
     use Di\UserSetter;
-    use Di\SelectBuilderFactorySetter;
 
     const UPCOMING_ACTIVITIES_FUTURE_DAYS = 1;
 
@@ -92,14 +91,18 @@ class Activities implements
 
     private $recordServiceContainer;
 
+    private $selectBuilderFactory;
+
     public function __construct(
         WhereConverterFactory $whereConverterFactory,
         ListLoadProcessor $listLoadProcessor,
-        RecordServiceContainer $recordServiceContainer
+        RecordServiceContainer $recordServiceContainer,
+        SelectBuilderFactory $selectBuilderFactory
     ) {
         $this->whereConverterFactory = $whereConverterFactory;
         $this->listLoadProcessor = $listLoadProcessor;
         $this->recordServiceContainer = $recordServiceContainer;
+        $this->selectBuilderFactory = $selectBuilderFactory;
     }
 
     protected function isPerson(string $scope): bool
@@ -805,6 +808,8 @@ class Activities implements
             $queryList[] = $itemBuilder->build();
         }
 
+        $query = $queryList[0];
+
         if (count($queryList) > 1) {
             $unionBuilder = $this->entityManager
                 ->getQueryBuilder()
@@ -814,17 +819,21 @@ class Activities implements
                 $unionBuilder->query($subQuery);
             }
 
+            if ($order && count($order)) {
+                $unionBuilder->order(
+                    $order[0]->getExpression()->getValue(),
+                    $order[0]->getDirection()
+                );
+            }
+
             $query = $unionBuilder->build();
-        }
-        else {
-            $query = $queryList[0];
         }
 
         $builder = $this->entityManager
             ->getQueryBuilder()
             ->clone($query);
 
-        if ($order) {
+        if ($order && count($queryList) === 1) {
             $builder->order($order);
         }
 
