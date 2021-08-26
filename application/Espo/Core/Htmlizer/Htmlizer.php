@@ -126,12 +126,19 @@ class Htmlizer
         Entity $entity,
         bool $skipLinks = false,
         int $level = 0,
-        ?string $template = null
+        ?string $template = null,
+        ?array $additionalData = null
     ): array {
 
         $entityType = $entity->getEntityType();
 
         $data = get_object_vars($entity->getValueMap());
+
+        if ($additionalData) {
+            foreach ($additionalData as $k => $value) {
+                $data[$k] = $value;
+            }
+        }
 
         $attributeList = $entity->getAttributeList();
 
@@ -652,7 +659,10 @@ class Htmlizer
 
         $renderer = LightnCandy::prepare($code);
 
-        $data = $this->getDataFromEntity($entity, $skipLinks, 0, $template);
+
+        $additionalData = $additionalData ?? [];
+
+        $data = $this->getDataFromEntity($entity, $skipLinks, 0, $template, $additionalData);
 
         if (!array_key_exists('today', $data)) {
             $data['today'] = $this->dateTime->getTodayString();
@@ -662,12 +672,6 @@ class Htmlizer
         if (!array_key_exists('now', $data)) {
             $data['now'] = $this->dateTime->getNowString();
             $data['now_RAW'] = date('Y-m-d H:i:s');
-        }
-
-        $additionalData = $additionalData ?? [];
-
-        foreach ($additionalData as $k => $value) {
-            $data[$k] = $value;
         }
 
         $data['__injectableFactory'] = $this->injectableFactory;
