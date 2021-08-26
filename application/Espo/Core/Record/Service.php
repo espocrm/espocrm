@@ -766,7 +766,7 @@ class Service implements Crud,
             ->withStrictAccessControl()
             ->withSearchParams($preparedSearchParams)
             ->withAdditionalApplierClassNameList(
-                $this->createSelectApplierClassNameList()->get($this->entityType)
+                $this->createSelectApplierClassNameListProvider()->get($this->entityType)
             )
             ->build();
 
@@ -797,8 +797,7 @@ class Service implements Crud,
         return new RecordCollection($collection, $total);
     }
 
-
-    private function createSelectApplierClassNameList(): ApplierClassNameListProvider
+    protected function createSelectApplierClassNameListProvider(): ApplierClassNameListProvider
     {
         return $this->injectableFactory->create(ApplierClassNameListProvider::class);
     }

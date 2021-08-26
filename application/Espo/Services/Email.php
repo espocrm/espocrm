@@ -929,7 +929,7 @@ class Email extends Record implements
             ->from('Email')
             ->withAccessControlFilter();
 
-        $draftsSelectParams = clone $selectBuilder;
+        $draftsSelecBuilder = clone $selectBuilder;
 
         $selectBuilder->withWhere(
             WhereItem::fromRaw([
@@ -952,10 +952,10 @@ class Email extends Record implements
         }
 
         foreach ($folderIdList as $folderId) {
-            $itemSelectBuilder = $selectBuilder;
+            $itemSelectBuilder = clone $selectBuilder;
 
             if ($folderId === 'drafts') {
-                $itemSelectBuilder = $draftsSelectParams;
+                $itemSelectBuilder = clone $draftsSelecBuilder;
             }
 
             $itemSelectBuilder->withWhere(
