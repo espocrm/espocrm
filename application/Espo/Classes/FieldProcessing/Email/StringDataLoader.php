@@ -37,6 +37,7 @@ use Espo\Core\{
     ORM\EntityManager,
 };
 
+use Espo\Entities\Email;
 use Espo\Entities\User;
 
 class StringDataLoader implements Loader
@@ -69,7 +70,7 @@ class StringDataLoader implements Loader
 
         if (
             in_array($entity->get('fromEmailAddressId'), $userEmailAdddressIdList) ||
-            $entity->get('createdById') === $this->user->getId()
+            $entity->get('createdById') === $this->user->getId() && $entity->get('status') === Email::STATUS_SENT
         ) {
             $entity->loadLinkMultipleField('toEmailAddresses');
 

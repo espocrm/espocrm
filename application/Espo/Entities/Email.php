@@ -83,7 +83,13 @@ class Email extends Entity
             return null;
         }
 
-        return EmailService::parseFromName($this->get('fromString'));
+        $string = EmailService::parseFromName($this->get('fromString'));
+
+        if ($string === '') {
+            return null;
+        }
+
+        return $string;
     }
 
     protected function _getFromAddress()
