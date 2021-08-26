@@ -42,7 +42,6 @@ class ExampleDataLoader implements DataLoader
 
         return (object) [
 
-            'helloTest' => 'TEST HELLO',
         ];
     }
 }
