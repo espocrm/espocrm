@@ -45,7 +45,7 @@ class BeforeUpgrade
         $errorMessageList = [];
 
         $this->processCheckExtension('Advanced Pack', '2.8.0', $errorMessageList);
-        $this->processCheckExtension('Sales Pack', '1.1.3', $errorMessageList);
+        $this->processCheckExtension('Sales Pack', '1.1.4', $errorMessageList);
         $this->processCheckExtension('Outlook Integration', '1.2.5', $errorMessageList);
         $this->processCheckExtension('MailChimp Integration', '1.0.8', $errorMessageList);
         $this->processCheckExtension('Real Estate', '1.5.0', $errorMessageList);
