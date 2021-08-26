@@ -350,7 +350,7 @@ class Pdf
         $applyAcl = true;
 
         if ($params) {
-            $applyAcl = $data->applyAcl();
+            $applyAcl = $params->applyAcl();
         }
 
         if ($applyAcl) {
