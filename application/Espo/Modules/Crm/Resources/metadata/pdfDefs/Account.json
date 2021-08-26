@@ -1,0 +1,5 @@
+{
+    "dataLoaderClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\Pdf\\Account\\ExampleDataLoader"
+    ]
+}

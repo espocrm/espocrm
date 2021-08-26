@@ -54,6 +54,9 @@ use Espo\{
     Tools\Pdf\Contents,
     Tools\Pdf\TemplateWrapper,
     Tools\Pdf\Data,
+    Tools\Pdf\IdDataMap,
+    Tools\Pdf\Params,
+    Tools\Pdf\DataLoader\DataLoaderManager,
 };
 
 use Espo\Entities\Template;
@@ -63,9 +66,9 @@ use StdClass;
 
 class Pdf
 {
-    protected const DEFAULT_ENGINE = 'Tcpdf';
+    private const DEFAULT_ENGINE = 'Tcpdf';
 
-    protected $removeMassFilePeriod = '1 hour';
+    private $removeMassFilePeriod = '1 hour';
 
     private $config;
 
@@ -83,6 +86,8 @@ class Pdf
 
     private $serviceContanier;
 
+    private $dataLoaderManager;
+
     public function __construct(
         Config $config,
         Metadata $metadata,
@@ -91,7 +96,8 @@ class Pdf
         Language $defaultLanguage,
         SelectBuilderFactory $selectBuilderFactory,
         Builder $builder,
-        ServiceContainer $serviceContanier
+        ServiceContainer $serviceContanier,
+        DataLoaderManager $dataLoaderManager
     ) {
         $this->config = $config;
         $this->metadata = $metadata;
@@ -101,6 +107,7 @@ class Pdf
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->builder = $builder;
         $this->serviceContanier = $serviceContanier;
+        $this->dataLoaderManager = $dataLoaderManager;
     }
 
     public function generateMailMerge(
@@ -117,24 +124,36 @@ class Pdf
             $collection[] = $entity;
         }
 
+        $params = Params::create()->withAcl();
+
+        $idDataMap = IdDataMap::create();
+
         $service = $this->serviceContanier->get($entityType);
 
         foreach ($entityList as $entity) {
             $service->loadAdditionalFields($entity);
 
+            $idDataMap->set(
+                $entity->getId(),
+                $this->dataLoaderManager->load($entity)
+            );
+
+            // deprecated
             if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
                 $service->loadAdditionalFieldsForPdf($entity);
             }
         }
 
+        $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
+
         $templateWrapper = new TemplateWrapper($template);
 
         $printer = $this->builder
             ->setTemplate($templateWrapper)
-            ->setEngine(self::DEFAULT_ENGINE)
+            ->setEngine($engine)
             ->build();
 
-        $contents = $printer->printCollection($collection);
+        $contents = $printer->printCollection($collection, $params, $idDataMap);
 
         $filename = Util::sanitizeFileName($name) . '.pdf';
 
@@ -177,6 +196,8 @@ class Pdf
             throw new NotFound();
         }
 
+        $params = Params::create();
+
         if ($checkAcl) {
             if (!$this->acl->check($template)) {
                 throw new Forbidden();
@@ -185,6 +206,8 @@ class Pdf
             if (!$this->acl->checkScope($entityType)) {
                 throw new Forbidden();
             }
+
+            $params = $params->withAcl();
         }
 
         $query = $this->selectBuilderFactory
@@ -201,9 +224,17 @@ class Pdf
             ])
             ->find();
 
+        $idDataMap = IdDataMap::create();
+
         foreach ($collection as $entity) {
             $service->loadAdditionalFields($entity);
 
+            $idDataMap->set(
+                $entity->getId(),
+                $this->dataLoaderManager->load($entity)
+            );
+
+            // deprecated
             if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
                 $service->loadAdditionalFieldsForPdf($entity);
             }
@@ -218,7 +249,7 @@ class Pdf
             ->setEngine($engine)
             ->build();
 
-        $contents = $printer->printCollection($collection);
+        $contents = $printer->printCollection($collection, $params, $idDataMap);
 
         $entityTypeTranslated = $this->defaultLanguage->translate($entityType, 'scopeNamesPlural');
 
@@ -241,7 +272,7 @@ class Pdf
             'serviceName' => 'Pdf',
             'methodName' => 'removeMassFileJob',
             'data' => [
-                'id' => $attachment->id
+                'id' => $attachment->getId(),
             ],
             'executeTime' => (new DateTime())->modify('+' . $this->removeMassFilePeriod)->format('Y-m-d H:i:s'),
             'queue' => QueueName::Q1,
@@ -249,7 +280,7 @@ class Pdf
 
         $this->entityManager->saveEntity($job);
 
-        return $attachment->id;
+        return $attachment->getId();
     }
 
     public function removeMassFileJob(StdClass $data): void
@@ -274,9 +305,9 @@ class Pdf
     /**
      * Generate PDF. ACL check is processed if `$data` is null.
      */
-    public function generate(Entity $entity, Template $template, ?Data $data = null): string
+    public function generate(Entity $entity, Template $template, ?Params $params = null, ?Data $data = null): string
     {
-        return $this->buildFromTemplateInternal($entity, $template, false, null, $data);
+        return $this->buildFromTemplateInternal($entity, $template, false, null, $params, $data);
     }
 
     /**
@@ -297,6 +328,7 @@ class Pdf
         Entity $template,
         bool $displayInline = false,
         ?array $additionalData = null,
+        ?Params $params = null,
         ?Data $data = null
     ): ?string {
 
@@ -307,6 +339,7 @@ class Pdf
         $service->loadAdditionalFields($entity);
 
         if (method_exists($service, 'loadAdditionalFieldsForPdf')) {
+            // deprecated
             $service->loadAdditionalFieldsForPdf($entity);
         }
 
@@ -316,7 +349,7 @@ class Pdf
 
         $applyAcl = true;
 
-        if ($data) {
+        if ($params) {
             $applyAcl = $data->applyAcl();
         }
 
@@ -332,11 +365,13 @@ class Pdf
         $templateWrapper = new TemplateWrapper($template);
 
         if (!$data) {
-            $data = Data
-                ::create()
-                ->withAdditionalTemplateData($additionalData ?? [])
-                ->withAcl($applyAcl);
+            $data = Data::create()
+                ->withAdditionalTemplateData(
+                    (object) ($additionalData ?? [])
+                );
         }
+
+        $data = $this->dataLoaderManager->load($entity, $data);
 
         $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
 
@@ -345,7 +380,7 @@ class Pdf
             ->setEngine($engine)
             ->build();
 
-        $contents = $printer->printEntity($entity, $data);
+        $contents = $printer->printEntity($entity, $params, $data);
 
         if ($displayInline) {
             $this->displayInline($entity, $contents);

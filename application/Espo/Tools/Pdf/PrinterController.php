@@ -42,11 +42,11 @@ use Espo\{
 
 class PrinterController
 {
-    protected $template;
+    private $template;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $injectableFactory;
+    private $injectableFactory;
 
     public function __construct(
         Metadata $metadata,
@@ -61,21 +61,23 @@ class PrinterController
         $this->engine = $engine;
     }
 
-    public function printEntity(Entity $entity, ?Data $data = null): Contents
+    public function printEntity(Entity $entity, ?Params $params, ?Data $data = null): Contents
     {
+        $params = $params ?? new Params();
         $data = $data ?? new Data();
 
-        return $this->createPrinter('entity')->print($this->template, $entity, $data);
+        return $this->createPrinter('entity')->print($this->template, $entity, $params,  $data);
     }
 
-    public function printCollection(Collection $collection, ?Data $data = null): Contents
+    public function printCollection(Collection $collection, ?Params $params, ?IdDataMap $IdDataMap = null): Contents
     {
-        $data = $data ?? new Data();
+        $params = $params ?? new Params();
+        $IdDataMap = $IdDataMap ?? new IdDataMap();
 
-        return $this->createPrinter('collection')->print($this->template, $collection, $data);
+        return $this->createPrinter('collection')->print($this->template, $collection, $params, $IdDataMap);
     }
 
-    protected function createPrinter(string $type): object
+    private function createPrinter(string $type): object
     {
         $className = $this->metadata
             ->get(['app', 'pdfEngines', $this->engine, 'implementationClassNameMap', $type]) ?? null;

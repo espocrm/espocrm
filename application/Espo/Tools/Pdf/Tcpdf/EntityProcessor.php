@@ -35,6 +35,7 @@ use Espo\Core\Htmlizer\Factory as HtmlizerFactory;
 use Espo\ORM\Entity;
 use Espo\Tools\Pdf\Template;
 use Espo\Tools\Pdf\Data;
+use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Tcpdf\Tcpdf;
 
 class EntityProcessor
@@ -53,11 +54,11 @@ class EntityProcessor
         $this->htmlizerFactory = $htmlizerFactory;
     }
 
-    public function process(Tcpdf $pdf, Template $template, Entity $entity, Data $data): void
+    public function process(Tcpdf $pdf, Template $template, Entity $entity, Params $params, Data $data): void
     {
-        $additionalData = $data->getAdditionalTemplateData();
+        $additionalData = get_object_vars($data->getAdditionalTemplateData());
 
-        $htmlizer = $data->applyAcl() ?
+        $htmlizer = $params->applyAcl() ?
             $this->htmlizerFactory->create() :
             $this->htmlizerFactory->createNoAcl();
 

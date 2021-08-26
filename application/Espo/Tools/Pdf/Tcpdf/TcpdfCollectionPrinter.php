@@ -34,6 +34,8 @@ use Espo\Tools\Pdf\CollectionPrinter;
 use Espo\Tools\Pdf\Template;
 use Espo\Tools\Pdf\Contents;
 use Espo\Tools\Pdf\Data;
+use Espo\Tools\Pdf\IdDataMap;
+use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Tcpdf\Tcpdf;
 
 class TcpdfCollectionPrinter implements CollectionPrinter
@@ -45,7 +47,7 @@ class TcpdfCollectionPrinter implements CollectionPrinter
         $this->entityProcessor = $entityProcessor;
     }
 
-    public function print(Template $template, Collection $collection, Data $data): Contents
+    public function print(Template $template, Collection $collection, Params $params, IdDataMap $dataMap): Contents
     {
         $pdf = new Tcpdf();
 
@@ -54,7 +56,9 @@ class TcpdfCollectionPrinter implements CollectionPrinter
         foreach ($collection as $entity) {
             $pdf->startPageGroup();
 
-            $this->entityProcessor->process($pdf, $template, $entity, $data);
+            $data = $dataMap->get($entity->getId()) ?? Data::create();
+
+            $this->entityProcessor->process($pdf, $template, $entity, $params, $data);
         }
 
         return new TcpdfContents($pdf);

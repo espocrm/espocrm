@@ -27,31 +27,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Pdf\Tcpdf;
+namespace Espo\Tools\Pdf\DataLoader;
 
 use Espo\ORM\Entity;
-use Espo\Tools\Pdf\EntityPrinter;
-use Espo\Tools\Pdf\Template;
-use Espo\Tools\Pdf\Contents;
-use Espo\Tools\Pdf\Params;
+
+use Espo\Core\Utils\Metadata;
+use Espo\Core\InjectableFactory;
+
 use Espo\Tools\Pdf\Data;
-use Espo\Tools\Pdf\Tcpdf\Tcpdf;
 
-class TcpdfEntityPrinter implements EntityPrinter
+class DataLoaderManager
 {
-    private $entityProcessor;
+    private $metadata;
 
-    public function __construct(EntityProcessor $entityProcessor)
+    private $injectableFactory;
+
+    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
     {
-        $this->entityProcessor = $entityProcessor;
+        $this->metadata = $metadata;
+        $this->injectableFactory = $injectableFactory;
     }
 
-    public function print(Template $template, Entity $entity, Params $params, Data $data): Contents
+    public function load(Entity $entity, ?Data $data = null): Data
     {
-        $pdf = new Tcpdf();
+        if (!$data) {
+            $data = Data::create();
+        }
 
-        $this->entityProcessor->process($pdf, $template, $entity, $params, $data);
+        $classNameList = $this->metadata->get(['pdfDefs', $entity->getEntityType(), 'dataLoaderClassNameList']) ?? [];
 
-        return new TcpdfContents($pdf);
+        foreach ($classNameList as $className) {
+            $loader = $this->createLoader($className);
+
+            $loadedData = $loader->load($entity);
+
+            $data = $data->withAdditionalTemplateData($loadedData);
+        }
+
+        return $data;
+    }
+
+    private function createLoader(string $className): DataLoader
+    {
+        return $this->injectableFactory->create($className);
     }
 }

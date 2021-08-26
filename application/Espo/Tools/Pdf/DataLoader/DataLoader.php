@@ -27,31 +27,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Pdf\Tcpdf;
+namespace Espo\Tools\Pdf\DataLoader;
 
 use Espo\ORM\Entity;
-use Espo\Tools\Pdf\EntityPrinter;
-use Espo\Tools\Pdf\Template;
-use Espo\Tools\Pdf\Contents;
-use Espo\Tools\Pdf\Params;
-use Espo\Tools\Pdf\Data;
-use Espo\Tools\Pdf\Tcpdf\Tcpdf;
 
-class TcpdfEntityPrinter implements EntityPrinter
+use stdClass;
+
+interface DataLoader
 {
-    private $entityProcessor;
-
-    public function __construct(EntityProcessor $entityProcessor)
-    {
-        $this->entityProcessor = $entityProcessor;
-    }
-
-    public function print(Template $template, Entity $entity, Params $params, Data $data): Contents
-    {
-        $pdf = new Tcpdf();
-
-        $this->entityProcessor->process($pdf, $template, $entity, $params, $data);
-
-        return new TcpdfContents($pdf);
-    }
+    public function load(Entity $entity): stdClass;
 }

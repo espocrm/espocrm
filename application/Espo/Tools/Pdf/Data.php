@@ -29,44 +29,25 @@
 
 namespace Espo\Tools\Pdf;
 
-/**
- * Data transfer object.
- */
+use stdClass;
+
 class Data
 {
     private $additionalTemplateData = [];
 
-    private $applyAcl = false;
-
-    public function setAdditionalTemplateData(array $additionalTemplateData)
+    public function getAdditionalTemplateData(): stdClass
     {
-        $this->additionalTemplateData = $additionalTemplateData;
+        return (object) $this->additionalTemplateData;
     }
 
-    public function applyAcl(): bool
-    {
-        return $this->applyAcl;
-    }
-
-    public function getAdditionalTemplateData(): array
-    {
-        return $this->additionalTemplateData;
-    }
-
-    public function withAdditionalTemplateData(array $additionalTemplateData): self
+    public function withAdditionalTemplateData(stdClass $additionalTemplateData): self
     {
         $obj = clone $this;
 
-        $obj->additionalTemplateData = $additionalTemplateData;
-
-        return $obj;
-    }
-
-    public function withAcl(bool $applyAcl = true): self
-    {
-        $obj = clone $this;
-
-        $obj->applyAcl = $applyAcl;
+        $obj->additionalTemplateData = array_merge(
+            $obj->additionalTemplateData,
+            get_object_vars($additionalTemplateData)
+        );
 
         return $obj;
     }
