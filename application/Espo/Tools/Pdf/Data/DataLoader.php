@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Pdf\DataLoader;
+namespace Espo\Tools\Pdf\Data;
 
 use Espo\ORM\Entity;
 

@@ -56,7 +56,7 @@ use Espo\{
     Tools\Pdf\Data,
     Tools\Pdf\IdDataMap,
     Tools\Pdf\Params,
-    Tools\Pdf\DataLoader\DataLoaderManager,
+    Tools\Pdf\Data\DataLoaderManager,
 };
 
 use Espo\Entities\Template;

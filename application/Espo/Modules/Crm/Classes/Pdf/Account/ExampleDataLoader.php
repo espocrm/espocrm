@@ -29,7 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\Pdf\Account;
 
-use Espo\Tools\Pdf\DataLoader\DataLoader;
+use Espo\Tools\Pdf\Data\DataLoader;
 use Espo\ORM\Entity;
 
 use stdClass;
