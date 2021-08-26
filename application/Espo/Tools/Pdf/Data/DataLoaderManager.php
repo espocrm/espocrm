@@ -35,6 +35,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
 
 use Espo\Tools\Pdf\Data;
+use Espo\Tools\Pdf\Params;
 
 class DataLoaderManager
 {
@@ -48,8 +49,12 @@ class DataLoaderManager
         $this->injectableFactory = $injectableFactory;
     }
 
-    public function load(Entity $entity, ?Data $data = null): Data
+    public function load(Entity $entity, ?Params $params = null, ?Data $data = null): Data
     {
+        if (!$params) {
+            $params = Params::create();
+        }
+
         if (!$data) {
             $data = Data::create();
         }
@@ -59,7 +64,7 @@ class DataLoaderManager
         foreach ($classNameList as $className) {
             $loader = $this->createLoader($className);
 
-            $loadedData = $loader->load($entity);
+            $loadedData = $loader->load($entity, $params);
 
             $data = $data->withAdditionalTemplateData($loadedData);
         }

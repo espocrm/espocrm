@@ -135,7 +135,7 @@ class Pdf
 
             $idDataMap->set(
                 $entity->getId(),
-                $this->dataLoaderManager->load($entity)
+                $this->dataLoaderManager->load($entity, $params)
             );
 
             // deprecated
@@ -231,7 +231,7 @@ class Pdf
 
             $idDataMap->set(
                 $entity->getId(),
-                $this->dataLoaderManager->load($entity)
+                $this->dataLoaderManager->load($entity, $params)
             );
 
             // deprecated
@@ -371,7 +371,7 @@ class Pdf
                 );
         }
 
-        $data = $this->dataLoaderManager->load($entity, $data);
+        $data = $this->dataLoaderManager->load($entity, $params, $data);
 
         $engine = $this->config->get('pdfEngine') ?? self::DEFAULT_ENGINE;
 
