@@ -26,6 +26,7 @@
         ["app", "config"],
         ["selectDefs"],
         ["recordDefs"],
+        ["pdfDefs"],
         ["aclDefs"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]
     ]
