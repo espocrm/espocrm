@@ -30,7 +30,7 @@
 namespace Espo\Core\ApplicationRunners;
 
 use Espo\Core\{
-    Application\Runner,
+    Application\RunnerParameterized,
     Application\RunnerParams,
     Exceptions\Error,
     EntryPoint\EntryPointManager,
@@ -58,10 +58,8 @@ use Exception;
 /**
  * Runs an entry point.
  */
-class EntryPoint implements Runner
+class EntryPoint implements RunnerParameterized
 {
-    private $params;
-
     private $authenticationFactory;
 
     private $entryPointManager;
@@ -86,8 +84,7 @@ class EntryPoint implements Runner
         ApplicationUser $applicationUser,
         AuthTokenManager $authTokenManager,
         AuthBuilderFactory $authBuilderFactory,
-        ErrorOutput $errorOutput,
-        ?RunnerParams $params = null
+        ErrorOutput $errorOutput
     ) {
         $this->authenticationFactory = $authenticationFactory;
         $this->entryPointManager = $entryPointManager;
@@ -97,11 +94,9 @@ class EntryPoint implements Runner
         $this->authTokenManager = $authTokenManager;
         $this->authBuilderFactory = $authBuilderFactory;
         $this->errorOutput = $errorOutput;
-
-        $this->params = $params ?? RunnerParams::create();
     }
 
-    public function run(): void
+    public function run(RunnerParams $params): void
     {
         $requestWrapped = new RequestWrapper(
             ServerRequestCreatorFactory::create()->createServerRequestFromGlobals(),
@@ -112,12 +107,11 @@ class EntryPoint implements Runner
             throw new Error("Only GET requests allowed for entry points.");
         }
 
-        $entryPoint = $this->params->get('entryPoint') ?? $requestWrapped->getQueryParam('entryPoint');
-
-        $final = $this->params->get('final') ?? false;
+        $entryPoint = $params->get('entryPoint') ?? $requestWrapped->getQueryParam('entryPoint');
+        $final = $params->get('final') ?? false;
 
         if (!$entryPoint) {
-            throw new Error();
+            throw new Error("No 'entryPoint' param.");
         }
 
         $authRequired = $this->entryPointManager->checkAuthRequired($entryPoint);

@@ -43,9 +43,9 @@ use Espo\Core\{
  */
 class EntryPointManager
 {
-    protected $injectableFactory;
+    private $injectableFactory;
 
-    protected $classFinder;
+    private $classFinder;
 
     public function __construct(InjectableFactory $injectableFactory, ClassFinder $classFinder)
     {
@@ -93,7 +93,7 @@ class EntryPointManager
         $entryPoint->run($request, $response);
     }
 
-    protected function getClassName(string $name): ?string
+    private function getClassName(string $name): ?string
     {
         return $this->classFinder->find('EntryPoints', ucfirst($name));
     }

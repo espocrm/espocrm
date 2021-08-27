@@ -27,33 +27,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
-
-use Espo\Core\{
-    Application\RunnerParameterized,
-    Application\RunnerParams,
-    Job\JobManager,
-};
+namespace Espo\Core\Application;
 
 /**
- * Runs a job by ID. A job record should exist in database.
+ * Runs an application with parameters.
  */
-class Job implements RunnerParameterized
+interface RunnerParameterized
 {
-    use Cli;
-    use SetupSystemUser;
-
-    private $jobManager;
-
-    public function __construct(JobManager $jobManager)
-    {
-        $this->jobManager = $jobManager;
-    }
-
-    public function run(RunnerParams $params): void
-    {
-        $id = $params->get('id');
-
-        $this->jobManager->runJobById($id);
-    }
+    public function run(RunnerParams $params): void;
 }

@@ -32,7 +32,7 @@ namespace Espo\Core\ApplicationRunners;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\{
-    Application\Runner,
+    Application\RunnerParameterized,
     Application\RunnerParams,
     Exceptions\NotFound,
     Utils\ClientManager,
@@ -56,10 +56,8 @@ use Exception;
 /**
  * Runs a portal client.
  */
-class PortalClient implements Runner
+class PortalClient implements RunnerParameterized
 {
-    private $params;
-
     private $clientManager;
 
     private $config;
@@ -69,31 +67,26 @@ class PortalClient implements Runner
     public function __construct(
         ClientManager $clientManager,
         Config $config,
-        ErrorOutput $errorOutput,
-        ?RunnerParams $params = null
+        ErrorOutput $errorOutput
     ) {
         $this->clientManager = $clientManager;
         $this->config = $config;
         $this->errorOutput = $errorOutput;
-
-        $this->params = $params ?? RunnerParams::create();
     }
 
-    public function run(): void
+    public function run(RunnerParams $params): void
     {
-        $id = $this->params->get('id') ??
+        $id = $params->get('id') ??
             Url::detectPortalId() ??
             $this->config->get('defaultPortalId');
 
-        $basePath = $this->params->get('basePath') ?? $this->clientManager->getBasePath();
+        $basePath = $params->get('basePath') ?? $this->clientManager->getBasePath();
 
         $requestWrapped = new RequestWrapper(
             ServerRequestCreatorFactory::create()->createServerRequestFromGlobals()
         );
 
-        $responseWrapped = new ResponseWrapper(
-            new Response()
-        );
+        $responseWrapped = new ResponseWrapper(new Response());
 
         if ($requestWrapped->getMethod() !== 'GET') {
             throw new Error("Only GET request is allowed.");

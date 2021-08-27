@@ -34,6 +34,7 @@ use Espo\Core\Container\ContainerBuilder;
 use Espo\Core\InjectableFactory;
 
 use Espo\Core\Application\Runner;
+use Espo\Core\Application\RunnerParameterized;
 use Espo\Core\Application\RunnerParams;
 use Espo\Core\ApplicationUser;
 
@@ -70,7 +71,7 @@ class Application
      * Run an application runner.
      *
      * @param $className A runner class name.
-     * @param $params Runner parameters. Will be passed to a runner's constructor.
+     * @param $params Runner parameters.
      */
     public function run(string $className, ?RunnerParams $params = null): void
     {
@@ -82,25 +83,34 @@ class Application
 
         $class = new ReflectionClass($className);
 
-        if ($class->getStaticPropertyValue('cli', false)) {
-            if (substr(php_sapi_name(), 0, 3) !== 'cli') {
-                die("Can be run only via CLI.");
-            }
+        if (
+            $class->getStaticPropertyValue('cli', false) &&
+            substr(php_sapi_name(), 0, 3) !== 'cli'
+        ) {
+            die("Can be run only via CLI.");
         }
 
         if ($class->getStaticPropertyValue('setupSystemUser', false)) {
             $this->setupSystemUser();
         }
 
-        $runner = $this->getInjectableFactory()->createWith($className, [
-            'params' => $params ?? RunnerParams::create(),
-        ]);
+        $runner = $this->getInjectableFactory()->create($className);
 
-        if (!$runner instanceof Runner) {
-            die("Class should implement Runner interface.");
+        if ($runner instanceof Runner) {
+            $runner->run();
+
+            return;
         }
 
-        $runner->run();
+        if ($runner instanceof RunnerParameterized) {
+            $runner->run(
+                $params ?? RunnerParams::create()
+            );
+
+            return;
+        }
+
+        die("Class should implement Runner or RunnerParameterized interface.");
     }
 
     /**
