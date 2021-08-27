@@ -68,7 +68,7 @@
                     data-action="openCategory"
                     data-id="{{id}}"
                     data-name="{{name}}"
-                ><span class="far fa-folder text-muted"></span></a>
+                ><span class="far fa-folder text-soft"></span></a>
                 <a
                     href="#{{../scope}}/view/{{id}}"
                     class="action link-gray"
