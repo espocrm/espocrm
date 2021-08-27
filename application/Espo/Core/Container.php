@@ -240,10 +240,14 @@ class Container implements ContainerInterface
 
     private function load(string $name): void
     {
-        $loadMethodName = 'load' . ucfirst($name);
+        if ($name === 'container') {
+            $this->setForced('container', $this->loadContainer());
 
-        if (method_exists($this, $loadMethodName)) {
-            $this->data[$name] = $this->$loadMethodName();
+            return;
+        }
+
+        if ($name === 'injectableFactory') {
+            $this->setForced('injectableFactory', $this->loadInjectableFactory());
 
             return;
         }
@@ -281,12 +285,12 @@ class Container implements ContainerInterface
         $this->data[$name] = $this->injectableFactory->create($className);
     }
 
-    protected function loadContainer(): Container
+    private function loadContainer(): Container
     {
         return $this;
     }
 
-    protected function loadInjectableFactory(): InjectableFactory
+    private function loadInjectableFactory(): InjectableFactory
     {
         return new InjectableFactory($this, $this->bindingContainer);
     }

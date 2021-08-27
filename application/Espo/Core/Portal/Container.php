@@ -38,7 +38,7 @@ use Espo\Core\{
 
 class Container extends BaseContainer
 {
-    protected $portalIsSet = false;
+    private $portalIsSet = false;
 
     public function setPortal(PortalEntity $portal): void
     {
