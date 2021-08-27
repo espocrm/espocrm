@@ -78,7 +78,7 @@ class Application extends BaseApplication
 
         if (!$portal) {
             $portal = $entityManager
-                ->getRepository('Portal')
+                ->getRDBRepository('Portal')
                 ->where(['customId' => $portalId])
                 ->findOne();
         }
@@ -86,6 +86,7 @@ class Application extends BaseApplication
         if (!$portal) {
             throw new NotFound("Portal {$portalId} not found.");
         }
+
         if (!$portal->get('isActive')) {
             throw new Forbidden("Portal {$portalId} is not active.");
         }
