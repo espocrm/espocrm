@@ -27,45 +27,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\Cleanup;
+namespace Espo\Core\Cleanup;
 
-use Espo\Core\Cleanup\Cleanup;
-use Espo\Core\Utils\Config;
-use Espo\ORM\EntityManager;
-
-use DateTime;
-
-class Reminders implements Cleanup
+interface Cleanup
 {
-    private $config;
-
-    private $entityManager;
-
-    private $cleanupRemindersPeriod = '15 days';
-
-    public function __construct(Config $config, EntityManager $entityManager)
-    {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-    }
-
-    public function process(): void
-    {
-        $period = '-' . $this->config->get('cleanupRemindersPeriod', $this->cleanupRemindersPeriod);
-
-        $dt = new DateTime();
-
-        $dt->modify($period);
-
-        $delete = $this->entityManager
-            ->getQueryBuilder()
-            ->delete()
-            ->from('Reminder')
-            ->where([
-                'remindAt<' => $dt->format('Y-m-d'),
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($delete);
-    }
+    public function process(): void;
 }

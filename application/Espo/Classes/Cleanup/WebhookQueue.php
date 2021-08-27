@@ -29,19 +29,19 @@
 
 namespace Espo\Classes\Cleanup;
 
-use Espo\Core\{
-    Utils\Config,
-    ORM\EntityManager,
-};
+use Espo\Core\Cleanup\Cleanup;
+use Espo\Core\Utils\Config;
+use Espo\ORM\EntityManager;
 
 use DateTime;
 
-class WebhookQueue
+class WebhookQueue implements Cleanup
 {
-    protected $cleanupWebhookQueuePeriod = '10 days';
+    private $cleanupWebhookQueuePeriod = '10 days';
 
-    protected $config;
-    protected $entityManager;
+    private $config;
+
+    private $entityManager;
 
     public function __construct(Config $config, EntityManager $entityManager)
     {
@@ -49,7 +49,7 @@ class WebhookQueue
         $this->entityManager = $entityManager;
     }
 
-    public function process()
+    public function process(): void
     {
         $period = '-' . $this->config->get('cleanupWebhookQueuePeriod', $this->cleanupWebhookQueuePeriod);
 
@@ -58,7 +58,8 @@ class WebhookQueue
         $datetime->modify($period);
         $from = $datetime->format('Y-m-d H:i:s');
 
-        $query = $this->entityManager->getQueryBuilder()
+        $query1 = $this->entityManager
+            ->getQueryBuilder()
             ->delete()
             ->from('WebhookQueueItem')
             ->where([
@@ -70,9 +71,10 @@ class WebhookQueue
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->execute($query);
+        $this->entityManager->getQueryExecutor()->execute($query1);
 
-        $query = $this->entityManager->getQueryBuilder()
+        $query2 = $this->entityManager
+            ->getQueryBuilder()
             ->delete()
             ->from('WebhookEventQueueItem')
             ->where([
@@ -84,6 +86,6 @@ class WebhookQueue
             ])
             ->build();
 
-        $this->entityManager->getQueryExecutor()->execute($query);
+        $this->entityManager->getQueryExecutor()->execute($query2);
     }
 }

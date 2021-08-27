@@ -132,6 +132,7 @@ class Cleanup implements JobDataLess
         foreach ($items as $name => $item) {
             try {
                 $className = $item['className'];
+
                 $injectableFactory->create($className)->process();
             }
             catch (Throwable $e) {
