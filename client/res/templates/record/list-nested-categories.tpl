@@ -53,7 +53,7 @@
                 data-action="openCategory"
                 data-id="{{categoryData.upperId}}"
                 title="{{translate 'Up'}}"
-            ><span class="fas fa-arrow-up text-muted transform-flip-x"></span></a>
+            ><span class="fas fa-arrow-up text-soft transform-flip-x"></span></a>
         </div>
         {{/if}}
     </div>
