@@ -34,7 +34,7 @@
         "cboden/ratchet": "^0.4.1",
         "react/zmq": "^0.4.0",
         "guzzlehttp/psr7": "^1.6",
-        "michelf/php-markdown": "^1.8",
+        "michelf/php-markdown": "^1.9",
         "robthree/twofactorauth": "^1.6",
         "nesbot/carbon": "^2.26",
         "zbateson/mail-mime-parser": "1.3.*",
