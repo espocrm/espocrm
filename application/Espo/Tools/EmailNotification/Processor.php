@@ -61,6 +61,7 @@ use Michelf\Markdown;
 use Exception;
 use DateTime;
 use StdClass;
+use Throwable;
 
 class Processor
 {
@@ -193,8 +194,16 @@ class Processor
 
             $methodName = 'processNotification' . ucfirst($type);
 
-            if (method_exists($this, $methodName)) {
+            if (!method_exists($this, $methodName)) {
+                continue;
+            }
+
+            try {
                 $this->$methodName($notification);
+            }
+            catch (Throwable $e)
+            {
+                $this->log->error("Email Notification: " . $e->getMessage());
             }
 
             $this->entityManager->saveEntity($notification);
