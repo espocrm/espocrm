@@ -35,7 +35,8 @@ use Espo\Entities\User;
 use Espo\Entities\Email;
 
 /**
- * Handles a notification emails. Provides sender parameters for notification emails.
+ * Handles a notification emails (supposed for adding CC, BCC addresses).
+ * Provides sender parameters for notification emails (e.g. setting Reply-To address).
  */
 interface EmailNotificationHandler
 {
