@@ -68,7 +68,7 @@ class AssignmentNotificatorFactory
 
     private function getClassName(string $entityType): string
     {
-        $className1 = $this->metadata->get(['recordDefs', $entityType, 'assignmentNotificatorClassName']);
+        $className1 = $this->metadata->get(['notificationDefs', $entityType, 'assignmentNotificatorClassName']);
 
         if ($className1) {
             return $className1;

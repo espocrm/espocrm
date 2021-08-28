@@ -28,6 +28,7 @@
         ["recordDefs"],
         ["pdfDefs"],
         ["aclDefs"],
+        ["notificationDefs"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]
     ]
 }
