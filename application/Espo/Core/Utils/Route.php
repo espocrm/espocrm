@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Api\Route as RouteItem;
+
 use Espo\Core\{
     Utils\Config,
     Utils\Metadata,
@@ -71,6 +73,8 @@ class Route
 
     /**
      * Get all routes.
+     *
+     * @return RouteItem[]
      */
     public function getFullList(): array
     {
@@ -78,7 +82,17 @@ class Route
             $this->init();
         }
 
-        return $this->data;
+        return array_map(
+            function (array $item): RouteItem {
+                return new RouteItem(
+                    $item['method'],
+                    $item['route'],
+                    $item['params'] ?? [],
+                    $item['noAuth'] ?? false
+                );
+            },
+            $this->data
+        );
     }
 
     private function init(): void

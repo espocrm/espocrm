@@ -38,7 +38,8 @@ use Espo\Core\{
     Api\RequestWrapper,
     Api\ResponseWrapper,
     Api\RouteProcessor,
-    Utils\Route,
+    Api\Route,
+    Utils\Route as RouteUtil,
     Utils\Log,
 };
 
@@ -78,7 +79,7 @@ class Api implements Runner
         RouteProcessor $routeProcessor,
         AuthenticationFactory $authenticationFactory,
         ApplicationUser $applicationUser,
-        Route $routeUtil,
+        RouteUtil $routeUtil,
         AuthBuilderFactory $authBuilderFactory,
         ErrorOutput $errorOutput,
         Log $log
@@ -96,7 +97,7 @@ class Api implements Runner
     {
         $slim = SlimAppFactory::create();
 
-        $slim->setBasePath(Route::detectBasePath());
+        $slim->setBasePath(RouteUtil::detectBasePath());
 
         $slim->addRoutingMiddleware();
 
@@ -111,19 +112,16 @@ class Api implements Runner
         $slim->run();
     }
 
-    private function addRoute(SlimApp $slim, array $item): void
+    private function addRoute(SlimApp $slim, Route $item): void
     {
-        $method = strtolower($item['method']);
-        $route = $item['route'];
-
-        $slim->$method(
-            $route,
-            function (Psr7Request $request, Psr7Response $response, array $args) use ($item, $slim)
+        $slim->map(
+            [$item->getMethod()],
+            $item->getRoute(),
+            function (Psr7Request $request, Psr7Response $response, array $args) use ($slim, $item)
             {
                 $routeParams = $this->getRouteParams($item, $args);
 
                 $requestWrapped = new RequestWrapper($request, $slim->getBasePath(), $routeParams);
-
                 $responseWrapped = new ResponseWrapper($response);
 
                 $this->processRequest($item, $requestWrapped, $responseWrapped);
@@ -133,11 +131,11 @@ class Api implements Runner
         );
     }
 
-    private function getRouteParams(array $item, array $args): array
+    private function getRouteParams(Route $item, array $args): array
     {
         $params = [];
 
-        $routeParams = $item['params'] ?? [];
+        $routeParams = $item->getParams();
 
         $paramKeys = array_keys($routeParams);
 
@@ -173,13 +171,13 @@ class Api implements Runner
     }
 
     private function processRequest(
-        array $item,
+        Route $item,
         RequestWrapper $requestWrapped,
         ResponseWrapper $responseWrapped
     ): void {
 
-        $noAuth = $item['noAuth'] ?? false;
-        $route = $item['route'];
+        $noAuth = $item->noAuth();
+        $route = $item->getRoute();
 
         try {
             $authRequired = !$noAuth;

@@ -27,38 +27,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Portal\Utils;
+namespace Espo\Core\Api;
 
-use Espo\Core\Api\Route as RouteItem;
-use Espo\Core\Utils\Route as BaseRoute;
-
-class Route extends BaseRoute
+class Route
 {
-    public function getFullList(): array
+    private $method;
+
+    private $route;
+
+    private $params;
+
+    private $noAuth;
+
+    public function __construct(
+        string $method,
+        string $route,
+        array $params,
+        bool $noAuth
+    ) {
+        $this->method = strtoupper($method);
+        $this->route = $route;
+        $this->params = $params;
+        $this->noAuth = $noAuth;
+    }
+
+    public function getMethod(): string
     {
-        $originalRouteList = parent::getFullList();
+        return $this->method;
+    }
 
-        $newRouteList = [];
+    public function getRoute(): string
+    {
+        return $this->route;
+    }
 
-        foreach ($originalRouteList as $route) {
-            $path = $route->getRoute();
+    public function getParams(): array
+    {
+        return $this->params;
+    }
 
-            if ($path[0] !== '/') {
-                $path = '/' . $path;
-            }
-
-            $path = '/{portalId}' . $path;
-
-            $newRoute = new RouteItem(
-                $route->getMethod(),
-                $path,
-                $route->getParams(),
-                $route->noAuth()
-            );
-
-            $newRouteList[] = $newRoute;
-        }
-
-        return $newRouteList;
+    public function noAuth(): bool
+    {
+        return $this->noAuth;
     }
 }

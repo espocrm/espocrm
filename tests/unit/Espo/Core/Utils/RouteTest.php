@@ -36,6 +36,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\DataCache,
     Utils\Resource\PathProvider,
+    Api\Route as RouteItem,
 };
 
 class RouteTest extends \PHPUnit\Framework\TestCase
@@ -171,7 +172,19 @@ class RouteTest extends \PHPUnit\Framework\TestCase
           ),
         );
 
-        $this->assertEquals($expected, $this->route->getFullList());
+        $expectedItemList = array_map(
+            function (array $item) {
+                return new RouteItem(
+                    $item['method'],
+                    $item['route'],
+                    $item['params'] ?? [],
+                    $item['noAuth'] ?? false
+                );
+            },
+            $expected
+        );
+
+        $this->assertEquals($expectedItemList, $this->route->getFullList());
     }
 
     public function testUnifyCase2ModuleRoutes()
@@ -253,7 +266,19 @@ class RouteTest extends \PHPUnit\Framework\TestCase
           ),
         );
 
-        $this->assertEquals($expected, $this->route->getFullList());
+        $expectedItemList = array_map(
+            function (array $item) {
+                return new RouteItem(
+                    $item['method'],
+                    $item['route'],
+                    $item['params'] ?? [],
+                    $item['noAuth'] ?? false
+                );
+            },
+            $expected
+        );
+
+        $this->assertEquals($expectedItemList, $this->route->getFullList());
     }
 
     public function testUnifyCase3ModuleRoutesWithRewrites()
@@ -335,7 +360,19 @@ class RouteTest extends \PHPUnit\Framework\TestCase
           ),
         );
 
-        $this->assertEquals($expected, $this->route->getFullList());
+        $expectedItemList = array_map(
+            function (array $item) {
+                return new RouteItem(
+                    $item['method'],
+                    $item['route'],
+                    $item['params'] ?? [],
+                    $item['noAuth'] ?? false
+                );
+            },
+            $expected
+        );
+
+        $this->assertEquals($expectedItemList, $this->route->getFullList());
     }
 
     public function testUnifyCase4ModuleRoutesWithRewrites()
@@ -387,6 +424,18 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             ],
         ];
 
-        $this->assertEquals($expected, $this->route->getFullList());
+        $expectedItemList = array_map(
+            function (array $item) {
+                return new RouteItem(
+                    $item['method'],
+                    $item['route'],
+                    $item['params'] ?? [],
+                    $item['noAuth'] ?? false
+                );
+            },
+            $expected
+        );
+
+        $this->assertEquals($expectedItemList, $this->route->getFullList());
     }
 }
