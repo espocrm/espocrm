@@ -29,6 +29,9 @@
 
 namespace Espo\Tools\EmailNotification;
 
+use Espo\Core\Notification\EmailNotificationHandler;
+use Espo\Core\Mail\SenderParams;
+
 use Espo\{
     ORM\Entity,
     ORM\EntityManager,
@@ -61,9 +64,9 @@ use StdClass;
 
 class Processor
 {
-    protected const HOURS_THERSHOLD = 5;
+    private const HOURS_THERSHOLD = 5;
 
-    protected const PROCESS_MAX_COUNT = 200;
+    private const PROCESS_MAX_COUNT = 200;
 
     private $htmlizer;
 
@@ -113,14 +116,13 @@ class Processor
         $this->noteAccessControl = $noteAccessControl;
     }
 
-    protected $emailNotificationEntityHandlerHash = [];
+    private $emailNotificationEntityHandlerHash = [];
 
-    protected $userIdPortalCacheMap = [];
+    private $userIdPortalCacheMap = [];
 
     public function process(): void
     {
         $mentionEmailNotifications = $this->config->get('mentionEmailNotifications');
-
         $streamEmailNotifications = $this->config->get('streamEmailNotifications');
         $portalStreamEmailNotifications = $this->config->get('portalStreamEmailNotifications');
 
@@ -139,7 +141,6 @@ class Processor
         }
 
         $fromDt = new DateTime();
-
         $fromDt->modify('-' . self::HOURS_THERSHOLD . ' hours');
 
         $where = [
@@ -152,7 +153,6 @@ class Processor
 
         if ($delay) {
             $delayDt = new DateTime();
-
             $delayDt->modify('-' . $delay . ' seconds');
 
             $where[] = ['createdAt<' => $delayDt->format('Y-m-d H:i:s')];
@@ -170,7 +170,8 @@ class Processor
             $queryList[] = $itemBuilder->build();
         }
 
-        $builder = $this->entityManager->getQueryBuilder()
+        $builder = $this->entityManager
+            ->getQueryBuilder()
             ->union()
             ->order('number')
             ->limit(0, self::PROCESS_MAX_COUNT);
@@ -326,20 +327,18 @@ class Processor
 
         $data['userName'] = $note->get('createdByName');
 
-        $post = $note->get('post') ?? ''
-            ;
-        $post = Markdown::defaultTransform($post);
+        $post = Markdown::defaultTransform(
+            $note->get('post') ?? ''
+        );
 
         $data['post'] = $post;
 
         $subjectTpl = $this->templateFileManager->getTemplate('mention', 'subject');
-
         $bodyTpl = $this->templateFileManager->getTemplate('mention', 'body');
 
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
-
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
 
         $email = $this->entityManager->getEntity('Email');
@@ -355,12 +354,25 @@ class Processor
         if ($parentId && $parentType) {
             $email->set([
                 'parentId' => $parentId,
-                'parentType' => $parentType
+                'parentType' => $parentType,
             ]);
         }
 
+        $senderParams = SenderParams::create();
+
+        if ($parent) {
+            $handler = $this->getHandler('mention', $parentType);
+
+            if ($handler) {
+                $handler->prepareEmail($email, $parent, $user);
+                $senderParams = $handler->getSenderParams($parent, $user);
+            }
+        }
+
         try {
-            $this->emailSender->send($email);
+            $this->emailSender
+                ->withParams($senderParams)
+                ->send($email);
         }
         catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
@@ -425,23 +437,24 @@ class Processor
         $this->$methodName($note, $user);
     }
 
-    protected function getEmailNotificationEntityHandler(string $entityType): ?object
+    protected function getHandler(string $type, string $entityType): ?EmailNotificationHandler
     {
-        if (!array_key_exists($entityType, $this->emailNotificationEntityHandlerHash)) {
-            $this->emailNotificationEntityHandlerHash[$entityType] = null;
+        $key = $type . '-' . $entityType;
 
-            $className = $this->metadata->get(['app', 'emailNotifications', 'handlerClassNameMap', $entityType]);
+        if (!array_key_exists($key, $this->emailNotificationEntityHandlerHash)) {
+            $this->emailNotificationEntityHandlerHash[$key] = null;
+
+            $className = $this->metadata
+                ->get(['notificationDefs', $entityType, 'emailNotificationHandlerClassNameMap', $type]);
 
             if ($className && class_exists($className)) {
                 $handler = $this->injectableFactory->create($className);
 
-                if ($handler) {
-                    $this->emailNotificationEntityHandlerHash[$entityType] = $handler;
-                }
+                $this->emailNotificationEntityHandlerHash[$key] = $handler;
             }
         }
 
-        return $this->emailNotificationEntityHandlerHash[$entityType];
+        return $this->emailNotificationEntityHandlerHash[$key];
     }
 
     protected function processNotificationNotePost(NoteEntity $note, UserEntity $user): void
@@ -459,9 +472,9 @@ class Processor
 
         $data['userName'] = $note->get('createdByName');
 
-        $post = $note->get('post') ?? '';
-
-        $post = Markdown::defaultTransform($post);
+        $post = Markdown::defaultTransform(
+            $note->get('post') ?? ''
+        );
 
         $data['post'] = $post;
 
@@ -483,7 +496,6 @@ class Processor
             $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
             $subjectTpl = $this->templateFileManager->getTemplate('notePost', 'subject', $parentType);
-
             $bodyTpl = $this->templateFileManager->getTemplate('notePost', 'body', $parentType);
 
             $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
@@ -508,13 +520,11 @@ class Processor
             $data['url'] = $this->getSiteUrl($user) . '/#Notification';
 
             $subjectTpl = $this->templateFileManager->getTemplate('notePostNoParent', 'subject');
-
             $bodyTpl = $this->templateFileManager->getTemplate('notePostNoParent', 'body');
 
             $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
             $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'note-post-email-subject', $data, true);
-
             $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
         }
 
@@ -535,80 +545,65 @@ class Processor
             ]);
         }
 
-        $smtpParams = null;
+        $senderParams = SenderParams::create();
 
-        if ($parentId && $parentType && !empty($parent)) {
-            $handler = $this->getEmailNotificationEntityHandler($parentType);
+        if ($parent) {
+            $handler = $this->getHandler('notePost', $parentType);
 
             if ($handler) {
-                $prepareEmailMethodName = 'prepareEmail';
-
-                if (method_exists($handler, $prepareEmailMethodName)) {
-                    $handler->$prepareEmailMethodName('notePost', $parent, $email, $user);
-                }
-
-                $getSmtpParamsMethodName = 'getSmtpParams';
-
-                if (method_exists($handler, $getSmtpParamsMethodName)) {
-                    $smtpParams = $handler->$getSmtpParamsMethodName('notePost', $parent, $user);
-                }
+                $handler->prepareEmail($email, $parent, $user);
+                $senderParams = $handler->getSenderParams($parent, $user);
             }
         }
 
-        $sender = $this->emailSender->create();
-
         try {
-            if ($smtpParams) {
-                $sender->withSmtpParams($smtpParams);
-            }
-
-            $sender->send($email);
+            $this->emailSender
+                ->withParams($senderParams)
+                ->send($email);
         }
         catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 
-    protected function getSiteUrl(UserEntity $user): string
+    private function getSiteUrl(UserEntity $user): string
     {
         $portal = null;
 
-        if ($user->isPortal()) {
-            if (!array_key_exists($user->id, $this->userIdPortalCacheMap)) {
-                $this->userIdPortalCacheMap[$user->id] = null;
+        if (!$user->isPortal()) {
+            return $this->config->getSiteUrl();
+        }
 
-                $portalIdList = $user->getLinkMultipleIdList('portals');
+        if (!array_key_exists($user->id, $this->userIdPortalCacheMap)) {
+            $this->userIdPortalCacheMap[$user->id] = null;
 
-                $defaultPortalId = $this->config->get('defaultPortalId');
+            $portalIdList = $user->getLinkMultipleIdList('portals');
 
-                $portalId = null;
+            $defaultPortalId = $this->config->get('defaultPortalId');
 
-                if (in_array($defaultPortalId, $portalIdList)) {
-                    $portalId = $defaultPortalId;
-                }
-                else if (count($portalIdList)) {
-                    $portalId = $portalIdList[0];
-                }
+            $portalId = null;
 
-                if ($portalId) {
-                    $portal = $this->entityManager->getEntity('Portal', $portalId);
-
-                    $this->entityManager->getRepository('Portal')->loadUrlField($portal);
-
-                    $this->userIdPortalCacheMap[$user->id] = $portal;
-                }
+            if (in_array($defaultPortalId, $portalIdList)) {
+                $portalId = $defaultPortalId;
             }
-            else {
-                $portal = $this->userIdPortalCacheMap[$user->id];
+            else if (count($portalIdList)) {
+                $portalId = $portalIdList[0];
             }
 
-            if ($portal) {
-                $url = $portal->get('url');
+            if ($portalId) {
+                $portal = $this->entityManager->getEntity('Portal', $portalId);
 
-                $url = rtrim($url, '/');
+                $this->entityManager->getRepository('Portal')->loadUrlField($portal);
 
-                return $url;
+                $this->userIdPortalCacheMap[$user->id] = $portal;
             }
+        }
+        else {
+            $portal = $this->userIdPortalCacheMap[$user->id];
+        }
+
+        if ($portal) {
+            return rtrim($portal->get('url'), '/');
         }
 
         return $this->config->getSiteUrl();
@@ -668,17 +663,24 @@ class Processor
         $data['userName'] = $note->get('createdByName');
 
         $subjectTpl = $this->templateFileManager->getTemplate('noteStatus', 'subject', $parentType);
-
         $bodyTpl = $this->templateFileManager->getTemplate('noteStatus', 'body', $parentType);
 
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render(
-            $note, $subjectTpl, 'note-status-email-subject', $data, true
+            $note,
+            $subjectTpl,
+            'note-status-email-subject',
+            $data,
+            true
         );
 
         $body = $this->getHtmlizer()->render(
-            $note, $bodyTpl, 'note-status-email-body', $data, true
+            $note,
+            $bodyTpl,
+            'note-status-email-body',
+            $data,
+            true
         );
 
         $email = $this->entityManager->getEntity('Email');
@@ -693,8 +695,19 @@ class Processor
             'parentType' => $parentType,
         ]);
 
+        $senderParams = SenderParams::create();
+
+        $handler = $this->getHandler('status', $parentType);
+
+        if ($handler) {
+            $handler->prepareEmail($email, $parent, $user);
+            $senderParams = $handler->getSenderParams($parent, $user);
+        }
+
         try {
-            $this->emailSender->send($email);
+            $this->emailSender
+                ->withParams($senderParams)
+                ->send($email);
         }
         catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
@@ -709,8 +722,7 @@ class Processor
         $allowedEntityTypeList = $this->config->get('streamEmailNotificationsEmailReceivedEntityTypeList');
 
         if (
-            is_array($allowedEntityTypeList)
-            &&
+            is_array($allowedEntityTypeList) &&
             !in_array($parentType, $allowedEntityTypeList)
         ) {
             return;
@@ -732,9 +744,9 @@ class Processor
             return;
         }
 
-        $email = $this->entityManager->getEntity('Email', $noteData->emailId);
+        $emailSubject = $this->entityManager->getEntity('Email', $noteData->emailId);
 
-        if (!$email) {
+        if (!$emailSubject) {
             return;
         }
 
@@ -743,9 +755,8 @@ class Processor
 
         foreach ($eaList as $ea) {
             if (
-                $emailRepository->isRelated($email, 'toEmailAddresses', $ea)
-                ||
-                $emailRepository->isRelated($email, 'ccEmailAddresses', $ea)
+                $emailRepository->isRelated($emailSubject, 'toEmailAddresses', $ea) ||
+                $emailRepository->isRelated($emailSubject, 'ccEmailAddresses', $ea)
             ) {
                 return;
             }
@@ -791,17 +802,24 @@ class Processor
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
         $subjectTpl = $this->templateFileManager->getTemplate('noteEmailReceived', 'subject', $parentType);
-
         $bodyTpl = $this->templateFileManager->getTemplate('noteEmailReceived', 'body', $parentType);
 
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
         $subject = $this->getHtmlizer()->render(
-            $note, $subjectTpl, 'note-email-received-email-subject-' . $parentType, $data, true
+            $note,
+            $subjectTpl,
+            'note-email-received-email-subject-' . $parentType,
+            $data,
+            true
         );
 
         $body = $this->getHtmlizer()->render(
-            $note, $bodyTpl, 'note-email-received-email-body-' . $parentType, $data, true
+            $note,
+            $bodyTpl,
+            'note-email-received-email-body-' . $parentType,
+            $data,
+            true
         );
 
         $email = $this->entityManager->getEntity('Email');
@@ -812,22 +830,30 @@ class Processor
             'isHtml' => true,
             'to' => $emailAddress,
             'isSystem' => true,
+            'parentId' => $parentId,
+            'parentType' => $parentType,
         ]);
 
-        $email->set([
-            'parentId' => $parentId,
-            'parentType' => $parentType
-        ]);
+        $senderParams = SenderParams::create();
+
+        $handler = $this->getHandler('emailReceived', $parentType);
+
+        if ($handler) {
+            $handler->prepareEmail($email, $parent, $user);
+            $senderParams = $handler->getSenderParams($parent, $user);
+        }
 
         try {
-            $this->emailSender->send($email);
+            $this->emailSender
+                ->withParams($senderParams)
+                ->send($email);
         }
         catch (Exception $e) {
             $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
         }
     }
 
-    protected function getHtmlizer(): Htmlizer
+    private function getHtmlizer(): Htmlizer
     {
         if (!$this->htmlizer) {
             $this->htmlizer = $this->htmlizerFactory->create(true);

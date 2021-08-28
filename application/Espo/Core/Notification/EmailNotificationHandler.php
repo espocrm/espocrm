@@ -27,56 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Classes\EmailNotificationHandlers;
-
-use Espo\Core\Notification\EmailNotificationHandler;
+namespace Espo\Core\Notification;
 
 use Espo\Core\Mail\SenderParams;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Entities\Email;
 
-use Espo\ORM\EntityManager;
-
-class CaseObj implements EmailNotificationHandler
+/**
+ * Handles a notification emails. Provides sender parameters for notification emails.
+ */
+interface EmailNotificationHandler
 {
-    private $inboundEmailEntityHash = [];
+    public function prepareEmail(Email $email, Entity $entity, User $user): void;
 
-    private $entityManager;
-
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    public function prepareEmail(Email $email, Entity $entity, User $user): void
-    {}
-
-    public function getSenderParams(Entity $case, User $user): ?SenderParams
-    {
-        $inboundEmailId = $case->get('inboundEmailId');
-
-        if (!$inboundEmailId) {
-            return null;
-        }
-
-        if (!array_key_exists($inboundEmailId, $this->inboundEmailEntityHash)) {
-            $this->inboundEmailEntityHash[$inboundEmailId] =
-                $this->entityManager->getEntity('InboundEmail', $inboundEmailId);
-        }
-
-        $inboundEmail = $this->inboundEmailEntityHash[$inboundEmailId];
-
-        if (!$inboundEmail) {
-            return null;
-        }
-
-        $emailAddress = $inboundEmail->get('emailAddress');
-
-        if (!$emailAddress) {
-            return null;
-        }
-
-        return SenderParams::create()->withReplyToAddress($emailAddress);
-    }
+    public function getSenderParams(Entity $entity, User $user): ?SenderParams;
 }

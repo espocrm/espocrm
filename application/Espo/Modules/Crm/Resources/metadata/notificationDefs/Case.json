@@ -1,0 +1,5 @@
+{
+    "emailNotificationHandlerClassNameMap": {
+        "notePost": "Espo\\Modules\\Crm\\Classes\\EmailNotificationHandlers\\CaseObj"
+    }
+}
