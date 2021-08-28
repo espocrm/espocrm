@@ -52,9 +52,9 @@ class CaseObj implements EmailNotificationHandler
     public function prepareEmail(Email $email, Entity $entity, User $user): void
     {}
 
-    public function getSenderParams(Entity $case, User $user): ?SenderParams
+    public function getSenderParams(Entity $entity, User $user): ?SenderParams
     {
-        $inboundEmailId = $case->get('inboundEmailId');
+        $inboundEmailId = $entity->get('inboundEmailId');
 
         if (!$inboundEmailId) {
             return null;
