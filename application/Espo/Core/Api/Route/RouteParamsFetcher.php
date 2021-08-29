@@ -27,25 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
+namespace Espo\Core\Api\Route;
 
-use Espo\Core\Application\Runner;
-use Espo\Core\Api\Starter;
+use Espo\Core\Api\Route;
 
-/**
- * Runs API request processing.
- */
-class Api implements Runner
+class RouteParamsFetcher
 {
-    private $starter;
-
-    public function __construct(Starter $starter)
+    public function fetch(Route $item, array $args): array
     {
-        $this->starter = $starter;
-    }
+        $params = [];
 
-    public function run(): void
-    {
-        $this->starter->start();
+        $routeParams = $item->getParams();
+
+        $setKeyList = [];
+
+        foreach (array_keys($routeParams) as $key) {
+            $value = $routeParams[$key];
+
+            $paramName = $key;
+
+            if ($value[0] === ':') {
+                $realKey = substr($value, 1);
+
+                $params[$paramName] = $args[$realKey];
+
+                $setKeyList[] = $realKey;
+
+                continue;
+            }
+
+            $params[$paramName] = $value;
+        }
+
+        foreach ($args as $key => $value) {
+            if (in_array($key, $setKeyList)) {
+                continue;
+            }
+
+            $params[$key] = $value;
+        }
+
+        return $params;
     }
 }

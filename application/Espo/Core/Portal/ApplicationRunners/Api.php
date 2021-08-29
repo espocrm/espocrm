@@ -29,36 +29,20 @@
 
 namespace Espo\Core\Portal\ApplicationRunners;
 
-use Espo\Core\{
-    ApplicationRunners\Api as ApiBase,
-    Authentication\AuthenticationFactory,
-    ApplicationUser,
-    Portal\Utils\Route,
-    Api\AuthBuilderFactory,
-    Api\RouteProcessor,
-    Api\ErrorOutput,
-    Utils\Log,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\Portal\Api\Starter;
 
-class Api extends ApiBase
+class Api implements Runner
 {
-    public function __construct(
-        RouteProcessor $routeProcessor,
-        AuthenticationFactory $authenticationFactory,
-        ApplicationUser $applicationUser,
-        Route $routeUtil,
-        AuthBuilderFactory $authBuilderFactory,
-        ErrorOutput $errorOutput,
-        Log $log
-    ) {
-        parent::__construct(
-            $routeProcessor,
-            $authenticationFactory,
-            $applicationUser,
-            $routeUtil,
-            $authBuilderFactory,
-            $errorOutput,
-            $log
-        );
+    private $starter;
+
+    public function __construct(Starter $starter)
+    {
+        $this->starter = $starter;
+    }
+
+    public function run(): void
+    {
+        $this->starter->start();
     }
 }

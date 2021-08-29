@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Api;
 
-use Espo\Core\{
-    Utils\Log,
-};
+use Espo\Core\Utils\Log;
 
 class AuthBuilderFactory
 {

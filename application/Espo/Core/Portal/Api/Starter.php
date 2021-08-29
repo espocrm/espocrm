@@ -27,25 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\ApplicationRunners;
+namespace Espo\Core\Portal\Api;
 
-use Espo\Core\Application\Runner;
-use Espo\Core\Api\Starter;
+use Espo\Core\Api\Starter as StarterBase;
+use Espo\Core\Portal\Utils\Route as RouteUtil;
+use Espo\Core\Api\RequestProcessor;
+use Espo\Core\Api\Route\RouteParamsFetcher;
+use Espo\Core\Utils\Log;
 
-/**
- * Runs API request processing.
- */
-class Api implements Runner
+class Starter extends StarterBase
 {
-    private $starter;
-
-    public function __construct(Starter $starter)
-    {
-        $this->starter = $starter;
-    }
-
-    public function run(): void
-    {
-        $this->starter->start();
+    public function __construct(
+        RequestProcessor $requestProcessor,
+        RouteUtil $routeUtil,
+        RouteParamsFetcher $routeParamsFetcher,
+        Log $log
+    ) {
+        parent::__construct(
+            $requestProcessor,
+            $routeUtil,
+            $routeParamsFetcher,
+            $log
+        );
     }
 }
