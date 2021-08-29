@@ -44,7 +44,7 @@ class ResponseWrapper implements ApiResponse
     /**
      * @var Psr7Response
      */
-    protected $response;
+    private $response;
 
     public function __construct(Psr7Response $response)
     {
