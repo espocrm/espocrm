@@ -34,12 +34,14 @@ use Espo\Core\Authentication\Authentication;
 use Espo\Core\Application;
 use Espo\Core\Portal\Application as PortalApplication;
 use Espo\Core\Api\RequestWrapper;
+use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\ApplicationRunners\Rebuild;
 use Espo\Core\Utils\PasswordHash;
 
 use Espo\Entities\User;
 
 use Slim\Psr7\Factory\RequestFactory;
+use Slim\Psr7\Response;
 
 class Tester
 {
@@ -205,10 +207,18 @@ class Tester
                 (new RequestFactory())->createRequest('POST', '')
             );
 
+            $response = new ResponseWrapper(new Response());
+
             if (isset($this->userName) || $this->authenticationMethod) {
                 $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
 
-                $result = $auth->login($this->userName, $this->password, $request, $this->authenticationMethod);
+                $auth->login(
+                    $this->userName,
+                    $this->password,
+                    $request,
+                    $response,
+                    $this->authenticationMethod
+                );
             }
             else {
                 $this->application->setupSystemUser();
@@ -469,7 +479,7 @@ class Tester
         }
 
         $application = $this->getApplication();
-        
+
         $entityManager = $application->getContainer()->get('entityManager');
         $config = $application->getContainer()->get('config');
 

@@ -68,6 +68,13 @@ class ResponseWrapper implements ApiResponse
         return $this;
     }
 
+    public function addHeader(string $name, string $value): Response
+    {
+        $this->response = $this->response->withAddedHeader($name, $value);
+
+        return $this;
+    }
+
     public function getHeader(string $name): ?string
     {
         if (!$this->response->hasHeader($name)) {

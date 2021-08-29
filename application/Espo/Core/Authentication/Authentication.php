@@ -55,6 +55,7 @@ use Espo\Core\{
     ApplicationState,
     ORM\EntityManagerProxy,
     Api\Request,
+    Api\Response,
     Utils\Log,
 };
 
@@ -136,6 +137,7 @@ class Authentication
         ?string $username,
         ?string $password,
         Request $request,
+        Response $response,
         ?string $authenticationMethod = null
     ): Result {
 
@@ -262,8 +264,9 @@ class Authentication
 
         if (!$result->isSecondStepRequired() && $request->getHeader('Espo-Authorization')) {
             if (!$authToken) {
-                $authToken = $this->createAuthToken($user, $request);
-            } else {
+                $authToken = $this->createAuthToken($user, $request, $response);
+            }
+            else {
                 $this->authTokenManager->renew($authToken);
             }
 
@@ -281,7 +284,7 @@ class Authentication
 
         if ($authToken && !$authLogRecord && isset($authToken->id)) {
             $authLogRecord = $this->entityManager
-                ->getRepository('AuthLogRecord')
+                ->getRDBRepository('AuthLogRecord')
                 ->select(['id'])
                 ->where([
                     'authTokenId' => $authToken->id
@@ -291,7 +294,7 @@ class Authentication
         }
 
         if ($authLogRecord) {
-            $user->set('authLogRecordId', $authLogRecord->id);
+            $user->set('authLogRecordId', $authLogRecord->getId());
         }
 
         return $result;
@@ -452,14 +455,14 @@ class Authentication
         ];
 
         $wasFailed = (bool) $this->entityManager
-            ->getRepository('AuthLogRecord')
+            ->getRDBRepository('AuthLogRecord')
             ->select(['id'])
             ->where($where)
             ->findOne();
 
         if ($wasFailed) {
             $failAttemptCount = $this->entityManager
-                ->getRepository('AuthLogRecord')
+                ->getRDBRepository('AuthLogRecord')
                 ->where($where)
                 ->count();
         }
@@ -473,7 +476,7 @@ class Authentication
         }
     }
 
-    private function createAuthToken(User $user, Request $request): AuthToken
+    private function createAuthToken(User $user, Request $request, Response $response): AuthToken
     {
         $createSecret = $request->getHeader('Espo-Authorization-Create-Token-Secret') === 'true';
 
@@ -496,7 +499,7 @@ class Authentication
         );
 
         if ($createSecret) {
-            $this->setSecretInCookie($authToken->getSecret());
+            $this->setSecretInCookie($authToken->getSecret(), $response);
         }
 
         if (
@@ -504,7 +507,7 @@ class Authentication
             $authToken instanceof AuthTokenEntity
         ) {
             $concurrentAuthTokenList = $this->entityManager
-                ->getRepository('AuthToken')
+                ->getRDBRepository('AuthToken')
                 ->select(['id'])
                 ->where([
                     'userId' => $user->id,
@@ -523,7 +526,7 @@ class Authentication
         return $authToken;
     }
 
-    public function destroyAuthToken(string $token, Request $request): bool
+    public function destroyAuthToken(string $token, Request $request, Response $response): bool
     {
         $authToken = $this->authTokenManager->get($token);
 
@@ -537,7 +540,7 @@ class Authentication
             $sentSecret = $request->getCookieParam('auth-token-secret');
 
             if ($sentSecret === $authToken->getSecret()) {
-                $this->setSecretInCookie(null);
+                $this->setSecretInCookie(null, $response);
             }
         }
 
@@ -603,15 +606,19 @@ class Authentication
         $this->entityManager->saveEntity($authLogRecord);
     }
 
-    private function setSecretInCookie(?string $secret): void
+    private function setSecretInCookie(?string $secret, Response $response): void
     {
-        $time = $secret ? strtotime('+1000 days') : -1;
+        $time = $secret ? strtotime('+1000 days') : 1;
 
-        setcookie('auth-token-secret', $secret, [
-            'expires' => $time,
-            'path' => '/',
-            'httponly' => true,
-            'samesite' => 'Lax',
-        ]);
+        $value = $secret ? $secret : 'deleted';
+
+        $headerValue =
+            'auth-token-secret=' . urlencode($value) .
+            '; path=/' .
+            '; expires=' . gmdate('D, d M Y H:i:s T', $time) .
+            '; HttpOnly' .
+            '; SameSite=Lax';
+
+        $response->addHeader('Set-Cookie', $headerValue);
     }
 }

@@ -32,6 +32,7 @@ namespace Espo\Core\ORM;
 use Espo\ORM\{
     Entity,
     Repository\Repository,
+    Repository\RDBRepository,
 };
 
 use Espo\Core\{
@@ -71,5 +72,10 @@ class EntityManagerProxy
     public function getRepository(string $entityType): Repository
     {
         return $this->getEntityManager()->getRepository($entityType);
+    }
+
+    public function getRDBRepository(string $entityType): RDBRepository
+    {
+        return $this->getEntityManager()->getRDBRepository($entityType);
     }
 }

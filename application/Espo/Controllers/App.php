@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Authentication\Authentication;
 use Espo\Core\Di;
 use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
 
 use StdClass;
 
@@ -50,7 +51,7 @@ class App implements
         return (object) $this->serviceFactory->create('App')->getUserData();
     }
 
-    public function postActionDestroyAuthToken(Request $request): bool
+    public function postActionDestroyAuthToken(Request $request, Response $response): bool
     {
         $data = $request->getParsedBody();
 
@@ -60,6 +61,6 @@ class App implements
 
         $auth = $this->injectableFactory->create(Authentication::class);
 
-        return $auth->destroyAuthToken($data->token, $request);
+        return $auth->destroyAuthToken($data->token, $request, $response);
     }
 }

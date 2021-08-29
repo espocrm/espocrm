@@ -127,7 +127,13 @@ class Auth
     ): ?AuthResult {
 
         try {
-            $result = $this->authentication->login($username, $password, $request, $authenticationMethod);
+            $result = $this->authentication->login(
+                $username,
+                $password,
+                $request,
+                $response,
+                $authenticationMethod
+            );
         }
         catch (Exception $e) {
             $this->handleException($response, $e);
@@ -153,7 +159,13 @@ class Auth
         $showDialog = $this->isEntryPoint;
 
         try {
-            $result = $this->authentication->login($username, $password, $request, $authenticationMethod);
+            $result = $this->authentication->login(
+                $username,
+                $password,
+                $request,
+                $response,
+                $authenticationMethod
+            );
         }
         catch (Exception $e) {
             $this->handleException($response, $e);
