@@ -29,188 +29,27 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\RunnerParameterized,
-    Application\RunnerParams,
-    Exceptions\Error,
-    EntryPoint\EntryPointManager,
-    ApplicationUser,
-    ORM\EntityManager,
-    Portal\Application as PortalApplication,
-    Utils\Route,
-    Utils\ClientManager,
-    Authentication\AuthenticationFactory,
-    Api\AuthBuilderFactory,
-    Api\ErrorOutput,
-    Api\RequestWrapper,
-    Api\ResponseWrapper,
-    Authentication\AuthToken\AuthTokenManager,
-};
-
-use Slim\{
-    ResponseEmitter,
-    Factory\ServerRequestCreatorFactory,
-    Psr7\Response,
-};
-
-use Exception;
+use Espo\Core\Application\RunnerParameterized;
+use Espo\Core\Application\RunnerParams;
+use Espo\Core\EntryPoint\Starter;
 
 /**
  * Runs an entry point.
  */
 class EntryPoint implements RunnerParameterized
 {
-    private $authenticationFactory;
+    private $starter;
 
-    private $entryPointManager;
-
-    private $entityManager;
-
-    private $clientManager;
-
-    private $applicationUser;
-
-    private $authTokenManager;
-
-    private $authBuilderFactory;
-
-    private $errorOutput;
-
-    public function __construct(
-        AuthenticationFactory $authenticationFactory,
-        EntryPointManager $entryPointManager,
-        EntityManager $entityManager,
-        ClientManager $clientManager,
-        ApplicationUser $applicationUser,
-        AuthTokenManager $authTokenManager,
-        AuthBuilderFactory $authBuilderFactory,
-        ErrorOutput $errorOutput
-    ) {
-        $this->authenticationFactory = $authenticationFactory;
-        $this->entryPointManager = $entryPointManager;
-        $this->entityManager = $entityManager;
-        $this->clientManager = $clientManager;
-        $this->applicationUser = $applicationUser;
-        $this->authTokenManager = $authTokenManager;
-        $this->authBuilderFactory = $authBuilderFactory;
-        $this->errorOutput = $errorOutput;
+    public function __construct(Starter $starter)
+    {
+        $this->starter = $starter;
     }
 
     public function run(RunnerParams $params): void
     {
-        $requestWrapped = new RequestWrapper(
-            ServerRequestCreatorFactory::create()->createServerRequestFromGlobals(),
-            Route::detectBasePath()
+        $this->starter->start(
+            $params->get('entryPoint'),
+            $params->get('final') ?? false
         );
-
-        if ($requestWrapped->getMethod() !== 'GET') {
-            throw new Error("Only GET requests allowed for entry points.");
-        }
-
-        $entryPoint = $params->get('entryPoint') ?? $requestWrapped->getQueryParam('entryPoint');
-        $final = $params->get('final') ?? false;
-
-        if (!$entryPoint) {
-            throw new Error("No 'entryPoint' param.");
-        }
-
-        $authRequired = $this->entryPointManager->checkAuthRequired($entryPoint);
-        $authNotStrict = $this->entryPointManager->checkNotStrictAuth($entryPoint);
-
-        if ($authRequired && !$authNotStrict && !$final) {
-            $portalId = $this->detectPortalId($requestWrapped);
-
-            if ($portalId) {
-                $this->runThroughPortal($portalId, $entryPoint);
-
-                return;
-            }
-        }
-
-        $responseWrapped = new ResponseWrapper(new Response());
-
-        $this->processRequest($entryPoint, $requestWrapped, $responseWrapped, $authRequired, $authNotStrict);
-
-        (new ResponseEmitter())->emit($responseWrapped->getResponse());
-    }
-
-    private function processRequest(
-        string $entryPoint,
-        RequestWrapper $requestWrapped,
-        ResponseWrapper $responseWrapped,
-        bool $authRequired,
-        bool $authNotStrict
-    ): void {
-
-        try {
-            $authentication = $authNotStrict ?
-                $this->authenticationFactory->createWithAnyAccessAllowed() :
-                $this->authenticationFactory->create();
-
-            $apiAuth = $this->authBuilderFactory
-                ->create()
-                ->setAuthentication($authentication)
-                ->setAuthRequired($authRequired)
-                ->forEntryPoint()
-                ->build();
-
-            $authResult = $apiAuth->process($requestWrapped, $responseWrapped);
-
-            if (!$authResult->isResolved()) {
-                return;
-            }
-
-            if ($authResult->isResolvedUseNoAuth()) {
-                $this->applicationUser->setupSystemUser();
-            }
-
-            ob_start();
-
-            $this->entryPointManager->run($entryPoint, $requestWrapped, $responseWrapped);
-
-            $contents = ob_get_clean();
-
-            if ($contents) {
-                $responseWrapped->writeBody($contents);
-            }
-        }
-        catch (Exception $exception) {
-            $this->errorOutput->processWithBodyPrinting($requestWrapped, $responseWrapped, $exception);
-        }
-    }
-
-    private function detectPortalId(RequestWrapper $requestWrapped): ?string
-    {
-        if ($requestWrapped->hasQueryParam('portalId')) {
-            return $requestWrapped->getQueryParam('portalId');
-        }
-
-        $token = $requestWrapped->getCookieParam('auth-token');
-
-        if (!$token) {
-            return null;
-        }
-
-        $authToken = $this->authTokenManager->get($token);
-
-        if ($authToken) {
-            return $authToken->getPortalId();
-        }
-
-        return null;
-    }
-
-    private function runThroughPortal(string $portalId, string $entryPoint): void
-    {
-        $app = new PortalApplication($portalId);
-
-        $app->setClientBasePath($this->clientManager->getBasePath());
-
-        $params = RunnerParams::fromArray([
-            'entryPoint' => $entryPoint,
-            'final' => true,
-        ]);
-
-        $app->run(EntryPoint::class, $params);
     }
 }
