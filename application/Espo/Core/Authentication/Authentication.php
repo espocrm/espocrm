@@ -108,38 +108,19 @@ class Authentication
         $this->log = $log;
     }
 
-    protected function setPortal(Portal $portal)
-    {
-        $this->portal = $portal;
-    }
-
-    protected function isPortal(): bool
-    {
-        return (bool) $this->portal || $this->applicationState->isPortal();
-    }
-
-    protected function getPortal(): Portal
-    {
-        if ($this->portal) {
-            return $this->portal;
-        }
-
-        return $this->applicationState->getPortal();
-    }
-
     /**
      * Process logging in.
+     *
+     * Warning: This method can change the state of the object (by setting the `portal` prop.).
      *
      * @throws Forbidden
      * @throws ServiceUnavailable
      */
-    public function login(
-        ?string $username,
-        ?string $password,
-        Request $request,
-        Response $response,
-        ?string $authenticationMethod = null
-    ): Result {
+    public function login(AuthenticationData $data, Request $request, Response $response): Result
+    {
+        $username = $data->getUsername();
+        $password = $data->getPassword();
+        $authenticationMethod = $data->getMethod();
 
         if (
             $authenticationMethod &&
@@ -160,6 +141,12 @@ class Authentication
 
         $authToken = null;
         $authTokenIsFound = false;
+
+        if (!$authenticationMethod && $password === null) {
+            $this->log->error("AUTH: Trying to login w/o password.");
+
+            return Result::fail('No password');
+        }
 
         if (!$authenticationMethod) {
             $authToken = $this->authTokenManager->get($password);
@@ -239,7 +226,7 @@ class Authentication
         }
 
         if ($this->isPortal()) {
-            $user->set('portalId', $this->getPortal()->id);
+            $user->set('portalId', $this->getPortal()->getId());
         }
 
         if (!$this->isPortal()) {
@@ -300,6 +287,25 @@ class Authentication
         return $result;
     }
 
+    private function setPortal(Portal $portal): void
+    {
+        $this->portal = $portal;
+    }
+
+    private function isPortal(): bool
+    {
+        return (bool) $this->portal || $this->applicationState->isPortal();
+    }
+
+    private function getPortal(): Portal
+    {
+        if ($this->portal) {
+            return $this->portal;
+        }
+
+        return $this->applicationState->getPortal();
+    }
+
     private function processAuthTokenCheck(AuthToken $authToken): bool
     {
         if ($this->allowAnyAccess && $authToken->getPortalId() && !$this->isPortal()) {
@@ -314,7 +320,7 @@ class Authentication
             return true;
         }
 
-        if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->id) {
+        if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->getId()) {
             $this->log->info(
                 "AUTH: Trying to login to portal with a token not related to portal."
             );
@@ -490,7 +496,7 @@ class Authentication
             'hash' => $user->get('password'),
             'ipAddress' => $request->getServerParam('REMOTE_ADDR'),
             'userId' => $user->id,
-            'portalId' => $this->isPortal() ? $this->getPortal()->id : null,
+            'portalId' => $this->isPortal() ? $this->getPortal()->getId() : null,
             'createSecret' => $createSecret,
         ];
 
@@ -547,7 +553,7 @@ class Authentication
         return true;
     }
 
-    protected function createAuthLogRecord(
+    private function createAuthLogRecord(
         ?string $username,
         ?User $user,
         Request $request,
@@ -579,7 +585,7 @@ class Authentication
         ]);
 
         if ($this->isPortal()) {
-            $authLogRecord->set('portalId', $this->getPortal()->id);
+            $authLogRecord->set('portalId', $this->getPortal()->getId());
         }
 
         if ($user) {

@@ -27,28 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication;
+namespace tests\unit\Espo\Core\Authentication;
 
-use Espo\Core\InjectableFactory;
+use Espo\Core\Authentication\AuthenticationData;
 
-class AuthenticationFactory
+class AuthenticationDataTest extends \PHPUnit\Framework\TestCase
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
+    public function testCreate1(): void
     {
-        $this->injectableFactory = $injectableFactory;
+        $data = AuthenticationData::create()
+            ->withUsername('u')
+            ->withPassword('p')
+            ->withMethod(null);
+
+        $this->assertEquals('u', $data->getUsername());
+        $this->assertEquals('p', $data->getPassword());
+        $this->assertNull($data->getMethod());
     }
 
-    public function create(): Authentication
+    public function testCreate2(): void
     {
-        return $this->injectableFactory->create(Authentication::class);
-    }
+        $data = AuthenticationData::create()
+            ->withUsername(null)
+            ->withPassword(null)
+            ->withMethod('m');
 
-    public function createWithAnyAccessAllowed(): Authentication
-    {
-        return $this->injectableFactory->createWith(Authentication::class, [
-            'allowAnyAccess' => true,
-        ]);
+        $this->assertNull($data->getUsername());
+        $this->assertNull($data->getPassword());
+        $this->assertEquals('m', $data->getMethod());
     }
 }

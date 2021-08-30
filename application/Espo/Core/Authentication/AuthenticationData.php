@@ -29,26 +29,65 @@
 
 namespace Espo\Core\Authentication;
 
-use Espo\Core\InjectableFactory;
-
-class AuthenticationFactory
+class AuthenticationData
 {
-    private $injectableFactory;
+    private $username;
 
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
+    private $password;
+
+    private $method;
+
+    public function __construct(
+        ?string $username = null,
+        ?string $password = null,
+        ?string $method = null
+    ) {
+        $this->username = $username;
+        $this->password = $password;
+        $this->method = $method;
     }
 
-    public function create(): Authentication
+    public static function create(): self
     {
-        return $this->injectableFactory->create(Authentication::class);
+        return new self();
     }
 
-    public function createWithAnyAccessAllowed(): Authentication
+    public function getUsername(): ?string
     {
-        return $this->injectableFactory->createWith(Authentication::class, [
-            'allowAnyAccess' => true,
-        ]);
+        return $this->username;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function getMethod(): ?string
+    {
+        return $this->method;
+    }
+
+    public function withUsername(?string $username): self
+    {
+        $obj = clone $this;
+        $obj->username = $username;
+
+        return $obj;
+    }
+
+    public function withPassword(?string $password): self
+    {
+        $obj = clone $this;
+        $obj->password = $password;
+
+        return $obj;
+    }
+
+    public function withMethod(?string $method): self
+    {
+        $obj = clone $this;
+        $obj->method = $method;
+
+        return $obj;
     }
 }

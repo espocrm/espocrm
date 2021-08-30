@@ -35,6 +35,7 @@ use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Authentication\Authentication;
+use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Utils\Log;
 
@@ -77,15 +78,18 @@ class Auth
             list($username, $password) = $this->obtainUsernamePasswordFromRequest($request);
         }
 
+        $authenticationData = AuthenticationData::create()
+            ->withUsername($username)
+            ->withPassword($password)
+            ->withMethod($authenticationMethod);
+
         $hasAuthData = (bool) ($username || $authenticationMethod);
 
         if (!$this->authRequired && !$this->isEntryPoint && $hasAuthData) {
             $authResult = $this->processAuthNotRequired(
-                $username,
-                $password,
+                $authenticationData,
                 $request,
-                $response,
-                $authenticationMethod
+                $response
             );
 
             if ($authResult) {
@@ -98,13 +102,7 @@ class Auth
         }
 
         if ($hasAuthData) {
-            return $this->processWithAuthData(
-                $username,
-                $password,
-                $request,
-                $response,
-                $authenticationMethod
-            );
+            return $this->processWithAuthData($authenticationData, $request, $response);
         }
 
         $showDialog = $this->isEntryPoint;
@@ -118,22 +116,14 @@ class Auth
         return AuthResult::createNotResolved();
     }
 
-    protected function processAuthNotRequired(
-        string $username,
-        ?string $password,
+    private function processAuthNotRequired(
+        AuthenticationData $data,
         Request $request,
-        Response $response,
-        ?string $authenticationMethod
+        Response $response
     ): ?AuthResult {
 
         try {
-            $result = $this->authentication->login(
-                $username,
-                $password,
-                $request,
-                $response,
-                $authenticationMethod
-            );
+            $result = $this->authentication->login($data, $request, $response);
         }
         catch (Exception $e) {
             $this->handleException($response, $e);
@@ -148,24 +138,16 @@ class Auth
         return null;
     }
 
-    protected function processWithAuthData(
-        ?string $username,
-        ?string $password,
+    private function processWithAuthData(
+        AuthenticationData $data,
         Request $request,
-        Response $response,
-        ?string $authenticationMethod
+        Response $response
     ): AuthResult {
 
         $showDialog = $this->isEntryPoint;
 
         try {
-            $result = $this->authentication->login(
-                $username,
-                $password,
-                $request,
-                $response,
-                $authenticationMethod
-            );
+            $result = $this->authentication->login($data, $request, $response);
         }
         catch (Exception $e) {
             $this->handleException($response, $e);

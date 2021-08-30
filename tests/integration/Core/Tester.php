@@ -30,6 +30,7 @@
 namespace tests\integration\Core;
 
 use Espo\Core\Authentication\Authentication;
+use Espo\Core\Authentication\AuthenticationData;
 
 use Espo\Core\Application;
 use Espo\Core\Portal\Application as PortalApplication;
@@ -212,13 +213,12 @@ class Tester
             if (isset($this->userName) || $this->authenticationMethod) {
                 $this->password = isset($this->password) ? $this->password : $this->defaultUserPassword;
 
-                $auth->login(
-                    $this->userName,
-                    $this->password,
-                    $request,
-                    $response,
-                    $this->authenticationMethod
-                );
+                $authenticationData = AuthenticationData::create()
+                    ->withUsername($this->userName)
+                    ->withPassword($this->password)
+                    ->withMethod($this->authenticationMethod);
+
+                $auth->login($authenticationData, $request, $response);
             }
             else {
                 $this->application->setupSystemUser();
