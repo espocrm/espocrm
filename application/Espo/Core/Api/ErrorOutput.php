@@ -44,7 +44,7 @@ use Throwable;
  */
 class ErrorOutput
 {
-    protected $errorDescriptions = [
+    private $errorDescriptions = [
         400 => 'Bad Request',
         401 => 'Unauthorized',
         403 => 'Forbidden',
@@ -54,7 +54,7 @@ class ErrorOutput
         503 => 'Service Unavailable',
     ];
 
-    protected $allowedStatusCodeList = [
+    private $allowedStatusCodeList = [
         200,
         201,
         400,
@@ -66,7 +66,7 @@ class ErrorOutput
         503,
     ];
 
-    protected $ignorePrintXStatusReasonExceptionClassNameList = [
+    private $ignorePrintXStatusReasonExceptionClassNameList = [
         'PDOException',
     ];
 
@@ -176,7 +176,7 @@ class ErrorOutput
         }
     }
 
-    protected function doesExceptionHaveBody(Throwable $exception): bool
+    private function doesExceptionHaveBody(Throwable $exception): bool
     {
         if (
             !$exception instanceof Error &&
@@ -194,7 +194,7 @@ class ErrorOutput
         return $exceptionBody !== null;
     }
 
-    protected function getCodeDescription(int $statusCode): ?string
+    private function getCodeDescription(int $statusCode): ?string
     {
         if (isset($this->errorDescriptions[$statusCode])) {
             return $this->errorDescriptions[$statusCode];
@@ -203,12 +203,12 @@ class ErrorOutput
         return null;
     }
 
-    protected function clearPasswords(string $string): string
+    private function clearPasswords(string $string): string
     {
         return preg_replace('/"(.*?password.*?)":".*?"/i', '"$1":"*****"', $string);
     }
 
-    protected static function generateErrorBody(string $header, string $text): string
+    private static function generateErrorBody(string $header, string $text): string
     {
         $body = "<h1>" . $header . "</h1>";
         $body .= $text;
@@ -216,14 +216,14 @@ class ErrorOutput
         return $body;
     }
 
-    protected function stripInvalidCharactersFromHeaderValue(string $value): string
+    private function stripInvalidCharactersFromHeaderValue(string $value): string
     {
         $pattern = "/[^ \t\x21-\x7E\x80-\xFF]/";
 
         return preg_replace($pattern, ' ', $value);
     }
 
-    protected function processRoute(string $route, Request $request, Throwable $exception): void
+    private function processRoute(string $route, Request $request, Throwable $exception): void
     {
         $requestBodyString = $this->clearPasswords($request->getBodyContents());
 
