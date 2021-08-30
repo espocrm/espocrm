@@ -36,9 +36,16 @@ use Espo\Core\{
     Select\SearchParams,
 };
 
+use Espo\Classes\Select\Email\AdditionalAppliers\Main as EmailAdditionalApplier;
+
 class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
 {
-    protected function setUp() : void
+    /**
+     * @var SelectBuilderFactory
+     */
+    private $factory;
+
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -554,6 +561,9 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
         $query = $builder
             ->from('Email')
             ->withSearchParams($searchParams)
+            ->withAdditionalApplierClassNameList([
+                EmailAdditionalApplier::class,
+            ])
             ->build();
 
         $raw = $query->getRaw();

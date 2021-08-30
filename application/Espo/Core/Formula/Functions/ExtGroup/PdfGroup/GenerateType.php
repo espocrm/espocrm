@@ -35,9 +35,11 @@ use Espo\Core\Formula\{
     Exceptions\Error,
 };
 
+use Espo\Services\Pdf as Service;
+
 use Espo\Core\Utils\Util;
 
-use Espo\Tools\Pdf\Data;
+use Espo\Tools\Pdf\Params;
 
 use Espo\Core\Di;
 
@@ -112,12 +114,13 @@ class GenerateType extends BaseFunction implements
             $fileName = Util::sanitizeFileName($entity->get('name')) . '.pdf';
         }
 
-        $data = Data::create()->withAcl(false);
+        $params = Params::create()->withAcl(false);
 
         try {
-            $contents = $this->serviceFactory
-                ->create('Pdf')
-                ->generate($entity, $template, $data);
+            /** @var Service $service */
+            $service = $this->serviceFactory->create('Pdf');
+
+            $contents = $service->generate($entity, $template, $params);
         }
         catch (Exception $e) {
             $this->log("Error while generating. Message: " . $e->getMessage() . ".", 'error');
