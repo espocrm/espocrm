@@ -70,7 +70,8 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         events: {
             'click [data-action="removeValue"]': function (e) {
-                var value = $(e.currentTarget).data('value').toString();
+                var value = $(e.currentTarget).attr('data-value').toString();
+
                 this.removeValue(value);
             },
             'click [data-action="showAddModal"]': function () {
@@ -398,7 +399,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             var selected = [];
 
             this.$el.find('.list-group .list-group-item').each(function (i, el) {
-                var value = $(el).data('value').toString();
+                var value = $(el).attr('data-value').toString();
 
                 selected.push(value);
             });
@@ -410,7 +411,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             var list = this.selected.map(function (item) {
                 var label = null;
 
-                if (this.translatedOptions != null) {
+                if (this.translatedOptions !== null) {
                     if (item in this.translatedOptions) {
                         label = this.translatedOptions[item];
 
