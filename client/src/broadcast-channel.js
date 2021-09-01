@@ -32,7 +32,7 @@ define('broadcast-channel', [], function () {
         constructor() {
             this.object = null;
 
-            if (BroadcastChannel) {
+            if (window.BroadcastChannel) {
                 this.object = new BroadcastChannel('app');
             }
         }
