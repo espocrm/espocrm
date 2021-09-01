@@ -227,6 +227,8 @@ define('views/record/panels-container', 'view', function (Dep) {
                 }
             }
 
+            let wasShown = !this.recordHelper.getPanelStateParam(name, 'hidden');
+
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
             var isFound = false;
@@ -251,7 +253,7 @@ define('views/record/panels-container', 'view', function (Dep) {
                     view.disabled = false;
                     view.trigger('show');
 
-                    if (view.getFieldViews) {
+                    if (!wasShown && view.getFieldViews) {
                         var fields = view.getFieldViews();
 
                         if (fields) {
@@ -261,26 +263,27 @@ define('views/record/panels-container', 'view', function (Dep) {
                         }
                     }
                 }
+
                 if (typeof callback === 'function') {
                     callback.call(this);
                 }
+
+                return;
             }
-            else {
-                this.once('after:render', () => {
-                    var view = this.getView(name);
 
-                    if (view) {
-                        view.$el.closest('.panel').removeClass('hidden');
-                        view.disabled = false;
-                        view.trigger('show');
-                    }
+            this.once('after:render', () => {
+                var view = this.getView(name);
 
-                    if (typeof callback === 'function') {
-                        callback.call(this);
-                    }
-                });
+                if (view) {
+                    view.$el.closest('.panel').removeClass('hidden');
+                    view.disabled = false;
+                    view.trigger('show');
+                }
 
-            }
+                if (typeof callback === 'function') {
+                    callback.call(this);
+                }
+            });
         },
 
         hidePanel: function (name, locked, softLockedType, callback) {
@@ -323,13 +326,14 @@ define('views/record/panels-container', 'view', function (Dep) {
                 if (typeof callback === 'function') {
                     callback.call(this);
                 }
+
+                return;
             }
-            else {
-                if (typeof callback === 'function') {
-                    this.once('after:render', () => {
-                        callback.call(this);
-                    });
-                }
+
+            if (typeof callback === 'function') {
+                this.once('after:render', () => {
+                    callback.call(this);
+                });
             }
         },
 
