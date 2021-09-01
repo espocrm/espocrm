@@ -42,6 +42,8 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     private $systemConfigPath = 'tests/unit/testData/Utils/Config/systemConfig.php';
 
+    private $internalConfigPath = 'tests/unit/testData/cache/config-internal.php';
+
     protected function setUp() : void
     {
         $this->fileManager = new ConfigFileManager;
@@ -57,6 +59,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
         $this->reflection->setProperty('configPath', $this->configPath);
         $this->reflection->setProperty('systemConfigPath', $this->systemConfigPath);
+        $this->reflection->setProperty('internalConfigPath', $this->internalConfigPath);
     }
 
     protected function tearDown() : void
