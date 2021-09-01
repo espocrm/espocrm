@@ -72,7 +72,7 @@ define('views/record/panels-container', 'view', function (Dep) {
             this.readOnly = false;
 
             if (onlyNotSetAsReadOnly) {
-                this.panelList.forEach(function (item) {
+                this.panelList.forEach((item) => {
                     this.applyAccessToActions(item.buttonList);
                     this.applyAccessToActions(item.actionList);
 
@@ -83,7 +83,7 @@ define('views/record/panels-container', 'view', function (Dep) {
                             actionsView.reRender();
                         }
                     }
-                }, this);
+                });
             }
         },
 
@@ -92,9 +92,10 @@ define('views/record/panels-container', 'view', function (Dep) {
                 return;
             }
 
-            actionList.forEach(function (item) {
+            actionList.forEach((item) => {
                 if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
                     item.hidden = true;
+
                     return;
                 }
 
@@ -103,17 +104,18 @@ define('views/record/panels-container', 'view', function (Dep) {
                         item.isHiddenByAcl = false;
                         item.hidden = false;
                     }
-                } else {
+                }
+                else {
                     if (!item.hidden) {
                         item.isHiddenByAcl = true;
                         item.hidden = true;
                     }
                 }
-            }, this);
+            });
         },
 
         setupPanelViews: function () {
-            this.panelList.forEach(function (p) {
+            this.panelList.forEach((p) => {
                 var name = p.name;
 
                 var options = {
@@ -131,11 +133,13 @@ define('views/record/panels-container', 'view', function (Dep) {
 
                 options = _.extend(options, p.options);
 
-                this.createView(name, p.view, options, function (view) {
+                this.createView(name, p.view, options, (view) => {
                     if ('getActionList' in view) {
                         p.actionList = view.getActionList();
+
                         this.applyAccessToActions(p.actionList);
                     }
+
                     if ('getButtonList' in view) {
                         p.buttonList = view.getButtonList();
                         this.applyAccessToActions(p.buttonList);
@@ -143,10 +147,12 @@ define('views/record/panels-container', 'view', function (Dep) {
 
                     if (view.titleHtml) {
                         p.titleHtml = view.titleHtml;
-                    } else {
+                    }
+                    else {
                         if (p.label) {
                             p.title = this.translate(p.label, 'labels', this.scope);
-                        } else {
+                        }
+                        else {
                             p.title = view.title;
                         }
                     }
@@ -159,8 +165,8 @@ define('views/record/panels-container', 'view', function (Dep) {
                         scope: this.scope,
                         entityType: this.entityType,
                     });
-                }, this);
-            }, this);
+                });
+            });
         },
 
         setupPanels: function () {},
@@ -168,13 +174,13 @@ define('views/record/panels-container', 'view', function (Dep) {
         getFieldViews: function (withHidden) {
             var fields = {};
 
-            this.panelList.forEach(function (p) {
+            this.panelList.forEach((p) => {
                 var panelView = this.getView(p.name);
 
                 if ((!panelView.disabled || withHidden) && 'getFieldViews' in panelView) {
                     fields = _.extend(fields, panelView.getFieldViews());
                 }
-            }, this);
+            });
 
             return fields;
         },
@@ -186,12 +192,13 @@ define('views/record/panels-container', 'view', function (Dep) {
         fetch: function () {
             var data = {};
 
-            this.panelList.forEach(function (p) {
+            this.panelList.forEach((p) => {
                 var panelView = this.getView(p.name);
+
                 if (!panelView.disabled && 'fetch' in panelView) {
                     data = _.extend(data, panelView.fetch());
                 }
-            }, this);
+            });
 
             return data;
         },
@@ -202,9 +209,8 @@ define('views/record/panels-container', 'view', function (Dep) {
             }
 
             if (softLockedType) {
-                this.recordHelper.setPanelStateParam(
-                    name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false
-                );
+                this.recordHelper
+                    .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false);
             }
 
             for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
@@ -225,12 +231,12 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             var isFound = false;
 
-            this.panelList.forEach(function (d) {
-                if (d.name == name) {
+            this.panelList.forEach((d) => {
+                if (d.name === name) {
                     d.hidden = false;
                     isFound = true;
                 }
-            }, this);
+            });
 
             if (!isFound) {
                 return;
@@ -241,11 +247,13 @@ define('views/record/panels-container', 'view', function (Dep) {
 
                 if (view) {
                     view.$el.closest('.panel').removeClass('hidden');
+
                     view.disabled = false;
                     view.trigger('show');
 
                     if (view.getFieldViews) {
                         var fields = view.getFieldViews();
+
                         if (fields) {
                             for (var i in fields) {
                                 fields[i].reRender();
@@ -253,11 +261,12 @@ define('views/record/panels-container', 'view', function (Dep) {
                         }
                     }
                 }
-                if (typeof callback == 'function') {
+                if (typeof callback === 'function') {
                     callback.call(this);
                 }
-            } else {
-                this.once('after:render', function () {
+            }
+            else {
+                this.once('after:render', () => {
                     var view = this.getView(name);
 
                     if (view) {
@@ -266,10 +275,10 @@ define('views/record/panels-container', 'view', function (Dep) {
                         view.trigger('show');
                     }
 
-                    if (typeof callback == 'function') {
+                    if (typeof callback === 'function') {
                         callback.call(this);
                     }
-                }, this);
+                });
 
             }
         },
@@ -291,12 +300,12 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             var isFound = false;
 
-            this.panelList.forEach(function (d) {
-                if (d.name == name) {
+            this.panelList.forEach((d) => {
+                if (d.name === name) {
                     d.hidden = true;
                     isFound = true;
                 }
-            }, this);
+            });
 
             if (!isFound) {
                 return;
@@ -304,19 +313,22 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             if (this.isRendered()) {
                 var view = this.getView(name);
+
                 if (view) {
                     view.$el.closest('.panel').addClass('hidden');
                     view.disabled = true;
                     view.trigger('hide');
                 }
-                if (typeof callback == 'function') {
+
+                if (typeof callback === 'function') {
                     callback.call(this);
                 }
-            } else {
-                if (typeof callback == 'function') {
-                    this.once('after:render', function () {
+            }
+            else {
+                if (typeof callback === 'function') {
+                    this.once('after:render', () => {
                         callback.call(this);
-                    }, this);
+                    });
                 }
             }
         },
@@ -334,7 +346,7 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             var newList = [];
 
-            this.panelList.forEach(function (item, i) {
+            this.panelList.forEach((item, i) => {
                 item.index = ('index' in item) ? item.index : i;
 
                 var allowedInLayout = false;
@@ -354,14 +366,15 @@ define('views/record/panels-container', 'view', function (Dep) {
                         item[i] = itemData[i];
                     }
                 }
+
                 if (item.disabled && !allowedInLayout) {
                     return;
                 }
 
                 newList.push(item);
-            }, this);
+            });
 
-            newList.sort(function (v1, v2) {
+            newList.sort((v1, v2) => {
                 return v1.index - v2.index;
             });
 
@@ -370,7 +383,7 @@ define('views/record/panels-container', 'view', function (Dep) {
             if (this.recordViewObject && this.recordViewObject.dynamicLogic) {
                 var dynamicLogic = this.recordViewObject.dynamicLogic;
 
-                this.panelList.forEach(function (item) {
+                this.panelList.forEach((item) => {
                     if (item.dynamicLogicVisible) {
                         dynamicLogic.addPanelVisibleCondition(item.name, item.dynamicLogicVisible);
 
@@ -382,7 +395,7 @@ define('views/record/panels-container', 'view', function (Dep) {
                     if (item.style && item.style !== 'default' && item.dynamicLogicStyled) {
                         dynamicLogic.addPanelStyledCondition(item.name, item.dynamicLogicStyled);
                     }
-                }, this);
+                });
             }
         },
 
@@ -392,8 +405,8 @@ define('views/record/panels-container', 'view', function (Dep) {
 
             var index = -1;
 
-            this.panelList.forEach(function (p, i) {
-                if (p.name == '_delimiter_') {
+            this.panelList.forEach((p, i) => {
+                if (p.name === '_delimiter_') {
                     afterDelimiter = true;
                     rightAfterDelimiter = true;
                     index = i;
@@ -404,6 +417,7 @@ define('views/record/panels-container', 'view', function (Dep) {
                 if (afterDelimiter) {
                     p.hidden = true;
                     p.hiddenAfterDelimiter = true;
+
                     this.recordHelper.setPanelStateParam(p.name, 'hidden', true);
                     this.recordHelper.setPanelStateParam(p.name, 'hiddenDelimiterLocked', true);
                 }
@@ -412,15 +426,15 @@ define('views/record/panels-container', 'view', function (Dep) {
                     p.isRightAfterDelimiter = true;
                     rightAfterDelimiter = false;
                 }
-            }, this);
+            });
 
             if (~index) {
                 this.panelList.splice(index, 1);
             }
 
-            this.panelList = this.panelList.filter(function (p) {
+            this.panelList = this.panelList.filter((p) => {
                 return !this.recordHelper.getPanelStateParam(p.name, 'hiddenLocked');
-            }, this);
+            });
 
             this.panelsAreSet = true;
 
@@ -428,7 +442,7 @@ define('views/record/panels-container', 'view', function (Dep) {
         },
 
         actionShowMorePanels: function () {
-            this.panelList.forEach(function (p) {
+            this.panelList.forEach(p => {
                 if (!p.hiddenAfterDelimiter) {
                     return;
                 }
@@ -436,22 +450,24 @@ define('views/record/panels-container', 'view', function (Dep) {
                 delete p.isRightAfterDelimiter;
 
                 this.showPanel(p.name, 'delimiter');
-            }, this);
+            });
 
             this.$el.find('.panels-show-more-delimiter').remove();
         },
 
         onPanelsReady: function (callback) {
             Promise.race([
-                new Promise (function (resolve) {
-                    if (this.panelsAreSet) resolve();
-                }.bind(this)),
-                new Promise (function (resolve) {
+                new Promise(resolve => {
+                    if (this.panelsAreSet) {
+                        resolve();
+                    }
+                }),
+                new Promise(resolve => {
                     this.once('panels-set', resolve);
-                }.bind(this))
-            ]).then(function () {
+                })
+            ]).then(() => {
                 callback.call(this);
-            }.bind(this));
+            });
         },
 
     });
