@@ -28,7 +28,7 @@
 
 define('broadcast-channel', [], function () {
 
-    let Channel = class {
+    return class {
         constructor() {
             this.object = null;
 
@@ -53,6 +53,4 @@ define('broadcast-channel', [], function () {
             this.object.addEventListener('message', callback);
         }
     };
-
-    return Channel;
 });
