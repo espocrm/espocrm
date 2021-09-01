@@ -31,7 +31,7 @@
     "lodash": "^4.17.21",
     "minimist": ">=1.2.2",
     "pofile": "~1.0.11",
-    "tar": "^6.1.2",
+    "tar": "^6.1.9",
     "trim-newlines": "^4.0.1"
   },
   "dependencies": {

@@ -38,20 +38,33 @@ define('views/record/detail-middle', 'view', function (Dep) {
         data: function () {
             return {
                 hiddenPanels: this.recordHelper.getHiddenPanels(),
-                hiddenFields: this.recordHelper.getHiddenFields()
+                hiddenFields: this.recordHelper.getHiddenFields(),
             };
         },
 
         showPanel: function (name) {
-            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) return;
+            if (this.recordHelper.getPanelStateParam(name, 'hiddenLocked')) {
+                return;
+            }
 
+            this.showPanelInternal(name);
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+        },
+
+        showPanelInternal: function (name) {
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
             }
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
 
-            if (this.options.panelFieldListMap && this.options.panelFieldListMap[name]) {
-                this.options.panelFieldListMap[name].forEach(function (field) {
+            let wasShown = !this.recordHelper.getPanelStateParam(name, 'hidden');
+
+            if (
+                !wasShown &&
+                this.options.panelFieldListMap &&
+                this.options.panelFieldListMap[name]
+            ) {
+                this.options.panelFieldListMap[name].forEach(field => {
                     var view = this.getFieldView(field);
 
                     if (!view) {
@@ -59,22 +72,26 @@ define('views/record/detail-middle', 'view', function (Dep) {
                     }
 
                     view.reRender();
-                }, this);
+                });
             }
         },
 
         hidePanel: function (name) {
+            this.hidePanelInternal(name);
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
+        },
+
+        hidePanelInternal: function (name) {
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
             }
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
         },
 
         hideField: function (name) {
             this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
-            var processHtml = function () {
+            var processHtml = () => {
                 var fieldView = this.getFieldView(name);
 
                 if (fieldView) {
@@ -85,19 +102,21 @@ define('views/record/detail-middle', 'view', function (Dep) {
                     $field.addClass('hidden');
                     $label.addClass('hidden');
                     $cell.addClass('hidden-cell');
-                } else {
+                }
+                else {
                     this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
                     this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
                 }
-            }.bind(this);
+            };
 
             if (this.isRendered()) {
                 processHtml();
-            } else {
-                this.once('after:render', function () {
+            }
+            else {
+                this.once('after:render', () => {
                     processHtml();
-                }, this);
+                });
             }
 
             var view = this.getFieldView(name);
@@ -114,7 +133,7 @@ define('views/record/detail-middle', 'view', function (Dep) {
 
             this.recordHelper.setFieldStateParam(name, 'hidden', false);
 
-            var processHtml = function () {
+            var processHtml = () => {
                 var fieldView = this.getFieldView(name);
 
                 if (fieldView) {
@@ -131,14 +150,15 @@ define('views/record/detail-middle', 'view', function (Dep) {
                     this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
                     this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
                 }
-            }.bind(this);
+            };
 
             if (this.isRendered()) {
                 processHtml();
-            } else {
-                this.once('after:render', function () {
+            }
+            else {
+                this.once('after:render', () => {
                     processHtml();
-                }, this);
+                });
             }
 
             var view = this.getFieldView(name);
@@ -155,11 +175,11 @@ define('views/record/detail-middle', 'view', function (Dep) {
         },
 
         getFieldViews: function () {
-            var nestedViews = this.nestedViews;
             var fieldViews = {};
 
             for (var viewKey in this.nestedViews) {
                 var name = this.nestedViews[viewKey].name;
+
                 fieldViews[name] = this.nestedViews[viewKey];
             }
 
@@ -173,9 +193,11 @@ define('views/record/detail-middle', 'view', function (Dep) {
         // @todo remove
         getView: function (name) {
             var view = Dep.prototype.getView.call(this, name);
+
             if (!view) {
                 view = this.getFieldView(name);
             }
+
             return view;
         },
 

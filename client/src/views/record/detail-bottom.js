@@ -64,15 +64,17 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
         setupStreamPanel: function () {
             var streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
+
             if (streamAllowed === null) {
-                this.listenToOnce(this.model, 'sync', function () {
+                this.listenToOnce(this.model, 'sync', () => {
                     streamAllowed = this.getAcl().checkModel(this.model, 'stream', true);
+
                     if (streamAllowed) {
-                        this.onPanelsReady(function () {
+                        this.onPanelsReady(() => {
                             this.showPanel('stream', 'acl');
                         });
                     }
-                }, this);
+                });
             }
             if (streamAllowed !== false) {
                 this.panelList.push({
@@ -105,6 +107,7 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
         setup: function () {
             this.type = this.mode;
+
             if ('type' in this.options) {
                 this.type = this.options.type;
             }
@@ -116,40 +119,49 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
             this.wait(true);
 
             Promise.all([
-                new Promise(function (resolve) {
+                new Promise((resolve) => {
                     this.getHelper().layoutManager.get(
                         this.scope,
                         'bottomPanels' + Espo.Utils.upperCaseFirst(this.type),
-                        function (layoutData) {
+                        (layoutData) => {
                             this.layoutData = layoutData;
+
                             resolve();
-                        }.bind(this)
-                    )
-                }.bind(this))
-            ]).then(function () {
+                        }
+                    );
+                })
+            ]).then(() => {
                 var panelNameList = [];
 
-                this.panelList = this.panelList.filter(function (p) {
+                this.panelList = this.panelList.filter((p) => {
                     panelNameList.push(p.name);
+
                     if (p.aclScope) {
                         if (!this.getAcl().checkScope(p.aclScope)) {
                             return;
                         }
                     }
+
                     if (p.accessDataList) {
                         if (!Espo.Utils.checkAccessDataList(p.accessDataList, this.getAcl(), this.getUser())) {
                             return false;
                         }
                     }
+
                     return true;
-                }, this);
+                });
 
                 if (this.relationshipPanels) {
                     var linkDefs = (this.model.defs || {}).links || {};
+
                     if (this.layoutData) {
                         for (var name in this.layoutData) {
-                            if (!linkDefs[name]) continue;
+                            if (!linkDefs[name]) {
+                                continue;
+                            }
+
                             var p = this.layoutData[name];
+
                             if (!~panelNameList.indexOf(name) && !p.disbled) {
                                 this.addRelationshipPanel(name, p);
                             }
@@ -157,28 +169,31 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
                     }
                 }
 
-                this.panelList = this.panelList.map(function (p) {
+                this.panelList = this.panelList.map((p) => {
                     var item = Espo.Utils.clone(p);
+
                     if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                         item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
-                    } else {
+                    }
+                    else {
                         this.recordHelper.setPanelStateParam(p.name, 'hidden', item.hidden || false);
                     }
-                    return item;
-                }, this);
 
-                this.panelList.forEach(function (item) {
+                    return item;
+                });
+
+                this.panelList.forEach((item) => {
                     item.actionsViewKey = item.name + 'Actions';
-                }, this);
+                });
 
                 this.alterPanels();
 
                 this.setupPanelsFinal();
 
                 this.setupPanelViews();
-                this.wait(false);
 
-            }.bind(this));
+                this.wait(false);
+            });
         },
 
         setReadOnly: function () {
@@ -191,9 +206,10 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
             var p;
 
-            if (typeof item == 'string' || item instanceof String) {
+            if (typeof item === 'string' || item instanceof String) {
                 p = {name: item};
-            } else {
+            }
+            else {
                 p = Espo.Utils.clone(item || {});
             }
 
@@ -213,7 +229,9 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
             var foreignScope = links[name].entity;
 
-            if ((scopesDefs[foreignScope] || {}).disabled) return;
+            if ((scopesDefs[foreignScope] || {}).disabled) {
+                return;
+            }
 
             if (!this.getAcl().check(foreignScope, 'read')) {
                 return;
@@ -223,7 +241,10 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
             defs = Espo.Utils.clone(defs);
 
             for (var i in defs) {
-                if (i in p) continue;
+                if (i in p) {
+                    continue;
+                }
+
                 p[i] = defs[i];
             }
 
@@ -233,7 +254,8 @@ define('views/record/detail-bottom', 'views/record/panels-container', function (
 
             if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                 p.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
-            } else {
+            }
+            else {
                 this.recordHelper.setPanelStateParam(p.name, 'hidden', p.hidden || false);
             }
 

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/datetime', 'views/fields/date', function (Dep) {
+define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (Dep, moment) {
 
     return Dep.extend({
 
@@ -57,7 +57,7 @@ define('views/fields/datetime', 'views/fields/date', function (Dep) {
             'on',
             'after',
             'before',
-            'between'
+            'between',
         ],
 
         timeFormatMap: {
@@ -156,9 +156,12 @@ define('views/fields/datetime', 'views/fields/date', function (Dep) {
                 timeFormat: this.timeFormatMap[this.getDateTime().timeFormat]
             });
 
-            $time.parent().find('button.time-picker-btn').on('click', function () {
-                $time.timepicker('show');
-            });
+            $time
+                .parent()
+                .find('button.time-picker-btn')
+                .on('click', () => {
+                    $time.timepicker('show');
+                });
         },
 
         setDefaultTime: function () {
@@ -190,43 +193,39 @@ define('views/fields/datetime', 'views/fields/date', function (Dep) {
 
                 this.initTimepicker();
 
-                this.$element.on('change.datetime', function (e) {
+                this.$element.on('change.datetime', (e) => {
                     if (this.$element.val() && !$time.val()) {
                         this.setDefaultTime();
                         this.trigger('change');
                     }
-                }.bind(this));
+                });
 
                 var timeout = false;
 
-                var changeCallback = function () {
+                $time.on('change', () => {
                     if (!timeout) {
                         this.trigger('change');
                     }
+
                     timeout = true;
 
-                    setTimeout(function () {
-                        timeout = false;
-                    }, 100)
-                }.bind(this);
-
-                $time.on('change', changeCallback);
+                    setTimeout(() => timeout = false, 100);
+                });
             }
         },
 
         update: function (value) {
             if (this.mode === 'edit') {
-                var formatedValue = this.getDateTime().toDisplay(value);
-
                 var pair = this.splitDatetime(value);
 
                 this.$date.val(pair[0]);
                 this.$time.val(pair[1]);
+
+                return;
             }
-            else {
-                this.setup();
-                this.render();
-            }
+
+            this.setup();
+            this.render();
         },
 
         parse: function (string) {

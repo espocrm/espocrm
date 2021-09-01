@@ -86,112 +86,135 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
             this.setupPanels();
 
             if (!this.additionalPanelsDisabled) {
-                var additionalPanels = this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.type]) || [];
-                additionalPanels.forEach(function (panel) {
+                var additionalPanels = this.getMetadata()
+                    .get(['clientDefs', this.scope, 'sidePanels', this.type]) || [];
+
+                additionalPanels.forEach((panel) => {
                     this.panelList.push(panel);
-                }, this);
+                });
             }
 
-            this.panelList = this.panelList.filter(function (p) {
+            this.panelList = this.panelList.filter((p) => {
                 if (p.aclScope) {
                     if (!this.getAcl().checkScope(p.aclScope)) {
                         return;
                     }
                 }
+
                 if (p.accessDataList) {
                     if (!Espo.Utils.checkAccessDataList(p.accessDataList, this.getAcl(), this.getUser())) {
                         return false;
                     }
                 }
-                return true;
-            }, this);
 
-            this.panelList = this.panelList.map(function (p) {
+                return true;
+            });
+
+            this.panelList = this.panelList.map((p) => {
                 var item = Espo.Utils.clone(p);
+
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
                 } else {
                     this.recordHelper.setPanelStateParam(p.name, 'hidden', item.hidden || false);
                 }
-                return item;
-            }, this);
 
-            this.panelList.forEach(function (item) {
+                return item;
+            });
+
+            this.panelList.forEach((item) => {
                 item.actionsViewKey = item.name + 'Actions';
-            }, this);
+            });
 
             this.wait(
                 Promise.all([
-                    new Promise(
-                        function (resolve) {
-                            this.getHelper().layoutManager.get(this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type), function (layoutData) {
+                    new Promise((resolve) => {
+                        this.getHelper().layoutManager.get(
+                            this.scope,
+                            'sidePanels' + Espo.Utils.upperCaseFirst(this.type),
+                            (layoutData) => {
                                 this.layoutData = layoutData;
-                                resolve();
-                            }.bind(this))
-                        }.bind(this)
-                    ),
-                    new Promise(
-                        function (resolve) {
-                            if (!this.defaultPanel) resolve();
-                            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) resolve();
-                            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type])) resolve();
-                            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type])) resolve();
-                            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList'])) resolve();
 
-                            this.getHelper().layoutManager.get(this.scope, 'defaultSidePanel', function (layoutData) {
+                                resolve();
+                            });
+                    }),
+                    new Promise((resolve) => {
+                        if (
+                            !this.defaultPanel ||
+                            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled']) ||
+                            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]) ||
+                            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]) ||
+                            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList'])
+                        ) {
+                            resolve();
+
+                            return;
+                        }
+
+                        this.getHelper()
+                            .layoutManager
+                            .get(this.scope, 'defaultSidePanel', (layoutData) => {
                                 this.defaultSidePanelLayoutData = layoutData;
+
                                 resolve();
-                            }.bind(this))
-                        }.bind(this)
-                    ),
-                ]).then(
-                    function () {
-                        if (this.defaultPanel)
-                            this.setupDefaultPanel();
+                            });
+                    }),
+                ]).then(() => {
+                    if (this.defaultPanel) {
+                        this.setupDefaultPanel();
+                    }
 
-                        this.alterPanels();
-
-                        this.setupPanelsFinal();
-
-                        this.setupPanelViews();
-                    }.bind(this)
-                )
+                    this.alterPanels();
+                    this.setupPanelsFinal();
+                    this.setupPanelViews();
+                })
             );
         },
 
-
         setupDefaultPanel: function () {
             var met = false;
-            this.panelList.forEach(function (item) {
+
+            this.panelList.forEach((item) => {
                 if (item.name === 'default') {
                     met = true;
                 }
-            }, this);
+            });
 
-            if (met) return;
+            if (met) {
+                return;
+            }
 
             var defaultPanelDefs = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]);
 
-            if (defaultPanelDefs === false) return;
+            if (defaultPanelDefs === false) {
+                return;
+            }
 
-            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) return;
+            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) {
+                return;
+            }
 
             defaultPanelDefs = defaultPanelDefs || this.defaultPanelDefs;
 
-            if (!defaultPanelDefs) return;
+            if (!defaultPanelDefs) {
+                return;
+            }
 
             defaultPanelDefs = Espo.Utils.cloneDeep(defaultPanelDefs);
 
             defaultPanelDefs.view = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelView']) ||
                 defaultPanelDefs.view;
 
-            var fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
+            var fieldList = this.getMetadata()
+                .get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
 
-            if (!fieldList)
+            if (!fieldList) {
                 fieldList = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelFieldList']);
+            }
 
-            if (!fieldList && this.defaultSidePanelLayoutData)
+            if (!fieldList && this.defaultSidePanelLayoutData) {
                 fieldList = this.defaultSidePanelLayoutData;
+            }
 
             if (fieldList) {
                 defaultPanelDefs.options = defaultPanelDefs.options || {};
@@ -199,26 +222,31 @@ define('views/record/detail-side', 'views/record/panels-container', function (De
             }
 
             if (defaultPanelDefs.options.fieldList && defaultPanelDefs.options.fieldList.length) {
-                defaultPanelDefs.options.fieldList.forEach(function (item, i) {
+                defaultPanelDefs.options.fieldList.forEach((item, i) => {
                     if (typeof item !== 'object') {
                         item = {
                             name: item
-                        }
+                        };
+
                         defaultPanelDefs.options.fieldList[i] = item;
                     }
+
                     if (item.name === ':assignedUser') {
                         if (this.model.hasField('assignedUsers')) {
                             item.name = 'assignedUsers';
+
                             if (!this.model.getFieldParam('assignedUsers', 'view')) {
                                 item.view = 'views/fields/assigned-users';
                             }
-                        } else if (this.model.hasField('assignedUser')) {
+                        }
+                        else if (this.model.hasField('assignedUser')) {
                             item.name = 'assignedUser';
-                        } else {
+                        }
+                        else {
                             defaultPanelDefs.options.fieldList[i] = {};
                         }
                     }
-                }, this);
+                });
             }
 
             this.panelList.unshift(defaultPanelDefs);
