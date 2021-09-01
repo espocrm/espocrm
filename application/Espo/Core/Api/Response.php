@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Api;
 
-use Psr\Http\Message\ResponseInterface as Psr7Response;
 use Psr\Http\Message\StreamInterface;
 
 /**
