@@ -202,7 +202,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
 
                 var timeout = false;
 
-                var changeCallback = () => {
+                $time.on('change', () => {
                     if (!timeout) {
                         this.trigger('change');
                     }
@@ -210,9 +210,7 @@ define('views/fields/datetime', ['views/fields/date', 'lib!moment'], function (D
                     timeout = true;
 
                     setTimeout(() => timeout = false, 100);
-                };
-
-                $time.on('change', changeCallback);
+                });
             }
         },
 
