@@ -67,8 +67,6 @@ interface Request
 
     /**
      * Get all route parameters.
-     *
-     * @return string[]
      */
     public function getRouteParams(): array;
 
