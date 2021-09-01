@@ -89,9 +89,16 @@ class ResponseWrapper implements ApiResponse
         return $this->response->hasHeader($name);
     }
 
-    public function getResponse(): Psr7Response
+    /**
+     * @return string[]
+     */
+    public function getHeaderAsArray(string $name): array
     {
-        return $this->response;
+        if (!$this->response->hasHeader($name)) {
+            return [];
+        }
+
+        return $this->response->getHeader($name);
     }
 
     public function writeBody(string $string): Response
@@ -106,5 +113,10 @@ class ResponseWrapper implements ApiResponse
         $this->response = $this->response->withBody($body);
 
         return $this;
+    }
+
+    public function getResponse(): Psr7Response
+    {
+        return $this->response;
     }
 }

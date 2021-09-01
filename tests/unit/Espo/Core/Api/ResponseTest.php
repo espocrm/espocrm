@@ -27,55 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Api;
+namespace tests\unit\Espo\Core\Api;
 
-use Psr\Http\Message\ResponseInterface as Psr7Response;
-use Psr\Http\Message\StreamInterface;
+use Slim\Psr7\Factory\ResponseFactory;
+use Espo\Core\Api\ResponseWrapper;
 
-/**
- * Representation of an HTTP response. An instance is mutable.
- */
-interface Response
+class ResponseTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * Set a status code.
-     */
-    public function setStatus(int $code, ?string $reason = null): self;
+    public function testHeaderAsArray(): void
+    {
+        $response = (new ResponseFactory())
+            ->createResponse()
+            ->withAddedHeader('Test', '1')
+            ->withAddedHeader('Test', '2');
 
-    /**
-     * Set a specific header.
-     */
-    public function setHeader(string $name, string $value): self;
+        $wrapped = new ResponseWrapper($response);
 
-    /**
-     * Add a specific header.
-     */
-    public function addHeader(string $name, string $value): self;
-
-    /**
-     * Get a header value.
-     */
-    public function getHeader(string $name): ?string;
-
-    /**
-     * Whether a header is set.
-     */
-    public function hasHeader(string $name): bool;
-
-    /**
-     * Get a header values as an array.
-     *
-     * @return string[]
-     */
-    public function getHeaderAsArray(string $name): array;
-
-    /**
-     * Write a body.
-     */
-    public function writeBody(string $string): self;
-
-    /**
-     * Set a body.
-     */
-    public function setBody(StreamInterface $body): self;
+        $this->assertEquals(['1', '2'], $wrapped->getHeaderAsArray('Test'));
+    }
 }
