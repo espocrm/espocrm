@@ -71,7 +71,7 @@ interface Request
     public function getRouteParams(): array;
 
     /**
-     * Get a header value.
+     * Get a header value. Multiple values will be concatenated with a comma.
      */
     public function getHeader(string $name): ?string;
 
@@ -79,6 +79,13 @@ interface Request
      * Whether a header is set.
      */
     public function hasHeader(string $name): bool;
+
+    /**
+     * Get a header values as array.
+     *
+     * @return string[]
+     */
+    public function getHeaderAsArray(string $name): array;
 
     /**
      * Get a request method.

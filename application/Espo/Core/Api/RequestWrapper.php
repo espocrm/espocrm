@@ -135,6 +135,18 @@ class RequestWrapper implements ApiRequest
         return $this->request->hasHeader($name);
     }
 
+    /**
+     * @return string[]
+     */
+    public function getHeaderAsArray(string $name): array
+    {
+        if (!$this->request->hasHeader($name)) {
+            return [];
+        }
+
+        return $this->request->getHeader($name);
+    }
+
     public function getMethod(): string
     {
         return $this->request->getMethod();

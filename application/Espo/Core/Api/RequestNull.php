@@ -85,6 +85,14 @@ class RequestNull implements ApiRequest
         return false;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getHeaderAsArray(string $name): array
+    {
+        return [];
+    }
+
     public function getMethod(): string
     {
         return '';

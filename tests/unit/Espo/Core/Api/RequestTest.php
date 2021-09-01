@@ -216,4 +216,16 @@ class RequestTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(null, $requestWrapped->getContentType());
     }
+
+    public function testHeaderAsArray(): void
+    {
+        $request = (new RequestFactory())
+            ->createRequest('POST', 'http://localhost/?')
+            ->withAddedHeader('Test', '1')
+            ->withAddedHeader('Test', '2');
+
+        $requestWrapped = new RequestWrapper($request);
+
+        $this->assertEquals(['1', '2'], $requestWrapped->getHeaderAsArray('Test'));
+    }
 }
