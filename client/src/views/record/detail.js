@@ -512,9 +512,14 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
 
             softLockedType = softLockedType || 'default';
 
-            this.recordHelper.setPanelStateParam(
-                name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false
-            );
+            this.recordHelper
+                .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false);
+
+            if (softLockedType === 'dynamicLogic') {
+                if (!this.recordHelper.getPanelStateParam(name, 'hidden')) {
+                    return;
+                }
+            }
 
             for (var i = 0; i < this.panelSoftLockedTypeList.length; i++) {
                 var iType = this.panelSoftLockedTypeList[i];
@@ -530,12 +535,10 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 }
             }
 
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
-
             var middleView = this.getView('middle');
 
             if (middleView) {
-                middleView.showPanel(name);
+                middleView.showPanelInternal(name);
             }
 
             var bottomView = this.getView('bottom');
@@ -571,11 +574,11 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     }
                 }, this);
             }
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
         },
 
         hidePanel: function (name, locked, softLockedType) {
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
-
             softLockedType = softLockedType || 'default';
 
             if (locked) {
@@ -583,15 +586,20 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (softLockedType) {
-                this.recordHelper.setPanelStateParam(
-                    name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', true
-                );
+                this.recordHelper
+                    .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', true);
+            }
+
+            if (softLockedType === 'dynamicLogic') {
+                if (this.recordHelper.getPanelStateParam(name, 'hidden')) {
+                    return;
+                }
             }
 
             var middleView = this.getView('middle');
 
             if (middleView) {
-                middleView.hidePanel(name);
+                middleView.hidePanelInternal(name);
             }
 
             var bottomView = this.getView('bottom');
@@ -627,6 +635,8 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                     }
                 }, this);
             }
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
         },
 
         afterRender: function () {

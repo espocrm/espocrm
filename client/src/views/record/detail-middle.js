@@ -47,13 +47,23 @@ define('views/record/detail-middle', 'view', function (Dep) {
                 return;
             }
 
+            this.showPanelInternal(name);
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+        },
+
+        showPanelInternal: function (name) {
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
             }
 
-            this.recordHelper.setPanelStateParam(name, 'hidden', false);
+            let wasShown = !this.recordHelper.getPanelStateParam(name, 'hidden');
 
-            if (this.options.panelFieldListMap && this.options.panelFieldListMap[name]) {
+            if (
+                !wasShown &&
+                this.options.panelFieldListMap &&
+                this.options.panelFieldListMap[name]
+            ) {
                 this.options.panelFieldListMap[name].forEach(field => {
                     var view = this.getFieldView(field);
 
@@ -67,11 +77,15 @@ define('views/record/detail-middle', 'view', function (Dep) {
         },
 
         hidePanel: function (name) {
+            this.hidePanelInternal(name);
+
+            this.recordHelper.setPanelStateParam(name, 'hidden', true);
+        },
+
+        hidePanelInternal: function (name) {
             if (this.isRendered()) {
                 this.$el.find('.panel[data-name="'+name+'"]').addClass('hidden');
             }
-
-            this.recordHelper.setPanelStateParam(name, 'hidden', true);
         },
 
         hideField: function (name) {
