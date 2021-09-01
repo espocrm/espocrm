@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Record;
 
-use Espo\Core\{
-    Api\Request,
-};
+use Espo\Core\Api\Request;
 
 class CreateParamsFetcher
 {

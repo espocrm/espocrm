@@ -81,7 +81,7 @@ interface Request
     public function hasHeader(string $name): bool;
 
     /**
-     * Get a header values as array.
+     * Get a header values as an array.
      *
      * @return string[]
      */
