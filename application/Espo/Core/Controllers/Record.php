@@ -29,23 +29,18 @@
 
 namespace Espo\Core\Controllers;
 
-use Espo\Core\Exceptions\{
-    BadRequest,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Api\Request;
+use Espo\Core\Select\SearchParams;
 
-use Espo\Core\{
-    Api\Request,
-    Select\SearchParams,
-};
-
-use StdClass;
+use stdClass;
 
 class Record extends RecordBase
 {
     /**
      * List related records.
      */
-    public function getActionListLinked(Request $request): StdClass
+    public function getActionListLinked(Request $request): stdClass
     {
         $id = $request->getRouteParam('id');
         $link = $request->getRouteParam('link');

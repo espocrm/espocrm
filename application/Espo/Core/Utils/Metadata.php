@@ -41,6 +41,9 @@ use Espo\Core\{
 
 use StdClass;
 
+/**
+ * Application metadata.
+ */
 class Metadata
 {
     private $data = null;

@@ -29,38 +29,33 @@
 
 namespace Espo\Core\Controllers;
 
-use Espo\Core\Exceptions\{
-    Forbidden,
-    NotFound,
-    BadRequest,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\{
-    Record\ServiceContainer as RecordServiceContainer,
-    Record\SearchParamsFetcher,
-    Record\CreateParamsFetcher,
-    Record\ReadParamsFetcher,
-    Record\UpdateParamsFetcher,
-    Record\DeleteParamsFetcher,
-    Container,
-    Acl,
-    AclManager,
-    Utils\Config,
-    Utils\Metadata,
-    ServiceFactory,
-    Api\Request,
-    Api\Response,
-    Record\Service as RecordService,
-    Select\SearchParams,
-    Di,
-};
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
+use Espo\Core\Record\SearchParamsFetcher;
+use Espo\Core\Record\CreateParamsFetcher;
+use Espo\Core\Record\ReadParamsFetcher;
+use Espo\Core\Record\UpdateParamsFetcher;
+use Espo\Core\Record\DeleteParamsFetcher;
+use Espo\Core\Record\Service as RecordService;
 
-use Espo\Entities\{
-    User,
-    Preferences,
-};
+use Espo\Core\Container;
+use Espo\Core\Acl;
+use Espo\Core\AclManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\ServiceFactory;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Select\SearchParams;
 
-use StdClass;
+use Espo\Core\Di;
+
+use Espo\Entities\User;
+use Espo\Entities\Preferences;
+
+use stdClass;
 
 class RecordBase extends Base implements Di\EntityManagerAware
 {
@@ -160,7 +155,7 @@ class RecordBase extends Base implements Di\EntityManagerAware
     /**
      * Read a record.
      */
-    public function getActionRead(Request $request, Response $response): StdClass
+    public function getActionRead(Request $request, Response $response): stdClass
     {
         if (method_exists($this, 'actionRead')) {
             // For backward compatibility.
@@ -168,14 +163,9 @@ class RecordBase extends Base implements Di\EntityManagerAware
         }
 
         $id = $request->getRouteParam('id');
-
         $params = $this->readParamsFetcher->fetch($request);
 
         $entity = $this->getRecordService()->read($id, $params);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
 
         return $entity->getValueMap();
     }
@@ -183,7 +173,7 @@ class RecordBase extends Base implements Di\EntityManagerAware
     /**
      * Create a record.
      */
-    public function postActionCreate(Request $request, Response $response): StdClass
+    public function postActionCreate(Request $request, Response $response): stdClass
     {
         if (method_exists($this, 'actionCreate')) {
             // For backward compatibility.
@@ -191,7 +181,6 @@ class RecordBase extends Base implements Di\EntityManagerAware
         }
 
         $data = $request->getParsedBody();
-
         $params = $this->createParamsFetcher->fetch($request);
 
         $entity = $this->getRecordService()->create($data, $params);
@@ -199,7 +188,7 @@ class RecordBase extends Base implements Di\EntityManagerAware
         return $entity->getValueMap();
     }
 
-    public function patchActionUpdate(Request $request, Response $response): StdClass
+    public function patchActionUpdate(Request $request, Response $response): stdClass
     {
         return $this->putActionUpdate($request, $response);
     }
@@ -207,7 +196,7 @@ class RecordBase extends Base implements Di\EntityManagerAware
     /**
      * Update a record.
      */
-    public function putActionUpdate(Request $request, Response $response): StdClass
+    public function putActionUpdate(Request $request, Response $response): stdClass
     {
         if (method_exists($this, 'actionUpdate')) {
             // For backward compatibility.
@@ -215,7 +204,6 @@ class RecordBase extends Base implements Di\EntityManagerAware
         }
 
         $id = $request->getRouteParam('id');
-
         $data = $request->getParsedBody();
 
         $params = $this->updateParamsFetcher->fetch($request);
@@ -228,7 +216,7 @@ class RecordBase extends Base implements Di\EntityManagerAware
     /**
      * List records.
      */
-    public function getActionList(Request $request, Response $response): StdClass
+    public function getActionList(Request $request, Response $response): stdClass
     {
         if (method_exists($this, 'actionList')) {
             // For backward compatibility.
@@ -256,7 +244,6 @@ class RecordBase extends Base implements Di\EntityManagerAware
         }
 
         $id = $request->getRouteParam('id');
-
         $params = $this->deleteParamsFetcher->fetch($request);
 
         $this->getRecordService()->delete($id, $params);
@@ -269,7 +256,7 @@ class RecordBase extends Base implements Di\EntityManagerAware
         return $this->searchParamsFetcher->fetch($request);
     }
 
-    public function postActionGetDuplicateAttributes(Request $request): StdClass
+    public function postActionGetDuplicateAttributes(Request $request): stdClass
     {
         $id = $request->getParsedBody()->id ?? null;
 
