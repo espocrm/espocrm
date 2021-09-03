@@ -62,6 +62,27 @@ class Manager
         }
     }
 
+    public function processOnSuccess(Result $result, AuthenticationData $data, Request $request): void
+    {
+        foreach ($this->getOnSuccessHookList() as $hook) {
+            $hook->process($result, $data, $request);
+        }
+    }
+
+    public function processOnSuccessByToken(Result $result, AuthenticationData $data, Request $request): void
+    {
+        foreach ($this->getOnSuccessByTokenHookList() as $hook) {
+            $hook->process($result, $data, $request);
+        }
+    }
+
+    public function processOnSecondStepRequired(Result $result, AuthenticationData $data, Request $request): void
+    {
+        foreach ($this->getOnSecondStepRequiredHookList() as $hook) {
+            $hook->process($result, $data, $request);
+        }
+    }
+
     /**
      * @return string[]
      */
@@ -87,13 +108,55 @@ class Manager
     }
 
     /**
-     * @return OnFail[]
+     * @return OnResult[]
      */
     private function getOnFailHookList(): array
     {
         $list = [];
 
         foreach ($this->getHookClassNameList('onFail') as $className) {
+            $list[] = $this->injectableFactory->create($className);
+        }
+
+        return $list;
+    }
+
+    /**
+     * @return OnResult[]
+     */
+    private function getOnSuccessHookList(): array
+    {
+        $list = [];
+
+        foreach ($this->getHookClassNameList('onSuccess') as $className) {
+            $list[] = $this->injectableFactory->create($className);
+        }
+
+        return $list;
+    }
+
+    /**
+     * @return OnResult[]
+     */
+    private function getOnSuccessByTokenHookList(): array
+    {
+        $list = [];
+
+        foreach ($this->getHookClassNameList('onSuccessByToken') as $className) {
+            $list[] = $this->injectableFactory->create($className);
+        }
+
+        return $list;
+    }
+
+    /**
+     * @return OnResult[]
+     */
+    private function getOnSecondStepRequiredHookList(): array
+    {
+        $list = [];
+
+        foreach ($this->getHookClassNameList('onSecondStepRequired') as $className) {
             $list[] = $this->injectableFactory->create($className);
         }
 

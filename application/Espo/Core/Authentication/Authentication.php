@@ -308,6 +308,14 @@ class Authentication
             $user->set('authLogRecordId', $authLogRecord->getId());
         }
 
+        if ($result->isSuccess()) {
+            return $this->processSuccess($result, $data, $request, $authTokenIsFound);
+        }
+
+        if ($result->isSecondStepRequired()) {
+            return $this->processSecondStepRequired($result, $data, $request);
+        }
+
         return $result;
     }
 
@@ -614,6 +622,34 @@ class Authentication
     private function processFail(Result $result, AuthenticationData $data, Request $request): Result
     {
         $this->hookManager->processOnFail($result, $data, $request);
+
+        return $result;
+    }
+
+    private function processSuccess(
+        Result $result,
+        AuthenticationData $data,
+        Request $request,
+        bool $byToken
+    ): Result {
+        if ($byToken) {
+            $this->hookManager->processOnSuccessByToken($result, $data, $request);
+
+            return $result;
+        }
+
+        $this->hookManager->processOnSuccess($result, $data, $request);
+
+        return $result;
+    }
+
+    private function processSecondStepRequired(
+        Result $result,
+        AuthenticationData $data,
+        Request $request
+    ): Result {
+
+        $this->hookManager->processOnSecondStepRequired($result, $data, $request);
 
         return $result;
     }

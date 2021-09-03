@@ -34,9 +34,9 @@ use Espo\Core\Api\Request;
 use Espo\Core\Authentication\Result;
 
 /**
- * Once logging in is failed. Not fired when an exception is thrown.
+ * Once a login result is ready.
  */
-interface OnFail
+interface OnResult
 {
     public function process(Result $result, AuthenticationData $data, Request $request): void;
 }
