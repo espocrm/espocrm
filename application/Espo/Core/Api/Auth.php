@@ -31,6 +31,7 @@ namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ServiceUnavailable;
+use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
@@ -202,7 +203,7 @@ class Auth
         if (
             $e instanceof BadRequest ||
             $e instanceof ServiceUnavailable ||
-            $e instanceof BadRequest
+            $e instanceof Forbidden
         ) {
             $reason = $e->getMessage();
 

@@ -42,6 +42,7 @@ use Espo\Core\{
     Authentication\LDAP\Utils as LDAPUtils,
     Authentication\LDAP\Client as LDAPClient,
     Authentication\AuthToken\AuthToken,
+    Authentication\FailReason,
 };
 
 use Exception;
@@ -121,12 +122,12 @@ class LDAP implements Login
                 return Result::success($user);
             }
             else {
-                return Result::fail();
+                return Result::fail(FailReason::WRONG_CREDENTIALS);
             }
         }
 
         if (!$password || $username == '**logout') {
-            return Result::fail();
+            return Result::fail(FailReason::NO_PASSWORD);
         }
 
         if ($isPortal) {
@@ -211,7 +212,7 @@ class LDAP implements Login
                     "LDAP: Authentication success for user {$username}, but user is not created in EspoCRM."
                 );
 
-                return Result::fail();
+                return Result::fail(FailReason::USER_NOT_FOUND);
             }
 
             $userData = $ldapClient->getEntry($userDn);

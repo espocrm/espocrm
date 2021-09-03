@@ -1,0 +1,6 @@
+{
+    "beforeLoginHookClassNameList": [
+        "Espo\\Core\\Authentication\\Hook\\Hooks\\FailedAttemptsLimit"
+    ],
+    "onFailHookClassNameList": []
+}

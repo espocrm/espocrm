@@ -37,6 +37,7 @@ use Espo\Core\{
     Authentication\Result,
     Authentication\Helpers\UserFinder,
     Exceptions\Error,
+    Authentication\FailReason,
 };
 
 class Hmac implements Login
@@ -60,13 +61,13 @@ class Hmac implements Login
         $user = $this->userFinder->findApiHmac($apiKey);
 
         if (!$user) {
-            return Result::fail('User not found');
+            return Result::fail(FailReason::WRONG_CREDENTIALS);
         }
 
-        $secretKey = $this->apiKeyUtil->getSecretKeyForUserId($user->id);
+        $secretKey = $this->apiKeyUtil->getSecretKeyForUserId($user->getId());
 
         if (!$secretKey) {
-            throw new Error("No secret key for API user '" . $user->id . "'.");
+            throw new Error("No secret key for API user '" . $user->getId() . "'.");
         }
 
         $string = $request->getMethod() . ' ' . $request->getResourcePath();
@@ -75,6 +76,6 @@ class Hmac implements Login
             return Result::success($user);
         }
 
-        return Result::fail('Hash not matched');
+        return Result::fail(FailReason::HASH_NOT_MATCHED);
     }
 }

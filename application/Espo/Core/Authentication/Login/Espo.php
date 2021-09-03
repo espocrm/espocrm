@@ -36,6 +36,7 @@ use Espo\Core\{
     Authentication\LoginData,
     Authentication\Result,
     Authentication\Helpers\UserFinder,
+    Authentication\FailReason,
 };
 
 class Espo implements Login
@@ -57,7 +58,7 @@ class Espo implements Login
         $authToken = $loginData->getAuthToken();
 
         if (!$password) {
-            return Result::fail('Empty password');
+            return Result::fail(FailReason::NO_PASSWORD);
         }
 
         $hash = $authToken ?
@@ -67,11 +68,11 @@ class Espo implements Login
         $user = $this->userFinder->find($username, $hash);
 
         if (!$user) {
-            return Result::fail('Wrong credentials');
+            return Result::fail(FailReason::WRONG_CREDENTIALS);
         }
 
         if ($authToken && $user->id !== $authToken->getUserId()) {
-            return Result::fail('User and token mismatch');
+            return Result::fail(FailReason::USER_TOKEN_MISMATCH);
         }
 
         return Result::success($user);

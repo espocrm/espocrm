@@ -27,36 +27,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Login;
+namespace Espo\Core\Authentication;
 
-use Espo\Core\{
-    Api\Request,
-    Authentication\Login,
-    Authentication\LoginData,
-    Authentication\Result,
-    Authentication\Helpers\UserFinder,
-    Authentication\FailReason,
-};
-
-class ApiKey implements Login
+class FailReason
 {
-    private $userFinder;
+    public const DENIED = 'Denied';
 
-    public function __construct(UserFinder $userFinder)
-    {
-        $this->userFinder = $userFinder;
-    }
+    public const CODE_NOT_VERIFIED = 'Code not verified';
 
-    public function login(LoginData $loginData, Request $request): Result
-    {
-        $apiKey = $request->getHeader('X-Api-Key');
+    public const NO_PASSWORD = 'No password';
 
-        $user = $this->userFinder->findApiApiKey($apiKey);
+    public const TOKEN_NOT_FOUND = 'Token not found';
 
-        if (!$user) {
-            return Result::fail(FailReason::WRONG_CREDENTIALS);
-        }
+    public const USER_NOT_FOUND = 'User not found';
 
-        return Result::success($user);
-    }
+    public const WRONG_CREDENTIALS = 'Wrong credentials';
+
+    public const USER_TOKEN_MISMATCH = 'User and token mismatch';
+
+    public const HASH_NOT_MATCHED = 'Hash not matched';
+
+    public const METHOD_NOT_ALLOWED = 'Not allowed authentication method';
 }

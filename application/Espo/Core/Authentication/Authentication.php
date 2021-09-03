@@ -48,6 +48,7 @@ use Espo\Core\Authentication\{
     AuthToken\AuthTokenManager,
     AuthToken\AuthTokenData,
     AuthToken\AuthToken,
+    Hook\Manager as HookManager,
 };
 
 use Espo\Core\{
@@ -59,13 +60,13 @@ use Espo\Core\{
     Utils\Log,
 };
 
-use DateTime;
-
 /**
  * Handles authentication. The entry point of the auth process.
  */
 class Authentication
 {
+    private const LOGOUT_USERNAME = '**logout';
+
     private $allowAnyAccess;
 
     private $portal;
@@ -82,6 +83,8 @@ class Authentication
 
     private $auth2FAFactory;
 
+    private $hookManager;
+
     private $log;
 
     public function __construct(
@@ -92,6 +95,7 @@ class Authentication
         LoginFactory $authLoginFactory,
         TwoFAFactory $auth2FAFactory,
         AuthTokenManager $authTokenManager,
+        HookManager $hookManager,
         Log $log,
         bool $allowAnyAccess = false
     ) {
@@ -99,12 +103,12 @@ class Authentication
 
         $this->applicationUser = $applicationUser;
         $this->applicationState = $applicationState;
-
         $this->configDataProvider = $configDataProvider;
         $this->entityManager = $entityManagerProxy;
         $this->authLoginFactory = $authLoginFactory;
         $this->auth2FAFactory = $auth2FAFactory;
         $this->authTokenManager = $authTokenManager;
+        $this->hookManager = $hookManager;
         $this->log = $log;
     }
 
@@ -130,23 +134,22 @@ class Authentication
                 "AUTH: Trying to use not allowed authentication method '{$authenticationMethod}'."
             );
 
-            return Result::fail('Not allowed authentication method');
+            return $this->processFail(
+                Result::fail(FailReason::METHOD_NOT_ALLOWED),
+                $data,
+                $request
+            );
         }
 
-        $isByTokenOnly = !$authenticationMethod && $request->getHeader('Espo-Authorization-By-Token') === 'true';
-
-        if (!$isByTokenOnly) {
-            $this->checkFailedAttemptsLimit($request);
-        }
-
-        $authToken = null;
-        $authTokenIsFound = false;
+        $this->hookManager->processBeforeLogin($data, $request);
 
         if (!$authenticationMethod && $password === null) {
             $this->log->error("AUTH: Trying to login w/o password.");
 
-            return Result::fail('No password');
+            return Result::fail(FailReason::NO_PASSWORD);
         }
+
+        $authToken = null;
 
         if (!$authenticationMethod) {
             $authToken = $this->authTokenManager->get($password);
@@ -160,9 +163,7 @@ class Authentication
             }
         }
 
-        if ($authToken) {
-            $authTokenIsFound = true;
-        }
+        $authTokenIsFound = $authToken !== null;
 
         if ($authToken && !$authToken->isActive()) {
             $authToken = null;
@@ -172,9 +173,11 @@ class Authentication
             $authTokenCheckResult = $this->processAuthTokenCheck($authToken);
 
             if (!$authTokenCheckResult) {
-                return Result::fail('Denied');
+                return Result::fail(FailReason::DENIED);
             }
         }
+
+        $isByTokenOnly = !$authenticationMethod && $request->getHeader('Espo-Authorization-By-Token') === 'true';
 
         if ($isByTokenOnly && !$authToken) {
             if ($username) {
@@ -183,7 +186,11 @@ class Authentication
                 );
             }
 
-            return Result::fail('Token not found');
+            return $this->processFail(
+                Result::fail(FailReason::TOKEN_NOT_FOUND),
+                $data,
+                $request
+            );
         }
 
         if (!$authenticationMethod) {
@@ -210,11 +217,20 @@ class Authentication
         }
 
         if ($result->isFail()) {
-            return $result;
+            return $this->processFail(
+                $result,
+                $data,
+                $request
+            );
         }
 
         if (!$user) {
-            return Result::fail();
+            // Supposed not to ever happen.
+            return $this->processFail(
+                Result::fail(FailReason::USER_NOT_FOUND),
+                $data,
+                $request
+            );
         }
 
         if (!$user->isAdmin() && $this->configDataProvider->isMaintenanceMode()) {
@@ -222,7 +238,11 @@ class Authentication
         }
 
         if (!$this->processUserCheck($user, $authLogRecord)) {
-            return Result::fail('Denied');
+            return $this->processFail(
+                Result::fail(FailReason::DENIED),
+                $data,
+                $request
+            );
         }
 
         if ($this->isPortal()) {
@@ -245,7 +265,11 @@ class Authentication
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
-                return $result;
+                return $this->processFail(
+                    $result,
+                    $data,
+                    $request
+                );
             }
         }
 
@@ -407,7 +431,7 @@ class Authentication
 
         if ($code) {
             if (!$impl->verifyCode($loggedUser, $code)) {
-                return Result::fail('Code not verified');
+                return Result::fail(FailReason::CODE_NOT_VERIFIED);
             }
 
             return $result;
@@ -439,47 +463,6 @@ class Authentication
         }
 
         return $method;
-    }
-
-    private function checkFailedAttemptsLimit(Request $request): void
-    {
-        $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
-        $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
-
-        $requestTime = intval($request->getServerParam('REQUEST_TIME_FLOAT'));
-
-        $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
-
-        $failAttemptCount = 0;
-
-        $ip = $request->getServerParam('REMOTE_ADDR');
-
-        $where = [
-            'requestTime>' => $requestTimeFrom->format('U'),
-            'ipAddress' => $ip,
-            'isDenied' => true,
-        ];
-
-        $wasFailed = (bool) $this->entityManager
-            ->getRDBRepository('AuthLogRecord')
-            ->select(['id'])
-            ->where($where)
-            ->findOne();
-
-        if ($wasFailed) {
-            $failAttemptCount = $this->entityManager
-                ->getRDBRepository('AuthLogRecord')
-                ->where($where)
-                ->count();
-        }
-
-        if ($failAttemptCount > $maxFailedAttempts) {
-            $this->log->warning(
-                "AUTH: Max failed login attempts exceeded for IP '{$ip}'."
-            );
-
-            throw new Forbidden("Max failed login attempts exceeded.");
-        }
     }
 
     private function createAuthToken(User $user, Request $request, Response $response): AuthToken
@@ -560,7 +543,7 @@ class Authentication
         ?string $authenticationMethod = null
     ): ?AuthLogRecord {
 
-        if ($username === '**logout') {
+        if ($username === self::LOGOUT_USERNAME) {
             return null;
         }
 
@@ -626,5 +609,12 @@ class Authentication
             '; SameSite=Lax';
 
         $response->addHeader('Set-Cookie', $headerValue);
+    }
+
+    private function processFail(Result $result, AuthenticationData $data, Request $request): Result
+    {
+        $this->hookManager->processOnFail($result, $data, $request);
+
+        return $result;
     }
 }

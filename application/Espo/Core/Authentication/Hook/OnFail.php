@@ -27,36 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\Login;
+namespace Espo\Core\Authentication\Hook;
 
-use Espo\Core\{
-    Api\Request,
-    Authentication\Login,
-    Authentication\LoginData,
-    Authentication\Result,
-    Authentication\Helpers\UserFinder,
-    Authentication\FailReason,
-};
+use Espo\Core\Authentication\AuthenticationData;
+use Espo\Core\Api\Request;
+use Espo\Core\Authentication\Result;
 
-class ApiKey implements Login
+/**
+ * Once logging in is failed. Not fired when an exception is thrown.
+ */
+interface OnFail
 {
-    private $userFinder;
-
-    public function __construct(UserFinder $userFinder)
-    {
-        $this->userFinder = $userFinder;
-    }
-
-    public function login(LoginData $loginData, Request $request): Result
-    {
-        $apiKey = $request->getHeader('X-Api-Key');
-
-        $user = $this->userFinder->findApiApiKey($apiKey);
-
-        if (!$user) {
-            return Result::fail(FailReason::WRONG_CREDENTIALS);
-        }
-
-        return Result::success($user);
-    }
+    public function process(Result $result, AuthenticationData $data, Request $request): void;
 }

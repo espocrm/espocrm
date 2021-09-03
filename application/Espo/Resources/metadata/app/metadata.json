@@ -12,6 +12,7 @@
         ["app", "templateHelpers"],
         ["app", "appParams"],
         ["app", "cleanup"],
+        ["app", "authentication"],
         ["app", "pdfEngines", "__ANY__", "implementationClassNameMap"],
         ["app", "addressFormats", "__ANY__", "formatterClassName"],
         ["app", "auth2FAMethods", "__ANY__", "implementationClassName"],
