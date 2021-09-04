@@ -105,7 +105,8 @@
         },
         "smtpServer": {
             "type": "varchar",
-            "tooltip": true
+            "tooltip": true,
+            "trim": true
         },
         "smtpPort": {
             "type": "int",
