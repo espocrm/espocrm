@@ -6,7 +6,7 @@ class Mentions extends \Espo\Core\Hooks\Base
 {
     public static $order = 9;
 
-    public function beforeSave(\Espo\ORM\Entity $entity)
+    public function beforeSave(\Espo\ORM\Entity $entity, array $options): void
     {
 
     }
