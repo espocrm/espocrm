@@ -35,7 +35,7 @@ use Espo\ORM\EntityManager;
 
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\AssignmentNotificatorFactory;
-use Espo\Core\Notification\NotificatorParams;
+use Espo\Core\Notification\AssignmentNotificatorParams;
 use Espo\Core\Mail\MessageWrapper;
 use Espo\Core\Utils\Config;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
@@ -685,7 +685,7 @@ class Importer
         if ($this->emailNotificationsEnabled()) {
             $this->notificator->process(
                 $duplicate,
-                NotificatorParams::create()->withRawOptions(['isBeingImported' => true])
+                AssignmentNotificatorParams::create()->withRawOptions(['isBeingImported' => true])
             );
         }
 

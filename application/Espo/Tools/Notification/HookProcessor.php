@@ -31,7 +31,7 @@ namespace Espo\Tools\Notification;
 
 use Espo\Core\Notification\AssignmentNotificatorFactory;
 use Espo\Core\Notification\AssignmentNotificator;
-use Espo\Core\Notification\NotificatorParams;
+use Espo\Core\Notification\AssignmentNotificatorParams;
 
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Config;
@@ -108,7 +108,7 @@ class HookProcessor
             return;
         }
 
-        $params = NotificatorParams::create()->withRawOptions($options);
+        $params = AssignmentNotificatorParams::create()->withRawOptions($options);
 
         $notificator->process($entity, $params);
     }

@@ -36,5 +36,5 @@ use Espo\ORM\Entity;
  */
 interface AssignmentNotificator
 {
-    public function process(Entity $entity, NotificatorParams $params): void;
+    public function process(Entity $entity, AssignmentNotificatorParams $params): void;
 }

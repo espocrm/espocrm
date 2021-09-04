@@ -27,41 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Notification;
+namespace tests\unit\Espo\Core\FieldProcessing;
 
-class NotificatorParams
+use Espo\Core\{
+    Notification\AssignmentNotificatorParams,
+};
+
+class AssignmentNotificatorParamsTest extends \PHPUnit\Framework\TestCase
 {
-    private $options = [];
-
-    public function hasOption(string $option): bool
+    public function testOne(): void
     {
-        return array_key_exists($option, $this->options);
-    }
+        $options = [
+            'silent' => true,
+        ];
 
-    /**
-     * @return mixed
-     */
-    public function getOption(string $option)
-    {
-        return $this->options[$option] ?? null;
-    }
+        $params = AssignmentNotificatorParams
+            ::create()
+            ->withRawOptions($options);
 
-    public function getRawOptions(): array
-    {
-        return $this->options;
-    }
+        $this->assertEquals(true, $params->getOption('silent'));
+        $this->assertEquals(true, $params->hasOption('silent'));
+        $this->assertEquals(null, $params->getOption('skipHooks'));
+        $this->assertEquals(false, $params->hasOption('skipHooks'));
 
-    public function withRawOptions(array $options): self
-    {
-        $obj = clone $this;
-
-        $obj->options = $options;
-
-        return $obj;
-    }
-
-    public static function create(): self
-    {
-        return new self();
+        $this->assertEquals($options, $params->getRawOptions());
     }
 }
