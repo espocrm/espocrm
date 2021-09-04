@@ -54,7 +54,7 @@ use Espo\Core\{
     Utils\Log,
 };
 
-use Espo\Services\Stream\NoteAccessControl;
+use Espo\Tools\Stream\NoteAccessControl;
 
 use Michelf\Markdown;
 

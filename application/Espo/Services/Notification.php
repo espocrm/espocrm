@@ -36,7 +36,7 @@ use Espo\Core\{
 
 use Espo\Entities\User;
 
-use Espo\Services\Stream\NoteAccessControl;
+use Espo\Tools\Stream\NoteAccessControl;
 
 class Notification extends \Espo\Services\Record
 {

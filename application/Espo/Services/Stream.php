@@ -33,6 +33,8 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Tools\Stream\NoteAccessControl;
+
 use Espo\ORM\{
     Entity,
     EntityCollection,
@@ -42,8 +44,6 @@ use Espo\ORM\{
 use Espo\{
     Entities\User,
     Entities\Note as NoteEntity,
-    Services\Notification as NotificationService,
-    Services\Stream\NoteAccessControl,
 };
 
 use Espo\Core\{
@@ -86,8 +86,6 @@ class Stream
     ];
 
     private $auditedFieldsCache = [];
-
-    private $notificationService = null;
 
     private $entityManager;
 
@@ -135,15 +133,6 @@ class Stream
         $this->selectBuilderFactory = $selectBuilderFactory;
         $this->userAclManagerProvider = $userAclManagerProvider;
         $this->noteAccessControl = $noteAccessControl;
-    }
-
-    private function getNotificationService(): NotificationService
-    {
-        if (!$this->notificationService) {
-            $this->notificationService = $this->serviceFactory->create('Notification');
-        }
-
-        return $this->notificationService;
     }
 
     private function getStatusStyles(): array
