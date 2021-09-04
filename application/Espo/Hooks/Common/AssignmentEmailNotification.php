@@ -30,109 +30,23 @@
 namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Utils\Config,
-    ORM\EntityManager,
-    ApplicationState,
-    Job\QueueName,
-};
+use Espo\Tools\EmailNotification\HookProcessor;
 
 class AssignmentEmailNotification
 {
-    protected $config;
+    private $processor;
 
-    protected $entityManager;
-
-    protected $applicationState;
-
-    public function __construct(Config $config, EntityManager $entityManager, ApplicationState $applicationState)
+    public function __construct(HookProcessor $processor)
     {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->applicationState = $applicationState;
+        $this->processor = $processor;
     }
 
-    public function afterSave(Entity $entity, array $options = [])
+    public function afterSave(Entity $entity, array $options): void
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;
         }
 
-        if (
-            $this->config->get('assignmentEmailNotifications')
-            &&
-            (
-                $entity->has('assignedUserId')
-                ||
-                $entity->hasLinkMultipleField('assignedUsers') && $entity->has('assignedUsersIds')
-            )
-            &&
-            in_array($entity->getEntityType(), $this->config->get('assignmentEmailNotificationsEntityList', []))
-        ) {
-            if ($entity->has('assignedUsersIds')) {
-                $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
-                $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
-
-                if (!is_array($fetchedAssignedUserIdList)) {
-                    $fetchedAssignedUserIdList = [];
-                }
-
-                foreach ($userIdList as $userId) {
-                    if (in_array($userId, $fetchedAssignedUserIdList)) {
-                        continue;
-                    }
-
-                    if (!$this->isNotSelfAssignment($entity, $userId)) {
-                        continue;
-                    }
-
-                    $this->createJob($entity, $userId);
-                }
-            } else {
-                $userId = $entity->get('assignedUserId');
-
-                if (!empty($userId) &&
-                    $entity->isAttributeChanged('assignedUserId') && $this->isNotSelfAssignment($entity, $userId)
-                ) {
-                    $this->createJob($entity, $userId);
-                }
-            }
-        }
-    }
-
-    protected function isNotSelfAssignment(Entity $entity, $assignedUserId)
-    {
-        if ($entity->hasAttribute('createdById') && $entity->hasAttribute('modifiedById')) {
-            if ($entity->isNew()) {
-                $isNotSelfAssignment = $assignedUserId !== $entity->get('createdById');
-            } else {
-                $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
-            }
-        } else {
-            $isNotSelfAssignment = $assignedUserId !== $this->applicationState->getUserId();
-        }
-
-        return $isNotSelfAssignment;
-    }
-
-    protected function createJob(Entity $entity, $userId)
-    {
-        $job = $this->entityManager->getEntity('Job');
-
-        $job->set([
-            'serviceName' => 'EmailNotification',
-            'methodName' => 'notifyAboutAssignmentJob',
-            'data' => [
-                'userId' => $userId,
-                'assignerUserId' => $this->applicationState->getUserId(),
-                'entityId' => $entity->id,
-                'entityType' => $entity->getEntityType(),
-            ],
-            'executeTime' => date('Y-m-d H:i:s'),
-            'queue' => QueueName::E0,
-        ]);
-
-        $this->entityManager->saveEntity($job);
+        $this->processor->afterSave($entity);
     }
 }

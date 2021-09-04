@@ -29,13 +29,10 @@
 
 namespace Espo\Tools\EmailNotification;
 
-use Espo\{
-    ORM\Entity,
-    ORM\EntityManager,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 use Espo\Core\{
-    Exceptions\Error,
     Htmlizer\Factory as HtmlizerFactory,
     Htmlizer\Htmlizer,
     Utils\Config,
@@ -48,29 +45,25 @@ use Espo\Core\{
 };
 
 use Exception;
-use StdClass;
+use LogicException;
 
 class AssignmentProcessor
 {
-    const HOURS_THERSHOLD = 5;
+    private $htmlizer;
 
-    const PROCESS_MAX_COUNT = 200;
+    private $entityManager;
 
-    protected $htmlizer;
+    private $htmlizerFactory;
 
-    protected $entityManager;
+    private $emailSender;
 
-    protected $htmlizerFactory;
+    private $config;
 
-    protected $emailSender;
+    private $templateFileManager;
 
-    protected $config;
+    private $metadata;
 
-    protected $templateFileManager;
-
-    protected $metadata;
-
-    protected $log;
+    private $log;
 
     public function __construct(
         EntityManager $entityManager,
@@ -92,12 +85,12 @@ class AssignmentProcessor
         $this->log = $log;
     }
 
-    public function process(StdClass $data): void
+    public function process(AssignmentProcessorData $data): void
     {
-        $userId = $data->userId ?? null;
-        $assignerUserId = $data->assignerUserId ?? null;
-        $entityId = $data->entityId ?? null;
-        $entityType = $data->entityType ?? null;
+        $userId = $data->getUserId();
+        $assignerUserId = $data->getAssignerUserId();
+        $entityId = $data->getEntityId();
+        $entityType = $data->getEntityType();
 
         if (
             !$userId ||
@@ -105,7 +98,7 @@ class AssignmentProcessor
             !$entityId ||
             !$entityType
         ) {
-            throw new Error();
+            throw new LogicException();
         }
 
         $user = $this->entityManager->getEntity('User', $userId);
@@ -163,7 +156,6 @@ class AssignmentProcessor
         $email = $this->entityManager->getEntity('Email');
 
         $subjectTpl = $this->templateFileManager->getTemplate('assignment', 'subject', $entity->getEntityType());
-
         $bodyTpl = $this->templateFileManager->getTemplate('assignment', 'body', $entity->getEntityType());
 
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
@@ -202,7 +194,7 @@ class AssignmentProcessor
             'isHtml' => true,
             'to' => $emailAddress,
             'isSystem' => true,
-            'parentId' => $entity->id,
+            'parentId' => $entity->getId(),
             'parentType' => $entity->getEntityType(),
         ]);
 
@@ -210,11 +202,11 @@ class AssignmentProcessor
             $this->emailSender->send($email);
         }
         catch (Exception $e) {
-            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' .$e->getMessage());
+            $this->log->error('EmailNotification: [' . $e->getCode() . '] ' . $e->getMessage());
         }
     }
 
-    protected function getHtmlizer(): Htmlizer
+    private function getHtmlizer(): Htmlizer
     {
         if (!$this->htmlizer) {
             $this->htmlizer = $this->htmlizerFactory->create(true);
@@ -223,7 +215,7 @@ class AssignmentProcessor
         return $this->htmlizer;
     }
 
-    protected function loadParentNameFields(Entity $entity): void
+    private function loadParentNameFields(Entity $entity): void
     {
         $fieldDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields'], []);
 

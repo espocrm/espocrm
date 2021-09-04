@@ -27,13 +27,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\EmailNotification;
 
-/**
- * @todo Remove in 7.0.1.
- */
-class EmailNotification
+class AssignmentProcessorData
 {
-    public function __construct()
-    {}
+    private $userId = null;
+
+    private $assignerUserId = null;
+
+    private $entityId = null;
+
+    private $entityType = null;
+
+    public function getUserId(): ?string
+    {
+        return $this->userId;
+    }
+
+    public function getAssignerUserId(): ?string
+    {
+        return $this->assignerUserId;
+    }
+
+    public function getEntityId(): ?string
+    {
+        return $this->entityId;
+    }
+
+    public function getEntityType(): ?string
+    {
+        return $this->entityType;
+    }
+
+    public static function create(): self
+    {
+        return new self();
+    }
+
+    public function withUserId(string $userId): self
+    {
+        $obj = clone $this;
+        $obj->userId = $userId;
+
+        return $obj;
+    }
+
+    public function withAssignerUserId(string $assignerUserId): self
+    {
+        $obj = clone $this;
+        $obj->assignerUserId = $assignerUserId;
+
+        return $obj;
+    }
+
+    public function withEntityId(string $entityId): self
+    {
+        $obj = clone $this;
+        $obj->entityId = $entityId;
+
+        return $obj;
+    }
+
+    public function withEntityType(string $entityType): self
+    {
+        $obj = clone $this;
+        $obj->entityType = $entityType;
+
+        return $obj;
+    }
 }

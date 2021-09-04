@@ -27,13 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Tools\EmailNotification\Jobs;
 
-/**
- * @todo Remove in 7.0.1.
- */
-class EmailNotification
+use Espo\Core\Job\Job;
+use Espo\Core\Job\JobData;
+
+use Espo\Tools\EmailNotification\AssignmentProcessor;
+use Espo\Tools\EmailNotification\AssignmentProcessorData;
+
+class NotifyAboutAssignment implements Job
 {
-    public function __construct()
-    {}
+    private $assignmentProcessor;
+
+    public function __construct(AssignmentProcessor $assignmentProcessor)
+    {
+        $this->assignmentProcessor = $assignmentProcessor;
+    }
+
+    public function run(JobData $data): void
+    {
+        $this->assignmentProcessor->process(
+            AssignmentProcessorData::create()
+                ->withAssignerUserId($data->get('assignerUserId'))
+                ->withEntityId($data->get('entityId'))
+                ->withEntityType($data->get('entityType'))
+                ->withUserId($data->get('userId'))
+        );
+    }
 }
