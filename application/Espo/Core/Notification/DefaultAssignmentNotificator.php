@@ -30,12 +30,10 @@
 namespace Espo\Core\Notification;
 
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
-
-use Espo\Core\{
-    ORM\EntityManager,
-};
+use Espo\Entities\Notification;
 
 class DefaultAssignmentNotificator implements AssignmentNotificator
 {
@@ -101,15 +99,15 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
             }
         }
         else {
-            $isNotSelfAssignment = $assignedUserId !== $this->user->id;
+            $isNotSelfAssignment = $assignedUserId !== $this->user->getId();
         }
 
         if (!$isNotSelfAssignment) {
             return;
         }
 
-        $this->entityManager->createEntity('Notification', [
-            'type' => 'Assign',
+        $this->entityManager->createEntity(Notification::ENTITY_TYPE, [
+            'type' => Notification::TYPE_ASSIGN,
             'userId' => $assignedUserId,
             'data' => [
                 'entityType' => $entity->getEntityType(),

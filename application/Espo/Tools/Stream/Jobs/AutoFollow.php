@@ -38,7 +38,7 @@ use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 use Espo\ORM\EntityManager;
 
 use Espo\Services\Stream as Service;
-use Espo\Services\Notification as NotificationService;
+use Espo\Tools\Notification\Service as NotificationService;
 
 /**
  * Handles auto-follow.

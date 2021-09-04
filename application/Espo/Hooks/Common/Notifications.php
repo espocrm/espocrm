@@ -29,183 +29,44 @@
 
 namespace Espo\Hooks\Common;
 
-use Espo\{
-    ORM\Entity,
-    Services\Stream as StreamService,
-};
-
-use Espo\Core\{
-    Utils\Metadata,
-    Utils\Config,
-    ORM\EntityManager,
-    ServiceFactory,
-    Notification\AssignmentNotificator,
-    Notification\AssignmentNotificatorFactory,
-    Notification\NotificatorParams,
-};
-
-use Espo\Entities\User;
+use Espo\Tools\Notification\HookProcessor;
+use Espo\ORM\Entity;
 
 class Notifications
 {
     public static $order = 10;
 
-    private $notifatorsHash = [];
+    private $processor;
 
-    private $streamService;
-
-    private $hasStreamCache = [];
-
-    private $metadata;
-
-    private $config;
-
-    private $entityManager;
-
-    private $serviceFactory;
-
-    private $notificatorFactory;
-
-    private $user;
-
-    public function __construct(
-        Metadata $metadata,
-        Config $config,
-        EntityManager $entityManager,
-        ServiceFactory $serviceFactory,
-        AssignmentNotificatorFactory $notificatorFactory,
-        User $user
-    ) {
-        $this->metadata = $metadata;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
-        $this->notificatorFactory = $notificatorFactory;
-        $this->user = $user;
+    public function __construct(HookProcessor $processor)
+    {
+        $this->processor = $processor;
     }
 
-    public function afterSave(Entity $entity, array $options = []): void
+    public function afterSave(Entity $entity, array $options): void
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;
         }
 
-        $entityType = $entity->getEntityType();
-
-        /**
-         * No need to process assignment notifications for entity types that have Stream enabled.
-         * Users are notified via Stream notifications.
-         */
-        if ($this->checkHasStream($entityType) && !$entity->hasLinkMultipleField('assignedUsers')) {
-            return;
-        }
-
-        $assignmentNotificationsEntityList = $this->config->get('assignmentNotificationsEntityList', []);
-
-        if (!in_array($entityType, $assignmentNotificationsEntityList)) {
-            return;
-        }
-
-        $notificator = $this->getNotificator($entityType);
-
-        if (!$notificator instanceof AssignmentNotificator) {
-            // For backward compatiblity.
-            $notificator->process($entity, $options);
-
-            return;
-        }
-
-        $params = NotificatorParams::create()->withRawOptions($options);
-
-        $notificator->process($entity, $params);
+        $this->processor->afterSave($entity, $options);
     }
 
-    public function beforeRemove(Entity $entity, array $options = []): void
+    public function beforeRemove(Entity $entity, array $options): void
     {
         if (!empty($options['silent']) || !empty($options['noNotifications'])) {
             return;
         }
 
-        $entityType = $entity->getEntityType();
-
-        if ($this->checkHasStream($entityType)) {
-            $followersData = $this->getStreamService()->getEntityFollowers($entity);
-
-            foreach ($followersData['idList'] as $userId) {
-                if ($userId === $this->user->id) {
-                    continue;
-                }
-
-                $notification = $this->entityManager->getEntity('Notification');
-
-                $notification->set([
-                    'userId' => $userId,
-                    'type' => 'EntityRemoved',
-                    'data' => [
-                        'entityType' => $entity->getEntityType(),
-                        'entityId' => $entity->id,
-                        'entityName' => $entity->get('name'),
-                        'userId' => $this->user->id,
-                        'userName' => $this->user->get('name'),
-                    ],
-                ]);
-
-                $this->entityManager->saveEntity($notification);
-            }
-        }
+        $this->processor->beforeRemove($entity);
     }
 
-    public function afterRemove(Entity $entity): void
+    public function afterRemove(Entity $entity, array $options): void
     {
-        $query = $this->entityManager->getQueryBuilder()
-            ->delete()
-            ->from('Notification')
-            ->where([
-                'OR' => [
-                    [
-                        'relatedId' => $entity->id,
-                        'relatedType' => $entity->getEntityType(),
-                    ],
-                    [
-                        'relatedParentId' => $entity->id,
-                        'relatedParentType' => $entity->getEntityType(),
-                    ],
-                ],
-            ])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($query);
-    }
-
-    private function checkHasStream($entityType): bool
-    {
-        if (!array_key_exists($entityType, $this->hasStreamCache)) {
-            $this->hasStreamCache[$entityType] = (bool) $this->metadata->get("scopes.{$entityType}.stream");
+        if (!empty($options['silent'])) {
+            return;
         }
 
-        return $this->hasStreamCache[$entityType];
-    }
-
-    /**
-     * @return AssignmentNotificator
-     */
-    private function getNotificator(string $entityType): object
-    {
-        if (empty($this->notifatorsHash[$entityType])) {
-            $notificator = $this->notificatorFactory->create($entityType);
-
-            $this->notifatorsHash[$entityType] = $notificator;
-        }
-
-        return $this->notifatorsHash[$entityType];
-    }
-
-    private function getStreamService(): StreamService
-    {
-        if (empty($this->streamService)) {
-            $this->streamService = $this->serviceFactory->create('Stream');
-        }
-
-        return $this->streamService;
+        $this->processor->afterRemove($entity);
     }
 }

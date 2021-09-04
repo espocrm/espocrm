@@ -29,21 +29,20 @@
 
 namespace Espo\Classes\AssignmentNotificators;
 
-use Espo\{
-    Services\Email as EmailService,
-    Services\Stream as StreamService,
-    Entities\User,
-    ORM\Entity,
-};
+use Espo\Services\Email as EmailService;
+use Espo\Services\Services\Stream as StreamService;
 
-use Espo\Core\{
-    Notification\AssignmentNotificator,
-    Notification\UserEnabledChecker,
-    Notification\NotificatorParams,
-    ORM\EntityManager,
-    ServiceFactory,
-    AclManager,
-};
+use Espo\Core\Notification\AssignmentNotificator;
+use Espo\Core\Notification\UserEnabledChecker;
+use Espo\Core\Notification\NotificatorParams;
+use Espo\Core\ServiceFactory;
+use Espo\Core\AclManager;
+
+use Espo\ORM\EntityManager;
+use Espo\ORM\Entity;
+
+use Espo\Entities\User;
+use Espo\Entities\Notification;
 
 use DateTime;
 use Exception;
@@ -101,12 +100,12 @@ class Email implements AssignmentNotificator
             return;
         }
 
-        $dt = null;
-
         try {
             $dt = new DateTime($dateSent);
         }
-        catch (Exception $e) {}
+        catch (Exception $e) {
+            return;
+        }
 
         if (!$dt) {
             return;
@@ -128,14 +127,14 @@ class Email implements AssignmentNotificator
             if (
                 !in_array($userId, $userIdList) &&
                 !in_array($userId, $previousUserIdList) &&
-                $userId != $this->user->id
+                $userId !== $this->user->getId()
             ) {
                 $userIdList[] = $userId;
             }
         }
 
         $data = [
-            'emailId' => $entity->id,
+            'emailId' => $entity->getId(),
             'emailName' => $entity->get('name'),
         ];
 
@@ -159,13 +158,13 @@ class Email implements AssignmentNotificator
             if ($person) {
                 $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
-                $data['personEntityId'] = $person->id;
+                $data['personEntityId'] = $person->getId();
             }
         }
 
         $userIdFrom = null;
 
-        if ($person && $person->getEntityType() == 'User') {
+        if ($person && $person->getEntityType() === 'User') {
             $userIdFrom = $person->id;
         }
 
@@ -241,48 +240,48 @@ class Email implements AssignmentNotificator
                 continue;
             }
 
-            if (
-                $entity->get('status') == 'Archived' ||
-                $params->getOption('isBeingImported')
-            ) {
-                if ($parent) {
-                    if ($this->getStreamService()->checkIsFollowed($parent, $userId)) {
-                        continue;
-                    }
-                }
+            $isArchivedOrBeingImported =
+                $entity->get('status') === 'Archived' ||
+                $params->getOption('isBeingImported');
 
-                if ($account) {
-                    if ($this->getStreamService()->checkIsFollowed($account, $userId)) {
-                        continue;
-                    }
-                }
-            }
             if (
-                $this->entityManager
-                    ->getRepository('Notification')
-                    ->where([
-                        'type' => 'EmailReceived',
-                        'userId' => $userId,
-                        'relatedId' => $entity->id,
-                        'relatedType' => 'Email',
-                    ])
-                    ->select(['id'])
-                    ->findOne()
+                $isArchivedOrBeingImported &&
+                $parent &&
+                $this->getStreamService()->checkIsFollowed($parent, $userId)
             ) {
                 continue;
             }
 
-            $notification = $this->entityManager->getEntity('Notification');
+            if (
+                $isArchivedOrBeingImported &&
+                $account &&
+                $this->getStreamService()->checkIsFollowed($account, $userId)
+            ) {
+                continue;
+            }
 
-            $notification->set([
-                'type' => 'EmailReceived',
+            $existing = $this->entityManager
+                ->getRepository(Notification::ENTITY_TYPE)
+                ->where([
+                    'type' => Notification::TYPE_EMAIL_RECEIVED,
+                    'userId' => $userId,
+                    'relatedId' => $entity->getId(),
+                    'relatedType' => 'Email',
+                ])
+                ->select(['id'])
+                ->findOne();
+
+            if ($existing) {
+                continue;
+            }
+
+            $this->entityManager->createEntity(Notification::ENTITY_TYPE, [
+                'type' => Notification::TYPE_EMAIL_RECEIVED,
                 'userId' => $userId,
                 'data' => $data,
                 'relatedId' => $entity->getId(),
                 'relatedType' => 'Email',
             ]);
-
-            $this->entityManager->saveEntity($notification);
         }
     }
 

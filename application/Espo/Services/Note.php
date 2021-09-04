@@ -208,7 +208,7 @@ class Note extends Record
         $portalIdList = $entity->getLinkMultipleIdList('portals');
         $teamIdList = $entity->getLinkMultipleIdList('teams');
 
-        $targetUserList = null;
+        $targetUserList = [];
 
         if ($targetType === NoteEntity::TARGET_USERS) {
             $targetUserList = $this->entityManager

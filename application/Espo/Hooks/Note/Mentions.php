@@ -29,157 +29,26 @@
 
 namespace Espo\Hooks\Note;
 
+use Espo\Tools\Notification\NoteMentionHookProcessor;
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    ORM\EntityManager,
-    ServiceFactory,
-    AclManager,
-    Acl,
-};
-
-use Espo\Entities\User;
 
 class Mentions
 {
     public static $order = 9;
 
-    protected $notificationService = null;
+    private $processor;
 
-    protected $entityManager;
-
-    protected $serviceFactory;
-
-    protected $user;
-
-    protected $aclManager;
-
-    protected $acl;
-
-    public function __construct(
-        EntityManager $entityManager,
-        ServiceFactory $serviceFactory,
-        User $user,
-        AclManager $aclManager,
-        Acl $acl
-    ) {
-        $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
-        $this->user = $user;
-        $this->aclManager = $aclManager;
-        $this->acl = $acl;
+    public function __construct(NoteMentionHookProcessor $processor)
+    {
+        $this->processor = $processor;
     }
 
-    protected function addMentionData($entity)
+    public function beforeSave(Entity $entity, array $options): void
     {
-        $post = $entity->get('post');
-
-        $mentionData = (object) [];
-
-        $previousMentionList = [];
-
-        if (!$entity->isNew()) {
-            $data = $entity->get('data');
-
-            if (!empty($data) && !empty($data->mentions)) {
-                $previousMentionList = array_keys(get_object_vars($data->mentions));
-            }
-        }
-
-        preg_match_all('/(@[\w@.-]+)/', $post, $matches);
-
-        $mentionCount = 0;
-
-        if (is_array($matches) && !empty($matches[0]) && is_array($matches[0])) {
-            $parent = null;
-
-            if ($entity->get('parentId') && $entity->get('parentType')) {
-                $parent = $this->entityManager
-                    ->getEntity($entity->get('parentType'), $entity->get('parentId'));
-            }
-
-            foreach ($matches[0] as $item) {
-                $userName = substr($item, 1);
-
-                $user = $this->entityManager
-                    ->getRepository('User')
-                    ->where(['userName' => $userName])
-                    ->findOne();
-
-                if ($user) {
-                    if (!$this->acl->checkUserPermission($user, 'assignment')) {
-                        continue;
-                    }
-
-                    $m = [
-                        'id' => $user->id,
-                        'name' => $user->get('name'),
-                        'userName' => $user->get('userName'),
-                        '_scope' => $user->getEntityType(),
-                    ];
-
-                    $mentionData->$item = (object) $m;
-                    $mentionCount++;
-
-                    if (!in_array($item, $previousMentionList)) {
-                        if ($user->id == $this->user->id) {
-                            continue;
-                        }
-
-                        $this->notifyAboutMention($entity, $user, $parent);
-
-                        $entity->addNotifiedUserId($user->id);
-                    }
-                }
-            }
-        }
-
-        $data = $entity->get('data');
-
-        if (empty($data)) {
-            $data = (object) [];
-        }
-
-        if ($mentionCount) {
-            $data->mentions = $mentionData;
-        }
-        else {
-            unset($data->mentions);
-        }
-
-        $entity->set('data', $data);
-    }
-
-    public function beforeSave(Entity $entity)
-    {
-        if ($entity->get('type') == 'Post') {
-            $post = $entity->get('post');
-
-            $this->addMentionData($entity);
-        }
-    }
-
-    protected function notifyAboutMention(Entity $entity, User $user, Entity $parent = null)
-    {
-        if ($user->isPortal()) {
+        if (!empty($options['silent'])) {
             return;
         }
 
-        if ($parent) {
-            if (!$this->aclManager->check($user, $parent, 'stream')) {
-                return;
-            }
-        }
-
-        $this->getNotificationService()->notifyAboutMentionInPost($user->id, $entity->id);
-    }
-
-    protected function getNotificationService()
-    {
-        if (empty($this->notificationService)) {
-            $this->notificationService = $this->serviceFactory->create('Notification');
-        }
-
-        return $this->notificationService;
+        $this->processor->beforeSave($entity);
     }
 }

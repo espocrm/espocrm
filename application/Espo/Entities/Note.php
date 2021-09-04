@@ -82,6 +82,26 @@ class Note extends Entity
         return $this->get('parentId');
     }
 
+    public function getSuperParentType(): ?string
+    {
+        return $this->get('superParentType');
+    }
+
+    public function getSuperParentId(): ?string
+    {
+        return $this->get('superParentId');
+    }
+
+    public function getRelatedType(): ?string
+    {
+        return $this->get('relatedType');
+    }
+
+    public function getRelatedId(): ?string
+    {
+        return $this->get('relatedId');
+    }
+
     public function getData(): stdClass
     {
         return $this->get('data') ?? (object) [];
@@ -90,6 +110,11 @@ class Note extends Entity
     public function isInternal(): bool
     {
         return (bool) $this->get('isInternal');
+    }
+
+    public function getPost(): ?string
+    {
+        return $this->get('post');
     }
 
     public function setAclIsProcessed(): void
@@ -142,7 +167,7 @@ class Note extends Entity
         $this->set('attachmentsTypes', $types);
     }
 
-    public function addNotifiedUserId($userId)
+    public function addNotifiedUserId($userId): void
     {
         $userIdList = $this->get('notifiedUserIdList');
 
@@ -157,13 +182,9 @@ class Note extends Entity
         $this->set('notifiedUserIdList', $userIdList);
     }
 
-    public function isUserIdNotified($userId)
+    public function isUserIdNotified($userId): bool
     {
-        $userIdList = $this->get('notifiedUserIdList');
-
-        if (!is_array($userIdList)) {
-            $userIdList = [];
-        }
+        $userIdList = $this->get('notifiedUserIdList') ?? [];
 
         return in_array($userId, $userIdList);
     }

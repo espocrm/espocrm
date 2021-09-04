@@ -29,177 +29,50 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Utils\Util;
-
 use Espo\Core\{
     Record\Collection as RecordCollection,
     Exceptions\Error,
 };
 
-use Espo\Entities\Note;
 use Espo\Entities\User;
 
 use Espo\Services\Stream\NoteAccessControl;
 
-use Espo\Core\Di;
-
-class Notification extends \Espo\Services\Record implements
-
-    Di\WebSocketSubmissionAware
+class Notification extends \Espo\Services\Record
 {
-    use Di\WebSocketSubmissionSetter;
-
     protected $actionHistoryDisabled = true;
 
     private $noteAccessControl = null;
 
-    public function notifyAboutMentionInPost(string $userId, string $noteId): void
-    {
-        $notification = $this->entityManager->getEntity('Notification');
-
-        $notification->set([
-            'type' => 'MentionInPost',
-            'data' => ['noteId' => $noteId],
-            'userId' => $userId,
-            'relatedId' => $noteId,
-            'relatedType' => 'Note',
-        ]);
-
-        $this->entityManager->saveEntity($notification);
-    }
-
-    public function notifyAboutNote(array $userIdList, Note $note): void
-    {
-        $data = ['noteId' => $note->id];
-
-        $related = null;
-
-        if ($note->get('relatedType') == 'Email') {
-            $related = $this->entityManager
-                ->getRepository('Email')
-                ->select(['id', 'sentById', 'createdById'])
-                ->where(['id' => $note->get('relatedId')])
-                ->findOne();
-        }
-
-        $now = date('Y-m-d H:i:s');
-
-        $collection = $this->entityManager
-            ->getCollectionFactory()
-            ->create();
-
-        $userList = $this->entityManager
-            ->getRepository('User')
-            ->select(['id', 'type'])
-            ->where([
-                'isActive' => true,
-                'id' => $userIdList,
-            ])
-            ->find();
-
-        foreach ($userList as $user) {
-            $userId = $user->id;
-
-            if (!$this->checkUserNoteAccess($user, $note)) {
-                continue;
-            }
-
-            if ($note->get('createdById') === $user->id) {
-                continue;
-            }
-
-            if ($related && $related->getEntityType() == 'Email' && $related->get('sentById') == $user->id) {
-                continue;
-            }
-
-            if ($related && $related->get('createdById') == $user->id) {
-                continue;
-            }
-
-            $notification = $this->entityManager->getEntity('Notification');
-
-            $notification->set([
-                'id' => Util::generateId(),
-                'data' => $data,
-                'type' => 'Note',
-                'userId' => $userId,
-                'createdAt' => $now,
-                'relatedId' => $note->id,
-                'relatedType' => 'Note',
-                'relatedParentId' => $note->get('parentId'),
-                'relatedParentType' => $note->get('parentType'),
-            ]);
-
-            $collection[] = $notification;
-        }
-
-        if (empty($collection)) {
-            return;
-        }
-
-        $this->entityManager->getMapper()->massInsert($collection);
-
-        if ($this->getConfig()->get('useWebSocket')) {
-            foreach ($userIdList as $userId) {
-                $this->webSocketSubmission->submit('newNotification', $userId);
-            }
-        }
-    }
-
-    public function checkUserNoteAccess(User $user, Note $note): bool
-    {
-        if ($user->isPortal()) {
-            if ($note->get('relatedType')) {
-                if ($note->get('relatedType') === 'Email' && $note->get('parentType') === 'Case') {
-                    return true;
-                }
-
-                return false;
-            }
-
-            return true;
-        }
-
-        if ($note->get('relatedType')) {
-            if (!$this->getAclManager()->checkScope($user, $note->get('relatedType'))) {
-                return false;
-            }
-        }
-
-        if ($note->get('parentType')) {
-            if (!$this->getAclManager()->checkScope($user, $note->get('parentType'))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public function getNotReadCount(string $userId): int
     {
-        $whereClause = array(
+        $whereClause = [
             'userId' => $userId,
-            'read' => 0
-        );
+            'read' => false,
+        ];
 
         $ignoreScopeList = $this->getIgnoreScopeList();
-        if (!empty($ignoreScopeList)) {
-            $where = [];
-            $where[] = array(
-                'OR' => array(
+
+        if (count($ignoreScopeList)) {
+            $whereClause[] = [
+                'OR' => [
                     'relatedParentType' => null,
-                    'relatedParentType!=' => $ignoreScopeList
-                )
-            );
-            $whereClause[] = $where;
+                    'relatedParentType!=' => $ignoreScopeList,
+                ]
+            ];
         }
 
-        return $this->entityManager->getRepository('Notification')->where($whereClause)->count();
+        return $this->entityManager
+            ->getRDBRepository('Notification')
+            ->where($whereClause)
+            ->count();
     }
 
     public function markAllRead(string $userId)
     {
-        $update = $this->entityManager->getQueryBuilder()->update()
+        $update = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
             ->in('Notification')
             ->set(['read' => true])
             ->where([
@@ -359,7 +232,7 @@ class Notification extends \Espo\Services\Record implements
         return new RecordCollection($collection, $count);
     }
 
-    protected function getIgnoreScopeList(): array
+    private function getIgnoreScopeList(): array
     {
         $ignoreScopeList = [];
 
