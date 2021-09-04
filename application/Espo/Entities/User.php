@@ -68,6 +68,9 @@ class User extends Person
         return $this->get('type') === 'portal';
     }
 
+    /**
+     * @deprecated Use `isPortal`.
+     */
     public function isPortalUser(): bool
     {
         return $this->isPortal();
