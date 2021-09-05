@@ -1,5 +1,6 @@
 {
     "accessControlFilterClassNameMap": {
         "mandatory": "Espo\\Classes\\Select\\Import\\AccessControlFilters\\Mandatory"
-    }
+    },
+    "accessControlFilterResolverClassName": "Espo\\Core\\Select\\AccessControl\\BypassFilterResolver"
 }
