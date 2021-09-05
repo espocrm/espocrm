@@ -119,7 +119,7 @@ class Service
         $entityType = $source->getTargetEntityType();
         $attributeList = $source->getTargetAttributeList() ?? [];
 
-        $params = ImportParams::fromRaw($source->getParams())
+        $params = Params::fromRaw($source->getParams())
             ->withIdleMode(false)
             ->withManualMode(false);
 
@@ -152,8 +152,7 @@ class Service
         $entityType = $import->getTargetEntityType();
         $attributeList = $import->getTargetAttributeList() ?? [];
 
-        $params = ImportParams
-            ::fromRaw($import->getParams())
+        $params = Params::fromRaw($import->getParams())
             ->withStartFromLastIndex($startFromLastIndex);
 
         $attachmentId = $import->getFileId();

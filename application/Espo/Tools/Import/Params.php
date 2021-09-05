@@ -346,12 +346,12 @@ class Params
             ->withIdleMode($raw->idleMode ?? false)
             ->withManualMode($raw->manualMode ?? false)
             ->withPersonNameFormat($raw->personNameFormat ?? null)
-            ->withSilentMode($raw->silentMode ?? null)
+            ->withSilentMode($raw->silentMode ?? false)
             ->withSkipDuplicateChecking($raw->skipDuplicateChecking ?? false)
             ->withStartFromLastIndex($raw->startFromLastIndex ?? false)
             ->withTextQualifier($raw->textQualifier ?? null)
             ->withTimeFormat($raw->timeFormat ?? false)
-            ->withTimezone($raw->timezone ?? false)
+            ->withTimezone($raw->timezone ?? null)
             ->withUpdateBy($raw->updateBy ?? []);
 
         return $obj;
