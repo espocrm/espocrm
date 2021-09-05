@@ -29,6 +29,9 @@
 
 namespace Espo\Tools\Import;
 
+use stdClass;
+use TypeError;
+
 class Params
 {
     public const ACTION_CREATE = 'create';
@@ -59,7 +62,7 @@ class Params
 
     private $updateBy = [];
 
-    private $defaultValues = [];
+    private $defaultValues;
 
     private $dateFormat = null;
 
@@ -70,6 +73,11 @@ class Params
     private $timezone = null;
 
     private $decimalMark = null;
+
+    private function __construct()
+    {
+        $this->defaultValues = (object) [];
+    }
 
     public function getAction(): ?string
     {
@@ -126,7 +134,7 @@ class Params
         return $this->updateBy;
     }
 
-    public function getDefaultValues(): array
+    public function getDefaultValues(): stdClass
     {
         return $this->defaultValues;
     }
@@ -249,8 +257,23 @@ class Params
         return $obj;
     }
 
-    public function withDefaultValues(array $defaultValues): self
+    /**
+     * @param stdClass|array|null $defaultValues
+     */
+    public function withDefaultValues($defaultValues): self
     {
+        if (is_array($defaultValues)) {
+            $defaultValues = (object) $defaultValues;
+        }
+
+        if (is_null($defaultValues)) {
+            $defaultValues = (object) [];
+        }
+
+        if (!is_object($defaultValues)) {
+            throw new TypeError();
+        }
+
         $obj = clone $this;
         $obj->defaultValues = $defaultValues;
 
@@ -297,21 +320,27 @@ class Params
         return $obj;
     }
 
-    public static function fromRaw(array $params): self
+    /**
+     * @param stdClass|array|null $params
+     */
+    public static function fromRaw($params): self
     {
-        $raw = (object) $params;
-
-        $defaultValues = $raw->defaultValues ?? [];
-        if (is_object($defaultValues)) {
-            $defaultValues = get_object_vars($defaultValues);
+        if ($params === null) {
+            $params = (object) [];
         }
+
+        if (is_array($params) && is_object($params)) {
+            throw new TypeError();
+        }
+
+        $raw = (object) $params;
 
         $obj = self::create()
             ->withAction($raw->action ?? null)
             ->withCurrency($raw->currency ?? null)
             ->withDateFormat($raw->dateFormat ?? null)
             ->withDecimalMark($raw->decimalMark ?? null)
-            ->withDefaultValues($defaultValues)
+            ->withDefaultValues($raw->defaultValues ?? null)
             ->withDelimiter($raw->delimiter ?? null)
             ->withHeaderRow($raw->headerRow ?? false)
             ->withIdleMode($raw->idleMode ?? false)

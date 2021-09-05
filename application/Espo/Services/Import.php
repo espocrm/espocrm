@@ -261,9 +261,7 @@ class Import extends Record implements
         $importAttributeList = $data->importAttributeList;
         $userId = $data->userId;
 
-        $params = ImportParams::fromRaw(
-            json_decode(json_encode($data->params), true)
-        );
+        $params = ImportParams::fromRaw($data->params);
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
@@ -308,12 +306,8 @@ class Import extends Record implements
         $entityType = $import->get('entityType');
         $attributeList = $import->get('attributeList') ?? [];
 
-        $rawParams = $import->get('params') ?? (object) [];
-
         $params = ImportParams
-            ::fromRaw(
-                json_decode(json_encode($rawParams), true)
-            )
+            ::fromRaw($import->get('params'))
             ->withStartFromLastIndex($startFromLastIndex);
 
         $attachmentId = $import->get('fileId');
@@ -369,12 +363,9 @@ class Import extends Record implements
         $entityType = $source->get('entityType');
         $attributeList = $source->get('attributeList') ?? [];
 
-        $params = $source->get('params') ?? (object) [];
-
-        $params = json_decode(json_encode($params), true);
-
-        unset($params['idleMode']);
-        unset($params['manualMode']);
+        $params = ImportParams::fromRaw($source->get('params'))
+            ->withIdleMode(false)
+            ->withManualMode(false);
 
         $attachmentId = $this->uploadFile($contents);
 
