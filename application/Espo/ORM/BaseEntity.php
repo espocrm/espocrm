@@ -1037,20 +1037,20 @@ class BaseEntity implements Entity
 
         $copy = [];
 
-        foreach ($value as $item) {
+        foreach ($value as $i => $item) {
             if (is_object($item)) {
-                $copy[] = $this->cloneObject($item);
+                $copy[$i] = $this->cloneObject($item);
 
                 continue;
             }
 
             if (is_array($item)) {
-                $copy[] = $this->cloneArray($item);
+                $copy[$i] = $this->cloneArray($item);
 
                 continue;
             }
 
-            $copy[] = $item;
+            $copy[$i] = $item;
         }
 
         return $copy;

@@ -29,14 +29,14 @@
 
 namespace Espo\Core\Utils;
 
-use StdClass;
+use stdClass;
 
 class ObjectUtil
 {
     /**
      * Deep clone.
      */
-    public static function clone(StdClass $source): StdClass
+    public static function clone(StdClass $source): stdClass
     {
         $cloned = (object) [];
 
@@ -52,8 +52,8 @@ class ObjectUtil
         if (is_array($item)) {
             $cloned = [];
 
-            foreach ($item as $v) {
-                $cloned[] = self::cloneItem($v);
+            foreach ($item as $i => $v) {
+                $cloned[$i] = self::cloneItem($v);
             }
 
             return $cloned;
