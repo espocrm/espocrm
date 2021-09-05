@@ -32,6 +32,8 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
+use Espo\Tools\Import\Params as ImportParams;
+
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
@@ -131,7 +133,7 @@ class Import extends Record
            $timezone = $data->timezone;
         }
 
-        $importParams = [
+        $rawParams = [
             'headerRow' => !empty($data->headerRow),
             'delimiter' => $data->delimiter,
             'textQualifier' => $data->textQualifier,
@@ -147,12 +149,13 @@ class Import extends Record
             'idleMode' => !empty($data->idleMode),
             'silentMode' => !empty($data->silentMode),
             'manualMode' => !empty($data->manualMode),
-            'defaultFieldList' => $data->defaultFieldList ?? [],
         ];
 
         if (property_exists($data, 'updateBy')) {
-            $importParams['updateBy'] = $data->updateBy;
+            $rawParams['updateBy'] = $data->updateBy;
         }
+
+        $params = ImportParams::fromRaw($rawParams);
 
         $attachmentId = $data->attachmentId;
 
@@ -164,7 +167,7 @@ class Import extends Record
             $data->entityType,
             $data->attributeList,
             $attachmentId,
-            $importParams
+            $params
         );
     }
 

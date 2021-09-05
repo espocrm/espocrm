@@ -33,7 +33,6 @@ use Espo\Core\{
     Exceptions\Error,
     Utils\Json,
     AclManager,
-    ORM\EntityManager,
     Utils\Metadata,
     Utils\Config,
     FileStorage\Manager as FileStorageManager,
@@ -42,41 +41,53 @@ use Espo\Core\{
     Utils\Log,
 };
 
-use Espo\{
-    ORM\Entity,
-    Entities\User,
-};
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-use StdClass;
+use Espo\Entities\User;
+
+use stdClass;
 use DateTime;
 use DateTimeZone;
 use Exception;
 
 class Import
 {
-    protected $attributeList = [];
+    private const DEFAULT_DELIMITER = ',';
 
-    protected $params = [];
+    private const DEFAULT_TEXT_QUALIFIER = '"';
 
-    protected $id = null;
+    private const DEFAULT_ACTION = Params::ACTION_CREATE;
 
-    protected $attachmentId = null;
+    private const DEFAULT_DECIMAL_MARK = '.';
 
-    protected $entityType = null;
+    private const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
 
-    protected $aclManager;
+    private const DEFAULT_TIME_FORMAT = 'HH:mm';
 
-    protected $entityManager;
+    private $attributeList = [];
 
-    protected $metadata;
+    private $params;
 
-    protected $config;
+    private $id = null;
 
-    protected $user;
+    private $attachmentId = null;
 
-    protected $fileStorageManager;
+    private $entityType = null;
 
-    protected $log;
+    private $aclManager;
+
+    private $entityManager;
+
+    private $metadata;
+
+    private $config;
+
+    private $user;
+
+    private $fileStorageManager;
+
+    private $log;
 
     public function __construct(
         AclManager $aclManager,
@@ -96,6 +107,8 @@ class Import
         $this->fileStorageManager = $fileStorageManager;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->log = $log;
+
+        $this->params = Params::create();
     }
 
     /**
@@ -150,35 +163,15 @@ class Import
 
     /**
      * Set import parameters.
-     *
-     * @param array $params [
-     *    'delimiter' => (string),
-     *    'textQualifier' => (string),
-     *    'idleMode' => (bool),
-     *    'manualMode' => (bool),
-     *    'silentMode' => (bool),
-     *    'headerRow' => (bool),
-     *    'action' => (string),
-     *    'skipDuplicateChecking' => (bool),
-     *    'updateBy' => (array),
-     *    'defaultValues' => (array|object),
-     *    'textQualifier' => (string),
-     *    'personNameFormat' => (string),
-     *    'delimiter' => (string),
-     *    'timeFormat' => (string),
-     *    'currency' => (string),
-     *    'timezone' => (string),
-     *    'startFromLastIndex' => (bool),
-     * ]
      */
-    public function setParams(array $params): self
+    public function setParams(Params $params): self
     {
         $this->params = $params;
 
         return $this;
     }
 
-    protected function validate()
+    private function validate()
     {
         if (!$this->entityType) {
             throw new Error("Entity type is not set.");
@@ -192,24 +185,27 @@ class Import
     /**
      * Run import.
      *
-     * @return StdClass [
+     * @return stdClass [
      *     id: (string),
      *     countCreated: (int),
      *     countUpdated: (int),
      * ]
      */
-    public function run(): StdClass
+    public function run(): stdClass
     {
         $this->validate();
 
-        $params =& $this->params;
+        $params = $this->params;
 
         $attributeList = $this->attributeList;
 
-        $delimiter = $params['delimiter'] ?? ',';
-        $enclosure = $params['textQualifier'] ?? '"';
+        $delimiter = str_replace(
+            '\t',
+            "\t",
+            $params->getDelimiter() ?? self::DEFAULT_DELIMITER
+        );
 
-        $delimiter = str_replace('\t', "\t", $delimiter);
+        $enclosure = $params->getTextQualifier() ?? self::DEFAULT_TEXT_QUALIFIER;
 
         if (!$this->user->isAdmin()) {
             $forbiddenAttributeList =
@@ -247,7 +243,7 @@ class Import
                 throw new Error('Import: Could not find import record.');
             }
 
-            if ($params['startFromLastIndex'] ?? false) {
+            if ($params->startFromLastIndex()) {
                 $startFromIndex = $import->get('lastIndex');
             }
 
@@ -263,53 +259,48 @@ class Import
 
             $import->set('status', 'In Process');
 
-            if ($params['manualMode'] ?? false) {
-                unset($params['idleMode']);
+            if ($params->isManualMode()) {
+                $params = $params->withIdleMode(false);
+
                 $import->set('status', 'Standby');
             }
-            else if ($params['idleMode'] ?? false) {
+            else if ($params->isIdleMode()) {
                 $import->set('status', 'Pending');
             }
 
-            $import->set('params', $params);
+            $import->set('params', $params->getRaw());
             $import->set('attributeList', $attributeList);
         }
 
         $this->entityManager->saveEntity($import);
 
-        if (!$this->id && ($params['manualMode'] ?? false)) {
+        if (!$this->id && $params->isManualMode()) {
             return (object) [
-                'id' => $import->id,
+                'id' => $import->getId(),
                 'countCreated' => 0,
                 'countUpdated' => 0,
                 'manualMode' => true,
             ];
         }
 
-        if (!empty($params['idleMode'])) {
-            $params['idleMode'] = false;
-
-            $job = $this->entityManager->getEntity('Job');
-
-            $job->set([
+        if ($params->isIdleMode()) {
+            $this->entityManager->createEntity('Job', [
                 'serviceName' => 'Import',
                 'methodName' => 'jobRunIdleImport',
                 'data' => [
                     'entityType' => $this->entityType,
-                    'params' => $params,
+                    'params' => $params->withIdleMode(false)->getRaw(),
                     'attachmentId' => $this->attachmentId,
                     'importAttributeList' => $attributeList,
-                    'importId' => $import->id,
-                    'userId' => $this->user->id,
+                    'importId' => $import->getId(),
+                    'userId' => $this->user->getId(),
                 ],
             ]);
 
-            $this->entityManager->saveEntity($job);
-
             return (object) [
-                'id' => $import->id,
+                'id' => $import->getId(),
                 'countCreated' => 0,
-                'countUpdated' => 0
+                'countUpdated' => 0,
             ];
         }
 
@@ -327,7 +318,7 @@ class Import
             while ($row = $this->readCsvString($contents, $delimiter, $enclosure)) {
                 $i++;
 
-                if ($i == 0 && !empty($params['headerRow'])) {
+                if ($i == 0 && $params->headerRow()) {
                     continue;
                 }
 
@@ -390,29 +381,29 @@ class Import
         ];
     }
 
-    protected function importRow(array $attributeList, array $row): ?StdClass
+    private function importRow(array $attributeList, array $row): ?stdClass
     {
         $id = null;
-        $action = 'create';
 
         $params = $this->params;
 
-        if (!empty($params['action'])) {
-            $action = $params['action'];
-        }
+        $action = $params->getAction() ?? self::DEFAULT_ACTION;
 
         if (empty($attributeList)) {
             return null;
         }
 
-        if (in_array($action, ['createAndUpdate', 'update'])) {
+        if (in_array($action, [Params::ACTION_CREATE_AND_UPDATE, Params::ACTION_UPDATE])) {
             $updateByAttributeList = [];
             $whereClause = [];
 
-            if (!empty($params['updateBy']) && is_array($params['updateBy'])) {
-                foreach ($params['updateBy'] as $i) {
+            $updateBy = $params->getUpdateBy();
+
+            if (count($updateBy)) {
+                foreach ($updateBy as $i) {
                     if (array_key_exists($i, $attributeList)) {
                         $updateByAttributeList[] = $attributeList[$i];
+
                         $whereClause[$attributeList[$i]] = $row[$i];
                     }
                 }
@@ -421,7 +412,7 @@ class Import
 
         $recordService = $this->recordServiceContainer->get($this->entityType);
 
-        if (in_array($action, ['createAndUpdate', 'update'])) {
+        if (in_array($action, [Params::ACTION_CREATE_AND_UPDATE, Params::ACTION_UPDATE])) {
             if (!count($updateByAttributeList)) {
                 return null;
             }
@@ -440,7 +431,7 @@ class Import
             }
 
             if (!$entity) {
-                if ($action == 'createAndUpdate') {
+                if ($action === Params::ACTION_CREATE_AND_UPDATE) {
                     $entity = $this->entityManager->getEntity($this->entityType);
 
                     if (array_key_exists('id', $whereClause)) {
@@ -456,27 +447,21 @@ class Import
 
         $isNew = $entity->isNew();
 
-        if (!empty($params['defaultValues'])) {
-            if (is_object($params['defaultValues'])) {
-                $v = get_object_vars($params['defaultValues']);
-            } else {
-                $v = $params['defaultValues'];
-            }
-
-            $entity->set($v);
-        }
+        $entity->set($params->getDefaultValues());
 
         $valueMap = (object) [];
 
         foreach ($attributeList as $i => $attribute) {
-            if (!empty($attribute)) {
-                if (!array_key_exists($i, $row)) {
-                    continue;
-                }
-
-                $value = $row[$i];
-                $valueMap->$attribute = $value;
+            if (empty($attribute)) {
+                continue;
             }
+
+            if (!array_key_exists($i, $row)) {
+                continue;
+            }
+
+            $value = $row[$i];
+            $valueMap->$attribute = $value;
         }
 
         foreach ($attributeList as $i => $attribute) {
@@ -493,11 +478,7 @@ class Import
             $this->processRowItem($entity, $attribute, $value, $valueMap);
         }
 
-        $defaultCurrency = $this->config->get('defaultCurrency');
-
-        if (!empty($params['currency'])) {
-            $defaultCurrency = $params['currency'];
-        }
+        $defaultCurrency = $params->getCurrency() ?? $this->config->get('defaultCurrency');
 
         $fieldsDefs = $this->metadata->get(['entityDefs', $entity->getEntityType(), 'fields']) ?? [];
 
@@ -530,7 +511,7 @@ class Import
         if ($isNew) {
             $isDuplicate = false;
 
-            if (empty($params['skipDuplicateChecking'])) {
+            if (!$params->skipDuplicateChecking()) {
                 $isDuplicate = $recordService->checkIsDuplicate($entity);
             }
         }
@@ -546,7 +527,7 @@ class Import
                 'noStream' => true,
                 'noNotifications' => true,
                 'import' => true,
-                'silent' => $params['silentMode'] ?? false,
+                'silent' => $params->isSilentMode(),
             ]);
 
             $result['id'] = $entity->id;
@@ -560,14 +541,15 @@ class Import
             } else {
                 $result['isUpdated'] = true;
             }
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             $this->log->error("Import: " . $e->getMessage());
         }
 
         return (object) $result;
     }
 
-    protected function processForeignName(Entity $entity, string $attribute)
+    private function processForeignName(Entity $entity, string $attribute)
     {
         $relation = $entity->getAttributeParam($attribute, 'relation');
 
@@ -613,8 +595,9 @@ class Import
         $nameValue = $entity->get($attribute);
 
         if ($isPerson) {
-            $where = $this->parsePersonName($nameValue, $this->params['personNameFormat']);
-        } else {
+            $where = $this->parsePersonName($nameValue, $this->params->getPersonNameFormat());
+        }
+        else {
             $where = [
                 'name' => $nameValue,
             ];
@@ -638,13 +621,15 @@ class Import
         }
     }
 
-    protected function processRowItem(Entity $entity, string $attribute, $value, StdClass $valueMap)
+    private function processRowItem(Entity $entity, string $attribute, $value, stdClass $valueMap)
     {
         $params = $this->params;
 
-        if ($attribute == 'id') {
-            if ($params['action'] == 'create') {
-                $entity->id = $value;
+        $action = $params->getAction() ?? self::DEFAULT_ACTION;
+
+        if ($attribute === 'id') {
+            if ($action === Params::ACTION_CREATE) {
+                $entity->set('id', $value);
             }
 
             return;
@@ -687,12 +672,12 @@ class Import
                     return;
                 }
 
-                if ($type == 'personName') {
+                if ($type === 'personName') {
                     $firstNameAttribute = 'first' . ucfirst($attribute);
                     $lastNameAttribute = 'last' . ucfirst($attribute);
                     $middleNameAttribute = 'middle' . ucfirst($attribute);
 
-                    $personNameData = $this->parsePersonName($value, $params['personNameFormat']);
+                    $personNameData = $this->parsePersonName($value, $params->getPersonNameFormat());
 
                     if (!$entity->get($firstNameAttribute) && isset($personNameData['firstName'])) {
                         $personNameData['firstName'] = $this->prepareAttributeValue(
@@ -723,8 +708,7 @@ class Import
             }
 
             if (
-                $value === ''
-                &&
+                $value === '' &&
                 !in_array($attributeType, [Entity::BOOL])
             ) {
                 return;
@@ -738,8 +722,7 @@ class Import
         $phoneFieldList = [];
 
         if (
-            $entity->hasAttribute('phoneNumber')
-            &&
+            $entity->hasAttribute('phoneNumber') &&
             $entity->getAttributeParam('phoneNumber', 'fieldType') === 'phone'
         ) {
             $typeList = $this->metadata
@@ -779,18 +762,12 @@ class Import
         }
 
         if (
-            strpos($attribute, 'emailAddress') === 0 && $attribute !== 'emailAddress'
-            &&
-            $entity->hasAttribute('emailAddress')
-            &&
-            $entity->hasAttribute('emailAddressData')
-            &&
-            is_numeric(substr($attribute, 12))
-            &&
-            intval(substr($attribute, 12)) >= 2
-            &&
-            intval(substr($attribute, 12)) <= 4
-            &&
+            strpos($attribute, 'emailAddress') === 0 && $attribute !== 'emailAddress' &&
+            $entity->hasAttribute('emailAddress') &&
+            $entity->hasAttribute('emailAddressData') &&
+            is_numeric(substr($attribute, 12)) &&
+            intval(substr($attribute, 12)) >= 2 &&
+            intval(substr($attribute, 12)) <= 4 &&
             !empty($value)
         ) {
             $emailAddressData = $entity->get('emailAddressData');
@@ -817,27 +794,21 @@ class Import
         }
     }
 
-    protected function parseValue(Entity $entity, string $attribute, $value)
+    private function parseValue(Entity $entity, string $attribute, $value)
     {
         $params = $this->params;
 
-        $decimalMark = '.';
+        $decimalMark = $params->getDecimalMark() ?? self::DEFAULT_DECIMAL_MARK;
 
-        if (!empty($params['decimalMark'])) {
-            $decimalMark = $params['decimalMark'];
-        }
+        $dateFormat = DateTimeUtil::convertFormatToSystem(
+            $params->getDateFormat() ?? self::DEFAULT_DATE_FORMAT
+        );
 
-        $dateFormat = 'Y-m-d';
+        $timeFormat = DateTimeUtil::convertFormatToSystem(
+            $params->getTimeFormat() ?? self::DEFAULT_TIME_FORMAT
+        );
 
-        if (!empty($params['dateFormat'])) {
-            $dateFormat = DateTimeUtil::convertFormatToSystem($params['dateFormat']);
-        }
-
-        $timeFormat = 'H:i';
-
-        if (!empty($params['timeFormat'])) {
-            $timeFormat = DateTimeUtil::convertFormatToSystem($params['timeFormat']);
-        }
+        $timezone = $params->getTimezone() ?? 'UTC';
 
         $type = $entity->getAttributeType($attribute);
 
@@ -846,20 +817,20 @@ class Import
                 $dt = DateTime::createFromFormat($dateFormat, $value);
 
                 if ($dt) {
-                    return $dt->format('Y-m-d');
+                    return $dt->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
                 }
 
                 return null;
 
             case Entity::DATETIME:
-                $timezone = new DateTimeZone(isset($params['timezone']) ? $params['timezone'] : 'UTC');
+                $timezone = new DateTimeZone($timezone);
 
                 $dt = DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
 
                 if ($dt) {
                     $dt->setTimezone(new DateTimeZone('UTC'));
 
-                    return $dt->format('Y-m-d H:i:s');
+                    return $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
                 }
 
                 return null;
@@ -912,7 +883,7 @@ class Import
         return $this->prepareAttributeValue($entity, $attribute, $value);
     }
 
-    protected function prepareAttributeValue(Entity $entity, string $attribute, $value)
+    private function prepareAttributeValue(Entity $entity, string $attribute, $value)
     {
         if ($entity->getAttributeType($attribute) === $entity::VARCHAR) {
             $maxLength = $entity->getAttributeParam($attribute, 'len');
@@ -1020,7 +991,7 @@ class Import
         ];
     }
 
-    protected function readCsvString(
+    private function readCsvString(
         string &$string,
         string $separator = ';',
         string $enclosure = '"',

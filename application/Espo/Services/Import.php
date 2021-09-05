@@ -42,6 +42,7 @@ use Espo\Core\{
 use Espo\{
     Services\Record,
     Tools\Import\Import as ImportTool,
+    Tools\Import\Params as ImportParams,
 };
 
 use StdClass;
@@ -255,11 +256,14 @@ class Import extends Record implements
         }
 
         $entityType = $data->entityType;
-        $params = json_decode(json_encode($data->params), true);
         $attachmentId = $data->attachmentId;
         $importId = $data->importId;
         $importAttributeList = $data->importAttributeList;
         $userId = $data->userId;
+
+        $params = ImportParams::fromRaw(
+            json_decode(json_encode($data->params), true)
+        );
 
         $user = $this->getEntityManager()->getEntity('User', $userId);
 
@@ -304,10 +308,13 @@ class Import extends Record implements
         $entityType = $import->get('entityType');
         $attributeList = $import->get('attributeList') ?? [];
 
-        $params = $import->get('params') ?? (object) [];
-        $params = json_decode(json_encode($params), true);
+        $rawParams = $import->get('params') ?? (object) [];
 
-        $params['startFromLastIndex'] = $startFromLastIndex;
+        $params = ImportParams
+            ::fromRaw(
+                json_decode(json_encode($rawParams), true)
+            )
+            ->withStartFromLastIndex($startFromLastIndex);
 
         $attachmentId = $import->get('fileId');
 
@@ -324,7 +331,7 @@ class Import extends Record implements
         string $entityType,
         array $attributeList,
         string $attachmentId,
-        array $params = []
+        ImportParams $params
     ): StdClass {
 
         $result = $this->createImportTool()
