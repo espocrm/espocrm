@@ -64,11 +64,11 @@ class FieldValidationManager
      *
      * @param Entity $entity An entity.
      * @param ?StdClass $data Raw request payload data.
-     * @param ?Params $params Validation additional parameters.
+     * @param ?FieldValidationParams $params Validation additional parameters.
      *
      * @throws BadRequest If data is not valid.
      */
-    public function process(Entity $entity, ?StdClass $data = null, ?Params $params = null): void
+    public function process(Entity $entity, ?StdClass $data = null, ?FieldValidationParams $params = null): void
     {
         $dataIsSet = $data !== null;
 
@@ -77,7 +77,7 @@ class FieldValidationManager
         }
 
         if (!$params) {
-            $params = new Params();
+            $params = new FieldValidationParams();
         }
 
         $fieldList = $this->fieldUtil->getEntityTypeFieldList($entity->getEntityType());
@@ -138,7 +138,7 @@ class FieldValidationManager
         return true;
     }
 
-    private function processField(Entity $entity, string $field, Params $params, StdClass $data): void
+    private function processField(Entity $entity, string $field, FieldValidationParams $params, StdClass $data): void
     {
         $entityType = $entity->getEntityType();
 

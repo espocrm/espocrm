@@ -29,7 +29,7 @@
 
 namespace Espo\Core\FieldValidation;
 
-class Params
+class FieldValidationParams
 {
     private $skipFieldList = [];
 

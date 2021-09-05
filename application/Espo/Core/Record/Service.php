@@ -60,7 +60,7 @@ use Espo\Core\{
     Record\Collection as RecordCollection,
     Record\HookManager as RecordHookManager,
     Record\Select\ApplierClassNameListProvider,
-    FieldValidation\Params as FieldValidationParams,
+    FieldValidation\FieldValidationParams as FieldValidationParams,
     FieldProcessing\ReadLoadProcessor,
     FieldProcessing\ListLoadProcessor,
     FieldProcessing\LoaderParams as FieldLoaderParams,
