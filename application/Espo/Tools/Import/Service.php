@@ -42,7 +42,6 @@ use Espo\ORM\EntityManager;
 use Espo\Entities\Import as ImportEntity;
 use Espo\Entities\Attachment;
 
-use stdClass;
 use DateTime;
 
 class Service
@@ -74,7 +73,7 @@ class Service
         array $attributeList,
         string $attachmentId,
         Params $params
-    ): stdClass {
+    ): Result {
 
         if (!$this->acl->check($entityType, Table::ACTION_CREATE)) {
             throw new Forbidden("No create access for '{$entityType}'.");
@@ -88,7 +87,7 @@ class Service
             ->setParams($params)
             ->run();
 
-        $id = $result->id ?? null;
+        $id = $result->getId();
 
         if ($id) {
             $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);
@@ -103,7 +102,7 @@ class Service
         return $result;
     }
 
-    public function importContentsWithParamsId(string $contents, string $importParamsId): stdClass
+    public function importContentsWithParamsId(string $contents, string $importParamsId): Result
     {
         if (!$contents) {
             throw new Error("Contents is empty.");
@@ -128,7 +127,7 @@ class Service
         return $this->import($entityType, $attributeList, $attachmentId, $params);
     }
 
-    public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false): stdClass
+    public function importById(string $id, bool $startFromLastIndex = false, bool $forceResume = false): Result
     {
         /** @var ImportEntity $import */
         $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);

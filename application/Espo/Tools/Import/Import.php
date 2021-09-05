@@ -180,7 +180,7 @@ class Import
         return $this;
     }
 
-    private function validate()
+    private function validate(): void
     {
         if (!$this->entityType) {
             throw new Error("Entity type is not set.");
@@ -193,14 +193,8 @@ class Import
 
     /**
      * Run import.
-     *
-     * @return stdClass [
-     *     id: (string),
-     *     countCreated: (int),
-     *     countUpdated: (int),
-     * ]
      */
-    public function run(): stdClass
+    public function run(): Result
     {
         $this->validate();
 
@@ -284,12 +278,9 @@ class Import
         $this->entityManager->saveEntity($import);
 
         if (!$this->id && $params->isManualMode()) {
-            return (object) [
-                'id' => $import->getId(),
-                'countCreated' => 0,
-                'countUpdated' => 0,
-                'manualMode' => true,
-            ];
+            return Result::create()
+                ->withId($import->getId())
+                ->withManualMode();
         }
 
         if ($params->isIdleMode()) {
@@ -306,11 +297,7 @@ class Import
                 ])
                 ->schedule();
 
-            return (object) [
-                'id' => $import->getId(),
-                'countCreated' => 0,
-                'countUpdated' => 0,
-            ];
+            return Result::create()->withId($import->getId());
         }
 
         try {
@@ -325,6 +312,7 @@ class Import
             $contents = str_replace("\r\n", "\n", $contents);
 
             while ($row = $this->readCsvString($contents, $delimiter, $enclosure)) {
+                print_r($row);
                 $i++;
 
                 if ($i == 0 && $params->headerRow()) {
@@ -383,11 +371,10 @@ class Import
 
         $this->entityManager->saveEntity($import);
 
-        return (object) [
-            'id' => $import->getId(),
-            'countCreated' => count($result->importedIds),
-            'countUpdated' => count($result->updatedIds),
-        ];
+        return Result::create()
+            ->withId($import->getId())
+            ->withCountCreated(count($result->importedIds))
+            ->withCountUpdated(count($result->updatedIds));
     }
 
     private function importRow(array $attributeList, array $row): ?stdClass
@@ -558,7 +545,7 @@ class Import
         return (object) $result;
     }
 
-    private function processForeignName(Entity $entity, string $attribute)
+    private function processForeignName(Entity $entity, string $attribute): void
     {
         $relation = $entity->getAttributeParam($attribute, 'relation');
 
@@ -630,7 +617,7 @@ class Import
         }
     }
 
-    private function processRowItem(Entity $entity, string $attribute, $value, stdClass $valueMap)
+    private function processRowItem(Entity $entity, string $attribute, $value, stdClass $valueMap): void
     {
         $params = $this->params;
 
@@ -803,6 +790,9 @@ class Import
         }
     }
 
+    /**
+     * @return mixed
+     */
     private function parseValue(Entity $entity, string $attribute, $value)
     {
         $params = $this->params;
@@ -892,22 +882,23 @@ class Import
         return $this->prepareAttributeValue($entity, $attribute, $value);
     }
 
+    /**
+     * @return mixed
+     */
     private function prepareAttributeValue(Entity $entity, string $attribute, $value)
     {
         if ($entity->getAttributeType($attribute) === $entity::VARCHAR) {
             $maxLength = $entity->getAttributeParam($attribute, 'len');
 
-            if ($maxLength) {
-                if (mb_strlen($value) > $maxLength) {
-                    $value = substr($value, 0, $maxLength);
-                }
+            if ($maxLength && mb_strlen($value) > $maxLength) {
+                $value = substr($value, 0, $maxLength);
             }
         }
 
         return $value;
     }
 
-    protected function parsePersonName($value, string $format): array
+    private function parsePersonName($value, string $format): array
     {
         $firstName = null;
         $lastName = $value;

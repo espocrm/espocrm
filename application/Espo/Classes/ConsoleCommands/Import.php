@@ -75,9 +75,9 @@ class Import implements Command
             try {
                 $result = $this->service->importContentsWithParamsId($contents, $paramsId);
 
-                $resultId = $result->id;
-                $countCreated = $result->countCreated;
-                $countUpdated = $result->countUpdated;
+                $resultId = $result->getId();
+                $countCreated = $result->getCountCreated();
+                $countUpdated = $result->getCountUpdated();
             }
             catch (Throwable $e) {
                 $io->writeLine("Error occurred: ". $e->getMessage() . "");
@@ -119,8 +119,8 @@ class Import implements Command
                 return;
             }
 
-            $countCreated = $result->countCreated;
-            $countUpdated = $result->countUpdated;
+            $countCreated = $result->getCountCreated();
+            $countUpdated = $result->getCountUpdated();
 
             $io->writeLine("Finished. Created: {$countCreated}. Updated: {$countUpdated}.");
 

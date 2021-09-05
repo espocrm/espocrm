@@ -116,12 +116,14 @@ class Import extends Record
 
         $params = ImportParams::fromRaw($data);
 
-        return $this->getImportService()->import(
+        $result = $this->getImportService()->import(
             $entityType,
             $attributeList,
             $attachmentId,
             $params
         );
+
+        return $result->getValueMap();
     }
 
     public function postActionUnmarkAsDuplicate(Request $request): bool
