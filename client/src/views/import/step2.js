@@ -108,30 +108,39 @@ define('views/import/step2', 'view', function (Dep) {
         afterRender: function () {
             $container = $('#mapping-container');
 
-            $table = $('<table>').addClass('table').addClass('table-bordered').css('table-layout', 'fixed');
+            var $table = $('<table>').addClass('table').addClass('table-bordered').css('table-layout', 'fixed');
 
-            $row = $('<tr>');
+            var $tbody = $('<tbody>').appendTo($table);
+
+            var $row = $('<tr>');
+
             if (this.formData.headerRow) {
                 $cell = $('<th>').attr('width', '25%').html(this.translate('Header Row Value', 'labels', 'Import'));
+
                 $row.append($cell);
             }
-            $cell = $('<th>').attr('width', '25%').html(this.translate('Field', 'labels', 'Import'));
+
+            var $cell = $('<th>').attr('width', '25%').html(this.translate('Field', 'labels', 'Import'));
             $row.append($cell);
-            $cell = $('<th>').html(this.translate('First Row Value', 'labels', 'Import'));
+
+            var $cell = $('<th>').html(this.translate('First Row Value', 'labels', 'Import'));
             $row.append($cell);
 
             if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
                 $cell = $('<th>').html(this.translate('Update by', 'labels', 'Import'));
                 $row.append($cell);
             }
-            $table.append($row);
 
-            this.mapping.forEach(function (d, i) {
+            $tbody.append($row);
+
+            this.mapping.forEach((d, i) => {
                 $row = $('<tr>');
+
                 if (this.formData.headerRow) {
                     $cell = $('<td>').html(d.name);
                     $row.append($cell);
                 }
+
                 var selectedName = d.name;
 
                 if (this.formData.attributeList) {
@@ -145,20 +154,24 @@ define('views/import/step2', 'view', function (Dep) {
 
                 $select = this.getFieldDropdown(i, selectedName);
                 $cell = $('<td>').append($select);
+
                 $row.append($cell);
 
                 var value = d.value || '';
+
                 if (value.length > 200) {
                     value = value.substr(0, 200) + '...';
                 }
 
                 $cell = $('<td>').css('overflow', 'hidden').html(value);
+
                 $row.append($cell);
 
                 if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
                     var $checkbox = $('<input>').attr('type', 'checkbox').attr('id', 'update-by-' + i.toString());
+
                     if (!this.formData.updateBy) {
-                        if (d.name == 'id') {
+                        if (d.name === 'id') {
                             $checkbox.attr('checked', true);
                         }
                     } else {
@@ -166,21 +179,23 @@ define('views/import/step2', 'view', function (Dep) {
                             $checkbox.attr('checked', true);
                         }
                     }
+
                     $cell = $('<td>').append($checkbox);
+
                     $row.append($cell);
                 }
 
-                $table.append($row);
-            }, this);
+                $tbody.append($row);
+            });
 
             $container.empty();
             $container.append($table);
 
 
             if (this.formData.defaultFieldList) {
-                this.formData.defaultFieldList.forEach(function (name) {
+                this.formData.defaultFieldList.forEach((name) => {
                     this.addField(name);
-                }, this);
+                });
             }
         },
 
@@ -190,20 +205,25 @@ define('views/import/step2', 'view', function (Dep) {
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
 
             var fieldList = [];
+
             for (var field in defs) {
-                if (~forbiddenFieldList.indexOf(field)) continue;
+                if (~forbiddenFieldList.indexOf(field)) {
+                    continue;
+                }
 
                 var d = defs[field];
 
                 if (!~this.allowedFieldList.indexOf(field) && (d.disabled || d.importDisabled)) {
                     continue;
                 }
+
                 fieldList.push(field);
             }
 
-            fieldList = fieldList.sort(function (v1, v2) {
-                return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
-            }.bind(this));
+            fieldList = fieldList.sort((v1, v2) => {
+                return this.translate(v1, 'fields', this.scope)
+                    .localeCompare(this.translate(v2, 'fields', this.scope));
+            });
 
             return fieldList;
         },
@@ -214,40 +234,45 @@ define('views/import/step2', 'view', function (Dep) {
             var forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
 
             var attributeList = [];
+
             attributeList.push('id');
 
             for (var field in fields) {
-                if (~forbiddenFieldList.indexOf(field)) continue;
+                if (~forbiddenFieldList.indexOf(field)) {
+                    continue;
+                }
 
                 var d = fields[field];
-                if (!~this.allowedFieldList.indexOf(field) && (((d.disabled) && !d.importNotDisabled) || d.importDisabled)) {
+
+                if (
+                    !~this.allowedFieldList.indexOf(field) &&
+                    (d.disabled && !d.importNotDisabled || d.importDisabled)
+                ) {
                     continue;
                 }
 
-                if (d.type == 'phone') {
-                    attributeList.push(field);
+                if (d.type === 'phone') {
+                    attributeList
+                        .push(field);
+
                     (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList') || [])
-                    .map(
-                        function (item) {
+                        .map((item) => {
                             return item.replace(/\s/g, '_');
-                        }, this
-                    )
-                    .forEach(
-                        function (item) {
+                        })
+                        .forEach((item) => {
                             attributeList.push(field + Espo.Utils.upperCaseFirst(item));
-                        }, this
-                    );
+                        });
 
                     continue;
                 }
 
-                if (d.type == 'email') {
+                if (d.type === 'email') {
                     attributeList.push(field + '2');
                     attributeList.push(field + '3');
                     attributeList.push(field + '4');
                 }
 
-                if (d.type == 'link') {
+                if (d.type === 'link') {
                     attributeList.push(field + 'Name');
                     attributeList.push(field + 'Id');
                 }
@@ -256,7 +281,7 @@ define('views/import/step2', 'view', function (Dep) {
                     continue;
                 }
 
-                if (d.type == 'personName') {
+                if (d.type === 'personName') {
                     attributeList.push(field);
                 }
 
@@ -267,18 +292,18 @@ define('views/import/step2', 'view', function (Dep) {
                     actualAttributeList = [field];
                 }
 
-                actualAttributeList.forEach(function (f) {
+                actualAttributeList.forEach((f) => {
                     if (attributeList.indexOf(f) === -1) {
                         attributeList.push(f);
                     }
-                }, this);
+                });
             }
 
-            attributeList = attributeList.sort(function (v1, v2) {
+            attributeList = attributeList.sort((v1, v2) => {
                 return this.translate(v1, 'fields', this.scope).localeCompare(this.translate(v2, 'fields', this.scope));
-            }.bind(this));
+            });
 
-            return attributeList
+            return attributeList;
         },
 
         getFieldDropdown: function (num, name) {
@@ -292,36 +317,51 @@ define('views/import/step2', 'view', function (Dep) {
             var scope = this.formData.entityType;
 
             $select.append($option);
+
             fieldList.forEach(function (field) {
                 var label = '';
+
                 if (this.getLanguage().has(field, 'fields', scope) || this.getLanguage().has(field, 'fields', 'Global')) {
                     label = this.translate(field, 'fields', scope);
-                } else {
+                }
+                else {
                     if (field.indexOf('Id') === field.length - 2) {
                         var baseField = field.substr(0, field.length - 2);
+
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                             label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('id', 'fields') + ')';
                         }
-                    } else if (field.indexOf('Name') === field.length - 4) {
+                    }
+                    else if (field.indexOf('Name') === field.length - 4) {
                         var baseField = field.substr(0, field.length - 4);
+
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                             label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('name', 'fields') + ')';
                         }
-                    } else if (field.indexOf('Type') === field.length - 4) {
+                    }
+                    else if (field.indexOf('Type') === field.length - 4) {
                         var baseField = field.substr(0, field.length - 4);
+
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                             label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('type', 'fields') + ')';
                         }
-                    } else if (field.indexOf('phoneNumber') === 0) {
+                    }
+                    else if (field.indexOf('phoneNumber') === 0) {
                         var phoneNumberType = field.substr(11);
+
                         var phoneNumberTypeLabel = this.getLanguage().translateOption(phoneNumberType, 'phoneNumber', scope);
+
                         label = this.translate('phoneNumber', 'fields', scope) + ' (' + phoneNumberTypeLabel + ')';
-                    } else if (
+                    }
+                    else if (
                         field.indexOf('emailAddress') === 0 && parseInt(field.substr(12)).toString() === field.substr(12)) {
                         var emailAddressNum = field.substr(12);
+
                         label = this.translate('emailAddress', 'fields', scope) + ' ' + emailAddressNum.toString();;
-                    } else if (field.indexOf('Ids') === field.length - 3) {
+                    }
+                    else if (field.indexOf('Ids') === field.length - 3) {
                         var baseField = field.substr(0, field.length - 3);
+
                         if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
                             label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('ids', 'fields') + ')';
                         }
@@ -337,12 +377,14 @@ define('views/import/step2', 'view', function (Dep) {
                 if (name) {
                     if (field == name) {
                         $option.prop('selected', true);
-                    } else {
+                    }
+                    else {
                         if (name.toLowerCase().replace('_', '') == field.toLowerCase()) {
                             $option.prop('selected', true);
                         }
                     }
                 }
+
                 $select.append($option);
             }, this);
 
@@ -380,11 +422,12 @@ define('views/import/step2', 'view', function (Dep) {
                 },
                 mode: 'edit',
                 readOnlyDisabled: true
-            }, function (view) {
+            }, (view) => {
                 this.additionalFields.push(name);
+
                 view.render();
                 view.notify(false);
-            }.bind(this));
+            });
         },
 
         disableButtons: function () {
@@ -399,6 +442,7 @@ define('views/import/step2', 'view', function (Dep) {
 
         fetch: function (skipValidation) {
             var attributes = {};
+
             this.additionalFields.forEach(function (field) {
                 var view = this.getView(field);
                 _.extend(attributes, view.fetch());
@@ -407,6 +451,7 @@ define('views/import/step2', 'view', function (Dep) {
             this.model.set(attributes);
 
             var notValid = false;
+
             this.additionalFields.forEach(function (field) {
                 var view = this.getView(field);
                 notValid = view.validate() || notValid;
@@ -433,11 +478,13 @@ define('views/import/step2', 'view', function (Dep) {
 
             if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
                 var updateBy = [];
+
                 this.mapping.forEach(function (d, i) {
                     if ($('#update-by-' + i).get(0).checked) {
                         updateBy.push(i);
                     }
                 }, this);
+
                 this.formData.updateBy = updateBy;
             }
 
@@ -459,8 +506,6 @@ define('views/import/step2', 'view', function (Dep) {
                 return;
             }
 
-
-
             this.disableButtons();
 
             this.notify('File uploading...');
@@ -469,15 +514,15 @@ define('views/import/step2', 'view', function (Dep) {
                 timeout: 0,
                 contentType: 'text/csv',
                 data: this.getParentView().fileContents,
-            }).then(
-                function (result) {
-                    if (!result.attachmentId) {
-                        this.notify('Bad response', 'error');
-                        return;
-                    }
-                    this.runImport(result.attachmentId);
-                }.bind(this)
-            );
+            }).then(result => {
+                if (!result.attachmentId) {
+                    this.notify('Bad response', 'error');
+
+                    return;
+                }
+
+                this.runImport(result.attachmentId);
+            });
         },
 
         runImport: function (attachmentId) {
@@ -488,46 +533,46 @@ define('views/import/step2', 'view', function (Dep) {
             this.notify('Import running...');
 
             Espo.Ajax.postRequest('Import', this.formData, {timeout: 0})
-                .then(
-                    function (result) {
-                        var id = result.id;
-                        this.getParentView().trigger('done');
-                        if (id) {
-                            if (this.formData.manualMode) {
-                                this.createView('dialog', 'views/modal', {
-                                    templateContent: "{{complexText viewObject.options.msg}}",
-                                    headerText: ' ',
-                                    backdrop: 'static',
-                                    msg:
-                                        this.translate('commandToRun', 'strings', 'Import') + ':\n\n' +
-                                        '```php command.php import --id='+id+'```',
-                                    buttonList: [
-                                        {
-                                            name: 'close',
-                                            label: this.translate('Close'),
-                                        }
-                                    ],
-                                }, function (view) {
-                                    view.render();
-                                    this.listenToOnce(view, 'close', function () {
-                                        this.getRouter().navigate('#Import/view/' + id, {trigger: true});
-                                    }, this);
+                .then(result => {
+                    var id = result.id;
+
+                    this.getParentView().trigger('done');
+
+                    if (id) {
+                        if (this.formData.manualMode) {
+                            this.createView('dialog', 'views/modal', {
+                                templateContent: "{{complexText viewObject.options.msg}}",
+                                headerText: ' ',
+                                backdrop: 'static',
+                                msg:
+                                    this.translate('commandToRun', 'strings', 'Import') + ':\n\n' +
+                                    '```php command.php import --id='+id+'```',
+                                buttonList: [
+                                    {
+                                        name: 'close',
+                                        label: this.translate('Close'),
+                                    }
+                                ],
+                            }, function (view) {
+                                view.render();
+
+                                this.listenToOnce(view, 'close', () => {
+                                    this.getRouter().navigate('#Import/view/' + id, {trigger: true});
                                 });
-                            } else {
-                                this.getRouter().navigate('#Import/view/' + id, {trigger: true});
-                            }
-                        } else {
-                            this.notify('Error', 'error');
-                            this.enableButtons();
+                            });
                         }
-                        this.notify(false);
-                    }.bind(this)
-                )
-                .fail(
-                    function () {
+                        else {
+                            this.getRouter().navigate('#Import/view/' + id, {trigger: true});
+                        }
+                    }
+                    else {
+                        this.notify('Error', 'error');
                         this.enableButtons();
-                    }.bind(this)
-                );
+                    }
+
+                    this.notify(false);
+                })
+                .catch(() => this.enableButtons());
         }
 
     });

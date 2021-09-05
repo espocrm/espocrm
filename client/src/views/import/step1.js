@@ -451,20 +451,25 @@ define('views/import/step1', ['view', 'model'], function (Dep, Model) {
 
             var $table = $('<table>').addClass('table').addClass('table-bordered');
 
-            arr.forEach(function (row, i) {
+            var $tbody = $('<tbody>').appendTo($table);
+
+            arr.forEach((row, i) => {
                 if (i >= 3) {
                     return;
                 }
+
                 $row = $('<tr>');
-                row.forEach(function (value) {
+
+                row.forEach((value) => {
                     $cell = $('<td>').html(value);
                     $row.append($cell);
                 });
 
-                $table.append($row);
+                $tbody.append($row);
             });
 
             var $container = $('#import-preview');
+
             $container.empty().append($table);
         },
 
