@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
 use Espo\Tools\Import\Params as ImportParams;
+use Espo\Tools\Import\Service as Service;
 
 use Espo\Core\{
     Controllers\Record,
@@ -40,29 +41,43 @@ use Espo\Core\{
     Api\Response,
 };
 
-use StdClass;
+use Espo\Core\Di\InjectableFactoryAware;
+use Espo\Core\Di\InjectableFactorySetter;
+
+use stdClass;
 
 class Import extends Record
+
+    implements InjectableFactoryAware
 {
+    use InjectableFactorySetter;
+
     protected function checkAccess(): bool
     {
         return $this->acl->check('Import');
     }
 
-    public function postActionUploadFile(Request $request): StdClass
+    private function getImportService(): Service
+    {
+        return $this->injectableFactory->create(Service::class);
+    }
+
+    public function postActionUploadFile(Request $request): stdClass
     {
         $contents = $request->getBodyContents();
 
-        $attachmentId = $this->getService('Import')->uploadFile($contents);
+        $attachmentId = $this->getImportService()->uploadFile($contents);
 
-        return (object) ['attachmentId' => $attachmentId];
+        return (object) [
+            'attachmentId' => $attachmentId
+        ];
     }
 
     public function postActionRevert(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        $this->getService('Import')->revert($data->id);
+        $this->getImportService()->revert($data->id);
 
         return true;
     }
@@ -75,97 +90,36 @@ class Import extends Record
             throw new BadRequest();
         }
 
-        $this->getService('Import')->removeDuplicates($data->id);
+        $this->getImportService()->removeDuplicates($data->id);
 
         return true;
     }
 
-    public function postActionCreate(Request $request, Response $response): StdClass
+    public function postActionCreate(Request $request, Response $response): stdClass
     {
         $data = $request->getParsedBody();
 
-        if (!isset($data->delimiter)) {
-            throw new BadRequest();
+        $entityType = $data->entityType ?? null;
+        $attributeList = $data->attributeList ?? null;
+        $attachmentId = $data->attachmentId ?? null;
+
+        if (!is_array($attributeList)) {
+            throw new BadRequest("No attributeList.");
         }
 
-        if (!isset($data->textQualifier)) {
-            throw new BadRequest();
+        if (!$attachmentId) {
+            throw new BadRequest("No attachmentId.");
         }
 
-        if (!isset($data->dateFormat)) {
-            throw new BadRequest();
+        if (!$entityType) {
+            throw new BadRequest("No entityType.");
         }
 
-        if (!isset($data->timeFormat)) {
-            throw new BadRequest();
-        }
+        $params = ImportParams::fromRaw($data);
 
-        if (!isset($data->personNameFormat)) {
-            throw new BadRequest();
-        }
-
-        if (!isset($data->decimalMark)) {
-            throw new BadRequest();
-        }
-
-        if (!isset($data->defaultValues)) {
-            throw new BadRequest();
-        }
-
-        if (!isset($data->action)) {
-            throw new BadRequest();
-        }
-
-        if (!isset($data->attachmentId)) {
-            throw new BadRequest();
-        }
-
-        if (!isset($data->entityType)) {
-            throw new BadRequest();
-        }
-
-        if (!isset($data->attributeList)) {
-            throw new BadRequest();
-        }
-
-        $timezone = 'UTC';
-        if (isset($data->timezone)) {
-           $timezone = $data->timezone;
-        }
-
-        $rawParams = [
-            'headerRow' => !empty($data->headerRow),
-            'delimiter' => $data->delimiter,
-            'textQualifier' => $data->textQualifier,
-            'dateFormat' => $data->dateFormat,
-            'timeFormat' => $data->timeFormat,
-            'timezone' => $timezone,
-            'personNameFormat' => $data->personNameFormat,
-            'decimalMark' => $data->decimalMark,
-            'currency' => $data->currency,
-            'defaultValues' => $data->defaultValues,
-            'action' => $data->action,
-            'skipDuplicateChecking' => !empty($data->skipDuplicateChecking),
-            'idleMode' => !empty($data->idleMode),
-            'silentMode' => !empty($data->silentMode),
-            'manualMode' => !empty($data->manualMode),
-        ];
-
-        if (property_exists($data, 'updateBy')) {
-            $rawParams['updateBy'] = $data->updateBy;
-        }
-
-        $params = ImportParams::fromRaw($rawParams);
-
-        $attachmentId = $data->attachmentId;
-
-        if (!$this->acl->check($data->entityType, 'edit')) {
-            throw new Forbidden();
-        }
-
-        return $this->getService('Import')->import(
-            $data->entityType,
-            $data->attributeList,
+        return $this->getImportService()->import(
+            $entityType,
+            $attributeList,
             $attachmentId,
             $params
         );
@@ -175,11 +129,15 @@ class Import extends Record
     {
         $data = $request->getParsedBody();
 
-        if (empty($data->id) || empty($data->entityType) || empty($data->entityId)) {
+        if (
+            empty($data->id) ||
+            empty($data->entityType) ||
+            empty($data->entityId)
+        ) {
             throw new BadRequest();
         }
 
-        $this->getService('Import')->unmarkAsDuplicate($data->id, $data->entityType, $data->entityId);
+        $this->getImportService()->unmarkAsDuplicate($data->id, $data->entityType, $data->entityId);
 
         return true;
     }

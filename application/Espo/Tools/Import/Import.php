@@ -29,6 +29,10 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\Job\JobSchedulerFactory;
+
+use Espo\Tools\Import\Jobs\RunIdle;
+
 use Espo\Core\{
     Exceptions\Error,
     Utils\Json,
@@ -45,6 +49,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use Espo\Entities\User;
+use Espo\Entities\Import as ImportEntity;
 
 use stdClass;
 use DateTime;
@@ -87,6 +92,8 @@ class Import
 
     private $fileStorageManager;
 
+    private $jobSchedulerFactory;
+
     private $log;
 
     public function __construct(
@@ -97,6 +104,7 @@ class Import
         User $user,
         FileStorageManager $fileStorageManager,
         RecordServiceContainer $recordServiceContainer,
+        JobSchedulerFactory $jobSchedulerFactory,
         Log $log
     ) {
         $this->aclManager = $aclManager;
@@ -106,6 +114,7 @@ class Import
         $this->user = $user;
         $this->fileStorageManager = $fileStorageManager;
         $this->recordServiceContainer = $recordServiceContainer;
+        $this->jobSchedulerFactory = $jobSchedulerFactory;
         $this->log = $log;
 
         $this->params = Params::create();
@@ -247,25 +256,25 @@ class Import
                 $startFromIndex = $import->get('lastIndex');
             }
 
-            $import->set('status', 'In Process');
+            $import->set('status', ImportEntity::STATUS_IN_PROCESS);
         }
         else {
-            $import = $this->entityManager->getEntity('Import');
+            $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE);
 
             $import->set([
                 'entityType' => $this->entityType,
                 'fileId' => $this->attachmentId,
             ]);
 
-            $import->set('status', 'In Process');
+            $import->set('status', ImportEntity::STATUS_IN_PROCESS);
 
             if ($params->isManualMode()) {
                 $params = $params->withIdleMode(false);
 
-                $import->set('status', 'Standby');
+                $import->set('status', ImportEntity::STATUS_STANDBY);
             }
             else if ($params->isIdleMode()) {
-                $import->set('status', 'Pending');
+                $import->set('status', ImportEntity::STATUS_PENDING);
             }
 
             $import->set('params', $params->getRaw());
@@ -284,18 +293,18 @@ class Import
         }
 
         if ($params->isIdleMode()) {
-            $this->entityManager->createEntity('Job', [
-                'serviceName' => 'Import',
-                'methodName' => 'jobRunIdleImport',
-                'data' => [
+            $this->jobSchedulerFactory
+                ->create()
+                ->setClassName(RunIdle::class)
+                ->setData([
                     'entityType' => $this->entityType,
                     'params' => $params->withIdleMode(false)->getRaw(),
                     'attachmentId' => $this->attachmentId,
                     'importAttributeList' => $attributeList,
                     'importId' => $import->getId(),
                     'userId' => $this->user->getId(),
-                ],
-            ]);
+                ])
+                ->schedule();
 
             return (object) [
                 'id' => $import->getId(),
@@ -367,15 +376,15 @@ class Import
         } catch (Exception $e) {
             $this->log->error('Import Error: '. $e->getMessage());
 
-            $import->set('status', 'Failed');
+            $import->set('status', ImportEntity::STATUS_FAILED);
         }
 
-        $import->set('status', 'Complete');
+        $import->set('status', ImportEntity::STATUS_COMPLETE);
 
         $this->entityManager->saveEntity($import);
 
         return (object) [
-            'id' => $import->id,
+            'id' => $import->getId(),
             'countCreated' => count($result->importedIds),
             'countUpdated' => count($result->updatedIds),
         ];

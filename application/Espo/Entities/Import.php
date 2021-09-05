@@ -29,7 +29,44 @@
 
 namespace Espo\Entities;
 
+use stdClass;
+
 class Import extends \Espo\Core\ORM\Entity
 {
     public const ENTITY_TYPE = 'Import';
+
+    public const STATUS_STANDBY = 'Standby';
+
+    public const STATUS_IN_PROCESS = 'In Process';
+
+    public const STATUS_FAILED = 'Failed';
+
+    public const STATUS_PENDING = 'Pending';
+
+    public const STATUS_COMPLETE = 'Complete';
+
+    public function getStatus(): ?string
+    {
+        return $this->get('status');
+    }
+
+    public function getParams(): ?stdClass
+    {
+        return $this->get('params');
+    }
+
+    public function getFileId(): ?string
+    {
+        return $this->get('fileId');
+    }
+
+    public function getTargetEntityType(): ?string
+    {
+        return $this->get('entityType');
+    }
+
+    public function getTargetAttributeList(): ?array
+    {
+        return $this->get('attributeList');
+    }
 }
