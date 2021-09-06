@@ -210,7 +210,7 @@ class DataManager
         $this->configWriter->save();
     }
 
-    protected function populateConfigParameters(): void
+    private function populateConfigParameters(): void
     {
         $this->setFullTextConfigParameters();
         $this->setCryptKeyConfigParameter();
@@ -218,7 +218,7 @@ class DataManager
         $this->configWriter->save();
     }
 
-    protected function setFullTextConfigParameters(): void
+    private function setFullTextConfigParameters(): void
     {
         $platform = $this->config->get('database.platform') ?? null;
         $driver = $this->config->get('database.driver') ?? '';
@@ -243,7 +243,7 @@ class DataManager
         $this->configWriter->set('fullTextSearchMinLength', $fullTextSearchMinLength);
     }
 
-    protected function setCryptKeyConfigParameter(): void
+    private function setCryptKeyConfigParameter(): void
     {
         if ($this->config->get('cryptKey')) {
             return;
@@ -254,12 +254,12 @@ class DataManager
         $this->configWriter->set('cryptKey', $cryptKey);
     }
 
-    protected function disableHooks(): void
+    private function disableHooks(): void
     {
         $this->hookManager->disable();
     }
 
-    protected function enableHooks(): void
+    private function enableHooks(): void
     {
         $this->hookManager->enable();
     }
