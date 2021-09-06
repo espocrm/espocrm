@@ -42,6 +42,7 @@ use Espo\Core\{
     Utils\Database\Schema\SchemaProxy,
     Utils\Log,
     Utils\Module,
+    Rebuild\RebuildActionProcessor,
 };
 
 use Throwable;
@@ -71,6 +72,8 @@ class DataManager
 
     private $module;
 
+    private $rebuildActionProcessor;
+
     private $cachePath = 'data/cache';
 
     public function __construct(
@@ -83,7 +86,8 @@ class DataManager
         HookManager $hookManager,
         SchemaProxy $schemaProxy,
         Log $log,
-        Module $module
+        Module $module,
+        RebuildActionProcessor $rebuildActionProcessor
     ) {
         $this->entityManager = $entityManager;
         $this->config = $config;
@@ -95,6 +99,7 @@ class DataManager
         $this->schemaProxy = $schemaProxy;
         $this->log = $log;
         $this->module = $module;
+        $this->rebuildActionProcessor = $rebuildActionProcessor;
     }
 
     /**
@@ -108,7 +113,9 @@ class DataManager
         $this->populateConfigParameters();
         $this->rebuildMetadata();
         $this->rebuildDatabase($entityList);
-        $this->rebuildScheduledJobs();
+
+        $this->rebuildActionProcessor->process();
+
         $this->enableHooks();
     }
 
@@ -195,92 +202,11 @@ class DataManager
     }
 
     /**
-     * Rebuild scheduled jobs. Create system jobs.
-     */
-    public function rebuildScheduledJobs(): void
-    {
-        $jobDefs = array_merge(
-            $this->metadata->get(['entityDefs', 'ScheduledJob', 'jobs'], []), // for bc
-            $this->metadata->get(['app', 'scheduledJobs'], [])
-        );
-
-        $systemJobNameList = [];
-
-        foreach ($jobDefs as $jobName => $defs) {
-            if (!$jobName) {
-                continue;
-            }
-
-            if (empty($defs['isSystem']) || empty($defs['scheduling'])) {
-                continue;
-            }
-
-            $systemJobNameList[] = $jobName;
-
-            $sj = $this->entityManager
-                ->getRDBRepository('ScheduledJob')
-                ->where([
-                    'job' => $jobName,
-                    'status' => 'Active',
-                    'scheduling' => $defs['scheduling'],
-                ])
-                ->findOne();
-
-            if ($sj) {
-                continue;
-            }
-
-            $existingJob = $this->entityManager
-                ->getRDBRepository('ScheduledJob')
-                ->where([
-                    'job' => $jobName,
-                ])
-                ->findOne();
-
-            if ($existingJob) {
-                $this->entityManager->removeEntity($existingJob);
-            }
-
-            $name = $jobName;
-
-            if (!empty($defs['name'])) {
-                $name = $defs['name'];
-            }
-
-            $this->entityManager->createEntity('ScheduledJob', [
-                'job' => $jobName,
-                'status' => 'Active',
-                'scheduling' => $defs['scheduling'],
-                'isInternal' => true,
-                'name' => $name,
-            ]);
-        }
-
-        $internalScheduledJobList = $this->entityManager
-            ->getRDBRepository('ScheduledJob')
-            ->where([
-                'isInternal' => true,
-            ])
-            ->find();
-
-        foreach ($internalScheduledJobList as $scheduledJob) {
-            $jobName = $scheduledJob->get('job');
-
-            if (!in_array($jobName, $systemJobNameList)) {
-                $this->entityManager
-                    ->getRDBRepository('ScheduledJob')
-                    ->deleteFromDb($scheduledJob->id);
-            }
-        }
-    }
-
-    /**
      * Update cache timestamp.
      */
     public function updateCacheTimestamp(): void
     {
         $this->configWriter->updateCacheTimestamp();
-
         $this->configWriter->save();
     }
 

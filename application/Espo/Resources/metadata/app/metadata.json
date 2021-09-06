@@ -24,6 +24,7 @@
         ["app", "scheduledJobs"],
         ["app", "webSocket", "messagers"],
         ["app", "config"],
+        ["app", "rebuild"],
         ["selectDefs"],
         ["recordDefs"],
         ["pdfDefs"],
