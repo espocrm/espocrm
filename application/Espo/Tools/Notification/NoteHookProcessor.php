@@ -133,6 +133,8 @@ class NoteHookProcessor
             $userIdList = $note->getLinkMultipleIdList('users');
         }
 
+        $notifyUserIdList = [];
+
         foreach ($userList as $user) {
             if ($skipAclCheck) {
                 $notifyUserIdList[] = $user->getId();
