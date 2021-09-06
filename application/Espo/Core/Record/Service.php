@@ -624,6 +624,8 @@ class Service implements Crud,
             $this->processDuplicateCheck($entity, $data);
         }
 
+        $this->recordHookManager->processBeforeCreate($entity, $params);
+
         $this->beforeCreateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity);
