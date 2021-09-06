@@ -627,7 +627,7 @@ class BaseEntity implements Entity
     /**
      * Get an entity type.
      */
-    final public function getEntityType(): string
+    public function getEntityType(): string
     {
         return $this->entityType;
     }
