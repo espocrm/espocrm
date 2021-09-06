@@ -44,7 +44,7 @@ use Espo\Entities\{
 use Espo\Core\Authentication\{
     Result,
     LoginFactory,
-    TwoFactor\Factory as TwoFAFactory,
+    TwoFactor\MethodFactory as TwoFAFactory,
     AuthToken\AuthTokenManager,
     AuthToken\AuthTokenData,
     AuthToken\AuthToken,

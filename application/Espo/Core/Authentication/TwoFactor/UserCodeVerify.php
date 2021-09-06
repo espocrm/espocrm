@@ -27,18 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFactor\User;
+namespace Espo\Core\Authentication\TwoFactor;
 
 use Espo\Entities\UserData;
 
-use StdClass;
+use stdClass;
 
-interface CodeVerify
+interface UserCodeVerify
 {
     /**
      * Generate data for a user.
      */
-    public function generateData(UserData $userData, StdClass $data, string $userName): StdClass;
+    public function generateData(UserData $userData, StdClass $data, string $userName): stdClass;
 
     /**
      * Confirm code before storing.

@@ -27,51 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFactor\User;
+namespace Espo\Core\Authentication\TwoFactor;
 
-use Espo\Entities\UserData;
+use Espo\Entities\User;
 
-use Espo\Core\{
-    Authentication\TwoFactor\Utils\Totp as TotpUtils,
-    Utils\Config,
-};
+use Espo\Core\Authentication\ResultData;
 
-use StdClass;
-
-class Totp implements CodeVerify
+interface CodeVerify
 {
-    protected $entityManager;
+    /**
+    * Verify a code for a user.
+    */
+    public function verifyCode(User $user, string $code): bool;
 
-    protected $totp;
-
-    public function __construct(TotpUtils $totp, Config $config)
-    {
-        $this->totp = $totp;
-        $this->config = $config;
-    }
-
-    public function generateData(UserData $userData, StdClass $data, string $userName): StdClass
-    {
-        $secret = $this->totp->createSecret();
-
-        $label = rawurlencode($this->config->get('applicationName')) . ':' . rawurlencode($userName);
-
-        return (object) [
-            'auth2FATotpSecret' => $secret,
-            'label' => $label,
-        ];
-    }
-
-    public function verify(UserData $userData, string $code): bool
-    {
-        if (!$code) {
-            return false;
-        }
-
-        $codeModified = str_replace(' ', '', trim($code));
-
-        $secret = $userData->get('auth2FATotpSecret');
-
-        return $this->totp->verifyCode($secret, $codeModified);
-    }
+    /**
+     * Data to be sent to the front-end for showing a form for a second step.
+     */
+    public function getLoginData(User $user): ResultData;
 }

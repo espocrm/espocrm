@@ -29,21 +29,19 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Methods;
 
-use Espo\{
-    ORM\EntityManager,
-    Entities\User,
-};
+use Espo\ORM\EntityManager;
+use Espo\Entities\User;
 
-use Espo\Core\Authentication\{
-    TwoFactor\Utils\Totp as TotpUtils,
-    ResultData,
-};
+
+use Espo\Core\Authentication\TwoFactor\CodeVerify;
+use Espo\Core\Authentication\TwoFactor\Utils\Totp as TotpUtils;
+use Espo\Core\Authentication\ResultData;
 
 class Totp implements CodeVerify
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $totp;
+    private $totp;
 
     public function __construct(EntityManager $entityManager, TotpUtils $totp)
     {

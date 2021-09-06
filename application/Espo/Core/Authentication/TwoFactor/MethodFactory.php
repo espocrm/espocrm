@@ -32,11 +32,11 @@ namespace Espo\Core\Authentication\TwoFactor;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 
-class Factory
+class MethodFactory
 {
-    protected $injectableFactory;
+    private $injectableFactory;
 
-    protected $config;
+    private $metadata;
 
     public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
@@ -44,16 +44,13 @@ class Factory
         $this->metadata = $metadata;
     }
 
-    public function create(string $method): object
+    public function create(string $method): CodeVerify
     {
-        $className = $this->metadata->get([
-            'app', 'auth2FAMethods', $method, 'implementationClassName'
-        ]);
+        $className = $this->metadata->get(['app', 'auth2FAMethods', $method, 'implementationClassName']);
 
         if (!$className) {
             $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
 
-            $className = "Espo\\Custom\\Core\\\Authentication\\TwoFactor\\Methods\\" . $sanitizedName;
             if (!class_exists($className)) {
                 $className = "Espo\\Core\\Authentication\\TwoFactor\\Methods\\" . $sanitizedName;
             }

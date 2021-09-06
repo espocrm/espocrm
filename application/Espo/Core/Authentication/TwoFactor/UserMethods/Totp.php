@@ -27,38 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFactor;
+namespace Espo\Core\Authentication\TwoFactor\UserMethods;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Metadata;
 
-class UserFactory
+use Espo\Entities\UserData;
+
+use Espo\Core\Authentication\TwoFactor\UserCodeVerify;
+use Espo\Core\Authentication\TwoFactor\Utils\Totp as TotpUtils;
+use Espo\Core\Utils\Config;
+
+use stdClass;
+
+class Totp implements UserCodeVerify
 {
-    protected $injectableFactory;
+    private $totp;
 
-    protected $config;
+    private $config;
 
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
+    public function __construct(TotpUtils $totp, Config $config)
     {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
+        $this->totp = $totp;
+        $this->config = $config;
     }
 
-    public function create(string $method): object
+    public function generateData(UserData $userData, StdClass $data, string $userName): stdClass
     {
-        $className = $this->metadata->get([
-            'app', 'auth2FAMethods', $method, 'implementationUserClassName'
-        ]);
+        $secret = $this->totp->createSecret();
 
-        if (!$className) {
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+        $label = rawurlencode($this->config->get('applicationName')) . ':' . rawurlencode($userName);
 
-            $className = "Espo\\Custom\\Core\\Authentication\\TwoFactor\\User\\" . $sanitizedName;
-            if (!class_exists($className)) {
-                $className = "Espo\\Core\\Authentication\\TwoFactor\\User\\" . $sanitizedName;
-            }
+        return (object) [
+            'auth2FATotpSecret' => $secret,
+            'label' => $label,
+        ];
+    }
+
+    public function verify(UserData $userData, string $code): bool
+    {
+        if (!$code) {
+            return false;
         }
 
-        return $this->injectableFactory->create($className);
+        $codeModified = str_replace(' ', '', trim($code));
+
+        $secret = $userData->get('auth2FATotpSecret');
+
+        return $this->totp->verifyCode($secret, $codeModified);
     }
 }

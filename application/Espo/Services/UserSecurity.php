@@ -41,7 +41,7 @@ use Espo\Core\{
     Utils\Metadata,
     Utils\Config,
     Authentication\LoginFactory,
-    Authentication\TwoFactor\UserFactory as TwoFactorUserFactory,
+    Authentication\TwoFactor\UserMethodFactory as TwoFactorUserFactory,
     Authentication\LoginData,
     Api\RequestNull,
 };
