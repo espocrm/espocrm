@@ -29,13 +29,11 @@
 
 namespace Espo\ORM;
 
-use Espo\ORM\{
-    Value\ValueAccessorFactory,
-};
+use Espo\ORM\Value\ValueAccessorFactory;
 
 use const E_USER_DEPRECATED;
 
-use StdClass;
+use stdClass;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -512,12 +510,12 @@ class BaseEntity implements Entity
         return $this->cloneArray($value);
     }
 
-    private function prepareObjectAttributeValue($value): ?StdClass
+    private function prepareObjectAttributeValue($value): ?stdClass
     {
         if (is_string($value)) {
             $preparedValue = json_decode($value);
 
-            if (!$preparedValue instanceof StdClass) {
+            if (!$preparedValue instanceof stdClass) {
                 return null;
             }
 
@@ -529,12 +527,12 @@ class BaseEntity implements Entity
         if (is_array($value)) {
             $preparedValue = json_decode(json_encode($value));
 
-            if ($preparedValue instanceof StdClass) {
+            if ($preparedValue instanceof stdClass) {
                 return $preparedValue;
             }
         }
 
-        if (!$preparedValue instanceof StdClass) {
+        if (!$preparedValue instanceof stdClass) {
             return null;
         }
 
@@ -629,7 +627,7 @@ class BaseEntity implements Entity
     /**
      * Get an entity type.
      */
-    public function getEntityType(): string
+    final public function getEntityType(): string
     {
         return $this->entityType;
     }
@@ -710,7 +708,7 @@ class BaseEntity implements Entity
     /**
      * Get values.
      */
-    public function getValueMap(): StdClass
+    public function getValueMap(): stdClass
     {
         $array = $this->toArray();
 
@@ -1059,7 +1057,7 @@ class BaseEntity implements Entity
     /**
      * Clone an object value.
      */
-    protected function cloneObject(?StdClass $value): ?StdClass
+    protected function cloneObject(?stdClass $value): ?stdClass
     {
         if ($value === null) {
             return null;
