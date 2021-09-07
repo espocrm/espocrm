@@ -30,7 +30,7 @@
 namespace Espo\Classes\AssignmentNotificators;
 
 use Espo\Services\Email as EmailService;
-use Espo\Services\Services\Stream as StreamService;
+use Espo\Services\Stream as StreamService;
 
 use Espo\Core\Notification\AssignmentNotificator;
 use Espo\Core\Notification\UserEnabledChecker;
