@@ -905,7 +905,11 @@ class SelectManager
 
         $builder->withSearchParams(SearchParams::fromRaw($params));
 
-        return $builder->build()->getRaw();
+        $raw = $builder->build()->getRaw();
+
+        $this->prepareResult($raw);
+
+        return $raw;
     }
 
     /**
