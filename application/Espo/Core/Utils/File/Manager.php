@@ -493,7 +493,7 @@ class Manager
      */
     public function mkdir(string $path, $permission = null): bool
     {
-        if (file_exists($path) && is_dir($path)) {
+        if (file_exists($path) && (is_dir($path) || is_link($path))) {
             return true;
         }
 

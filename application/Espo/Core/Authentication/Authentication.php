@@ -112,6 +112,12 @@ class Authentication
         $this->log = $log;
     }
 
+    public function authDetails($authenticationMethod = null): array {
+        if (!$authenticationMethod) $authenticationMethod = $this->getDefaultAuthenticationMethod();
+        $login = $this->authLoginFactory->create($authenticationMethod, $this->isPortal());
+        return $login->authDetails();
+    }
+
     /**
      * Process logging in.
      *

@@ -30,10 +30,13 @@ define('controllers/base', 'controller', function (Dep) {
 
     return Dep.extend({
 
+        loginMethod: null,
+
         login: function () {
             var viewName = this.getConfig().get('loginView') || 'views/login';
 
             this.entire(viewName, {}, loginView => {
+                loginView.authenticationMethod = this.loginMethod;
                 loginView.render();
 
                 loginView.on('login', (userName, data) => {

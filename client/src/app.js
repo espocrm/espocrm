@@ -130,6 +130,10 @@ define(
 
         apiUrl: 'api/v1',
 
+        loginMethod: null,
+        loginUrl: null,
+        logoutUrl: null,
+
         auth: null,
 
         baseController: null,
@@ -270,16 +274,69 @@ define(
         start: function () {
             this.initAuth();
 
-            if (!this.auth) {
-                this.baseController.login();
+            // TODO: Provide selection screen
+            var params = new URLSearchParams(document.location.search.substring(1));
+            this.loginMethod = params.get('login');
+
+            var url = 'App/authMethod';
+            if (this.loginMethod) {
+                url = url + "?method=" + this.loginMethod;
             }
-            else {
-                this.initUserData(null, () => {
-                    this.onAuth.call(this);
+            Ajax.getRequest(url).then(function (data) {
+                if (data.method == 'redirect') {
+                    this.loginUrl = data.loginUrl;
+                    this.logoutUrl = data.logoutUrl;
+                }
+                if (!this.auth) {
+                    this.login();
+                } else {
+                    this.initUserData(null, function () {
+                        this.onAuth();
+                    });
+                }
+            });
+        },
+
+        login: function () {
+            if (this.loginUrl) {
+                Espo.Ajax.getRequest('App/user', null, {
+                    headers: {
+                        'Espo-Authorization': Base64.encode('::' + (this.loginMethod || '')),
+                        'Espo-Authorization-By-Token': false
+                    },
+                    timeout: 5000,
+                    cache: false,
+                    global: false,
+                    login: true
+                }).done(function (data) {
+                    this.onLogin({
+                        auth: {
+                            userName: data.user.userName,
+                            token: data.token
+                        },
+                        user: data.user,
+                        preferences: data.preferences,
+                        acl: data.acl,
+                        settings: data.settings,
+                        appParams: data.appParams
+                    });
+                }).fail(function (xhr, textStatus, errorThrown) {
+                    if (xhr.status == 401) {
+                        if (self.auth) {
+                            self.logout();
+                        }
+                        window.location = this.loginUrl;
+                    } else {
+                        msg = 'Bad server response: '  + xhr.responseText
+                        Espo.Ui.error(msg);
+                        console.error(msg + ' App/user ' + xhr.status);
+                    }
                 });
+                return;
             }
 
-            this.on('auth', this.onAuth, this);
+            this.baseController.loginMethod = this.loginMethod;
+            this.baseController.login();
         },
 
         onAuth: function () {
@@ -620,29 +677,35 @@ define(
         initAuth: function () {
             this.auth = this.storage.get('user', 'auth') || null;
 
+            this.on('auth', this.onAuth, this);
+
             this.baseController.on('login', data => {
-                let userId = data.user.id;
-                let userName = data.auth.userName;
-                let token = data.auth.token;
-
-                this.auth = base64.encode(userName  + ':' + token);
-
-                let lastUserId = this.storage.get('user', 'lastUserId');
-
-                if (lastUserId !== userId) {
-                    this.metadata.clearCache();
-                    this.language.clearCache();
-                }
-
-                this.storage.set('user', 'auth', this.auth);
-                this.storage.set('user', 'lastUserId', userId);
-
-                this.setCookieAuth(userName, token);
-
-                this.initUserData(data, () => this.trigger('auth'));
+                this.onLogin(data);
             });
 
             this.baseController.on('logout', () => this.logout());
+        },
+
+        onLogin: function (data) {
+            let userId = data.user.id;
+            let userName = data.auth.userName;
+            let token = data.auth.token;
+
+            this.auth = base64.encode(userName  + ':' + token);
+
+            let lastUserId = this.storage.get('user', 'lastUserId');
+
+            if (lastUserId !== userId) {
+                this.metadata.clearCache();
+                this.language.clearCache();
+            }
+
+            this.storage.set('user', 'auth', this.auth);
+            this.storage.set('user', 'lastUserId', userId);
+
+            this.setCookieAuth(userName, token);
+
+            this.initUserData(data, () => this.trigger('auth'));
         },
 
         logout: function () {
@@ -652,14 +715,25 @@ define(
                 if (arr.length > 1) {
                     Ajax.postRequest('App/action/destroyAuthToken', {
                         token: arr[1]
+                    }).fail(function (xhr, textStatus, errorThrown) {
+                        if (xhr.status != 401) {
+                            msg = 'Bad server response: '  + xhr.responseText
+                            Espo.Ui.error(msg);
+                            console.error(msg + ' App/user ' + xhr.status);
+                        }
+                    }).always(function (data) {
+                        this.onLogout();
                     });
+                    return;
                 }
             }
 
-            if (this.webSocketManager) {
-                this.webSocketManager.close();
-            }
+            this.onLogout();
+        },
+ 
 
+
+        onLogout: function () {
             this.auth = null;
 
             this.user.clear();
@@ -672,6 +746,15 @@ define(
             this.doAction({action: 'login'});
 
             this.unsetCookieAuth();
+
+            if (this.logoutUrl) {
+                window.location = this.logoutUrl;
+                return;
+            }
+
+            if (this.webSocketManager) {
+                this.webSocketManager.close();
+            }
 
             if (this.broadcastChannel && this.broadcastChannel.object) {
                 this.broadcastChannel.object.close();
@@ -687,6 +770,7 @@ define(
             xhr.abort();
 
             this.loadStylesheet();
+            // XXX this.login();
         },
 
         loadStylesheet: function () {
@@ -719,6 +803,9 @@ define(
             if (this.auth === null) {
                 return;
             }
+
+            // XXX var arr = Base64.decode(this.auth).split(':');
+            // XXX this.setCookieAuth(arr[0], arr[1]);
 
             new Promise(resolve => {
                 if (options.user) {
@@ -845,6 +932,7 @@ define(
                             }
                             else {
                                 console.error('Error 401: Unauthorized.');
+                                this.onLogout();
                             }
                         }
 

@@ -51,6 +51,12 @@ class Espo implements Login
         $this->passwordHash = $passwordHash;
     }
 
+    public function authDetails(): array {
+        return [
+            'method' => 'credentials',
+        ];
+    }
+
     public function login(LoginData $loginData, Request $request): Result
     {
         $username = $loginData->getUsername();

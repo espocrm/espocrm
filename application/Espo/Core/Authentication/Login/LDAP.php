@@ -49,6 +49,10 @@ use Exception;
 
 class LDAP implements Login
 {
+    use ExternalLoginTrait {
+        createUser as _createUser;
+    }
+
     private $utils;
 
     private $ldapClient;
@@ -106,6 +110,12 @@ class LDAP implements Login
         'portalsIds' => 'portalUserPortalsIds',
         'portalRolesIds' => 'portalUserRolesIds',
     ];
+
+    public function authDetails(): array {
+        return [
+            'method' => 'credentials',
+        ];
+    }
 
     public function login(LoginData $loginData, Request $request): Result
     {
@@ -243,39 +253,6 @@ class LDAP implements Login
         return $this->ldapClient;
     }
 
-    /**
-     * Login by authorization token.
-     */
-    private function loginByToken($username, AuthToken $authToken = null)
-    {
-        if (!isset($authToken)) {
-            return null;
-        }
-
-        $userId = $authToken->getUserId();
-
-        $user = $this->entityManager->getEntity('User', $userId);
-
-        $tokenUsername = $user->get('userName');
-
-        if (strtolower($username) != strtolower($tokenUsername)) {
-            $ip = $_SERVER['REMOTE_ADDR'] ?? '';
-
-            $this->log->alert(
-                'Unauthorized access attempt for user [' . $username . '] from IP [' . $ip . ']'
-            );
-
-            return null;
-        }
-
-        return $this->entityManager
-            ->getRDBRepository('User')
-            ->where([
-                'userName' => $username,
-            ])
-            ->findOne();
-    }
-
     private function adminLogin($username, $password)
     {
         $hash = $this->passwordHash->hash($password);
@@ -326,16 +303,7 @@ class LDAP implements Login
             $data[$fieldName] = $fieldValue;
         }
 
-        $user = $this->entityManager->getEntity('User');
-
-        $user->set($data);
-
-        $this->entityManager->saveEntity($user, [
-            // Prevent `user` service being loaded by hooks.
-            'skipHooks' => true,
-        ]);
-
-        return $this->entityManager->getEntity('User', $user->id);
+        return $this->_createUser($data);
     }
 
     /**

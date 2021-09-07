@@ -70,14 +70,7 @@ class Auth
 
     public function process(Request $request, Response $response): AuthResult
     {
-        $username = null;
-        $password = null;
-
-        $authenticationMethod = $this->obtainAuthenticationMethodFromRequest($request);
-
-        if (!$authenticationMethod) {
-            list($username, $password) = $this->obtainUsernamePasswordFromRequest($request);
-        }
+        list ($username, $password, $authenticationMethod) = $this->obtainAuthenticationFromRequest($request);
 
         $authenticationData = AuthenticationData::create()
             ->withUsername($username)
@@ -86,7 +79,7 @@ class Auth
 
         $hasAuthData = (bool) ($username || $authenticationMethod);
 
-        if (!$this->authRequired && !$this->isEntryPoint && $hasAuthData) {
+        if (!$this->authRequired && !$this->isEntryPoint) {
             $authResult = $this->processAuthNotRequired(
                 $authenticationData,
                 $request,
@@ -102,19 +95,7 @@ class Auth
             return AuthResult::createResolvedUseNoAuth();
         }
 
-        if ($hasAuthData) {
-            return $this->processWithAuthData($authenticationData, $request, $response);
-        }
-
-        $showDialog = $this->isEntryPoint;
-
-        if (!$this->isXMLHttpRequest($request)) {
-            $showDialog = true;
-        }
-
-        $this->handleUnauthorized($response, $showDialog);
-
-        return AuthResult::createNotResolved();
+        return $this->processWithAuthData($authenticationData, $request, $response);
     }
 
     private function processAuthNotRequired(
@@ -145,7 +126,7 @@ class Auth
         Response $response
     ): AuthResult {
 
-        $showDialog = $this->isEntryPoint;
+        $showDialog = $this->isEntryPoint || !$this->isXMLHttpRequest($request);
 
         try {
             $result = $this->authentication->login($data, $request, $response);
@@ -179,7 +160,12 @@ class Auth
             throw new BadRequest("Auth: Bad authorization string provided.");
         }
 
-        return explode(':', $stringDecoded, 2);
+        $auth = explode(':', $stringDecoded, 2);
+        if (strpos($auth[1], ':') === false) {
+            $auth[2] = null;
+            return $auth;
+        }
+        return array_merge([$auth[0]], explode(':', $auth[1]));
     }
 
     protected function handleSecondStepRequired(Response $response, Result $result): void
@@ -218,7 +204,7 @@ class Auth
             return;
         }
 
-        $response->setStatus(500);
+        $response->setStatus(500, $e->getMessage());
 
         $this->log->error("Auth: " . $e->getMessage());
     }
@@ -241,35 +227,24 @@ class Auth
         return false;
     }
 
-    protected function obtainAuthenticationMethodFromRequest(Request $request): ?string
+    protected function obtainAuthenticationFromRequest(Request $request): array
     {
         if ($request->hasHeader('Espo-Authorization')) {
-            return null;
+            return $this->decodeAuthorizationString(
+                $request->getHeader('Espo-Authorization')
+            );
         }
 
         if ($request->hasHeader('X-Hmac-Authorization')) {
-            return 'Hmac';
+            return [null, null, 'Hmac'];
         }
 
         if ($request->hasHeader('X-Api-Key')) {
-            return 'ApiKey';
+            return [null, null, 'ApiKey'];
         }
 
         if ($request->hasHeader('X-Auth-Method')) {
-            return $request->getHeader('X-Auth-Method');
-        }
-
-        return null;
-    }
-
-    protected function obtainUsernamePasswordFromRequest(Request $request): array
-    {
-        if ($request->hasHeader('Espo-Authorization')) {
-            list($username, $password) = $this->decodeAuthorizationString(
-                $request->getHeader('Espo-Authorization')
-            );
-
-            return [$username, $password];
+            return [null, null, $request->getHeader('X-Auth-Method')];
         }
 
         if (
@@ -279,7 +254,7 @@ class Auth
             $username = $request->getServerParam('PHP_AUTH_USER');
             $password = $request->getServerParam('PHP_AUTH_PW');
 
-            return [$username, $password];
+            return [$username, $password, null];
         }
 
         if (
@@ -290,18 +265,16 @@ class Auth
             $username = $request->getCookieParam('auth-username');
             $password = $request->getCookieParam('auth-token');
 
-            return [$username, $password];
+            return [$username, $password, null];
         }
 
         $cgiAuthString = $request->getHeader('Http-Espo-Cgi-Auth') ??
             $request->getHeader('Redirect-Http-Espo-Cgi-Auth');
 
         if ($cgiAuthString) {
-            list($username, $password) = $this->decodeAuthorizationString(substr($cgiAuthString, 6));
-
-            return [$username, $password];
+            return $this->decodeAuthorizationString(substr($cgiAuthString, 6));
         }
 
-        return [null, null];
+        return [null, null, null];
     }
 }

@@ -52,6 +52,12 @@ class Hmac implements Login
         $this->apiKeyUtil = $apiKeyUtil;
     }
 
+    public function authDetails(): array {
+        return [
+            'method' => 'key',
+        ];
+    }
+
     public function login(LoginData $loginData, Request $request): Result
     {
         $authString = base64_decode($request->getHeader('X-Hmac-Authorization'));

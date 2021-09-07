@@ -51,6 +51,12 @@ class App implements
         return (object) $this->serviceFactory->create('App')->getUserData();
     }
 
+    public function getActionAuthMethod(): StdClass
+    {
+        $auth = $this->injectableFactory->create(Authentication::class);
+        return (object) $auth->authDetails($request->get('method'));
+    }
+
     public function postActionDestroyAuthToken(Request $request, Response $response): bool
     {
         $data = $request->getParsedBody();

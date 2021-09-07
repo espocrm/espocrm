@@ -67,6 +67,8 @@ define('views/login', 'view', function (Dep) {
             return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
         },
 
+        authenticationMethod: null,
+
         login: function () {
             var userName = $('#field-userName').val();
             var trimmedUserName = userName.trim();
@@ -123,7 +125,7 @@ define('views/login', 'view', function (Dep) {
                     login: true,
                     headers: {
                         'Authorization': 'Basic ' + base64.encode(userName  + ':' + password),
-                        'Espo-Authorization': base64.encode(userName + ':' + password),
+                        'Espo-Authorization': base64.encode(userName + ':' + password + ':' + (this.authenticationMethod || '')),
                         'Espo-Authorization-By-Token': false,
                         'Espo-Authorization-Create-Token-Secret': true,
                     },

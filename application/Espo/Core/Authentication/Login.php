@@ -42,6 +42,11 @@ use Espo\Core\{
 interface Login
 {
     /**
+     * Auth method and details
+     */
+    public function authDetails(): array;
+
+    /**
      * Check credentials.
      */
     public function login(LoginData $loginData, Request $request): Result;
