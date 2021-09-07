@@ -549,6 +549,10 @@ class BaseEntity implements Entity
 
         $entityDefs = $defs->getEntity($this->entityType);
 
+        if (!$entityDefs->hasAttribute($attribute)) {
+            return null;
+        }
+
         $relation = $entityDefs->getAttribute($attribute)->getParam('relation');
         $foreign = $entityDefs->getAttribute($attribute)->getParam('foreign');
 
