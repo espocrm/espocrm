@@ -549,6 +549,7 @@ class BaseEntity implements Entity
 
         $entityDefs = $defs->getEntity($this->entityType);
 
+        // This should not be removed for compatibility reasons.
         if (!$entityDefs->hasAttribute($attribute)) {
             return null;
         }
