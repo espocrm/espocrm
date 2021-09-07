@@ -2163,11 +2163,13 @@ class SelectManager
      */
     public function hasJoin($join, array &$result)
     {
-        if (in_array($join, $result['joins'])) {
+        $list = $result['joins'] ?? [];
+
+        if (in_array($join, $list)) {
             return true;
         }
 
-        foreach ($result['joins'] as $item) {
+        foreach ($list as $item) {
             if (is_array($item) && count($item) > 1) {
                 if ($item[1] == $join) {
                     return true;
@@ -2184,11 +2186,13 @@ class SelectManager
      */
     public function hasLeftJoin($leftJoin, array &$result)
     {
-        if (in_array($leftJoin, $result['leftJoins'])) {
+        $list = $result['leftJoins'] ?? [];
+
+        if (in_array($leftJoin, $list)) {
             return true;
         }
 
-        foreach ($result['leftJoins'] as $item) {
+        foreach ($list as $item) {
             if (is_array($item) && count($item) > 1) {
                 if ($item[1] == $leftJoin) {
                     return true;
