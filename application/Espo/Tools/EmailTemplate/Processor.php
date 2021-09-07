@@ -32,7 +32,6 @@ namespace Espo\Tools\EmailTemplate;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 
-use Espo\Core\Utils\Metadata;
 use Espo\Core\AclManager;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
@@ -41,8 +40,6 @@ use Espo\Core\Entities\Person;
 use Espo\Core\Htmlizer\Factory as HtmlizerFactory;
 use Espo\Core\Acl\GlobalRestricton;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-use Espo\Core\Utils\NumberUtil;
-use Espo\Core\Utils\Language;
 
 use Espo\Entities\EmailTemplate;
 use Espo\Entities\User;
@@ -54,9 +51,9 @@ use DateTimezone;
 
 class Processor
 {
-    private $entityManager;
+    private $formatter;
 
-    private $metadata;
+    private $entityManager;
 
     private $aclManager;
 
@@ -72,25 +69,19 @@ class Processor
 
     private $dateTime;
 
-    private $number;
-
-    private $language;
-
     public function __construct(
+        Formatter $formatter,
         EntityManager $entityManager,
-        Metadata $metadata,
         AclManager $aclManager,
         ServiceContainer $recordServiceContainer,
         Config $config,
         FileStorageManager $fileStorageManager,
         User $user,
         HtmlizerFactory $htmlizerFactory,
-        DateTimeUtil $dateTime,
-        NumberUtil $number,
-        Language $language
+        DateTimeUtil $dateTime
     ) {
+        $this->formatter = $formatter;
         $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
         $this->aclManager = $aclManager;
         $this->recordServiceContainer = $recordServiceContainer;
         $this->config = $config;
@@ -98,8 +89,6 @@ class Processor
         $this->user = $user;
         $this->htmlizerFactory = $htmlizerFactory;
         $this->dateTime = $dateTime;
-        $this->number = $number;
-        $this->language = $language;
     }
 
     public function process(EmailTemplate $template, Params $params, Data $data): Result
@@ -269,7 +258,7 @@ class Processor
                 continue;
             }
 
-            $value = $this->formatAttributeValue($entity, $attribute);
+            $value = $this->formatter->formatAttributeValue($entity, $attribute);
 
             if (is_null($value)) {
                 continue;
@@ -373,7 +362,7 @@ class Processor
                 $skipAcl
             );
         }
-        
+
         return $text;
     }
 
@@ -412,106 +401,5 @@ class Processor
         }
 
         return $copiedAttachmentList;
-    }
-
-    private function formatAttributeValue(Entity $entity, string $attribute): ?string
-    {
-        $value = $entity->get($attribute);
-
-        $fieldType = $this->metadata
-            ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'type']);
-
-        $attributeType = $entity->getAttributeType($attribute);
-
-        if ($fieldType === 'enum') {
-            if ($value === null) {
-                return '';
-            }
-
-            return (string) $this->language->translateOption($value, $attribute, $entity->getEntityType());
-        }
-
-        if ($fieldType === 'array' || $fieldType === 'multiEnum' || $fieldType === 'checklist') {
-            $valueList = [];
-
-            if (!is_array($value)) {
-                return '';
-            }
-
-            foreach ($value as $v) {
-                $valueList[] = $this->language->translateOption($v, $attribute, $entity->getEntityType());
-            }
-
-            return implode(', ', $valueList);
-        }
-
-        if ($attributeType === 'date') {
-            if (!$value) {
-                return '';
-            }
-
-            return $this->dateTime->convertSystemDate($value);
-        }
-
-        if ($attributeType === 'datetime') {
-            if (!$value) {
-                return '';
-            }
-
-            return $this->dateTime->convertSystemDateTime($value);
-        }
-
-        if ($attributeType === 'text') {
-            if (!is_string($value)) {
-                return '';
-            }
-
-            return nl2br($value);
-        }
-
-        if ($attributeType === 'float') {
-            if (!is_float($value)) {
-                return '';
-            }
-
-            $decimalPlaces = 2;
-
-            if ($fieldType === 'currency') {
-                $decimalPlaces = $this->config->get('currencyDecimalPlaces');
-            }
-
-            return $this->number->format($value, $decimalPlaces);
-        }
-
-        if ($attributeType === 'int') {
-            if (!is_int($value)) {
-                return '';
-            }
-
-            if (
-                $fieldType === 'autoincrement' ||
-                $fieldType === 'int' &&
-                $this->metadata
-                    ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'disableFormatting'])
-            ) {
-                return (string) $value;
-            }
-
-            return $this->number->format($value);
-        }
-
-        if (!is_string($value) && is_scalar($value) || is_callable([$value, '__toString'])) {
-            return strval($value);
-        }
-
-        if ($value === null) {
-            return '';
-        }
-
-        if (!is_string($value)) {
-            return null;
-        }
-
-        return $value;
     }
 }

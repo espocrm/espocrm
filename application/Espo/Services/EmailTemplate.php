@@ -32,6 +32,7 @@ namespace Espo\Services;
 use Espo\Tools\EmailTemplate\Processor;
 use Espo\Tools\EmailTemplate\Params;
 use Espo\Tools\EmailTemplate\Data;
+use Espo\Tools\EmailTemplate\Formatter;
 
 use Espo\Entities\EmailTemplate as EmailTemplateEntity;
 
@@ -122,6 +123,8 @@ class EmailTemplate extends Record implements
 
         $fm = $this->fieldUtil;
 
+        $formatter = $this->createFormatter();
+
         foreach ($dataList as $item) {
             $type = $item['type'];
             $e = $item['entity'];
@@ -159,16 +162,16 @@ class EmailTemplate extends Record implements
                     continue;
                 }
 
-                $value = $emailTemplateService->formatAttributeValue($e, $a);
+                $value = $formatter->formatAttributeValue($e, $a);
 
-                if ($value != '') {
+                if ($value !== null && $value !== '') {
                     $values->$a = $value;
                 }
             }
 
             $result->$type = (object) [
                 'entityType' => $e->getEntityType(),
-                'id' => $e->id,
+                'id' => $e->getId(),
                 'values' => $values,
                 'name' => $e->get('name'),
             ];
@@ -180,5 +183,10 @@ class EmailTemplate extends Record implements
     private function createProcessor(): Processor
     {
         return $this->injectableFactory->create(Processor::class);
+    }
+
+    private function createFormatter(): Formatter
+    {
+        return $this->injectableFactory->create(Formatter::class);
     }
 }
