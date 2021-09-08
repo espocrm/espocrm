@@ -29,15 +29,11 @@
 
 namespace Espo\Tools\EmailTemplate;
 
-use Espo\Entities\User;
-
 class Params
 {
     private $applyAcl = false;
 
     private $copyAttachments = false;
-
-    private $user = null;
 
     public function applyAcl(): bool
     {
@@ -47,11 +43,6 @@ class Params
     public function copyAttachments(): bool
     {
         return $this->copyAttachments;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
     }
 
     /**
@@ -72,17 +63,6 @@ class Params
     {
         $obj = clone $this;
         $obj->copyAttachments = $copyAttachments;
-
-        return $obj;
-    }
-
-    /**
-     * A user to apply ACL for.
-     */
-    public function withUser(?User $user): self
-    {
-        $obj = clone $this;
-        $obj->user = $user;
 
         return $obj;
     }

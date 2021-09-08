@@ -31,6 +31,8 @@ namespace Espo\Tools\EmailTemplate;
 
 use Espo\ORM\Entity;
 
+use Espo\Entities\User;
+
 class Data
 {
     private $entityHash = [];
@@ -46,6 +48,8 @@ class Data
     private $relatedId = null;
 
     private $relatedType = null;
+
+    private $user = null;
 
     /**
      * @return array<string,Entity> $entityHash
@@ -83,6 +87,11 @@ class Data
     public function getRelatedType(): ?string
     {
         return $this->relatedType;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 
     /**
@@ -147,5 +156,16 @@ class Data
     public static function create(): self
     {
         return new self();
+    }
+
+    /**
+     * A user to apply ACL for.
+     */
+    public function withUser(?User $user): self
+    {
+        $obj = clone $this;
+        $obj->user = $user;
+
+        return $obj;
     }
 }

@@ -57,8 +57,7 @@ class EmailTemplate extends Record implements
 
         $paramsInternal = Params::create()
             ->withApplyAcl(!$skipAcl)
-            ->withCopyAttachments($copyAttachments)
-            ->withUser($this->user);
+            ->withCopyAttachments($copyAttachments);
 
         $data = Data::create()
             ->withEmailAddress($params['emailAddress'])
@@ -67,7 +66,8 @@ class EmailTemplate extends Record implements
             ->withParentId($params['parentId'] ?? null)
             ->withParentType($params['parentType'] ?? null)
             ->withRelatedId($params['relatedId'] ?? null)
-            ->withRelatedType($params['relatedType'] ?? null);
+            ->withRelatedType($params['relatedType'] ?? null)
+            ->withUser($this->user);
 
         $result = $this->createProcessor()->process($emailTemplate, $paramsInternal, $data);
 

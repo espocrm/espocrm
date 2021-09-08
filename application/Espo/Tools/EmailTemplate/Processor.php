@@ -96,7 +96,7 @@ class Processor
     {
         $entityHash = $data->getEntityHash();
 
-        $user = $params->getUser() ?? $this->user;
+        $user = $data->getUser() ?? $this->user;
 
         if (!isset($entityHash['User'])) {
             $entityHash['User'] = $user;
