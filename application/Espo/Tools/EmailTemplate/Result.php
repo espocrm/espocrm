@@ -87,8 +87,10 @@ class Result
         $attachmentsNames = (object) [];
 
         foreach ($this->attachmentList as $attachment) {
-            $attachmentsIds[] = $attachment->getId();
-            $attachmentsNames[$attachment->getId()] = $attachment->get('name');
+            $id = $attachment->getId();
+
+            $attachmentsIds[] = $id;
+            $attachmentsNames->$id = $attachment->get('name');
         }
 
         return (object) [
