@@ -36,8 +36,6 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\{
     Controllers\Record,
     Api\Request,
-    Select\SearchParams,
-    Select\Where\Item as WhereItem,
 };
 
 use StdClass;
@@ -266,25 +264,6 @@ class Email extends Record
     public function getActionGetFoldersNotReadCounts()
     {
         return $this->getRecordService()->getFoldersNotReadCounts();
-    }
-
-    protected function fetchSearchParamsFromRequest(Request $request): SearchParams
-    {
-        $searchParams = parent::fetchSearchParamsFromRequest($request);
-
-        $folderId = $request->getQueryParam('folderId');
-
-        if (!$folderId) {
-            return $searchParams;
-        }
-
-        return $searchParams->withWhereAdded(
-            WhereItem::fromRaw([
-                'type' => 'inFolder',
-                'attribute' => 'folderId',
-                'value' => $folderId,
-            ])
-        );
     }
 
     public function postActionMoveToFolder(Request $request)

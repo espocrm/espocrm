@@ -169,7 +169,21 @@ define('views/email/list', 'views/list', function (Dep) {
         },
 
         applyFolder: function () {
-            this.collection.data.folderId = this.selectedFolderId;
+            if (!this.selectedFolderId) {
+                this.collection.whereFunction = null;
+
+                return;
+            }
+
+            this.collection.whereFunction = () => {
+                return [
+                    {
+                        type: 'inFolder',
+                        attribute: 'folderId',
+                        value: this.selectedFolderId,
+                    }
+                ];
+            };
         },
 
         applyRoutingParams: function (params) {
