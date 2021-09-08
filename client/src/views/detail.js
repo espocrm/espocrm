@@ -83,24 +83,24 @@ define('views/detail', 'views/main', function (Dep) {
                     this.handleFollowButton();
                 }
 
-                this.listenTo(this.model, 'change:isFollowed', function () {
+                this.listenTo(this.model, 'change:isFollowed', () => {
                     this.handleFollowButton();
-                }, this);
+                });
             }
 
             this.getHelper().processSetupHandlers(this, 'detail');
         },
 
         setupPageTitle: function () {
-            this.listenTo(this.model, 'after:save', function () {
+            this.listenTo(this.model, 'after:save', () => {
                 this.updatePageTitle();
-            }, this);
+            });
 
-            this.listenTo(this.model, 'sync', function (model) {
+            this.listenTo(this.model, 'sync', (model) => {
                 if (model && model.hasChanged('name')) {
                     this.updatePageTitle();
                 }
-            }, this);
+            });
         },
 
         setupHeader: function () {
@@ -111,13 +111,13 @@ define('views/detail', 'views/main', function (Dep) {
                 fontSizeFlexible: true,
             });
 
-            this.listenTo(this.model, 'sync', function (model) {
+            this.listenTo(this.model, 'sync', (model) => {
                 if (model && model.hasChanged('name')) {
                     if (this.getView('header')) {
                         this.getView('header').reRender();
                     }
                 }
-            }, this);
+            });
         },
 
         setupRecord: function () {
@@ -127,9 +127,9 @@ define('views/detail', 'views/main', function (Dep) {
                 scope: this.scope,
             };
 
-            this.optionsToPass.forEach(function (option) {
+            this.optionsToPass.forEach((option) => {
                 o[option] = this.options[option];
-            }, this);
+            });
 
             if (this.options.params && this.options.params.rootUrl) {
                 o.rootUrl = this.options.params.rootUrl;
@@ -150,7 +150,8 @@ define('views/detail', 'views/main', function (Dep) {
         handleFollowButton: function () {
             if (this.model.get('isFollowed')) {
                 this.addUnfollowButtonToMenu();
-            } else {
+            }
+            else {
                 if (this.getAcl().checkModel(this.model, 'stream')) {
                     this.addFollowButtonToMenu();
                 }
@@ -160,27 +161,29 @@ define('views/detail', 'views/main', function (Dep) {
         actionFollow: function () {
             this.disableMenuItem('follow');
 
-            Espo.Ajax.putRequest(this.model.name + '/' + this.model.id + '/subscription')
-                .then(function () {
+            Espo.Ajax
+                .putRequest(this.model.name + '/' + this.model.id + '/subscription')
+                .then(() => {
                     this.removeMenuItem('follow', true);
                     this.model.set('isFollowed', true);
-                }.bind(this))
-                .fail(function () {
+                })
+                .catch(() => {
                     this.enableMenuItem('follow');
-                }.bind(this));
+                });
         },
 
         actionUnfollow: function () {
             this.disableMenuItem('unfollow');
 
-            Espo.Ajax.deleteRequest(this.model.name + '/' + this.model.id + '/subscription')
-                .then(function () {
+            Espo.Ajax
+                .deleteRequest(this.model.name + '/' + this.model.id + '/subscription')
+                .then(() => {
                     this.removeMenuItem('unfollow', true);
                     this.model.set('isFollowed', false);
-                }.bind(this))
-                .fail(function () {
+                })
+                .catch(() => {
                     this.enableMenuItem('unfollow');
-                }.bind(this));
+                });
         },
 
         getHeader: function () {
@@ -211,14 +214,15 @@ define('views/detail', 'views/main', function (Dep) {
 
             return this.buildHeaderHtml([
                 headerIconHtml + rootHtml,
-                name
+                name,
             ]);
         },
 
         updatePageTitle: function () {
             if (this.model.has('name')) {
                 this.setPageTitle(this.model.get('name'));
-            } else {
+            }
+            else {
                 Dep.prototype.updatePageTitle.call(this);
             }
         },
@@ -260,9 +264,9 @@ define('views/detail', 'views/main', function (Dep) {
                 attributes = _.extend(this.relatedAttributeFunctions[link].call(this), attributes);
             }
 
-            Object.keys(this.relatedAttributeMap[link] || {}).forEach(function (attr) {
+            Object.keys(this.relatedAttributeMap[link] || {}).forEach((attr) => {
                 attributes[this.relatedAttributeMap[link][attr]] = this.model.get(attr);
-            }, this);
+            });
 
             this.notify('Loading...');
 
@@ -276,22 +280,22 @@ define('views/detail', 'views/main', function (Dep) {
                     link: foreignLink,
                 },
                 attributes: attributes,
-            }, function (view) {
+            }, (view) => {
                 view.render();
                 view.notify(false);
 
-                this.listenToOnce(view, 'after:save', function () {
+                this.listenToOnce(view, 'after:save', () => {
                     if (data.fromSelectRelated) {
-                        setTimeout(function () {
+                        setTimeout(() => {
                             this.clearView('dialogSelectRelated');
-                        }.bind(this), 25);
+                        }, 25);
                     }
 
                     this.updateRelationshipPanel(link);
 
                     this.model.trigger('after:relate');
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         actionSelectRelated: function (data) {
@@ -311,6 +315,7 @@ define('views/detail', 'views/main', function (Dep) {
                 for (var filterName in filters) {
                     if (typeof filters[filterName] === 'function') {
                         var filtersData = filters[filterName].call(this);
+
                         if (filtersData) {
                             filters[filterName] = filtersData;
                         } else {
@@ -371,6 +376,7 @@ define('views/detail', 'views/main', function (Dep) {
                 'views/modals/select-records';
 
             this.notify('Loading...');
+
             this.createView('dialogSelectRelated', viewName, {
                 scope: scope,
                 multiple: true,
@@ -380,25 +386,25 @@ define('views/detail', 'views/main', function (Dep) {
                 massRelateEnabled: massRelateEnabled,
                 primaryFilterName: primaryFilterName,
                 boolFilterList: boolFilterList,
-            }, function (dialog) {
+            }, (dialog) => {
                 dialog.render();
 
                 Espo.Ui.notify(false);
 
-                this.listenTo(dialog, 'create', function () {
+                this.listenTo(dialog, 'create', () => {
                     this.actionCreateRelated({
                         link: data.link,
                         fromSelectRelated: true,
                     });
-                }, this);
+                });
 
-                this.listenToOnce(dialog, 'select', function (selectObj) {
+                this.listenToOnce(dialog, 'select', (selectObj) => {
                     var data = {};
 
                     if (Object.prototype.toString.call(selectObj) === '[object Array]') {
                         var ids = [];
 
-                        selectObj.forEach(function (model) {
+                        selectObj.forEach((model) => {
                             ids.push(model.id);
                         });
 
@@ -408,45 +414,43 @@ define('views/detail', 'views/main', function (Dep) {
                         if (selectObj.massRelate) {
                             data.massRelate = true;
                             data.where = selectObj.where;
-                        } else {
+                            data.searchParams = selectObj.searchParams;
+                        }
+                        else {
                             data.id = selectObj.id;
                         }
                     }
 
                     Espo.Ajax.postRequest(this.scope + '/' + this.model.id + '/' + link, data)
-                        .then(
-                            function () {
-                                this.notify('Linked', 'success');
-                                this.updateRelationshipPanel(link);
-                                this.model.trigger('after:relate');
-                            }.bind(this)
-                        )
-                        .fail(
-                            function () {
-                                this.notify('Error occurred', 'error');
-                            }.bind(this)
-                        );
-                }, this);
+                        .then(() => {
+                            this.notify('Linked', 'success');
+                            this.updateRelationshipPanel(link);
+                            this.model.trigger('after:relate');
+                        })
+                        .catch(() => this.notify('Error occurred', 'error'));
+                });
             });
         },
 
         actionDuplicate: function () {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            this.ajaxPostRequest(this.scope + '/action/getDuplicateAttributes', {
-                id: this.model.id
-            }).then(function (attributes) {
-                Espo.Ui.notify(false);
+            this
+                .ajaxPostRequest(this.scope + '/action/getDuplicateAttributes', {
+                    id: this.model.id
+                })
+                .then((attributes) => {
+                    Espo.Ui.notify(false);
 
-                var url = '#' + this.scope + '/create';
+                    var url = '#' + this.scope + '/create';
 
-                this.getRouter().dispatch(this.scope, 'create', {
-                    attributes: attributes,
-                    returnUrl: this.getRouter().getCurrentUrl(),
+                    this.getRouter().dispatch(this.scope, 'create', {
+                        attributes: attributes,
+                        returnUrl: this.getRouter().getCurrentUrl(),
+                    });
+
+                    this.getRouter().navigate(url, {trigger: false});
                 });
-
-                this.getRouter().navigate(url, {trigger: false});
-            }.bind(this));
         },
 
     });

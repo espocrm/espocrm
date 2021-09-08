@@ -97,17 +97,20 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                         var listView = this.getView('list');
 
                         if (listView.allResultIsChecked) {
-                            var where = this.collection.where;
                             this.trigger('select', {
                                 massRelate: true,
-                                where: where
+                                where: this.collection.getWhere(),
+                                searchParams: this.collection.data,
                             });
-                        } else {
+                        }
+                        else {
                             var list = listView.getSelected();
+
                             if (list.length) {
                                 this.trigger('select', list);
                             }
                         }
+
                         dialog.close();
                     }
                 });
