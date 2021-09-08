@@ -93,7 +93,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     style: 'danger',
                     label: 'Select',
                     disabled: true,
-                    onClick: function (dialog) {
+                    onClick: (dialog) => {
                         var listView = this.getView('list');
 
                         if (listView.allResultIsChecked) {
@@ -109,7 +109,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                             }
                         }
                         dialog.close();
-                    }.bind(this),
+                    }
                 });
             }
 
@@ -121,8 +121,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
 
             if (this.createButton) {
                 if (
-                    !this.getAcl().check(this.scope, 'create')
-                    ||
+                    !this.getAcl().check(this.scope, 'create') ||
                     this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
                 ) {
                     this.createButton = false;
@@ -143,7 +142,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 this.waitForView('search');
             }
 
-            this.getCollectionFactory().create(this.scope, function (collection) {
+            this.getCollectionFactory().create(this.scope, (collection) => {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
                 this.collection = collection;
@@ -157,7 +156,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 this.wait(true);
 
                 this.loadList();
-            }, this);
+            });
         },
 
         loadSearch: function () {
@@ -176,7 +175,7 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
             if (boolFilterList) {
                 var d = {};
 
-                boolFilterList.forEach(function (item) {
+                boolFilterList.forEach((item) => {
                     d[item] = true;
                 });
 
@@ -199,17 +198,16 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                     searchManager: searchManager,
                     disableSavePreset: true,
                     filterList: this.filterList,
-                }, function (view) {
-                    this.listenTo(view, 'reset', function () {
-                    }, this);
+                }, (view) => {
+                    this.listenTo(view, 'reset', () => {});
                 });
             }
         },
 
         loadList: function () {
             var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
-                           this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
-                           'views/record/list';
+                this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
+                'views/record/list';
 
             this.createView('list', viewName, {
                 collection: this.collection,
@@ -222,62 +220,61 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 searchManager: this.searchManager,
                 checkAllResultDisabled: !this.massRelateEnabled,
                 buttonsDisabled: true,
-                skipBuildRows: true
+                skipBuildRows: true,
             }, function (view) {
-                this.listenToOnce(view, 'select', function (model) {
+                this.listenToOnce(view, 'select', (model) =>{
                     this.trigger('select', model);
 
                     this.close();
-                }.bind(this));
+                });
 
                 if (this.multiple) {
-                    this.listenTo(view, 'check', function () {
+                    this.listenTo(view, 'check', () => {
                         if (view.checkedList.length) {
                             this.enableButton('select');
                         }
                         else {
                             this.disableButton('select');
                         }
-                    }, this);
+                    });
 
-                    this.listenTo(view, 'select-all-results', function () {
+                    this.listenTo(view, 'select-all-results', () => {
                         this.enableButton('select');
-                    }, this);
+                    });
                 }
 
                 if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
-                    this.listenToOnce(view, 'after:build-rows', function () {
+                    this.listenToOnce(view, 'after:build-rows', () => {
                         this.wait(false);
-                    }, this);
+                    });
 
                     this.collection.fetch();
                 }
                 else {
-                    view.getSelectAttributeList(function (selectAttributeList) {
+                    view.getSelectAttributeList((selectAttributeList) => {
                         if (!~selectAttributeList.indexOf('name')) {
                             selectAttributeList.push('name');
                         }
 
-                        var mandatorySelectAttributeList =
-                            this.options.mandatorySelectAttributeList ||
+                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
                             this.mandatorySelectAttributeList || [];
 
-                        mandatorySelectAttributeList.forEach(function (attribute) {
+                        mandatorySelectAttributeList.forEach((attribute) => {
                             if (!~selectAttributeList.indexOf(attribute)) {
                                 selectAttributeList.push(attribute);
                             }
-                        }, this);
+                        });
 
                         if (selectAttributeList) {
                             this.collection.data.select = selectAttributeList.join(',');
                         }
 
-                        this.listenToOnce(view, 'after:build-rows', function () {
+                        this.listenToOnce(view, 'after:build-rows', () => {
                             this.wait(false);
-                        }, this);
+                        });
 
                         this.collection.fetch();
-                    }.bind(this));
+                    });
                 }
             });
         },
@@ -298,26 +295,26 @@ define('views/modals/select-records', ['views/modal', 'search-manager'], functio
                 fullFormDisabled: true,
                 attributes: this.options.createAttributes,
             }, function (view) {
-                view.once('after:render', function () {
+                view.once('after:render', () => {
                     self.notify(false);
                 });
 
                 view.render();
 
-                self.listenToOnce(view, 'leave', function () {
+                self.listenToOnce(view, 'leave', () => {
                     view.close();
                     self.close();
                 });
 
-                self.listenToOnce(view, 'after:save', function (model) {
+                self.listenToOnce(view, 'after:save', (model) => {
                     view.close();
 
                     self.trigger('select', model);
 
-                    setTimeout(function () {
+                    setTimeout(() => {
                         self.close();
                     }, 10);
-                }.bind(this));
+                });
             });
         },
     });
