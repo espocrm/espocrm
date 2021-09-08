@@ -87,7 +87,7 @@ class MassAction
     private function prepareMassActionParams(stdClass $data): array
     {
         $where = $data->where ?? null;
-        $searchParams = $data->searchParams ?? null;
+        $searchParams = $data->searchParams ?? $data->selectData ?? null;
         $ids = $data->ids ?? null;
 
         if (!is_null($where) || !is_null($searchParams)) {

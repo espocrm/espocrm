@@ -74,7 +74,7 @@ class Export
         $params['entityType'] = $entityType;
 
         $where = $data->where ?? null;
-        $searchParams = $data->searchParams ?? null;
+        $searchParams = $data->searchParams ?? $data->selectData ?? null;
         $ids = $data->ids ?? null;
 
         if (!is_null($where) || !is_null($searchParams)) {

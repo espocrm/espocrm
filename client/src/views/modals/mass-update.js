@@ -76,7 +76,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.ids = this.options.ids;
             this.where = this.options.where;
-            this.selectData = this.options.selectData;
+            this.searchParams = this.options.searchParams;
             this.byWhere = this.options.byWhere;
 
             this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') +
@@ -86,15 +86,15 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             this.wait(true);
 
-            this.getModelFactory().create(this.entityType, function (model) {
+            this.getModelFactory().create(this.entityType, (model) => {
                 this.model = model;
 
-                this.getHelper().layoutManager.get(this.entityType, this.layoutName, function (layout) {
+                this.getHelper().layoutManager.get(this.entityType, this.layoutName, (layout) => {
                     layout = layout || [];
 
                     this.fieldList = [];
 
-                    layout.forEach(function (field) {
+                    layout.forEach((field) => {
                         if (~forbiddenList.indexOf(field)) {
                             return;
                         }
@@ -102,11 +102,11 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
                         if (model.hasField(field)) {
                             this.fieldList.push(field);
                         }
-                    }, this);
+                    });
 
                     this.wait(false);
-                }.bind(this));
-            }.bind(this));
+                });
+            });
 
             this.addedFieldList = [];
         },
@@ -143,13 +143,13 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
                     name: name,
                 },
                 mode: 'edit',
-            }, function (view) {
+            }, (view) => {
                 this.addedFieldList.push(name);
 
                 view.render();
 
                 view.notify(false);
-            }.bind(this));
+            });
         },
 
         actionUpdate: function () {
@@ -159,7 +159,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             var attributes = {};
 
-            this.addedFieldList.forEach(function (field) {
+            this.addedFieldList.forEach((field) => {
                 var view = self.getView(field);
 
                 _.extend(attributes, view.fetch());
@@ -169,7 +169,7 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
 
             var notValid = false;
 
-            this.addedFieldList.forEach(function (field) {
+            this.addedFieldList.forEach((field) => {
                 var view = self.getView(field);
 
                 notValid = view.validate() || notValid;
@@ -186,20 +186,20 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
                     params: {
                         ids: self.ids || null,
                         where: (!self.ids || self.ids.length === 0) ? self.options.where : null,
-                        selectData: (!self.ids || self.ids.length === 0) ? self.options.selectData : null,
+                        searchParams: (!self.ids || self.ids.length === 0) ? self.options.searchParams : null,
                     },
                     data: attributes,
                 })
                     .then(
-                        function (result) {
+                        (result) => {
                             var result = result || {};
                             var count = result.count;
 
                             self.trigger('after:update', count);
                         }
                     )
-                    .fail(
-                        function () {
+                    .catch(
+                        () =>{
                             self.notify('Error occurred', 'error');
 
                             self.enableButton('update');
@@ -213,11 +213,11 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
         },
 
         reset: function () {
-            this.addedFieldList.forEach(function (field) {
+            this.addedFieldList.forEach((field) => {
                 this.clearView(field);
 
                 this.$el.find('.cell[data-name="'+field+'"]').remove();
-            }, this);
+            });
 
             this.addedFieldList = [];
 

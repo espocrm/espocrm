@@ -583,7 +583,8 @@ define('views/record/list', 'view', function (Dep) {
 
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
-                    data.searchData = this.collection.data || {};
+                    data.searchParams = this.collection.data || {};
+                    data.searchData = this.collection.data || {}; // for bc;
                 }
                 else {
                     data.ids = this.checkedList;
@@ -679,7 +680,7 @@ define('views/record/list', 'view', function (Dep) {
 
                 if (this.allResultIsChecked) {
                     data.where = this.collection.getWhere();
-                    data.searchData =  this.collection.data || {};
+                    data.searchParams =  this.collection.data || {};
                     data.selectData = data.searchData; // for bc;
                     data.byWhere = true; // for bc
                 }
@@ -736,8 +737,9 @@ define('views/record/list', 'view', function (Dep) {
 
             if (this.allResultIsChecked) {
                 data.where = this.collection.getWhere();
-                data.selectData = this.collection.data || {};
-                data.byWhere = true;
+                data.searchParams = this.collection.data || {};
+                data.selectData = this.collection.data || {}; // for bc;
+                data.byWhere = true; // for bc;
             }
             else {
                 data.ids = [];
@@ -1046,7 +1048,7 @@ define('views/record/list', 'view', function (Dep) {
                 entityType: this.entityType,
                 ids: ids,
                 where: this.collection.getWhere(),
-                selectData: this.collection.data,
+                searchParams: this.collection.data,
                 byWhere: this.allResultIsChecked,
             }, (view) => {
                 view.render();
@@ -1123,7 +1125,7 @@ define('views/record/list', 'view', function (Dep) {
                 entityType: this.entityType,
                 ids: ids,
                 where: this.collection.getWhere(),
-                selectData: this.collection.data,
+                searchParams: this.collection.data,
                 byWhere: this.allResultIsChecked,
             }, (view) => {
                 view.render();

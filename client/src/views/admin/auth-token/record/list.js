@@ -62,14 +62,14 @@ define('views/admin/auth-token/record/list', 'views/record/list', function (Dep)
                 params: {
                     ids: ids || null,
                     where: (!ids || ids.length === 0) ? this.collection.getWhere() : null,
-                    selectData: (!ids || ids.length === 0) ? this.collection.data : null,
+                    searchParams: (!ids || ids.length === 0) ? this.collection.data : null,
                 },
                 data: attributes,
-            }).then(function () {
+            }).then(() => {
                 var result = result || {};
 
                 this.collection.fetch();
-            }.bind(this));
+            });
         },
 
         actionSetInactive: function (data) {
@@ -85,11 +85,13 @@ define('views/admin/auth-token/record/list', 'views/record/list', function (Dep)
 
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-            model.save({
-                'isActive': false
-            }, {patch: true}).then(function () {
-                Espo.Ui.notify(false);
-            });
+            model
+                .save({
+                    'isActive': false
+                }, {patch: true})
+                .then(() => {
+                    Espo.Ui.notify(false);
+                });
         }
 
     });

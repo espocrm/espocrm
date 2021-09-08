@@ -91,7 +91,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         $params = Params::fromRaw(
             [
                 'where' => $where,
-                'selectData' => [
+                'searchParams' => [
                     'primaryFilter' => 'testFilter',
                 ],
             ],

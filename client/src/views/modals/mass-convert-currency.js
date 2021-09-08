@@ -110,7 +110,7 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
                 params: {
                    ids: this.options.ids || null,
                    where: hasWhere ? this.options.where : null,
-                   searchParams: hasWhere ? this.options.selectData : null,
+                   searchParams: hasWhere ? this.options.searchParams : null,
                 },
                 data: {
                     fieldList: this.options.fieldList || null,
@@ -119,13 +119,13 @@ define('views/modals/mass-convert-currency', ['views/modal', 'model'], function 
                     rates: currencyRates,
                 },
             })
-                .then(function (result) {
+                .then(result => {
                     this.trigger('after:update', result.count);
                     this.close();
-                }.bind(this))
-                .fail(function () {
+                })
+                .catch(() => {
                     this.enableButton('convert');
-                }.bind(this));
+                });
         },
 
     });
