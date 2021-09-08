@@ -27,60 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Htmlizer;
+namespace Espo\Core\Utils\DateTime;
+
+use Espo\Core\Utils\DateTime;
 
 use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\DateTime\DateTimeFactory;
-use Espo\Core\AclManager;
+use Espo\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 
 use Espo\Entities\User;
+use Espo\Entities\Preferences;
 
-class Factory
+class DateTimeFactory
 {
     private $injectableFactory;
 
-    private $dateTimeFactory;
+    private $entityManager;
 
-    private $aclManager;
+    private $config;
 
     public function __construct(
         InjectableFactory $injectableFactory,
-        DateTimeFactory $dateTimeFactory,
-        AclManager $aclManager
+        EntityManager $entityManager,
+        Config $config
     ) {
         $this->injectableFactory = $injectableFactory;
-        $this->dateTimeFactory = $dateTimeFactory;
-        $this->aclManager = $aclManager;
+        $this->entityManager = $entityManager;
+        $this->config = $config;
     }
 
-    public function create(bool $skipAcl = false, ?string $timeZone = null): Htmlizer
+    public function createWithUserTimeZone(User $user): DateTime
     {
-        $with = [];
+        $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $user->getId());
 
-        if ($skipAcl) {
-            $with['acl'] = null;
+        $timeZone = $this->config->get('timeZone') ?? 'UTC';
+
+        if ($preferences) {
+            $timeZone = $preferences->get('timeZone') ?? $timeZone;
         }
 
-        if ($timeZone) {
-            $with['dateTime'] = $this->dateTimeFactory->createWithTimeZone($timeZone);
-        }
-
-        return $this->injectableFactory->createWith(Htmlizer::class, $with);
+        return $this->createWithTimeZone($timeZone);
     }
 
-    public function createNoAcl(): Htmlizer
+    public function createWithTimeZone(string $timeZone): DateTime
     {
-        return $this->create(true);
-    }
-
-    public function createForUser(User $user): Htmlizer
-    {
-        $dateTime = $this->dateTimeFactory->createWithUserTimeZone($user);
-        $acl = $this->aclManager->createUserAcl($user);
-
-        return $this->injectableFactory->createWith(Htmlizer::class, [
-            'dateTime' => $dateTime,
-            'acl' => $acl,
+        return $this->injectableFactory->createWith(DateTime::class, [
+            'timeZone' => $timeZone,
         ]);
     }
 }

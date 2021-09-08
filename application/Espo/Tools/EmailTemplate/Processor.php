@@ -38,6 +38,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Entities\Person;
 use Espo\Core\Htmlizer\Factory as HtmlizerFactory;
+use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\Acl\GlobalRestricton;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 
@@ -169,7 +170,7 @@ class Processor
             $handlebarsInBody = strpos($body, '{{') !== false && strpos($body, '}}') !== false;
 
             if ($handlebarsInSubject || $handlebarsInBody) {
-                $htmlizer = $this->htmlizerFactory->create(!$params->applyAcl());
+                $htmlizer = $this->createHtmlizer($params, $user);
 
                 if ($handlebarsInSubject) {
                     $subject = $htmlizer->render($parent, $subject);
@@ -401,5 +402,14 @@ class Processor
         }
 
         return $copiedAttachmentList;
+    }
+
+    private function createHtmlizer(Params $params, User $user): Htmlizer
+    {
+        if (!$params->applyAcl()) {
+            return $this->htmlizerFactory->createNoAcl();
+        }
+
+        return $this->htmlizerFactory->createForUser($user);
     }
 }
