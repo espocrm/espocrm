@@ -50,7 +50,7 @@ class Totp implements UserCodeVerify
         $this->config = $config;
     }
 
-    public function generateData(UserData $userData, StdClass $data, string $userName): stdClass
+    public function generateData(UserData $userData, stdClass $data, string $userName): stdClass
     {
         $secret = $this->totp->createSecret();
 

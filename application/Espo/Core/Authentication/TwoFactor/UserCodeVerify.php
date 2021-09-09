@@ -38,7 +38,7 @@ interface UserCodeVerify
     /**
      * Generate data for a user.
      */
-    public function generateData(UserData $userData, StdClass $data, string $userName): stdClass;
+    public function generateData(UserData $userData, stdClass $data, string $userName): stdClass;
 
     /**
      * Confirm code before storing.
