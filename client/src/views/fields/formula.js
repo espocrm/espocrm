@@ -74,7 +74,9 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
             this.containerId = 'editor-' + Math.floor((Math.random() * 10000) + 1).toString();
 
             if (this.mode === 'edit' || this.mode === 'detail') {
-                this.wait(this.requireAce());
+                this.wait(
+                    this.requireAce()
+                );
             }
 
             this.on('remove', () => {
@@ -133,13 +135,15 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 var editor = this.editor = ace.edit(this.containerId);
 
                 editor.setOptions({
-                    maxLines: this.mode === 'edit' ? this.maxLineEditCount : this.maxLineDetailCount
+                    maxLines: this.mode === 'edit' ? this.maxLineEditCount : this.maxLineDetailCount,
                 });
 
                 if (this.isEditMode()) {
-                    editor.getSession().on('change', function () {
+                    editor.getSession().on('change', () => {
                         this.trigger('change', {ui: true});
-                    }.bind(this));
+                    });
+                    
+                    editor.getSession().setUseWrapMode(true);
                 }
 
                 if (this.isReadMode()) {
@@ -174,36 +178,36 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
         addAttribute: function () {
             this.createView('dialog', 'views/admin/formula/modals/add-attribute', {
                 scope: this.targetEntityType
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'add', function (attribute) {
+                this.listenToOnce(view, 'add', (attribute) => {
                     this.editor.insert(attribute);
 
                     this.clearView('dialog');
-                }, this);
-            }, this);
+                });
+            });
         },
 
         addFunction: function () {
             this.createView('dialog', 'views/admin/formula/modals/add-function', {
                 scope: this.targetEntityType
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'add', function (string) {
+                this.listenToOnce(view, 'add', (string) => {
                     this.editor.insert(string);
 
                     this.clearView('dialog');
-                }, this);
-            }, this);
+                });
+            });
         },
 
         initAutocomplete: function () {
             var functionItemList =
                 this.getMetadata()
                     .get(['app', 'formula', 'functionList'], [])
-                    .filter(function (item) {
+                    .filter(item => {
                         return item.insertText;
                     });
 
@@ -222,7 +226,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 getCompletions: function (editor, session, pos, prefix, callback) {
 
                     var matchedFunctionItemList = functionItemList
-                        .filter(function (originalItem) {
+                        .filter((originalItem) => {
                             var text = originalItem.name;
 
                             if (text.indexOf(prefix) === 0) {
@@ -238,7 +242,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                             return false;
                         });
 
-                    var itemList = matchedFunctionItemList.map(function (item) {
+                    var itemList = matchedFunctionItemList.map((item) => {
                         return {
                             caption: item.name + '()',
                             value: item.insertText,
@@ -247,7 +251,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                     });
 
                     var matchedAttributeList = attributeList
-                        .filter(function (item) {
+                        .filter((item) => {
                             if (item.indexOf(prefix) === 0) {
                                 return true;
                             }
@@ -255,7 +259,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                             return false;
                         });
 
-                    var itemAttributeList = matchedAttributeList.map(function (item) {
+                    var itemAttributeList = matchedAttributeList.map((item) => {
                         return {
                             name: item,
                             value: item,
@@ -285,7 +289,7 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
 
             var linkList = [];
 
-            Object.keys(links).forEach(function (link) {
+            Object.keys(links).forEach((link) => {
                 var type = links[link].type;
 
                 if (!type) {
@@ -295,11 +299,11 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                 if (~['belongsToParent', 'hasOne', 'belongsTo'].indexOf(type)) {
                     linkList.push(link);
                 }
-            }, this);
+            });
 
             linkList.sort();
 
-            linkList.forEach(function (link) {
+            linkList.forEach((link) => {
                 var scope = links[link].entity;
 
                 if (!scope) {
@@ -314,10 +318,10 @@ define('views/fields/formula', 'views/fields/text', function (Dep) {
                     .getEntityTypeAttributeList(scope)
                     .sort();
 
-                linkAttributeList.forEach(function (item) {
+                linkAttributeList.forEach((item) => {
                     attributeList.push(link + '.' + item);
-                }, this);
-            }, this);
+                });
+            });
 
             return attributeList;
         },
