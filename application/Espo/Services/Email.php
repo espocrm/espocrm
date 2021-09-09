@@ -46,6 +46,7 @@ use Espo\Core\{
     Di,
     Select\Where\Item as WhereItem,
     Mail\Sender,
+    Mail\SmtpParams,
     Record\CreateParams,
 };
 
@@ -95,9 +96,9 @@ class Email extends Record implements
         'hasAttachment',
     ];
 
-    public function getUserSmtpParams(string $userId): ?array
+    public function getUserSmtpParams(string $userId): ?SmtpParams
     {
-        $user = $this->getEntityManager()->getEntity('User', $userId);
+        $user = $this->entityManager->getEntity('User', $userId);
 
         if (!$user) {
             return null;
@@ -109,7 +110,7 @@ class Email extends Record implements
             $fromAddress = strtolower($fromAddress);
         }
 
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
+        $preferences = $this->entityManager->getEntity('Preferences', $user->getId());
 
         if (!$preferences) {
             return null;
@@ -124,7 +125,7 @@ class Email extends Record implements
         }
 
         if (!$smtpParams && $fromAddress) {
-            $emailAccountService = $this->getServiceFactory()->create('EmailAccount');
+            $emailAccountService = $this->serviceFactory->create('EmailAccount');
 
             $emailAccount = $emailAccountService->findAccountForUser($user, $fromAddress);
 
@@ -133,15 +134,17 @@ class Email extends Record implements
             }
         }
 
-        if ($smtpParams) {
-            $smtpParams['fromName'] = $user->get('name');
-
-            if ($fromAddress) {
-                $this->applySmtpHandler($user->id, $fromAddress, $smtpParams);
-            }
+        if (!$smtpParams) {
+            return null;
         }
 
-        return $smtpParams;
+        $smtpParams['fromName'] = $user->get('name');
+
+        if ($fromAddress) {
+            $this->applySmtpHandler($user->getId(), $fromAddress, $smtpParams);
+        }
+
+        return SmtpParams::fromArray($smtpParams);
     }
 
     public function sendEntity(EmailEntity $entity, ?User $user = null)

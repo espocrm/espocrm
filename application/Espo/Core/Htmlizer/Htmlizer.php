@@ -721,11 +721,16 @@ class Htmlizer
 
     private function getRelationOrder(string $entityType, string $relation): array
     {
-        $foreignEntityType = $this->entityManager
+        $relationDefs = $this->entityManager
             ->getDefs()
             ->getEntity($entityType)
-            ->getRelation($relation)
-            ->getForeignEntityType();
+            ->getRelation($relation);
+
+        if (!$relationDefs->hasForeignEntityType()) {
+            return [];
+        }
+
+        $foreignEntityType = $relationDefs->getForeignEntityType();
 
         $collectionParams = $this->entityManager
             ->getDefs()
