@@ -63,7 +63,7 @@ class DateTimeFactory
         $timeZone = $this->config->get('timeZone') ?? 'UTC';
 
         if ($preferences) {
-            $timeZone = $preferences->get('timeZone') ?? $timeZone;
+            $timeZone = $preferences->get('timeZone') ? $preferences->get('timeZone') : $timeZone;
         }
 
         return $this->createWithTimeZone($timeZone);
