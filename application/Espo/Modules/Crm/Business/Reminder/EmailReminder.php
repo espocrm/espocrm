@@ -45,11 +45,17 @@ use Espo\Core\{
 class EmailReminder
 {
     protected $entityManager;
+
     protected $emailSender;
+
     protected $config;
+
     protected $dateTime;
+
     protected $templateFileManager;
+
     protected $language;
+
     protected $htmlizerFactory;
 
     public function __construct(
@@ -68,73 +74,72 @@ class EmailReminder
         $this->htmlizerFactory = $htmlizerFactory;
     }
 
-    protected function getEntityManager()
+    public function send(Entity $reminder): void
     {
-        return $this->entityManager;
-    }
+        $user = $this->entityManager->getEntity('User', $reminder->get('userId'));
+        $entity = $this->entityManager->getEntity($reminder->get('entityType'), $reminder->get('entityId'));
 
-    protected function getTemplateFileManager()
-    {
-        return $this->templateFileManager;
-    }
+        if (!$user || !$entity) {
+            return;
+        }
 
-    protected function getConfig()
-    {
-        return $this->config;
-    }
-
-    protected function getLanguage()
-    {
-        return $this->language;
-    }
-
-    public function send(Entity $reminder)
-    {
-        $user = $this->getEntityManager()->getEntity('User', $reminder->get('userId'));
-        $entity = $this->getEntityManager()->getEntity($reminder->get('entityType'), $reminder->get('entityId'));
-
-        if (!$user || !$entity) return;
         $emailAddress = $user->get('emailAddress');
-        if (!$emailAddress) return;
+
+        if (!$emailAddress) {
+            return;
+        }
 
         if ($entity->hasLinkMultipleField('users')) {
             $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
-            $status = $entity->getLinkMultipleColumn('users', 'status', $user->id);
-            if ($status === 'Declined') return;
+            $status = $entity->getLinkMultipleColumn('users', 'status', $user->getId());
+
+            if ($status === 'Declined') {
+                return;
+            }
         }
 
-        $email = $this->getEntityManager()->getEntity('Email');
+        $email = $this->entityManager->getEntity('Email');
+
         $email->set('to', $emailAddress);
 
-        $subjectTpl = $this->getTemplateFileManager()->getTemplate('reminder', 'subject', $entity->getEntityType(), 'Crm');
-        $bodyTpl = $this->getTemplateFileManager()->getTemplate('reminder', 'body', $entity->getEntityType(), 'Crm');
+        $subjectTpl = $this->templateFileManager
+            ->getTemplate('reminder', 'subject', $entity->getEntityType(), 'Crm');
+
+        $bodyTpl = $this->templateFileManager
+            ->getTemplate('reminder', 'body', $entity->getEntityType(), 'Crm');
 
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
         $data = [];
 
-        $siteUrl = rtrim($this->getConfig()->get('siteUrl'), '/');
-        $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->id;
-        $data['recordUrl'] = $recordUrl;
+        $siteUrl = rtrim($this->config->get('siteUrl'), '/');
+        $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->getId();
 
-        $data['entityType'] = $this->getLanguage()->translate($entity->getEntityType(), 'scopeNames');
+        $data['recordUrl'] = $recordUrl;
+        $data['entityType'] = $this->language->translate($entity->getEntityType(), 'scopeNames');
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
         if ($user) {
             $data['userName'] = $user->get('name');
         }
 
-        $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
-        $timezone = $preferences->get('timeZone');
+        $htmlizer = $this->htmlizerFactory->createForUser($user);
 
-        if (!$timezone) {
-            $timezone = null;
-        }
+        $subject = $htmlizer->render(
+            $entity,
+            $subjectTpl,
+            'reminder-email-subject-' . $entity->getEntityType(),
+            $data,
+            true
+        );
 
-        $htmlizer = $this->htmlizerFactory->create(true, $timezone);
-
-        $subject = $htmlizer->render($entity, $subjectTpl, 'reminder-email-subject-' . $entity->getEntityType(), $data, true);
-        $body = $htmlizer->render($entity, $bodyTpl, 'reminder-email-body-' . $entity->getEntityType(), $data, false);
+        $body = $htmlizer->render(
+            $entity,
+            $bodyTpl,
+            'reminder-email-body-' . $entity->getEntityType(),
+            $data,
+            false
+        );
 
         $email->set('subject', $subject);
         $email->set('body', $body);
