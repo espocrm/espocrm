@@ -106,7 +106,7 @@ class UserSecurity
         ];
     }
 
-    public function generate2FAData(string $id, stdClass $data): stdClass
+    public function getTwoFactorUserSetupData(string $id, stdClass $data): stdClass
     {
         if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
@@ -148,7 +148,7 @@ class UserSecurity
 
         $generatedData = $this->twoFactorUserSetupFactory
             ->create($auth2FAMethod)
-            ->generateData($user);
+            ->getData($user);
 
         $userData->set($generatedData);
 

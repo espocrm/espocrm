@@ -32,28 +32,32 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
-use Espo\Core\{
-    Controllers\Base,
-    Api\Request,
-};
+use Espo\Core\Api\Request;
 
-use StdClass;
+use Espo\Services\UserSecurity as Service;
 
-class UserSecurity extends Base
+use Espo\Entities\User;
+
+use stdClass;
+
+class UserSecurity
 {
-    protected function checkAccess(): bool
+    private $service;
+
+    public function __construct(Service $service, User $user)
     {
+        $this->service = $service;
+        $this->user = $user;
+
         if (
             !$this->user->isAdmin() &&
             !$this->user->isRegular()
         ) {
-            return false;
+            throw new Forbidden();
         }
-
-        return true;
     }
 
-    public function getActionRead(Request $request): StdClass
+    public function getActionRead(Request $request): stdClass
     {
         $id = $request->getRouteParam('id');
 
@@ -65,27 +69,27 @@ class UserSecurity extends Base
             throw new Forbidden();
         }
 
-        return $this->getService('UserSecurity')->read($id);
+        return $this->service->read($id);
     }
 
-    public function postActionGenerate2FAData(Request $request): StdClass
+    public function postActionGetTwoFactorUserSetupData(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
         $id = $data->id ?? null;
 
         if (!$id) {
-            throw new BadRequest();
+            throw new BadRequest("No 'id'.");
         }
 
         if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
-        return $this->getService('UserSecurity')->generate2FAData($id, $data);
+        return $this->service->getTwoFactorUserSetupData($id, $data);
     }
 
-    public function putActionUpdate(Request $request): StdClass
+    public function putActionUpdate(Request $request): stdClass
     {
         $id = $request->getRouteParam('id');
 
@@ -99,6 +103,6 @@ class UserSecurity extends Base
             throw new Forbidden();
         }
 
-        return $this->getService('UserSecurity')->update($id, $data);
+        return $this->service->update($id, $data);
     }
 }

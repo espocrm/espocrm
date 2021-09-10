@@ -58,7 +58,7 @@ class TotpUserSetup implements UserSetup
         $this->entityManager = $entityManager;
     }
 
-    public function generateData(User $user): stdClass
+    public function getData(User $user): stdClass
     {
         $userName = $user->get('userName');
 

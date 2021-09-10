@@ -57,7 +57,7 @@ define('views/user-security/modals/totp',
 
             this.wait(
                 Espo.Ajax
-                    .postRequest('UserSecurity/action/generate2FAData', {
+                    .postRequest('UserSecurity/action/getTwoFactorUserSetupData', {
                         id: this.model.id,
                         password: this.model.get('password'),
                         auth2FAMethod: this.model.get('auth2FAMethod'),
@@ -141,6 +141,7 @@ define('views/user-security/modals/totp',
                 .save()
                 .then(() => {
                     Espo.Ui.notify(false);
+
                     this.trigger('done');
                 })
                 .catch(() => {

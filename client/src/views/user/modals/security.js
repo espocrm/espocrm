@@ -111,7 +111,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
                                 ]
                             }
                         ],
-                    }, function (view) {
+                    }, (view) => {
                         this.controlFieldsVisibility(view);
 
                         this.listenTo(this.model, 'change:auth2FA', () => {

@@ -39,12 +39,12 @@ use stdClass;
 interface UserSetup
 {
     /**
-     * Generate data needed for configuration for a user. Data will be passed to the front-end.
+     * Get data needed for configuration for a user. Data will be passed to the front-end.
      */
-    public function generateData(User $user): stdClass;
+    public function getData(User $user): stdClass;
 
     /**
-     * Verify data before making 2FA enabled for a user.
+     * Verify input data before making 2FA enabled for a user.
      */
     public function verifyData(User $user, stdClass $payloadData): bool;
 }
