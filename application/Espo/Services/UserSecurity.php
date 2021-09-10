@@ -35,33 +35,36 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\EntityManager;
+
 use Espo\Entities\User;
+use Espo\Entities\UserData;
+
+use Espo\Repositories\UserData as UserDataRepository;
 
 use Espo\Core\{
     Utils\Metadata,
     Utils\Config,
     Authentication\LoginFactory,
-    Authentication\TwoFactor\UserMethodFactory as TwoFactorUserFactory,
+    Authentication\TwoFactor\UserSetupFactory as TwoFactorUserSetupFactory,
     Authentication\LoginData,
     Api\RequestNull,
 };
 
-
-use StdClass;
+use stdClass;
 
 class UserSecurity
 {
-    protected $entityManager;
+    private $entityManager;
 
-    protected $user;
+    private $user;
 
-    protected $metadata;
+    private $metadata;
 
-    protected $config;
+    private $config;
 
-    protected $authLoginFactory;
+    private $authLoginFactory;
 
-    protected $auth2FAUserFactory;
+    private $twoFactorUserSetupFactory;
 
     public function __construct(
         EntityManager $entityManager,
@@ -69,19 +72,19 @@ class UserSecurity
         Metadata $metadata,
         Config $config,
         LoginFactory $authLoginFactory,
-        TwoFactorUserFactory $auth2FAUserFactory
+        TwoFactorUserSetupFactory $twoFactorUserSetupFactory
     ) {
         $this->entityManager = $entityManager;
         $this->user = $user;
         $this->metadata = $metadata;
         $this->config = $config;
         $this->authLoginFactory = $authLoginFactory;
-        $this->auth2FAUserFactory = $auth2FAUserFactory;
+        $this->twoFactorUserSetupFactory = $twoFactorUserSetupFactory;
     }
 
-    public function read(string $id): StdClass
+    public function read(string $id): stdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->id) {
+        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
@@ -95,7 +98,7 @@ class UserSecurity
             throw new Forbidden();
         }
 
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($id);
+        $userData = $this->getUserDataRepository()->getByUserId($id);
 
         return (object) [
             'auth2FA' => $userData->get('auth2FA'),
@@ -103,9 +106,9 @@ class UserSecurity
         ];
     }
 
-    public function generate2FAData(string $id, StdClass $data): StdClass
+    public function generate2FAData(string $id, stdClass $data): stdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->id) {
+        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
@@ -125,11 +128,11 @@ class UserSecurity
             throw new Forbidden('Passport required.');
         }
 
-        if (!$this->user->isAdmin() || $this->user->id === $id) {
+        if (!$this->user->isAdmin() || $this->user->getId() === $id) {
             $this->checkPassword($id, $password);
         }
 
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($id);
+        $userData = $this->getUserDataRepository()->getByUserId($id);
 
         $auth2FAMethod = $data->auth2FAMethod ?? null;
 
@@ -137,14 +140,15 @@ class UserSecurity
             throw new BadRequest();
         }
 
-        $user = $this->entityManager->getEntity('User', $userData->get('userId'));
+        $userFromData = $this->entityManager->getEntity('User', $userData->get('userId'));
 
-        if (!$user) {
+        if (!$userFromData) {
             throw new Error("User not found.");
         }
 
-        $impl = $this->auth2FAUserFactory->create($auth2FAMethod);
-        $generatedData = $impl->generateData($userData, $data, $user->get('userName'));
+        $generatedData = $this->twoFactorUserSetupFactory
+            ->create($auth2FAMethod)
+            ->generateData($user);
 
         $userData->set($generatedData);
 
@@ -158,9 +162,9 @@ class UserSecurity
         return $generatedData;
     }
 
-    public function update(string $id, StdClass $data): StdClass
+    public function update(string $id, stdClass $data): stdClass
     {
-        if (!$this->user->isAdmin() && $id !== $this->user->id) {
+        if (!$this->user->isAdmin() && $id !== $this->user->getId()) {
             throw new Forbidden();
         }
 
@@ -174,27 +178,25 @@ class UserSecurity
             throw new Forbidden();
         }
 
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($id);
+        $userData = $this->getUserDataRepository()->getByUserId($id);
 
-        $originalData = clone $data;
-
-        $password = $originalData->password ?? null;
+        $password = $data->password ?? null;
 
         if (!$password) {
-            throw new Forbidden('Passport required.');
+            throw new Forbidden('Password required.');
         }
 
-        if (!$this->user->isAdmin() || $this->user->id === $id) {
+        if (!$this->user->isAdmin() || $this->user->getId() === $id) {
             $this->checkPassword($id, $password);
         }
 
-        foreach (get_object_vars($data) as $attribute => $v) {
-            if (!in_array($attribute, ['auth2FA', 'auth2FAMethod'])) {
-                unset($data->$attribute);
-            }
+        if (property_exists($data, 'auth2FA')) {
+            $userData->set('auth2FA', $data->auth2FA);
         }
 
-        $userData->set($data);
+        if (property_exists($data, 'auth2FAMethod')) {
+            $userData->set('auth2FAMethod', $data->auth2FAMethod);
+        }
 
         if (!$userData->get('auth2FA')) {
             $userData->set('auth2FAMethod', null);
@@ -217,13 +219,9 @@ class UserSecurity
                 throw new Forbidden('Not allowed 2FA auth method.');
             }
 
-            $code = $originalData->code ?? null;
-
-            if (!$code) {
-                throw new Forbidden('Not verified.');
-            }
-
-            $verifyResult = $this->auth2FAUserFactory->create($auth2FAMethod)->verify($userData, $code);
+            $verifyResult = $this->twoFactorUserSetupFactory
+                ->create($auth2FAMethod)
+                ->verifyData($user, $data);
 
             if (!$verifyResult) {
                 throw new Forbidden('Not verified.');
@@ -240,14 +238,10 @@ class UserSecurity
         return $returnData;
     }
 
-    protected function checkPassword(string $id, string $password)
+    private function checkPassword(string $id, string $password): void
     {
-        $method = $this->config->get('authenticationMethod', 'Espo');
-
-        $auth = $this->authLoginFactory->create($method);
-
         $user = $this->entityManager
-            ->getRepository('User')
+            ->getRDBRepository('User')
             ->where([
                 'id' => $id,
             ])
@@ -262,12 +256,17 @@ class UserSecurity
             ->setPassword($password)
             ->build();
 
-        $result = $auth->login($loginData, new RequestNull());
+        $login = $this->authLoginFactory->createDefault();
+
+        $result = $login->login($loginData, new RequestNull());
 
         if ($result->isFail()) {
             throw new Forbidden('Password is incorrect.');
         }
+    }
 
-        return true;
+    private function getUserDataRepository(): UserDataRepository
+    {
+        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

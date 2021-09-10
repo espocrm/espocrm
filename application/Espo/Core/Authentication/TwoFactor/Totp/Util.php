@@ -27,51 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFactor\UserMethods;
+namespace Espo\Core\Authentication\TwoFactor\Totp;
 
+use RobThree\Auth\TwoFactorAuth;
 
-use Espo\Entities\UserData;
-
-use Espo\Core\Authentication\TwoFactor\UserCodeVerify;
-use Espo\Core\Authentication\TwoFactor\Utils\Totp as TotpUtils;
-use Espo\Core\Utils\Config;
-
-use stdClass;
-
-class Totp implements UserCodeVerify
+class Util
 {
-    private $totp;
-
-    private $config;
-
-    public function __construct(TotpUtils $totp, Config $config)
+    public function verifyCode(string $secret, string $code): bool
     {
-        $this->totp = $totp;
-        $this->config = $config;
+        $impl = new TwoFactorAuth();
+
+        return $impl->verifyCode($secret, $code);
     }
 
-    public function generateData(UserData $userData, stdClass $data, string $userName): stdClass
+    public function createSecret(): string
     {
-        $secret = $this->totp->createSecret();
+        $impl = new TwoFactorAuth();
 
-        $label = rawurlencode($this->config->get('applicationName')) . ':' . rawurlencode($userName);
-
-        return (object) [
-            'auth2FATotpSecret' => $secret,
-            'label' => $label,
-        ];
-    }
-
-    public function verify(UserData $userData, string $code): bool
-    {
-        if (!$code) {
-            return false;
-        }
-
-        $codeModified = str_replace(' ', '', trim($code));
-
-        $secret = $userData->get('auth2FATotpSecret');
-
-        return $this->totp->verifyCode($secret, $codeModified);
+        return $impl->createSecret();
     }
 }

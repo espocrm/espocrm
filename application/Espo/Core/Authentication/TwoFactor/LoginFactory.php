@@ -31,8 +31,9 @@ namespace Espo\Core\Authentication\TwoFactor;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Exceptions\Error;
 
-class MethodFactory
+class LoginFactory
 {
     private $injectableFactory;
 
@@ -44,16 +45,12 @@ class MethodFactory
         $this->metadata = $metadata;
     }
 
-    public function create(string $method): CodeVerify
+    public function create(string $method): Login
     {
-        $className = $this->metadata->get(['app', 'auth2FAMethods', $method, 'implementationClassName']);
+        $className = $this->metadata->get(['app', 'auth2FAMethods', $method, 'loginClassName']);
 
         if (!$className) {
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
-
-            if (!class_exists($className)) {
-                $className = "Espo\\Core\\Authentication\\TwoFactor\\Methods\\" . $sanitizedName;
-            }
+            throw new Error("No login-class class for '{$method}'.");
         }
 
         return $this->injectableFactory->create($className);

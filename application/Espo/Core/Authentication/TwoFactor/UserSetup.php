@@ -29,19 +29,22 @@
 
 namespace Espo\Core\Authentication\TwoFactor;
 
-use Espo\Entities\UserData;
+use Espo\Entities\User;
 
 use stdClass;
 
-interface UserCodeVerify
+/**
+ * 2FA setting-up for a user.
+ */
+interface UserSetup
 {
     /**
-     * Generate data for a user.
+     * Generate data needed for configuration for a user. Data will be passed to the front-end.
      */
-    public function generateData(UserData $userData, stdClass $data, string $userName): stdClass;
+    public function generateData(User $user): stdClass;
 
     /**
-     * Confirm code before storing.
+     * Verify data before making 2FA enabled for a user.
      */
-    public function verify(UserData $userData, string $code): bool;
+    public function verifyData(User $user, stdClass $payloadData): bool;
 }

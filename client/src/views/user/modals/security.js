@@ -149,7 +149,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
                 this.initialAttributes.auth2FAMethod !== this.model.get('auth2FAMethod')
         },
 
-        actionReset: function () {
+        actionReset: function (dialog) {
             this.confirm(this.translate('security2FaResetConfimation', 'messages', 'User'), () => {
                 this.actionApply(dialog, true);
             });

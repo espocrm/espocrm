@@ -29,22 +29,23 @@
 
 namespace Espo\Core\Authentication;
 
-use Espo\Core\Exceptions\{
-    Forbidden,
-    ServiceUnavailable,
-};
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ServiceUnavailable;
+
+use Espo\Repositories\UserData as UserDataRepository;
 
 use Espo\Entities\{
     Portal,
     User,
     AuthLogRecord,
     AuthToken as AuthTokenEntity,
+    UserData,
 };
 
 use Espo\Core\Authentication\{
     Result,
     LoginFactory,
-    TwoFactor\MethodFactory as TwoFAFactory,
+    TwoFactor\LoginFactory as TwoFactorLoginFactory,
     AuthToken\AuthTokenManager,
     AuthToken\AuthTokenData,
     AuthToken\AuthToken,
@@ -79,9 +80,9 @@ class Authentication
 
     private $entityManager;
 
-    private $authLoginFactory;
+    private $loginFactory;
 
-    private $auth2FAFactory;
+    private $twoFactorLoginFactory;
 
     private $hookManager;
 
@@ -92,8 +93,8 @@ class Authentication
         ApplicationState $applicationState,
         ConfigDataProvider $configDataProvider,
         EntityManagerProxy $entityManagerProxy,
-        LoginFactory $authLoginFactory,
-        TwoFAFactory $auth2FAFactory,
+        LoginFactory $loginFactory,
+        TwoFactorLoginFactory $twoFactorLoginFactory,
         AuthTokenManager $authTokenManager,
         HookManager $hookManager,
         Log $log,
@@ -105,8 +106,8 @@ class Authentication
         $this->applicationState = $applicationState;
         $this->configDataProvider = $configDataProvider;
         $this->entityManager = $entityManagerProxy;
-        $this->authLoginFactory = $authLoginFactory;
-        $this->auth2FAFactory = $auth2FAFactory;
+        $this->loginFactory = $loginFactory;
+        $this->twoFactorLoginFactory = $twoFactorLoginFactory;
         $this->authTokenManager = $authTokenManager;
         $this->hookManager = $hookManager;
         $this->log = $log;
@@ -197,7 +198,7 @@ class Authentication
             $authenticationMethod = $this->configDataProvider->getDefaultAuthenticationMethod();
         }
 
-        $login = $this->authLoginFactory->create($authenticationMethod, $this->isPortal());
+        $login = $this->loginFactory->create($authenticationMethod, $this->isPortal());
 
         $loginData = LoginData
             ::createBuilder()
@@ -433,24 +434,14 @@ class Authentication
             return $result;
         }
 
-        $impl = $this->auth2FAFactory->create($method);
+        $login = $this->twoFactorLoginFactory->create($method);
 
-        $code = $request->getHeader('Espo-Authorization-Code');
-
-        if ($code) {
-            if (!$impl->verifyCode($loggedUser, $code)) {
-                return Result::fail(FailReason::CODE_NOT_VERIFIED);
-            }
-
-            return $result;
-        }
-
-        return Result::secondStepRequired($result->getUser(), $impl->getLoginData($loggedUser));
+        return $login->login($result, $request);
     }
 
     private function getUser2FAMethod(User $user): ?string
     {
-        $userData = $this->entityManager->getRepository('UserData')->getByUserId($user->id);
+        $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
         if (!$userData) {
             return null;
@@ -652,5 +643,10 @@ class Authentication
         $this->hookManager->processOnSecondStepRequired($result, $data, $request);
 
         return $result;
+    }
+
+    private function getUserDataRepository(): UserDataRepository
+    {
+        return $this->entityManager->getRepository(UserData::ENTITY_TYPE);
     }
 }

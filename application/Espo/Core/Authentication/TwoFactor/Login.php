@@ -29,33 +29,13 @@
 
 namespace Espo\Core\Authentication\TwoFactor;
 
-use Espo\Core\InjectableFactory;
-use Espo\Core\Utils\Metadata;
+use Espo\Core\Authentication\Result;
+use Espo\Core\Api\Request;
 
-class UserMethodFactory
+/**
+ * Processes second-step logging in.
+ */
+interface Login
 {
-    private $injectableFactory;
-
-    private $metadata;
-
-    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->metadata = $metadata;
-    }
-
-    public function create(string $method): UserCodeVerify
-    {
-        $className = $this->metadata->get(['app', 'auth2FAMethods', $method, 'implementationUserClassName']);
-
-        if (!$className) {
-            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
-
-            if (!class_exists($className)) {
-                $className = "Espo\\Core\\Authentication\\TwoFactor\\UserMethods\\" . $sanitizedName;
-            }
-        }
-
-        return $this->injectableFactory->create($className);
-    }
+    public function login(Result $result, Request $request): Result;
 }

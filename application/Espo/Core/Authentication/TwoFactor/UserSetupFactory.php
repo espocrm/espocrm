@@ -27,57 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Authentication\TwoFactor\Methods;
+namespace Espo\Core\Authentication\TwoFactor;
 
-use Espo\ORM\EntityManager;
-use Espo\Entities\User;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 
+use Espo\Core\Exceptions\Error;
 
-use Espo\Core\Authentication\TwoFactor\CodeVerify;
-use Espo\Core\Authentication\TwoFactor\Utils\Totp as TotpUtils;
-use Espo\Core\Authentication\ResultData;
-
-class Totp implements CodeVerify
+class UserSetupFactory
 {
-    private $entityManager;
+    private $injectableFactory;
 
-    private $totp;
+    private $metadata;
 
-    public function __construct(EntityManager $entityManager, TotpUtils $totp)
+    public function __construct(InjectableFactory $injectableFactory, Metadata $metadata)
     {
-        $this->entityManager = $entityManager;
-        $this->totp = $totp;
+        $this->injectableFactory = $injectableFactory;
+        $this->metadata = $metadata;
     }
 
-    public function verifyCode(User $user, string $code): bool
+    public function create(string $method): UserSetup
     {
-        $userData = $this->entityManager
-            ->getRepository('UserData')
-            ->getByUserId($user->id);
+        $className = $this->metadata->get(['app', 'auth2FAMethods', $method, 'userSetupClassName']);
 
-        if (!$userData) {
-            return false;
+        if (!$className) {
+            throw new Error("No user-setup class for '{$method}'.");
         }
 
-        if (!$userData->get('auth2FA')) {
-            return false;
-        }
-
-        if ($userData->get('auth2FAMethod') !== 'Totp') {
-            return false;
-        }
-
-        $secret = $userData->get('auth2FATotpSecret');
-
-        if (!$secret) {
-            return false;
-        }
-
-        return $this->totp->verifyCode($secret, $code);
-    }
-
-    public function getLoginData(User $user): ResultData
-    {
-        return ResultData::createWithMessage('enterTotpCode');
+        return $this->injectableFactory->create($className);
     }
 }
