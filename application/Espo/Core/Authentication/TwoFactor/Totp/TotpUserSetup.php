@@ -66,6 +66,8 @@ class TotpUserSetup implements UserSetup
 
         $label = rawurlencode($this->config->get('applicationName')) . ':' . rawurlencode($userName);
 
+        $this->storeSecret($user, $secret);
+
         return (object) [
             'auth2FATotpSecret' => $secret,
             'label' => $label,
@@ -95,6 +97,15 @@ class TotpUserSetup implements UserSetup
         $secret = $userData->get('auth2FATotpSecret');
 
         return $this->totp->verifyCode($secret, $codeModified);
+    }
+
+    private function storeSecret(User $user, string $secret): void
+    {
+        $userData = $this->getUserDataRepository()->getByUserId($user->getId());
+
+        $userData->set('auth2FATotpSecret', $secret);
+
+        $this->entityManager->saveEntity($userData);
     }
 
     private function getUserDataRepository(): UserDataRepository

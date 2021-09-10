@@ -112,6 +112,8 @@ class UserSecurity
             throw new Forbidden();
         }
 
+        $isReset = $data->reset ?? false;
+
         $user = $this->entityManager->getEntity('User', $id);
 
         if (!$user) {
@@ -132,34 +134,26 @@ class UserSecurity
             $this->checkPassword($id, $password);
         }
 
-        $userData = $this->getUserDataRepository()->getByUserId($id);
-
         $auth2FAMethod = $data->auth2FAMethod ?? null;
 
         if (!$auth2FAMethod) {
             throw new BadRequest();
         }
 
-        $userFromData = $this->entityManager->getEntity('User', $userData->get('userId'));
-
-        if (!$userFromData) {
-            throw new Error("User not found.");
-        }
-
-        $generatedData = $this->twoFactorUserSetupFactory
+        $clientData = $this->twoFactorUserSetupFactory
             ->create($auth2FAMethod)
             ->getData($user);
 
-        $userData->set($generatedData);
+        if ($isReset) {
+            $userData = $this->getUserDataRepository()->getByUserId($id);
 
-        if (!empty($data->reset)) {
             $userData->set('auth2FA', false);
             $userData->set('auth2FAMethod', null);
+
+            $this->entityManager->saveEntity($userData);
         }
 
-        $this->entityManager->saveEntity($userData);
-
-        return $generatedData;
+        return $clientData;
     }
 
     public function update(string $id, stdClass $data): stdClass
