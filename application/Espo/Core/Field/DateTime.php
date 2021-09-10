@@ -199,6 +199,9 @@ class DateTime implements DateTimeable
         return self::fromDateTime($dateTime);
     }
 
+    /**
+     * A difference between another object (date or date-time) and self.
+     */
     public function diff(DateTimeable $other): DateInterval
     {
         return $this->getDateTime()->diff($other->getDateTime());
