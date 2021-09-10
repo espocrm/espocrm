@@ -29,12 +29,15 @@
 
 namespace tests\unit\Espo\Entities;
 
-use tests\unit\ReflectionHelper;
-
-use \Espo\Entities\Email;
+use Espo\Entities\Email;
 
 class EmailTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @var Email
+     */
+    private $email;
+
     // TODO defs test helper
     protected $defs = array(
     'fields' =>
@@ -80,6 +83,12 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         'len' => 255,
       ),
       'bcc' =>
+      array (
+        'type' => 'varchar',
+        'notStorable' => true,
+        'len' => 255,
+      ),
+      'replyTo' =>
       array (
         'type' => 'varchar',
         'notStorable' => true,
@@ -418,7 +427,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->entityManager = $this->getMockBuilder('\Espo\Core\ORM\EntityManager')->disableOriginalConstructor()->getMock();
 
         $this->repository =
-          $this->getMockBuilder('\Espo\Core\ORM\Repositories\Database')->disableOriginalConstructor()->getMock();
+          $this->getMockBuilder('Espo\Core\ORM\Repositories\Database')->disableOriginalConstructor()->getMock();
 
         $this->entityManager->expects($this->any())
                             ->method('getRepository')
@@ -449,8 +458,11 @@ class EmailTest extends \PHPUnit\Framework\TestCase
     function testGetBodyForSending()
     {
         $attachment =
-            $this->getMockBuilder('\Espo\Entities\Attachment')->disableOriginalConstructor()->getMock();
-        $attachment->id = 'Id01';
+            $this->getMockBuilder('Espo\Entities\Attachment')->disableOriginalConstructor()->getMock();
+
+        $attachment
+            ->method('getId')
+            ->willReturn('Id01');
 
         $this->email->set('body', 'test <img src="?entryPoint=attachment&amp;id=Id01">');
 
@@ -468,5 +480,64 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->email->set('body', '<br />&nbsp;&amp;');
         $bodyPlain = $this->email->getBodyPlain();
         $this->assertEquals("\r\n &", $bodyPlain);
+    }
+
+    public function testSubjectBody(): void
+    {
+        $email = $this->email;
+
+        $email->setSubject('1');
+        $email->setBody('2');
+        $email->setIsHtml();
+
+        $this->assertEquals('1', $email->getSubject());
+        $this->assertEquals('2', $email->getBody());
+        $this->assertEquals(true, $email->isHtml());
+    }
+
+    public function testPlain(): void
+    {
+        $email = $this->email;
+
+        $email->setIsPlain();
+
+        $this->assertEquals(false, $email->isHtml());
+    }
+
+    public function testAddressList(): void
+    {
+        $email = $this->email;
+
+        $email->addToAddress('test1@test.com');
+        $email->addToAddress('test2@test.com');
+
+        $this->assertEquals(
+            ['test1@test.com', 'test2@test.com'],
+            $email->getToAddressList()
+        );
+
+        $email->addCcAddress('test3@test.com');
+        $email->addCcAddress('test4@test.com');
+
+        $this->assertEquals(
+            ['test3@test.com', 'test4@test.com'],
+            $email->getCcAddressList()
+        );
+
+        $email->addBccAddress('test5@test.com');
+        $email->addBccAddress('test6@test.com');
+
+        $this->assertEquals(
+            ['test5@test.com', 'test6@test.com'],
+            $email->getBccAddressList()
+        );
+
+        $email->addReplyToAddress('test7@test.com');
+        $email->addReplyToAddress('test8@test.com');
+
+        $this->assertEquals(
+            ['test7@test.com', 'test8@test.com'],
+            $email->getReplyToAddressList()
+        );
     }
 }

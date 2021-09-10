@@ -392,19 +392,19 @@ class Email extends Record implements
             }
         }
 
-        foreach ($entity->getToList() as $address) {
+        foreach ($entity->getToAddressList() as $address) {
             if (!filter_var($address, \FILTER_VALIDATE_EMAIL)) {
                 throw new Error('To email address is not valid.');
             }
         }
 
-        foreach ($entity->getCcList() as $address) {
+        foreach ($entity->getCcAddressList() as $address) {
             if (!filter_var($address, \FILTER_VALIDATE_EMAIL)) {
                 throw new Error('CC email address is not valid.');
             }
         }
 
-        foreach ($entity->getBccList() as $address) {
+        foreach ($entity->getBccAddressList() as $address) {
             if (!filter_var($address, \FILTER_VALIDATE_EMAIL)) {
                 throw new Error('BCC email address is not valid.');
             }

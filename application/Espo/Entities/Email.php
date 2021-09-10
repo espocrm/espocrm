@@ -41,7 +41,9 @@ class Email extends Entity
     public const ENTITY_TYPE = 'Email';
 
     public const STATUS_BEING_IMPORTED = 'Being Imported';
+
     public const STATUS_ARCHIVED = 'Archived';
+
     public const STATUS_SENT = 'Sent';
 
     protected function _getSubject()
@@ -115,9 +117,9 @@ class Email extends Entity
             return null;
         }
 
-        $string = trim(explode(';', $string)[0]);
-
-        return EmailService::parseFromName($string);
+        return EmailService::parseFromName(
+            trim(explode(';', $string)[0])
+        );
     }
 
     protected function _getReplyToAddress()
@@ -132,9 +134,9 @@ class Email extends Entity
             return null;
         }
 
-        $string = trim(explode(';', $string)[0]);
-
-        return EmailService::parseFromAddress($string);
+        return EmailService::parseFromAddress(
+            trim(explode(';', $string)[0])
+        );
     }
 
     protected function _setIsRead($value)
@@ -143,10 +145,11 @@ class Email extends Entity
 
         if ($value === true || $value === false) {
             $this->setInContainer('isUsers', true);
+
+            return;
         }
-        else {
-            $this->setInContainer('isUsers', false);
-        }
+
+        $this->setInContainer('isUsers', false);
     }
 
     public function isManuallyArchived(): bool
@@ -201,6 +204,7 @@ class Email extends Entity
             '&(copy|#169);',
             '&(reg|#174);',
         ];
+
         $replaceList = [
             '',
             '&',
@@ -221,36 +225,39 @@ class Email extends Entity
         return $body;
     }
 
-    public function getBodyPlainForSending()
+    public function getBodyPlainForSending(): string
     {
-        return $this->getBodyPlain();
+        return $this->getBodyPlain() ?? '';
     }
 
-    public function getBodyForSending()
+    public function getBodyForSending(): string
     {
-        $body = $this->get('body');
+        $body = $this->get('body') ?? '';
 
         if (!empty($body)) {
             $attachmentList = $this->getInlineAttachments();
 
             foreach ($attachmentList as $attachment) {
+                $id = $attachment->getId();
+
                 $body = str_replace(
-                    "\"?entryPoint=attachment&amp;id={$attachment->id}\"",
-                    "\"cid:{$attachment->id}\"",
+                    "\"?entryPoint=attachment&amp;id={$id}\"",
+                    "\"cid:{$id}\"",
                     $body
                 );
             }
         }
 
-        $body = str_replace(
+        return str_replace(
             "<table class=\"table table-bordered\">",
             "<table class=\"table table-bordered\" width=\"100%\">",
             $body
         );
-
-        return $body;
     }
 
+    /**
+     * @return Attachment[]
+     */
     public function getInlineAttachments(): array
     {
         $idList = [];
@@ -315,76 +322,111 @@ class Email extends Entity
         $this->set('body', $body);
     }
 
+    public function isHtml(): ?bool
+    {
+        return $this->get('isHtml');
+    }
+
+    public function setIsHtml(bool $isHtml = true): void
+    {
+        $this->set('isHtml', $isHtml);
+    }
+
+    public function setIsPlain(bool $isPlain = true): void
+    {
+        $this->set('isHtml', !$isPlain);
+    }
+
+    public function addToAddress(string $address): void
+    {
+        $list = $this->getToAddressList();
+
+        $list[] = $address;
+
+        $this->set('to', implode(';', $list));
+    }
+
+    public function addCcAddress(string $address): void
+    {
+        $list = $this->getCcAddressList();
+
+        $list[] = $address;
+
+        $this->set('cc', implode(';', $list));
+    }
+
+    public function addBccAddress(string $address): void
+    {
+        $list = $this->getBccAddressList();
+
+        $list[] = $address;
+
+        $this->set('bcc', implode(';', $list));
+    }
+
+    public function addReplyToAddress(string $address): void
+    {
+        $list = $this->getReplyToAddressList();
+
+        $list[] = $address;
+
+        $this->set('replyTo', implode(';', $list));
+    }
+
     /**
      * @return string[]
      */
-    public function getToList(): array
+    public function getToAddressList(): array
     {
         $value = $this->get('to');
 
-        if ($value) {
-            $arr = explode(';', $value);
-
-            if (is_array($arr)) {
-                return $arr;
-            }
+        if (!$value) {
+            return [];
         }
 
-        return [];
+        return explode(';', $value);
     }
 
     /**
      * @return string[]
      */
-    public function getCcList(): array
+    public function getCcAddressList(): array
     {
         $value = $this->get('cc');
 
-        if ($value) {
-            $arr = explode(';', $value);
-
-            if (is_array($arr)) {
-                return $arr;
-            }
+        if (!$value) {
+            return [];
         }
 
-        return [];
+        return explode(';', $value);
     }
 
     /**
      * @return string[]
      */
-    public function getBccList(): array
+    public function getBccAddressList(): array
     {
         $value = $this->get('bcc');
 
-        if ($value) {
-            $arr = explode(';', $value);
-
-            if (is_array($arr)) {
-                return $arr;
-            }
+        if (!$value) {
+            return [];
         }
 
-        return [];
+        return explode(';', $value);
     }
 
     /**
      * @return string[]
      */
-    public function getReplyToList(): array
+    public function getReplyToAddressList(): array
     {
         $value = $this->get('replyTo');
 
-        if ($value) {
-            $arr = explode(';', $value);
-
-            if (is_array($arr)) {
-                return $arr;
-            }
+        if (!$value) {
+            return [];
         }
 
-        return [];
+        return explode(';', $value);
     }
 
     public function setDummyMessageId(): void
