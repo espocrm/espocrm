@@ -31,6 +31,8 @@ namespace Espo\Entities;
 
 use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
+use Espo\Core\Field\DateTime;
+
 use Espo\Entities\Attachment;
 use Espo\Services\Email as EmailService;
 
@@ -288,6 +290,34 @@ class Email extends Entity
         return $attachmentList;
     }
 
+    public function getDateSent(): ?DateTime
+    {
+        return $this->getValueObject('dateTime');
+    }
+
+    public function getSubject(): ?string
+    {
+        return $this->get('subject');
+    }
+
+    public function setSubject(?string $subject): void
+    {
+        $this->set('subject', $subject);
+    }
+
+    public function getBody(): ?string
+    {
+        return $this->get('body');
+    }
+
+    public function setBody(?string $body): void
+    {
+        $this->set('body', $body);
+    }
+
+    /**
+     * @return string[]
+     */
     public function getToList(): array
     {
         $value = $this->get('to');
@@ -303,6 +333,9 @@ class Email extends Entity
         return [];
     }
 
+    /**
+     * @return string[]
+     */
     public function getCcList(): array
     {
         $value = $this->get('cc');
@@ -318,6 +351,9 @@ class Email extends Entity
         return [];
     }
 
+    /**
+     * @return string[]
+     */
     public function getBccList(): array
     {
         $value = $this->get('bcc');
@@ -333,7 +369,10 @@ class Email extends Entity
         return [];
     }
 
-    public function getReplyToList()
+    /**
+     * @return string[]
+     */
+    public function getReplyToList(): array
     {
         $value = $this->get('replyTo');
 
