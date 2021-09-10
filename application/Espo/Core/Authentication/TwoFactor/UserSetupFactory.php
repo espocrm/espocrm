@@ -48,7 +48,7 @@ class UserSetupFactory
 
     public function create(string $method): UserSetup
     {
-        $className = $this->metadata->get(['app', 'auth2FAMethods', $method, 'userSetupClassName']);
+        $className = $this->metadata->get(['app', 'authentication2FAMethods', $method, 'userSetupClassName']);
 
         if (!$className) {
             throw new Error("No user-setup class for '{$method}'.");

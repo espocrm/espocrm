@@ -47,7 +47,7 @@ class LoginFactory
 
     public function create(string $method): Login
     {
-        $className = $this->metadata->get(['app', 'auth2FAMethods', $method, 'loginClassName']);
+        $className = $this->metadata->get(['app', 'authentication2FAMethods', $method, 'loginClassName']);
 
         if (!$className) {
             throw new Error("No login-class class for '{$method}'.");

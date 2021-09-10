@@ -33,7 +33,7 @@ define('views/settings/fields/auth-two-fa-method-list', 'views/fields/multi-enum
         setupOptions: function () {
             this.params.options = [];
 
-            var defs = this.getMetadata().get(['app', 'auth2FAMethods']) || {};
+            var defs = this.getMetadata().get(['app', 'authentication2FAMethods']) || {};
 
             for (var method in defs) {
                 if (defs[method].settings && defs[method].settings.isAvailable) {
