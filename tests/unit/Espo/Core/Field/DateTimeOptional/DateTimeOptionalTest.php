@@ -164,4 +164,20 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(new DateTimeZone('Europe/Kiev'), $value->getTimezone());
     }
+
+    public function testDiff(): void
+    {
+        $value1 = DateTimeOptional::fromString('2021-05-01 10:10:30');
+        $value2 = DateTimeOptional::fromString('2021-05-01 10:20:30');
+
+        $this->assertEquals(10, $value1->diff($value2)->i);
+        $this->assertEquals(0, $value1->diff($value2)->invert);
+    }
+
+    public function testNow(): void
+    {
+        $value = DateTimeOptional::createNow();
+
+        $this->assertNotNull($value);
+    }
 }

@@ -152,4 +152,21 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFalse($value->isAllDay());
     }
+
+    public function testDiff(): void
+    {
+        $value1 = DateTimeOptional::fromString('2021-05-01');
+        $value2 = DateTimeOptional::fromString('2021-05-02');
+
+        $this->assertEquals(1, $value1->diff($value2)->d);
+        $this->assertEquals(0, $value1->diff($value2)->invert);
+    }
+
+    public function testToday(): void
+    {
+        $value1 = DateTimeOptional::createToday();
+        $value2 = DateTimeOptional::createToday(new DateTimeZone('Europe/Kiev'));
+
+        $this->assertEquals(0, $value1->diff($value2)->invert);
+    }
 }

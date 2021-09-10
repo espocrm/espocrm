@@ -130,4 +130,21 @@ class DateTest extends \PHPUnit\Framework\TestCase
 
         $this->assertNotSame($modifiedValue, $value);
     }
+
+    public function testDiff(): void
+    {
+        $value1 = Date::fromString('2021-05-01');
+        $value2 = Date::fromString('2021-05-02');
+
+        $this->assertEquals(1, $value1->diff($value2)->d);
+        $this->assertEquals(0, $value1->diff($value2)->invert);
+    }
+
+    public function testToday(): void
+    {
+        $value1 = Date::createToday();
+        $value2 = Date::createToday(new DateTimeZone('Europe/Kiev'));
+
+        $this->assertEquals(0, $value1->diff($value2)->invert);
+    }
 }

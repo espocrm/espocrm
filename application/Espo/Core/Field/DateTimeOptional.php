@@ -29,10 +29,9 @@
 
 namespace Espo\Core\Field;
 
-use Espo\Core\Field\{
-    DateTime,
-    Date,
-};
+use Espo\Core\Field\DateTime;
+use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime\DateTimeable;
 
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -43,7 +42,7 @@ use RuntimeException;
 /**
  * A date-time or date. Immutable.
  */
-class DateTimeOptional
+class DateTimeOptional implements DateTimeable
 {
     private $dateTimeValue = null;
 
@@ -261,6 +260,33 @@ class DateTimeOptional
         return self::fromDateTime(
             $this->dateTimeValue->subtract($interval)->getDateTime()
         );
+    }
+
+    public function diff(DateTimeable $other): DateInterval
+    {
+        return $this->getDateTime()->diff($other->getDateTime());
+    }
+
+    /**
+     * Create a current time.
+     */
+    public static function createNow(): self
+    {
+        return self::fromDateTime(new DateTimeImmutable());
+    }
+
+    /**
+     * Create a today.
+     */
+    public static function createToday(?DateTimeZone $timezone = null): self
+    {
+        $now = new DateTimeImmutable();
+
+        if ($timezone) {
+            $now = $now->setTimezone($timezone);
+        }
+
+        return self::fromDateTimeAllDay($now);
     }
 
     /**

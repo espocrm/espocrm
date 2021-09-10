@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Field;
 
+use Espo\Core\Field\DateTime\DateTimeable;
+
 use DateTimeImmutable;
 use DateTimeInterface;
 use DateInterval;
@@ -39,7 +41,7 @@ use Throwable;
 /**
  * A date value object. Immutable.
  */
-class Date
+class Date implements DateTimeable
 {
     private $value;
 
@@ -163,6 +165,25 @@ class Date
         $dateTime = $this->dateTime->sub($interval);
 
         return self::fromDateTime($dateTime);
+    }
+
+    public function diff(DateTimeable $other): DateInterval
+    {
+        return $this->getDateTime()->diff($other->getDateTime());
+    }
+
+    /**
+     * Create a today.
+     */
+    public static function createToday(?DateTimeZone $timezone = null): self
+    {
+        $now = new DateTimeImmutable();
+
+        if ($timezone) {
+            $now = $now->setTimezone($timezone);
+        }
+
+        return self::fromDateTime($now);
     }
 
     /**
