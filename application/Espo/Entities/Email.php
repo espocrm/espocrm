@@ -235,7 +235,7 @@ class Email extends Entity
         $body = $this->get('body') ?? '';
 
         if (!empty($body)) {
-            $attachmentList = $this->getInlineAttachments();
+            $attachmentList = $this->getInlineAttachmentList();
 
             foreach ($attachmentList as $attachment) {
                 $id = $attachment->getId();
@@ -258,7 +258,7 @@ class Email extends Entity
     /**
      * @return Attachment[]
      */
-    public function getInlineAttachments(): array
+    public function getInlineAttachmentList(): array
     {
         $idList = [];
 

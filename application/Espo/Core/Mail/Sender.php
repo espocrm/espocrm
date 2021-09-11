@@ -521,7 +521,7 @@ class Sender
             }
         }
 
-        $attachmentInlineList = $email->getInlineAttachments();
+        $attachmentInlineList = $email->getInlineAttachmentList();
 
         if (!empty($attachmentInlineList)) {
             foreach ($attachmentInlineList as $a) {

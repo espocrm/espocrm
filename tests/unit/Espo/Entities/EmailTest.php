@@ -452,7 +452,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
                             ->method('getEntity')
                             ->with('Attachment', 'Id01');
 
-        $this->email->getInlineAttachments();
+        $this->email->getInlineAttachmentList();
     }
 
     function testGetBodyForSending()
