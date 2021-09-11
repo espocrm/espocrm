@@ -266,7 +266,7 @@ class Authentication
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
-                return $this->processFail(
+                return $this->processFailSecondStep(
                     $result,
                     $data,
                     $request
@@ -617,12 +617,21 @@ class Authentication
         return $result;
     }
 
+    private function processFailSecondStep(Result $result, AuthenticationData $data, Request $request): Result
+    {
+        $this->hookManager->processOnFailSecondStep($result, $data, $request);
+        $this->hookManager->processOnFail($result, $data, $request);
+
+        return $result;
+    }
+
     private function processSuccess(
         Result $result,
         AuthenticationData $data,
         Request $request,
         bool $byToken
     ): Result {
+
         if ($byToken) {
             $this->hookManager->processOnSuccessByToken($result, $data, $request);
 
