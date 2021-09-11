@@ -62,13 +62,6 @@ class Manager
         }
     }
 
-    public function processOnFailSecondStep(Result $result, AuthenticationData $data, Request $request): void
-    {
-        foreach ($this->getOnFailSecondStepHookList() as $hook) {
-            $hook->process($result, $data, $request);
-        }
-    }
-
     public function processOnSuccess(Result $result, AuthenticationData $data, Request $request): void
     {
         foreach ($this->getOnSuccessHookList() as $hook) {
@@ -122,20 +115,6 @@ class Manager
         $list = [];
 
         foreach ($this->getHookClassNameList('onFail') as $className) {
-            $list[] = $this->injectableFactory->create($className);
-        }
-
-        return $list;
-    }
-
-    /**
-     * @return OnResult[]
-     */
-    private function getOnFailSecondStepHookList(): array
-    {
-        $list = [];
-
-        foreach ($this->getHookClassNameList('onFailSecondStep') as $className) {
             $list[] = $this->injectableFactory->create($className);
         }
 

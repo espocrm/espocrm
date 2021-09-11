@@ -266,7 +266,7 @@ class Authentication
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
-                return $this->processFailSecondStep(
+                return $this->processFail(
                     $result,
                     $data,
                     $request
@@ -612,14 +612,6 @@ class Authentication
 
     private function processFail(Result $result, AuthenticationData $data, Request $request): Result
     {
-        $this->hookManager->processOnFail($result, $data, $request);
-
-        return $result;
-    }
-
-    private function processFailSecondStep(Result $result, AuthenticationData $data, Request $request): Result
-    {
-        $this->hookManager->processOnFailSecondStep($result, $data, $request);
         $this->hookManager->processOnFail($result, $data, $request);
 
         return $result;
