@@ -45,7 +45,7 @@ use Espo\Core\{
     Utils\NumberUtil,
     Utils\Language,
     Utils\TemplateFileManager,
-    Htmlizer\Factory as HtmlizerFactory,
+    Htmlizer\HtmlizerFactory as HtmlizerFactory,
 };
 
 use DateTime;

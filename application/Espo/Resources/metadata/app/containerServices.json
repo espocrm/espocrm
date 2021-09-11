@@ -78,7 +78,7 @@
         "className": "Espo\\Core\\Mail\\Sender"
     },
     "htmlizerFactory": {
-        "className": "Espo\\Core\\Htmlizer\\Factory"
+        "className": "Espo\\Core\\Htmlizer\\HtmlizerFactory"
     },
     "fieldValidationManager": {
         "className": "Espo\\Core\\FieldValidation\\FieldValidationManager"

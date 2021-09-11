@@ -41,7 +41,7 @@ use Espo\Core\{
     ORM\EntityManager,
     Utils\Config,
     Mail\EmailSender,
-    Htmlizer\Factory as HtmlizerFactory,
+    Htmlizer\HtmlizerFactory as HtmlizerFactory,
     Utils\TemplateFileManager,
     Utils\Log,
     Job\QueueName,

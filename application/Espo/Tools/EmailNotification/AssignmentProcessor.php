@@ -33,7 +33,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 use Espo\Core\{
-    Htmlizer\Factory as HtmlizerFactory,
+    Htmlizer\HtmlizerFactory as HtmlizerFactory,
     Htmlizer\Htmlizer,
     Utils\Config,
     Utils\Metadata,

@@ -37,7 +37,7 @@ use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\Entities\Person;
-use Espo\Core\Htmlizer\Factory as HtmlizerFactory;
+use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\Acl\GlobalRestricton;
 use Espo\Core\Utils\DateTime as DateTimeUtil;

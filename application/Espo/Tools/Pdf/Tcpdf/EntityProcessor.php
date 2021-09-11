@@ -31,7 +31,7 @@ namespace Espo\Tools\Pdf\Tcpdf;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Htmlizer\Htmlizer as Htmlizer;
-use Espo\Core\Htmlizer\Factory as HtmlizerFactory;
+use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 use Espo\ORM\Entity;
 use Espo\Tools\Pdf\Template;
 use Espo\Tools\Pdf\Data;

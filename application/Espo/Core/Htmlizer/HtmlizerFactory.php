@@ -35,7 +35,7 @@ use Espo\Core\AclManager;
 
 use Espo\Entities\User;
 
-class Factory
+class HtmlizerFactory
 {
     private $injectableFactory;
 

@@ -38,7 +38,7 @@ use Espo\Core\{
     Utils\TemplateFileManager,
     Mail\EmailSender,
     Utils\Config,
-    Htmlizer\Factory as HtmlizerFactory,
+    Htmlizer\HtmlizerFactory as HtmlizerFactory,
     Utils\Language,
 };
 
