@@ -77,7 +77,8 @@
         "Security": "Security",
         "Reset 2FA": "Reset 2FA",
         "Code": "Code",
-        "Secret": "Secret"
+        "Secret": "Secret",
+        "Send Code": "Send Code"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
@@ -108,6 +109,8 @@
         "userNameExists": "User Name already exists",
         "wrongCode": "Wrong code",
         "codeIsRequired": "Code is required",
+        "choose2FaEmailAddress": "Select an email address that will be used for 2FA. It's highly recommended to use a non-primary email address.",
+        "enterCodeSentInEmail": "Enter the code sent to your email address.",
         "enterTotpCode": "Enter a code from your authenticator app.",
         "verifyTotpCode": "Scan the QR-code with your mobile authenticator app. If you have a trouble with scanning, you can enter the secret manually. After that you will see a 6-digit code in your application. Enter this code in the field below.",
         "generateAndSendNewPassword": "A new password will be generated and sent to the user's email address.",

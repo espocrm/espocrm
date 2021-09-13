@@ -1,0 +1,56 @@
+{
+    "fields": {
+        "code": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "method": {
+            "type": "varchar",
+            "maxLength": 100
+        },
+        "attemptsLeft": {
+            "type": "int"
+        },
+        "isActive": {
+            "type": "bool",
+            "default": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        }
+    },
+    "links": {
+        "user": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "indexes": {
+        "createdAt": {
+            "columns": [
+                "createdAt"
+            ]
+        },
+        "userIdMethod": {
+            "columns": [
+                "userId",
+                "method"
+            ]
+        },
+        "userIdMethodIsActive": {
+            "columns": [
+                "userId",
+                "method",
+                "isActive"
+            ]
+        },
+        "userIdMethodCreatedAt": {
+            "columns": [
+                "userId",
+                "method",
+                "createdAt"
+            ]
+        }
+    }
+}

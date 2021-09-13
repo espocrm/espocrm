@@ -317,6 +317,7 @@
         "readable": "Readable"
     },
     "templates": {
+        "twoFactorCode": "2FA Code",
         "accessInfo": "Access Info",
         "accessInfoPortal": "Access Info for Portals",
         "assignment": "Assignment",

@@ -25,5 +25,8 @@
     },
     "passwordChangeLink": {
         "scope": "User"
+    },
+    "twoFactorCode": {
+        "scope": "User"
     }
 }

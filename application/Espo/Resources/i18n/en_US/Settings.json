@@ -154,7 +154,8 @@
             "EmailReceived": "Received emails"
         },
         "auth2FAMethodList": {
-            "Totp": "TOTP"
+            "Totp": "TOTP",
+            "Email": "Email"
         }
     },
     "tooltips": {

@@ -6,5 +6,8 @@
     "webhookQueue": {
         "className": "Espo\\Classes\\Cleanup\\WebhookQueue",
         "order": 11
+    },
+    "twoFactorCodes": {
+        "className": "Espo\\Classes\\Cleanup\\TwoFactorCodes"
     }
 }

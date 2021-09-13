@@ -6,5 +6,13 @@
         "userApplyView": "views/user-security/modals/totp",
         "loginClassName": "Espo\\Core\\Authentication\\TwoFactor\\Totp\\TotpLogin",
         "userSetupClassName": "Espo\\Core\\Authentication\\TwoFactor\\Totp\\TotpUserSetup"
+    },
+    "Email": {
+        "settings": {
+            "isAvailable": true
+        },
+        "userApplyView": "views/user-security/modals/two-factor-email",
+        "loginClassName": "Espo\\Core\\Authentication\\TwoFactor\\Email\\EmailLogin",
+        "userSetupClassName": "Espo\\Core\\Authentication\\TwoFactor\\Email\\EmailUserSetup"
     }
 }

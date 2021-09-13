@@ -15,6 +15,9 @@
         "auth2FATotpSecret": {
             "type": "varchar",
             "maxLength": 32
+        },
+        "auth2FAEmailAddress": {
+            "type": "varchar"
         }
     },
     "links": {
