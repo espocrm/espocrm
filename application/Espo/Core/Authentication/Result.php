@@ -162,7 +162,7 @@ class Result
     }
 
     /**
-     * A message to show to end user for a second step.
+     * A message to show to a user for a second step.
      */
     public function getMessage(): ?string
     {
@@ -178,7 +178,7 @@ class Result
     }
 
     /**
-     * Additional data that can be needed to a second step.
+     * Additional data that can be needed for a second step.
      */
     public function getData(): ?stdClass
     {
