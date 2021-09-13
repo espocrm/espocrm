@@ -337,6 +337,11 @@ class Email extends Entity
         $this->set('isHtml', !$isPlain);
     }
 
+    public function getFromAddress(): ?string
+    {
+        return $this->get('from');
+    }
+
     public function addToAddress(string $address): void
     {
         $list = $this->getToAddressList();
