@@ -32,6 +32,7 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
+use Espo\Core\Utils\Config;
 use Espo\Core\Authentication\TwoFactor\Email\Util;
 
 use Espo\ORM\EntityManager;
@@ -46,11 +47,14 @@ class TwoFactorEmail
 
     private $entityManager;
 
-    public function __construct(Util $util, User $user, EntityManager $entityManager)
+    private $config;
+
+    public function __construct(Util $util, User $user, EntityManager $entityManager, Config $config)
     {
         $this->util = $util;
         $this->user = $user;
         $this->entityManager = $entityManager;
+        $this->config = $config;
     }
 
     public function sendCode(string $userId, string $emailAddress): void
@@ -58,6 +62,8 @@ class TwoFactorEmail
         if (!$this->user->isAdmin() && $userId !== $this->user->getId()) {
             throw new Forbidden();
         }
+
+        $this->checkAllowed();
 
         $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
 
@@ -67,5 +73,18 @@ class TwoFactorEmail
 
         $this->util->sendCode($user, $emailAddress);
         $this->util->storeEmailAddress($user, $emailAddress);
+    }
+
+    private function checkAllowed(): void
+    {
+        if (!$this->config->get('auth2FA')) {
+            throw new Forbidden("2FA is not enabled.");
+        }
+
+        $methodList = $this->config->get('auth2FAMethodList') ?? [];
+
+        if (!in_array('Email', $methodList)) {
+            throw new Forbidden("Email 2FA is not allowed.");
+        }
     }
 }
