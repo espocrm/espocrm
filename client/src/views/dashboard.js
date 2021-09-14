@@ -42,53 +42,55 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 this.selectTab(tab);
             },
             'click button[data-action="addDashlet"]': function () {
-                this.createView('addDashlet', 'views/modals/add-dashlet', {}, function (view) {
+                this.createView('addDashlet', 'views/modals/add-dashlet', {}, view => {
                     view.render();
-                    this.listenToOnce(view, 'add', function (name) {
+
+                    this.listenToOnce(view, 'add', name => {
                         this.addDashlet(name);
-                    }, this);
-                }, this);
+                    });
+                });
             },
             'click button[data-action="editTabs"]': function () {
                 this.createView('editTabs', 'views/modals/edit-dashboard', {
-                    dashboardLayout: this.dashboardLayout
-                }, function (view) {
+                    dashboardLayout: this.dashboardLayout,
+                }, view => {
                     view.render();
 
-                    this.listenToOnce(view, 'after:save', function (data) {
+                    this.listenToOnce(view, 'after:save', data => {
                         view.close();
-                        var dashboardLayout = [];
 
-                        dashboardLayout = dashboardLayout.filter(function (item, i) {
-                            return dashboardLayout.indexOf(item) == i;
-                        });
+                        let dashboardLayout = [];
 
-                        (data.dashboardTabList).forEach(function (name) {
+                        (data.dashboardTabList).forEach(name => {
                             var layout = [];
                             var id = null;
-                            this.dashboardLayout.forEach(function (d) {
-                                if (d.name == name) {
+
+                            this.dashboardLayout.forEach(d => {
+                                if (d.name === name) {
                                     layout = d.layout;
                                     id = d.id;
                                 }
-                            }, this);
+                            });
 
                             if (name in data.renameMap) {
                                 name = data.renameMap[name];
                             }
+
                             var o = {
                                 name: name,
                                 layout: layout,
                             };
+
                             if (id) {
                                 o.id = id;
                             }
-                            dashboardLayout.push(o);
-                        }, this);
 
-                        this.dashletIdList.forEach(function (item) {
+                            dashboardLayout.push(o);
+                        });
+
+                        this.dashletIdList.forEach(item => {
                             this.clearView('dashlet-' + item);
-                        }, this);
+                        });
 
                         this.dashboardLayout = dashboardLayout;
                         this.saveLayout();
@@ -96,10 +98,10 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                         this.storeCurrentTab(0);
                         this.currentTab = 0;
                         this.setupCurrentTabLayout();
-                        this.reRender();
 
-                    }, this);
-                }.bind(this));
+                        this.reRender();
+                    });
+                });
             },
         },
 
@@ -109,7 +111,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 currentTab: this.currentTab,
                 tabCount: this.dashboardLayout.length,
                 dashboardLayout: this.dashboardLayout,
-                layoutReadOnly: this.layoutReadOnly
+                layoutReadOnly: this.layoutReadOnly,
             };
         },
 
@@ -122,19 +124,24 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 var defaultLayout = [
                     {
                         "name": "My Espo",
-                        "layout": []
+                        "layout": [],
                     }
                 ];
 
                 if (this.getConfig().get('forcedDashboardLayout')) {
                     this.dashboardLayout = this.getConfig().get('forcedDashboardLayout') || [];
-                } else if (this.getUser().get('portalId')) {
+                }
+                else if (this.getUser().get('portalId')) {
                     this.dashboardLayout = this.getConfig().get('dashboardLayout') || [];
-                } else {
+                }
+                else {
                     this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
                 }
 
-                if (this.dashboardLayout.length == 0 || Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]') {
+                if (
+                    this.dashboardLayout.length === 0 ||
+                    Object.prototype.toString.call(this.dashboardLayout) !== '[object Array]'
+                ) {
                     this.dashboardLayout = defaultLayout;
                 }
             }
@@ -165,9 +172,10 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             this.setupCurrentTabLayout();
 
-            this.dashletIdList.forEach(function (id) {
+            this.dashletIdList.forEach(id => {
                 this.clearView('dashlet-'+id);
-            }, this);
+            });
+
             this.dashletIdList = [];
 
             this.reRender();
@@ -184,17 +192,20 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             if (this.getUser().get('portalId')) {
                 this.layoutReadOnly = true;
                 this.dashletsReadOnly = true;
-            } else {
+            }
+            else {
                 var forbiddenPreferencesFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+
                 if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
                     this.layoutReadOnly = true;
                 }
+
                 if (~forbiddenPreferencesFieldList.indexOf('dashletsOptions')) {
                     this.dashletthis.gridsReadOnly = true;
                 }
             }
 
-            this.once('remove', function () {
+            this.once('remove', () => {
                 if (this.grid) {
                     this.grid.destroy();
                 }
@@ -204,8 +215,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 }
 
                 $(window).off('resize.dashboard');
-
-            }, this);
+            });
         },
 
         afterRender: function () {
@@ -213,7 +223,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             if (window.innerWidth >= this.screenWidthXs) {
                 this.initGridstack();
-            } else {
+            }
+            else {
                 this.initFallbackMode();
             }
 
@@ -225,8 +236,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             if (this.isFallbackMode() && window.innerWidth >= this.screenWidthXs) {
                 this.initGridstack();
             }
-            else
-            if (!this.isFallbackMode() && window.innerWidth < this.screenWidthXs) {
+            else if (!this.isFallbackMode() && window.innerWidth < this.screenWidthXs) {
                 this.initFallbackMode();
             }
         },
@@ -239,7 +249,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             this.preservedDashletViews = {};
             this.preservedDashletElements = {};
 
-            this.currentTabLayout.forEach(function (o) {
+            this.currentTabLayout.forEach(o => {
                 var key = 'dashlet-' + o.id;
                 var view = this.getView(key);
 
@@ -252,7 +262,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 this.preservedDashletElements[o.id] = $el;
 
                 $el.detach();
-            }, this);
+            });
         },
 
         addPreservedDashlet: function (id) {
@@ -287,13 +297,13 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             $dashboard.addClass('fallback');
 
-            this.currentTabLayout.forEach(function (o) {
+            this.currentTabLayout.forEach(o => {
                 var $item = this.prepareFallbackItem(o);
 
                 $dashboard.append($item);
-            }, this);
+            });
 
-            this.currentTabLayout.forEach(function (o) {
+            this.currentTabLayout.forEach(o => {
                 if (!o.id || !o.name) {
                     return;
                 }
@@ -311,7 +321,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 }
 
                 this.createDashletView(o.id, o.name);
-            }, this);
+            });
 
             this.clearPreservedDashlets();
 
@@ -325,7 +335,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
         },
 
         fallbackControlHeights: function () {
-            this.currentTabLayout.forEach(function (o) {
+            this.currentTabLayout.forEach(o => {
                 var $container = this.$dashboard.find('.dashlet-container[data-id="'+o.id+'"]');
 
                 var headerHeight = $container.find('.panel-heading').outerHeight();
@@ -343,11 +353,11 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
                     $container.css('height', height + 'px');
                 }
-            }, this);
+            });
 
-            this.fallbackModeTimeout = setTimeout(function () {
+            this.fallbackModeTimeout = setTimeout(() => {
                 this.fallbackControlHeights();
-            }.bind(this), 300);
+            }, 300);
         },
 
         initGridstack: function () {
@@ -399,7 +409,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             grid.removeAll();
 
-            this.currentTabLayout.forEach(function (o) {
+            this.currentTabLayout.forEach(o => {
                 var $item = this.prepareGridstackItem(o.id, o.name);
 
                 if (!this.getMetadata().get(['dashlets', o.name])) {
@@ -415,11 +425,11 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                         height: o.height,
                     }
                 );
-            }, this);
+            });
 
             $gridstack.find(' .grid-stack-item').css('position', 'absolute');
 
-            this.currentTabLayout.forEach(function (o) {
+            this.currentTabLayout.forEach(o => {
                 if (!o.id || !o.name) {
                     return;
                 }
@@ -437,16 +447,16 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 }
 
                 this.createDashletView(o.id, o.name);
-            }, this);
+            });
 
             this.clearPreservedDashlets();
 
-            this.grid.on('change', function (e, itemList) {
+            this.grid.on('change', (e, itemList) => {
                 this.fetchLayout();
                 this.saveLayout();
-            }.bind(this));
+            });
 
-            this.grid.on('resizestop', function (e, ui) {
+            this.grid.on('resizestop', (e, ui) => {
                 var id = $(e.target).data('id');
                 var view = this.getView('dashlet-' + id);
 
@@ -455,11 +465,11 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 }
 
                 view.trigger('resize');
-            }.bind(this));
+            });
         },
 
         fetchLayout: function () {
-            var layout = _.map(this.$gridstack.find('.grid-stack-item'), function (el) {
+            var layout = _.map(this.$gridstack.find('.grid-stack-item'), el => {
                 var $el = $(el);
                 var node = $el.data('_gridstack_node') || {};
 
@@ -471,7 +481,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                     width: node.width,
                     height: node.height,
                 };
-            }.bind(this));
+            });
 
             this.dashboardLayout[this.currentTab].layout = layout;
         },
@@ -532,15 +542,14 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 revertToFallback = true;
             }
 
-            var grid = this.$gridstack.data('gridstack');
             var $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
 
             this.grid.removeWidget($item.get(0), true);
 
             var layout = this.dashboardLayout[this.currentTab].layout;
 
-            layout.forEach(function (o, i) {
-                if (o.id == id) {
+            layout.forEach((o, i) => {
+                if (o.id === id) {
                     layout.splice(i, 1);
 
                     return;
@@ -582,6 +591,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             if (this.isFallbackMode()) {
                 this.initGridstack();
+
                 revertToFallback = true;
             }
 
@@ -599,7 +609,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 }
             );
 
-            this.createDashletView(id, name, name, function (view) {
+            this.createDashletView(id, name, name, view => {
                 this.fetchLayout();
                 this.saveLayout();
 
@@ -612,7 +622,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 if (revertToFallback) {
                     this.initFallbackMode();
                 }
-            }, this);
+            });
         },
 
         createDashletView: function (id, name, label, callback, context) {
@@ -620,8 +630,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
             var o = {
                 id: id,
-                name: name
-            }
+                name: name,
+            };
 
             if (label) {
                 o.label = label;
@@ -632,26 +642,26 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 name: name,
                 id: id,
                 el: this.options.el + ' > .dashlets .dashlet-container[data-id="'+id+'"]',
-                readOnly: this.dashletsReadOnly
-            }, function (view) {
+                readOnly: this.dashletsReadOnly,
+            }, view => {
                 this.dashletIdList.push(id);
 
                 view.render();
 
-                this.listenToOnce(view, 'change', function () {
+                this.listenToOnce(view, 'change', () => {
                     this.clearView(id);
-                    this.createDashletView(id, name, label, function (view) {
-                    }, this);
-                }, this);
 
-                this.listenToOnce(view, 'remove-dashlet', function () {
+                    this.createDashletView(id, name, label, view => {});
+                });
+
+                this.listenToOnce(view, 'remove-dashlet', () => {
                     this.removeDashlet(id);
-                }, this);
+                });
 
                 if (callback) {
                     callback.call(this, view);
                 }
-            }, this);
+            });
         },
     });
 });
