@@ -147,7 +147,7 @@ class Email extends Record implements
         return SmtpParams::fromArray($smtpParams);
     }
 
-    public function sendEntity(EmailEntity $entity, ?User $user = null)
+    public function sendEntity(EmailEntity $entity, ?User $user = null): void
     {
         $emailSender = $this->emailSender->create();
 
@@ -155,7 +155,7 @@ class Email extends Record implements
 
         if ($user) {
             $emailAddressCollection = $this->entityManager
-                ->getRepository('User')
+                ->getRDBRepository('User')
                 ->getRelation($user, 'emailAddresses')
                 ->find();
 
@@ -180,7 +180,7 @@ class Email extends Record implements
             $primaryUserAddress = strtolower($user->get('emailAddress'));
 
             if ($primaryUserAddress === $fromAddress) {
-                $preferences = $this->getEntityManager()->getEntity('Preferences', $user->id);
+                $preferences = $this->entityManager->getEntity('Preferences', $user->id);
 
                 if ($preferences) {
                     $smtpParams = $preferences->getSmtpParams();
@@ -235,17 +235,17 @@ class Email extends Record implements
             }
         }
 
-        if (!$smtpParams && $fromAddress === strtolower($this->getConfig()->get('outboundEmailFromAddress'))) {
-            if (!$this->getConfig()->get('outboundEmailIsShared')) {
+        if (!$smtpParams && $fromAddress === strtolower($this->config->get('outboundEmailFromAddress'))) {
+            if (!$this->config->get('outboundEmailIsShared')) {
                 throw new Error("Email sending: Can not use system SMTP. System SMTP is not shared.");
             }
 
             $emailSender->withParams([
-                'fromName' => $this->getConfig()->get('outboundEmailFromName'),
+                'fromName' => $this->config->get('outboundEmailFromName'),
             ]);
         }
 
-        if (!$smtpParams && !$this->getConfig()->get('outboundEmailIsShared')) {
+        if (!$smtpParams && !$this->config->get('outboundEmailIsShared')) {
             throw new Error("Email sending: No SMTP params found for {$fromAddress}.");
         }
 
@@ -262,13 +262,13 @@ class Email extends Record implements
         $parent = null;
 
         if ($entity->get('parentType') && $entity->get('parentId')) {
-            $parent = $this->getEntityManager()
+            $parent = $this->entityManager
                 ->getEntity($entity->get('parentType'), $entity->get('parentId'));
 
             if ($parent) {
                 if ($entity->get('parentType') == 'Case') {
                     if ($parent->get('inboundEmailId')) {
-                        $inboundEmail = $this->getEntityManager()
+                        $inboundEmail = $this->entityManager
                             ->getEntity('InboundEmail', $parent->get('inboundEmailId'));
 
                         if ($inboundEmail && $inboundEmail->get('replyToAddress')) {
@@ -299,7 +299,7 @@ class Email extends Record implements
         catch (Exception $e) {
             $entity->set('status', EmailEntity::STATUS_DRAFT);
 
-            $this->getEntityManager()->saveEntity($entity, ['silent' => true]);
+            $this->entityManager->saveEntity($entity, ['silent' => true]);
 
             $this->log->error("Email sending:" . $e->getMessage() . "; " . $e->getCode());
 
@@ -311,7 +311,7 @@ class Email extends Record implements
             throw ErrorSilent::createWithBody('sendingFail', json_encode($errorData));
         }
 
-        $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);
+        $this->entityManager->saveEntity($entity, ['isJustSent' => true]);
 
         if ($inboundEmail) {
             $entity->addLinkMultipleId('inboundEmails', $inboundEmail->id);
@@ -353,7 +353,7 @@ class Email extends Record implements
 
     protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
     {
-        $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($userId);
+        $userData = $this->entityManager->getRepository('UserData')->getByUserId($userId);
 
         if ($userData) {
             $smtpHandlers = $userData->get('smtpHandlers') ?? (object) [];
@@ -754,7 +754,7 @@ class Email extends Record implements
             throw new BadRequest();
         }
 
-        $email = $this->getEntityManager()->getEntity('Email', $id);
+        $email = $this->entityManager->getEntity('Email', $id);
 
         if (!$email) {
             throw new NotFound();
@@ -788,7 +788,7 @@ class Email extends Record implements
                 }
 
                 if ($this->fileStorageManager->exists($source)) {
-                    $this->getEntityManager()->saveEntity($attachment);
+                    $this->entityManager->saveEntity($attachment);
 
                     $contents = $this->fileStorageManager->getContents($source) ?? '';
 
@@ -826,7 +826,7 @@ class Email extends Record implements
             }
         }
 
-        $email = $this->getEntityManager()->getEntity('Email');
+        $email = $this->entityManager->getEntity('Email');
 
         $email->set([
             'subject' => 'EspoCRM: Test Email',
@@ -838,7 +838,7 @@ class Email extends Record implements
         $id = $data['id'] ?? null;
 
         if ($type === 'emailAccount' && $id) {
-            $emailAccount = $this->getEntityManager()->getEntity('EmailAccount', $id);
+            $emailAccount = $this->entityManager->getEntity('EmailAccount', $id);
 
             if ($emailAccount && $emailAccount->get('smtpHandler')) {
                 $this->getServiceFactory()->create('EmailAccount')->applySmtpHandler($emailAccount, $smtpParams);
@@ -846,7 +846,7 @@ class Email extends Record implements
         }
 
         if ($type === 'inboundEmail' && $id) {
-            $inboundEmail = $this->getEntityManager()->getEntity('InboundEmail', $id);
+            $inboundEmail = $this->entityManager->getEntity('InboundEmail', $id);
 
             if ($inboundEmail && $inboundEmail->get('smtpHandler')) {
                 $this->getServiceFactory()->create('InboundEmail')->applySmtpHandler($inboundEmail, $smtpParams);
@@ -950,7 +950,7 @@ class Email extends Record implements
 
         $folderIdList = ['inbox', 'drafts'];
 
-        $emailFolderList = $this->getEntityManager()
+        $emailFolderList = $this->entityManager
             ->getRepository('EmailFolder')
             ->where([
                 'assignedUserId' => $this->getUser()->id,
