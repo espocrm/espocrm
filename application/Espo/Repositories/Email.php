@@ -88,7 +88,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function loadFromField(Entity $entity)
+    public function loadFromField(Entity $entity): void
     {
         if ($entity->get('fromEmailAddressName')) {
             $entity->set('from', $entity->get('fromEmailAddressName'));
@@ -115,7 +115,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         $entity->set('from', null);
     }
 
-    public function loadToField(Entity $entity)
+    public function loadToField(Entity $entity): void
     {
         $entity->loadLinkMultipleField('toEmailAddresses');
         $names = $entity->get('toEmailAddressesNames');
@@ -123,7 +123,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         if (!empty($names)) {
             $arr = [];
 
-            foreach ($names as $id => $address) {
+            foreach ($names as $address) {
                 $arr[] = $address;
             }
 
@@ -131,7 +131,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function loadCcField(Entity $entity)
+    public function loadCcField(Entity $entity): void
     {
         $entity->loadLinkMultipleField('ccEmailAddresses');
         $names = $entity->get('ccEmailAddressesNames');
@@ -139,14 +139,15 @@ class Email extends \Espo\Core\Repositories\Database implements
         if (!empty($names)) {
             $arr = [];
 
-            foreach ($names as $id => $address) {
+            foreach ($names as $address) {
                 $arr[] = $address;
             }
+
             $entity->set('cc', implode(';', $arr));
         }
     }
 
-    public function loadBccField(Entity $entity)
+    public function loadBccField(Entity $entity): void
     {
         $entity->loadLinkMultipleField('bccEmailAddresses');
         $names = $entity->get('bccEmailAddressesNames');
@@ -154,7 +155,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         if (!empty($names)) {
             $arr = [];
 
-            foreach ($names as $id => $address) {
+            foreach ($names as $address) {
                 $arr[] = $address;
             }
 
@@ -162,7 +163,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         }
     }
 
-    public function loadReplyToField(Entity $entity)
+    public function loadReplyToField(Entity $entity): void
     {
         $entity->loadLinkMultipleField('replyToEmailAddresses');
         $names = $entity->get('replyToEmailAddressesNames');
@@ -170,7 +171,7 @@ class Email extends \Espo\Core\Repositories\Database implements
         if (!empty($names)) {
             $arr = [];
 
-            foreach ($names as $id => $address) {
+            foreach ($names as $address) {
                 $arr[] = $address;
             }
 

@@ -35,6 +35,7 @@ use Espo\Core\Field\DateTime;
 
 use Espo\Entities\Attachment;
 use Espo\Services\Email as EmailService;
+use Espo\Repositories\Email as EmailRepository;
 
 class Email extends Entity
 {
@@ -341,6 +342,11 @@ class Email extends Entity
         $this->set('isHtml', !$isPlain);
     }
 
+    public function setFromAddress(?string $address): void
+    {
+        $this->set('from', $address);
+    }
+
     public function addToAddress(string $address): void
     {
         $list = $this->getToAddressList();
@@ -376,9 +382,13 @@ class Email extends Entity
 
         $this->set('replyTo', implode(';', $list));
     }
-    
+
     public function getFromAddress(): ?string
     {
+        if (!$this->hasInContainer('from') && !$this->isNew()) {
+            $this->getEmailRepository()->loadFromField($this);
+        }
+
         return $this->get('from');
     }
 
@@ -387,6 +397,10 @@ class Email extends Entity
      */
     public function getToAddressList(): array
     {
+        if (!$this->hasInContainer('to') && !$this->isNew()) {
+            $this->getEmailRepository()->loadToField($this);
+        }
+
         $value = $this->get('to');
 
         if (!$value) {
@@ -401,6 +415,10 @@ class Email extends Entity
      */
     public function getCcAddressList(): array
     {
+        if (!$this->hasInContainer('cc') && !$this->isNew()) {
+            $this->getEmailRepository()->loadCcField($this);
+        }
+
         $value = $this->get('cc');
 
         if (!$value) {
@@ -415,6 +433,10 @@ class Email extends Entity
      */
     public function getBccAddressList(): array
     {
+        if (!$this->hasInContainer('bcc') && !$this->isNew()) {
+            $this->getEmailRepository()->loadBccField($this);
+        }
+
         $value = $this->get('bcc');
 
         if (!$value) {
@@ -429,6 +451,10 @@ class Email extends Entity
      */
     public function getReplyToAddressList(): array
     {
+        if (!$this->hasInContainer('replyTo') && !$this->isNew()) {
+            $this->getEmailRepository()->loadReplyToField($this);
+        }
+
         $value = $this->get('replyTo');
 
         if (!$value) {
@@ -446,5 +472,10 @@ class Email extends Entity
     public function getMessageId(): ?string
     {
         return $this->get('messageId');
+    }
+
+    private function getEmailRepository(): EmailRepository
+    {
+        return $this->entityManager->getRepository(self::ENTITY_TYPE);
     }
 }
