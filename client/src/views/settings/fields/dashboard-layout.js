@@ -48,19 +48,20 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             'click a[data-action="editDashlet"]': function (e) {
                 var id = $(e.currentTarget).data('id');
                 var name = $(e.currentTarget).data('name');
+
                 this.editDashlet(id, name);
             },
             'click button[data-action="editTabs"]': function () {
                 this.editTabs();
             },
             'click button[data-action="addDashlet"]': function () {
-                this.createView('addDashlet', 'views/modals/add-dashlet', {}, function (view) {
+                this.createView('addDashlet', 'views/modals/add-dashlet', {}, (view) => {
                     view.render();
 
-                    this.listenToOnce(view, 'add', function (name) {
+                    this.listenToOnce(view, 'add', (name) => {
                         this.addDashlet(name);
-                    }, this);
-                }, this);
+                    });
+                });
             },
         },
 
@@ -76,7 +77,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             this.dashboardLayout = Espo.Utils.cloneDeep(this.model.get(this.name) || []);
             this.dashletsOptions = Espo.Utils.cloneDeep(this.model.get('dashletsOptions') || {});
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', () => {
                 if (this.model.hasChanged(this.name)) {
                     this.dashboardLayout = Espo.Utils.cloneDeep(this.model.get(this.name) || []);
                 }
@@ -92,7 +93,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                         }
                     }
                 }
-            }, this);
+            });
 
             this.currentTab = -1;
             this.currentTabLayout = null;
@@ -105,6 +106,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
         selectTab: function (tab) {
             this.currentTab = tab;
             this.setupCurrentTabLayout();
+
             if (this.isRendered()) {
                 this.reRender();
             }
@@ -149,16 +151,20 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                     layout: [],
                     id: this.generateId(),
                 });
+
                 this.currentTab = 0;
                 this.setupCurrentTabLayout();
-                this.once('after:render', function () {
-                    setTimeout(function() {
+
+                this.once('after:render', () => {
+                    setTimeout(() => {
                         this.addDashetHtml(id, name);
                         this.fetchLayout();
-                    }.bind(this), 50);
-                }, this);
+                    }, 50);
+                });
+
                 this.reRender();
-            } else {
+            }
+            else {
                 this.addDashetHtml(id, name);
                 this.fetchLayout();
             }
@@ -171,9 +177,10 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
 
             var layout = this.dashboardLayout[this.currentTab].layout;
 
-            layout.forEach(function (o, i) {
-                if (o.id == id) {
+            layout.forEach((o, i) => {
+                if (o.id === id) {
                     layout.splice(i, 1);
+
                     return;
                 }
             });
@@ -186,27 +193,26 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
         editTabs: function () {
             this.createView('editTabs', 'views/modals/edit-dashboard', {
                 dashboardLayout: this.dashboardLayout,
-                tabListIsNotRequired: true
-            }, function (view) {
+                tabListIsNotRequired: true,
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'after:save', function (data) {
+                this.listenToOnce(view, 'after:save', (data) => {
                     view.close();
+
                     var dashboardLayout = [];
 
-                    dashboardLayout = dashboardLayout.filter(function (item, i) {
-                        return dashboardLayout.indexOf(item) == i;
-                    });
 
-                    (data.dashboardTabList).forEach(function (name) {
+                    (data.dashboardTabList).forEach((name) => {
                         var layout = [];
                         var id = this.generateId();
-                        this.dashboardLayout.forEach(function (d) {
-                            if (d.name == name) {
+
+                        this.dashboardLayout.forEach(d => {
+                            if (d.name === name) {
                                 layout = d.layout;
                                 id = d.id;
                             }
-                        }, this);
+                        });
 
                         if (name in data.renameMap) {
                             name = data.renameMap[name];
@@ -217,30 +223,31 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                             layout: layout,
                             id: id,
                         });
-                    }, this);
+                    });
 
                     this.dashboardLayout = dashboardLayout;
 
                     this.selectTab(0);
 
                     this.deleteNotExistingDashletsOptions();
-                }, this);
-            }.bind(this));
+                });
+            });
         },
 
         deleteNotExistingDashletsOptions: function () {
             var idListMet = [];
-            (this.dashboardLayout || []).forEach(function (itemTab) {
-                (itemTab.layout || []).forEach(function (item) {
-                    idListMet.push(item.id);
-                }, this);
-            }, this);
 
-            Object.keys(this.dashletsOptions).forEach(function (id) {
+            (this.dashboardLayout || []).forEach((itemTab) => {
+                (itemTab.layout || []).forEach((item) => {
+                    idListMet.push(item.id);
+                });
+            });
+
+            Object.keys(this.dashletsOptions).forEach((id) => {
                 if (!~idListMet.indexOf(id)) {
                     delete this.dashletsOptions[id];
                 }
-            }, this);
+            });
         },
 
         editDashlet: function (id, name) {
@@ -249,51 +256,64 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
 
             var defaultOptions = this.getMetadata().get(['dashlets', name , 'options', 'defaults']) || {};
 
-            Object.keys(defaultOptions).forEach(function (item) {
-                if (item in options) return;
+            Object.keys(defaultOptions).forEach((item) => {
+                if (item in options) {
+                    return;
+                }
+
                 options[item] = Espo.Utils.cloneDeep(defaultOptions[item]);
-            }, this);
+            });
 
             if (!('title' in options)) {
                 options.title = this.translate(name, 'dashlets');
             }
 
-            var optionsView = this.getMetadata().get(['dashlets', name, 'options', 'view']) || 'views/dashlets/options/base';
+            var optionsView = this.getMetadata().get(['dashlets', name, 'options', 'view']) ||
+                'views/dashlets/options/base';
+
             this.createView('options', optionsView, {
                 name: name,
                 optionsData: options,
-                fields: this.getMetadata().get(['dashlets', name, 'options', 'fields']) || {}
-            }, function (view) {
+                fields: this.getMetadata().get(['dashlets', name, 'options', 'fields']) || {},
+            }, (view) => {
                 view.render();
-                this.listenToOnce(view, 'save', function (attributes) {
+
+                this.listenToOnce(view, 'save', (attributes) => {
                     this.dashletsOptions[id] = attributes;
+
                     view.close();
+
                     if ('title' in attributes) {
                         var title = attributes.title;
+
                         if (!title) {
                             title = this.translate(name, 'dashlets');
                         }
+
                         this.$el.find('[data-id="'+id+'"] .panel-title').text(title);
                     }
-                }, this);
-            }, this);
+                });
+            });
         },
 
         fetchLayout: function () {
-            if (!~this.currentTab) return;
+            if (!~this.currentTab) {
+                return;
+            }
 
-            var layout = _.map(this.$gridstack.find('.grid-stack-item'), function (el) {
+            var layout = _.map(this.$gridstack.find('.grid-stack-item'), (el) => {
                 var $el = $(el);
                 var node = $el.data('_gridstack_node') || {};
+
                 return {
                     id: $el.data('id'),
                     name: $el.data('name'),
                     x: node.x,
                     y: node.y,
                     width: node.width,
-                    height: node.height
+                    height: node.height,
                 };
-            }.bind(this));
+            });
 
             this.dashboardLayout[this.currentTab].layout = layout;
 
@@ -321,7 +341,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
 
                 grid.removeAll();
 
-                this.currentTabLayout.forEach(function (o) {
+                this.currentTabLayout.forEach((o) => {
                     var $item = this.prepareGridstackItem(o.id, o.name);
 
                     this.grid.addWidget(
@@ -333,14 +353,14 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                             height: o.height,
                         }
                     );
-                }, this);
+                });
 
                 $gridstack.find(' .grid-stack-item').css('position', 'absolute');
 
-                $gridstack.on('change', function (e, itemList) {
+                $gridstack.on('change', (e, itemList) => {
                     this.fetchLayout();
                     this.trigger('change');
-                }.bind(this));
+                });
             }
         },
 
@@ -348,16 +368,19 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             var $item = $('<div></div>');
             var actionsHtml = '';
             var actions2Html = '';
-            if (this.mode == 'edit') {
+
+            if (this.mode === 'edit') {
                 actionsHtml +=
-                                '<a href="javascript:" class="pull-right" data-action="removeDashlet" data-id="'+id+'">'+
-                                    '<span class="fas fa-times"></span>'+
-                                '</a>';
+                    '<a href="javascript:" class="pull-right" data-action="removeDashlet" data-id="'+id+'">'+
+                        '<span class="fas fa-times"></span>'+
+                    '</a>';
+
                 actions2Html +=
-                                '<a href="javascript:" class="pull-right" data-action="editDashlet" data-id="'+id+'" data-name="'+name+'">'+
-                                    this.translate('Edit') +
-                                '</a>';
+                    '<a href="javascript:" class="pull-right" data-action="editDashlet" data-id="'+id+'" data-name="'+name+'">'+
+                        this.translate('Edit') +
+                    '</a>';
             }
+
             var title = this.getOption(id, 'title');
 
             if (title) {
@@ -369,10 +392,15 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             }
 
             var headerHtml =
-                        '<div class="panel-heading">' +
-                            actionsHtml + '<h4 class="panel-title">' + title  + '</h4>' +
-                        '</div>';
-            var $container = $('<div class="grid-stack-item-content panel panel-default">' + headerHtml + '<div class="panel-body">'+actions2Html+'</div></div>');
+                '<div class="panel-heading">' +
+                    actionsHtml + '<h4 class="panel-title">' + title  + '</h4>' +
+                '</div>';
+
+            var $container = $(
+                '<div class="grid-stack-item-content panel panel-default">' + headerHtml +
+                '<div class="panel-body">'+actions2Html+'</div></div>'
+            );
+
             $container.attr('data-id', id);
             $container.attr('data-name', name);
             $item.attr('data-id', id);
@@ -384,29 +412,33 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
 
         getOption: function (id, optionName) {
             var options = (this.model.get('dashletsOptions') || {})[id] || {};
+
             return options[optionName];
         },
 
         isEmpty: function () {
-            var isEmpty = true
+            var isEmpty = true;
 
             if (this.dashboardLayout && this.dashboardLayout.length) {
-                this.dashboardLayout.forEach(function (item) {
+                this.dashboardLayout.forEach((item) => {
                     if (item.layout && item.layout.length) {
                         isEmpty = false;
                     }
-                }, this);
+                });
             }
 
             return isEmpty;
         },
 
         validateRequired: function () {
-            if (!this.isRequired()) return;
+            if (!this.isRequired()) {
+                return;
+            }
 
             if (this.isEmpty()) {
                 var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
                 this.showValidationMessage(msg);
+
                 return true;
             }
         },
@@ -417,14 +449,15 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             if (!this.dashboardLayout || !this.dashboardLayout.length) {
                 data[this.name] = null;
                 data['dashletsOptions'] = {};
+
                 return data;
-            } else {
-                data[this.name] = Espo.Utils.cloneDeep(this.dashboardLayout);
             }
+
+            data[this.name] = Espo.Utils.cloneDeep(this.dashboardLayout);
 
             data['dashletsOptions'] = Espo.Utils.cloneDeep(this.dashletsOptions);
 
             return data;
-        }
+        },
     });
 });
