@@ -33,16 +33,17 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 
-use Espo\Core\{
-    Controllers\Record,
-    Api\Request,
-};
+use Espo\Core\Controllers\Record;
+use Espo\Core\Api\Request;
 
-use StdClass;
+use Espo\Services\Email as Service;
+use Espo\Services\EmailTemplate as EmailTemplateService;
+
+use stdClass;
 
 class Email extends Record
 {
-    public function postActionGetCopiedAttachments(Request $request): StdClass
+    public function postActionGetCopiedAttachments(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -52,7 +53,7 @@ class Email extends Record
 
         $id = $data->id;
 
-        return $this->getRecordService()->getCopiedAttachments($id);
+        return $this->getEmailService()->getCopiedAttachments($id);
     }
 
     /**
@@ -139,7 +140,7 @@ class Email extends Record
             }
         }
 
-        return $this->getRecordService()->sendTestEmail(get_object_vars($data));
+        return $this->getEmailService()->sendTestEmail(get_object_vars($data));
     }
 
     public function postActionMarkAsRead(Request $request)
@@ -158,10 +159,10 @@ class Email extends Record
             }
         }
 
-        return $this->getRecordService()->markAsReadByIdList($idList);
+        return $this->getEmailService()->markAsReadByIdList($idList);
     }
 
-    public function postActionMarkAsNotRead(Request $request)
+    public function postActionMarkAsNotRead(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -177,34 +178,19 @@ class Email extends Record
             }
         }
 
-        return $this->getRecordService()->markAsNotReadByIdList($idList);
+        $this->getEmailService()->markAsNotReadByIdList($idList);
+
+        return true;
     }
 
-    public function postActionMarkAllAsRead()
+    public function postActionMarkAllAsRead(): bool
     {
-        return $this->getRecordService()->markAllAsRead();
+        $this->getEmailService()->markAllAsRead();
+
+        return true;
     }
 
-    public function postActionMarkAsImportant(Request $request)
-    {
-        $data = $request->getParsedBody();
-
-        if (!empty($data->ids)) {
-            $idList = $data->ids;
-        }
-        else {
-            if (!empty($data->id)) {
-                $idList = [$data->id];
-            }
-            else {
-                throw new BadRequest();
-            }
-        }
-
-        return $this->getRecordService()->markAsImportantByIdList($idList);
-    }
-
-    public function postActionMarkAsNotImportant(Request $request)
+    public function postActionMarkAsImportant(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -220,10 +206,12 @@ class Email extends Record
             }
         }
 
-        return $this->getRecordService()->markAsNotImportantByIdList($idList);
+        $this->getEmailService()->markAsImportantByIdList($idList);
+
+        return true;
     }
 
-    public function postActionMoveToTrash(Request $request)
+    public function postActionMarkAsNotImportant(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -239,10 +227,12 @@ class Email extends Record
             }
         }
 
-        return $this->getRecordService()->moveToTrashByIdList($idList);
+        $this->getEmailService()->markAsNotImportantByIdList($idList);
+
+        return true;
     }
 
-    public function postActionRetrieveFromTrash(Request $request)
+    public function postActionMoveToTrash(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -258,15 +248,38 @@ class Email extends Record
             }
         }
 
-        return $this->getRecordService()->retrieveFromTrashByIdList($idList);
+        $this->getEmailService()->moveToTrashByIdList($idList);
+
+        return true;
     }
 
-    public function getActionGetFoldersNotReadCounts()
+    public function postActionRetrieveFromTrash(Request $request): bool
     {
-        return $this->getRecordService()->getFoldersNotReadCounts();
+        $data = $request->getParsedBody();
+
+        if (!empty($data->ids)) {
+            $idList = $data->ids;
+        }
+        else {
+            if (!empty($data->id)) {
+                $idList = [$data->id];
+            }
+            else {
+                throw new BadRequest();
+            }
+        }
+
+        $this->getEmailService()->retrieveFromTrashByIdList($idList);
+
+        return true;
     }
 
-    public function postActionMoveToFolder(Request $request)
+    public function getActionGetFoldersNotReadCounts(): stdClass
+    {
+        return $this->getEmailService()->getFoldersNotReadCounts();
+    }
+
+    public function postActionMoveToFolder(Request $request): bool
     {
         $data = $request->getParsedBody();
 
@@ -284,7 +297,9 @@ class Email extends Record
             throw new BadRequest();
         }
 
-        return $this->getRecordService()->moveToFolderByIdList($idList, $data->folderId);
+        $this->getEmailService()->moveToFolderByIdList($idList, $data->folderId);
+
+        return true;
     }
 
     public function getActionGetInsertFieldData(Request $request)
@@ -293,12 +308,20 @@ class Email extends Record
             throw new Forbidden();
         }
 
-        return $this->getServiceFactory()
-            ->create('EmailTemplate')
-            ->getInsertFieldData([
-                'parentId' => $request->getQueryParam('parentId'),
-                'parentType' => $request->getQueryParam('parentType'),
-                'to' => $request->getQueryParam('to'),
-            ]);
+        return $this->getEmailTemplateService()->getInsertFieldData([
+            'parentId' => $request->getQueryParam('parentId'),
+            'parentType' => $request->getQueryParam('parentType'),
+            'to' => $request->getQueryParam('to'),
+        ]);
+    }
+
+    private function getEmailService(): Service
+    {
+        return $this->getRecordService();
+    }
+
+    private function getEmailTemplateService(): EmailTemplateService
+    {
+        return $this->getServiceFactory()->create('EmailTemplate');
     }
 }

@@ -930,7 +930,7 @@ class Email extends Record implements
         }
     }
 
-    public function getFoldersNotReadCounts()
+    public function getFoldersNotReadCounts(): StdClass
     {
         $data = [];
 
@@ -982,7 +982,7 @@ class Email extends Record implements
                 ->count();
         }
 
-        return $data;
+        return (object) $data;
     }
 
     private function getRepliedEmailMessageId(EmailEntity $email): ?string
