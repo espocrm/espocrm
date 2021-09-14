@@ -297,7 +297,7 @@ class Email extends Record implements
                 ->send($entity);
         }
         catch (Exception $e) {
-            $entity->set('status', 'Draft');
+            $entity->set('status', EmailEntity::STATUS_DRAFT);
 
             $this->getEntityManager()->saveEntity($entity, ['silent' => true]);
 
@@ -415,7 +415,7 @@ class Email extends Record implements
     {
         $entity = parent::create($data, $params);
 
-        if ($entity && $entity->get('status') == 'Sending') {
+        if ($entity && $entity->get('status') === EmailEntity::STATUS_SENDING) {
             $this->sendEntity($entity, $this->getUser());
         }
 
@@ -424,7 +424,7 @@ class Email extends Record implements
 
     protected function beforeCreateEntity(Entity $entity, $data)
     {
-        if ($entity->get('status') == 'Sending') {
+        if ($entity->get('status') === EmailEntity::STATUS_SENDING) {
             $messageId = Sender::generateMessageId($entity);
 
             $entity->set('messageId', '<' . $messageId . '>');
@@ -433,7 +433,7 @@ class Email extends Record implements
 
     protected function afterUpdateEntity(Entity $entity, $data)
     {
-        if ($entity && $entity->get('status') == 'Sending') {
+        if ($entity && $entity->get('status') === EmailEntity::STATUS_SENDING) {
             $this->sendEntity($entity, $this->getUser());
         }
 
@@ -769,10 +769,11 @@ class Email extends Record implements
         $attachmentsIds = $email->get('attachmentsIds');
 
         foreach ($attachmentsIds as $attachmentId) {
-            $source = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
+            $source = $this->entityManager->getEntity('Attachment', $attachmentId);
 
             if ($source) {
-                $attachment = $this->getEntityManager()->getEntity('Attachment');
+                $attachment = $this->entityManager->getEntity('Attachment');
+
                 $attachment->set('role', 'Attachment');
                 $attachment->set('type', $source->get('type'));
                 $attachment->set('size', $source->get('size'));
@@ -894,15 +895,21 @@ class Email extends Record implements
             }
         }
 
-        if ($entity->get('status') === 'Draft') {
+        if ($entity->get('status') === EmailEntity::STATUS_DRAFT) {
             $skipFilter = true;
         }
 
-        if ($entity->get('status') === 'Sending' && $entity->getFetched('status') === 'Draft') {
+        if (
+            $entity->get('status') === EmailEntity::STATUS_SENDING &&
+            $entity->getFetched('status') === EmailEntity::STATUS_DRAFT
+        ) {
             $skipFilter = true;
         }
 
-        if ($entity->isAttributeChanged('status') && $entity->getFetched('status') === 'Archived') {
+        if (
+            $entity->isAttributeChanged('status') &&
+            $entity->getFetched('status') === EmailEntity::STATUS_ARCHIVED
+        ) {
             $entity->set('status', 'Archived');
         }
 
@@ -916,7 +923,7 @@ class Email extends Record implements
             }
         }
 
-        if ($entity->get('status') == 'Sending') {
+        if ($entity->get('status') == EmailEntity::STATUS_SENDING) {
             $messageId = Sender::generateMessageId($entity);
 
             $entity->set('messageId', '<' . $messageId . '>');

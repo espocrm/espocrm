@@ -46,6 +46,10 @@ class Email extends Entity
 
     public const STATUS_SENT = 'Sent';
 
+    public const STATUS_SENDING = 'Sending';
+
+    public const STATUS_DRAFT = 'Draft';
+
     protected function _getSubject()
     {
         return $this->get('name');
