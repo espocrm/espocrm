@@ -106,14 +106,7 @@ class JobRunner
             throw new Error("Can't run job '{$id}' with no status Ready.");
         }
 
-        if (!$jobEntity->getStartedAt()) {
-            $jobEntity->set('startedAt', DateTimeUtil::getSystemNowString());
-        }
-
-        $jobEntity->set('status', JobStatus::RUNNING);
-        $jobEntity->set('pid', System::getPid());
-
-        $this->entityManager->saveEntity($jobEntity);
+        $this->setJobRunning($jobEntity);
 
         $this->run($jobEntity);
     }
@@ -121,10 +114,13 @@ class JobRunner
     private function runInternal(JobEntity $jobEntity, bool $throwException = false): void
     {
         $isSuccess = true;
-
         $skipLog = false;
 
         $exception = null;
+
+        if ($jobEntity->getStatus() !== JobStatus::RUNNING) {
+            $this->setJobRunning($jobEntity);
+        }
 
         try {
             if ($jobEntity->getScheduledJobId()) {
@@ -253,5 +249,17 @@ class JobRunner
         }
 
         $service->$methodName($jobEntity->getData(), $jobEntity->getTargetId(), $jobEntity->getTargetType());
+    }
+
+    private function setJobRunning(JobEntity $jobEntity): void
+    {
+        if (!$jobEntity->getStartedAt()) {
+            $jobEntity->set('startedAt', DateTimeUtil::getSystemNowString());
+        }
+
+        $jobEntity->set('status', JobStatus::RUNNING);
+        $jobEntity->set('pid', System::getPid());
+
+        $this->entityManager->saveEntity($jobEntity);
     }
 }

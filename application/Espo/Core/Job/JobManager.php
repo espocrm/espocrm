@@ -100,43 +100,6 @@ class JobManager
         }
     }
 
-    protected function getLastRunTime(): int
-    {
-        $lastRunData = $this->fileManager->getPhpContents($this->lastRunTimeFile);
-
-        if (is_array($lastRunData) && !empty($lastRunData['time'])) {
-            $lastRunTime = $lastRunData['time'];
-        }
-        else {
-            $lastRunTime = time() - intval($this->config->get('cronMinInterval', 0)) - 1;
-        }
-
-        return (int) $lastRunTime;
-    }
-
-    protected function updateLastRunTime(): void
-    {
-        $data = [
-            'time' => time(),
-        ];
-
-        $this->fileManager->putPhpContents($this->lastRunTimeFile, $data, false, true);
-    }
-
-    protected function checkLastRunTime(): bool
-    {
-        $currentTime = time();
-        $lastRunTime = $this->getLastRunTime();
-
-        $cronMinInterval = $this->config->get('cronMinInterval', 0);
-
-        if ($currentTime > ($lastRunTime + $cronMinInterval)) {
-            return true;
-        }
-
-        return false;
-    }
-
     /**
      * Process jobs. Jobs will be created according scheduling. Then pending jobs will be processed.
      * This method supposed to be called on every Cron run or loop iteration of the Daemon.
@@ -225,5 +188,42 @@ class JobManager
     public function runJob(JobEntity $job): void
     {
         $this->jobRunner->runThrowingException($job);
+    }
+
+    private function getLastRunTime(): int
+    {
+        $lastRunData = $this->fileManager->getPhpContents($this->lastRunTimeFile);
+
+        if (is_array($lastRunData) && !empty($lastRunData['time'])) {
+            $lastRunTime = $lastRunData['time'];
+        }
+        else {
+            $lastRunTime = time() - intval($this->config->get('cronMinInterval', 0)) - 1;
+        }
+
+        return (int) $lastRunTime;
+    }
+
+    private function updateLastRunTime(): void
+    {
+        $data = [
+            'time' => time(),
+        ];
+
+        $this->fileManager->putPhpContents($this->lastRunTimeFile, $data, false, true);
+    }
+
+    private function checkLastRunTime(): bool
+    {
+        $currentTime = time();
+        $lastRunTime = $this->getLastRunTime();
+
+        $cronMinInterval = $this->config->get('cronMinInterval', 0);
+
+        if ($currentTime > ($lastRunTime + $cronMinInterval)) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -30,13 +30,18 @@
 namespace Espo\Core\Console\Commands;
 
 use Espo\Core\{
-    ORM\EntityManager,
-    Utils\Util,
-    Job\JobManager,
     Console\Command,
     Console\Params,
     Console\IO,
 };
+
+use Espo\Core\Job\JobManager;
+use Espo\Core\Job\JobStatus;
+use Espo\Core\Utils\Util;
+
+use Espo\ORM\EntityManager;
+
+use Espo\Entities\Job;
 
 use Throwable;
 
@@ -85,12 +90,13 @@ class RunJob implements Command
 
         $entityManager = $this->entityManager;
 
-        $job = $entityManager->createEntity('Job', [
+        $job = $entityManager->createEntity(Job::ENTITY_TYPE, [
             'name' => $jobName,
             'job' => $jobName,
             'targetType' => $targetType,
             'targetId' => $targetId,
             'attempts' => 0,
+            'status' => JobStatus::READY,
         ]);
 
         try {
