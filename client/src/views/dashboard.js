@@ -36,6 +36,8 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
         currentTab: null,
 
+        WIDTH_MULTIPLIER: 3,
+
         events: {
             'click button[data-action="selectTab"]': function (e) {
                 var tab = parseInt($(e.currentTarget).data('tab'));
@@ -398,7 +400,7 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 {
                     cellHeight: this.getThemeManager().getParam('dashboardCellHeight'),
                     verticalMargin: this.getThemeManager().getParam('dashboardCellMargin'),
-                    column: 4,
+                    column: 12,
                     handle: '.dashlet-container .panel-heading',
                     disableDrag: disableDrag,
                     disableResize: disableResize,
@@ -419,9 +421,9 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 grid.addWidget(
                     $item.get(0),
                     {
-                        x: o.x,
+                        x: o.x * this.WIDTH_MULTIPLIER,
                         y: o.y,
-                        width: o.width,
+                        width: o.width * this.WIDTH_MULTIPLIER,
                         height: o.height,
                     }
                 );
@@ -476,9 +478,9 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
                 return {
                     id: $el.data('id'),
                     name: $el.data('name'),
-                    x: node.x,
+                    x: node.x / this.WIDTH_MULTIPLIER,
                     y: node.y,
-                    width: node.width,
+                    width: node.width / this.WIDTH_MULTIPLIER,
                     height: node.height,
                 };
             });
@@ -602,9 +604,9 @@ define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
             this.grid.addWidget(
                 $item.get(0),
                 {
-                    x: 0,
+                    x: 0 * this.WIDTH_MULTIPLIER,
                     y: 0,
-                    width: 2,
+                    width: 2 * this.WIDTH_MULTIPLIER,
                     height: 2,
                 }
             );

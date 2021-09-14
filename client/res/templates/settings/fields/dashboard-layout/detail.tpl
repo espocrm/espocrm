@@ -14,4 +14,4 @@
 </div>
 
 
-<div class="grid-stack grid-stack-4"></div>
+<div class="grid-stack grid-stack-12"></div>

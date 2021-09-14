@@ -36,6 +36,8 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
 
         validationElementSelector: 'button[data-action="addDashlet"]',
 
+        WIDTH_MULTIPLIER: 3,
+
         events: {
             'click button[data-action="selectTab"]': function (e) {
                 var tab = parseInt($(e.currentTarget).data('tab'));
@@ -130,9 +132,9 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             this.grid.addWidget(
                 $item.get(0),
                 {
-                    x: 0,
+                    x: 0 * this.WIDTH_MULTIPLIER,
                     y: 0,
-                    width: 2,
+                    width: 2 * this.WIDTH_MULTIPLIER,
                     height: 2,
                 }
             );
@@ -308,9 +310,9 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 return {
                     id: $el.data('id'),
                     name: $el.data('name'),
-                    x: node.x,
+                    x: node.x / this.WIDTH_MULTIPLIER,
                     y: node.y,
-                    width: node.width,
+                    width: node.width / this.WIDTH_MULTIPLIER,
                     height: node.height,
                 };
             });
@@ -328,7 +330,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                     minWidth: 4,
                     cellHeight: 60,
                     verticalMargin: 10,
-                    column: 4,
+                    column: 12,
                     resizable: {
                         handles: 'se',
                         helper: false
@@ -347,9 +349,9 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                     this.grid.addWidget(
                         $item.get(0),
                         {
-                            x: o.x,
+                            x: o.x * this.WIDTH_MULTIPLIER,
                             y: o.y,
-                            width: o.width,
+                            width: o.width * this.WIDTH_MULTIPLIER,
                             height: o.height,
                         }
                     );
