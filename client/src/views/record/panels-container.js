@@ -227,7 +227,7 @@ define('views/record/panels-container', 'view', function (Dep) {
                 }
             }
 
-            let wasShown = !this.recordHelper.getPanelStateParam(name, 'hidden');
+            let wasShown = this.recordHelper.getPanelStateParam(name, 'hidden') === false;
 
             this.recordHelper.setPanelStateParam(name, 'hidden', false);
 

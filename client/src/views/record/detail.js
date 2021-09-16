@@ -516,7 +516,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
                 .setPanelStateParam(name, 'hidden' + Espo.Utils.upperCaseFirst(softLockedType) + 'Locked', false);
 
             if (softLockedType === 'dynamicLogic') {
-                if (!this.recordHelper.getPanelStateParam(name, 'hidden')) {
+                if (this.recordHelper.getPanelStateParam(name, 'hidden') === false) {
                     return;
                 }
             }
@@ -591,7 +591,7 @@ define('views/record/detail', ['views/record/base', 'view-record-helper'], funct
             }
 
             if (softLockedType === 'dynamicLogic') {
-                if (this.recordHelper.getPanelStateParam(name, 'hidden')) {
+                if (this.recordHelper.getPanelStateParam(name, 'hidden') === true) {
                     return;
                 }
             }
