@@ -392,7 +392,33 @@ define('utils', [], function () {
             }
 
             return str;
-        }
+        },
+
+        parseUrlOptionsParam: function (string) {
+            if (!string) {
+                return {};
+            }
+
+            if (string.indexOf('&') === -1 && string.indexOf('=') === -1) {
+                return string;
+            }
+
+            let options = {};
+
+            if (typeof string !== 'undefined') {
+                string.split('&').forEach((item, i) => {
+                    let p = item.split('=');
+
+                    options[p[0]] = true;
+
+                    if (p.length > 1) {
+                        options[p[0]] = p[1];
+                    }
+                });
+            }
+
+            return options;
+        },
     };
 
     return Utils;

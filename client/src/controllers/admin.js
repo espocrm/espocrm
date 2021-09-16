@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/admin', ['controller', 'search-manager'], function (Dep, SearchManager) {
+define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], function (Dep, SearchManager, _) {
 
     return Dep.extend({
 
@@ -36,6 +36,67 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             }
 
             return false;
+        },
+
+        actionPage: function (options) {
+            let page = options.page;
+
+            if (options.options) {
+                options = _.extend(
+                    Espo.Utils.parseUrlOptionsParam(options.options),
+                    options
+                );
+
+                delete options.options;
+            }
+
+            if (!page) {
+                throw new Error();
+            }
+
+            let methodName = 'action' + Espo.Utils.upperCaseFirst(page);
+
+            if (this[methodName]) {
+                this[methodName](options);
+
+                return;
+            }
+
+            let defs = this.getPageDefs(page);
+
+            if (!defs) {
+                throw new Espo.Exceptions.NotFound();
+            }
+
+            if (defs.view) {
+                this.main(defs.view, options);
+
+                return;
+            }
+
+            if (defs.recordView) {
+                let model = this.getSettingsModel();
+
+                model.fetch().then(() => {
+                    model.id = '1';
+
+                    this.main('views/settings/edit', {
+                        model: model,
+                        headerTemplate: 'admin/settings/headers/page',
+                        recordView: defs.recordView,
+                        page: page,
+                        label: defs.label,
+                        optionsToPass: [
+                            'page',
+                            'label',
+                        ],
+                    });
+                });
+
+                return;
+            }
+
+            throw new Espo.Exceptions.NotFound();
         },
 
         actionIndex: function (options) {
@@ -104,11 +165,7 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             this.main('views/admin/link-manager/index', {scope: scope});
         },
 
-        actionUpgrade: function (options) {
-            this.main('views/admin/upgrade/index');
-        },
-
-        actionSystemRequirements: function (options) {
+        actionSystemRequirements: function () {
             this.main('views/admin/system-requirements/index');
         },
 
@@ -123,76 +180,6 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             });
 
             return model;
-        },
-
-        actionSettings: function () {
-            let model = this.getSettingsModel();
-
-            model.fetch().then(() => {
-                model.id = '1';
-
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/settings',
-                    recordView: 'views/admin/settings'
-                });
-            });
-        },
-
-        actionNotifications: function () {
-            let model = this.getSettingsModel();
-
-            model.fetch().then(() => {
-                model.id = '1';
-
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/notifications',
-                    recordView: 'views/admin/notifications'
-                });
-            });
-        },
-
-        actionOutboundEmails: function () {
-            let model = this.getSettingsModel();
-
-            model.fetch().then(() => {
-                model.id = '1';
-
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/outbound-emails',
-                    recordView: 'views/admin/outbound-emails'
-                });
-            });
-        },
-
-        actionInboundEmails: function () {
-            let model = this.getSettingsModel();
-
-            model.fetch().then(() => {
-                model.id = '1';
-
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/inbound-emails',
-                    recordView: 'views/admin/inbound-emails'
-                });
-            });
-        },
-
-        actionCurrency: function () {
-            let model = this.getSettingsModel();
-
-            model.fetch().then(() => {
-                model.id = '1';
-
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/currency',
-                    recordView: 'views/admin/currency'
-                });
-            });
         },
 
         actionAuthTokens: function () {
@@ -261,48 +248,6 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
             });
         },
 
-        actionUserInterface: function () {
-            let model = this.getSettingsModel();
-
-            model.fetch().then(() => {
-                model.id = '1';
-
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/user-interface',
-                    recordView: 'views/admin/user-interface'
-                });
-            });
-        },
-
-        actionAuthentication: function () {
-            let model = this.getSettingsModel();
-
-            model.fetch().then(() => {
-                model.id = '1';
-
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/authentication',
-                    recordView: 'views/admin/authentication'
-                });
-            });
-        },
-
-        actionJobsSettings: function () {
-            let model = this.getSettingsModel();
-
-            model.fetch().then(() => {
-                model.id = '1';
-
-                this.main('views/settings/edit', {
-                    model: model,
-                    headerTemplate: 'admin/settings/headers/jobs-settings',
-                    recordView: 'views/admin/jobs-settings'
-                });
-            });
-        },
-
         actionIntegrations: function (options) {
             var integration = options.name || null;
 
@@ -359,6 +304,24 @@ define('controllers/admin', ['controller', 'search-manager'], function (Dep, Sea
                 .catch(() => {
                     this.clearCacheRunning = false;
                 });
-        }
+        },
+
+        getPageDefs: function (page) {
+            let panelsDefs = this.getMetadata().get(['app', 'adminPanel']) || {};
+
+            let resultDefs = null;
+
+            Object.keys(panelsDefs).forEach(key => {
+                let itemList = panelsDefs[key].itemList || [];
+
+                itemList.forEach(defs => {
+                    if (defs.url === '#Admin/' + page) {
+                        resultDefs = defs;
+                    }
+                });
+            });
+
+            return resultDefs;
+        },
     });
 });

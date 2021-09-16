@@ -4,5 +4,19 @@
             "controller": "AddressMap",
             "action": "view"
         }
+    },
+    "Admin/:page": {
+        "params": {
+            "controller": "Admin",
+            "action": "page"
+        },
+        "order": 1
+    },
+    "Admin/:page/:options": {
+        "params": {
+            "controller": "Admin",
+            "action": "page"
+        },
+        "order": 1
     }
 }

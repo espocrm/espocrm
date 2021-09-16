@@ -6,19 +6,22 @@
                 "url": "#Admin/settings",
                 "label": "Settings",
                 "iconClass": "fas fa-cog",
-                "description": "settings"
+                "description": "settings",
+                "recordView": "views/admin/settings"
             },
             {
                 "url": "#Admin/userInterface",
                 "label": "User Interface",
                 "iconClass": "fas fa-desktop",
-                "description": "userInterface"
+                "description": "userInterface",
+                "recordView": "views/admin/user-interface"
             },
             {
                 "url": "#Admin/authentication",
                 "label": "Authentication",
                 "iconClass": "fas fa-sign-in-alt",
-                "description": "authentication"
+                "description": "authentication",
+                "recordView": "views/admin/authentication"
             },
             {
                 "url": "#ScheduledJob",
@@ -30,13 +33,15 @@
                 "url": "#Admin/currency",
                 "label": "Currency",
                 "iconClass": "fas fa-euro-sign",
-                "description": "currency"
+                "description": "currency",
+                "recordView": "views/admin/currency"
             },
             {
                 "url": "#Admin/notifications",
                 "label": "Notifications",
                 "iconClass": "fas fa-bell",
-                "description": "notifications"
+                "description": "notifications",
+                "recordView": "views/admin/notifications"
             },
             {
                 "url": "#Admin/integrations",
@@ -60,13 +65,15 @@
                 "url": "#Admin/jobsSettings",
                 "label": "Job Settings",
                 "iconClass": "fas fa-list-ul",
-                "description": "jobsSettings"
+                "description": "jobsSettings",
+                "recordView": "views/admin/jobs-settings"
             },
             {
                 "url": "#Admin/upgrade",
                 "label": "Upgrade",
                 "iconClass": "fas fa-arrow-alt-circle-up",
-                "description": "upgrade"
+                "description": "upgrade",
+                "view": "views/admin/upgrade/index"
             },
             {
                 "action": "clearCache",
@@ -168,13 +175,15 @@
                 "url": "#Admin/outboundEmails",
                 "label": "Outbound Emails",
                 "iconClass": "fas fa-paper-plane",
-                "description": "outboundEmails"
+                "description": "outboundEmails",
+                "recordView": "views/admin/outbound-emails"
             },
             {
                 "url": "#Admin/inboundEmails",
                 "label": "Inbound Emails",
                 "iconClass": "fas fa-envelope",
-                "description": "inboundEmails"
+                "description": "inboundEmails",
+                "recordView": "views/admin/inbound-emails"
             },
             {
                 "url": "#InboundEmail",
