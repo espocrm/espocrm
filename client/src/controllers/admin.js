@@ -311,15 +311,21 @@ define('controllers/admin', ['controller', 'search-manager', 'lib!underscore'], 
 
             let resultDefs = null;
 
-            Object.keys(panelsDefs).forEach(key => {
-                let itemList = panelsDefs[key].itemList || [];
+            for (let panelKey in panelsDefs) {
+                let itemList = panelsDefs[panelKey].itemList || [];
 
-                itemList.forEach(defs => {
+                for (let defs of itemList) {
                     if (defs.url === '#Admin/' + page) {
                         resultDefs = defs;
+
+                        break;
                     }
-                });
-            });
+                }
+
+                if (resultDefs) {
+                    break;
+                }
+            }
 
             return resultDefs;
         },
