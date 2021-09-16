@@ -169,7 +169,7 @@
         "order": 10
     },
     "email":{
-        "label": "Email",
+        "label": "Messaging",
         "itemList": [
             {
                 "url": "#Admin/outboundEmails",
@@ -208,6 +208,13 @@
                 "label": "Email Templates",
                 "iconClass": "fas fa-envelope-square",
                 "description": "emailTemplates"
+            },
+            {
+                "url": "#Admin/sms",
+                "label": "SMS",
+                "iconClass": "fas fa-paper-plane",
+                "description": "sms",
+                "recordView": "views/admin/sms"
             }
         ],
         "order": 15

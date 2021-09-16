@@ -15,6 +15,9 @@
     "params": {
         "awsS3Storage": {
             "level": "system"
+        },
+        "smsProvider": {
+            "level": "admin"
         }
     }
 }

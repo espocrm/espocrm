@@ -13,6 +13,8 @@
         "currencyList": "Currency List",
         "language": "Language",
         "companyLogo": "Company Logo",
+        "smsProvider": "SMS Provider",
+        "outboundSmsFromNumber": "SMS From Number",
         "smtpServer": "Server",
         "smtpPort": "Port",
         "smtpAuth": "Auth",
@@ -155,7 +157,8 @@
         },
         "auth2FAMethodList": {
             "Totp": "TOTP",
-            "Email": "Email"
+            "Email": "Email",
+            "Sms": "SMS"
         }
     },
     "tooltips": {

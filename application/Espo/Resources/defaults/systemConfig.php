@@ -205,6 +205,7 @@ return [
         'passwordRecoveryRequestDelay',
         'thumbImageCacheDisabled',
         'emailReminderPortionSize',
+        'outboundSmsFromNumber',
         'latestVersion',
     ],
     'superAdminItems' => [

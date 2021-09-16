@@ -1,0 +1,147 @@
+{
+    "fields": {
+        "from": {
+            "type": "varchar",
+            "notStorable": true,
+            "required": true,
+            "textFilterDisabled": true
+        },
+        "fromName": {
+            "type": "varchar"
+        },
+        "to": {
+            "type": "varchar",
+            "notStorable": true,
+            "required": true,
+            "textFilterDisabled": true
+        },
+        "fromPhoneNumber": {
+            "type": "link",
+            "textFilterDisabled": true
+        },
+        "toPhoneNumbers": {
+            "type": "linkMultiple"
+        },
+        "body": {
+            "type": "text"
+        },
+        "status": {
+            "type": "enum",
+            "options": ["Draft", "Sending", "Sent", "Archived", "Failed"],
+            "default": "Archived",
+            "clientReadOnly": true,
+            "style": {
+                "Draft": "warning",
+                "Failed": "danger",
+                "Sending": "warning"
+            }
+        },
+        "parent": {
+            "type": "linkParent"
+        },
+        "dateSent": {
+            "type": "datetime"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "replied": {
+            "type": "link",
+            "noJoin": true,
+            "readOnly": true,
+            "view": "views/email/fields/replied"
+        },
+        "replies": {
+            "type": "linkMultiple",
+            "readOnly": true,
+            "orderBy": "dateSent",
+            "view": "views/email/fields/replies"
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
+        }
+    },
+    "links": {
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam"
+        },
+        "parent": {
+            "type": "belongsToParent",
+            "entityList": [
+                "Account",
+                "Contact",
+                "Lead",
+                "Opportunity"
+            ],
+            "foreign": "emails"
+        },
+        "replied": {
+            "type": "belongsTo",
+            "entity": "Sms",
+            "foreign": "replies",
+            "foreignName": "id"
+        },
+        "replies": {
+            "type": "hasMany",
+            "entity": "Sms",
+            "foreign": "replied"
+        },
+        "fromPhoneNumber": {
+            "type": "belongsTo",
+            "entity": "PhoneNumber"
+        },
+        "toPhoneNumbers": {
+            "type": "hasMany",
+            "entity": "PhoneNumber",
+            "relationName": "smsPhoneNumber",
+            "conditions": {
+                "addressType": "to"
+            },
+            "additionalColumns": {
+                "addressType": {
+                    "type": "varchar",
+                    "len": "4"
+                }
+            }
+        }
+    },
+    "collection": {
+        "orderBy": "dateSent",
+        "order": "desc",
+        "textFilterFields": ["name", "body"]
+    },
+    "indexes": {
+        "dateSent": {
+            "columns": ["dateSent", "deleted"]
+        },
+        "dateSentStatus": {
+            "columns": ["dateSent", "status", "deleted"]
+        }
+    }
+}

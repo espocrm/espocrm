@@ -25,6 +25,7 @@
         ["app", "webSocket", "messagers"],
         ["app", "config"],
         ["app", "rebuild"],
+        ["app", "smsProviders", "__ANY__", "senderClassName"],
         ["selectDefs"],
         ["recordDefs"],
         ["pdfDefs"],

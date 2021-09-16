@@ -217,5 +217,10 @@ class DefaultBinding implements BindingProcessor
             'Espo\\Core\\WebSocket\\Sender',
             'Espo\\Core\\WebSocket\\SenderFactory'
         );
+
+        $binder->bindFactory(
+            'Espo\\Core\\Sms\\Sender',
+            'Espo\\Core\\Sms\\SenderFactory'
+        );
     }
 }

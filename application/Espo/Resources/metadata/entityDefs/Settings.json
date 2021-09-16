@@ -635,6 +635,14 @@
         },
         "awsS3Storage": {
             "type": "jsonObject"
+        },
+        "outboundSmsFromNumber": {
+            "type": "varchar",
+            "trim": true
+        },
+        "smsProvider": {
+            "type": "enum",
+            "view": "views/settings/fields/sms-provider"
         }
     }
 }

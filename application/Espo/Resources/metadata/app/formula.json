@@ -379,6 +379,11 @@
             "returnType": "bool"
         },
         {
+            "name": "ext\\sms\\send",
+            "insertText": "ext\\sms\\send(SMS_ID)",
+            "returnType": "bool"
+        },
+        {
             "name": "ext\\email\\applyTemplate",
             "insertText": "ext\\email\\applyTemplate(EMAIL_ID, EMAIL_TEMPLATE_ID)"
         },
