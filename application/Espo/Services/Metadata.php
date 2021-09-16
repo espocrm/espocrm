@@ -29,6 +29,8 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Acl\Exceptions\NotImplemented;
+
 use Espo\Core\{
     Acl,
     Utils\Metadata as MetadataUtil,
@@ -54,157 +56,168 @@ class Metadata
     {
         $data = $this->metadata->getAllForFrontend();
 
-        if (!$this->user->isAdmin()) {
-            $scopeList = array_keys($this->metadata->get(['scopes'], []));
+        if ($this->user->isAdmin()) {
+            return $data;
+        }
 
-            foreach ($scopeList as $scope) {
-                if (!$this->metadata->get(['scopes', $scope, 'entity'])) {
-                    continue;
-                }
+        $scopeList = array_keys($this->metadata->get(['entityDefs'], []));
 
-                if (in_array($scope, ['Reminder'])) {
-                    continue;
-                }
+        foreach ($scopeList as $scope) {
+            $isEntity = $this->metadata->get(['scopes', $scope, 'entity']);
 
-                if (!$this->acl->check($scope)) {
-                    unset($data->entityDefs->$scope);
-                    unset($data->clientDefs->$scope);
-                    unset($data->entityAcl->$scope);
-                    unset($data->scopes->$scope);
-                }
+            if ($isEntity === false) {
+                continue;
             }
 
-            $entityTypeList = array_keys(get_object_vars($data->entityDefs));
+            if (in_array($scope, ['Reminder'])) {
+                continue;
+            }
 
-            foreach ($entityTypeList as $entityType) {
-                $linksDefs = $this->metadata->get(['entityDefs', $entityType, 'links'], []);
+            try {
+                $isAllowed = $isEntity !== null && $this->acl->check($scope);
+            }
+            catch (NotImplemented $e) {
+                $isAllowed = false;
+            }
 
-                $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType);
+            if (!$isAllowed) {
+                unset($data->entityDefs->$scope);
+                unset($data->clientDefs->$scope);
+                unset($data->entityAcl->$scope);
+                unset($data->scopes->$scope);
+            }
+        }
 
-                foreach ($linksDefs as $link => $defs) {
-                    $type = $defs['type'] ?? null;
+        $entityTypeList = array_keys(get_object_vars($data->entityDefs));
 
-                    $hasField = (bool) $this->metadata->get(['entityDefs', $entityType, 'fields', $link]);
+        foreach ($entityTypeList as $entityType) {
+            $linksDefs = $this->metadata->get(['entityDefs', $entityType, 'links'], []);
 
-                    if ($type === 'belongsToParent') {
-                        if ($hasField) {
-                            $parentEntityList = $this->metadata
-                                ->get(['entityDefs', $entityType, 'fields', $link, 'entityList']);
+            $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($entityType);
 
-                            if (is_array($parentEntityList)) {
-                                foreach ($parentEntityList as $i => $e) {
-                                    if (!$this->acl->check($e)) {
-                                        unset($parentEntityList[$i]);
-                                    }
-                                }
+            foreach ($linksDefs as $link => $defs) {
+                $type = $defs['type'] ?? null;
 
-                                $parentEntityList = array_values($parentEntityList);
+                $hasField = (bool) $this->metadata->get(['entityDefs', $entityType, 'fields', $link]);
 
-                                $data->entityDefs->$entityType->fields->$link->entityList = $parentEntityList;
-                            }
-                        }
-
-                        continue;
-                    }
-
-                    $foreignEntityType = $defs['entity'] ?? null;
-
-                    if ($foreignEntityType) {
-                        if ($this->acl->check($foreignEntityType)) {
-                            continue;
-                        }
-
-                        if ($this->user->isPortal()) {
-                            if ($foreignEntityType === 'Account' || $foreignEntityType === 'Contact') {
-                                continue;
-                            }
-                        }
-                    }
-
+                if ($type === 'belongsToParent') {
                     if ($hasField) {
-                        if (!in_array($link, $forbiddenFieldList)) {
+                        $parentEntityList = $this->metadata
+                            ->get(['entityDefs', $entityType, 'fields', $link, 'entityList']);
+
+                        if (is_array($parentEntityList)) {
+                            foreach ($parentEntityList as $i => $e) {
+                                if (!$this->acl->check($e)) {
+                                    unset($parentEntityList[$i]);
+                                }
+                            }
+
+                            $parentEntityList = array_values($parentEntityList);
+
+                            $data->entityDefs->$entityType->fields->$link->entityList = $parentEntityList;
+                        }
+                    }
+
+                    continue;
+                }
+
+                $foreignEntityType = $defs['entity'] ?? null;
+
+                if ($foreignEntityType) {
+                    if ($this->acl->check($foreignEntityType)) {
+                        continue;
+                    }
+
+                    if ($this->user->isPortal()) {
+                        if ($foreignEntityType === 'Account' || $foreignEntityType === 'Contact') {
                             continue;
                         }
+                    }
+                }
 
-                        unset($data->entityDefs->$entityType->fields->$link);
+                if ($hasField) {
+                    if (!in_array($link, $forbiddenFieldList)) {
+                        continue;
                     }
 
-                    unset($data->entityDefs->$entityType->links->$link);
+                    unset($data->entityDefs->$entityType->fields->$link);
+                }
 
-                    if (
-                        isset($data->clientDefs)
-                        &&
-                        isset($data->clientDefs->$entityType)
-                        &&
-                        isset($data->clientDefs->$entityType->relationshipPanels)
-                    ) {
-                        unset($data->clientDefs->$entityType->relationshipPanels->$link);
-                    }
+                unset($data->entityDefs->$entityType->links->$link);
+
+                if (
+                    isset($data->clientDefs)
+                    &&
+                    isset($data->clientDefs->$entityType)
+                    &&
+                    isset($data->clientDefs->$entityType->relationshipPanels)
+                ) {
+                    unset($data->clientDefs->$entityType->relationshipPanels->$link);
                 }
             }
+        }
 
-            unset($data->entityDefs->Settings);
+        unset($data->entityDefs->Settings);
 
-            $dashletList = array_keys($this->metadata->get(['dashlets'], []));
+        $dashletList = array_keys($this->metadata->get(['dashlets'], []));
 
-            foreach ($dashletList as $item) {
-                $aclScope = $this->metadata->get(['dashlets', $item, 'aclScope']);
+        foreach ($dashletList as $item) {
+            $aclScope = $this->metadata->get(['dashlets', $item, 'aclScope']);
 
-                if ($aclScope && !$this->acl->check($aclScope)) {
-                    unset($data->dashlets->$item);
-                }
+            if ($aclScope && !$this->acl->check($aclScope)) {
+                unset($data->dashlets->$item);
             }
+        }
 
-            unset($data->authenticationMethods);
-            unset($data->formula);
+        unset($data->authenticationMethods);
+        unset($data->formula);
 
-            foreach (($this->metadata->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
-                $targetArr = explode('.', $target);
+        foreach (($this->metadata->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
+            $targetArr = explode('.', $target);
 
-                if (is_string($item)) {
-                    $depArr = explode('.', $item);
-                    $pointer = $data;
-
-                    foreach ($depArr as $k) {
-                        if (!isset($pointer->$k)) {
-                            continue 2;
-                        }
-
-                        $pointer = $pointer->$k;
-                    }
-                }
-                else if (is_array($item)) {
-                    $aclScope = $item['scope'] ?? null;
-                    $aclField = $item['field'] ?? null;
-
-                    if (!$aclScope) {
-                        continue;
-                    }
-
-                    if (!$this->acl->check($aclScope)) {
-                        continue;
-                    }
-
-                    if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) {
-                        continue;
-                    }
-                }
-
+            if (is_string($item)) {
+                $depArr = explode('.', $item);
                 $pointer = $data;
 
-                foreach ($targetArr as $i => $k) {
-                    if ($i === count($targetArr) - 1) {
-                        $pointer->$k = $this->metadata->get($targetArr);
-
-                        break;
-                    }
-
+                foreach ($depArr as $k) {
                     if (!isset($pointer->$k)) {
-                        $pointer->$k = (object) [];
+                        continue 2;
                     }
 
                     $pointer = $pointer->$k;
                 }
+            }
+            else if (is_array($item)) {
+                $aclScope = $item['scope'] ?? null;
+                $aclField = $item['field'] ?? null;
+
+                if (!$aclScope) {
+                    continue;
+                }
+
+                if (!$this->acl->check($aclScope)) {
+                    continue;
+                }
+
+                if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) {
+                    continue;
+                }
+            }
+
+            $pointer = $data;
+
+            foreach ($targetArr as $i => $k) {
+                if ($i === count($targetArr) - 1) {
+                    $pointer->$k = $this->metadata->get($targetArr);
+
+                    break;
+                }
+
+                if (!isset($pointer->$k)) {
+                    $pointer->$k = (object) [];
+                }
+
+                $pointer = $pointer->$k;
             }
         }
 
