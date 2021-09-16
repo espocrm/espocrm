@@ -24,11 +24,13 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-Espo.define('views/settings/record/edit', 'views/record/edit', function (Dep) {
+define('views/settings/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
+
+        saveAndContinueEditingAction: false,
 
         sideView: null,
 
@@ -49,9 +51,9 @@ Espo.define('views/settings/record/edit', 'views/record/edit', function (Dep) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'after:save', function () {
+            this.listenTo(this.model, 'after:save', () => {
                 this.getConfig().set(this.model.toJSON());
-            }.bind(this));
+            });
         },
 
         afterRender: function () {
@@ -59,7 +61,7 @@ Espo.define('views/settings/record/edit', 'views/record/edit', function (Dep) {
         },
 
         exit: function (after) {
-            if (after == 'cancel') {
+            if (after === 'cancel') {
                 this.getRouter().navigate('#Admin', {trigger: true});
             }
         },
