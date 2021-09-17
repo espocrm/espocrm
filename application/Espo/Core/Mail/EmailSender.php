@@ -31,6 +31,7 @@ namespace Espo\Core\Mail;
 
 use Espo\{
     Entities\Email,
+    Entities\Attachment,
     Entities\InboundEmail,
     Services\InboundEmail as InboundEmailService,
 };
@@ -123,6 +124,8 @@ class EmailSender
 
     /**
      * With specific attachments.
+     *
+     * @param Attachment[] $attachmentList
      */
     public function withAttachments(iterable $attachmentList): Sender
     {

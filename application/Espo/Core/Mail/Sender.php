@@ -44,6 +44,7 @@ use Laminas\{
 
 use Espo\Entities\{
     Email,
+    Attachment,
     InboundEmail,
 };
 
@@ -188,6 +189,8 @@ class Sender
 
     /**
      * With specific attachments.
+     *
+     * @param Attachment[] $attachmentList
      */
     public function withAttachments(iterable $attachmentList): self
     {
