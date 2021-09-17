@@ -159,6 +159,7 @@ return [
     'personNameFormat' => 'firstLast',
     'newNotificationCountInTitle' => false,
     'pdfEngine' => 'Tcpdf',
+    'smsProvider' => null,
     'defaultFileStorage' => 'EspoUploadDir',
     'isInstalled' => false,
 ];
