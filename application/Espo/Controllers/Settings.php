@@ -31,40 +31,46 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 
-use Espo\Core\{
-    Authentication\LDAP\Utils as LDAPUtils,
-    Authentication\LDAP\Client as LDAPClient,
-    Controllers\Base,
-    Api\Request,
-};
+use Espo\Core\Authentication\LDAP\Utils as LDAPUtils;
+use Espo\Core\Authentication\LDAP\Client as LDAPClient;
+use Espo\Core\Api\Request;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Config;
 
-use StdClass;
+use Espo\Services\Settings as Service;
 
-class Settings extends Base
+use Espo\Entities\User;
+
+use stdClass;
+
+class Settings
 {
-    protected function getConfigData(): StdClass
-    {
-        $data = $this->serviceFactory->create('Settings')->getConfigData();
+    private $metadata;
 
-        $data->jsLibs = $this->metadata->get(['app', 'jsLibs']);
+    private $service;
 
-        unset($data->loginView);
+    private $user;
 
-        $loginView = $this->metadata->get(['clientDefs', 'App', 'loginView']);
+    private $config;
 
-        if ($loginView) {
-            $data->loginView = $loginView;
-        }
-
-        return $data;
+    public function __construct(
+        Metadata $metadata,
+        Service $service,
+        User $user,
+        Config $config
+    ) {
+        $this->metadata = $metadata;
+        $this->service = $service;
+        $this->user = $user;
+        $this->config = $config;
     }
 
-    public function getActionRead(): StdClass
+    public function getActionRead(): stdClass
     {
         return $this->getConfigData();
     }
 
-    public function putActionUpdate(Request $request): StdClass
+    public function putActionUpdate(Request $request): stdClass
     {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
@@ -72,9 +78,7 @@ class Settings extends Base
 
         $data = $request->getParsedBody();
 
-        $this->serviceFactory
-            ->create('Settings')
-            ->setConfigData($data);
+        $this->service->setConfigData($data);
 
         return $this->getConfigData();
     }
@@ -103,5 +107,22 @@ class Settings extends Base
         $ldapClient->bind();
 
         return true;
+    }
+
+    private function getConfigData(): stdClass
+    {
+        $data = $this->service->getConfigData();
+
+        $data->jsLibs = $this->metadata->get(['app', 'jsLibs']);
+
+        unset($data->loginView);
+
+        $loginView = $this->metadata->get(['clientDefs', 'App', 'loginView']);
+
+        if ($loginView) {
+            $data->loginView = $loginView;
+        }
+
+        return $data;
     }
 }
