@@ -160,9 +160,9 @@ class Access
         $params = $this->metadata->get(['app', 'config', 'params']) ?? [];
 
         foreach ($params as $name => $item) {
-            $level = $item['level'] ?? null;
+            $levelItem = $item['level'] ?? null;
 
-            if ($level !== $level) {
+            if ($levelItem !== $level) {
                 continue;
             }
 
