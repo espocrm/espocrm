@@ -681,7 +681,11 @@ class Service implements Crud,
 
         $this->processAssignmentCheck($entity);
 
-        if ($this->checkForDuplicatesInUpdate && !$params->skipDuplicateCheck()) {
+        $checkForDuplicates =
+            $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ??
+            $this->checkForDuplicatesInUpdate;
+
+        if ($checkForDuplicates && !$params->skipDuplicateCheck()) {
             $this->processDuplicateCheck($entity, $data);
         }
 
