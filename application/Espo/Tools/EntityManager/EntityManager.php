@@ -90,7 +90,7 @@ class EntityManager
         'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof',
         'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private',
         'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw',
-        'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common', 'fn',
+        'trait', 'try', 'unset', 'use', 'var', 'while', 'xor', 'common', 'fn', 'parent',
     ];
 
     private $linkForbiddenNameList = [
