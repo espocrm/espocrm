@@ -34,10 +34,14 @@ define('views/import/record/detail', 'views/record/detail', function (Dep) {
 
         returnUrl: '#Import/list',
 
-        checkInterval: 10,
+        checkInterval: 5,
+
+        resultPanelFetchLimit: 10,
 
         setup: function () {
             Dep.prototype.setup.call(this);
+
+            this.fetchCounter = 0;
 
             this.setupChecking();
 
@@ -68,34 +72,48 @@ define('views/import/record/detail', 'views/record/detail', function (Dep) {
             }
 
             this.model.fetch().then(() => {
-                var bottomView = this.getView('bottom');
+                let isFinished = !~['In Process', 'Pending', 'Standby'].indexOf(this.model.get('status'));
 
-                if (bottomView) {
-                    var importedView = bottomView.getView('imported');
-
-                    if (importedView && importedView.collection) {
-                        importedView.collection.fetch();
-                    }
-
-                    var duplicatesView = bottomView.getView('duplicates');
-
-                    if (duplicatesView && duplicatesView.collection) {
-                        duplicatesView.collection.fetch();
-                    }
-
-                    var updatedView = bottomView.getView('updated');
-
-                    if (updatedView && updatedView.collection) {
-                        updatedView.collection.fetch();
-                    }
+                if (this.fetchCounter < this.resultPanelFetchLimit && !isFinished) {
+                    this.fetchResultPanels();
                 }
 
-                if (!~['In Process', 'Pending', 'Standby'].indexOf(this.model.get('status'))) {
+                if (isFinished) {
+                    this.fetchResultPanels();
+
                     return;
                 }
 
                 setTimeout(this.runChecking.bind(this), this.checkInterval * 1000);
             });
+
+            this.fetchCounter++;
+        },
+
+        fetchResultPanels: function () {
+            var bottomView = this.getView('bottom');
+
+            if (!bottomView) {
+                return;
+            }
+
+            var importedView = bottomView.getView('imported');
+
+            if (importedView && importedView.collection) {
+                importedView.collection.fetch();
+            }
+
+            var duplicatesView = bottomView.getView('duplicates');
+
+            if (duplicatesView && duplicatesView.collection) {
+                duplicatesView.collection.fetch();
+            }
+
+            var updatedView = bottomView.getView('updated');
+
+            if (updatedView && updatedView.collection) {
+                updatedView.collection.fetch();
+            }
         },
     });
 });
