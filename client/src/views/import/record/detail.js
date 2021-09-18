@@ -34,7 +34,7 @@ define('views/import/record/detail', 'views/record/detail', function (Dep) {
 
         returnUrl: '#Import/list',
 
-        checkInterval: 5,
+        checkInterval: 10,
 
         setup: function () {
             Dep.prototype.setup.call(this);
@@ -47,35 +47,44 @@ define('views/import/record/detail', 'views/record/detail', function (Dep) {
         setupChecking: function () {
             if (!this.model.has('status')) {
                 this.listenToOnce(this.model, 'sync', this.setupChecking.bind(this));
+
                 return;
             }
+
             if (!~['In Process', 'Pending', 'Standby'].indexOf(this.model.get('status'))) {
                 return;
             }
+
             setTimeout(this.runChecking.bind(this), this.checkInterval * 1000);
-            this.on('remove', function () {
+
+            this.on('remove', () => {
                 this.stopChecking = true;
-            }, this);
+            },);
         },
 
         runChecking: function () {
-            if (this.stopChecking) return;
+            if (this.stopChecking) {
+                return;
+            }
 
-            this.model.fetch().done(function () {
-
+            this.model.fetch().then(() => {
                 var bottomView = this.getView('bottom');
+
                 if (bottomView) {
                     var importedView = bottomView.getView('imported');
+
                     if (importedView && importedView.collection) {
                         importedView.collection.fetch();
                     }
 
                     var duplicatesView = bottomView.getView('duplicates');
+
                     if (duplicatesView && duplicatesView.collection) {
                         duplicatesView.collection.fetch();
                     }
 
                     var updatedView = bottomView.getView('updated');
+
                     if (updatedView && updatedView.collection) {
                         updatedView.collection.fetch();
                     }
@@ -84,8 +93,9 @@ define('views/import/record/detail', 'views/record/detail', function (Dep) {
                 if (!~['In Process', 'Pending', 'Standby'].indexOf(this.model.get('status'))) {
                     return;
                 }
+
                 setTimeout(this.runChecking.bind(this), this.checkInterval * 1000);
-            }.bind(this));
+            });
         },
     });
 });
