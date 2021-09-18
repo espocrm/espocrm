@@ -309,9 +309,9 @@ class Import
 
             $i = -1;
 
-            $contents = str_replace("\r\n", "\n", $contents);
+            $contentsPrepared = str_replace(["\r\n", "\r"], "\n", $contents);
 
-            while ($row = $this->readCsvString($contents, $delimiter, $enclosure)) {
+            while ($row = $this->readCsvString($contentsPrepared, $delimiter, $enclosure)) {
                 $i++;
 
                 if ($i == 0 && $params->headerRow()) {
