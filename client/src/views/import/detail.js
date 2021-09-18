@@ -31,12 +31,13 @@ define('views/import/detail', 'views/detail', function (Dep) {
     return Dep.extend({
 
         getHeader: function () {
-        	var dt = this.model.get('createdAt');
-        	dt = this.getDateTime().toDisplay(dt);
-            var name = Handlebars.Utils.escapeExpression(dt);
+            var name = Handlebars.Utils.escapeExpression(
+                this.getDateTime().toDisplay(this.model.get('createdAt'))
+            );
 
             return this.buildHeaderHtml([
-                '<a href="#' + this.model.name + '/list">' + this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
+                '<a href="#' + this.model.name + '/list">' +
+                    this.getLanguage().translate(this.model.name, 'scopeNamesPlural') + '</a>',
                 name
             ]);
         },
@@ -46,16 +47,17 @@ define('views/import/detail', 'views/detail', function (Dep) {
 
             this.setupMenu();
 
-            this.listenTo(this.model, 'change', function () {
+            this.listenTo(this.model, 'change', () => {
                 this.setupMenu();
+
                 if (this.isRendered()) {
                     this.getView('header').reRender();
                 }
-            }, this);
+            });
 
-            this.listenTo(this.model, 'sync', function (m) {
+            this.listenTo(this.model, 'sync', (m) => {
                 this.controlButtons(m);
-            }, this);
+            });
         },
 
         setupMenu: function () {
@@ -114,67 +116,62 @@ define('views/import/detail', 'views/detail', function (Dep) {
         },
 
         actionRemoveImportLog: function () {
-            this.confirm(this.translate('confirmRemoveImportLog', 'messages', 'Import'), function () {
+            this.confirm(this.translate('confirmRemoveImportLog', 'messages', 'Import'), () => {
                 this.disableMenuItem('removeImportLog');
 
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
                 this.model.destroy({
-                    wait: true
-                }).then(function () {
+                    wait: true,
+                }).then(() => {
                     Espo.Ui.notify(false);
+
                     var collection = this.model.collection;
+
                     if (collection) {
                         if (collection.total > 0) {
                             collection.total--;
                         }
                     }
+
                     this.getRouter().navigate('#Import/list', {trigger: true});
 
                     this.removeMenuItem('removeImportLog', true);
-                }.bind(this));
-
-            }, this);
+                });
+            });
         },
 
         actionRevert: function () {
-        	this.confirm(this.translate('confirmRevert', 'messages', 'Import'), function () {
+            this.confirm(this.translate('confirmRevert', 'messages', 'Import'), () => {
                 this.disableMenuItem('revert');
+
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-	        	$.ajax({
-	        		type: 'POST',
-	        		url: 'Import/action/revert',
-	        		data: JSON.stringify({
-	        			id: this.model.id
-	        		})
-	        	}).done(function () {
-                    Espo.Ui.notify(false);
-
-	        		this.getRouter().navigate('#Import/list', {trigger: true});
-	        	}.bind(this));
-        	}, this);
+                Espo.Ajax
+                    .postRequest('Import/action/revert', {id: this.model.id})
+                    .then(() => {
+                        this.getRouter().navigate('#Import/list', {trigger: true});
+                    });
+            });
         },
 
         actionRemoveDuplicates: function () {
-        	this.confirm(this.translate('confirmRemoveDuplicates', 'messages', 'Import'), function () {
+            this.confirm(this.translate('confirmRemoveDuplicates', 'messages', 'Import'), () => {
                 this.disableMenuItem('removeDuplicates');
 
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-	        	$.ajax({
-	        		type: 'POST',
-	        		url: 'Import/action/removeDuplicates',
-	        		data: JSON.stringify({
-	        			id: this.model.id
-	        		})
-	        	}).done(function () {
-                    this.removeMenuItem('removeDuplicates', true);
+                Espo.Ajax
+                    .postRequest('Import/action/removeDuplicates', {id: this.model.id})
+                    .then(() => {
+                        this.removeMenuItem('removeDuplicates', true);
 
-                    this.model.fetch();
-                    this.model.trigger('update-all');
-                    Espo.Ui.success(this.translate('duplicatesRemoved', 'messages', 'Import'))
-	        	}.bind(this));
-        	}, this);
+                        this.model.fetch();
+                        this.model.trigger('update-all');
+
+                        Espo.Ui.success(this.translate('duplicatesRemoved', 'messages', 'Import'));
+                    });
+                });
         },
 
         actionCreateWithSameParams: function () {
@@ -186,6 +183,7 @@ define('views/import/detail', 'views/detail', function (Dep) {
             formData = Espo.Utils.cloneDeep(formData);
 
             this.getRouter().navigate('#Import', {trigger: false});
+
             this.getRouter().dispatch('Import', 'index', {
                 formData: formData,
             });
